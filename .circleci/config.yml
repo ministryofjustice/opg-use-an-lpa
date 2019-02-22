@@ -1,0 +1,36 @@
+version: 2.1
+
+workflows:
+  path_to_live:
+    jobs:
+      - use-my-lpa/hello_terraform:
+          name: hello_terraform
+
+orbs:
+  use-my-lpa:
+    executors:
+      ruby:
+        docker: [image: circleci/ruby:latest-browsers]
+      terraform:
+        docker: [image: hashicorp/terraform]
+    commands:
+      install_terraform:
+        steps:
+          - run:
+              name: install_terraform
+              command: |
+                export TERRAFORM_VERSION=0.11.11
+                export TERRAFORM_SHA256SUM=94504f4a67bad612b5c8e3a4b7ce6ca2772b3c1559630dfd71e9c519e3d6149c
+                curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip > terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+                echo "${TERRAFORM_SHA256SUM}  terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > terraform_${TERRAFORM_VERSION}_SHA256SUMS
+                sha256sum -c --status terraform_${TERRAFORM_VERSION}_SHA256SUMS
+                sudo unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /bin
+                rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+    jobs:
+      hello_terraform:
+        executor: terraform
+        steps:
+          - checkout
+          - run:
+              name: Hello Terraform
+              command: terraform version
