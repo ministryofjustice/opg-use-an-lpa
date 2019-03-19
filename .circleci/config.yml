@@ -3,7 +3,6 @@ version: 2.1
 workflows:
   path_to_live:
     jobs:
-    # pipeline
       - use-my-lpa/lint_terraform:
           name: lint_terraform
           workspace: development
@@ -41,5 +40,10 @@ orbs:
         steps:
           - checkout
           - run:
-            name: Lint Terraform
-            command: terraform validate
+              name: Init Terraform
+              command: |
+                terraform init
+          - run:
+              name: Lint Terraform
+              command: |
+                terraform validate
