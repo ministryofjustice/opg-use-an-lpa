@@ -40,10 +40,8 @@ orbs:
         steps:
           - checkout
           - run:
-              name: Init Terraform
-              command: |
-                terraform init
-          - run:
               name: Lint Terraform
               command: |
+                cd terraform
+                terraform init
                 terraform validate
