@@ -6,7 +6,10 @@ workflows:
       - use-my-lpa/lint_terraform:
           name: lint_terraform
           workspace: development
-
+      - use-my-lpa/apply_terraform:
+          name: apply_terraform_devlopment
+          workspace: development
+          requires: [lint_terraform]
 orbs:
   use-my-lpa:
     executors:
@@ -45,3 +48,20 @@ orbs:
                 cd terraform
                 terraform init
                 terraform validate
+      apply_terraform:
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
+        steps:
+          - checkout
+          - run:
+              name: Apply Terraform
+              command: |
+                cd terraform
+                terraform init
+                terraform apply --auto-approve
