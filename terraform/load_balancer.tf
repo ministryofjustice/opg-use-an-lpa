@@ -5,7 +5,7 @@ resource "aws_lb" "view" {
   subnets            = ["${aws_default_subnet.public.*.id}"]
 
   security_groups = [
-    "${aws_security_group.loadbalancer.id}",
+    "${aws_security_group.view_loadbalancer.id}",
   ]
 
   access_logs {
@@ -19,7 +19,7 @@ resource "aws_lb" "view" {
   }
 }
 
-resource "aws_lb_listener" "loadbalancer" {
+resource "aws_lb_listener" "view_loadbalancer" {
   load_balancer_arn = "${aws_lb.view.arn}"
   port              = "443"
   protocol          = "HTTPS"
@@ -37,7 +37,7 @@ resource "aws_lb_listener" "loadbalancer" {
   }
 }
 
-resource "aws_security_group" "loadbalancer" {
+resource "aws_security_group" "view_loadbalancer" {
   name        = "view-${terraform.workspace}-sg"
   description = "Allow inbound traffic"
   vpc_id      = "${aws_default_vpc.default.id}"
@@ -47,16 +47,16 @@ resource "aws_security_group" "loadbalancer" {
   }
 }
 
-resource "aws_security_group_rule" "allow_all" {
+resource "aws_security_group_rule" "view_loadbalancer" {
   type              = "ingress"
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.loadbalancer.id}"
+  security_group_id = "${aws_security_group.view_loadbalancer.id}"
 }
 
-data "aws_iam_policy_document" "access_log" {
+data "aws_iam_policy_document" "view_loadbalancer" {
   statement {
     sid = "accessLogBucketAccess"
 
