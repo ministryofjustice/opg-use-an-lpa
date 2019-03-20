@@ -2,6 +2,7 @@ resource "aws_lb" "view" {
   name               = "view-${terraform.workspace}"
   internal           = false
   load_balancer_type = "application"
+  subnets            = ["${aws_default_subnet.public.*.id}"]
 
   security_groups = [
     "${aws_security_group.loadbalancer.id}",
