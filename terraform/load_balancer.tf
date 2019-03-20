@@ -30,8 +30,9 @@ resource "aws_lb_listener" "loadbalancer" {
     type = "fixed-response"
 
     fixed_response {
-      content_type = "application/json"
-      status_code  = "203"
+      content_type = "text/plain"
+      message_body = "Fixed response content"
+      status_code  = "200"
     }
   }
 }
@@ -39,6 +40,7 @@ resource "aws_lb_listener" "loadbalancer" {
 resource "aws_security_group" "loadbalancer" {
   name        = "view-${terraform.workspace}-sg"
   description = "Allow inbound traffic"
+  vpc_id      = "${aws_default_vpc.default.id}"
 
   lifecycle {
     create_before_destroy = true
@@ -50,8 +52,21 @@ resource "aws_security_group_rule" "allow_all" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  cidr_blocks       = ["${formatlist("%s/32", aws_nat_gateway.nat.*.public_ip)}"]
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.loadbalancer.id}"
+}
+
+resource "aws_security_group_rule" "moj_whitelist" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["${module.whitelist.moj_vpn}"]
+  security_group_id = "${aws_security_group.loadbalancer.id}"
+}
+
+module "whitelist" {
+  source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-whitelist.git"
 }
 
 data "aws_iam_policy_document" "access_log" {
@@ -68,8 +83,10 @@ data "aws_iam_policy_document" "access_log" {
 
     principals {
       // AWS docs, Account ID that corresponds to the region for your load balancer and bucket.
+      // https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html
       identifiers = ["652711504416"]
-      type        = "AWS"
+
+      type = "AWS"
     }
   }
 }

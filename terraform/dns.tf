@@ -19,3 +19,7 @@ resource "aws_route53_record" "view-use-my-lpa" {
     create_before_destroy = true
   }
 }
+
+output "view-use-an-lpa-domain" {
+  value = "${aws_route53_record.view-use-my-lpa.fqdn}"
+}
