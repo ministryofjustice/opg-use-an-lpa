@@ -10,6 +10,22 @@ workflows:
           name: apply_terraform_devlopment
           workspace: development
           requires: [lint_terraform]
+          filters:
+            branches:
+              ignore: master
+      - use-my-lpa/apply_terraform:
+          name: apply_terraform_preproduction
+          workspace: preproduction
+          filters:
+            branches:
+              only: master
+      - use-my-lpa/apply_terraform:
+          name: apply_terraform_production
+          workspace: production
+          requires: [apply_terraform_preproduction]
+          filters:
+            branches:
+              only: master
 orbs:
   use-my-lpa:
     executors:
