@@ -45,11 +45,12 @@ resource "aws_security_group" "loadbalancer" {
 }
 
 resource "aws_security_group_rule" "allow_all" {
-  security_group_id = "${aws_security_group.loadbalancer.id}"
   type              = "ingress"
-  protocol          = "tcp"
   from_port         = 443
   to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["${formatlist("%s/32", aws_nat_gateway.nat.*.public_ip)}"]
+  security_group_id = "${aws_security_group.loadbalancer.id}"
 }
 
 data "aws_iam_policy_document" "access_log" {
