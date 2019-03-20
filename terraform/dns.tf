@@ -14,4 +14,8 @@ resource "aws_route53_record" "view-use-my-lpa" {
     name                   = "${aws_elb.view.dns_name}"
     zone_id                = "${aws_elb.view.zone_id}"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }

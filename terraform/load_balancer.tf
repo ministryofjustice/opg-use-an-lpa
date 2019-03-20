@@ -8,4 +8,8 @@ resource "aws_elb" "view" {
     lb_port           = 80
     lb_protocol       = "http"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
