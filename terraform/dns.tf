@@ -3,10 +3,10 @@ data "aws_route53_zone" "opg_service_justice_gov_uk" {
   name     = "opg.service.justice.gov.uk"
 }
 
-resource "aws_route53_record" "use-my-lpa" {
+resource "aws_route53_record" "view-use-my-lpa" {
   provider = "aws.management"
   zone_id  = "${data.aws_route53_zone.opg_service_justice_gov_uk.zone_id}"
-  name     = "${local.dns_prefix}"
+  name     = "view.${local.dns_prefix}"
   type     = "A"
 
   alias {
