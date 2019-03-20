@@ -11,8 +11,8 @@ resource "aws_route53_record" "view-use-my-lpa" {
 
   alias {
     evaluate_target_health = false
-    name                   = "${aws_elb.view.dns_name}"
-    zone_id                = "${aws_elb.view.zone_id}"
+    name                   = "${aws_lb.view.dns_name}"
+    zone_id                = "${aws_lb.view.zone_id}"
   }
 
   lifecycle {
