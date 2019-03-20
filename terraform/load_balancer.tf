@@ -68,7 +68,7 @@ data "aws_iam_policy_document" "access_log" {
 
     principals {
       // AWS docs, Account ID that corresponds to the region for your load balancer and bucket.
-      identifiers = ["${local.target_account}"]
+      identifiers = ["652711504416"]
       type        = "AWS"
     }
   }
