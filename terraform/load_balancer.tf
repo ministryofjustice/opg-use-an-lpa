@@ -56,19 +56,6 @@ resource "aws_security_group_rule" "allow_all" {
   security_group_id = "${aws_security_group.loadbalancer.id}"
 }
 
-resource "aws_security_group_rule" "moj_whitelist" {
-  type              = "ingress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  cidr_blocks       = ["${module.whitelist.moj_vpn}"]
-  security_group_id = "${aws_security_group.loadbalancer.id}"
-}
-
-module "whitelist" {
-  source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-whitelist.git"
-}
-
 data "aws_iam_policy_document" "access_log" {
   statement {
     sid = "accessLogBucketAccess"
