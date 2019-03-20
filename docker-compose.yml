@@ -5,9 +5,9 @@ services:
     container_name: viewer-web
     build:
       context: .
-      dockerfile: docker/web/Dockerfile
+      dockerfile: service-viewer/docker/web/Dockerfile
     volumes:
-      - ./viewer/web:/web
+      - ./service-viewer/web:/web
     ports:
       - 9001:80
     environment:
@@ -19,6 +19,6 @@ services:
     container_name: viewer-app
     build:
       context: .
-      dockerfile: docker/app/Dockerfile
+      dockerfile: service-viewer/docker/app/Dockerfile
     volumes:
-      - ./viewer/app:/app
+      - ./service-viewer/app:/app
