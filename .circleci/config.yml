@@ -35,6 +35,8 @@ orbs:
         docker: [image: circleci/ruby:latest-browsers]
       terraform:
         docker: [image: hashicorp/terraform]
+      python:
+        docker: [image: circleci/python]
     commands:
       install_terraform:
         steps:
@@ -84,7 +86,7 @@ orbs:
                 terraform init
                 terraform apply --auto-approve
       docker_build_view:
-        executor: ruby
+        executor: python
         steps:
           - checkout
           - setup_remote_docker:
@@ -92,8 +94,12 @@ orbs:
           - run:
               name: Build
               command: |
+                pip install --user --quiet awscli
+          - run:
+              name: Build
+              command: |
                 docker-compose build
-          - run: |
+          - run:
               name: push
               command: |
                 ./docker_login.sh
