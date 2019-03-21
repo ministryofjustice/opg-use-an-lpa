@@ -1,0 +1,10 @@
+{
+    "name": "ministryofjustice/opg-use-my-lpa",
+    "description": "Use my LPA - Viewer Service",
+    "type": "project",
+    "homepage": "https://github.com/ministryofjustice/opg-use-my-lpa",
+    "license": "MIT",
+    "config": {
+        "sort-packages": true
+    }
+}
