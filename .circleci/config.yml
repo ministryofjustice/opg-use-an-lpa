@@ -82,6 +82,7 @@ orbs:
                 terraform init
                 terraform apply --auto-approve
       docker_build_view:
+        executor: ruby
         steps:
           - checkout
           - setup_remote_docker:
