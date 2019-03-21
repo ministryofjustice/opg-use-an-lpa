@@ -41,10 +41,6 @@ resource "aws_security_group" "view_loadbalancer" {
   name        = "view-${terraform.workspace}-sg"
   description = "Allow inbound traffic"
   vpc_id      = "${aws_default_vpc.default.id}"
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_security_group_rule" "view_loadbalancer" {
