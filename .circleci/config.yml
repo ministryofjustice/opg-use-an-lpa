@@ -13,6 +13,9 @@ workflows:
           filters:
             branches:
               ignore: master
+      - use-my-lpa/test_view_service_development:
+          name: test_view_service_development
+          requires: [apply_terraform_devlopment]
       - use-my-lpa/apply_terraform:
           name: apply_terraform_preproduction
           workspace: preproduction
@@ -81,3 +84,10 @@ orbs:
                 cd terraform
                 terraform init
                 terraform apply --auto-approve
+      test_view_service_development:
+        executor: terraform
+        steps:
+          - run:
+              name: check response from view service
+              command: |
+                curl https://view.dev.use-an-lpa.opg.service.justice.gov.uk --fail
