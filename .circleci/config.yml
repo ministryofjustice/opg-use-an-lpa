@@ -3,9 +3,29 @@ version: 2.1
 workflows:
   path_to_live:
     jobs:
-      - use-my-lpa/hello_terraform:
-          name: hello_terraform
-
+      - use-my-lpa/lint_terraform:
+          name: lint_terraform
+          workspace: development
+      - use-my-lpa/apply_terraform:
+          name: apply_terraform_devlopment
+          workspace: development
+          requires: [lint_terraform]
+          filters:
+            branches:
+              ignore: master
+      - use-my-lpa/apply_terraform:
+          name: apply_terraform_preproduction
+          workspace: preproduction
+          filters:
+            branches:
+              only: master
+      - use-my-lpa/apply_terraform:
+          name: apply_terraform_production
+          workspace: production
+          requires: [apply_terraform_preproduction]
+          filters:
+            branches:
+              only: master
 orbs:
   use-my-lpa:
     executors:
@@ -27,10 +47,37 @@ orbs:
                 sudo unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /bin
                 rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip
     jobs:
-      hello_terraform:
+      lint_terraform:
         executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
         steps:
           - checkout
           - run:
-              name: Hello Terraform
-              command: terraform version
+              name: Lint Terraform
+              command: |
+                cd terraform
+                terraform init
+                terraform validate
+      apply_terraform:
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
+        steps:
+          - checkout
+          - run:
+              name: Apply Terraform
+              command: |
+                cd terraform
+                terraform init
+                terraform apply --auto-approve
