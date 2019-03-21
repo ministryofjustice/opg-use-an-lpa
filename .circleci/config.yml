@@ -49,7 +49,6 @@ orbs:
     jobs:
       lint_terraform:
         executor: terraform
-        working_directory: ./terraform
         parameters:
           workspace:
             description: Terraform workspace name
@@ -62,11 +61,11 @@ orbs:
           - run:
               name: Lint Terraform
               command: |
+                cd terraform
                 terraform init
                 terraform validate
       apply_terraform:
         executor: terraform
-        working_directory: ./terraform
         parameters:
           workspace:
             description: Terraform workspace name
@@ -79,6 +78,7 @@ orbs:
           - run:
               name: Apply Terraform
               command: |
+                cd terraform
                 terraform init
                 terraform apply --auto-approve
       docker_build_view:
