@@ -23,13 +23,10 @@ resource "aws_lb_target_group" "view" {
   name                 = "view-loadbalancer-group"
   port                 = 80
   protocol             = "HTTP"
+  target_type          = "ip"
   vpc_id               = "${aws_default_vpc.default.id}"
   deregistration_delay = 0
   tags                 = "${local.default_tags}"
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 // TODO - Change the default action to forward to the lb_target_group
@@ -41,13 +38,8 @@ resource "aws_lb_listener" "view_loadbalancer" {
   certificate_arn   = "${aws_acm_certificate_validation.cert.certificate_arn}"
 
   default_action {
-    type = "fixed-response"
-
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "Fixed response content"
-      status_code  = "200"
-    }
+    target_group_arn = "${aws_lb_target_group.view.arn}"
+    type             = "forward"
   }
 }
 
