@@ -39,8 +39,7 @@ orbs:
                 curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
                 unzip awscli-bundle.zip
                 ./awscli-bundle/install -b ~/bin/aws
-                alias aws="/home/circleci/bin/aws"
-                aws --version
+                /home/circleci/bin/aws --version
 
     executors:
       ruby:
