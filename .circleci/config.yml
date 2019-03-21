@@ -81,3 +81,22 @@ orbs:
               command: |
                 terraform init
                 terraform apply --auto-approve
+      docker_build_view:
+        steps:
+          - checkout
+          - setup_remote_docker:
+              version: 18.06.0-ce
+          - run:
+              name: Build
+              command: |
+                docker-compose build
+          - run: |
+              name: push
+              command: |
+                ./docker_login.sh
+                docker tag opgusemylpa_viewer-app:latest use_my_lpa/view_lpa_front:latest
+                docker tag use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest
+                docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest
+                docker tag opgusemylpa_viewer-web:latest use_my_lpa/web:latest
+                docker tag use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest
+                docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest
