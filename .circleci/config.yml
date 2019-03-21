@@ -36,20 +36,7 @@ orbs:
       terraform:
         docker: [image: hashicorp/terraform]
       python:
-        docker: [image: circleci/python]
-    commands:
-      install_terraform:
-        steps:
-          - run:
-              name: install_terraform
-              command: |
-                export TERRAFORM_VERSION=0.11.11
-                export TERRAFORM_SHA256SUM=94504f4a67bad612b5c8e3a4b7ce6ca2772b3c1559630dfd71e9c519e3d6149c
-                curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip > terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-                echo "${TERRAFORM_SHA256SUM}  terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > terraform_${TERRAFORM_VERSION}_SHA256SUMS
-                sha256sum -c --status terraform_${TERRAFORM_VERSION}_SHA256SUMS
-                sudo unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /bin
-                rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+        docker: [image: circleci/python:3.6.1]
     jobs:
       lint_terraform:
         executor: terraform
@@ -92,8 +79,10 @@ orbs:
           - setup_remote_docker:
               version: 18.06.0-ce
           - run:
-              name: Build
+              name: Install awscli
               command: |
+                python3 -m venv venv
+                . venv/bin/activate
                 pip install --user --quiet awscli
           - run:
               name: Build
@@ -102,7 +91,8 @@ orbs:
           - run:
               name: push
               command: |
-                ./docker_login.sh
+                . venv/bin/activate
+                eval $(~/bin/aws ecr get-login --no-include-email --region=eu-west-1)
                 docker tag opgusemylpa_viewer-app:latest use_my_lpa/view_lpa_front:latest
                 docker tag use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest
                 docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest
