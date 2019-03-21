@@ -3,13 +3,15 @@ version: 2.1
 workflows:
   path_to_live:
     jobs:
+      - use-my-lpa/docker_build_view:
+          name: build_view_containers
       - use-my-lpa/lint_terraform:
           name: lint_terraform
           workspace: development
       - use-my-lpa/apply_terraform:
           name: apply_terraform_devlopment
           workspace: development
-          requires: [lint_terraform]
+          requires: [lint_terraform, build_view_containers]
           filters:
             branches:
               ignore: master
