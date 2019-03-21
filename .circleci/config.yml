@@ -93,7 +93,7 @@ orbs:
           - run:
               name: Build
               command: |
-                docker-compose build
+                docker-compose build -p opgusemylpa
           - run:
               name: push
               command: |
