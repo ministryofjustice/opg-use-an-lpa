@@ -1,4 +1,4 @@
-# 1. Record architecture decisions
+# 1. Record application decisions
 
 Date: 2019-02-22
 
