@@ -1,32 +1,13 @@
 locals {
-  accounts = {
-    "development"   = 367815980639
-    "preproduction" = 888228022356
-    "production"    = 690083044361
-  }
-
-  account = "${lookup(local.accounts, terraform.workspace)}"
-
-  dns_prefixes = {
-    "development"   = "dev.use-an-lpa"
-    "preproduction" = "preprod.use-an-lpa"
-    "production"    = "use-an-lpa"
-  }
-
-  dns_prefix = "${lookup(local.dns_prefixes, terraform.workspace)}"
-
-  is_production = {
-    "development"   = "false"
-    "preproduction" = "false"
-    "production"    = "true"
-  }
+  account    = "${lookup(var.accounts, terraform.workspace)}"
+  dns_prefix = "${lookup(var.dns_prefixes, terraform.workspace)}"
 
   mandatory_moj_tags = {
     business-unit    = "OPG"
     application      = "use-an-lpa"
     environment-name = "${terraform.workspace}"
     owner            = "Katie Gibbs: katie.gibbs@digital.justice.gov.uk"
-    is-production    = "${lookup(local.is_production, terraform.workspace)}"
+    is-production    = "${lookup(var.is_production, terraform.workspace)}"
   }
 
   optional_tags = {
@@ -34,4 +15,16 @@ locals {
   }
 
   default_tags = "${merge(local.mandatory_moj_tags,local.optional_tags)}"
+}
+
+variable "dns_prefixes" {
+  type = "map"
+}
+
+variable "accounts" {
+  type = "map"
+}
+
+variable "is_production" {
+  type = "map"
 }
