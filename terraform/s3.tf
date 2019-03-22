@@ -1,3 +1,7 @@
+data "aws_elb_service_account" "main" {
+  region = "eu-west-2"
+}
+
 data "aws_iam_policy_document" "viewer_loadbalancer" {
   statement {
     sid = "accessLogBucketAccess"
@@ -11,9 +15,7 @@ data "aws_iam_policy_document" "viewer_loadbalancer" {
     actions = ["s3:PutObject"]
 
     principals {
-      // AWS docs, Account ID that corresponds to the region for your load balancer and bucket.
-      // https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html
-      identifiers = ["652711504416"]
+      identifiers = ["${data.aws_elb_service_account.main.id}"]
 
       type = "AWS"
     }
