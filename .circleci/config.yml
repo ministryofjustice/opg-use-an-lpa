@@ -38,9 +38,17 @@ orbs:
               command: |
                 curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
                 unzip awscli-bundle.zip
-                ./awscli-bundle/install -b ~/bin/aws
-                /home/circleci/bin/aws --version
-
+                sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+      ecr_login:
+        steps:
+          - run:
+              name: ecr_login
+              command: |
+                temp_role=$(aws sts assume-role --role-arn arn:aws:iam::311462405659:role/ci --role-session-name ci)
+                export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
+                export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
+                export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
+                eval $(aws ecr get-login --no-include-email --region=eu-west-1)
     executors:
       ruby:
         docker: [image: circleci/ruby:latest-browsers]
@@ -97,20 +105,8 @@ orbs:
                 # Build viewer service
                 docker-compose build viewer-web
                 docker-compose build viewer-app
-          - run:
-              name: install aws
-              command: |
-                curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-                unzip awscli-bundle.zip
-                sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
-          - run:
-              name: "Log in to AWS ECR"
-              command: |
-                temp_role=$(aws sts assume-role --role-arn arn:aws:iam::311462405659:role/ci --role-session-name ci)
-                export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
-                export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
-                export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
-                eval $(aws ecr get-login --no-include-email --region=eu-west-1)
+          - install_aws_cli
+          - ecr_login
           - run:
               name: Deploy
               command: |
