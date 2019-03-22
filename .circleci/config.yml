@@ -46,8 +46,8 @@ orbs:
         docker: [image: circleci/ruby:latest-browsers]
       terraform:
         docker: [image: hashicorp/terraform]
-      python:
-        docker: [image: circleci/python:3.6.1]
+      docker:
+        docker: [image: circleci/classic:201808-01]
     jobs:
       lint_terraform:
         executor: terraform
@@ -84,23 +84,27 @@ orbs:
                 terraform init
                 terraform apply --auto-approve
       docker_build_view:
-        executor: python
+        executor: docker
         steps:
           - checkout
-          - setup_remote_docker:
-              version: 18.06.0-ce
-          - install_aws_cli
           - run:
               name: Build
               command: |
-                docker-compose build
+                # Build app
+                docker-compose build viewer-web
+                docker-compose build viewer-app
           - run:
-              name: push
+              name: Deploy
               command: |
-                eval $(/home/circleci/bin/aws ecr get-login --no-include-email --region=eu-west-1)
-                docker tag project_viewer-app:latest use_my_lpa/view_lpa_front:latest
-                docker tag use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest
-                docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest
-                docker tag project_viewer-web:latest use_my_lpa/web:latest
-                docker tag use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest
-                docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest
+                # git tag $CIRCLE_BUILD_NUM
+                # git push --tags
+
+                docker images
+                ./docker_login.sh
+                docker-compose push viewer-app
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BUILD_NUM
+                docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BUILD_NUM
+
+                docker-compose push viewer-web
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BUILD_NUM
+                docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BUILD_NUM
