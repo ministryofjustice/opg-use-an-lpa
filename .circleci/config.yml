@@ -112,8 +112,7 @@ orbs:
               name: Build
               command: |
                 # Build viewer service
-                docker-compose build viewer-web
-                docker-compose build viewer-app
+                docker-compose build
           - install_aws_cli
           - ecr_login
           - run:
@@ -121,12 +120,12 @@ orbs:
               command: |
                 docker images
                 docker tag project_viewer-app:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BUILD_NUM
-                docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BUILD_NUM
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
+                docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
 
                 docker tag project_viewer-web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BUILD_NUM
-                docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BUILD_NUM
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
+                docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
       test_viewer_service_development:
         executor: terraform
         steps:
