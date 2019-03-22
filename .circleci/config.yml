@@ -3,7 +3,7 @@ version: 2.1
 workflows:
   path_to_live:
     jobs:
-      - use-my-lpa/docker_build_view:
+      - use-my-lpa/docker_build_viewer:
           name: build_view_containers
       - use-my-lpa/lint_terraform:
           name: lint_terraform
@@ -46,8 +46,8 @@ orbs:
         docker: [image: circleci/ruby:latest-browsers]
       terraform:
         docker: [image: hashicorp/terraform]
-      aws:
-        docker: [image: cibuilds/aws:1.16]
+      docker:
+        docker: [image: circleci/python]
     jobs:
       lint_terraform:
         executor: terraform
@@ -83,8 +83,8 @@ orbs:
                 cd terraform
                 terraform init
                 terraform apply --auto-approve
-      docker_build_view:
-        executor: aws
+      docker_build_viewer:
+        executor: docker
         steps:
           - checkout
           - run:
@@ -94,13 +94,20 @@ orbs:
                 docker-compose build viewer-web
                 docker-compose build viewer-app
           - run:
+              name: install aws
+              command: |
+                curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+                unzip awscli-bundle.zip
+                sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+          - run:
+              name: "Log in to AWS ECR"
+              command: |
+                ./set_tokens.sh
+                eval $(aws ecr get-login --no-include-email --region=eu-west-1)
+          - run:
               name: Deploy
               command: |
-                # git tag $CIRCLE_BUILD_NUM
-                # git push --tags
-
                 docker images
-                ./docker_login.sh
                 docker-compose push viewer-app
                 docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BUILD_NUM
                 docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BUILD_NUM
