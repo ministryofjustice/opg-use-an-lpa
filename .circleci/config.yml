@@ -79,7 +79,7 @@ orbs:
           container_version:
             description: Container version
             type: string
-            default: "${CIRCLE_BRANCH}-{$CIRCLE_BUILD_NUM}"
+            default: ${CIRCLE_BRANCH}-{$CIRCLE_BUILD_NUM}
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
           TF_VAR_container_version: "<<parameters.container_version>>"
@@ -101,7 +101,7 @@ orbs:
           container_version:
             description: Container version
             type: string
-            default: "${CIRCLE_BRANCH}-{$CIRCLE_BUILD_NUM}"
+            default: ${CIRCLE_BRANCH}-{$CIRCLE_BUILD_NUM}
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
           TF_VAR_container_version: "<<parameters.container_version>>"
@@ -109,10 +109,10 @@ orbs:
           - checkout
           - run:
               name: check env-var
-              command: echo "${CIRCLE_BRANCH}-{$CIRCLE_BUILD_NUM}"
+              command: echo ${CIRCLE_BRANCH}-{$CIRCLE_BUILD_NUM}
           - run:
               name: check parameter
-              command: echo "<<parameters.workspace>>"
+              command: echo "<<parameters.container_version>>"
           - run:
               name: Apply Terraform
               command: |
