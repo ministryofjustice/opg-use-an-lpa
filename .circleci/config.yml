@@ -9,7 +9,7 @@ workflows:
           name: lint_terraform
           workspace: development
       - use-my-lpa/apply_terraform:
-          name: apply_terraform_devlopment
+          name: apply_terraform_development
           workspace: development
           requires: [lint_terraform, build_view_containers]
           filters:
@@ -17,10 +17,11 @@ workflows:
               ignore: master
       - use-my-lpa/test_viewer_service_development:
           name: test_viewer_service_development
-          requires: [apply_terraform_devlopment]
+          requires: [apply_terraform_development]
       - use-my-lpa/apply_terraform:
           name: apply_terraform_preproduction
           workspace: preproduction
+          requires: [lint_terraform]
           filters:
             branches:
               only: master
