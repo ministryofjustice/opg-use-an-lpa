@@ -111,10 +111,10 @@ orbs:
               name: Deploy
               command: |
                 docker images
-                docker-compose push viewer-app
+                docker tag project_viewer-app:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 
                 docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BUILD_NUM
                 docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BUILD_NUM
 
-                docker-compose push viewer-web
+                docker tag project_viewer-web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 
                 docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BUILD_NUM
                 docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BUILD_NUM
