@@ -1,3 +1,13 @@
+resource "aws_lb_target_group" "view" {
+  name                 = "view-loadbalancer-group"
+  port                 = 80
+  protocol             = "HTTP"
+  target_type          = "ip"
+  vpc_id               = "${aws_default_vpc.default.id}"
+  deregistration_delay = 0
+  tags                 = "${local.default_tags}"
+}
+
 resource "aws_lb" "view" {
   name               = "view-${terraform.workspace}"
   internal           = false
@@ -17,16 +27,6 @@ resource "aws_lb" "view" {
   lifecycle {
     create_before_destroy = true
   }
-}
-
-resource "aws_lb_target_group" "view" {
-  name                 = "view-loadbalancer-group"
-  port                 = 80
-  protocol             = "HTTP"
-  target_type          = "ip"
-  vpc_id               = "${aws_default_vpc.default.id}"
-  deregistration_delay = 0
-  tags                 = "${local.default_tags}"
 }
 
 // TODO - Change the default action to forward to the lb_target_group
