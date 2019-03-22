@@ -95,19 +95,16 @@ orbs:
         steps:
           - run:
               name: check response from viewer service
-              command: |
-                curl https://viewer.dev.use-an-lpa.opg.service.justice.gov.uk --fail
+              command: curl https://viewer.dev.use-an-lpa.opg.service.justice.gov.uk --fail
       test_viewer_service_preproduction:
         executor: terraform
         steps:
           - run:
               name: check response from viewer service
-              command: |
-                curl https://viewer.preprod.use-an-lpa.opg.service.justice.gov.uk --fail
+              command: curl https://viewer.preprod.use-an-lpa.opg.service.justice.gov.uk --fail
       test_viewer_service_production:
         executor: terraform
         steps:
           - run:
               name: check response from viewer service
-              command: |
-                curl https://viewer.use-an-lpa.opg.service.justice.gov.uk --fail
+              command: curl https://viewer.use-an-lpa.opg.service.justice.gov.uk --fail
