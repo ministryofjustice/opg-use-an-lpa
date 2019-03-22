@@ -89,11 +89,12 @@ orbs:
         steps:
           - checkout
           - setup_remote_docker:
+              version: 18.06.0-ce
               docker_layer_caching: false
           - run:
               name: Build
               command: |
-                # Build app
+                # Build viewer service
                 docker-compose build viewer-web
                 docker-compose build viewer-app
           - run:
