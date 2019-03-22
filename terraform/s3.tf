@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "view_loadbalancer" {
+data "aws_iam_policy_document" "viewer_loadbalancer" {
   statement {
     sid = "accessLogBucketAccess"
 
@@ -23,6 +23,7 @@ data "aws_iam_policy_document" "view_loadbalancer" {
 resource "aws_s3_bucket" "access_log" {
   bucket = "opg-use-an-lpa-${terraform.workspace}-lb-access-log"
   acl    = "private"
+  tags   = "${local.default_tags}"
 
   server_side_encryption_configuration {
     "rule" {
@@ -35,5 +36,5 @@ resource "aws_s3_bucket" "access_log" {
 
 resource "aws_s3_bucket_policy" "access_log" {
   bucket = "${aws_s3_bucket.access_log.id}"
-  policy = "${data.aws_iam_policy_document.view_loadbalancer.json}"
+  policy = "${data.aws_iam_policy_document.viewer_loadbalancer.json}"
 }

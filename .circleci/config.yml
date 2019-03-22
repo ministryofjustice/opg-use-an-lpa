@@ -13,8 +13,8 @@ workflows:
           filters:
             branches:
               ignore: master
-      - use-my-lpa/test_view_service_development:
-          name: test_view_service_development
+      - use-my-lpa/test_viewer_service_development:
+          name: test_viewer_service_development
           requires: [apply_terraform_devlopment]
       - use-my-lpa/apply_terraform:
           name: apply_terraform_preproduction
@@ -22,6 +22,9 @@ workflows:
           filters:
             branches:
               only: master
+      - use-my-lpa/test_viewer_service_preproduction:
+          name: test_viewer_service_preproduction
+          requires: [apply_terraform_preproduction]
       - use-my-lpa/apply_terraform:
           name: apply_terraform_production
           workspace: production
@@ -29,6 +32,9 @@ workflows:
           filters:
             branches:
               only: master
+      - use-my-lpa/test_viewer_service_production:
+          name: test_viewer_service_production
+          requires: [apply_terraform_production]
 orbs:
   use-my-lpa:
     executors:
@@ -84,10 +90,24 @@ orbs:
                 cd terraform
                 terraform init
                 terraform apply --auto-approve
-      test_view_service_development:
+      test_viewer_service_development:
         executor: terraform
         steps:
           - run:
-              name: check response from view service
+              name: check response from viewer service
               command: |
-                curl https://view.dev.use-an-lpa.opg.service.justice.gov.uk --fail
+                curl https://viewer.dev.use-an-lpa.opg.service.justice.gov.uk --fail
+      test_viewer_service_preproduction:
+        executor: terraform
+        steps:
+          - run:
+              name: check response from viewer service
+              command: |
+                curl https://viewer.preprod.use-an-lpa.opg.service.justice.gov.uk --fail
+      test_viewer_service_production:
+        executor: terraform
+        steps:
+          - run:
+              name: check response from viewer service
+              command: |
+                curl https://viewer.use-an-lpa.opg.service.justice.gov.uk --fail

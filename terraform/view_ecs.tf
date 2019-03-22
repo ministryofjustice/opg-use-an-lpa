@@ -1,7 +1,7 @@
-resource "aws_ecs_service" "view" {
-  name            = "view"
+resource "aws_ecs_service" "viewer" {
+  name            = "viewer"
   cluster         = "${aws_ecs_cluster.use-an-lpa.id}"
-  task_definition = "${aws_ecs_task_definition.view.arn}"
+  task_definition = "${aws_ecs_task_definition.viewer.arn}"
   desired_count   = 1
   launch_type     = "FARGATE"
 
@@ -12,7 +12,7 @@ resource "aws_ecs_service" "view" {
   }
 
   load_balancer {
-    target_group_arn = "${aws_lb_target_group.view.arn}"
+    target_group_arn = "${aws_lb_target_group.viewer.arn}"
     container_name   = "web"
     container_port   = 80
   }
@@ -27,7 +27,7 @@ resource "aws_security_group" "ecs_service" {
     protocol        = "tcp"
     from_port       = 80
     to_port         = 80
-    security_groups = ["${aws_security_group.view_loadbalancer.id}"]
+    security_groups = ["${aws_security_group.viewer_loadbalancer.id}"]
   }
 
   egress {
@@ -42,8 +42,8 @@ resource "aws_security_group" "ecs_service" {
   }
 }
 
-resource "aws_ecs_task_definition" "view" {
-  family                   = "view"
+resource "aws_ecs_task_definition" "viewer" {
+  family                   = "viewer"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
@@ -51,11 +51,13 @@ resource "aws_ecs_task_definition" "view" {
   container_definitions    = "[${local.web}, ${local.app}]"
   task_role_arn            = "${aws_iam_role.use_an_lpa.arn}"
   execution_role_arn       = "${aws_iam_role.execution_role.arn}"
+  tags                     = "${local.default_tags}"
 }
 
 resource "aws_iam_role" "use_an_lpa" {
-  name               = "view"
+  name               = "viewer"
   assume_role_policy = "${data.aws_iam_policy_document.task_role_assume_policy.json}"
+  tags               = "${local.default_tags}"
 }
 
 data "aws_ecr_repository" "use_my_lpa_web" {
@@ -89,7 +91,7 @@ locals {
         "options": {
             "awslogs-group": "${aws_cloudwatch_log_group.use-an-lpa.name}",
             "awslogs-region": "eu-west-2",
-            "awslogs-stream-prefix": "view.use-an-lpa"
+            "awslogs-stream-prefix": "viewer.use-an-lpa"
         }
     },
     "environment": [
@@ -128,7 +130,7 @@ locals {
         "options": {
             "awslogs-group": "${aws_cloudwatch_log_group.use-an-lpa.name}",
             "awslogs-region": "eu-west-2",
-            "awslogs-stream-prefix": "view.use-an-lpa"
+            "awslogs-stream-prefix": "viewer.use-an-lpa"
         }
     }
   }

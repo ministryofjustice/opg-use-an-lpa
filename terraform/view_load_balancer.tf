@@ -1,5 +1,5 @@
-resource "aws_lb_target_group" "view" {
-  name                 = "view-loadbalancer-group"
+resource "aws_lb_target_group" "viewer" {
+  name                 = "viewer-loadbalancer-group"
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
@@ -8,61 +8,59 @@ resource "aws_lb_target_group" "view" {
   tags                 = "${local.default_tags}"
 }
 
-resource "aws_lb" "view" {
-  name               = "view-${terraform.workspace}"
+resource "aws_lb" "viewer" {
+  name               = "viewer-${terraform.workspace}"
   internal           = false
   load_balancer_type = "application"
   subnets            = ["${aws_default_subnet.public.*.id}"]
+  tags               = "${local.default_tags}"
 
   security_groups = [
-    "${aws_security_group.view_loadbalancer.id}",
+    "${aws_security_group.viewer_loadbalancer.id}",
   ]
 
   access_logs {
     bucket  = "${aws_s3_bucket.access_log.bucket}"
-    prefix  = "view-${terraform.workspace}"
+    prefix  = "viewer-${terraform.workspace}"
     enabled = true
-  }
-
-  lifecycle {
-    create_before_destroy = true
   }
 }
 
 // TODO - Change the default action to forward to the lb_target_group
-resource "aws_lb_listener" "view_loadbalancer" {
-  load_balancer_arn = "${aws_lb.view.arn}"
+resource "aws_lb_listener" "viewer_loadbalancer" {
+  load_balancer_arn = "${aws_lb.viewer.arn}"
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
   certificate_arn   = "${aws_acm_certificate_validation.cert.certificate_arn}"
 
   default_action {
-    target_group_arn = "${aws_lb_target_group.view.arn}"
+    target_group_arn = "${aws_lb_target_group.viewer.arn}"
     type             = "forward"
   }
 }
 
-resource "aws_security_group" "view_loadbalancer" {
-  name        = "view-${terraform.workspace}-sg"
+resource "aws_security_group" "viewer_loadbalancer" {
+  name        = "viewer-${terraform.workspace}-sg"
   description = "Allow inbound traffic"
   vpc_id      = "${aws_default_vpc.default.id}"
+  tags        = "${local.default_tags}"
 }
 
-resource "aws_security_group_rule" "view_loadbalancer" {
+resource "aws_security_group_rule" "viewer_loadbalancer" {
   type              = "ingress"
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.view_loadbalancer.id}"
+  security_group_id = "${aws_security_group.viewer_loadbalancer.id}"
 }
 
-resource "aws_security_group_rule" "view_loadbalancer_egress" {
+resource "aws_security_group_rule" "viewer_loadbalancer_egress" {
   type              = "egress"
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.view_loadbalancer.id}"
+  security_group_id = "${aws_security_group.viewer_loadbalancer.id}"
 }
