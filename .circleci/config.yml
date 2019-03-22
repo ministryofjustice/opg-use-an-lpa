@@ -98,6 +98,7 @@ orbs:
               name: push
               command: |
                 ./docker_login.sh
+                eval $(/home/circleci/bin/aws ecr get-login --no-include-email --region=eu-west-1)
                 docker tag opgusemylpa_viewer-app:latest use_my_lpa/view_lpa_front:latest
                 docker tag use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest
                 docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest
