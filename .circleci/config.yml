@@ -11,7 +11,7 @@ workflows:
       - use-my-lpa/apply_terraform:
           name: apply_terraform_development
           workspace: development
-          container_version: $CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
+          container_version: "${CIRCLE_BRANCH}-{$CIRCLE_BUILD_NUM}"
           requires: [lint_terraform, build_view_containers]
           filters:
             branches:
@@ -80,7 +80,7 @@ orbs:
           container_version:
             description: Container version
             type: string
-            default: $CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
+            default: "${CIRCLE_BRANCH}-{$CIRCLE_BUILD_NUM}"
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
           TF_VAR_container_version: "<<parameters.container_version>>"
@@ -102,7 +102,7 @@ orbs:
           container_version:
             description: Container version
             type: string
-            default: $CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
+            default: "${CIRCLE_BRANCH}-{$CIRCLE_BUILD_NUM}"
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
           TF_VAR_container_version: "<<parameters.container_version>>"
