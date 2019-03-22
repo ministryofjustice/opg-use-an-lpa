@@ -103,17 +103,16 @@ orbs:
         steps:
           - checkout
           - run:
-              name: check env-var
-              command: echo 'export TF_VAR_container_version=${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}' >> $BASH_ENV
-          # - run:
-          #     name: check parameter
-          #     command: echo "<<parameters.container_version>>"
-          - run:
               name: Apply Terraform
               command: |
                 cd terraform
                 terraform init
-                terraform apply --auto-approve
+                if [ "${CIRCLE_BRANCH}" != "master" ]; then 
+                  terraform apply --auto-approve -var container_version=${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}
+                else
+                  terraform apply --auto-approve
+                fi
+
       docker_build_viewer:
         executor: docker
 
