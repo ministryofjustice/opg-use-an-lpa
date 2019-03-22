@@ -21,7 +21,7 @@ workflows:
       - use-my-lpa/apply_terraform:
           name: apply_terraform_preproduction
           workspace: preproduction
-          container_version: latest
+          # container_version: latest
           requires: [lint_terraform]
           filters:
             branches:
@@ -32,7 +32,7 @@ workflows:
       - use-my-lpa/apply_terraform:
           name: apply_terraform_production
           workspace: production
-          container_version: latest
+          # container_version: latest
           requires: [test_viewer_service_preproduction]
           filters:
             branches:
@@ -98,21 +98,16 @@ orbs:
             description: Terraform workspace name
             type: string
             default: development
-          container_version:
-            description: Container version
-            type: string
-            default: ${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
-          TF_VAR_container_version: "<<parameters.container_version>>"
         steps:
           - checkout
-          # - run:
-          # name: check env-var
-          # command: echo 'export TF_VAR_container_version=${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}' >> $BASH_ENV
           - run:
-              name: check parameter
-              command: echo "<<parameters.container_version>>"
+              name: check env-var
+              command: echo 'export TF_VAR_container_version=${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}' >> $BASH_ENV
+          # - run:
+          #     name: check parameter
+          #     command: echo "<<parameters.container_version>>"
           - run:
               name: Apply Terraform
               command: |
