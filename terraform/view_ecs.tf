@@ -30,6 +30,13 @@ resource "aws_security_group" "ecs_service" {
     security_groups = ["${aws_security_group.view_loadbalancer.id}"]
   }
 
+  egress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   lifecycle {
     create_before_destroy = true
   }
@@ -41,28 +48,77 @@ resource "aws_ecs_task_definition" "view" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.web}]"
-  task_role_arn            = "${aws_iam_role.task_role.arn}"
+  container_definitions    = "[${local.web}, ${local.app}]"
+  task_role_arn            = "${aws_iam_role.use_an_lpa.arn}"
   execution_role_arn       = "${aws_iam_role.execution_role.arn}"
 }
 
-resource "aws_iam_role" "task_role" {
+resource "aws_iam_role" "use_an_lpa" {
   name               = "view"
   assume_role_policy = "${data.aws_iam_policy_document.task_role_assume_policy.json}"
+}
+
+data "aws_ecr_repository" "use_my_lpa_web" {
+  provider = "aws.management"
+  name     = "use_my_lpa/web"
+}
+
+data "aws_ecr_repository" "use_my_lpa_view" {
+  provider = "aws.management"
+  name     = "use_my_lpa/view_lpa_front"
 }
 
 locals {
   web = <<EOF
   {
-    "cpu": 0,
+    "cpu": 1,
     "essential": true,
-    "image": "nginx:stable-alpine",
+    "image": "${data.aws_ecr_repository.use_my_lpa_web.repository_url}:latest",
     "mountPoints": [],
     "name": "web",
     "portMappings": [
         {
             "containerPort": 80,
             "hostPort": 80,
+            "protocol": "tcp"
+        }
+    ],
+    "volumesFrom": [],
+    "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+            "awslogs-group": "${aws_cloudwatch_log_group.use-an-lpa.name}",
+            "awslogs-region": "eu-west-2",
+            "awslogs-stream-prefix": "view.use-an-lpa"
+        }
+    },
+    "environment": [
+    {
+      "name": "APP_HOST",
+      "value": "127.0.0.1"
+    },
+    {
+      "name": "APP_PORT",
+      "value": "9000"
+    },
+    {
+      "name": "TIMEOUT",
+      "value": "60"
+    }]
+  }
+  EOF
+
+  app = <<EOF
+  {
+    "cpu": 1,
+    "essential": true,
+    "image": "${data.aws_ecr_repository.use_my_lpa_view.repository_url}:latest",
+    "mountPoints": [],
+    "name": "app",
+    "portMappings": [
+        {
+            "containerPort": 9000,
+            "hostPort": 9000,
             "protocol": "tcp"
         }
     ],
