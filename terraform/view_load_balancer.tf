@@ -5,7 +5,7 @@ resource "aws_lb_target_group" "viewer" {
   target_type          = "ip"
   vpc_id               = "${aws_default_vpc.default.id}"
   deregistration_delay = 0
-  depends_on           = “${aws_lb.viewer}”
+  depends_on           = "${aws_lb.viewer}"
   tags                 = "${local.default_tags}"
 }
 
