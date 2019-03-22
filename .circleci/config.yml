@@ -11,6 +11,7 @@ workflows:
       - use-my-lpa/apply_terraform:
           name: apply_terraform_development
           workspace: development
+          container_version: $CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
           requires: [lint_terraform, build_view_containers]
           filters:
             branches:
@@ -21,6 +22,7 @@ workflows:
       - use-my-lpa/apply_terraform:
           name: apply_terraform_preproduction
           workspace: preproduction
+          container_version: latest
           requires: [lint_terraform]
           filters:
             branches:
@@ -31,6 +33,7 @@ workflows:
       - use-my-lpa/apply_terraform:
           name: apply_terraform_production
           workspace: production
+          container_version: latest
           requires: [test_viewer_service_preproduction]
           filters:
             branches:
@@ -74,8 +77,13 @@ orbs:
             description: Terraform workspace name
             type: string
             default: development
+          container_version:
+            description: Container version
+            type: string
+            default: $CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
+          TF_VAR_container_version: "<<parameters.container_version>>"
         steps:
           - checkout
           - run:
@@ -91,8 +99,13 @@ orbs:
             description: Terraform workspace name
             type: string
             default: development
+          container_version:
+            description: Container version
+            type: string
+            default: $CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
+          TF_VAR_container_version: "<<parameters.container_version>>"
         steps:
           - checkout
           - run:
@@ -122,11 +135,20 @@ orbs:
                 docker images
                 # Viewer App
                 docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
-                docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then 
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front
+                else
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
+                fi
 
                 # Viewer Web
                 docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
                 docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then 
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web
+                else
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
+                fi
       test_viewer_service_development:
         executor: terraform
         steps:
