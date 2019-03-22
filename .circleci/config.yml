@@ -11,7 +11,6 @@ workflows:
       - use-my-lpa/apply_terraform:
           name: apply_terraform_development
           workspace: development
-          container_version: UML-44-build-containers-278
           requires: [lint_terraform, build_view_containers]
           filters:
             branches:
