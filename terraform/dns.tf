@@ -3,16 +3,16 @@ data "aws_route53_zone" "opg_service_justice_gov_uk" {
   name     = "opg.service.justice.gov.uk"
 }
 
-resource "aws_route53_record" "view-use-my-lpa" {
+resource "aws_route53_record" "viewer-use-my-lpa" {
   provider = "aws.management"
   zone_id  = "${data.aws_route53_zone.opg_service_justice_gov_uk.zone_id}"
-  name     = "view.${local.dns_prefix}"
+  name     = "viewer.${local.dns_prefix}"
   type     = "A"
 
   alias {
     evaluate_target_health = false
-    name                   = "${aws_lb.view.dns_name}"
-    zone_id                = "${aws_lb.view.zone_id}"
+    name                   = "${aws_lb.viewer.dns_name}"
+    zone_id                = "${aws_lb.viewer.zone_id}"
   }
 
   lifecycle {
@@ -20,6 +20,6 @@ resource "aws_route53_record" "view-use-my-lpa" {
   }
 }
 
-output "view-use-an-lpa-domain" {
-  value = "${aws_route53_record.view-use-my-lpa.fqdn}"
+output "viewer-use-an-lpa-domain" {
+  value = "${aws_route53_record.viewer-use-my-lpa.fqdn}"
 }

@@ -13,6 +13,6 @@ resource "aws_acm_certificate_validation" "cert" {
 }
 
 resource "aws_acm_certificate" "cert" {
-  domain_name       = "${aws_route53_record.view-use-my-lpa.fqdn}"
+  domain_name       = "${aws_route53_record.viewer-use-my-lpa.fqdn}"
   validation_method = "DNS"
 }
