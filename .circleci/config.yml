@@ -46,8 +46,8 @@ orbs:
         docker: [image: circleci/ruby:latest-browsers]
       terraform:
         docker: [image: hashicorp/terraform]
-      docker:
-        docker: [image: circleci/classic:201808-01]
+      aws:
+        docker: [image: cibuilds/aws:1.16]
     jobs:
       lint_terraform:
         executor: terraform
@@ -84,7 +84,7 @@ orbs:
                 terraform init
                 terraform apply --auto-approve
       docker_build_view:
-        executor: docker
+        executor: aws
         steps:
           - checkout
           - run:
