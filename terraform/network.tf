@@ -94,7 +94,3 @@ resource "aws_route" "private" {
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = "${element(aws_nat_gateway.nat.*.id, count.index)}"
 }
-
-output "nat_ips" {
-  value = "${aws_nat_gateway.nat.*.public_ip}"
-}

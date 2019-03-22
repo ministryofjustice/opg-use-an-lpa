@@ -132,7 +132,20 @@ locals {
             "awslogs-region": "eu-west-2",
             "awslogs-stream-prefix": "viewer.use-an-lpa"
         }
-    }
+    },
+    "environment": [
+    {
+      "name": "APP_HOST",
+      "value": "127.0.0.1"
+    },
+    {
+      "name": "APP_PORT",
+      "value": "9000"
+    },
+    {
+      "name": "TIMEOUT",
+      "value": "60"
+    }]
   }
   EOF
 }
