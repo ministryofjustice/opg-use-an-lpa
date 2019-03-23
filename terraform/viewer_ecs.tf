@@ -114,7 +114,7 @@ locals {
   {
     "cpu": 1,
     "essential": true,
-    "image": "${data.aws_ecr_repository.use_my_lpa_view.repository_url}:latest",
+    "image": "${data.aws_ecr_repository.use_my_lpa_view.repository_url}:${var.container_version}",
     "mountPoints": [],
     "name": "app",
     "portMappings": [
