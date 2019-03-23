@@ -56,3 +56,12 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.viewer_loadbalancer.id}"
 }
+
+resource "aws_security_group_rule" "viewer_loadbalancer_egress" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.viewer_loadbalancer.id}"
+}
