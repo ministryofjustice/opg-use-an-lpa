@@ -108,7 +108,7 @@ orbs:
                 cd terraform
                 terraform init
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then 
-                  terraform apply --auto-approve -var container_version=${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}
+                  terraform apply --auto-approve -var container_version=${CIRCLE_BRANCH}
                 else
                   terraform apply --auto-approve
                 fi
@@ -133,19 +133,19 @@ orbs:
               command: |
                 docker images
                 # Viewer App
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then 
                   docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front
                 else
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH
                 fi
 
                 # Viewer Web
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then 
                   docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web
                 else
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH
                 fi
       test_viewer_service_development:
         executor: terraform
