@@ -48,7 +48,7 @@ resource "aws_ecs_task_definition" "viewer" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.web}, ${local.app}]"
+  container_definitions    = "[${local.viewer_web}, ${local.viewer_app}]"
   task_role_arn            = "${aws_iam_role.use_an_lpa.arn}"
   execution_role_arn       = "${aws_iam_role.execution_role.arn}"
   tags                     = "${local.default_tags}"
@@ -71,7 +71,7 @@ data "aws_ecr_repository" "use_my_lpa_view" {
 }
 
 locals {
-  web = <<EOF
+  viewer_web = <<EOF
   {
     "cpu": 1,
     "essential": true,
@@ -91,7 +91,7 @@ locals {
         "options": {
             "awslogs-group": "${aws_cloudwatch_log_group.use-an-lpa.name}",
             "awslogs-region": "eu-west-2",
-            "awslogs-stream-prefix": "viewer.use-an-lpa"
+            "awslogs-stream-prefix": "viewer-web.use-an-lpa"
         }
     },
     "environment": [
@@ -110,7 +110,7 @@ locals {
   }
   EOF
 
-  app = <<EOF
+  viewer_app = <<EOF
   {
     "cpu": 1,
     "essential": true,
@@ -130,7 +130,7 @@ locals {
         "options": {
             "awslogs-group": "${aws_cloudwatch_log_group.use-an-lpa.name}",
             "awslogs-region": "eu-west-2",
-            "awslogs-stream-prefix": "viewer.use-an-lpa"
+            "awslogs-stream-prefix": "viewer-app.use-an-lpa"
         }
     },
     "environment": [
