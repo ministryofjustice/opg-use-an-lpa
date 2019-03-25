@@ -22,7 +22,7 @@ workflows:
           name: apply_terraform_preproduction
           workspace: preproduction
           # container_version: latest
-          requires: [lint_terraform]
+          requires: [lint_terraform, build_view_containers]
           filters:
             branches:
               only: master
