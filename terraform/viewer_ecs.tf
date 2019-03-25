@@ -19,29 +19,27 @@ resource "aws_ecs_service" "viewer" {
 }
 
 resource "aws_security_group" "ecs_service" {
-  name   = "ecs-service"
-  vpc_id = "${aws_default_vpc.default.id}"
-  tags   = "${local.default_tags}"
-
-  lifecycle {
-    create_before_destroy = true
-  }
+  name_prefix = "ecs-service"
+  vpc_id      = "${aws_default_vpc.default.id}"
+  tags        = "${local.default_tags}"
 }
 
 resource "aws_security_group_rule" "ecs_service_ingress" {
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  security_group_id = "${aws_security_group.viewer_loadbalancer.id}"
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  security_group_id        = "${aws_security_group.ecs_service.id}"
+  source_security_group_id = "${aws_security_group.viewer_loadbalancer.id}"
 }
 
 resource "aws_security_group_rule" "ecs_service_egress" {
-  type        = "egress"
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.ecs_service.id}"
 }
 
 resource "aws_ecs_task_definition" "viewer" {
