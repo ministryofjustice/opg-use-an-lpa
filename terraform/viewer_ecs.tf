@@ -136,3 +136,11 @@ locals {
   }
   EOF
 }
+
+output "web_deployed_version" {
+  value = "${data.aws_ecr_repository.use_my_lpa_web.repository_url}:${var.container_version}"
+}
+
+output "viewer_deployed_version" {
+  value = "${data.aws_ecr_repository.use_my_lpa_view.repository_url}:${var.container_version}"
+}
