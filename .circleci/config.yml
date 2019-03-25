@@ -100,6 +100,7 @@ orbs:
             default: development
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
+          SHORT_GIT_HASH: $(echo $CIRCLE_SHA1 | cut -c -7)
         steps:
           - checkout
           - run:
@@ -107,11 +108,12 @@ orbs:
               command: |
                 cd terraform
                 terraform init
-                terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$CIRCLE_SHA
+                terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_GIT_HASH
 
       docker_build_viewer:
         executor: docker
-
+        environment:
+          SHORT_GIT_HASH: $(echo $CIRCLE_SHA1 | cut -c -7)
         steps:
           - checkout
           - setup_remote_docker:
@@ -128,20 +130,22 @@ orbs:
               name: Deploy
               command: |
                 docker images
+                echo $CIRCLE_SHA1
+                echo $SHORT_GIT_HASH
                 # Viewer App
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$CIRCLE_SHA
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$SHORT_GIT_HASH
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then 
                   docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front
                 else
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$CIRCLE_SHA
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$SHORT_GIT_HASH
                 fi
 
                 # Viewer Web
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$CIRCLE_SHA
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$SHORT_GIT_HASH
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then 
                   docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web
                 else
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$CIRCLE_SHA
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$SHORT_GIT_HASH
                 fi
       test_viewer_service_development:
         executor: terraform
