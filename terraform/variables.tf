@@ -5,3 +5,7 @@ variable "default_role" {
 variable "management_role" {
   default = "ci"
 }
+
+variable "container_version" {
+  default = "latest"
+}

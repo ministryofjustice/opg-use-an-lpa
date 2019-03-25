@@ -5,6 +5,7 @@ resource "aws_lb_target_group" "viewer" {
   target_type          = "ip"
   vpc_id               = "${aws_default_vpc.default.id}"
   deregistration_delay = 0
+  depends_on           = ["aws_lb.viewer"]
   tags                 = "${local.default_tags}"
 }
 
@@ -47,7 +48,7 @@ resource "aws_security_group" "viewer_loadbalancer" {
   tags        = "${local.default_tags}"
 }
 
-resource "aws_security_group_rule" "viewer_loadbalancer" {
+resource "aws_security_group_rule" "viewer_loadbalancer_ingress" {
   type              = "ingress"
   from_port         = 443
   to_port           = 443

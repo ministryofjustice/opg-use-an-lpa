@@ -3,13 +3,15 @@ version: 2.1
 workflows:
   path_to_live:
     jobs:
+      - use-my-lpa/docker_build_viewer:
+          name: build_view_containers
       - use-my-lpa/lint_terraform:
           name: lint_terraform
           workspace: development
       - use-my-lpa/apply_terraform:
           name: apply_terraform_development
           workspace: development
-          requires: [lint_terraform]
+          requires: [lint_terraform, build_view_containers]
           filters:
             branches:
               ignore: master
@@ -19,6 +21,7 @@ workflows:
       - use-my-lpa/apply_terraform:
           name: apply_terraform_preproduction
           workspace: preproduction
+          # container_version: latest
           requires: [lint_terraform]
           filters:
             branches:
@@ -29,6 +32,7 @@ workflows:
       - use-my-lpa/apply_terraform:
           name: apply_terraform_production
           workspace: production
+          # container_version: latest
           requires: [test_viewer_service_preproduction]
           filters:
             branches:
@@ -38,24 +42,32 @@ workflows:
           requires: [apply_terraform_production]
 orbs:
   use-my-lpa:
+    commands:
+      install_aws_cli:
+        steps:
+          - run:
+              name: install_aws_cli
+              command: |
+                curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+                unzip awscli-bundle.zip
+                sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+      ecr_login:
+        steps:
+          - run:
+              name: ecr_login
+              command: |
+                temp_role=$(aws sts assume-role --role-arn arn:aws:iam::311462405659:role/ci --role-session-name ci)
+                export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
+                export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
+                export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
+                eval $(aws ecr get-login --no-include-email --region=eu-west-1)
     executors:
       ruby:
         docker: [image: circleci/ruby:latest-browsers]
       terraform:
         docker: [image: hashicorp/terraform]
-    commands:
-      install_terraform:
-        steps:
-          - run:
-              name: install_terraform
-              command: |
-                export TERRAFORM_VERSION=0.11.11
-                export TERRAFORM_SHA256SUM=94504f4a67bad612b5c8e3a4b7ce6ca2772b3c1559630dfd71e9c519e3d6149c
-                curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip > terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-                echo "${TERRAFORM_SHA256SUM}  terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > terraform_${TERRAFORM_VERSION}_SHA256SUMS
-                sha256sum -c --status terraform_${TERRAFORM_VERSION}_SHA256SUMS
-                sudo unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /bin
-                rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+      docker:
+        docker: [image: circleci/python]
     jobs:
       lint_terraform:
         executor: terraform
@@ -64,8 +76,13 @@ orbs:
             description: Terraform workspace name
             type: string
             default: development
+          container_version:
+            description: Container version
+            type: string
+            default: ${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
+          TF_VAR_container_version: "<<parameters.container_version>>"
         steps:
           - checkout
           - run:
@@ -90,7 +107,46 @@ orbs:
               command: |
                 cd terraform
                 terraform init
-                terraform apply --auto-approve
+                if [ "${CIRCLE_BRANCH}" != "master" ]; then 
+                  terraform apply --auto-approve -var container_version=${CIRCLE_BRANCH}
+                else
+                  terraform apply --auto-approve
+                fi
+
+      docker_build_viewer:
+        executor: docker
+
+        steps:
+          - checkout
+          - setup_remote_docker:
+              version: 18.06.0-ce
+              docker_layer_caching: false
+          - run:
+              name: Build
+              command: |
+                # Build viewer service
+                docker-compose build
+          - install_aws_cli
+          - ecr_login
+          - run:
+              name: Deploy
+              command: |
+                docker images
+                # Viewer App
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then 
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front
+                else
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH
+                fi
+
+                # Viewer Web
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then 
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web
+                else
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH
+                fi
       test_viewer_service_development:
         executor: terraform
         steps:
