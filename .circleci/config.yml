@@ -105,7 +105,7 @@ orbs:
           - run:
               name: Apply Terraform
               command: |
-                'export SHORT_HASH=$(echo $CIRCLE_SHA1 | cut -c -7)' >> $BASH_ENV
+                export SHORT_HASH=${CIRCLE_SHA1:0:10} >> $BASH_ENV
                 cd terraform
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
@@ -128,7 +128,7 @@ orbs:
           - run:
               name: Deploy
               command: |
-                'export SHORT_HASH=$(echo $CIRCLE_SHA1 | cut -c -7)' >> $BASH_ENV
+                export SHORT_HASH=${CIRCLE_SHA1:0:10} >> $BASH_ENV
                 echo $CIRCLE_SHA1
                 echo $SHORT_HASH
                 # Viewer App
