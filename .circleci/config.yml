@@ -66,8 +66,8 @@ orbs:
         docker: [image: circleci/ruby:latest-browsers]
       terraform:
         docker: [image: hashicorp/terraform]
-      docker:
-        docker: [image: circleci/python]
+      aws-cli:
+        docker: [image: tomtucka/circleci-aws-ecr]
     jobs:
       lint_terraform:
         executor: terraform
@@ -111,7 +111,7 @@ orbs:
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
 
       docker_build_viewer:
-        executor: docker
+        executor: aws-cli
         environment:
         steps:
           - checkout
