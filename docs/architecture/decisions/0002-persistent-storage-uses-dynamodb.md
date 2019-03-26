@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-* he application will require persistent storage for storing LPA ownership, granted access, and possibly user credentials
+* The application will require persistent storage for storing LPA ownership, granted access, and possibly user credentials
 * Current MoJ strategy is to use managed services where possible
 
 ## Decision
