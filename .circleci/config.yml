@@ -67,7 +67,7 @@ orbs:
       terraform:
         docker: [image: hashicorp/terraform]
       aws-cli:
-        docker: [image: tomtucka/circleci-aws-ecr]
+        docker: [image: tomtucka/python-awscli:v2]
     jobs:
       lint_terraform:
         executor: terraform
@@ -123,7 +123,6 @@ orbs:
               command: |
                 # Build viewer service
                 docker-compose build
-          - install_aws_cli
           - ecr_login
           - run:
               name: Deploy
