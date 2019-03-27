@@ -67,7 +67,7 @@ orbs:
       terraform:
         docker: [image: hashicorp/terraform]
       aws-cli:
-        docker: [image: tomtucka/python-awscli:v3]
+        docker: [image: tomtucka/python-awscli:v4]
     jobs:
       lint_terraform:
         executor: terraform
