@@ -66,8 +66,8 @@ orbs:
         docker: [image: circleci/ruby:latest-browsers]
       terraform:
         docker: [image: hashicorp/terraform]
-      docker:
-        docker: [image: circleci/python]
+      aws-cli:
+        docker: [image: tomtucka/python-awscli:v4]
     jobs:
       lint_terraform:
         executor: terraform
@@ -105,17 +105,14 @@ orbs:
           - run:
               name: Apply Terraform
               command: |
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 cd terraform
                 terraform init
-                if [ "${CIRCLE_BRANCH}" != "master" ]; then 
-                  terraform apply --auto-approve -var container_version=${CIRCLE_BRANCH}
-                else
-                  terraform apply --auto-approve
-                fi
+                terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
 
       docker_build_viewer:
-        executor: docker
-
+        executor: aws-cli
+        environment:
         steps:
           - checkout
           - setup_remote_docker:
@@ -126,26 +123,25 @@ orbs:
               command: |
                 # Build viewer service
                 docker-compose build
-          - install_aws_cli
           - ecr_login
           - run:
               name: Deploy
               command: |
-                docker images
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 # Viewer App
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$SHORT_HASH
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then 
                   docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front
                 else
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
 
                 # Viewer Web
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$SHORT_HASH
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then 
                   docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web
                 else
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
       test_viewer_service_development:
         executor: terraform
