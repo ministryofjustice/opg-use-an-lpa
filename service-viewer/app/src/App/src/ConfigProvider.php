@@ -39,6 +39,9 @@ class ConfigProvider
                 Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
                 Handler\EnterCodeHandler::class => Handler\EnterCodeHandlerFactory::class,
             ],
+            'autowires' => [
+                Middleware\Session\General::class
+            ],
         ];
     }
 
