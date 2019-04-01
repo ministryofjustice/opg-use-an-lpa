@@ -10,7 +10,7 @@ use Zend\Expressive\Session\SessionMiddleware;
 
 class General extends SessionMiddleware
 {
-    public const SESSION_ATTRIBUTE = 's';
+    #public const SESSION_ATTRIBUTE = 'cookie';
 
     /**
      * General constructor.
@@ -20,6 +20,6 @@ class General extends SessionMiddleware
     {
         parent::__construct($persistence);
 
-        // Apply config
+        # Apply config
     }
 }
