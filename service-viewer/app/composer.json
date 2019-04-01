@@ -28,6 +28,7 @@
     },
     "require": {
         "php": "^7.1",
+        "dflydev/fig-cookies": "^2.0",
         "elie29/zend-phpdi-config": "^3.0",
         "zendframework/zend-component-installer": "^2.1.1",
         "zendframework/zend-config-aggregator": "^1.0",
@@ -36,7 +37,7 @@
         "zendframework/zend-expressive-fastroute": "^3.0",
         "zendframework/zend-expressive-helpers": "^5.0",
         "zendframework/zend-expressive-platesrenderer": "^2.0",
-        "zendframework/zend-form": "^2.14",
+        "zendframework/zend-expressive-session": "^1.2",
         "zendframework/zend-stdlib": "^3.1"
     },
     "require-dev": {
