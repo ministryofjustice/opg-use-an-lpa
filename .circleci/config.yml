@@ -18,6 +18,9 @@ workflows:
       - use-my-lpa/test_viewer_service_development:
           name: test_viewer_service_development
           requires: [apply_terraform_development]
+      - use-my-lpa/run_behave_suite:
+          name: run_behave_suite
+          requires: [apply_terraform_development]
       - use-my-lpa/apply_terraform:
           name: apply_terraform_preproduction
           workspace: preproduction
@@ -62,8 +65,8 @@ orbs:
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
     executors:
-      ruby:
-        docker: [image: circleci/ruby:latest-browsers]
+      python:
+        docker: [image: circleci/python]
       terraform:
         docker: [image: hashicorp/terraform]
       aws-cli:
@@ -161,3 +164,9 @@ orbs:
           - run:
               name: check response from viewer service
               command: curl https://viewer.use-an-lpa.opg.service.justice.gov.uk --fail
+      run_behave_suite:
+        executor: python
+        steps:
+          - run:
+              name: install behave
+              command: sudo pip3 install behave --upgrade
