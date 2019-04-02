@@ -31,3 +31,22 @@ services:
       - ./service-viewer/app:/app
     command:
       - install
+
+  localstack:
+    image: localstack/localstack
+    ports:
+      - 4584:4584
+    environment:
+      - SERVICES=secretsmanager:4584
+      - DEFAULT_REGION=eu-west-2
+      - HOSTNAME=localstack
+
+  localstack-config:
+    container_name: localstack-config
+    build:
+      context: .
+      dockerfile: localstack-config/Dockerfile
+    volumes:
+      - ./localstack-config:/config
+    depends_on:
+      - localstack
