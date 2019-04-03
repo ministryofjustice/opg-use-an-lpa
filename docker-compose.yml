@@ -1,6 +1,7 @@
 version: "3"
 
 services:
+
   viewer-web:
     container_name: viewer-web
     image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest
@@ -24,6 +25,8 @@ services:
       dockerfile: service-viewer/docker/app/Dockerfile
     volumes:
       - ./service-viewer/app:/app
+    environment:
+      SECRET_NAME_SESSION: 'session-keys'
 
   viewer-composer:
     image: composer

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App;
 
+use Psr\Container\ContainerInterface;
+
 /**
  * The configuration provider for the App module
  *
@@ -35,13 +37,30 @@ class ConfigProvider
             'invokables' => [
                 Handler\PingHandler::class => Handler\PingHandler::class,
             ],
+
             'factories'  => [
                 Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
                 Handler\EnterCodeHandler::class => Handler\EnterCodeHandlerFactory::class,
-            ],
+            ] + $this->getConfigs(),
+
             'autowires' => [
-                Middleware\Session\General::class
+                Middleware\Session\General::class,
+
+                Service\Session\Cookie::class,
+                Service\Session\KeyManager\Manager::class,
             ],
+        ];
+    }
+
+    public function getConfigs() : array
+    {
+        return [
+
+            // For Session key manager
+            Service\Session\KeyManager\Config::class => function(ContainerInterface $container){
+                return new Service\Session\KeyManager\Config($container->get('config')['session']['key']);
+            },
+
         ];
     }
 
