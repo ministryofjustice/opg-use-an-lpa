@@ -19,7 +19,8 @@ workflows:
           name: test_viewer_service_development
           requires: [apply_terraform_development]
       - use-my-lpa/run_behave_suite:
-          name: run_behave_suite
+          name: run_behave_suite_development
+          workspace: development
           requires: [apply_terraform_development]
       - use-my-lpa/apply_terraform:
           name: apply_terraform_preproduction
@@ -32,6 +33,10 @@ workflows:
       - use-my-lpa/test_viewer_service_preproduction:
           name: test_viewer_service_preproduction
           requires: [apply_terraform_preproduction]
+      - use-my-lpa/run_behave_suite:
+          name: run_behave_suite_preproduction
+          workspace: preproduction
+          requires: [apply_terraform_preproduction]
       - use-my-lpa/apply_terraform:
           name: apply_terraform_production
           workspace: production
@@ -42,6 +47,10 @@ workflows:
               only: master
       - use-my-lpa/test_viewer_service_production:
           name: test_viewer_service_production
+          requires: [apply_terraform_production]
+      - use-my-lpa/run_behave_suite:
+          name: run_behave_suite_production
+          workspace: production
           requires: [apply_terraform_production]
 orbs:
   use-my-lpa:
@@ -118,7 +127,6 @@ orbs:
                 cd terraform
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
-
       docker_build_viewer:
         executor: aws-cli
         environment:
@@ -172,7 +180,15 @@ orbs:
               command: curl https://viewer.use-an-lpa.opg.service.justice.gov.uk --fail
       run_behave_suite:
         executor: python
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
         steps:
+          - checkout
           - install_webdriver
           - run:
               name: install behave
