@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
-use Psr\Container\ContainerInterface;
+use Zend;
 
 /**
  * The configuration provider for the App module
@@ -55,6 +55,12 @@ class ConfigProvider
                 // Services
                 Service\Session\Cookie::class,
                 Service\Session\KeyManager\Manager::class,
+            ],
+
+            'delegators' => [
+                Zend\Stratigility\Middleware\ErrorHandler::class => [
+                    Service\Log\LogStderrListenerDelegatorFactory::class,
+                ],
             ],
         ];
     }
