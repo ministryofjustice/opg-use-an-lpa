@@ -45,7 +45,7 @@ workflows:
       - use-my-lpa/apply_terraform:
           name: apply_terraform_production
           workspace: production
-          requires: [curl_test_viewer_service_preproduction]
+          requires: [curl_test_viewer_service_preproduction, run_behave_suite_preproduction]
           filters:
             branches:
               only: master
