@@ -3,11 +3,13 @@ version: 2.1
 workflows:
   path_to_live:
     jobs:
+      # Common tasks
       - use-my-lpa/docker_build_viewer:
           name: build_view_containers
       - use-my-lpa/lint_terraform:
           name: lint_terraform
           workspace: development
+      # Provision and test development
       - use-my-lpa/apply_terraform:
           name: apply_terraform_development
           workspace: development
@@ -15,30 +17,45 @@ workflows:
           filters:
             branches:
               ignore: master
-      - use-my-lpa/test_viewer_service_development:
-          name: test_viewer_service_development
+      - use-my-lpa/curl_test_viewer_service:
+          name: curl_test_viewer_service_development
+          workspace: development
           requires: [apply_terraform_development]
+      - use-my-lpa/run_behave_suite:
+          name: run_behave_suite_development
+          workspace: development
+          requires: [apply_terraform_development]
+      # Provision and test preproduction
       - use-my-lpa/apply_terraform:
           name: apply_terraform_preproduction
           workspace: preproduction
-          # container_version: latest
           requires: [lint_terraform, build_view_containers]
           filters:
             branches:
               only: master
-      - use-my-lpa/test_viewer_service_preproduction:
-          name: test_viewer_service_preproduction
+      - use-my-lpa/curl_test_viewer_service:
+          name: curl_test_viewer_service_preproduction
+          workspace: preproduction
           requires: [apply_terraform_preproduction]
+      - use-my-lpa/run_behave_suite:
+          name: run_behave_suite_preproduction
+          workspace: preproduction
+          requires: [apply_terraform_preproduction]
+      # Provision and test production
       - use-my-lpa/apply_terraform:
           name: apply_terraform_production
           workspace: production
-          # container_version: latest
-          requires: [test_viewer_service_preproduction]
+          requires: [curl_test_viewer_service_preproduction]
           filters:
             branches:
               only: master
-      - use-my-lpa/test_viewer_service_production:
-          name: test_viewer_service_production
+      - use-my-lpa/curl_test_viewer_service:
+          name: curl_test_viewer_service_production
+          workspace: production
+          requires: [apply_terraform_production]
+      - use-my-lpa/run_behave_suite:
+          name: run_behave_suite_production
+          workspace: production
           requires: [apply_terraform_production]
 orbs:
   use-my-lpa:
@@ -47,10 +64,16 @@ orbs:
         steps:
           - run:
               name: install_aws_cli
+              command: sudo pip3 install awscli --upgrade
+      install_webdriver:
+        steps:
+          - run:
+              name: install_webdriver
               command: |
-                curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-                unzip awscli-bundle.zip
-                sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+                wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
+                sudo sh -c 'tar -x geckodriver -zf geckodriver-v0.23.0-linux64.tar.gz -O > /usr/bin/geckodriver'
+                sudo chmod +x /usr/bin/geckodriver
+                rm geckodriver-v0.23.0-linux64.tar.gz
       ecr_login:
         steps:
           - run:
@@ -62,8 +85,8 @@ orbs:
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
     executors:
-      ruby:
-        docker: [image: circleci/ruby:latest-browsers]
+      python:
+        docker: [image: circleci/python:3.6-stretch-browsers]
       terraform:
         docker: [image: hashicorp/terraform]
       aws-cli:
@@ -109,7 +132,6 @@ orbs:
                 cd terraform
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
-
       docker_build_viewer:
         executor: aws-cli
         environment:
@@ -143,21 +165,36 @@ orbs:
                 else
                   docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
-      test_viewer_service_development:
-        executor: terraform
+      curl_test_viewer_service:
+        executor: python
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
         steps:
+          - checkout
           - run:
-              name: check response from viewer service
-              command: curl https://viewer.dev.use-an-lpa.opg.service.justice.gov.uk --fail
-      test_viewer_service_preproduction:
-        executor: terraform
+              command: |
+                export DNS_PREFIX=$(cat terraform/terraform.tfvars | jq -r ".dns_prefixes.${TF_WORKSPACE}") >> $BASH_ENV
+                curl -I "https://viewer.${DNS_PREFIX}.opg.service.justice.gov.uk" --fail
+      run_behave_suite:
+        executor: python
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
         steps:
+          - checkout
+          - install_webdriver
           - run:
-              name: check response from viewer service
-              command: curl https://viewer.preprod.use-an-lpa.opg.service.justice.gov.uk --fail
-      test_viewer_service_production:
-        executor: terraform
-        steps:
+              name: install behave
+              command: sudo pip3 install behave selenium --upgrade
           - run:
-              name: check response from viewer service
-              command: curl https://viewer.use-an-lpa.opg.service.justice.gov.uk --fail
+              name: run suite
+              command: behave
