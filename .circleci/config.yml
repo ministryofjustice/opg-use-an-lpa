@@ -166,7 +166,7 @@ orbs:
                   docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
       curl_test_viewer_service:
-        executor: terraform
+        executor: python
         parameters:
           workspace:
             description: Terraform workspace name
