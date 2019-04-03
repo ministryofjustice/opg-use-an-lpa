@@ -21,7 +21,7 @@ def step_impl(context):
  
 @when('I click Start Now')
 def step_impl(context):
-  start_button= context.browser.find_element_by_css_selector('a.govuk-button--start')
+  start_button= context.browser.find_element_by_xpath("//a[@href='/enter-code']")
   start_button.click()
 
 @then('The enter code page is displayed')
