@@ -1,4 +1,4 @@
-@web @duckduckgo
+@viewer
 Feature: View a lasting power of attorney
   As a person working for a bank,
   I want to enter a code for a lasting power of attorney that has been shared with me,
