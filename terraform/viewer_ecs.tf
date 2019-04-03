@@ -60,14 +60,14 @@ resource "aws_iam_role" "use_an_lpa" {
   tags               = "${local.default_tags}"
 }
 
-data "aws_ecr_repository" "use_my_lpa_web" {
+data "aws_ecr_repository" "use_an_lpa_web" {
   provider = "aws.management"
-  name     = "use_my_lpa/web"
+  name     = "use_an_lpa/web"
 }
 
-data "aws_ecr_repository" "use_my_lpa_view" {
+data "aws_ecr_repository" "use_an_lpa_view" {
   provider = "aws.management"
-  name     = "use_my_lpa/view_lpa_front"
+  name     = "use_an_lpa/viewer_front"
 }
 
 locals {
@@ -75,7 +75,7 @@ locals {
   {
     "cpu": 1,
     "essential": true,
-    "image": "${data.aws_ecr_repository.use_my_lpa_web.repository_url}:${var.container_version}",
+    "image": "${data.aws_ecr_repository.use_an_lpa_web.repository_url}:${var.container_version}",
     "mountPoints": [],
     "name": "web",
     "portMappings": [
@@ -114,7 +114,7 @@ locals {
   {
     "cpu": 1,
     "essential": true,
-    "image": "${data.aws_ecr_repository.use_my_lpa_view.repository_url}:${var.container_version}",
+    "image": "${data.aws_ecr_repository.use_an_lpa_view.repository_url}:${var.container_version}",
     "mountPoints": [],
     "name": "app",
     "portMappings": [
@@ -138,9 +138,9 @@ locals {
 }
 
 output "web_deployed_version" {
-  value = "${data.aws_ecr_repository.use_my_lpa_web.repository_url}:${var.container_version}"
+  value = "${data.aws_ecr_repository.use_an_lpa_web.repository_url}:${var.container_version}"
 }
 
 output "viewer_deployed_version" {
-  value = "${data.aws_ecr_repository.use_my_lpa_view.repository_url}:${var.container_version}"
+  value = "${data.aws_ecr_repository.use_an_lpa_view.repository_url}:${var.container_version}"
 }
