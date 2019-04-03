@@ -175,6 +175,9 @@ orbs:
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
         steps:
+          - checkout
+          - run:
+              command: sudo apt-get install jq -qq
           - run:
               command: export DNS_PREFIX=$(cat terraform/terraform.tfvars | jq -r ".dns_prefixes.${TF_WORKSPACE}") >> $BASH_ENV
           - run:
