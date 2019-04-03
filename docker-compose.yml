@@ -34,6 +34,11 @@ services:
       - ./service-viewer/app:/app
     command:
       - install
+      - --prefer-dist
+      - --no-suggest
+      - --no-interaction
+      - --no-scripts
+      - --optimize-autoloader
 
   localstack:
     image: localstack/localstack
