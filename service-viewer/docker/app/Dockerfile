@@ -2,7 +2,7 @@ FROM composer AS composer
 
 COPY service-viewer/app /app
 
-RUN composer install
+RUN composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
 
 FROM php:7-fpm-alpine
 
