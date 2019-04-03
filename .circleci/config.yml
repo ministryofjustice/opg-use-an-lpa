@@ -81,7 +81,7 @@ orbs:
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
     executors:
       python:
-        docker: [image: circleci/python]
+        docker: [image: circleci/python:3.6-stretch-browsers]
       terraform:
         docker: [image: hashicorp/terraform]
       aws-cli:
