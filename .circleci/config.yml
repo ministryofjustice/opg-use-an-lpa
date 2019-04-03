@@ -3,11 +3,13 @@ version: 2.1
 workflows:
   path_to_live:
     jobs:
+      # Common tasks
       - use-my-lpa/docker_build_viewer:
           name: build_view_containers
       - use-my-lpa/lint_terraform:
           name: lint_terraform
           workspace: development
+      # Provision and test development
       - use-my-lpa/apply_terraform:
           name: apply_terraform_development
           workspace: development
@@ -15,38 +17,41 @@ workflows:
           filters:
             branches:
               ignore: master
-      - use-my-lpa/test_viewer_service_development:
-          name: test_viewer_service_development
+      - use-my-lpa/curl_test_viewer_service:
+          name: curl_test_viewer_service_development
+          workspace: development
           requires: [apply_terraform_development]
       - use-my-lpa/run_behave_suite:
           name: run_behave_suite_development
           workspace: development
           requires: [apply_terraform_development]
+      # Provision and test preproduction
       - use-my-lpa/apply_terraform:
           name: apply_terraform_preproduction
           workspace: preproduction
-          # container_version: latest
           requires: [lint_terraform, build_view_containers]
           filters:
             branches:
               only: master
-      - use-my-lpa/test_viewer_service_preproduction:
-          name: test_viewer_service_preproduction
+      - use-my-lpa/curl_test_viewer_service:
+          name: curl_test_viewer_service_preproduction
+          workspace: preproduction
           requires: [apply_terraform_preproduction]
       - use-my-lpa/run_behave_suite:
           name: run_behave_suite_preproduction
           workspace: preproduction
           requires: [apply_terraform_preproduction]
+      # Provision and test production
       - use-my-lpa/apply_terraform:
           name: apply_terraform_production
           workspace: production
-          # container_version: latest
-          requires: [test_viewer_service_preproduction]
+          requires: [curl_test_viewer_service_preproduction]
           filters:
             branches:
               only: master
-      - use-my-lpa/test_viewer_service_production:
-          name: test_viewer_service_production
+      - use-my-lpa/curl_test_viewer_service:
+          name: curl_test_viewer_service_production
+          workspace: production
           requires: [apply_terraform_production]
       - use-my-lpa/run_behave_suite:
           name: run_behave_suite_production
@@ -160,24 +165,21 @@ orbs:
                 else
                   docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
-      test_viewer_service_development:
+      curl_test_viewer_service:
         executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
         steps:
           - run:
-              name: check response from viewer service
-              command: curl https://viewer.dev.use-an-lpa.opg.service.justice.gov.uk --fail
-      test_viewer_service_preproduction:
-        executor: terraform
-        steps:
+              command: export DNS_PREFIX=$(cat terraform/terraform.tfvars | jq -r ".dns_prefixes.${TF_WORKSPACE}") >> $BASH_ENV
           - run:
               name: check response from viewer service
-              command: curl https://viewer.preprod.use-an-lpa.opg.service.justice.gov.uk --fail
-      test_viewer_service_production:
-        executor: terraform
-        steps:
-          - run:
-              name: check response from viewer service
-              command: curl https://viewer.use-an-lpa.opg.service.justice.gov.uk --fail
+              command: curl -I "https://viewer.${DNS_PREFIX}.opg.service.justice.gov.uk" --fail
       run_behave_suite:
         executor: python
         parameters:
