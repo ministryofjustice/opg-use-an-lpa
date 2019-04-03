@@ -180,9 +180,7 @@ orbs:
               command: sudo apt-get install jq -qq
           - run:
               command: |
-                echo $TF_WORKSPACE
                 export DNS_PREFIX=$(cat terraform/terraform.tfvars | jq -r ".dns_prefixes.${TF_WORKSPACE}") >> $BASH_ENV
-                echo $DNS_PREFIX
                 curl -I "https://viewer.${DNS_PREFIX}.opg.service.justice.gov.uk" --fail
       run_behave_suite:
         executor: python
