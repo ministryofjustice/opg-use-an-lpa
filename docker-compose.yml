@@ -53,3 +53,7 @@ services:
       - ./localstack-config:/config
     depends_on:
       - localstack
+    environment:
+      # Dummy keys
+      SECRET_SESSION_KEYS_KEY: 'session-keys'
+      SECRET_SESSION_KEYS_VALUE: '{"a":"0000000000000000000000000000000000000000000000000000000000000000", "b":"1111111111111111111111111111111111111111111111111111111111111111"}'
