@@ -3,12 +3,17 @@ from selenium.webdriver.common.keys import Keys
 import json
 import os
 
-workspace = os.getenv('TF_WORKSPACE', 'development')
-with open('terraform/terraform.tfvars', 'r') as f:
-    mapped_variables = json.load(f)
-dns_prefix = mapped_variables['dns_prefixes'][workspace]
 
-VIEWER_URL = 'https://viewer.{}.opg.service.justice.gov.uk'.format(dns_prefix)
+def get_viewer_url():
+  workspace = os.getenv('TF_WORKSPACE', 'development')
+  with open('terraform/terraform.tfvars', 'r') as f:
+      mapped_variables = json.load(f)
+  dns_prefix = mapped_variables['dns_prefixes'][workspace]
+
+  VIEWER_URL = 'https://viewer.{}.opg.service.justice.gov.uk'.format(dns_prefix)
+  return VIEWER_URL
+
+VIEWER_URL = get_viewer_url()
 
 @given('I go to the viewer page on the internet')
 def step_impl(context):
