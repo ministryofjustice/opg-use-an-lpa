@@ -41,7 +41,6 @@ $aggregator = new ConfigAggregator([
 
     // Load development config if it exists
     new PhpFileProvider(realpath(__DIR__) . '/development.config.php'),
-    new PhpFileProvider(realpath(__DIR__) . '/disable-cache.php'),
 ], $cacheConfig['config_cache_path']);
 
 return $aggregator->getMergedConfig();

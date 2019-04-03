@@ -35,32 +35,35 @@ class ConfigProvider
     {
         return [
             'invokables' => [
+                // Handlers
                 Handler\PingHandler::class => Handler\PingHandler::class,
             ],
 
             'factories'  => [
+                // Handlers
                 Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
                 Handler\EnterCodeHandler::class => Handler\EnterCodeHandlerFactory::class,
-            ] + $this->getConfigs(),
+
+                // Services
+                Service\Session\KeyManager\Config::class => ConfigFactory::class,
+            ] + $this->getConfigDependencies(),
 
             'autowires' => [
+                // Middleware
                 Middleware\Session\General::class,
 
+                // Services
                 Service\Session\Cookie::class,
                 Service\Session\KeyManager\Manager::class,
             ],
         ];
     }
 
-    public function getConfigs() : array
+    public function getConfigDependencies() : array
     {
+        // Add all Config classes here. All should point to the same factory, ConfigFactory::class
         return [
-
-            // For Session key manager
-            Service\Session\KeyManager\Config::class => function(ContainerInterface $container){
-                return new Service\Session\KeyManager\Config($container->get('config')['session']['key']);
-            },
-
+            Service\Session\KeyManager\Config::class => ConfigFactory::class,
         ];
     }
 

@@ -10,7 +10,7 @@ class Config
 
     public function __construct(array $config)
     {
-        if (empty($config['name'])) {
+        if (empty($config['session']['key']['name'])) {
             throw new \RuntimeException('Secret name is missing');
         }
 
@@ -19,6 +19,6 @@ class Config
 
     public function getName() : string
     {
-        return $this->config['name'];
+        return $this->config['session']['key']['name'];
     }
 }
