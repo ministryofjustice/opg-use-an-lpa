@@ -30,7 +30,7 @@ workflows:
 
       # Provision and test preproduction
       - use-my-lpa/apply_terraform:
-          name: preprod_apply_terraform_preproduction
+          name: preprod_apply_terraform
           workspace: preproduction
           requires: [lint_terraform, app_viewer_build, web_viewer_build]
           filters:
@@ -40,13 +40,13 @@ workflows:
       - use-my-lpa/run_behave_suite:
           name: preprod_run_behave_tests
           workspace: preproduction
-          requires: [preprod_apply_terraform_preproduction]
+          requires: [preprod_apply_terraform]
 
       # Provision and test production
       - use-my-lpa/apply_terraform:
           name: prod_apply_terraform
           workspace: production
-          requires: [run_behave_suite_preproduction]
+          requires: [preprod_run_behave_tests]
           filters:
             branches:
               only: master
