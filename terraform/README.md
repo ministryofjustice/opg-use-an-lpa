@@ -11,3 +11,11 @@ source .envrc
 ```bash
 direnv allow
 ```
+
+This sets environment variables that allow the following commands with no further setup
+
+```bash
+aws-vault exe identity -- terraform init
+aws-vault exe identity -- terraform plan
+aws-vault exe identity -- terraform force-unlock 49b3784c-51eb-668d-ac4b-3bd5b8701925
+```
