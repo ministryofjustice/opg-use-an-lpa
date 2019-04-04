@@ -33,7 +33,7 @@ class HomePageHandlerTest extends TestCase
     {
         $renderer = $this->prophesize(TemplateRendererInterface::class);
         $renderer
-            ->render('app::home-page')
+            ->render('app::home-page', Argument::type('array'))
             ->willReturn('');
 
         $homePage = new HomePageHandler(
