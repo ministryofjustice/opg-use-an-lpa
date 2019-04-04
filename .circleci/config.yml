@@ -139,7 +139,7 @@ orbs:
           - run:
               name: Run unit tests
               command: |
-                docker-compose run viewer-app /app/vendor/bin/phpunit --detach
+                docker-compose run --detach viewer-app /app/vendor/bin/phpunit
           - ecr_login
           - run:
               name: Deploy
