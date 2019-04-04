@@ -1,6 +1,7 @@
 version: "3"
 
 services:
+
   viewer-web:
     container_name: viewer-web
     image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web:latest
@@ -24,6 +25,8 @@ services:
       dockerfile: service-viewer/docker/app/Dockerfile
     volumes:
       - ./service-viewer/app:/app
+    environment:
+      SECRET_NAME_SESSION: 'session-keys'
 
   viewer-composer:
     image: composer
@@ -31,3 +34,31 @@ services:
       - ./service-viewer/app:/app
     command:
       - install
+      - --prefer-dist
+      - --no-suggest
+      - --no-interaction
+      - --no-scripts
+      - --optimize-autoloader
+
+  localstack:
+    image: localstack/localstack
+    ports:
+      - 4584:4584
+    environment:
+      - SERVICES=secretsmanager:4584
+      - DEFAULT_REGION=eu-west-2
+      - HOSTNAME=localstack
+
+  localstack-config:
+    container_name: localstack-config
+    build:
+      context: .
+      dockerfile: localstack-config/Dockerfile
+    volumes:
+      - ./localstack-config:/config
+    depends_on:
+      - localstack
+    environment:
+      # Dummy keys
+      SECRET_SESSION_KEYS_KEY: 'session-keys'
+      SECRET_SESSION_KEYS_VALUE: '{"a":"0000000000000000000000000000000000000000000000000000000000000000", "b":"1111111111111111111111111111111111111111111111111111111111111111"}'

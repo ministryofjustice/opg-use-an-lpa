@@ -132,7 +132,12 @@ locals {
             "awslogs-region": "eu-west-2",
             "awslogs-stream-prefix": "viewer-app.use-an-lpa"
         }
-    }
+    },
+    "environment": [
+    {
+      "name": "SECRET_NAME_SESSION",
+      "value": "session-keys"
+    }]
   }
   EOF
 }

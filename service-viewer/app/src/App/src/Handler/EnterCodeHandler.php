@@ -14,6 +14,8 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 
 class EnterCodeHandler implements RequestHandlerInterface
 {
+    use Traits\Session;
+
     /** @var string */
     private $containerName;
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App;
 
+use Zend;
+
 /**
  * The configuration provider for the App module
  *
@@ -33,12 +35,44 @@ class ConfigProvider
     {
         return [
             'invokables' => [
+                // Handlers
                 Handler\PingHandler::class => Handler\PingHandler::class,
             ],
+
             'factories'  => [
+                // Handlers
                 Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
                 Handler\EnterCodeHandler::class => Handler\EnterCodeHandlerFactory::class,
+
+                // Services
+                Service\Session\KeyManager\Config::class => ConfigFactory::class,
+            ] + $this->getConfigDependencies(),
+
+            'autowires' => [
+
+                // The below don't seem to be needed; seemingly the default is to attempt autowiring.
+
+                // Middleware
+                #Middleware\Session\General::class,
+
+                // Services
+                #Service\Session\Cookie::class,
+                #Service\Session\KeyManager\Manager::class,
             ],
+
+            'delegators' => [
+                Zend\Stratigility\Middleware\ErrorHandler::class => [
+                    Service\Log\LogStderrListenerDelegatorFactory::class,
+                ],
+            ],
+        ];
+    }
+
+    public function getConfigDependencies() : array
+    {
+        // Add all Config classes here. All should point to the same factory, ConfigFactory::class
+        return [
+            Service\Session\KeyManager\Config::class => ConfigFactory::class,
         ];
     }
 
