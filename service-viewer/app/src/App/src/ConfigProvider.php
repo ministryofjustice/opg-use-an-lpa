@@ -49,12 +49,15 @@ class ConfigProvider
             ] + $this->getConfigDependencies(),
 
             'autowires' => [
+
+                // The below don't seem to be needed; seemingly the default is to attempt autowiring.
+
                 // Middleware
-                Middleware\Session\General::class,
+                #Middleware\Session\General::class,
 
                 // Services
-                Service\Session\Cookie::class,
-                Service\Session\KeyManager\Manager::class,
+                #Service\Session\Cookie::class,
+                #Service\Session\KeyManager\Manager::class,
             ],
 
             'delegators' => [
