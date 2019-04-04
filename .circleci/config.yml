@@ -140,6 +140,7 @@ orbs:
               name: Run unit tests
               command: |
                 docker-compose run --detach viewer-app /app/vendor/bin/phpunit
+                docker exec viewer-app curl --retry 10 --retry-connrefused http://localhost:8080
           - ecr_login
           - run:
               name: Deploy
