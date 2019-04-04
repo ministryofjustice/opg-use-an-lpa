@@ -139,8 +139,8 @@ orbs:
           - run:
               name: Run unit tests
               command: |
-                CONTAINER_NAME = $(docker-compose run --detach viewer-app /app/vendor/bin/phpunit)
-                docker exec $CONTAINER_NAME curl --retry 10 --retry-connrefused http://localhost:8080
+                docker run -d --name my-app 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front:latest
+                docker exec my-app curl --retry 10 --retry-connrefused http://localhost:8080
           - ecr_login
           - run:
               name: Deploy
