@@ -212,7 +212,6 @@ orbs:
         #
         executor: python-browsers
         parameters:
-        parameters:
           workspace:
             description: Terraform workspace name
             type: string
