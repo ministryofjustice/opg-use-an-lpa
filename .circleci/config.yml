@@ -135,8 +135,11 @@ orbs:
           - run:
               name: Build
               command: |
-                # Build viewer service
                 docker-compose build viewer-app
+          - run:
+              name: Run unit tests
+              command: |
+                docker-compose run viewer-app /app/vendor/bin/phpunit
           - ecr_login
           - run:
               name: Deploy
@@ -166,7 +169,6 @@ orbs:
           - run:
               name: Build
               command: |
-                # Build viewer service
                 docker-compose build viewer-web
           - ecr_login
           - run:
