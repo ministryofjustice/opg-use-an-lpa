@@ -9,42 +9,42 @@ workflows:
           workspace: development
 
       - use-my-lpa/docker_build_viewer_app:
-          name: build_view_containers_app
+          name: app_viewer_build
       - use-my-lpa/docker_build_viewer_web:
-          name: build_view_containers_web
+          name: web_viewer_build
 
 
       # Provision and test development
       - use-my-lpa/apply_terraform:
-          name: apply_terraform_development
+          name: dev_apply_terraform
           workspace: development
-          requires: [lint_terraform, build_view_containers_app, build_view_containers_web]
+          requires: [lint_terraform, app_viewer_build, web_viewer_build]
           filters:
             branches:
               ignore: master
 
       - use-my-lpa/run_behave_suite:
-          name: run_behave_suite_development
+          name: dev_run_behave_tests
           workspace: development
-          requires: [apply_terraform_development]
+          requires: [dev_apply_terraform]
 
       # Provision and test preproduction
       - use-my-lpa/apply_terraform:
-          name: apply_terraform_preproduction
+          name: preprod_apply_terraform_preproduction
           workspace: preproduction
-          requires: [lint_terraform, build_view_containers_app, build_view_containers_web]
+          requires: [lint_terraform, app_viewer_build, web_viewer_build]
           filters:
             branches:
               only: master
 
       - use-my-lpa/run_behave_suite:
-          name: run_behave_suite_preproduction
+          name: preprod_run_behave_tests
           workspace: preproduction
-          requires: [apply_terraform_preproduction]
+          requires: [preprod_apply_terraform_preproduction]
 
       # Provision and test production
       - use-my-lpa/apply_terraform:
-          name: apply_terraform_production
+          name: prod_apply_terraform
           workspace: production
           requires: [run_behave_suite_preproduction]
           filters:
@@ -52,9 +52,9 @@ workflows:
               only: master
 
       - use-my-lpa/run_behave_suite:
-          name: run_behave_suite_production
+          name: prod_run_behave_tests
           workspace: production
-          requires: [apply_terraform_production]
+          requires: [prod_apply_terraform]
 
 orbs:
   use-my-lpa:
