@@ -151,11 +151,11 @@ orbs:
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
 
                 # Viewer App
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front:$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag << parameters.container_repo_url >>:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then 
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front
+                  docker push << parameters.container_repo_url >>
                 else
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front:$CIRCLE_BRANCH-$SHORT_HASH
+                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
 
       docker_build_viewer_web:
@@ -163,7 +163,10 @@ orbs:
         # Build Docker container for Viewer Web
         #
         executor: python
-        environment:
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web
         steps:
           - checkout
           - install_aws_cli
@@ -181,11 +184,11 @@ orbs:
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
 
                 # Viewer Web
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web:$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag << parameters.container_repo_url >>:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web
+                  docker push << parameters.container_repo_url >>
                 else
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web:$CIRCLE_BRANCH-$SHORT_HASH
+                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
 
       apply_terraform:
