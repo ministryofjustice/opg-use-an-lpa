@@ -62,7 +62,7 @@ orbs:
       install_aws_cli:
         steps:
           - run:
-              name: install_aws_cli
+              name: Install AWS CLI
               command: sudo pip3 install awscli --upgrade
       install_webdriver:
         steps:
@@ -139,8 +139,8 @@ orbs:
           - run:
               name: Run unit tests
               command: |
-                docker run -d --name my-app 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front:latest
-                docker exec my-app /app/vendor/bin/phpunit
+                docker-compose run --detach --name viewer-app viewer-app
+                docker exec viewer-app /app/vendor/bin/phpunit
           - ecr_login
           - run:
               name: Deploy
