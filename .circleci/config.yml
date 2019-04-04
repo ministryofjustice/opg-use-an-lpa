@@ -4,71 +4,70 @@ workflows:
   path_to_live:
     jobs:
       # Common tasks
-      - use-my-lpa/docker_build_viewer:
-          name: build_view_containers
       - use-my-lpa/lint_terraform:
           name: lint_terraform
           workspace: development
+
+      - use-my-lpa/docker_build_viewer_app:
+          name: app_viewer_build
+      - use-my-lpa/docker_build_viewer_web:
+          name: web_viewer_build
+
+
       # Provision and test development
       - use-my-lpa/apply_terraform:
-          name: apply_terraform_development
+          name: dev_apply_terraform
           workspace: development
-          requires: [lint_terraform, build_view_containers]
+          requires: [lint_terraform, app_viewer_build, web_viewer_build]
           filters:
             branches:
               ignore: master
-      - use-my-lpa/curl_test_viewer_service:
-          name: curl_test_viewer_service_development
-          workspace: development
-          requires: [apply_terraform_development]
+
       - use-my-lpa/run_behave_suite:
-          name: run_behave_suite_development
+          name: dev_run_behave_tests
           workspace: development
-          requires: [apply_terraform_development]
+          requires: [dev_apply_terraform]
+
       # Provision and test preproduction
       - use-my-lpa/apply_terraform:
-          name: apply_terraform_preproduction
+          name: preprod_apply_terraform
           workspace: preproduction
-          requires: [lint_terraform, build_view_containers]
+          requires: [lint_terraform, app_viewer_build, web_viewer_build]
           filters:
             branches:
               only: master
-      - use-my-lpa/curl_test_viewer_service:
-          name: curl_test_viewer_service_preproduction
-          workspace: preproduction
-          requires: [apply_terraform_preproduction]
+
       - use-my-lpa/run_behave_suite:
-          name: run_behave_suite_preproduction
+          name: preprod_run_behave_tests
           workspace: preproduction
-          requires: [apply_terraform_preproduction]
+          requires: [preprod_apply_terraform]
+
       # Provision and test production
       - use-my-lpa/apply_terraform:
-          name: apply_terraform_production
+          name: prod_apply_terraform
           workspace: production
-          requires: [curl_test_viewer_service_preproduction, run_behave_suite_preproduction]
+          requires: [preprod_run_behave_tests]
           filters:
             branches:
               only: master
-      - use-my-lpa/curl_test_viewer_service:
-          name: curl_test_viewer_service_production
-          workspace: production
-          requires: [apply_terraform_production]
+
       - use-my-lpa/run_behave_suite:
-          name: run_behave_suite_production
+          name: prod_run_behave_tests
           workspace: production
-          requires: [apply_terraform_production]
+          requires: [prod_apply_terraform]
+
 orbs:
   use-my-lpa:
     commands:
       install_aws_cli:
         steps:
           - run:
-              name: install_aws_cli
+              name: Install AWS CLI
               command: sudo pip3 install awscli --upgrade
       install_webdriver:
         steps:
           - run:
-              name: install_webdriver
+              name: Install WebDriver
               command: |
                 wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
                 sudo sh -c 'tar -x geckodriver -zf geckodriver-v0.23.0-linux64.tar.gz -O > /usr/bin/geckodriver'
@@ -77,22 +76,27 @@ orbs:
       ecr_login:
         steps:
           - run:
-              name: ecr_login
+              name: Login to ECR
               command: |
                 temp_role=$(aws sts assume-role --role-arn arn:aws:iam::311462405659:role/ci --role-session-name ci)
                 export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
+
     executors:
       python:
+        docker: [image: circleci/python]
+      python-browsers:
         docker: [image: circleci/python:3.6-stretch-browsers]
       terraform:
         docker: [image: hashicorp/terraform]
-      aws-cli:
-        docker: [image: tomtucka/python-awscli:v4]
+
     jobs:
       lint_terraform:
+        #
+        # Lint the Terraform
+        #
         executor: terraform
         parameters:
           workspace:
@@ -114,7 +118,85 @@ orbs:
                 cd terraform
                 terraform init
                 terraform validate
+
+      docker_build_viewer_app:
+        #
+        # Build Docker container for Viewer App
+        #   and runs the Unit Tests.
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 18.06.0-ce
+              docker_layer_caching: false
+          - run:
+              name: Build
+              command: |
+                docker-compose build viewer-app
+          - run:
+              name: Run unit tests
+              command: |
+                docker run -d --name my-app << parameters.container_repo_url >>:latest
+                docker exec my-app /app/vendor/bin/phpunit
+          - ecr_login
+          - run:
+              name: Deploy
+              command: |
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+
+                # Viewer App
+                docker tag << parameters.container_repo_url >>:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then 
+                  docker push << parameters.container_repo_url >>
+                else
+                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                fi
+
+      docker_build_viewer_web:
+        #
+        # Build Docker container for Viewer Web
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 18.06.0-ce
+              docker_layer_caching: false
+          - run:
+              name: Build
+              command: |
+                docker-compose build viewer-web
+          - ecr_login
+          - run:
+              name: Deploy
+              command: |
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+
+                # Viewer Web
+                docker tag << parameters.container_repo_url >>:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  docker push << parameters.container_repo_url >>
+                else
+                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                fi
+
       apply_terraform:
+        #
+        # Apply the terraform. This:
+        #   - Updates any infrastructure; and
+        #   - Triggers a deploy of the updated container (if changed)
+        #
         executor: terraform
         parameters:
           workspace:
@@ -132,56 +214,12 @@ orbs:
                 cd terraform
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
-      docker_build_viewer:
-        executor: aws-cli
-        environment:
-        steps:
-          - checkout
-          - setup_remote_docker:
-              version: 18.06.0-ce
-              docker_layer_caching: false
-          - run:
-              name: Build
-              command: |
-                # Build viewer service
-                docker-compose build
-          - ecr_login
-          - run:
-              name: Deploy
-              command: |
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                # Viewer App
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front:$CIRCLE_BRANCH-$SHORT_HASH
-                if [ "${CIRCLE_BRANCH}" == "master" ]; then 
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front
-                else
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front:$CIRCLE_BRANCH-$SHORT_HASH
-                fi
 
-                # Viewer Web
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web:$CIRCLE_BRANCH-$SHORT_HASH
-                if [ "${CIRCLE_BRANCH}" == "master" ]; then 
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web
-                else
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web:$CIRCLE_BRANCH-$SHORT_HASH
-                fi
-      curl_test_viewer_service:
-        executor: python
-        parameters:
-          workspace:
-            description: Terraform workspace name
-            type: string
-            default: development
-        environment:
-          TF_WORKSPACE: "<<parameters.workspace>>"
-        steps:
-          - checkout
-          - run:
-              command: |
-                export DNS_PREFIX=$(cat terraform/terraform.tfvars | jq -r ".dns_prefixes.${TF_WORKSPACE}") >> $BASH_ENV
-                curl -I "https://viewer.${DNS_PREFIX}.opg.service.justice.gov.uk" --fail
       run_behave_suite:
-        executor: python
+        #
+        # Run the full set of functional tests
+        #
+        executor: python-browsers
         parameters:
           workspace:
             description: Terraform workspace name
