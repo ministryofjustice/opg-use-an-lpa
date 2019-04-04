@@ -151,19 +151,19 @@ orbs:
               command: |
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 # Viewer App
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front:$CIRCLE_BRANCH-$SHORT_HASH
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then 
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front
                 else
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/view_lpa_front:$CIRCLE_BRANCH-$SHORT_HASH
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
 
                 # Viewer Web
-                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web:latest 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web:$CIRCLE_BRANCH-$SHORT_HASH
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then 
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web
                 else
-                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_my_lpa/web:$CIRCLE_BRANCH-$SHORT_HASH
+                  docker push 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
       curl_test_viewer_service:
         executor: python
