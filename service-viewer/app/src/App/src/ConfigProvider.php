@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use Aws;
 use Zend;
 
 /**
@@ -45,7 +46,9 @@ class ConfigProvider
                 Handler\EnterCodeHandler::class => Handler\EnterCodeHandlerFactory::class,
 
                 // Services
-                Service\Session\KeyManager\Config::class => ConfigFactory::class,
+                Aws\Sdk::class => Service\Aws\SdkFactory::class,
+                Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
+
             ] + $this->getConfigDependencies(),
 
             'autowires' => [

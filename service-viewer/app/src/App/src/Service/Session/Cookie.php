@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Session;
 
 use RuntimeException;
-use App\Service\Session\KeyManager\Manager;
+
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
@@ -20,12 +20,12 @@ class Cookie implements SessionPersistenceInterface
 {
 
     /** @var string */
-    private $cookieName;
+    protected $cookieName;
 
     /** @var string */
-    private $cookiePath;
+    protected $cookiePath;
 
-    public function __construct(Manager $keyManager)
+    public function __construct()
     {
         $this->cookieName   = 'session';
         $this->cookiePath   = '/';
@@ -75,7 +75,7 @@ class Cookie implements SessionPersistenceInterface
     protected function decode(string $data) : array
     {
         $result = [];
-        parse_str ( $data, $result );
+        parse_str($data, $result);
         return $result;
     }
 

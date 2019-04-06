@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Middleware\Session;
 
-use App\Service\Session\Cookie as CookieSessionPersistence;
+use App\Service\Session\EncryptedCookie as CookieSessionPersistence;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
