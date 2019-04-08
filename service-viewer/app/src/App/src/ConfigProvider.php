@@ -35,6 +35,9 @@ class ConfigProvider
     public function getDependencies() : array
     {
         return [
+            'aliases' => [
+                Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookie::class,
+            ],
             'invokables' => [
                 // Handlers
                 Handler\PingHandler::class => Handler\PingHandler::class,
