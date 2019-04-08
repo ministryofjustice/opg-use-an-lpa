@@ -71,15 +71,12 @@ class Manager
      */
     public function getKeyId(?int $id = null) : Key
     {
-        $secretsUpdated = false;
-
         // Gets the keys out of the cache
         $keys = $this->cache->get(static::CACHE_SESSION_KEY);
 
         // If we didn't find any, retrieve them from Secrets Manager
         if (!is_array($keys) || count($keys) != 2) {
             $keys = $this->updateSecrets(false);
-            $secretsUpdated = true;
         }
 
         // If we still don't have them...
@@ -99,10 +96,8 @@ class Manager
 
             // Else return the specific key.
 
-            // If we don't have the key being requested,
-            // and we haven't just updated them,
-            // then get the latest set of keys.
-            if (!isset($keys[$id]) && !$secretsUpdated) {
+            // If we don't have the key being requested then attempt to request it
+            if (!isset($keys[$id])) {
                 $keys = $this->updateSecrets(true);
             }
 
@@ -140,7 +135,7 @@ class Manager
         ]);
 
         if (!$result->hasKey('SecretString')) {
-            throw new RuntimeException('Invalid response from Secrets Manager');
+            throw new RuntimeException('Invalid response from Secrets Manager; missing SecretString');
         }
 
         //---
@@ -148,7 +143,7 @@ class Manager
         $secrets = json_decode($result->get('SecretString'), true);
 
         if (!is_array($secrets)){
-            throw new RuntimeException('Invalid response from Secrets Manager');
+            throw new RuntimeException('Invalid response from Secrets Manager; invalid JSON');
         }
 
         // Map the returned value to HiddenStrings

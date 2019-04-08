@@ -17,6 +17,7 @@ class KeyCache
      *
      * @param string $key
      * @return mixed
+     * @codeCoverageIgnore
      */
     public function get(string $key)
     {
@@ -30,6 +31,7 @@ class KeyCache
      * @param $value
      * @param int $ttl
      * @return array|bool
+     * @codeCoverageIgnore
      */
     public function store(string $key, $value, int $ttl = 0 )
     {
