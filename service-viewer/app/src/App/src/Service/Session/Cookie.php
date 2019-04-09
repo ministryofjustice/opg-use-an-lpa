@@ -20,10 +20,10 @@ class Cookie implements SessionPersistenceInterface
 {
 
     /** @var string */
-    protected $cookieName;
+    private $cookieName;
 
     /** @var string */
-    protected $cookiePath;
+    private $cookiePath;
 
     public function __construct()
     {
