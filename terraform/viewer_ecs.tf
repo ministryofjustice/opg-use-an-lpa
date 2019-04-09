@@ -60,6 +60,23 @@ resource "aws_iam_role" "use_an_lpa" {
   tags               = "${local.default_tags}"
 }
 
+resource "aws_iam_role_policy" "use_an_lpa_execution_role" {
+  policy = "${data.aws_iam_policy_document.use_an_lpa_execution_role.json}"
+  role   = "${aws_iam_role.use_an_lpa.id}"
+}
+
+data "aws_iam_policy_document" "use_an_lpa_execution_role" {
+  "statement" {
+    effect    = "Allow"
+    actions = [
+      "secretsmanager:DescribeSecret",
+      "secretsmanager:GetSecretValue",
+    ]
+    resources = ["${aws_secretsmanager_secret.session_key.arn}"]
+  }
+}
+
+
 data "aws_ecr_repository" "use_an_lpa_web" {
   provider = "aws.management"
   name     = "use_an_lpa/web"
