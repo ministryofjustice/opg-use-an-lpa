@@ -22,6 +22,10 @@ class EncryptedCookie extends Cookie
      */
     private $keyManager;
 
+    /**
+     * EncryptedCookie constructor.
+     * @param Manager $keyManager
+     */
     public function __construct(Manager $keyManager)
     {
         parent::__construct();

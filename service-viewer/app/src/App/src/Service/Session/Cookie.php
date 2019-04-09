@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\Session;
 
-use RuntimeException;
-
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
@@ -15,22 +13,33 @@ use Zend\Expressive\Session\Session;
 use Zend\Expressive\Session\SessionCookiePersistenceInterface;
 use Zend\Expressive\Session\SessionInterface;
 use Zend\Expressive\Session\SessionPersistenceInterface;
+use RuntimeException;
 
+/**
+ * Class Cookie
+ * @package App\Service\Session
+ */
 class Cookie implements SessionPersistenceInterface
 {
-
     /** @var string */
     private $cookieName;
 
     /** @var string */
     private $cookiePath;
 
+    /**
+     * Cookie constructor.
+     */
     public function __construct()
     {
         $this->cookieName   = 'session';
         $this->cookiePath   = '/';
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return SessionInterface
+     */
     public function initializeSessionFromRequest(ServerRequestInterface $request) : SessionInterface
     {
         $data = FigRequestCookies::get($request, $this->cookieName)->getValue() ?? '';
@@ -40,6 +49,11 @@ class Cookie implements SessionPersistenceInterface
         );
     }
 
+    /**
+     * @param SessionInterface $session
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     public function persistSession(SessionInterface $session, ResponseInterface $response) : ResponseInterface
     {
         // To keep cookies small, limit payloads to scalar values.
@@ -67,11 +81,19 @@ class Cookie implements SessionPersistenceInterface
         return $response;
     }
 
+    /**
+     * @param array $data
+     * @return string
+     */
     protected function encode(array $data) : string
     {
         return http_build_query($data);
     }
 
+    /**
+     * @param string $data
+     * @return array
+     */
     protected function decode(string $data) : array
     {
         $result = [];
@@ -82,7 +104,6 @@ class Cookie implements SessionPersistenceInterface
     //-------------------------------------------------------------------------
     // Everything below is taken from Zend's ext-session implementation
     // https://github.com/zendframework/zend-expressive-session-ext/blob/master/src/PhpSessionPersistence.php
-
 
     private function getCookieLifetime(SessionInterface $session) : int
     {

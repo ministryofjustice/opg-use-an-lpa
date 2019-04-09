@@ -1,11 +1,14 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
-use Zend\DI\Config\Config;
-use Zend\DI\Config\ContainerFactory;
+use Zend\ServiceManager\ServiceManager;
 
-$config  = require __DIR__ . '/config.php';
-$factory = new ContainerFactory();
+// Load configuration
+$config = require __DIR__ . '/config.php';
 
-return $factory(new Config($config));
+$dependencies = $config['dependencies'];
+$dependencies['services']['config'] = $config;
+
+// Build container
+return new ServiceManager($dependencies);
