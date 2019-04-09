@@ -153,7 +153,7 @@ locals {
     "environment": [
     {
       "name": "SECRET_NAME_SESSION",
-      "value": "session-keys"
+      "value": "${aws_secretsmanager_secret.session_key.arn}"
     }]
   }
   EOF
