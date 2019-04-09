@@ -31,8 +31,8 @@ services:
 
       # Local only
       AWS_ENDPOINT_SECRETS_MANAGER: http://localstack:4584
-      ENV AWS_ACCESS_KEY_ID: '-'
-      ENV AWS_SECRET_ACCESS_KEY: '-'
+      AWS_ACCESS_KEY_ID: '-'
+      AWS_SECRET_ACCESS_KEY: '-'
 
   viewer-composer:
     image: composer
