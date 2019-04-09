@@ -1,3 +1,7 @@
+
+//----------------------------------
+// Viewer ECS Service level config
+
 resource "aws_ecs_service" "viewer" {
   name            = "viewer"
   cluster         = "${aws_ecs_cluster.use-an-lpa.id}"
@@ -18,12 +22,16 @@ resource "aws_ecs_service" "viewer" {
   }
 }
 
+//----------------------------------
+// The service's Security Groups
+
 resource "aws_security_group" "ecs_service" {
   name_prefix = "ecs-service"
   vpc_id      = "${aws_default_vpc.default.id}"
   tags        = "${local.default_tags}"
 }
 
+// 80 in from the ELB
 resource "aws_security_group_rule" "ecs_service_ingress" {
   type                     = "ingress"
   from_port                = 80
@@ -33,6 +41,7 @@ resource "aws_security_group_rule" "ecs_service_ingress" {
   source_security_group_id = "${aws_security_group.viewer_loadbalancer.id}"
 }
 
+// Anything out
 resource "aws_security_group_rule" "ecs_service_egress" {
   type              = "egress"
   from_port         = 0
@@ -41,6 +50,9 @@ resource "aws_security_group_rule" "ecs_service_egress" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.ecs_service.id}"
 }
+
+//--------------------------------------
+// Viewer ECS Service Task level config
 
 resource "aws_ecs_task_definition" "viewer" {
   family                   = "viewer"
@@ -54,6 +66,9 @@ resource "aws_ecs_task_definition" "viewer" {
   tags                     = "${local.default_tags}"
 }
 
+//----------------
+// Permissions
+
 resource "aws_iam_role" "use_an_lpa" {
   name               = "viewer"
   assume_role_policy = "${data.aws_iam_policy_document.task_role_assume_policy.json}"
@@ -61,10 +76,14 @@ resource "aws_iam_role" "use_an_lpa" {
 }
 
 resource "aws_iam_role_policy" "use_an_lpa_execution_role" {
+  name = "ViewerApplicationPermissions"
   policy = "${data.aws_iam_policy_document.use_an_lpa_execution_role.json}"
   role   = "${aws_iam_role.use_an_lpa.id}"
 }
 
+/*
+  Defines permissions that the application running within the task has.
+*/
 data "aws_iam_policy_document" "use_an_lpa_execution_role" {
   "statement" {
     effect    = "Allow"
@@ -76,6 +95,8 @@ data "aws_iam_policy_document" "use_an_lpa_execution_role" {
   }
 }
 
+//--------------------
+// ECR Repos
 
 data "aws_ecr_repository" "use_an_lpa_web" {
   provider = "aws.management"
@@ -86,6 +107,9 @@ data "aws_ecr_repository" "use_an_lpa_view" {
   provider = "aws.management"
   name     = "use_an_lpa/viewer_front"
 }
+
+//-----------------------------------------------
+// Viewer ECS Service Task Container level config
 
 locals {
   viewer_web = <<EOF
