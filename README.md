@@ -18,9 +18,14 @@ docker-compose run viewer-composer composer development-enable
 docker-compose exec viewer-app rm -f /tmp/config-cache.php
 ```
 
-
-
 The Viewer service will then be available via http://localhost:9001/
+
+### Tests
+
+To run the unit tests
+```bash
+docker-compose run viewer-app /app/vendor/bin/phpunit
+```
 
 ### Updating composer dependencies
 
