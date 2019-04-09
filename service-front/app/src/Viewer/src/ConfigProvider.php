@@ -41,7 +41,8 @@ class ConfigProvider
 
             'invokables' => [
                 // Handlers
-                Handler\PingHandler::class,
+                Handler\HomePageHandler::class,
+                Handler\EnterCodeHandler::class,
 
                 // Services
                 Service\Session\KeyManager\KeyCache::class,
@@ -49,8 +50,6 @@ class ConfigProvider
 
             'factories'  => [
                 // Handlers
-                Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
-                Handler\EnterCodeHandler::class => Handler\EnterCodeHandlerFactory::class,
 
                 // Services
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
@@ -60,6 +59,11 @@ class ConfigProvider
                 Service\Session\KeyManager\Manager::class => Service\Session\KeyManager\ManagerFactory::class,
 
                 Zend\Expressive\Session\SessionMiddleware::class => Zend\Expressive\Session\SessionMiddlewareFactory::class,
+            ],
+
+            'initializers' => [
+                Handler\Initializer\UrlHelperInitializer::class,
+                Handler\Initializer\TemplatingSupportInitializer::class,
             ],
 
             'delegators' => [
