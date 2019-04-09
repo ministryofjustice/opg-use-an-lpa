@@ -37,6 +37,10 @@ class EnterCodeHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
+        $s = $this->getSession($request,'session');
+
+        $s->set('test', 'hello');
+
         return new HtmlResponse($this->template->render('app::enter-code'));
     }
 }

@@ -57,6 +57,10 @@ class EncryptedCookie extends Cookie
     {
         $plaintext = parent::encode($data);
 
+        if (empty($plaintext)) {
+            return '';
+        }
+
         $key = $this->keyManager->getCurrentKey();
 
         $ciphertext = $this->getBlockCipher()
