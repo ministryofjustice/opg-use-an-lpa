@@ -50,13 +50,7 @@ data "aws_iam_policy_document" "execution_role" {
       "ecr:BatchGetImage",
       "logs:CreateLogStream",
       "logs:PutLogEvents",
+      "secretsmanager:*",
     ]
-  }
-  statement {
-    effect = "Allow"
-    actions = [
-      "secretsmanager:GetSecretValue"
-    ]
-    resources = ["${aws_secretsmanager_secret.session_key.arn}"]
   }
 }
