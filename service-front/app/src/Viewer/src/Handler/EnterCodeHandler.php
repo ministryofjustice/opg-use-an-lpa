@@ -16,6 +16,10 @@ class EnterCodeHandler extends AbstractHandler
 
         $s->set('test', 'hello');
 
+        if ($request->getMethod() == 'POST') {
+            //  TODO - Some processing here...
+        }
+
         return new HtmlResponse($this->getTemplateRenderer()->render('app::enter-code'));
     }
 }
