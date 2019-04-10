@@ -38,9 +38,13 @@ class ConfigProvider
             'aliases' => [
                 Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookie::class,
             ],
+
             'invokables' => [
                 // Handlers
-                Handler\PingHandler::class => Handler\PingHandler::class,
+                Handler\PingHandler::class,
+
+                // Services
+                Service\Session\KeyManager\KeyCache::class,
             ],
 
             'factories'  => [
@@ -52,18 +56,10 @@ class ConfigProvider
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
 
-            ] + $this->getConfigDependencies(),
+                Service\Session\EncryptedCookie::class => Service\Session\EncryptedCookieFactory::class,
+                Service\Session\KeyManager\Manager::class => Service\Session\KeyManager\ManagerFactory::class,
 
-            'autowires' => [
-
-                // The below don't seem to be needed; seemingly the default is to attempt autowiring.
-
-                // Middleware
-                #Middleware\Session\General::class,
-
-                // Services
-                #Service\Session\Cookie::class,
-                #Service\Session\KeyManager\Manager::class,
+                Zend\Expressive\Session\SessionMiddleware::class => Zend\Expressive\Session\SessionMiddlewareFactory::class,
             ],
 
             'delegators' => [
@@ -71,14 +67,6 @@ class ConfigProvider
                     Service\Log\LogStderrListenerDelegatorFactory::class,
                 ],
             ],
-        ];
-    }
-
-    public function getConfigDependencies() : array
-    {
-        // Add all Config classes here. All should point to the same factory, ConfigFactory::class
-        return [
-            Service\Session\KeyManager\Config::class => ConfigFactory::class,
         ];
     }
 

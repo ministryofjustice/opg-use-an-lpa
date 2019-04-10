@@ -9,6 +9,10 @@ use RuntimeException;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
 
+/**
+ * Class Manager
+ * @package App\Service\Session\KeyManager
+ */
 class Manager
 {
     /**
@@ -22,9 +26,9 @@ class Manager
     const CACHE_SESSION_UPDATED_KEY = 'session_keys_updated_at';
 
     /**
-     * @var Config
+     * @var string
      */
-    private $config;
+    private $name;
 
     /**
      * @var KeyCache
@@ -38,15 +42,15 @@ class Manager
 
     /**
      * Manager constructor.
-     * @param Config $config
+     * @param string $name
      * @param SecretsManagerClient $secretsManagerClient
      * @param KeyCache $cache
      */
-    public function __construct(Config $config, SecretsManagerClient $secretsManagerClient, KeyCache $cache)
+    public function __construct(string $name, SecretsManagerClient $secretsManagerClient, KeyCache $cache)
     {
-        $this->cache = $cache;
-        $this->config = $config;
+        $this->name = $name;
         $this->secretsManagerClient = $secretsManagerClient;
+        $this->cache = $cache;
     }
 
     /**
@@ -131,7 +135,7 @@ class Manager
         //---
 
         $result = $this->secretsManagerClient->getSecretValue([
-            'SecretId' => $this->config->getName()
+            'SecretId' => $this->name
         ]);
 
         if (!$result->hasKey('SecretString')) {
