@@ -1,6 +1,6 @@
 FROM composer AS composer
 
-COPY service-viewer/app /app
+COPY service-front/app /app
 
 RUN composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
 
@@ -11,8 +11,8 @@ RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
         && docker-php-ext-enable apcu \
         && apk del .build-dependencies
 
-COPY service-viewer/app /app
+COPY service-front/app /app
 COPY --from=composer /app/vendor /app/vendor
-COPY service-viewer/docker/app/app-php.ini /usr/local/etc/php/conf.d/
+COPY service-front/docker/app/app-php.ini /usr/local/etc/php/conf.d/
 
 WORKDIR /app
