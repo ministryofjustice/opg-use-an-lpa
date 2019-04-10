@@ -59,7 +59,7 @@ class ConfigProvider
                 Service\Session\EncryptedCookie::class => Service\Session\EncryptedCookieFactory::class,
                 Service\Session\KeyManager\Manager::class => Service\Session\KeyManager\ManagerFactory::class,
 
-                // Middleware
+                Zend\Expressive\Session\SessionMiddleware::class => Zend\Expressive\Session\SessionMiddlewareFactory::class,
             ],
 
             'delegators' => [
