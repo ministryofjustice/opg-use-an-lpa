@@ -33,8 +33,8 @@ use Zend\Expressive\MiddlewareFactory;
  * );
  */
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
-    $app->get('/', App\Handler\HomePageHandler::class, 'home');
-    $app->get('/api/ping', App\Handler\PingHandler::class, 'api.ping');
+    $app->get('/', Viewer\Handler\HomePageHandler::class, 'home');
+    $app->get('/api/ping', Viewer\Handler\PingHandler::class, 'api.ping');
 
-    $app->route('/enter-code', App\Handler\EnterCodeHandler::class, ['GET', 'POST'],'enter-code');
+    $app->route('/enter-code', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'],'enter-code');
 };
