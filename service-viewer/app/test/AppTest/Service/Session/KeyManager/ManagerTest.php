@@ -21,7 +21,6 @@ class ManagerTest extends TestCase
 {
     const NAME_OF_SECRET = 'name-of-secret';
 
-    private $config;
     private $cache;
     private $secretsManagerClient;
 
@@ -31,17 +30,12 @@ class ManagerTest extends TestCase
 
         //---
 
-        $this->config = $this->prophesize(Config::class);
-        $this->config->getName()->willReturn(self::NAME_OF_SECRET);
-
-        //---
-
         $this->secretsManagerClient = $this->prophesize(SecretsManagerClient::class);
     }
 
     private function getManagerInstance()
     {
-        return new Manager($this->config->reveal(), $this->secretsManagerClient->reveal(), $this->cache->reveal());
+        return new Manager(self::NAME_OF_SECRET, $this->secretsManagerClient->reveal(), $this->cache->reveal());
     }
 
     public function testCanInstantiate()
