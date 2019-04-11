@@ -6,11 +6,13 @@ import os
 
 def get_viewer_url():
   workspace = os.getenv('TF_WORKSPACE', 'development')
-  with open('terraform_environment/terraform.tfvars', 'r') as f:
-      mapped_variables = json.load(f)
-  dns_prefix = mapped_variables['dns_prefixes'][workspace]
+  if workspace == "production":
+    dns_namespace = ""
+  else:
+    dns_namespace = workspace + "."
 
-  VIEWER_URL = 'https://viewer.{}.opg.service.justice.gov.uk'.format(dns_prefix)
+  VIEWER_URL = 'https://viewer.{}opg.service.justice.gov.uk'.format(dns_namespace)
+  print(VIEWER_URL)
   return VIEWER_URL
 
 VIEWER_URL = get_viewer_url()
