@@ -143,7 +143,10 @@ orbs:
           - run:
               name: Lint Terraform
               command: |
-                cd terraform
+                cd terraform_shared
+                terraform init
+                terraform validate
+                cd terraform_environment
                 terraform init
                 terraform validate
 
