@@ -141,11 +141,14 @@ orbs:
         steps:
           - checkout
           - run:
-              name: Lint Terraform
+              name: Lint Shared Terraform
               command: |
                 cd terraform_shared
                 terraform init
                 terraform validate
+          - run:
+              name: Lint Environment Terraform
+              command: |
                 cd terraform_environment
                 terraform init
                 terraform validate
