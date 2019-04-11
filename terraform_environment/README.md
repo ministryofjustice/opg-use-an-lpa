@@ -2,7 +2,28 @@
 
 This terraform configuration manages per-environment resources.
 
-Per-account or otherwise shared resources are managed in ../terraform_shared
+Per-account or otherwise shared resources are managed in `../terraform_shared`
+
+## Namespace resources
+It is important to namespace resources to avoid getting errors for creating resources that already exist.
+
+There are two namespace variables available.
+
+`${terraform.workspace}`
+returns the workspace name
+
+```
+"${terraform.workspace}-use-an-lpa"
+``` 
+can return `UML-93-use-an-lpa` or `production-use-an-lpa`
+
+`${local.dns_namespace}`
+returns the workspace name followed by ., unless the workspace is production where it returns an empty string
+
+```
+"viewer.${local.dns_namespace}use-an-lpa"
+``` 
+can return `viewer.uml-93.use-an-lpa` or `viewer.use-an-lpa`.
 
 ## Running Terraform Locally
 
