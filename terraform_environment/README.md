@@ -1,3 +1,9 @@
+# Terraform Shared
+
+This terraform configuration manages per-environment resources.
+
+Per-account or otherwise shared resources are managed in ../terraform_shared
+
 ## Running Terraform Locally
 
 This repository comes with an `.envrc` file containing useful environment variables for working with this repository.

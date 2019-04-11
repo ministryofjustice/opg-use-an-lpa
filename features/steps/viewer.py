@@ -6,7 +6,7 @@ import os
 
 def get_viewer_url():
   workspace = os.getenv('TF_WORKSPACE', 'development')
-  with open('terraform/terraform.tfvars', 'r') as f:
+  with open('terraform_environment/terraform.tfvars', 'r') as f:
       mapped_variables = json.load(f)
   dns_prefix = mapped_variables['dns_prefixes'][workspace]
 

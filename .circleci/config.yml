@@ -7,18 +7,27 @@ workflows:
       - use-my-lpa/lint_terraform:
           name: lint_terraform
           workspace: development
+          filters:
+            branches:
+              ignore: master
 
       - use-my-lpa/docker_build_viewer_app:
           name: app_viewer_build
       - use-my-lpa/docker_build_viewer_web:
           name: web_viewer_build
 
-
       # Provision and test development
-      - use-my-lpa/apply_terraform:
-          name: dev_apply_terraform
+      - use-my-lpa/apply_shared_terraform:
+          name: dev_apply_shared_terraform
           workspace: development
-          requires: [lint_terraform, app_viewer_build, web_viewer_build]
+          requires: [lint_terraform]
+          filters:
+            branches:
+              ignore: master
+      - use-my-lpa/apply_environment_terraform:
+          name: dev_apply_environment_terraform
+          workspace: development
+          requires: [dev_apply_shared_terraform, app_viewer_build, web_viewer_build]
           filters:
             branches:
               ignore: master
@@ -26,13 +35,19 @@ workflows:
       - use-my-lpa/run_behave_suite:
           name: dev_run_behave_tests
           workspace: development
-          requires: [dev_apply_terraform]
+          requires: [dev_apply_environment_terraform]
 
       # Provision and test preproduction
-      - use-my-lpa/apply_terraform:
-          name: preprod_apply_terraform
+      - use-my-lpa/apply_shared_terraform:
+          name: preprod_apply_shared_terraform
           workspace: preproduction
-          requires: [lint_terraform, app_viewer_build, web_viewer_build]
+          filters:
+            branches:
+              only: master
+      - use-my-lpa/apply_environment_terraform:
+          name: preprod_apply_environment_terraform
+          workspace: preproduction
+          requires: [preprod_apply_shared_terraform, app_viewer_build, web_viewer_build]
           filters:
             branches:
               only: master
@@ -40,13 +55,23 @@ workflows:
       - use-my-lpa/run_behave_suite:
           name: preprod_run_behave_tests
           workspace: preproduction
-          requires: [preprod_apply_terraform]
+          requires: [preprod_apply_environment_terraform]
+          filters:
+            branches:
+              only: master
 
       # Provision and test production
-      - use-my-lpa/apply_terraform:
-          name: prod_apply_terraform
+      - use-my-lpa/apply_shared_terraform:
+          name: production_apply_shared_terraform
           workspace: production
           requires: [preprod_run_behave_tests]
+          filters:
+            branches:
+              only: master
+      - use-my-lpa/apply_environment_terraform:
+          name: production_apply_environment_terraform
+          workspace: production
+          requires: [production_apply_shared_terraform, app_viewer_build, web_viewer_build]
           filters:
             branches:
               only: master
@@ -54,7 +79,10 @@ workflows:
       - use-my-lpa/run_behave_suite:
           name: prod_run_behave_tests
           workspace: production
-          requires: [prod_apply_terraform]
+          requires: [production_apply_environment_terraform]
+          filters:
+            branches:
+              only: master
 
 orbs:
   use-my-lpa:
@@ -113,9 +141,15 @@ orbs:
         steps:
           - checkout
           - run:
-              name: Lint Terraform
+              name: Lint Shared Terraform
               command: |
-                cd terraform
+                cd terraform_shared
+                terraform init
+                terraform validate
+          - run:
+              name: Lint Environment Terraform
+              command: |
+                cd terraform_environment
                 terraform init
                 terraform validate
 
@@ -190,11 +224,31 @@ orbs:
                 else
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
-
-      apply_terraform:
+      apply_shared_terraform:
         #
-        # Apply the terraform. This:
-        #   - Updates any infrastructure; and
+        # Apply the shared terraform configuration. This:
+        #   - Updates the shared infrastructure;
+        #
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
+        steps:
+          - checkout
+          - run:
+              name: Apply Shared Terraform
+              command: |
+                cd terraform_shared
+                terraform init
+                terraform apply --auto-approve
+      apply_environment_terraform:
+        #
+        # Apply the environment terraform configuration. This:
+        #   - Updates per environment infrastructure; and
         #   - Triggers a deploy of the updated container (if changed)
         #
         executor: terraform
@@ -208,10 +262,10 @@ orbs:
         steps:
           - checkout
           - run:
-              name: Apply Terraform
+              name: Apply Environment Terraform
               command: |
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                cd terraform
+                cd terraform_environment
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
 

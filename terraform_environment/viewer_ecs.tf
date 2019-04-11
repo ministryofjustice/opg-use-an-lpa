@@ -1,4 +1,3 @@
-
 //----------------------------------
 // Viewer ECS Service level config
 
@@ -11,7 +10,7 @@ resource "aws_ecs_service" "viewer" {
 
   network_configuration {
     security_groups  = ["${aws_security_group.ecs_service.id}"]
-    subnets          = ["${aws_subnet.private.*.id}"]
+    subnets          = ["${data.aws_subnet.private.*.id}"]
     assign_public_ip = false
   }
 
@@ -27,7 +26,7 @@ resource "aws_ecs_service" "viewer" {
 
 resource "aws_security_group" "ecs_service" {
   name_prefix = "ecs-service"
-  vpc_id      = "${aws_default_vpc.default.id}"
+  vpc_id      = "${data.aws_vpc.default.id}"
   tags        = "${local.default_tags}"
 }
 
@@ -76,7 +75,7 @@ resource "aws_iam_role" "use_an_lpa" {
 }
 
 resource "aws_iam_role_policy" "use_an_lpa_execution_role" {
-  name = "ViewerApplicationPermissions"
+  name   = "ViewerApplicationPermissions"
   policy = "${data.aws_iam_policy_document.use_an_lpa_execution_role.json}"
   role   = "${aws_iam_role.use_an_lpa.id}"
 }
@@ -86,11 +85,13 @@ resource "aws_iam_role_policy" "use_an_lpa_execution_role" {
 */
 data "aws_iam_policy_document" "use_an_lpa_execution_role" {
   "statement" {
-    effect    = "Allow"
+    effect = "Allow"
+
     actions = [
       "secretsmanager:DescribeSecret",
       "secretsmanager:GetSecretValue",
     ]
+
     resources = ["${aws_secretsmanager_secret.session_key.arn}"]
   }
 }
@@ -130,7 +131,7 @@ locals {
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-            "awslogs-group": "${aws_cloudwatch_log_group.use-an-lpa.name}",
+            "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
             "awslogs-region": "eu-west-2",
             "awslogs-stream-prefix": "viewer-web.use-an-lpa"
         }
@@ -169,7 +170,7 @@ locals {
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-            "awslogs-group": "${aws_cloudwatch_log_group.use-an-lpa.name}",
+            "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
             "awslogs-region": "eu-west-2",
             "awslogs-stream-prefix": "viewer-app.use-an-lpa"
         }

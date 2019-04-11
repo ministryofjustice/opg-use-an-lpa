@@ -3,7 +3,7 @@ resource "aws_lb_target_group" "viewer" {
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
-  vpc_id               = "${aws_default_vpc.default.id}"
+  vpc_id               = "${data.aws_vpc.default.id}"
   deregistration_delay = 0
   depends_on           = ["aws_lb.viewer"]
   tags                 = "${local.default_tags}"
@@ -13,7 +13,7 @@ resource "aws_lb" "viewer" {
   name               = "viewer-${terraform.workspace}"
   internal           = false
   load_balancer_type = "application"
-  subnets            = ["${aws_default_subnet.public.*.id}"]
+  subnets            = ["${data.aws_subnet.public.*.id}"]
   tags               = "${local.default_tags}"
 
   security_groups = [
@@ -21,7 +21,7 @@ resource "aws_lb" "viewer" {
   ]
 
   access_logs {
-    bucket  = "${aws_s3_bucket.access_log.bucket}"
+    bucket  = "${data.aws_s3_bucket.access_log.bucket}"
     prefix  = "viewer-${terraform.workspace}"
     enabled = true
   }
@@ -44,7 +44,7 @@ resource "aws_lb_listener" "viewer_loadbalancer" {
 resource "aws_security_group" "viewer_loadbalancer" {
   name        = "viewer-${terraform.workspace}-sg"
   description = "Allow inbound traffic"
-  vpc_id      = "${aws_default_vpc.default.id}"
+  vpc_id      = "${data.aws_vpc.default.id}"
   tags        = "${local.default_tags}"
 }
 
