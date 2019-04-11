@@ -1,8 +1,13 @@
 {
-    "accounts": {
+    "account_ids": {
         "development": "367815980639",
         "preproduction": "888228022356",
         "production": "690083044361"
+    },
+    "account_mapping": {
+        "development": "development",
+        "preproduction": "preproduction",
+        "production": "production"
     },
     "dns_prefixes": {
         "development": "dev.use-an-lpa",
@@ -13,5 +18,5 @@
         "development": "false",
         "preproduction": "false",
         "production": "true"
-    }
+    },
 }

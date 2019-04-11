@@ -1,5 +1,5 @@
 resource "aws_lb_target_group" "viewer" {
-  name                 = "viewer-loadbalancer-group"
+  name                 = "${terraform.workspace}-viewer"
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
@@ -10,7 +10,7 @@ resource "aws_lb_target_group" "viewer" {
 }
 
 resource "aws_lb" "viewer" {
-  name               = "viewer-${terraform.workspace}"
+  name               = "${terraform.workspace}-viewer"
   internal           = false
   load_balancer_type = "application"
   subnets            = ["${data.aws_subnet.public.*.id}"]
@@ -42,7 +42,7 @@ resource "aws_lb_listener" "viewer_loadbalancer" {
 }
 
 resource "aws_security_group" "viewer_loadbalancer" {
-  name        = "viewer-${terraform.workspace}-sg"
+  name        = "${terraform.workspace}-viewer-loadbalancer"
   description = "Allow inbound traffic"
   vpc_id      = "${data.aws_vpc.default.id}"
   tags        = "${local.default_tags}"
