@@ -7,9 +7,9 @@ services:
     image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web:latest
     build:
       context: .
-      dockerfile: service-viewer/docker/web/Dockerfile
+      dockerfile: service-front/docker/web/Dockerfile
     volumes:
-      - ./service-viewer/web:/web
+      - ./service-front/web:/web
     ports:
       - 9001:80
     environment:
@@ -22,9 +22,9 @@ services:
     image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front:latest
     build:
       context: .
-      dockerfile: service-viewer/docker/app/Dockerfile
+      dockerfile: service-front/docker/app/Dockerfile
     volumes:
-      - ./service-viewer/app:/app
+      - ./service-front/app:/app
     environment:
       # Always required
       SECRET_NAME_SESSION: 'session-keys'
@@ -37,7 +37,7 @@ services:
   viewer-composer:
     image: composer
     volumes:
-      - ./service-viewer/app:/app
+      - ./service-front/app:/app
     command:
       - install
       - --prefer-dist
