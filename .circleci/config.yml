@@ -6,7 +6,6 @@ workflows:
       # Common tasks
       - use-my-lpa/lint_terraform:
           name: lint_terraform
-          workspace: development
           filters:
             branches:
               ignore: master
@@ -19,14 +18,12 @@ workflows:
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
           name: dev_apply_shared_terraform
-          workspace: development
           requires: [lint_terraform]
           filters:
             branches:
               ignore: master
       - use-my-lpa/apply_environment_terraform:
           name: dev_apply_environment_terraform
-          workspace: development
           requires: [dev_apply_shared_terraform, app_viewer_build, web_viewer_build]
           filters:
             branches:
@@ -34,7 +31,6 @@ workflows:
 
       - use-my-lpa/run_behave_suite:
           name: dev_run_behave_tests
-          workspace: development
           requires: [dev_apply_environment_terraform]
 
       # Provision and test preproduction
@@ -130,7 +126,7 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: development
+            default: ${CIRCLE_PR_NUMBER}-${CIRCLE_BRANCH:0:7}
           container_version:
             description: Container version
             type: string
