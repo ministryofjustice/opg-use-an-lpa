@@ -9,11 +9,6 @@
         "preproduction": "preproduction",
         "production": "production"
     },
-    "dns_prefixes": {
-        "development": "dev.use-an-lpa",
-        "preproduction": "preprod.use-an-lpa",
-        "production": "use-an-lpa"
-    },
     "is_production": {
         "development": "false",
         "preproduction": "false",
