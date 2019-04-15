@@ -1,12 +1,13 @@
 locals {
-  account = "${lookup(var.accounts, terraform.workspace)}"
+  account_name = "${lookup(var.account_mapping, terraform.workspace, lookup(var.account_mapping, "development"))}"
+  account      = "${lookup(var.accounts, local.account_name)}"
 
   mandatory_moj_tags = {
     business-unit    = "OPG"
     application      = "use-an-lpa"
     environment-name = "${terraform.workspace}"
     owner            = "Katie Gibbs: katie.gibbs@digital.justice.gov.uk"
-    is-production    = "${lookup(var.is_production, terraform.workspace)}"
+    is-production    = "${lookup(var.is_production, local.account_name)}"
   }
 
   optional_tags = {
