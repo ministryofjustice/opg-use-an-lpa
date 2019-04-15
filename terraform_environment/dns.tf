@@ -21,5 +21,5 @@ resource "aws_route53_record" "viewer-use-my-lpa" {
 }
 
 output "viewer-use-an-lpa-domain" {
-  value = "${aws_route53_record.viewer-use-my-lpa.fqdn}"
+  value = "https://${aws_route53_record.viewer-use-my-lpa.fqdn}"
 }
