@@ -253,15 +253,14 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: ${CIRCLE_PR_NUMBER}-${CIRCLE_BRANCH:0:7}
-        environment:
-          TF_WORKSPACE: "<<parameters.workspace>>"
+            default: "${CIRCLE_PR_NUMBER}-${CIRCLE_BRANCH:0:7}"
         steps:
           - checkout
           - run:
               name: Apply Environment Terraform
               command: |
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                export TF_WORKSPACE=<<parameters.workspace>> >> $BASH_ENV
                 echo $TF_WORKSPACE
                 cd terraform_environment
                 terraform init
