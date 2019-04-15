@@ -261,18 +261,18 @@ orbs:
               command: |
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:10} >> $BASH_ENV
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
                 cd terraform_environment
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
-                  echo "Your environment, ${CIRCLE_PR_NUMBER}-${CIRCLE_BRANCH:0:7} is built."
+                  echo "Your environment, ${ENV_NAME:0:13} is built."
                   echo "To destroy this environment"
                   echo
                   echo "cd terraform_environment"
                   echo "aws-vault identity -- terraform init"
-                  echo "aws-vault identity -- terraform workspace select ${CIRCLE_PR_NUMBER}-${CIRCLE_BRANCH:0:7}"
+                  echo "aws-vault identity -- terraform workspace select ${ENV_NAME:0:13}"
                   echo "aws-vault identity -- terraform destroy"
                 fi
 
@@ -286,8 +286,6 @@ orbs:
             description: Terraform workspace name
             type: string
             default: development
-        environment:
-          TF_WORKSPACE: "<<parameters.workspace>>"
         steps:
           - checkout
           - install_webdriver
@@ -296,4 +294,7 @@ orbs:
               command: sudo pip3 install behave selenium --upgrade
           - run:
               name: run suite
-              command: behave
+              command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                behave
