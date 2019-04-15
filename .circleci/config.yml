@@ -262,6 +262,7 @@ orbs:
               name: Apply Environment Terraform
               command: |
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                echo $TF_WORKSPACE
                 cd terraform_environment
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
