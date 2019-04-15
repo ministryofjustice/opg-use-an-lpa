@@ -285,7 +285,7 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: development
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//-/}"
         steps:
           - checkout
           - install_webdriver
