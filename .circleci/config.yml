@@ -252,7 +252,7 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: development
+            default: ${CIRCLE_PR_NUMBER}-${CIRCLE_BRANCH:0:7}
         environment:
           TF_WORKSPACE: "<<parameters.workspace>>"
         steps:
@@ -264,6 +264,15 @@ orbs:
                 cd terraform_environment
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
+                if [ "${CIRCLE_BRANCH}" != "master" ]; then
+                  echo "Your environment, ${CIRCLE_PR_NUMBER}-${CIRCLE_BRANCH:0:7} is built."
+                  echo "To destroy this environment"
+                  echo
+                  echo "cd terraform_environment"
+                  echo "aws-vault identity -- terraform init"
+                  echo "aws-vault identity -- terraform workspace select ${CIRCLE_PR_NUMBER}-${CIRCLE_BRANCH:0:7}"
+                  echo "aws-vault identity -- terraform destroy"
+                fi
 
       run_behave_suite:
         #
