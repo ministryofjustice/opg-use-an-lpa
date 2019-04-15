@@ -6,6 +6,7 @@ workflows:
       # Common tasks
       - use-my-lpa/lint_terraform:
           name: lint_terraform
+          workspace: development
           filters:
             branches:
               ignore: master
