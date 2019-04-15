@@ -13,27 +13,29 @@ use Zend\Stratigility\Middleware\ErrorHandler;
 
 class LogStderrListenerDelegatorFactoryTest extends TestCase
 {
-
     public function testValidConfig()
     {
-        $container = $this->prophesize(ContainerInterface::class);
+        $containerProphecy = $this->prophesize(ContainerInterface::class);
 
         //---
 
-        $errorHandler = $this->prophesize(ErrorHandler::class);
+        $errorHandlerProphecy = $this->prophesize(ErrorHandler::class);
 
         // We're expecting an instance of `LogStderrListener` to be passed via `attachListener()`.
-        $errorHandler->attachListener(Argument::type(LogStderrListener::class))->shouldBeCalled();
+        $errorHandlerProphecy
+            ->attachListener(Argument::type(LogStderrListener::class))
+            ->shouldBeCalled();
 
-        $callable = function () use ($errorHandler){
-            return $errorHandler->reveal();
+        $callable = function () use ($errorHandlerProphecy) {
+            return $errorHandlerProphecy->reveal();
         };
 
         //---
 
         $factory = new LogStderrListenerDelegatorFactory();
 
-        $factory($container->reveal(), null, $callable, null);
-    }
+        $errorHandler = $factory($containerProphecy->reveal(), null, $callable, null);
 
+        $this->assertInstanceOf(ErrorHandler::class, $errorHandler);
+    }
 }
