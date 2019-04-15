@@ -24,3 +24,7 @@ variable "accounts" {
 variable "is_production" {
   type = "map"
 }
+
+variable "account_mapping" {
+  type = "map"
+}
