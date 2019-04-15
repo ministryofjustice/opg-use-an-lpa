@@ -11,7 +11,7 @@ def get_viewer_url():
   else:
     dns_namespace = workspace + "."
 
-  VIEWER_URL = 'https://viewer.{}opg.service.justice.gov.uk'.format(dns_namespace)
+  VIEWER_URL = 'https://viewer.{}use-an-lpa.opg.service.justice.gov.uk'.format(dns_namespace)
   print(VIEWER_URL)
   return VIEWER_URL
 
