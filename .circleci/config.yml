@@ -6,7 +6,6 @@ workflows:
       # Common tasks
       - use-my-lpa/lint_terraform:
           name: lint_terraform
-          workspace: development
           filters:
             branches:
               ignore: master
@@ -127,16 +126,21 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: ${CIRCLE_PR_NUMBER}-${CIRCLE_BRANCH:0:7}
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//-/}"
           container_version:
             description: Container version
             type: string
             default: ${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}
-        environment:
-          TF_WORKSPACE: "<<parameters.workspace>>"
-          TF_VAR_container_version: "<<parameters.container_version>>"
         steps:
           - checkout
+          - run:
+              name: set up environment variables
+              command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                echo $SHORT_HASH
           - run:
               name: Lint Shared Terraform
               command: |
@@ -148,7 +152,7 @@ orbs:
               command: |
                 cd terraform_environment
                 terraform init
-                terraform validate
+                terraform validate -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
 
       docker_build_viewer_app:
         #
