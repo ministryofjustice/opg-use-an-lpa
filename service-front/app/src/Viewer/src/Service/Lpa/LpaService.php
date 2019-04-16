@@ -2,17 +2,28 @@
 
 namespace Viewer\Service\Lpa;
 
-use Viewer\Service\ApiClient\Initializers\ApiClientInterface;
-use Viewer\Service\ApiClient\Initializers\ApiClientTrait;
+use Viewer\Service\ApiClient\Client as ApiClient;
 use ArrayObject;
 
 /**
  * Class LpaService
  * @package Viewer\Service\ApiClient
  */
-class LpaService implements ApiClientInterface
+class LpaService
 {
-    use ApiClientTrait;
+    /**
+     * @var ApiClient
+     */
+    private $apiClient;
+
+    /**
+     * LpaService constructor.
+     * @param ApiClient $apiClient
+     */
+    public function __construct(ApiClient $apiClient)
+    {
+        $this->apiClient = $apiClient;
+    }
 
     /**
      * Get an LPA
@@ -23,7 +34,7 @@ class LpaService implements ApiClientInterface
      */
     public function getLpa(string $shareCode) : ?ArrayObject
     {
-        $lpaData = $this->getApiClient()->httpGet('/path/to/lpa', [
+        $lpaData = $this->apiClient->httpGet('/path/to/lpa', [
             'code' => $shareCode,
         ]);
 
