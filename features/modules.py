@@ -1,6 +1,10 @@
 import os
 
 def get_frontend_url( frontend ):
+  """
+  Return a URL for a Use an LPA frontend on a specific environment.
+  The environment is based on the Terraform Workspace environment variable.
+  """
   workspace = os.getenv('TF_WORKSPACE', 'development')
   if workspace == "production":
     dns_namespace = ""
