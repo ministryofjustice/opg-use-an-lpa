@@ -225,6 +225,7 @@ orbs:
                 else
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
+
       apply_shared_terraform:
         #
         # Apply the shared terraform configuration. This:
@@ -246,6 +247,7 @@ orbs:
                 cd terraform_shared
                 terraform init
                 terraform apply --auto-approve
+                
       apply_environment_terraform:
         #
         # Apply the environment terraform configuration. This:
@@ -261,12 +263,16 @@ orbs:
         steps:
           - checkout
           - run:
-              name: Apply Environment Terraform
+              name: set up environment variables
               command: |
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 ENV_NAME=<<parameters.workspace>>
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                echo $SHORT_HASH
+          - run:
+              name: Apply Environment Terraform
+              command: |
                 cd terraform_environment
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
@@ -297,8 +303,14 @@ orbs:
               name: install behave
               command: sudo pip3 install behave selenium --upgrade
           - run:
-              name: run suite
+              name: set up environment variables
               command: |
                 ENV_NAME=<<parameters.workspace>>
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                echo $SHORT_HASH
+          - run:
+              name: run suite
+              command: |
                 behave
