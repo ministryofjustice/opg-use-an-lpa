@@ -8,12 +8,37 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response;
+use Zend\Expressive\Helper\UrlHelper;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
-abstract class AbstractHandler implements RequestHandlerInterface, Initializer\UrlHelperInterface, Initializer\TemplatingSupportInterface
+/**
+ * Class AbstractHandler
+ * @package Viewer\Handler
+ */
+abstract class AbstractHandler implements RequestHandlerInterface
 {
     use Traits\Session;
-    use Initializer\TemplatingSupportTrait;
-    use Initializer\UrlHelperTrait;
+
+    /**
+     * @var TemplateRendererInterface
+     */
+    protected $renderer;
+
+    /**
+     * @var UrlHelper
+     */
+    protected $urlHelper;
+
+    /**
+     * AbstractHandler constructor.
+     * @param TemplateRendererInterface $renderer
+     * @param UrlHelper $urlHelper
+     */
+    public function __construct(TemplateRendererInterface $renderer, UrlHelper $urlHelper)
+    {
+        $this->renderer = $renderer;
+        $this->urlHelper = $urlHelper;
+    }
 
     /**
      * Handles a request and produces a response
@@ -34,7 +59,7 @@ abstract class AbstractHandler implements RequestHandlerInterface, Initializer\U
     protected function redirectToRoute($route, $routeParams = [], $queryParams = [])
     {
         return new Response\RedirectResponse(
-            $this->getUrlHelper()->generate($route, $routeParams, $queryParams)
+            $this->urlHelper->generate($route, $routeParams, $queryParams)
         );
     }
 }

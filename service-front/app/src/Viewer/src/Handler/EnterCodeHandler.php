@@ -20,6 +20,6 @@ class EnterCodeHandler extends AbstractHandler
             //  TODO - Some processing here...
         }
 
-        return new HtmlResponse($this->getTemplateRenderer()->render('app::enter-code'));
+        return new HtmlResponse($this->renderer->render('app::enter-code'));
     }
 }
