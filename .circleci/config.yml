@@ -134,22 +134,24 @@ orbs:
         steps:
           - checkout
           - run:
-              name: set up environment variables
+              name: Lint Shared Terraform
               command: |
                 ENV_NAME=<<parameters.workspace>>
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
-          - run:
-              name: Lint Shared Terraform
-              command: |
                 cd terraform_shared
                 terraform init
                 terraform validate
           - run:
               name: Lint Environment Terraform
               command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                echo $SHORT_HASH
                 cd terraform_environment
                 terraform init
                 terraform validate -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
@@ -247,7 +249,7 @@ orbs:
                 cd terraform_shared
                 terraform init
                 terraform apply --auto-approve
-                
+
       apply_environment_terraform:
         #
         # Apply the environment terraform configuration. This:
@@ -263,16 +265,13 @@ orbs:
         steps:
           - checkout
           - run:
-              name: set up environment variables
+              name: Apply Environment Terraform
               command: |
                 ENV_NAME=<<parameters.workspace>>
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
-          - run:
-              name: Apply Environment Terraform
-              command: |
                 cd terraform_environment
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
@@ -303,14 +302,11 @@ orbs:
               name: install behave
               command: sudo pip3 install behave selenium --upgrade
           - run:
-              name: set up environment variables
+              name: run suite
               command: |
                 ENV_NAME=<<parameters.workspace>>
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
-          - run:
-              name: run suite
-              command: |
                 behave
