@@ -1,21 +1,9 @@
 from behave import *
 from selenium.webdriver.common.keys import Keys
 import json
-import os
+from modules import get_frontend_url
 
-
-def get_viewer_url():
-  workspace = os.getenv('TF_WORKSPACE', 'development')
-  if workspace == "production":
-    dns_namespace = ""
-  else:
-    dns_namespace = workspace + "."
-
-  VIEWER_URL = 'https://viewer.{}use-an-lpa.opg.service.justice.gov.uk'.format(dns_namespace)
-  print(VIEWER_URL)
-  return VIEWER_URL
-
-VIEWER_URL = get_viewer_url()
+VIEWER_URL = get_frontend_url("viewer")
 
 @given('I go to the viewer page on the internet')
 def step_impl(context):
