@@ -13,8 +13,8 @@ $cacheConfig = [
 ];
 
 $aggregator = new ConfigAggregator([
+    \Zend\Expressive\Twig\ConfigProvider::class,
     \Zend\HttpHandlerRunner\ConfigProvider::class,
-    \Zend\Expressive\Plates\ConfigProvider::class,
     \Zend\Expressive\Router\FastRouteRouter\ConfigProvider::class,
     // Include cache configuration
     new ArrayProvider($cacheConfig),
