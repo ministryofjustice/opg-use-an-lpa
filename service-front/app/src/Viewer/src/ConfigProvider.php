@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Viewer;
 
 use Aws;
+use Http;
 use Zend;
 
 /**
@@ -43,6 +44,7 @@ class ConfigProvider
                 // Handlers
 
                 // Services
+                Service\Lpa\LpaService::class,
                 Service\Session\KeyManager\KeyCache::class,
             ],
 
@@ -55,6 +57,13 @@ class ConfigProvider
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
 
+                Http\Client\HttpClient::class => function () {
+                    return Http\Adapter\Guzzle6\Client::createWithConfig([
+                        //  TODO - might require .... 'verify' => false
+                    ]);
+                },
+
+                Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
                 Service\Session\EncryptedCookie::class => Service\Session\EncryptedCookieFactory::class,
                 Service\Session\KeyManager\Manager::class => Service\Session\KeyManager\ManagerFactory::class,
 
