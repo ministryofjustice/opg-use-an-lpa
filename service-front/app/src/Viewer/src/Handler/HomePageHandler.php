@@ -16,6 +16,6 @@ class HomePageHandler extends AbstractHandler
             return $this->redirectToRoute('enter-code');
         }
 
-        return new HtmlResponse($this->getTemplateRenderer()->render('app::home-page'));
+        return new HtmlResponse($this->renderer->render('app::home-page'));
     }
 }

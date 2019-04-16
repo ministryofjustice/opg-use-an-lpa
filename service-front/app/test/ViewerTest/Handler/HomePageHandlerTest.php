@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 class HomePageHandlerTest extends TestCase
@@ -18,29 +19,28 @@ class HomePageHandlerTest extends TestCase
      */
     protected $renderer;
 
+    /**
+     * @var UrlHelper|ObjectProphecy
+     */
+    protected $urlHelper;
+
     protected function setUp()
     {
         $this->renderer = $this->prophesize(TemplateRendererInterface::class);
+        $this->urlHelper = $this->prophesize(UrlHelper::class);
     }
 
     public function testReturnsHtmlResponseWhenTemplateRendererProvided()
     {
-        $homePage = new HomePageHandler();
-
-        //  Mimic the behaviour of the initializer
+        //  Set up the handler
         $this->renderer
             ->render('app::home-page')
             ->willReturn('');
 
-        /** @var TemplateRendererInterface $renderer */
-        $renderer = $this->renderer->reveal();
+        $homePage = new HomePageHandler($this->renderer->reveal(), $this->urlHelper->reveal());
 
-        $homePage->setTemplateRenderer($renderer);
-
-        /** @var ServerRequestInterface $request */
-        $request = $this->prophesize(ServerRequestInterface::class)->reveal();
-
-        $response = $homePage->handle($request);
+        $request = $this->prophesize(ServerRequestInterface::class);
+        $response = $homePage->handle($request->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
