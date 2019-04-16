@@ -44,7 +44,6 @@ class ConfigProvider
                 // Handlers
 
                 // Services
-                Service\Lpa\LpaService::class,
                 Service\Session\KeyManager\KeyCache::class,
             ],
 
@@ -64,6 +63,7 @@ class ConfigProvider
                 },
 
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
+                Service\Lpa\LpaService::class => Service\Lpa\LpaServiceFactory::class,
                 Service\Session\EncryptedCookie::class => Service\Session\EncryptedCookieFactory::class,
                 Service\Session\KeyManager\Manager::class => Service\Session\KeyManager\ManagerFactory::class,
 
