@@ -2,6 +2,9 @@ locals {
   account_name = "${lookup(var.account_mapping, terraform.workspace, lookup(var.account_mapping, "development"))}"
   account      = "${lookup(var.accounts, local.account_name)}"
 
+  dns_namespace_acc = "${terraform.workspace == "production" ? "": "${local.account_name}."}"
+  dev_wildcard      = "${local.account_name != "development" ? "": "*."}"
+
   mandatory_moj_tags = {
     business-unit    = "OPG"
     application      = "use-an-lpa"
