@@ -1,4 +1,5 @@
 import os
+from collections import defaultdict
 
 def get_frontend_url( frontend ):
   """
@@ -7,9 +8,8 @@ def get_frontend_url( frontend ):
   """
   workspace = os.getenv('TF_WORKSPACE', 'development')
 
-  account_namespace_mapping = {'production': "", 'preproduction': "preproduction."}
-
-  dns_account_namespace = account_namespace_mapping.get(workspace, "development.")
+  account_namespace_mapping = defaultdict(lambda: "development.", {'production': "", 'preproduction': "preproduction."})
+  dns_account_namespace = account_namespace_mapping[workspace]
 
   if dns_account_namespace == "development.":
     dns_env_namespace = workspace + "."
