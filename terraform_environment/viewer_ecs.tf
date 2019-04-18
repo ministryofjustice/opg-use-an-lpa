@@ -28,7 +28,7 @@ resource "aws_ecs_service" "viewer" {
 // The service's Security Groups
 
 resource "aws_security_group" "ecs_service" {
-  name_prefix = "${terraform.workspace}-ecs-service"
+  name_prefix = "${terraform.workspace}-viewer-ecs-service"
   vpc_id      = "${data.aws_vpc.default.id}"
   tags        = "${local.default_tags}"
 }
@@ -72,7 +72,7 @@ resource "aws_ecs_task_definition" "viewer" {
 // Permissions
 
 resource "aws_iam_role" "use_an_lpa" {
-  name               = "${terraform.workspace}-viewer"
+  name               = "${terraform.workspace}-viewer-task-role"
   assume_role_policy = "${data.aws_iam_policy_document.task_role_assume_policy.json}"
   tags               = "${local.default_tags}"
 }

@@ -16,7 +16,7 @@ data "aws_iam_policy_document" "task_role_assume_policy" {
 }
 
 resource "aws_iam_role" "execution_role" {
-  name               = "${terraform.workspace}_execution_role"
+  name               = "${terraform.workspace}-execution-role-ecs-cluster"
   assume_role_policy = "${data.aws_iam_policy_document.execution_role_assume_policy.json}"
   tags               = "${local.default_tags}"
 }
