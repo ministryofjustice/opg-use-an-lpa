@@ -6,20 +6,24 @@ namespace Viewer\Handler;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
-use function get_class;
-
+/**
+ * Class EnterCodeHandlerFactory
+ * @package Viewer\Handler
+ */
 class EnterCodeHandlerFactory
 {
+    /**
+     * @param ContainerInterface $container
+     * @return RequestHandlerInterface
+     */
     public function __invoke(ContainerInterface $container) : RequestHandlerInterface
     {
-        $router   = $container->get(RouterInterface::class);
-        $template = $container->has(TemplateRendererInterface::class)
-            ? $container->get(TemplateRendererInterface::class)
-            : null;
+        $renderer = $container->get(TemplateRendererInterface::class);
+        $urlHelper = $container->get(UrlHelper::class);
 
-        return new EnterCodeHandler(get_class($container), $router, $template);
+        return new EnterCodeHandler($renderer, $urlHelper);
     }
 }

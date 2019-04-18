@@ -41,7 +41,6 @@ class ConfigProvider
 
             'invokables' => [
                 // Handlers
-                Handler\PingHandler::class,
 
                 // Services
                 Service\Session\KeyManager\KeyCache::class,

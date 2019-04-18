@@ -6,45 +6,41 @@ namespace ViewerTest\Handler;
 
 use Viewer\Handler\HomePageHandler;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\Response\JsonResponse;
-use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 class HomePageHandlerTest extends TestCase
 {
-    /** @var ContainerInterface|ObjectProphecy */
-    protected $container;
+    /**
+     * @var TemplateRendererInterface|ObjectProphecy
+     */
+    protected $renderer;
 
-    /** @var RouterInterface|ObjectProphecy */
-    protected $router;
+    /**
+     * @var UrlHelper|ObjectProphecy
+     */
+    protected $urlHelper;
 
     protected function setUp()
     {
-        $this->container = $this->prophesize(ContainerInterface::class);
-        $this->router    = $this->prophesize(RouterInterface::class);
+        $this->renderer = $this->prophesize(TemplateRendererInterface::class);
+        $this->urlHelper = $this->prophesize(UrlHelper::class);
     }
-    
+
     public function testReturnsHtmlResponseWhenTemplateRendererProvided()
     {
-        $renderer = $this->prophesize(TemplateRendererInterface::class);
-        $renderer
+        //  Set up the handler
+        $this->renderer
             ->render('app::home-page')
             ->willReturn('');
 
-        $homePage = new HomePageHandler(
-            get_class($this->container->reveal()),
-            $this->router->reveal(),
-            $renderer->reveal()
-        );
+        $homePage = new HomePageHandler($this->renderer->reveal(), $this->urlHelper->reveal());
 
-        $response = $homePage->handle(
-            $this->prophesize(ServerRequestInterface::class)->reveal()
-        );
+        $request = $this->prophesize(ServerRequestInterface::class);
+        $response = $homePage->handle($request->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }

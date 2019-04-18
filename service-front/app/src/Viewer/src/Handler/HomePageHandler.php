@@ -6,36 +6,16 @@ namespace Viewer\Handler;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Router;
-use Zend\Expressive\Template\TemplateRendererInterface;
 
-class HomePageHandler implements RequestHandlerInterface
+class HomePageHandler extends AbstractHandler
 {
-    use Traits\Session;
-
-    /** @var string */
-    private $containerName;
-
-    /** @var Router\RouterInterface */
-    private $router;
-
-    /** @var null|TemplateRendererInterface */
-    private $template;
-
-    public function __construct(
-        string $containerName,
-        Router\RouterInterface $router,
-        ?TemplateRendererInterface $template = null
-    ) {
-        $this->containerName = $containerName;
-        $this->router        = $router;
-        $this->template      = $template;
-    }
-
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        return new HtmlResponse($this->template->render('app::home-page'));
+        if ($request->getMethod() == 'POST') {
+            return $this->redirectToRoute('enter-code');
+        }
+
+        return new HtmlResponse($this->renderer->render('app::home-page'));
     }
 }
