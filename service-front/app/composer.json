@@ -32,6 +32,7 @@
         "dflydev/fig-cookies": "^2.0",
         "elie29/zend-phpdi-config": "^3.0",
         "paragonie/halite": "^4.5",
+        "php-http/guzzle6-adapter": "^2.0",
         "zendframework/zend-component-installer": "^2.1.1",
         "zendframework/zend-config-aggregator": "^1.0",
         "zendframework/zend-crypt": "^3.3",

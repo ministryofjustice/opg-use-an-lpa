@@ -12,23 +12,22 @@ use Psr\Container\ContainerInterface;
 
 class SecretsManagerFactoryTest extends TestCase
 {
-
     public function testValidConfig()
     {
-        $container = $this->prophesize(ContainerInterface::class);
+        $containerProphecy = $this->prophesize(ContainerInterface::class);
 
         // Use a real Aws\Sdk to sense check the method.
-        $container->get(Sdk::class)->willReturn(new Sdk([
-            'region'    => 'eu-west-1',
-            'version'   => 'latest',
-        ]));
+        $containerProphecy->get(Sdk::class)
+            ->willReturn(new Sdk([
+                'region'    => 'eu-west-1',
+                'version'   => 'latest',
+            ]));
 
         //---
 
         $factory = new SecretsManagerFactory();
-        $client = $factory($container->reveal());
+        $client = $factory($containerProphecy->reveal());
 
         $this->assertInstanceOf(SecretsManagerClient::class, $client);
     }
-
 }

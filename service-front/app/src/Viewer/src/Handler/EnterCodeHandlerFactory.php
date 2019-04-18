@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
+use Viewer\Service\Lpa\LpaService;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Expressive\Helper\UrlHelper;
@@ -23,7 +24,8 @@ class EnterCodeHandlerFactory
     {
         $renderer = $container->get(TemplateRendererInterface::class);
         $urlHelper = $container->get(UrlHelper::class);
+        $lpaService = $container->get(LpaService::class);
 
-        return new EnterCodeHandler($renderer, $urlHelper);
+        return new EnterCodeHandler($renderer, $urlHelper, $lpaService);
     }
 }

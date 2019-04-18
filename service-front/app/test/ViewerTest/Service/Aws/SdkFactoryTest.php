@@ -11,36 +11,36 @@ use Psr\Container\ContainerInterface;
 
 class SdkFactoryTest extends TestCase
 {
-
     public function testMissingConfig()
     {
+        $containerProphecy = $this->prophesize(ContainerInterface::class);
+
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Missing aws configuration');
 
-        //---
-
-        $container = $this->prophesize(ContainerInterface::class);
-
-        $container->get('config')->willReturn([]);
+        $containerProphecy
+            ->get('config')
+            ->willReturn([]);
 
         $factory = new SdkFactory();
 
-        $factory($container->reveal());
+        $factory($containerProphecy->reveal());
     }
 
     public function testValidConfig()
     {
-        $container = $this->prophesize(ContainerInterface::class);
+        $containerProphecy = $this->prophesize(ContainerInterface::class);
 
-        $container->get('config')->willReturn([
-            'aws' => [],
-        ]);
+        $containerProphecy
+            ->get('config')
+            ->willReturn([
+                'aws' => [],
+            ]);
 
         $factory = new SdkFactory();
 
-        $sdk = $factory($container->reveal());
+        $sdk = $factory($containerProphecy->reveal());
 
         $this->assertInstanceOf(Sdk::class, $sdk);
     }
-
 }

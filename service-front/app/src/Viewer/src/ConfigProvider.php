@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Viewer;
 
 use Aws;
+use Http;
 use Zend;
 
 /**
@@ -36,6 +37,7 @@ class ConfigProvider
     {
         return [
             'aliases' => [
+                Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
                 Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookie::class,
             ],
 
@@ -55,6 +57,10 @@ class ConfigProvider
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
 
+                Http\Adapter\Guzzle6\Client::class => Service\Http\GuzzleClientFactory::class,
+
+                Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
+                Service\Lpa\LpaService::class => Service\Lpa\LpaServiceFactory::class,
                 Service\Session\EncryptedCookie::class => Service\Session\EncryptedCookieFactory::class,
                 Service\Session\KeyManager\Manager::class => Service\Session\KeyManager\ManagerFactory::class,
 
