@@ -280,9 +280,9 @@ orbs:
                   echo "To destroy this environment"
                   echo
                   echo "cd terraform_environment"
-                  echo "aws-vault identity -- terraform init"
-                  echo "aws-vault identity -- terraform workspace select ${ENV_NAME:0:13}"
-                  echo "aws-vault identity -- terraform destroy"
+                  echo "aws-vault exec identity -- terraform init"
+                  echo "aws-vault exec identity -- terraform workspace select ${ENV_NAME:0:13}"
+                  echo "aws-vault exec identity -- terraform destroy"
                 fi
 
       run_behave_suite:
