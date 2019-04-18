@@ -37,6 +37,7 @@ class ConfigProvider
     {
         return [
             'aliases' => [
+                Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
                 Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookie::class,
             ],
 
@@ -56,11 +57,7 @@ class ConfigProvider
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
 
-                Http\Client\HttpClient::class => function () {
-                    return Http\Adapter\Guzzle6\Client::createWithConfig([
-                        //  TODO - might require .... 'verify' => false
-                    ]);
-                },
+                Http\Adapter\Guzzle6\Client::class => Service\Http\GuzzleClientFactory::class,
 
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
                 Service\Lpa\LpaService::class => Service\Lpa\LpaServiceFactory::class,
