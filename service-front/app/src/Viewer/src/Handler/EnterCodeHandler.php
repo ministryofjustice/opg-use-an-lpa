@@ -6,41 +6,58 @@ namespace Viewer\Handler;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Viewer\Service\Lpa\LpaService;
 use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Router;
+use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
-
-class EnterCodeHandler implements RequestHandlerInterface
+/**
+ * Class EnterCodeHandler
+ * @package Viewer\Handler
+ */
+class EnterCodeHandler extends AbstractHandler
 {
-    use Traits\Session;
+    /**
+     * @var LpaService
+     */
+    private $lpaService;
 
-    /** @var string */
-    private $containerName;
+    /**
+     * EnterCodeHandler constructor.
+     * @param TemplateRendererInterface $renderer
+     * @param UrlHelper $urlHelper
+     * @param LpaService $lpaService
+     */
+    public function __construct(TemplateRendererInterface $renderer, UrlHelper $urlHelper, LpaService $lpaService)
+    {
+        parent::__construct($renderer, $urlHelper);
 
-    /** @var Router\RouterInterface */
-    private $router;
-
-    /** @var null|TemplateRendererInterface */
-    private $template;
-
-    public function __construct(
-        string $containerName,
-        Router\RouterInterface $router,
-        ?TemplateRendererInterface $template = null
-    ) {
-        $this->containerName = $containerName;
-        $this->router        = $router;
-        $this->template      = $template;
+        $this->lpaService = $lpaService;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         $s = $this->getSession($request,'session');
 
         $s->set('test', 'hello');
 
-        return new HtmlResponse($this->template->render('app::enter-code'));
+        if ($request->getMethod() == 'POST') {
+            $post = $request->getParsedBody();
+
+            //  TODO - Validation required....
+            if (isset($post['share-code'])) {
+                $lpa = $this->lpaService->getLpa($post['share-code']);
+
+                if (!is_null($lpa)) {
+var_dump(json_encode($lpa));die();
+                }
+            }
+        }
+
+        return new HtmlResponse($this->renderer->render('app::enter-code'));
     }
 }

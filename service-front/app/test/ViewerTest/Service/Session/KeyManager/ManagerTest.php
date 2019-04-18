@@ -6,7 +6,6 @@ namespace ViewerTest\Service\Session\KeyManager;
 
 use Aws\Result as AwsResult;
 use Aws\SecretsManager\SecretsManagerClient;
-use Viewer\Service\Session\KeyManager\Config;
 use Viewer\Service\Session\KeyManager\KeyCache;
 use Viewer\Service\Session\KeyManager\Manager;
 use Viewer\Service\Session\KeyManager\KeyNotFoundException;
@@ -16,26 +15,25 @@ use ParagonIE\HiddenString\HiddenString;
 use Prophecy\Argument;
 use PHPUnit\Framework\TestCase;
 
-
 class ManagerTest extends TestCase
 {
     const NAME_OF_SECRET = 'name-of-secret';
 
-    private $cache;
-    private $secretsManagerClient;
+    private $cacheProphercy;
+    private $secretsManagerClientProphercy;
 
     public function setUp()
     {
-        $this->cache = $this->prophesize(KeyCache::class);
+        $this->cacheProphercy = $this->prophesize(KeyCache::class);
 
         //---
 
-        $this->secretsManagerClient = $this->prophesize(SecretsManagerClient::class);
+        $this->secretsManagerClientProphercy = $this->prophesize(SecretsManagerClient::class);
     }
 
     private function getManagerInstance()
     {
-        return new Manager(self::NAME_OF_SECRET, $this->secretsManagerClient->reveal(), $this->cache->reveal());
+        return new Manager(self::NAME_OF_SECRET, $this->secretsManagerClientProphercy->reveal(), $this->cacheProphercy->reveal());
     }
 
     public function testCanInstantiate()
@@ -57,13 +55,13 @@ class ManagerTest extends TestCase
 
         //---
 
-        $awsResult = $this->prophesize(AwsResult::class);
+        $awsResultProphercy = $this->prophesize(AwsResult::class);
 
-        $awsResult->hasKey('SecretString')->willReturn(false);
+        $awsResultProphercy->hasKey('SecretString')->willReturn(false);
 
-        $this->secretsManagerClient->getSecretValue([
+        $this->secretsManagerClientProphercy->getSecretValue([
             'SecretId' => self::NAME_OF_SECRET
-        ])->willReturn($awsResult);
+        ])->willReturn($awsResultProphercy->reveal());
 
         //---
 
@@ -82,14 +80,14 @@ class ManagerTest extends TestCase
 
         //---
 
-        $awsResult = $this->prophesize(AwsResult::class);
+        $awsResultProphercy = $this->prophesize(AwsResult::class);
 
-        $awsResult->hasKey('SecretString')->willReturn(true);
-        $awsResult->get('SecretString')->willReturn('not-valid-json');
+        $awsResultProphercy->hasKey('SecretString')->willReturn(true);
+        $awsResultProphercy->get('SecretString')->willReturn('not-valid-json');
 
-        $this->secretsManagerClient->getSecretValue([
+        $this->secretsManagerClientProphercy->getSecretValue([
             'SecretId' => self::NAME_OF_SECRET
-        ])->willReturn($awsResult);
+        ])->willReturn($awsResultProphercy->reveal());
 
         //---
 
@@ -110,18 +108,18 @@ class ManagerTest extends TestCase
         $testId = '12';
         $testMaterial = '1111'; // Code too short.
 
-        $awsResult = $this->prophesize(AwsResult::class);
+        $awsResultProphercy = $this->prophesize(AwsResult::class);
 
-        $awsResult->hasKey('SecretString')->willReturn(true);
+        $awsResultProphercy->hasKey('SecretString')->willReturn(true);
 
-        $awsResult->get('SecretString')->willReturn(json_encode([
+        $awsResultProphercy->get('SecretString')->willReturn(json_encode([
             $testId => $testMaterial,
             '4' => '0000000000000000000000000000000000000000000000000000000000000000',
         ]));
 
-        $this->secretsManagerClient->getSecretValue([
+        $this->secretsManagerClientProphercy->getSecretValue([
             'SecretId' => self::NAME_OF_SECRET
-        ])->willReturn($awsResult);
+        ])->willReturn($awsResultProphercy->reveal());
 
         //---
 
@@ -139,17 +137,17 @@ class ManagerTest extends TestCase
 
         //---
 
-        $awsResult = $this->prophesize(AwsResult::class);
+        $awsResultProphercy = $this->prophesize(AwsResult::class);
 
-        $awsResult->hasKey('SecretString')->willReturn(true);
+        $awsResultProphercy->hasKey('SecretString')->willReturn(true);
 
-        $awsResult->get('SecretString')->willReturn(json_encode([
+        $awsResultProphercy->get('SecretString')->willReturn(json_encode([
             '4' => '0000000000000000000000000000000000000000000000000000000000000000',
         ]));
 
-        $this->secretsManagerClient->getSecretValue([
+        $this->secretsManagerClientProphercy->getSecretValue([
             'SecretId' => self::NAME_OF_SECRET
-        ])->willReturn($awsResult);
+        ])->willReturn($awsResultProphercy->reveal());
 
         //---
 
@@ -167,19 +165,19 @@ class ManagerTest extends TestCase
 
         //---
 
-        $awsResult = $this->prophesize(AwsResult::class);
+        $awsResultProphercy = $this->prophesize(AwsResult::class);
 
-        $awsResult->hasKey('SecretString')->willReturn(true);
+        $awsResultProphercy->hasKey('SecretString')->willReturn(true);
 
-        $awsResult->get('SecretString')->willReturn(json_encode([
+        $awsResultProphercy->get('SecretString')->willReturn(json_encode([
             '4' => '0000000000000000000000000000000000000000000000000000000000000000',
             '5' => '1111111111111111111111111111111111111111111111111111111111111111',
             '14' => '2222222222222222222222222222222222222222222222222222222222222222',
         ]));
 
-        $this->secretsManagerClient->getSecretValue([
+        $this->secretsManagerClientProphercy->getSecretValue([
             'SecretId' => self::NAME_OF_SECRET
-        ])->willReturn($awsResult);
+        ])->willReturn($awsResultProphercy->reveal());
 
         //---
 
@@ -195,28 +193,28 @@ class ManagerTest extends TestCase
         $testId = '12';
         $testMaterial = '1111111111111111111111111111111111111111111111111111111111111111';
 
-        $awsResult = $this->prophesize(AwsResult::class);
+        $awsResultProphercy = $this->prophesize(AwsResult::class);
 
-        $awsResult->hasKey('SecretString')->willReturn(true);
+        $awsResultProphercy->hasKey('SecretString')->willReturn(true);
 
         // Defined this way around as we'd expect the 'biggest' number to be the current key
-        $awsResult->get('SecretString')->willReturn(json_encode([
+        $awsResultProphercy->get('SecretString')->willReturn(json_encode([
             $testId => $testMaterial,
             '4' => '0000000000000000000000000000000000000000000000000000000000000000',
         ]));
 
-        $this->secretsManagerClient->getSecretValue([
+        $this->secretsManagerClientProphercy->getSecretValue([
             'SecretId' => self::NAME_OF_SECRET
-        ])->willReturn($awsResult);
+        ])->willReturn($awsResultProphercy->reveal());
 
         //---
 
         // Cache will be checked first keys first
-        $this->cache->get(Manager::CACHE_SESSION_KEY)->willReturn(false);
+        $this->cacheProphercy->get(Manager::CACHE_SESSION_KEY)->willReturn(false);
 
         // Test cache methods were called
-        $this->cache->store(Manager::CACHE_SESSION_KEY, Argument::type('array'), Argument::type('int'))->shouldBeCalled();
-        $this->cache->store(Manager::CACHE_SESSION_UPDATED_KEY, Argument::type('int'))->shouldBeCalled();
+        $this->cacheProphercy->store(Manager::CACHE_SESSION_KEY, Argument::type('array'), Argument::type('int'))->shouldBeCalled();
+        $this->cacheProphercy->store(Manager::CACHE_SESSION_UPDATED_KEY, Argument::type('int'))->shouldBeCalled();
 
         //---
 
@@ -235,28 +233,28 @@ class ManagerTest extends TestCase
         $testId = '12';
         $testMaterial = '1111111111111111111111111111111111111111111111111111111111111111';
 
-        $awsResult = $this->prophesize(AwsResult::class);
+        $awsResultProphercy = $this->prophesize(AwsResult::class);
 
-        $awsResult->hasKey('SecretString')->willReturn(true);
+        $awsResultProphercy->hasKey('SecretString')->willReturn(true);
 
         // Defined this way around as we'd expect the 'biggest' number to be the current key
-        $awsResult->get('SecretString')->willReturn(json_encode([
+        $awsResultProphercy->get('SecretString')->willReturn(json_encode([
             '4' => '0000000000000000000000000000000000000000000000000000000000000000',
             $testId => $testMaterial,
         ]));
 
-        $this->secretsManagerClient->getSecretValue([
+        $this->secretsManagerClientProphercy->getSecretValue([
             'SecretId' => self::NAME_OF_SECRET
-        ])->willReturn($awsResult);
+        ])->willReturn($awsResultProphercy->reveal());
 
         //---
 
         // Cache will be checked first keys first
-        $this->cache->get(Manager::CACHE_SESSION_KEY)->willReturn(false);
+        $this->cacheProphercy->get(Manager::CACHE_SESSION_KEY)->willReturn(false);
 
         // Test cache methods were called
-        $this->cache->store(Manager::CACHE_SESSION_KEY, Argument::type('array'), Argument::type('int'))->shouldBeCalled();
-        $this->cache->store(Manager::CACHE_SESSION_UPDATED_KEY, Argument::type('int'))->shouldBeCalled();
+        $this->cacheProphercy->store(Manager::CACHE_SESSION_KEY, Argument::type('array'), Argument::type('int'))->shouldBeCalled();
+        $this->cacheProphercy->store(Manager::CACHE_SESSION_UPDATED_KEY, Argument::type('int'))->shouldBeCalled();
 
         //---
 
@@ -291,7 +289,7 @@ class ManagerTest extends TestCase
         ];
 
         // Cache will be checked first keys first
-        $this->cache->get(Manager::CACHE_SESSION_KEY)->willReturn($data);
+        $this->cacheProphercy->get(Manager::CACHE_SESSION_KEY)->willReturn($data);
 
         $m = $this->getManagerInstance();
 
@@ -347,10 +345,10 @@ class ManagerTest extends TestCase
         ];
 
         // Cache will be checked first keys first
-        $this->cache->get(Manager::CACHE_SESSION_KEY)->willReturn($data);
+        $this->cacheProphercy->get(Manager::CACHE_SESSION_KEY)->willReturn($data);
 
         // Return that we've just done a cache lookup
-        $this->cache->get(Manager::CACHE_SESSION_UPDATED_KEY)->willReturn(time());
+        $this->cacheProphercy->get(Manager::CACHE_SESSION_UPDATED_KEY)->willReturn(time());
 
         $m = $this->getManagerInstance();
 
@@ -379,30 +377,30 @@ class ManagerTest extends TestCase
         ];
 
         // Cache will be checked first keys first
-        $this->cache->get(Manager::CACHE_SESSION_KEY)->willReturn($data);
+        $this->cacheProphercy->get(Manager::CACHE_SESSION_KEY)->willReturn($data);
 
         // Return that the last lookup was a little while ago
-        $this->cache->get(Manager::CACHE_SESSION_UPDATED_KEY)->willReturn(time() - 300);
+        $this->cacheProphercy->get(Manager::CACHE_SESSION_UPDATED_KEY)->willReturn(time() - 300);
 
         //-----------------------------------------------------
 
-        $awsResult = $this->prophesize(AwsResult::class);
+        $awsResultProphercy = $this->prophesize(AwsResult::class);
 
-        $awsResult->hasKey('SecretString')->willReturn(true);
+        $awsResultProphercy->hasKey('SecretString')->willReturn(true);
 
         // Returns the exact same set of keys that was in the cache
-        $awsResult->get('SecretString')->willReturn(json_encode([
+        $awsResultProphercy->get('SecretString')->willReturn(json_encode([
             '7' => '0000000000000000000000000000000000000000000000000000000000000000',
             '8' => '1111111111111111111111111111111111111111111111111111111111111111',
         ]));
 
-        $this->secretsManagerClient->getSecretValue([
+        $this->secretsManagerClientProphercy->getSecretValue([
             'SecretId' => self::NAME_OF_SECRET
-        ])->willReturn($awsResult);
+        ])->willReturn($awsResultProphercy->reveal());
 
         // The cache will be updated
-        $this->cache->store(Manager::CACHE_SESSION_KEY, Argument::type('array'), Argument::type('int'))->shouldBeCalled();
-        $this->cache->store(Manager::CACHE_SESSION_UPDATED_KEY, Argument::type('int'))->shouldBeCalled();
+        $this->cacheProphercy->store(Manager::CACHE_SESSION_KEY, Argument::type('array'), Argument::type('int'))->shouldBeCalled();
+        $this->cacheProphercy->store(Manager::CACHE_SESSION_UPDATED_KEY, Argument::type('int'))->shouldBeCalled();
 
         //-----------------------------------------------------
 
@@ -427,30 +425,30 @@ class ManagerTest extends TestCase
         ];
 
         // Cache will be checked first keys first
-        $this->cache->get(Manager::CACHE_SESSION_KEY)->willReturn($data);
+        $this->cacheProphercy->get(Manager::CACHE_SESSION_KEY)->willReturn($data);
 
         // Return that the last lookup was a little while ago
-        $this->cache->get(Manager::CACHE_SESSION_UPDATED_KEY)->willReturn(time() - 300);
+        $this->cacheProphercy->get(Manager::CACHE_SESSION_UPDATED_KEY)->willReturn(time() - 300);
 
         //-----------------------------------------------------
 
-        $awsResult = $this->prophesize(AwsResult::class);
+        $awsResultProphercy = $this->prophesize(AwsResult::class);
 
-        $awsResult->hasKey('SecretString')->willReturn(true);
+        $awsResultProphercy->hasKey('SecretString')->willReturn(true);
 
         // Returns the exact same set of keys that was in the cache
-        $awsResult->get('SecretString')->willReturn(json_encode([
+        $awsResultProphercy->get('SecretString')->willReturn(json_encode([
             '8' => '1111111111111111111111111111111111111111111111111111111111111111',
             "$newId" => $newMaterial,
         ]));
 
-        $this->secretsManagerClient->getSecretValue([
+        $this->secretsManagerClientProphercy->getSecretValue([
             'SecretId' => self::NAME_OF_SECRET
-        ])->willReturn($awsResult);
+        ])->willReturn($awsResultProphercy->reveal());
 
         // The cache will be updated
-        $this->cache->store(Manager::CACHE_SESSION_KEY, Argument::type('array'), Argument::type('int'))->shouldBeCalled();
-        $this->cache->store(Manager::CACHE_SESSION_UPDATED_KEY, Argument::type('int'))->shouldBeCalled();
+        $this->cacheProphercy->store(Manager::CACHE_SESSION_KEY, Argument::type('array'), Argument::type('int'))->shouldBeCalled();
+        $this->cacheProphercy->store(Manager::CACHE_SESSION_UPDATED_KEY, Argument::type('int'))->shouldBeCalled();
 
         //-----------------------------------------------------
 

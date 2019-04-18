@@ -35,3 +35,13 @@ It can also be run independently with:
 ```bash
 docker-compose run viewer-composer
 ```
+
+New packages can be added with:
+```bash
+docker-compose run viewer-composer composer require author/package
+```
+
+Packages can be removed with:
+```bash
+docker-compose run viewer-composer composer remove author/package
+```

@@ -33,6 +33,9 @@ services:
       AWS_ENDPOINT_SECRETS_MANAGER: http://localstack:4584
       AWS_ACCESS_KEY_ID: '-'
       AWS_SECRET_ACCESS_KEY: '-'
+      ENABLE_XDEBUG: 'true'
+      PHP_IDE_CONFIG: serverName=viewer-app
+      XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1 remote_log=/tmp/xdebug.log
 
   viewer-composer:
     image: composer
