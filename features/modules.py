@@ -8,6 +8,7 @@ def get_frontend_url( frontend ):
   """
   workspace = os.getenv('TF_WORKSPACE', 'development')
 
+  # match workspace to a value in the dict or return a default value "development."
   account_namespace_mapping = defaultdict(lambda: "development.", {'production': "", 'preproduction': "preproduction."})
   dns_account_namespace = account_namespace_mapping[workspace]
 
@@ -16,7 +17,7 @@ def get_frontend_url( frontend ):
   else:
     dns_env_namespace = ""
 
-  URL = 'https://{0}{1}.{2}use-an-lpa.opg.service.justice.gov.uk'.format(dns_env_namespace, frontend, dns_account_namespace)
-  print(URL)
-  return URL
+  url = 'https://{0}{1}.{2}use-an-lpa.opg.service.justice.gov.uk'.format(dns_env_namespace, frontend, dns_account_namespace)
+  print(url)
+  return url
 
