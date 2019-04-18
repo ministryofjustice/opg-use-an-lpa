@@ -20,7 +20,8 @@ resource "aws_ecs_service" "viewer" {
     container_port   = 80
   }
 
-  depends_on = ["aws_lb.viewer", "aws_acm_certificate.cert", "aws_acm_certificate_validation.cert"]
+  # depends_on = ["aws_lb.viewer", "aws_acm_certificate.cert", "aws_acm_certificate_validation.cert"]
+  depends_on = ["aws_lb.viewer"]
 }
 
 //----------------------------------

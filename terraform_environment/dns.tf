@@ -6,7 +6,7 @@ data "aws_route53_zone" "opg_service_justice_gov_uk" {
 resource "aws_route53_record" "viewer-use-my-lpa" {
   provider = "aws.management"
   zone_id  = "${data.aws_route53_zone.opg_service_justice_gov_uk.zone_id}"
-  name     = "viewer.${local.dns_namespace}use-an-lpa"
+  name     = "${local.dns_namespace_env}viewer.${local.dns_namespace_acc}use-an-lpa"
   type     = "A"
 
   alias {

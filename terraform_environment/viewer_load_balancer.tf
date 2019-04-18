@@ -27,13 +27,14 @@ resource "aws_lb" "viewer" {
   }
 }
 
-// TODO - Change the default action to forward to the lb_target_group
 resource "aws_lb_listener" "viewer_loadbalancer" {
   load_balancer_arn = "${aws_lb.viewer.arn}"
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
-  certificate_arn   = "${aws_acm_certificate_validation.cert.certificate_arn}"
+
+  # certificate_arn   = "${aws_acm_certificate_validation.cert.certificate_arn}"
+  certificate_arn = "${data.aws_acm_certificate.certificate_viewer.arn}"
 
   default_action {
     target_group_arn = "${aws_lb_target_group.viewer.arn}"
