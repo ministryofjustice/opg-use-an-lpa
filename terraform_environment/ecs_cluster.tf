@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "use-an-lpa" {
-  name = "use-an-lpa"
+  name = "${terraform.workspace}-use-an-lpa"
   tags = "${local.default_tags}"
 }
 
@@ -16,7 +16,7 @@ data "aws_iam_policy_document" "task_role_assume_policy" {
 }
 
 resource "aws_iam_role" "execution_role" {
-  name               = "execution_role"
+  name               = "${terraform.workspace}-execution-role-ecs-cluster"
   assume_role_policy = "${data.aws_iam_policy_document.execution_role_assume_policy.json}"
   tags               = "${local.default_tags}"
 }
@@ -34,6 +34,7 @@ data "aws_iam_policy_document" "execution_role_assume_policy" {
 }
 
 resource "aws_iam_role_policy" "execution_role" {
+  name   = "${terraform.workspace}_execution_role"
   policy = "${data.aws_iam_policy_document.execution_role.json}"
   role   = "${aws_iam_role.execution_role.id}"
 }

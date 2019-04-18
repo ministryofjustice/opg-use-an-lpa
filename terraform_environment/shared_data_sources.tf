@@ -3,7 +3,7 @@ data "aws_vpc" "default" {
 }
 
 data "aws_s3_bucket" "access_log" {
-  bucket = "opg-use-an-lpa-${terraform.workspace}-lb-access-log"
+  bucket = "opg-ual-${local.account_name}-lb-access-log"
 }
 
 data "aws_subnet_ids" "private" {
@@ -34,4 +34,8 @@ data "aws_subnet" "public" {
 
 data "aws_cloudwatch_log_group" "use-an-lpa" {
   name = "use-an-lpa"
+}
+
+data "aws_acm_certificate" "certificate_viewer" {
+  domain = "${local.dev_wildcard}viewer.${local.dns_namespace_acc}use-an-lpa.opg.service.justice.gov.uk"
 }

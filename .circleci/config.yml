@@ -6,7 +6,6 @@ workflows:
       # Common tasks
       - use-my-lpa/lint_terraform:
           name: lint_terraform
-          workspace: development
           filters:
             branches:
               ignore: master
@@ -19,14 +18,12 @@ workflows:
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
           name: dev_apply_shared_terraform
-          workspace: development
           requires: [lint_terraform]
           filters:
             branches:
               ignore: master
       - use-my-lpa/apply_environment_terraform:
           name: dev_apply_environment_terraform
-          workspace: development
           requires: [dev_apply_shared_terraform, app_viewer_build, web_viewer_build]
           filters:
             branches:
@@ -34,7 +31,6 @@ workflows:
 
       - use-my-lpa/run_behave_suite:
           name: dev_run_behave_tests
-          workspace: development
           requires: [dev_apply_environment_terraform]
 
       # Provision and test preproduction
@@ -130,28 +126,35 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: development
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//-/}"
           container_version:
             description: Container version
             type: string
             default: ${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}
-        environment:
-          TF_WORKSPACE: "<<parameters.workspace>>"
-          TF_VAR_container_version: "<<parameters.container_version>>"
         steps:
           - checkout
           - run:
               name: Lint Shared Terraform
               command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                echo $SHORT_HASH
                 cd terraform_shared
                 terraform init
                 terraform validate
           - run:
               name: Lint Environment Terraform
               command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                echo $SHORT_HASH
                 cd terraform_environment
                 terraform init
-                terraform validate
+                terraform validate -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
 
       docker_build_viewer_app:
         #
@@ -224,6 +227,7 @@ orbs:
                 else
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
+
       apply_shared_terraform:
         #
         # Apply the shared terraform configuration. This:
@@ -245,6 +249,7 @@ orbs:
                 cd terraform_shared
                 terraform init
                 terraform apply --auto-approve
+
       apply_environment_terraform:
         #
         # Apply the environment terraform configuration. This:
@@ -256,18 +261,29 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: development
-        environment:
-          TF_WORKSPACE: "<<parameters.workspace>>"
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//-/}"
         steps:
           - checkout
           - run:
               name: Apply Environment Terraform
               command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                echo $SHORT_HASH
                 cd terraform_environment
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
+                if [ "${CIRCLE_BRANCH}" != "master" ]; then
+                  echo "Your environment, ${ENV_NAME:0:13} is built."
+                  echo "To destroy this environment"
+                  echo
+                  echo "cd terraform_environment"
+                  echo "aws-vault identity -- terraform init"
+                  echo "aws-vault identity -- terraform workspace select ${ENV_NAME:0:13}"
+                  echo "aws-vault identity -- terraform destroy"
+                fi
 
       run_behave_suite:
         #
@@ -278,9 +294,7 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: development
-        environment:
-          TF_WORKSPACE: "<<parameters.workspace>>"
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//-/}"
         steps:
           - checkout
           - install_webdriver
@@ -289,4 +303,10 @@ orbs:
               command: sudo pip3 install behave selenium --upgrade
           - run:
               name: run suite
-              command: behave
+              command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                echo $SHORT_HASH
+                behave

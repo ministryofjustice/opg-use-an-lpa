@@ -2,7 +2,7 @@
 // Viewer ECS Service level config
 
 resource "aws_ecs_service" "viewer" {
-  name            = "viewer"
+  name            = "${terraform.workspace}-viewer"
   cluster         = "${aws_ecs_cluster.use-an-lpa.id}"
   task_definition = "${aws_ecs_task_definition.viewer.arn}"
   desired_count   = 1
@@ -19,13 +19,16 @@ resource "aws_ecs_service" "viewer" {
     container_name   = "web"
     container_port   = 80
   }
+
+  # depends_on = ["aws_lb.viewer", "aws_acm_certificate.cert", "aws_acm_certificate_validation.cert"]
+  depends_on = ["aws_lb.viewer"]
 }
 
 //----------------------------------
 // The service's Security Groups
 
 resource "aws_security_group" "ecs_service" {
-  name_prefix = "ecs-service"
+  name_prefix = "${terraform.workspace}-viewer-ecs-service"
   vpc_id      = "${data.aws_vpc.default.id}"
   tags        = "${local.default_tags}"
 }
@@ -54,7 +57,7 @@ resource "aws_security_group_rule" "ecs_service_egress" {
 // Viewer ECS Service Task level config
 
 resource "aws_ecs_task_definition" "viewer" {
-  family                   = "viewer"
+  family                   = "${terraform.workspace}-viewer"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
@@ -69,13 +72,13 @@ resource "aws_ecs_task_definition" "viewer" {
 // Permissions
 
 resource "aws_iam_role" "use_an_lpa" {
-  name               = "viewer"
+  name               = "${terraform.workspace}-viewer-task-role"
   assume_role_policy = "${data.aws_iam_policy_document.task_role_assume_policy.json}"
   tags               = "${local.default_tags}"
 }
 
 resource "aws_iam_role_policy" "use_an_lpa_execution_role" {
-  name   = "ViewerApplicationPermissions"
+  name   = "${terraform.workspace}-ViewerApplicationPermissions"
   policy = "${data.aws_iam_policy_document.use_an_lpa_execution_role.json}"
   role   = "${aws_iam_role.use_an_lpa.id}"
 }

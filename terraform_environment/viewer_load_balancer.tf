@@ -1,5 +1,5 @@
 resource "aws_lb_target_group" "viewer" {
-  name                 = "viewer-loadbalancer-group"
+  name                 = "${terraform.workspace}-viewer"
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
@@ -10,7 +10,7 @@ resource "aws_lb_target_group" "viewer" {
 }
 
 resource "aws_lb" "viewer" {
-  name               = "viewer-${terraform.workspace}"
+  name               = "${terraform.workspace}-viewer"
   internal           = false
   load_balancer_type = "application"
   subnets            = ["${data.aws_subnet.public.*.id}"]
@@ -27,13 +27,14 @@ resource "aws_lb" "viewer" {
   }
 }
 
-// TODO - Change the default action to forward to the lb_target_group
 resource "aws_lb_listener" "viewer_loadbalancer" {
   load_balancer_arn = "${aws_lb.viewer.arn}"
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
-  certificate_arn   = "${aws_acm_certificate_validation.cert.certificate_arn}"
+
+  # certificate_arn   = "${aws_acm_certificate_validation.cert.certificate_arn}"
+  certificate_arn = "${data.aws_acm_certificate.certificate_viewer.arn}"
 
   default_action {
     target_group_arn = "${aws_lb_target_group.viewer.arn}"
@@ -42,7 +43,7 @@ resource "aws_lb_listener" "viewer_loadbalancer" {
 }
 
 resource "aws_security_group" "viewer_loadbalancer" {
-  name        = "viewer-${terraform.workspace}-sg"
+  name        = "${terraform.workspace}-viewer-loadbalancer"
   description = "Allow inbound traffic"
   vpc_id      = "${data.aws_vpc.default.id}"
   tags        = "${local.default_tags}"
