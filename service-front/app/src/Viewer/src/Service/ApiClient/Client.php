@@ -55,11 +55,13 @@ class Client
         $httpClientProphercy = $prophet->prophesize(HttpClient::class);
 
         $lpaDatasets = [
-            '123' => [
-                'id' => 'ABC',
+            '12345' => [
+                'id'      => 'A12345678901',
+                'isValid' => true,
             ],
-            '456' => [
-                'id' => 'DEF',
+            '67890' => [
+                'id'      => 'A98765432109',
+                'isValid' => false,
             ],
         ];
 

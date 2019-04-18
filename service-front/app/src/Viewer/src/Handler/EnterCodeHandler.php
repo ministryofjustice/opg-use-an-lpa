@@ -52,8 +52,9 @@ class EnterCodeHandler extends AbstractHandler
             if (isset($post['share-code'])) {
                 $lpa = $this->lpaService->getLpa($post['share-code']);
 
+                if (!is_null($lpa)) {
 var_dump(json_encode($lpa));die();
-
+                }
             }
         }
 
