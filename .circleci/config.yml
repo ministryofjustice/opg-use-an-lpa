@@ -317,8 +317,7 @@ orbs:
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   cd terraform_environment
                   terraform init
-                  terraform workspace select ${ENV_NAME:0:13}
-                  terraform destroy
+                  terraform destroy -auto-approve
                 fi
 
       run_behave_suite:
