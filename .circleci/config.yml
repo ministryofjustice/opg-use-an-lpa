@@ -32,11 +32,17 @@ workflows:
       - use-my-lpa/run_behave_suite:
           name: dev_run_behave_tests
           requires: [dev_apply_environment_terraform]
+          filters:
+            branches:
+              ignore: master
 
       - hold-for-destruction:
           name: hold_env_for_destruction
           type: approval 
           requires: [dev_run_behave_tests]
+          filters:
+            branches:
+              ignore: master
 
       - use-my-lpa/destroy_dev_environment:
           name: dev_destroy_environment
