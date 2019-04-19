@@ -33,6 +33,18 @@ workflows:
           name: dev_run_behave_tests
           requires: [dev_apply_environment_terraform]
 
+      - hold-for-destruction:
+          name: hold_env_for_destruction
+          type: approval 
+          requires: [dev_run_behave_tests]
+
+      - use-my-lpa/destroy_dev_environment:
+          name: dev_destroy_environment
+          requires: [hold_env_for_destruction]
+          filters:
+            branches:
+              ignore: master
+
       # Provision and test preproduction
       - use-my-lpa/apply_shared_terraform:
           name: preprod_apply_shared_terraform
@@ -249,7 +261,6 @@ orbs:
                 cd terraform_shared
                 terraform init
                 terraform apply --auto-approve
-
       apply_environment_terraform:
         #
         # Apply the environment terraform configuration. This:
@@ -275,6 +286,36 @@ orbs:
                 cd terraform_environment
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
+                if [ "${CIRCLE_BRANCH}" != "master" ]; then
+                  echo "Your environment, ${ENV_NAME:0:13} is built."
+                  echo "To destroy this environment"
+                  echo
+                  echo "cd terraform_environment"
+                  echo "aws-vault exec identity -- terraform init"
+                  echo "aws-vault exec identity -- terraform workspace select ${ENV_NAME:0:13}"
+                  echo "aws-vault exec identity -- terraform destroy"
+                fi
+
+      destroy_dev_environment:
+        #
+        # Destroys a development environment after testing and approval
+        #
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//-/}"
+        steps:
+          - checkout
+          - run:
+              name: Destroy Development Environment
+              command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                echo $SHORT_HASH
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   echo "Your environment, ${ENV_NAME:0:13} is built."
                   echo "To destroy this environment"
