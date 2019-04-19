@@ -314,16 +314,11 @@ orbs:
                 ENV_NAME=<<parameters.workspace>>
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                echo $SHORT_HASH
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
-                  echo "Your environment, ${ENV_NAME:0:13} is built."
-                  echo "To destroy this environment"
-                  echo
-                  echo "cd terraform_environment"
-                  echo "aws-vault exec identity -- terraform init"
-                  echo "aws-vault exec identity -- terraform workspace select ${ENV_NAME:0:13}"
-                  echo "aws-vault exec identity -- terraform destroy"
+                  cd terraform_environment
+                  terraform init
+                  terraform workspace select ${ENV_NAME:0:13}
+                  terraform destroy
                 fi
 
       run_behave_suite:
