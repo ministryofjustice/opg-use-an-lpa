@@ -27,10 +27,10 @@ class Key
     /**
      * Key constructor.
      *
-     * @param int $id
+     * @param int|string $id
      * @param EncryptionKey $material
      */
-    public function __construct(int $id, EncryptionKey $material)
+    public function __construct($id, EncryptionKey $material)
     {
         $this->id = $id;
         $this->material = $material;
@@ -39,9 +39,9 @@ class Key
     /**
      * Return ihe key's ID
      *
-     * @return int
+     * @return int|string
      */
-    public function getId() : int
+    public function getId()
     {
         return $this->id;
     }
