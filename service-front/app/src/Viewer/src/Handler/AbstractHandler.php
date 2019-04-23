@@ -18,6 +18,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 abstract class AbstractHandler implements RequestHandlerInterface
 {
     use Traits\Session;
+    use Traits\Form;
 
     /**
      * @var TemplateRendererInterface

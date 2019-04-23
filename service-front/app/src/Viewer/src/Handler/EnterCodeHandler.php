@@ -17,9 +17,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  */
 class EnterCodeHandler extends AbstractHandler
 {
-    /**
-     * @var LpaService
-     */
+    /** @var LpaService */
     private $lpaService;
 
     /**
@@ -38,6 +36,7 @@ class EnterCodeHandler extends AbstractHandler
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Http\Client\Exception
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
@@ -53,7 +52,7 @@ class EnterCodeHandler extends AbstractHandler
                 $lpa = $this->lpaService->getLpa($post['share-code']);
 
                 if (!is_null($lpa)) {
-var_dump(json_encode($lpa));die();
+                    var_dump(json_encode($lpa));die();
                 }
             }
         }
