@@ -23,7 +23,7 @@ class LpaServiceTest extends TestCase
     public function testGetLpa()
     {
         $apiClientProphecy = $this->prophesize(Client::class);
-        $apiClientProphecy->httpGet('/path/to/lpa', [
+        $apiClientProphecy->httpGet('/lpa-by-code', [
                 'code' => 123,
             ])
             ->willReturn([
@@ -33,7 +33,7 @@ class LpaServiceTest extends TestCase
 
         $service = new LpaService($apiClientProphecy->reveal());
 
-        $lpa = $service->getLpa('123');
+        $lpa = $service->getLpaByCode('123');
 
         $this->assertInstanceOf(ArrayObject::class, $lpa);
         $this->assertEquals(987654321, $lpa->id);
@@ -43,14 +43,14 @@ class LpaServiceTest extends TestCase
     public function testGetLpaNotFound()
     {
         $apiClientProphecy = $this->prophesize(Client::class);
-        $apiClientProphecy->httpGet('/path/to/lpa', [
+        $apiClientProphecy->httpGet('/lpa-by-code', [
                 'code' => 999,
             ])
             ->willReturn(null);
 
         $service = new LpaService($apiClientProphecy->reveal());
 
-        $lpa = $service->getLpa('999');
+        $lpa = $service->getLpaByCode('999');
 
         $this->assertNotInstanceOf(ArrayObject::class, $lpa);
         $this->assertNull($lpa);
@@ -59,7 +59,7 @@ class LpaServiceTest extends TestCase
     public function testGetLpaById()
     {
         $apiClientProphecy = $this->prophesize(Client::class);
-        $apiClientProphecy->httpGet('/path/to/lpa', [
+        $apiClientProphecy->httpGet('/lpa', [
                 'id' => 123456789,
             ])
             ->willReturn([

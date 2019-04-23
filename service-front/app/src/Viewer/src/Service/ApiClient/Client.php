@@ -54,9 +54,71 @@ class Client
         $prophet = new \Prophecy\Prophet();
         $httpClientProphercy = $prophet->prophesize(HttpClient::class);
 
+        //  The keys in this data array represent the LPA share codes
         $lpaDatasets = [
             '12345' => [
-                'id'      => '12345678901',
+                'id' => '12345678901',
+                'caseNumber' => '787640393837',
+                'type' => 'property-and-financial',
+                'donor' => [
+                    'name' => [
+                        'title' => 'Mr',
+                        'first' => 'Jordan',
+                        'last' => 'Johnson',
+                    ],
+                    'dob' => [
+                        'date' => '1980-01-01T00:00:00+00:00',
+                    ],
+                    'address' => [
+                        'address1' => '1 High Street',
+                        'address2' => 'Hampton',
+                        'address3' => 'Wessex',
+                        'postcode' => 'LH1 7QQ',
+                    ],
+                ],
+                'attorneys' => [
+                    [
+                        'name' => [
+                            'title' => 'Mr',
+                            'first' => 'Peter',
+                            'last' => 'Smith',
+                        ],
+                        'dob' => [
+                            'date' => '1984-02-14T00:00:00+00:00',
+                        ],
+                        'address' => [
+                            'address1' => '1 High Street',
+                            'address2' => 'Hampton',
+                            'address3' => 'Wessex',
+                            'postcode' => 'LH1 7QQ',
+                        ],
+                    ],
+                    [
+                        'name' => [
+                            'title' => 'Miss',
+                            'first' => 'Celia',
+                            'last' => 'Smith',
+                        ],
+                        'dob' => [
+                            'date' => '1988-11-12T00:00:00+00:00',
+                        ],
+                        'address' => [
+                            'address1' => '1 Avenue Road',
+                            'address2' => 'Great Hampton',
+                            'address3' => 'Wessex',
+                            'postcode' => 'LH4 8PU',
+                        ],
+                    ],
+                ],
+                'decisions' => [
+                    'how' => 'jointly',
+                    'when' => 'no-capacity',
+                ],
+                'preferences' => false,
+                'instructions' => false,
+                'dateDonorSigned' => '2017-02-25T00:00:00+00:00',
+                'dateRegistration' => '2017-04-15T00:00:00+00:00',
+                'dateLastConfirmedStatus' => '2019-04-22T00:00:00+00:00',
                 'isValid' => true,
             ],
             '67890' => [
@@ -67,12 +129,6 @@ class Client
 
         //  Loop through the LPA datasets and set up the mock data
         foreach ($lpaDatasets as $shareCode => $lpaDataset) {
-            //  Generate the intended request with the share code parameter
-            $uri = new Uri($apiBaseUri . '/path/to/lpa');
-            $uri = Uri::withQueryValue($uri, 'code', $shareCode);
-
-            $request = new Request('GET', $uri, $this->buildHeaders());
-
             //  Generate the mocked response
             $responseProphecy = $prophet->prophesize(ResponseInterface::class);
             $responseProphecy->getStatusCode()
@@ -80,9 +136,20 @@ class Client
             $responseProphecy->getBody()
                 ->willReturn(json_encode($lpaDataset));
 
-            //  Attach the request and response to the mocked client
-            $httpClientProphercy->sendRequest($request)
-                ->willReturn($responseProphecy->reveal());
+            //  Set up the URIs for which this response is returned
+            $uri1 = new Uri($apiBaseUri . '/lpa-by-code');
+            $uri1 = Uri::withQueryValue($uri1, 'code', $shareCode);
+
+            $uri2 = new Uri($apiBaseUri . '/lpa');
+            $uri2 = Uri::withQueryValue($uri2, 'id', $lpaDataset['id']);
+
+            foreach ([$uri1, $uri2] as $uri) {
+                $request = new Request('GET', $uri, $this->buildHeaders());
+
+                //  Attach the request and response to the mocked client
+                $httpClientProphercy->sendRequest($request)
+                    ->willReturn($responseProphecy->reveal());
+            }
         }
 
         //  Response for not found 404
