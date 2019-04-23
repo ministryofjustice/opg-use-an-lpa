@@ -1,16 +1,10 @@
-<?php $this->layout('layout::default', ['title' => 'Enter code']) ?>
+{% extends '@layout/default.html.twig' %}
 
+{% block title %}Enter code{% endblock %}
+
+{% block content %}
 <div class="govuk-width-container">
-    <div class="govuk-phase-banner">
-        <p class="govuk-phase-banner__content"><strong class="govuk-tag govuk-phase-banner__content__tag ">
-                alpha
-            </strong>
-            <span class="govuk-phase-banner__text">
-                    This is a new service – your
-                    <a class="govuk-link" href="#">feedback</a> will help us to improve it.
-                </span>
-        </p>
-    </div>
+    {{ include('@partials/new-service.html.twig') }}
     <a href="/" class="govuk-back-link">Back</a>
 
     <main class="govuk-main-wrapper">
@@ -18,23 +12,26 @@
             <div class="govuk-grid-column-one-half">
                 <h1 class="govuk-heading-xl">Enter Code</h1>
 
-                <form method="post">
+                {{ form_start(form) }}
                     <fieldset class="govuk-fieldset">
+                        <input type="hidden" name="__csrf" value="{{ csrf_token }}">
 
                         <div class="govuk-form-group">
-                            <label class="govuk-label" for="share-code">
+                            <label class="govuk-label" for="code">
                                 LPA code
                             </label>
-                            <input class="govuk-input" id="share-code" name="share-code"
+                            <span id="name-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> Enter your full name
+                            </span>
+                            <input class="govuk-input govuk-input--error" id="code" name="code"
                                    type="text">
-
                         </div>
 
                         <details class="govuk-details">
                             <summary class="govuk-details__summary">
-                                    <span class="govuk-details__summary-text">
-                                        What is a share code?
-                                    </span>
+                                <span class="govuk-details__summary-text">
+                                    What is a share code?
+                                </span>
                             </summary>
                             <div class="govuk-details__text">
                                 A share code is given to you by the donor or an attorney named on the lasting power
@@ -44,9 +41,11 @@
 
                         <button type="submit" class="govuk-button">Save and continue</button>
                     </fieldset>
-                </form>
+                {{ form_end(form) }}
             </div>
         </div>
 
     </main>
 </div>
+
+{% endblock %}
