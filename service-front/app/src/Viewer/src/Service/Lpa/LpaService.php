@@ -4,6 +4,7 @@ namespace Viewer\Service\Lpa;
 
 use Viewer\Service\ApiClient\Client as ApiClient;
 use ArrayObject;
+use DateTime;
 
 /**
  * Class LpaService
@@ -26,33 +27,13 @@ class LpaService
     }
 
     /**
-     * Get an LPA
-     *
-     * @param string $shareCode
-     * @return ArrayObject|null
-     * @throws \Http\Client\Exception
-     */
-    public function getLpa(string $shareCode) : ?ArrayObject
-    {
-        $lpaData = $this->apiClient->httpGet('/path/to/lpa', [
-            'code' => $shareCode,
-        ]);
-
-        if (is_array($lpaData)) {
-            return $this->parseLpaData($lpaData);
-        }
-
-        return null;
-    }
-
-    /**
      * @param int $lpaId
      * @return ArrayObject|null
      * @throws \Http\Client\Exception
      */
     public function getLpaById(int $lpaId) : ?ArrayObject
     {
-        $lpaData = $this->apiClient->httpGet('/path/to/lpa', [
+        $lpaData = $this->apiClient->httpGet('/lpa', [
             'id' => $lpaId,
         ]);
 
@@ -64,12 +45,48 @@ class LpaService
     }
 
     /**
-     * @param array $lpaData
+     * Get an LPA
+     *
+     * @param string $shareCode
+     * @return ArrayObject|null
+     * @throws \Http\Client\Exception
+     */
+    public function getLpaByCode(string $shareCode) : ?ArrayObject
+    {
+        $lpaData = $this->apiClient->httpGet('/lpa-by-code', [
+            'code' => $shareCode,
+        ]);
+
+        if (is_array($lpaData)) {
+            return $this->parseLpaData($lpaData);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array $data
      * @return ArrayObject
      */
-    private function parseLpaData(array $lpaData): ArrayObject
+    private function parseLpaData(array $data): ArrayObject
     {
+        foreach ($data as $dataItemName => $dataItem) {
+            if (!is_numeric($dataItemName) && in_array($dataItemName, ['dob', 'dateDonorSigned', 'dateRegistration', 'dateLastConfirmedStatus'])) {
+                if ($dataItemName === 'dob') {
+                    $dataItem = $dataItem['date'];
+                }
+
+                $dob = new DateTime($dataItem);
+
+                $data[$dataItemName] = $dob->format('j F Y');
+            } elseif ($dataItemName === 'address') {
+                $data[$dataItemName] = implode(', ', $dataItem);
+            } elseif (is_array($dataItem)) {
+                $data[$dataItemName] = $this->parseLpaData($dataItem);
+            }
+        }
+
         //  TODO - Transform the data array into a data object
-        return new ArrayObject($lpaData, ArrayObject::ARRAY_AS_PROPS);
+        return new ArrayObject($data, ArrayObject::ARRAY_AS_PROPS);
     }
 }

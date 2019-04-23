@@ -53,7 +53,7 @@ class EnterCodeHandler extends AbstractHandler
             //  TODO - Validation required....
 
             if (isset($post['share-code'])) {
-                $lpa = $this->lpaService->getLpa($post['share-code']);
+                $lpa = $this->lpaService->getLpaByCode($post['share-code']);
 
                 if ($lpa instanceof \ArrayObject) {
                     return $this->redirectToRoute('view-lpa', [
