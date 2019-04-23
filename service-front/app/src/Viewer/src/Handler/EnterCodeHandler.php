@@ -65,8 +65,10 @@ class EnterCodeHandler extends AbstractHandler
             $data = $form->getData();
             $lpa = $this->lpaService->getLpa($data['lpa_code']);
 
-            if (!is_null($lpa)) {
-                var_dump(json_encode($lpa));die();
+            if ($lpa instanceof \ArrayObject) {
+                return $this->redirectToRoute('view-lpa', [
+                    'id' => $lpa->id,
+                ]);
             }
         }
 

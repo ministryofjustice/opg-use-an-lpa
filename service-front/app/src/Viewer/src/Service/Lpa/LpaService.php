@@ -39,10 +39,37 @@ class LpaService
         ]);
 
         if (is_array($lpaData)) {
-            //  TODO - Transform the data array into a data object
-            return new ArrayObject($lpaData);
+            return $this->parseLpaData($lpaData);
         }
 
         return null;
+    }
+
+    /**
+     * @param int $lpaId
+     * @return ArrayObject|null
+     * @throws \Http\Client\Exception
+     */
+    public function getLpaById(int $lpaId) : ?ArrayObject
+    {
+        $lpaData = $this->apiClient->httpGet('/path/to/lpa', [
+            'id' => $lpaId,
+        ]);
+
+        if (is_array($lpaData)) {
+            return $this->parseLpaData($lpaData);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array $lpaData
+     * @return ArrayObject
+     */
+    private function parseLpaData(array $lpaData): ArrayObject
+    {
+        //  TODO - Transform the data array into a data object
+        return new ArrayObject($lpaData, ArrayObject::ARRAY_AS_PROPS);
     }
 }

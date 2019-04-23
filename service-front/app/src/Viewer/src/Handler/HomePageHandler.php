@@ -20,10 +20,6 @@ class HomePageHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        if ($request->getMethod() == 'POST') {
-            return $this->redirectToRoute('enter-code');
-        }
-
         return new HtmlResponse($this->renderer->render('app::home-page'));
     }
 }

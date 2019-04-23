@@ -65,8 +65,9 @@ class ConfigProvider
 
             'factories'  => [
                 // Handlers
-                Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
                 Handler\EnterCodeHandler::class => Handler\EnterCodeHandlerFactory::class,
+                Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
+                Handler\ViewLpaHandler::class => Handler\ViewLpaHandlerFactory::class,
 
                 // Services
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
