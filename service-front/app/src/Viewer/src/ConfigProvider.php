@@ -50,8 +50,9 @@ class ConfigProvider
 
             'factories'  => [
                 // Handlers
-                Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
                 Handler\EnterCodeHandler::class => Handler\EnterCodeHandlerFactory::class,
+                Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
+                Handler\ViewLpaHandler::class => Handler\ViewLpaHandlerFactory::class,
 
                 // Services
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
@@ -82,9 +83,10 @@ class ConfigProvider
     {
         return [
             'paths' => [
-                'app'    => [__DIR__ . '/../templates/app'],
-                'error'  => [__DIR__ . '/../templates/error'],
-                'layout' => [__DIR__ . '/../templates/layout'],
+                'app'     => [__DIR__ . '/../templates/app'],
+                'error'   => [__DIR__ . '/../templates/error'],
+                'layout'  => [__DIR__ . '/../templates/layout'],
+                'snippet' => [__DIR__ . '/../templates/snippet'],
             ],
         ];
     }

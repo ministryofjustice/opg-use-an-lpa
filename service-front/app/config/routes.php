@@ -35,4 +35,5 @@ use Zend\Expressive\MiddlewareFactory;
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
     $app->route('/', Viewer\Handler\HomePageHandler::class, ['GET', 'POST'], 'home');
     $app->route('/enter-code', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'],'enter-code');
+    $app->get('/view-lpa/{id:\d+}', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
 };

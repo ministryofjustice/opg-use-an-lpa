@@ -12,10 +12,10 @@ use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
- * Class EnterCodeHandler
+ * Class ViewLpaHandler
  * @package Viewer\Handler
  */
-class EnterCodeHandler extends AbstractHandler
+class ViewLpaHandler extends AbstractHandler
 {
     /**
      * @var LpaService
@@ -23,7 +23,7 @@ class EnterCodeHandler extends AbstractHandler
     private $lpaService;
 
     /**
-     * EnterCodeHandler constructor.
+     * ViewLpaHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param LpaService $lpaService
@@ -41,32 +41,14 @@ class EnterCodeHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $s = $this->getSession($request,'session');
+        $lpaId = $request->getAttribute('id');
 
-        $s->set('test', 'hello');
+        $lpa = $this->lpaService->getLpaById((int) $lpaId);
 
-        $errorMsg = null;
+        //  TODO - Check that the user is allowed to view this LPA? Re-verify the share code?
 
-        if ($request->getMethod() == 'POST') {
-            $post = $request->getParsedBody();
-
-            //  TODO - Validation required....
-
-            if (isset($post['share-code'])) {
-                $lpa = $this->lpaService->getLpa($post['share-code']);
-
-                if ($lpa instanceof \ArrayObject) {
-                    return $this->redirectToRoute('view-lpa', [
-                        'id' => $lpa->id,
-                    ]);
-                } else {
-                    $errorMsg = 'No LPA were found using the provided code';
-                }
-            }
-        }
-
-        return new HtmlResponse($this->renderer->render('app::enter-code', [
-            'errorMsg' => $errorMsg,
+        return new HtmlResponse($this->renderer->render('app::view-lpa', [
+            'lpa' => $lpa,
         ]));
     }
 }
