@@ -6,7 +6,14 @@ namespace Viewer;
 
 use Aws;
 use Http;
+use Composer\Autoload\ClassLoader;
+use ReflectionClass;
 use Zend;
+use Symfony;
+use Twig;
+
+use function realpath;
+use function dirname;
 
 /**
  * The configuration provider for the App module
@@ -27,6 +34,7 @@ class ConfigProvider
         return [
             'dependencies' => $this->getDependencies(),
             'templates'    => $this->getTemplates(),
+            'twig'         => $this->getTwig()
         ];
     }
 
@@ -39,6 +47,12 @@ class ConfigProvider
             'aliases' => [
                 Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
                 Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookie::class,
+
+                // Twig
+                Symfony\Component\Form\FormRenderer::class => Symfony\Component\Form\FormRendererInterface::class,
+
+                // Forms
+                Symfony\Component\Form\FormFactoryInterface::class => Symfony\Component\Form\FormFactory::class
             ],
 
             'invokables' => [
@@ -61,6 +75,17 @@ class ConfigProvider
 
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
                 Service\Lpa\LpaService::class => Service\Lpa\LpaServiceFactory::class,
+
+                // Twig
+                Symfony\Bridge\Twig\Extension\FormExtension::class => Service\Twig\FormExtensionFactory::class,
+                Symfony\Bridge\Twig\Extension\TranslationExtension::class => Service\Twig\TranslationExtensionFactory::class,
+                Twig\RuntimeLoader\ContainerRuntimeLoader::class => Service\Twig\ContainerRuntimeLoaderFactory::class,
+                Symfony\Component\Form\FormRendererInterface::class => Service\Twig\FormRendererFactory::class,
+                Symfony\Component\Form\FormRendererEngineInterface::class => Service\Twig\FormRendererEngineFactory::class,
+
+                // Forms
+                Symfony\Component\Form\FormFactory::class => Service\Form\FormFactory::class,
+
                 Service\Session\EncryptedCookie::class => Service\Session\EncryptedCookieFactory::class,
                 Service\Session\KeyManager\Manager::class => Service\Session\KeyManager\ManagerFactory::class,
 
@@ -80,13 +105,34 @@ class ConfigProvider
      */
     public function getTemplates() : array
     {
+        $reflector = new ReflectionClass(ClassLoader::class);
+        $file      = $reflector->getFileName();
+        $vendorDir = realpath(dirname($file) . '/../');
+
         return [
             'paths' => [
+                $vendorDir . '/symfony/twig-bridge/Resources/views/Form',
                 'app'      => [__DIR__ . '/../templates/app'],
                 'error'    => [__DIR__ . '/../templates/error'],
                 'layout'   => [__DIR__ . '/../templates/layout'],
                 'partials' => [__DIR__ . '/../templates/partials'],
             ],
+        ];
+    }
+
+    public function getTwig() : array
+    {
+        return [
+            'form_themes' => [
+                'form_div_layout.html.twig'
+            ],
+            'extensions' => [
+                Symfony\Bridge\Twig\Extension\FormExtension::class,
+                Symfony\Bridge\Twig\Extension\TranslationExtension::class
+            ],
+            'runtime_loaders' => [
+                Twig\RuntimeLoader\ContainerRuntimeLoader::class
+            ]
         ];
     }
 }
