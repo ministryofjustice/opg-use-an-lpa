@@ -135,7 +135,7 @@ locals {
         "logDriver": "awslogs",
         "options": {
             "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
-            "awslogs-region": "eu-west-2",
+            "awslogs-region": "eu-west-1",
             "awslogs-stream-prefix": "viewer-web.use-an-lpa"
         }
     },
@@ -174,7 +174,7 @@ locals {
         "logDriver": "awslogs",
         "options": {
             "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
-            "awslogs-region": "eu-west-2",
+            "awslogs-region": "eu-west-1",
             "awslogs-stream-prefix": "viewer-app.use-an-lpa"
         }
     },

@@ -55,7 +55,7 @@ services:
       - 4584:4584
     environment:
       - SERVICES=secretsmanager:4584
-      - DEFAULT_REGION=eu-west-2
+      - DEFAULT_REGION=eu-west-1
       - HOSTNAME=localstack
 
   localstack-config:

@@ -1,5 +1,5 @@
 data "aws_elb_service_account" "main" {
-  region = "eu-west-2"
+  region = "eu-west-1"
 }
 
 data "aws_iam_policy_document" "viewer_loadbalancer" {
@@ -23,7 +23,7 @@ data "aws_iam_policy_document" "viewer_loadbalancer" {
 }
 
 resource "aws_s3_bucket" "access_log" {
-  bucket = "opg-ual-${terraform.workspace}-lb-access-log"
+  bucket = "opg-ual-${terraform.workspace}-lb-access-logs"
   acl    = "private"
   tags   = "${local.default_tags}"
 
