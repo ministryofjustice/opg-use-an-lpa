@@ -124,7 +124,7 @@ class ConfigProvider
     {
         return [
             'form_themes' => [
-                'form_div_layout.html.twig'
+                '@partials/govuk_form.html.twig'
             ],
             'extensions' => [
                 Symfony\Bridge\Twig\Extension\FormExtension::class,
