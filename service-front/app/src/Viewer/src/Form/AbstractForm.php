@@ -14,8 +14,6 @@ abstract class AbstractForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('__csrf', HiddenType::class, [
-                'constraints' => new NotBlank()
-            ]);
+            ->add('__csrf', HiddenType::class);
     }
 }

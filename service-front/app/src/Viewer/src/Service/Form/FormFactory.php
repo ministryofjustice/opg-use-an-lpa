@@ -28,7 +28,7 @@ class FormFactory
 
         $ffb = Forms::createFormFactoryBuilder();
         $ffb->addExtension(new ValidatorExtension($validator));
-        //$ffb->addExtension(new PHP7RequestHandler());
+        //$ffb->addExtension(new PSR7RequestHandler());
 
         $ffb->addType(new ShareCode());
 
