@@ -13,18 +13,16 @@
                 <h1 class="govuk-heading-xl">Enter Code</h1>
 
                 {{ form_start(form) }}
+                    {{ form_errors(form) }}
                     <fieldset class="govuk-fieldset">
-                        <input type="hidden" name="__csrf" value="{{ csrf_token }}">
+                        {{ form_widget(form.__csrf) }}
 
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="code">
-                                LPA code
-                            </label>
-                            <span id="name-error" class="govuk-error-message">
-                                <span class="govuk-visually-hidden">Error:</span> Enter your full name
-                            </span>
-                            <input class="govuk-input govuk-input--error" id="code" name="code"
-                                   type="text">
+                        <div class="govuk-form-group {% if form.lpa_code.vars.errors|length > 0 %}govuk-form-group--error{% endif %}">
+                            {{ form_label(form.lpa_code, 'LPA Code', {'label_attr': {'class': 'govuk-label'}}) }}
+
+                            {{ form_errors(form.lpa_code) }}
+
+                            {{ form_widget(form.lpa_code, {'attr': {'class': 'govuk-input'}}) }}
                         </div>
 
                         <details class="govuk-details">
