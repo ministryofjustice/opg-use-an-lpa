@@ -6,8 +6,8 @@ namespace Viewer\Form;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class ShareCode extends AbstractForm
 {
@@ -16,10 +16,13 @@ class ShareCode extends AbstractForm
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('code', TextType::class, [
+            ->add('lpa_code', TextType::class, [
                 'constraints' => [
                     new NotBlank(),
-                    new Length(['value' => 12])
+                    new Regex([
+                        'pattern' => '/[\w\d]{4,4}-[\w\d]{4,4}-[\w\d]{4,4}/',
+                        'message' => 'Enter an LPA share code in the correct format.'
+                    ])
                 ]
             ]);
     }
