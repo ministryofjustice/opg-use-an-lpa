@@ -10,6 +10,7 @@ use Viewer\Service\Lpa\LpaService;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
+use ArrayObject;
 
 /**
  * Class EnterCodeHandler
@@ -52,16 +53,18 @@ class EnterCodeHandler extends AbstractHandler
 
             //  TODO - Validation required....
 
-            if (isset($post['share-code'])) {
+            if (isset($post['share-code']) && !empty($post['share-code'])) {
                 $lpa = $this->lpaService->getLpaByCode($post['share-code']);
 
-                if ($lpa instanceof \ArrayObject) {
+                if ($lpa instanceof ArrayObject) {
                     return $this->redirectToRoute('view-lpa', [
                         'id' => $lpa->id,
                     ]);
                 } else {
                     $errorMsg = 'No LPA were found using the provided code';
                 }
+            } else {
+                $errorMsg = 'Please enter a code';
             }
         }
 
