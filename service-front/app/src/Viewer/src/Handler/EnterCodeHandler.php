@@ -77,13 +77,7 @@ class EnterCodeHandler extends AbstractHandler
         $token = $guard->generateToken();
 
         return new HtmlResponse(
-            $this->renderer->render(
-                'app::enter-code',
-                [
-                    'csrf_token' => $token ,
-                    'form' => $form->createView()
-                ]
-            )
+            $this->renderer->render('app::enter-code', [ 'form' => $form->createView() ])
         );
     }
 }
