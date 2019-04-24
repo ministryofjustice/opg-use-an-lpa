@@ -12,6 +12,7 @@ use Zend\Expressive\Helper\UrlHelper;
 use Viewer\Form\ShareCode;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
+use ArrayObject;
 
 /**
  * Class EnterCodeHandler
@@ -65,7 +66,7 @@ class EnterCodeHandler extends AbstractHandler
             $data = $form->getData();
             $lpa = $this->lpaService->getLpaByCode($data['lpa_code']);
 
-            if ($lpa instanceof \ArrayObject) {
+            if ($lpa instanceof ArrayObject) {
                 return $this->redirectToRoute('view-lpa', [
                     'id' => $lpa->id,
                 ]);
