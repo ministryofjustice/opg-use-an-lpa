@@ -64,7 +64,7 @@ class EnterCodeHandler extends AbstractHandler
         if ($form->isSubmitted() && $form->isValid())
         {
             $data = $form->getData();
-            $lpa = $this->lpaService->getLpa($data['share-code']);
+            $lpa = $this->lpaService->getLpa($data['lpa_code']);
 
             if (!is_null($lpa)) {
                 var_dump(json_encode($lpa));die();
