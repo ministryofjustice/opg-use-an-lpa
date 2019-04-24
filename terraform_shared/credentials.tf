@@ -10,7 +10,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "eu-west-2"
+  region = "eu-west-1"
 
   assume_role {
     role_arn     = "arn:aws:iam::${local.account}:role/${var.default_role}"

@@ -1,5 +1,5 @@
 data "aws_elb_service_account" "main" {
-  region = "eu-west-2"
+  region = "eu-west-1"
 }
 
 data "aws_iam_policy_document" "viewer_loadbalancer" {

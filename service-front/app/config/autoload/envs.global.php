@@ -5,7 +5,7 @@ declare(strict_types=1);
 return [
 
     'aws' => [
-        'region'    => 'eu-west-2',
+        'region'    => 'eu-west-1',
         'version'   => 'latest',
 
         'SecretsManager' => [
