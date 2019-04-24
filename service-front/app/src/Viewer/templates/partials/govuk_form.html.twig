@@ -1,2 +1,42 @@
 {% use 'form_div_layout.html.twig' %}
 
+{%- block form_errors -%}
+    {% spaceless %}
+    {% if form.vars.errors.form.getErrors(true)|length > 0 and compound %}
+        {# ... display the errors for the whole form #}
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    {% for error in form.vars.errors.form.getErrors(true) %}
+                        <li>
+                            <a href="#{{ error.origin.createView().vars.id }}">{{ error.message }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+    {% if errors|length > 0 and not compound %}
+        {# ... display the errors for a single field #}
+        {%- for error in errors -%}
+            <span id="{{ id }}-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ error.message }}
+            </span>
+        {%- endfor -%}
+    {% endif %}
+    {% endspaceless %}
+{%- endblock form_errors -%}
+
+{% block form_widget_simple %}
+    {% if form.vars.errors|length > 0 %}
+        {% set class = attr.class is defined ? attr.class ~ ' govuk-input--error' : 'govuk-input--error' %}
+        {% set attr = attr|merge({'class': class}) %}
+    {% endif %}
+    {% spaceless %}
+        {% set type = type|default('text') %}
+        <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    {% endspaceless %}
+{% endblock form_widget_simple %}
