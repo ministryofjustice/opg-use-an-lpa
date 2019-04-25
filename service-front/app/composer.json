@@ -15,8 +15,7 @@
                 "zendframework/zend-expressive-router",
                 "zendframework/zend-httphandlerrunner",
                 "zendframework/zend-expressive-fastroute",
-                "zendframework/zend-expressive-twigrenderer",
-                "zendframework/zend-expressive-csrf"
+                "zendframework/zend-expressive-twigrenderer"
             ]
         }
     },
@@ -35,6 +34,7 @@
         "paragonie/halite": "^4.5",
         "php-http/guzzle6-adapter": "^2.0",
         "symfony/form": "^4.2",
+        "symfony/security-csrf": "^4.2",
         "symfony/twig-bridge": "^4.2",
         "symfony/validator": "^4.2",
         "zendframework/zend-component-installer": "^2.1.1",
@@ -42,7 +42,6 @@
         "zendframework/zend-crypt": "^3.3",
         "zendframework/zend-diactoros": "^1.7.1 || ^2.0",
         "zendframework/zend-expressive": "^3.0.1",
-        "zendframework/zend-expressive-csrf": "^1.0",
         "zendframework/zend-expressive-fastroute": "^3.0",
         "zendframework/zend-expressive-helpers": "^5.0",
         "zendframework/zend-expressive-session": "^1.2",
