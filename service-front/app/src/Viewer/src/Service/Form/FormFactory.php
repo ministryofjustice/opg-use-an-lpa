@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Viewer\Service\Form;
 
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\Forms;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Validator\Validation;
 use Viewer\Form\ShareCode;
 
@@ -28,6 +30,7 @@ class FormFactory
 
         $ffb = Forms::createFormFactoryBuilder();
         $ffb->addExtension(new ValidatorExtension($validator));
+        $ffb->addExtension(new CsrfExtension($container->get(CsrfTokenManagerInterface::class)));
         //$ffb->addExtension(new PSR7RequestHandler());
 
         $ffb->addType(new ShareCode());

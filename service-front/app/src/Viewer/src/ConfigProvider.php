@@ -8,6 +8,7 @@ use Aws;
 use Http;
 use Composer\Autoload\ClassLoader;
 use ReflectionClass;
+use Viewer\Service\Form\TokenManagerFactory;
 use Zend;
 use Symfony;
 use Twig;
@@ -52,7 +53,9 @@ class ConfigProvider
                 Symfony\Component\Form\FormRenderer::class => Symfony\Component\Form\FormRendererInterface::class,
 
                 // Forms
-                Symfony\Component\Form\FormFactoryInterface::class => Symfony\Component\Form\FormFactory::class
+                Symfony\Component\Form\FormFactoryInterface::class => Symfony\Component\Form\FormFactory::class,
+                Symfony\Component\Security\Csrf\CsrfTokenManagerInterface::class => Middleware\Csrf\TokenManager::class,
+                Middleware\Csrf\TokenManagerFactoryInterface::class => Middleware\Csrf\TokenManagerFactory::class,
             ],
 
             'invokables' => [
@@ -77,14 +80,15 @@ class ConfigProvider
                 Service\Lpa\LpaService::class => Service\Lpa\LpaServiceFactory::class,
 
                 // Twig
-                Symfony\Bridge\Twig\Extension\FormExtension::class => Service\Twig\FormExtensionFactory::class,
                 Symfony\Bridge\Twig\Extension\TranslationExtension::class => Service\Twig\TranslationExtensionFactory::class,
                 Twig\RuntimeLoader\ContainerRuntimeLoader::class => Service\Twig\ContainerRuntimeLoaderFactory::class,
                 Symfony\Component\Form\FormRendererInterface::class => Service\Twig\FormRendererFactory::class,
                 Symfony\Component\Form\FormRendererEngineInterface::class => Service\Twig\FormRendererEngineFactory::class,
 
                 // Forms
+                Middleware\Csrf\TokenManagerMiddleware::class => Middleware\Csrf\TokenManagerMiddlewareFactory::class,
                 Symfony\Component\Form\FormFactory::class => Service\Form\FormFactory::class,
+                Middleware\Csrf\TokenManager::class => Middleware\Csrf\TokenManagerFactory::class,
 
                 Service\Session\EncryptedCookie::class => Service\Session\EncryptedCookieFactory::class,
                 Service\Session\KeyManager\Manager::class => Service\Session\KeyManager\ManagerFactory::class,
@@ -127,6 +131,7 @@ class ConfigProvider
                 '@partials/govuk_form.html.twig'
             ],
             'extensions' => [
+                Symfony\Bridge\Twig\Extension\CsrfExtension::class,
                 Symfony\Bridge\Twig\Extension\FormExtension::class,
                 Symfony\Bridge\Twig\Extension\TranslationExtension::class
             ],

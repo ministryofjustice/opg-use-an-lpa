@@ -13,8 +13,6 @@ class ShareCode extends AbstractForm
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-
         $builder
             ->add('lpa_code', TextType::class, [
                 'constraints' => [

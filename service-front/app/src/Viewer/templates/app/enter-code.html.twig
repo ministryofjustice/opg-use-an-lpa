@@ -15,8 +15,6 @@
                 {{ form_start(form) }}
                     {{ form_errors(form) }}
                     <fieldset class="govuk-fieldset">
-                        {{ form_widget(form.__csrf) }}
-
                         <div class="govuk-form-group {% if form.lpa_code.vars.errors|length > 0 %}govuk-form-group--error{% endif %}">
                             {{ form_label(form.lpa_code, 'LPA Code', {'label_attr': {'class': 'govuk-label'}}) }}
 

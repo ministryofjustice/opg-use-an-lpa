@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace Viewer\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractForm extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $builder
-            ->add('__csrf', HiddenType::class);
+        $resolver->setDefaults([
+            // enable CSRF protection for forms
+            'csrf_protection' => true
+        ]);
     }
 }

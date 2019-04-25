@@ -11,8 +11,6 @@ use Viewer\Service\Lpa\LpaService;
 use Zend\Expressive\Helper\UrlHelper;
 use Viewer\Form\ShareCode;
 use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
@@ -54,7 +52,7 @@ class EnterCodeHandler extends AbstractHandler
         $s->set('test', 'hello');
 
         // use a trait to create the form we need.
-        $form = $this->createForm($this->formFactory, ShareCode::class);
+        $form = $this->createForm($request, $this->formFactory, ShareCode::class);
 
         // this bit of magic handles the form using the default provider, which
         // accesses the raw super globals to populate. what we really want is a
@@ -70,11 +68,6 @@ class EnterCodeHandler extends AbstractHandler
                 var_dump(json_encode($lpa));die();
             }
         }
-
-        // this should be refactored as a part of the form generation.
-        /** @var CsrfGuardInterface $guard */
-        $guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
-        $token = $guard->generateToken();
 
         return new HtmlResponse(
             $this->renderer->render('app::enter-code', [ 'form' => $form->createView() ])
