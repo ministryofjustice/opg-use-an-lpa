@@ -4,7 +4,6 @@ namespace Viewer\Service\Lpa;
 
 use Viewer\Service\ApiClient\Client as ApiClient;
 use ArrayObject;
-use DateTime;
 
 /**
  * Class LpaService
@@ -71,17 +70,7 @@ class LpaService
     private function parseLpaData(array $data): ArrayObject
     {
         foreach ($data as $dataItemName => $dataItem) {
-            if (!is_numeric($dataItemName) && in_array($dataItemName, ['dob', 'dateDonorSigned', 'dateRegistration', 'dateLastConfirmedStatus'])) {
-                if ($dataItemName === 'dob') {
-                    $dataItem = $dataItem['date'];
-                }
-
-                $dob = new DateTime($dataItem);
-
-                $data[$dataItemName] = $dob->format('j F Y');
-            } elseif ($dataItemName === 'address') {
-                $data[$dataItemName] = implode(', ', $dataItem);
-            } elseif (is_array($dataItem)) {
+            if (is_array($dataItem)) {
                 $data[$dataItemName] = $this->parseLpaData($dataItem);
             }
         }

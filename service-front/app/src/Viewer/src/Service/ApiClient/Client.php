@@ -56,8 +56,8 @@ class Client
 
         //  The keys in this data array represent the LPA share codes
         $lpaDatasets = [
-            '12345' => [
-                'id' => '12345678901',
+            '1234-5678-9012' => [
+                'id' => '123456789012',
                 'caseNumber' => '787640393837',
                 'type' => 'property-and-financial',
                 'donor' => [
@@ -66,9 +66,7 @@ class Client
                         'first' => 'Jordan',
                         'last' => 'Johnson',
                     ],
-                    'dob' => [
-                        'date' => '1980-01-01T00:00:00+00:00',
-                    ],
+                    'dob' => '1980-01-01T00:00:00+00:00',
                     'address' => [
                         'address1' => '1 High Street',
                         'address2' => 'Hampton',
@@ -83,9 +81,7 @@ class Client
                             'first' => 'Peter',
                             'last' => 'Smith',
                         ],
-                        'dob' => [
-                            'date' => '1984-02-14T00:00:00+00:00',
-                        ],
+                        'dob' => '1984-02-14T00:00:00+00:00',
                         'address' => [
                             'address1' => '1 High Street',
                             'address2' => 'Hampton',
@@ -99,9 +95,7 @@ class Client
                             'first' => 'Celia',
                             'last' => 'Smith',
                         ],
-                        'dob' => [
-                            'date' => '1988-11-12T00:00:00+00:00',
-                        ],
+                        'dob' => '1988-11-12T00:00:00+00:00',
                         'address' => [
                             'address1' => '1 Avenue Road',
                             'address2' => 'Great Hampton',
@@ -121,8 +115,8 @@ class Client
                 'dateLastConfirmedStatus' => '2019-04-22T00:00:00+00:00',
                 'isValid' => true,
             ],
-            '67890' => [
-                'id'      => '98765432109',
+            '9876-5432-1098' => [
+                'id'      => '987654321098',
                 'isValid' => false,
             ],
         ];
