@@ -8,7 +8,6 @@ use Aws;
 use Http;
 use Composer\Autoload\ClassLoader;
 use ReflectionClass;
-use Viewer\Service\Form\TokenManagerFactory;
 use Zend;
 use Symfony;
 use Twig;
@@ -55,7 +54,6 @@ class ConfigProvider
                 // Forms
                 Symfony\Component\Form\FormFactoryInterface::class => Symfony\Component\Form\FormFactory::class,
                 Symfony\Component\Security\Csrf\CsrfTokenManagerInterface::class => Middleware\Csrf\TokenManager::class,
-                Middleware\Csrf\TokenManagerFactoryInterface::class => Middleware\Csrf\TokenManagerFactory::class,
             ],
 
             'invokables' => [
