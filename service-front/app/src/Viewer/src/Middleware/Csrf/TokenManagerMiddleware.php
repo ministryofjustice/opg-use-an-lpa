@@ -22,7 +22,7 @@ use Zend\Expressive\Session\SessionMiddleware;
  */
 class TokenManagerMiddleware implements MiddlewareInterface
 {
-    const TOKEN_ATTRIBUTE = 'crsf_token_manager';
+    const TOKEN_ATTRIBUTE = 'csrf_token_manager';
 
     /**
      * @var TokenGeneratorInterface
