@@ -15,7 +15,7 @@ use ArrayObject;
 
 class ViewLpaHandlerTest extends TestCase
 {
-    public function testReturnsHtmlResponseWhenTemplateRendererProvided()
+    public function testSimplePageGet()
     {
         $lpa = new ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
 

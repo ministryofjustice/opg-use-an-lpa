@@ -32,9 +32,6 @@ class OrdinalNumberExtension extends AbstractExtension
             throw new InvalidArgumentException('Ordinals can only be provided for integers');
         }
 
-        //  No need to process numbers above 100 differently
-        $number = $number % 100;
-
         $ord = 'th';
 
         if ($number < 11 || $number > 13) {

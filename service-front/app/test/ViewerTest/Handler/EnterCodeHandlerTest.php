@@ -49,33 +49,7 @@ class EnterCodeHandlerTest extends TestCase
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 
-    public function testPostNoLpaFound()
-    {
-        $formProphecy = $this->prophesize(ShareCode::class);
-
-        $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render('app::enter-code', [
-                'form' => $formProphecy->reveal(),
-            ])
-            ->willReturn('');
-
-        $urlHelperProphecy = $this->prophesize(UrlHelper::class);
-
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
-
-        $formFactoryProphecy = $this->getFormFactoryProphecy($formProphecy, [
-            'lpa_code' => '9876-5432-1098',
-        ]);
-
-        //  Set up the handler
-        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal(), $formFactoryProphecy->reveal());
-
-        $response = $handler->handle($this->getRequestProphecy()->reveal());
-
-        $this->assertInstanceOf(HtmlResponse::class, $response);
-    }
-
-    public function testPostLpaFound()
+    public function testFormSubmittedLpaFound()
     {
         $lpaId = '123456789012';
 
@@ -109,6 +83,35 @@ class EnterCodeHandlerTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
+    public function testFormSubmittedNoLpaFound()
+    {
+        $formProphecy = $this->prophesize(ShareCode::class);
+
+        $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
+        $rendererProphecy->render('app::enter-code', [
+                'form' => $formProphecy->reveal(),
+            ])
+            ->willReturn('');
+
+        $urlHelperProphecy = $this->prophesize(UrlHelper::class);
+
+        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+
+        $formFactoryProphecy = $this->getFormFactoryProphecy($formProphecy, [
+            'lpa_code' => '9876-5432-1098',
+        ]);
+
+        //  Set up the handler
+        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal(), $formFactoryProphecy->reveal());
+
+        $response = $handler->handle($this->getRequestProphecy()->reveal());
+
+        $this->assertInstanceOf(HtmlResponse::class, $response);
+    }
+
+    /**
+     * @return ObjectProphecy
+     */
     private function getRequestProphecy()
     {
         $sessionProphecy = $this->prophesize(SessionInterface::class);
