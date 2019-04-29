@@ -31,7 +31,9 @@ class FormFactory
         $ffb = Forms::createFormFactoryBuilder();
         $ffb->addExtension(new ValidatorExtension($validator));
         $ffb->addExtension(new CsrfExtension($container->get(CsrfTokenManagerInterface::class)));
-        //$ffb->addExtension(new PSR7RequestHandler());
+
+        // TODO as a part of UML-105
+        // $ffb->addExtension(new PSR7RequestHandler());
 
         $ffb->addType(new ShareCode());
 

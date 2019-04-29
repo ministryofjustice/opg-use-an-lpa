@@ -57,6 +57,7 @@ class EnterCodeHandler extends AbstractHandler
         // this bit of magic handles the form using the default provider, which
         // accesses the raw super globals to populate. what we really want is a
         // PSR7 provider.
+        // TODO as a part of UML-105
         $form->handleRequest();
 
         if ($form->isSubmitted() && $form->isValid())
