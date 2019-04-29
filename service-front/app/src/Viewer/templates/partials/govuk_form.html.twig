@@ -12,7 +12,7 @@
                 <ul class="govuk-list govuk-error-summary__list">
                     {% for error in form.vars.errors.form.getErrors(true) %}
                         <li>
-                            <a href="#{{ error.origin.createView().vars.id }}">{{ error.message }}</a>
+                            <a href="#{{ error.origin.createView().vars.id }}">{{  error.message|raw }}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -23,7 +23,7 @@
         {# ... display the errors for a single field #}
         {%- for error in errors -%}
             <span id="{{ id }}-error" class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span> {{ error.message }}
+                <span class="govuk-visually-hidden">Error:</span> {{ error.message|raw }}
             </span>
         {%- endfor -%}
     {% endif %}
