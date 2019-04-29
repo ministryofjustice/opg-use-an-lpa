@@ -7,6 +7,7 @@ namespace Viewer\Handler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -18,26 +19,28 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 abstract class AbstractHandler implements RequestHandlerInterface
 {
     use Traits\Session;
+    use Traits\Form;
 
-    /**
-     * @var TemplateRendererInterface
-     */
+    /** @var TemplateRendererInterface */
     protected $renderer;
 
-    /**
-     * @var UrlHelper
-     */
+    /** @var UrlHelper */
     protected $urlHelper;
+
+    /**  @var null|FormFactoryInterface */
+    protected $formFactory;
 
     /**
      * AbstractHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
+     * @param FormFactoryInterface|null $formFactory
      */
-    public function __construct(TemplateRendererInterface $renderer, UrlHelper $urlHelper)
+    public function __construct(TemplateRendererInterface $renderer, UrlHelper $urlHelper, FormFactoryInterface $formFactory = null)
     {
         $this->renderer = $renderer;
         $this->urlHelper = $urlHelper;
+        $this->formFactory = $formFactory;
     }
 
     /**

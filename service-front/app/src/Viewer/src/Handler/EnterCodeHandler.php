@@ -6,9 +6,11 @@ namespace Viewer\Handler;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 use Viewer\Service\Lpa\LpaService;
-use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
+use Viewer\Form\ShareCode;
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
@@ -17,9 +19,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  */
 class EnterCodeHandler extends AbstractHandler
 {
-    /**
-     * @var LpaService
-     */
+    /** @var LpaService */
     private $lpaService;
 
     /**
@@ -27,10 +27,15 @@ class EnterCodeHandler extends AbstractHandler
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param LpaService $lpaService
+     * @param FormFactoryInterface|null $formFactory
      */
-    public function __construct(TemplateRendererInterface $renderer, UrlHelper $urlHelper, LpaService $lpaService)
+    public function __construct(
+        TemplateRendererInterface $renderer,
+        UrlHelper $urlHelper,
+        LpaService $lpaService,
+        FormFactoryInterface $formFactory = null)
     {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $formFactory);
 
         $this->lpaService = $lpaService;
     }
@@ -38,6 +43,7 @@ class EnterCodeHandler extends AbstractHandler
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Http\Client\Exception
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
@@ -45,19 +51,27 @@ class EnterCodeHandler extends AbstractHandler
 
         $s->set('test', 'hello');
 
-        if ($request->getMethod() == 'POST') {
-            $post = $request->getParsedBody();
+        // use a trait to create the form we need.
+        $form = $this->createForm($request, $this->formFactory, ShareCode::class);
 
-            //  TODO - Validation required....
-            if (isset($post['share-code'])) {
-                $lpa = $this->lpaService->getLpa($post['share-code']);
+        // this bit of magic handles the form using the default provider, which
+        // accesses the raw super globals to populate. what we really want is a
+        // PSR7 provider.
+        // TODO as a part of UML-105
+        $form->handleRequest();
 
-                if (!is_null($lpa)) {
-var_dump(json_encode($lpa));die();
-                }
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $data = $form->getData();
+            $lpa = $this->lpaService->getLpa($data['lpa_code']);
+
+            if (!is_null($lpa)) {
+                var_dump(json_encode($lpa));die();
             }
         }
 
-        return new HtmlResponse($this->renderer->render('app::enter-code'));
+        return new HtmlResponse(
+            $this->renderer->render('app::enter-code', [ 'form' => $form->createView() ])
+        );
     }
 }

@@ -8,23 +8,23 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/images/favicon.ico" type="image/x-icon" />
-    <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/govuk-apple-touch-icon-180x180.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png">
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon" />
+    <link rel="mask-icon" href="{{ asset('assets/images/govuk-mask-icon.svg') }}" color="#0b0c0c">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/govuk-apple-touch-icon-180x180.png') }}">
+    <link rel="apple-touch-icon" sizes="167x167" href="{{ asset('assets/images/govuk-apple-touch-icon-167x167.png') }}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('assets/images/govuk-apple-touch-icon-152x152.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/images/govuk-apple-touch-icon.png') }}">
     <!--[if !IE 8]><!-->
-    <link rel="stylesheet" href="/stylesheets/govuk-frontend-2.7.0.min.css">
+    <link rel="stylesheet" href="{{ asset('stylesheets/govuk-frontend-2.7.0.min.css') }}">
     <!--<![endif]-->
     <!--[if IE 8]>
-    <link rel="stylesheet" href="/stylesheets/govuk-frontend-ie8-2.7.0.min.css">
+    <link rel="stylesheet" href="{{ asset('stylesheets/govuk-frontend-ie8-2.7.0.min.css') }}">
     <![endif]-->
-    <?=$this->section('stylesheets')?>
+    {% block stylesheets %}{% endblock %}
 
 
 
-    <meta property="og:image" content="/assets/images/govuk-opengraph-image.png">
+    <meta property="og:image" content="{{ asset('assets/images/govuk-opengraph-image.png') }}">
 </head>
 
 <body class="govuk-template__body ">
@@ -59,7 +59,7 @@
 
 <div class="app-content">
     <main class="container">
-        <?=$this->section('content')?>
+        {% block content %}{% endblock %}
     </main>
 </div>
 
@@ -84,8 +84,8 @@
     </div>
 </footer>
 
-<script src="/javascript/govuk-frontend-2.7.0.min.js"></script>
+<script src="{{ asset('javascript/govuk-frontend-2.7.0.min.js') }}"></script>
 <script>window.GOVUKFrontend.initAll()</script>
-<?=$this->section('javascript')?>
+{% block javascript %}{% endblock %}
 </body>
 </html>

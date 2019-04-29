@@ -8,6 +8,7 @@ use Viewer\Service\Lpa\LpaService;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Expressive\Helper\UrlHelper;
+use Symfony\Component\Form\FormFactoryInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
@@ -25,7 +26,8 @@ class EnterCodeHandlerFactory
         $renderer = $container->get(TemplateRendererInterface::class);
         $urlHelper = $container->get(UrlHelper::class);
         $lpaService = $container->get(LpaService::class);
+        $formFactory = $container->get(FormFactoryInterface::class);
 
-        return new EnterCodeHandler($renderer, $urlHelper, $lpaService);
+        return new EnterCodeHandler($renderer, $urlHelper, $lpaService, $formFactory);
     }
 }

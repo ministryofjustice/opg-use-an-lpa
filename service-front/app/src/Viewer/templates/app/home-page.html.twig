@@ -1,0 +1,24 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block title %}Enter code{% endblock %}
+
+{% block content %}
+<div class="govuk-width-container">
+    {{ include('@partials/new-service.html.twig') }}
+
+    <main class="govuk-main-wrapper">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <h1 class="govuk-heading-xl">Use your LPA Homepage</h1>
+
+
+                <a href="/enter-code" role="button" draggable="false" class="govuk-button govuk-button--start">
+                    Start now
+                </a>
+
+            </div>
+        </div>
+
+    </main>
+</div>
+{% endblock %}

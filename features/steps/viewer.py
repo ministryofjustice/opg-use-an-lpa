@@ -16,4 +16,4 @@ def step_impl(context):
 
 @then('The enter code page is displayed')
 def step_impl(context):
-  assert context.browser.find_element_by_css_selector('#share-code')
+  assert context.browser.find_element_by_xpath("//form[@name='share_code']")
