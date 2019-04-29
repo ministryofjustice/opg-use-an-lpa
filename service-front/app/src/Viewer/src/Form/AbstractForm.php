@@ -16,7 +16,8 @@ abstract class AbstractForm extends AbstractType
     {
         $resolver->setDefaults([
             // enable CSRF protection for forms
-            'csrf_protection' => true
+            'csrf_protection' => true,
+            'csrf_message' => "As you have not used this service for over 60 minutes, the page has timed out. We've now refreshed the page - please try to sign in again."
         ]);
     }
 }
