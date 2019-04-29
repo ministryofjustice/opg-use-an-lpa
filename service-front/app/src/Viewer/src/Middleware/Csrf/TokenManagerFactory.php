@@ -7,25 +7,16 @@ namespace Viewer\Middleware\Csrf;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
-use Zend\Expressive\Session\SessionMiddleware;
 
 class TokenManagerFactory implements TokenManagerFactoryInterface
 {
     /**
-     * @var string
-     */
-    private $attributeKey;
-
-    public function __construct(string $attributeKey = SessionMiddleware::SESSION_ATTRIBUTE)
-    {
-        $this->attributeKey = $attributeKey;
-    }
-
-    /**
      * This will provide a correctly built TokenManager but because we rely on
-     * the request pipeline to make it fully functional we actually rely on middleware
-     * to create a working instance. The middleware uses the createTokenManagerFromGuard()
+     * the request pipeline to make it fully functional, we actually rely on middleware
+     * to create a working instance. The middleware uses the createTokenManager()
      * function below.
+     *
+     * This function still needs to exist so the Twig CSRF extension can be initialised correctly.
      *
      * @param ContainerInterface $container
      * @return TokenManager
