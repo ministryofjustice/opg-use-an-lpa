@@ -61,8 +61,7 @@ class EnterCodeHandler extends AbstractHandler
         // TODO as a part of UML-105
         $form->handleRequest();
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $lpa = $this->lpaService->getLpaByCode($data['lpa_code']);
 
@@ -73,8 +72,8 @@ class EnterCodeHandler extends AbstractHandler
             }
         }
 
-        return new HtmlResponse(
-            $this->renderer->render('app::enter-code', [ 'form' => $form->createView() ])
-        );
+        return new HtmlResponse($this->renderer->render('app::enter-code', [
+            'form' => $form->createView(),
+        ]));
     }
 }

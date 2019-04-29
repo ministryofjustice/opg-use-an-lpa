@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler;
 
+use Symfony\Component\Form\FormFactoryInterface;
 use Viewer\Handler\EnterCodeHandler;
 use Viewer\Handler\EnterCodeHandlerFactory;
 use PHPUnit\Framework\TestCase;
@@ -29,6 +30,10 @@ class EnterCodeHandlerFactoryTest extends TestCase
         $lpaService = $this->prophesize(LpaService::class);
         $container->get(LpaService::class)
             ->willReturn($lpaService);
+
+        $formFactory = $this->prophesize(FormFactoryInterface::class);
+        $container->get(FormFactoryInterface::class)
+            ->willReturn($formFactory);
 
         $factory = new EnterCodeHandlerFactory();
 

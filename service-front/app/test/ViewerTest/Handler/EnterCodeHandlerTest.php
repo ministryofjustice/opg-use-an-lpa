@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler;
 
+use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormFactoryInterface;
+use Viewer\Form\ShareCode;
 use Viewer\Handler\EnterCodeHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Viewer\Middleware\Csrf\TokenManagerMiddleware;
 use Viewer\Service\Lpa\LpaService;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\RedirectResponse;
@@ -17,11 +22,16 @@ use ArrayObject;
 
 class EnterCodeHandlerTest extends TestCase
 {
-    public function testReturnsHtmlResponseWhenTemplateRendererProvided()
+    /** @var string  */
+    const CSRF_TOKEN = 'csrf_token_123';
+
+    public function testSimplePageGet()
     {
+        $formProphecy = $this->prophesize(ShareCode::class);
+
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
         $rendererProphecy->render('app::enter-code', [
-                'errorMsg' => null,
+                'form' => $formProphecy->reveal(),
             ])
             ->willReturn('');
 
@@ -29,24 +39,23 @@ class EnterCodeHandlerTest extends TestCase
 
         $lpaServiceProphecy = $this->prophesize(LpaService::class);
 
+        $formFactoryProphecy = $this->getFormFactoryProphecy($formProphecy);
+
         //  Set up the handler
-        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal());
+        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal(), $formFactoryProphecy->reveal());
 
-        $sessionProphecy = $this->prophesize(SessionInterface::class);
-        $sessionProphecy->set('test', 'hello');
-
-        $requestProphecy = $this->getRequestProphecy('GET');
-
-        $response = $handler->handle($requestProphecy->reveal());
+        $response = $handler->handle($this->getRequestProphecy()->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 
     public function testPostNoLpaFound()
     {
+        $formProphecy = $this->prophesize(ShareCode::class);
+
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-            $rendererProphecy->render('app::enter-code', [
-                'errorMsg' => 'No LPA were found using the provided code',
+        $rendererProphecy->render('app::enter-code', [
+                'form' => $formProphecy->reveal(),
             ])
             ->willReturn('');
 
@@ -54,21 +63,21 @@ class EnterCodeHandlerTest extends TestCase
 
         $lpaServiceProphecy = $this->prophesize(LpaService::class);
 
-        //  Set up the handler
-        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal());
-
-        $requestProphecy = $this->getRequestProphecy('POST', [
-            'share-code' => '67890',
+        $formFactoryProphecy = $this->getFormFactoryProphecy($formProphecy, [
+            'lpa_code' => '9876-5432-1098',
         ]);
 
-        $response = $handler->handle($requestProphecy->reveal());
+        //  Set up the handler
+        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal(), $formFactoryProphecy->reveal());
+
+        $response = $handler->handle($this->getRequestProphecy()->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 
     public function testPostLpaFound()
     {
-        $lpaId = '12345678901';
+        $lpaId = '123456789012';
 
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
 
@@ -83,36 +92,73 @@ class EnterCodeHandlerTest extends TestCase
         ], ArrayObject::ARRAY_AS_PROPS);
 
         $lpaServiceProphecy = $this->prophesize(LpaService::class);
-        $lpaServiceProphecy->getLpaByCode('12345')
+        $lpaServiceProphecy->getLpaByCode('1234-5678-9012')
             ->willReturn($lpa);
 
-        //  Set up the handler
-        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal());
+        $formProphecy = $this->prophesize(ShareCode::class);
 
-        $requestProphecy = $this->getRequestProphecy('POST', [
-            'share-code' => '12345',
+        $formFactoryProphecy = $this->getFormFactoryProphecy($formProphecy, [
+            'lpa_code' => '1234-5678-9012',
         ]);
 
-        $response = $handler->handle($requestProphecy->reveal());
+        //  Set up the handler
+        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal(), $formFactoryProphecy->reveal());
+
+        $response = $handler->handle($this->getRequestProphecy()->reveal());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
-    private function getRequestProphecy(string $requestMethod, array $bodyData = [])
+    private function getRequestProphecy()
     {
         $sessionProphecy = $this->prophesize(SessionInterface::class);
         $sessionProphecy->set('test', 'hello');
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-        $requestProphecy->getMethod()
-            ->willReturn($requestMethod);
-
         $requestProphecy->getAttribute('session', null)
             ->willReturn($sessionProphecy->reveal());
 
-        $requestProphecy->getParsedBody()
-            ->willReturn($bodyData);
+        $requestProphecy->getAttribute(TokenManagerMiddleware::TOKEN_ATTRIBUTE)
+            ->willReturn(self::CSRF_TOKEN);
 
         return $requestProphecy;
+    }
+
+    /**
+     * @param ObjectProphecy $formProphecy
+     * @param array $returnData
+     * @return ObjectProphecy
+     */
+    private function getFormFactoryProphecy(ObjectProphecy $formProphecy, array $returnData = null)
+    {
+        $symfonyFormProphecy = $this->prophesize(Form::class);
+        $symfonyFormProphecy->handleRequest()
+            ->willReturn();
+
+        $symfonyFormProphecy->isSubmitted()
+            ->willReturn(is_array($returnData));
+
+        $symfonyFormProphecy->isValid()
+            ->willReturn(is_array($returnData));
+
+        if (empty($returnData)) {
+            $symfonyFormProphecy->getData()
+                ->shouldNotBeCalled();
+        } else {
+            $symfonyFormProphecy->getData()
+                ->willReturn($returnData);
+        }
+
+        $symfonyFormProphecy->createView()
+            ->willReturn($formProphecy->reveal());
+
+        $formFactoryProphecy = $this->prophesize(FormFactoryInterface::class);
+
+        $formFactoryProphecy->create(ShareCode::class, null, [
+                'csrf_token_manager' => self::CSRF_TOKEN,
+            ])
+            ->willReturn($symfonyFormProphecy->reveal());
+
+        return $formFactoryProphecy;
     }
 }
