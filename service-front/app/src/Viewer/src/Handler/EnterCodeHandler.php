@@ -6,10 +6,9 @@ namespace Viewer\Handler;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 use Viewer\Service\Lpa\LpaService;
+use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Expressive\Helper\UrlHelper;
-use Viewer\Form\ShareCode;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
@@ -32,10 +31,9 @@ class EnterCodeHandler extends AbstractHandler
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        LpaService $lpaService,
-        FormFactoryInterface $formFactory)
+        LpaService $lpaService)
     {
-        parent::__construct($renderer, $urlHelper, $formFactory);
+        parent::__construct($renderer, $urlHelper);
 
         $this->lpaService = $lpaService;
     }
@@ -47,17 +45,13 @@ class EnterCodeHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        // use a trait to create the form we need.
-        $form = $this->createForm($request, $this->formFactory, ShareCode::class);
+        $s = $this->getSession($request,'session');
 
-        // this bit of magic handles the form using the default provider, which
-        // accesses the raw super globals to populate. what we really want is a
-        // PSR7 provider.
-        // TODO as a part of UML-105
-        $form->handleRequest();
+        $s->set('test', 'hello');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+        $body = $request->getParsedBody();
+        if (isset($body['lpa_code'])) {
+            $lpa = $this->lpaService->getLpaByCode($body['lpa_code']);
 
             $session = $this->getSession($request,'session');
             $session->set('code', $data['lpa_code']);
@@ -65,8 +59,15 @@ class EnterCodeHandler extends AbstractHandler
             return $this->redirectToRoute('check-code');
         }
 
-        return new HtmlResponse($this->renderer->render('app::enter-code', [
-            'form' => $form->createView(),
-        ]));
+        /** @var CsrfGuardInterface $guard */
+        $guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
+        $token = $guard->generateToken();
+
+        return new HtmlResponse(
+            $this->renderer->render(
+                'app::enter-code',
+                [ 'csrf_token' => $token ]
+            )
+        );
     }
 }
