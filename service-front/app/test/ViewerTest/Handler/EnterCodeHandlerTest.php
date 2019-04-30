@@ -7,6 +7,7 @@ namespace ViewerTest\Handler;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Viewer\Form\ShareCode;
 use Viewer\Handler\EnterCodeHandler;
 use PHPUnit\Framework\TestCase;
@@ -22,16 +23,24 @@ use ArrayObject;
 
 class EnterCodeHandlerTest extends TestCase
 {
-    /** @var string  */
-    const CSRF_TOKEN = 'csrf_token_123';
+    /** @var ObjectProphecy */
+    private $formProphecy;
+
+    /** @var ObjectProphecy */
+    private $tokenManagerProphecy;
+
+    public function setUp()
+    {
+        $this->formProphecy = $this->prophesize(ShareCode::class);
+
+        $this->tokenManagerProphecy = $this->prophesize(CsrfTokenManagerInterface::class);
+    }
 
     public function testSimplePageGet()
     {
-        $formProphecy = $this->prophesize(ShareCode::class);
-
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
         $rendererProphecy->render('app::enter-code', [
-                'form' => $formProphecy->reveal(),
+                'form' => $this->formProphecy->reveal(),
             ])
             ->willReturn('');
 
@@ -39,7 +48,7 @@ class EnterCodeHandlerTest extends TestCase
 
         $lpaServiceProphecy = $this->prophesize(LpaService::class);
 
-        $formFactoryProphecy = $this->getFormFactoryProphecy($formProphecy);
+        $formFactoryProphecy = $this->getFormFactoryProphecy();
 
         //  Set up the handler
         $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal(), $formFactoryProphecy->reveal());
@@ -69,9 +78,7 @@ class EnterCodeHandlerTest extends TestCase
         $lpaServiceProphecy->getLpaByCode('1234-5678-9012')
             ->willReturn($lpa);
 
-        $formProphecy = $this->prophesize(ShareCode::class);
-
-        $formFactoryProphecy = $this->getFormFactoryProphecy($formProphecy, [
+        $formFactoryProphecy = $this->getFormFactoryProphecy([
             'lpa_code' => '1234-5678-9012',
         ]);
 
@@ -85,11 +92,9 @@ class EnterCodeHandlerTest extends TestCase
 
     public function testFormSubmittedNoLpaFound()
     {
-        $formProphecy = $this->prophesize(ShareCode::class);
-
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
         $rendererProphecy->render('app::enter-code', [
-                'form' => $formProphecy->reveal(),
+                'form' => $this->formProphecy->reveal(),
             ])
             ->willReturn('');
 
@@ -97,7 +102,7 @@ class EnterCodeHandlerTest extends TestCase
 
         $lpaServiceProphecy = $this->prophesize(LpaService::class);
 
-        $formFactoryProphecy = $this->getFormFactoryProphecy($formProphecy, [
+        $formFactoryProphecy = $this->getFormFactoryProphecy([
             'lpa_code' => '9876-5432-1098',
         ]);
 
@@ -122,17 +127,16 @@ class EnterCodeHandlerTest extends TestCase
             ->willReturn($sessionProphecy->reveal());
 
         $requestProphecy->getAttribute(TokenManagerMiddleware::TOKEN_ATTRIBUTE)
-            ->willReturn(self::CSRF_TOKEN);
+            ->willReturn($this->tokenManagerProphecy->reveal());
 
         return $requestProphecy;
     }
 
     /**
-     * @param ObjectProphecy $formProphecy
      * @param array $returnData
      * @return ObjectProphecy
      */
-    private function getFormFactoryProphecy(ObjectProphecy $formProphecy, array $returnData = null)
+    private function getFormFactoryProphecy(array $returnData = null)
     {
         $symfonyFormProphecy = $this->prophesize(Form::class);
         $symfonyFormProphecy->handleRequest()
@@ -153,12 +157,12 @@ class EnterCodeHandlerTest extends TestCase
         }
 
         $symfonyFormProphecy->createView()
-            ->willReturn($formProphecy->reveal());
+            ->willReturn($this->formProphecy->reveal());
 
         $formFactoryProphecy = $this->prophesize(FormFactoryInterface::class);
 
         $formFactoryProphecy->create(ShareCode::class, null, [
-                'csrf_token_manager' => self::CSRF_TOKEN,
+                'csrf_token_manager' => $this->tokenManagerProphecy->reveal(),
             ])
             ->willReturn($symfonyFormProphecy->reveal());
 
