@@ -33,7 +33,7 @@ class EnterCodeHandler extends AbstractHandler
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LpaService $lpaService,
-        FormFactoryInterface $formFactory = null)
+        FormFactoryInterface $formFactory)
     {
         parent::__construct($renderer, $urlHelper, $formFactory);
 
@@ -58,7 +58,6 @@ class EnterCodeHandler extends AbstractHandler
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            //$lpa = $this->lpaService->getLpaByCode($data['lpa_code']);
 
             $session = $this->getSession($request,'session');
             $session->set('code', $data['lpa_code']);
