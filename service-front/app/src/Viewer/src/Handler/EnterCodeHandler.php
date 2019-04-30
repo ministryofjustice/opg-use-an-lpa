@@ -48,10 +48,6 @@ class EnterCodeHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $s = $this->getSession($request,'session');
-
-        $s->set('test', 'hello');
-
         // use a trait to create the form we need.
         $form = $this->createForm($request, $this->formFactory, ShareCode::class);
 
@@ -63,13 +59,12 @@ class EnterCodeHandler extends AbstractHandler
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $lpa = $this->lpaService->getLpaByCode($data['lpa_code']);
+            //$lpa = $this->lpaService->getLpaByCode($data['lpa_code']);
 
-            if ($lpa instanceof ArrayObject) {
-                return $this->redirectToRoute('view-lpa', [
-                    'id' => $lpa->id,
-                ]);
-            }
+            $session = $this->getSession($request,'session');
+            $session->set('code', $data['lpa_code']);
+
+            return $this->redirectToRoute('check-code');
         }
 
         return new HtmlResponse($this->renderer->render('app::enter-code', [

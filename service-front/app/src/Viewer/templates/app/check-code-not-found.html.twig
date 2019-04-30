@@ -1,0 +1,27 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block title %}Not Found{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@partials/new-service.html.twig') }}
+
+        <main class="govuk-main-wrapper">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">Invalid Code</h1>
+
+                    <p>We couldn't find a valid code that matches the one you entered.</p>
+
+                    <a href="/enter-code" role="button" draggable="false" class="govuk-button govuk-button--start">
+                        Try again
+                    </a>
+
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+{% endblock %}
