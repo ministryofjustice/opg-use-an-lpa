@@ -12,7 +12,6 @@ use Zend\Expressive\Helper\UrlHelper;
 use Viewer\Form\ShareCode;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use ArrayObject;
 
 /**
  * Class EnterCodeHandler

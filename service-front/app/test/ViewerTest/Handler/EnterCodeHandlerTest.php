@@ -58,17 +58,15 @@ class EnterCodeHandlerTest extends TestCase
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 
-    public function testFormSubmittedLpaFound()
+    public function testFormSubmitted()
     {
         $lpaId = '123456789012';
 
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
 
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
-        $urlHelperProphecy->generate('view-lpa', [
-                'id' => $lpaId,
-            ], [])
-            ->willReturn('/view-lpa/' . $lpaId);
+        $urlHelperProphecy->generate('check-code', [], [])
+            ->willReturn('/check-code' . $lpaId);
 
         $lpa = new ArrayObject([
             'id' => $lpaId
@@ -90,29 +88,6 @@ class EnterCodeHandlerTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
-    public function testFormSubmittedNoLpaFound()
-    {
-        $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render('app::enter-code', [
-                'form' => $this->formProphecy->reveal(),
-            ])
-            ->willReturn('');
-
-        $urlHelperProphecy = $this->prophesize(UrlHelper::class);
-
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
-
-        $formFactoryProphecy = $this->getFormFactoryProphecy([
-            'lpa_code' => '9876-5432-1098',
-        ]);
-
-        //  Set up the handler
-        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal(), $formFactoryProphecy->reveal());
-
-        $response = $handler->handle($this->getRequestProphecy()->reveal());
-
-        $this->assertInstanceOf(HtmlResponse::class, $response);
-    }
 
     /**
      * @return ObjectProphecy
@@ -120,7 +95,7 @@ class EnterCodeHandlerTest extends TestCase
     private function getRequestProphecy()
     {
         $sessionProphecy = $this->prophesize(SessionInterface::class);
-        $sessionProphecy->set('test', 'hello');
+        $sessionProphecy->set('code', '1234-5678-9012');
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy->getAttribute('session', null)
