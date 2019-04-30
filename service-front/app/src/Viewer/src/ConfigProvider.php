@@ -65,8 +65,9 @@ class ConfigProvider
 
             'factories'  => [
                 // Handlers
-                Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
                 Handler\EnterCodeHandler::class => Handler\EnterCodeHandlerFactory::class,
+                Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
+                Handler\ViewLpaHandler::class => Handler\ViewLpaHandlerFactory::class,
 
                 // Services
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
@@ -129,6 +130,7 @@ class ConfigProvider
                 '@partials/govuk_form.html.twig'
             ],
             'extensions' => [
+                View\Twig\OrdinalNumberExtension::class,
                 Symfony\Bridge\Twig\Extension\CsrfExtension::class,
                 Symfony\Bridge\Twig\Extension\FormExtension::class,
                 Symfony\Bridge\Twig\Extension\TranslationExtension::class

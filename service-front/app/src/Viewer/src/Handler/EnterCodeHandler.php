@@ -12,6 +12,7 @@ use Zend\Expressive\Helper\UrlHelper;
 use Viewer\Form\ShareCode;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
+use ArrayObject;
 
 /**
  * Class EnterCodeHandler
@@ -60,18 +61,19 @@ class EnterCodeHandler extends AbstractHandler
         // TODO as a part of UML-105
         $form->handleRequest();
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $lpa = $this->lpaService->getLpa($data['lpa_code']);
+            $lpa = $this->lpaService->getLpaByCode($data['lpa_code']);
 
-            if (!is_null($lpa)) {
-                var_dump(json_encode($lpa));die();
+            if ($lpa instanceof ArrayObject) {
+                return $this->redirectToRoute('view-lpa', [
+                    'id' => $lpa->id,
+                ]);
             }
         }
 
-        return new HtmlResponse(
-            $this->renderer->render('app::enter-code', [ 'form' => $form->createView() ])
-        );
+        return new HtmlResponse($this->renderer->render('app::enter-code', [
+            'form' => $form->createView(),
+        ]));
     }
 }
