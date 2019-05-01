@@ -4,7 +4,7 @@ Date: 2019-02-21
 
 ## Status
 
-Accepted
+Superceded by [8. Session storage using an encrypted cookie](0008-session-storage-using-an-encrypted-cookie.md)
 
 ## Context
 
