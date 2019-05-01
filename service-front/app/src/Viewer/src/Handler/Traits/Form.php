@@ -25,7 +25,7 @@ trait Form
     public function createForm(ServerRequestInterface $request, FormFactoryInterface $formFactory, string $formType, $entity = null) : FormInterface
     {
         return $formFactory->create($formType, $entity, [
-            'csrf_token_manager' => $request->getAttribute(TokenManagerMiddleware::TOKEN_ATTRIBUTE)
+            //'csrf_token_manager' => $request->getAttribute(TokenManagerMiddleware::TOKEN_ATTRIBUTE)
         ]);
     }
 }

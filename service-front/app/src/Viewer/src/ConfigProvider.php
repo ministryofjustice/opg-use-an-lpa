@@ -81,6 +81,8 @@ class ConfigProvider
                 Symfony\Component\Form\FormRendererEngineInterface::class => Service\Twig\FormRendererEngineFactory::class,
 
                 // Forms
+                Form\ShareCode::class   => Form\FormFactory::class,
+
                 Middleware\Csrf\TokenManagerMiddleware::class => Middleware\Csrf\TokenManagerMiddlewareFactory::class,
                 Symfony\Component\Form\FormFactory::class => Service\Form\FormFactory::class,
                 Middleware\Csrf\TokenManager::class => Middleware\Csrf\TokenManagerFactory::class,
