@@ -12,7 +12,6 @@ use Zend\Expressive\Helper\UrlHelper;
 use Viewer\Form\ShareCode;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use ArrayObject;
 
 /**
  * Class EnterCodeHandler
@@ -34,7 +33,7 @@ class EnterCodeHandler extends AbstractHandler
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LpaService $lpaService,
-        FormFactoryInterface $formFactory = null)
+        FormFactoryInterface $formFactory)
     {
         parent::__construct($renderer, $urlHelper, $formFactory);
 
@@ -48,10 +47,6 @@ class EnterCodeHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $s = $this->getSession($request,'session');
-
-        $s->set('test', 'hello');
-
         // use a trait to create the form we need.
         $form = $this->createForm($request, $this->formFactory, ShareCode::class);
 
@@ -63,13 +58,11 @@ class EnterCodeHandler extends AbstractHandler
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $lpa = $this->lpaService->getLpaByCode($data['lpa_code']);
 
-            if ($lpa instanceof ArrayObject) {
-                return $this->redirectToRoute('view-lpa', [
-                    'id' => $lpa->id,
-                ]);
-            }
+            $session = $this->getSession($request,'session');
+            $session->set('code', $data['lpa_code']);
+
+            return $this->redirectToRoute('check-code');
         }
 
         return new HtmlResponse($this->renderer->render('app::enter-code', [

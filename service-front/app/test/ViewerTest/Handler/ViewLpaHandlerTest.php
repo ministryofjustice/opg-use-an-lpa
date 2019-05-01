@@ -11,6 +11,7 @@ use Viewer\Service\Lpa\LpaService;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
+use Zend\Expressive\Session\SessionInterface;
 use ArrayObject;
 
 class ViewLpaHandlerTest extends TestCase
@@ -28,16 +29,18 @@ class ViewLpaHandlerTest extends TestCase
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
 
         $lpaServiceProphecy = $this->prophesize(LpaService::class);
-        $lpaServiceProphecy->getLpaById(123456789)
+        $lpaServiceProphecy->getLpaByCode('1234-5678-9012')
             ->willReturn($lpa);
 
         //  Set up the handler
         $handler = new ViewLpaHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal());
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-        $requestProphecy->getAttribute('id')
-            ->willReturn('123456789');
 
+        $sessionProphecy = $this->prophesize(SessionInterface::class );
+        $sessionProphecy->get('code')->willReturn('1234-5678-9012');
+
+        $requestProphecy->getAttribute('session', null)->willReturn($sessionProphecy->reveal());
         $response = $handler->handle($requestProphecy->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);

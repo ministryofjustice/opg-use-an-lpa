@@ -1,0 +1,84 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block title %}Found{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@partials/new-service.html.twig') }}
+
+        <main class="govuk-main-wrapper " id="main-content" role="main">
+
+
+            <h1 class="govuk-heading-xl">Confirmation</h1>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header govuk-!-font-weight-regular" scope="col">Please check that the
+                                information
+                                below is correct.</th>
+                            <th class="govuk-table__header" scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">Type of LPA</th>
+                            <td class="govuk-table__cell">{{ lpa.type == 'property-and-financial' ? 'Property and finance' : 'Health and welfare' }}</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">Donor name</th>
+                            <td class="govuk-table__cell">{{ lpa.donor.name.first }} {{ lpa.donor.name.last }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    Check that these details are correct before continuing.
+                </strong>
+            </div>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <details class="govuk-details" role="group">
+                        <summary class="govuk-details__summary" role="button" aria-controls="details-content-0951a634-57d7-42f7-a69a-f0c8d2e4a932" aria-expanded="false">
+    <span class="govuk-details__summary-text">
+      What to do if the details are wrong
+    </span>
+                        </summary>
+                        <div class="govuk-details__text" id="details-content-0951a634-57d7-42f7-a69a-f0c8d2e4a932" aria-hidden="true">
+                            Please go back and check that you entered the right reference number and registration code. Remember that the donor and each attorney on an LPA have their own unique registration code.
+                            <br>
+                            <br>
+                            If the information is still wrong, or if a name is mispelt, please contact us on 02342 435920.
+                            <br>
+                            <br>
+                            Opening hours are Monday, Tuesday, Thursday, Friday 9am to 5pm. Wednesday 10am to 5pm.
+                        </div>
+                    </details>
+
+                </div>
+            </div>
+
+
+
+
+
+
+            <a href="/view-lpa" role="button" draggable="false" class="govuk-button">
+                Continue
+            </a>
+
+
+
+
+        </main>
+
+    </div>
+{% endblock %}
