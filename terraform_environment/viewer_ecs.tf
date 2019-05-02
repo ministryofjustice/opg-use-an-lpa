@@ -151,6 +151,10 @@ locals {
     {
       "name": "TIMEOUT",
       "value": "60"
+    },
+    {
+      "name": "CONTAINER_VERSION",
+      "value": "${var.container_version}"
     }]
   }
   EOF
@@ -182,6 +186,10 @@ locals {
     {
       "name": "KMS_SESSION_CMK_ALIAS",
       "value": "${data.aws_kms_alias.sessions_viewer.name}"
+    },
+    {
+      "name": "CONTAINER_VERSION",
+      "value": "${var.container_version}"
     }]
   }
   EOF
