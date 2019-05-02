@@ -31,18 +31,16 @@ class EnterCodeHandler extends AbstractHandler
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param LpaService $lpaService
-     * @param FormFactoryInterface $formFactory
      * @param ShareCodeForm $form
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LpaService $lpaService,
-        FormFactoryInterface $formFactory,
         ShareCodeForm $form
     )
     {
-        parent::__construct($renderer, $urlHelper, $formFactory);
+        parent::__construct($renderer, $urlHelper);
 
         $this->form = $form;
         $this->lpaService = $lpaService;
@@ -51,11 +49,10 @@ class EnterCodeHandler extends AbstractHandler
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Http\Client\Exception
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $this->form->setCsrfToken($request->getAttribute('csrf'));
+        $this->form->setCsrfToken('1234');  // This string will be pulled from the session.
 
         if ($request->getMethod() == 'POST') {
 

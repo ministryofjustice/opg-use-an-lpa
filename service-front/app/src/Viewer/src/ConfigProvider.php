@@ -9,6 +9,7 @@ use EnterCodeHandlerForm;
 use Http;
 use Composer\Autoload\ClassLoader;
 use ReflectionClass;
+use Viewer\Service\Form\FormFactoryXXX;
 use Zend;
 use Symfony;
 use Twig;
@@ -82,10 +83,10 @@ class ConfigProvider
                 Symfony\Component\Form\FormRendererEngineInterface::class => Service\Twig\FormRendererEngineFactory::class,
 
                 // Forms
-                Form\ShareCodeForm::class   => Form\FormFactory::class,
+                Form\ShareCodeForm::class   => Service\Form\FormFactory::class,
 
                 Middleware\Csrf\TokenManagerMiddleware::class => Middleware\Csrf\TokenManagerMiddlewareFactory::class,
-                Symfony\Component\Form\FormFactory::class => Service\Form\FormFactory::class,
+                //Symfony\Component\Form\FormFactory::class => Service\Form\FormFactoryXXX::class,
                 Middleware\Csrf\TokenManager::class => Middleware\Csrf\TokenManagerFactory::class,
 
                 Service\Session\EncryptedCookie::class => Service\Session\EncryptedCookieFactory::class,
