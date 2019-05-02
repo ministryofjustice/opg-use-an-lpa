@@ -14,16 +14,19 @@
 
                 <form method="post" name="share_code">
                     <fieldset class="govuk-fieldset">
-                        <input type="hidden" name="__csrf" value="">
+                        <input type="hidden" name="__csrf" value="{{ form.get('__csrf').value }}">
 
-                        {{ dump(form) }}
+                        {{ govuk_error_summary(form) }}
 
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="lpa_code">
                                 LPA code
                             </label>
-                            <input class="govuk-input" id="share_code_lpa_code" name="lpa_code"
-                                   type="text">
+
+                            {{ govuk_error(form.get('lpa_code')) }}
+
+                            <input class="govuk-input {{ govuk_error_class(form.get('lpa_code')) }}" id="share_code_lpa_code" name="lpa_code"
+                                   type="text" value="{{ form.get('lpa_code').value }}">
                         </div>
 
                         <details class="govuk-details">
