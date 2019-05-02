@@ -8,6 +8,7 @@ RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckod
 RUN sh -c 'tar -x geckodriver -zf geckodriver-v0.23.0-linux64.tar.gz -O > /usr/bin/geckodriver'
 RUN chmod +x /usr/bin/geckodriver
 RUN rm geckodriver-v0.23.0-linux64.tar.gz
+RUN apk add firefox-esr
 RUN pip install -r features/requirements.txt
 
 CMD [ "behave"]
