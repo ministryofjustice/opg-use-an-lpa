@@ -20,12 +20,10 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  */
 class EnterCodeHandler extends AbstractHandler
 {
-
     /**
      * EnterCodeHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
-     * @param FormFactoryInterface|null $formFactory
      */
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -51,7 +49,7 @@ class EnterCodeHandler extends AbstractHandler
             $form->setData($request->getParsedBody());
 
             if ($form->isValid()) {
-                $session->set('code', $form->getData()->lpa_code);
+                $session->set('code', $form->getData()['lpa_code']);
 
                 return $this->redirectToRoute('check-code');
             }
