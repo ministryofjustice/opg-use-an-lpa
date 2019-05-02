@@ -180,8 +180,8 @@ locals {
     },
     "environment": [
     {
-      "name": "SECRET_NAME_SESSION",
-      "value": "${aws_secretsmanager_secret.session_key.arn}"
+      "name": "KMS_SESSION_CMK_ALIAS",
+      "value": "${data.aws_kms_alias.sessions_viewer.name}"
     }]
   }
   EOF
