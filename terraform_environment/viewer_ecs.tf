@@ -151,6 +151,10 @@ locals {
     {
       "name": "TIMEOUT",
       "value": "60"
+    },
+    {
+      "name": "CONTAINER_VERSION",
+      "value": "${var.container_version}"
     }]
   }
   EOF
@@ -182,6 +186,10 @@ locals {
     {
       "name": "SECRET_NAME_SESSION",
       "value": "${aws_secretsmanager_secret.session_key.arn}"
+    },
+    {
+      "name": "CONTAINER_VERSION",
+      "value": "${var.container_version}"
     }]
   }
   EOF
