@@ -58,14 +58,7 @@ class ConfigProvider
                 Symfony\Component\Form\FormFactoryInterface::class => Symfony\Component\Form\FormFactory::class,
                 Symfony\Component\Security\Csrf\CsrfTokenManagerInterface::class => Middleware\Csrf\TokenManager::class,
             ],
-
-            'invokables' => [
-                // Handlers
-
-                // Services
-                Service\Session\KeyManager\KeyCache::class,
-            ],
-
+            
             'factories'  => [
 
                 // Services
