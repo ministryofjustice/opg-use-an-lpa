@@ -67,6 +67,7 @@ class ConfigProvider
 
                 // Services
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
+                Aws\Kms\KmsClient::class => Service\Aws\KmsFactory::class,
                 Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
 
                 Http\Adapter\Guzzle6\Client::class => Service\Http\GuzzleClientFactory::class,

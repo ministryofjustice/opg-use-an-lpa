@@ -71,3 +71,11 @@ services:
       # Dummy keys
       SECRET_SESSION_KEYS_KEY: 'session-keys'
       SECRET_SESSION_KEYS_VALUE: '{"1":"0000000000000000000000000000000000000000000000000000000000000000", "2":"1111111111111111111111111111111111111111111111111111111111111111"}'
+
+  kms:
+    image: nsmithuk/local-kms:2
+    volumes:
+      - ./localstack-config:/init
+    environment:
+      REGION: eu-west-2
+      SEED_PATH: /init/kms-seed.yaml
