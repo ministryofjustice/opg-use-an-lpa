@@ -46,7 +46,7 @@ class CsrfGuardValidator extends ZendCsrf
     {
         $this->setValue($value);
 
-        if ($this->getGuard()->validateToken($value)) {
+        if ( ! $this->getGuard()->validateToken($value)) {
             $this->error(self::NOT_SAME);
             return false;
         }
