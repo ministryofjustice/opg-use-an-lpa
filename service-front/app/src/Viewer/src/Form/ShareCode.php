@@ -6,31 +6,21 @@ namespace Viewer\Form;
 
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Filter\StringTrim;
-use Zend\Form\Form;
-use Viewer\Form\Element\Csrf;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Validator\Regex;
 
-class ShareCode extends Form implements InputFilterProviderInterface
+class ShareCode extends AbstractCsrfForm implements InputFilterProviderInterface
 {
+    const FORM_NAME = 'share_code';
+
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
-        parent::__construct();
+        parent::__construct(self::FORM_NAME, $csrfGuard);
 
         $this->add([
             'name' => 'lpa_code',
             'type'  => 'Text',
         ]);
-        $this->add(
-            new Csrf(
-                '__csrf',
-                [
-                    'csrf_options' => [
-                        'guard' => $csrfGuard
-                    ]
-                ]
-            )
-        );
     }
 
     public function getInputFilterSpecification() : array
