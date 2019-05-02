@@ -24,7 +24,7 @@ class TokenManager implements CsrfTokenManagerInterface
      */
     public function getToken($tokenId) : CsrfToken
     {
-        return new CsrfToken($tokenId, $this->baseToken);
+        return new CsrfToken($tokenId, hash('sha512/256', $tokenId.$this->baseToken));
     }
 
     /**
@@ -32,7 +32,7 @@ class TokenManager implements CsrfTokenManagerInterface
      */
     public function isTokenValid(CsrfToken $token) : bool
     {
-        return $token->getValue() === $this->baseToken;
+        return $token->getValue() === $this->getToken($token->getId())->getValue();
     }
 
     /**
