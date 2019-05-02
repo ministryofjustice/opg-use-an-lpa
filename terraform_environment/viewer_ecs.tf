@@ -5,7 +5,7 @@ resource "aws_ecs_service" "viewer" {
   name            = "${terraform.workspace}-viewer"
   cluster         = "${aws_ecs_cluster.use-an-lpa.id}"
   task_definition = "${aws_ecs_task_definition.viewer.arn}"
-  desired_count   = 1
+  desired_count   = 6
   launch_type     = "FARGATE"
 
   network_configuration {
