@@ -1,0 +1,14 @@
+
+resource "aws_kms_key" "sessions_viewer" {
+  description             = "Managers keys for sessions in Viewer"
+  deletion_window_in_days = 7
+
+  enable_key_rotation     = true
+
+  tags   = "${local.default_tags}"
+}
+
+resource "aws_kms_alias" "sessions_viewer" {
+  name          = "alias/sessions-viewer"
+  target_key_id = "${aws_kms_key.sessions_viewer.key_id}"
+}
