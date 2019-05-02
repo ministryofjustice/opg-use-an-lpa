@@ -87,17 +87,7 @@ resource "aws_iam_role_policy" "use_an_lpa_execution_role" {
   Defines permissions that the application running within the task has.
 */
 data "aws_iam_policy_document" "use_an_lpa_execution_role" {
-  "statement" {
-    effect = "Allow"
-
-    actions = [
-      "secretsmanager:DescribeSecret",
-      "secretsmanager:GetSecretValue",
-    ]
-
-    resources = ["${aws_secretsmanager_secret.session_key.arn}"]
-  }
-  "statement" {
+  statement {
     effect = "Allow"
 
     actions = [
