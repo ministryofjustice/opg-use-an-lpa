@@ -16,7 +16,7 @@ class EncryptedCookieFactory
     public function __invoke(ContainerInterface $container)
     {
         return new EncryptedCookie(
-            $container->get(KeyManager\SecretsManager::class)
+            $container->get(KeyManager\SecretsManagerManager::class)
         );
     }
 }

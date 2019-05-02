@@ -13,7 +13,7 @@ use ParagonIE\HiddenString\HiddenString;
  * Class Manager
  * @package App\Service\Session\KeyManager
  */
-class Manager implements KeyManagerInterface
+class SecretsManagerManager implements KeyManagerInterface
 {
     /**
      * Name of the cache key under which session data is stored.

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Viewer\Service\Session;
 
 use Viewer\Service\Session\KeyManager\KeyNotFoundException;
-use Viewer\Service\Session\KeyManager\Manager as Manager;
+use Viewer\Service\Session\KeyManager\SecretsManagerManager as Manager;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Zend\Crypt\BlockCipher;
 

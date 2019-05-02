@@ -11,7 +11,7 @@ use Psr\Container\ContainerInterface;
  * Class ManagerFactory
  * @package App
  */
-class ManagerFactory
+class SecretsManagerManagerFactory
 {
     public function __invoke(ContainerInterface $container)
     {
@@ -21,7 +21,7 @@ class ManagerFactory
             throw new \RuntimeException('Secret name is missing');
         }
 
-        return new Manager(
+        return new SecretsManagerManager(
             $config['session']['key']['name'],
             $container->get(SecretsManagerClient::class),
             $container->get(KeyCache::class)

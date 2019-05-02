@@ -7,7 +7,7 @@ namespace ViewerTest\Service\Session\KeyManager;
 use Aws\Result as AwsResult;
 use Aws\SecretsManager\SecretsManagerClient;
 use Viewer\Service\Session\KeyManager\KeyCache;
-use Viewer\Service\Session\KeyManager\Manager;
+use Viewer\Service\Session\KeyManager\SecretsManagerManager as Manager;
 use Viewer\Service\Session\KeyManager\KeyNotFoundException;
 use Viewer\Service\Session\KeyManager\ThrottledRefreshException;
 use ParagonIE\Halite\Alerts\InvalidKey;
@@ -15,7 +15,7 @@ use ParagonIE\HiddenString\HiddenString;
 use Prophecy\Argument;
 use PHPUnit\Framework\TestCase;
 
-class ManagerTest extends TestCase
+class SecretsManagerManagerTest extends TestCase
 {
     const NAME_OF_SECRET = 'name-of-secret';
 
@@ -66,7 +66,7 @@ class ManagerTest extends TestCase
         //---
 
         $m = $this->getManagerInstance();
-        $m->getCurrentKey();
+        $m->getEncryptionKey();
     }
 
     /*
@@ -92,7 +92,7 @@ class ManagerTest extends TestCase
         //---
 
         $m = $this->getManagerInstance();
-        $m->getCurrentKey();
+        $m->getEncryptionKey();
     }
 
     /*
@@ -124,7 +124,7 @@ class ManagerTest extends TestCase
         //---
 
         $m = $this->getManagerInstance();
-        $m->getCurrentKey();
+        $m->getEncryptionKey();
     }
 
     /*
@@ -152,7 +152,7 @@ class ManagerTest extends TestCase
         //---
 
         $m = $this->getManagerInstance();
-        $m->getCurrentKey();
+        $m->getEncryptionKey();
     }
 
     /*
@@ -182,7 +182,7 @@ class ManagerTest extends TestCase
         //---
 
         $m = $this->getManagerInstance();
-        $m->getCurrentKey();
+        $m->getEncryptionKey();
     }
 
     /*
@@ -219,7 +219,7 @@ class ManagerTest extends TestCase
         //---
 
         $m = $this->getManagerInstance();
-        $key = $m->getCurrentKey();
+        $key = $m->getEncryptionKey();
 
         $this->assertEquals($testId, $key->getId());
         $this->assertEquals(hex2bin($testMaterial), $key->getKeyMaterial());
@@ -259,7 +259,7 @@ class ManagerTest extends TestCase
         //---
 
         $m = $this->getManagerInstance();
-        $key = $m->getCurrentKey();
+        $key = $m->getEncryptionKey();
 
         $this->assertEquals($testId, $key->getId());
         $this->assertEquals(hex2bin($testMaterial), $key->getKeyMaterial());
@@ -276,10 +276,10 @@ class ManagerTest extends TestCase
      */
     public function testLookingUpValidKeys()
     {
-        $previousId = 7;
+        $previousId = '7';
         $previousMaterial = '0000000000000000000000000000000000000000000000000000000000000000';
 
-        $currentId = 12;
+        $currentId = '12';
         $currentMaterial = '1111111111111111111111111111111111111111111111111111111111111111';
 
         // Mock key cache data
@@ -296,7 +296,7 @@ class ManagerTest extends TestCase
         //---
 
         // Current key is the latest key
-        $key = $m->getCurrentKey();
+        $key = $m->getEncryptionKey();
 
         $this->assertEquals($currentId, $key->getId());
         $this->assertEquals(hex2bin($currentMaterial), $key->getKeyMaterial());
@@ -304,7 +304,7 @@ class ManagerTest extends TestCase
         //---
 
         // We can also explicitly lookup the current key
-        $key = $m->getKeyId($currentId);
+        $key = $m->getDecryptionKey($currentId);
 
         $this->assertEquals($currentId, $key->getId());
         $this->assertEquals(hex2bin($currentMaterial), $key->getKeyMaterial());
@@ -312,7 +312,7 @@ class ManagerTest extends TestCase
         //---
 
         // We can also lookup the last key
-        $key = $m->getKeyId($previousId);
+        $key = $m->getDecryptionKey($previousId);
 
         $this->assertEquals($previousId, $key->getId());
         $this->assertEquals(hex2bin($previousMaterial), $key->getKeyMaterial());
@@ -352,7 +352,7 @@ class ManagerTest extends TestCase
 
         $m = $this->getManagerInstance();
 
-        $m->getKeyId(14);    // Key not in cache
+        $m->getDecryptionKey('14');    // Key not in cache
     }
 
 
@@ -363,7 +363,7 @@ class ManagerTest extends TestCase
      */
     public function testLookingUpMissingKeyUnthrottledNoNewKey()
     {
-        $invalidId = 14;
+        $invalidId = '14';
 
         $this->expectException(KeyNotFoundException::class);
         $this->expectExceptionMessage('Unable to find key for ID: '.$invalidId);
@@ -406,7 +406,7 @@ class ManagerTest extends TestCase
 
         $m = $this->getManagerInstance();
 
-        $m->getKeyId($invalidId);    // Key not in cache
+        $m->getDecryptionKey($invalidId);    // Key not in cache
     }
 
     /*
@@ -415,7 +415,7 @@ class ManagerTest extends TestCase
      */
     public function testLookingUpMissingKeyUnthrottledAndFindIt()
     {
-        $newId = 14;
+        $newId = '14';
         $newMaterial = '2222222222222222222222222222222222222222222222222222222222222222';
 
         // Mock key cache data
@@ -454,7 +454,7 @@ class ManagerTest extends TestCase
 
         $m = $this->getManagerInstance();
 
-        $key = $m->getKeyId($newId);    // Key not in cache
+        $key = $m->getDecryptionKey($newId);    // Key not in cache
 
         $this->assertEquals($newId, $key->getId());
         $this->assertEquals(hex2bin($newMaterial), $key->getKeyMaterial());
