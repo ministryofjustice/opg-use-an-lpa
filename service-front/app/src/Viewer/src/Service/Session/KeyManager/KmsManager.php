@@ -44,9 +44,9 @@ class KmsManager implements KeyManagerInterface
      */
     private $cache;
 
-    public function __construct(KmsClient $kmsClient, KeyCache $cache)
+    public function __construct(KmsClient $kmsClient, KeyCache $cache, Config $config)
     {
-        $this->kmsAlias = 'alias/viewer-sessions-key';
+        $this->kmsAlias = $config->getKeyAlias();
         $this->kmsClient = $kmsClient;
         $this->cache = $cache;
     }

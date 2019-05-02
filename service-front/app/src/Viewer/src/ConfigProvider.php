@@ -92,6 +92,9 @@ class ConfigProvider
                 Service\Session\KeyManager\SecretsManagerManager::class => Service\Session\KeyManager\SecretsManagerManagerFactory::class,
 
                 Zend\Expressive\Session\SessionMiddleware::class => Zend\Expressive\Session\SessionMiddlewareFactory::class,
+
+                // Config objects
+                Service\Session\KeyManager\Config::class => ConfigFactory::class,
             ],
 
             'delegators' => [
