@@ -89,7 +89,6 @@ class ConfigProvider
                 Symfony\Component\Form\FormFactory::class => Service\Form\FormFactory::class,
                 Middleware\Csrf\TokenManager::class => Middleware\Csrf\TokenManagerFactory::class,
 
-                Service\Session\EncryptedCookie::class => Service\Session\EncryptedCookieFactory::class,
                 Service\Session\KeyManager\SecretsManagerManager::class => Service\Session\KeyManager\SecretsManagerManagerFactory::class,
 
                 Zend\Expressive\Session\SessionMiddleware::class => Zend\Expressive\Session\SessionMiddlewareFactory::class,
