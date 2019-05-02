@@ -64,9 +64,14 @@ class SecretsManagerManager implements KeyManagerInterface
         return $this->getKeyId();
     }
 
+    /**
+     * @param string $id
+     * @return Key
+     * @throws \ParagonIE\Halite\Alerts\InvalidKey
+     */
     public function getDecryptionKey(string $id) : Key
     {
-        return $this->getKeyId($id);
+        return $this->getKeyId((int)$id);
     }
 
     /**
@@ -78,7 +83,7 @@ class SecretsManagerManager implements KeyManagerInterface
      * @return Key
      * @throws \ParagonIE\Halite\Alerts\InvalidKey
      */
-    private function getKeyId(?string $id = null) : Key
+    private function getKeyId(?int $id = null) : Key
     {
         // Gets the keys out of the cache
         $keys = $this->cache->get(static::CACHE_SESSION_KEY);
