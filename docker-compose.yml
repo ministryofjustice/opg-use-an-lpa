@@ -31,7 +31,7 @@ services:
       KMS_SESSION_CMK_ALIAS: 'alias/viewer-sessions-cmk-alias'
 
       # Local only
-      AWS_ENDPOINT_SECRETS_MANAGER: http://localstack:4584
+      AWS_ENDPOINT_KMS: http://kms:8080
       AWS_ACCESS_KEY_ID: '-'
       AWS_SECRET_ACCESS_KEY: '-'
       ENABLE_XDEBUG: 'true'

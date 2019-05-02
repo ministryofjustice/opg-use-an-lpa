@@ -9,11 +9,7 @@ return [
         'version'   => 'latest',
 
         'Kms' => [
-            'endpoint' => 'http://kms:8080',
-        ],
-
-        'SecretsManager' => [
-            'endpoint' => getenv('AWS_ENDPOINT_SECRETS_MANAGER') ?: null,
+            'endpoint' => getenv('AWS_ENDPOINT_KMS') ?: null,
         ],
     ],
 
