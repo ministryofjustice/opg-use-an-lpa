@@ -15,7 +15,6 @@ return [
 
     'session' => [
         'key' => [
-            'name' => getenv('SECRET_NAME_SESSION') ?: null,
             'alias' => getenv('KMS_SESSION_CMK_ALIAS') ?: null,
         ],
     ],
