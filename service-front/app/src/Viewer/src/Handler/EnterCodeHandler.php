@@ -11,10 +11,9 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Viewer\Service\Lpa\LpaService;
 use Zend\Expressive\Helper\UrlHelper;
 use Viewer\Form\ShareCode;
+use Viewer\Form\ShareCodeForm;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
-
-use Viewer\Form\EnterCode;
 
 /**
  * Class EnterCodeHandler
@@ -25,23 +24,27 @@ class EnterCodeHandler extends AbstractHandler
     /** @var LpaService */
     private $lpaService;
 
+    private $form;
+
     /**
      * EnterCodeHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param LpaService $lpaService
-     * @param FormFactoryInterface|null $formFactory
+     * @param FormFactoryInterface $formFactory
+     * @param ShareCodeForm $form
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LpaService $lpaService,
         FormFactoryInterface $formFactory,
-        ShareCode $form
+        ShareCodeForm $form
     )
     {
         parent::__construct($renderer, $urlHelper, $formFactory);
 
+        $this->form = $form;
         $this->lpaService = $lpaService;
     }
 
@@ -52,27 +55,14 @@ class EnterCodeHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        // use a trait to create the form we need.
-        $form = $this->createForm($request, $this->formFactory, ShareCode::class);
-
-        //$form = $this->formFactory->create(ShareCode::class, null);
-
-        //$csrf = $form->getConfig()->getOption('csrf_token_manager');
-
-        //$form->getConfig()->op
-
-        // this bit of magic handles the form using the default provider, which
-        // accesses the raw super globals to populate. what we really want is a
-        // PSR7 provider.
-        // TODO as a part of UML-105
-        //$form->handleRequest();
+        $this->form->setCsrfToken($request->getAttribute('csrf'));
 
         if ($request->getMethod() == 'POST') {
 
-            $form->submit($request->getParsedBody()[$form->getName()]);
+            $this->form->submit($request->getParsedBody()[$this->form->getName()]);
 
-            if ($form->isValid()) {
-                $data = $form->getData();
+            if ($this->form->isValid()) {
+                $data = $this->form->getData();
 
                 $session = $this->getSession($request,'session');
                 $session->set('code', $data['lpa_code']);
@@ -83,7 +73,14 @@ class EnterCodeHandler extends AbstractHandler
         }
 
         return new HtmlResponse($this->renderer->render('app::enter-code', [
-            'form' => $form->createView(),
+            'form' => $this->form->createView(),
         ]));
     }
 }
+
+
+
+
+
+
+// $csrf = $form->getConfig()->getOption('csrf_token_manager');

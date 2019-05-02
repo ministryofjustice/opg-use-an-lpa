@@ -29,6 +29,10 @@ class FormFactory
         $validator = Validation::createValidator();
 
         $ffb = Forms::createFormFactoryBuilder();
+
+        // The beginning of the chain to customise this
+        $ffb->setResolvedTypeFactory(new ResolvedFormTypeFactory);
+
         $ffb->addExtension(new ValidatorExtension($validator));
         $ffb->addExtension(new CsrfExtension($container->get(CsrfTokenManagerInterface::class)));
 

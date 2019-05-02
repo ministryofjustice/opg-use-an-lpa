@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Viewer;
 
 use Aws;
+use EnterCodeHandlerForm;
 use Http;
 use Composer\Autoload\ClassLoader;
 use ReflectionClass;
@@ -81,7 +82,7 @@ class ConfigProvider
                 Symfony\Component\Form\FormRendererEngineInterface::class => Service\Twig\FormRendererEngineFactory::class,
 
                 // Forms
-                Form\ShareCode::class   => Form\FormFactory::class,
+                Form\ShareCodeForm::class   => Form\FormFactory::class,
 
                 Middleware\Csrf\TokenManagerMiddleware::class => Middleware\Csrf\TokenManagerMiddlewareFactory::class,
                 Symfony\Component\Form\FormFactory::class => Service\Form\FormFactory::class,

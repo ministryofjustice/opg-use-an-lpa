@@ -15,8 +15,12 @@ class FormFactory
 
         $formFactory = $container->get(FormFactoryInterface::class);
 
-        return $formFactory->create(
-            $definition->getName(), null, []
+        $class = $definition->getName();
+
+        $type = $class::getType();
+
+       return $formFactory->create(
+            $type, null, []
         );
     }
 }
