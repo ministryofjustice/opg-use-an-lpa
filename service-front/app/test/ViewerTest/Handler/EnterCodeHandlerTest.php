@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler;
 
+use Prophecy\Argument\Token\CallbackToken;
 use Prophecy\Prophecy\ObjectProphecy;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Viewer\Form\ShareCode;
 use Viewer\Handler\EnterCodeHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Viewer\Middleware\Csrf\TokenManagerMiddleware;
 use Viewer\Service\Lpa\LpaService;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\RedirectResponse;
@@ -29,7 +26,13 @@ class EnterCodeHandlerTest extends TestCase
     public function testSimplePageGet()
     {
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render('app::enter-code', ['csrf_token' => self::CSRF_CODE])
+        $rendererProphecy->render('app::enter-code', new CallbackToken(function($options) {
+            $this->assertIsArray($options);
+            $this->assertArrayHasKey('form', $options);
+            $this->assertInstanceOf(ShareCode::class, $options['form']);
+
+            return true;
+        }))
             ->willReturn('');
 
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
@@ -41,6 +44,8 @@ class EnterCodeHandlerTest extends TestCase
 
         /** @var ServerRequestInterface|ObjectProphecy $requestProphecy */
         $requestProphecy = $this->getRequestProphecy();
+        $requestProphecy->getMethod()
+            ->willReturn("GET");
         $requestProphecy->getParsedBody()
             ->willReturn([]);
 
@@ -54,7 +59,13 @@ class EnterCodeHandlerTest extends TestCase
         $lpaId = '123456789012';
 
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render('app::enter-code', ['csrf_token' => self::CSRF_CODE])
+        $rendererProphecy->render('app::enter-code', new CallbackToken(function($options) {
+            $this->assertIsArray($options);
+            $this->assertArrayHasKey('form', $options);
+            $this->assertInstanceOf(ShareCode::class, $options['form']);
+
+            return true;
+        }))
             ->willReturn('');
 
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
@@ -74,8 +85,13 @@ class EnterCodeHandlerTest extends TestCase
 
         /** @var ServerRequestInterface|ObjectProphecy $requestProphecy */
         $requestProphecy = $this->getRequestProphecy();
+        $requestProphecy->getMethod()
+            ->willReturn("POST");
         $requestProphecy->getParsedBody()
-            ->willReturn(['lpa_code' => '1234-5678-9012']);
+            ->willReturn([
+                'lpa_code' => '1234-5678-9012',
+                '__csrf'   => self::CSRF_CODE
+            ]);
 
         $response = $handler->handle($requestProphecy->reveal());
 
@@ -85,7 +101,13 @@ class EnterCodeHandlerTest extends TestCase
     public function testFormSubmittedNoLpaFound()
     {
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render('app::enter-code', ['csrf_token' => self::CSRF_CODE])
+        $rendererProphecy->render('app::enter-code', new CallbackToken(function($options) {
+            $this->assertIsArray($options);
+            $this->assertArrayHasKey('form', $options);
+            $this->assertInstanceOf(ShareCode::class, $options['form']);
+
+            return true;
+        }))
             ->willReturn('');
 
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
@@ -97,6 +119,8 @@ class EnterCodeHandlerTest extends TestCase
 
         /** @var ServerRequestInterface|ObjectProphecy $requestProphecy */
         $requestProphecy = $this->getRequestProphecy();
+        $requestProphecy->getMethod()
+            ->willReturn("POST");
         $requestProphecy->getParsedBody()
             ->willReturn(['lpa_code' => '1234-5678-9012']);
 
@@ -115,7 +139,9 @@ class EnterCodeHandlerTest extends TestCase
 
         $csrfProphecy = $this->prophesize(CsrfGuardInterface::class);
         $csrfProphecy->generateToken()
-            ->willReturn('1234');
+            ->willReturn(self::CSRF_CODE);
+        $csrfProphecy->validateToken(self::CSRF_CODE)
+            ->willReturn(true);
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy->getAttribute('session', null)
