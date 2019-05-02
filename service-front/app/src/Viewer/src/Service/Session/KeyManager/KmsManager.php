@@ -44,6 +44,13 @@ class KmsManager implements KeyManagerInterface
      */
     private $cache;
 
+    /**
+     * KmsManager constructor.
+     *
+     * @param KmsClient $kmsClient
+     * @param KeyCache $cache
+     * @param Config $config
+     */
     public function __construct(KmsClient $kmsClient, KeyCache $cache, Config $config)
     {
         $this->kmsAlias = $config->getKeyAlias();
@@ -109,7 +116,7 @@ class KmsManager implements KeyManagerInterface
     {
         $material = $this->cache->get($id);
 
-        if ($material === false) {
+        if (!($material instanceof HiddenString)) {
 
             // Then we don't know the key. Pull it out of KMS.
 
@@ -117,7 +124,7 @@ class KmsManager implements KeyManagerInterface
                 $key = $this->kmsClient->decrypt([
                     'CiphertextBlob' => base64_decode($id),
                 ]);
-            } catch ( KmsException $e){
+            } catch (KmsException $e){
                 if ($e->getAwsErrorCode() == 'InvalidCiphertextException') {
                     throw new KeyNotFoundException();
                 }
