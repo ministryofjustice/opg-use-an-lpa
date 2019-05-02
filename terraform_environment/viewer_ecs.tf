@@ -97,6 +97,16 @@ data "aws_iam_policy_document" "use_an_lpa_execution_role" {
 
     resources = ["${aws_secretsmanager_secret.session_key.arn}"]
   }
+  "statement" {
+    effect = "Allow"
+
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey",
+    ]
+
+    resources = ["${data.aws_kms_alias.sessions_viewer.target_key_arn}"]
+  }
 }
 
 //--------------------
