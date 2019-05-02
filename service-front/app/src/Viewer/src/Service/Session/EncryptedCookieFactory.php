@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Viewer\Service\Session;
 
-use Viewer\Service\Session\KeyManager;
+use Viewer\Service\Session\KeyManager\KeyManagerInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -16,7 +16,7 @@ class EncryptedCookieFactory
     public function __invoke(ContainerInterface $container)
     {
         return new EncryptedCookie(
-            $container->get(KeyManager\SecretsManagerManager::class)
+            $container->get(KeyManagerInterface::class)
         );
     }
 }

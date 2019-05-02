@@ -48,6 +48,9 @@ class ConfigProvider
                 Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
                 Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookie::class,
 
+                // The Session Key Manager to use
+                Service\Session\KeyManager\KeyManagerInterface::class => Service\Session\KeyManager\KmsManager::class,
+
                 // Twig
                 Symfony\Component\Form\FormRenderer::class => Symfony\Component\Form\FormRendererInterface::class,
 

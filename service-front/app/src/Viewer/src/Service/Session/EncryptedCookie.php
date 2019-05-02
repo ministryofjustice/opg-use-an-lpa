@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Viewer\Service\Session;
 
 use Viewer\Service\Session\KeyManager\KeyNotFoundException;
-use Viewer\Service\Session\KeyManager\SecretsManagerManager as Manager;
+use Viewer\Service\Session\KeyManager\KeyManagerInterface;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Zend\Crypt\BlockCipher;
 
@@ -18,15 +18,15 @@ use Zend\Crypt\BlockCipher;
 class EncryptedCookie extends Cookie
 {
     /**
-     * @var Manager
+     * @var KeyManagerInterface
      */
     private $keyManager;
 
     /**
      * EncryptedCookie constructor.
-     * @param Manager $keyManager
+     * @param KeyManagerInterface $keyManager
      */
-    public function __construct(Manager $keyManager)
+    public function __construct(KeyManagerInterface $keyManager)
     {
         parent::__construct();
 
@@ -55,7 +55,6 @@ class EncryptedCookie extends Cookie
      *
      * @param array $data
      * @return string
-     * @throws \ParagonIE\Halite\Alerts\InvalidKey
      */
     protected function encode(array $data) : string
     {
@@ -79,7 +78,6 @@ class EncryptedCookie extends Cookie
      *
      * @param string $data
      * @return array
-     * @throws \ParagonIE\Halite\Alerts\InvalidKey
      */
     protected function decode(string $data) : array
     {
@@ -96,8 +94,8 @@ class EncryptedCookie extends Cookie
             $ciphertext = Base64UrlSafe::decode($payload);
 
             $plaintext = $this->getBlockCipher()
-                ->setKey($key->getKeyMaterial())
-                ->decrypt($ciphertext);
+                            ->setKey($key->getKeyMaterial())
+                            ->decrypt($ciphertext);
 
         } catch (KeyNotFoundException $e){
             # TODO: add logging
