@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Viewer\Service\Session;
 
 use Viewer\Service\Session\KeyManager\KeyNotFoundException;
-use Viewer\Service\Session\KeyManager\KmsManager as Manager;
+use Viewer\Service\Session\KeyManager\Manager as Manager;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Zend\Crypt\BlockCipher;
 
@@ -65,7 +65,7 @@ class EncryptedCookie extends Cookie
             return '';
         }
 
-        $key = $this->keyManager->getCurrentKey();
+        $key = $this->keyManager->getEncryptionKey();
 
         $ciphertext = $this->getBlockCipher()
                         ->setKey($key->getKeyMaterial())
@@ -91,7 +91,7 @@ class EncryptedCookie extends Cookie
 
         try {
 
-            $key = $this->keyManager->getKeyId($keyId);
+            $key = $this->keyManager->getDecryptionKey($keyId);
 
             $ciphertext = Base64UrlSafe::decode($payload);
 

@@ -13,7 +13,7 @@ use ParagonIE\HiddenString\HiddenString;
  * Class Manager
  * @package App\Service\Session\KeyManager
  */
-class Manager
+class Manager implements KeyManagerInterface
 {
     /**
      * Name of the cache key under which session data is stored.
@@ -59,9 +59,14 @@ class Manager
      * @return Key
      * @throws \ParagonIE\Halite\Alerts\InvalidKey
      */
-    public function getCurrentKey() : Key
+    public function getEncryptionKey() : Key
     {
         return $this->getKeyId();
+    }
+
+    public function getDecryptionKey(string $id) : Key
+    {
+        return $this->getKeyId($id);
     }
 
     /**
@@ -69,11 +74,11 @@ class Manager
      *
      * If $id is null, the latest (last) session key is returned.
      *
-     * @param null|int $id
+     * @param null|string $id
      * @return Key
      * @throws \ParagonIE\Halite\Alerts\InvalidKey
      */
-    public function getKeyId(?int $id = null) : Key
+    private function getKeyId(?string $id = null) : Key
     {
         // Gets the keys out of the cache
         $keys = $this->cache->get(static::CACHE_SESSION_KEY);
@@ -110,7 +115,7 @@ class Manager
             }
         }
 
-        return new Key($id, new EncryptionKey($keys[$id]));
+        return new Key((string)$id, new EncryptionKey($keys[$id]));
     }
 
     /**

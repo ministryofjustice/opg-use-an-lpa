@@ -87,7 +87,7 @@ class ConfigProvider
                 Middleware\Csrf\TokenManager::class => Middleware\Csrf\TokenManagerFactory::class,
 
                 Service\Session\EncryptedCookie::class => Service\Session\EncryptedCookieFactory::class,
-                Service\Session\KeyManager\Manager::class => Service\Session\KeyManager\ManagerFactory::class,
+                Service\Session\KeyManager\SecretsManager::class => Service\Session\KeyManager\ManagerFactory::class,
 
                 Zend\Expressive\Session\SessionMiddleware::class => Zend\Expressive\Session\SessionMiddlewareFactory::class,
             ],
