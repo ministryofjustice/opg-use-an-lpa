@@ -20,27 +20,27 @@ class KmsManagerTest extends TestCase
 {
     const TEST_KMS_CMK_ALIAS = 'test-alias-name';
 
-    private $cacheProphercy;
-    private $kmsClientProphercy;
-    private $configProphercy;
+    private $cacheProphecy;
+    private $kmsClientProphecy;
+    private $configProphecy;
 
     public function setUp()
     {
         // Constructor arguments
-        $this->cacheProphercy = $this->prophesize(KeyCache::class);
-        $this->kmsClientProphercy = $this->prophesize(KmsClient::class);
-        $this->configProphercy = $this->prophesize(Config::class);
+        $this->cacheProphecy = $this->prophesize(KeyCache::class);
+        $this->kmsClientProphecy = $this->prophesize(KmsClient::class);
+        $this->configProphecy = $this->prophesize(Config::class);
 
         // Config setup
-        $this->configProphercy->getKeyAlias()->willReturn(self::TEST_KMS_CMK_ALIAS);
+        $this->configProphecy->getKeyAlias()->willReturn(self::TEST_KMS_CMK_ALIAS);
     }
 
     public function testCanInstantiate()
     {
         $manager = new KmsManager(
-            $this->kmsClientProphercy->reveal(),
-            $this->cacheProphercy->reveal(),
-            $this->configProphercy->reveal()
+            $this->kmsClientProphecy->reveal(),
+            $this->cacheProphecy->reveal(),
+            $this->configProphecy->reveal()
         );
 
         $this->assertInstanceOf(KmsManager::class, $manager);
@@ -59,20 +59,20 @@ class KmsManagerTest extends TestCase
 
         //---
 
-        $exceptionProphercy = $this->prophesize(KmsException::class);
+        $exceptionProphecy = $this->prophesize(KmsException::class);
 
-        $exceptionProphercy->getAwsErrorCode()->willReturn('InvalidCiphertextException')->shouldBeCalled();
+        $exceptionProphecy->getAwsErrorCode()->willReturn('InvalidCiphertextException')->shouldBeCalled();
 
-        $this->kmsClientProphercy->decrypt(Argument::any())->willThrow(
-            $exceptionProphercy->reveal()
+        $this->kmsClientProphecy->decrypt(Argument::any())->willThrow(
+            $exceptionProphecy->reveal()
         );
 
         //---
 
         $manager = new KmsManager(
-            $this->kmsClientProphercy->reveal(),
-            $this->cacheProphercy->reveal(),
-            $this->configProphercy->reveal()
+            $this->kmsClientProphecy->reveal(),
+            $this->cacheProphecy->reveal(),
+            $this->configProphecy->reveal()
         );
 
         $manager->getDecryptionKey('key-id');
@@ -88,19 +88,19 @@ class KmsManagerTest extends TestCase
 
         //---
 
-        $exceptionProphercy = $this->prophesize(KmsException::class);
-        $exceptionProphercy->getAwsErrorCode()->willReturn('OtherExceptionType')->shouldBeCalled();
+        $exceptionProphecy = $this->prophesize(KmsException::class);
+        $exceptionProphecy->getAwsErrorCode()->willReturn('OtherExceptionType')->shouldBeCalled();
 
-        $this->kmsClientProphercy->decrypt(Argument::any())->willThrow(
-            $exceptionProphercy->reveal()
+        $this->kmsClientProphecy->decrypt(Argument::any())->willThrow(
+            $exceptionProphecy->reveal()
         );
 
         //---
 
         $manager = new KmsManager(
-            $this->kmsClientProphercy->reveal(),
-            $this->cacheProphercy->reveal(),
-            $this->configProphercy->reveal()
+            $this->kmsClientProphecy->reveal(),
+            $this->cacheProphecy->reveal(),
+            $this->configProphecy->reveal()
         );
 
         $manager->getDecryptionKey('key-id');
@@ -119,14 +119,14 @@ class KmsManagerTest extends TestCase
 
         //---
 
-        $this->cacheProphercy->get($keyCiphertext)->willReturn(new HiddenString($testMaterial));
+        $this->cacheProphecy->get($keyCiphertext)->willReturn(new HiddenString($testMaterial));
 
         //---
 
         $manager = new KmsManager(
-            $this->kmsClientProphercy->reveal(),
-            $this->cacheProphercy->reveal(),
-            $this->configProphercy->reveal()
+            $this->kmsClientProphecy->reveal(),
+            $this->cacheProphecy->reveal(),
+            $this->configProphecy->reveal()
         );
 
         $key = $manager->getDecryptionKey($keyCiphertext);
@@ -154,10 +154,10 @@ class KmsManagerTest extends TestCase
         //---
 
         // Cache will return false
-        $this->cacheProphercy->get($keyCiphertextEncoded)->willReturn(false)->shouldBeCalled();
+        $this->cacheProphecy->get($keyCiphertextEncoded)->willReturn(false)->shouldBeCalled();
 
         // But we do expect the new key to be cached
-        $this->cacheProphercy->store(
+        $this->cacheProphecy->store(
             $keyCiphertextEncoded,
             $testMaterial,
             KmsManager::DECRYPTION_KEY_TTL
@@ -165,21 +165,21 @@ class KmsManagerTest extends TestCase
 
         //---
 
-        $awsResultProphercy = $this->prophesize(AwsResult::class);
+        $awsResultProphecy = $this->prophesize(AwsResult::class);
 
-        $awsResultProphercy->get('CiphertextBlob')->willReturn($keyCiphertext);
-        $awsResultProphercy->get('Plaintext')->willReturn($keyPlaintext);
+        $awsResultProphecy->get('CiphertextBlob')->willReturn($keyCiphertext);
+        $awsResultProphecy->get('Plaintext')->willReturn($keyPlaintext);
 
-        $this->kmsClientProphercy->decrypt([
+        $this->kmsClientProphecy->decrypt([
             'CiphertextBlob' => $keyCiphertext,
-        ])->willReturn($awsResultProphercy)->shouldBeCalled();
+        ])->willReturn($awsResultProphecy)->shouldBeCalled();
 
         //---
 
         $manager = new KmsManager(
-            $this->kmsClientProphercy->reveal(),
-            $this->cacheProphercy->reveal(),
-            $this->configProphercy->reveal()
+            $this->kmsClientProphecy->reveal(),
+            $this->cacheProphecy->reveal(),
+            $this->configProphecy->reveal()
         );
 
         $key = $manager->getDecryptionKey($keyCiphertextEncoded);
@@ -202,7 +202,7 @@ class KmsManagerTest extends TestCase
 
         //---
 
-        $this->cacheProphercy->get(KmsManager::CURRENT_ENCRYPTION_KEY)->willReturn([
+        $this->cacheProphecy->get(KmsManager::CURRENT_ENCRYPTION_KEY)->willReturn([
             'id' => $keyCiphertext,
             'key_material' => new HiddenString($testMaterial),
         ]);
@@ -210,9 +210,9 @@ class KmsManagerTest extends TestCase
         //---
 
         $manager = new KmsManager(
-            $this->kmsClientProphercy->reveal(),
-            $this->cacheProphercy->reveal(),
-            $this->configProphercy->reveal()
+            $this->kmsClientProphecy->reveal(),
+            $this->cacheProphecy->reveal(),
+            $this->configProphecy->reveal()
         );
 
         $key = $manager->getEncryptionKey();
@@ -238,17 +238,17 @@ class KmsManagerTest extends TestCase
         //---
 
         // Cache will return false
-        $this->cacheProphercy->get(KmsManager::CURRENT_ENCRYPTION_KEY)->willReturn(false)->shouldBeCalled();
+        $this->cacheProphecy->get(KmsManager::CURRENT_ENCRYPTION_KEY)->willReturn(false)->shouldBeCalled();
 
         // But we do expect the new key to be cached for decryption
-        $this->cacheProphercy->store(
+        $this->cacheProphecy->store(
             $keyCiphertextEncoded,
             $testMaterial,
             KmsManager::DECRYPTION_KEY_TTL
         )->shouldBeCalled();
 
         // And we'll also be storing the new encryption key in the cache
-        $this->cacheProphercy->store(
+        $this->cacheProphecy->store(
             KmsManager::CURRENT_ENCRYPTION_KEY,
             [
                 'id' => $keyCiphertextEncoded,
@@ -259,22 +259,22 @@ class KmsManagerTest extends TestCase
 
         //---
 
-        $awsResultProphercy = $this->prophesize(AwsResult::class);
+        $awsResultProphecy = $this->prophesize(AwsResult::class);
 
-        $awsResultProphercy->get('CiphertextBlob')->willReturn($keyCiphertext);
-        $awsResultProphercy->get('Plaintext')->willReturn($keyPlaintext);
+        $awsResultProphecy->get('CiphertextBlob')->willReturn($keyCiphertext);
+        $awsResultProphecy->get('Plaintext')->willReturn($keyPlaintext);
 
-        $this->kmsClientProphercy->generateDataKey([
+        $this->kmsClientProphecy->generateDataKey([
             'KeyId' => self::TEST_KMS_CMK_ALIAS,
             'KeySpec' => 'AES_256',
-        ])->willReturn($awsResultProphercy)->shouldBeCalled();
+        ])->willReturn($awsResultProphecy)->shouldBeCalled();
 
         //---
 
         $manager = new KmsManager(
-            $this->kmsClientProphercy->reveal(),
-            $this->cacheProphercy->reveal(),
-            $this->configProphercy->reveal()
+            $this->kmsClientProphecy->reveal(),
+            $this->cacheProphecy->reveal(),
+            $this->configProphecy->reveal()
         );
 
 
