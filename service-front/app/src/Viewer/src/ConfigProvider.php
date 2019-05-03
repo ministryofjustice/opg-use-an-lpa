@@ -46,7 +46,7 @@ class ConfigProvider
         return [
             'aliases' => [
                 Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
-                Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\CookiePersistence::class,
+                Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookiePersistence::class,
 
                 // The Session Key Manager to use
                 Service\Session\KeyManager\KeyManagerInterface::class => Service\Session\KeyManager\KmsManager::class,
