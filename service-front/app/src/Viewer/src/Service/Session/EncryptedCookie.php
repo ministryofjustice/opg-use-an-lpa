@@ -67,8 +67,8 @@ class EncryptedCookie extends Cookie
         $key = $this->keyManager->getEncryptionKey();
 
         $ciphertext = $this->getBlockCipher()
-                        ->setKey($key->getKeyMaterial())
-                        ->encrypt($plaintext);
+            ->setKey($key->getKeyMaterial())
+            ->encrypt($plaintext);
 
         return $key->getId() . '.' . Base64UrlSafe::encode($ciphertext);
     }
@@ -94,8 +94,8 @@ class EncryptedCookie extends Cookie
             $ciphertext = Base64UrlSafe::decode($payload);
 
             $plaintext = $this->getBlockCipher()
-                            ->setKey($key->getKeyMaterial())
-                            ->decrypt($ciphertext);
+                ->setKey($key->getKeyMaterial())
+                ->decrypt($ciphertext);
 
         } catch (KeyNotFoundException $e){
             # TODO: add logging
