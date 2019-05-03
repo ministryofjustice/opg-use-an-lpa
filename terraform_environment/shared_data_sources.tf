@@ -39,3 +39,7 @@ data "aws_cloudwatch_log_group" "use-an-lpa" {
 data "aws_acm_certificate" "certificate_viewer" {
   domain = "${local.dev_wildcard}viewer.${local.dns_namespace_acc}use-an-lpa.opg.service.justice.gov.uk"
 }
+
+data "aws_kms_alias" "sessions_viewer" {
+  name = "alias/sessions-viewer"
+}

@@ -87,15 +87,15 @@ resource "aws_iam_role_policy" "use_an_lpa_execution_role" {
   Defines permissions that the application running within the task has.
 */
 data "aws_iam_policy_document" "use_an_lpa_execution_role" {
-  "statement" {
+  statement {
     effect = "Allow"
 
     actions = [
-      "secretsmanager:DescribeSecret",
-      "secretsmanager:GetSecretValue",
+      "kms:Decrypt",
+      "kms:GenerateDataKey",
     ]
 
-    resources = ["${aws_secretsmanager_secret.session_key.arn}"]
+    resources = ["${data.aws_kms_alias.sessions_viewer.target_key_arn}"]
   }
 }
 
@@ -184,8 +184,8 @@ locals {
     },
     "environment": [
     {
-      "name": "SECRET_NAME_SESSION",
-      "value": "${aws_secretsmanager_secret.session_key.arn}"
+      "name": "KMS_SESSION_CMK_ALIAS",
+      "value": "${data.aws_kms_alias.sessions_viewer.name}"
     },
     {
       "name": "CONTAINER_VERSION",

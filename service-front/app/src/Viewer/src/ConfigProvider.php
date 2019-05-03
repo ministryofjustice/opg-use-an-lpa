@@ -48,6 +48,9 @@ class ConfigProvider
                 Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
                 Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookie::class,
 
+                // The Session Key Manager to use
+                Service\Session\KeyManager\KeyManagerInterface::class => Service\Session\KeyManager\KmsManager::class,
+
                 // Twig
                 Symfony\Component\Form\FormRenderer::class => Symfony\Component\Form\FormRendererInterface::class,
 
@@ -55,18 +58,12 @@ class ConfigProvider
                 Symfony\Component\Form\FormFactoryInterface::class => Symfony\Component\Form\FormFactory::class,
                 Symfony\Component\Security\Csrf\CsrfTokenManagerInterface::class => Middleware\Csrf\TokenManager::class,
             ],
-
-            'invokables' => [
-                // Handlers
-
-                // Services
-                Service\Session\KeyManager\KeyCache::class,
-            ],
-
+            
             'factories'  => [
 
                 // Services
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
+                Aws\Kms\KmsClient::class => Service\Aws\KmsFactory::class,
                 Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
 
                 Http\Adapter\Guzzle6\Client::class => Service\Http\GuzzleClientFactory::class,
@@ -85,10 +82,10 @@ class ConfigProvider
                 Symfony\Component\Form\FormFactory::class => Service\Form\FormFactory::class,
                 Middleware\Csrf\TokenManager::class => Middleware\Csrf\TokenManagerFactory::class,
 
-                Service\Session\EncryptedCookie::class => Service\Session\EncryptedCookieFactory::class,
-                Service\Session\KeyManager\Manager::class => Service\Session\KeyManager\ManagerFactory::class,
-
                 Zend\Expressive\Session\SessionMiddleware::class => Zend\Expressive\Session\SessionMiddlewareFactory::class,
+
+                // Config objects
+                Service\Session\KeyManager\Config::class => ConfigFactory::class,
             ],
 
             'delegators' => [
