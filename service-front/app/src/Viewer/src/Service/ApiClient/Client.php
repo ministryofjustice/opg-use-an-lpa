@@ -113,11 +113,64 @@ class Client
                 'dateDonorSigned' => '2017-02-25T00:00:00+00:00',
                 'dateRegistration' => '2017-04-15T00:00:00+00:00',
                 'dateLastConfirmedStatus' => '2019-04-22T00:00:00+00:00',
-                'isValid' => true,
             ],
             '9876-5432-1098' => [
-                'id'      => '987654321098',
-                'isValid' => false,
+                'id' => '987654321098',
+                'caseNumber' => '787640393837',
+                'type' => 'property-and-financial',
+                'donor' => [
+                    'name' => [
+                        'title' => 'Mr',
+                        'first' => 'Jordan',
+                        'last' => 'Johnson',
+                    ],
+                    'dob' => '1980-01-01T00:00:00+00:00',
+                    'address' => [
+                        'address1' => '1 High Street',
+                        'address2' => 'Hampton',
+                        'address3' => 'Wessex',
+                        'postcode' => 'LH1 7QQ',
+                    ],
+                ],
+                'attorneys' => [
+                    [
+                        'name' => [
+                            'title' => 'Mr',
+                            'first' => 'Peter',
+                            'last' => 'Smith',
+                        ],
+                        'dob' => '1984-02-14T00:00:00+00:00',
+                        'address' => [
+                            'address1' => '1 High Street',
+                            'address2' => 'Hampton',
+                            'address3' => 'Wessex',
+                            'postcode' => 'LH1 7QQ',
+                        ],
+                    ],
+                    [
+                        'name' => [
+                            'title' => 'Miss',
+                            'first' => 'Celia',
+                            'last' => 'Smith',
+                        ],
+                        'dob' => '1988-11-12T00:00:00+00:00',
+                        'address' => [
+                            'address1' => '1 Avenue Road',
+                            'address2' => 'Great Hampton',
+                            'address3' => 'Wessex',
+                            'postcode' => 'LH4 8PU',
+                        ],
+                    ],
+                ],
+                'decisions' => [
+                    'how' => 'jointly',
+                    'when' => 'no-capacity',
+                ],
+                'preferences' => false,
+                'instructions' => false,
+                'dateDonorSigned' => '2017-02-25T00:00:00+00:00',
+                'dateRegistration' => '2017-04-15T00:00:00+00:00',
+                'dateCancelled' => '2018-04-25T00:00:00+00:00',
             ],
         ];
 
