@@ -40,7 +40,7 @@ use function time;
  * During persistence, if the session regeneration flag is true, a new session
  * identifier is created, and the session re-started.
  */
-class Cookie implements SessionPersistenceInterface
+class CookiePersistence implements SessionPersistenceInterface
 {
     /**
      * This unusual past date value is taken from the php-engine source code and

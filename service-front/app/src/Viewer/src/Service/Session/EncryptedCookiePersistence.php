@@ -15,7 +15,7 @@ use Zend\Crypt\BlockCipher;
  * Class EncryptedCookie
  * @package App\Service\Session
  */
-class EncryptedCookie extends Cookie
+class EncryptedCookiePersistence extends CookiePersistence
 {
     /**
      * @var KeyManagerInterface
@@ -23,13 +23,13 @@ class EncryptedCookie extends Cookie
     private $keyManager;
 
     /**
-     * EncryptedCookie constructor.
+     * EncryptedCookiePersistence constructor.
      * @param KeyManagerInterface $keyManager
+     * @param Config $config
      */
-    public function __construct(KeyManagerInterface $keyManager)
+    public function __construct(KeyManagerInterface $keyManager, Config $config)
     {
-        parent::__construct();
-
+        parent::__construct($config);
         $this->keyManager = $keyManager;
     }
 
@@ -56,9 +56,9 @@ class EncryptedCookie extends Cookie
      * @param array $data
      * @return string
      */
-    protected function encode(array $data) : string
+    protected function encodeCookieValue(array $data) : string
     {
-        $plaintext = parent::encode($data);
+        $plaintext = parent::encodeCookieValue($data);
 
         if (empty($plaintext)) {
             return '';
@@ -79,10 +79,10 @@ class EncryptedCookie extends Cookie
      * @param string $data
      * @return array
      */
-    protected function decode(string $data) : array
+    protected function decodeCookieValue(string $data) : array
     {
         if (empty($data)) {
-            return parent::decode($data);
+            return parent::decodeCookieValue($data);
         }
 
         list($keyId, $payload) = explode('.', $data, 2);
@@ -104,7 +104,7 @@ class EncryptedCookie extends Cookie
             $plaintext = '';
         }
 
-        return parent::decode($plaintext);
+        return parent::decodeCookieValue($plaintext);
     }
 
 }
