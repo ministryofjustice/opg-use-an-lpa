@@ -7,6 +7,7 @@ namespace Viewer\Handler;
 use ArrayObject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Viewer\Middleware\Session\SessionTimeoutException;
 use Viewer\Service\Lpa\LpaService;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
@@ -40,8 +41,7 @@ class CheckCodeHandler extends AbstractHandler
 
         if (!isset($code)) {
 
-            # TODO
-            die('Show a timeout page');
+            throw new SessionTimeoutException;
 
         } else {
 
