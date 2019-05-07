@@ -129,9 +129,9 @@ services:
       REGION: eu-west-1
       SEED_PATH: /init/kms-seed.yaml
 
-feature-tests:
-  build:
-    context: .
-    dockerfile: features/Dockerfile
-  volumes:
-    - ./features:/feature-tests
+  feature-tests:
+    build:
+      context: .
+      dockerfile: features/Dockerfile
+    volumes:
+      - ./features:/feature-tests
