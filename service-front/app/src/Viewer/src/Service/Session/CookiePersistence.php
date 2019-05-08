@@ -94,7 +94,8 @@ class CookiePersistence implements SessionPersistenceInterface
      * CacheSessionPersistence constructor.
      * @param Config $config
      */
-    public function __construct(Config $config) {
+    public function __construct(Config $config)
+    {
 
         $this->cookieName = $config->getCookieName();
 
