@@ -1,11 +1,17 @@
 import boto3
 import argparse
+import json
 parser = argparse.ArgumentParser()
-parser.add_argument("cluster_arn", type=str,
-                    help="ECS Cluster ARN")
-parser.add_argument("service_name", type=str,
-                    help="ECS Service Name")
+parser.add_argument("config_file_path", type=str,
+                    help="Path to config file produced by terraform")
+
 args = parser.parse_args()
+
+
+def read_parameters_from_file(config_file):
+    with open(config_file) as json_file:
+        parameters = json.load(json_file)
+        return parameters
 
 
 def set_iam_role_session():
@@ -21,15 +27,18 @@ def set_iam_role_session():
     return session
 
 
-def get_task_status(cluster, service):
-    aws_access_key = set_iam_role_session()
+def get_task_status(config_file):
+    parameters = read_parameters_from_file(config_file)
+    cluster = parameters['cluster_name']
+    service = parameters['service_name']
 
+    session = set_iam_role_session()
     aws_access_key_id = \
-        aws_access_key['Credentials']['AccessKeyId']
+        session['Credentials']['AccessKeyId']
     aws_secret_access_key = \
-        aws_access_key['Credentials']['SecretAccessKey']
+        session['Credentials']['SecretAccessKey']
     aws_session_token = \
-        aws_access_key['Credentials']['SessionToken']
+        session['Credentials']['SessionToken']
 
     ecs = boto3.client(
         'ecs',
@@ -65,9 +74,8 @@ def get_task_status(cluster, service):
             tasks=[
                 task_arn,
             ],
-        )
-        print(task_status['tasks'][0]['lastStatus'])
+        )['tasks'][0]['lastStatus']
+        print(task_status)
 
 
-# avei -- python3 aws_ecs_task.py 47-UML115dyna-use-an-lpa 47-UML115dyna-viewer
-get_task_status(args.cluster_arn, args.service_name)
+get_task_status(args.config_file_path)
