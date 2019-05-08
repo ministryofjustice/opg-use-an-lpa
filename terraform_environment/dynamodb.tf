@@ -1,4 +1,4 @@
-resource "aws_dynamodb_table" "codes-table" {
+resource "aws_dynamodb_table" "viewer-codes-table" {
   name         = "${terraform.workspace}-ViewerCodes"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "ViewerCode"
