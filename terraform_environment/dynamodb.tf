@@ -1,7 +1,7 @@
 resource "aws_dynamodb_table" "codes-table" {
-  name         = "${terraform.workspace}-Codes"
+  name         = "${terraform.workspace}-ViewerCodes"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "Code"
+  hash_key     = "ViewerCode"
 
   attribute {
     name = "Code"
