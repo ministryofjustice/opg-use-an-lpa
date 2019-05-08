@@ -8,10 +8,6 @@ resource "aws_dynamodb_table" "viewer-codes-table" {
     type = "S"
   }
 
-  server_side_encryption {
-    enabled = false
-  }
-
   point_in_time_recovery {
     enabled = true
   }
