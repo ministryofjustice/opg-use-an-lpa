@@ -12,7 +12,7 @@ use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
- * Cached a session timeout exception and display the relevant error page.
+ * Catches a session timeout exception and displays the relevant error page.
  *
  * Class SessionTimeoutMiddleware
  * @package Viewer\Middleware\Session
