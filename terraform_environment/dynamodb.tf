@@ -19,6 +19,6 @@ resource "aws_dynamodb_table" "codes-table" {
   tags = "${local.default_tags}"
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
