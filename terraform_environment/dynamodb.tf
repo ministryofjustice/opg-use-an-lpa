@@ -4,7 +4,7 @@ resource "aws_dynamodb_table" "codes-table" {
   hash_key     = "ViewerCode"
 
   attribute {
-    name = "Code"
+    name = "ViewerCode"
     type = "S"
   }
 
