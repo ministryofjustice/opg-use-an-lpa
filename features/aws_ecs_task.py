@@ -60,7 +60,8 @@ def get_task_status(config_file):
     )['taskArns'][0]
 
     try:
-        print("Checking for task status")
+        print("Checking for task status...")
+        print(task_arn)
         waiter = ecs.get_waiter('tasks_running')
         waiter.wait(
             cluster=cluster,
