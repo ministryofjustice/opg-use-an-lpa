@@ -292,7 +292,6 @@ orbs:
                 cd terraform_environment
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
-                cat viewer_task_config.json
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   echo "Your environment, ${ENV_NAME:0:13} is built."
                   echo "To destroy this environment"
@@ -355,14 +354,17 @@ orbs:
           - restore_cache:
               key: task_configs-$SHORT_HASH
           - run:
+              name: wait for new task to be running
+              command: python features/aws_ecs_task.py viewer_task_config.json
+          - run:
               name: install behave
               command: sudo pip3 install behave selenium --upgrade
           - run:
               name: run suite
               command: |
-                ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
-                echo $TF_WORKSPACE
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                echo $SHORT_HASH
+                # ENV_NAME=<<parameters.workspace>>
+                # export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                # echo $TF_WORKSPACE
+                # export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                # echo $SHORT_HASH
                 behave
