@@ -6,10 +6,11 @@ namespace Viewer\Handler;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Viewer\Service\Lpa\LpaService;
-use Zend\Expressive\Helper\UrlHelper;
 use Viewer\Form\ShareCode;
+use Viewer\Service\Lpa\LpaService;
+use Zend\Expressive\Csrf\CsrfGuardInterface;
+use Zend\Expressive\Csrf\CsrfMiddleware;
+use Zend\Expressive\Helper\UrlHelper;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
@@ -19,25 +20,16 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  */
 class EnterCodeHandler extends AbstractHandler
 {
-    /** @var LpaService */
-    private $lpaService;
-
     /**
      * EnterCodeHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
-     * @param LpaService $lpaService
-     * @param FormFactoryInterface|null $formFactory
      */
     public function __construct(
         TemplateRendererInterface $renderer,
-        UrlHelper $urlHelper,
-        LpaService $lpaService,
-        FormFactoryInterface $formFactory)
+        UrlHelper $urlHelper)
     {
-        parent::__construct($renderer, $urlHelper, $formFactory);
-
-        $this->lpaService = $lpaService;
+        parent::__construct($renderer, $urlHelper);
     }
 
     /**
@@ -47,26 +39,27 @@ class EnterCodeHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        // use a trait to create the form we need.
-        $form = $this->createForm($request, $this->formFactory, ShareCode::class);
+        $session = $this->getSession($request, 'session');
 
-        // this bit of magic handles the form using the default provider, which
-        // accesses the raw super globals to populate. what we really want is a
-        // PSR7 provider.
-        // TODO as a part of UML-105
-        $form->handleRequest();
+        /** @var CsrfGuardInterface $guard */
+        $guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
+        $form = new ShareCode($guard);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+        if ($request->getMethod() === 'POST') {
+            $form->setData($request->getParsedBody());
 
-            $session = $this->getSession($request,'session');
-            $session->set('code', $data['lpa_code']);
+            if ($form->isValid()) {
+                $session->set('code', $form->getData()['lpa_code']);
 
-            return $this->redirectToRoute('check-code');
+                return $this->redirectToRoute('check-code');
+            }
         }
 
-        return new HtmlResponse($this->renderer->render('app::enter-code', [
-            'form' => $form->createView(),
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'app::enter-code',
+                [ 'form' => $form ]
+            )
+        );
     }
 }
