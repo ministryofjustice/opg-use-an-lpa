@@ -38,7 +38,7 @@ services:
       AWS_SECRET_ACCESS_KEY: '-'
       ENABLE_XDEBUG: 'true'
       PHP_IDE_CONFIG: serverName=viewer-app
-      XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1 remote_log=/tmp/xdebug.log
+      XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
 
   viewer-composer:
     image: composer
@@ -53,43 +53,43 @@ services:
       - --optimize-autoloader
 
   # ---------------------------
-  # Application
+  # API
 
-  application-web:
-    container_name: application-web
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web:latest
+  api-web:
+    container_name: api-web
+    image: api-web:latest
     build:
       context: .
-      dockerfile: service-application/docker/web/Dockerfile
+      dockerfile: service-api/docker/web/Dockerfile
     volumes:
-      - ./service-application/web:/web
+      - ./service-api/web:/web
     ports:
       - 9002:80
     environment:
-      APP_HOST: application-app
+      APP_HOST: api-app
       APP_PORT: 9000
       NGINX_LOG_LEVEL: warn
 
-  application-app:
-    container_name: application-app
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/application:latest
+  api-app:
+    container_name: api-app
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api:latest
     build:
       context: .
-      dockerfile: service-application/docker/app/Dockerfile
+      dockerfile: service-api/docker/app/Dockerfile
     volumes:
-      - ./service-application/app:/app
+      - ./service-api/app:/app
     environment:
       # Local only
       AWS_ACCESS_KEY_ID: '-'
       AWS_SECRET_ACCESS_KEY: '-'
       ENABLE_XDEBUG: 'true'
-      PHP_IDE_CONFIG: serverName=application-app
-      XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1 remote_log=/tmp/xdebug.log
+      PHP_IDE_CONFIG: serverName=api-app
+      XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
 
-  application-composer:
+  api-composer:
     image: composer
     volumes:
-      - ./service-application/app:/app
+      - ./service-api/app:/app
     command:
       - install
       - --prefer-dist

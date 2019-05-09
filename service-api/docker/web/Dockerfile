@@ -10,7 +10,7 @@ ENV WAITFORIT_VERSION="v2.4.1"
 RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64 \
   && chmod +x /usr/local/bin/waitforit
 
-COPY service-application/docker/web/etc /etc
+COPY service-api/docker/web/etc /etc
 
 CMD confd -onetime -backend env \
   && nginx -g "daemon off;"

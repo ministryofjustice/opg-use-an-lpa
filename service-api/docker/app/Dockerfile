@@ -1,6 +1,6 @@
 FROM composer AS composer
 
-COPY service-application/app /app
+COPY service-api/app /app
 
 RUN composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
 

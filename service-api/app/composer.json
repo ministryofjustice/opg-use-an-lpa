@@ -1,6 +1,6 @@
 {
     "name": "ministryofjustice/opg-use-my-lpa",
-    "description": "Use my LPA - Application Layer",
+    "description": "Use my LPA - API Layer",
     "type": "project",
     "homepage": "https://github.com/ministryofjustice/opg-use-my-lpa",
     "license": "MIT",
