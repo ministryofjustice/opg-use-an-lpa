@@ -212,6 +212,6 @@ locals {
   viewer_task_config = {
     cluster_name = "${aws_ecs_cluster.use-an-lpa.name}"
     service_name = "${aws_ecs_service.viewer.name}"
-    account_id   = "${locals.account_id}"
+    account_id   = "${local.account_id}"
   }
 }
