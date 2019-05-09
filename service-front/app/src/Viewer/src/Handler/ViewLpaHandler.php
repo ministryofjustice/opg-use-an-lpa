@@ -6,6 +6,7 @@ namespace Viewer\Handler;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Viewer\Middleware\Session\SessionTimeoutException;
 use Viewer\Service\Lpa\LpaService;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
@@ -45,7 +46,7 @@ class ViewLpaHandler extends AbstractHandler
         $code = $this->getSession($request,'session')->get('code');
 
         if (!isset($code)) {
-            die('Show a timeout page');
+            throw new SessionTimeoutException;
         }
 
         $lpa = $this->lpaService->getLpaByCode($code);

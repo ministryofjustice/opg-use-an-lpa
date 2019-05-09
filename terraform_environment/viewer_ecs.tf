@@ -202,3 +202,16 @@ output "web_deployed_version" {
 output "viewer_deployed_version" {
   value = "${data.aws_ecr_repository.use_an_lpa_view.repository_url}:${var.container_version}"
 }
+
+resource "local_file" "viewer_task_config" {
+  content  = "${jsonencode(local.viewer_task_config)}"
+  filename = "${path.module}/viewer_task_config.json"
+}
+
+locals {
+  viewer_task_config = {
+    cluster_name = "${aws_ecs_cluster.use-an-lpa.name}"
+    service_name = "${aws_ecs_service.viewer.name}"
+    account_id   = "${local.account_id}"
+  }
+}
