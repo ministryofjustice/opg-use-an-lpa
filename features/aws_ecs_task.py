@@ -1,6 +1,7 @@
 import boto3
 import argparse
 import json
+import os
 parser = argparse.ArgumentParser()
 parser.add_argument("config_file_path", type=str,
                     help="Path to config file produced by terraform")
@@ -14,15 +15,20 @@ def read_parameters_from_file(config_file):
         return parameters
 
 
-def set_iam_role_session():
+def set_iam_role_session(account_id):
+    if os.getenv('CI'):
+        role_arn = 'arn:aws:iam::{}:role/ci'.format(account_id)
+    else:
+        role_arn = 'arn:aws:iam::{}:role/account-read'.format(account_id)
+
     sts = boto3.client(
         'sts',
-        region_name='eu-west-1'
+        region_name='eu-west-1',
     )
     session = sts.assume_role(
-        RoleArn='arn:aws:iam::367815980639:role/account-read',
+        RoleArn=role_arn,
         RoleSessionName='checking_ecs_task',
-        DurationSeconds=900,
+        DurationSeconds=900
     )
     return session
 
@@ -31,8 +37,9 @@ def get_task_status(config_file):
     parameters = read_parameters_from_file(config_file)
     cluster = parameters['cluster_name']
     service = parameters['service_name']
+    account_id = parameters['account_id']
 
-    session = set_iam_role_session()
+    session = set_iam_role_session(account_id)
     aws_access_key_id = \
         session['Credentials']['AccessKeyId']
     aws_secret_access_key = \
