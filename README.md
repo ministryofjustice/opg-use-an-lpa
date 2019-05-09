@@ -1,7 +1,7 @@
 # opg-use-my-lpa
 OPG Use My LPA: Managed by opg-org-infra &amp; Terraform
 
-[![CircleCI](https://circleci.com/gh/ministryofjustice/opg-use-my-lpa/tree/master.svg?style=svg)](https://circleci.com/gh/ministryofjustice/opg-use-my-lpa/tree/master)
+[![CircleCI](https://circleci.com/gh/ministryofjustice/opg-use-an-lpa.svg?style=svg)](https://circleci.com/gh/ministryofjustice/opg-use-an-lpa)
 
 ## Setup
 
