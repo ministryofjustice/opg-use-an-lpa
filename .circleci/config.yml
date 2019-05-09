@@ -356,7 +356,7 @@ orbs:
           - run:
               name: wait for new task to be running
               command: |
-                pip install boto3 #do this properly later
+                pip install boto3 --user #do this properly later
                 python features/aws_ecs_task.py viewer_task_config.json
           - run:
               name: install behave
