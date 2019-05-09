@@ -19,7 +19,7 @@ return [
         'expires' => 60 * 60 * 1,    // 1 hour
 
         'key' => [
-            // KMS alias to sue for data key generation.
+            // KMS alias to use for data key generation.
             'alias' => getenv('KMS_SESSION_CMK_ALIAS') ?: null,
         ],
 
