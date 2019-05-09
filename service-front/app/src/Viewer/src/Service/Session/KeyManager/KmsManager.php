@@ -6,6 +6,7 @@ namespace Viewer\Service\Session\KeyManager;
 
 use Aws\Kms\KmsClient;
 use Aws\Kms\Exception\KmsException;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\Halite\Alerts\InvalidKey;
 use ParagonIE\HiddenString\HiddenString;
@@ -84,7 +85,7 @@ class KmsManager implements KeyManagerInterface
                 'KeySpec' => 'AES_256',
             ]);
 
-            $id = base64_encode($newKey->get('CiphertextBlob'));
+            $id = Base64UrlSafe::encode((string)$newKey->get('CiphertextBlob'));
 
             $material = new HiddenString(
                 (string)$newKey->get('Plaintext'),
@@ -122,7 +123,7 @@ class KmsManager implements KeyManagerInterface
 
             try {
                 $key = $this->kmsClient->decrypt([
-                    'CiphertextBlob' => base64_decode($id),
+                    'CiphertextBlob' => Base64UrlSafe::decode($id),
                 ]);
             } catch (KmsException $e){
                 if ($e->getAwsErrorCode() == 'InvalidCiphertextException') {
