@@ -355,7 +355,9 @@ orbs:
               key: task_configs-$SHORT_HASH
           - run:
               name: wait for new task to be running
-              command: python features/aws_ecs_task.py viewer_task_config.json
+              command: |
+                pip install boto3 #do this properly later
+                python features/aws_ecs_task.py viewer_task_config.json
           - run:
               name: install behave
               command: sudo pip3 install behave selenium --upgrade
