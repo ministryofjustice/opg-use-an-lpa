@@ -122,7 +122,7 @@ class EncryptedCookiePersistenceTest extends TestCase
 
         $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), $this->configProphecy->reveal());
 
-        // We use a concrete session object here. It just moves data around; that's no test benefit to mocking it
+        // We use a concrete session object here. It just moves data around; there's no test benefit to mocking it
         $response = $cp->persistSession(new Session([]), $responseProphecy->reveal());
 
         // We expect the response we put in to be returned
