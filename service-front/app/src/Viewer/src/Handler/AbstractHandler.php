@@ -19,7 +19,6 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 abstract class AbstractHandler implements RequestHandlerInterface
 {
     use Traits\Session;
-    use Traits\Form;
 
     /** @var TemplateRendererInterface */
     protected $renderer;
@@ -34,13 +33,11 @@ abstract class AbstractHandler implements RequestHandlerInterface
      * AbstractHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
-     * @param FormFactoryInterface|null $formFactory
      */
-    public function __construct(TemplateRendererInterface $renderer, UrlHelper $urlHelper, FormFactoryInterface $formFactory = null)
+    public function __construct(TemplateRendererInterface $renderer, UrlHelper $urlHelper)
     {
         $this->renderer = $renderer;
         $this->urlHelper = $urlHelper;
-        $this->formFactory = $formFactory;
     }
 
     /**

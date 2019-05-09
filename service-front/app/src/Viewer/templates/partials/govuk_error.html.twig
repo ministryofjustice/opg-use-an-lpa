@@ -1,0 +1,32 @@
+{% block error_summary %}
+    {% if errors|length > 0 %}
+        {# ... display the errors for the whole form #}
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    {% for id, messages in errors %}
+                        {% for message in messages %}
+                            <li>
+                                <a href="#{{ form_name }}_{{ id }}">{{  message|raw }}</a>
+                            </li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+{% endblock error_summary %}
+
+{% block error_message %}
+    {% if errors|length > 0 %}
+        {# ... display the errors for a single field #}
+        {%- for error in errors -%}
+            <span id="{{ id }}-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ error|raw }}
+            </span>
+        {%- endfor -%}
+    {% endif %}
+{% endblock error_message %}
