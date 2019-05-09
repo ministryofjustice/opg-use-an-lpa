@@ -349,12 +349,7 @@ orbs:
           - run:
               name: wait for new task to be running
               command: |
-                ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
-                echo $TF_WORKSPACE
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                echo $SHORT_HASH
-                pip install boto3 --user #do this properly later
+                sudo pip3 install boto3 -q
                 python features/aws_ecs_task.py /tmp/viewer_task_config.json
           - run:
               name: install behave
