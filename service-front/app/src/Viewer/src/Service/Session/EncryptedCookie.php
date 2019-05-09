@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Viewer\Service\Session;
 
 use Viewer\Service\Session\KeyManager\KeyNotFoundException;
-use Viewer\Service\Session\KeyManager\Manager;
+use Viewer\Service\Session\KeyManager\KeyManagerInterface;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Zend\Crypt\BlockCipher;
 
@@ -18,15 +18,15 @@ use Zend\Crypt\BlockCipher;
 class EncryptedCookie extends Cookie
 {
     /**
-     * @var Manager
+     * @var KeyManagerInterface
      */
     private $keyManager;
 
     /**
      * EncryptedCookie constructor.
-     * @param Manager $keyManager
+     * @param KeyManagerInterface $keyManager
      */
-    public function __construct(Manager $keyManager)
+    public function __construct(KeyManagerInterface $keyManager)
     {
         parent::__construct();
 
@@ -55,7 +55,6 @@ class EncryptedCookie extends Cookie
      *
      * @param array $data
      * @return string
-     * @throws \ParagonIE\Halite\Alerts\InvalidKey
      */
     protected function encode(array $data) : string
     {
@@ -65,13 +64,13 @@ class EncryptedCookie extends Cookie
             return '';
         }
 
-        $key = $this->keyManager->getCurrentKey();
+        $key = $this->keyManager->getEncryptionKey();
 
         $ciphertext = $this->getBlockCipher()
-                        ->setKey($key->getKeyMaterial())
-                        ->encrypt($plaintext);
+            ->setKey($key->getKeyMaterial())
+            ->encrypt($plaintext);
 
-        return dechex($key->getId()) . '.' . Base64UrlSafe::encode($ciphertext);
+        return $key->getId() . '.' . Base64UrlSafe::encode($ciphertext);
     }
 
     /**
@@ -79,7 +78,6 @@ class EncryptedCookie extends Cookie
      *
      * @param string $data
      * @return array
-     * @throws \ParagonIE\Halite\Alerts\InvalidKey
      */
     protected function decode(string $data) : array
     {
@@ -89,11 +87,9 @@ class EncryptedCookie extends Cookie
 
         list($keyId, $payload) = explode('.', $data, 2);
 
-        $keyId = hexdec($keyId);
-
         try {
 
-            $key = $this->keyManager->getKeyId($keyId);
+            $key = $this->keyManager->getDecryptionKey($keyId);
 
             $ciphertext = Base64UrlSafe::decode($payload);
 

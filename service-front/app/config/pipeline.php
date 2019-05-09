@@ -43,7 +43,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - $app->pipe('/files', $filesMiddleware);
 
     $app->pipe(\Zend\Expressive\Session\SessionMiddleware::class);
-    $app->pipe(\Viewer\Middleware\Csrf\TokenManagerMiddleware::class);
+    $app->pipe(\Zend\Expressive\Csrf\CsrfMiddleware::class);
 
     // Register the routing middleware in the middleware pipeline.
     // This middleware registers the Zend\Expressive\Router\RouteResult request attribute.

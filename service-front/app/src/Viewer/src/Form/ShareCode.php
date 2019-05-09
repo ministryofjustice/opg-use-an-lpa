@@ -4,24 +4,42 @@ declare(strict_types=1);
 
 namespace Viewer\Form;
 
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
+use Zend\Expressive\Csrf\CsrfGuardInterface;
+use Zend\Filter\StringTrim;
+use Zend\InputFilter\InputFilterProviderInterface;
+use Zend\Validator\Regex;
 
-class ShareCode extends AbstractForm
+class ShareCode extends AbstractCsrfForm implements InputFilterProviderInterface
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    const FORM_NAME = 'share_code';
+
+    public function __construct(CsrfGuardInterface $csrfGuard)
     {
-        $builder
-            ->add('lpa_code', TextType::class, [
-                'constraints' => [
-                    new NotBlank(),
+        parent::__construct(self::FORM_NAME, $csrfGuard);
+
+        $this->add([
+            'name' => 'lpa_code',
+            'type'  => 'Text',
+        ]);
+    }
+
+    public function getInputFilterSpecification() : array
+    {
+        return [
+            'lpa_code' => [
+                'required' => true,
+                'filters'  => [
+                    ['name' => StringTrim::class],
+                ],
+                'validators' => [
                     new Regex([
                         'pattern' => '/[\w\d]{4,4}-[\w\d]{4,4}-[\w\d]{4,4}/',
-                        'message' => 'Enter an LPA share code in the correct format.'
+                        'message' => [
+                            Regex::NOT_MATCH => 'Enter an LPA share code in the correct format.'
+                        ]
                     ])
                 ]
-            ]);
+            ]
+        ];
     }
 }
