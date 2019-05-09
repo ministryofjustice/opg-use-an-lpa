@@ -22,6 +22,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // The error handler should be the first (most outer) middleware to catch
     // all Exceptions.
     $app->pipe(ErrorHandler::class);
+    $app->pipe(\Viewer\Middleware\Session\SessionTimeoutMiddleware::class);
     $app->pipe(ServerUrlMiddleware::class);
 
     // Pipe more middleware here that you want to execute on every request:
