@@ -47,6 +47,9 @@ class ConfigProvider
             'aliases' => [
                 Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
                 Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookie::class,
+
+                // The Session Key Manager to use
+                Service\Session\KeyManager\KeyManagerInterface::class => Service\Session\KeyManager\KmsManager::class,
             ],
             
             'factories'  => [
@@ -60,9 +63,6 @@ class ConfigProvider
 
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
                 Service\Lpa\LpaService::class => Service\Lpa\LpaServiceFactory::class,
-
-                Service\Session\EncryptedCookie::class => Service\Session\EncryptedCookieFactory::class,
-                Service\Session\KeyManager\Manager::class => Service\Session\KeyManager\ManagerFactory::class,
 
                 Zend\Expressive\Session\SessionMiddleware::class => Zend\Expressive\Session\SessionMiddlewareFactory::class,
 

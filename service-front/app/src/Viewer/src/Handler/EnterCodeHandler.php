@@ -39,7 +39,7 @@ class EnterCodeHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $s = $this->getSession($request,'session');
+        $session = $this->getSession($request, 'session');
 
         /** @var CsrfGuardInterface $guard */
         $guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
