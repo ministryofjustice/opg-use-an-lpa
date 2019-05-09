@@ -292,6 +292,7 @@ orbs:
                 cd terraform_environment
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
+                cat viewer_task_config.json
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   echo "Your environment, ${ENV_NAME:0:13} is built."
                   echo "To destroy this environment"
