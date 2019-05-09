@@ -343,19 +343,16 @@ orbs:
         steps:
           - checkout
           - install_webdriver
+          - restore_cache:
+              key: task_configs-$SHORT_HASH
           - run:
-              name: set environment
+              name: wait for new task to be running
               command: |
                 ENV_NAME=<<parameters.workspace>>
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
-          - restore_cache:
-              key: task_configs-$SHORT_HASH
-          - run:
-              name: wait for new task to be running
-              command: |
                 pip install boto3 --user #do this properly later
                 python features/aws_ecs_task.py viewer_task_config.json
           - run:
@@ -364,9 +361,9 @@ orbs:
           - run:
               name: run suite
               command: |
-                # ENV_NAME=<<parameters.workspace>>
-                # export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
-                # echo $TF_WORKSPACE
-                # export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                # echo $SHORT_HASH
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                echo $SHORT_HASH
                 behave
