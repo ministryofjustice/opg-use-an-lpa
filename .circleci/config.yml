@@ -304,7 +304,7 @@ orbs:
           - save_cache:
               key: task_configs-$SHORT_HASH
               paths:
-                - viewer_task_config.json
+                - terraform_environment/viewer_task_config.json
 
       destroy_dev_environment:
         #
