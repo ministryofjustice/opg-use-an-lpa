@@ -33,13 +33,13 @@ class CsrfGuardValidator extends ZendCsrf
      */
     public function __construct($options = [])
     {
-        parent::__construct($options);
-
-        if ( ! isset($options['guard']) || ! $options['guard'] instanceof CsrfGuardInterface) {
+        // turns out Zend does some magic initialisation of properties from the options array so 
+        // we have to check things are valid before __construct'ing the parent.
+        if (! (isset($options['guard']) && $options['guard'] instanceof CsrfGuardInterface)) {
             throw new InvalidArgumentException('A CsrfGuardInterface must be supplied to the Csrf Validator');
         }
 
-        $this->setGuard($options['guard']);
+        parent::__construct($options);
     }
 
     public function isValid($value, $context = null) : bool
