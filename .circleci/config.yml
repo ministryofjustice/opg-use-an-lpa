@@ -302,6 +302,10 @@ orbs:
                   echo "aws-vault exec identity -- terraform workspace select ${ENV_NAME:0:13}"
                   echo "aws-vault exec identity -- terraform destroy"
                 fi
+          - save_cache:
+              key: task_configs-$SHORT_HASH
+              paths:
+                - viewer_task_config.json
 
       destroy_dev_environment:
         #
@@ -340,6 +344,16 @@ orbs:
         steps:
           - checkout
           - install_webdriver
+          - run:
+              name: set environment
+              command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                echo $SHORT_HASH
+          - restore_cache:
+              key: task_configs-$SHORT_HASH
           - run:
               name: install behave
               command: sudo pip3 install behave selenium --upgrade
