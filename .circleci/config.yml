@@ -252,8 +252,8 @@ orbs:
               command: |
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
 
-                docker tag front-app:latest << parameters.container_repo_url >>:latest
-                docker tag front-app:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag api-app:latest << parameters.container_repo_url >>:latest
+                docker tag api-app:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   docker push << parameters.container_repo_url >>:latest
