@@ -3,6 +3,10 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
+use Viewer\Handler\CheckCodeHandler;
+use Viewer\Handler\EnterCodeHandler;
+use Viewer\Handler\HomePageHandler;
+use Viewer\Handler\ViewLpaHandler;
 use Zend\Expressive\Application;
 use Zend\Expressive\MiddlewareFactory;
 
@@ -32,9 +36,25 @@ use Zend\Expressive\MiddlewareFactory;
  *     'contact'
  * );
  */
-return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
+
+$viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
+{
     $app->route('/', Viewer\Handler\HomePageHandler::class, ['GET', 'POST'], 'home');
     $app->route('/enter-code', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'],'enter-code');
     $app->get('/check-code', Viewer\Handler\CheckCodeHandler::class, 'check-code');
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
 };
+
+$actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
+{
+    $app->route('/', Actor\Handler\HomePageHandler::class, ['GET', 'POST'], 'home');
+};
+
+switch (getenv('CONTEXT')){
+    case 'viewer':
+        return $viewerRoutes;
+    case 'actor':
+        return $actorRoutes;
+    default:
+        throw new Error('Unknown context');
+}

@@ -13,9 +13,9 @@ RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
         && pecl clear-cache \
         && apk del .build-dependencies
 
-COPY service-front/app /app
+COPY service-api/app /app
 COPY --from=composer /app/vendor /app/vendor
-COPY service-front/docker/app/app-php.ini /usr/local/etc/php/conf.d/
+COPY service-api/docker/app/app-php.ini /usr/local/etc/php/conf.d/
 
 WORKDIR /app
 

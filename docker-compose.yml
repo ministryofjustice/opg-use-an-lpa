@@ -7,7 +7,7 @@ services:
 
   viewer-web:
     container_name: viewer-web
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web:latest
+    image: front-web
     build:
       context: .
       dockerfile: service-front/docker/web/Dockerfile
@@ -22,7 +22,7 @@ services:
 
   viewer-app:
     container_name: viewer-app
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front:latest
+    image: viewer-app
     build:
       context: .
       dockerfile: service-front/docker/app/Dockerfile
@@ -30,6 +30,7 @@ services:
       - ./service-front/app:/app
     environment:
       # Always required
+      CONTEXT: 'viewer'
       KMS_SESSION_CMK_ALIAS: 'alias/viewer-sessions-cmk-alias'
 
       # Local only
@@ -53,18 +54,69 @@ services:
       - --optimize-autoloader
 
   # ---------------------------
+  # Actor Front
+
+  actor-web:
+    container_name: actor-web
+    image: front-web
+    build:
+      context: .
+      dockerfile: service-front/docker/web/Dockerfile
+    volumes:
+      - ./service-front/web:/web
+    ports:
+      - 9002:80
+    environment:
+      APP_HOST: actor-app
+      APP_PORT: 9000
+      NGINX_LOG_LEVEL: warn
+
+  actor-app:
+    container_name: actor-app
+    image: actor-app
+    build:
+      context: .
+      dockerfile: service-front/docker/app/Dockerfile
+    volumes:
+      - ./service-front/app:/app
+    environment:
+      # Always required
+      CONTEXT: 'actor'
+      KMS_SESSION_CMK_ALIAS: 'alias/viewer-sessions-cmk-alias'
+
+      # Local only
+      AWS_ENDPOINT_KMS: http://kms:8080
+      AWS_ACCESS_KEY_ID: '-'
+      AWS_SECRET_ACCESS_KEY: '-'
+      ENABLE_XDEBUG: 'true'
+      PHP_IDE_CONFIG: serverName=viewer-app
+      XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
+
+  actor-composer:
+    image: composer
+    volumes:
+      - ./service-front/app:/app
+    command:
+      - install
+      - --prefer-dist
+      - --no-suggest
+      - --no-interaction
+      - --no-scripts
+      - --optimize-autoloader
+
+  # ---------------------------
   # API
 
   api-web:
     container_name: api-web
-    image: api-web:latest
+    image: api-web
     build:
       context: .
       dockerfile: service-api/docker/web/Dockerfile
     volumes:
       - ./service-api/web:/web
     ports:
-      - 9002:80
+      - 9003:80
     environment:
       APP_HOST: api-app
       APP_PORT: 9000
@@ -72,7 +124,7 @@ services:
 
   api-app:
     container_name: api-app
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api:latest
+    image: api-app
     build:
       context: .
       dockerfile: service-api/docker/app/Dockerfile
