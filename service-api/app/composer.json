@@ -1,20 +1,9 @@
 {
-    "name": "zendframework/zend-expressive-skeleton",
-    "description": "Zend expressive skeleton. Begin developing PSR-15 middleware applications in seconds!",
+    "name": "ministryofjustice/opg-use-my-lpa",
+    "description": "Use my LPA - API Layer",
     "type": "project",
-    "homepage": "https://github.com/zendframework/zend-expressive-skeleton",
-    "license": "BSD-3-Clause",
-    "keywords": [
-        "skeleton",
-        "middleware",
-        "psr",
-        "psr-7",
-        "psr-11",
-        "psr-15",
-        "zf",
-        "zendframework",
-        "zend-expressive"
-    ],
+    "homepage": "https://github.com/ministryofjustice/opg-use-my-lpa",
+    "license": "MIT",
     "config": {
         "sort-packages": true
     },
