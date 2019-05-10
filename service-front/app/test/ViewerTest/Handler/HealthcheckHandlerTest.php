@@ -19,7 +19,10 @@ class HealthcheckHandlerTest extends TestCase
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
         $response = $handler->handle($requestProphecy->reveal());
+        $json = json_decode((string) $response->getBody());
 
         $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertObjectHasAttribute('healthy', $json);
+        $this->assertObjectHasAttribute('version', $json);
     }
 }
