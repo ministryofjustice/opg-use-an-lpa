@@ -29,7 +29,7 @@ workflows:
               ignore: master
       - use-my-lpa/apply_environment_terraform:
           name: dev_apply_environment_terraform
-          requires: [dev_apply_shared_terraform, app_front_build, web_front_build, web_api_build]
+          requires: [dev_apply_shared_terraform, app_front_build, web_front_build, web_api_build, app_api_build]
           filters:
             branches:
               ignore: master
@@ -66,7 +66,7 @@ workflows:
       - use-my-lpa/apply_environment_terraform:
           name: preprod_apply_environment_terraform
           workspace: preproduction
-          requires: [preprod_apply_shared_terraform, app_front_build, web_front_build, web_api_build]
+          requires: [preprod_apply_shared_terraform, app_front_build, web_front_build, web_api_build, app_api_build]
           filters:
             branches:
               only: master
@@ -90,7 +90,7 @@ workflows:
       - use-my-lpa/apply_environment_terraform:
           name: production_apply_environment_terraform
           workspace: production
-          requires: [production_apply_shared_terraform, app_front_build, web_front_build, web_api_build]
+          requires: [production_apply_shared_terraform, app_front_build, web_front_build, web_api_build, app_api_build]
           filters:
             branches:
               only: master
