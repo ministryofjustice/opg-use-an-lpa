@@ -1,7 +1,7 @@
 # opg-use-my-lpa
 OPG Use My LPA: Managed by opg-org-infra &amp; Terraform
 
-[![CircleCI](https://circleci.com/gh/ministryofjustice/opg-use-my-lpa/tree/master.svg?style=svg)](https://circleci.com/gh/ministryofjustice/opg-use-my-lpa/tree/master)
+[![CircleCI](https://circleci.com/gh/ministryofjustice/opg-use-an-lpa.svg?style=svg)](https://circleci.com/gh/ministryofjustice/opg-use-an-lpa)
 
 ## Setup
 
@@ -18,7 +18,9 @@ docker-compose run viewer-composer composer development-enable
 docker-compose exec viewer-app rm -f /tmp/config-cache.php
 ```
 
-The Viewer service will then be available via http://localhost:9001/
+The Viewer service will be available via http://localhost:9001/
+
+The API service will be available via http://localhost:9002/
 
 ### Tests
 
