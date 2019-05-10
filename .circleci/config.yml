@@ -303,7 +303,7 @@ orbs:
                   echo "aws-vault exec identity -- terraform destroy"
                 fi
           - save_cache:
-              key: task_configs-{{ .Revision }}
+              key: task_configs-<<parameters.workspace>>-{{ .Revision }}
               paths:
                 - /tmp/viewer_task_config.json
 
@@ -345,7 +345,7 @@ orbs:
           - checkout
           - install_webdriver
           - restore_cache:
-              key: task_configs-{{ .Revision }}
+              key: task_configs-<<parameters.workspace>>-{{ .Revision }}
           - run:
               name: wait for new task to be running
               command: |
