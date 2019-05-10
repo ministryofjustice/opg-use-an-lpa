@@ -2,7 +2,7 @@
 // Viewer ECS Service level config
 
 resource "aws_ecs_service" "viewer" {
-  name            = "${terraform.workspace}-viewer"
+  name            = "viewer"
   cluster         = "${aws_ecs_cluster.use-an-lpa.id}"
   task_definition = "${aws_ecs_task_definition.viewer.arn}"
   desired_count   = 1
