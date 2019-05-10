@@ -347,10 +347,6 @@ orbs:
           - attach_workspace:
               at: /tmp
           - run:
-              name: what's in tmp?
-              command: |
-                ls /tmp
-          - run:
               name: wait for new task to be running
               command: |
                 sudo pip3 install boto3 -q
