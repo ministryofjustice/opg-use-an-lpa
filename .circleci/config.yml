@@ -305,7 +305,7 @@ orbs:
           - persist_to_workspace:
               root: /tmp
               paths:
-                - /tmp/viewer_task_config.json
+                - viewer_task_config.json
 
       destroy_dev_environment:
         #
