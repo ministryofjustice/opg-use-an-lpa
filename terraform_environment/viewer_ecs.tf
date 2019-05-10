@@ -99,19 +99,6 @@ data "aws_iam_policy_document" "use_an_lpa_execution_role" {
   }
 }
 
-//--------------------
-// ECR Repos
-
-data "aws_ecr_repository" "use_an_lpa_web" {
-  provider = "aws.management"
-  name     = "use_an_lpa/web"
-}
-
-data "aws_ecr_repository" "use_an_lpa_view" {
-  provider = "aws.management"
-  name     = "use_an_lpa/viewer_front"
-}
-
 //-----------------------------------------------
 // Viewer ECS Service Task Container level config
 
@@ -120,7 +107,7 @@ locals {
   {
     "cpu": 1,
     "essential": true,
-    "image": "${data.aws_ecr_repository.use_an_lpa_web.repository_url}:${var.container_version}",
+    "image": "${data.aws_ecr_repository.use_an_lpa_front_web.repository_url}:${var.container_version}",
     "mountPoints": [],
     "name": "web",
     "portMappings": [
@@ -163,7 +150,7 @@ locals {
   {
     "cpu": 1,
     "essential": true,
-    "image": "${data.aws_ecr_repository.use_an_lpa_view.repository_url}:${var.container_version}",
+    "image": "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}:${var.container_version}",
     "mountPoints": [],
     "name": "app",
     "portMappings": [
@@ -195,12 +182,12 @@ locals {
   EOF
 }
 
-output "web_deployed_version" {
-  value = "${data.aws_ecr_repository.use_an_lpa_web.repository_url}:${var.container_version}"
+output "front_web_deployed_version" {
+  value = "${data.aws_ecr_repository.use_an_lpa_front_web.repository_url}:${var.container_version}"
 }
 
-output "viewer_deployed_version" {
-  value = "${data.aws_ecr_repository.use_an_lpa_view.repository_url}:${var.container_version}"
+output "front_app_deployed_version" {
+  value = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}:${var.container_version}"
 }
 
 resource "local_file" "viewer_task_config" {
