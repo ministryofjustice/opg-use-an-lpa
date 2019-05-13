@@ -23,5 +23,4 @@ def get_frontend_url( frontend ):
   else:
     url = 'https://{0}{1}.{2}use-an-lpa.opg.service.justice.gov.uk'.format(dns_env_namespace, frontend, dns_account_namespace)
 
-  print(url)
   return url
