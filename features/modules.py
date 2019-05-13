@@ -19,7 +19,7 @@ def get_frontend_url( frontend ):
 
 
   if workspace == 'localhost':
-    url = 'http://{0}.localhost'.format(frontend)
+    url = 'http://viewer-web'
   else:
     url = 'https://{0}{1}.{2}use-an-lpa.opg.service.justice.gov.uk'.format(dns_env_namespace, frontend, dns_account_namespace)
 
