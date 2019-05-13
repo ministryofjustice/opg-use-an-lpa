@@ -26,7 +26,7 @@ resource "aws_ecs_task_definition" "api" {
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.api_web}, ${local.api_app}]"
-  task_role_arn            = "${aws_iam_role.use_an_lpa.arn}"
+  task_role_arn            = "${aws_iam_role.viewer_task_role.arn}"
   execution_role_arn       = "${aws_iam_role.execution_role.arn}"
   tags                     = "${local.default_tags}"
 }

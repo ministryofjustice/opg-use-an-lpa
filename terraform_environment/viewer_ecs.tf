@@ -63,7 +63,7 @@ resource "aws_ecs_task_definition" "viewer" {
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.viewer_web}, ${local.viewer_app}]"
-  task_role_arn            = "${aws_iam_role.use_an_lpa.arn}"
+  task_role_arn            = "${aws_iam_role.viewer_task_role.arn}"
   execution_role_arn       = "${aws_iam_role.execution_role.arn}"
   tags                     = "${local.default_tags}"
 }
@@ -71,22 +71,22 @@ resource "aws_ecs_task_definition" "viewer" {
 //----------------
 // Permissions
 
-resource "aws_iam_role" "use_an_lpa" {
+resource "aws_iam_role" "viewer_task_role" {
   name               = "${terraform.workspace}-viewer-task-role"
   assume_role_policy = "${data.aws_iam_policy_document.task_role_assume_policy.json}"
   tags               = "${local.default_tags}"
 }
 
-resource "aws_iam_role_policy" "use_an_lpa_execution_role" {
+resource "aws_iam_role_policy" "viewer_execution_role" {
   name   = "${terraform.workspace}-ViewerApplicationPermissions"
-  policy = "${data.aws_iam_policy_document.use_an_lpa_execution_role.json}"
-  role   = "${aws_iam_role.use_an_lpa.id}"
+  policy = "${data.aws_iam_policy_document.viewer_execution_role.json}"
+  role   = "${aws_iam_role.viewer_task_role.id}"
 }
 
 /*
   Defines permissions that the application running within the task has.
 */
-data "aws_iam_policy_document" "use_an_lpa_execution_role" {
+data "aws_iam_policy_document" "viewer_execution_role" {
   statement {
     effect = "Allow"
 
