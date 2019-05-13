@@ -17,8 +17,6 @@ resource "aws_ecs_service" "api" {
   service_registries {
     registry_arn = "${aws_service_discovery_service.api.arn}"
   }
-
-  tags = "${local.default_tags}"
 }
 
 resource "aws_ecs_task_definition" "api" {

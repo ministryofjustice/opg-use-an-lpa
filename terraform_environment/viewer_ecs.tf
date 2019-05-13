@@ -21,7 +21,6 @@ resource "aws_ecs_service" "viewer" {
   }
 
   depends_on = ["aws_lb.viewer"]
-  tags       = "${local.default_tags}"
 }
 
 //----------------------------------
