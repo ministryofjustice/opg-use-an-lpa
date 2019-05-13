@@ -56,3 +56,13 @@ data "aws_ecr_repository" "use_an_lpa_front_app" {
   provider = "aws.management"
   name     = "use_an_lpa/front_app"
 }
+data "aws_ecr_repository" "use_an_lpa_api_app" {
+  provider = "aws.management"
+  name     = "use_an_lpa/api_app"
+}
+
+data "aws_ecr_repository" "use_an_lpa_api_web" {
+  provider = "aws.management"
+  name     = "use_an_lpa/api_app"
+}
+
