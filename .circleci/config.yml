@@ -179,7 +179,8 @@ orbs:
                 docker tag front-app:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                  docker push << parameters.container_repo_url >>:latest
+                  # We want all of the tags pushed
+                  docker push << parameters.container_repo_url >>
                 else
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
@@ -213,7 +214,8 @@ orbs:
                 docker tag front-web:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                  docker push << parameters.container_repo_url >>:latest
+                  # We want all of the tags pushed
+                  docker push << parameters.container_repo_url >>
                 else
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
@@ -256,7 +258,8 @@ orbs:
                 docker tag api-app:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                  docker push << parameters.container_repo_url >>:latest
+                  # We want all of the tags pushed
+                  docker push << parameters.container_repo_url >>
                 else
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
@@ -290,7 +293,8 @@ orbs:
                 docker tag api-web:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                  docker push << parameters.container_repo_url >>:latest
+                  # We want all of the tags pushed
+                  docker push << parameters.container_repo_url >>
                 else
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
