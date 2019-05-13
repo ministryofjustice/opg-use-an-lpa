@@ -23,8 +23,3 @@ resource "aws_route53_record" "viewer-use-my-lpa" {
 output "viewer-use-an-lpa-domain" {
   value = "https://${aws_route53_record.viewer-use-my-lpa.fqdn}"
 }
-
-resource "aws_service_discovery_private_dns_namespace" "internal" {
-  name = "${terraform.workspace}-internal"
-  vpc = "${data.aws_vpc.default.id}"
-}
