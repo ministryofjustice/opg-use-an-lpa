@@ -10,10 +10,15 @@ workflows:
             branches:
               ignore: master
 
-      - use-my-lpa/docker_build_viewer_app:
-          name: app_viewer_build
-      - use-my-lpa/docker_build_viewer_web:
-          name: web_viewer_build
+      - use-my-lpa/docker_build_front_app:
+          name: app_front_build
+      - use-my-lpa/docker_build_front_web:
+          name: web_front_build
+
+      - use-my-lpa/docker_build_api_app:
+          name: app_api_build
+      - use-my-lpa/docker_build_api_web:
+          name: web_api_build
 
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
@@ -24,7 +29,7 @@ workflows:
               ignore: master
       - use-my-lpa/apply_environment_terraform:
           name: dev_apply_environment_terraform
-          requires: [dev_apply_shared_terraform, app_viewer_build, web_viewer_build]
+          requires: [dev_apply_shared_terraform, app_front_build, web_front_build, web_api_build, app_api_build]
           filters:
             branches:
               ignore: master
@@ -61,7 +66,7 @@ workflows:
       - use-my-lpa/apply_environment_terraform:
           name: preprod_apply_environment_terraform
           workspace: preproduction
-          requires: [preprod_apply_shared_terraform, app_viewer_build, web_viewer_build]
+          requires: [preprod_apply_shared_terraform, app_front_build, web_front_build, web_api_build, app_api_build]
           filters:
             branches:
               only: master
@@ -85,7 +90,7 @@ workflows:
       - use-my-lpa/apply_environment_terraform:
           name: production_apply_environment_terraform
           workspace: production
-          requires: [production_apply_shared_terraform, app_viewer_build, web_viewer_build]
+          requires: [production_apply_shared_terraform, app_front_build, web_front_build, web_api_build, app_api_build]
           filters:
             branches:
               only: master
@@ -135,6 +140,164 @@ orbs:
         docker: [image: hashicorp/terraform]
 
     jobs:
+
+      #----------------------------------------------------
+      # Front Services (Actor & Viewer)
+
+      docker_build_front_app:
+        #
+        # Build Docker container for Front App
+        #   and runs the Unit Tests.
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/front_app
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 18.06.0-ce
+              docker_layer_caching: false
+          - run:
+              name: Build
+              command: |
+                docker build --file service-front/docker/app/Dockerfile --tag front-app:latest .
+          - run:
+              name: Run unit tests
+              command: |
+                docker run -d --name tests front-app:latest
+                docker exec tests /app/vendor/bin/phpunit
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+
+                docker tag front-app:latest << parameters.container_repo_url >>:latest
+                docker tag front-app:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  docker push << parameters.container_repo_url >>:latest
+                else
+                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                fi
+
+      docker_build_front_web:
+        #
+        # Build Docker container for Front Web
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/front_web
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 18.06.0-ce
+              docker_layer_caching: false
+          - run:
+              name: Build
+              command: |
+                docker build --file service-front/docker/web/Dockerfile --tag front-web:latest .
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+
+                docker tag front-web:latest << parameters.container_repo_url >>:latest
+                docker tag front-web:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  docker push << parameters.container_repo_url >>:latest
+                else
+                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                fi
+
+      #----------------------------------------------------
+      # API Service
+
+      docker_build_api_app:
+        #
+        # Build Docker container for API App
+        #   and runs the Unit Tests.
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api_app
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 18.06.0-ce
+              docker_layer_caching: false
+          - run:
+              name: Build
+              command: |
+                docker build --file service-api/docker/app/Dockerfile --tag api-app:latest .
+#          - run: # TODO: Add in once there are some tests in place.
+#              name: Run unit tests
+#              command: |
+#                docker run -d --name tests front-app:latest
+#                docker exec tests /app/vendor/bin/phpunit
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+
+                docker tag api-app:latest << parameters.container_repo_url >>:latest
+                docker tag api-app:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  docker push << parameters.container_repo_url >>:latest
+                else
+                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                fi
+
+      docker_build_api_web:
+        #
+        # Build Docker container for API Web
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api_web
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 18.06.0-ce
+              docker_layer_caching: false
+          - run:
+              name: Build
+              command: |
+                docker build --file service-api/docker/web/Dockerfile --tag api-web:latest .
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+
+                docker tag api-web:latest << parameters.container_repo_url >>:latest
+                docker tag api-web:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  docker push << parameters.container_repo_url >>:latest
+                else
+                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                fi
+
+      #----------------------------------------------------
+      # Terraform
+
       lint_terraform:
         #
         # Lint the Terraform
@@ -173,78 +336,6 @@ orbs:
                 cd terraform_environment
                 terraform init
                 terraform validate -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
-
-      docker_build_viewer_app:
-        #
-        # Build Docker container for Viewer App
-        #   and runs the Unit Tests.
-        #
-        executor: python
-        parameters:
-          container_repo_url:
-            type: string
-            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/viewer_front
-        steps:
-          - checkout
-          - install_aws_cli
-          - setup_remote_docker:
-              version: 18.06.0-ce
-              docker_layer_caching: false
-          - run:
-              name: Build
-              command: |
-                docker-compose build viewer-app
-          - run:
-              name: Run unit tests
-              command: |
-                docker run -d --name my-app << parameters.container_repo_url >>:latest
-                docker exec my-app /app/vendor/bin/phpunit
-          - ecr_login
-          - run:
-              name: Deploy
-              command: |
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-
-                # Viewer App
-                docker tag << parameters.container_repo_url >>:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
-                if [ "${CIRCLE_BRANCH}" == "master" ]; then 
-                  docker push << parameters.container_repo_url >>
-                else
-                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
-                fi
-
-      docker_build_viewer_web:
-        #
-        # Build Docker container for Viewer Web
-        #
-        executor: python
-        parameters:
-          container_repo_url:
-            type: string
-            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/web
-        steps:
-          - checkout
-          - install_aws_cli
-          - setup_remote_docker:
-              version: 18.06.0-ce
-              docker_layer_caching: false
-          - run:
-              name: Build
-              command: |
-                docker-compose build viewer-web
-          - ecr_login
-          - run:
-              name: Deploy
-              command: |
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-
-                # Viewer Web
-                docker tag << parameters.container_repo_url >>:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
-                if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                  docker push << parameters.container_repo_url >>
-                else
-                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
-                fi
 
       apply_shared_terraform:
         #
@@ -347,15 +438,15 @@ orbs:
           - attach_workspace:
               at: /tmp
           - run:
-              name: wait for new task to be running
+              name: Install Behave
+              command: sudo pip3 install behave selenium --upgrade
+          - run:
+              name: Wait for new task to be running
               command: |
                 sudo pip3 install boto3 -q
                 python features/aws_ecs_task.py /tmp/viewer_task_config.json
           - run:
-              name: install behave
-              command: sudo pip3 install behave selenium --upgrade
-          - run:
-              name: run suite
+              name: Run suite
               command: |
                 ENV_NAME=<<parameters.workspace>>
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
