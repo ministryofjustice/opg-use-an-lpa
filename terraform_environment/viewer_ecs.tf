@@ -20,8 +20,8 @@ resource "aws_ecs_service" "viewer" {
     container_port   = 80
   }
 
-  # depends_on = ["aws_lb.viewer", "aws_acm_certificate.cert", "aws_acm_certificate_validation.cert"]
   depends_on = ["aws_lb.viewer"]
+  tags       = "${local.default_tags}"
 }
 
 //----------------------------------
@@ -77,16 +77,16 @@ resource "aws_iam_role" "viewer_task_role" {
   tags               = "${local.default_tags}"
 }
 
-resource "aws_iam_role_policy" "viewer_execution_role" {
+resource "aws_iam_role_policy" "viewer_permissions_role" {
   name   = "${terraform.workspace}-ViewerApplicationPermissions"
-  policy = "${data.aws_iam_policy_document.viewer_execution_role.json}"
+  policy = "${data.aws_iam_policy_document.viewer_permissions_role.json}"
   role   = "${aws_iam_role.viewer_task_role.id}"
 }
 
 /*
   Defines permissions that the application running within the task has.
 */
-data "aws_iam_policy_document" "viewer_execution_role" {
+data "aws_iam_policy_document" "viewer_permissions_role" {
   statement {
     effect = "Allow"
 

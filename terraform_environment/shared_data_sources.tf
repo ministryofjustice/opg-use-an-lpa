@@ -63,6 +63,6 @@ data "aws_ecr_repository" "use_an_lpa_api_app" {
 
 data "aws_ecr_repository" "use_an_lpa_api_web" {
   provider = "aws.management"
-  name     = "use_an_lpa/api_app"
+  name     = "use_an_lpa/api_web"
 }
 

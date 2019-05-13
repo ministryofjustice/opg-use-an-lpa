@@ -17,6 +17,8 @@ resource "aws_ecs_service" "api" {
   service_registries {
     registry_arn = "${aws_service_discovery_service.api.arn}"
   }
+
+  tags = "${local.default_tags}"
 }
 
 resource "aws_ecs_task_definition" "api" {
@@ -26,7 +28,7 @@ resource "aws_ecs_task_definition" "api" {
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.api_web}, ${local.api_app}]"
-  task_role_arn            = "${aws_iam_role.viewer_task_role.arn}"
+  task_role_arn            = "${aws_iam_role.api_task_role.arn}"
   execution_role_arn       = "${aws_iam_role.execution_role.arn}"
   tags                     = "${local.default_tags}"
 }
@@ -132,4 +134,42 @@ resource "aws_service_discovery_service" "api" {
 resource "aws_service_discovery_private_dns_namespace" "internal" {
   name = "${terraform.workspace}-internal"
   vpc  = "${data.aws_vpc.default.id}"
+}
+
+//----------------
+// Permissions
+
+resource "aws_iam_role" "api_task_role" {
+  name               = "${terraform.workspace}-api-task-role"
+  assume_role_policy = "${data.aws_iam_policy_document.task_role_assume_policy.json}"
+  tags               = "${local.default_tags}"
+}
+
+resource "aws_iam_role_policy" "api_permissions_role" {
+  name   = "${terraform.workspace}-apiApplicationPermissions"
+  policy = "${data.aws_iam_policy_document.api_permissions_role.json}"
+  role   = "${aws_iam_role.api_task_role.id}"
+}
+
+/*
+  Defines permissions that the application running within the task has.
+*/
+data "aws_iam_policy_document" "api_permissions_role" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "dynamodb:*",
+    ]
+
+    resources = ["${aws_dynamodb_table.viewer_codes_table.arn}"]
+  }
+}
+
+output "api_web_deployed_version" {
+  value = "${data.aws_ecr_repository.use_an_lpa_api_web.repository_url}:${var.container_version}"
+}
+
+output "api_app_deployed_version" {
+  value = "${data.aws_ecr_repository.use_an_lpa_api_app.repository_url}:${var.container_version}"
 }
