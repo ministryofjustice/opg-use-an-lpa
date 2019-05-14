@@ -1,5 +1,5 @@
 //----------------------------------
-// Viewer ECS Service level config
+// Api ECS Service level config
 
 resource "aws_ecs_service" "api" {
   name            = "api"
@@ -40,11 +40,6 @@ resource "aws_service_discovery_service" "api" {
   }
 }
 
-resource "aws_service_discovery_private_dns_namespace" "internal" {
-  name = "${terraform.workspace}-internal"
-  vpc  = "${data.aws_vpc.default.id}"
-}
-
 //----------------------------------
 // The Api service's Security Groups
 
@@ -65,6 +60,8 @@ resource "aws_security_group_rule" "api_ecs_service_ingress" {
   source_security_group_id = "${aws_security_group.viewer_ecs_service.id}"
 }
 
+//----------------------------------
+// Anything out
 resource "aws_security_group_rule" "api_ecs_service_egress" {
   type              = "egress"
   from_port         = 0
