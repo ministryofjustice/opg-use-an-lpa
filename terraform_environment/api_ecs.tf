@@ -9,7 +9,7 @@ resource "aws_ecs_service" "api" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    security_groups  = ["${aws_security_group.ecs_service.id}"]
+    security_groups  = ["${aws_security_group.api_ecs_service.id}"]
     subnets          = ["${data.aws_subnet.private.*.id}"]
     assign_public_ip = false
   }
@@ -19,6 +19,54 @@ resource "aws_ecs_service" "api" {
   }
 }
 
+//-----------------------------------------------
+// Api service discovery
+resource "aws_service_discovery_service" "api" {
+  name = "api"
+
+  dns_config {
+    namespace_id = "${aws_service_discovery_private_dns_namespace.internal.id}"
+
+    dns_records {
+      ttl  = 10
+      type = "A"
+    }
+
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {
+    failure_threshold = 1
+  }
+}
+
+resource "aws_service_discovery_private_dns_namespace" "internal" {
+  name = "${terraform.workspace}-internal"
+  vpc  = "${data.aws_vpc.default.id}"
+}
+
+//----------------------------------
+// The Api service's Security Groups
+
+resource "aws_security_group" "api_ecs_service" {
+  name_prefix = "${terraform.workspace}-api-ecs-service"
+  vpc_id      = "${data.aws_vpc.default.id}"
+  tags        = "${local.default_tags}"
+}
+
+//----------------------------------
+// 80 in from viewer ECS service
+resource "aws_security_group_rule" "api_ecs_service_ingress" {
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  security_group_id        = "${aws_security_group.api_ecs_service.id}"
+  source_security_group_id = "${aws_security_group.viewer_ecs_service.id}"
+}
+
+//--------------------------------------
+// Api ECS Service Task level config
 resource "aws_ecs_task_definition" "api" {
   family                   = "${terraform.workspace}-api"
   requires_compatibilities = ["FARGATE"]
@@ -29,6 +77,36 @@ resource "aws_ecs_task_definition" "api" {
   task_role_arn            = "${aws_iam_role.api_task_role.arn}"
   execution_role_arn       = "${aws_iam_role.execution_role.arn}"
   tags                     = "${local.default_tags}"
+}
+
+//----------------
+// Permissions
+
+resource "aws_iam_role" "api_task_role" {
+  name               = "${terraform.workspace}-api-task-role"
+  assume_role_policy = "${data.aws_iam_policy_document.task_role_assume_policy.json}"
+  tags               = "${local.default_tags}"
+}
+
+resource "aws_iam_role_policy" "api_permissions_role" {
+  name   = "${terraform.workspace}-apiApplicationPermissions"
+  policy = "${data.aws_iam_policy_document.api_permissions_role.json}"
+  role   = "${aws_iam_role.api_task_role.id}"
+}
+
+/*
+  Defines permissions that the application running within the task has.
+*/
+data "aws_iam_policy_document" "api_permissions_role" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "dynamodb:*",
+    ]
+
+    resources = ["${aws_dynamodb_table.viewer_codes_table.arn}"]
+  }
 }
 
 //-----------------------------------------------
@@ -108,60 +186,6 @@ locals {
     }]
   }
   EOF
-}
-
-resource "aws_service_discovery_service" "api" {
-  name = "api"
-
-  dns_config {
-    namespace_id = "${aws_service_discovery_private_dns_namespace.internal.id}"
-
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-
-    routing_policy = "MULTIVALUE"
-  }
-
-  health_check_custom_config {
-    failure_threshold = 1
-  }
-}
-
-resource "aws_service_discovery_private_dns_namespace" "internal" {
-  name = "${terraform.workspace}-internal"
-  vpc  = "${data.aws_vpc.default.id}"
-}
-
-//----------------
-// Permissions
-
-resource "aws_iam_role" "api_task_role" {
-  name               = "${terraform.workspace}-api-task-role"
-  assume_role_policy = "${data.aws_iam_policy_document.task_role_assume_policy.json}"
-  tags               = "${local.default_tags}"
-}
-
-resource "aws_iam_role_policy" "api_permissions_role" {
-  name   = "${terraform.workspace}-apiApplicationPermissions"
-  policy = "${data.aws_iam_policy_document.api_permissions_role.json}"
-  role   = "${aws_iam_role.api_task_role.id}"
-}
-
-/*
-  Defines permissions that the application running within the task has.
-*/
-data "aws_iam_policy_document" "api_permissions_role" {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "dynamodb:*",
-    ]
-
-    resources = ["${aws_dynamodb_table.viewer_codes_table.arn}"]
-  }
 }
 
 output "api_web_deployed_version" {

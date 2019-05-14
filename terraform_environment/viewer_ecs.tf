@@ -9,7 +9,7 @@ resource "aws_ecs_service" "viewer" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    security_groups  = ["${aws_security_group.ecs_service.id}"]
+    security_groups  = ["${aws_security_group.viewer_ecs_service.id}"]
     subnets          = ["${data.aws_subnet.private.*.id}"]
     assign_public_ip = false
   }
@@ -26,30 +26,30 @@ resource "aws_ecs_service" "viewer" {
 //----------------------------------
 // The service's Security Groups
 
-resource "aws_security_group" "ecs_service" {
+resource "aws_security_group" "viewer_ecs_service" {
   name_prefix = "${terraform.workspace}-viewer-ecs-service"
   vpc_id      = "${data.aws_vpc.default.id}"
   tags        = "${local.default_tags}"
 }
 
 // 80 in from the ELB
-resource "aws_security_group_rule" "ecs_service_ingress" {
+resource "aws_security_group_rule" "viewer_ecs_service_ingress" {
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
-  security_group_id        = "${aws_security_group.ecs_service.id}"
+  security_group_id        = "${aws_security_group.viewer_ecs_service.id}"
   source_security_group_id = "${aws_security_group.viewer_loadbalancer.id}"
 }
 
 // Anything out
-resource "aws_security_group_rule" "ecs_service_egress" {
+resource "aws_security_group_rule" "viewer_ecs_service_egress" {
   type              = "egress"
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.ecs_service.id}"
+  security_group_id = "${aws_security_group.viewer_ecs_service.id}"
 }
 
 //--------------------------------------
