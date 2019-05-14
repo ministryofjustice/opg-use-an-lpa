@@ -180,8 +180,7 @@ locals {
     {
       "name": "API_SERVICE_HOSTNAME",
       "value": "${local.api_service_fqdn}"
-    }, 
-    ]
+    }]
   }
   EOF
 }
