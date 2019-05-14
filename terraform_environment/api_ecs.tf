@@ -40,6 +40,13 @@ resource "aws_service_discovery_service" "api" {
   }
 }
 
+//
+locals {
+  
+  api_service_fqdn = "${aws_service_discovery_service.api.name}.${aws_service_discovery_private_dns_namespace.internal.name}"
+}
+
+
 //----------------------------------
 // The Api service's Security Groups
 
