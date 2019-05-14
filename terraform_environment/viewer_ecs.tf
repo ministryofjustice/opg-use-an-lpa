@@ -175,6 +175,10 @@ locals {
       "value": "${data.aws_kms_alias.sessions_viewer.name}"
     },
     {
+      "name": "DYNAMODB_TABLE_VIEWER_CODES",
+      "value": "${aws_dynamodb_table.viewer_codes_table.name}"
+    },
+    {
       "name": "CONTAINER_VERSION",
       "value": "${var.container_version}"
     }]

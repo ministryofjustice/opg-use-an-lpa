@@ -32,6 +32,7 @@ services:
       # Always required
       CONTEXT: 'viewer'
       KMS_SESSION_CMK_ALIAS: 'alias/viewer-sessions-cmk-alias'
+      DYNAMODB_TABLE_VIEWER_CODES: 'ViewerCodes'
 
       # Local only
       AWS_ENDPOINT_KMS: http://kms:8080
