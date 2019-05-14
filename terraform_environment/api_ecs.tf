@@ -65,6 +65,15 @@ resource "aws_security_group_rule" "api_ecs_service_ingress" {
   source_security_group_id = "${aws_security_group.viewer_ecs_service.id}"
 }
 
+resource "aws_security_group_rule" "api_ecs_service_egress" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.api_ecs_service.id}"
+}
+
 //--------------------------------------
 // Api ECS Service Task level config
 resource "aws_ecs_task_definition" "api" {
