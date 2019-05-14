@@ -80,6 +80,8 @@ services:
     volumes:
       - ./service-api/app:/app
     environment:
+      DYNAMODB_TABLE_VIEWER_CODES: 'ViewerCodes'
+
       # Local only
       AWS_ACCESS_KEY_ID: '-'
       AWS_SECRET_ACCESS_KEY: '-'

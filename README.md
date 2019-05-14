@@ -27,6 +27,8 @@ The API service will be available via http://localhost:9002/
 To run the unit tests
 ```bash
 docker-compose run viewer-app /app/vendor/bin/phpunit
+
+docker-compose run api-app /app/vendor/bin/phpunit
 ```
 
 ### Updating composer dependencies
