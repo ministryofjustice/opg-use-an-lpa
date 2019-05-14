@@ -119,7 +119,7 @@ data "aws_iam_policy_document" "api_permissions_role" {
 }
 
 //-----------------------------------------------
-// Viewer ECS Service Task Container level config
+// API ECS Service Task Container level config
 
 locals {
   api_web = <<EOF
