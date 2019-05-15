@@ -6,10 +6,10 @@ Feature: Check status of viewer service
 
 Scenario: I want to check the service health
   Given I fetch the healthcheck endpoint
-  Then I see JSON output
-   And it contains a "healthy" key/value pair
+   Then I see JSON output
+    And it contains a "healthy" key/value pair
 
 Scenario: I want to discover the service version
   Given I fetch the healthcheck endpoint
-  Then I see JSON output
-   And it contains a "version" key/value pair
+   Then I see JSON output
+    And it contains a "version" key/value pair

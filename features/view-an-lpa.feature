@@ -6,5 +6,5 @@ Feature: View a lasting power of attorney
 
   Scenario: Load the enter code page
     Given I go to the viewer page on the internet
-    When I click Start Now
-    Then The enter code page is displayed
+     When I click Start Now
+     Then The enter code page is displayed
