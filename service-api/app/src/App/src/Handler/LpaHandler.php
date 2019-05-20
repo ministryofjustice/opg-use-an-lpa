@@ -40,9 +40,9 @@ class LpaHandler implements RequestHandlerInterface
         $data = [];
 
         if (!empty($uid)) {
-            $data = $this->lpaService->getById((int) $uid);
+            $data = $this->lpaService->getById($uid);
         } elseif (!empty($shareCode)) {
-            $data = $this->lpaService->getByCode((int) $shareCode);
+            $data = $this->lpaService->getByCode($shareCode);
         } else {
             throw new RuntimeException('Missing LPA identifier');
         }

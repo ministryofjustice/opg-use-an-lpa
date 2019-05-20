@@ -14,7 +14,7 @@ class LpaHandlerTest extends TestCase
 {
     public function testHandleForId()
     {
-        $uid = 12345678901;
+        $uid = '12345678901';
         $shareCode = null;
 
         $expectedData = [
@@ -55,7 +55,7 @@ class LpaHandlerTest extends TestCase
     public function testHandleForShareCode()
     {
         $uid = null;
-        $shareCode = 123456789012;
+        $shareCode = '123456789012';
 
         $expectedData = [
             'id'        => '12345678901',

@@ -28,10 +28,10 @@ class LpaService
     /**
      * Get an LPA using the ID value
      *
-     * @param int $lpaId
+     * @param string $lpaId
      * @return array
      */
-    public function getById(int $lpaId) : array
+    public function getById(string $lpaId) : array
     {
         //  TODO - Implement the Dynamo query build here - for now just look for the hardcoded data
 
@@ -47,10 +47,10 @@ class LpaService
     /**
      * Get an LPA using the share code
      *
-     * @param int $shareCode
+     * @param string $shareCode
      * @return array
      */
-    public function getByCode(int $shareCode) : array
+    public function getByCode(string $shareCode) : array
     {
         //  TODO - Implement the Dynamo query build here - for now just look for the hardcoded data
 
