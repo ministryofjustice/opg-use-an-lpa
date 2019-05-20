@@ -52,6 +52,9 @@ class LpaService
      */
     public function getLpaByCode(string $shareCode) : ?ArrayObject
     {
+        //  Filter dashes out of the share code
+        $shareCode = str_replace('-', '', $shareCode);
+
         $lpaData = $this->apiClient->httpGet('/lpa-by-code', [
             'code' => $shareCode,
         ]);

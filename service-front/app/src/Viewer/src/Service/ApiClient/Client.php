@@ -56,8 +56,8 @@ class Client
 
         //  The keys in this data array represent the LPA share codes
         $lpaDatasets = [
-            '1234-5678-9012' => [
-                'id' => '123456789012',
+            '123456789012' => [
+                'id' => '12345678901',
                 'caseNumber' => '787640393837',
                 'type' => 'property-and-financial',
                 'donor' => [
@@ -114,8 +114,8 @@ class Client
                 'dateRegistration' => '2017-04-15T00:00:00+00:00',
                 'dateLastConfirmedStatus' => '2019-04-22T00:00:00+00:00',
             ],
-            '9876-5432-1098' => [
-                'id' => '987654321098',
+            '987654321098' => [
+                'id' => '98765432109',
                 'caseNumber' => '787640393837',
                 'type' => 'property-and-financial',
                 'donor' => [
