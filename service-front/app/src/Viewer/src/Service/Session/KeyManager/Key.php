@@ -10,7 +10,7 @@ use ParagonIE\Halite\Symmetric\EncryptionKey;
  * Represents a single encryption key, and it ID.
  *
  * Class Key
- * @package App\Service\Session\KeyManager
+ * @package Viewer\Service\Session\KeyManager
  */
 class Key
 {

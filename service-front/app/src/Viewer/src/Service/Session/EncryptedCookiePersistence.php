@@ -30,7 +30,7 @@ use Zend\Expressive\Session\SessionPersistenceInterface;
 
 /**
  * Class EncryptedCookie
- * @package App\Service\Session
+ * @package Viewer\Service\Session
  */
 class EncryptedCookiePersistence  implements SessionPersistenceInterface
 {

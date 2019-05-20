@@ -9,7 +9,7 @@ use Psr\Container\ContainerInterface;
  * Builds a configured instance of the AWS KMS Client
  *
  * Class KmsFactory
- * @package App\Service\Aws
+ * @package Viewer\Service\Aws
  */
 class KmsFactory
 {
