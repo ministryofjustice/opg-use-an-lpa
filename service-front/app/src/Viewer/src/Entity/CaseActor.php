@@ -8,35 +8,35 @@ use \DateTime;
 
 class CaseActor
 {
-    /** @var int*/
+    /** @var int */
     protected $id;
     
-    /** @var string */
-    protected $uId;
+    /** @var string|null */
+    protected $uId = null;
     
-    /** @var string */
-    protected $email;
+    /** @var string|null */
+    protected $email = null;
     
-    /** @var DateTime */
-    protected $dob;
+    /** @var DateTime|null */
+    protected $dob = null;
     
-    /** @var string */
-    protected $salutation;
+    /** @var string|null */
+    protected $salutation = null;
     
-    /** @var string */
-    protected $firstname;
+    /** @var string|null */
+    protected $firstname = null;
     
-    /** @var string */
-    protected $middlenames;
+    /** @var string|null */
+    protected $middlenames = null;
     
-    /** @var string */
-    protected $surname;
+    /** @var string|null */
+    protected $surname = null;
     
-    /** @var string */
-    protected $companyName;
+    /** @var string|null */
+    protected $companyName = null;
     
     /** @var Address[] */
-    protected $addresses;
+    protected $addresses = [];
 
 	public function getId() : int
 	{
@@ -48,7 +48,7 @@ class CaseActor
 		$this->id = $id;
 	}
 
-	public function getUId() : string
+	public function getUId() : ?string
 	{
 		return $this->uId;
 	}
@@ -58,7 +58,7 @@ class CaseActor
 		$this->uId = $uId;
 	}
 
-	public function getEmail() : string
+	public function getEmail() : ?string
 	{
 		return $this->email;
 	}
@@ -68,7 +68,7 @@ class CaseActor
 		$this->email = $email;
 	}
 
-	public function getDob() : DateTime
+	public function getDob() : ?DateTime
 	{
 		return $this->dob;
 	}
@@ -78,7 +78,7 @@ class CaseActor
 		$this->dob = $dob;
 	}
 
-	public function getSalutation() : string
+	public function getSalutation() : ?string
 	{
 		return $this->salutation;
 	}
@@ -88,7 +88,7 @@ class CaseActor
 		$this->salutation = $salutation;
 	}
 
-	public function getFirstname() : string
+	public function getFirstname() : ?string
 	{
 		return $this->firstname;
 	}
@@ -98,7 +98,7 @@ class CaseActor
 		$this->firstname = $firstname;
 	}
 
-	public function getMiddlenames() : string
+	public function getMiddlenames() : ?string
 	{
 		return $this->middlenames;
 	}
@@ -108,7 +108,7 @@ class CaseActor
 		$this->middlenames = $middlenames;
 	}
 
-	public function getCompanyName() : string
+	public function getCompanyName() : ?string
 	{
 		return $this->companyName;
 	}
@@ -118,7 +118,7 @@ class CaseActor
 		$this->companyName = $companyName;
 	}
 
-	public function getSurname() : string
+	public function getSurname() : ?string
 	{
 		return $this->surname;
 	}

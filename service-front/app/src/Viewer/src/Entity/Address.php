@@ -9,29 +9,29 @@ class Address
     /** @var int */
     protected $id;
 
-    /** @var string */
-    protected $town;
+    /** @var string|null */
+    protected $town = null;
 
-    /** @var string */
-    protected $county;
+    /** @var string|null */
+    protected $county = null;
 
-    /** @var string */
-    protected $postcode;
+    /** @var string|null */
+    protected $postcode = null;
 
-    /** @var string */
-    protected $country;
+    /** @var string|null */
+    protected $country = null;
 
-    /** @var string */
-    protected $type;
+    /** @var string|null */
+    protected $type = null;
 
-    /** @var string */
-    protected $addressLine1;
+    /** @var string|null */
+    protected $addressLine1 = null;
 
-    /** @var string */
-    protected $addressLine2;
+    /** @var string|null */
+    protected $addressLine2 = null;
 
-    /** @var string */
-    protected $addressLine3;
+    /** @var string|null */
+    protected $addressLine3 = null;
 
     public function getId() : int
     {
@@ -43,7 +43,7 @@ class Address
         $this->id = $id;
     }
 
-    public function getTown() : string
+    public function getTown() : ?string
     {
         return $this->town;
     }
@@ -53,7 +53,7 @@ class Address
         $this->town = $town;
     }
 
-	public function getCounty() : string
+	public function getCounty() : ?string
 	{
 		return $this->county;
 	}
@@ -63,7 +63,7 @@ class Address
 		$this->county = $county;
 	}
 
-	public function getPostcode() : string
+	public function getPostcode() : ?string
 	{
 		return $this->postcode;
 	}
@@ -73,7 +73,7 @@ class Address
 		$this->postcode = $postcode;
 	}
 
-	public function getCountry() : string
+	public function getCountry() : ?string
 	{
 		return $this->country;
 	}
@@ -83,7 +83,7 @@ class Address
 		$this->country = $country;
 	}
 
-	public function getType() : string
+	public function getType() : ?string
 	{
 		return $this->type;
 	}
@@ -93,7 +93,7 @@ class Address
 		$this->type = $type;
 	}
 
-	public function getAddressLine1() : string
+	public function getAddressLine1() : ?string
 	{
 		return $this->addressLine1;
 	}
@@ -103,7 +103,7 @@ class Address
 		$this->addressLine1 = $addressLine1;
 	}
 
-	public function getAddressLine2() : string
+	public function getAddressLine2() : ?string
 	{
 		return $this->addressLine2;
 	}
@@ -113,7 +113,7 @@ class Address
 		$this->addressLine2 = $addressLine2;
 	}
 
-	public function getAddressLine3() : string
+	public function getAddressLine3() : ?string
 	{
 		return $this->addressLine3;
 	}

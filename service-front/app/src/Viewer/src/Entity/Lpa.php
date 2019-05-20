@@ -11,73 +11,73 @@ class Lpa
     /** @var int */
     protected $id; 
   
-    /** @var string */
-    protected $uId;
+    /** @var string|null */
+    protected $uId = null;
 
-    /** @var string */
-    protected $applicationType;
+    /** @var string|null */
+    protected $applicationType = null;
 
-    /** @var string */
-    protected $caseSubtype;
+    /** @var string|null */
+    protected $caseSubtype = null;
 
-    /** @var DateTime */
-    protected $receiptDate;
+    /** @var DateTime|null */
+    protected $receiptDate = null;
 
-    /** @var DateTime */
-    protected $rejectedDate;
+    /** @var DateTime|null */
+    protected $rejectedDate = null;
 
-    /** @var DateTime */
-    protected $registrationDate;
+    /** @var DateTime|null */
+    protected $registrationDate = null;
 
-    /** @var string */
-    protected $status;
+    /** @var string|null */
+    protected $status = null;
 
-    /** @var bool */
-    protected $caseAttorneySingular;
+    /** @var bool|null */
+    protected $caseAttorneySingular = null;
 
-    /** @var bool */
-    protected $caseAttorneyJointlyAndSeverally;
+    /** @var bool|null */
+    protected $caseAttorneyJointlyAndSeverally = null;
 
-    /** @var bool */
-    protected $caseAttorneyJointly;
+    /** @var bool|null */
+    protected $caseAttorneyJointly = null;
 
-    /** @var bool */
-    protected $caseAttorneyJointlyAndJointlyAndSeverally;
+    /** @var bool|null */
+    protected $caseAttorneyJointlyAndJointlyAndSeverally = null;
 
-    /** @var bool */
-    protected $applicationHasRestrictions;
+    /** @var bool|null */
+    protected $applicationHasRestrictions = null;
 
-    /** @var bool */
-    protected $applicationHasGuidance;
+    /** @var bool|null */
+    protected $applicationHasGuidance = null;
 
-    /** @var DateTime */
-    protected $lpaDonorSignatureDate;
+    /** @var DateTime|null */
+    protected $lpaDonorSignatureDate = null;
 
-    /** @var ?bool */
-    protected $lifeSustainingTreatment;
+    /** @var bool|null */
+    protected $lifeSustainingTreatment = null;
 
-    /** @var string */
-    protected $onlineLpaId;
+    /** @var string|null */
+    protected $onlineLpaId = null;
 
-    /** @var string */
-    protected $attorneyActDecisions;
+    /** @var string|null */
+    protected $attorneyActDecisions = null;
 
-    /** @var CaseActor */
-    protected $donor;
-
-    /** @var CaseActor[] */
-    protected $attorneys;
+    /** @var CaseActor|null */
+    protected $donor = null;
 
     /** @var CaseActor[] */
-    protected $replacementAttorneys;
+    protected $attorneys = [];
 
     /** @var CaseActor[] */
-    protected $certificateProviders;
+    protected $replacementAttorneys = [];
 
     /** @var CaseActor[] */
-    protected $trustCorporations;
+    protected $certificateProviders = [];
+
+    /** @var CaseActor[] */
+    protected $trustCorporations = [];
     
-    public function getUId() : string
+    public function getUId() : ?string
     {
         return $this->uId;
     }
@@ -97,7 +97,7 @@ class Lpa
         $this->id = $id;
     }
 
-    public function getApplicationType() : string
+    public function getApplicationType() : ?string
     {
         return $this->applicationType;
     }
@@ -107,7 +107,7 @@ class Lpa
         $this->applicationType = $applicationType;
     }
 
-    public function getCaseSubtype() : string
+    public function getCaseSubtype() : ?string
     {
         return $this->caseSubtype;
     }
@@ -117,7 +117,7 @@ class Lpa
         $this->caseSubtype = $caseSubtype;
     }
 
-    public function getReceiptDate() : DateTime
+    public function getReceiptDate() : ?DateTime
     {
         return $this->receiptDate;
     }
@@ -127,7 +127,7 @@ class Lpa
         $this->receiptDate = $receiptDate;
     }
 
-    public function getRejectedDate() : DateTime
+    public function getRejectedDate() : ?DateTime
     {
         return $this->rejectedDate;
     }
@@ -137,7 +137,7 @@ class Lpa
         $this->rejectedDate = $rejectedDate;
     }
 
-    public function getRegistrationDate() : DateTime
+    public function getRegistrationDate() : ?DateTime
     {
         return $this->registrationDate;
     }
@@ -147,7 +147,7 @@ class Lpa
         $this->registrationDate = $registrationDate;
     }
 
-    public function getStatus() : string
+    public function getStatus() : ?string
     {
         return $this->status;
     }
@@ -157,7 +157,7 @@ class Lpa
         $this->status = $status;
     }
 
-    public function getCaseAttorneySingular() : bool
+    public function getCaseAttorneySingular() : ?bool
     {
         return $this->caseAttorneySingular;
     }
@@ -167,7 +167,7 @@ class Lpa
         $this->caseAttorneySingular = $caseAttorneySingular;
     }
 
-    public function getCaseAttorneyJointlyAndSeverally() : bool
+    public function getCaseAttorneyJointlyAndSeverally() : ?bool
     {
         return $this->caseAttorneyJointlyAndSeverally;
     }
@@ -177,7 +177,7 @@ class Lpa
         $this->caseAttorneyJointlyAndSeverally = $caseAttorneyJointlyAndSeverally;
     }
 
-    public function getCaseAttorneyJointly() : bool
+    public function getCaseAttorneyJointly() : ?bool
     {
         return $this->caseAttorneyJointly;
     }
@@ -187,7 +187,7 @@ class Lpa
         $this->caseAttorneyJointly = $caseAttorneyJointly;
     }
 
-    public function getCaseAttorneyJointlyAndJointlyAndSeverally() : bool
+    public function getCaseAttorneyJointlyAndJointlyAndSeverally() : ?bool
     {
         return $this->caseAttorneyJointlyAndJointlyAndSeverally;
     }
@@ -197,7 +197,7 @@ class Lpa
         $this->caseAttorneyJointlyAndJointlyAndSeverally = $caseAttorneyJointlyAndJointlyAndSeverally;
     }
 
-    public function getApplicationHasRestrictions() : bool
+    public function getApplicationHasRestrictions() : ?bool
     {
         return $this->applicationHasRestrictions;
     }
@@ -207,7 +207,7 @@ class Lpa
         $this->applicationHasRestrictions = $applicationHasRestrictions;
     }
 
-    public function getApplicationHasGuidance() : bool
+    public function getApplicationHasGuidance() : ?bool
     {
         return $this->applicationHasGuidance;
     }
@@ -217,7 +217,7 @@ class Lpa
         $this->applicationHasGuidance = $applicationHasGuidance;
     }
 
-    public function getLpaDonorSignatureDate() : DateTime
+    public function getLpaDonorSignatureDate() : ?DateTime
     {
         return $this->lpaDonorSignatureDate;
     }
@@ -237,7 +237,7 @@ class Lpa
         $this->lifeSustainingTreatment = $lifeSustainingTreatment;
     }
 
-    public function getOnlineLpaId() : string
+    public function getOnlineLpaId() : ?string
     {
         return $this->onlineLpaId;
     }
@@ -247,7 +247,7 @@ class Lpa
         $this->onlineLpaId = $onlineLpaId;
     }
 
-    public function getAttorneyActDecisions() : string
+    public function getAttorneyActDecisions() : ?string
     {
         return $this->attorneyActDecisions;
     }
@@ -257,7 +257,7 @@ class Lpa
         $this->attorneyActDecisions = $attorneyActDecisions;
     }
 
-    public function getDonor() : CaseActor
+    public function getDonor() : ?CaseActor
     {
         return $this->donor;
     }
