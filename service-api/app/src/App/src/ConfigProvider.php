@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App;
 
+use Aws;
+
 /**
  * The configuration provider for the App module
  *
@@ -22,7 +24,6 @@ class ConfigProvider
     {
         return [
             'dependencies' => $this->getDependencies(),
-            'templates'    => $this->getTemplates(),
         ];
     }
 
@@ -32,22 +33,12 @@ class ConfigProvider
     public function getDependencies() : array
     {
         return [
-            'factories' => [
-                //  TODO - Add later
-            ],
-        ];
-    }
 
-    /**
-     * Returns the templates configuration
-     */
-    public function getTemplates() : array
-    {
-        return [
-            'paths' => [
-                'app'    => [__DIR__ . '/../templates/app'],
-                'error'  => [__DIR__ . '/../templates/error'],
-                'layout' => [__DIR__ . '/../templates/layout'],
+            'factories'  => [
+
+                // Services
+                Aws\DynamoDb\DynamoDbClient::class => Service\Aws\DynamoDbClientFactory::class,
+
             ],
         ];
     }
