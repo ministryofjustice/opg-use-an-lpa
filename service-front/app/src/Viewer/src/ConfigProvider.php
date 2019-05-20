@@ -6,11 +6,8 @@ namespace Viewer;
 
 use Aws;
 use Http;
-use Composer\Autoload\ClassLoader;
-use ReflectionClass;
 use Zend;
 use Symfony;
-use Twig;
 
 use function realpath;
 use function dirname;
