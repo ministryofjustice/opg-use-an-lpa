@@ -1,0 +1,76 @@
+{
+  "id": 0,
+  "uId": "7000-0000-0054",
+  "applicationType": "Online",
+  "caseSubtype": "hw",
+  "receiptDate": "2018-06-30",
+  "rejectedDate": null,
+  "registrationDate": null,
+  "status": "Cancelled",
+  "caseAttorneySingular": true,
+  "caseAttorneyJointlyAndSeverally": true,
+  "caseAttorneyJointly": true,
+  "caseAttorneyJointlyAndJointlyAndSeverally": true,
+  "applicationHasRestrictions": true,
+  "applicationHasGuidance": true,
+  "lpaDonorSignatureDate": "2018-06-30",
+  "lifeSustainingTreatment": null,
+  "onlineLpaId": "ABC123",
+  "attorneyActDecisions": "Example decision",
+  "donor": {
+    "id": 0,
+    "uId": "7000-0000-0054",
+    "email": "string",
+    "dob": "1980-10-10",
+    "salutation": "Mrs",
+    "firstname": "Ian",
+    "middlenames": null,
+    "surname": "Deputy",
+    "companyName": "ABC Ltd",
+    "addresses": [
+      {
+        "id": 0,
+        "town": "string",
+        "county": "string",
+        "postcode": "string",
+        "country": "UK",
+        "type": "Primary",
+        "addressLine1": "string",
+        "addressLine2": null,
+        "addressLine3": null
+      }
+    ]
+  },
+  "attorneys": [
+    {
+      "id": 0,
+      "uId": "7000-0000-0054",
+      "email": "string",
+      "dob": "1980-10-10",
+      "salutation": "Mrs",
+      "firstname": "Ian",
+      "middlenames": "Deputy",
+      "surname": "Deputy",
+      "companyName": "ABC Ltd",
+      "addresses": [
+        {
+          "id": 0,
+          "town": "string",
+          "county": "string",
+          "postcode": "string",
+          "country": "UK",
+          "type": "Primary",
+          "addressLine1": "string",
+          "addressLine2": "string",
+          "addressLine3": "string"
+        }
+      ]
+    }
+  ],
+  "replacementAttorneys": [
+  ],
+  "trustCorporations": [
+  ],
+  "certificateProviders": [
+  ]
+}

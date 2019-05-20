@@ -16,9 +16,13 @@ class LpaFactoryTest extends TestCase
     /** @var array */
     protected $fullExampleFixtureData;
 
+    /** @var array */
+    protected $simpleExampleFixtureData;
+
     public function setUp() 
     {
         $this->fullExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/fixtures/full_example.json'), true);
+        $this->simpleExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/fixtures/simple_example.json'), true);
     }
 
     public function testBadDataThrowsException()
@@ -52,5 +56,25 @@ class LpaFactoryTest extends TestCase
 
         $this->assertInstanceOf(CaseActor::class, $lpa->getAttorneys()[0]);
         $this->assertEquals(new DateTime('1980-10-10'), $lpa->getAttorneys()[0]->getDob()); // from full_example.json
+    }
+
+    public function testCanCreateLpaFromSimpleExample()
+    {
+        $factory = new LpaFactory();
+
+        $lpa = $factory->createLpaFromData($this->simpleExampleFixtureData);
+        $this->assertInstanceOf(Lpa::class, $lpa);
+        $this->assertEquals('7000-0000-0054', $lpa->getUId()); // from simple_example.json
+
+        $this->assertEquals(null, $lpa->getRejectedDate());
+        $this->assertEquals(null, $lpa->getLifeSustainingTreatment());
+
+        $this->assertInstanceOf(CaseActor::class, $lpa->getDonor());
+        $this->assertInstanceOf(Address::class, $lpa->getDonor()->getAddresses()[0]);
+
+        $this->assertInstanceOf(CaseActor::class, $lpa->getAttorneys()[0]);
+        $this->assertEquals(new DateTime('1980-10-10'), $lpa->getAttorneys()[0]->getDob()); // from simple_example.json
+
+        $this->assertCount(0, $lpa->getReplacementAttorneys());
     }
 }
