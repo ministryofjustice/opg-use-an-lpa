@@ -2,31 +2,93 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Handler;
+namespace ViewerTest\Handler;
 
 use App\Handler\LpaHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use App\Service\Lpa\LpaService;
 use Zend\Diactoros\Response\JsonResponse;
 
-class PingHandlerTest extends TestCase
+class LpaHandlerTest extends TestCase
 {
-    public function testResponse()
+    public function testHandleForId()
     {
-        $lpaHandler = new LpaHandler();
+        $uid = 12345678901;
+        $shareCode = null;
 
-        $requestProphercy = $this->prophesize(ServerRequestInterface::class);
+        $expectedData = [
+            'id'        => '12345678901',
+            'type'      => 'property-and-financial',
+            'donor'     => [],
+            'attorneys' => [],
+        ];
 
-        $requestProphercy->getAttribute('shareCode')
-            ->willReturn(123456789012);
+        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $lpaServiceProphecy->getById($uid)
+            ->willReturn($expectedData);
+
+        //  Set up the handler
+        $handler = new LpaHandler($lpaServiceProphecy->reveal());
+
+        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
+
+        $requestProphecy->getAttribute('uid')
+            ->willReturn($uid);
+        $requestProphecy->getAttribute('shareCode')
+            ->willReturn($shareCode);
 
         /** @var JsonResponse $response */
-        $response = $lpaHandler->handle($requestProphercy->reveal());
+        $response = $handler->handle($requestProphecy->reveal());
 
         $data = $response->getPayload();
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertArrayHasKey('shareCode', $data);
-        $this->assertEquals(123456789012, $data['shareCode']);
+
+        //  Check the contents of the return data
+        foreach ($expectedData as $fieldName => $fieldValue) {
+            $this->assertArrayHasKey($fieldName, $data);
+            $this->assertEquals($fieldValue, $data[$fieldName]);
+        }
+    }
+
+    public function testHandleForShareCode()
+    {
+        $uid = null;
+        $shareCode = 123456789012;
+
+        $expectedData = [
+            'id'        => '12345678901',
+            'type'      => 'property-and-financial',
+            'donor'     => [],
+            'attorneys' => [],
+        ];
+
+        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $lpaServiceProphecy->getByCode($shareCode)
+            ->willReturn($expectedData);
+
+        //  Set up the handler
+        $handler = new LpaHandler($lpaServiceProphecy->reveal());
+
+        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
+
+        $requestProphecy->getAttribute('uid')
+            ->willReturn($uid);
+        $requestProphecy->getAttribute('shareCode')
+            ->willReturn($shareCode);
+
+        /** @var JsonResponse $response */
+        $response = $handler->handle($requestProphecy->reveal());
+
+        $data = $response->getPayload();
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+
+        //  Check the contents of the return data
+        foreach ($expectedData as $fieldName => $fieldValue) {
+            $this->assertArrayHasKey($fieldName, $data);
+            $this->assertEquals($fieldValue, $data[$fieldName]);
+        }
     }
 }

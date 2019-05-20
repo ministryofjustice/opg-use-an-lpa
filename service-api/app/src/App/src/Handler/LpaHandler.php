@@ -34,8 +34,8 @@ class LpaHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         //  TODO - Possibly split this logic into a separate handler later
-        $shareCode = $request->getAttribute('shareCode');
         $uid = $request->getAttribute('uid');
+        $shareCode = $request->getAttribute('shareCode');
 
         $data = [];
 
