@@ -56,8 +56,6 @@ class ConfigProvider
                 Aws\Kms\KmsClient::class => Service\Aws\KmsFactory::class,
                 Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
 
-                Http\Adapter\Guzzle6\Client::class => Service\Http\GuzzleClientFactory::class,
-
                 Zend\Expressive\Session\SessionMiddleware::class => Zend\Expressive\Session\SessionMiddlewareFactory::class,
 
                 // Config objects

@@ -5,7 +5,7 @@ declare(strict_types=1);
 return [
 
     'api' => [
-        'uri' => 'http://dummy.uml.api',
+        'uri' => 'http://api-web',
     ],
 
     'aws' => [

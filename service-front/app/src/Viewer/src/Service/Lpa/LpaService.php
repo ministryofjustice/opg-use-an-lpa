@@ -32,15 +32,13 @@ class LpaService
      */
     public function getLpaById(int $lpaId) : ?ArrayObject
     {
-        $lpaData = $this->apiClient->httpGet('/lpa', [
-            'id' => $lpaId,
-        ]);
+        $lpaData = $this->apiClient->httpGet('/v1/lpa/' . $lpaId);
 
         if (is_array($lpaData)) {
-            return $this->parseLpaData($lpaData);
+            $lpaData = $this->parseLpaData($lpaData);
         }
 
-        return null;
+        return $lpaData;
     }
 
     /**
@@ -55,15 +53,13 @@ class LpaService
         //  Filter dashes out of the share code
         $shareCode = str_replace('-', '', $shareCode);
 
-        $lpaData = $this->apiClient->httpGet('/lpa-by-code', [
-            'code' => $shareCode,
-        ]);
+        $lpaData = $this->apiClient->httpGet('/v1/lpa-by-code/' . $shareCode);
 
         if (is_array($lpaData)) {
-            return $this->parseLpaData($lpaData);
+            $lpaData = $this->parseLpaData($lpaData);
         }
 
-        return null;
+        return $lpaData;
     }
 
     /**
