@@ -13,9 +13,12 @@ use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
+/**
+ * Class CheckCodeHandler
+ * @package Viewer\Handler
+ */
 class CheckCodeHandler extends AbstractHandler
 {
-
     /** @var LpaService */
     private $lpaService;
 
@@ -35,6 +38,11 @@ class CheckCodeHandler extends AbstractHandler
         $this->lpaService = $lpaService;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     * @throws \Http\Client\Exception
+     */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         $code = $this->getSession($request,'session')->get('code');
@@ -59,5 +67,4 @@ class CheckCodeHandler extends AbstractHandler
         // If we get here then we couldn't find an LPA for the given code.
         return new HtmlResponse($this->renderer->render('app::check-code-not-found'));
     }
-
 }
