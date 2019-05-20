@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ViewerTest\Handler;
+namespace AppTest\Handler;
 
 use App\Handler\LpaHandler;
 use PHPUnit\Framework\TestCase;

@@ -19,7 +19,7 @@ class DynamoDbClientFactory
     {
         $config = $container->get('config');
 
-        if (!isset($config['aws'])) {
+        if (!isset($config['aws']['dynamodb'])) {
             throw new RuntimeException('Missing aws configuration');
         }
 
