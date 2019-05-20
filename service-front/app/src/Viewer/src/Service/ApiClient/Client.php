@@ -27,20 +27,19 @@ class Client
     /**
      * @var string
      */
-    private $authToken;
+    private $token;
 
     /**
      * Client constructor
      *
      * @param HttpClient $httpClient
-     * @param string $apiBaseUri
-     * @param string|null $authToken
+     * @param Config $config
      */
-    public function __construct(HttpClient $httpClient, string $apiBaseUri, string $authToken = null)
+    public function __construct(HttpClient $httpClient, Config $config)
     {
-        $this->httpClient = $this->getMockHttpClient($apiBaseUri);//$httpClient;
-        $this->apiBaseUri = $apiBaseUri;
-        $this->authToken = $authToken;
+        $this->httpClient = $this->getMockHttpClient($config->getApiUri());//$httpClient;
+        $this->apiBaseUri = $config->getApiUri();
+        $this->token = $config->getToken();
     }
 
     /**
@@ -353,8 +352,8 @@ class Client
         ];
 
         //  If the logged in user has an auth token already then set that in the header
-        if (isset($this->authToken)) {
-            $headerLines['token'] = $this->authToken;
+        if (isset($this->token)) {
+            $headerLines['token'] = $this->token;
         }
 
         return $headerLines;

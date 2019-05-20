@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 return [
 
+    'api' => [
+        'uri' => 'http://dummy.uml.api',
+    ],
+
     'aws' => [
         'region'    => 'eu-west-1',
         'version'   => 'latest',

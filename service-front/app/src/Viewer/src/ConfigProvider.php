@@ -51,7 +51,7 @@ class ConfigProvider
                 // The Session Key Manager to use
                 Service\Session\KeyManager\KeyManagerInterface::class => Service\Session\KeyManager\KmsManager::class,
             ],
-            
+
             'factories'  => [
 
                 // Services
@@ -61,12 +61,10 @@ class ConfigProvider
 
                 Http\Adapter\Guzzle6\Client::class => Service\Http\GuzzleClientFactory::class,
 
-                Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
-                Service\Lpa\LpaService::class => Service\Lpa\LpaServiceFactory::class,
-
                 Zend\Expressive\Session\SessionMiddleware::class => Zend\Expressive\Session\SessionMiddlewareFactory::class,
 
                 // Config objects
+                Service\ApiClient\Config::class => ConfigFactory::class,
                 Service\Session\Config::class => ConfigFactory::class,
                 Service\Session\KeyManager\Config::class => ConfigFactory::class,
             ],
