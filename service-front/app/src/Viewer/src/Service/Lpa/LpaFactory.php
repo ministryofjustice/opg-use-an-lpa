@@ -7,6 +7,7 @@ namespace Viewer\Service\Lpa;
 use Viewer\Entity\Lpa;
 use Viewer\Entity\CaseActor;
 use Viewer\Entity\Address;
+use \DateTime;
 use Zend\Stdlib\Exception\InvalidArgumentException;
 
 final class LpaFactory
@@ -34,9 +35,9 @@ final class LpaFactory
         $lpa->setUId($data['uId']);
         $lpa->setApplicationType($data['applicationType']);
         $lpa->setCaseSubtype($data['caseSubtype']);
-        $lpa->setReceiptDate(new \DateTime($data['receiptDate']));
-        $lpa->setRejectedDate(new \DateTime($data['rejectedDate']));
-        $lpa->setRegistrationDate(new \DateTime($data['registrationDate']));
+        $lpa->setReceiptDate($data['receiptDate'] ? new DateTime($data['receiptDate']) : null);
+        $lpa->setRejectedDate($data['rejectedDate'] ? new DateTime($data['rejectedDate']) : null);
+        $lpa->setRegistrationDate($data['registrationDate'] ? new DateTime($data['registrationDate']) : null);
         $lpa->setStatus($data['status']);
         $lpa->setCaseAttorneySingular($data['caseAttorneySingular']);
         $lpa->setCaseAttorneyJointlyAndSeverally($data['caseAttorneyJointlyAndSeverally']);
@@ -44,7 +45,7 @@ final class LpaFactory
         $lpa->setCaseAttorneyJointlyAndJointlyAndSeverally($data['caseAttorneyJointlyAndJointlyAndSeverally']);
         $lpa->setApplicationHasRestrictions($data['applicationHasRestrictions']);
         $lpa->setApplicationHasGuidance($data['applicationHasGuidance']);
-        $lpa->setLpaDonorSignatureDate(new \DateTime($data['lpaDonorSignatureDate']));
+        $lpa->setLpaDonorSignatureDate($data['lpaDonorSignatureDate'] ? new DateTime($data['lpaDonorSignatureDate']) : null);
         $lpa->setLifeSustainingTreatment($data['lifeSustainingTreatment']);
         $lpa->setOnlineLpaId($data['onlineLpaId']);
         $lpa->setAttorneyActDecisions($data['attorneyActDecisions']);
@@ -58,13 +59,39 @@ final class LpaFactory
         return $lpa;
     }
 
-    private function createCaseActorFromData(array $caseActordata) : CaseActor
+    private function createCaseActorFromData(array $caseActorData) : CaseActor
     {
         $actor = new CaseActor();
 
-        $actor->setAddresses($this->createAddressesFromData($caseActordata['addresses']));
+        $actor->setId($caseActorData['id']);
+        $actor->setUId($caseActorData['uId']);
+        $actor->setEmail($caseActorData['email']);
+        $actor->setDob($caseActorData['dob'] ? new DateTime($caseActorData['dob']) : null);
+        $actor->setSalutation($caseActorData['salutation']);
+        $actor->setFirstname($caseActorData['firstname']);
+        $actor->setMiddlenames($caseActorData['middlenames']);
+        $actor->setSurname($caseActorData['surname']);
+        $actor->setCompanyName($caseActorData['companyName']);
+        $actor->setAddresses($this->createAddressesFromData($caseActorData['addresses']));
 
         return $actor;
+    }
+    
+    private function createAddressFromData(array $addressData) : Address
+    {
+        $address = new Address();
+
+        $address->setId($addressData['id']);
+        $address->setTown($addressData['town']);
+        $address->setCounty($addressData['county']);
+        $address->setPostcode($addressData['postcode']);
+        $address->setCountry($addressData['country']);
+        $address->setType($addressData['type']);
+        $address->setAddressLine1($addressData['addressLine1']);
+        $address->setAddressLine2($addressData['addressLine2']);
+        $address->setAddressLine3($addressData['addressLine3']);
+
+        return $address;
     }
 
     private function createCaseActorsFromData(array $caseActorsData) : array
@@ -77,18 +104,12 @@ final class LpaFactory
 
         return $actors;
     }
-    
-    private function createAddressFromData(array $addressData) : Address
-    {
-        $address = new Address();
-        return $address;
-    }
 
-    private function createAddressesFromData(array $addressData) : array
+    private function createAddressesFromData(array $addressesData) : array
     {
         $addresses = [];
 
-        foreach ($addressData as $address) {
+        foreach ($addressesData as $address) {
             $addresses[] = $this->createAddressFromData($address);
         }
 
