@@ -13,14 +13,20 @@ class PingHandlerTest extends TestCase
 {
     public function testResponse()
     {
-        $pingHandler = new LpaHandler();
-        $response = $pingHandler->handle(
-            $this->prophesize(ServerRequestInterface::class)->reveal()
-        );
+        $lpaHandler = new LpaHandler();
 
-        $json = json_decode((string) $response->getBody());
+        $requestProphercy = $this->prophesize(ServerRequestInterface::class);
+
+        $requestProphercy->getAttribute('shareCode')
+            ->willReturn(123456789012);
+
+        /** @var JsonResponse $response */
+        $response = $lpaHandler->handle($requestProphercy->reveal());
+
+        $data = $response->getPayload();
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertTrue(isset($json->ack));
+        $this->assertArrayHasKey('shareCode', $data);
+        $this->assertEquals(123456789012, $data['shareCode']);
     }
 }
