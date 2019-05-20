@@ -69,7 +69,7 @@ class CheckCodeHandlerTest extends TestCase
         $handler = new CheckCodeHandler(
             $this->templateRendererProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal(),
+            $this->lpaServiceProphecy->reveal()
         );
 
         //---
@@ -96,7 +96,7 @@ class CheckCodeHandlerTest extends TestCase
         $handler = new CheckCodeHandler(
             $this->templateRendererProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal(),
+            $this->lpaServiceProphecy->reveal()
         );
 
         //---
