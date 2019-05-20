@@ -11,9 +11,9 @@ use Zend\Expressive\MiddlewareFactory;
  *
  * $app->get('/', App\Handler\HomePageHandler::class, 'home');
  * $app->post('/album', App\Handler\AlbumCreateHandler::class, 'album.create');
- * $app->put('/album/:id', App\Handler\AlbumUpdateHandler::class, 'album.put');
- * $app->patch('/album/:id', App\Handler\AlbumUpdateHandler::class, 'album.patch');
- * $app->delete('/album/:id', App\Handler\AlbumDeleteHandler::class, 'album.delete');
+ * $app->put('/album/{id}', App\Handler\AlbumUpdateHandler::class, 'album.put');
+ * $app->patch('/album/{id}', App\Handler\AlbumUpdateHandler::class, 'album.patch');
+ * $app->delete('/album/{id}', App\Handler\AlbumDeleteHandler::class, 'album.delete');
  *
  * Or with multiple request methods:
  *
@@ -33,5 +33,5 @@ use Zend\Expressive\MiddlewareFactory;
  * );
  */
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
-    $app->get('/', App\Handler\PingHandler::class, 'api.ping');
+    $app->get('/v1/lpa-by-code/{shareCode}', App\Handler\LpaHandler::class, 'lpa.by.share-code');
 };
