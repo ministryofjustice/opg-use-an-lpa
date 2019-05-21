@@ -54,19 +54,14 @@ def get_task_status(config_file):
         aws_secret_access_key=aws_secret_access_key,
         aws_session_token=aws_session_token
     )
-    task_arn = ecs.list_tasks(
-        cluster=cluster,
-        serviceName=service,
-    )['taskArns'][0]
-
     try:
-        print("Checking for task status...")
-        print(task_arn)
-        waiter = ecs.get_waiter('tasks_running')
+        print("Checking for service to settle...")
+        print(service)
+        waiter = ecs.get_waiter('services_stable')
         waiter.wait(
             cluster=cluster,
-            tasks=[
-                task_arn,
+            services=[
+                service,
             ],
             WaiterConfig={
                 'Delay': 6,
@@ -77,13 +72,8 @@ def get_task_status(config_file):
         print("Exceeded attempts checking for task status")
         exit(1)
     else:
-        task_status = ecs.describe_tasks(
-            cluster=cluster,
-            tasks=[
-                task_arn,
-            ],
-        )['tasks'][0]['lastStatus']
-        print(task_status)
+        print("ECS service stable")
+        print(service)
 
 
 get_task_status(args.config_file_path)
