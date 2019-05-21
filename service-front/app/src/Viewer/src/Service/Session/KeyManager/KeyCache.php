@@ -8,7 +8,7 @@ namespace Viewer\Service\Session\KeyManager;
  * Abstracted APCu functions out to aid with testing.
  *
  * Class KeyCache
- * @package App\Service\Session\KeyManager
+ * @package Viewer\Service\Session\KeyManager
  */
 class KeyCache
 {

@@ -20,13 +20,15 @@ docker-compose exec viewer-app rm -f /tmp/config-cache.php
 
 The Viewer service will be available via http://localhost:9001/
 
-The API service will be available via http://localhost:9002/
+The API service will be available via http://localhost:9003/
 
 ### Tests
 
 To run the unit tests
 ```bash
 docker-compose run viewer-app /app/vendor/bin/phpunit
+
+docker-compose run api-app /app/vendor/bin/phpunit
 ```
 
 ### Updating composer dependencies

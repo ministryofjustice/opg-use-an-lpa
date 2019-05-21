@@ -43,3 +43,26 @@ data "aws_acm_certificate" "certificate_viewer" {
 data "aws_kms_alias" "sessions_viewer" {
   name = "alias/sessions-viewer"
 }
+
+//--------------------
+// ECR Repos
+
+data "aws_ecr_repository" "use_an_lpa_front_web" {
+  provider = "aws.management"
+  name     = "use_an_lpa/front_web"
+}
+
+data "aws_ecr_repository" "use_an_lpa_front_app" {
+  provider = "aws.management"
+  name     = "use_an_lpa/front_app"
+}
+data "aws_ecr_repository" "use_an_lpa_api_app" {
+  provider = "aws.management"
+  name     = "use_an_lpa/api_app"
+}
+
+data "aws_ecr_repository" "use_an_lpa_api_web" {
+  provider = "aws.management"
+  name     = "use_an_lpa/api_web"
+}
+

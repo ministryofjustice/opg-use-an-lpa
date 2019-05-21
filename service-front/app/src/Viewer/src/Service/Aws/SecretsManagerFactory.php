@@ -9,7 +9,7 @@ use Psr\Container\ContainerInterface;
  * Builds a configured instance of the AWS Secrets Manager Client
  *
  * Class SecretsManagerFactory
- * @package App\Service\Aws
+ * @package Viewer\Service\Aws
  */
 class SecretsManagerFactory
 {
