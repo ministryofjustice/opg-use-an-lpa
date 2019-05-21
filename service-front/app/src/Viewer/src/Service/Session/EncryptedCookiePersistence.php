@@ -90,33 +90,41 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
     /**
      * EncryptedCookiePersistence constructor.
      * @param KeyManagerInterface $keyManager
-     * @param Config $config
+     * @param string $cookieName
+     * @param string $cookiePath
+     * @param string $cacheLimiter
+     * @param int $sessionExpire
+     * @param int|null $lastModified
+     * @param bool $persistent
+     * @param string|null $cookieDomain
+     * @param bool $cookieSecure
+     * @param bool $cookieHttpOnly
      */
-    public function __construct(KeyManagerInterface $keyManager, Config $config)
+    public function __construct(KeyManagerInterface $keyManager, string $cookieName, string $cookiePath, string $cacheLimiter, int $sessionExpire, ?int $lastModified, bool $persistent, ?string $cookieDomain, bool $cookieSecure, bool $cookieHttpOnly)
     {
         $this->keyManager = $keyManager;
 
-        $this->cookieName = $config->getCookieName();
+        $this->cookieName = $cookieName;
 
-        $this->cookieDomain = $config->getCookieDomain();
+        $this->cookieDomain = $cookieDomain;
 
-        $this->cookiePath = $config->getCookiePath();
+        $this->cookiePath = $cookiePath;
 
-        $this->cookieSecure = $config->getCookieSecure();
+        $this->cookieSecure = $cookieSecure;
 
-        $this->cookieHttpOnly = $config->getCookieHttpOnly();
+        $this->cookieHttpOnly = $cookieHttpOnly;
 
-        $this->cacheLimiter = in_array($config->getCacheLimiter(), self::SUPPORTED_CACHE_LIMITERS, true)
-            ? $config->getCacheLimiter()
+        $this->cacheLimiter = in_array($cacheLimiter, self::SUPPORTED_CACHE_LIMITERS, true)
+            ? $cacheLimiter
             : 'nocache';
 
-        $this->sessionExpire = $config->getSessionExpired();
+        $this->sessionExpire = $sessionExpire;
 
-        $this->lastModified = $config->getLastModified()
-            ? gmdate(self::HTTP_DATE_FORMAT, $config->getLastModified())
+        $this->lastModified = $lastModified
+            ? gmdate(self::HTTP_DATE_FORMAT, $lastModified)
             : $this->determineLastModifiedValue();
 
-        $this->persistent = $config->getPersistent();
+        $this->persistent = $persistent;
     }
 
 

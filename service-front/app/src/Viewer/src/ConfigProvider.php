@@ -8,6 +8,7 @@ use Aws;
 use Http;
 use Zend;
 use Psr;
+use Viewer;
 
 /**
  * The configuration provider for the App module
@@ -49,16 +50,15 @@ class ConfigProvider
             'factories'  => [
 
                 // Services
+                Viewer\Service\ApiClient\Client::class => Viewer\Service\ApiClient\ClientFactory::class,
+                Viewer\Service\Session\EncryptedCookiePersistence::class => Viewer\Service\Session\EncryptedCookiePersistenceFactory::class,
+                Viewer\Service\Session\KeyManager\KmsManager::class => Viewer\Service\Session\KeyManager\KmsManagerFactory::class,
+
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 Aws\Kms\KmsClient::class => Service\Aws\KmsFactory::class,
                 Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
 
                 Zend\Expressive\Session\SessionMiddleware::class => Zend\Expressive\Session\SessionMiddlewareFactory::class,
-
-                // Config objects
-                Service\ApiClient\Config::class => ConfigFactory::class,
-                Service\Session\Config::class => ConfigFactory::class,
-                Service\Session\KeyManager\Config::class => ConfigFactory::class,
 
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class

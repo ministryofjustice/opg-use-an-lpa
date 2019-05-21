@@ -33,13 +33,14 @@ class Client
      * Client constructor
      *
      * @param ClientInterface $httpClient
-     * @param Config $config
+     * @param string $apiBaseUri
+     * @param string|null $token
      */
-    public function __construct(ClientInterface $httpClient, Config $config)
+    public function __construct(ClientInterface $httpClient, string $apiBaseUri, ?string $token)
     {
         $this->httpClient = $httpClient;
-        $this->apiBaseUri = $config->getApiUri();
-        $this->token = $config->getToken();
+        $this->apiBaseUri = $apiBaseUri;
+        $this->token = $token;
     }
 
     /**

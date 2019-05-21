@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace Viewer\Service\Session;
 
+use Psr\Container\ContainerInterface;
 use RuntimeException;
+use Viewer\Service\Session\KeyManager\KeyManagerInterface;
 
-class Config
+/**
+ * Class EncryptedCookiePersistenceFactory
+ * @package Viewer\Service\Session
+ */
+class EncryptedCookiePersistenceFactory
 {
-    /**
-     * @var array
-     */
-    private $config;
-
-    public function __construct(array $config)
+    public function __invoke(ContainerInterface $container)
     {
-        if (!array_key_exists('session', $config)) {
-            throw new RuntimeException("Session configuration missing");
+        $config = $container->get('config');
+
+        if (!isset($config['session'])) {
+            throw new RuntimeException('Session configuration missing');
         }
 
         if (!array_key_exists('expires', $config['session'])) {
@@ -55,51 +58,17 @@ class Config
             throw new RuntimeException("Missing session configuration: persistent");
         }
 
-        $this->config = $config;
-    }
-
-    public function getCookieName() : string
-    {
-        return $this->config['session']['cookie_name'];
-    }
-
-    public function getCookiePath() : string
-    {
-        return $this->config['session']['cookie_path'];
-    }
-
-    public function getCacheLimiter() : string
-    {
-        return $this->config['session']['cache_limiter'];
-    }
-
-    public function getSessionExpired() : int
-    {
-        return $this->config['session']['expires'];
-    }
-
-    public function getLastModified() : ?int
-    {
-        return $this->config['session']['last_modified'];
-    }
-
-    public function getPersistent() : bool
-    {
-        return $this->config['session']['persistent'];
-    }
-
-    public function getCookieDomain() : ?string
-    {
-        return $this->config['session']['cookie_domain'];
-    }
-
-    public function getCookieSecure() : bool
-    {
-        return $this->config['session']['cookie_secure'];
-    }
-
-    public function getCookieHttpOnly() : bool
-    {
-        return $this->config['session']['cookie_http_only'];
+        return new EncryptedCookiePersistence(
+            $container->get(KeyManagerInterface::class),
+            $config['session']['cookie_name'],
+            $config['session']['cookie_path'],
+            $config['session']['cache_limiter'],
+            $config['session']['expires'],
+            $config['session']['last_modified'],
+            $config['session']['persistent'],
+            $config['session']['cookie_domain'],
+            $config['session']['cookie_secure'],
+            $config['session']['cookie_http_only']
+        );
     }
 }
