@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 declare(strict_types=1);
 
@@ -9,8 +9,16 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\JsonResponse;
 
+/**
+ * Class HealthcheckHandler
+ * @package Viewer\Handler
+ */
 class HealthcheckHandler implements RequestHandlerInterface
 {
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         return new JsonResponse([
@@ -19,6 +27,9 @@ class HealthcheckHandler implements RequestHandlerInterface
         ]);
     }
 
+    /**
+     * @return bool
+     */
     protected function isHealthy() : bool
     {
         return true;

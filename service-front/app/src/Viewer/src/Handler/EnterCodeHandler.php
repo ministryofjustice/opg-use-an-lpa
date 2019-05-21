@@ -7,12 +7,9 @@ namespace Viewer\Handler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\ShareCode;
-use Viewer\Service\Lpa\LpaService;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Expressive\Csrf\CsrfMiddleware;
-use Zend\Expressive\Helper\UrlHelper;
 use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * Class EnterCodeHandler
@@ -21,21 +18,8 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 class EnterCodeHandler extends AbstractHandler
 {
     /**
-     * EnterCodeHandler constructor.
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     */
-    public function __construct(
-        TemplateRendererInterface $renderer,
-        UrlHelper $urlHelper)
-    {
-        parent::__construct($renderer, $urlHelper);
-    }
-
-    /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Http\Client\Exception
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {

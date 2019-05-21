@@ -10,7 +10,6 @@ use Viewer\Form\ShareCode;
 use Viewer\Handler\EnterCodeHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Viewer\Service\Lpa\LpaService;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
@@ -37,10 +36,8 @@ class EnterCodeHandlerTest extends TestCase
 
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
 
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
-
         //  Set up the handler
-        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal());
+        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal());
 
         /** @var ServerRequestInterface|ObjectProphecy $requestProphecy */
         $requestProphecy = $this->getRequestProphecy();
@@ -76,12 +73,8 @@ class EnterCodeHandlerTest extends TestCase
             'id' => $lpaId
         ], ArrayObject::ARRAY_AS_PROPS);
 
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
-        $lpaServiceProphecy->getLpaByCode('1234-5678-9012')
-            ->willReturn($lpa);
-
         //  Set up the handler
-        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal());
+        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal());
 
         /** @var ServerRequestInterface|ObjectProphecy $requestProphecy */
         $requestProphecy = $this->getRequestProphecy();
@@ -112,10 +105,8 @@ class EnterCodeHandlerTest extends TestCase
 
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
 
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
-
         //  Set up the handler
-        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal());
+        $handler = new EnterCodeHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal());
 
         /** @var ServerRequestInterface|ObjectProphecy $requestProphecy */
         $requestProphecy = $this->getRequestProphecy();

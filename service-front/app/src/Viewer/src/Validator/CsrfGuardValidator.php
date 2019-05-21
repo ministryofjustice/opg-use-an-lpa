@@ -10,7 +10,7 @@ use InvalidArgumentException;
  * Simplified CSRF validator that relies on a passed secret
  * Where the secret comes from is beyond the scope of this class
  *
- * @package App\Validator
+ * @package Viewer\Validator
  */
 class CsrfGuardValidator extends ZendCsrf
 {
@@ -33,7 +33,7 @@ class CsrfGuardValidator extends ZendCsrf
      */
     public function __construct($options = [])
     {
-        // turns out Zend does some magic initialisation of properties from the options array so 
+        // turns out Zend does some magic initialisation of properties from the options array so
         // we have to check things are valid before __construct'ing the parent.
         if (! (isset($options['guard']) && $options['guard'] instanceof CsrfGuardInterface)) {
             throw new InvalidArgumentException('A CsrfGuardInterface must be supplied to the Csrf Validator');

@@ -20,7 +20,7 @@ docker-compose exec viewer-app rm -f /tmp/config-cache.php
 
 The Viewer service will be available via http://localhost:9001/
 
-The API service will be available via http://localhost:9002/
+The API service will be available via http://localhost:9003/
 
 ### Tests
 
