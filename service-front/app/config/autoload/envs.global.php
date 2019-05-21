@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 return [
 
+    'api' => [
+        'uri' => 'http://api-web',
+    ],
+
     'aws' => [
         'region'    => 'eu-west-1',
         'version'   => 'latest',

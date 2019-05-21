@@ -27,187 +27,19 @@ class Client
     /**
      * @var string
      */
-    private $authToken;
+    private $token;
 
     /**
      * Client constructor
      *
      * @param HttpClient $httpClient
-     * @param string $apiBaseUri
-     * @param string|null $authToken
+     * @param Config $config
      */
-    public function __construct(HttpClient $httpClient, string $apiBaseUri, string $authToken = null)
+    public function __construct(HttpClient $httpClient, Config $config)
     {
-        $this->httpClient = $this->getMockHttpClient($apiBaseUri);//$httpClient;
-        $this->apiBaseUri = $apiBaseUri;
-        $this->authToken = $authToken;
-    }
-
-    /**
-     * TODO - TO BE REMOVED WHEN MOCKED HTTP CLIENT IS REMOVED
-     *
-     * @param string $apiBaseUri
-     * @return HttpClient
-     */
-    private function getMockHttpClient(string $apiBaseUri) : HttpClient
-    {
-        $prophet = new \Prophecy\Prophet();
-        $httpClientProphercy = $prophet->prophesize(HttpClient::class);
-
-        //  The keys in this data array represent the LPA share codes
-        $lpaDatasets = [
-            '123456789012' => [
-                'id' => '12345678901',
-                'caseNumber' => '787640393837',
-                'type' => 'property-and-financial',
-                'donor' => [
-                    'name' => [
-                        'title' => 'Mr',
-                        'first' => 'Jordan',
-                        'last' => 'Johnson',
-                    ],
-                    'dob' => '1980-01-01T00:00:00+00:00',
-                    'address' => [
-                        'address1' => '1 High Street',
-                        'address2' => 'Hampton',
-                        'address3' => 'Wessex',
-                        'postcode' => 'LH1 7QQ',
-                    ],
-                ],
-                'attorneys' => [
-                    [
-                        'name' => [
-                            'title' => 'Mr',
-                            'first' => 'Peter',
-                            'last' => 'Smith',
-                        ],
-                        'dob' => '1984-02-14T00:00:00+00:00',
-                        'address' => [
-                            'address1' => '1 High Street',
-                            'address2' => 'Hampton',
-                            'address3' => 'Wessex',
-                            'postcode' => 'LH1 7QQ',
-                        ],
-                    ],
-                    [
-                        'name' => [
-                            'title' => 'Miss',
-                            'first' => 'Celia',
-                            'last' => 'Smith',
-                        ],
-                        'dob' => '1988-11-12T00:00:00+00:00',
-                        'address' => [
-                            'address1' => '1 Avenue Road',
-                            'address2' => 'Great Hampton',
-                            'address3' => 'Wessex',
-                            'postcode' => 'LH4 8PU',
-                        ],
-                    ],
-                ],
-                'decisions' => [
-                    'how' => 'jointly',
-                    'when' => 'no-capacity',
-                ],
-                'preferences' => false,
-                'instructions' => false,
-                'dateDonorSigned' => '2017-02-25T00:00:00+00:00',
-                'dateRegistration' => '2017-04-15T00:00:00+00:00',
-                'dateLastConfirmedStatus' => '2019-04-22T00:00:00+00:00',
-            ],
-            '987654321098' => [
-                'id' => '98765432109',
-                'caseNumber' => '787640393837',
-                'type' => 'property-and-financial',
-                'donor' => [
-                    'name' => [
-                        'title' => 'Mr',
-                        'first' => 'Jordan',
-                        'last' => 'Johnson',
-                    ],
-                    'dob' => '1980-01-01T00:00:00+00:00',
-                    'address' => [
-                        'address1' => '1 High Street',
-                        'address2' => 'Hampton',
-                        'address3' => 'Wessex',
-                        'postcode' => 'LH1 7QQ',
-                    ],
-                ],
-                'attorneys' => [
-                    [
-                        'name' => [
-                            'title' => 'Mr',
-                            'first' => 'Peter',
-                            'last' => 'Smith',
-                        ],
-                        'dob' => '1984-02-14T00:00:00+00:00',
-                        'address' => [
-                            'address1' => '1 High Street',
-                            'address2' => 'Hampton',
-                            'address3' => 'Wessex',
-                            'postcode' => 'LH1 7QQ',
-                        ],
-                    ],
-                    [
-                        'name' => [
-                            'title' => 'Miss',
-                            'first' => 'Celia',
-                            'last' => 'Smith',
-                        ],
-                        'dob' => '1988-11-12T00:00:00+00:00',
-                        'address' => [
-                            'address1' => '1 Avenue Road',
-                            'address2' => 'Great Hampton',
-                            'address3' => 'Wessex',
-                            'postcode' => 'LH4 8PU',
-                        ],
-                    ],
-                ],
-                'decisions' => [
-                    'how' => 'jointly',
-                    'when' => 'no-capacity',
-                ],
-                'preferences' => false,
-                'instructions' => false,
-                'dateDonorSigned' => '2017-02-25T00:00:00+00:00',
-                'dateRegistration' => '2017-04-15T00:00:00+00:00',
-                'dateCancelled' => '2018-04-25T00:00:00+00:00',
-            ],
-        ];
-
-        //  Loop through the LPA datasets and set up the mock data
-        foreach ($lpaDatasets as $shareCode => $lpaDataset) {
-            //  Generate the mocked response
-            $responseProphecy = $prophet->prophesize(ResponseInterface::class);
-            $responseProphecy->getStatusCode()
-                ->willReturn(200);
-            $responseProphecy->getBody()
-                ->willReturn(json_encode($lpaDataset));
-
-            //  Set up the URIs for which this response is returned
-            $uri1 = new Uri($apiBaseUri . '/lpa-by-code');
-            $uri1 = Uri::withQueryValue($uri1, 'code', $shareCode);
-
-            $uri2 = new Uri($apiBaseUri . '/lpa');
-            $uri2 = Uri::withQueryValue($uri2, 'id', $lpaDataset['id']);
-
-            foreach ([$uri1, $uri2] as $uri) {
-                $request = new Request('GET', $uri, $this->buildHeaders());
-
-                //  Attach the request and response to the mocked client
-                $httpClientProphercy->sendRequest($request)
-                    ->willReturn($responseProphecy->reveal());
-            }
-        }
-
-        //  Response for not found 404
-        $notFoundResponseProphecy = $prophet->prophesize(ResponseInterface::class);
-        $notFoundResponseProphecy->getStatusCode()
-            ->willReturn(404);
-
-        $httpClientProphercy->sendRequest(new \Prophecy\Argument\Token\AnyValuesToken())
-            ->willReturn($notFoundResponseProphecy->reveal());
-
-        return $httpClientProphercy->reveal();
+        $this->httpClient = $httpClient;
+        $this->apiBaseUri = $config->getApiUri();
+        $this->token = $config->getToken();
     }
 
     /**
@@ -353,8 +185,8 @@ class Client
         ];
 
         //  If the logged in user has an auth token already then set that in the header
-        if (isset($this->authToken)) {
-            $headerLines['token'] = $this->authToken;
+        if (isset($this->token)) {
+            $headerLines['token'] = $this->token;
         }
 
         return $headerLines;

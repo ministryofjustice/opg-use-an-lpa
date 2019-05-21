@@ -33,5 +33,6 @@ use Zend\Expressive\MiddlewareFactory;
  * );
  */
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
+    $app->get('/v1/lpa/{uid}', App\Handler\LpaHandler::class, 'lpa.by.uid');
     $app->get('/v1/lpa-by-code/{shareCode}', App\Handler\LpaHandler::class, 'lpa.by.share-code');
 };
