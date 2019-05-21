@@ -41,17 +41,6 @@ services:
       PHP_IDE_CONFIG: serverName=viewer-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
 
-  viewer-composer:
-    image: composer
-    volumes:
-      - ./service-front/app:/app
-    command:
-      - install
-      - --prefer-dist
-      - --no-suggest
-      - --no-interaction
-      - --no-scripts
-      - --optimize-autoloader
 
   # ---------------------------
   # Actor Front
@@ -92,7 +81,11 @@ services:
       PHP_IDE_CONFIG: serverName=viewer-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
 
-  actor-composer:
+
+  # ---------------------------
+  # Front Composer (Shared)
+
+  front-composer:
     image: composer
     volumes:
       - ./service-front/app:/app
