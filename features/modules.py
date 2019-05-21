@@ -1,11 +1,9 @@
 import os
 from collections import defaultdict
 
-def get_frontend_url( frontend ):
-  """
-  Return a URL for a Use an LPA frontend on a specific environment.
-  The environment is based on the Terraform Workspace environment variable.
-  """
+def get_frontend_url(frontend, path = ''):
+  # Return a URL for a Use an LPA frontend on a specific environment.
+  # The environment is based on the Terraform Workspace environment variable.
   workspace = os.getenv('TF_WORKSPACE', 'localhost')
 
   # match workspace to a value in the dict or return a default value "development."
@@ -23,4 +21,4 @@ def get_frontend_url( frontend ):
   else:
     url = 'https://{0}{1}.{2}use-an-lpa.opg.service.justice.gov.uk'.format(dns_env_namespace, frontend, dns_account_namespace)
 
-  return url
+  return url + path
