@@ -50,11 +50,11 @@ class KmsManager implements KeyManagerInterface
      *
      * @param KmsClient $kmsClient
      * @param KeyCache $cache
-     * @param Config $config
+     * @param string $kmsAlias
      */
-    public function __construct(KmsClient $kmsClient, KeyCache $cache, Config $config)
+    public function __construct(KmsClient $kmsClient, KeyCache $cache, string $kmsAlias)
     {
-        $this->kmsAlias = $config->getKeyAlias();
+        $this->kmsAlias = $kmsAlias;
         $this->kmsClient = $kmsClient;
         $this->cache = $cache;
     }
