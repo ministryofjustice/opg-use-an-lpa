@@ -170,6 +170,10 @@ locals {
     },
     "environment": [
     {
+      "name": "CONTEXT",
+      "value": "viewer"
+    },
+    {
       "name": "KMS_SESSION_CMK_ALIAS",
       "value": "${data.aws_kms_alias.sessions_viewer.name}"
     },
