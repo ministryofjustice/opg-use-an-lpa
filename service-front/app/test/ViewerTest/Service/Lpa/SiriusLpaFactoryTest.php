@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace ViewerTest\Service\Lpa;
 
 use PHPUnit\Framework\TestCase;
-use Viewer\Service\Lpa\LpaFactory;
 use Viewer\Entity\Lpa;
 use Viewer\Entity\Address;
 use Viewer\Entity\CaseActor;
 use \DateTime;
+use Viewer\Service\Lpa\Factory\Sirius;
 
 class LpaFactoryTest extends TestCase
 {
@@ -27,7 +27,7 @@ class LpaFactoryTest extends TestCase
 
     public function testBadDataThrowsException()
     {
-        $factory = new LpaFactory();
+        $factory = new Sirius();
 
         $this->expectException(\Zend\Stdlib\Exception\InvalidArgumentException::class);
         $lpa = $factory->createLpaFromData([]);
@@ -35,7 +35,7 @@ class LpaFactoryTest extends TestCase
 
     public function testCanCreateEmptyLpa()
     {
-        $factory = new LpaFactory();
+        $factory = new Sirius();
 
         $lpa = $factory->createLpaFromData(['uId' => '1234']);
 
@@ -45,7 +45,7 @@ class LpaFactoryTest extends TestCase
 
     public function testCanCreateLpaFromSwaggerExample()
     {
-        $factory = new LpaFactory();
+        $factory = new Sirius();
 
         $lpa = $factory->createLpaFromData($this->fullExampleFixtureData);
         $this->assertInstanceOf(Lpa::class, $lpa);
@@ -60,7 +60,7 @@ class LpaFactoryTest extends TestCase
 
     public function testCanCreateLpaFromSimpleExample()
     {
-        $factory = new LpaFactory();
+        $factory = new Sirius();
 
         $lpa = $factory->createLpaFromData($this->simpleExampleFixtureData);
         $this->assertInstanceOf(Lpa::class, $lpa);
