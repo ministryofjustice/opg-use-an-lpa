@@ -57,7 +57,9 @@
     },
     "autoload": {
         "psr-4": {
-            "Viewer\\": "src/Viewer/src/"
+            "Viewer\\": "src/Viewer/src/",
+            "Common\\": "src/Common/src/",
+            "Actor\\": "src/Actor/src/"
         }
     },
     "autoload-dev": {
