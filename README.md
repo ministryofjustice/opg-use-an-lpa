@@ -31,6 +31,19 @@ docker-compose run viewer-app /app/vendor/bin/phpunit
 docker-compose run api-app /app/vendor/bin/phpunit
 ```
 
+### Functional (Behave) test
+
+To run the Behave functional tests
+
+```bash
+docker-compose run feature-tests
+```
+
+To run a tagged subset of tests
+```bash
+docker-compose run feature-tests --tags=<TAG_NAME>
+```
+
 ### Updating composer dependencies
 
 Composer install is run when the app container is built, and on a standard `docker-compose up`.
