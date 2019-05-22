@@ -21,9 +21,14 @@ def step_impl(context, share_code):
 
 
 # WHENS
-@when('I click the "{button_text}" button')
-def step_impl(context, button_text):
-  button_element = context.browser.find_element_by_xpath('//a[contains(concat(" ", @class, " "), " govuk-button ")][contains(text(), "' + button_text + '")]')
+@when('I click the "Start now" button')
+def step_impl(context):
+  button_element = context.browser.find_element_by_xpath('//a[contains(concat(" ", @class, " "), " govuk-button ")][@href="/enter-code"]')
+  button_element.click()
+
+@when('I click the "Continue" button')
+def step_impl(context):
+  button_element = context.browser.find_element_by_xpath('//a[contains(concat(" ", @class, " "), " govuk-button ")][@href="/view-lpa"]')
   button_element.click()
 
 @when('I click on the "{help_link}" help section')
@@ -38,14 +43,14 @@ def step_impl(context):
 
 
 # THENS
-@then('the "{page_title}" page is displayed')
-def step_impl(context, page_title):
-  page_title_element = context.browser.find_element_by_xpath('//h1[contains(text(),"' + page_title + '")]')
-  assert page_title_element.text == page_title
+@then('the "{page_heading}" page is displayed')
+def step_impl(context, page_heading):
+  page_heading_element = context.browser.find_element_by_xpath('//h1[contains(text(),"' + page_heading + '")]')
+  assert page_heading_element.text == page_heading
 
-@then('error message "{error_message}" is displayed at the top of the screen')
+@then('error message "{error_message}" is displayed in the error summary')
 def step_impl(context, error_message):
-  error_message_element = context.browser.find_element_by_xpath('//a[contains(text(),"' + error_message + '")]')
+  error_message_element = context.browser.find_element_by_xpath('//div[contains(concat(" ", @class, " "), " govuk-error-summary__body ")]//a[contains(text(),"' + error_message + '")]')
   assert error_message_element.text == error_message
 
 @then('error message "{error_message}" is displayed next to the {input_label} input')

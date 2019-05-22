@@ -22,14 +22,14 @@ Feature: View a lasting power of attorney
   Scenario: Show an error message when I try to search for an LPA without entering an LPA code
     Given I go to the enter code page on the viewer service
     When the share code form is submitted
-    Then error message "Value is required and can't be empty" is displayed at the top of the screen
+    Then error message "Value is required and can't be empty" is displayed in the error summary
     And error message "Value is required and can't be empty" is displayed next to the LPA code input
 
   Scenario: Show an error message when I search for an LPA with an LPA code that is the wrong format
     Given I go to the enter code page on the viewer service
     And the share code input is populated with "wrong-format"
     When the share code form is submitted
-    Then error message "Enter an LPA share code in the correct format." is displayed at the top of the screen
+    Then error message "Enter an LPA share code in the correct format." is displayed in the error summary
     And error message "Enter an LPA share code in the correct format." is displayed next to the LPA code input
 
   Scenario: Show a try again page when I search for an LPA with an LPA code that does not exist
