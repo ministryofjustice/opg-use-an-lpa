@@ -5,7 +5,7 @@ declare(strict_types=1);
 return [
 
     'api' => [
-        'uri' => getenv('API_SERVICE_HOSTNAME') ?: null,
+        'uri' => getenv('API_SERVICE_URL') ?: null,
     ],
 
     'aws' => [

@@ -178,8 +178,8 @@ locals {
       "value": "${var.container_version}"
     },
     {
-      "name": "API_SERVICE_HOSTNAME",
-      "value": "${local.api_service_fqdn}"
+      "name": "API_SERVICE_URL",
+      "value": "http://${local.api_service_fqdn}"
     }]
   }
   EOF
