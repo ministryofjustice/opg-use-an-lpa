@@ -73,7 +73,6 @@ def get_task_status(config_file):
         exit(1)
     else:
         print("ECS service stable")
-        print(service)
 
 
 get_task_status(args.config_file_path)
