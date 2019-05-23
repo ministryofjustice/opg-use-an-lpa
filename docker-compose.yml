@@ -129,6 +129,7 @@ services:
 
       # Local only
       AWS_ACCESS_KEY_ID: '-'
+      AWS_ENDPOINT_DYNAMODB: http://localstack:4569
       AWS_SECRET_ACCESS_KEY: '-'
       ENABLE_XDEBUG: 'true'
       PHP_IDE_CONFIG: serverName=api-app
