@@ -351,7 +351,7 @@ orbs:
                 echo $TF_WORKSPACE
                 cd terraform_shared
                 terraform init
-                terraform workspace new $TF_WORKSPACE; terraform workspace select $TF_WORKSPACE
+                terraform workspace new $TF_WORKSPACE || terraform workspace select $TF_WORKSPACE
                 terraform validate
           - run:
               name: Lint Environment Terraform
@@ -363,7 +363,7 @@ orbs:
                 echo $SHORT_HASH
                 cd terraform_environment
                 terraform init
-                terraform workspace new $TF_WORKSPACE; terraform workspace select $TF_WORKSPACE
+                terraform workspace new $TF_WORKSPACE || terraform workspace select $TF_WORKSPACE
                 terraform validate -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
 
       apply_shared_terraform:
@@ -386,7 +386,7 @@ orbs:
               command: |
                 cd terraform_shared
                 terraform init
-                terraform workspace new $TF_WORKSPACE; terraform workspace select $TF_WORKSPACE
+                terraform workspace new $TF_WORKSPACE || terraform workspace select $TF_WORKSPACE
                 terraform apply --auto-approve
       apply_environment_terraform:
         #
@@ -412,7 +412,7 @@ orbs:
                 echo $SHORT_HASH
                 cd terraform_environment
                 terraform init
-                terraform workspace new $TF_WORKSPACE; terraform workspace select $TF_WORKSPACE
+                terraform workspace new $TF_WORKSPACE || terraform workspace select $TF_WORKSPACE
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
                 mv *task_config.json /tmp/
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
@@ -452,7 +452,7 @@ orbs:
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   cd terraform_environment
                   terraform init
-                  terraform workspace new $TF_WORKSPACE; terraform workspace select $TF_WORKSPACE
+                  terraform workspace new $TF_WORKSPACE || terraform workspace select $TF_WORKSPACE
                   terraform destroy -auto-approve
                 fi
       wait_for_services_to_settle:
