@@ -40,8 +40,17 @@ data "aws_acm_certificate" "certificate_viewer" {
   domain = "${local.dev_wildcard}viewer.${local.dns_namespace_acc}use-an-lpa.opg.service.justice.gov.uk"
 }
 
+data "aws_acm_certificate" "certificate_actor" {
+  domain = "${local.dev_wildcard}actor.${local.dns_namespace_acc}use-an-lpa.opg.service.justice.gov.uk"
+
+}
+
 data "aws_kms_alias" "sessions_viewer" {
   name = "alias/sessions-viewer"
+}
+
+data "aws_kms_alias" "sessions_actor" {
+  name = "alias/sessions-actor"
 }
 
 //--------------------

@@ -57,14 +57,27 @@ resource "aws_security_group" "api_ecs_service" {
 }
 
 //----------------------------------
-// 80 in from viewer ECS service
-resource "aws_security_group_rule" "api_ecs_service_ingress" {
+// 80 in from Viewer ECS service
+
+resource "aws_security_group_rule" "api_ecs_service_viewer_ingress" {
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
   security_group_id        = "${aws_security_group.api_ecs_service.id}"
   source_security_group_id = "${aws_security_group.viewer_ecs_service.id}"
+}
+
+//----------------------------------
+// 80 in from Actor ECS service
+
+resource "aws_security_group_rule" "api_ecs_service_actor_ingress" {
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  security_group_id        = "${aws_security_group.api_ecs_service.id}"
+  source_security_group_id = "${aws_security_group.actor_ecs_service.id}"
 }
 
 //----------------------------------
