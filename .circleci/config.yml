@@ -347,10 +347,8 @@ orbs:
               command: |
                 terraform --version
                 ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                export TF_WORKSPACE=development >> $BASH_ENV
                 echo $TF_WORKSPACE
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                echo $SHORT_HASH
                 cd terraform_shared
                 terraform init
                 terraform validate
