@@ -34,9 +34,33 @@ workflows:
             branches:
               ignore: master
 
+      - use-my-lpa/wait_for_services_to_settle:
+          name: wait_for_viewer_dev
+          task_config: viewer_task_config.json
+          requires: [dev_apply_environment_terraform]
+          filters:
+            branches:
+              ignore: master
+
+      - use-my-lpa/wait_for_services_to_settle:
+          name: wait_for_actor_dev
+          task_config: actor_task_config.json
+          requires: [dev_apply_environment_terraform]
+          filters:
+            branches:
+              ignore: master
+
+      - use-my-lpa/wait_for_services_to_settle:
+          name: wait_for_api_dev
+          task_config: api_task_config.json
+          requires: [dev_apply_environment_terraform]
+          filters:
+            branches:
+              ignore: master
+
       - use-my-lpa/run_behave_suite:
           name: dev_run_behave_tests
-          requires: [dev_apply_environment_terraform]
+          requires: [wait_for_viewer_dev, wait_for_actor_dev, wait_for_api_dev]
           filters:
             branches:
               ignore: master
@@ -388,7 +412,7 @@ orbs:
                 cd terraform_environment
                 terraform init
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
-                mv viewer_task_config.json /tmp/viewer_task_config.json
+                mv *task_config.json /tmp/
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   echo "Your environment, ${ENV_NAME:0:13} is built."
                   echo "To destroy this environment"
@@ -402,6 +426,8 @@ orbs:
               root: /tmp
               paths:
                 - viewer_task_config.json
+                - actor_task_config.json
+                - api_task_config.json
 
       destroy_dev_environment:
         #
@@ -426,6 +452,26 @@ orbs:
                   terraform init
                   terraform destroy -auto-approve
                 fi
+      wait_for_services_to_settle:
+        #
+        # Wait for a service to settle before continuing with the workflow
+        #
+        executor: python-browsers
+        parameters:
+          task_config:
+            description: name of the file to configure the wait
+            type: string
+        steps:
+          - checkout
+          - install_webdriver
+          - attach_workspace:
+              at: /tmp
+          - run:
+              name: Wait for new task to be running
+              command: |
+                sudo pip3 install boto3 -q
+                python features/aws_ecs_task.py /tmp/<<parameters.task_config>>
+                
 
       run_behave_suite:
         #
@@ -445,11 +491,11 @@ orbs:
           - run:
               name: Install Behave
               command: sudo pip3 install behave selenium --upgrade
-          - run:
-              name: Wait for new task to be running
-              command: |
-                sudo pip3 install boto3 -q
-                python features/aws_ecs_task.py /tmp/viewer_task_config.json
+          # - run:
+          #     name: Wait for new task to be running
+          #     command: |
+          #       sudo pip3 install boto3 -q
+          #       python features/aws_ecs_task.py /tmp/viewer_task_config.json
           - run:
               name: Run suite
               command: |
