@@ -412,7 +412,6 @@ orbs:
                 echo $SHORT_HASH
                 cd terraform_environment
                 terraform init
-                terraform workspace new $TF_WORKSPACE || terraform workspace select $TF_WORKSPACE
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
                 mv *task_config.json /tmp/
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
