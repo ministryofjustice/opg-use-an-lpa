@@ -42,6 +42,7 @@ class ConfigProvider
 
             'factories'  => [
                 // Services
+                Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 Aws\DynamoDb\DynamoDbClient::class => Service\Aws\DynamoDbClientFactory::class,
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
 
