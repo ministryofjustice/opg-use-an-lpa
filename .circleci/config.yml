@@ -361,8 +361,8 @@ orbs:
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
                 cd terraform_environment
-                terraform init
                 terraform workspace new $TF_WORKSPACE || terraform workspace select $TF_WORKSPACE
+                terraform init
                 terraform validate -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
 
       apply_shared_terraform:
