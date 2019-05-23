@@ -12,7 +12,6 @@ use Aws\Kms\Exception\KmsException;
 use ParagonIE\HiddenString\HiddenString;
 use Viewer\Service\Session\KeyManager\Key;
 use Viewer\Service\Session\KeyManager\KeyCache;
-use Viewer\Service\Session\KeyManager\Config;
 use Viewer\Service\Session\KeyManager\KmsManager;
 use Viewer\Service\Session\KeyManager\KeyNotFoundException;
 
@@ -22,17 +21,12 @@ class KmsManagerTest extends TestCase
 
     private $cacheProphecy;
     private $kmsClientProphecy;
-    private $configProphecy;
 
     public function setUp()
     {
         // Constructor arguments
         $this->cacheProphecy = $this->prophesize(KeyCache::class);
         $this->kmsClientProphecy = $this->prophesize(KmsClient::class);
-        $this->configProphecy = $this->prophesize(Config::class);
-
-        // Config setup
-        $this->configProphecy->getKeyAlias()->willReturn(self::TEST_KMS_CMK_ALIAS);
     }
 
     public function testCanInstantiate()
@@ -40,7 +34,7 @@ class KmsManagerTest extends TestCase
         $manager = new KmsManager(
             $this->kmsClientProphecy->reveal(),
             $this->cacheProphecy->reveal(),
-            $this->configProphecy->reveal()
+            self::TEST_KMS_CMK_ALIAS
         );
 
         $this->assertInstanceOf(KmsManager::class, $manager);
@@ -72,7 +66,7 @@ class KmsManagerTest extends TestCase
         $manager = new KmsManager(
             $this->kmsClientProphecy->reveal(),
             $this->cacheProphecy->reveal(),
-            $this->configProphecy->reveal()
+            self::TEST_KMS_CMK_ALIAS
         );
 
         $manager->getDecryptionKey('key-id');
@@ -100,7 +94,7 @@ class KmsManagerTest extends TestCase
         $manager = new KmsManager(
             $this->kmsClientProphecy->reveal(),
             $this->cacheProphecy->reveal(),
-            $this->configProphecy->reveal()
+            self::TEST_KMS_CMK_ALIAS
         );
 
         $manager->getDecryptionKey('key-id');
@@ -126,7 +120,7 @@ class KmsManagerTest extends TestCase
         $manager = new KmsManager(
             $this->kmsClientProphecy->reveal(),
             $this->cacheProphecy->reveal(),
-            $this->configProphecy->reveal()
+            self::TEST_KMS_CMK_ALIAS
         );
 
         $key = $manager->getDecryptionKey($keyCiphertext);
@@ -179,7 +173,7 @@ class KmsManagerTest extends TestCase
         $manager = new KmsManager(
             $this->kmsClientProphecy->reveal(),
             $this->cacheProphecy->reveal(),
-            $this->configProphecy->reveal()
+            self::TEST_KMS_CMK_ALIAS
         );
 
         $key = $manager->getDecryptionKey($keyCiphertextEncoded);
@@ -212,7 +206,7 @@ class KmsManagerTest extends TestCase
         $manager = new KmsManager(
             $this->kmsClientProphecy->reveal(),
             $this->cacheProphecy->reveal(),
-            $this->configProphecy->reveal()
+            self::TEST_KMS_CMK_ALIAS
         );
 
         $key = $manager->getEncryptionKey();
@@ -274,7 +268,7 @@ class KmsManagerTest extends TestCase
         $manager = new KmsManager(
             $this->kmsClientProphecy->reveal(),
             $this->cacheProphecy->reveal(),
-            $this->configProphecy->reveal()
+            self::TEST_KMS_CMK_ALIAS
         );
 
 

@@ -24,7 +24,6 @@ use Psr\Http\Message\ResponseInterface;
 use Prophecy\Prophecy\ObjectProphecy;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
-use Viewer\Service\Session\Config;
 use Viewer\Service\Session\EncryptedCookiePersistence;
 use Viewer\Service\Session\KeyManager\Key;
 use Viewer\Service\Session\KeyManager\KeyManagerInterface;
@@ -50,11 +49,6 @@ class EncryptedCookiePersistenceTest extends TestCase
     const SESSION_EXPIRES = 1000;
 
     /**
-     * @var ObjectProphecy|Config
-     */
-    private $configProphecy;
-
-    /**
      * @var ObjectProphecy|KeyManagerInterface
      */
     private $keyManagerProphecy;
@@ -70,19 +64,7 @@ class EncryptedCookiePersistenceTest extends TestCase
         // A real key used within the tests. It doesn't matter what it is.
         $this->testKey = new Key('test-id', new EncryptionKey(new HiddenString(random_bytes(32))));
 
-        $this->configProphecy = $this->prophesize(Config::class);
         $this->keyManagerProphecy = $this->prophesize(KeyManagerInterface::class);
-
-        // Setup the default config
-        $this->configProphecy->getCookieName()->willReturn(self::COOKIE_NAME);
-        $this->configProphecy->getCookiePath()->willReturn(self::COOKIE_PATH);
-        $this->configProphecy->getCacheLimiter()->willReturn('nocache');
-        $this->configProphecy->getSessionExpired()->willReturn(self::SESSION_EXPIRES);
-        $this->configProphecy->getLastModified()->willReturn(null);
-        $this->configProphecy->getPersistent()->willReturn(false);
-        $this->configProphecy->getCookieDomain()->willReturn(null);
-        $this->configProphecy->getCookieSecure()->willReturn(true);
-        $this->configProphecy->getCookieHttpOnly()->willReturn(true);
 
         // Setup the key manager mock
         $this->keyManagerProphecy->getEncryptionKey()->willReturn($this->testKey);
@@ -105,7 +87,7 @@ class EncryptedCookiePersistenceTest extends TestCase
 
     public function testCanInstantiate()
     {
-        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), $this->configProphecy->reveal());
+        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), self::COOKIE_NAME, self::COOKIE_PATH, 'nocache', self::SESSION_EXPIRES, null, false, null, true, true);
         $this->assertInstanceOf(EncryptedCookiePersistence::class, $cp);
     }
 
@@ -120,7 +102,7 @@ class EncryptedCookiePersistenceTest extends TestCase
     {
         $responseProphecy = $this->prophesize( ResponseInterface::class );
 
-        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), $this->configProphecy->reveal());
+        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), self::COOKIE_NAME, self::COOKIE_PATH, 'nocache', self::SESSION_EXPIRES, null, false, null, true, true);
 
         // We use a concrete session object here. It just moves data around; there's no test benefit to mocking it
         $response = $cp->persistSession(new Session([]), $responseProphecy->reveal());
@@ -217,7 +199,7 @@ class EncryptedCookiePersistenceTest extends TestCase
             return true;
         }))->willReturn($responseProphecy->reveal())->shouldBeCalled();
 
-        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), $this->configProphecy->reveal());
+        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), self::COOKIE_NAME, self::COOKIE_PATH, 'nocache', self::SESSION_EXPIRES, null, false, null, true, true);
 
         // We use a concrete session object here. It just moves data around; that's no test benefit to mocking it
         $response = $cp->persistSession(new Session($testData), $responseProphecy->reveal());
@@ -245,7 +227,7 @@ class EncryptedCookiePersistenceTest extends TestCase
 
         //---
 
-        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), $this->configProphecy->reveal());
+        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), self::COOKIE_NAME, self::COOKIE_PATH, 'nocache', self::SESSION_EXPIRES, null, false, null, true, true);
 
         $session = $cp->initializeSessionFromRequest($requestProphecy->reveal());
 
@@ -282,7 +264,7 @@ class EncryptedCookiePersistenceTest extends TestCase
 
         //---
 
-        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), $this->configProphecy->reveal());
+        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), self::COOKIE_NAME, self::COOKIE_PATH, 'nocache', self::SESSION_EXPIRES, null, false, null, true, true);
 
         $session = $cp->initializeSessionFromRequest($requestProphecy->reveal());
 
@@ -319,7 +301,7 @@ class EncryptedCookiePersistenceTest extends TestCase
 
         //---
 
-        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), $this->configProphecy->reveal());
+        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), self::COOKIE_NAME, self::COOKIE_PATH, 'nocache', self::SESSION_EXPIRES, null, false, null, true, true);
 
         $session = $cp->initializeSessionFromRequest($requestProphecy->reveal());
 
@@ -358,7 +340,7 @@ class EncryptedCookiePersistenceTest extends TestCase
 
         //---
 
-        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), $this->configProphecy->reveal());
+        $cp = new EncryptedCookiePersistence($this->keyManagerProphecy->reveal(), self::COOKIE_NAME, self::COOKIE_PATH, 'nocache', self::SESSION_EXPIRES, null, false, null, true, true);
 
         $session = $cp->initializeSessionFromRequest($requestProphecy->reveal());
 
