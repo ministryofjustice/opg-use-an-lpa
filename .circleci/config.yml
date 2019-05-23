@@ -346,11 +346,11 @@ orbs:
               name: Lint Shared Terraform
               command: |
                 terraform --version
-                ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=development >> $BASH_ENV
-                echo $TF_WORKSPACE
                 cd terraform_shared
                 terraform init
+                export TF_WORKSPACE=development >> $BASH_ENV
+                echo $TF_WORKSPACE
+                terraform workspace list
                 terraform validate
           - run:
               name: Lint Environment Terraform
@@ -362,7 +362,7 @@ orbs:
                 terraform init
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
-                # terraform workspace new $TF_WORKSPACE || terraform workspace select $TF_WORKSPACE
+                terraform workspace list
                 terraform validate -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
 
       apply_shared_terraform:
@@ -404,13 +404,12 @@ orbs:
               name: Apply Environment Terraform
               command: |
                 ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
-                echo $TF_WORKSPACE
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
                 cd terraform_environment
                 terraform init
-                terraform workspace new $TF_WORKSPACE || terraform workspace select $TF_WORKSPACE
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
                 mv *task_config.json /tmp/
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
@@ -450,7 +449,8 @@ orbs:
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   cd terraform_environment
                   terraform init
-                  terraform workspace new $TF_WORKSPACE || terraform workspace select $TF_WORKSPACE
+                  export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                  echo $TF_WORKSPACE
                   terraform destroy -auto-approve
                 fi
       wait_for_services_to_settle:
