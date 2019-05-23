@@ -351,9 +351,7 @@ orbs:
                 echo $TF_WORKSPACE
                 cd terraform_shared
                 terraform init
-                set +e
                 terraform workspace new $TF_WORKSPACE; terraform workspace select $TF_WORKSPACE
-                set -e
                 terraform validate
           - run:
               name: Lint Environment Terraform
