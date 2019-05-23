@@ -321,6 +321,7 @@ orbs:
           - run:
               name: Lint Shared Terraform
               command: |
+                terraform --version
                 ENV_NAME=<<parameters.workspace>>
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
