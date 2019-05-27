@@ -33,12 +33,9 @@ def set_iam_role_session(account_id):
     return session
 
 
-def get_task_status(config_file):  #
-    # cluster = "74-waitforser-use-an-lpa"
-    # account_id = "367815980639"
+def get_task_status(config_file):
     parameters = read_parameters_from_file(config_file)
     cluster = parameters['cluster_name']
-    # service = parameters['service_name']
     account_id = parameters['account_id']
 
     session = set_iam_role_session(account_id)
@@ -76,5 +73,4 @@ def get_task_status(config_file):  #
         print("ECS services stable")
 
 
-# get_task_status()
 get_task_status(args.config_file_path)
