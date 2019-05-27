@@ -45,7 +45,7 @@ class ConfigProvider
     {
         return [
             'paths' => [
-                'actor'    => [__DIR__ . '/../templates/actor'],
+                'actor' => [__DIR__ . '/../templates/actor'],
             ],
         ];
     }
