@@ -225,16 +225,3 @@ output "api_web_deployed_version" {
 output "api_app_deployed_version" {
   value = "${data.aws_ecr_repository.use_an_lpa_api_app.repository_url}:${var.container_version}"
 }
-
-resource "local_file" "api_task_config" {
-  content  = "${jsonencode(local.api_task_config)}"
-  filename = "${path.module}/api_task_config.json"
-}
-
-locals {
-  api_task_config = {
-    cluster_name = "${aws_ecs_cluster.use-an-lpa.name}"
-    service_name = "${aws_ecs_service.api.name}"
-    account_id   = "${local.account_id}"
-  }
-}
