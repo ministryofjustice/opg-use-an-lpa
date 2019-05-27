@@ -5,4 +5,4 @@
 geckodriver.log
 .vscode/
 **__pycache__
-**/viewer_task_config.json
+**/cluster_config.json
