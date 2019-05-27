@@ -36,7 +36,7 @@ workflows:
 
       - use-my-lpa/run_behave_suite:
           name: dev_run_behave_tests
-          requires: [wait_for_viewer_dev, wait_for_actor_dev, wait_for_api_dev]
+          requires: [dev_apply_environment_terraform]
           filters:
             branches:
               ignore: master
