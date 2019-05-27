@@ -33,10 +33,12 @@ def set_iam_role_session(account_id):
     return session
 
 
-def get_task_status(config_file):
+def get_task_status(config_file):  #
+    # cluster = "74-waitforser-use-an-lpa"
+    # account_id = "367815980639"
     parameters = read_parameters_from_file(config_file)
     cluster = parameters['cluster_name']
-    service = parameters['service_name']
+    # service = parameters['service_name']
     account_id = parameters['account_id']
 
     session = set_iam_role_session(account_id)
@@ -55,13 +57,12 @@ def get_task_status(config_file):
         aws_session_token=aws_session_token
     )
     try:
-        print("Checking for service to settle...")
-        print(service)
+        print("Checking for services to settle...")
         waiter = ecs.get_waiter('services_stable')
         waiter.wait(
             cluster=cluster,
             services=[
-                service,
+                'api', 'actor', 'viewer',
             ],
             WaiterConfig={
                 'Delay': 6,
@@ -72,7 +73,8 @@ def get_task_status(config_file):
         print("Exceeded attempts checking for task status")
         exit(1)
     else:
-        print("ECS service stable")
+        print("ECS services stable")
 
 
+# get_task_status()
 get_task_status(args.config_file_path)
