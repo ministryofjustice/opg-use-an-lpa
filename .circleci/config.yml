@@ -386,15 +386,6 @@ orbs:
                 echo $TF_WORKSPACE
                 terraform apply -lock-timeout=300s --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
                 mv cluster_config.json /tmp/
-                if [ "${CIRCLE_BRANCH}" != "master" ]; then
-                  echo "Your environment, ${ENV_NAME:0:13} is built."
-                  echo "To destroy this environment"
-                  echo
-                  echo "cd terraform_environment"
-                  echo "aws-vault exec identity -- terraform init -lock-timeout=300s"
-                  echo "aws-vault exec identity -- terraform workspace select ${ENV_NAME:0:13}"
-                  echo "aws-vault exec identity -- terraform destroy"
-                fi
           - persist_to_workspace:
               root: /tmp
               paths:
@@ -423,7 +414,7 @@ orbs:
                   terraform init -lock-timeout=300s
                   export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                   echo $TF_WORKSPACE
-                  terraform destroy -auto-approve
+                  terraform destroy -lock-timeout=300s -auto-approve
                 fi
       run_behave_suite:
         #
