@@ -57,14 +57,6 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress" {
   cidr_blocks       = "${module.whitelist.moj_sites}"
   security_group_id = "${aws_security_group.viewer_loadbalancer.id}"
 }
-# resource "aws_security_group_rule" "viewer_loadbalancer_ingress_ci" {
-#   type              = "ingress"
-#   from_port         = 443
-#   to_port           = 443
-#   protocol          = "tcp"
-#   cidr_blocks       = []
-#   security_group_id = "${aws_security_group.viewer_loadbalancer.id}"
-# }
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress_production" {
   count             = "${terraform.workspace == "production" ? 1 : 0}"
   type              = "ingress"
