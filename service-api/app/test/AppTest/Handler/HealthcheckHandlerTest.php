@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ViewerTest\Handler;
+namespace AppTest\Handler;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Viewer\Handler\HealthcheckHandler;
+use App\Handler\HealthcheckHandler;
 use Zend\Diactoros\Response\JsonResponse;
 
 class HealthcheckHandlerTest extends TestCase

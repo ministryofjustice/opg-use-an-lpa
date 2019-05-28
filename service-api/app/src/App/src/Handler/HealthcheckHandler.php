@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Handler;
+namespace App\Handler;
 
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\JsonResponse;
-use Http\Client\HttpClient;
-use Zend\Diactoros\Request;
 
 /**
  * Class HealthcheckHandler
@@ -17,13 +15,6 @@ use Zend\Diactoros\Request;
  */
 class HealthcheckHandler implements RequestHandlerInterface
 {
-    protected $httpClient;
-
-    public function __construct(HttpClient $http)
-    {
-        $this->httpClient = $http;
-    }
-
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
@@ -34,7 +25,7 @@ class HealthcheckHandler implements RequestHandlerInterface
             "healthy" => $this->isHealthy(),
             "version" => getenv("CONTAINER_VERSION") ? getenv("CONTAINER_VERSION") : "dev",
             "dependencies" => [
-                "api" => $this->checkApiEndpoint()
+                "api_gateway" => $this->checkApiEndpoint()
             ]
         ]);
     }
@@ -46,10 +37,9 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     protected function checkApiEndpoint() : array
     {
-        $apiRequest = new Request("http://api-web/healthcheck");
-
-        $response = $this->httpClient->sendRequest($apiRequest);
-
-        return json_decode($response->getBody()->getContents(), true);
+        return [
+            "healthy" => true,
+            "version" => "dev"
+        ];
     }
 }
