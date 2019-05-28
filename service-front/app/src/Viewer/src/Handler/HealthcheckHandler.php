@@ -8,8 +8,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\JsonResponse;
+use GuzzleHttp\Psr7\Request;
 use Http\Client\HttpClient;
-use Zend\Diactoros\Request;
 
 /**
  * Class HealthcheckHandler
@@ -46,10 +46,15 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     protected function checkApiEndpoint() : array
     {
-        $apiRequest = new Request("http://api-web/healthcheck");
+        $request = new Request('GET', 'http://api-web/healthcheck');
 
-        $response = $this->httpClient->sendRequest($apiRequest);
+        $start = microtime(true);
+        $response = $this->httpClient->sendRequest($request);
+        $time = microtime(true) - $start;
 
-        return json_decode($response->getBody()->getContents(), true);
+        $data = json_decode($response->getBody()->getContents(), true);
+        $data['response_time'] = round($time, 3);
+
+        return $data;
     }
 }
