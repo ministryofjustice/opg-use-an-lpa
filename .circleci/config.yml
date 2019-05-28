@@ -323,7 +323,7 @@ orbs:
               command: |
                 terraform --version
                 cd terraform_shared
-                terraform init
+                terraform init -lock-timeout=300s
                 export TF_WORKSPACE=development >> $BASH_ENV
                 echo $TF_WORKSPACE
                 terraform validate
@@ -334,7 +334,7 @@ orbs:
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
                 cd terraform_environment
-                terraform init
+                terraform init -lock-timeout=300s
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
                 terraform validate -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
@@ -358,8 +358,8 @@ orbs:
               name: Apply Shared Terraform
               command: |
                 cd terraform_shared
-                terraform init
-                terraform apply --auto-approve
+                terraform init -lock-timeout=300s
+                terraform apply -lock-timeout=300s --auto-approve
       apply_environment_terraform:
         #
         # Apply the environment terraform configuration. This:
@@ -381,17 +381,17 @@ orbs:
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
                 cd terraform_environment
-                terraform init
+                terraform init -lock-timeout=300s
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
-                terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
+                terraform apply -lock-timeout=300s --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
                 mv cluster_config.json /tmp/
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   echo "Your environment, ${ENV_NAME:0:13} is built."
                   echo "To destroy this environment"
                   echo
                   echo "cd terraform_environment"
-                  echo "aws-vault exec identity -- terraform init"
+                  echo "aws-vault exec identity -- terraform init -lock-timeout=300s"
                   echo "aws-vault exec identity -- terraform workspace select ${ENV_NAME:0:13}"
                   echo "aws-vault exec identity -- terraform destroy"
                 fi
@@ -420,7 +420,7 @@ orbs:
                 echo $TF_WORKSPACE
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   cd terraform_environment
-                  terraform init
+                  terraform init -lock-timeout=300s
                   export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                   echo $TF_WORKSPACE
                   terraform destroy -auto-approve
