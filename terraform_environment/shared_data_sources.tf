@@ -75,3 +75,6 @@ data "aws_ecr_repository" "use_an_lpa_api_web" {
   name     = "use_an_lpa/api_web"
 }
 
+module "whitelist" {
+  source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-whitelist.git"
+}
