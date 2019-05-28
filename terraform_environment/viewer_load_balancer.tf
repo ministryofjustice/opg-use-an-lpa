@@ -58,7 +58,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress" {
   security_group_id = "${aws_security_group.viewer_loadbalancer.id}"
 }
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress_production" {
-  count             = "${terraform.workspace == production ? 1 : 0}"
+  count             = "${terraform.workspace == "production" ? 1 : 0}"
   type              = "ingress"
   from_port         = 443
   to_port           = 443
