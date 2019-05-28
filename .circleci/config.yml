@@ -322,24 +322,21 @@ orbs:
               name: Lint Shared Terraform
               command: |
                 terraform --version
-                ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
-                echo $TF_WORKSPACE
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                echo $SHORT_HASH
                 cd terraform_shared
                 terraform init
+                export TF_WORKSPACE=development >> $BASH_ENV
+                echo $TF_WORKSPACE
                 terraform validate
           - run:
               name: Lint Environment Terraform
               command: |
                 ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
-                echo $TF_WORKSPACE
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
                 cd terraform_environment
                 terraform init
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
                 terraform validate -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
 
       apply_shared_terraform:
@@ -381,14 +378,14 @@ orbs:
               name: Apply Environment Terraform
               command: |
                 ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
-                echo $TF_WORKSPACE
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
                 cd terraform_environment
                 terraform init
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
                 terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
-                mv viewer_task_config.json /tmp/viewer_task_config.json
+                mv cluster_config.json /tmp/
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   echo "Your environment, ${ENV_NAME:0:13} is built."
                   echo "To destroy this environment"
@@ -401,7 +398,7 @@ orbs:
           - persist_to_workspace:
               root: /tmp
               paths:
-                - viewer_task_config.json
+                - cluster_config.json
 
       destroy_dev_environment:
         #
@@ -424,9 +421,10 @@ orbs:
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   cd terraform_environment
                   terraform init
+                  export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                  echo $TF_WORKSPACE
                   terraform destroy -auto-approve
                 fi
-
       run_behave_suite:
         #
         # Run the full set of functional tests
@@ -443,13 +441,13 @@ orbs:
           - attach_workspace:
               at: /tmp
           - run:
-              name: Install Behave
-              command: sudo pip3 install behave selenium --upgrade
-          - run:
-              name: Wait for new task to be running
+              name: Wait for new tasks in services to be running
               command: |
                 sudo pip3 install boto3 -q
-                python features/aws_ecs_task.py /tmp/viewer_task_config.json
+                python features/aws_ecs_task.py /tmp/cluster_config.json
+          - run:
+              name: Install Behave
+              command: sudo pip3 install behave selenium --upgrade
           - run:
               name: Run suite
               command: |
