@@ -7,10 +7,6 @@ namespace Viewer;
 use Aws;
 use Http;
 use Zend;
-use Symfony;
-
-use function realpath;
-use function dirname;
 
 /**
  * The configuration provider for the App module
