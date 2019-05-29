@@ -40,6 +40,11 @@ class ConfigProvider
                 Aws\DynamoDb\DynamoDbClient::class => Service\Aws\DynamoDbClientFactory::class,
 
             ],
+            'delegators' => [
+                Zend\Stratigility\Middleware\ErrorHandler::class => [
+                    Service\Log\LogStderrListenerDelegatorFactory::class,
+                ],
+            ],
         ];
     }
 }
