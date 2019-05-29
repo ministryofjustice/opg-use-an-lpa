@@ -46,13 +46,20 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     protected function checkApiEndpoint() : array
     {
+        $data = [
+            'healthy' => false
+        ];
+
         $request = new Request('GET', 'http://api-web/healthcheck');
 
         $start = microtime(true);
         $response = $this->httpClient->sendRequest($request);
         $time = microtime(true) - $start;
 
-        $data = json_decode($response->getBody()->getContents(), true);
+        if (round($response->getStatusCode(), -2) == 200) {
+            $data = json_decode($response->getBody()->getContents(), true);
+        }
+
         $data['response_time'] = round($time, 3);
 
         return $data;

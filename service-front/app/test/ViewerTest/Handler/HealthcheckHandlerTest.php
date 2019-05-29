@@ -16,13 +16,15 @@ use Psr\Http\Message\StreamInterface;
 
 class HealthcheckHandlerTest extends TestCase
 {
-    protected function apiHealthcheckResponse(string $response) : HttpClient
+    protected function apiHealthcheckResponse(int $status = 200, string $response) : HttpClient
     {
         $bodyProphecy = $this->prophesize(StreamInterface::class);
         $bodyProphecy->getContents()
             ->willReturn($response);
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
+        $responseProphecy->getStatusCode()
+            ->willReturn($status);
         $responseProphecy->getBody()
             ->willReturn($bodyProphecy->reveal());
 
@@ -40,10 +42,10 @@ class HealthcheckHandlerTest extends TestCase
     /**
      * @dataProvider responseDataProvider
      */
-    public function testReturnsJsonResponse(string $response)
+    public function testReturnsExpectedJsonResponse(int $status, string $response)
     {
         //  Set up the handler
-        $handler = new HealthcheckHandler($this->apiHealthcheckResponse($response));
+        $handler = new HealthcheckHandler($this->apiHealthcheckResponse($status, $response));
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
@@ -80,7 +82,7 @@ class HealthcheckHandlerTest extends TestCase
         ];
 
         return [
-            [ json_encode($allHealthyResponse) ]
+            [ 200, json_encode($allHealthyResponse) ]
         ];
     }
 }
