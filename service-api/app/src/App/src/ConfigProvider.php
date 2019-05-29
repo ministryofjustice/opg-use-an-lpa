@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use Aws;
+use Http;
 
 /**
  * The configuration provider for the App module
@@ -33,13 +34,15 @@ class ConfigProvider
     public function getDependencies() : array
     {
         return [
+            'aliases' => [
+                Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
+            ],
 
             'factories'  => [
-
                 // Services
                 Aws\DynamoDb\DynamoDbClient::class => Service\Aws\DynamoDbClientFactory::class,
-
             ],
+            
             'delegators' => [
                 Zend\Stratigility\Middleware\ErrorHandler::class => [
                     Service\Log\LogStderrListenerDelegatorFactory::class,

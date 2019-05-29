@@ -8,13 +8,21 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\JsonResponse;
+use Http\Client\HttpClient;
 
 /**
  * Class HealthcheckHandler
- * @package Viewer\Handler
+ * @package App\Handler
  */
 class HealthcheckHandler implements RequestHandlerInterface
 {
+    protected $httpClient;
+
+    public function __construct(HttpClient $http)
+    {
+        $this->httpClient = $http;
+    }
+
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
@@ -32,14 +40,16 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     protected function isHealthy() : bool
     {
+        // TODO actual checks that verify service health
         return true;
     }
 
     protected function checkApiEndpoint() : array
     {
+        // TODO actual checks of Sirius API gateway
         return [
-            "healthy" => true,
-            "version" => "dev"
+            'healthy' => true,
+            'response_time' => 0.235
         ];
     }
 }

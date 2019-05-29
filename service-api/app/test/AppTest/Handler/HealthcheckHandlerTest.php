@@ -58,9 +58,9 @@ class HealthcheckHandlerTest extends TestCase
         $this->assertObjectHasAttribute('dependencies', $json);
 
         $dependencies = $json->dependencies;
-        $this->assertObjectHasAttribute('sirius_api', $dependencies);
+        $this->assertObjectHasAttribute('api_gateway', $dependencies);
 
-        $api = $dependencies->sirius_api;
+        $api = $dependencies->api_gateway;
         $this->assertObjectHasAttribute('healthy', $api);
     }
 
@@ -73,7 +73,7 @@ class HealthcheckHandlerTest extends TestCase
             'healthy' => true,
             'version' => 'dev',
             'dependencies' => [
-                'sirius_api' => [
+                'api_gateway' => [
                     'healthy' => true,
                     'version' => 'dev'
                 ]
