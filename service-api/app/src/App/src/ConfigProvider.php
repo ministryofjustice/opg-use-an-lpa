@@ -6,6 +6,7 @@ namespace App;
 
 use Aws;
 use Http;
+use Psr;
 
 /**
  * The configuration provider for the App module
@@ -35,6 +36,7 @@ class ConfigProvider
     {
         return [
             'aliases' => [
+                Psr\Http\Client\ClientInterface::class => Http\Adapter\Guzzle6\Client::class,
                 Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
             ],
 

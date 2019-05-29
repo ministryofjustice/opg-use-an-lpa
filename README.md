@@ -14,7 +14,7 @@ docker-compose up
 
 If you plan on developing the application you should also enable development mode.
 ```bash
-docker-compose run viewer-composer composer development-enable
+docker-compose run front-composer composer development-enable
 docker-compose exec viewer-app rm -f /tmp/config-cache.php
 ```
 
@@ -50,15 +50,17 @@ Composer install is run when the app container is built, and on a standard `dock
 
 It can also be run independently with:
 ```bash
-docker-compose run viewer-composer
+docker-compose run front-composer
 ```
 
 New packages can be added with:
 ```bash
-docker-compose run viewer-composer composer require author/package
+docker-compose run api-composer composer require author/package
+docker-compose run front-composer composer require author/package
 ```
 
 Packages can be removed with:
 ```bash
-docker-compose run viewer-composer composer remove author/package
+docker-compose run api-composer composer remove author/package
+docker-compose run front-composer composer remove author/package
 ```

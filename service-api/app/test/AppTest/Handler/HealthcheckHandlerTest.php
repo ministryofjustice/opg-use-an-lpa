@@ -44,6 +44,10 @@ class HealthcheckHandlerTest extends TestCase
      */
     public function testReturnsExpectedJsonResponse(int $status, string $response)
     {
+        $this->markTestIncomplete(
+            'This test needs finishing once we know what we want back from the Gateway'
+        );
+
         //  Set up the handler
         $handler = new HealthcheckHandler($this->apiHealthcheckResponse($status, $response));
 

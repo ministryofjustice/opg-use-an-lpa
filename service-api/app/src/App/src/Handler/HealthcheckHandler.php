@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use Aws\Credentials\CredentialProvider;
+use Aws\Signature\SignatureV4;
+use Exception;
+use GuzzleHttp\Psr7\Request as HttpRequest;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\JsonResponse;
-use Http\Client\HttpClient;
+use Psr\Http\Client\ClientInterface;
 
 /**
  * Class HealthcheckHandler
@@ -18,7 +22,7 @@ class HealthcheckHandler implements RequestHandlerInterface
 {
     protected $httpClient;
 
-    public function __construct(HttpClient $http)
+    public function __construct(ClientInterface $http)
     {
         $this->httpClient = $http;
     }
@@ -46,10 +50,25 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     protected function checkApiEndpoint() : array
     {
-        // TODO actual checks of Sirius API gateway
+        $request = new HttpRequest('GET', 'https://api.dev.sirius.opg.digital/v1/use-an-lpa/lpas/700000000000');
+        $provider = CredentialProvider::defaultProvider();
+        $s4 = new SignatureV4('execute-api', 'eu-west-1');
+        $signed_request = $s4->signRequest($request, $provider()->wait());
+
+        try {
+            $response = $this->httpClient->sendRequest($signed_request);
+
+            return [
+                'healthy' => $response->getStatusCode() == 404,
+                'code' => $response->getStatusCode(),
+                'message' => (string)$response->getBody()
+            ];
+
+        } catch (Exception $e) {
+        }
+
         return [
-            'healthy' => true,
-            'response_time' => 0.235
+            'healthy' => false,
         ];
     }
 }
