@@ -50,7 +50,7 @@ class HealthcheckHandler implements RequestHandlerInterface
             'healthy' => false
         ];
 
-        $request = new Request('GET', 'http://api-web/healthcheck');
+        $request = new Request('GET', getenv('API_SERVICE_URL').'/healthcheck');
 
         $start = microtime(true);
         $response = $this->httpClient->sendRequest($request);
