@@ -5,6 +5,15 @@ import json
 import os
 import pprint
 
+
+class andrew_aws:
+
+    def read_parameters_from_file(self, config_file):
+        with open(config_file) as json_file:
+            parameters = json.load(json_file)
+            return parameters['account_id']
+
+
 parser = argparse.ArgumentParser(
     description='Open or close stack security groups.')
 parser.add_argument("config_file_path", type=str,
@@ -151,3 +160,14 @@ def modify_ci_ingress(account_id, ingress_cidr):
 account_id = read_parameters_from_file(args.config_file_path)['account_id']
 ingress_cidr = get_ip_addresses()
 modify_ci_ingress(account_id, ingress_cidr)
+
+
+def main():
+    work = andrew_aws()
+    account_id = work.read_parameters_from_file(args.config_file_path)
+    ingress_cidr = get_ip_addresses()
+    modify_ci_ingress(account_id, ingress_cidr)
+
+
+if __name__ == "__main__":
+    main()
