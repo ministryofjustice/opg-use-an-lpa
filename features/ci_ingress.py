@@ -150,5 +150,4 @@ def modify_ci_ingress(account_id, ingress_cidr):
 
 account_id = read_parameters_from_file(args.config_file_path)['account_id']
 ingress_cidr = get_ip_addresses()
-ingress_cidr = "0.0.0.0/0"
 modify_ci_ingress(account_id, ingress_cidr)
