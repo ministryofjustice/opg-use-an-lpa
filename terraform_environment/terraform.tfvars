@@ -14,4 +14,9 @@
         "preproduction": "false",
         "production": "true"
     },
+    "sirius_account_ids": {
+        "development": "288342028542",
+        "preproduction": "649098267436",
+        "production": "649098267436"
+    },
 }

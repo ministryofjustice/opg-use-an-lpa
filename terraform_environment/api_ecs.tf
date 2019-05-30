@@ -146,7 +146,7 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:ManageConnections"
     ]
 
-    resources = ["arn:aws:execute-api:*:*:*"]
+    resources = ["arn:aws:execute-api:eu-west-1:${local.sirius_account_id}:*/*/GET/use-an-lpa/*"]
   }
 }
 
