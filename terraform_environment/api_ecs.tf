@@ -134,16 +134,10 @@ data "aws_iam_policy_document" "api_permissions_role" {
     resources = ["${aws_dynamodb_table.viewer_codes_table.arn}"]
   }
   statement {
-    /*
-      Initially overerly permissiove until we prove the concept works
-      TODO: Restrict access to the specific Gateway
-    */
-
     effect = "Allow"
 
     actions = [
-      "execute-api:Invoke",
-      "execute-api:ManageConnections"
+      "execute-api:Invoke"
     ]
 
     resources = ["arn:aws:execute-api:eu-west-1:${local.sirius_account_id}:*/*/GET/use-an-lpa/*"]
