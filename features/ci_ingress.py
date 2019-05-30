@@ -3,7 +3,6 @@ import boto3
 import argparse
 import json
 import os
-import pprint
 
 
 class task_setup:
@@ -89,7 +88,6 @@ class task_setup:
                         self.verify_ingress_rule_removed(sg_name)
                     except Exception as e:
                         print(e)
-                        print("unable to remove security group rule")
                         exit(1)
 
     def verify_ingress_rule_removed(self, sg_name):
@@ -115,7 +113,6 @@ class task_setup:
 
     def add_ci_ingress_rule_to_sg(self, ingress_cidr):
         self.clear_all_ci_ingress_rule_from_sg()
-        print(ingress_cidr)
         try:
             for sg_name in self.security_groups:
                 print("Adding SG rule to " + sg_name)
@@ -138,27 +135,24 @@ class task_setup:
                 self.verify_ingress_rule_added(sg_name)
         except Exception as e:
             print(e)
-            print("on add")
-            print("unable to open security group, possibly already open")
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Open or close stack security groups.')
+        description="Add or remove your host's IP address to the viewer and actor loadbalancer ingress rules.")
 
     parser.add_argument("config_file_path", type=str,
                         help="Path to config file produced by terraform")
-    parser.add_argument('--open', dest='action_flag', action='store_const',
+    parser.add_argument('--add', dest='action_flag', action='store_const',
                         const=True, default=False,
-                        help='open security group (default: close security group)')
+                        help='add host IP address to security group ci ingress rule (default: remove all ci ingress rules)')
 
     args = parser.parse_args()
-    pp = pprint.PrettyPrinter(indent=4)
 
     work = task_setup(args.config_file_path)
     ingress_cidr = work.get_ip_addresses()
     if args.action_flag:
-        work.add_ci_ingress_rule_to_sg("0.0.0.0/0")
+        work.add_ci_ingress_rule_to_sg(ingress_cidr)
     else:
         work.clear_all_ci_ingress_rule_from_sg()
 
