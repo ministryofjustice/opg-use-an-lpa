@@ -450,7 +450,10 @@ orbs:
               command: sudo pip3 install behave selenium --upgrade
           - run:
               name: Allow CircleCI ingress to environment
-              command: python features/ci_ingress.py /tmp/cluster_config.json --open
+              command: |
+                python --version
+                python3 --version
+                python features/ci_ingress.py /tmp/cluster_config.json --open
           - run:
               name: Run suite
               command: |
