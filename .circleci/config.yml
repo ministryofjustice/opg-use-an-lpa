@@ -451,8 +451,9 @@ orbs:
           - run:
               name: Allow CircleCI ingress to environment
               command: |
-                python --version
-                python3 --version
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
                 python features/ci_ingress.py /tmp/cluster_config.json --open
           - run:
               name: Run suite
@@ -465,5 +466,9 @@ orbs:
                 behave
           - run:
               name: Remove CircleCI ingress to environment
-              command: python features/ci_ingress.py /tmp/cluster_config.json
+              command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                python features/ci_ingress.py /tmp/cluster_config.json
               when: always
