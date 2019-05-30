@@ -53,14 +53,17 @@ class HealthcheckHandler implements RequestHandlerInterface
         $request = new Request('GET', getenv('API_SERVICE_URL').'/healthcheck');
 
         $start = microtime(true);
-        $response = $this->httpClient->sendRequest($request);
-        $time = microtime(true) - $start;
 
-        if (round($response->getStatusCode(), -2) == 200) {
-            $data = json_decode($response->getBody()->getContents(), true);
+        try {
+            $response = $this->httpClient->sendRequest($request);
+
+            if (round($response->getStatusCode(), -2) == 200) {
+                $data = json_decode($response->getBody()->getContents(), true);
+            }
+        } catch (\Exception $e) {
         }
 
-        $data['response_time'] = round($time, 3);
+        $data['response_time'] = round(microtime(true) - $start, 3);
 
         return $data;
     }
