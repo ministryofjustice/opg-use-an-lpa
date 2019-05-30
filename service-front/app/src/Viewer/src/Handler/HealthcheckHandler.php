@@ -8,8 +8,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\JsonResponse;
-use GuzzleHttp\Psr7\Request;
-use Http\Client\HttpClient;
+use GuzzleHttp\Psr7\Request as HttpRequest;
+use \Exception;
+use Viewer\Service\ApiClient\Client as ApiClient;
 
 /**
  * Class HealthcheckHandler
@@ -17,11 +18,20 @@ use Http\Client\HttpClient;
  */
 class HealthcheckHandler implements RequestHandlerInterface
 {
-    protected $httpClient;
+    /**
+     * @var Client
+     */
+    protected $apiClient;
 
-    public function __construct(HttpClient $http)
+    /**
+     * @var string
+     */
+    protected $version;
+
+    public function __construct(string $version, ApiClient $api)
     {
-        $this->httpClient = $http;
+        $this->apiClient = $api;
+        $this->version = $version;
     }
 
     /**
@@ -32,7 +42,7 @@ class HealthcheckHandler implements RequestHandlerInterface
     {
         return new JsonResponse([
             "healthy" => $this->isHealthy(),
-            "version" => getenv("CONTAINER_VERSION") ? getenv("CONTAINER_VERSION") : "dev",
+            "version" => $this->version,
             "dependencies" => [
                 "api" => $this->checkApiEndpoint()
             ]
@@ -46,21 +56,14 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     protected function checkApiEndpoint() : array
     {
-        $data = [
-            'healthy' => false
-        ];
-
-        $request = new Request('GET', getenv('API_SERVICE_URL').'/healthcheck');
+        $data = [];
 
         $start = microtime(true);
 
         try {
-            $response = $this->httpClient->sendRequest($request);
-
-            if (round($response->getStatusCode(), -2) == 200) {
-                $data = json_decode($response->getBody()->getContents(), true);
-            }
-        } catch (\Exception $e) {
+            $data = $this->apiClient->httpGet('/healthcheck');
+        } catch (Exception $e) {
+            $data['healthy'] = false;
         }
 
         $data['response_time'] = round(microtime(true) - $start, 3);
