@@ -1,3 +1,4 @@
+import urllib.request
 import boto3
 import argparse
 import json
@@ -6,20 +7,20 @@ import pprint
 
 parser = argparse.ArgumentParser(
     description='Open or close stack security groups.')
-
+parser.add_argument("config_file_path", type=str,
+                    help="Path to config file produced by terraform")
 parser.add_argument('--open', dest='action_flag', action='store_const',
-                    const="open", default="close",
+                    const=True, default=False,
                     help='open security group (default: close security group)')
-parser.add_argument('--ingress-cidr', dest='ingress_cidr',
-                    help="ci ip address in cidr format")
-
 
 args = parser.parse_args()
-if args.action_flag == "open" and (args.ingress_cidr is None):
-    parser.error("--open requires --ingress-cidr.")
-print(args.action_flag)
-
 pp = pprint.PrettyPrinter(indent=4)
+
+
+def get_ip_addresses():
+    host_public_cidr = urllib.request.urlopen(
+        'http://checkip.amazonaws.com').read().decode('utf8').rstrip() + "/32"
+    return host_public_cidr
 
 
 def read_parameters_from_file(config_file):
@@ -46,15 +47,16 @@ def set_iam_role_session(account_id):
     return session
 
 
-def allow_ci_ingress(ingress_cidr):
-    session = set_iam_role_session("367815980639")
+def allow_ci_ingress(account_id, ingress_cidr):
+    workspace = os.getenv('TF_WORKSPACE')
+    security_groups = ["-actor-loadbalancer", "-viewer-loadbalancer"]
+    session = set_iam_role_session(account_id)
     aws_access_key_id = \
         session['Credentials']['AccessKeyId']
     aws_secret_access_key = \
         session['Credentials']['SecretAccessKey']
     aws_session_token = \
         session['Credentials']['SessionToken']
-
     ec2 = boto3.client(
         'ec2',
         region_name='eu-west-1',
@@ -63,15 +65,10 @@ def allow_ci_ingress(ingress_cidr):
         aws_session_token=aws_session_token
     )
 
-    workspace = os.getenv('TF_WORKSPACE')
-
-    security_groups = ["-actor-loadbalancer", "-viewer-loadbalancer"]
     for sg_name in security_groups:
-        if args.action_flag == "open":
+        if args.action_flag:
             try:
                 print("Adding SG rule to " + workspace + sg_name)
-                # cidr_range = "255.155.255.255/32"
-                cidr_range = ingress_cidr
                 response = ec2.authorize_security_group_ingress(
                     GroupName=workspace + sg_name,
                     IpPermissions=[
@@ -80,7 +77,7 @@ def allow_ci_ingress(ingress_cidr):
                             'IpProtocol': 'tcp',
                             'IpRanges': [
                                 {
-                                    'CidrIp': cidr_range,
+                                    'CidrIp': ingress_cidr,
                                     'Description': 'ci ingress'
                                 },
                             ],
@@ -88,27 +85,25 @@ def allow_ci_ingress(ingress_cidr):
                         },
                     ],
                 )
-                status = ec2.describe_security_groups(
+                sg = ec2.describe_security_groups(
                     GroupNames=[
                         workspace + sg_name,
                     ],
                 )
-                if 'ci ingress' in status['SecurityGroups'][0]['IpPermissions'][0]['IpRanges'][-1]['Description']:
-                    print("Added security group ingress rule " + str(status['SecurityGroups'][0]['IpPermissions']
+                if 'ci ingress' in sg['SecurityGroups'][0]['IpPermissions'][0]['IpRanges'][-1]['Description']:
+                    print("Added security group ingress rule " + str(sg['SecurityGroups'][0]['IpPermissions']
                                                                      [0]['IpRanges'][-1]))
             except:
                 print("unable to open security group, possibly already open")
-        if args.action_flag == "close":
-            sg = ec2.describe_security_groups(
-
+        if not args.action_flag:
+            sg_rules = ec2.describe_security_groups(
                 GroupNames=[
                     workspace + sg_name,
                 ],
-            )
-            sg_rules = sg['SecurityGroups'][0]['IpPermissions'][0]['IpRanges']
+            )['SecurityGroups'][0]['IpPermissions'][0]['IpRanges']
             for i in sg_rules:
                 if 'Description' in i and (i['Description']) == "ci ingress":
-                    remove_cidr_range = i['CidrIp']
+                    cidr_range_to_remove = i['CidrIp']
                     print("found security group ingress rule " + str(i))
                     try:
                         print("Removing security group ingress rule from " +
@@ -121,7 +116,7 @@ def allow_ci_ingress(ingress_cidr):
                                     'IpProtocol': 'tcp',
                                     'IpRanges': [
                                         {
-                                            'CidrIp': remove_cidr_range,
+                                            'CidrIp': cidr_range_to_remove,
                                             'Description': 'ci ingress'
                                         },
                                     ],
@@ -129,17 +124,19 @@ def allow_ci_ingress(ingress_cidr):
                                 },
                             ],
                         )
-                        for i in sg:
+                        sg_rules = ec2.describe_security_groups(
+                            GroupNames=[
+                                workspace + sg_name,
+                            ],
+                        )['SecurityGroups'][0]['IpPermissions'][0]['IpRanges']
+                        for i in sg_rules:
                             if 'Description' in i and (i['Description']) == "ci ingress":
-                                print("unable to close security group")
+                                print("unable to close security group" + str(i))
                                 exit(1)
-                        print("ci ingress removed from security group " +
-                              workspace + sg_name)
                     except:
                         print("unable to close security group")
 
 
-# allow_ci_ingress(args.config_file_path)
-
-
-allow_ci_ingress(args.ingress_cidr)
+account_id = read_parameters_from_file(args.config_file_path)['account_id']
+ingress_cidr = get_ip_addresses()
+allow_ci_ingress(account_id, ingress_cidr)
