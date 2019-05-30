@@ -47,24 +47,24 @@ def set_iam_role_session(account_id):
     return session
 
 
-def get_security_group(client, workspace, sg_name):
+def get_security_group(client, sg_name):
     return client.describe_security_groups(
         GroupNames=[
-            workspace + sg_name,
+            sg_name,
         ],
     )
 
 
-def remove_ci_ingress_rule_from_sg(client, workspace, sg_name, sg_rules):
-    for i in sg_rules:
-        if 'Description' in i and (i['Description']) == "ci ingress":
-            cidr_range_to_remove = i['CidrIp']
-            print("found security group ingress rule " + str(i))
+def remove_ci_ingress_rule_from_sg(client, sg_name, sg_rules):
+    for sg_rule in sg_rules:
+        if 'Description' in sg_rule and sg_rule['Description'] == "ci ingress":
+            cidr_range_to_remove = sg_rule['CidrIp']
+            print("found security group ingress rule " + str(sg_rule))
             try:
                 print("Removing security group ingress rule from " +
-                      workspace + sg_name)
-                response = client.revoke_security_group_ingress(
-                    GroupName=workspace + sg_name,
+                      sg_name)
+                client.revoke_security_group_ingress(
+                    GroupName=sg_name,
                     IpPermissions=[
                         {
                             'FromPort': 443,
@@ -80,22 +80,25 @@ def remove_ci_ingress_rule_from_sg(client, workspace, sg_name, sg_rules):
                     ],
                 )
 
-                sg_rules = get_security_group(client, workspace, sg_name)[
+                # Verify sg rule has been removed
+                # by looking up security group details again
+                sg_rules = get_security_group(client, sg_name)[
                     'SecurityGroups'][0]['IpPermissions'][0]['IpRanges']
 
                 for sg_rule in sg_rules:
-                    if 'Description' in sg_rule and (i['Description']) == "ci ingress":
+                    if 'Description' in sg_rule and sg_rule[
+                            'Description'] == "ci ingress":
                         print("unable to remove security group rule" + str(sg_rule))
                         exit(1)
             except:
-                print("unable to close security group")
+                print("unable to remove security group rule")
 
 
-def add_ci_ingress_rule_to_sg(client, workspace, sg_name, ingress_cidr):
+def add_ci_ingress_rule_to_sg(client, sg_name, ingress_cidr):
     try:
-        print("Adding SG rule to " + workspace + sg_name)
-        response = client.authorize_security_group_ingress(
-            GroupName=workspace + sg_name,
+        print("Adding SG rule to " + sg_name)
+        client.authorize_security_group_ingress(
+            GroupName=sg_name,
             IpPermissions=[
                 {
                     'FromPort': 443,
@@ -110,19 +113,22 @@ def add_ci_ingress_rule_to_sg(client, workspace, sg_name, ingress_cidr):
                 },
             ],
         )
-        sg = get_security_group(client, workspace, sg_name)
+        sg = get_security_group(client, sg_name)
 
         if 'ci ingress' in sg['SecurityGroups'][0][
                 'IpPermissions'][0]['IpRanges'][-1]['Description']:
-            print("Added security group ingress rule " + str(sg['SecurityGroups'][0]['IpPermissions']
-                                                             [0]['IpRanges'][-1]))
+            sg_rule = str(sg['SecurityGroups'][0]['IpPermissions']
+                                              [0]['IpRanges'][-1])
+            print("Added ingress rule {} to {}".format(
+                sg_rule, sg_name))
     except:
         print("unable to open security group, possibly already open")
 
 
 def modify_ci_ingress(account_id, ingress_cidr):
     workspace = os.getenv('TF_WORKSPACE')
-    security_groups = ["-actor-loadbalancer", "-viewer-loadbalancer"]
+    security_groups = [workspace+"-actor-loadbalancer",
+                       workspace+"-viewer-loadbalancer"]
     session = set_iam_role_session(account_id)
     ec2 = boto3.client(
         'ec2',
@@ -133,16 +139,13 @@ def modify_ci_ingress(account_id, ingress_cidr):
     )
 
     for sg_name in security_groups:
+        sg_rules = get_security_group(ec2, sg_name)[
+            'SecurityGroups'][0]['IpPermissions'][0]['IpRanges']
+
+        remove_ci_ingress_rule_from_sg(
+            ec2, sg_name, sg_rules)
         if args.action_flag:
-            add_ci_ingress_rule_to_sg(ec2, workspace, sg_name, ingress_cidr)
-
-        if not args.action_flag:
-
-            sg_rules = get_security_group(ec2, workspace, sg_name)[
-                'SecurityGroups'][0]['IpPermissions'][0]['IpRanges']
-
-            remove_ci_ingress_rule_from_sg(
-                ec2, workspace, sg_name, sg_rules)
+            add_ci_ingress_rule_to_sg(ec2, sg_name, ingress_cidr)
 
 
 account_id = read_parameters_from_file(args.config_file_path)['account_id']
