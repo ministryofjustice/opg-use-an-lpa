@@ -127,8 +127,8 @@ def add_ci_ingress_rule_to_sg(client, sg_name, ingress_cidr):
 
 def modify_ci_ingress(account_id, ingress_cidr):
     workspace = os.getenv('TF_WORKSPACE')
-    security_groups = [workspace+"-actor-loadbalancer",
-                       workspace+"-viewer-loadbalancer"]
+    security_groups = [str(workspace) + "-actor-loadbalancer",
+                       str(workspace) + "-viewer-loadbalancer"]
     session = set_iam_role_session(account_id)
     ec2 = boto3.client(
         'ec2',
