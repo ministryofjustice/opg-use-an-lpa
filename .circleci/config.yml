@@ -445,7 +445,10 @@ orbs:
                 ENV_NAME=<<parameters.workspace>>
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
-                python features/ci_ingress.py /tmp/cluster_config.json --add
+                if [ "${$TF_WORKSPACE}" != "production" ]; then
+                  # don't modify ingress if production
+                  python features/ci_ingress.py /tmp/cluster_config.json --add
+                
           - run:
               name: Run suite
               command: |
