@@ -58,7 +58,7 @@ class IngressManager:
             ],
         )
 
-    def clear_all_ci_ingress_rule_from_sg(self):
+    def clear_all_ci_ingress_rules_from_sg(self):
         for sg_name in self.security_groups:
             sg_rules = self.get_security_group(sg_name)[
                 'SecurityGroups'][0]['IpPermissions'][0]['IpRanges']
@@ -85,34 +85,26 @@ class IngressManager:
                                 },
                             ],
                         )
-                        self.verify_ingress_rule_removed(sg_name)
+                        if self.verify_ingress_rule(sg_name):
+                            print(
+                                "Verify: Found security group rule that should have been removed from " + str(sg_name))
+                            exit(1)
                     except Exception as e:
                         print(e)
                         exit(1)
 
-    def verify_ingress_rule_removed(self, sg_name):
+    def verify_ingress_rule(self, sg_name):
         sg_rules = self.get_security_group(sg_name)[
             'SecurityGroups'][0]['IpPermissions'][0]['IpRanges']
 
         for sg_rule in sg_rules:
             if 'Description' in sg_rule and sg_rule[
                     'Description'] == "ci ingress":
-                print(
-                    "Verify: Found security group rule that should have been removed: " + str(sg_rule))
-                exit(1)
-
-    def verify_ingress_rule_added(self, sg_name):
-        sg = self.get_security_group(sg_name)
-
-        if 'ci ingress' in sg['SecurityGroups'][0][
-                'IpPermissions'][0]['IpRanges'][-1]['Description']:
-            sg_rule = str(sg['SecurityGroups'][0]['IpPermissions']
-                          [0]['IpRanges'][-1])
-            print("Added ingress rule {} to {}".format(
-                sg_rule, sg_name))
+                print(sg_rule)
+                return True
 
     def add_ci_ingress_rule_to_sg(self, ingress_cidr):
-        self.clear_all_ci_ingress_rule_from_sg()
+        self.clear_all_ci_ingress_rules_from_sg()
         try:
             for sg_name in self.security_groups:
                 print("Adding SG rule to " + sg_name)
@@ -132,7 +124,8 @@ class IngressManager:
                         },
                     ],
                 )
-                self.verify_ingress_rule_added(sg_name)
+                if self.verify_ingress_rule(sg_name):
+                    print("Added ingress rule to " + str(sg_name))
         except Exception as e:
             print(e)
 
@@ -154,7 +147,7 @@ def main():
     if args.action_flag:
         work.add_ci_ingress_rule_to_sg(ingress_cidr)
     else:
-        work.clear_all_ci_ingress_rule_from_sg()
+        work.clear_all_ci_ingress_rules_from_sg()
 
 
 if __name__ == "__main__":
