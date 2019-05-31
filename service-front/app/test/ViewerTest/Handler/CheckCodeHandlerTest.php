@@ -77,7 +77,7 @@ class CheckCodeHandlerTest extends TestCase
         // Return null. i.e. code not found.
         $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE)->willReturn(null);
 
-        $this->templateRendererProphecy->render('app::check-code-not-found', Argument::any())->willReturn('');
+        $this->templateRendererProphecy->render('viewer::check-code-not-found', Argument::any())->willReturn('');
 
         //---
 
@@ -107,7 +107,7 @@ class CheckCodeHandlerTest extends TestCase
 
         //---
 
-        $this->templateRendererProphecy->render('app::check-code-found',
+        $this->templateRendererProphecy->render('viewer::check-code-found',
             ['lpa' => $lpa]
         )->willReturn('');
 
