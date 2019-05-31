@@ -20,6 +20,6 @@ class HomePageHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        return new HtmlResponse($this->renderer->render('app::home-page'));
+        return new HtmlResponse($this->renderer->render('viewer::home-page'));
     }
 }
