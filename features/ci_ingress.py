@@ -5,7 +5,7 @@ import json
 import os
 
 
-class task_setup:
+class IngressManager:
     aws_account_id = ''
     aws_iam_session = ''
     aws_ec2_client = ''
@@ -48,7 +48,7 @@ class task_setup:
 
     def get_ip_addresses(self):
         host_public_cidr = urllib.request.urlopen(
-            'http://checkip.amazonaws.com').read().decode('utf8').rstrip() + "/32"
+            'https://checkip.amazonaws.com').read().decode('utf8').rstrip() + "/32"
         return host_public_cidr
 
     def get_security_group(self, sg_name):
@@ -149,7 +149,7 @@ def main():
 
     args = parser.parse_args()
 
-    work = task_setup(args.config_file_path)
+    work = IngressManager(args.config_file_path)
     ingress_cidr = work.get_ip_addresses()
     if args.action_flag:
         work.add_ci_ingress_rule_to_sg(ingress_cidr)
