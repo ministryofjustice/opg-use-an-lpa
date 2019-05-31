@@ -32,7 +32,7 @@ class IngressManager:
         if os.getenv('CI'):
             role_arn = 'arn:aws:iam::{}:role/ci'.format(self.aws_account_id)
         else:
-            role_arn = 'arn:aws:iam::{}:role/account-write'.format(
+            role_arn = 'arn:aws:iam::{}:role/account-read'.format(
                 self.aws_account_id)
 
         sts = boto3.client(
@@ -85,21 +85,23 @@ class IngressManager:
                                 },
                             ],
                         )
-                        self.verify_ingress_rule_removed(sg_name)
+                        if self.verify_ingress_rule(sg_name):
+                            print(
+                                "Verify: Found security group rule that should have been removed: " + str(sg_rule))
+                            exit(1)
                     except Exception as e:
                         print(e)
                         exit(1)
 
-    def verify_ingress_rule_removed(self, sg_name):
+    def verify_ingress_rule(self, sg_name):
         sg_rules = self.get_security_group(sg_name)[
             'SecurityGroups'][0]['IpPermissions'][0]['IpRanges']
 
         for sg_rule in sg_rules:
             if 'Description' in sg_rule and sg_rule[
                     'Description'] == "ci ingress":
-                print(
-                    "Verify: Found security group rule that should have been removed: " + str(sg_rule))
-                exit(1)
+                print(sg_rule)
+                return True
 
     def verify_ingress_rule_added(self, sg_name):
         sg = self.get_security_group(sg_name)
@@ -132,7 +134,9 @@ class IngressManager:
                         },
                     ],
                 )
-                self.verify_ingress_rule_added(sg_name)
+                if self.verify_ingress_rule(sg_name):
+                    print("Added ingress rule {} to {}".format(
+                        sg_name))
         except Exception as e:
             print(e)
 
