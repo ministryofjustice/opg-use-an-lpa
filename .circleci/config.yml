@@ -446,8 +446,8 @@ orbs:
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
                 if [ "${$TF_WORKSPACE}" != "production" ]; then
-                  # don't modify ingress if production
                   python features/ci_ingress.py /tmp/cluster_config.json --add
+                fi
                 
           - run:
               name: Run suite
