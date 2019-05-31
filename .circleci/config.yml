@@ -440,6 +440,16 @@ orbs:
               name: Install Behave
               command: sudo pip3 install behave selenium --upgrade
           - run:
+              name: Allow CircleCI ingress to environment
+              command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                if [ "${TF_WORKSPACE}" != "production" ]; then
+                  python features/ci_ingress.py /tmp/cluster_config.json --add
+                fi
+                
+          - run:
               name: Run suite
               command: |
                 ENV_NAME=<<parameters.workspace>>
@@ -448,3 +458,11 @@ orbs:
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
                 behave
+          - run:
+              name: Remove CircleCI ingress to environment
+              command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                python features/ci_ingress.py /tmp/cluster_config.json
+              when: always

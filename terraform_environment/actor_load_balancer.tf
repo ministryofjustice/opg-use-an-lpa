@@ -54,6 +54,15 @@ resource "aws_security_group_rule" "actor_loadbalancer_ingress" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
+  cidr_blocks       = "${module.whitelist.moj_sites}"
+  security_group_id = "${aws_security_group.actor_loadbalancer.id}"
+}
+resource "aws_security_group_rule" "actor_loadbalancer_ingress_production" {
+  count             = "${terraform.workspace == "production" ? 1 : 0}"
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.actor_loadbalancer.id}"
 }
