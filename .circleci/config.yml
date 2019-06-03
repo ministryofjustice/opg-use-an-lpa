@@ -327,12 +327,7 @@ orbs:
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
 
                 docker tag api-seeding:latest << parameters.container_repo_url >>:seeding-$CIRCLE_BRANCH-$SHORT_HASH
-
-                if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                  # We want all of the tags pushed
-                else
-                  docker push << parameters.container_repo_url >>:seeding-$CIRCLE_BRANCH-$SHORT_HASH
-                fi
+                docker push << parameters.container_repo_url >>:seeding-$CIRCLE_BRANCH-$SHORT_HASH
 
       #----------------------------------------------------
       # Terraform
