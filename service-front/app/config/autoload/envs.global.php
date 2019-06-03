@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 return [
 
+    'version' => getenv('CONTAINER_VERSION') ?: 'dev',
+
     'api' => [
         'uri' => getenv('API_SERVICE_URL') ?: null,
     ],

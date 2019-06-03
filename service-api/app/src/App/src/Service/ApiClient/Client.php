@@ -1,16 +1,19 @@
 <?php
 
-namespace Viewer\Service\ApiClient;
+namespace App\Service\ApiClient;
 
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\Request;
 use Http\Client\Exception as HttpException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
+use Aws\Credentials\CredentialProvider;
+use Aws\Signature\SignatureV4;
 
 /**
  * Class Client
- * @package Viewer\Service\ApiClient
+ * @package App\Service\ApiClient
  */
 class Client
 {
@@ -27,19 +30,18 @@ class Client
     /**
      * @var string
      */
-    private $token;
+    private $awsRegion;
 
     /**
      * Client constructor
      *
      * @param ClientInterface $httpClient
-     * @param Config $config
      */
-    public function __construct(ClientInterface $httpClient, Config $config)
+    public function __construct(ClientInterface $httpClient, string $apiUrl, string $awsRegion)
     {
         $this->httpClient = $httpClient;
-        $this->apiBaseUri = $config->getApiUri();
-        $this->token = $config->getToken();
+        $this->apiBaseUri = $apiUrl;
+        $this->awsRegion = $awsRegion;
     }
 
     /**
@@ -61,7 +63,7 @@ class Client
         $request = new Request('GET', $url, $this->buildHeaders());
 
         //  Can throw RuntimeException if there is a problem
-        $response = $this->httpClient->sendRequest($request);
+        $response = $this->httpClient->sendRequest($this->signRequest($request));
 
         switch ($response->getStatusCode()) {
             case 200:
@@ -172,6 +174,13 @@ class Client
         }
     }
 
+    private function signRequest(RequestInterface $request) : RequestInterface
+    {
+        $provider = CredentialProvider::defaultProvider();
+        $s4 = new SignatureV4('execute-api', $this->awsRegion);
+        return $s4->signRequest($request, $provider()->wait());
+    }
+
     /**
      * Generates the standard set of HTTP headers expected by the API
      *
@@ -183,11 +192,6 @@ class Client
             'Accept'        => 'application/json',
             'Content-Type'  => 'application/json',
         ];
-
-        //  If the logged in user has an auth token already then set that in the header
-        if (isset($this->token)) {
-            $headerLines['token'] = $this->token;
-        }
 
         return $headerLines;
     }

@@ -2,6 +2,8 @@ locals {
   account_name = "${lookup(var.account_mapping, terraform.workspace, lookup(var.account_mapping, "development"))}"
   account_id   = "${lookup(var.account_ids, local.account_name)}"
 
+  sirius_account_id = "${lookup(var.sirius_account_ids, local.account_name)}"
+
   dns_namespace_acc = "${terraform.workspace == "production" ? "": "${local.account_name}."}"
   dns_namespace_env = "${local.account_name != "development" ? "": "${terraform.workspace}."}"
 
@@ -33,3 +35,8 @@ variable "is_production" {
 variable "account_mapping" {
   type = "map"
 }
+
+variable "sirius_account_ids" {
+  type = "map"
+}
+

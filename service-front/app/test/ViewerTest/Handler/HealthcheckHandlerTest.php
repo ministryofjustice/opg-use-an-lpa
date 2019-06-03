@@ -8,21 +8,59 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Handler\HealthcheckHandler;
 use Zend\Diactoros\Response\JsonResponse;
+use Viewer\Service\ApiClient\Client as ApiClient;
 
 class HealthcheckHandlerTest extends TestCase
 {
-    public function testReturnsJsonResponse()
+    /**
+     * @dataProvider responseDataProvider
+     */
+    public function testReturnsExpectedJsonResponse(int $status, array $response)
     {
+        $version = 'dev';
+        $apiClientProphecy = $this->prophesize(ApiClient::class);
+        $apiClientProphecy->httpGet('/healthcheck')
+            ->willReturn($response);
+
         //  Set up the handler
-        $handler = new HealthcheckHandler();
+        $handler = new HealthcheckHandler($version, $apiClientProphecy->reveal());
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
         $response = $handler->handle($requestProphecy->reveal());
-        $json = json_decode((string) $response->getBody());
+        $json = json_decode((string) $response->getBody()->getContents());
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertObjectHasAttribute('healthy', $json);
-        $this->assertObjectHasAttribute('version', $json);
+        $this->assertEquals($version, $json->version);
+        $this->assertObjectHasAttribute('dependencies', $json);
+
+        $dependencies = $json->dependencies;
+        $this->assertObjectHasAttribute('api', $dependencies);
+
+        $api = $dependencies->api;
+        $this->assertObjectHasAttribute('healthy', $api);
+        $this->assertObjectHasAttribute('version', $api);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function responseDataProvider() : array
+    {
+        $allHealthyResponse = [
+            'healthy' => true,
+            'version' => 'dev',
+            'dependencies' => [
+                'api' => [
+                    'healthy' => true,
+                    'version' => 'dev'
+                ]
+            ]
+        ];
+
+        return [
+            [ 200, $allHealthyResponse ]
+        ];
     }
 }

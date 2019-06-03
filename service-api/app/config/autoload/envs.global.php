@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 return [
 
-    'aws' => [
-        'region'  => 'eu-west-1',
-        'version' => 'latest',
+    'version' => getenv('CONTAINER_VERSION') ?: 'dev',
 
-        'DynamoDb' => [
-            'endpoint' => getenv('AWS_ENDPOINT_DYNAMODB') ?: null,
+    'sirius_api' => [
+        'endpoint' => getenv('SIRIUS_API_ENDPOINT') ?: 'https://api.dev.sirius.opg.digital/v1/use-an-lpa',
+    ],
+
+    'aws' => [
+        'region'    => 'eu-west-1',
+        'version'   => 'latest',
+
+        'dynamodb' => [
+            'region'    => 'eu-west-1',
+            'version'   => 'latest',
         ],
     ],
 
