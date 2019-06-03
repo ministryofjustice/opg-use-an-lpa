@@ -21,7 +21,7 @@ class ViewLpaHandlerTest extends TestCase
         $lpa = new ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
 
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render('app::view-lpa', [
+        $rendererProphecy->render('viewer::view-lpa', [
                 'lpa' => $lpa,
             ])
             ->willReturn('');

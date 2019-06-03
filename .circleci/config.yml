@@ -311,7 +311,7 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//-/}"
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
           container_version:
             description: Container version
             type: string
@@ -323,7 +323,7 @@ orbs:
               command: |
                 terraform --version
                 cd terraform_shared
-                terraform init
+                terraform init -lock-timeout=300s
                 export TF_WORKSPACE=development >> $BASH_ENV
                 echo $TF_WORKSPACE
                 terraform validate
@@ -334,7 +334,7 @@ orbs:
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
                 cd terraform_environment
-                terraform init
+                terraform init -lock-timeout=300s
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
                 terraform validate -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
@@ -358,8 +358,8 @@ orbs:
               name: Apply Shared Terraform
               command: |
                 cd terraform_shared
-                terraform init
-                terraform apply --auto-approve
+                terraform init -lock-timeout=300s
+                terraform apply -lock-timeout=300s --auto-approve
       apply_environment_terraform:
         #
         # Apply the environment terraform configuration. This:
@@ -371,7 +371,7 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//-/}"
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
         steps:
           - checkout
           - run:
@@ -381,20 +381,11 @@ orbs:
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
                 cd terraform_environment
-                terraform init
+                terraform init -lock-timeout=300s
                 export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                 echo $TF_WORKSPACE
-                terraform apply --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
+                terraform apply -lock-timeout=300s --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
                 mv cluster_config.json /tmp/
-                if [ "${CIRCLE_BRANCH}" != "master" ]; then
-                  echo "Your environment, ${ENV_NAME:0:13} is built."
-                  echo "To destroy this environment"
-                  echo
-                  echo "cd terraform_environment"
-                  echo "aws-vault exec identity -- terraform init"
-                  echo "aws-vault exec identity -- terraform workspace select ${ENV_NAME:0:13}"
-                  echo "aws-vault exec identity -- terraform destroy"
-                fi
           - persist_to_workspace:
               root: /tmp
               paths:
@@ -409,7 +400,7 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//-/}"
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
         steps:
           - checkout
           - run:
@@ -420,10 +411,10 @@ orbs:
                 echo $TF_WORKSPACE
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   cd terraform_environment
-                  terraform init
+                  terraform init -lock-timeout=300s
                   export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
                   echo $TF_WORKSPACE
-                  terraform destroy -auto-approve
+                  terraform destroy -lock-timeout=300s -auto-approve
                 fi
       run_behave_suite:
         #
@@ -434,7 +425,7 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//-/}"
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
         steps:
           - checkout
           - install_webdriver
@@ -449,6 +440,16 @@ orbs:
               name: Install Behave
               command: sudo pip3 install behave selenium --upgrade
           - run:
+              name: Allow CircleCI ingress to environment
+              command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                if [ "${TF_WORKSPACE}" != "production" ]; then
+                  python features/ci_ingress.py /tmp/cluster_config.json --add
+                fi
+                
+          - run:
               name: Run suite
               command: |
                 ENV_NAME=<<parameters.workspace>>
@@ -457,3 +458,11 @@ orbs:
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
                 behave
+          - run:
+              name: Remove CircleCI ingress to environment
+              command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                python features/ci_ingress.py /tmp/cluster_config.json
+              when: always

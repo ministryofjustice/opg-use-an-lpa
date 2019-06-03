@@ -39,7 +39,7 @@ use Zend\Expressive\MiddlewareFactory;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
 {
-    $app->route('/', Viewer\Handler\HomePageHandler::class, ['GET', 'POST'], 'home');
+    $app->get('/', Viewer\Handler\HomePageHandler::class, 'home');
     $app->get('/healthcheck', Viewer\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->route('/enter-code', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'],'enter-code');
     $app->get('/check-code', Viewer\Handler\CheckCodeHandler::class, 'check-code');
@@ -48,7 +48,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
 {
-    $app->route('/', Actor\Handler\HomePageHandler::class, ['GET', 'POST'], 'home');
+    $app->get('/', Actor\Handler\HomePageHandler::class, 'home');
 };
 
 switch (getenv('CONTEXT')){

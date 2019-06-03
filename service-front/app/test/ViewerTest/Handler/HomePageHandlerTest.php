@@ -16,7 +16,7 @@ class HomePageHandlerTest extends TestCase
     public function testReturnsHtmlResponseWhenTemplateRendererProvided()
     {
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render('app::home-page')
+        $rendererProphecy->render('viewer::home-page')
             ->willReturn('');
 
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
