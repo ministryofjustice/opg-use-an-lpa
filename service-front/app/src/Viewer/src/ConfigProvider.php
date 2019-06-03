@@ -7,10 +7,7 @@ namespace Viewer;
 use Aws;
 use Http;
 use Zend;
-use Symfony;
-
-use function realpath;
-use function dirname;
+use Psr;
 
 /**
  * The configuration provider for the App module
@@ -42,7 +39,7 @@ class ConfigProvider
     {
         return [
             'aliases' => [
-                Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
+                Psr\Http\Client\ClientInterface::class => Http\Adapter\Guzzle6\Client::class,
                 Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookiePersistence::class,
 
                 // The Session Key Manager to use
@@ -62,6 +59,9 @@ class ConfigProvider
                 Service\ApiClient\Config::class => ConfigFactory::class,
                 Service\Session\Config::class => ConfigFactory::class,
                 Service\Session\KeyManager\Config::class => ConfigFactory::class,
+
+                // Handlers
+                Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class
             ],
 
             'delegators' => [
