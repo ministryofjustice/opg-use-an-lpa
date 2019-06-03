@@ -93,13 +93,14 @@ resource "aws_security_group_rule" "api_ecs_service_egress" {
 
 //--------------------------------------
 // Api ECS Service Task level config
+
 resource "aws_ecs_task_definition" "api" {
   family                   = "${terraform.workspace}-api"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.api_web}, ${local.api_app}, ${local.api_seeding}]"
+  container_definitions    = "[${terraform.workspace == "production" ? local.api_container_definitions_production : local.api_container_definitions }]"
   task_role_arn            = "${aws_iam_role.api_task_role.arn}"
   execution_role_arn       = "${aws_iam_role.execution_role.arn}"
   tags                     = "${local.default_tags}"
@@ -139,6 +140,12 @@ data "aws_iam_policy_document" "api_permissions_role" {
 // API ECS Service Task Container level config
 
 locals {
+  // We always want the following containers started
+  api_container_definitions_production = "${local.api_web}, ${local.api_app}"
+
+  // We only want the aditional ones started outside of production
+  api_container_definitions = "${local.api_container_definitions_production}, ${local.api_seeding}" // Add seeding
+
   api_web = <<EOF
   {
     "cpu": 1,
