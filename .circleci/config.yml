@@ -19,6 +19,8 @@ workflows:
           name: app_api_build
       - use-my-lpa/docker_build_api_web:
           name: web_api_build
+      - use-my-lpa/docker_build_api_seeding:
+          name: seeding_api_build
 
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
@@ -29,7 +31,7 @@ workflows:
               ignore: master
       - use-my-lpa/apply_environment_terraform:
           name: dev_apply_environment_terraform
-          requires: [dev_apply_shared_terraform, app_front_build, web_front_build, web_api_build, app_api_build]
+          requires: [dev_apply_shared_terraform, app_front_build, web_front_build, web_api_build, app_api_build, seeding_api_build]
           filters:
             branches:
               ignore: master
@@ -297,6 +299,39 @@ orbs:
                   docker push << parameters.container_repo_url >>
                 else
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                fi
+
+      docker_build_api_seeding:
+        #
+        # Build Docker container for API Seeding
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api_web
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 18.06.0-ce
+              docker_layer_caching: false
+          - run:
+              name: Build
+              command: |
+                docker build --file dev-config/Dockerfile --tag api-seeding:latest .
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+
+                docker tag api-seeding:latest << parameters.container_repo_url >>:seeding-$CIRCLE_BRANCH-$SHORT_HASH
+
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  # We want all of the tags pushed
+                else
+                  docker push << parameters.container_repo_url >>:seeding-$CIRCLE_BRANCH-$SHORT_HASH
                 fi
 
       #----------------------------------------------------
