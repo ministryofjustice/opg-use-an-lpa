@@ -99,7 +99,7 @@ resource "aws_ecs_task_definition" "api" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.api_web}, ${local.api_app}]"
+  container_definitions    = "[${local.api_web}, ${local.api_app}, ${local.api_seeding}]"
   task_role_arn            = "${aws_iam_role.api_task_role.arn}"
   execution_role_arn       = "${aws_iam_role.execution_role.arn}"
   tags                     = "${local.default_tags}"
@@ -215,7 +215,35 @@ locals {
         }
     },
     "environment": [
-      {
+    {
+      "name": "DYNAMODB_TABLE_VIEWER_CODES",
+      "value": "${aws_dynamodb_table.viewer_codes_table.name}"
+    },
+    {
+      "name": "CONTAINER_VERSION",
+      "value": "${var.container_version}"
+    }]
+  }
+  EOF
+
+  api_seeding = <<EOF
+  {
+    "cpu": 1,
+    "essential": false,
+    "image": "${data.aws_ecr_repository.use_an_lpa_api_web.repository_url}:seeding-${var.container_version}",
+    "mountPoints": [],
+    "name": "seeding",
+    "volumesFrom": [],
+    "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+            "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
+            "awslogs-region": "eu-west-1",
+            "awslogs-stream-prefix": "api-web.use-an-lpa"
+        }
+    },
+    "environment": [
+    {
       "name": "DYNAMODB_TABLE_VIEWER_CODES",
       "value": "${aws_dynamodb_table.viewer_codes_table.name}"
     },
