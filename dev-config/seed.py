@@ -7,7 +7,7 @@ dynamodb = boto3.resource('dynamodb', region_name='eu-west-1')
 
 table = dynamodb.Table(os.environ['DYNAMODB_TABLE_VIEWER_CODES'])
 
-response = table.put_item(
+table.put_item(
    Item={
         'ViewerCode': "123456789012",
         'SiriusId': "12345678901",
@@ -15,5 +15,20 @@ response = table.put_item(
     }
 )
 
-print("PutItem succeeded:")
-print(json.dumps(response, indent=4))
+table.put_item(
+   Item={
+        'ViewerCode': "987654321098",
+        'SiriusId': "98765432109",
+        'Expires': "2020-01-01 12:34:56",
+    }
+)
+
+table.put_item(
+   Item={
+        'ViewerCode': "222222222222",
+        'SiriusId': "22222222222",
+        'Expires': "2019-01-01 12:34:56",
+    }
+)
+
+print("Items added")
