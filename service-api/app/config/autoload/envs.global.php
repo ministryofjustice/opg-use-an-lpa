@@ -19,4 +19,10 @@ return [
         ],
     ],
 
+    'repositories' => [
+        'dynamodb' => [
+            'viewer-codes-table' => getenv('DYNAMODB_TABLE_VIEWER_CODES') ?: null,
+        ]
+    ],
+
 ];

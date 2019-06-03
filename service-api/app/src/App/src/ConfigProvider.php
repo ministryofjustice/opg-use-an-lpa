@@ -47,6 +47,8 @@ class ConfigProvider
                 Aws\DynamoDb\DynamoDbClient::class => Service\Aws\DynamoDbClientFactory::class,
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
 
+                Service\Lpa\LpaService::class =>  Service\Lpa\LpaServiceFactory::class,
+
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class
             ],
