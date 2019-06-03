@@ -19,12 +19,18 @@ class LpaService
     private $dynamoDbClient;
 
     /**
+     * $var string
+     */
+    private $viewCodesTableName;
+
+    /**
      * LpaService constructor.
      * @param DynamoDbClient $dynamoDbClient
      */
-    public function __construct(DynamoDbClient $dynamoDbClient)
+    public function __construct(DynamoDbClient $dynamoDbClient, string $viewCodesTable)
     {
         $this->dynamoDbClient = $dynamoDbClient;
+        $this->viewCodesTableName = $viewCodesTable;
     }
 
     /**
@@ -56,7 +62,7 @@ class LpaService
     {
         //  Query Dynamo DB for the code
         $result = $this->dynamoDbClient->getItem([
-            'TableName' => 'ViewerCodes',
+            'TableName' => $this->viewCodesTableName,
             'Key' => [
                 'ViewerCode' => [
                     'S' => $shareCode,
