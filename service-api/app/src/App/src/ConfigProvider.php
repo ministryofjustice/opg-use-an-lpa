@@ -7,6 +7,7 @@ namespace App;
 use Aws;
 use Http;
 use Psr;
+use Zend;
 
 /**
  * The configuration provider for the App module

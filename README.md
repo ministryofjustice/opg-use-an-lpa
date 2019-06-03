@@ -16,6 +16,9 @@ If you plan on developing the application you should also enable development mod
 ```bash
 docker-compose run front-composer composer development-enable
 docker-compose exec viewer-app rm -f /tmp/config-cache.php
+
+docker-compose run api-composer composer development-enable
+docker-compose exec api-app rm -f /tmp/config-cache.php
 ```
 
 The Viewer service will be available via http://localhost:9001/
