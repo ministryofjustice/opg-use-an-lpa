@@ -25,7 +25,7 @@ class EnterCodeHandlerTest extends TestCase
     public function testSimplePageGet()
     {
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render('app::enter-code', new CallbackToken(function($options) {
+        $rendererProphecy->render('viewer::enter-code', new CallbackToken(function($options) {
             $this->assertIsArray($options);
             $this->assertArrayHasKey('form', $options);
             $this->assertInstanceOf(ShareCode::class, $options['form']);
@@ -56,7 +56,7 @@ class EnterCodeHandlerTest extends TestCase
         $lpaId = '123456789012';
 
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render('app::enter-code', new CallbackToken(function($options) {
+        $rendererProphecy->render('viewer::enter-code', new CallbackToken(function($options) {
             $this->assertIsArray($options);
             $this->assertArrayHasKey('form', $options);
             $this->assertInstanceOf(ShareCode::class, $options['form']);
@@ -94,7 +94,7 @@ class EnterCodeHandlerTest extends TestCase
     public function testFormSubmittedNoLpaFound()
     {
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render('app::enter-code', new CallbackToken(function($options) {
+        $rendererProphecy->render('viewer::enter-code', new CallbackToken(function($options) {
             $this->assertIsArray($options);
             $this->assertArrayHasKey('form', $options);
             $this->assertInstanceOf(ShareCode::class, $options['form']);

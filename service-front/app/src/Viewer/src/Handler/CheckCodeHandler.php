@@ -58,13 +58,13 @@ class CheckCodeHandler extends AbstractHandler
             if ($lpa instanceof ArrayObject) {
 
                 // Then we found a LPA for the given code
-                return new HtmlResponse($this->renderer->render('app::check-code-found', [
+                return new HtmlResponse($this->renderer->render('viewer::check-code-found', [
                     'lpa' => $lpa,
                 ]));
             }
         }
 
         // If we get here then we couldn't find an LPA for the given code.
-        return new HtmlResponse($this->renderer->render('app::check-code-not-found'));
+        return new HtmlResponse($this->renderer->render('viewer::check-code-not-found'));
     }
 }

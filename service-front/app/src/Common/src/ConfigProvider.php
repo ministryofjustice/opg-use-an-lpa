@@ -45,7 +45,9 @@ class ConfigProvider
     {
         return [
             'paths' => [
-                'common'    => [__DIR__ . '/../templates/'],
+                'error'    => [__DIR__ . '/../templates/error'],
+                'layout'   => [__DIR__ . '/../templates/layout'],
+                'partials' => [__DIR__ . '/../templates/partials'],
             ],
         ];
     }
