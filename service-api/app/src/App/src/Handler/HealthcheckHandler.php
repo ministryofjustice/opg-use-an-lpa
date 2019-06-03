@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-use Aws\Credentials\CredentialProvider;
-use Aws\Signature\SignatureV4;
 use Exception;
-use GuzzleHttp\Psr7\Request as HttpRequest;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\JsonResponse;
-use Psr\Http\Client\ClientInterface;
+use App\Service\ApiClient\Client as ApiClient;
 
 /**
  * Class HealthcheckHandler
@@ -20,11 +17,20 @@ use Psr\Http\Client\ClientInterface;
  */
 class HealthcheckHandler implements RequestHandlerInterface
 {
-    protected $httpClient;
+    /**
+     * @var ApiClient
+     */
+    protected $apiClient;
 
-    public function __construct(ClientInterface $http)
+    /**
+     * @var string
+     */
+    protected $version;
+
+    public function __construct(string $version, ApiClient $api)
     {
-        $this->httpClient = $http;
+        $this->apiClient = $api;
+        $this->version = $version;
     }
 
     /**
@@ -35,9 +41,9 @@ class HealthcheckHandler implements RequestHandlerInterface
     {
         return new JsonResponse([
             "healthy" => $this->isHealthy(),
-            "version" => getenv("CONTAINER_VERSION") ? getenv("CONTAINER_VERSION") : "dev",
+            "version" => $this->version,
             "dependencies" => [
-                "api_gateway" => $this->checkApiEndpoint()
+                "api" => $this->checkApiEndpoint()
             ]
         ]);
     }
@@ -50,25 +56,25 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     protected function checkApiEndpoint() : array
     {
-        $request = new HttpRequest('GET', 'https://api.dev.sirius.opg.digital/v1/use-an-lpa/lpas/700000000000');
-        $provider = CredentialProvider::defaultProvider();
-        $s4 = new SignatureV4('execute-api', 'eu-west-1');
-        $signed_request = $s4->signRequest($request, $provider()->wait());
+        $data = [];
+
+        $start = microtime(true);
 
         try {
-            $response = $this->httpClient->sendRequest($signed_request);
+            $data = $this->apiClient->httpGet('/lpas/700000000000');
 
-            return [
-                'healthy' => $response->getStatusCode() == 404,
-                'code' => $response->getStatusCode(),
-                'message' => (string)$response->getBody()
-            ];
-
+            // TODO fix up with actual check
+            // when $data == null a 404 has been returned from the api
+            if (is_null($data)) {
+                $data['healthy'] = true;
+            }
         } catch (Exception $e) {
+            $data['healthy'] = false;
+            $data['message'] = $e->getMessage();
         }
 
-        return [
-            'healthy' => false,
-        ];
+        $data['response_time'] = round(microtime(true) - $start, 3);
+
+        return $data;
     }
 }

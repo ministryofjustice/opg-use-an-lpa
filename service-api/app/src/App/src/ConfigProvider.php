@@ -43,6 +43,10 @@ class ConfigProvider
             'factories'  => [
                 // Services
                 Aws\DynamoDb\DynamoDbClient::class => Service\Aws\DynamoDbClientFactory::class,
+                Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
+
+                // Handlers
+                Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class
             ],
             
             'delegators' => [
