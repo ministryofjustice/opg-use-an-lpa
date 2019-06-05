@@ -309,7 +309,7 @@ orbs:
         parameters:
           container_repo_url:
             type: string
-            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api_web
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api_seeding
         steps:
           - checkout
           - install_aws_cli
@@ -326,8 +326,15 @@ orbs:
               command: |
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
 
-                docker tag api-seeding:latest << parameters.container_repo_url >>:seeding-$CIRCLE_BRANCH-$SHORT_HASH
-                docker push << parameters.container_repo_url >>:seeding-$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag api-seeding:latest << parameters.container_repo_url >>:latest
+                docker tag api-seeding:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  # We want all of the tags pushed
+                  docker push << parameters.container_repo_url >>
+                else
+                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                fi
 
       #----------------------------------------------------
       # Terraform
