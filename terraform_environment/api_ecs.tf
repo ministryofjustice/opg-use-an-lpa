@@ -237,7 +237,7 @@ locals {
   {
     "cpu": 1,
     "essential": false,
-    "image": "${data.aws_ecr_repository.use_an_lpa_api_web.repository_url}:seeding-${var.container_version}",
+    "image": "${data.aws_ecr_repository.use_an_lpa_api_seeding.repository_url}:${var.container_version}",
     "mountPoints": [],
     "name": "seeding",
     "volumesFrom": [],
