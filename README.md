@@ -44,7 +44,7 @@ docker-compose run feature-tests
 
 To run a tagged subset of tests
 ```bash
-docker-compose run feature-tests --tags=<TAG_NAME>
+docker-compose run feature-tests behave --tags=<TAG_NAME>
 ```
 
 ### Updating composer dependencies
