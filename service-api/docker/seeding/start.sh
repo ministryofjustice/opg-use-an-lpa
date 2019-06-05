@@ -26,27 +26,6 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --endpoint $DYNAMODN_ENDPOINT
 fi
 
-# Inject dummy data
-aws dynamodb put-item \
---table-name ViewerCodes \
---item '{"ViewerCode": {"S": "123456789012"}, "SiriusId": {"S": "12345678901"}, "Expires": {"S": "2020-01-01 12:34:56"}}' \
---region eu-west-1 \
---endpoint $DYNAMODN_ENDPOINT
-
-aws dynamodb put-item \
---table-name ViewerCodes \
---item '{"ViewerCode": {"S": "987654321098"}, "SiriusId": {"S": "98765432109"}, "Expires": {"S": "2020-01-01 12:34:56"}}' \
---region eu-west-1 \
---endpoint $DYNAMODN_ENDPOINT
-
-aws dynamodb put-item \
---table-name ViewerCodes \
---item '{"ViewerCode": {"S": "222222222222"}, "SiriusId": {"S": "22222222222"}, "Expires": {"S": "2019-01-01 12:34:56"}}' \
---region eu-west-1 \
---endpoint $DYNAMODN_ENDPOINT
-
-# Output the table's content for debugging.
-aws dynamodb scan \
---table-name ViewerCodes \
---region eu-west-1 \
---endpoint $DYNAMODN_ENDPOINT
+# Run the seeding script
+# This is written in Python as managing the variable DynamoDB endpoint isn't easy in a shell script.
+python dynamodb.py
