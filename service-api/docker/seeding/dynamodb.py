@@ -46,4 +46,4 @@ table.put_item(
 # Scan and output the table, so we can see what we've got in the logs.
 response = table.scan()
 for i in response['Items']:
-    print(json.dumps(i))
+    print(json.dumps(i, indent=4, separators=(',', ': ')))
