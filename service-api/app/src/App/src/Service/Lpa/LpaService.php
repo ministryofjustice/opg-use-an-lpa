@@ -3,7 +3,7 @@
 namespace App\Service\Lpa;
 
 use App\Exception\NotFoundException;
-use App\Exception\PageExpiredException;
+use App\Exception\GoneException;
 use Aws\DynamoDb\DynamoDbClient;
 use DateTime;
 
@@ -77,7 +77,7 @@ class LpaService
             $expiresDateTime = DateTime::createFromFormat('Y-m-d H:i:s', $expires);
 
             if ($expiresDateTime < new DateTime()) {
-                throw new PageExpiredException('Share code expired');
+                throw new GoneException('Share code expired');
             }
 
             $siriusId = $result->search('Item.SiriusId.S');
