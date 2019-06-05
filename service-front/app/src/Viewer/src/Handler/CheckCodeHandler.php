@@ -8,6 +8,7 @@ use ArrayObject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Middleware\Session\SessionTimeoutException;
+use Viewer\Service\ApiClient\ApiException;
 use Viewer\Service\Lpa\LpaService;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
@@ -47,24 +48,28 @@ class CheckCodeHandler extends AbstractHandler
     {
         $code = $this->getSession($request,'session')->get('code');
 
-        if (!isset($code)) {
+        if (isset($code)) {
 
-            throw new SessionTimeoutException;
+            try {
+                $lpa = $this->lpaService->getLpaByCode($code);
 
-        } else {
+                if ($lpa instanceof ArrayObject) {
 
-            $lpa = $this->lpaService->getLpaByCode($code);
-
-            if ($lpa instanceof ArrayObject) {
-
-                // Then we found a LPA for the given code
-                return new HtmlResponse($this->renderer->render('viewer::check-code-found', [
-                    'lpa' => $lpa,
-                ]));
+                    // Then we found a LPA for the given code
+                    return new HtmlResponse($this->renderer->render('viewer::check-code-found', [
+                        'lpa' => $lpa,
+                    ]));
+                }
+            } catch (ApiException $apiEx) {
+                if ($apiEx->getCode() == 410) {
+                    return new HtmlResponse($this->renderer->render('viewer::check-code-expired'));
+                }
             }
+
+            return new HtmlResponse($this->renderer->render('viewer::check-code-not-found'));
         }
 
-        // If we get here then we couldn't find an LPA for the given code.
-        return new HtmlResponse($this->renderer->render('viewer::check-code-not-found'));
+        //  We don't have a code so the session has timed out
+        throw new SessionTimeoutException;
     }
 }
