@@ -5,25 +5,25 @@ namespace App\Exception;
 use Throwable;
 
 /**
- * Class PageExpiredException
+ * Class GoneException
  * @package App\Exception
  */
-class PageExpiredException extends AbstractApiException
+class GoneException extends AbstractApiException
 {
     /**
      * @var int
      */
-    protected $code = 419;
+    protected $code = 410;
 
     /**
-     * PageExpiredException constructor.
+     * GoneException constructor.
      *
      * @param string $message
      * @param string $title
      * @param array $additionalData
      * @param Throwable|null $previous
      */
-    public function __construct(string $message = null, string $title = 'Page expired', array $additionalData = [], Throwable $previous = null)
+    public function __construct(string $message = null, string $title = 'Gone', array $additionalData = [], Throwable $previous = null)
     {
         parent::__construct($message, $title, $additionalData, $previous);
     }
