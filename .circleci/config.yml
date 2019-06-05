@@ -319,7 +319,7 @@ orbs:
           - run:
               name: Build
               command: |
-                docker build --file dev-config/Dockerfile --tag api-seeding:latest .
+                docker build --file service-api/docker/seeding/Dockerfile --tag api-seeding:latest .
           - ecr_login
           - run:
               name: Push container
