@@ -26,16 +26,6 @@ else:
     else:
         role_arn = 'arn:aws:iam::{}:role/account-write'.format(parameters['account_id'])
 
-    # Get a auth token
-    session = boto3.client(
-        'sts',
-        region_name='eu-west-1',
-    ).assume_role(
-        RoleArn=role_arn,
-        RoleSessionName='db_seeding',
-        DurationSeconds=900
-    )
-
     # Create a authenticated client
     dynamodb = boto3.resource(
         'dynamodb',
