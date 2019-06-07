@@ -100,7 +100,7 @@ resource "aws_ecs_task_definition" "api" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${terraform.workspace == "production" ? local.api_container_definitions_production : local.api_container_definitions }]"
+  container_definitions    = "[${local.api_web}, ${local.api_app}]"
   task_role_arn            = "${aws_iam_role.api_task_role.arn}"
   execution_role_arn       = "${aws_iam_role.execution_role.arn}"
   tags                     = "${local.default_tags}"

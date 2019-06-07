@@ -453,6 +453,34 @@ orbs:
                   echo $TF_WORKSPACE
                   terraform destroy -lock-timeout=300s -auto-approve
                 fi
+
+
+      #----------------------------------------------------
+      # Seeding
+
+      seed_database:
+        #
+        # Seed database with test data
+        #
+        executor: python
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
+        steps:
+          - checkout
+          - attach_workspace:
+              at: /tmp
+          - run:
+              name: Seed DynamoDB
+              command: |
+                sudo pip3 install boto3
+                python service-api/seeding/dynamodb.py
+
+      #----------------------------------------------------
+      # Tests
+
       run_behave_suite:
         #
         # Run the full set of functional tests
