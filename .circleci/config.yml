@@ -36,9 +36,16 @@ workflows:
             branches:
               ignore: master
 
+      - use-my-lpa/seed_database:
+          name: dev_seed_database
+          requires: [dev_apply_environment_terraform]
+          filters:
+            branches:
+              ignore: master
+
       - use-my-lpa/run_behave_suite:
           name: dev_run_behave_tests
-          requires: [dev_apply_environment_terraform]
+          requires: [dev_seed_database]
           filters:
             branches:
               ignore: master
