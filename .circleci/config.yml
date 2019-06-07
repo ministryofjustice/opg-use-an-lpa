@@ -488,6 +488,7 @@ orbs:
                 echo $AWS_ACCESS_KEY_ID
                 echo $AWS_SECRET_ACCESS_KEY
                 echo $AWS_SESSION_TOKEN
+                aws sts assume-role --role-arn arn:aws:iam::311462405659:role/ci --role-session-name ci
                 python service-api/seeding/dynamodb.py
                 cat /tmp/cluster_config.json
 
