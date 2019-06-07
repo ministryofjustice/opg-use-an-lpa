@@ -149,11 +149,6 @@ data "aws_iam_policy_document" "api_permissions_role" {
 // API ECS Service Task Container level config
 
 locals {
-  // We always want the following containers started
-  api_container_definitions_production = "${local.api_web}, ${local.api_app}"
-
-  // We only want the aditional ones started outside of production
-  api_container_definitions = "${local.api_container_definitions_production}, ${local.api_seeding}" // Add seeding
 
   api_web = <<EOF
   {
@@ -219,34 +214,6 @@ locals {
             "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
             "awslogs-region": "eu-west-1",
             "awslogs-stream-prefix": "api-app.use-an-lpa"
-        }
-    },
-    "environment": [
-    {
-      "name": "DYNAMODB_TABLE_VIEWER_CODES",
-      "value": "${aws_dynamodb_table.viewer_codes_table.name}"
-    },
-    {
-      "name": "CONTAINER_VERSION",
-      "value": "${var.container_version}"
-    }]
-  }
-  EOF
-
-  api_seeding = <<EOF
-  {
-    "cpu": 1,
-    "essential": false,
-    "image": "${data.aws_ecr_repository.use_an_lpa_api_seeding.repository_url}:${var.container_version}",
-    "mountPoints": [],
-    "name": "seeding",
-    "volumesFrom": [],
-    "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-            "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
-            "awslogs-region": "eu-west-1",
-            "awslogs-stream-prefix": "api-web.use-an-lpa"
         }
     },
     "environment": [

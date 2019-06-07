@@ -15,16 +15,12 @@ if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
     dynamodb_endpoint_url = 'http://' + os.environ['AWS_ENDPOINT_DYNAMODB']
     dynamodb = boto3.resource('dynamodb', region_name='eu-west-1', endpoint_url=dynamodb_endpoint_url)
 
-    table = dynamodb.Table(os.environ['DYNAMODB_TABLE_VIEWER_CODES'])
 else:
-    with open('/tmp/cluster_config.json') as json_file:
-        parameters = json.load(json_file)
-        pprint.pprint(parameters)
 
     if os.getenv('CI'):
-        role_arn = 'arn:aws:iam::{}:role/ci'.format(parameters['account_id'])
+        role_arn = 'arn:aws:iam::{}:role/ci'.format(os.environ['AWS_ACCOUNT_ID'])
     else:
-        role_arn = 'arn:aws:iam::{}:role/account-write'.format(parameters['account_id'])
+        role_arn = 'arn:aws:iam::{}:role/account-write'.format(os.environ['AWS_ACCOUNT_ID'])
 
     # Get a auth token
     session = boto3.client(
@@ -45,12 +41,7 @@ else:
         aws_session_token=session['Credentials']['SessionToken']
     )
 
-    table = dynamodb.Table(os.getenv('VIEWER_CODES_TABLE'))
-
-
-# tables = dynamodb.list_tables()
-# print(json.dumps(tables, indent=4, separators=(',', ': ')))
-
+table = dynamodb.Table(os.environ['DYNAMODB_TABLE_VIEWER_CODES'])
 
 table.put_item(
    Item={
