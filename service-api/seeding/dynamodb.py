@@ -45,7 +45,7 @@ else:
         aws_session_token=session['Credentials']['SessionToken']
     )
 
-    table = dynamodb.Table(parameters['viewer_codes_table'])
+    table = dynamodb.Table(os.getenv('VIEWER_CODES_TABLE'))
 
 
 # tables = dynamodb.list_tables()

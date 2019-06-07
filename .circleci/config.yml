@@ -483,6 +483,8 @@ orbs:
               name: Seed DynamoDB
               command: |
                 sudo pip3 install boto3
+                export VIEWER_CODES_TABLE=$(cat /tmp/cluster_config.json | jq .viewer_codes_table | xargs)
+                echo $VIEWER_CODES_TABLE
                 python service-api/seeding/dynamodb.py
                 cat /tmp/cluster_config.json
 
