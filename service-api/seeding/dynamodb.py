@@ -40,9 +40,9 @@ else:
     dynamodb = boto3.resource(
         'dynamodb',
         region_name='eu-west-1',
-        aws_access_key_id=session['Credentials']['AccessKeyId'],
-        aws_secret_access_key=session['Credentials']['SecretAccessKey'],
-        aws_session_token=session['Credentials']['SessionToken']
+        # aws_access_key_id=session['Credentials']['AccessKeyId'],
+        # aws_secret_access_key=session['Credentials']['SecretAccessKey'],
+        # aws_session_token=session['Credentials']['SessionToken']
     )
 
     table = dynamodb.Table(parameters['viewer_codes_table'])
