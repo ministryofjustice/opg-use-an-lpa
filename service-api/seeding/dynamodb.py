@@ -31,7 +31,7 @@ else:
     ).assume_role(
         RoleArn=role_arn,
         RoleSessionName='db_seeding',
-        DurationSeconds=300
+        DurationSeconds=900
     )
 
     # Create a authenticated client
