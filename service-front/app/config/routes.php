@@ -41,7 +41,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 {
     $app->get('/', Viewer\Handler\HomePageHandler::class, 'home');
     $app->get('/healthcheck', Viewer\Handler\HealthcheckHandler::class, 'healthcheck');
-    $app->route('/enter-code', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'],'enter-code');
+    $app->route('/enter-code', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'enter-code');
     $app->get('/check-code', Viewer\Handler\CheckCodeHandler::class, 'check-code');
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
 };
@@ -49,6 +49,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
 {
     $app->get('/', Actor\Handler\HomePageHandler::class, 'home');
+    $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');
 };
 
 switch (getenv('CONTEXT')){

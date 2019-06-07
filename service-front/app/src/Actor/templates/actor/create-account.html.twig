@@ -1,0 +1,117 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block title %}Actor Homepage{% endblock %}
+
+{% block content %}
+<div class="govuk-width-container">
+    {{ include('@partials/new-service.html.twig') }}
+
+    <a href="#" class="govuk-back-link">Back</a>
+
+    <main class="govuk-main-wrapper">
+
+        <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-two-thirds">
+
+                <h2 class="govuk-heading-l">Create account</h2>
+
+                <p class="govuk-body-l">You need to create an account to use this service.</p>
+
+            </div>
+
+            <div class="govuk-grid-column-one-half">
+
+                <p class="govuk-body">If you already have an account, please <a href="#" class="govuk-link">sign in</a>.</p>
+
+                <form method="post" name="create_account">
+
+                    <fieldset class="govuk-fieldset">
+
+                        <input type="hidden" name="__csrf" value="{{ form.get('__csrf').value }}">
+
+                        {{ govuk_error_summary(form) }}
+
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="email">
+                                Enter your email address
+                            </label>
+
+                            {{ govuk_error(form.get('email')) }}
+
+                            <input class="govuk-input {{ govuk_error_class(form.get('email')) }}" id="email" name="email"
+                                type="text" value="{{ form.get('email').value }}">
+                        </div>
+
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="email_confirm">
+                                Confirm your email address
+                            </label>
+
+                            {{ govuk_error(form.get('email_confirm')) }}
+
+                            <input class="govuk-input {{ govuk_error_class(form.get('email_confirm')) }}" id="email_confirm" name="email_confirm"
+                                type="text" value="{{ form.get('email_confirm').value }}">
+                        </div>
+
+                        <p class="govuk-body govuk-!-font-weight-bold">Password</p>
+
+                        <p class="govuk-body">Your password needs to have:</p>
+
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>at least 8 characters</li>
+                            <li>at least one lower-case and one capital letter</li>
+                            <li>at least one number</li>
+                        </ul>
+
+                        <p class="govuk-body">Never share your password with anyone.</p>
+
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="password">
+                                Password
+                            </label>
+
+                            {{ govuk_error(form.get('password')) }}
+
+                            <input class="govuk-input {{ govuk_error_class(form.get('password')) }}" id="password" name="password"
+                                type="password" value="{{ form.get('password').value }}">
+                        </div>
+
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="password_confirm">
+                                Confirm password
+                            </label>
+
+                            {{ govuk_error(form.get('password_confirm')) }}
+
+                            <input class="govuk-input {{ govuk_error_class(form.get('password_confirm')) }}" id="password_confirm" name="password_confirm"
+                                type="password" value="{{ form.get('password_confirm').value }}">
+                        </div>
+
+                        <div class="govuk-form-group">
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+
+                                    {{ govuk_error(form.get('terms')) }}
+
+                                    <input class="govuk-checkboxes__input" id="terms" name="terms" type="checkbox">
+                                    <label class="govuk-label govuk-checkboxes__label" for="terms">
+                                        I agree to the <a href="#" class="govuk-link">terms of use</a>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="govuk-button">Create account</button>
+
+                    </fieldset>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+</div>
+{% endblock %}
