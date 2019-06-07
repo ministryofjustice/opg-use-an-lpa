@@ -484,6 +484,7 @@ orbs:
               command: |
                 sudo pip3 install boto3
                 python service-api/seeding/dynamodb.py
+                echo /tmp/cluster_config.json
 
       #----------------------------------------------------
       # Tests
