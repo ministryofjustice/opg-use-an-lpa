@@ -30,6 +30,6 @@ fi
 
 # Run the seeding script
 # This is written in Python as managing the variable DynamoDB endpoint isn't easy in a shell script.
-python dynamodb.py
+python /app/seeding/dynamodb.py
 
 echo Finished seeding

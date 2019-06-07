@@ -1,14 +1,6 @@
 import os
 import boto3
 import json
-import pprint
-
-# Setup the DynamoDB client.
-
-# cluster_config = {
-#    cluster_name = "${aws_ecs_cluster.use-an-lpa.name}"
-#    account_id = "${local.account_id}"
-# }
 
 if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
     # For local development

@@ -21,6 +21,7 @@ resource "aws_ecs_service" "api" {
 
 //-----------------------------------------------
 // Api service discovery
+
 resource "aws_service_discovery_service" "api" {
   name = "api"
 
