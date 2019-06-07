@@ -485,6 +485,9 @@ orbs:
               name: Seed DynamoDB
               command: |
                 sudo pip3 install boto3
+                echo $AWS_ACCESS_KEY_ID
+                echo $AWS_SECRET_ACCESS_KEY
+                echo $AWS_SESSION_TOKEN
                 python service-api/seeding/dynamodb.py
                 cat /tmp/cluster_config.json
 
