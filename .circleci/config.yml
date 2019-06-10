@@ -79,7 +79,7 @@ workflows:
 
       - use-my-lpa/seed_database:
           name: preprod_seed_database
-          workspace: preproduction
+          #workspace: preproduction   # Not needed as the target account is within the config file.
           requires: [preprod_apply_environment_terraform]
           filters:
             branches:
