@@ -77,10 +77,18 @@ workflows:
             branches:
               only: master
 
+      - use-my-lpa/seed_database:
+          name: preprod_seed_database
+          workspace: preproduction
+          requires: [preprod_apply_environment_terraform]
+          filters:
+            branches:
+              only: master
+
       - use-my-lpa/run_behave_suite:
           name: preprod_run_behave_tests
           workspace: preproduction
-          requires: [preprod_apply_environment_terraform]
+          requires: [preprod_seed_database]
           filters:
             branches:
               only: master
