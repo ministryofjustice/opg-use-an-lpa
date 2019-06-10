@@ -35,31 +35,29 @@ else:
 
 table = dynamodb.Table(os.environ['DYNAMODB_TABLE_VIEWER_CODES'])
 
-table.put_item(
-   Item={
+items = [
+    {
         'ViewerCode': "123456789012",
         'SiriusId': "12345678901",
         'Expires': "2020-01-01 12:34:56",
-    }
-)
-
-table.put_item(
-   Item={
+    },
+    {
         'ViewerCode': "987654321098",
         'SiriusId': "98765432109",
         'Expires': "2020-01-01 12:34:56",
-    }
-)
-
-table.put_item(
-   Item={
+    },
+    {
         'ViewerCode': "222222222222",
         'SiriusId': "22222222222",
         'Expires': "2019-01-01 12:34:56",
-    }
-)
+    },
+]
 
-# Scan and output the table, so we can see what we've got in the logs.
-response = table.scan()
-for i in response['Items']:
-    print(json.dumps(i, indent=4, separators=(',', ': ')))
+for i in items:
+    table.put_item(
+       Item=i,
+    )
+    response = table.get_item(
+        Key={'ViewerCode': i['ViewerCode']}
+    )
+    print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
