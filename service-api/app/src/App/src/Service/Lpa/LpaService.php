@@ -2,6 +2,7 @@
 
 namespace App\Service\Lpa;
 
+use App\DataAccess\Repository;
 use App\Exception\NotFoundException;
 use App\Exception\GoneException;
 use Aws\DynamoDb\DynamoDbClient;
@@ -24,13 +25,25 @@ class LpaService
     private $viewCodesTableName;
 
     /**
+     * @var Repository\ViewerCodeActivityInterface
+     */
+    private $activityRepository;
+
+    /**
      * LpaService constructor.
      * @param DynamoDbClient $dynamoDbClient
+     * @param string $viewCodesTable
+     * @param Repository\ViewerCodeActivityInterface $activityRepository\
      */
-    public function __construct(DynamoDbClient $dynamoDbClient, string $viewCodesTable)
+    public function __construct(
+        DynamoDbClient $dynamoDbClient,
+        string $viewCodesTable,
+        Repository\ViewerCodeActivityInterface $activityRepository
+    )
     {
         $this->dynamoDbClient = $dynamoDbClient;
         $this->viewCodesTableName = $viewCodesTable;
+        $this->activityRepository = $activityRepository;
     }
 
     /**
@@ -81,6 +94,9 @@ class LpaService
             }
 
             $siriusId = $result->search('Item.SiriusId.S');
+
+            // Record the lookup in the Activity table
+            $this->activityRepository->recordSuccessfulLookupActivity($result->search('Item.ViewerCode.S'));
 
             return $this->getById($siriusId);
         }

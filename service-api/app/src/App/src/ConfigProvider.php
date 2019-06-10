@@ -39,6 +39,9 @@ class ConfigProvider
             'aliases' => [
                 Psr\Http\Client\ClientInterface::class => Http\Adapter\Guzzle6\Client::class,
                 Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
+
+                // Data Access
+                DataAccess\Repository\ViewerCodeActivityInterface::class => DataAccess\DynamoDb\ViewerCodeActivity::class,
             ],
 
             'factories'  => [
@@ -48,6 +51,9 @@ class ConfigProvider
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
 
                 Service\Lpa\LpaService::class =>  Service\Lpa\LpaServiceFactory::class,
+
+                // Data Access
+                DataAccess\DynamoDb\ViewerCodeActivity::class => DataAccess\DynamoDb\ViewerCodeActivityFactory::class,
 
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class

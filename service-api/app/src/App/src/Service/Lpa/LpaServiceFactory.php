@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\DataAccess\Repository;
 use Aws;
 use Psr\Container\ContainerInterface;
 
@@ -18,7 +19,8 @@ class LpaServiceFactory
 
         return new LpaService(
             $container->get(Aws\DynamoDb\DynamoDbClient::class),
-            $config['repositories']['dynamodb']['viewer-codes-table']
+            $config['repositories']['dynamodb']['viewer-codes-table'],
+            $container->get(Repository\ViewerCodeActivityInterface::class),
         );
     }
 }
