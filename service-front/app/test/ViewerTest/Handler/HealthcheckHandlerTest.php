@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler;
 
+use Common\Service\ApiClient\Client as ApiClient;
+use Viewer\Handler\HealthcheckHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Viewer\Handler\HealthcheckHandler;
 use Zend\Diactoros\Response\JsonResponse;
-use Viewer\Service\ApiClient\Client as ApiClient;
 
 class HealthcheckHandlerTest extends TestCase
 {

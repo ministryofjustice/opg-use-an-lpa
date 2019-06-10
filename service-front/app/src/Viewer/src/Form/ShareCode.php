@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Viewer\Form;
 
+use Common\Form\AbstractCsrfForm;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Filter\StringTrim;
 use Zend\InputFilter\InputFilterProviderInterface;

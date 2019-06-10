@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
+use Common\Service\ApiClient\Client as ApiClient;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\JsonResponse;
-use GuzzleHttp\Psr7\Request as HttpRequest;
-use \Exception;
-use Viewer\Service\ApiClient\Client as ApiClient;
+use Exception;
 
 /**
  * Class HealthcheckHandler
@@ -19,7 +18,7 @@ use Viewer\Service\ApiClient\Client as ApiClient;
 class HealthcheckHandler implements RequestHandlerInterface
 {
     /**
-     * @var Client
+     * @var ApiClient
      */
     protected $apiClient;
 

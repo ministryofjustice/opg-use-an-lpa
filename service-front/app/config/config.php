@@ -13,8 +13,6 @@ $cacheConfig = [
 ];
 
 $aggregator = new ConfigAggregator([
-    \Actor\ConfigProvider::class,
-    \Common\ConfigProvider::class,
     \Zend\Expressive\Session\ConfigProvider::class,
     \Zend\Expressive\Csrf\ConfigProvider::class,
 
@@ -35,7 +33,9 @@ $aggregator = new ConfigAggregator([
         ? \Zend\Expressive\Swoole\ConfigProvider::class
         : function(){ return[]; },
 
-    // Default App module config
+    // App module(s) config
+    Common\ConfigProvider::class,
+    Actor\ConfigProvider::class,
     Viewer\ConfigProvider::class,
 
     // Load application config in a pre-defined order in such a way that local settings

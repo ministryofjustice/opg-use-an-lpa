@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
+use Common\Handler\AbstractHandler;
+use Common\Handler\Traits\Session as SessionTrait;
+use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Lpa\LpaService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Viewer\Middleware\Session\SessionTimeoutException;
-use Viewer\Service\Lpa\LpaService;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -18,6 +20,8 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  */
 class ViewLpaHandler extends AbstractHandler
 {
+    use SessionTrait;
+
     /**
      * @var LpaService
      */

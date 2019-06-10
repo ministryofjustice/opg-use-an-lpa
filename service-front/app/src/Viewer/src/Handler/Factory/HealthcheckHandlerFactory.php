@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\Factory;
 
+use Common\Service\ApiClient\Client as ApiClient;
 use Psr\Container\ContainerInterface;
 use Viewer\Handler\HealthcheckHandler;
-use Viewer\Service\ApiClient\Client as ApiClient;
 
 class HealthcheckHandlerFactory
 {

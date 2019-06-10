@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\CreateAccount;
+use Common\Handler\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -13,7 +14,7 @@ use Zend\Expressive\Csrf\CsrfMiddleware;
 
 /**
  * Class CreateAccountHandler
- * @package Viewer\Handler
+ * @package Actor\Handler
  */
 class CreateAccountHandler extends AbstractHandler
 {

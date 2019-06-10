@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler;
 
+use Common\Service\Lpa\LpaService;
 use Viewer\Handler\ViewLpaHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Viewer\Service\Lpa\LpaService;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;

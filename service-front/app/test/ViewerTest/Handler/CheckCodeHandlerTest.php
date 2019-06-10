@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler;
 
-use ArrayObject;
-use Psr\Http\Message\ResponseInterface;
+use Common\Service\ApiClient\ApiException;
+use Common\Service\Lpa\LpaService;
 use Viewer\Handler\CheckCodeHandler;
+use Psr\Http\Message\ResponseInterface;
 use PHPUnit\Framework\TestCase;
-use Viewer\Service\ApiClient\ApiException;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Expressive\Helper\UrlHelper;
-use Viewer\Service\Lpa\LpaService;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Session\SessionInterface;
 use Prophecy\Argument;
+use ArrayObject;
 
 class CheckCodeHandlerTest extends TestCase
 {
