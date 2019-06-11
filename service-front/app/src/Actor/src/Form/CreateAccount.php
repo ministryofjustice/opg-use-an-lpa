@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Actor\Form;
 
-use Viewer\Form\AbstractCsrfForm;
+use Common\Form\AbstractCsrfForm;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Filter\StringTrim;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\Regex;
 
 class CreateAccount extends AbstractCsrfForm implements InputFilterProviderInterface
 {

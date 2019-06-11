@@ -3,10 +3,6 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
-use Viewer\Handler\CheckCodeHandler;
-use Viewer\Handler\EnterCodeHandler;
-use Viewer\Handler\HomePageHandler;
-use Viewer\Handler\ViewLpaHandler;
 use Zend\Expressive\Application;
 use Zend\Expressive\MiddlewareFactory;
 

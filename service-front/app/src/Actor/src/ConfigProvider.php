@@ -31,8 +31,6 @@ class ConfigProvider
     public function getDependencies() : array
     {
         return [
-            'invokables' => [
-            ],
             'factories'  => [
             ],
         ];

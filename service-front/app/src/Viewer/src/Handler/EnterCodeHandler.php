@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
+use Common\Handler\AbstractHandler;
+use Common\Handler\Traits\Session as SessionTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\ShareCode;
@@ -17,6 +19,8 @@ use Zend\Diactoros\Response\HtmlResponse;
  */
 class EnterCodeHandler extends AbstractHandler
 {
+    use SessionTrait;
+
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface

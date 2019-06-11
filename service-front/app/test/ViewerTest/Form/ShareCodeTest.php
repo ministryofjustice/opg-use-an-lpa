@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ViewerTest\Form;
 
+use Common\Form\AbstractCsrfForm;
 use PHPUnit\Framework\TestCase;
-use Viewer\Form\AbstractCsrfForm;
 use Viewer\Form\ShareCode;
 use Prophecy\Prophecy\ObjectProphecy;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
@@ -13,7 +13,7 @@ use Zend\Form\Element\Csrf;
 
 class ShareCodeTest extends TestCase
 {
-    public function testIsAForm() 
+    public function testIsAForm()
     {
         $form = new ShareCode($this->setupGuard()->reveal());
 
@@ -25,7 +25,7 @@ class ShareCodeTest extends TestCase
     {
         $form = new ShareCode($this->setupGuard()->reveal());
 
-        $this->assertArrayHasKey("__csrf", $form->getElements()); 
+        $this->assertArrayHasKey("__csrf", $form->getElements());
         $this->assertInstanceOf(Csrf::class, $form->get("__csrf"));
     }
 

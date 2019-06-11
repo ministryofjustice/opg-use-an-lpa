@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
+use Common\Handler\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;

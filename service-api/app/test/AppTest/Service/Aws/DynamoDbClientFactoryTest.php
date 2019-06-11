@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ViewerTest\Service\Aws;
+namespace AppTest\Service\Aws;
 
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\Sdk;

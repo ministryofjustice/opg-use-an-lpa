@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Common\Handler\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 
 /**
  * Class HomePageHandler
- * @package Viewer\Handler
+ * @package Actor\Handler
  */
 class HomePageHandler extends AbstractHandler
 {

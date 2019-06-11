@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
-use ArrayObject;
+use Common\Handler\AbstractHandler;
+use Common\Handler\Traits\Session as SessionTrait;
+use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\ApiClient\ApiException;
+use Common\Service\Lpa\LpaService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Viewer\Middleware\Session\SessionTimeoutException;
-use Viewer\Service\ApiClient\ApiException;
-use Viewer\Service\Lpa\LpaService;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
+use ArrayObject;
 
 /**
  * Class CheckCodeHandler
@@ -20,6 +22,8 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  */
 class CheckCodeHandler extends AbstractHandler
 {
+    use SessionTrait;
+
     /** @var LpaService */
     private $lpaService;
 

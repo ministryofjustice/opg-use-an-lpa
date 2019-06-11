@@ -15,7 +15,7 @@ use RuntimeException;
  * how to create a client for a specific service.
  *
  * Class SdkFactory
- * @package Viewer\Service\Aws
+ * @package App\Service\Aws
  */
 class SdkFactory
 {

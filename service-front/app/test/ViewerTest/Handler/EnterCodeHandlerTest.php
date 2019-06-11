@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler;
 
-use Prophecy\Argument\Token\CallbackToken;
-use Prophecy\Prophecy\ObjectProphecy;
 use Viewer\Form\ShareCode;
 use Viewer\Handler\EnterCodeHandler;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument\Token\CallbackToken;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\RedirectResponse;
