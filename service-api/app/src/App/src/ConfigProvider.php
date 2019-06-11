@@ -7,6 +7,7 @@ namespace App;
 use Aws;
 use Http;
 use Psr;
+use Zend;
 
 /**
  * The configuration provider for the App module
@@ -42,8 +43,11 @@ class ConfigProvider
 
             'factories'  => [
                 // Services
+                Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 Aws\DynamoDb\DynamoDbClient::class => Service\Aws\DynamoDbClientFactory::class,
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
+
+                Service\Lpa\LpaService::class =>  Service\Lpa\LpaServiceFactory::class,
 
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class

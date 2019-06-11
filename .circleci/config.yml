@@ -19,7 +19,6 @@ workflows:
           name: app_api_build
       - use-my-lpa/docker_build_api_web:
           name: web_api_build
-
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
           name: dev_apply_shared_terraform
@@ -34,9 +33,16 @@ workflows:
             branches:
               ignore: master
 
+      - use-my-lpa/seed_database:
+          name: dev_seed_database
+          requires: [dev_apply_environment_terraform]
+          filters:
+            branches:
+              ignore: master
+
       - use-my-lpa/run_behave_suite:
           name: dev_run_behave_tests
-          requires: [dev_apply_environment_terraform]
+          requires: [dev_seed_database]
           filters:
             branches:
               ignore: master
@@ -71,10 +77,18 @@ workflows:
             branches:
               only: master
 
+      - use-my-lpa/seed_database:
+          name: preprod_seed_database
+          #workspace: preproduction   # Not needed as the target account is within the config file.
+          requires: [preprod_apply_environment_terraform]
+          filters:
+            branches:
+              only: master
+
       - use-my-lpa/run_behave_suite:
           name: preprod_run_behave_tests
           workspace: preproduction
-          requires: [preprod_apply_environment_terraform]
+          requires: [preprod_seed_database]
           filters:
             branches:
               only: master
@@ -95,9 +109,8 @@ workflows:
             branches:
               only: master
 
-      - use-my-lpa/run_behave_suite:
-          name: prod_run_behave_tests
-          workspace: production
+      - use-my-lpa/run_healthcheck_test:
+          name: prod_run_healthcheck_test
           requires: [production_apply_environment_terraform]
           filters:
             branches:
@@ -416,6 +429,31 @@ orbs:
                   echo $TF_WORKSPACE
                   terraform destroy -lock-timeout=300s -auto-approve
                 fi
+
+
+      #----------------------------------------------------
+      # Seeding
+
+      seed_database:
+        #
+        # Seed database with test data
+        #
+        executor: python
+        steps:
+          - checkout
+          - attach_workspace:
+              at: /tmp
+          - run:
+              name: Seed DynamoDB
+              command: |
+                sudo pip3 install boto3
+                export AWS_ACCOUNT_ID=$(cat /tmp/cluster_config.json | jq .account_id | xargs)
+                export DYNAMODB_TABLE_VIEWER_CODES=$(cat /tmp/cluster_config.json | jq .viewer_codes_table | xargs)
+                python service-api/seeding/dynamodb.py
+
+      #----------------------------------------------------
+      # Tests
+
       run_behave_suite:
         #
         # Run the full set of functional tests
@@ -466,3 +504,29 @@ orbs:
                 echo $TF_WORKSPACE
                 python features/ci_ingress.py /tmp/cluster_config.json
               when: always
+
+
+      run_healthcheck_test:
+        #
+        # Checks the health check is returning 200
+        #
+        executor: python
+        steps:
+          - checkout
+          - install_webdriver
+          - attach_workspace:
+              at: /tmp
+          - run:
+              name: Wait for new tasks in services to be running
+              command: |
+                sudo pip3 install boto3
+                python features/aws_ecs_task.py /tmp/cluster_config.json
+          - run:
+              name: Run test
+              command: |
+                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
+                viewer_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$viewer_fqdn/healthcheck)
+                [[ $viewer_response == 200 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
+
+                actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
+                # TODO Add for actor when endpoint exists.

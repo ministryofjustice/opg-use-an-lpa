@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace ViewerTest\Handler;
 
 use ArrayObject;
+use Psr\Http\Message\ResponseInterface;
 use Viewer\Handler\CheckCodeHandler;
 use PHPUnit\Framework\TestCase;
+use Viewer\Service\ApiClient\ApiException;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Expressive\Helper\UrlHelper;
@@ -61,7 +63,7 @@ class CheckCodeHandlerTest extends TestCase
     }
 
     /**
-     * Tests the case where an invalid (not found) code is within teh session.
+     * Tests the case where an invalid (not found) code is within the session.
      * We expect the 'Invalid Code' template.
      */
     public function testInvalidCode()
@@ -78,6 +80,32 @@ class CheckCodeHandlerTest extends TestCase
         $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE)->willReturn(null);
 
         $this->templateRendererProphecy->render('viewer::check-code-not-found', Argument::any())->willReturn('');
+
+        //---
+
+        $response = $handler->handle($this->requestProphecy->reveal());
+
+        $this->assertInstanceOf(HtmlResponse::class, $response);
+    }
+
+    /**
+     * Tests the case where an expired code is within the session.
+     * We expect the 'Expired Code' template.
+     */
+    public function testExpiredCode()
+    {
+        $handler = new CheckCodeHandler(
+            $this->templateRendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->lpaServiceProphecy->reveal()
+        );
+
+        //---
+
+        // Throw 410 exception
+        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE)->willThrow($this->getException(410));
+
+        $this->templateRendererProphecy->render('viewer::check-code-expired', Argument::any())->willReturn('');
 
         //---
 
@@ -116,5 +144,20 @@ class CheckCodeHandlerTest extends TestCase
         $response = $handler->handle($this->requestProphecy->reveal());
         $this->assertInstanceOf(HtmlResponse::class, $response);
 
+    }
+
+    /**
+     * @param int $code
+     * @param array $body
+     * @return ApiException
+     */
+    private function getException(int $code, array $body = [])
+    {
+        $responseProphecy = $this->prophesize(ResponseInterface::class);
+
+        $responseProphecy->getBody()->willReturn(json_encode($body));
+        $responseProphecy->getStatusCode()->willReturn($code);
+
+        return new ApiException($responseProphecy->reveal());
     }
 }

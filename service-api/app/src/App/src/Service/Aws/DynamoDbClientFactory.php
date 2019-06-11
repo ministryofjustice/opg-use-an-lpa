@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace App\Service\Aws;
 
-use Aws\DynamoDb\DynamoDbClient;
 use Psr\Container\ContainerInterface;
-use RuntimeException;
 
 /**
  * Builds a configured instance of the AWS DynamoDbClient.
@@ -17,12 +15,6 @@ class DynamoDbClientFactory
 {
     public function __invoke(ContainerInterface $container)
     {
-        $config = $container->get('config');
-
-        if (!isset($config['aws']['dynamodb'])) {
-            throw new RuntimeException('Missing aws configuration');
-        }
-
-        return new DynamoDbClient($config['aws']['dynamodb']);
+        return $container->get(\Aws\Sdk::class)->createDynamoDb();
     }
 }

@@ -11,13 +11,18 @@ return [
     ],
 
     'aws' => [
-        'region'    => 'eu-west-1',
-        'version'   => 'latest',
+        'region'  => 'eu-west-1',
+        'version' => 'latest',
 
-        'dynamodb' => [
-            'region'    => 'eu-west-1',
-            'version'   => 'latest',
+        'DynamoDb' => [
+            'endpoint' => getenv('AWS_ENDPOINT_DYNAMODB') ?: null,
         ],
+    ],
+
+    'repositories' => [
+        'dynamodb' => [
+            'viewer-codes-table' => getenv('DYNAMODB_TABLE_VIEWER_CODES') ?: null,
+        ]
     ],
 
 ];

@@ -2,50 +2,32 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service\Aws;
+namespace ViewerTest\Service\Aws;
 
-use App\Service\Aws\DynamoDbClientFactory;
 use Aws\DynamoDb\DynamoDbClient;
+use Aws\Sdk;
+use App\Service\Aws\DynamoDbClientFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
 class DynamoDbClientFactoryTest extends TestCase
 {
-    public function testMissingConfig()
-    {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Missing aws configuration');
-
-        $containerProphecy
-            ->get('config')
-            ->willReturn([]);
-
-        $factory = new DynamoDbClientFactory();
-
-        $factory($containerProphecy->reveal());
-    }
-
     public function testValidConfig()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
-        $containerProphecy
-            ->get('config')
-            ->willReturn([
-                'aws' => [
-                    'dynamodb' => [
-                        'region'    => 'eu-west-1',
-                        'version'   => 'latest',
-                    ],
-                ],
-            ]);
+        // Use a real Aws\Sdk to sense check the method.
+        $containerProphecy->get(Sdk::class)
+            ->willReturn(new Sdk([
+                'region'    => 'eu-west-1',
+                'version'   => 'latest',
+            ]));
+
+        //---
 
         $factory = new DynamoDbClientFactory();
+        $client = $factory($containerProphecy->reveal());
 
-        $dynamoDbClient = $factory($containerProphecy->reveal());
-
-        $this->assertInstanceOf(DynamoDbClient::class, $dynamoDbClient);
+        $this->assertInstanceOf(DynamoDbClient::class, $client);
     }
 }

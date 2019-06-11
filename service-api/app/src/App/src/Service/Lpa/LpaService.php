@@ -3,7 +3,9 @@
 namespace App\Service\Lpa;
 
 use App\Exception\NotFoundException;
+use App\Exception\GoneException;
 use Aws\DynamoDb\DynamoDbClient;
+use DateTime;
 
 /**
  * Class LpaService
@@ -17,12 +19,18 @@ class LpaService
     private $dynamoDbClient;
 
     /**
+     * $var string
+     */
+    private $viewCodesTableName;
+
+    /**
      * LpaService constructor.
      * @param DynamoDbClient $dynamoDbClient
      */
-    public function __construct(DynamoDbClient $dynamoDbClient)
+    public function __construct(DynamoDbClient $dynamoDbClient, string $viewCodesTable)
     {
         $this->dynamoDbClient = $dynamoDbClient;
+        $this->viewCodesTableName = $viewCodesTable;
     }
 
     /**
@@ -33,8 +41,7 @@ class LpaService
      */
     public function getById(string $lpaId) : array
     {
-        //  TODO - Implement the Dynamo query build here - for now just look for the hardcoded data
-
+        //  TODO - Remove the use of mock data when connected to Sirius gateway
         foreach ($this->lpaDatasets as $lpaDataset) {
             if (isset($lpaDataset['id']) && $lpaDataset['id'] == $lpaId) {
                 return $lpaDataset;
@@ -49,18 +56,36 @@ class LpaService
      *
      * @param string $shareCode
      * @return array
+     * @throws \Exception
      */
     public function getByCode(string $shareCode) : array
     {
-        //  TODO - Implement the Dynamo query build here - for now just look for the hardcoded data
+        //  Query Dynamo DB for the code
+        $result = $this->dynamoDbClient->getItem([
+            'TableName' => $this->viewCodesTableName,
+            'Key' => [
+                'ViewerCode' => [
+                    'S' => $shareCode,
+                ],
+            ],
+        ]);
 
-        foreach ($this->lpaDatasets as $lpaShareCode => $lpaDataset) {
-            if ($lpaShareCode == $shareCode) {
-                return $lpaDataset;
+        $expires = $result->search('Item.Expires.S');
+
+        if (!is_null($expires)) {
+            //  Check that the share code hasn't expired
+            $expiresDateTime = DateTime::createFromFormat('Y-m-d H:i:s', $expires);
+
+            if ($expiresDateTime < new DateTime()) {
+                throw new GoneException('Share code expired');
             }
+
+            $siriusId = $result->search('Item.SiriusId.S');
+
+            return $this->getById($siriusId);
         }
 
-        throw new NotFoundException('LPA not found');
+        throw new NotFoundException('Code not found');
     }
 
 
@@ -70,7 +95,7 @@ class LpaService
      * @var array
      */
     private $lpaDatasets = [
-        '123456789012' => [
+        [
             'id' => '12345678901',
             'caseNumber' => '787640393837',
             'type' => 'property-and-financial',
@@ -128,7 +153,7 @@ class LpaService
             'dateRegistration' => '2017-04-15T00:00:00+00:00',
             'dateLastConfirmedStatus' => '2019-04-22T00:00:00+00:00',
         ],
-        '987654321098' => [
+        [
             'id' => '98765432109',
             'caseNumber' => '787640393837',
             'type' => 'property-and-financial',

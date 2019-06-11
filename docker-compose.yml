@@ -129,6 +129,7 @@ services:
 
       # Local only
       AWS_ACCESS_KEY_ID: '-'
+      AWS_ENDPOINT_DYNAMODB: http://localstack:4569
       AWS_SECRET_ACCESS_KEY: '-'
       ENABLE_XDEBUG: 'true'
       PHP_IDE_CONFIG: serverName=api-app
@@ -146,6 +147,19 @@ services:
       - --no-scripts
       - --optimize-autoloader
 
+  api-seeding:
+    container_name: api-seeding
+    build:
+      context: .
+      dockerfile: service-api/docker/seeding/Dockerfile
+    depends_on:
+      - localstack
+    environment:
+      AWS_ACCESS_KEY_ID: '-'
+      AWS_SECRET_ACCESS_KEY: '-'
+      DYNAMODB_TABLE_VIEWER_CODES: 'ViewerCodes'
+      AWS_ENDPOINT_DYNAMODB: localstack:4569
+
   # ---------------------------
   # Local Development
 
@@ -157,16 +171,6 @@ services:
       - SERVICES=dynamodb:4569
       - DEFAULT_REGION=eu-west-1
       - HOSTNAME=localstack
-
-  local-config:
-    container_name: local-config
-    build:
-      context: .
-      dockerfile: local-config/Dockerfile
-    volumes:
-      - ./local-config:/config
-    depends_on:
-      - localstack
 
   kms:
     image: nsmithuk/local-kms:2

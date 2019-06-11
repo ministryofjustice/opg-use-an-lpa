@@ -21,6 +21,7 @@ resource "aws_ecs_service" "api" {
 
 //-----------------------------------------------
 // Api service discovery
+
 resource "aws_service_discovery_service" "api" {
   name = "api"
 
@@ -93,6 +94,7 @@ resource "aws_security_group_rule" "api_ecs_service_egress" {
 
 //--------------------------------------
 // Api ECS Service Task level config
+
 resource "aws_ecs_task_definition" "api" {
   family                   = "${terraform.workspace}-api"
   requires_compatibilities = ["FARGATE"]
@@ -148,6 +150,7 @@ data "aws_iam_policy_document" "api_permissions_role" {
 // API ECS Service Task Container level config
 
 locals {
+
   api_web = <<EOF
   {
     "cpu": 1,
@@ -215,7 +218,7 @@ locals {
         }
     },
     "environment": [
-      {
+    {
       "name": "DYNAMODB_TABLE_VIEWER_CODES",
       "value": "${aws_dynamodb_table.viewer_codes_table.name}"
     },
