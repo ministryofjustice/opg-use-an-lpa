@@ -38,7 +38,6 @@ Feature: View a lasting power of attorney
     When the share code form is submitted
     Then the "Invalid Code" page is displayed
 
-  @wip
   Scenario: Show an error page when I search for an LPA with an LPA code that has expired
     Given I go to the enter code page on the viewer service
     And the share code input is populated with "2222-2222-2222"
