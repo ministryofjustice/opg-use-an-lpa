@@ -47,6 +47,14 @@ workflows:
             branches:
               ignore: master
 
+        # Only here for testing
+      - use-my-lpa/run_healthcheck_test:
+          name: dev_run_healthcheck_test
+          requires: [dev_run_behave_tests]
+          filters:
+            branches:
+              ignore: master
+
       - hold-for-destruction:
           name: hold_env_for_destruction
           type: approval 
@@ -497,6 +505,53 @@ orbs:
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
                 behave
+          - run:
+              name: Remove CircleCI ingress to environment
+              command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                python features/ci_ingress.py /tmp/cluster_config.json
+              when: always
+
+
+      run_healthcheck_test:
+        #
+        # Checks the healthcheck is returning 200
+        #
+        executor: python
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
+        steps:
+          - checkout
+          - install_webdriver
+          - attach_workspace:
+              at: /tmp
+          - run:
+              name: Wait for new tasks in services to be running
+              command: |
+                sudo pip3 install boto3
+                python features/aws_ecs_task.py /tmp/cluster_config.json
+          - run:
+              name: Allow CircleCI ingress to environment
+              command: |
+                ENV_NAME=<<parameters.workspace>>
+                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                echo $TF_WORKSPACE
+                if [ "${TF_WORKSPACE}" != "production" ]; then
+                  python features/ci_ingress.py /tmp/cluster_config.json --add
+                fi
+          - run:
+              name: Run test
+              command: |
+                actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
+                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
+
+                viewer_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$viewer_fqdn/healthcheck)
+                echo $viewer_response
           - run:
               name: Remove CircleCI ingress to environment
               command: |
