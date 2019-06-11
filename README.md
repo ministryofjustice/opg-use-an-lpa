@@ -21,9 +21,11 @@ docker-compose run api-composer composer development-enable
 docker-compose exec api-app rm -f /tmp/config-cache.php
 ```
 
-The Viewer service will be available via http://localhost:9001/
+The Viewer service will be available via http://localhost:9001
 
-The API service will be available via http://localhost:9003/
+The Actor service will be available via http://localhost:9002
+
+The API service will be available via http://localhost:9003
 
 ### Tests
 
@@ -53,17 +55,21 @@ Composer install is run when the app container is built, and on a standard `dock
 
 It can also be run independently with:
 ```bash
+docker-compose run api-composer
+
 docker-compose run front-composer
 ```
 
 New packages can be added with:
 ```bash
 docker-compose run api-composer composer require author/package
+
 docker-compose run front-composer composer require author/package
 ```
 
 Packages can be removed with:
 ```bash
 docker-compose run api-composer composer remove author/package
+
 docker-compose run front-composer composer remove author/package
 ```
