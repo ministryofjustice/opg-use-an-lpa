@@ -511,11 +511,6 @@ orbs:
         # Checks the health check is returning 200
         #
         executor: python
-        parameters:
-          workspace:
-            description: Terraform workspace name
-            type: string
-            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
         steps:
           - checkout
           - install_webdriver
@@ -527,15 +522,6 @@ orbs:
                 sudo pip3 install boto3
                 python features/aws_ecs_task.py /tmp/cluster_config.json
           - run:
-              name: Allow CircleCI ingress to environment
-              command: |
-                ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
-                echo $TF_WORKSPACE
-                if [ "${TF_WORKSPACE}" != "production" ]; then
-                  python features/ci_ingress.py /tmp/cluster_config.json --add
-                fi
-          - run:
               name: Run test
               command: |
                 viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
@@ -544,11 +530,3 @@ orbs:
 
                 actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
                 # TODO Add for actor when endpoint exists.
-          - run:
-              name: Remove CircleCI ingress to environment
-              command: |
-                ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
-                echo $TF_WORKSPACE
-                python features/ci_ingress.py /tmp/cluster_config.json
-              when: always
