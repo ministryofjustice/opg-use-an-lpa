@@ -551,7 +551,7 @@ orbs:
                 viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
 
                 viewer_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$viewer_fqdn/healthcheck)
-                [[ $viewer_response == 200 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
+                [[ $viewer_response == 500 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
           - run:
               name: Remove CircleCI ingress to environment
               command: |
