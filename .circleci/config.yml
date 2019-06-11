@@ -47,14 +47,6 @@ workflows:
             branches:
               ignore: master
 
-        # Only here for testing
-      - use-my-lpa/run_healthcheck_test:
-          name: dev_run_healthcheck_test
-          requires: [dev_run_behave_tests]
-          filters:
-            branches:
-              ignore: master
-
       - hold-for-destruction:
           name: hold_env_for_destruction
           type: approval 
@@ -117,9 +109,8 @@ workflows:
             branches:
               only: master
 
-      - use-my-lpa/run_behave_suite:
-          name: prod_run_behave_tests
-          workspace: production
+      - use-my-lpa/run_healthcheck_test:
+          name: prod_run_healthcheck_test
           requires: [production_apply_environment_terraform]
           filters:
             branches:
@@ -517,7 +508,7 @@ orbs:
 
       run_healthcheck_test:
         #
-        # Checks the healthcheck is returning 200
+        # Checks the health check is returning 200
         #
         executor: python
         parameters:
@@ -547,11 +538,12 @@ orbs:
           - run:
               name: Run test
               command: |
-                actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
                 viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
-
                 viewer_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$viewer_fqdn/healthcheck)
-                [[ $viewer_response == 500 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
+                [[ $viewer_response == 200 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
+
+                actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
+                # TODO Add for actor when endpoint exists.
           - run:
               name: Remove CircleCI ingress to environment
               command: |
