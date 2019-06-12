@@ -26,6 +26,15 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
     --region eu-west-1 \
     --endpoint $DYNAMODN_ENDPOINT
+
+
+    aws dynamodb create-table \
+    --attribute-definitions AttributeName=ViewerCode,AttributeType=S AttributeName=Viewed,AttributeType=S \
+    --table-name ViewerActivity \
+    --key-schema AttributeName=ViewerCode,KeyType=HASH AttributeName=Viewed,KeyType=RANGE \
+    --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
+    --region eu-west-1 \
+    --endpoint $DYNAMODN_ENDPOINT
 fi
 
 # Run the seeding script
