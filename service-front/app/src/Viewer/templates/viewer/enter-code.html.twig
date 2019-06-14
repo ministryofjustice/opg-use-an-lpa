@@ -18,16 +18,7 @@
 
                         {{ govuk_error_summary(form) }}
 
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="lpa_code">
-                                LPA code
-                            </label>
-
-                            {{ govuk_error(form.get('lpa_code')) }}
-
-                            <input class="govuk-input {{ govuk_error_class(form.get('lpa_code')) }}" id="share_code_lpa_code" name="lpa_code"
-                                   type="text" value="{{ form.get('lpa_code').value }}">
-                        </div>
+                        {{ govuk_form_element(form.get('lpa_code'), 'LPA code') }}
 
                         <details class="govuk-details">
                             <summary class="govuk-details__summary">

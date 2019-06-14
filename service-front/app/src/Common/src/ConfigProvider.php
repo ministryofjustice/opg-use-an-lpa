@@ -91,6 +91,7 @@ class ConfigProvider
             'extensions' => [
                 View\Twig\OrdinalNumberExtension::class,
                 View\Twig\GovUKZendFormErrorsExtension::class,
+                View\Twig\GovUKZendFormExtension::class,
             ]
         ];
     }
