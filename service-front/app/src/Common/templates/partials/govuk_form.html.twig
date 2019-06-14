@@ -23,7 +23,7 @@
         {{ govuk_error(element) }}
 
         <input class="govuk-input {% if element.getMessages() is not empty %}govuk-input--error{% endif %}" id="{{ element.getName() }}"
-               name="{{ element.getName() }}" type="password" value="{{ element.getValue() }}" />
+               name="{{ element.getName() }}" type="password" />
     </div>
 
 {% endblock form_input_password %}
@@ -34,10 +34,10 @@
         <div class="govuk-checkboxes">
             <div class="govuk-checkboxes__item">
 
-                <input class="govuk-checkboxes__input" id="terms" name="terms" type="checkbox">
+                <input class="govuk-checkboxes__input" id="{{ element.getName() }}" name="{{ element.getName() }}" value="{{ element.getCheckedValue() }}" type="checkbox" {% if element.getValue() == element.getCheckedValue() %}checked="checked"{% endif %}>
 
-                <label class="govuk-label govuk-checkboxes__label" for="terms">
-                    I agree to the <a href="#" class="govuk-link">terms of use</a>
+                <label class="govuk-label govuk-checkboxes__label" for="{{ element.getName() }}">
+                    {{ element.getLabel() | raw }}
 
                     {{ govuk_error(element) }}
                 </label>
