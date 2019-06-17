@@ -2,15 +2,15 @@
 
 namespace App\Service\ApiClient;
 
+use App\Exception\AbstractApiException;
 use Psr\Http\Message\ResponseInterface;
-use RuntimeException;
 use Throwable;
 
 /**
  * Class ApiException
  * @package App\Service\ApiClient
  */
-class ApiException extends RuntimeException
+class ApiException extends AbstractApiException
 {
     const DEFAULT_ERROR = 500;
 
@@ -30,13 +30,19 @@ class ApiException extends RuntimeException
     public function __construct(string $message, int $code = self::DEFAULT_ERROR, ResponseInterface $response = null, Throwable $previous = null)
     {
         $this->response = $response;
+        $this->code = $code;
 
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, 'An API exception has occurred', null, $previous);
     }
 
     public function getResponse() : ResponseInterface
     {
         return $this->response;
+    }
+
+    public function getAdditionalData() : array
+    {
+        return json_decode($this->getResponse()->getBody(), true);
     }
 
     public static function create(string $message = null, ResponseInterface $response = null, Throwable $previous = null) : ApiException
