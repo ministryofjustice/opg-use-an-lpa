@@ -19,6 +19,9 @@ class GovUKZendFormExtension extends AbstractExtension
         Element\Text::class     => 'form_input_text',
     ];
 
+    /**
+     * @return array
+     */
     public function getFunctions() : array
     {
         return [

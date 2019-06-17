@@ -14,12 +14,35 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
 {
     const THEME_FILE='@partials/govuk_error.html.twig';
 
+    /**
+     * @return array
+     */
     public function getFunctions() : array
     {
         return [
+            new TwigFunction('govuk_error_class_input', [$this, 'errorClassInput']),
+            new TwigFunction('govuk_error_class_form_group', [$this, 'errorClassFormGroup']),
             new TwigFunction('govuk_error', [$this, 'errorMessage'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('govuk_error_summary', [$this, 'errorSummary'], ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
+    }
+
+    /**
+     * @param ElementInterface $element
+     * @return string
+     */
+    public function errorClassInput(ElementInterface $element) : string
+    {
+        return (empty($element->getMessages()) ? '' : 'govuk-input--error');
+    }
+
+    /**
+     * @param ElementInterface $element
+     * @return string
+     */
+    public function errorClassFormGroup(ElementInterface $element) : string
+    {
+        return (empty($element->getMessages()) ? '' : 'govuk-form-group--error');
     }
 
     /**
@@ -41,6 +64,15 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
         ]);
     }
 
+    /**
+     * @param Environment $twigEnv
+     * @param FormInterface $form
+     * @return string
+     * @throws \Throwable
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function errorSummary(Environment $twigEnv, FormInterface $form) : string {
         $template = $twigEnv->load(self::THEME_FILE);
 
@@ -56,6 +88,10 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
         ]);
     }
 
+    /**
+     * @param array $messages
+     * @return array
+     */
     private function flattenMessages(array $messages) : array {
         $messagesToPrint = [];
         array_walk_recursive($messages, function ($item) use (&$messagesToPrint) {
