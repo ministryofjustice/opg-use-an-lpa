@@ -5,7 +5,6 @@ namespace App\Service\Lpa;
 use App\DataAccess\Repository;
 use App\Exception\NotFoundException;
 use App\Exception\GoneException;
-use Aws\DynamoDb\DynamoDbClient;
 use DateTime;
 
 /**
@@ -15,14 +14,9 @@ use DateTime;
 class LpaService
 {
     /**
-     * @var DynamoDbClient
+     * @var Repository\ViewerCodesInterface
      */
-    private $dynamoDbClient;
-
-    /**
-     * $var string
-     */
-    private $viewCodesTableName;
+    private $codesRepository;
 
     /**
      * @var Repository\ViewerCodeActivityInterface
@@ -31,18 +25,15 @@ class LpaService
 
     /**
      * LpaService constructor.
-     * @param DynamoDbClient $dynamoDbClient
-     * @param string $viewCodesTable
-     * @param Repository\ViewerCodeActivityInterface $activityRepository\
+     * @param Repository\ViewerCodesInterface $codesRepository
+     * @param Repository\ViewerCodeActivityInterface $activityRepository
      */
     public function __construct(
-        DynamoDbClient $dynamoDbClient,
-        string $viewCodesTable,
+        Repository\ViewerCodesInterface $codesRepository,
         Repository\ViewerCodeActivityInterface $activityRepository
     )
     {
-        $this->dynamoDbClient = $dynamoDbClient;
-        $this->viewCodesTableName = $viewCodesTable;
+        $this->codesRepository = $codesRepository;
         $this->activityRepository = $activityRepository;
     }
 
@@ -73,37 +64,17 @@ class LpaService
      */
     public function getByCode(string $shareCode) : array
     {
-        //  Query Dynamo DB for the code
-        $result = $this->dynamoDbClient->getItem([
-            'TableName' => $this->viewCodesTableName,
-            'Key' => [
-                'ViewerCode' => [
-                    'S' => $shareCode,
-                ],
-            ],
-        ]);
+        $viewerCodeData = $this->codesRepository->get($shareCode);
 
-        $expires = $result->search('Item.Expires.S');
-
-        if (!is_null($expires)) {
-            //  Check that the share code hasn't expired
-            $expiresDateTime = DateTime::createFromFormat('Y-m-d H:i:s', $expires);
-
-            if ($expiresDateTime < new DateTime()) {
-                throw new GoneException('Share code expired');
-            }
-
-            $siriusId = $result->search('Item.SiriusId.S');
-
-            // Record the lookup in the Activity table
-            $this->activityRepository->recordSuccessfulLookupActivity($result->search('Item.ViewerCode.S'));
-
-            return $this->getById($siriusId);
+        if ($viewerCodeData['Expires'] < new DateTime()) {
+            throw new GoneException('Share code expired');
         }
 
-        throw new NotFoundException('Code not found');
-    }
+        //  Record the lookup in the activity table
+        $this->activityRepository->recordSuccessfulLookupActivity($viewerCodeData['ViewerCode']);
 
+        return $this->getById($viewerCodeData['SiriusId']);
+    }
 
     /**
      * TODO - Mock LPA data....to be removed when Sirius connectivity is established

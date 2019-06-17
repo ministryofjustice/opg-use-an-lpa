@@ -42,6 +42,7 @@ class ConfigProvider
 
                 // Data Access
                 DataAccess\Repository\ViewerCodeActivityInterface::class => DataAccess\DynamoDb\ViewerCodeActivity::class,
+                DataAccess\Repository\ViewerCodesInterface::class => DataAccess\DynamoDb\ViewerCodes::class,
             ],
 
             'factories'  => [
@@ -50,15 +51,14 @@ class ConfigProvider
                 Aws\DynamoDb\DynamoDbClient::class => Service\Aws\DynamoDbClientFactory::class,
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
 
-                Service\Lpa\LpaService::class =>  Service\Lpa\LpaServiceFactory::class,
-
                 // Data Access
                 DataAccess\DynamoDb\ViewerCodeActivity::class => DataAccess\DynamoDb\ViewerCodeActivityFactory::class,
+                DataAccess\DynamoDb\ViewerCodes::class => DataAccess\DynamoDb\ViewerCodesFactory::class,
 
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class
             ],
-            
+
             'delegators' => [
                 Zend\Stratigility\Middleware\ErrorHandler::class => [
                     Service\Log\LogStderrListenerDelegatorFactory::class,
