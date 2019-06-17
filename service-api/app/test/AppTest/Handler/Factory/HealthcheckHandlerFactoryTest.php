@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use App\Handler\Factory\HealthcheckHandlerFactory;
 use App\Handler\HealthcheckHandler;
 use Psr\Container\ContainerInterface;
-use App\Service\ApiClient\Client as ApiClient;
+use App\Service\ApiClient\ClientInterface as ApiClient;
 
 class HealthcheckHandlerFactoryTest extends TestCase
 {

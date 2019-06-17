@@ -21,7 +21,7 @@ class ClientFactory
             throw new \Exception('AWS configuration not present');
         }
 
-        return new Client(
+        return new SignedRequestClient(
             $container->get(ClientInterface::class),
             $config['sirius_api']['endpoint'],
             $config['aws']['region']

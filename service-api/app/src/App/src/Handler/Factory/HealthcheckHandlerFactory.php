@@ -6,7 +6,7 @@ namespace App\Handler\Factory;
 
 use Psr\Container\ContainerInterface;
 use App\Handler\HealthcheckHandler;
-use App\Service\ApiClient\Client as ApiClient;
+use App\Service\ApiClient\ClientInterface as ApiClient;
 
 class HealthcheckHandlerFactory
 {

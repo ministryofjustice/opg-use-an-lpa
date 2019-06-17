@@ -1,21 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\ApiClient;
 
+use App\Exception\ApiException;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\Request;
-use Http\Client\Exception as HttpException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Aws\Credentials\CredentialProvider;
 use Aws\Signature\SignatureV4;
+use App\Service\ApiClient\ClientInterface as ApiClientInterface;
 
 /**
- * Class Client
+ * Class SignedRequestClient
+ *
+ * Signs HTTP requests made through it using HMAC and AWS API Gateway data.
+ *
  * @package App\Service\ApiClient
  */
-class Client
+class SignedRequestClient implements ApiClientInterface
 {
     /**
      * @var ClientInterface
@@ -45,12 +52,7 @@ class Client
     }
 
     /**
-     * Performs a GET against the API
-     *
-     * @param string $path
-     * @param array $query
-     * @return array
-     * @throws ApiException|HttpException
+     * @inheritDoc
      */
     public function httpGet(string $path, array $query = []) : ?array
     {
@@ -62,26 +64,24 @@ class Client
 
         $request = new Request('GET', $url, $this->buildHeaders());
 
-        //  Can throw RuntimeException if there is a problem
-        $response = $this->httpClient->sendRequest($this->signRequest($request));
+        try {
+            $response = $this->httpClient->sendRequest($this->signRequest($request));
 
-        switch ($response->getStatusCode()) {
-            case 200:
-                return $this->handleResponse($response);
-            case 404:
-                return null;
-            default:
-                throw new ApiException($response);
+            switch ($response->getStatusCode()) {
+                case 200:
+                    return $this->handleResponse($response);
+                case 404:
+                    return null;
+                default:
+                    throw ApiException::create(null, $response);
+            }
+        } catch (ClientExceptionInterface $ex) {
+            throw ApiException::create('Error whilst making http GET request', null, $ex);
         }
     }
 
     /**
-     * Performs a POST against the API
-     *
-     * @param string $path
-     * @param array $payload
-     * @return array
-     * @throws ApiException|HttpException
+     * @inheritDoc
      */
     public function httpPost(string $path, array $payload = []) : array
     {
@@ -89,24 +89,23 @@ class Client
 
         $request = new Request('POST', $url, $this->buildHeaders(), json_encode($payload));
 
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($this->signRequest($request));
 
-        switch ($response->getStatusCode()) {
-            case 200:
-            case 201:
-                return $this->handleResponse($response);
-            default:
-                throw new ApiException($response);
+            switch ($response->getStatusCode()) {
+                case 200:
+                case 201:
+                    return $this->handleResponse($response);
+                default:
+                    throw ApiException::create(null, $response);
+            }
+        } catch (ClientExceptionInterface $ex) {
+            throw ApiException::create('Error whilst making http POST request', null, $ex);
         }
     }
 
     /**
-     * Performs a PUT against the API
-     *
-     * @param string $path
-     * @param array $payload
-     * @return array
-     * @throws ApiException|HttpException
+     * @inheritDoc
      */
     public function httpPut(string $path, array $payload = []) : array
     {
@@ -114,24 +113,23 @@ class Client
 
         $request = new Request('PUT', $url, $this->buildHeaders(), json_encode($payload));
 
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($this->signRequest($request));
 
-        switch ($response->getStatusCode()) {
-            case 200:
-            case 201:
-                return $this->handleResponse($response);
-            default:
-                throw new ApiException($response);
+            switch ($response->getStatusCode()) {
+                case 200:
+                case 201:
+                    return $this->handleResponse($response);
+                default:
+                    throw ApiException::create(null, $response);
+            }
+        } catch (ClientExceptionInterface $ex) {
+            throw ApiException::create('Error whilst making http POST request', null, $ex);
         }
     }
 
     /**
-     * Performs a PATCH against the API
-     *
-     * @param string $path
-     * @param array $payload
-     * @return array
-     * @throws ApiException|HttpException
+     * @inheritDoc
      */
     public function httpPatch(string $path, array $payload = []) : array
     {
@@ -139,23 +137,24 @@ class Client
 
         $request = new Request('PATCH', $url, $this->buildHeaders(), json_encode($payload));
 
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($this->signRequest($request));
 
-        switch ($response->getStatusCode()) {
-            case 200:
-            case 201:
-                return $this->handleResponse($response);
-            default:
-                throw new ApiException($response);
+            switch ($response->getStatusCode()) {
+                case 200:
+                case 201:
+                    return $this->handleResponse($response);
+                default:
+                    throw ApiException::create(null, $response);
+            }
+        } catch (ClientExceptionInterface $ex) {
+            throw ApiException::create('Error whilst making http PATCH request', null, $ex);
         }
+
     }
 
     /**
-     * Performs a DELETE against the API
-     *
-     * @param string $path
-     * @return array
-     * @throws ApiException|HttpException
+     * @inheritDoc
      */
     public function httpDelete(string $path) : array
     {
@@ -163,14 +162,18 @@ class Client
 
         $request = new Request('DELETE', $url, $this->buildHeaders());
 
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($this->signRequest($request));
 
-        switch ($response->getStatusCode()) {
-            case 200:
-            case 201:
-                return $this->handleResponse($response);
-            default:
-                throw new ApiException($response);
+            switch ($response->getStatusCode()) {
+                case 200:
+                case 201:
+                    return $this->handleResponse($response);
+                default:
+                    throw ApiException::create(null, $response);
+            }
+        } catch (ClientExceptionInterface $ex) {
+            throw ApiException::create('Error whilst making http DELETE request', null, $ex);
         }
     }
 
@@ -209,7 +212,7 @@ class Client
 
         //  If the body isn't an array now then it wasn't JSON before
         if (!is_array($body)) {
-            throw new ApiException($response, 'Malformed JSON response from server');
+            throw new ApiException('Malformed JSON response from server', $response);
         }
 
         return $body;

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\Service\ApiClient\ClientInterface;
 use Exception;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\JsonResponse;
-use App\Service\ApiClient\Client as ApiClient;
 
 /**
  * Class HealthcheckHandler
@@ -18,7 +18,7 @@ use App\Service\ApiClient\Client as ApiClient;
 class HealthcheckHandler implements RequestHandlerInterface
 {
     /**
-     * @var ApiClient
+     * @var ClientInterface
      */
     protected $apiClient;
 
@@ -27,7 +27,7 @@ class HealthcheckHandler implements RequestHandlerInterface
      */
     protected $version;
 
-    public function __construct(string $version, ApiClient $api)
+    public function __construct(string $version, ClientInterface $api)
     {
         $this->apiClient = $api;
         $this->version = $version;
