@@ -125,6 +125,7 @@ services:
     volumes:
       - ./service-api/app:/app
     environment:
+      DYNAMODB_TABLE_ACTOR_USERS: 'ActorUsers'
       DYNAMODB_TABLE_VIEWER_CODES: 'ViewerCodes'
       DYNAMODB_TABLE_VIEWER_ACTIVITY: 'ViewerActivity'
 
