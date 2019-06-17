@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exception;
 
 use RuntimeException;
@@ -33,7 +35,7 @@ abstract class AbstractApiException extends RuntimeException
      * @param array $additionalData
      * @param Throwable|null $previous
      */
-    public function __construct(string $title, ?string $message = null, array $additionalData = [], Throwable $previous = null)
+    public function __construct(string $title, ?string $message = null, ?array $additionalData = [], ?Throwable $previous = null)
     {
         //  Ensure the the required data is set in the extending exception classes
         if (!is_numeric($this->code)) {
