@@ -7,10 +7,11 @@ namespace App\DataAccess\DynamoDb;
 use App\DataAccess\Repository\ViewerCodesInterface;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
-use DateTime;
 
 class ViewerCodes implements ViewerCodesInterface
 {
+    use DynamoHydrateTrait;
+
     /**
      * @var DynamoDbClient
      */
@@ -46,25 +47,12 @@ class ViewerCodes implements ViewerCodesInterface
             ],
         ]);
 
-        if (isset($result['Item'])) {
-            $values = $result['Item'];
+        $codeData = $this->getData($result, ['Expires']);
 
-            $item = [];
-            $dateFields = ['Expires'];
-
-            foreach ($values as $key => $value) {
-                $thisVal = current($value);
-
-                if (in_array($key, $dateFields)) {
-                    $thisVal = DateTime::createFromFormat('Y-m-d H:i:s', $thisVal);
-                }
-
-                $item[$key] = $thisVal;
-            }
-
-            return $item;
+        if (empty($codeData)) {
+            throw new NotFoundException('Code not found');
         }
 
-        throw new NotFoundException('Code not found');
+        return $codeData;
     }
 }
