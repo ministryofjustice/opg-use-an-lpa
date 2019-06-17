@@ -1,6 +1,8 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace App\Service\ApiClient;
+declare(strict_types=1);
+
+namespace App\Exception;
 
 use App\Exception\AbstractApiException;
 use Psr\Http\Message\ResponseInterface;
@@ -12,12 +14,22 @@ use Throwable;
  */
 class ApiException extends AbstractApiException
 {
+    // A safe bet for an exception is a 500 error response
     const DEFAULT_ERROR = 500;
+
+    // The title is suitably generic, further details (from previous Throwables) will be
+    // encapsulated in the stacktrace.
+    const DEFAULT_TITLE = 'An API exception has occurred';
+
+    /**
+     * @var int|null
+     */
+    protected $code;
 
     /**
      * @var ResponseInterface
      */
-    private $response;
+    protected $response;
 
     /**
      * ApiException constructor
@@ -32,7 +44,7 @@ class ApiException extends AbstractApiException
         $this->response = $response;
         $this->code = $code;
 
-        parent::__construct($message, 'An API exception has occurred', null, $previous);
+        parent::__construct(self::DEFAULT_TITLE, $message,null, $previous);
     }
 
     public function getResponse() : ResponseInterface
@@ -40,6 +52,12 @@ class ApiException extends AbstractApiException
         return $this->response;
     }
 
+    /**
+     * Returns the body content of the response decoded from JSON into an
+     * associative array.
+     *
+     * @return array
+     */
     public function getAdditionalData() : array
     {
         return json_decode($this->getResponse()->getBody(), true);
@@ -47,7 +65,7 @@ class ApiException extends AbstractApiException
 
     public static function create(string $message = null, ResponseInterface $response = null, Throwable $previous = null) : ApiException
     {
-        $code = null;
+        $code = self::DEFAULT_ERROR;
 
         if (! is_null($response)) {
             $body = json_decode($response->getBody(), true);
