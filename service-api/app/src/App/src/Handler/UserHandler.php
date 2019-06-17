@@ -34,8 +34,6 @@ class UserHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $data = [];
-
         if ($request->getMethod() === 'POST') {
             $requestData = $request->getParsedBody();
 
@@ -43,17 +41,19 @@ class UserHandler implements RequestHandlerInterface
                 throw new BadRequestException('Email address and password must be provided');
             }
 
-            $this->userService->add($requestData);
-        } else {
-            //  If not a post then try to get a user
-            $params = $request->getQueryParams();
+            $data = $this->userService->add($requestData);
 
-            if (!isset($params['email'])) {
-                throw new BadRequestException('Email address must be provided');
-            }
-
-            $data = $this->userService->get($params['email']);
+            return new JsonResponse($data, 201);
         }
+
+        //  If not a post then try to get a user
+        $params = $request->getQueryParams();
+
+        if (!isset($params['email'])) {
+            throw new BadRequestException('Email address must be provided');
+        }
+
+        $data = $this->userService->get($params['email']);
 
         return new JsonResponse($data);
     }

@@ -6,11 +6,14 @@ namespace Actor\Handler;
 
 use Actor\Form\CreateAccount;
 use Common\Handler\AbstractHandler;
+use Common\Service\User\UserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Expressive\Csrf\CsrfMiddleware;
+use Zend\Expressive\Helper\UrlHelper;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * Class CreateAccountHandler
@@ -18,9 +21,29 @@ use Zend\Expressive\Csrf\CsrfMiddleware;
  */
 class CreateAccountHandler extends AbstractHandler
 {
+    /** @var UserService */
+    private $userService;
+
+    /**
+     * CreateAccountHandler constructor.
+     * @param TemplateRendererInterface $renderer
+     * @param UrlHelper $urlHelper
+     * @param UserService $userService
+     */
+    public function __construct(
+        TemplateRendererInterface $renderer,
+        UrlHelper $urlHelper,
+        UserService $userService)
+    {
+        parent::__construct($renderer, $urlHelper);
+
+        $this->userService = $userService;
+    }
+
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Http\Client\Exception
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
@@ -32,8 +55,11 @@ class CreateAccountHandler extends AbstractHandler
             $form->setData($request->getParsedBody());
 
             if ($form->isValid()) {
-                //  TODO - For now just redirect to create account page
+                $data = $form->getData();
 
+                $userData = $this->userService->create($data['email'], $data['password']);
+
+                //  TODO - For now just redirect to create account page
                 return $this->redirectToRoute('create-account');
             }
         }

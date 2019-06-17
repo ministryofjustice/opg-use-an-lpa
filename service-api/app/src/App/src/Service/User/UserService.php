@@ -26,10 +26,11 @@ class UserService
 
     /**
      * @param array $data
+     * @return array
      */
-    public function add(array $data)
+    public function add(array $data) : array
     {
-        $this->usersRepository->add($data['email'], $data['password']);
+        return $this->usersRepository->add($data['email'], $data['password']);
     }
 
     /**

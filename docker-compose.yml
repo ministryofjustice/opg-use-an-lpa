@@ -75,11 +75,12 @@ services:
       KMS_SESSION_CMK_ALIAS: 'alias/viewer-sessions-cmk-alias'
 
       # Local only
+      API_SERVICE_URL: http://api-web
       AWS_ENDPOINT_KMS: http://kms:8080
       AWS_ACCESS_KEY_ID: '-'
       AWS_SECRET_ACCESS_KEY: '-'
       ENABLE_XDEBUG: 'true'
-      PHP_IDE_CONFIG: serverName=viewer-app
+      PHP_IDE_CONFIG: serverName=actor-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
 
 

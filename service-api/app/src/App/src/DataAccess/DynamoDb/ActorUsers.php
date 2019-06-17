@@ -36,7 +36,7 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function add(string $email, string $password) : void
+    public function add(string $email, string $password) : array
     {
         $this->client->putItem([
             'TableName' => $this->actorUsersTable,
@@ -45,6 +45,8 @@ class ActorUsers implements ActorUsersInterface
                 'Password' => ['S' => password_hash($password, PASSWORD_DEFAULT)],
             ]
         ]);
+
+        return $this->get($email);
     }
 
     /**

@@ -11,8 +11,9 @@ interface ActorUsersInterface
      *
      * @param string $email
      * @param string $password
+     * @return array
      */
-    public function add(string $email, string $password) : void;
+    public function add(string $email, string $password) : array;
 
     /**
      * Get an actor user from the database
