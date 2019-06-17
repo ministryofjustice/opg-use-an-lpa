@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Service\ApiClient;
 
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
+use Throwable;
 
 /**
  * Class ApiException
@@ -11,72 +12,60 @@ use RuntimeException;
  */
 class ApiException extends RuntimeException
 {
+    const DEFAULT_ERROR = 500;
+
     /**
-     * @var array
+     * @var ResponseInterface
      */
-    private $body;
+    private $response;
 
     /**
      * ApiException constructor
      *
-     * @param ResponseInterface $response
-     * @param string|null $message
+     * @param string $message
+     * @param int $code
+     * @param ResponseInterface|null $response
+     * @param Throwable|null $previous
      */
-    public function __construct(ResponseInterface $response, string $message = null)
+    public function __construct(string $message, int $code = self::DEFAULT_ERROR, ResponseInterface $response = null, Throwable $previous = null)
     {
-        $this->body = json_decode($response->getBody(), true);
+        $this->response = $response;
 
-        //  If no message was provided create one from the response data
-        if (is_null($message)) {
-            //  Try to get the message from the details section of the body
-            $message = $this->getBodyData('details');
+        parent::__construct($message, $code, $previous);
+    }
 
-            //  If there is still no message then compose a standard message
+    public function getResponse() : ResponseInterface
+    {
+        return $this->response;
+    }
+
+    public static function create(string $message = null, ResponseInterface $response = null, Throwable $previous = null) : ApiException
+    {
+        $code = null;
+
+        if (! is_null($response)) {
+            $body = json_decode($response->getBody(), true);
+            $code = $response->getStatusCode();
+
+            //  If no message was provided create one from the response data
             if (is_null($message)) {
-                $message = 'HTTP:' . $response->getStatusCode() . ' - ' . (is_array($this->body) ? print_r($this->body, true) : 'Unexpected API response');
+
+                //  Try to get the message from the details section of the body
+                if (is_array($body) && isset($body['details'])) {
+                    $message = $body['details'];
+                }
+
+                //  If there is still no message then compose a standard message
+                if (is_null($message)) {
+                    $message = sprintf(
+                        'HTTP: %d - %s',
+                        $response->getStatusCode(),
+                        is_array($body) ? print_r($body, true) : 'Unexpected API response'
+                    );
+                }
             }
         }
 
-        parent::__construct($message, $response->getStatusCode());
-    }
-
-    /**
-     * @return mixed|null
-     */
-    public function getTitle()
-    {
-        return $this->getBodyData('title');
-    }
-
-    /**
-     * Returns additional data from the API error response
-     *
-     * @param string|null $key
-     * @return array|mixed
-     */
-    public function getData(string $key = null)
-    {
-        $data = $this->getBodyData('data');
-
-        if (!is_null($key) && is_array($data) && isset($data[$key])) {
-            $data = $data[$key];
-        }
-
-        return $data;
-    }
-
-    /**
-     * Get data from the body if it exists
-     *
-     * @param string $key
-     * @return mixed|null
-     */
-    private function getBodyData(string $key)
-    {
-        if (is_array($this->body) && isset($this->body[$key])) {
-            return $this->body[$key];
-        }
-
-        return null;
+        return new self($message, $code, $response, $previous);
     }
 }
