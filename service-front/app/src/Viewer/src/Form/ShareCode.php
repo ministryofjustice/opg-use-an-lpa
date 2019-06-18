@@ -20,7 +20,7 @@ class ShareCode extends AbstractCsrfForm implements InputFilterProviderInterface
 
         $this->add([
             'name' => 'lpa_code',
-            'type'  => 'Text',
+            'type' => 'Text',
         ]);
     }
 
