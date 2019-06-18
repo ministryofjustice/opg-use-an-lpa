@@ -1,13 +1,13 @@
 {% block form_input_text %}
 
-    <div class="govuk-form-group {{ govuk_error_class_form_group(element) }}">
+    <div class="govuk-form-group {{- block('form_group_error_class') -}}">
         <label class="govuk-label" for="{{ element.getName() }}">
             {{ element.getLabel() }}
         </label>
 
         {{ govuk_error(element) }}
 
-        <input class="govuk-input {{ govuk_error_class_input(element) }}" id="{{ element.getName() }}"
+        <input class="govuk-input {{- block('input_error_class') -}}" id="{{ element.getName() }}"
                name="{{ element.getName() }}" type="text" value="{{ element.getValue() }}" />
     </div>
 
@@ -15,14 +15,14 @@
 
 {% block form_input_password %}
 
-    <div class="govuk-form-group {{ govuk_error_class_form_group(element) }}">
+    <div class="govuk-form-group {{- block('form_group_error_class') -}}">
         <label class="govuk-label" for="{{ element.getName() }}">
             {{ element.getLabel() }}
         </label>
 
         {{ govuk_error(element) }}
 
-        <input class="govuk-input {{ govuk_error_class_input(element) }}" id="{{ element.getName() }}"
+        <input class="govuk-input {{- block('input_error_class') -}}" id="{{ element.getName() }}"
                name="{{ element.getName() }}" type="password" />
     </div>
 
@@ -30,7 +30,7 @@
 
 {% block form_input_checkbox %}
 
-    <div class="govuk-form-group {{ govuk_error_class_form_group(element) }}">
+    <div class="govuk-form-group {{- block('form_group_error_class') -}}">
         <div class="govuk-checkboxes">
             <div class="govuk-checkboxes__item">
 
@@ -47,3 +47,15 @@
     </div>
 
 {% endblock form_input_checkbox %}
+
+{% block input_error_class %}
+
+    {% if element.getMessages() is not empty %}govuk-input--error{% endif %}
+
+{% endblock input_error_class %}
+
+{% block form_group_error_class %}
+
+    {% if element.getMessages() is not empty %}govuk-form-group--error{% endif %}
+
+{% endblock form_group_error_class %}

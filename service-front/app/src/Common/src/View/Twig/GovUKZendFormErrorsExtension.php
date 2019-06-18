@@ -20,29 +20,9 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
     public function getFunctions() : array
     {
         return [
-            new TwigFunction('govuk_error_class_input', [$this, 'errorClassInput']),
-            new TwigFunction('govuk_error_class_form_group', [$this, 'errorClassFormGroup']),
             new TwigFunction('govuk_error', [$this, 'errorMessage'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('govuk_error_summary', [$this, 'errorSummary'], ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
-    }
-
-    /**
-     * @param ElementInterface $element
-     * @return string
-     */
-    public function errorClassInput(ElementInterface $element) : string
-    {
-        return (empty($element->getMessages()) ? '' : 'govuk-input--error');
-    }
-
-    /**
-     * @param ElementInterface $element
-     * @return string
-     */
-    public function errorClassFormGroup(ElementInterface $element) : string
-    {
-        return (empty($element->getMessages()) ? '' : 'govuk-form-group--error');
     }
 
     /**
