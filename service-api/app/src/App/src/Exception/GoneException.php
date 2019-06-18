@@ -2,6 +2,7 @@
 
 namespace App\Exception;
 
+use Fig\Http\Message\StatusCodeInterface;
 use Throwable;
 
 /**
@@ -13,7 +14,7 @@ class GoneException extends AbstractApiException
     /**
      * @var int
      */
-    protected $code = 410;
+    protected $code = StatusCodeInterface::STATUS_GONE;
 
     /**
      * GoneException constructor.

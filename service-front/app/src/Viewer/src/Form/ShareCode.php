@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Viewer\Form;
 
-use Common\Form\AbstractCsrfForm;
+use Common\Form\AbstractForm;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Filter\StringTrim;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Validator\Regex;
 
-class ShareCode extends AbstractCsrfForm implements InputFilterProviderInterface
+class ShareCode extends AbstractForm implements InputFilterProviderInterface
 {
     const FORM_NAME = 'share_code';
 

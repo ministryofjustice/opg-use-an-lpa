@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ViewerTest\Form;
 
-use Common\Form\AbstractCsrfForm;
+use Common\Form\AbstractForm;
 use PHPUnit\Framework\TestCase;
 use Viewer\Form\ShareCode;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -17,7 +17,7 @@ class ShareCodeTest extends TestCase
     {
         $form = new ShareCode($this->setupGuard()->reveal());
 
-        $this->assertInstanceOf(AbstractCsrfForm::class, $form);
+        $this->assertInstanceOf(AbstractForm::class, $form);
         $this->assertInstanceOf(ShareCode::class, $form);
     }
 

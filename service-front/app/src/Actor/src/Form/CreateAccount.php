@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Form;
 
-use Common\Form\AbstractCsrfForm;
+use Common\Form\AbstractForm;
 use Common\Validator\EmailAddressValidator;
 use Common\Validator\PasswordValidator;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
@@ -14,7 +14,7 @@ use Zend\Validator\Identical;
 use Zend\Validator\NotEmpty;
 use Zend\Validator\StringLength;
 
-class CreateAccount extends AbstractCsrfForm implements InputFilterProviderInterface
+class CreateAccount extends AbstractForm implements InputFilterProviderInterface
 {
     const FORM_NAME = 'create_account';
 

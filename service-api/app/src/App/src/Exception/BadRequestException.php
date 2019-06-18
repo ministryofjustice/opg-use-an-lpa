@@ -2,6 +2,7 @@
 
 namespace App\Exception;
 
+use Fig\Http\Message\StatusCodeInterface;
 use Throwable;
 
 /**
@@ -13,7 +14,7 @@ class BadRequestException extends AbstractApiException
     /**
      * @var int
      */
-    protected $code = 400;
+    protected $code = StatusCodeInterface::STATUS_BAD_REQUEST;
 
     /**
      * BadRequestException constructor.

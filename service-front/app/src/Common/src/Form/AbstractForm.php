@@ -9,7 +9,7 @@ use Common\Validator\CsrfGuardValidator;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Form\Form;
 
-class AbstractCsrfForm extends Form
+class AbstractForm extends Form
 {
     public function __construct(string $formName, CsrfGuardInterface $csrfGuard)
     {
@@ -28,5 +28,20 @@ class AbstractCsrfForm extends Form
                 ]
             )
         );
+    }
+
+    /**
+     * Add an error message for the specified input to the form and the input filter
+     *
+     * @param string $inputName
+     * @param string $error
+     */
+    public function addErrorMessage(string $inputName, string $error)
+    {
+        $this->setMessages([
+            $inputName => array_merge($this->getMessages($inputName), [
+                $error,
+            ]),
+        ]);
     }
 }

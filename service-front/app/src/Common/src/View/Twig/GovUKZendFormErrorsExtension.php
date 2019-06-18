@@ -12,7 +12,7 @@ use Zend\Form\FormInterface;
 
 class GovUKZendFormErrorsExtension extends AbstractExtension
 {
-    const THEME_FILE='@partials/govuk_error.html.twig';
+    const THEME_FILE = '@partials/govuk_error.html.twig';
 
     /**
      * @return array
@@ -40,7 +40,7 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
 
         return $template->renderBlock('error_message', [
             'id'     => $element->getName(),
-            'errors' => $this->flattenMessages($element->getMessages()),
+            'errors' => $element->getMessages(),
         ]);
     }
 
@@ -53,31 +53,12 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function errorSummary(Environment $twigEnv, FormInterface $form) : string {
+    public function errorSummary(Environment $twigEnv, FormInterface $form) : string
+    {
         $template = $twigEnv->load(self::THEME_FILE);
 
-        $errors = [];
-        $invalidInput = $form->getInputFilter()->getInvalidInput();
-
-        foreach ($invalidInput as $name => $input) {
-            $errors[$name] = $this->flattenMessages($input->getMessages());
-        }
-
         return $template->renderBlock('error_summary', [
-            'errors' => $errors,
+            'errors' => $form->getMessages(),
         ]);
     }
-
-    /**
-     * @param array $messages
-     * @return array
-     */
-    private function flattenMessages(array $messages) : array {
-        $messagesToPrint = [];
-        array_walk_recursive($messages, function ($item) use (&$messagesToPrint) {
-            $messagesToPrint[] = $item;
-        });
-        return $messagesToPrint;
-    }
-
 }

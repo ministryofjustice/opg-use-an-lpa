@@ -6,7 +6,9 @@ namespace Actor\Handler;
 
 use Actor\Form\CreateAccount;
 use Common\Handler\AbstractHandler;
+use Common\Service\ApiClient\ApiException;
 use Common\Service\User\UserService;
+use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -57,10 +59,17 @@ class CreateAccountHandler extends AbstractHandler
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                $userData = $this->userService->create($data['email'], $data['password']);
+                try {
+                    $userData = $this->userService->create($data['email'], $data['password']);
 
-                //  TODO - For now just redirect to create account page
-                return $this->redirectToRoute('create-account');
+                    //  TODO - For now just redirect to create account page
+
+                    return $this->redirectToRoute('create-account');
+                } catch (ApiException $ex) {
+                    if ($ex->getCode() == StatusCodeInterface::STATUS_CONFLICT) {
+                        $form->addErrorMessage('email', 'Email address is already registered');
+                    }
+                }
             }
         }
 
