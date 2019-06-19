@@ -267,6 +267,7 @@ orbs:
               command: |
                 mkdir -p build/service-api
                 docker cp tests:/app/build/reports build/service-api/phpunit
+              when: always
           - store_test_results:
               path: build/service-api/
           - store_artifacts:
