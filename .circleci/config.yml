@@ -266,9 +266,11 @@ orbs:
               name: Fetch test results
               command: |
                 mkdir -p build/service-api
-                docker cp tests:/app/build/reports build/service-api/reports
+                docker cp tests:/app/build/reports build/service-api/phpunit
+          - store_test_results:
+              path: build/service-api/
           - store_artifacts:
-              path: build/service-api/reports
+              path: build/service-api/
           - ecr_login
           - run:
               name: Push container
