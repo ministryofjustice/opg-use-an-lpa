@@ -212,7 +212,7 @@ class SignedRequestClient implements ApiClientInterface
 
         //  If the body isn't an array now then it wasn't JSON before
         if (!is_array($body)) {
-            throw new ApiException('Malformed JSON response from server', $response);
+            throw ApiException::create('Malformed JSON response from server', $response);
         }
 
         return $body;
