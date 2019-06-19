@@ -262,7 +262,8 @@ orbs:
                 docker run -d --name tests api-app:latest
                 docker exec tests docker-php-ext-enable xdebug
                 docker exec tests /app/vendor/bin/phpunit
-                docker cp tests:/app/build/reports build/reports
+                mkdir -p build/service-api
+                docker cp tests:/app/build/reports build/service-api/reports
           - store_artifacts:
               path: build/reports
           - ecr_login
