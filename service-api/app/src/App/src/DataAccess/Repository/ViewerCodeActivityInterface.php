@@ -7,7 +7,7 @@ namespace App\DataAccess\Repository;
 interface ViewerCodeActivityInterface
 {
     /**
-     * Records teh fact that a given code has just been successfully accessed.
+     * Records the fact that a given code has just been successfully accessed
      *
      * @param string $activityCode
      */

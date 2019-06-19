@@ -36,4 +36,5 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/healthcheck', App\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/v1/lpa/{uid}', App\Handler\LpaHandler::class, 'lpa.by.uid');
     $app->get('/v1/lpa-by-code/{shareCode}', App\Handler\LpaHandler::class, 'lpa.by.share-code');
+    $app->route('/v1/user', App\Handler\UserHandler::class, ['GET', 'POST'], 'user.get');
 };

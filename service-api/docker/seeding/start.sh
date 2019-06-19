@@ -20,13 +20,20 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     # Add any setup here that is performed with Terraform in AWS.
 
     aws dynamodb create-table \
+    --attribute-definitions AttributeName=Email,AttributeType=S \
+    --table-name ActorUsers \
+    --key-schema AttributeName=Email,KeyType=HASH \
+    --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
+    --region eu-west-1 \
+    --endpoint $DYNAMODN_ENDPOINT
+
+    aws dynamodb create-table \
     --attribute-definitions AttributeName=ViewerCode,AttributeType=S \
     --table-name ViewerCodes \
     --key-schema AttributeName=ViewerCode,KeyType=HASH \
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
     --region eu-west-1 \
     --endpoint $DYNAMODN_ENDPOINT
-
 
     aws dynamodb create-table \
     --attribute-definitions AttributeName=ViewerCode,AttributeType=S AttributeName=Viewed,AttributeType=S \
