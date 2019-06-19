@@ -262,10 +262,13 @@ orbs:
                 docker run -d --name tests api-app:latest
                 docker exec tests docker-php-ext-enable xdebug
                 docker exec tests /app/vendor/bin/phpunit
+          - run:
+              name: Fetch test results
+              command: |
                 mkdir -p build/service-api
                 docker cp tests:/app/build/reports build/service-api/reports
           - store_artifacts:
-              path: build/reports
+              path: build/service-api/reports
           - ecr_login
           - run:
               name: Push container
