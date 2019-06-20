@@ -5,8 +5,8 @@ namespace Common\Service\ApiClient;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\Request;
 use Http\Client\Exception as HttpException;
+use Http\Client\HttpClient;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Client\ClientInterface;
 
 /**
  * Class Client
@@ -15,7 +15,7 @@ use Psr\Http\Client\ClientInterface;
 class Client
 {
     /**
-     * @var ClientInterface
+     * @var HttpClient
      */
     private $httpClient;
 
@@ -32,11 +32,11 @@ class Client
     /**
      * Client constructor
      *
-     * @param ClientInterface $httpClient
+     * @param HttpClient $httpClient
      * @param string $apiBaseUri
      * @param string|null $token
      */
-    public function __construct(ClientInterface $httpClient, string $apiBaseUri, ?string $token)
+    public function __construct(HttpClient $httpClient, string $apiBaseUri, ?string $token)
     {
         $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiBaseUri;

@@ -19,6 +19,12 @@ return [
         ],
     ],
 
+    'notify' => [
+        'api' => [
+            'key' => getenv('NOTIFY_API_KEY') ?: null,
+        ],
+    ],
+
     'session' => [
 
         // Time in seconds after which a session will expire.

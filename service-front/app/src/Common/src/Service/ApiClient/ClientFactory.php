@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Common\Service\ApiClient;
 
 use DI\Factory\RequestedEntry;
+use Http\Client\HttpClient;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Client\ClientInterface;
 use RuntimeException;
 
 /**
@@ -28,7 +28,7 @@ class ClientFactory
         }
 
         return new Client(
-            $container->get(ClientInterface::class),
+            $container->get(HttpClient::class),
             $config['api']['uri'],
             null
         );
