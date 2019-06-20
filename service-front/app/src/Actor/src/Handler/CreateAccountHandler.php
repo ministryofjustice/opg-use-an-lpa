@@ -66,11 +66,20 @@ class CreateAccountHandler extends AbstractHandler
             if ($form->isValid()) {
                 $data = $form->getData();
 
+                $emailAddress = $data['email'];
+                $password = $data['password'];
+
                 try {
-                    $userData = $this->userService->create($data['email'], $data['password']);
+                    $userData = $this->userService->create($emailAddress, $password);
+
+                    //  Generate an activate account URL using the token from the user record
+//TODO - along with only keeping the link valid for 24 hours
+                    $activateAccountUrl = 'https://gov.uk';
+
+                    $this->emailClient->sendAccountActivationEmail($emailAddress, $activateAccountUrl);
                 } catch (ApiException $ex) {
                     if ($ex->getCode() == StatusCodeInterface::STATUS_CONFLICT) {
-                        $this->emailClient->sendAlreadyRegisteredEmail($data['email']);
+                        $this->emailClient->sendAlreadyRegisteredEmail($emailAddress);
                     } else {
                         throw $ex;
                     }
