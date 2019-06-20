@@ -38,9 +38,11 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
     {
         $template = $twigEnv->load(self::THEME_FILE);
 
+        $messages = $this->flattenMessages($element->getMessages());
+
         return $template->renderBlock('error_message', [
             'id'     => $element->getName(),
-            'errors' => $element->getMessages(),
+            'errors' => $messages,
         ]);
     }
 
@@ -57,8 +59,29 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
     {
         $template = $twigEnv->load(self::THEME_FILE);
 
+        $messages = $form->getMessages();
+
+        //  Flattern each set of messages for each input
+        foreach ($messages as $inputName => $inputMessages) {
+            $messages[$inputName] = $this->flattenMessages($inputMessages);
+        }
+
         return $template->renderBlock('error_summary', [
-            'errors' => $form->getMessages(),
+            'errors' => $messages,
         ]);
+    }
+
+    /**
+     * @param array $messages
+     * @return array
+     */
+    private function flattenMessages(array $messages) : array {
+        $messagesToPrint = [];
+
+        array_walk_recursive($messages, function ($item) use (&$messagesToPrint) {
+            $messagesToPrint[] = $item;
+        });
+
+        return $messagesToPrint;
     }
 }
