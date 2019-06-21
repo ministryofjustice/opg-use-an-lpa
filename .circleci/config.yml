@@ -181,7 +181,18 @@ orbs:
               name: Run unit tests
               command: |
                 docker run -d --name tests front-app:latest
+                docker exec tests docker-php-ext-enable xdebug
                 docker exec tests /app/vendor/bin/phpunit
+          - run:
+              name: Fetch test results
+              command: |
+                mkdir -p build/service-front
+                docker cp tests:/app/build/reports build/service-front/phpunit
+              when: always
+          - store_test_results:
+              path: build/service-front/
+          - store_artifacts:
+              path: build/service-front/
           - ecr_login
           - run:
               name: Push container
