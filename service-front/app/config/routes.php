@@ -46,6 +46,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 {
     $app->get('/', Actor\Handler\HomePageHandler::class, 'home');
     $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');
+    $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
 };
 
 switch (getenv('CONTEXT')){

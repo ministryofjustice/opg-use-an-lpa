@@ -1,0 +1,43 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="govuk-width-container">
+    {{ include('@partials/new-service.html.twig') }}
+
+    <a href="#" class="govuk-back-link">Back</a>
+
+    <main class="govuk-main-wrapper">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                <form method="post" name="create_account">
+                    <fieldset class="govuk-fieldset">
+
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                Sign in to the Use an LPA service
+                            </h1>
+                        </legend>
+
+                        <p class="govuk-body">Sign in or <a href="{{ path('create-account') }}">create an account</a> to use and LPA.</p>
+
+                        <input type="hidden" name="__csrf" value="{{ form.get('__csrf').value }}">
+
+                        {{ govuk_error_summary(form) }}
+
+                        {{ govuk_form_element(form.get('email'), 'Email address') }}
+
+                        {{ govuk_form_element(form.get('password'), 'Password') }}
+
+                        <button type="submit" class="govuk-button">
+                            Continue
+                        </button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
