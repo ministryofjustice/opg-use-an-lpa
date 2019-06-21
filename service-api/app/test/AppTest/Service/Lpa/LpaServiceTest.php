@@ -8,7 +8,7 @@ use App\DataAccess\Repository\ViewerCodeActivityInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
-use DateInterval;
+use App\Service\ApiClient\ClientInterface;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +20,13 @@ class LpaServiceTest extends TestCase
 
         $activityRepository = $this->prophesize(ViewerCodeActivityInterface::class);
 
-        $instance = new LpaService($viewerRepository->reveal(), $activityRepository->reveal());
+        $apiClient = $this->prophesize(ClientInterface::class);
+
+        $instance = new LpaService(
+            $viewerRepository->reveal(),
+            $activityRepository->reveal(),
+            $apiClient->reveal()
+        );
 
         $this->assertInstanceOf(LpaService::class, $instance);
     }
@@ -31,7 +37,17 @@ class LpaServiceTest extends TestCase
 
         $activityRepository = $this->prophesize(ViewerCodeActivityInterface::class);
 
-        $instance = new LpaService($viewerRepository->reveal(), $activityRepository->reveal());
+        $apiClient = $this->prophesize(ClientInterface::class);
+        $apiClient->httpGet('/lpas/12345678901')
+            ->willReturn([
+                'id' => '12345678901'
+            ]);
+
+        $instance = new LpaService(
+            $viewerRepository->reveal(),
+            $activityRepository->reveal(),
+            $apiClient->reveal()
+        );
 
         $lpa = $instance->getById('12345678901');
 
@@ -46,7 +62,15 @@ class LpaServiceTest extends TestCase
 
         $activityRepository = $this->prophesize(ViewerCodeActivityInterface::class);
 
-        $instance = new LpaService($viewerRepository->reveal(), $activityRepository->reveal());
+        $apiClient = $this->prophesize(ClientInterface::class);
+        $apiClient->httpGet('/lpas/bad-id')
+            ->willThrow(new NotFoundException());
+
+        $instance = new LpaService(
+            $viewerRepository->reveal(),
+            $activityRepository->reveal(),
+            $apiClient->reveal()
+        );
 
         $this->expectException(NotFoundException::class);
 
@@ -66,7 +90,17 @@ class LpaServiceTest extends TestCase
         $activityRepository = $this->prophesize(ViewerCodeActivityInterface::class);
         $activityRepository->recordSuccessfulLookupActivity('viewer-code')->shouldBeCalled();
 
-        $instance = new LpaService($viewerRepository->reveal(), $activityRepository->reveal());
+        $apiClient = $this->prophesize(ClientInterface::class);
+        $apiClient->httpGet('/lpas/12345678901')
+            ->willReturn([
+                'id' => '12345678901'
+            ]);
+
+        $instance = new LpaService(
+            $viewerRepository->reveal(),
+            $activityRepository->reveal(),
+            $apiClient->reveal()
+        );
 
         $lpa = $instance->getByCode('share-code');
 
@@ -87,7 +121,13 @@ class LpaServiceTest extends TestCase
 
         $activityRepository = $this->prophesize(ViewerCodeActivityInterface::class);
 
-        $instance = new LpaService($viewerRepository->reveal(), $activityRepository->reveal());
+        $apiClient = $this->prophesize(ClientInterface::class);
+
+        $instance = new LpaService(
+            $viewerRepository->reveal(),
+            $activityRepository->reveal(),
+            $apiClient->reveal()
+        );
 
         $this->expectException(GoneException::class);
 

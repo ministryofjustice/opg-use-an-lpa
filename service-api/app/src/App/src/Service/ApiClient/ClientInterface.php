@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\ApiClient;
 
 use App\Exception\ApiException;
-use Http\Client\Exception as HttpException;
 
 /**
  * Class Client
