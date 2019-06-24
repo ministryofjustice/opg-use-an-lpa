@@ -27,9 +27,9 @@
 
                         {{ govuk_error_summary(form) }}
 
-                        {{ govuk_form_element(form.get('email'), 'Email address') }}
+                        {{ govuk_form_element(form.get('email'), { 'label': 'Email address', 'attr': { 'class': 'govuk-!-width-one-half', 'auto-complete': 'username' } }) }}
 
-                        {{ govuk_form_element(form.get('password'), 'Password') }}
+                        {{ govuk_form_element(form.get('password'), { 'label': 'Password', 'attr': { 'class': 'govuk-!-width-one-half', 'auto-complete': 'current-password' } }) }}
 
                         <button type="submit" class="govuk-button">
                             Continue

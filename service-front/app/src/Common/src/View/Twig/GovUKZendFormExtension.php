@@ -39,7 +39,7 @@ class GovUKZendFormExtension extends AbstractExtension
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function formElement(Environment $twigEnv, ElementInterface $element, string $label = null) : string
+    public function formElement(Environment $twigEnv, ElementInterface $element, array $options = []) : string
     {
         //  Check for a valid block mapping
         $eleClass = get_class($element);
@@ -50,12 +50,17 @@ class GovUKZendFormExtension extends AbstractExtension
 
         $template = $twigEnv->load('@partials/govuk_form.html.twig');
 
-        if (!empty($label)) {
-            $element->setLabel($label);
+        if (isset($options['label'])) {
+            $element->setLabel($options['label']);
         }
 
-        return $template->renderBlock($this->blockMappings[$eleClass], [
-            'element' => $element,
-        ]);
+        return $template->renderBlock($this->blockMappings[$eleClass],
+            array_merge(
+                [
+                    'element' => $element,
+                ],
+                $options
+            )
+        );
     }
 }

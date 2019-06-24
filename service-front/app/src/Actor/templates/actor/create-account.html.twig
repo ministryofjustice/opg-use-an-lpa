@@ -22,7 +22,7 @@
 
             <div class="govuk-grid-column-one-half">
 
-                <p class="govuk-body">If you already have an account, please <a href="#" class="govuk-link">sign in</a>.</p>
+                <p class="govuk-body">If you already have an account, please <a href="{{ path('login') }}" class="govuk-link">sign in</a>.</p>
 
                 <form method="post" name="create_account">
 
@@ -32,9 +32,9 @@
 
                         {{ govuk_error_summary(form) }}
 
-                        {{ govuk_form_element(form.get('email'), 'Enter your email address') }}
+                        {{ govuk_form_element(form.get('email'), { 'label': 'Enter your email address' }) }}
 
-                        {{ govuk_form_element(form.get('email_confirm'), 'Confirm your email address') }}
+                        {{ govuk_form_element(form.get('email_confirm'), { 'label': 'Confirm your email address' }) }}
 
                         <p class="govuk-body govuk-!-font-weight-bold">Password</p>
 
@@ -49,11 +49,11 @@
                         <p class="govuk-body">Never share your password with anyone.</p>
 
 
-                        {{ govuk_form_element(form.get('password'), 'Password') }}
+                        {{ govuk_form_element(form.get('password'), { 'label': 'Password' }) }}
 
-                        {{ govuk_form_element(form.get('password_confirm'), 'Confirm Password') }}
+                        {{ govuk_form_element(form.get('password_confirm'), { 'label': 'Confirm Password' }) }}
 
-                        {{ govuk_form_element(form.get('terms'), 'I agree to the <a href="#" class="govuk-link">terms of use</a>') }}
+                        {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="#" class="govuk-link">terms of use</a>' }) }}
 
                         <button type="submit" class="govuk-button">Create account</button>
 
