@@ -61,7 +61,7 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
 
         $messages = $form->getMessages();
 
-        //  Flattern each set of messages for each input
+        //  Flatten each set of messages for each input
         foreach ($messages as $inputName => $inputMessages) {
             $messages[$inputName] = $this->flattenMessages($inputMessages);
         }
