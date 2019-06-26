@@ -57,10 +57,23 @@ class LoginPageHandler extends AbstractHandler
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                $userData = $this->userService->create($data['email'], $data['password']);
+                // TODO do actual login with something like Zend_Authentication
+                $loggedIn = false;
+                if ($data['email'] === 'test@example.com') {
+                    $loggedIn = true;
 
-                //  TODO - For now just redirect to create account page
-                return $this->redirectToRoute('create-account');
+                    //  TODO for now just redirect to home page
+                    return $this->redirectToRoute('home');
+                }
+
+                if ( ! $loggedIn) {
+                    // adding an element name allows the form to link the error message to a field. In this case we'll
+                    // link to the email field to allow the user to correct their mistake.
+                    $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
+
+                    // blank the password field
+                    $form->get('password')->setValue('');
+                }
             }
         }
 
