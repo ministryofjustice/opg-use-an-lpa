@@ -29,19 +29,4 @@ class AbstractForm extends Form
             )
         );
     }
-
-    /**
-     * Add an error message for the specified input to the form and the input filter
-     *
-     * @param string $inputName
-     * @param string $error
-     */
-    public function addErrorMessage(string $inputName, string $error)
-    {
-        $this->setMessages([
-            $inputName => array_merge($this->getMessages($inputName), [
-                $error,
-            ]),
-        ]);
-    }
 }

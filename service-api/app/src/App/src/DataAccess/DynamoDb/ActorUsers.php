@@ -71,4 +71,18 @@ class ActorUsers implements ActorUsersInterface
 
         return $userData;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function exists($email) : bool
+    {
+        try {
+            $userData = $this->get($email);
+        } catch (NotFoundException $nfe) {
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -22,4 +22,12 @@ interface ActorUsersInterface
      * @return array
      */
     public function get(string $email) : array;
+
+    /**
+     * Check for the existence of an actor user
+     *
+     * @param $email
+     * @return bool
+     */
+    public function exists($email) : bool;
 }
