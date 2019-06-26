@@ -20,12 +20,11 @@ class ConflictException extends AbstractApiException
      * ConflictException constructor.
      *
      * @param string $message
-     * @param string $title
      * @param array $additionalData
      * @param Throwable|null $previous
      */
-    public function __construct(string $message = null, string $title = 'Conflict', array $additionalData = [], Throwable $previous = null)
+    public function __construct(string $message = null, array $additionalData = [], Throwable $previous = null)
     {
-        parent::__construct($message, $title, $additionalData, $previous);
+        parent::__construct('Conflict', $message, $additionalData, $previous);
     }
 }

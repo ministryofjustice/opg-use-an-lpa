@@ -32,7 +32,7 @@ class EmailClient
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $recipient
      */
     public function sendAlreadyRegisteredEmail(string $recipient)
     {
