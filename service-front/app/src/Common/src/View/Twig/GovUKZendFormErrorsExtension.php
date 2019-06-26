@@ -57,15 +57,18 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
     {
         $template = $twigEnv->load(self::THEME_FILE);
 
-        $messages = $form->getMessages();
+        // if the form has no overall errors it'll be an empty array
+        $errors = $form->getMessages();
+
+        $invalidInput = $form->getInputFilter()->getInvalidInput();
 
         //  Flatten each set of messages for each input
-        foreach ($messages as $inputName => $inputMessages) {
-            $messages[$inputName] = $this->flattenMessages($inputMessages);
+        foreach ($errors as $inputName => $inputMessages) {
+            $errors[$inputName] = $this->flattenMessages($inputMessages);
         }
 
         return $template->renderBlock('error_summary', [
-            'errors' => $messages,
+            'errors' => $errors,
         ]);
     }
 
