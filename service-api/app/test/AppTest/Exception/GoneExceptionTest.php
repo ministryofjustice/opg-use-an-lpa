@@ -12,15 +12,15 @@ class GoneExceptionTest extends TestCase
     public function testDataGets()
     {
         $message = 'ge message';
-        $title = 'ge title';
+
         $additionalData = [
             'some' => 'additional',
             'data' => 'here,'
         ];
 
-        $ge = new GoneException($message, $title, $additionalData);
+        $ge = new GoneException($message, $additionalData);
 
-        $this->assertEquals($title, $ge->getTitle());
+        $this->assertEquals('Gone', $ge->getTitle());
         $this->assertEquals($additionalData, $ge->getAdditionalData());
 
         $this->assertEquals($message, $ge->getMessage());
