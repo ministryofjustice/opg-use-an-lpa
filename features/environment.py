@@ -18,10 +18,8 @@ def after_tag(context, tag):
 
 
 def after_scenario(context, scenario):
-    print("scenario status" + scenario.status)
     if scenario.status == "failed":
         if not os.path.exists("failed_scenarios_screenshots"):
             os.makedirs("failed_scenarios_screenshots")
         os.chdir("failed_scenarios_screenshots")
         context.browser.save_screenshot(scenario.name + "_failed.png")
-    context.browser.quit()
