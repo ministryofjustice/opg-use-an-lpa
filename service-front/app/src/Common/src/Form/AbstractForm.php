@@ -47,8 +47,8 @@ class AbstractForm extends Form
      * Allows the addition of form level error messages to a form. These will typically be displayed at the
      * summary level on the page.
      *
-     * @param string $messageKey
-     * @param string $elementName
+     * @param string $messageKey The key to a message stored in the messageTemplates array of the form
+     * @param string $elementName An optional field name to link the error message to
      */
     public function addErrorMessage(string $messageKey, string $elementName = "") : void
     {
