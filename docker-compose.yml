@@ -73,7 +73,6 @@ services:
       # Always required
       CONTEXT: 'actor'
       KMS_SESSION_CMK_ALIAS: 'alias/viewer-sessions-cmk-alias'
-      NOTIFY_API_KEY: initial_key_nonproduction-9133fd26-4205-4b52-b26a-27de8f5eb7c2-e749db62-33be-4137-9553-da765c4dc5c0
 
       # Local only
       API_SERVICE_URL: http://api-web
