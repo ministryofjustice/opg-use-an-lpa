@@ -75,5 +75,5 @@ def get_task_status(config_file):
 
 
 get_task_status(args.config_file_path)
-print("sleeping for 120 seconds")
-time.sleep(120)
+# print("sleeping for 120 seconds")
+# time.sleep(120)
