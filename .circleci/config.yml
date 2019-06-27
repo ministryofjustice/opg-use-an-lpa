@@ -504,6 +504,8 @@ orbs:
                 echo $TF_WORKSPACE
                 python features/ci_ingress.py /tmp/cluster_config.json
               when: always
+          - store_artifacts:
+              path: failed_scenarios_screenshots
 
 
       run_healthcheck_test:
