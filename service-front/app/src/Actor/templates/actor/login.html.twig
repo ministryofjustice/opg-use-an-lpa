@@ -26,7 +26,7 @@
                             </h1>
                         </legend>
 
-                        <p class="govuk-body">Sign in or <a href="{{ path('create-account') }}" class="govuk-link">create an account</a> to use and LPA.</p>
+                        <p class="govuk-body">Sign in or <a href="{{ path('create-account') }}" class="govuk-link">create an account</a> to use an LPA.</p>
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
@@ -40,6 +40,7 @@
 
                 {{ govuk_form_close() }}
 
+                <a href="{{ path('password-reset') }}" class="govuk-body govuk-link">Forgotten your password?</a>
             </div>
 
         </div>
