@@ -3,7 +3,6 @@ import boto3
 import argparse
 import json
 import os
-import time
 
 
 class IngressManager:
@@ -149,8 +148,6 @@ def main():
         work.add_ci_ingress_rule_to_sg(ingress_cidr)
     else:
         work.clear_all_ci_ingress_rules_from_sg()
-    print(sleeping for 120 seconds)
-    time.sleep(120)
 
 
 if __name__ == "__main__":

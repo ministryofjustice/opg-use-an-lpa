@@ -2,6 +2,7 @@ import boto3
 import argparse
 import json
 import os
+import time
 parser = argparse.ArgumentParser()
 parser.add_argument("config_file_path", type=str,
                     help="Path to config file produced by terraform")
@@ -74,3 +75,5 @@ def get_task_status(config_file):
 
 
 get_task_status(args.config_file_path)
+print("sleeping for 120 seconds")
+time.sleep(120)
