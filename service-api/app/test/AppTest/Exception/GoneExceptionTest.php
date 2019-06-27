@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Handler;
+namespace AppTest\Exception;
 
 use App\Exception\GoneException;
 use PHPUnit\Framework\TestCase;

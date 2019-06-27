@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Handler;
+namespace AppTest\Exception;
 
 use App\Exception\NotFoundException;
 use PHPUnit\Framework\TestCase;
