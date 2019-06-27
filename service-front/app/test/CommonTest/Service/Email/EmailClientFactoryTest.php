@@ -6,9 +6,9 @@ namespace CommonTest\Service\Email;
 
 use Common\Service\Email\EmailClient;
 use Common\Service\Email\EmailClientFactory;
-use Http\Client\HttpClient;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Client\ClientInterface;
 
 class EmailClientFactoryTest extends TestCase
 {
@@ -25,9 +25,9 @@ class EmailClientFactoryTest extends TestCase
                 ],
             ]);
 
-        $httpClientPropercy = $this->prophesize(HttpClient::class);
+        $httpClientPropercy = $this->prophesize(ClientInterface::class);
 
-        $containerProphecy->get(HttpClient::class)
+        $containerProphecy->get(ClientInterface::class)
             ->willReturn($httpClientPropercy->reveal());
 
         $factory = new EmailClientFactory();

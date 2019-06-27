@@ -6,6 +6,7 @@ namespace Common;
 
 use Aws;
 use Http;
+use Psr;
 use Zend;
 
 /**
@@ -39,7 +40,7 @@ class ConfigProvider
 
             'aliases' => [
 
-                Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
+                Psr\Http\Client\ClientInterface::class => Http\Adapter\Guzzle6\Client::class,
                 Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookiePersistence::class,
 
                 // The Session Key Manager to use

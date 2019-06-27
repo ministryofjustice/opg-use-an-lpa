@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Common\Service\Email;
 
 use Alphagov\Notifications\Client as NotifyClient;
-use Http\Client\HttpClient;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Client\ClientInterface;
 use RuntimeException;
 
 /**
@@ -29,7 +29,7 @@ class EmailClientFactory
 
         $notifyClient = new NotifyClient([
             'apiKey'     => $config['notify']['api']['key'],
-            'httpClient' => $container->get(HttpClient::class),
+            'httpClient' => $container->get(ClientInterface::class),
         ]);
 
         return new EmailClient($notifyClient);
