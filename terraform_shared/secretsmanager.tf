@@ -8,5 +8,5 @@ data "aws_secretsmanager_secret" "notify_api_key" {
 }
 
 data "aws_secretsmanager_secret_version" "notify_api_key" {
-  secret_id = "${aws_secretsmanager_secret.notify_api_key.id}"
+  secret_id = "${data.aws_secretsmanager_secret.notify_api_key.id}"
 }
