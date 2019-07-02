@@ -42,7 +42,6 @@ data "aws_acm_certificate" "certificate_viewer" {
 
 data "aws_acm_certificate" "certificate_actor" {
   domain = "${local.dev_wildcard}actor.${local.dns_namespace_acc}use-an-lpa.opg.service.justice.gov.uk"
-
 }
 
 data "aws_kms_alias" "sessions_viewer" {
@@ -65,6 +64,7 @@ data "aws_ecr_repository" "use_an_lpa_front_app" {
   provider = "aws.management"
   name     = "use_an_lpa/front_app"
 }
+
 data "aws_ecr_repository" "use_an_lpa_api_app" {
   provider = "aws.management"
   name     = "use_an_lpa/api_app"
@@ -77,4 +77,12 @@ data "aws_ecr_repository" "use_an_lpa_api_web" {
 
 module "whitelist" {
   source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-whitelist.git"
+}
+
+data "aws_secretsmanager_secret" "notify_api_key" {
+  name = "notify-api-key"
+}
+
+data "aws_secretsmanager_secret_version" "notify_api_key" {
+  secret_id = "${data.aws_secretsmanager_secret.notify_api_key.id}"
 }
