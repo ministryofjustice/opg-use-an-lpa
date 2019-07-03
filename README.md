@@ -29,9 +29,10 @@ The API service will be available via http://localhost:9003
 
 ### Tests
 
-To run the unit tests
+To run the unit tests (the command for viewer-app and actor-app will run exactly the same suite of unit tests in the front service)
 ```bash
 docker-compose run viewer-app /app/vendor/bin/phpunit
+docker-compose run actor-app /app/vendor/bin/phpunit
 
 docker-compose run api-app /app/vendor/bin/phpunit
 ```

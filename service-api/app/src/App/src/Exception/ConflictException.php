@@ -6,23 +6,23 @@ use Fig\Http\Message\StatusCodeInterface;
 use Throwable;
 
 /**
- * Class GoneException
+ * Class ConflictException
  * @package App\Exception
  */
-class GoneException extends AbstractApiException
+class ConflictException extends AbstractApiException
 {
     /**
      * Exception title
      */
-    const TITLE = 'Gone';
+    const TITLE = 'Conflict';
 
     /**
      * @var int
      */
-    protected $code = StatusCodeInterface::STATUS_GONE;
+    protected $code = StatusCodeInterface::STATUS_CONFLICT;
 
     /**
-     * GoneException constructor.
+     * ConflictException constructor.
      *
      * @param string $message
      * @param array $additionalData

@@ -38,7 +38,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
 
         $delegateProphecy = $this->prophesize(DelegateInterface::class);
 
-        $exception = new NotFoundException('Exception message', 'Exception title');
+        $exception = new NotFoundException('Exception message');
 
         $delegateProphecy->handle($requestProphecy->reveal())
             ->willThrow($exception);
@@ -53,6 +53,5 @@ class ProblemDetailsMiddlewareTest extends TestCase
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(404, $response->getStatusCode());
         $this->assertEquals('Exception message', $data['details']);
-        $this->assertEquals('Exception title', $data['title']);
     }
 }

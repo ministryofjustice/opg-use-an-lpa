@@ -6,7 +6,10 @@ namespace Actor\Handler;
 
 use Actor\Form\CreateAccount;
 use Common\Handler\AbstractHandler;
+use Common\Service\ApiClient\ApiException;
+use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
+use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -24,20 +27,26 @@ class CreateAccountHandler extends AbstractHandler
     /** @var UserService */
     private $userService;
 
+    /** @var EmailClient */
+    private $emailClient;
+
     /**
      * CreateAccountHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param UserService $userService
+     * @param EmailClient $emailClient
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UserService $userService)
+        UserService $userService,
+        EmailClient $emailClient)
     {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;
+        $this->emailClient = $emailClient;
     }
 
     /**
@@ -57,9 +66,18 @@ class CreateAccountHandler extends AbstractHandler
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                $userData = $this->userService->create($data['email'], $data['password']);
+                try {
+                    $userData = $this->userService->create($data['email'], $data['password']);
+                } catch (ApiException $ex) {
+                    if ($ex->getCode() == StatusCodeInterface::STATUS_CONFLICT) {
+                        $this->emailClient->sendAlreadyRegisteredEmail($data['email']);
+                    } else {
+                        throw $ex;
+                    }
+                }
 
                 //  TODO - For now just redirect to create account page
+
                 return $this->redirectToRoute('create-account');
             }
         }
