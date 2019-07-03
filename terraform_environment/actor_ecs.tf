@@ -171,7 +171,7 @@ locals {
     "secrets" : [
     {
       "name": "NOTIFY_API_KEY",
-      "value": "${data.aws_secretsmanager_secret.notify_api_key.arn}"
+      "valueFrom": "${data.aws_secretsmanager_secret.notify_api_key.arn}"
     }],
     "environment": [
     {
