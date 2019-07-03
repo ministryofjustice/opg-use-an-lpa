@@ -12,6 +12,11 @@ use Throwable;
 class GoneException extends AbstractApiException
 {
     /**
+     * Exception title
+     */
+    const TITLE = 'Gone';
+
+    /**
      * @var int
      */
     protected $code = StatusCodeInterface::STATUS_GONE;
@@ -25,6 +30,6 @@ class GoneException extends AbstractApiException
      */
     public function __construct(string $message = null, array $additionalData = [], Throwable $previous = null)
     {
-        parent::__construct('Gone', $message, $additionalData, $previous);
+        parent::__construct(self::TITLE, $message, $additionalData, $previous);
     }
 }

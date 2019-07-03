@@ -12,6 +12,11 @@ use Throwable;
 class BadRequestException extends AbstractApiException
 {
     /**
+     * Exception title
+     */
+    const TITLE = 'Bad Request';
+
+    /**
      * @var int
      */
     protected $code = StatusCodeInterface::STATUS_BAD_REQUEST;
@@ -25,6 +30,6 @@ class BadRequestException extends AbstractApiException
      */
     public function __construct(string $message = null, array $additionalData = [], Throwable $previous = null)
     {
-        parent::__construct('Bad Request', $message, $additionalData, $previous);
+        parent::__construct(self::TITLE, $message, $additionalData, $previous);
     }
 }
