@@ -53,4 +53,13 @@ data "aws_iam_policy_document" "execution_role" {
       "logs:PutLogEvents",
     ]
   }
+  "statement" {
+    effect    = "Allow"
+
+    resources = ["*"]
+
+    actions = [
+      "secretsmanager:GetSecretValue",
+    ]
+  }
 }
