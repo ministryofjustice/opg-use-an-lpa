@@ -26,8 +26,8 @@ interface ActorUsersInterface
     /**
      * Check for the existence of an actor user
      *
-     * @param $email
+     * @param string $email
      * @return bool
      */
-    public function exists($email) : bool;
+    public function exists(string $email) : bool;
 }

@@ -28,6 +28,7 @@ class UserService
     /**
      * @param array $data
      * @return array
+     * @throws ConflictException
      */
     public function add(array $data) : array
     {

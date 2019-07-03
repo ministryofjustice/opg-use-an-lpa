@@ -75,7 +75,7 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function exists($email) : bool
+    public function exists(string $email) : bool
     {
         try {
             $userData = $this->get($email);
