@@ -53,4 +53,13 @@ data "aws_iam_policy_document" "execution_role" {
       "logs:PutLogEvents",
     ]
   }
+  "statement" {
+    effect    = "Allow"
+
+    resources = ["${data.aws_secretsmanager_secret.notify_api_key.arn}"]
+
+    actions = [
+      "secretsmanager:GetSecretValue",
+    ]
+  }
 }
