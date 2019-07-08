@@ -59,11 +59,10 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
 
         // if the form has no overall errors it'll be an empty array
         $errors = $form->getMessages();
-
         $invalidInput = $form->getInputFilter()->getInvalidInput();
 
         //  Flatten each set of messages for each input
-        foreach ($errors as $inputName => $inputMessages) {
+        foreach ($invalidInput as $inputName => $inputMessages) {
             $errors[$inputName] = $this->flattenMessages($inputMessages);
         }
 
