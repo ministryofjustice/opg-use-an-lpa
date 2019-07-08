@@ -1,0 +1,17 @@
+default:
+  gherkin:
+    filters:
+      tags: '~@wip'
+
+  suites:
+    common_features:
+      filters:
+        tags: '@common'
+    actor_features:
+      filters:
+        tags: '@actor'
+    viewer_features:
+      paths: [ '%paths.base%/../../features/' ]
+      contexts: [ ViewerContext ]
+      filters:
+        tags: '@viewer'
