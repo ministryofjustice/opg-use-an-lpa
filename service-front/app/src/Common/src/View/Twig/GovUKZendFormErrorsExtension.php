@@ -62,8 +62,8 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
         $invalidInput = $form->getInputFilter()->getInvalidInput();
 
         //  Flatten each set of messages for each input
-        foreach ($invalidInput as $inputName => $inputMessages) {
-            $errors[$inputName] = $this->flattenMessages($inputMessages);
+        foreach ($invalidInput as $name => $input) {
+            $errors[$name] = $this->flattenMessages($input->getMessages());
         }
 
         return $template->renderBlock('error_summary', [
