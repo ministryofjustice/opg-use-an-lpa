@@ -81,4 +81,16 @@ class UserService
 
         return null;
     }
+
+    /**
+     * @param string $activationToken
+     * @return array
+     * @throws \Http\Client\Exception
+     */
+    public function activate(string $activationToken) : array
+    {
+        return $this->apiClient->httpPatch('/v1/user-activation', [
+            'activation_token' => $activationToken,
+        ]);
+    }
 }

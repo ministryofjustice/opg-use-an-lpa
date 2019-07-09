@@ -94,7 +94,7 @@ class ActorUsers implements ActorUsersInterface
         $usersData = $this->getDataCollection($result);
 
         if (empty($usersData)) {
-            throw new NotFoundException('User not found');
+            throw new NotFoundException('User not found for token');
         }
 
         //  Use the returned value to get the user

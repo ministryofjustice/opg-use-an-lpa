@@ -72,9 +72,11 @@ class CreateAccountHandler extends AbstractHandler
                 try {
                     $userData = $this->userService->create($emailAddress, $password);
 
-                    //  Generate an activate account URL using the token from the user record
-//TODO - along with only keeping the link valid for 24 hours
-                    $activateAccountUrl = 'https://gov.uk';
+                    $host = sprintf('%s://%s', $request->getUri()->getScheme(), $request->getUri()->getAuthority());
+
+                    $activateAccountUrl = $host . $this->urlHelper->generate('activate-account', [
+                        'token' => $userData['ActivationToken'],
+                    ]);
 
                     $this->emailClient->sendAccountActivationEmail($emailAddress, $activateAccountUrl);
                 } catch (ApiException $ex) {
