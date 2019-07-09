@@ -7,6 +7,7 @@ namespace App\DataAccess\DynamoDb;
 use App\DataAccess\Repository\ActorUsersInterface;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
+use Aws\DynamoDb\Marshaler;
 
 class ActorUsers implements ActorUsersInterface
 {
@@ -36,13 +37,15 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function add(string $email, string $password) : array
+    public function add(string $email, string $password, string $activationToken, int $activationTtl) : array
     {
         $this->client->putItem([
             'TableName' => $this->actorUsersTable,
             'Item' => [
                 'Email' => ['S' => $email],
                 'Password' => ['S' => password_hash($password, PASSWORD_DEFAULT)],
+                'ActivationToken' => ['S' => $activationToken],
+                'ExpiresTTL' => ['N' => (string) $activationTtl],
             ]
         ]);
 
@@ -64,6 +67,35 @@ class ActorUsers implements ActorUsersInterface
         ]);
 
         $userData = $this->getData($result);
+
+        if (empty($userData)) {
+            throw new NotFoundException('User not found');
+        }
+
+        return $userData;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getByToken(string $activationToken) : array
+    {
+        $data = [
+            ':activationToken' => $activationToken,
+        ];
+
+        $marshaler = new Marshaler();
+
+        $result = $this->client->query([
+            'TableName' => $this->actorUsersTable,
+            'IndexName' => 'ActivationTokenIndex',
+            'KeyConditionExpression' => 'ActivationToken = :activationToken',
+            'ExpressionAttributeValues'=> $marshaler->marshalJson(json_encode($data)),
+        ]);
+
+        $userData = $this->getData($result);
+
+var_dump($userData);die();
 
         if (empty($userData)) {
             throw new NotFoundException('User not found');

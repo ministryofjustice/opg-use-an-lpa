@@ -8,6 +8,14 @@ resource "aws_dynamodb_table" "actor_users_table" {
     type = "S"
   }
 
+  global_secondary_index {
+    name               = "ActivationTokenIndex"
+    hash_key           = "ActivationToken"
+    write_capacity     = 10
+    read_capacity      = 10
+    projection_type    = "KEYS_ONLY"
+  }
+
   point_in_time_recovery {
     enabled = true
   }
@@ -46,15 +54,15 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
   hash_key     = "ViewerCode"
   range_key    = "Viewed"
 
-  attribute = [{
-
-    name = "ViewerCode"
-    type = "S"
-  },
-  {
-    name = "Viewed"
-    type = "S"
-  }
+  attribute = [
+    {
+      name = "ViewerCode"
+      type = "S"
+    },
+    {
+      name = "Viewed"
+      type = "S"
+    }
   ]
 
   point_in_time_recovery {
