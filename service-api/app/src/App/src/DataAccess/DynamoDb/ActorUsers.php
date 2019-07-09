@@ -80,22 +80,18 @@ class ActorUsers implements ActorUsersInterface
      */
     public function getByToken(string $activationToken) : array
     {
-        $data = [
-            ':activationToken' => $activationToken,
-        ];
-
         $marshaler = new Marshaler();
 
         $result = $this->client->query([
             'TableName' => $this->actorUsersTable,
             'IndexName' => 'ActivationTokenIndex',
             'KeyConditionExpression' => 'ActivationToken = :activationToken',
-            'ExpressionAttributeValues'=> $marshaler->marshalJson(json_encode($data)),
+            'ExpressionAttributeValues'=> $marshaler->marshalItem([
+                ':activationToken' => $activationToken,
+            ]),
         ]);
 
-        $userData = $this->getData($result);
-
-var_dump($userData);die();
+        var_dump($result['Items']); die;
 
         if (empty($userData)) {
             throw new NotFoundException('User not found');
