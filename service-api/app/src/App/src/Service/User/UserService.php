@@ -64,12 +64,6 @@ class UserService
      */
     public function activate(string $activationToken) : array
     {
-        $userData = $this->usersRepository->getByToken($activationToken);
-
-//TODO - handle this....
-
-
-
-        return $userData;
+        return $this->usersRepository->activate($activationToken);
     }
 }

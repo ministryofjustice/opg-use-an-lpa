@@ -29,12 +29,12 @@ interface ActorUsersInterface
     public function get(string $email) : array;
 
     /**
-     * Get an actor user from the database using the token value
+     * Activate the user account in the database using the token value
      *
      * @param string $activationToken
      * @return array
      */
-    public function getByToken(string $activationToken) : array;
+    public function activate(string $activationToken) : array;
 
     /**
      * Check for the existence of an actor user

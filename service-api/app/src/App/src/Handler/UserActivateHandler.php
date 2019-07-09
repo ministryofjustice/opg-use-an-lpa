@@ -40,7 +40,7 @@ class UserActivateHandler implements RequestHandlerInterface
             throw new BadRequestException('Token must be provided');
         }
 
-        $data = $this->userService->activate($requestData['activation_token']);
+        $data = $this->userService->activate((string) $requestData['activation_token']);
 
         return new JsonResponse($data);
     }

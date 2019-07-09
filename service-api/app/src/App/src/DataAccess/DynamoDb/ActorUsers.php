@@ -78,7 +78,7 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function getByToken(string $activationToken) : array
+    public function activate(string $activationToken) : array
     {
         $marshaler = new Marshaler();
 
@@ -91,13 +91,28 @@ class ActorUsers implements ActorUsersInterface
             ]),
         ]);
 
-        var_dump($result['Items']); die;
+        $usersData = $this->getDataCollection($result);
 
-        if (empty($userData)) {
+        if (empty($usersData)) {
             throw new NotFoundException('User not found');
         }
 
-        return $userData;
+        //  Use the returned value to get the user
+        $userData = array_pop($usersData);
+        $email = $userData['Email'];
+
+        //  Update the item by removing the activation token
+        $result = $this->client->updateItem([
+            'TableName' => $this->actorUsersTable,
+            'Key' => [
+                'Email' => [
+                    'S' => $email,
+                ],
+            ],
+            'UpdateExpression' => 'remove ActivationToken',
+        ]);
+
+        return $this->get($email);
     }
 
     /**
