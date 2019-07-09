@@ -2,6 +2,7 @@
 
 namespace Common\Service\ApiClient;
 
+use Common\Exception\ApiException;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\Request;
 use Http\Client\Exception as HttpException;
@@ -70,7 +71,7 @@ class Client
             case 404:
                 return null;
             default:
-                throw new ApiException($response);
+                throw ApiException::create(null, $response);
         }
     }
 
@@ -95,7 +96,7 @@ class Client
             case 201:
                 return $this->handleResponse($response);
             default:
-                throw new ApiException($response);
+                throw ApiException::create(null, $response);
         }
     }
 
@@ -120,7 +121,7 @@ class Client
             case 201:
                 return $this->handleResponse($response);
             default:
-                throw new ApiException($response);
+                throw ApiException::create(null, $response);
         }
     }
 
@@ -145,7 +146,7 @@ class Client
             case 201:
                 return $this->handleResponse($response);
             default:
-                throw new ApiException($response);
+                throw ApiException::create(null, $response);
         }
     }
 
@@ -169,7 +170,7 @@ class Client
             case 201:
                 return $this->handleResponse($response);
             default:
-                throw new ApiException($response);
+                throw ApiException::create(null, $response);
         }
     }
 
@@ -206,7 +207,7 @@ class Client
 
         //  If the body isn't an array now then it wasn't JSON before
         if (!is_array($body)) {
-            throw new ApiException($response, 'Malformed JSON response from server');
+            throw ApiException::create('Malformed JSON response from server', $response);
         }
 
         return $body;
