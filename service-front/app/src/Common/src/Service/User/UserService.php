@@ -2,6 +2,7 @@
 
 namespace Common\Service\User;
 
+use Common\Entity\User;
 use Common\Service\ApiClient\Client as ApiClient;
 use ArrayObject;
 
@@ -44,10 +45,26 @@ class UserService
      * @return ArrayObject|null
      * @throws \Http\Client\Exception
      */
-    public function getByEmail(string $email) : array
+    public function getByEmail(string $email) : ?array
     {
         return $this->apiClient->httpGet('/v1/user', [
             'email' => $email,
         ]);
+    }
+
+    /**
+     * Attempts authentication of a user based on the passed in credentials.
+     *
+     * @param string $email
+     * @param string $password
+     * @return User|null
+     */
+    public function authenticate(string $email, string $password) : ?User
+    {
+        if ($email == 'test@example.com' && $password == 'test') {
+            return new User();
+        }
+
+        return null;
     }
 }
