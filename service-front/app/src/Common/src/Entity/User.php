@@ -9,6 +9,9 @@ use DateTime;
 class User
 {
     /** @var string */
+    protected $id;
+
+    /** @var string */
     protected $firstname;
 
     /** @var string */
@@ -23,11 +26,20 @@ class User
      * @param string $surname
      * @param DateTime $lastSignedIn
      */
-    public function __construct(string $firstname, string $surname, DateTime $lastSignedIn)
+    public function __construct(string $id, string $firstname, string $surname, DateTime $lastSignedIn)
     {
+        $this->id = $id;
         $this->firstname = $firstname;
         $this->surname = $surname;
         $this->lastSignedIn = $lastSignedIn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     /**
@@ -53,4 +65,5 @@ class User
     {
         return $this->lastSignedIn;
     }
+
 }
