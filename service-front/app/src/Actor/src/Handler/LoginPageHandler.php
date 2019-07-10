@@ -74,9 +74,6 @@ class LoginPageHandler extends AbstractHandler
             }
         }
 
-        // blank the password field
-        $form->get('password')->setValue('');
-
         return new HtmlResponse($this->renderer->render('actor::login',[
             'form' => $form
         ]));

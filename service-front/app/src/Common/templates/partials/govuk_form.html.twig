@@ -1,6 +1,5 @@
 {%- block form_element_simple -%}
     {%- set name = element.getName() -%}
-    {%- set value = element.getValue() -%}
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
         <label class="govuk-label" for="{{ name }}">
             {{ label | raw }}
@@ -15,12 +14,14 @@
 
 {%- block form_input_text -%}
     {%- set type = type|default('text') -%}
+    {%- set value = element.getValue() -%}
     {{ block('form_element_simple') }}
 {%- endblock form_input_text -%}
 
 
 {%- block form_input_password -%}
     {%- set type = type|default('password') -%}
+    {%- set value = '' %}
     {{ block('form_element_simple') }}
 {%- endblock form_input_password -%}
 
