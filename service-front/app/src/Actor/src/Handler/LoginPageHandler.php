@@ -70,12 +70,12 @@ class LoginPageHandler extends AbstractHandler
                     // adding an element name allows the form to link the error message to a field. In this case we'll
                     // link to the email field to allow the user to correct their mistake.
                     $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
-
-                    // blank the password field
-                    $form->get('password')->setValue('');
                 }
             }
         }
+
+        // blank the password field
+        $form->get('password')->setValue('');
 
         return new HtmlResponse($this->renderer->render('actor::login',[
             'form' => $form
