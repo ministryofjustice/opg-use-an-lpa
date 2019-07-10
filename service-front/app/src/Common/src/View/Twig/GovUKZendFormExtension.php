@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\View\Twig;
 
 use Actor\Form\Fieldset\Date;
+use Common\Form\AbstractForm;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -29,9 +30,34 @@ class GovUKZendFormExtension extends AbstractExtension
     public function getFunctions() : array
     {
         return [
+            new TwigFunction('govuk_form_open', [$this, 'formOpen'], ['is_safe' => ['html']]),
+            new TwigFunction('govuk_form_close', [$this, 'formClose'], ['is_safe' => ['html']]),
             new TwigFunction('govuk_form_element', [$this, 'formElement'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('govuk_form_fieldset', [$this, 'formFieldset'], ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
+    }
+
+    /**
+     * @param AbstractForm $form
+     * @return string
+     */
+    public function formOpen(AbstractForm $form)
+    {
+        $name = $form->getName();
+
+        if (!empty($name)) {
+            return sprintf('<form name="%s" method="post">', $name);
+        }
+
+        return '<form>';
+    }
+
+    /**
+     * @return string
+     */
+    public function formClose()
+    {
+        return '</form>';
     }
 
     /**

@@ -12,7 +12,8 @@
             <div class="govuk-grid-column-one-half">
                 <h1 class="govuk-heading-xl">Enter Code</h1>
 
-                <form method="post" name="share_code">
+                {{ govuk_form_open(form) }}
+
                     <fieldset class="govuk-fieldset">
                         <input type="hidden" name="__csrf" value="{{ form.get('__csrf').value }}">
 
@@ -34,7 +35,9 @@
 
                         <button type="submit" class="govuk-button">Save and continue</button>
                     </fieldset>
-                </form>
+
+                {{ govuk_form_close() }}
+
             </div>
         </div>
 
