@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Actor\Form\ConfirmEmail;
 use Actor\Form\CreateAccount;
 use Common\Handler\AbstractHandler;
 use Common\Service\ApiClient\ApiException;
@@ -61,40 +62,106 @@ class CreateAccountHandler extends AbstractHandler
         $form = new CreateAccount($guard);
 
         if ($request->getMethod() === 'POST') {
-            $form->setData($request->getParsedBody());
+            //  Check to see if this a post to register an account or to resend the activation token
+            $requestData = $request->getParsedBody();
 
-            if ($form->isValid()) {
-                $data = $form->getData();
+            if (array_key_exists('password', $requestData) && array_key_exists('password_confirm', $requestData)) {
+                //  Request to create an account
+                $form->setData($requestData);
 
-                $emailAddress = $data['email'];
-                $password = $data['password'];
+                if ($form->isValid()) {
+                    $formData = $form->getData();
 
-                try {
-                    $userData = $this->userService->create($emailAddress, $password);
+                    $emailAddress = $formData['email'];
+                    $password = $formData['password'];
 
-                    $host = sprintf('%s://%s', $request->getUri()->getScheme(), $request->getUri()->getAuthority());
+                    try {
+                        $userData = $this->userService->create($emailAddress, $password);
 
-                    $activateAccountUrl = $host . $this->urlHelper->generate('activate-account', [
-                        'token' => $userData['ActivationToken'],
-                    ]);
+                        $this->sendActivationEmail($request, $emailAddress, $userData['ActivationToken']);
+                    } catch (ApiException $ex) {
+                        if ($ex->getCode() == StatusCodeInterface::STATUS_CONFLICT) {
+                            $this->emailClient->sendAlreadyRegisteredEmail($emailAddress);
+                        } else {
+                            throw $ex;
+                        }
+                    }
 
-                    $this->emailClient->sendAccountActivationEmail($emailAddress, $activateAccountUrl);
-                } catch (ApiException $ex) {
-                    if ($ex->getCode() == StatusCodeInterface::STATUS_CONFLICT) {
-                        $this->emailClient->sendAlreadyRegisteredEmail($emailAddress);
-                    } else {
-                        throw $ex;
+                    return $this->returnConfirmationScreenResponse($request, $emailAddress);
+                }
+            } else {
+                //  Request to resend the activation email - swap in the correct form
+                $confirmEmailForm = new ConfirmEmail($guard);
+
+                $confirmEmailForm->setData($requestData);
+
+                if ($confirmEmailForm->isValid()) {
+                    $confirmEmailFormData = $confirmEmailForm->getData();
+
+                    $emailAddress = $confirmEmailFormData['email'];
+
+                    try {
+                        $userData = $this->userService->getByEmail($emailAddress);
+
+                        //  Check to see if the user has activated their account by looking for an activation token
+                        if (isset($userData['ActivationToken'])) {
+                            $this->sendActivationEmail($request, $emailAddress, $userData['ActivationToken']);
+
+                            return $this->returnConfirmationScreenResponse($request, $emailAddress);
+                        }
+                    } catch (ApiException $ignore) {
+                        //  Ignore any API exception (e.g. user not found) and let the redirect below manage the request
                     }
                 }
 
-                //  TODO - For now just redirect to create account page
-
+                //  If we have got to this point then something has gone wrong so just do a clean redirect to the create account screen
                 return $this->redirectToRoute('create-account');
             }
         }
 
-        return new HtmlResponse($this->renderer->render('actor::create-account',[
-            'form' => $form
+        return new HtmlResponse($this->renderer->render('actor::create-account', [
+            'form' => $form,
         ]));
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @param string $emailAddress
+     * @return HtmlResponse
+     */
+    private function returnConfirmationScreenResponse(ServerRequestInterface $request, string $emailAddress)
+    {
+        //  Account created successfully so set up the new form and go to the confirmation screen
+        /** @var CsrfGuardInterface $guard */
+        $guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
+
+        $form = new ConfirmEmail($guard);
+
+        //  Populate the email address in the form
+        $form->populateValues([
+            'email'         => $emailAddress,
+            'email_confirm' => $emailAddress,
+        ]);
+
+        return new HtmlResponse($this->renderer->render('actor::create-account-success', [
+            'form'         => $form,
+            'emailAddress' => $emailAddress,
+        ]));
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @param string $emailAddress
+     * @param string $activationToken
+     */
+    private function sendActivationEmail(ServerRequestInterface $request, string $emailAddress, string $activationToken) : void
+    {
+        $host = sprintf('%s://%s', $request->getUri()->getScheme(), $request->getUri()->getAuthority());
+
+        $activateAccountUrl = $host . $this->urlHelper->generate('activate-account', [
+            'token' => $activationToken,
+        ]);
+
+        $this->emailClient->sendAccountActivationEmail($emailAddress, $activateAccountUrl);
     }
 }

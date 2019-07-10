@@ -22,6 +22,7 @@
     </div>
 {%- endblock form_element_simple -%}
 
+
 {%- block form_input_text -%}
     {%- set type = type|default('text') -%}
     {%- set value = element.getValue() -%}
@@ -93,6 +94,11 @@
 
     </div>
 {%- endblock form_fieldset_date -%}
+
+
+{% block form_input_hidden %}
+    <input id="{{ element.getName() }}" name="{{ element.getName() }}" type="hidden" value="{{ element.getValue() }}" />
+{% endblock form_input_hidden %}
 
 
 {%- block input_extra_class -%}

@@ -15,9 +15,10 @@
                 {{ govuk_form_open(form) }}
 
                     <fieldset class="govuk-fieldset">
-                        <input type="hidden" name="__csrf" value="{{ form.get('__csrf').value }}">
 
                         {{ govuk_error_summary(form) }}
+
+                        {{ govuk_form_element(form.get('__csrf')) }}
 
                         {{ govuk_form_element(form.get('lpa_code'), { 'label': 'LPA code' }) }}
 
