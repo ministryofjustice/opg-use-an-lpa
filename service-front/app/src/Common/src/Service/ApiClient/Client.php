@@ -6,6 +6,7 @@ use Common\Exception\ApiException;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\Request;
 use Http\Client\Exception as HttpException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -50,7 +51,7 @@ class Client
      * @param string $path
      * @param array $query
      * @return array
-     * @throws ApiException|HttpException
+     * @throws ApiException
      */
     public function httpGet(string $path, array $query = []) : ?array
     {
@@ -63,15 +64,19 @@ class Client
         $request = new Request('GET', $url, $this->buildHeaders());
 
         //  Can throw RuntimeException if there is a problem
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($request);
 
-        switch ($response->getStatusCode()) {
-            case 200:
-                return $this->handleResponse($response);
-            case 404:
-                return null;
-            default:
-                throw ApiException::create(null, $response);
+            switch ($response->getStatusCode()) {
+                case 200:
+                    return $this->handleResponse($response);
+                case 404:
+                    return null;
+                default:
+                    throw ApiException::create(null, $response);
+            }
+        } catch (ClientExceptionInterface $ex) {
+            throw ApiException::create('Error whilst making http GET request', null, $ex);
         }
     }
 
@@ -81,7 +86,7 @@ class Client
      * @param string $path
      * @param array $payload
      * @return array
-     * @throws ApiException|HttpException
+     * @throws ApiException
      */
     public function httpPost(string $path, array $payload = []) : array
     {
@@ -89,14 +94,18 @@ class Client
 
         $request = new Request('POST', $url, $this->buildHeaders(), json_encode($payload));
 
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($request);
 
-        switch ($response->getStatusCode()) {
-            case 200:
-            case 201:
-                return $this->handleResponse($response);
-            default:
-                throw ApiException::create(null, $response);
+            switch ($response->getStatusCode()) {
+                case 200:
+                case 201:
+                    return $this->handleResponse($response);
+                default:
+                    throw ApiException::create(null, $response);
+            }
+        } catch (ClientExceptionInterface $ex) {
+            throw ApiException::create('Error whilst making http POST request', null, $ex);
         }
     }
 
@@ -106,7 +115,7 @@ class Client
      * @param string $path
      * @param array $payload
      * @return array
-     * @throws ApiException|HttpException
+     * @throws ApiException
      */
     public function httpPut(string $path, array $payload = []) : array
     {
@@ -114,14 +123,18 @@ class Client
 
         $request = new Request('PUT', $url, $this->buildHeaders(), json_encode($payload));
 
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($request);
 
-        switch ($response->getStatusCode()) {
-            case 200:
-            case 201:
-                return $this->handleResponse($response);
-            default:
-                throw ApiException::create(null, $response);
+            switch ($response->getStatusCode()) {
+                case 200:
+                case 201:
+                    return $this->handleResponse($response);
+                default:
+                    throw ApiException::create(null, $response);
+            }
+        } catch (ClientExceptionInterface $ex) {
+            throw ApiException::create('Error whilst making http PUT request', null, $ex);
         }
     }
 
@@ -131,7 +144,7 @@ class Client
      * @param string $path
      * @param array $payload
      * @return array
-     * @throws ApiException|HttpException
+     * @throws ApiException
      */
     public function httpPatch(string $path, array $payload = []) : array
     {
@@ -139,14 +152,18 @@ class Client
 
         $request = new Request('PATCH', $url, $this->buildHeaders(), json_encode($payload));
 
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($request);
 
-        switch ($response->getStatusCode()) {
-            case 200:
-            case 201:
-                return $this->handleResponse($response);
-            default:
-                throw ApiException::create(null, $response);
+            switch ($response->getStatusCode()) {
+                case 200:
+                case 201:
+                    return $this->handleResponse($response);
+                default:
+                    throw ApiException::create(null, $response);
+            }
+        } catch (ClientExceptionInterface $ex) {
+            throw ApiException::create('Error whilst making http PATCH request', null, $ex);
         }
     }
 
@@ -155,7 +172,7 @@ class Client
      *
      * @param string $path
      * @return array
-     * @throws ApiException|HttpException
+     * @throws ApiException
      */
     public function httpDelete(string $path) : array
     {
@@ -163,14 +180,18 @@ class Client
 
         $request = new Request('DELETE', $url, $this->buildHeaders());
 
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($request);
 
-        switch ($response->getStatusCode()) {
-            case 200:
-            case 201:
-                return $this->handleResponse($response);
-            default:
-                throw ApiException::create(null, $response);
+            switch ($response->getStatusCode()) {
+                case 200:
+                case 201:
+                    return $this->handleResponse($response);
+                default:
+                    throw ApiException::create(null, $response);
+            }
+        } catch (ClientExceptionInterface $ex) {
+            throw ApiException::create('Error whilst making http DELETE request', null, $ex);
         }
     }
 

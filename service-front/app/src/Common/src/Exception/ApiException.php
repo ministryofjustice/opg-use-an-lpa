@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Common\Exception;
 
-use App\Exception\AbstractApiException;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
