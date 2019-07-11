@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Form;
 
-use Common\Form\AbstractCsrfForm;
+use Common\Form\AbstractForm;
 use Common\Validator\EmailAddressValidator;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Filter\StringToLower;
@@ -12,7 +12,7 @@ use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Validator\Identical;
 use Zend\Validator\NotEmpty;
 
-class PasswordReset extends AbstractCsrfForm implements InputFilterProviderInterface
+class PasswordReset extends AbstractForm implements InputFilterProviderInterface
 {
     const FORM_NAME = "password-reset";
 
