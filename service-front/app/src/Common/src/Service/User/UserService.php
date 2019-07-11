@@ -6,6 +6,7 @@ use Common\Entity\User;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use ArrayObject;
+use DateTime;
 use Exception;
 use RuntimeException;
 
@@ -72,7 +73,7 @@ class UserService
                 $userData['id'],
                 $userData['firstname'],
                 $userData['surname'],
-                new \DateTime($userData['lastlogin'])
+                new DateTime($userData['lastlogin'])
             );
         } catch (ApiException $e) {
             // TODO log or otherwise report authentication issue?
