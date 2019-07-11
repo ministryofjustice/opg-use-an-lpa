@@ -6,6 +6,7 @@ namespace ViewerTest\Handler;
 
 use Common\Service\ApiClient\ApiException;
 use Common\Service\Lpa\LpaService;
+use Psr\Http\Message\StreamInterface;
 use Viewer\Handler\CheckCodeHandler;
 use Psr\Http\Message\ResponseInterface;
 use PHPUnit\Framework\TestCase;
@@ -153,9 +154,11 @@ class CheckCodeHandlerTest extends TestCase
      */
     private function getException(int $code, array $body = [])
     {
-        $responseProphecy = $this->prophesize(ResponseInterface::class);
+        $streamProphecy = $this->prophesize(StreamInterface::class);
+        $streamProphecy->getContents()->willReturn(json_encode($body));
 
-        $responseProphecy->getBody()->willReturn(json_encode($body));
+        $responseProphecy = $this->prophesize(ResponseInterface::class);
+        $responseProphecy->getBody()->willReturn($streamProphecy->reveal());
         $responseProphecy->getStatusCode()->willReturn($code);
 
         return new ApiException($responseProphecy->reveal());

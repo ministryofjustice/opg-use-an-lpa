@@ -1,35 +1,32 @@
-{% block form_input_text %}
-
+{%- block form_element_simple -%}
+    {%- set name = element.getName() -%}
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
-        <label class="govuk-label" for="{{ element.getName() }}">
-            {{ element.getLabel() }}
+        <label class="govuk-label" for="{{ name }}">
+            {{ label | raw }}
         </label>
 
         {{ govuk_error(element) }}
 
-        <input class="govuk-input {{- block('input_error_class') -}}" id="{{ element.getName() }}"
-               name="{{ element.getName() }}" type="text" value="{{ element.getValue() }}" />
+        <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}" id="{{ name }}"
+               name="{{ name }}" type="{{ type }}" value="{{ value }}" />
     </div>
+{%- endblock form_element_simple -%}
 
-{% endblock form_input_text %}
+{%- block form_input_text -%}
+    {%- set type = type|default('text') -%}
+    {%- set value = element.getValue() -%}
+    {{ block('form_element_simple') }}
+{%- endblock form_input_text -%}
 
-{% block form_input_password %}
 
-    <div class="govuk-form-group {{- block('form_group_error_class') -}}">
-        <label class="govuk-label" for="{{ element.getName() }}">
-            {{ element.getLabel() }}
-        </label>
+{%- block form_input_password -%}
+    {%- set type = type|default('password') -%}
+    {%- set value = '' %}
+    {{ block('form_element_simple') }}
+{%- endblock form_input_password -%}
 
-        {{ govuk_error(element) }}
-
-        <input class="govuk-input {{- block('input_error_class') -}}" id="{{ element.getName() }}"
-               name="{{ element.getName() }}" type="password" />
-    </div>
-
-{% endblock form_input_password %}
 
 {% block form_input_checkbox %}
-
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
         <div class="govuk-checkboxes">
             <div class="govuk-checkboxes__item">
@@ -37,7 +34,7 @@
                 <input class="govuk-checkboxes__input" id="{{ element.getName() }}" name="{{ element.getName() }}" value="{{ element.getCheckedValue() }}" type="checkbox" {% if element.getValue() == element.getCheckedValue() %}checked="checked"{% endif %}>
 
                 <label class="govuk-label govuk-checkboxes__label" for="{{ element.getName() }}">
-                    {{ element.getLabel() | raw }}
+                    {{ label | raw }}
 
                     {{ govuk_error(element) }}
                 </label>
@@ -45,17 +42,28 @@
             </div>
         </div>
     </div>
-
 {% endblock form_input_checkbox %}
 
-{% block input_error_class %}
 
-    {% if element.getMessages() is not empty %}govuk-input--error{% endif %}
+{%- block input_extra_class -%}
+    {%- if attr is defined and attr['class'] is not empty -%}
+        {{- " " -}}
+        {{- attr['class'] -}}
+    {%- endif -%}
+{%- endblock input_extra_class -%}
 
-{% endblock input_error_class %}
 
-{% block form_group_error_class %}
+{%- block input_error_class -%}
+    {%- if element.getMessages() is not empty -%}
+        {{- " " -}}
+        govuk-input--error
+    {%- endif -%}
+{%- endblock input_error_class -%}
 
-    {% if element.getMessages() is not empty %}govuk-form-group--error{% endif %}
 
-{% endblock form_group_error_class %}
+{%- block form_group_error_class -%}
+    {%- if element.getMessages() is not empty -%}
+        {{- " " -}}
+        govuk-form-group--error
+    {%- endif -%}
+{%- endblock form_group_error_class -%}
