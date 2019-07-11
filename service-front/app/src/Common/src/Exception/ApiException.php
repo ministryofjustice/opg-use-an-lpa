@@ -67,7 +67,7 @@ class ApiException extends AbstractApiException
         $code = self::DEFAULT_ERROR;
 
         if (! is_null($response)) {
-            $body = json_decode($response->getBody(), true);
+            $body = json_decode($response->getBody()->getContents(), true);
             $code = $response->getStatusCode();
 
             //  If no message was provided create one from the response data
