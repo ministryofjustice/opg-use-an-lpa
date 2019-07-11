@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument\Token\CallbackToken;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\RedirectResponse;
@@ -166,14 +167,8 @@ class CreateAccountHandlerTest extends TestCase
             return true;
         }))->willReturn('');
 
-        $apiResponseProphecy = $this->prophesize(ResponseInterface::class);
-        $apiResponseProphecy->getBody()
-            ->willReturn('{}');
-        $apiResponseProphecy->getStatusCode()
-            ->willReturn(StatusCodeInterface::STATUS_CONFLICT);
-
         $this->userServiceProphecy->create('a@b.com', 'P@55word')
-            ->willThrow(new ApiException($apiResponseProphecy->reveal()));
+            ->willThrow($this->getMockApiException(StatusCodeInterface::STATUS_CONFLICT));
 
         $this->emailClientProphecy->sendAccountActivationEmail('a@b.com', 'http://localhost/activate-account/activate1234567890')
             ->shouldNotBeCalled();
@@ -202,14 +197,8 @@ class CreateAccountHandlerTest extends TestCase
 
     public function testFormSubmittedCreateAccountException()
     {
-        $apiResponseProphecy = $this->prophesize(ResponseInterface::class);
-        $apiResponseProphecy->getBody()
-            ->willReturn('{}');
-        $apiResponseProphecy->getStatusCode()
-            ->willReturn(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
-
         $this->userServiceProphecy->create('a@b.com', 'P@55word')
-            ->willThrow(new ApiException($apiResponseProphecy->reveal()));
+            ->willThrow($this->getMockApiException(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR));
 
         $this->emailClientProphecy->sendAccountActivationEmail('a@b.com', 'http://localhost/activate-account/activate1234567890')
             ->shouldNotBeCalled();
@@ -296,14 +285,8 @@ class CreateAccountHandlerTest extends TestCase
         $this->urlHelperProphecy->generate('create-account', [], [])
             ->willReturn('/create-account');
 
-        $apiResponseProphecy = $this->prophesize(ResponseInterface::class);
-        $apiResponseProphecy->getBody()
-            ->willReturn('{}');
-        $apiResponseProphecy->getStatusCode()
-            ->willReturn(StatusCodeInterface::STATUS_NOT_FOUND);
-
         $this->userServiceProphecy->getByEmail('a@b.com')
-            ->willThrow(new ApiException($apiResponseProphecy->reveal()));
+            ->willThrow($this->getMockApiException(StatusCodeInterface::STATUS_NOT_FOUND));
 
         $this->emailClientProphecy->sendAccountActivationEmail('a@b.com', 'http://localhost/activate-account/activate1234567890')
             ->shouldNotBeCalled();
@@ -358,5 +341,25 @@ class CreateAccountHandlerTest extends TestCase
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    /**
+     * @param int $statusCode
+     * @return ApiException
+     */
+    private function getMockApiException(int $statusCode) : ApiException
+    {
+        $streamProphecy = $this->prophesize(StreamInterface::class);
+        $streamProphecy->getContents()
+            ->willReturn('{}');
+
+        $apiResponseProphecy = $this->prophesize(ResponseInterface::class);
+        $apiResponseProphecy->getBody()
+            ->willReturn($streamProphecy->reveal());
+
+        $apiResponseProphecy->getStatusCode()
+            ->willReturn($statusCode);
+
+        return new ApiException($apiResponseProphecy->reveal());
     }
 }
