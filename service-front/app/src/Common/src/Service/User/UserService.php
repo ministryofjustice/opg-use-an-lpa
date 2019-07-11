@@ -68,7 +68,12 @@ class UserService
                 'password' => $password,
             ]);
 
-            return new User($userData['id'], $userData['firstname'], $userData['surname'], new \DateTime($userData['lastlogin']));
+            return new User(
+                $userData['id'],
+                $userData['firstname'],
+                $userData['surname'],
+                new \DateTime($userData['lastlogin'])
+            );
         } catch (ApiException $e) {
             // TODO log or otherwise report authentication issue?
         } catch (Exception $e) {
