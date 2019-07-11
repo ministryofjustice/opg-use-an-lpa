@@ -5,18 +5,26 @@
 {% block content %}
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
+
     <a href="/" class="govuk-back-link">Back</a>
 
     <main class="govuk-main-wrapper">
+
         <div class="govuk-grid-row">
+
             <div class="govuk-grid-column-one-half">
-                <h1 class="govuk-heading-xl">Enter Code</h1>
+
+                {{ govuk_error_summary(form) }}
 
                 {{ govuk_form_open(form) }}
 
                     <fieldset class="govuk-fieldset">
 
-                        {{ govuk_error_summary(form) }}
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                Enter Code
+                            </h1>
+                        </legend>
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
@@ -29,17 +37,18 @@
                                 </span>
                             </summary>
                             <div class="govuk-details__text">
-                                A share code is given to you by the donor or an attorney named on the lasting power
-                                of attorney.
+                                <p class="govuk-body">A share code is given to you by the donor or an attorney named on the lasting power of attorney.</p>
                             </div>
                         </details>
 
                         <button type="submit" class="govuk-button">Save and continue</button>
+
                     </fieldset>
 
                 {{ govuk_form_close() }}
 
             </div>
+
         </div>
 
     </main>

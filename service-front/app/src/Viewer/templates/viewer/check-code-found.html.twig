@@ -6,8 +6,9 @@
     <div class="govuk-width-container">
         {{ include('@partials/new-service.html.twig') }}
 
-        <main class="govuk-main-wrapper " id="main-content" role="main">
+        <a href="/" class="govuk-back-link">Back</a>
 
+        <main class="govuk-main-wrapper " id="main-content" role="main">
 
             <h1 class="govuk-heading-xl">Confirmation</h1>
 
@@ -54,20 +55,18 @@
                             </span>
                         </summary>
                         <div class="govuk-details__text">
-                            Please go back and check that you entered the right reference number and registration code. Remember that the donor and each attorney on an LPA have their own unique registration code.
-                            <br>
-                            <br>
-                            If the information is still wrong, or if a name is mispelt, please contact us on 02342 435920.
-                            <br>
-                            <br>
-                            Opening hours are Monday, Tuesday, Thursday, Friday 9am to 5pm. Wednesday 10am to 5pm.
+                            <p class="govuk-body">Please go back and check that you entered the right reference number and registration code. Remember that the donor and each attorney on an LPA have their own unique registration code.</p>
+
+                            <p class="govuk-body">If the information is still wrong, or if a name is misspelt, please contact us on 02342 435920.</p>
+
+                            <p class="govuk-body">Opening hours are Monday, Tuesday, Thursday, Friday 9am to 5pm. Wednesday 10am to 5pm.</p>
                         </div>
                     </details>
 
                 </div>
             </div>
 
-            <a href="/view-lpa" role="button" draggable="false" class="govuk-button">
+            <a href="{{ path('view-lpa') }}" role="button" draggable="false" class="govuk-button">
                 Continue
             </a>
 

@@ -22,7 +22,7 @@
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
 
-    <a href="#" class="govuk-back-link">Back</a>
+    <a href="/" class="govuk-back-link">Back</a>
 
     <main class="govuk-main-wrapper">
 
@@ -46,7 +46,7 @@
 
                     <p class="govuk-body">If you still do not receive the email, please contact us on 0300 456 0300.</p>
 
-                    <p class="govuk-body">If you've already activated your account, you can <a href="#">sign in now</a>.</p>
+                    <p class="govuk-body">If you've already activated your account, you can <a href="{{ path('login') }}">sign in</a> now.</p>
 
                 {{ govuk_form_close() }}
 
