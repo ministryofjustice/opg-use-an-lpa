@@ -134,7 +134,6 @@ class CreateAccountHandler extends AbstractHandler
         //  Account created successfully so set up the new form and go to the confirmation screen
         /** @var CsrfGuardInterface $guard */
         $guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
-
         $form = new ConfirmEmail($guard);
 
         //  Populate the email address in the form

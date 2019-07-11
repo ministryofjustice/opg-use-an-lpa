@@ -8,6 +8,7 @@ use Common\Handler\AbstractHandler;
 use Common\Service\User\UserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
@@ -47,10 +48,8 @@ class ActivateAccountHandler extends AbstractHandler
 
         $userData = $this->userService->activate($activationToken);
 
-        //  TODO - complete this later
-        //  For now just redirect to screen with active on it
-        echo 'USER ACTIVE!';
-        echo '<br/><br/><a href="/">HOME</a>';
-        die();
+        //  TODO - Populate this response properly later
+
+        return new HtmlResponse($this->renderer->render('actor::activate-account'));
     }
 }

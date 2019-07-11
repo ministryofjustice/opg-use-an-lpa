@@ -1,0 +1,31 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Account activated - {% endblock %}
+
+{% block content %}
+<div class="govuk-width-container">
+    {{ include('@partials/new-service.html.twig') }}
+
+    <a href="#" class="govuk-back-link">Back</a>
+
+    <main class="govuk-main-wrapper">
+
+        <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-two-thirds">
+
+                <h2 class="govuk-heading-l">Account activated</h2>
+
+            </div>
+
+            <div class="govuk-grid-column-one-half">
+
+                <p class="govuk-body">USER ACTIVE</p>
+
+            </div>
+
+        </div>
+
+    </main>
+</div>
+{% endblock %}
