@@ -16,6 +16,7 @@ interface ActorUsersInterface
      * @param string $activationToken
      * @param int $activationTtl
      * @return array
+     * @throws NotFoundException
      */
     public function add(string $email, string $password, string $activationToken, int $activationTtl) : array;
 
@@ -41,6 +42,7 @@ interface ActorUsersInterface
      *
      * @param string $email
      * @return bool
+     * @throws NotFoundException
      */
     public function exists(string $email) : bool;
 }
