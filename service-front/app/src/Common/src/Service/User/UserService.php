@@ -5,6 +5,7 @@ namespace Common\Service\User;
 use Common\Entity\User;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Fig\Http\Message\StatusCodeInterface;
 use ArrayObject;
 use DateTime;
 use Exception;
@@ -84,13 +85,25 @@ class UserService
 
     /**
      * @param string $activationToken
-     * @return array
+     * @return bool
      * @throws \Http\Client\Exception
      */
-    public function activate(string $activationToken) : array
+    public function activate(string $activationToken) : bool
     {
-        return $this->apiClient->httpPatch('/v1/user-activation', [
-            'activation_token' => $activationToken,
-        ]);
+        try {
+            $userData = $this->apiClient->httpPatch('/v1/user-activation', [
+                'activation_token' => $activationToken,
+            ]);
+
+            if (is_array($userData) && !empty($userData)) {
+                return true;
+            }
+        } catch (ApiException $ex) {
+            if ($ex->getCode() != StatusCodeInterface::STATUS_NOT_FOUND) {
+                throw $ex;
+            }
+        }
+
+        return false;
     }
 }

@@ -46,7 +46,12 @@ class ActivateAccountHandler extends AbstractHandler
     {
         $activationToken = $request->getAttribute('token');
 
-        $userData = $this->userService->activate($activationToken);
+        $activated = $this->userService->activate($activationToken);
+
+        if (!$activated) {
+            //  If the user activate failed (probably because the token has been used) then redirect home
+            return $this->redirectToRoute('home');
+        }
 
         //  TODO - Populate this response properly later
 

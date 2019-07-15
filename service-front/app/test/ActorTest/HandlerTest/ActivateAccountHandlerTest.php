@@ -54,10 +54,7 @@ class ActivateAccountHandlerTest extends TestCase
             $this->userServiceProphecy->reveal()
         );
 
-        $this->userServiceProphecy->activate('tok123')->willReturn([
-            'Email'           => 'a@b.com',
-            'ActivationToken' => 'tok123',
-        ]);
+        $this->userServiceProphecy->activate('tok123')->willReturn(true);
 
         $this->templateRendererProphecy->render('actor::activate-account')->willReturn('');
 
