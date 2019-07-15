@@ -20,6 +20,11 @@ resource "aws_dynamodb_table" "actor_users_table" {
     projection_type    = "KEYS_ONLY"
   }
 
+  ttl {
+    attribute_name = "ExpiresTTL"
+    enabled        = true
+  }
+
   point_in_time_recovery {
     enabled = true
   }
