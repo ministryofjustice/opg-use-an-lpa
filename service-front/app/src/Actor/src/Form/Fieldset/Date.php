@@ -1,12 +1,12 @@
 <?php
 
-namespace Actor\Form\Element;
+namespace Actor\Form\Fieldset;
 
 use Zend\Form\Fieldset;
 
 /**
  * Class Date
- * @package Actor\Form\Element
+ * @package Actor\Form\Fieldset
  */
 class Date extends Fieldset
 {

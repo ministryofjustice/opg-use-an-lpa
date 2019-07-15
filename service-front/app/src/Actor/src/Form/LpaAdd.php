@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Form;
 
-use Actor\Form\Element\Date;
+use Actor\Form\Fieldset\Date;
 use Common\Form\AbstractForm;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\InputFilter\InputFilterProviderInterface;

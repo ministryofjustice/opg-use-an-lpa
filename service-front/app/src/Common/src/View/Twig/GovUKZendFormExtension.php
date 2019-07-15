@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Common\View\Twig;
 
-use Actor\Form\Element\Date;
+use Actor\Form\Fieldset\Date;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
