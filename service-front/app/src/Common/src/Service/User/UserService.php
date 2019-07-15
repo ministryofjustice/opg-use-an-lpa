@@ -71,8 +71,6 @@ class UserService
 
             return new User(
                 $userData['id'],
-                $userData['firstname'],
-                $userData['surname'],
                 new DateTime($userData['lastlogin'])
             );
         } catch (ApiException $e) {

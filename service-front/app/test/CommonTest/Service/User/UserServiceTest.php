@@ -24,8 +24,6 @@ class UserServiceTest extends TestCase
             ])
             ->willReturn([
                 'id'        => 'guid',
-                'firstname' => 'Firstname',
-                'surname'   => 'Surname',
                 'lastlogin' => '2019-07-10T09:00:00'
             ]);
 
@@ -35,8 +33,6 @@ class UserServiceTest extends TestCase
 
         $this->assertInstanceOf(User::class, $return);
         $this->assertEquals('guid', $return->getId());
-        $this->assertEquals('Firstname', $return->getFirstname());
-        $this->assertEquals('Surname', $return->getSurname());
         $this->assertEquals(new DateTime('2019-07-10T09:00:00'), $return->getLastSignedIn());
 
     }

@@ -11,12 +11,6 @@ class User
     /** @var string */
     protected $id;
 
-    /** @var string */
-    protected $firstname;
-
-    /** @var string */
-    protected $surname;
-
     /** @var DateTime */
     protected $lastSignedIn;
 
@@ -26,11 +20,9 @@ class User
      * @param string $surname
      * @param DateTime $lastSignedIn
      */
-    public function __construct(string $id, string $firstname, string $surname, DateTime $lastSignedIn)
+    public function __construct(string $id, DateTime $lastSignedIn)
     {
         $this->id = $id;
-        $this->firstname = $firstname;
-        $this->surname = $surname;
         $this->lastSignedIn = $lastSignedIn;
     }
 
@@ -40,22 +32,6 @@ class User
     public function getId(): string
     {
         return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFirstname(): string
-    {
-        return $this->firstname;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSurname(): string
-    {
-        return $this->surname;
     }
 
     /**
