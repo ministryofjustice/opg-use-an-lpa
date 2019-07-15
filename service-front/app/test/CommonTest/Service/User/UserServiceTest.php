@@ -67,8 +67,6 @@ class UserServiceTest extends TestCase
             ])
             ->willReturn([
                 'id'        => 'guid',
-                'firstname' => 'Firstname',
-                'surname'   => 'Surname',
                 'lastlogin' => 'baddatetime'
             ]);
 
