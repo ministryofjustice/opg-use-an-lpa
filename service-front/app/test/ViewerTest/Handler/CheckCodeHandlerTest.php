@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler;
 
-use Common\Service\ApiClient\ApiException;
+use Common\Exception\ApiException;
 use Common\Service\Lpa\LpaService;
 use Psr\Http\Message\StreamInterface;
 use Viewer\Handler\CheckCodeHandler;
@@ -102,12 +102,12 @@ class CheckCodeHandlerTest extends TestCase
         );
 
         //---
-
         // Throw 410 exception
-        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE)->willThrow($this->getException(410));
+        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE)
+            ->willThrow($this->getException(410));
 
-        $this->templateRendererProphecy->render('viewer::check-code-expired', Argument::any())->willReturn('');
-
+        $this->templateRendererProphecy->render('viewer::check-code-expired', Argument::any())
+            ->willReturn('');
         //---
 
         $response = $handler->handle($this->requestProphecy->reveal());
@@ -161,6 +161,6 @@ class CheckCodeHandlerTest extends TestCase
         $responseProphecy->getBody()->willReturn($streamProphecy->reveal());
         $responseProphecy->getStatusCode()->willReturn($code);
 
-        return new ApiException($responseProphecy->reveal());
+        return ApiException::create(null, $responseProphecy->reveal());
     }
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
+use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Middleware\Session\SessionTimeoutException;
-use Common\Service\ApiClient\ApiException;
 use Common\Service\Lpa\LpaService;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -75,6 +75,6 @@ class CheckCodeHandler extends AbstractHandler
         }
 
         //  We don't have a code so the session has timed out
-        throw new SessionTimeoutException;
+        throw new SessionTimeoutException();
     }
 }
