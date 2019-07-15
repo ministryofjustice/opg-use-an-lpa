@@ -40,8 +40,8 @@ class GovUKZendFormExtension extends AbstractExtension
     public function getFunctions() : array
     {
         return [
-            new TwigFunction('govuk_form_open', [$this, 'formOpen'], ['is_safe' => ['html']]),
-            new TwigFunction('govuk_form_close', [$this, 'formClose'], ['is_safe' => ['html']]),
+            new TwigFunction('govuk_form_open', [$this, 'formOpen'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('govuk_form_close', [$this, 'formClose'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('govuk_form_element', [$this, 'formElement'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('govuk_form_element_hidden', [$this, 'formElementHidden'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('govuk_form_fieldset', [$this, 'formFieldset'], ['needs_environment' => true, 'is_safe' => ['html']]),
@@ -49,26 +49,36 @@ class GovUKZendFormExtension extends AbstractExtension
     }
 
     /**
+     * @param Environment $twigEnv
      * @param AbstractForm $form
      * @return string
+     * @throws \Throwable
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
-    public function formOpen(AbstractForm $form)
+    public function formOpen(Environment $twigEnv, AbstractForm $form)
     {
-        $name = $form->getName();
+        $template = $twigEnv->load('@partials/govuk_form.html.twig');
 
-        if (!empty($name)) {
-            return sprintf('<form name="%s" method="post">', $name);
-        }
-
-        return '<form>';
+        return $template->renderBlock('form_open', [
+            'name' => $form->getName(),
+        ]);
     }
 
     /**
+     * @param Environment $twigEnv
      * @return string
+     * @throws \Throwable
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
-    public function formClose()
+    public function formClose(Environment $twigEnv)
     {
-        return '</form>';
+        $template = $twigEnv->load('@partials/govuk_form.html.twig');
+
+        return $template->renderBlock('form_close');
     }
 
     /**
