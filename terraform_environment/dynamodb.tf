@@ -3,16 +3,20 @@ resource "aws_dynamodb_table" "actor_users_table" {
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Email"
 
-  attribute {
-    name = "Email"
-    type = "S"
-  }
+  attribute = [
+    {
+      name = "Email"
+      type = "S"
+    },
+    {
+      name = "ActivationToken"
+      type = "S"
+    }
+  ]
 
   global_secondary_index {
     name               = "ActivationTokenIndex"
     hash_key           = "ActivationToken"
-    write_capacity     = 10
-    read_capacity      = 10
     projection_type    = "KEYS_ONLY"
   }
 
