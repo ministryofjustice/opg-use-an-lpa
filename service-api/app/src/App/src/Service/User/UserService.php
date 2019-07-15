@@ -11,8 +11,8 @@ use Exception;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use App\Exception\ForbiddenException;
 use App\Exception\NotFoundException;
-
 use App\Exception\UnauthorizedException;
+
 use function password_verify;
 
 /**
@@ -82,7 +82,7 @@ class UserService
      * @param string $email
      * @param string $password
      * @return array
-     * @throws NotFoundException
+     * @throws NotFoundException|ForbiddenException|UnauthorizedException
      */
     public function authenticate(string $email, string $password) : array
     {
