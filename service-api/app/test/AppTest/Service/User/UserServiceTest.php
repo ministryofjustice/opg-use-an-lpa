@@ -8,7 +8,6 @@ use App\DataAccess\Repository\ActorUsersInterface;
 use App\Exception\ConflictException;
 use App\Exception\NotFoundException;
 use App\Service\User\UserService;
-use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -18,7 +17,8 @@ use PHPUnit\Framework\TestCase;
 class UserServiceTest extends TestCase
 {
     // Password hash for password 'test' generated using PASSWORD_DEFAULT
-    // 'test': '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq'
+    // 'test':
+    const PASS_HASH = '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq';
 
     /** @test */
     public function can_create_a_valid_instance()
@@ -40,13 +40,13 @@ class UserServiceTest extends TestCase
         $repoProphecy->exists($userData['email'])
             ->willReturn(false);
         $repoProphecy->add($userData['email'], $userData['password'])
-            ->willReturn(['Email' => $userData['email'], 'Password' => '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq']);
+            ->willReturn(['Email' => $userData['email'], 'Password' => self::PASS_HASH]);
 
         $us = new UserService($repoProphecy->reveal());
 
         $return = $us->add($userData);
 
-        $this->assertEquals(['Email' => $userData['email'], 'Password' => '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq'], $return);
+        $this->assertEquals(['Email' => $userData['email'], 'Password' => self::PASS_HASH], $return);
     }
 
     /** @test */
@@ -71,13 +71,13 @@ class UserServiceTest extends TestCase
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
 
         $repoProphecy->get('a@b.com')
-            ->willReturn(['Email' => 'a@b.com', 'Password' => '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq']);
+            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
 
         $us = new UserService($repoProphecy->reveal());
 
         $return = $us->get('a@b.com');
 
-        $this->assertEquals(['Email' => 'a@b.com', 'Password' => '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq'], $return);
+        $this->assertEquals(['Email' => 'a@b.com', 'Password' => self::PASS_HASH], $return);
     }
 
     /** @test */
@@ -100,13 +100,13 @@ class UserServiceTest extends TestCase
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
 
         $repoProphecy->get('a@b.com')
-            ->willReturn(['Email' => 'a@b.com', 'Password' => '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq']);
+            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
 
         $us = new UserService($repoProphecy->reveal());
 
         $return = $us->authenticate('a@b.com', 'test');
 
-        $this->assertEquals(['Email' => 'a@b.com', 'Password' => '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq'], $return);
+        $this->assertEquals(['Email' => 'a@b.com', 'Password' => self::PASS_HASH], $return);
     }
 
     /** @test */
@@ -115,7 +115,7 @@ class UserServiceTest extends TestCase
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
 
         $repoProphecy->get('a@b.com')
-            ->willReturn(['Email' => 'a@b.com', 'Password' => '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq']);
+            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
 
         $us = new UserService($repoProphecy->reveal());
 
