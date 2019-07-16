@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
+use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Middleware\Session\SessionTimeoutException;
-use Common\Service\ApiClient\ApiException;
 use Common\Service\Lpa\LpaService;
+use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -65,7 +66,7 @@ class CheckCodeHandler extends AbstractHandler
                     ]));
                 }
             } catch (ApiException $apiEx) {
-                if ($apiEx->getCode() == 410) {
+                if ($apiEx->getCode() == StatusCodeInterface::STATUS_GONE) {
                     return new HtmlResponse($this->renderer->render('viewer::check-code-expired'));
                 }
             }
@@ -74,6 +75,6 @@ class CheckCodeHandler extends AbstractHandler
         }
 
         //  We don't have a code so the session has timed out
-        throw new SessionTimeoutException;
+        throw new SessionTimeoutException();
     }
 }
