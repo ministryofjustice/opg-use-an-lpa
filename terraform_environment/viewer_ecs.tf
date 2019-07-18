@@ -56,7 +56,7 @@ resource "aws_security_group_rule" "viewer_ecs_service_egress" {
 // Viewer ECS Service Task level config
 
 resource "aws_ecs_task_definition" "viewer" {
-  family                   = "${terraform.workspace}-viewer"
+  family                   = "${terraform.workspace}-viewer"timestamp()
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
