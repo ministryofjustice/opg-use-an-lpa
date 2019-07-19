@@ -6,10 +6,13 @@ RUN composer install --prefer-dist --no-suggest --no-interaction --no-scripts --
 
 FROM php:7-fpm-alpine
 
-RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
+RUN apk add --update --no-cache icu
+
+RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS icu-dev \
         && pecl install xdebug \
         && pecl install apcu \
         && docker-php-ext-enable apcu \
+        && docker-php-ext-install intl \
         && pecl clear-cache \
         && apk del .build-dependencies
 

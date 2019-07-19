@@ -43,6 +43,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - $app->pipe('/docs', $apiDocMiddleware);
     // - $app->pipe('/files', $filesMiddleware);
 
+    $app->pipe(\Common\Middleware\I18n\SetLocaleMiddleware::class);
+
     $app->pipe(\Zend\Expressive\Session\SessionMiddleware::class);
     $app->pipe(\Zend\Expressive\Csrf\CsrfMiddleware::class);
 

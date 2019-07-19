@@ -25,6 +25,16 @@ return [
         ],
     ],
 
+    'translator' => [
+        'translation_file_patterns' => [
+            [
+                'base_dir' => __DIR__ . '/../../languages',
+                'type'     => 'phpArray',
+                'pattern'  => '%s.lang.php',
+            ],
+        ],
+    ],
+
     'session' => [
 
         // Time in seconds after which a session will expire.
