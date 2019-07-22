@@ -7,11 +7,11 @@ namespace App\Service\User;
 use App\DataAccess\Repository;
 use App\Exception\ConflictException;
 use App\Exception\CreationException;
-use Exception;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 use App\Exception\ForbiddenException;
 use App\Exception\NotFoundException;
 use App\Exception\UnauthorizedException;
+use Exception;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 
 use function password_verify;
 
