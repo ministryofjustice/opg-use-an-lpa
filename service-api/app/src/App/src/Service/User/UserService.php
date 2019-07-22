@@ -8,8 +8,10 @@ use App\DataAccess\Repository;
 use App\Exception\ConflictException;
 use Exception;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use App\Exception\ForbiddenException;
 use App\Exception\NotFoundException;
 
+use App\Exception\UnauthorizedException;
 use function password_verify;
 
 /**
@@ -86,7 +88,11 @@ class UserService
         $user = $this->usersRepository->get($email);
 
         if ( ! password_verify($password, $user['Password'])) {
-            throw new NotFoundException('Authentication failed');
+            throw new ForbiddenException('Authentication failed');
+        }
+
+        if (array_key_exists('ActivationToken', $user)) {
+            throw new UnauthorizedException('User account not verified');
         }
 
         return $user;

@@ -6,7 +6,9 @@ namespace AppTest\Service\User;
 
 use App\DataAccess\Repository\ActorUsersInterface;
 use App\Exception\ConflictException;
+use App\Exception\ForbiddenException;
 use App\Exception\NotFoundException;
+use App\Exception\UnauthorizedException;
 use App\Service\User\UserService;
 use PHPUnit\Framework\TestCase;
 
@@ -119,7 +121,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal());
 
-        $this->expectException(NotFoundException::class);
+        $this->expectException(ForbiddenException::class);
         $return = $us->authenticate('a@b.com', 'badpassword');
     }
 
@@ -137,5 +139,17 @@ class UserServiceTest extends TestCase
         $return = $us->authenticate('baduser@b.com', 'test');
     }
 
+    /** @test */
+    public function will_not_authenticate_unverfied_account()
+    {
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
 
+        $repoProphecy->get('a@b.com')
+            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'ActivationToken' => 'aToken']);
+
+        $us = new UserService($repoProphecy->reveal());
+
+        $this->expectException(UnauthorizedException::class);
+        $return = $us->authenticate('a@b.com', 'test');
+    }
 }
