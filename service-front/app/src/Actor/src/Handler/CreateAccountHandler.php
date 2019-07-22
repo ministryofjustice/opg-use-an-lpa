@@ -6,8 +6,8 @@ namespace Actor\Handler;
 
 use Actor\Form\ConfirmEmail;
 use Actor\Form\CreateAccount;
+use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
-use Common\Service\ApiClient\ApiException;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
