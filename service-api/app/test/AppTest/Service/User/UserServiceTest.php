@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 class UserServiceTest extends TestCase
 {
     // Password hash for password 'test' generated using PASSWORD_DEFAULT
-    // 'test':
+    const PASS = 'test';
     const PASS_HASH = '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq';
 
     /** @test */
@@ -35,7 +35,7 @@ class UserServiceTest extends TestCase
     /** @test */
     public function can_add_a_new_user()
     {
-        $userData = ['email' => 'a@b.com', 'password' => 'test'];
+        $userData = ['email' => 'a@b.com', 'password' => self::PASS];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
 
@@ -54,7 +54,7 @@ class UserServiceTest extends TestCase
     /** @test */
     public function cannot_add_existing_user()
     {
-        $userData = ['email' => 'a@b.com', 'password' => 'test'];
+        $userData = ['email' => 'a@b.com', 'password' => self::PASS];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
 
@@ -106,7 +106,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal());
 
-        $return = $us->authenticate('a@b.com', 'test');
+        $return = $us->authenticate('a@b.com', self::PASS);
 
         $this->assertEquals(['Email' => 'a@b.com', 'Password' => self::PASS_HASH], $return);
     }
@@ -136,7 +136,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal());
 
         $this->expectException(NotFoundException::class);
-        $return = $us->authenticate('baduser@b.com', 'test');
+        $return = $us->authenticate('baduser@b.com', self::PASS);
     }
 
     /** @test */
@@ -150,6 +150,6 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal());
 
         $this->expectException(UnauthorizedException::class);
-        $return = $us->authenticate('a@b.com', 'test');
+        $return = $us->authenticate('a@b.com', self::PASS);
     }
 }
