@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common;
 
 use Aws;
+use Common\Entity\UserFactory;
 use Http;
 use Psr;
 use Zend;
@@ -45,6 +46,10 @@ class ConfigProvider
 
                 // The Session Key Manager to use
                 Service\Session\KeyManager\KeyManagerInterface::class => Service\Session\KeyManager\KmsManager::class,
+
+                // Auth
+                Zend\Expressive\Authentication\UserRepositoryInterface::class => Service\User\UserService::class,
+                Zend\Expressive\Authentication\AuthenticationInterface::class => Zend\Expressive\Authentication\Session\PhpSession::class
             ],
 
             'factories'  => [
@@ -56,11 +61,16 @@ class ConfigProvider
 
                 Service\Email\EmailClient::class => Service\Email\EmailClientFactory::class,
 
+                Service\User\UserService::class => Service\User\UserServiceFactory::class,
+
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 Aws\Kms\KmsClient::class => Service\Aws\KmsFactory::class,
                 Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
 
                 Zend\Expressive\Session\SessionMiddleware::class => Zend\Expressive\Session\SessionMiddlewareFactory::class,
+
+                // Auth
+                Zend\Expressive\Authentication\UserInterface::class => Entity\UserFactory::class,
             ],
 
             'delegators' => [
