@@ -43,7 +43,6 @@ class GovUKZendFormExtension extends AbstractExtension
             new TwigFunction('govuk_form_open', [$this, 'formOpen'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('govuk_form_close', [$this, 'formClose'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('govuk_form_element', [$this, 'formElement'], ['needs_environment' => true, 'is_safe' => ['html']]),
-            new TwigFunction('govuk_form_element_hidden', [$this, 'formElementHidden'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('govuk_form_fieldset', [$this, 'formFieldset'], ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
     }
@@ -139,24 +138,6 @@ class GovUKZendFormExtension extends AbstractExtension
                 $options
             )
         );
-    }
-
-    /**
-     * @param Environment $twigEnv
-     * @param ElementInterface $element
-     * @return string
-     * @throws \Throwable
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function formElementHidden(Environment $twigEnv, ElementInterface $element) : string
-    {
-        $template = $twigEnv->load('@partials/govuk_form.html.twig');
-
-        return $template->renderBlock('form_input_hidden', [
-            'element' => $element,
-        ]);
     }
 
     /**

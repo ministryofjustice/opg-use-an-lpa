@@ -1,6 +1,6 @@
 {% extends '@layout/default.html.twig' %}
 
-{% block html_title %}{{ status }} {{ reason }} - {% endblock %}
+{% block html_title %}{{ status }} {{ reason }} - {{ parent() }} {% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
@@ -16,7 +16,7 @@
         {% if status == 404 %}
             <p class="govuk-body">
                 You are looking for something that doesn't exist or may have moved. Check out one of the links on this page
-                or head back to <a href="{{ path('home') }}">Home</a>.
+                or head back to <a href="{{ path('home') }}" class="govuk-link">Home</a>.
             </p>
         {% endif %}
 

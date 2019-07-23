@@ -1,24 +1,8 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Account created - {% endblock %}
+{% block html_title %}Account created - {{ parent() }} {% endblock %}
 
 {% block content %}
-<style>
-    .button-input-to-link {
-        color: #005ea5;
-        background-color: transparent;
-        cursor: pointer;
-        text-decoration: underline;
-        border: none;
-        margin: 0;
-        padding: 0;
-        font-size: inherit;
-        font-family: inherit;
-        line-height: inherit;
-        font-weight: 400;
-    }
-</style>
-
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
 
@@ -32,23 +16,13 @@
 
                 <h1 class="govuk-heading-l">Activate your account</h1>
 
-                {{ govuk_form_open(form) }}
+                <p class="govuk-body">We've emailed a link to {{ emailAddress }}. Click on the link to activate your account. The link will work for the next 24 hours.</p>
 
-                    {{ govuk_form_element(form.get('__csrf')) }}
+                <p class="govuk-body">The email should arrive in a few minutes. If it's not in your inbox, check your spam or junk folder. If you have not received the email, we can <a href="{{ path('create-account-success', {}, {'email': emailAddress, 'resend': 'true'}) }}" class="govuk-link">resend the activation email</a>.</p>
 
-                    {{ govuk_form_element_hidden(form.get('email')) }}
+                <p class="govuk-body">If you still do not receive the email, please contact us on 0300 456 0300.</p>
 
-                    {{ govuk_form_element_hidden(form.get('email_confirm')) }}
-
-                    <p class="govuk-body">We've emailed a link to {{ emailAddress }}. Click on the link to activate your account. The link will work for the next 24 hours.</p>
-
-                    <p class="govuk-body">The email should arrive in a few minutes. If it's not in your inbox, check your spam or junk folder. If you have not received the email, we can <input type="submit" class="button-input-to-link" value="resend the activation email">.</p>
-
-                    <p class="govuk-body">If you still do not receive the email, please contact us on 0300 456 0300.</p>
-
-                    <p class="govuk-body">If you've already activated your account, you can <a href="{{ path('login') }}">sign in</a> now.</p>
-
-                {{ govuk_form_close() }}
+                <p class="govuk-body">If you've already activated your account, you can <a href="{{ path('login') }}" class="govuk-link">sign in</a> now.</p>
 
             </div>
 

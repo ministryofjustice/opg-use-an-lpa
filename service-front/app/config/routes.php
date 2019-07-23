@@ -46,6 +46,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 {
     $app->get('/', Actor\Handler\HomePageHandler::class, 'home');
     $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');
+    $app->get('/create-account-success', Actor\Handler\CreateAccountSuccessHandler::class, 'create-account-success');
     $app->route('/lpa/add-details', Actor\Handler\LpaAddHandler::class, ['GET', 'POST'], 'lpa.add');
     $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
     $app->get('/activate-account/{token}', Actor\Handler\ActivateAccountHandler::class, 'activate-account');
