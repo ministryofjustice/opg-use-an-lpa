@@ -42,6 +42,7 @@ class LpaService
      *
      * @param string $lpaId
      * @return array
+     * @throws NotFoundException
      */
     public function getById(string $lpaId) : array
     {
@@ -60,7 +61,7 @@ class LpaService
      *
      * @param string $shareCode
      * @return array
-     * @throws \Exception
+     * @throws GoneException
      */
     public function getByCode(string $shareCode) : array
     {

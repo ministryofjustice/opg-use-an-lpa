@@ -1,35 +1,42 @@
-{% block form_input_text %}
-
+{%- block form_element_simple -%}
+    {%- set name = element.getName() -%}
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
-        <label class="govuk-label" for="{{ element.getName() }}">
-            {{ element.getLabel() }}
+        <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ name }}">
+            {{ label | raw }}
         </label>
+
+        {{- block('input_hint') -}}
 
         {{ govuk_error(element) }}
 
-        <input class="govuk-input {{- block('input_error_class') -}}" id="{{ element.getName() }}"
-               name="{{ element.getName() }}" type="text" value="{{ element.getValue() }}" />
+        {% if input_prefix is defined %}
+
+            <span class="govuk-body-l govuk-!-font-weight-bold">
+                {{ input_prefix }}
+            </span>
+
+        {% endif %}
+
+        <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}" id="{{ name }}"
+               name="{{ name }}" type="{{ type }}" value="{{ value }}" />
     </div>
+{%- endblock form_element_simple -%}
 
-{% endblock form_input_text %}
+{%- block form_input_text -%}
+    {%- set type = type|default('text') -%}
+    {%- set value = element.getValue() -%}
+    {{ block('form_element_simple') }}
+{%- endblock form_input_text -%}
 
-{% block form_input_password %}
 
-    <div class="govuk-form-group {{- block('form_group_error_class') -}}">
-        <label class="govuk-label" for="{{ element.getName() }}">
-            {{ element.getLabel() }}
-        </label>
+{%- block form_input_password -%}
+    {%- set type = type|default('password') -%}
+    {%- set value = '' %}
+    {{ block('form_element_simple') }}
+{%- endblock form_input_password -%}
 
-        {{ govuk_error(element) }}
 
-        <input class="govuk-input {{- block('input_error_class') -}}" id="{{ element.getName() }}"
-               name="{{ element.getName() }}" type="password" />
-    </div>
-
-{% endblock form_input_password %}
-
-{% block form_input_checkbox %}
-
+{%- block form_input_checkbox -%}
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
         <div class="govuk-checkboxes">
             <div class="govuk-checkboxes__item">
@@ -37,7 +44,7 @@
                 <input class="govuk-checkboxes__input" id="{{ element.getName() }}" name="{{ element.getName() }}" value="{{ element.getCheckedValue() }}" type="checkbox" {% if element.getValue() == element.getCheckedValue() %}checked="checked"{% endif %}>
 
                 <label class="govuk-label govuk-checkboxes__label" for="{{ element.getName() }}">
-                    {{ element.getLabel() | raw }}
+                    {{ label | raw }}
 
                     {{ govuk_error(element) }}
                 </label>
@@ -45,17 +52,85 @@
             </div>
         </div>
     </div>
+{%- endblock form_input_checkbox -%}
 
-{% endblock form_input_checkbox %}
 
-{% block input_error_class %}
+{%- block form_fieldset_date -%}
+    {%- set name = element.getName() -%}
+    <div class="govuk-form-group {{- block('form_group_error_class') -}}">
 
-    {% if element.getMessages() is not empty %}govuk-input--error{% endif %}
+        <fieldset class="govuk-fieldset" aria-describedby="{{ name }}-hint" role="group">
 
-{% endblock input_error_class %}
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                <h1 class="govuk-fieldset__heading">
+                    {{ label | raw }}
+                </h1>
+            </legend>
 
-{% block form_group_error_class %}
+            {{- block('input_hint') -}}
 
-    {% if element.getMessages() is not empty %}govuk-form-group--error{% endif %}
+            {{ govuk_error(element) }}
 
-{% endblock form_group_error_class %}
+            <div class="govuk-date-input" id="{{ name }}">
+                <div class="govuk-date-input__item">
+
+                    {{ govuk_form_element(element.get(name ~ '-day'), { 'label': 'Day', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }) }}
+
+                </div>
+                <div class="govuk-date-input__item">
+
+                    {{ govuk_form_element(element.get(name ~ '-month'), { 'label': 'Month', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }) }}
+
+                </div>
+                <div class="govuk-date-input__item">
+
+                    {{ govuk_form_element(element.get(name ~ '-year'), { 'label': 'Year', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-4', 'label_class': 'govuk-date-input__label'} }) }}
+
+                </div>
+            </div>
+
+        </fieldset>
+
+    </div>
+{%- endblock form_fieldset_date -%}
+
+
+{%- block input_extra_class -%}
+    {%- if attr is defined and attr['class'] is defined and attr['class'] is not empty -%}
+        {{- " " -}}
+        {{- attr['class'] -}}
+    {%- endif -%}
+{%- endblock input_extra_class -%}
+
+
+{%- block input_extra_label_class -%}
+    {%- if attr is defined and attr['label_class'] is defined and attr['label_class'] is not empty -%}
+        {{- " " -}}
+        {{- attr['label_class'] -}}
+    {%- endif -%}
+{%- endblock input_extra_label_class -%}
+
+
+{%- block input_error_class -%}
+    {%- if element.getMessages() is not empty -%}
+        {{- " " -}}
+        govuk-input--error
+    {%- endif -%}
+{%- endblock input_error_class -%}
+
+
+{%- block form_group_error_class -%}
+    {%- if element.getMessages() is not empty -%}
+        {{- " " -}}
+        govuk-form-group--error
+    {%- endif -%}
+{%- endblock form_group_error_class -%}
+
+
+{%- block input_hint -%}
+    {% if hint is defined %}
+        <span id="{{ name }}-hint" class="govuk-hint">
+            {{ hint }}
+        </span>
+    {% endif %}
+{%- endblock input_hint -%}

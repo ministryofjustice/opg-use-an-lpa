@@ -168,6 +168,11 @@ locals {
             "awslogs-stream-prefix": "actor-app.use-an-lpa"
         }
     },
+    "secrets" : [
+    {
+      "name": "NOTIFY_API_KEY",
+      "valueFrom": "${data.aws_secretsmanager_secret.notify_api_key.arn}"
+    }],
     "environment": [
     {
       "name": "CONTEXT",

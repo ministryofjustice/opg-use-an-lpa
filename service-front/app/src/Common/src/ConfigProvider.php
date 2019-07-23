@@ -39,6 +39,7 @@ class ConfigProvider
         return [
 
             'aliases' => [
+
                 Psr\Http\Client\ClientInterface::class => Http\Adapter\Guzzle6\Client::class,
                 Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookiePersistence::class,
 
@@ -52,6 +53,8 @@ class ConfigProvider
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
                 Service\Session\EncryptedCookiePersistence::class => Service\Session\EncryptedCookiePersistenceFactory::class,
                 Service\Session\KeyManager\KmsManager::class => Service\Session\KeyManager\KmsManagerFactory::class,
+
+                Service\Email\EmailClient::class => Service\Email\EmailClientFactory::class,
 
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 Aws\Kms\KmsClient::class => Service\Aws\KmsFactory::class,

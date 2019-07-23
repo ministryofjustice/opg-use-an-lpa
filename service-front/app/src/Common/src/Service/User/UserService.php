@@ -2,8 +2,13 @@
 
 namespace Common\Service\User;
 
+use Common\Entity\User;
+use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use ArrayObject;
+use DateTime;
+use Exception;
+use RuntimeException;
 
 /**
  * Class UserService
@@ -29,7 +34,6 @@ class UserService
      * @param string $email
      * @param string $password
      * @return array
-     * @throws \Http\Client\Exception
      */
     public function create(string $email, string $password) : array
     {
@@ -42,12 +46,39 @@ class UserService
     /**
      * @param string $email
      * @return ArrayObject|null
-     * @throws \Http\Client\Exception
      */
-    public function getByEmail(string $email) : array
+    public function getByEmail(string $email) : ?array
     {
         return $this->apiClient->httpGet('/v1/user', [
             'email' => $email,
         ]);
+    }
+
+    /**
+     * Attempts authentication of a user based on the passed in credentials.
+     *
+     * @param string $email
+     * @param string $password
+     * @return User|null
+     */
+    public function authenticate(string $email, string $password) : ?User
+    {
+        try {
+            $userData = $this->apiClient->httpGet('/v1/auth', [
+                'email' => $email,
+                'password' => $password,
+            ]);
+
+            return new User(
+                $userData['id'],
+                new DateTime($userData['lastlogin'])
+            );
+        } catch (ApiException $e) {
+            // TODO log or otherwise report authentication issue?
+        } catch (Exception $e) {
+            throw new RuntimeException("Marshaling user login datetime to DateTime failed", 500, $e);
+        }
+
+        return null;
     }
 }

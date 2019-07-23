@@ -3,6 +3,7 @@
 namespace App\Service\User;
 
 use App\DataAccess\Repository;
+use App\Exception\ConflictException;
 
 /**
  * Class UserService
@@ -27,9 +28,14 @@ class UserService
     /**
      * @param array $data
      * @return array
+     * @throws ConflictException
      */
     public function add(array $data) : array
     {
+        if ($this->usersRepository->exists($data['email'])) {
+            throw new ConflictException('User already exists with email address ' . $data['email']);
+        }
+
         return $this->usersRepository->add($data['email'], $data['password']);
     }
 
