@@ -10,6 +10,7 @@ use Common\Service\User\UserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Expressive\Csrf\CsrfMiddleware;
@@ -60,11 +61,14 @@ class LoginPageHandler extends AbstractHandler
             if ($form->isValid()) {
                 $user = $this->authenticator->authenticate($request);
 
-                if (is_null($user)) {
-                    // adding an element name allows the form to link the error message to a field. In this case we'll
-                    // link to the email field to allow the user to correct their mistake.
-                    $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
+                if ( ! is_null($user)) {
+                    // TODO redirect somewhere sensible.
+                    $this->redirectToRoute('home');
                 }
+
+                // adding an element name allows the form to link the error message to a field. In this case we'll
+                // link to the email field to allow the user to correct their mistake.
+                $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
             }
         }
 
