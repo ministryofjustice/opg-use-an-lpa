@@ -11,6 +11,7 @@ use Actor\Form\Login;
 use Prophecy\Argument\Token\CallbackToken;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Expressive\Helper\UrlHelper;
@@ -22,7 +23,7 @@ class LoginPageHandlerTest extends TestCase
 
     private $rendererProphecy;
     private $urlHelperProphecy;
-    private $userServiceProphecy;
+    private $authenticatorProphecy;
     private $requestProphecy;
 
     public function setUp()
@@ -39,7 +40,7 @@ class LoginPageHandlerTest extends TestCase
 
         $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);
 
-        $this->userServiceProphecy = $this->prophesize(UserService::class);
+        $this->authenticatorProphecy = $this->prophesize(AuthenticationInterface::class);
 
         $csrfProphecy = $this->prophesize(CsrfGuardInterface::class);
         $csrfProphecy->generateToken()
@@ -58,7 +59,7 @@ class LoginPageHandlerTest extends TestCase
             ->willReturn('GET');
 
         //  Set up the handler
-        $handler = new LoginPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->userServiceProphecy->reveal());
+        $handler = new LoginPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal());
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
@@ -78,7 +79,7 @@ class LoginPageHandlerTest extends TestCase
             ]);
 
         //  Set up the handler
-        $handler = new LoginPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->userServiceProphecy->reveal());
+        $handler = new LoginPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal());
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
@@ -98,7 +99,7 @@ class LoginPageHandlerTest extends TestCase
             ]);
 
         //  Set up the handler
-        $handler = new LoginPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->userServiceProphecy->reveal());
+        $handler = new LoginPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal());
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
@@ -118,7 +119,7 @@ class LoginPageHandlerTest extends TestCase
             ]);
 
         //  Set up the handler
-        $handler = new LoginPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->userServiceProphecy->reveal());
+        $handler = new LoginPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal());
 
         $response = $handler->handle($this->requestProphecy->reveal());
 

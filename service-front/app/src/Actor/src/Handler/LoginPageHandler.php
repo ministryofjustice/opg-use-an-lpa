@@ -10,9 +10,12 @@ use Common\Service\User\UserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Expressive\Helper\UrlHelper;
+use Zend\Expressive\Session\Session;
+use Zend\Expressive\Session\SessionMiddleware;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
@@ -21,8 +24,8 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  */
 class LoginPageHandler extends AbstractHandler
 {
-    /** @var UserService */
-    private $userService;
+    /** @var AuthenticationInterface */
+    private $authenticator;
 
     /**
      * CreateAccountHandler constructor.
@@ -33,11 +36,11 @@ class LoginPageHandler extends AbstractHandler
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UserService $userService)
+        AuthenticationInterface $authenticator)
     {
         parent::__construct($renderer, $urlHelper);
 
-        $this->userService = $userService;
+        $this->authenticator = $authenticator;
     }
 
     /**
@@ -55,18 +58,9 @@ class LoginPageHandler extends AbstractHandler
             $form->setData($request->getParsedBody());
 
             if ($form->isValid()) {
-                $data = $form->getData();
+                $user = $this->authenticator->authenticate($request);
 
-                // TODO do actual login with something like Zend_Authentication
-                $loggedIn = false;
-                if ($data['email'] === 'test@example.com') {
-                    $loggedIn = true;
-
-                    //  TODO for now just redirect to home page
-                    return $this->redirectToRoute('home');
-                }
-
-                if ( ! $loggedIn) {
+                if (is_null($user)) {
                     // adding an element name allows the form to link the error message to a field. In this case we'll
                     // link to the email field to allow the user to correct their mistake.
                     $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
