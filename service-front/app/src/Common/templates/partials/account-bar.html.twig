@@ -1,0 +1,60 @@
+<style>
+    .signin {
+        border-bottom: 1px solid #bfc1c3;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        margin: 0 auto;
+    }
+
+    .signin::before,
+    .signin::after {
+        content: "";
+        display: table;
+    }
+
+    .signin::after {
+        clear: both;
+    }
+
+    .signin p {
+        float: left;
+        padding: 0;
+        margin: 0;
+    }
+
+    .signin .navigation {
+        float: none;
+        clear: both;
+        margin: 0;
+        padding: 0;
+    }
+
+    .signin .navigation li {
+        list-style-position: inside;
+        list-style-type: none;
+        display: inline;
+        margin-left: 0;
+        margin-right: 10px;
+    }
+
+    @media screen and (min-width: 769px) {
+        .signin .navigation {
+            float: right;
+            clear: none;
+        }
+
+        .signin .navigation li {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+    }
+</style>
+
+<div class="signin">
+    <p class="govuk-body-s">Last signed in: {{ user.getDetail('lastLogin')|date('j F Y g:ia') }}</p>
+    <nav class="navigation govuk-body-s">
+        <li><a href="/your-details">Your details</a></li>
+        <li><a href="/lpa/dashboard">Your LPAs</a></li>
+        <li><a href="/logout">Sign out</a></li>
+    </nav>
+</div>

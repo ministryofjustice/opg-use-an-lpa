@@ -65,7 +65,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
                 if ( ! is_null($user)) {
                     // TODO redirect somewhere sensible.
-                    $this->redirectToRoute('home');
+                    return $this->redirectToRoute('home');
                 }
 
                 // adding an element name allows the form to link the error message to a field. In this case we'll
