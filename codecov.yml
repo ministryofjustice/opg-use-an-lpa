@@ -1,0 +1,22 @@
+coverage:
+  status:
+    patch:
+      default:
+        # basic
+        target: auto
+        threshold: 5%
+        base: pr 
+    project:
+      default: false  # disable the default status that measures entire project
+      front: # declare a new status context for service-front
+        target: 30% # set coverage target
+        threshold: 5% # allow coverage to drop by x% and post a success
+        base: pr # will only use the pull request base. Commits not on a pull request will not receive this status.
+        paths: 
+        - service-front/app/src 
+      api:  # declare a new status context for service-api
+        target: 60% # set coverage target
+        threshold: 5% # allow coverage to drop by x% and post a success
+        base: pr # will only use the pull request base. Commits not on a pull request will not receive this status.
+        paths: 
+        - service-api/app/src/App/src
