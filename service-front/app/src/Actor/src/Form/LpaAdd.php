@@ -7,7 +7,10 @@ namespace Actor\Form;
 use Actor\Form\Fieldset\Date;
 use Common\Form\AbstractForm;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
+use Zend\Filter\StringTrim;
 use Zend\InputFilter\InputFilterProviderInterface;
+use Zend\Validator\Regex;
+use Zend\Validator\StringLength;
 
 /**
  * Class LpaAdd
@@ -44,7 +47,33 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
     public function getInputFilterSpecification() : array
     {
         return [
-            //TODO
+            'passcode' => [
+                'required' => true,
+                'filters'  => [
+                    ['name' => StringTrim::class],
+                ],
+                'validators' => [
+                    new StringLength([
+                        'min' => 12,
+                        'max' => 12,
+                        'message' => 'Enter one-time passcode in the correct format.',
+                    ])
+                ]
+            ],
+            'reference_number' => [
+                'required' => true,
+                'filters'  => [
+                    ['name' => StringTrim::class],
+                ],
+                'validators' => [
+                    new Regex([
+                        'pattern' => '/7\d{11}/',
+                        'message' => [
+                            Regex::NOT_MATCH => 'Enter an LPA reference number in the correct format.'
+                        ]
+                    ])
+                ]
+            ],
         ];
     }
 }
