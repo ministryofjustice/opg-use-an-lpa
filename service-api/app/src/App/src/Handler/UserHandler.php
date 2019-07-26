@@ -35,6 +35,7 @@ class UserHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         if ($request->getMethod() === 'POST') {
+            //  This is an attempt to create a user
             $requestData = $request->getParsedBody();
 
             if (!isset($requestData['email']) || !isset($requestData['password'])) {
@@ -46,7 +47,7 @@ class UserHandler implements RequestHandlerInterface
             return new JsonResponse($data, 201);
         }
 
-        //  If not a post then try to get a user
+        //  This is an attempt to search for a user - must be done by email address
         $params = $request->getQueryParams();
 
         if (!isset($params['email'])) {

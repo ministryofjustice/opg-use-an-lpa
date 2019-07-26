@@ -133,7 +133,14 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "dynamodb:*",
     ]
 
-    resources = ["${aws_dynamodb_table.actor_users_table.arn}","${aws_dynamodb_table.viewer_codes_table.arn}","${aws_dynamodb_table.viewer_activity_table.arn}"]
+    resources = [
+      "${aws_dynamodb_table.actor_users_table.arn}",
+      "${aws_dynamodb_table.actor_users_table.arn}/index/*",
+      "${aws_dynamodb_table.viewer_codes_table.arn}",
+      "${aws_dynamodb_table.viewer_codes_table.arn}/index/*",
+      "${aws_dynamodb_table.viewer_activity_table.arn}",
+      "${aws_dynamodb_table.viewer_activity_table.arn}/index/*"
+    ]
   }
   statement {
     effect = "Allow"

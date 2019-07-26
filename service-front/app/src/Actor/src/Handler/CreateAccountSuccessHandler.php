@@ -4,26 +4,22 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
-use Actor\Form\CreateAccount;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
-use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
- * Class CreateAccountHandler
+ * Class CreateAccountSuccessHandler
  * @package Actor\Handler
  */
-class CreateAccountHandler extends AbstractHandler
+class CreateAccountSuccessHandler extends AbstractHandler
 {
     /** @var UserService */
     private $userService;
@@ -35,7 +31,7 @@ class CreateAccountHandler extends AbstractHandler
     private $serverUrlHelper;
 
     /**
-     * CreateAccountHandler constructor.
+     * CreateAccountSuccessHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param UserService $userService
@@ -63,27 +59,29 @@ class CreateAccountHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        /** @var CsrfGuardInterface $guard */
-        $guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
-        $form = new CreateAccount($guard);
+        /*
+         * IMPORTANT: - This handler is currently configured to receive a GET request ONLY
+         *              This is only allowed because the current processing DOES NOT update
+         *              the activation token that is set for the user.
+         *              If this changes in future such that the token is regenerated then
+         *              this handler must be changed to receive a POST request.
+         */
+        $params = $request->getQueryParams();
 
-        if ($request->getMethod() === 'POST') {
-            //  Check to see if this a post to register an account or to resend the activation token
-            $requestData = $request->getParsedBody();
+        /** @var string $emailAddress */
+        $emailAddress = $params['email'] ?? null;
+        $resend = (isset($params['resend']) && $params['resend'] === 'true');
 
-            //  Request to create an account
-            $form->setData($requestData);
+        if (is_null($emailAddress)) {
+            return $this->redirectToRoute('create-account');
+        }
 
-            if ($form->isValid()) {
-                $formData = $form->getData();
+        if ($resend === true) {
+            try {
+                $userData = $this->userService->getByEmail($emailAddress);
 
-                $emailAddress = $formData['email'];
-                $password = $formData['password'];
-
-                try {
-                    $userData = $this->userService->create($emailAddress, $password);
-
-                    //  Send account activation email to user
+                //  Check to see if the user has activated their account by looking for an activation token
+                if (isset($userData['ActivationToken'])) {
                     $activateAccountPath = $this->urlHelper->generate('activate-account', [
                         'token' => $userData['ActivationToken'],
                     ]);
@@ -91,23 +89,19 @@ class CreateAccountHandler extends AbstractHandler
                     $activateAccountUrl = $this->serverUrlHelper->generate($activateAccountPath);
 
                     $this->emailClient->sendAccountActivationEmail($emailAddress, $activateAccountUrl);
-                } catch (ApiException $ex) {
-                    if ($ex->getCode() == StatusCodeInterface::STATUS_CONFLICT) {
-                        $this->emailClient->sendAlreadyRegisteredEmail($emailAddress);
-                    } else {
-                        throw $ex;
-                    }
-                }
 
-                //  Redirect to the success screen with the email address so that we can utilise the resend activation token functionality
-                return $this->redirectToRoute('create-account-success', [], [
-                    'email' => $emailAddress,
-                ]);
+                    //  Redirect back to this page without the resend flag - do this to guard against repeated page refreshes
+                    return $this->redirectToRoute('create-account-success', [], [
+                        'email' => $emailAddress,
+                    ]);
+                }
+            } catch (ApiException $ignore) {
+                //  Ignore any API exception (e.g. user not found) and let the redirect below manage the request
             }
         }
 
-        return new HtmlResponse($this->renderer->render('actor::create-account', [
-            'form' => $form,
+        return new HtmlResponse($this->renderer->render('actor::create-account-success', [
+            'emailAddress' => $emailAddress,
         ]));
     }
 }

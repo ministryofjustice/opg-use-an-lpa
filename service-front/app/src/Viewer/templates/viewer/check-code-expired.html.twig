@@ -1,6 +1,6 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block title %}Code Expired{% endblock %}
+{% block html_title %}Code expired - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -15,7 +15,7 @@
 
                     <p class="govuk-body">The code that you entered has expired.</p>
 
-                    <a href="/enter-code" role="button" draggable="false" class="govuk-button govuk-button--start">
+                    <a href="{{ path('enter-code') }}" role="button" draggable="false" class="govuk-button govuk-button--start">
                         Try again
                     </a>
 

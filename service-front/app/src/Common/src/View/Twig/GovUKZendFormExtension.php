@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\View\Twig;
 
 use Actor\Form\Fieldset\Date;
+use Common\Form\AbstractForm;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -13,10 +14,20 @@ use Zend\Form\ElementInterface;
 use Zend\Form\FieldsetInterface;
 use Exception;
 
+/**
+ * Class GovUKZendFormExtension
+ * @package Common\View\Twig
+ */
 class GovUKZendFormExtension extends AbstractExtension
 {
+    /**
+     * Map the element types to blocks in the Twig partial template
+     *
+     * @var array
+     */
     private $blockMappings = [
         Element\Checkbox::class => 'form_input_checkbox',
+        Element\Csrf::class     => 'form_input_hidden',
         Element\Password::class => 'form_input_password',
         Element\Text::class     => 'form_input_text',
         //  Fieldsets
@@ -29,9 +40,44 @@ class GovUKZendFormExtension extends AbstractExtension
     public function getFunctions() : array
     {
         return [
+            new TwigFunction('govuk_form_open', [$this, 'formOpen'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('govuk_form_close', [$this, 'formClose'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('govuk_form_element', [$this, 'formElement'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('govuk_form_fieldset', [$this, 'formFieldset'], ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
+    }
+
+    /**
+     * @param Environment $twigEnv
+     * @param AbstractForm $form
+     * @return string
+     * @throws \Throwable
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function formOpen(Environment $twigEnv, AbstractForm $form)
+    {
+        $template = $twigEnv->load('@partials/govuk_form.html.twig');
+
+        return $template->renderBlock('form_open', [
+            'name' => $form->getName(),
+        ]);
+    }
+
+    /**
+     * @param Environment $twigEnv
+     * @return string
+     * @throws \Throwable
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function formClose(Environment $twigEnv)
+    {
+        $template = $twigEnv->load('@partials/govuk_form.html.twig');
+
+        return $template->renderBlock('form_close');
     }
 
     /**
@@ -46,7 +92,7 @@ class GovUKZendFormExtension extends AbstractExtension
      */
     public function formElement(Environment $twigEnv, ElementInterface $element, array $options = []) : string
     {
-        $blockMapping = $this->getBlockMapping($element);
+        $elementBlock = $this->getBlockForElement($element);
 
         $template = $twigEnv->load('@partials/govuk_form.html.twig');
 
@@ -54,7 +100,7 @@ class GovUKZendFormExtension extends AbstractExtension
             $element->setLabel($options['label']);
         }
 
-        return $template->renderBlock($blockMapping,
+        return $template->renderBlock($elementBlock,
             array_merge(
                 [
                     'element' => $element,
@@ -76,7 +122,7 @@ class GovUKZendFormExtension extends AbstractExtension
      */
     public function formFieldset(Environment $twigEnv, FieldsetInterface $fieldset, array $options = []) : string
     {
-        $blockMapping = $this->getBlockMapping($fieldset);
+        $elementBlock = $this->getBlockForElement($fieldset);
 
         $template = $twigEnv->load('@partials/govuk_form.html.twig');
 
@@ -84,7 +130,7 @@ class GovUKZendFormExtension extends AbstractExtension
             $fieldset->setLabel($options['label']);
         }
 
-        return $template->renderBlock($blockMapping,
+        return $template->renderBlock($elementBlock,
             array_merge(
                 [
                     'element' => $fieldset,
@@ -95,19 +141,27 @@ class GovUKZendFormExtension extends AbstractExtension
     }
 
     /**
-     * @param ElementInterface $elementOrFieldset
+     * @param ElementInterface $element
      * @return string
      * @throws Exception
      */
-    private function getBlockMapping(ElementInterface $elementOrFieldset) : string
+    private function getBlockForElement(ElementInterface $element) : string
     {
-        //  Check for a valid block mapping
-        $eleClass = get_class($elementOrFieldset);
+        $eleClass = get_class($element);
 
-        if (!isset($this->blockMappings[$eleClass])) {
-            throw new Exception('Block mapping unavailable for ' . $eleClass);
+        //  Check for a direct mapping
+        if (isset($this->blockMappings[$eleClass])) {
+            return $this->blockMappings[$eleClass];
         }
 
-        return $this->blockMappings[$eleClass];
+        //  Check for a mapping of a parent
+        foreach ($this->blockMappings as $elementClass => $blockName) {
+            if (is_subclass_of($eleClass, $elementClass)) {
+                return $this->blockMappings[$elementClass];
+            }
+        }
+
+        //  No mappings so throw an exception
+        throw new Exception('Block mapping unavailable for ' . $eleClass);
     }
 }
