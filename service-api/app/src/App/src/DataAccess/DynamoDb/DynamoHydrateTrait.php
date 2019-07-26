@@ -5,6 +5,10 @@ namespace App\DataAccess\DynamoDb;
 use Aws\Result;
 use DateTime;
 
+/**
+ * Trait DynamoHydrateTrait
+ * @package App\DataAccess\DynamoDb
+ */
 trait DynamoHydrateTrait
 {
     /**
@@ -12,22 +16,50 @@ trait DynamoHydrateTrait
      * @param array $dateFields
      * @return array
      */
-    private function getData(Result $result, array $dateFields = [])
+    private function getData(Result $result,  array $dateFields = [])
+    {
+        if (isset($result['Item'])) {
+            return $this->extractData($result['Item'], $dateFields);
+        }
+
+        return [];
+    }
+
+    /**
+     * @param Result $result
+     * @param array $dateFields
+     * @return array
+     */
+    private function getDataCollection(Result $result,  array $dateFields = [])
+    {
+        $items = [];
+
+        if (isset($result['Items'])) {
+            foreach ($result['Items'] as $item) {
+                $items[] = $this->extractData($item, $dateFields);
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * @param array $resultItem
+     * @param array $dateFields
+     * @return array
+     */
+    private function extractData(array $resultItem, array $dateFields = []) : array
     {
         $item = [];
 
-        if (isset($result['Item'])) {
-            $values = $result['Item'];
+        foreach ($resultItem as $key => $value) {
+            $thisVal = current($value);
 
-            foreach ($values as $key => $value) {
-                $thisVal = current($value);
-
-                if (in_array($key, $dateFields)) {
-                    $thisVal = DateTime::createFromFormat('Y-m-d H:i:s', $thisVal);
-                }
-
-                $item[$key] = $thisVal;
+            if (in_array($key, $dateFields)) {
+                $thisVal = DateTime::createFromFormat('Y-m-d H:i:s', $thisVal);
             }
+
+            $item[$key] = $thisVal;
         }
 
         return $item;

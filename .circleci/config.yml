@@ -193,6 +193,9 @@ orbs:
               path: build/service-front/
           - store_artifacts:
               path: build/service-front/
+          - run:
+              name: Upload to Codecov
+              command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
           - ecr_login
           - run:
               name: Push container
@@ -271,7 +274,21 @@ orbs:
               name: Run unit tests
               command: |
                 docker run -d --name tests api-app:latest
+                docker exec tests docker-php-ext-enable xdebug
                 docker exec tests /app/vendor/bin/phpunit
+          - run:
+              name: Fetch test results
+              command: |
+                mkdir -p build/service-api
+                docker cp tests:/app/build/reports build/service-api/phpunit
+              when: always
+          - store_test_results:
+              path: build/service-api/
+          - store_artifacts:
+              path: build/service-api/
+          - run:
+              name: Upload to Codecov
+              command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
           - ecr_login
           - run:
               name: Push container

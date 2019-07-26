@@ -10,7 +10,7 @@ use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Form\Exception\InvalidArgumentException;
 use Zend\Form\Form;
 
-class AbstractForm extends Form
+abstract class AbstractForm extends Form
 {
     /**
      * Error messages

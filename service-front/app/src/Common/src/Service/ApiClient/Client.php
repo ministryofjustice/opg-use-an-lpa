@@ -5,7 +5,6 @@ namespace Common\Service\ApiClient;
 use Common\Exception\ApiException;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\Request;
-use Http\Client\Exception as HttpException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -70,8 +69,6 @@ class Client
             switch ($response->getStatusCode()) {
                 case 200:
                     return $this->handleResponse($response);
-                case 404:
-                    return null;
                 default:
                     throw ApiException::create(null, $response);
             }

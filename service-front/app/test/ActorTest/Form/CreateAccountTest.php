@@ -2,20 +2,22 @@
 
 declare(strict_types=1);
 
-namespace ViewerTest\Form;
+namespace ActorTest\Form;
 
+use Actor\Form\CreateAccount;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use PHPUnit\Framework\TestCase;
-use Viewer\Form\ShareCode;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
+use Zend\Form\Element\Checkbox;
+use Zend\Form\Element\Password;
 use Zend\Form\Element\Text;
 use Zend\InputFilter\InputFilter;
 
-class ShareCodeTest extends TestCase
+class CreateAccountTest extends TestCase
 {
     /**
-     * @var ShareCode
+     * @var CreateAccount
      */
     private $form;
 
@@ -23,23 +25,28 @@ class ShareCodeTest extends TestCase
      * @var array
      */
     private $elements = [
-        '__csrf'   => Csrf::class,
-        'lpa_code' => Text::class,
+        '__csrf'           => Csrf::class,
+        'email'            => Text::class,
+        'email_confirm'    => Text::class,
+        'password'         => Password::class,
+        'password_confirm' => Password::class,
+        'terms'            => Checkbox::class,
     ];
 
     public function setUp()
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
 
-        $this->form = new ShareCode($guardProphecy->reveal());
+        $this->form = new CreateAccount($guardProphecy->reveal());
     }
+
 
     public function testIsAForm()
     {
         $this->assertInstanceOf(AbstractForm::class, $this->form);
-        $this->assertInstanceOf(ShareCode::class, $this->form);
+        $this->assertInstanceOf(CreateAccount::class, $this->form);
 
-        $this->assertEquals('share_code', $this->form->getName());
+        $this->assertEquals('create_account', $this->form->getName());
     }
 
     public function testInputs()
@@ -48,7 +55,7 @@ class ShareCodeTest extends TestCase
 
         foreach ($formElements as $formElementName => $formElement) {
             if (!isset($this->elements[$formElementName])) {
-                $this->fail('No class type expectation found for ' . $formElementName);
+                $this->fail(sprintf('No class type expectation found for element "%s"', $formElementName));
             }
 
             $expectedElementClass = $this->elements[$formElementName];

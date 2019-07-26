@@ -43,7 +43,7 @@ class EnterCodeHandler extends AbstractHandler
             }
         }
 
-        return new HtmlResponse($this->renderer->render('viewer::enter-code',[
+        return new HtmlResponse($this->renderer->render('viewer::enter-code', [
             'form' => $form
         ]));
     }

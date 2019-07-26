@@ -1,6 +1,6 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block title %}View LPA{% endblock %}
+{% block html_title %}View LPA - {{ parent() }} {% endblock %}
 
 {% block content %}
     <style>
@@ -45,6 +45,7 @@
 
     <div class="govuk-width-container">
         {{ include('@partials/new-service.html.twig') }}
+
         <a href="/" class="govuk-back-link">Back</a>
 
         <main class="govuk-main-wrapper">

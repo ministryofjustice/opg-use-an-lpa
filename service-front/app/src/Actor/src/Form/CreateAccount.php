@@ -14,10 +14,18 @@ use Zend\Validator\Identical;
 use Zend\Validator\NotEmpty;
 use Zend\Validator\StringLength;
 
+/**
+ * Class CreateAccount
+ * @package Actor\Form
+ */
 class CreateAccount extends AbstractForm implements InputFilterProviderInterface
 {
     const FORM_NAME = 'create_account';
 
+    /**
+     * CreateAccount constructor.
+     * @param CsrfGuardInterface $csrfGuard
+     */
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
@@ -154,7 +162,6 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                     ],
                 ],
             ],
-
             'terms'            => [
                 'required'      => true,
                 'error_message' => 'You must accept the terms of use',
@@ -171,7 +178,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                         ],
                     ],
                 ],
-            ]
+            ],
         ];
     }
 }
