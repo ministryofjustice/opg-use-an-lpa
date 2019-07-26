@@ -20,3 +20,4 @@ coverage:
         base: pr # will only use the pull request base. Commits not on a pull request will not receive this status.
         paths: 
         - service-api/app/src/App/src
+        
