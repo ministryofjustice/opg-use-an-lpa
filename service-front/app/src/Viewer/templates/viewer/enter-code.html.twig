@@ -1,22 +1,32 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block title %}Enter code{% endblock %}
+{% block html_title %}Enter code - {{ parent() }} {% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
+
     <a href="/" class="govuk-back-link">Back</a>
 
     <main class="govuk-main-wrapper">
+
         <div class="govuk-grid-row">
+
             <div class="govuk-grid-column-one-half">
-                <h1 class="govuk-heading-xl">Enter Code</h1>
 
-                <form method="post" name="share_code">
+                {{ govuk_error_summary(form) }}
+
+                {{ govuk_form_open(form) }}
+
                     <fieldset class="govuk-fieldset">
-                        <input type="hidden" name="__csrf" value="{{ form.get('__csrf').value }}">
 
-                        {{ govuk_error_summary(form) }}
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                Enter Code
+                            </h1>
+                        </legend>
+
+                        {{ govuk_form_element(form.get('__csrf')) }}
 
                         {{ govuk_form_element(form.get('lpa_code'), { 'label': 'LPA code' }) }}
 
@@ -27,15 +37,18 @@
                                 </span>
                             </summary>
                             <div class="govuk-details__text">
-                                A share code is given to you by the donor or an attorney named on the lasting power
-                                of attorney.
+                                <p class="govuk-body">A share code is given to you by the donor or an attorney named on the lasting power of attorney.</p>
                             </div>
                         </details>
 
                         <button type="submit" class="govuk-button">Save and continue</button>
+
                     </fieldset>
-                </form>
+
+                {{ govuk_form_close() }}
+
             </div>
+
         </div>
 
     </main>

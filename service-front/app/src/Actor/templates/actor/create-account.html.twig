@@ -1,65 +1,72 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block title %}Actor Homepage{% endblock %}
+{% block html_title %}Create account - {{ parent() }} {% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
 
-    <a href="#" class="govuk-back-link">Back</a>
+    <a href="/" class="govuk-back-link">Back</a>
 
     <main class="govuk-main-wrapper">
 
         <div class="govuk-grid-row">
 
-            <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-column-full">
 
-                <h2 class="govuk-heading-l">Create account</h2>
+                {{ govuk_error_summary(form) }}
 
-                <p class="govuk-body-l">You need to create an account to use this service.</p>
-
-            </div>
-
-            <div class="govuk-grid-column-one-half">
-
-                <p class="govuk-body">If you already have an account, please <a href="{{ path('login') }}" class="govuk-link">sign in</a>.</p>
-
-                <form method="post" name="create_account">
+                {{ govuk_form_open(form) }}
 
                     <fieldset class="govuk-fieldset">
 
-                        <input type="hidden" name="__csrf" value="{{ form.get('__csrf').value }}">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                Create an account
+                            </h1>
+                        </legend>
 
-                        {{ govuk_error_summary(form) }}
+                        <p class="govuk-body-l">You need to create an account to use this service.</p>
 
-                        {{ govuk_form_element(form.get('email'), { 'label': 'Enter your email address' }) }}
+                        <p class="govuk-body">If you already have an account, please <a href="{{ path('login') }}" class="govuk-link">sign in</a>.</p>
 
-                        {{ govuk_form_element(form.get('email_confirm'), { 'label': 'Confirm your email address' }) }}
+                        <div class="govuk-grid-row">
 
-                        <p class="govuk-body govuk-!-font-weight-bold">Password</p>
+                            <div class="govuk-grid-column-one-half">
 
-                        <p class="govuk-body">Your password needs to have:</p>
+                                {{ govuk_form_element(form.get('__csrf')) }}
 
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>at least 8 characters</li>
-                            <li>at least one lower-case and one capital letter</li>
-                            <li>at least one number</li>
-                        </ul>
+                                {{ govuk_form_element(form.get('email'), { 'label': 'Enter your email address' }) }}
 
-                        <p class="govuk-body">Never share your password with anyone.</p>
+                                {{ govuk_form_element(form.get('email_confirm'), { 'label': 'Confirm your email address' }) }}
 
+                                <p class="govuk-body govuk-!-font-weight-bold">Password</p>
 
-                        {{ govuk_form_element(form.get('password'), { 'label': 'Password' }) }}
+                                <p class="govuk-body">Your password needs to have:</p>
 
-                        {{ govuk_form_element(form.get('password_confirm'), { 'label': 'Confirm Password' }) }}
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>at least 8 characters</li>
+                                    <li>at least one lower-case and one capital letter</li>
+                                    <li>at least one number</li>
+                                </ul>
 
-                        {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="#" class="govuk-link">terms of use</a>' }) }}
+                                <p class="govuk-body">Never share your password with anyone.</p>
 
-                        <button type="submit" class="govuk-button">Create account</button>
+                                {{ govuk_form_element(form.get('password'), { 'label': 'Password' }) }}
+
+                                {{ govuk_form_element(form.get('password_confirm'), { 'label': 'Confirm Password' }) }}
+
+                                {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="#" class="govuk-link">terms of use</a>' }) }}
+
+                                <button type="submit" class="govuk-button">Create account</button>
+
+                            </div>
+
+                        </div>
 
                     </fieldset>
 
-                </form>
+                {{ govuk_form_close() }}
 
             </div>
 

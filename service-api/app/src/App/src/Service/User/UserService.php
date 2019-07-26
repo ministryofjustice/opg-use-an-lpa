@@ -4,6 +4,7 @@ namespace App\Service\User;
 
 use App\DataAccess\Repository;
 use App\Exception\ConflictException;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 
 /**
  * Class UserService
@@ -36,7 +37,11 @@ class UserService
             throw new ConflictException('User already exists with email address ' . $data['email']);
         }
 
-        return $this->usersRepository->add($data['email'], $data['password']);
+        //  An unactivated user account can only exist for 24 hours before it is deleted
+        $activationToken = Base64UrlSafe::encode(random_bytes(32));
+        $activationTtl = time() + (60 * 60 * 24);
+
+        return $this->usersRepository->add($data['email'], $data['password'], $activationToken, $activationTtl);
     }
 
     /**
@@ -49,5 +54,16 @@ class UserService
     public function get(string $email) : array
     {
         return $this->usersRepository->get($email);
+    }
+
+    /**
+     * Activate a user account
+     *
+     * @param string $activationToken
+     * @return array
+     */
+    public function activate(string $activationToken) : array
+    {
+        return $this->usersRepository->activate($activationToken);
     }
 }

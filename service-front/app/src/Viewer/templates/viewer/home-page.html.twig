@@ -1,7 +1,5 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block title %}Enter code{% endblock %}
-
 {% block content %}
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
@@ -12,7 +10,7 @@
             <div class="govuk-grid-column-two-thirds">
                 <h1 class="govuk-heading-xl">Use your LPA Homepage</h1>
 
-                <a href="/enter-code" role="button" draggable="false" class="govuk-button govuk-button--start">
+                <a href="{{ path('enter-code') }}" role="button" draggable="false" class="govuk-button govuk-button--start">
                     Start now
                 </a>
 

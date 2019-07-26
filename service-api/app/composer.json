@@ -29,6 +29,7 @@
         "php": "^7.1",
         "aws/aws-sdk-php": "^3.93",
         "elie29/zend-phpdi-config": "^3.0",
+        "paragonie/constant_time_encoding": "^2.2",
         "php-http/guzzle6-adapter": "^2.0",
         "psr/http-client-implementation": "^1.0",
         "zendframework/zend-component-installer": "^2.1.1",

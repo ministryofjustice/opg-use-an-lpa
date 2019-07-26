@@ -20,12 +20,19 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     # Add any setup here that is performed with Terraform in AWS.
 
     aws dynamodb create-table \
-    --attribute-definitions AttributeName=Email,AttributeType=S \
+    --attribute-definitions AttributeName=Email,AttributeType=S AttributeName=ActivationToken,AttributeType=S \
     --table-name ActorUsers \
     --key-schema AttributeName=Email,KeyType=HASH \
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
     --region eu-west-1 \
-    --endpoint $DYNAMODN_ENDPOINT
+    --endpoint $DYNAMODN_ENDPOINT \
+    --global-secondary-indexes IndexName=ActivationTokenIndex,KeySchema=["{AttributeName=ActivationToken,KeyType=HASH}"],Projection="{ProjectionType=KEYS_ONLY}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
+
+    aws dynamodb update-time-to-live \
+    --table-name ActorUsers \
+    --region eu-west-1 \
+    --endpoint $DYNAMODN_ENDPOINT \
+    --time-to-live-specification "Enabled=true, AttributeName=ExpiresTTL"
 
     aws dynamodb create-table \
     --attribute-definitions AttributeName=ViewerCode,AttributeType=S \

@@ -15,6 +15,7 @@ class EmailClient
     /**
      * Template IDs for the notify client
      */
+    const TEMPLATE_ID_ACCOUNT_ACTIVATION               = 'd897fe13-a0c3-4c50-aa5b-3f0efacda5dc';
     const TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED = '4af9acf0-f2c1-4ecc-8441-0e2173890463';
 
     /**
@@ -32,6 +33,21 @@ class EmailClient
     }
 
     /**
+     * Send an account activation email to a user
+     *
+     * @param string $recipient
+     * @param string $activateAccountUrl
+     */
+    public function sendAccountActivationEmail(string $recipient, string $activateAccountUrl)
+    {
+        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_ACCOUNT_ACTIVATION, [
+            'activate-account-url' => $activateAccountUrl,
+        ]);
+    }
+
+    /**
+     * Send an email to a user to tell them that the email address is already registered
+     *
      * @param string $recipient
      */
     public function sendAlreadyRegisteredEmail(string $recipient)
