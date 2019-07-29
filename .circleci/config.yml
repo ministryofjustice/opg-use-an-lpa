@@ -1,8 +1,15 @@
 version: 2.1
 
 workflows:
-  docker_build_and_push:
+  path_to_live:
     jobs:
+      # Common tasks
+      - use-my-lpa/lint_terraform:
+          name: lint_terraform
+          filters:
+            branches:
+              ignore: master
+
       - use-my-lpa/docker_build_front_app:
           name: app_front_build
       - use-my-lpa/docker_build_front_web:
@@ -16,27 +23,7 @@ workflows:
       - use-my-lpa/codecov_php-unit_upload:
           name: codecov_upload
           requires: [app_front_build, app_api_build]
-  path_to_live:
-    jobs:
-      # Common tasks
-      - use-my-lpa/lint_terraform:
-          name: lint_terraform
-          filters:
-            branches:
-              ignore: master
-
-      # - use-my-lpa/docker_build_front_app:
-      #     name: app_front_build
-      # - use-my-lpa/docker_build_front_web:
-      #     name: web_front_build
-
-      # - use-my-lpa/docker_build_api_app:
-      #     name: app_api_build
-      # - use-my-lpa/docker_build_api_web:
-      #     name: web_api_build
-      # - use-my-lpa/codecov_php-unit_upload:
-      #     name: codecov_upload
-      #     requires: [app_front_build, app_api_build]
+          
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
           name: dev_apply_shared_terraform
