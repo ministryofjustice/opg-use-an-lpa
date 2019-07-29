@@ -1,30 +1,8 @@
 version: 2.1
 
 workflows:
-  hold_for_destruction:
+  docker_build_and_push:
     jobs:
-      - hold-for-destruction:
-          name: hold_env_for_destruction
-          type: approval 
-          # requires: [dev_run_behave_tests]
-          filters:
-            branches:
-              ignore: master
-      - use-my-lpa/destroy_dev_environment:
-          name: dev_destroy_environment
-          requires: [hold_env_for_destruction]
-          filters:
-            branches:
-              ignore: master            
-  path_to_live:
-    jobs:
-      # Common tasks
-      - use-my-lpa/lint_terraform:
-          name: lint_terraform
-          filters:
-            branches:
-              ignore: master
-
       - use-my-lpa/docker_build_front_app:
           name: app_front_build
       - use-my-lpa/docker_build_front_web:
@@ -34,9 +12,31 @@ workflows:
           name: app_api_build
       - use-my-lpa/docker_build_api_web:
           name: web_api_build
+
       - use-my-lpa/codecov_php-unit_upload:
           name: codecov_upload
           requires: [app_front_build, app_api_build]
+  path_to_live:
+    jobs:
+      # Common tasks
+      - use-my-lpa/lint_terraform:
+          name: lint_terraform
+          filters:
+            branches:
+              ignore: master
+
+      # - use-my-lpa/docker_build_front_app:
+      #     name: app_front_build
+      # - use-my-lpa/docker_build_front_web:
+      #     name: web_front_build
+
+      # - use-my-lpa/docker_build_api_app:
+      #     name: app_api_build
+      # - use-my-lpa/docker_build_api_web:
+      #     name: web_api_build
+      # - use-my-lpa/codecov_php-unit_upload:
+      #     name: codecov_upload
+      #     requires: [app_front_build, app_api_build]
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
           name: dev_apply_shared_terraform
@@ -65,20 +65,20 @@ workflows:
             branches:
               ignore: master
 
-      # - hold-for-destruction:
-      #     name: hold_env_for_destruction
-      #     type: approval 
-      #     requires: [dev_run_behave_tests]
-      #     filters:
-      #       branches:
-      #         ignore: master
+      - hold-for-destruction:
+          name: hold_env_for_destruction
+          type: approval 
+          requires: [dev_run_behave_tests]
+          filters:
+            branches:
+              ignore: master
 
-      # - use-my-lpa/destroy_dev_environment:
-      #     name: dev_destroy_environment
-      #     requires: [hold_env_for_destruction]
-      #     filters:
-      #       branches:
-      #         ignore: master
+      - use-my-lpa/destroy_dev_environment:
+          name: dev_destroy_environment
+          requires: [hold_env_for_destruction]
+          filters:
+            branches:
+              ignore: master
 
       # Provision and test preproduction
       - use-my-lpa/apply_shared_terraform:
