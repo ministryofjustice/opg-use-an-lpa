@@ -1,6 +1,15 @@
 version: 2.1
 
 workflows:
+  hold_for_destruction:
+    jobs:
+    - hold-for-destruction:
+        name: hold_env_for_destruction
+        type: approval 
+        requires: [dev_run_behave_tests]
+        filters:
+          branches:
+            ignore: master
   path_to_live:
     jobs:
       # Common tasks
@@ -50,13 +59,13 @@ workflows:
             branches:
               ignore: master
 
-      - hold-for-destruction:
-          name: hold_env_for_destruction
-          type: approval 
-          requires: [dev_run_behave_tests]
-          filters:
-            branches:
-              ignore: master
+      # - hold-for-destruction:
+      #     name: hold_env_for_destruction
+      #     type: approval 
+      #     requires: [dev_run_behave_tests]
+      #     filters:
+      #       branches:
+      #         ignore: master
 
       - use-my-lpa/destroy_dev_environment:
           name: dev_destroy_environment
