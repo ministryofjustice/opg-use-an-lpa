@@ -197,9 +197,10 @@ orbs:
           - store_artifacts:
               path: build/service-front/
           - persist_to_workspace:
-              root: /build
+              root: build
               paths:
-                - service-front/              
+                - service-front/
+              when: always
           # - run:
           #     name: Upload to Codecov
           #     command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
@@ -294,7 +295,7 @@ orbs:
           - store_artifacts:
               path: build/service-api/
           - persist_to_workspace:
-              root: /build
+              root: build
               paths:
                 - service-api/
               when: always
@@ -363,7 +364,7 @@ orbs:
         steps:
           - checkout
           - attach_workspace:
-              at: /build
+              at: build
           - run:
               name: Upload to Codecov
               command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN || echo 'Codecov upload failed'                                
