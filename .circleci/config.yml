@@ -6,7 +6,7 @@ workflows:
     - hold-for-destruction:
         name: hold_env_for_destruction
         type: approval 
-        requires: [dev_run_behave_tests]
+        # requires: [dev_run_behave_tests]
         filters:
           branches:
             ignore: master
