@@ -19,6 +19,9 @@ workflows:
           name: app_api_build
       - use-my-lpa/docker_build_api_web:
           name: web_api_build
+      - use-my-lpa/codecov_php-unit_upload:
+          name: codecov_upload
+          requires: [app_front_build, app_api_build]
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
           name: dev_apply_shared_terraform
@@ -193,9 +196,13 @@ orbs:
               path: build/service-front/
           - store_artifacts:
               path: build/service-front/
-          - run:
-              name: Upload to Codecov
-              command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
+          - persist_to_workspace:
+              root: /build
+              paths:
+                - service-front/              
+          # - run:
+          #     name: Upload to Codecov
+          #     command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
           - ecr_login
           - run:
               name: Push container
@@ -286,9 +293,14 @@ orbs:
               path: build/service-api/
           - store_artifacts:
               path: build/service-api/
-          - run:
-              name: Upload to Codecov
-              command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
+          - persist_to_workspace:
+              root: /build
+              paths:
+                - service-api/
+              when: always
+          # - run:
+          #     name: Upload to Codecov
+          #     command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
           - ecr_login
           - run:
               name: Push container
@@ -340,6 +352,21 @@ orbs:
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
 
+      # Code Coverage
+
+      codecov_php-unit_upload:
+        #
+        # Upload all php-unit test results 
+        #   to Codecov.
+        #
+        executor: python
+        steps:
+          - checkout
+          - attach_workspace:
+              at: /build
+          - run:
+              name: Upload to Codecov
+              command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN || echo 'Codecov upload failed'                                
       #----------------------------------------------------
       # Terraform
 
