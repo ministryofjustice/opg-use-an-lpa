@@ -1,6 +1,6 @@
 {% extends '@layout/default.html.twig' %}
 
-{% block title %}Session timeout{% endblock %}
+{% block html_title %}Session timeout - {{ parent() }} {% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
@@ -10,7 +10,7 @@
         <h1 class="govuk-heading-xl">Session timeout</h1>
         <p class="govuk-body">Your session has expired.</p>
         <p class="govuk-body">
-            Please head back to <a href="{{ path('home') }}">Home</a>.
+            Please head back to <a href="{{ path('home') }}" class="govuk-link">Home</a>.
         </p>
     </main>
 </div>

@@ -1,3 +1,13 @@
+{%- block form_open -%}
+    <form name="{{ name }}" method="post">
+{%- endblock form_open -%}
+
+
+{%- block form_close -%}
+    </form>
+{%- endblock form_close -%}
+
+
 {%- block form_element_simple -%}
     {%- set name = element.getName() -%}
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
@@ -21,6 +31,7 @@
                name="{{ name }}" type="{{ type }}" value="{{ value }}" />
     </div>
 {%- endblock form_element_simple -%}
+
 
 {%- block form_input_text -%}
     {%- set type = type|default('text') -%}
@@ -93,6 +104,11 @@
 
     </div>
 {%- endblock form_fieldset_date -%}
+
+
+{% block form_input_hidden %}
+    <input id="{{ element.getName() }}" name="{{ element.getName() }}" type="hidden" value="{{ element.getValue() }}" />
+{% endblock form_input_hidden %}
 
 
 {%- block input_extra_class -%}
