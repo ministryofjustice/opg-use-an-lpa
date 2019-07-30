@@ -14,7 +14,11 @@ class SetLocaleMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
-        Locale::setDefault('en');
+        if ($request->getUri()->getPath() === '/cy') {
+            Locale::setDefault('cy');
+        } else {
+            Locale::setDefault('en');
+        }
         return $handler->handle($request);
     }
 }

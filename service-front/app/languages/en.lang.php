@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'hello-world' => 'Hello World!',
+    'hello_world' => 'Hello World!',
+    'homepage_title' => 'Use your LPA Homepage'
 ];
