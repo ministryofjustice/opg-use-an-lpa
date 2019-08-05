@@ -41,5 +41,5 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->post('/v1/user', App\Handler\UserHandler::class, 'user.create');
     $app->patch('/v1/user-activation', App\Handler\UserActivateHandler::class, 'user.activate');
 
-    $app->get('/v1/auth', App\Handler\AuthHandler::class, 'user.auth');
+    $app->patch('/v1/auth', App\Handler\AuthHandler::class, 'user.auth');
 };

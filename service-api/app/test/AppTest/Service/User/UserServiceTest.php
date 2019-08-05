@@ -11,6 +11,8 @@ use App\Exception\NotFoundException;
 use App\Exception\UnauthorizedException;
 use App\Service\User\UserService;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\Argument\Token\TypeToken;
 
 /**
  * Class UserServiceTest
@@ -35,13 +37,18 @@ class UserServiceTest extends TestCase
     /** @test */
     public function can_add_a_new_user()
     {
-        $userData = ['email' => 'a@b.com', 'password' => self::PASS];
+        $userData = [
+            'email' => 'a@b.com',
+            'password' => self::PASS,
+            'activation_token' => '4O09oMEd57ZzF-xgEv7XMiGRLD7D8I0G9VawMykYVZU=',
+            'ttl' => time() + 60
+        ];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
 
         $repoProphecy->exists($userData['email'])
             ->willReturn(false);
-        $repoProphecy->add($userData['email'], $userData['password'])
+        $repoProphecy->add($userData['email'], $userData['password'], Argument::type('string'), Argument::type('int'))
             ->willReturn(['Email' => $userData['email'], 'Password' => self::PASS_HASH]);
 
         $us = new UserService($repoProphecy->reveal());

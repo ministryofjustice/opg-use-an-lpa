@@ -65,7 +65,7 @@ class UserService
     public function authenticate(string $email, string $password) : ?User
     {
         try {
-            $userData = $this->apiClient->httpGet('/v1/auth', [
+            $userData = $this->apiClient->httpPatch('/v1/auth', [
                 'email' => $email,
                 'password' => $password,
             ]);
