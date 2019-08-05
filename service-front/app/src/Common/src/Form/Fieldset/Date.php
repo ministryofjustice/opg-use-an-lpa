@@ -48,7 +48,8 @@ class Date extends Fieldset implements InputFilterProviderInterface
     {
         return [
             'day' => [
-                'required' => true,
+                'allow_empty'       => true, // Use these 2 flags so the default NotEmpty validator is not injected
+                'continue_if_empty' => true,
                 'filters'  => [
                     [
                         'name' => StringTrim::class,
@@ -57,14 +58,13 @@ class Date extends Fieldset implements InputFilterProviderInterface
                 'validators' => [
                     new Regex([
                         'pattern' => '/\b(0?[1-9]|[12][0-9]|3[01])\b/',
-                        'message' => [
-                            Regex::NOT_MATCH => 'Enter a valid day.'
-                        ]
+                        'message' => 'Enter a valid day.'
                     ])
                 ]
             ],
             'month' => [
-                'required' => true,
+                'allow_empty'       => true, // Use these 2 flags so the default NotEmpty validator is not injected
+                'continue_if_empty' => true,
                 'filters'  => [
                     [
                         'name' => StringTrim::class,
@@ -73,14 +73,13 @@ class Date extends Fieldset implements InputFilterProviderInterface
                 'validators' => [
                     new Regex([
                         'pattern' => '/\b(0?[1-9]|1[0-2])\b/',
-                        'message' => [
-                            Regex::NOT_MATCH => 'Enter a valid month.'
-                        ]
+                        'message' => 'Enter a valid month.'
                     ])
                 ]
             ],
             'year' => [
-                'required' => true,
+                'allow_empty'       => true, // Use these 2 flags so the default NotEmpty validator is not injected
+                'continue_if_empty' => true,
                 'filters'  => [
                     [
                         'name' => StringTrim::class,
@@ -89,9 +88,7 @@ class Date extends Fieldset implements InputFilterProviderInterface
                 'validators' => [
                     new Regex([
                         'pattern' => '/\b([0-9]?[0-9]?[0-9]?[0-9])\b/',
-                        'message' => [
-                            Regex::NOT_MATCH => 'Enter a valid year.'
-                        ]
+                        'message' => 'Enter a valid year.'
                     ])
                 ]
             ],
