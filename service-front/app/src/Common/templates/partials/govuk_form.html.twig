@@ -16,7 +16,11 @@
 
         {{- block('input_hint') -}}
 
-        {{ govuk_error(element) }}
+        {% if fieldset is not defined or fieldset is empty %}
+
+            {{ govuk_error(element) }}
+
+        {% endif %}
 
         {% if input_prefix is defined %}
 

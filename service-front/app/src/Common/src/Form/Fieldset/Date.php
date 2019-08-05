@@ -1,6 +1,6 @@
 <?php
 
-namespace Actor\Form\Fieldset;
+namespace Common\Form\Fieldset;
 
 use Zend\Filter\StringTrim;
 use Zend\Form\Fieldset;
@@ -12,7 +12,7 @@ use Zend\Validator\Regex;
  *
  * This fieldset is only suitable for catching AD dates
  *
- * @package Actor\Form\Fieldset
+ * @package Common\Form\Fieldset
  */
 class Date extends Fieldset implements InputFilterProviderInterface
 {
