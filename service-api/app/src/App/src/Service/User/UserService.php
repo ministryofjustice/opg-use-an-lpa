@@ -37,7 +37,7 @@ class UserService
     /**
      * @param array $data
      * @return array
-     * @throws Exception|ConflictException|NotFoundException
+     * @throws Exception|ConflictException
      */
     public function add(array $data) : array
     {
