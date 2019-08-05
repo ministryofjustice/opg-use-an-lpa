@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataAccess\Repository;
 
 use App\Exception\NotFoundException;
+use Exception;
 
 interface ActorUsersInterface
 {
@@ -16,7 +17,7 @@ interface ActorUsersInterface
      * @param string $activationToken
      * @param int $activationTtl
      * @return array
-     * @throws NotFoundException
+     * @throws Exception
      */
     public function add(string $email, string $password, string $activationToken, int $activationTtl) : array;
 
