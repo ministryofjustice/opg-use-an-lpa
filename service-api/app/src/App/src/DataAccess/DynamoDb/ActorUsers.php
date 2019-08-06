@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataAccess\DynamoDb;
 
 use App\DataAccess\Repository\ActorUsersInterface;
+use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
@@ -53,7 +54,7 @@ class ActorUsers implements ActorUsersInterface
         try {
             return $this->get($email);
         } catch(NotFoundException $nfe) {
-            throw new Exception('Unable to retrieve newly created actor from database', 500, $nfe);
+            throw new CreationException('Unable to retrieve newly created actor from database', null, $nfe);
         }
     }
 

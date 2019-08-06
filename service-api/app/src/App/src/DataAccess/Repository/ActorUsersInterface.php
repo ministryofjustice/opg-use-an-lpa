@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
+use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use Exception;
 
@@ -17,7 +18,7 @@ interface ActorUsersInterface
      * @param string $activationToken
      * @param int $activationTtl
      * @return array
-     * @throws Exception
+     * @throws CreationException
      */
     public function add(string $email, string $password, string $activationToken, int $activationTtl) : array;
 
@@ -35,6 +36,7 @@ interface ActorUsersInterface
      *
      * @param string $activationToken
      * @return array
+     * @throws NotFoundException
      */
     public function activate(string $activationToken) : array;
 
@@ -43,7 +45,6 @@ interface ActorUsersInterface
      *
      * @param string $email
      * @return bool
-     * @throws NotFoundException
      */
     public function exists(string $email) : bool;
 }
