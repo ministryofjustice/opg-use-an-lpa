@@ -6,6 +6,7 @@ namespace App\Service\User;
 
 use App\DataAccess\Repository;
 use App\Exception\ConflictException;
+use App\Exception\CreationException;
 use Exception;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use App\Exception\ForbiddenException;
@@ -37,7 +38,7 @@ class UserService
     /**
      * @param array $data
      * @return array
-     * @throws Exception|ConflictException
+     * @throws Exception|CreationException|ConflictException
      */
     public function add(array $data) : array
     {
