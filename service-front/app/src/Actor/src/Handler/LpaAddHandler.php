@@ -58,7 +58,7 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
 
                 //  TODO - Do nothing for now - a confirmation screen will be added later
 
-                echo 'OK';
+                echo 'OK - validation has passed but the LPA has not been added';
                 echo '<br/>';
                 echo '<br/>';
                 echo '<a href="/lpa/add-details">Return to add screen</a>';
