@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service\User;
+namespace CommonTest\Service\User;
 
 use Common\Entity\User;
 use Common\Exception\ApiException;
@@ -16,7 +16,7 @@ class UserServiceTest extends TestCase
     public function testCanAuthenticateWithGoodCredentials()
     {
         $apiClientProphecy = $this->prophesize(Client::class);
-        $apiClientProphecy->httpGet(
+        $apiClientProphecy->httpPatch(
             '/v1/auth',
             [
                 'email' => 'test@example.com',
@@ -40,7 +40,7 @@ class UserServiceTest extends TestCase
     public function testAuthenticationFailsWithBadCredentials()
     {
         $apiClientProphecy = $this->prophesize(Client::class);
-        $apiClientProphecy->httpGet(
+        $apiClientProphecy->httpPatch(
             '/v1/auth',
             [
                 'email' => 'test@example.com',
@@ -59,7 +59,7 @@ class UserServiceTest extends TestCase
     public function testBadDateTimeThrowsException()
     {
         $apiClientProphecy = $this->prophesize(Client::class);
-        $apiClientProphecy->httpGet(
+        $apiClientProphecy->httpPatch(
             '/v1/auth',
             [
                 'email' => 'test@example.com',

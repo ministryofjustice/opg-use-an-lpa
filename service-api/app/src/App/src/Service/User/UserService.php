@@ -1,10 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\User;
 
 use App\DataAccess\Repository;
 use App\Exception\ConflictException;
+use App\Exception\CreationException;
+use Exception;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use App\Exception\ForbiddenException;
+use App\Exception\NotFoundException;
+
+use App\Exception\UnauthorizedException;
+use function password_verify;
 
 /**
  * Class UserService
@@ -29,7 +38,7 @@ class UserService
     /**
      * @param array $data
      * @return array
-     * @throws ConflictException
+     * @throws Exception|CreationException|ConflictException
      */
     public function add(array $data) : array
     {
@@ -49,7 +58,7 @@ class UserService
      *
      * @param string $email
      * @return array
-     * @throws \Exception
+     * @throws NotFoundException
      */
     public function get(string $email) : array
     {
@@ -65,5 +74,28 @@ class UserService
     public function activate(string $activationToken) : array
     {
         return $this->usersRepository->activate($activationToken);
+    }
+
+    /**
+     * Attempts authentication of a user
+     *
+     * @param string $email
+     * @param string $password
+     * @return array
+     * @throws NotFoundException
+     */
+    public function authenticate(string $email, string $password) : array
+    {
+        $user = $this->usersRepository->get($email);
+
+        if ( ! password_verify($password, $user['Password'])) {
+            throw new ForbiddenException('Authentication failed');
+        }
+
+        if (array_key_exists('ActivationToken', $user)) {
+            throw new UnauthorizedException('User account not verified');
+        }
+
+        return $user;
     }
 }

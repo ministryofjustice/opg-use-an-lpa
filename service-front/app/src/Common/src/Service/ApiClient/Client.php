@@ -156,6 +156,10 @@ class Client
                 case 200:
                 case 201:
                     return $this->handleResponse($response);
+                case 401:
+                case 403:
+                case 404:
+                    return null;
                 default:
                     throw ApiException::create(null, $response);
             }
