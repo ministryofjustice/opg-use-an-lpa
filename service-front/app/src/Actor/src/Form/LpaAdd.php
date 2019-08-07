@@ -60,7 +60,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                             'encoding' => 'UTF-8',
                             'min'      => 12,
                             'max'      => 12,
-                            'message'  => 'Enter one-time passcode in the correct format.',
+                            'message'  => 'Enter one-time passcode in the correct format',
                         ],
                     ],
                 ]
@@ -76,7 +76,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         'name'    => Regex::class,
                         'options' => [
                             'pattern' => '/7\d{11}/',
-                            'message' => 'Enter an LPA reference number in the correct format.',
+                            'message' => 'Enter an LPA reference number in the correct format',
                         ],
                     ],
                 ]
