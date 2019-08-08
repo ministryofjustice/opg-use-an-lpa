@@ -13,7 +13,8 @@ use PHPUnit\Framework\TestCase;
 
 class UserServiceTest extends TestCase
 {
-    public function testCanAuthenticateWithGoodCredentials()
+    /** @test */
+    public function can_authenticate_with_good_credentials()
     {
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPatch(
@@ -46,7 +47,8 @@ class UserServiceTest extends TestCase
 
     }
 
-    public function testAuthenticationFailsWithBadCredentials()
+    /** @test */
+    public function authentication_fails_with_bad_credentials()
     {
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPatch(
@@ -69,7 +71,8 @@ class UserServiceTest extends TestCase
         $this->assertNull($return);
     }
 
-    public function testBadDateTimeThrowsException()
+    /** @test */
+    public function bad_datetime_throws_exception()
     {
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPatch(
