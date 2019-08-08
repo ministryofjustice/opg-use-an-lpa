@@ -45,7 +45,6 @@ interface ActorUsersInterface
      *
      * @param string $email
      * @return bool
-     * @throws NotFoundException
      */
     public function exists(string $email) : bool;
 }
