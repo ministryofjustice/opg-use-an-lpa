@@ -36,7 +36,10 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/healthcheck', App\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/v1/lpa/{uid}', App\Handler\LpaHandler::class, 'lpa.by.uid');
     $app->get('/v1/lpa-by-code/{shareCode}', App\Handler\LpaHandler::class, 'lpa.by.share-code');
+
     $app->get('/v1/user', App\Handler\UserHandler::class, 'user.get');
     $app->post('/v1/user', App\Handler\UserHandler::class, 'user.create');
     $app->patch('/v1/user-activation', App\Handler\UserActivateHandler::class, 'user.activate');
+
+    $app->patch('/v1/auth', App\Handler\AuthHandler::class, 'user.auth');
 };
