@@ -36,7 +36,7 @@ class AuthHandlerTest extends TestCase
         $handler = new AuthHandler($userServiceProphecy->reveal());
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-        $requestProphecy->getQueryParams()
+        $requestProphecy->getParsedBody()
             ->willReturn([
             ]);
 
@@ -57,7 +57,7 @@ class AuthHandlerTest extends TestCase
         $handler = new AuthHandler($userServiceProphecy->reveal());
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-        $requestProphecy->getQueryParams()
+        $requestProphecy->getParsedBody()
             ->willReturn([
                 'email' => 'a@b.com',
                 'password' => 'test'
@@ -80,7 +80,7 @@ class AuthHandlerTest extends TestCase
         $handler = new AuthHandler($userServiceProphecy->reveal());
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-        $requestProphecy->getQueryParams()
+        $requestProphecy->getParsedBody()
             ->willReturn([
                 'email' => 'b@c.com',
                 'password' => 'test'
