@@ -112,27 +112,6 @@ class ClientTest extends TestCase
         $data = $client->httpGet('/simple_get', ['simple_query' => 'query_value']);
     }
 
-    /** @test */
-    public function sets_appropriate_request_headers_for_get_request()
-    {
-        $this->apiClient->sendRequest(Argument::that(function($request) {
-            $this->assertInstanceOf(RequestInterface::class, $request);
-
-            $headers = $request->getHeaders();
-            $this->assertArrayHasKey('Accept', $headers);
-            $this->assertEquals('application/json', $headers['Accept'][0]);
-            $this->assertArrayHasKey('Content-Type', $headers);
-            $this->assertEquals('application/json', $headers['Content-Type'][0]);
-            return true;
-        }))
-            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
-
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
-
-        $data = $client->httpGet('/simple_get');
-        $this->assertIsArray($data);
-    }
-
     // ============
     // httpPost
     // ============
@@ -179,27 +158,6 @@ class ClientTest extends TestCase
         $this->expectException(ClientExceptionInterface::class);
         $this->expectExceptionCode(0);
         $data = $client->httpPost('/simple_post', ['simple_query' => 'query_value']);
-    }
-
-    /** @test */
-    public function sets_appropriate_request_headers_for_post_request()
-    {
-        $this->apiClient->sendRequest(Argument::that(function($request) {
-            $this->assertInstanceOf(RequestInterface::class, $request);
-
-            $headers = $request->getHeaders();
-            $this->assertArrayHasKey('Accept', $headers);
-            $this->assertEquals('application/json', $headers['Accept'][0]);
-            $this->assertArrayHasKey('Content-Type', $headers);
-            $this->assertEquals('application/json', $headers['Content-Type'][0]);
-            return true;
-        }))
-            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
-
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
-
-        $data = $client->httpPut('/simple_get');
-        $this->assertIsArray($data);
     }
 
     // ============
@@ -250,27 +208,6 @@ class ClientTest extends TestCase
         $data = $client->httpPut('/simple_put', ['simple_query' => 'query_value']);
     }
 
-    /** @test */
-    public function sets_appropriate_request_headers_for_put_request()
-    {
-        $this->apiClient->sendRequest(Argument::that(function($request) {
-            $this->assertInstanceOf(RequestInterface::class, $request);
-
-            $headers = $request->getHeaders();
-            $this->assertArrayHasKey('Accept', $headers);
-            $this->assertEquals('application/json', $headers['Accept'][0]);
-            $this->assertArrayHasKey('Content-Type', $headers);
-            $this->assertEquals('application/json', $headers['Content-Type'][0]);
-            return true;
-        }))
-            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
-
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
-
-        $data = $client->httpPut('/simple_put');
-        $this->assertIsArray($data);
-    }
-
     // ============
     // httpPatch
     // ============
@@ -317,27 +254,6 @@ class ClientTest extends TestCase
         $this->expectException(ClientExceptionInterface::class);
         $this->expectExceptionCode(0);
         $data = $client->httpPatch('/simple_patch', ['simple_query' => 'query_value']);
-    }
-
-    /** @test */
-    public function sets_appropriate_request_headers_for_patch_request()
-    {
-        $this->apiClient->sendRequest(Argument::that(function($request) {
-            $this->assertInstanceOf(RequestInterface::class, $request);
-
-            $headers = $request->getHeaders();
-            $this->assertArrayHasKey('Accept', $headers);
-            $this->assertEquals('application/json', $headers['Accept'][0]);
-            $this->assertArrayHasKey('Content-Type', $headers);
-            $this->assertEquals('application/json', $headers['Content-Type'][0]);
-            return true;
-        }))
-            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
-
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
-
-        $data = $client->httpPatch('/simple_patch');
-        $this->assertIsArray($data);
     }
 
     // ============
@@ -388,8 +304,15 @@ class ClientTest extends TestCase
         $data = $client->httpDelete('/simple_delete', ['simple_query' => 'query_value']);
     }
 
+    // ============
+    // All
+    // ============
+
+    // These tests operate on all request methods in the Client class but test identical
+    // expected functionality in each.
+
     /** @test */
-    public function sets_appropriate_request_headers_for_delete_request()
+    public function sets_appropriate_request_headers_for_request()
     {
         $this->apiClient->sendRequest(Argument::that(function($request) {
             $this->assertInstanceOf(RequestInterface::class, $request);
@@ -405,10 +328,67 @@ class ClientTest extends TestCase
 
         $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
 
+        $data = $client->httpGet('/simple_get');
+        $this->assertIsArray($data);
+
+        $data = $client->httpPost('/simple_post', []);
+        $this->assertIsArray($data);
+
+        $data = $client->httpPut('/simple_put', []);
+        $this->assertIsArray($data);
+
+        $data = $client->httpPatch('/simple_patch', []);
+        $this->assertIsArray($data);
+
         $data = $client->httpDelete('/simple_delete');
         $this->assertIsArray($data);
     }
 
+    /** @test */
+    public function gracefully_handles_malformed_response_data()
+    {
+        $exceptionProphecy = $this->prophesize(ApiException::class);
+
+        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+            ->willReturn($this->setupResponse('<xml>we_dont_do_xml</xml>', StatusCodeInterface::STATUS_OK));
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        try {
+            $data = $client->httpGet('/simple_get');
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(ApiException::class, $e);
+        }
+
+        try {
+            $data = $client->httpPost('/simple_post', []);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(ApiException::class, $e);
+        }
+
+        try {
+            $data = $client->httpPut('/simple_put', []);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(ApiException::class, $e);
+        }
+
+        try {
+            $data = $client->httpPatch('/simple_patch', []);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(ApiException::class, $e);
+        }
+
+        try {
+            $data = $client->httpDelete('/simple_delete');
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(ApiException::class, $e);
+        }
+    }
+
+    /**
+     * Provides expected valid response codes that we know our methods should handle.
+     * @return array
+     */
     public function validStatusCodes(): array {
         return [
             [ StatusCodeInterface::STATUS_OK ],
