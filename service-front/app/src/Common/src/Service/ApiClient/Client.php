@@ -232,7 +232,7 @@ class Client
      */
     private function handleResponse(ResponseInterface $response)
     {
-        $body = json_decode($response->getBody(), true);
+        $body = json_decode($response->getBody()->getContents(), true);
 
         //  If the body isn't an array now then it wasn't JSON before
         if (!is_array($body)) {
