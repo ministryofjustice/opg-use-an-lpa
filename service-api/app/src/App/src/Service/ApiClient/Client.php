@@ -55,7 +55,7 @@ class Client
      * @return array
      * @throws ApiException|ClientExceptionInterface
      */
-    public function httpGet(string $path, array $query = []) : ?array
+    public function httpGet(string $path, array $query = []): ?array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -70,7 +70,7 @@ class Client
 
         switch ($response->getStatusCode()) {
             case StatusCodeInterface::STATUS_OK:
-            return $this->handleResponse($response);
+                return $this->handleResponse($response);
             default:
                 throw new ApiException($response);
         }
@@ -84,7 +84,7 @@ class Client
      * @return array
      * @throws ApiException|ClientExceptionInterface
      */
-    public function httpPost(string $path, array $payload = []) : array
+    public function httpPost(string $path, array $payload = []): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -97,7 +97,7 @@ class Client
             case StatusCodeInterface::STATUS_CREATED:
             case StatusCodeInterface::STATUS_ACCEPTED:
             case StatusCodeInterface::STATUS_NO_CONTENT:
-            return $this->handleResponse($response);
+                return $this->handleResponse($response);
             default:
                 throw new ApiException($response);
         }
@@ -111,7 +111,7 @@ class Client
      * @return array
      * @throws ApiException|ClientExceptionInterface
      */
-    public function httpPut(string $path, array $payload = []) : array
+    public function httpPut(string $path, array $payload = []): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -124,7 +124,7 @@ class Client
             case StatusCodeInterface::STATUS_CREATED:
             case StatusCodeInterface::STATUS_ACCEPTED:
             case StatusCodeInterface::STATUS_NO_CONTENT:
-            return $this->handleResponse($response);
+                return $this->handleResponse($response);
             default:
                 throw new ApiException($response);
         }
@@ -138,7 +138,7 @@ class Client
      * @return array
      * @throws ApiException|ClientExceptionInterface
      */
-    public function httpPatch(string $path, array $payload = []) : array
+    public function httpPatch(string $path, array $payload = []): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -151,7 +151,7 @@ class Client
             case StatusCodeInterface::STATUS_CREATED:
             case StatusCodeInterface::STATUS_ACCEPTED:
             case StatusCodeInterface::STATUS_NO_CONTENT:
-            return $this->handleResponse($response);
+                return $this->handleResponse($response);
             default:
                 throw new ApiException($response);
         }
@@ -164,7 +164,7 @@ class Client
      * @return array
      * @throws ApiException|ClientExceptionInterface
      */
-    public function httpDelete(string $path) : array
+    public function httpDelete(string $path): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -177,13 +177,13 @@ class Client
             case StatusCodeInterface::STATUS_CREATED:
             case StatusCodeInterface::STATUS_ACCEPTED:
             case StatusCodeInterface::STATUS_NO_CONTENT:
-            return $this->handleResponse($response);
+                return $this->handleResponse($response);
             default:
                 throw new ApiException($response);
         }
     }
 
-    private function signRequest(RequestInterface $request) : RequestInterface
+    private function signRequest(RequestInterface $request): RequestInterface
     {
         $provider = CredentialProvider::defaultProvider();
         $s4 = new SignatureV4('execute-api', $this->awsRegion);
@@ -214,7 +214,7 @@ class Client
      */
     private function handleResponse(ResponseInterface $response)
     {
-        $body = json_decode($response->getBody(), true);
+        $body = json_decode($response->getBody()->getContents(), true);
 
         //  If the body isn't an array now then it wasn't JSON before
         if (!is_array($body)) {
