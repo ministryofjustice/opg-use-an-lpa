@@ -54,6 +54,10 @@ class ClientTest extends TestCase
         return $responseProphecy;
     }
 
+    // ============
+    // httpGet
+    // ============
+
     /** @test */
     public function can_get_a_simple_endpoint_returning_valid_json()
     {
@@ -81,7 +85,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function correctly_processeses_a_non_200_response_to_a_get_request()
+    public function correctly_processes_a_non_200_response_to_a_get_request()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
@@ -109,7 +113,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function sets_appropriate_request_headers()
+    public function sets_appropriate_request_headers_for_get_request()
     {
         $this->apiClient->sendRequest(Argument::that(function($request) {
             $this->assertInstanceOf(RequestInterface::class, $request);
@@ -126,7 +130,291 @@ class ClientTest extends TestCase
         $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
 
         $data = $client->httpGet('/simple_get');
+        $this->assertIsArray($data);
+    }
+
+    // ============
+    // httpPost
+    // ============
+
+    /**
+     * @test
+     * @dataProvider validStatusCodes
+     */
+    public function can_post_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode)
+    {
+        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+            ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $data = $client->httpPost('/simple_post', ['simple_query' => 'query_value']);
 
         $this->assertIsArray($data);
+    }
+
+    /** @test */
+    public function correctly_processes_a_non_2xx_response_to_a_post_request()
+    {
+        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+        $data = $client->httpPost('/simple_bad_post', ['simple_query' => 'query_value']);
+    }
+
+    /** @test */
+    public function client_throws_error_with_post_request()
+    {
+        $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
+
+        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+            ->willThrow($exceptionProphecy->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $this->expectException(ClientExceptionInterface::class);
+        $this->expectExceptionCode(0);
+        $data = $client->httpPost('/simple_post', ['simple_query' => 'query_value']);
+    }
+
+    /** @test */
+    public function sets_appropriate_request_headers_for_post_request()
+    {
+        $this->apiClient->sendRequest(Argument::that(function($request) {
+            $this->assertInstanceOf(RequestInterface::class, $request);
+
+            $headers = $request->getHeaders();
+            $this->assertArrayHasKey('Accept', $headers);
+            $this->assertEquals('application/json', $headers['Accept'][0]);
+            $this->assertArrayHasKey('Content-Type', $headers);
+            $this->assertEquals('application/json', $headers['Content-Type'][0]);
+            return true;
+        }))
+            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $data = $client->httpPut('/simple_get');
+        $this->assertIsArray($data);
+    }
+
+    // ============
+    // httpPut
+    // ============
+
+    /**
+     * @test
+     * @dataProvider validStatusCodes
+     */
+    public function can_put_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode)
+    {
+        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+            ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $data = $client->httpPut('/simple_put', ['simple_query' => 'query_value']);
+
+        $this->assertIsArray($data);
+    }
+
+    /** @test */
+    public function correctly_processes_a_non_2xx_response_to_a_put_request()
+    {
+        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+        $data = $client->httpPut('/simple_bad_put', ['simple_query' => 'query_value']);
+    }
+
+    /** @test */
+    public function client_throws_error_with_put_request()
+    {
+        $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
+
+        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+            ->willThrow($exceptionProphecy->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $this->expectException(ClientExceptionInterface::class);
+        $this->expectExceptionCode(0);
+        $data = $client->httpPut('/simple_put', ['simple_query' => 'query_value']);
+    }
+
+    /** @test */
+    public function sets_appropriate_request_headers_for_put_request()
+    {
+        $this->apiClient->sendRequest(Argument::that(function($request) {
+            $this->assertInstanceOf(RequestInterface::class, $request);
+
+            $headers = $request->getHeaders();
+            $this->assertArrayHasKey('Accept', $headers);
+            $this->assertEquals('application/json', $headers['Accept'][0]);
+            $this->assertArrayHasKey('Content-Type', $headers);
+            $this->assertEquals('application/json', $headers['Content-Type'][0]);
+            return true;
+        }))
+            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $data = $client->httpPut('/simple_put');
+        $this->assertIsArray($data);
+    }
+
+    // ============
+    // httpPatch
+    // ============
+
+    /**
+     * @test
+     * @dataProvider validStatusCodes
+     */
+    public function can_patch_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode)
+    {
+        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+            ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $data = $client->httpPatch('/simple_patch', ['simple_query' => 'query_value']);
+
+        $this->assertIsArray($data);
+    }
+
+    /** @test */
+    public function correctly_processes_a_non_2xx_response_to_a_patch_request()
+    {
+        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+        $data = $client->httpPatch('/simple_bad_patch', ['simple_query' => 'query_value']);
+    }
+
+    /** @test */
+    public function client_throws_error_with_patch_request()
+    {
+        $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
+
+        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+            ->willThrow($exceptionProphecy->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $this->expectException(ClientExceptionInterface::class);
+        $this->expectExceptionCode(0);
+        $data = $client->httpPatch('/simple_patch', ['simple_query' => 'query_value']);
+    }
+
+    /** @test */
+    public function sets_appropriate_request_headers_for_patch_request()
+    {
+        $this->apiClient->sendRequest(Argument::that(function($request) {
+            $this->assertInstanceOf(RequestInterface::class, $request);
+
+            $headers = $request->getHeaders();
+            $this->assertArrayHasKey('Accept', $headers);
+            $this->assertEquals('application/json', $headers['Accept'][0]);
+            $this->assertArrayHasKey('Content-Type', $headers);
+            $this->assertEquals('application/json', $headers['Content-Type'][0]);
+            return true;
+        }))
+            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $data = $client->httpPatch('/simple_patch');
+        $this->assertIsArray($data);
+    }
+
+    // ============
+    // httpDelete
+    // ============
+
+    /**
+     * @test
+     * @dataProvider validStatusCodes
+     */
+    public function can_delete_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode)
+    {
+        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+            ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $data = $client->httpDelete('/simple_delete', ['simple_query' => 'query_value']);
+
+        $this->assertIsArray($data);
+    }
+
+    /** @test */
+    public function correctly_processes_a_non_2xx_response_to_a_delete_request()
+    {
+        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+        $data = $client->httpDelete('/simple_bad_delete', ['simple_query' => 'query_value']);
+    }
+
+    /** @test */
+    public function client_throws_error_with_delete_request()
+    {
+        $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
+
+        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+            ->willThrow($exceptionProphecy->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $this->expectException(ClientExceptionInterface::class);
+        $this->expectExceptionCode(0);
+        $data = $client->httpDelete('/simple_delete', ['simple_query' => 'query_value']);
+    }
+
+    /** @test */
+    public function sets_appropriate_request_headers_for_delete_request()
+    {
+        $this->apiClient->sendRequest(Argument::that(function($request) {
+            $this->assertInstanceOf(RequestInterface::class, $request);
+
+            $headers = $request->getHeaders();
+            $this->assertArrayHasKey('Accept', $headers);
+            $this->assertEquals('application/json', $headers['Accept'][0]);
+            $this->assertArrayHasKey('Content-Type', $headers);
+            $this->assertEquals('application/json', $headers['Content-Type'][0]);
+            return true;
+        }))
+            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+
+        $data = $client->httpDelete('/simple_delete');
+        $this->assertIsArray($data);
+    }
+
+    public function validStatusCodes(): array {
+        return [
+            [ StatusCodeInterface::STATUS_OK ],
+            [ StatusCodeInterface::STATUS_CREATED],
+            [ StatusCodeInterface::STATUS_ACCEPTED],
+            [ StatusCodeInterface::STATUS_NO_CONTENT],
+        ];
     }
 }
