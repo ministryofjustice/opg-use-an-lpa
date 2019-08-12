@@ -6,6 +6,7 @@ namespace CommonTest\Entity;
 
 use Common\Entity\User;
 use DateTime;
+use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
@@ -22,7 +23,7 @@ class UserTest extends TestCase
     public function it_returns_valid_user_details()
     {
         $date = new DateTime();
-        $user = new User('test', [], ['LastLogin' => $date->format(DATE_ATOM)]);
+        $user = new User('test', [], ['LastLogin' => $date->format(DateTimeInterface::ATOM)]);
 
         $this->assertIsArray($user->getDetails());
         $this->assertCount(1, $user->getDetails());
@@ -44,10 +45,24 @@ class UserTest extends TestCase
         // this is needed to ensure our datetime is truncated at 0 microseconds
         // which is what we store and pass it around as everywhere but this test
         $date = new DateTime();
-        $date = $date->format(DATE_ATOM);
+        $date = $date->format(DateTimeInterface::ATOM);
         $date = new DateTime($date);
 
-        $user = new User('test', [], ['LastLogin' => $date->format(DATE_ATOM)]);
+        $user = new User('test', [], ['LastLogin' => $date->format(DateTimeInterface::ATOM)]);
+
+        $this->assertEquals($date, $user->getDetail('LastLogin'));
+    }
+
+    /** @test */
+    public function it_returns_a_valid_lastLogin_time_when_constructed_from_DateTime_array()
+    {
+        $date = new DateTime();
+
+        $user = new User('test', [], ['LastLogin' => [
+            'date' => $date->format('Y-m-d H:i:s.u'),
+            'timezone_type' => 3,
+            'timezone' => $date->getTimezone()->getName()
+        ]]);
 
         $this->assertEquals($date, $user->getDetail('LastLogin'));
     }
@@ -58,6 +73,14 @@ class UserTest extends TestCase
         $user = new User('test', [], []);
 
         $this->assertEquals('Never', $user->getDetail('LastLogin', 'Never'));
+    }
+
+    /** @test */
+    public function it_returns_a_null_when_property_not_found()
+    {
+        $user = new User('test', [], []);
+
+        $this->assertNull($user->getDetail('TestProperty'));
     }
 
     /** @test */
