@@ -6,6 +6,10 @@ namespace Actor\Handler;
 
 use Actor\Form\LpaAdd;
 use Common\Handler\AbstractHandler;
+use Common\Handler\CsrfGuardAware;
+use Common\Handler\Traits\CsrfGuard;
+use Common\Handler\Traits\User;
+use Common\Handler\UserAware;
 use Common\Service\User\UserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,10 +24,10 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  * Class LpaAddHandler
  * @package Actor\Handler
  */
-class LpaAddHandler extends AbstractHandler
+class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
 {
-    /** @var AuthenticationInterface */
-    private $authenticator;
+    use CsrfGuard;
+    use User;
 
     /**
      * CreateAccountHandler constructor.
@@ -38,7 +42,7 @@ class LpaAddHandler extends AbstractHandler
     {
         parent::__construct($renderer, $urlHelper);
 
-        $this->authenticator = $authenticator;
+        $this->setAuthenticator($authenticator);
     }
 
     /**
@@ -48,9 +52,7 @@ class LpaAddHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        /** @var CsrfGuardInterface $guard */
-        $guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
-        $form = new LpaAdd($guard);
+        $form = new LpaAdd($this->getCsrfGuard($request));
 
         if ($request->getMethod() === 'POST') {
 
@@ -60,7 +62,7 @@ class LpaAddHandler extends AbstractHandler
 
         return new HtmlResponse($this->renderer->render('actor::lpa-add', [
             'form' => $form,
-            'user' => $this->authenticator->authenticate($request)
+            'user' => $this->getUser($request)
         ]));
     }
 }
