@@ -21,14 +21,14 @@ class DateTest extends TestCase
 
     public function setUp()
     {
-        $this->fieldset = new Date('date-field');
+        $this->fieldset = new Date('date');
     }
 
     public function testIsAForm()
     {
         $this->assertInstanceOf(Date::class, $this->fieldset);
 
-        $this->assertEquals('date-field', $this->fieldset->getName());
+        $this->assertEquals('date', $this->fieldset->getName());
     }
 
     public function testInputs()
@@ -37,9 +37,9 @@ class DateTest extends TestCase
 
         foreach ($fieldsetElements as $fieldsetElementName => $fieldsetElement) {
             $elements = [
-                'date-field-day'   => Text::class,
-                'date-field-month' => Text::class,
-                'date-field-year'  => Text::class,
+                'day'   => Text::class,
+                'month' => Text::class,
+                'year'  => Text::class,
             ];
 
             if (!isset($elements[$fieldsetElementName])) {
