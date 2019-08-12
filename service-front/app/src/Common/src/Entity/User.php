@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Common\Entity;
 
 use DateTime;
+use DateTimeZone;
+use Exception;
 use Zend\Expressive\Authentication\UserInterface;
 
 /**
@@ -25,14 +27,17 @@ class User implements UserInterface
     public function __construct(string $identity, array $roles, array $details)
     {
         $this->identity = $identity;
+        $this->lastLogin = null;
 
-        $this->lastLogin = array_key_exists('LastLogin', $details) ? $details['LastLogin'] : new DateTime();
+        if (array_key_exists('LastLogin', $details)) {
+            $this->setLastLogin($details['LastLogin']);
+        }
     }
 
     /**
      * Get the unique user identity (id, username, email address or ...)
      */
-    public function getIdentity() : string
+    public function getIdentity(): string
     {
         return $this->identity;
     }
@@ -42,7 +47,7 @@ class User implements UserInterface
      *
      * @return Iterable
      */
-    public function getRoles() : iterable
+    public function getRoles(): iterable
     {
         // Not used.
         return [];
@@ -57,7 +62,7 @@ class User implements UserInterface
      */
     public function getDetail(string $name, $default = null)
     {
-        if (property_exists($this, $name)) {
+        if (property_exists($this, lcfirst($name))) {
             return $this->$name;
         } else {
             return $default;
@@ -67,10 +72,31 @@ class User implements UserInterface
     /**
      * Get all the details, if any
      */
-    public function getDetails() : array
+    public function getDetails(): array
     {
         return [
-            'lastLogin' => $this->lastLogin
+            'LastLogin' => $this->lastLogin
         ];
+    }
+
+    /**
+     * Attempts to figure out how to construct a valid DateTime from the information made available.
+     *
+     * @param mixed $date An array, or string containing a serialised DateTime or ATOM compliant date.
+     * @throws Exception
+     */
+    public function setLastLogin($date): void
+    {
+        // if this is being called via a construction from the database it will be an ISO/ATOM
+        // format string.
+        if (is_string($date)) {
+            $this->lastLogin = new DateTime($date);
+        }
+
+        // if this is being called via a reconstruction from the session the the DateTime object
+        // will have been deconstructed to a key/value array. So build a new DateTime from that.
+        if (is_array($date) && array_key_exists('date', $date)) {
+            $this->lastLogin = new DateTime($date['date'], new DateTimeZone($date['timezone']));
+        }
     }
 }

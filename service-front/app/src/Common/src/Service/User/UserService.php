@@ -92,7 +92,7 @@ class UserService implements UserRepositoryInterface
                     $userData['Email'],
                     [],
                     [
-                        'LastLogin' => new DateTime($userData['LastLogin'])
+                        'LastLogin' => $userData['LastLogin']
                     ]
                 );
             }
