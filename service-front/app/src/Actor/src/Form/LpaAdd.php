@@ -79,17 +79,24 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                 ]
             ],
             'reference_number' => [
-                'allow_empty'       => true, // Use these 2 flags so the default NotEmpty validator is not injected
-                'continue_if_empty' => true,
                 'filters'  => [
                     ['name' => StringTrim::class],
                 ],
                 'validators' => [
                     [
-                        'name'    => Regex::class,
+                        'name'                   => NotEmpty::class,
+                        'break_chain_on_failure' => true,
+                        'options'                => [
+                            'message'  => 'Enter a reference number',
+                        ],
+                    ],
+                    [
+                        'name'    => StringLength::class,
                         'options' => [
-                            'pattern' => '/7\d{11}/',
-                            'message' => 'Enter an LPA reference number in the correct format',
+                            'encoding' => 'UTF-8',
+                            'min'      => 12,
+                            'max'      => 12,
+                            'message'  => 'The reference number must be 12 numbers long',
                         ],
                     ],
                 ]
