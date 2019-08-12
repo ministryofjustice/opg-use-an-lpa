@@ -47,4 +47,12 @@ interface ActorUsersInterface
      * @return bool
      */
     public function exists(string $email) : bool;
+
+    /**
+     * Records a successful login against the actor user
+     *
+     * @param string $email
+     * @throws NotFoundException
+     */
+    public function recordSuccessfulLogin(string $email) : void;
 }
