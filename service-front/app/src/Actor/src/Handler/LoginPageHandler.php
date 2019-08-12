@@ -74,7 +74,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             }
         }
 
-        return new HtmlResponse($this->renderer->render('actor::login',[
+        return new HtmlResponse($this->renderer->render('actor::login', [
             'form' => $form
         ]));
     }
