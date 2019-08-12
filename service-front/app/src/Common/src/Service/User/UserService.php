@@ -10,12 +10,14 @@ use ArrayObject;
 use DateTime;
 use Exception;
 use RuntimeException;
+use Zend\Expressive\Authentication\UserInterface;
+use Zend\Expressive\Authentication\UserRepositoryInterface;
 
 /**
  * Class UserService
  * @package Common\Service\ApiClient
  */
-class UserService
+class UserService implements UserRepositoryInterface
 {
     /**
      * @var ApiClient
@@ -23,12 +25,27 @@ class UserService
     private $apiClient;
 
     /**
+     * @var callable
+     */
+    private $userModelFactory;
+
+    /**
      * UserService constructor.
      * @param ApiClient $apiClient
+     * @param callable $userModelFactory
      */
-    public function __construct(ApiClient $apiClient)
+    public function __construct(ApiClient $apiClient, callable $userModelFactory)
     {
         $this->apiClient = $apiClient;
+
+        // Provide type safety for the composed user factory.
+        $this->userModelFactory = function (
+            string $identity,
+            array $roles = [],
+            array $details = []
+        ) use ($userModelFactory) : UserInterface {
+            return $userModelFactory($identity, $roles, $details);
+        };
     }
 
     /**
@@ -62,7 +79,7 @@ class UserService
      * @param string $password
      * @return User|null
      */
-    public function authenticate(string $email, string $password) : ?User
+    public function authenticate(string $email, string $password = null) : ?UserInterface
     {
         try {
             $userData = $this->apiClient->httpPatch('/v1/auth', [
@@ -70,10 +87,15 @@ class UserService
                 'password' => $password,
             ]);
 
-            return new User(
-                $userData['id'],
-                new DateTime($userData['lastlogin'])
-            );
+            if ( ! is_null($userData)) {
+                return ($this->userModelFactory)(
+                    $userData['Email'],
+                    [],
+                    [
+                        'LastLogin' => new DateTime($userData['LastLogin'])
+                    ]
+                );
+            }
         } catch (ApiException $e) {
             // TODO log or otherwise report authentication issue?
         } catch (Exception $e) {

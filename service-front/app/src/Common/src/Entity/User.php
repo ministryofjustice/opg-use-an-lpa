@@ -5,41 +5,72 @@ declare(strict_types=1);
 namespace Common\Entity;
 
 use DateTime;
+use Zend\Expressive\Authentication\UserInterface;
 
-class User
+/**
+ * Class User
+ *
+ * Implements the UserInterface interface from the Zend Expressive authentication library
+ *
+ * @package Common\Entity
+ */
+class User implements UserInterface
 {
     /** @var string */
-    protected $id;
+    protected $identity;
 
     /** @var DateTime */
-    protected $lastSignedIn;
+    protected $lastLogin;
 
-    /**
-     * User constructor.
-     * @param string $firstname
-     * @param string $surname
-     * @param DateTime $lastSignedIn
-     */
-    public function __construct(string $id, DateTime $lastSignedIn)
+    public function __construct(string $identity, array $roles, array $details)
     {
-        $this->id = $id;
-        $this->lastSignedIn = $lastSignedIn;
+        $this->identity = $identity;
+
+        $this->lastLogin = array_key_exists('LastLogin', $details) ? $details['LastLogin'] : new DateTime();
     }
 
     /**
-     * @return string
+     * Get the unique user identity (id, username, email address or ...)
      */
-    public function getId(): string
+    public function getIdentity() : string
     {
-        return $this->id;
+        return $this->identity;
     }
 
     /**
-     * @return DateTime
+     * Get all user roles
+     *
+     * @return Iterable
      */
-    public function getLastSignedIn(): DateTime
+    public function getRoles() : iterable
     {
-        return $this->lastSignedIn;
+        // Not used.
+        return [];
     }
 
+    /**
+     * Get a detail $name if present, $default otherwise
+     *
+     * @param string $name
+     * @param null $default
+     * @return mixed|null
+     */
+    public function getDetail(string $name, $default = null)
+    {
+        if (property_exists($this, $name)) {
+            return $this->$name;
+        } else {
+            return $default;
+        }
+    }
+
+    /**
+     * Get all the details, if any
+     */
+    public function getDetails() : array
+    {
+        return [
+            'lastLogin' => $this->lastLogin
+        ];
+    }
 }

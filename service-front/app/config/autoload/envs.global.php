@@ -89,4 +89,9 @@ return [
         'persistent' => false,
     ],
 
+    'authentication' => [
+        'username' => 'email',
+        'redirect' => '/login',
+    ]
+
 ];

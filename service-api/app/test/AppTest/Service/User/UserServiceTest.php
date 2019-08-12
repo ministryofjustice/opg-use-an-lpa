@@ -12,7 +12,6 @@ use App\Exception\UnauthorizedException;
 use App\Service\User\UserService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Prophecy\Argument\Token\TypeToken;
 
 /**
  * Class UserServiceTest
