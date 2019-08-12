@@ -11,6 +11,6 @@ trait Session
 {
     public function getSession(ServerRequestInterface $request, string $name) : ?SessionInterface
     {
-        return $request->getAttribute($name, null);
+        return $request->getAttribute($name);
     }
 }
