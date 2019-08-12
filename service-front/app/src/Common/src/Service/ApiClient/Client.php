@@ -102,7 +102,7 @@ class Client
                 case StatusCodeInterface::STATUS_CREATED:
                 case StatusCodeInterface::STATUS_ACCEPTED:
                 case StatusCodeInterface::STATUS_NO_CONTENT:
-                return $this->handleResponse($response);
+                    return $this->handleResponse($response);
                 default:
                     throw ApiException::create(null, $response);
             }
@@ -133,7 +133,7 @@ class Client
                 case StatusCodeInterface::STATUS_CREATED:
                 case StatusCodeInterface::STATUS_ACCEPTED:
                 case StatusCodeInterface::STATUS_NO_CONTENT:
-                return $this->handleResponse($response);
+                    return $this->handleResponse($response);
                 default:
                     throw ApiException::create(null, $response);
             }
@@ -164,7 +164,7 @@ class Client
                 case StatusCodeInterface::STATUS_CREATED:
                 case StatusCodeInterface::STATUS_ACCEPTED:
                 case StatusCodeInterface::STATUS_NO_CONTENT:
-                return $this->handleResponse($response);
+                    return $this->handleResponse($response);
                 default:
                     throw ApiException::create(null, $response);
             }
@@ -194,7 +194,7 @@ class Client
                 case StatusCodeInterface::STATUS_CREATED:
                 case StatusCodeInterface::STATUS_ACCEPTED:
                 case StatusCodeInterface::STATUS_NO_CONTENT:
-                return $this->handleResponse($response);
+                    return $this->handleResponse($response);
                 default:
                     throw ApiException::create(null, $response);
             }
