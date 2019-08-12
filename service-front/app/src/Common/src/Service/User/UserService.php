@@ -7,7 +7,6 @@ use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Fig\Http\Message\StatusCodeInterface;
 use ArrayObject;
-use DateTime;
 use Exception;
 use RuntimeException;
 use Zend\Expressive\Authentication\UserInterface;
@@ -53,7 +52,7 @@ class UserService implements UserRepositoryInterface
      * @param string $password
      * @return array
      */
-    public function create(string $email, string $password) : array
+    public function create(string $email, string $password): array
     {
         return $this->apiClient->httpPost('/v1/user', [
             'email'    => $email,
@@ -65,7 +64,7 @@ class UserService implements UserRepositoryInterface
      * @param string $email
      * @return ArrayObject|null
      */
-    public function getByEmail(string $email) : ?array
+    public function getByEmail(string $email): ?array
     {
         return $this->apiClient->httpGet('/v1/user', [
             'email' => $email,
@@ -79,7 +78,7 @@ class UserService implements UserRepositoryInterface
      * @param string $password
      * @return User|null
      */
-    public function authenticate(string $email, string $password = null) : ?UserInterface
+    public function authenticate(string $email, string $password = null): ?UserInterface
     {
         try {
             $userData = $this->apiClient->httpPatch('/v1/auth', [
@@ -110,7 +109,7 @@ class UserService implements UserRepositoryInterface
      * @return bool
      * @throws \Http\Client\Exception
      */
-    public function activate(string $activationToken) : bool
+    public function activate(string $activationToken): bool
     {
         try {
             $userData = $this->apiClient->httpPatch('/v1/user-activation', [
