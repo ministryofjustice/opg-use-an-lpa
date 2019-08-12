@@ -22,11 +22,11 @@ class UserTest extends TestCase
     public function it_returns_valid_user_details()
     {
         $date = new DateTime();
-        $user = new User('test', [], ['LastLogin' => $date]);
+        $user = new User('test', [], ['LastLogin' => $date->format(DATE_ATOM)]);
 
         $this->assertIsArray($user->getDetails());
         $this->assertCount(1, $user->getDetails());
-        $this->assertArrayHasKey('lastLogin', $user->getDetails());
+        $this->assertArrayHasKey('LastLogin', $user->getDetails());
     }
 
     /** @test */
@@ -39,23 +39,34 @@ class UserTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_a_valid_user_detail()
+    public function it_returns_a_valid_lastLogin_time()
     {
+        // this is needed to ensure our datetime is truncated at 0 microseconds
+        // which is what we store and pass it around as everywhere but this test
         $date = new DateTime();
-        $user = new User('test', [], ['LastLogin' => $date]);
+        $date = $date->format(DATE_ATOM);
+        $date = new DateTime($date);
 
-        $this->assertEquals($date, $user->getDetail('lastLogin'));
+        $user = new User('test', [], ['LastLogin' => $date->format(DATE_ATOM)]);
+
+        $this->assertEquals($date, $user->getDetail('LastLogin'));
     }
 
     /** @test */
-    public function it_returns_a_default_detail_when_needed()
+    public function it_returns_a_default_detail_when_provided_and_necessary()
     {
-        $date = new DateTime('1 hour ago');
         $user = new User('test', [], []);
 
-        $this->assertEquals($date, $user->getDetail('LastLogin', $date));
+        $this->assertEquals('Never', $user->getDetail('LastLogin', 'Never'));
     }
 
+    /** @test */
+    public function it_returns_a_null_lastLogin_when_none_provided()
+    {
+        $user = new User('test', [], []);
+
+        $this->assertNull($user->getDetail('LastLogin'));
+    }
 
     /** @test */
     public function it_returns_the_correct_identity()

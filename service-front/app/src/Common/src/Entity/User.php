@@ -62,8 +62,10 @@ class User implements UserInterface
      */
     public function getDetail(string $name, $default = null)
     {
-        if (property_exists($this, lcfirst($name))) {
-            return $this->$name;
+        $propertyName = lcfirst($name);
+
+        if (property_exists($this, $propertyName)) {
+            return $this->$propertyName ?? $default;
         } else {
             return $default;
         }
