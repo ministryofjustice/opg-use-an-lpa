@@ -9,6 +9,7 @@ use Common\Form\Fieldset\Date;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Filter\StringTrim;
 use Zend\InputFilter\InputFilterProviderInterface;
+use Zend\Validator\NotEmpty;
 use Zend\Validator\Regex;
 use Zend\Validator\StringLength;
 
@@ -48,19 +49,31 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
     {
         return [
             'passcode' => [
-                'allow_empty'       => true, // Use these 2 flags so the default NotEmpty validator is not injected
-                'continue_if_empty' => true,
                 'filters'  => [
                     ['name' => StringTrim::class],
                 ],
                 'validators' => [
+                    [
+                        'name'                   => NotEmpty::class,
+                        'break_chain_on_failure' => true,
+                        'options'                => [
+                            'message'  => 'Enter your one-time passcode',
+                        ],
+                    ],
                     [
                         'name'    => StringLength::class,
                         'options' => [
                             'encoding' => 'UTF-8',
                             'min'      => 12,
                             'max'      => 12,
-                            'message'  => 'Enter one-time passcode in the correct format',
+                            'message'  => 'Your passcode must be 12 characters long',
+                        ],
+                    ],
+                    [
+                        'name'    => Regex::class,
+                        'options' => [
+                            'pattern' => '/[a-zA-Z0-9]{12}/',
+                            'message' => 'Your passcode must only include letters and numbers',
                         ],
                     ],
                 ]
