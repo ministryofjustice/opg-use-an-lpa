@@ -6,6 +6,7 @@ namespace Actor\Form;
 
 use Common\Form\AbstractForm;
 use Common\Form\Fieldset\Date;
+use Common\Validator\DobValidator;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Filter\StringTrim;
 use Zend\InputFilter\InputFilterProviderInterface;
@@ -98,6 +99,13 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                             'max'      => 12,
                             'message'  => 'The reference number must be 12 numbers long',
                         ],
+                    ],
+                ]
+            ],
+            'dob' => [
+                'validators' => [
+                    [
+                        'name' => DobValidator::class,
                     ],
                 ]
             ],
