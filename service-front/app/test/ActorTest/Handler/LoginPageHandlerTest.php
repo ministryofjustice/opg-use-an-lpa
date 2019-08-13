@@ -58,7 +58,7 @@ class LoginPageHandlerTest extends TestCase
     }
 
     /** @test */
-    public function get_request_returns_html_response()
+    public function it_returns_a_valid_html_response_for_a_get_request()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('GET');
@@ -72,7 +72,7 @@ class LoginPageHandlerTest extends TestCase
     }
 
     /** @test */
-    public function invalid_email_returns_html_response()
+    public function an_invalid_email_returns_a_html_response()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('POST');
@@ -93,7 +93,7 @@ class LoginPageHandlerTest extends TestCase
     }
 
     /** @test */
-    public function empty_fields_return_html_response()
+    public function empty_fields_give_a_html_response()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('POST');
@@ -114,7 +114,7 @@ class LoginPageHandlerTest extends TestCase
     }
 
     /** @test */
-    public function valid_fields_return_html_response_when_credentials_bad()
+    public function valid_fields_but_incorrect_login_returns_html_response()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('POST');
