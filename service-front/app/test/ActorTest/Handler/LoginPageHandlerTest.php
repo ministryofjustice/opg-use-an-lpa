@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace ActorTest;
 
 use Actor\Handler\LoginPageHandler;
+use Common\Entity\User;
 use Common\Service\User\UserService;
+use Grpc\Server;
 use PHPUnit\Framework\TestCase;
 use Actor\Form\Login;
+use Prophecy\Argument;
 use Prophecy\Argument\Token\CallbackToken;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Expressive\Csrf\CsrfMiddleware;
@@ -39,6 +43,8 @@ class LoginPageHandlerTest extends TestCase
             ->willReturn('');
 
         $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);
+        $this->urlHelperProphecy->generate(Argument::any(), Argument::any(), Argument::any())
+            ->willReturn('http:://localhost/test');
 
         $this->authenticatorProphecy = $this->prophesize(AuthenticationInterface::class);
 
@@ -53,7 +59,8 @@ class LoginPageHandlerTest extends TestCase
             ->willReturn($csrfProphecy->reveal());
     }
 
-    public function testGetReturnsHtmlResponse()
+    /** @test */
+    public function get_request_returns_html_response()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('GET');
@@ -66,7 +73,8 @@ class LoginPageHandlerTest extends TestCase
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 
-    public function testInvalidEmail()
+    /** @test */
+    public function invalid_email_returns_html_response()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('POST');
@@ -86,7 +94,8 @@ class LoginPageHandlerTest extends TestCase
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 
-    public function testEmptyFields()
+    /** @test */
+    public function empty_fields_return_html_response()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('POST');
@@ -106,7 +115,8 @@ class LoginPageHandlerTest extends TestCase
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 
-    public function testValidFields()
+    /** @test */
+    public function valid_fields_return_html_response_when_credentials_bad()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('POST');
@@ -124,5 +134,29 @@ class LoginPageHandlerTest extends TestCase
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
+    }
+
+    /** @test */
+    public function returns_redirect_response_when_credentials_good()
+    {
+        $this->requestProphecy->getMethod()
+            ->willReturn('POST');
+
+        $this->requestProphecy->getParsedBody()
+            ->willReturn([
+                '__csrf' => self::CSRF_CODE,
+                'email' => 'a@b.com',
+                'password' => '1234'
+            ]);
+
+        $this->authenticatorProphecy->authenticate(Argument::type(ServerRequestInterface::class))
+            ->willReturn(new User('test', [], []));
+
+        //  Set up the handler
+        $handler = new LoginPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal());
+
+        $response = $handler->handle($this->requestProphecy->reveal());
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 }
