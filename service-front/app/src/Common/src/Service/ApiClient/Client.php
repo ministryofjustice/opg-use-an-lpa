@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Common\Service\ApiClient;
 
 use Common\Exception\ApiException;
-use GuzzleHttp\Psr7\Uri;
+use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -67,7 +70,7 @@ class Client
             $response = $this->httpClient->sendRequest($request);
 
             switch ($response->getStatusCode()) {
-                case 200:
+                case StatusCodeInterface::STATUS_OK:
                     return $this->handleResponse($response);
                 default:
                     throw ApiException::create(null, $response);
@@ -95,9 +98,11 @@ class Client
             $response = $this->httpClient->sendRequest($request);
 
             switch ($response->getStatusCode()) {
-                case 200:
-                case 201:
-                    return $this->handleResponse($response);
+                case StatusCodeInterface::STATUS_OK:
+                case StatusCodeInterface::STATUS_CREATED:
+                case StatusCodeInterface::STATUS_ACCEPTED:
+                case StatusCodeInterface::STATUS_NO_CONTENT:
+                return $this->handleResponse($response);
                 default:
                     throw ApiException::create(null, $response);
             }
@@ -124,9 +129,11 @@ class Client
             $response = $this->httpClient->sendRequest($request);
 
             switch ($response->getStatusCode()) {
-                case 200:
-                case 201:
-                    return $this->handleResponse($response);
+                case StatusCodeInterface::STATUS_OK:
+                case StatusCodeInterface::STATUS_CREATED:
+                case StatusCodeInterface::STATUS_ACCEPTED:
+                case StatusCodeInterface::STATUS_NO_CONTENT:
+                return $this->handleResponse($response);
                 default:
                     throw ApiException::create(null, $response);
             }
@@ -153,13 +160,11 @@ class Client
             $response = $this->httpClient->sendRequest($request);
 
             switch ($response->getStatusCode()) {
-                case 200:
-                case 201:
-                    return $this->handleResponse($response);
-                case 401:
-                case 403:
-                case 404:
-                    return null;
+                case StatusCodeInterface::STATUS_OK:
+                case StatusCodeInterface::STATUS_CREATED:
+                case StatusCodeInterface::STATUS_ACCEPTED:
+                case StatusCodeInterface::STATUS_NO_CONTENT:
+                return $this->handleResponse($response);
                 default:
                     throw ApiException::create(null, $response);
             }
@@ -185,9 +190,11 @@ class Client
             $response = $this->httpClient->sendRequest($request);
 
             switch ($response->getStatusCode()) {
-                case 200:
-                case 201:
-                    return $this->handleResponse($response);
+                case StatusCodeInterface::STATUS_OK:
+                case StatusCodeInterface::STATUS_CREATED:
+                case StatusCodeInterface::STATUS_ACCEPTED:
+                case StatusCodeInterface::STATUS_NO_CONTENT:
+                return $this->handleResponse($response);
                 default:
                     throw ApiException::create(null, $response);
             }
@@ -225,7 +232,7 @@ class Client
      */
     private function handleResponse(ResponseInterface $response)
     {
-        $body = json_decode($response->getBody(), true);
+        $body = json_decode($response->getBody()->getContents(), true);
 
         //  If the body isn't an array now then it wasn't JSON before
         if (!is_array($body)) {

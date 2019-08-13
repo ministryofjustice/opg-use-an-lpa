@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\ApiClient;
 
-use GuzzleHttp\Psr7\Uri;
-use GuzzleHttp\Psr7\Request;
-use Http\Client\Exception as HttpException;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestInterface;
 use Aws\Credentials\CredentialProvider;
 use Aws\Signature\SignatureV4;
+use Fig\Http\Message\StatusCodeInterface;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Client
@@ -50,9 +53,9 @@ class Client
      * @param string $path
      * @param array $query
      * @return array
-     * @throws ApiException|HttpException
+     * @throws ApiException|ClientExceptionInterface
      */
-    public function httpGet(string $path, array $query = []) : ?array
+    public function httpGet(string $path, array $query = []): ?array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -66,10 +69,8 @@ class Client
         $response = $this->httpClient->sendRequest($this->signRequest($request));
 
         switch ($response->getStatusCode()) {
-            case 200:
+            case StatusCodeInterface::STATUS_OK:
                 return $this->handleResponse($response);
-            case 404:
-                return null;
             default:
                 throw new ApiException($response);
         }
@@ -81,9 +82,9 @@ class Client
      * @param string $path
      * @param array $payload
      * @return array
-     * @throws ApiException|HttpException
+     * @throws ApiException|ClientExceptionInterface
      */
-    public function httpPost(string $path, array $payload = []) : array
+    public function httpPost(string $path, array $payload = []): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -92,8 +93,10 @@ class Client
         $response = $this->httpClient->sendRequest($request);
 
         switch ($response->getStatusCode()) {
-            case 200:
-            case 201:
+            case StatusCodeInterface::STATUS_OK:
+            case StatusCodeInterface::STATUS_CREATED:
+            case StatusCodeInterface::STATUS_ACCEPTED:
+            case StatusCodeInterface::STATUS_NO_CONTENT:
                 return $this->handleResponse($response);
             default:
                 throw new ApiException($response);
@@ -106,9 +109,9 @@ class Client
      * @param string $path
      * @param array $payload
      * @return array
-     * @throws ApiException|HttpException
+     * @throws ApiException|ClientExceptionInterface
      */
-    public function httpPut(string $path, array $payload = []) : array
+    public function httpPut(string $path, array $payload = []): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -117,8 +120,10 @@ class Client
         $response = $this->httpClient->sendRequest($request);
 
         switch ($response->getStatusCode()) {
-            case 200:
-            case 201:
+            case StatusCodeInterface::STATUS_OK:
+            case StatusCodeInterface::STATUS_CREATED:
+            case StatusCodeInterface::STATUS_ACCEPTED:
+            case StatusCodeInterface::STATUS_NO_CONTENT:
                 return $this->handleResponse($response);
             default:
                 throw new ApiException($response);
@@ -131,9 +136,9 @@ class Client
      * @param string $path
      * @param array $payload
      * @return array
-     * @throws ApiException|HttpException
+     * @throws ApiException|ClientExceptionInterface
      */
-    public function httpPatch(string $path, array $payload = []) : array
+    public function httpPatch(string $path, array $payload = []): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -142,8 +147,10 @@ class Client
         $response = $this->httpClient->sendRequest($request);
 
         switch ($response->getStatusCode()) {
-            case 200:
-            case 201:
+            case StatusCodeInterface::STATUS_OK:
+            case StatusCodeInterface::STATUS_CREATED:
+            case StatusCodeInterface::STATUS_ACCEPTED:
+            case StatusCodeInterface::STATUS_NO_CONTENT:
                 return $this->handleResponse($response);
             default:
                 throw new ApiException($response);
@@ -155,9 +162,9 @@ class Client
      *
      * @param string $path
      * @return array
-     * @throws ApiException|HttpException
+     * @throws ApiException|ClientExceptionInterface
      */
-    public function httpDelete(string $path) : array
+    public function httpDelete(string $path): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -166,15 +173,17 @@ class Client
         $response = $this->httpClient->sendRequest($request);
 
         switch ($response->getStatusCode()) {
-            case 200:
-            case 201:
+            case StatusCodeInterface::STATUS_OK:
+            case StatusCodeInterface::STATUS_CREATED:
+            case StatusCodeInterface::STATUS_ACCEPTED:
+            case StatusCodeInterface::STATUS_NO_CONTENT:
                 return $this->handleResponse($response);
             default:
                 throw new ApiException($response);
         }
     }
 
-    private function signRequest(RequestInterface $request) : RequestInterface
+    private function signRequest(RequestInterface $request): RequestInterface
     {
         $provider = CredentialProvider::defaultProvider();
         $s4 = new SignatureV4('execute-api', $this->awsRegion);
@@ -205,7 +214,7 @@ class Client
      */
     private function handleResponse(ResponseInterface $response)
     {
-        $body = json_decode($response->getBody(), true);
+        $body = json_decode($response->getBody()->getContents(), true);
 
         //  If the body isn't an array now then it wasn't JSON before
         if (!is_array($body)) {
