@@ -86,14 +86,6 @@ class UserService
      */
     public function authenticate(string $email, string $password) : array
     {
-        // TODO Remove development code
-//        if ($email === 'a@b.com' && $password ='test') {
-//            return [
-//                'Email' => 'a@b.com',
-//                'Password' => '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq'
-//            ];
-//        }
-
         $user = $this->usersRepository->get($email);
 
         if ( ! password_verify($password, $user['Password'])) {
