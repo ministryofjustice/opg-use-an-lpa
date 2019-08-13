@@ -4,28 +4,28 @@ coverage:
       default:
         # basic
         target: auto
-        threshold: 0%
+        threshold: 5%
         base: pr
         if_no_uploads: error
         if_not_found: success
         if_ci_failed: error        
-    project: off
-      # default: false  # disable the default status that measures entire project
-      # front: # declare a new status context for service-front
-      #   target: 60% # set coverage target
-      #   threshold: 5% # allow coverage to drop by x% and post a success
-      #   base: pr # will only use the pull request base. Commits not on a pull request will not receive this status.
-      #   paths: 
-      #   - service-front/app/src 
-      #   if_no_uploads: error
-      #   if_not_found: success
-      #   if_ci_failed: error
-      # api:  # declare a new status context for service-api
-      #   target: 30% # set coverage target
-      #   threshold: 5% # allow coverage to drop by x% and post a success
-      #   base: pr # will only use the pull request base. Commits not on a pull request will not receive this status.
-      #   paths: 
-      #   - service-api/app/src/App/src
-      #   if_no_uploads: error
-      #   if_not_found: success
-      #   if_ci_failed: error        
+    project:
+      default: false  # disable the default status that measures entire project
+      front: # declare a new status context for service-front
+        target: auto # set coverage target
+        threshold: 5% # allow coverage to drop by x% and post a success
+        base: pr # will only use the pull request base. Commits not on a pull request will not receive this status.
+        paths: 
+        - service-front/app/src 
+        if_no_uploads: error
+        if_not_found: success
+        if_ci_failed: error
+      api:  # declare a new status context for service-api
+        target: auto # set coverage target
+        threshold: 5% # allow coverage to drop by x% and post a success
+        base: pr # will only use the pull request base. Commits not on a pull request will not receive this status.
+        paths: 
+        - service-api/app/src/App/src
+        if_no_uploads: error
+        if_not_found: success
+        if_ci_failed: error        
