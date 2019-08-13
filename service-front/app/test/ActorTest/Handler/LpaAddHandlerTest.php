@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument\Token\CallbackToken;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Expressive\Helper\UrlHelper;
@@ -22,6 +23,7 @@ class LpaAddHandlerTest extends TestCase
     private $rendererProphecy;
     private $urlHelperProphecy;
     private $requestProphecy;
+    private $authenticatorProphecy;
 
     public function setUp()
     {
@@ -36,6 +38,8 @@ class LpaAddHandlerTest extends TestCase
             ->willReturn('');
 
         $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);
+
+        $this->authenticatorProphecy = $this->prophesize(AuthenticationInterface::class);
 
         $csrfProphecy = $this->prophesize(CsrfGuardInterface::class);
         $csrfProphecy->generateToken()
@@ -54,7 +58,7 @@ class LpaAddHandlerTest extends TestCase
             ->willReturn('GET');
 
         //  Set up the handler
-        $handler = new LpaAddHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal());
+        $handler = new LpaAddHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal());
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
