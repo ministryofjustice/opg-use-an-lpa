@@ -9,7 +9,8 @@ use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
-use Exception;
+use DateTime;
+use DateTimeInterface;
 
 class ActorUsers implements ActorUsersInterface
 {
@@ -39,7 +40,7 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function add(string $email, string $password, string $activationToken, int $activationTtl) : array
+    public function add(string $email, string $password, string $activationToken, int $activationTtl): array
     {
         $this->client->putItem([
             'TableName' => $this->actorUsersTable,
@@ -61,7 +62,7 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function get(string $email) : array
+    public function get(string $email): array
     {
         $result = $this->client->getItem([
             'TableName' => $this->actorUsersTable,
@@ -84,7 +85,7 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function activate(string $activationToken) : array
+    public function activate(string $activationToken): array
     {
         $marshaler = new Marshaler();
 
@@ -124,7 +125,7 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function exists(string $email) : bool
+    public function exists(string $email): bool
     {
         try {
             $userData = $this->get($email);
@@ -133,5 +134,29 @@ class ActorUsers implements ActorUsersInterface
         }
 
         return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function recordSuccessfulLogin(string $email): void
+    {
+        $loginTime = (new DateTime('now'))->format(DateTimeInterface::ATOM);
+
+        $this->client->updateItem([
+            'TableName' => $this->actorUsersTable,
+            'Key' => [
+                'Email' => [
+                    'S' => $email,
+                ],
+            ],
+            'UpdateExpression' =>
+                'SET LastLogin=:ll',
+            'ExpressionAttributeValues'=> [
+                ':ll' => [
+                    'S' => $loginTime
+                ]
+            ]
+        ]);
     }
 }

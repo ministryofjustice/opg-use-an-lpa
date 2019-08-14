@@ -96,6 +96,8 @@ class UserService
             throw new UnauthorizedException('User account not verified');
         }
 
+        $this->usersRepository->recordSuccessfulLogin($email);
+
         return $user;
     }
 }

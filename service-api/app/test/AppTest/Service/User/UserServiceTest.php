@@ -109,6 +109,7 @@ class UserServiceTest extends TestCase
 
         $repoProphecy->get('a@b.com')
             ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
+        $repoProphecy->recordSuccessfulLogin('a@b.com');
 
         $us = new UserService($repoProphecy->reveal());
 
