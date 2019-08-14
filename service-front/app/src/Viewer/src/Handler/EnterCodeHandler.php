@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Viewer\Handler;
 
 use Common\Handler\AbstractHandler;
+use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session as SessionTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\ShareCode;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Diactoros\Response\HtmlResponse;
 
 /**
@@ -19,6 +18,7 @@ use Zend\Diactoros\Response\HtmlResponse;
  */
 class EnterCodeHandler extends AbstractHandler
 {
+    use CsrfGuard;
     use SessionTrait;
 
     /**
@@ -29,9 +29,7 @@ class EnterCodeHandler extends AbstractHandler
     {
         $session = $this->getSession($request, 'session');
 
-        /** @var CsrfGuardInterface $guard */
-        $guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
-        $form = new ShareCode($guard);
+        $form = new ShareCode($this->getCsrfGuard($request));
 
         if ($request->getMethod() === 'POST') {
             $form->setData($request->getParsedBody());
