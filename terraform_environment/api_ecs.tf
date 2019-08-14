@@ -43,10 +43,8 @@ resource "aws_service_discovery_service" "api" {
 
 //
 locals {
-
   api_service_fqdn = "${aws_service_discovery_service.api.name}.${aws_service_discovery_private_dns_namespace.internal.name}"
 }
-
 
 //----------------------------------
 // The Api service's Security Groups
@@ -142,11 +140,12 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "${aws_dynamodb_table.viewer_activity_table.arn}/index/*"
     ]
   }
+
   statement {
     effect = "Allow"
 
     actions = [
-      "execute-api:Invoke"
+      "execute-api:Invoke",
     ]
 
     resources = ["arn:aws:execute-api:eu-west-1:${local.sirius_account_id}:*/*/GET/use-an-lpa/*"]
@@ -157,7 +156,6 @@ data "aws_iam_policy_document" "api_permissions_role" {
 // API ECS Service Task Container level config
 
 locals {
-
   api_web = <<EOF
   {
     "cpu": 1,
