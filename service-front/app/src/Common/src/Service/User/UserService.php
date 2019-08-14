@@ -42,7 +42,7 @@ class UserService implements UserRepositoryInterface
             string $identity,
             array $roles = [],
             array $details = []
-        ) use ($userModelFactory) : UserInterface {
+        ) use ($userModelFactory): UserInterface {
             return $userModelFactory($identity, $roles, $details);
         };
     }
@@ -62,9 +62,9 @@ class UserService implements UserRepositoryInterface
 
     /**
      * @param string $email
-     * @return ArrayObject|null
+     * @return array
      */
-    public function getByEmail(string $email): ?array
+    public function getByEmail(string $email): array
     {
         return $this->apiClient->httpGet('/v1/user', [
             'email' => $email,
@@ -120,7 +120,7 @@ class UserService implements UserRepositoryInterface
                 return true;
             }
         } catch (ApiException $ex) {
-            if ($ex->getCode() != StatusCodeInterface::STATUS_NOT_FOUND) {
+            if ($ex->getCode() !== StatusCodeInterface::STATUS_NOT_FOUND) {
                 throw $ex;
             }
         }
