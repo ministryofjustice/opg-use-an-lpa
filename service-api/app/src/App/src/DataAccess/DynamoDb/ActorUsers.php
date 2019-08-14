@@ -9,7 +9,6 @@ use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
-use Exception;
 use DateTime;
 use DateTimeInterface;
 

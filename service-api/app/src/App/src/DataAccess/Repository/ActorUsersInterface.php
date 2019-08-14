@@ -52,7 +52,6 @@ interface ActorUsersInterface
      * Records a successful login against the actor user
      *
      * @param string $email
-     * @throws NotFoundException
      */
     public function recordSuccessfulLogin(string $email) : void;
 }
