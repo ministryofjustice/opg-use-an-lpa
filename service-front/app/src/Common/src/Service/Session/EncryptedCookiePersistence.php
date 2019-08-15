@@ -231,6 +231,7 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
     public function persistSession(SessionInterface $session, ResponseInterface $response) : ResponseInterface
     {
         // No data? Nothing to do.
+        // TODO if a session has been cleared ($session->clear) then it doesn't get persisted?
         if ([] === $session->toArray()) {
             return $response;
         }
