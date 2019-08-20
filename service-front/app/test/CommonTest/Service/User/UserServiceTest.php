@@ -11,6 +11,7 @@ use Common\Service\User\UserService;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 class UserServiceTest extends TestCase
 {
@@ -268,5 +269,79 @@ class UserServiceTest extends TestCase
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $this->expectException(ApiException::class);
         $return = $service->activate('activate1234567890');
+    }
+
+    /** @test */
+    public function can_request_a_password_reset_token_for_a_valid_user()
+    {
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpPatch(
+            '/v1/request-password-reset',
+            [
+                'email' => 'test@example.com'
+            ])
+            ->willReturn([
+                'Email'     => 'test@example.com',
+                'PasswordResetToken' => 'resettokenAABBCCDDEE'
+            ]);
+
+        $userFactoryCallable = function($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+
+        $token = $service->requestPasswordReset('test@example.com');
+
+        $this->assertEquals('resettokenAABBCCDDEE', $token);
+    }
+
+    /** @test */
+    public function a_password_reset_request_for_an_invalid_user_will_not_be_found()
+    {
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpPatch(
+            '/v1/request-password-reset',
+            [
+                'email' => 'test@example.com'
+            ])
+            ->willThrow(new ApiException('User not found', StatusCodeInterface::STATUS_NOT_FOUND));
+
+        $userFactoryCallable = function($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+        $this->expectException(ApiException::class);
+        $token = $service->requestPasswordReset('test@example.com');
+    }
+
+    /** @test */
+    public function exception_thrown_when_api_gives_invalid_response_to_reset_password_request()
+    {
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpPatch(
+            '/v1/request-password-reset',
+            [
+                'email' => 'test@example.com'
+            ])
+            ->willReturn([
+                'InvalidResponse' => 'YouWereExpectingSomethingElse'
+            ]);
+
+        $userFactoryCallable = function($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $this->expectException(RuntimeException::class);
+        $token = $service->requestPasswordReset('test@example.com');
     }
 }

@@ -86,7 +86,7 @@ class UserService implements UserRepositoryInterface
                 'password' => $password,
             ]);
 
-            if ( ! is_null($userData)) {
+            if (!is_null($userData)) {
                 return ($this->userModelFactory)(
                     $userData['Email'],
                     [],
@@ -126,5 +126,18 @@ class UserService implements UserRepositoryInterface
         }
 
         return false;
+    }
+
+    public function requestPasswordReset(string $email): string
+    {
+        $data = $this->apiClient->httpPatch('/v1/request-password-reset', [
+            'email' => $email,
+        ]);
+
+        if (!is_null($data) && isset($data['PasswordResetToken'])) {
+            return $data['PasswordResetToken'];
+        }
+
+        throw new RuntimeException("Error whilst requesting password reset token", 500);
     }
 }
