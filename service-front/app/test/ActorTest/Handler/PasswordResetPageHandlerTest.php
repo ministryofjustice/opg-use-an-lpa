@@ -6,28 +6,62 @@ namespace ActorTest;
 
 use Actor\Form\PasswordReset;
 use Actor\Handler\PasswordResetPageHandler;
+use Common\Service\Email\EmailClient;
+use Common\Service\User\UserService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument\Token\CallbackToken;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Expressive\Csrf\CsrfMiddleware;
+use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 class PasswordResetPageHandlerTest extends TestCase
 {
-    const CSRF_CODE="1234";
+    const CSRF_CODE = '1234';
 
-    private $rendererProphecy;
+    /**
+     * @var TemplateRendererInterface
+     */
+    private $templateRendererProphecy;
+
+    /**
+     * @var UrlHelper
+     */
     private $urlHelperProphecy;
+
+    /**
+     * @var UserService
+     */
     private $userServiceProphecy;
+
+    /**
+     * @var EmailClient
+     */
+    private $emailClientProphecy;
+
+    /**
+     * @var ServerUrlHelper
+     */
+    private $serverUrlHelperProphecy;
+
+    /**
+     * @var ServerRequestInterface
+     */
     private $requestProphecy;
 
     public function setUp()
     {
-        $this->rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $this->rendererProphecy->render('actor::password-reset', new CallbackToken(function($options) {
+        // Constructor Parameters
+        $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);
+        $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);
+        $this->userServiceProphecy = $this->prophesize(UserService::class);
+        $this->emailClientProphecy = $this->prophesize(EmailClient::class);
+        $this->serverUrlHelperProphecy = $this->prophesize(ServerUrlHelper::class);
+
+        $this->templateRendererProphecy->render('actor::password-reset', new CallbackToken(function($options) {
             $this->assertIsArray($options);
             $this->assertArrayHasKey('form', $options);
             $this->assertInstanceOf(PasswordReset::class, $options['form']);
@@ -49,20 +83,28 @@ class PasswordResetPageHandlerTest extends TestCase
             ->willReturn($csrfProphecy->reveal());
     }
 
-    public function testGetReturnsHtmlResponse()
+    /** @test */
+    public function a_get_request_returns_a_html_response()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('GET');
 
         //  Set up the handler
-        $handler = new PasswordResetPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal());
+        $handler = new PasswordResetPageHandler(
+            $this->templateRendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->userServiceProphecy->reveal(),
+            $this->emailClientProphecy->reveal(),
+            $this->serverUrlHelperProphecy->reveal()
+        );
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 
-    public function testInvalidEmail()
+    /** @test */
+    public function an_invalid_email_submission_returns_a_html_response()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('POST');
@@ -75,14 +117,21 @@ class PasswordResetPageHandlerTest extends TestCase
             ]);
 
         //  Set up the handler
-        $handler = new PasswordResetPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal());
+        $handler = new PasswordResetPageHandler(
+            $this->templateRendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->userServiceProphecy->reveal(),
+            $this->emailClientProphecy->reveal(),
+            $this->serverUrlHelperProphecy->reveal()
+        );
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 
-    public function testMismatchedEmail()
+    /** @test */
+    public function mismatched_emails_return_html_response()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('POST');
@@ -95,14 +144,21 @@ class PasswordResetPageHandlerTest extends TestCase
             ]);
 
         //  Set up the handler
-        $handler = new PasswordResetPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal());
+        $handler = new PasswordResetPageHandler(
+            $this->templateRendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->userServiceProphecy->reveal(),
+            $this->emailClientProphecy->reveal(),
+            $this->serverUrlHelperProphecy->reveal()
+        );
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 
-    public function testEmptyFields()
+    /** @test */
+    public function empty_fields_return_html_response()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('POST');
@@ -115,14 +171,21 @@ class PasswordResetPageHandlerTest extends TestCase
             ]);
 
         //  Set up the handler
-        $handler = new PasswordResetPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal());
+        $handler = new PasswordResetPageHandler(
+            $this->templateRendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->userServiceProphecy->reveal(),
+            $this->emailClientProphecy->reveal(),
+            $this->serverUrlHelperProphecy->reveal()
+        );
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 
-    public function testValidSubmission()
+    /** @test */
+    public function a_valid_form_submission_returns_a_html_response()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('POST');
@@ -134,7 +197,10 @@ class PasswordResetPageHandlerTest extends TestCase
                 'email_confirm' => 'a@b.com'
             ]);
 
-        $this->rendererProphecy->render('actor::password-reset-done', new CallbackToken(function($options) {
+        $this->userServiceProphecy->requestPasswordReset('a@b.com')
+            ->willReturn('passwordResetAABBCCDDEE');
+
+        $this->templateRendererProphecy->render('actor::password-reset-done', new CallbackToken(function($options) {
             $this->assertIsArray($options);
             $this->assertArrayHasKey('email', $options);
             $this->assertIsString($options['email']);
@@ -144,7 +210,13 @@ class PasswordResetPageHandlerTest extends TestCase
             ->willReturn('');
 
         //  Set up the handler
-        $handler = new PasswordResetPageHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal());
+        $handler = new PasswordResetPageHandler(
+            $this->templateRendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->userServiceProphecy->reveal(),
+            $this->emailClientProphecy->reveal(),
+            $this->serverUrlHelperProphecy->reveal()
+        );
 
         $response = $handler->handle($this->requestProphecy->reveal());
 

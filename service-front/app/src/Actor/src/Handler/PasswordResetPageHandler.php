@@ -6,18 +6,47 @@ namespace Actor\Handler;
 
 use Actor\Form\PasswordReset;
 use Common\Handler\AbstractHandler;
+use Common\Service\Email\EmailClient;
+use Common\Service\User\UserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Csrf\CsrfMiddleware;
+use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 class PasswordResetPageHandler extends AbstractHandler
 {
-    public function __construct(TemplateRendererInterface $renderer, UrlHelper $urlHelper)
+    /** @var UserService */
+    private $userService;
+
+    /** @var EmailClient */
+    private $emailClient;
+
+    /** @var ServerUrlHelper */
+    private $serverUrlHelper;
+
+    /**
+     * CreateAccountHandler constructor.
+     * @param TemplateRendererInterface $renderer
+     * @param UrlHelper $urlHelper
+     * @param UserService $userService
+     * @param EmailClient $emailClient
+     * @param ServerUrlHelper $serverUrlHelper
+     */
+    public function __construct(
+        TemplateRendererInterface $renderer,
+        UrlHelper $urlHelper,
+        UserService $userService,
+        EmailClient $emailClient,
+        ServerUrlHelper $serverUrlHelper)
     {
         parent::__construct($renderer, $urlHelper);
+
+        $this->userService = $userService;
+        $this->emailClient = $emailClient;
+        $this->serverUrlHelper = $serverUrlHelper;
     }
 
     /**
@@ -38,7 +67,8 @@ class PasswordResetPageHandler extends AbstractHandler
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                // TODO actual email sending.
+                $resetToken = $this->userService->requestPasswordReset($data['email']);
+
 
                 return new HtmlResponse($this->renderer->render('actor::password-reset-done',[
                     'email' => $data['email']
