@@ -9,8 +9,6 @@ use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
-use DateTime;
-use DateTimeInterface;
 
 class ActorUsers implements ActorUsersInterface
 {
@@ -139,6 +137,50 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
+    public function resetPassword(string $resetToken, string $password): bool
+    {
+        $marshaler = new Marshaler();
+
+        $result = $this->client->query([
+            'TableName' => $this->actorUsersTable,
+            'KeyConditionExpression' => 'PasswordResetToken = :rt',
+            'ExpressionAttributeValues'=> $marshaler->marshalItem([
+                ':rt' => $resetToken,
+            ]),
+        ]);
+
+        $usersData = $this->getDataCollection($result);
+
+        if (empty($usersData)) {
+            return false;
+        }
+
+        //  Use the returned value to get the user
+        $userData = array_pop($usersData);
+        $email = $userData['Email'];
+
+        //  Update the item by removing the activation token
+        $this->client->updateItem([
+            'TableName' => $this->actorUsersTable,
+            'Key' => [
+                'Email' => [
+                    'S' => $email,
+                ],
+            ],
+            'UpdateExpression' => 'SET Password=:p REMOVE PasswordResetToken, PasswordResetExpiry',
+            'ExpressionAttributeValues'=> [
+                ':p' => [
+                    'S' => password_hash($password, PASSWORD_DEFAULT)
+                ]
+            ]
+        ]);
+
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function recordSuccessfulLogin(string $email, string $loginTime): void
     {
         $this->client->updateItem([
@@ -153,6 +195,31 @@ class ActorUsers implements ActorUsersInterface
             'ExpressionAttributeValues'=> [
                 ':ll' => [
                     'S' => $loginTime
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): void
+    {
+        $this->client->updateItem([
+            'TableName' => $this->actorUsersTable,
+            'Key' => [
+                'Email' => [
+                    'S' => $email,
+                ],
+            ],
+            'UpdateExpression' =>
+                'SET PasswordResetToken=:rt, PasswordResetExpiry=:re',
+            'ExpressionAttributeValues'=> [
+                ':rt' => [
+                    'S' => $resetToken
+                ],
+                ':re' => [
+                    'N' => (string) $resetExpiry
                 ]
             ]
         ]);

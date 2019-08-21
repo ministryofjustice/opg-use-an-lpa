@@ -49,6 +49,15 @@ interface ActorUsersInterface
     public function exists(string $email) : bool;
 
     /**
+     * Reset a password in the system using a reset token and the intended password
+     *
+     * @param string $resetToken
+     * @param string $password
+     * @return bool The password reset was successful or not
+     */
+    public function resetPassword(string $resetToken, string $password): bool;
+
+    /**
      * Records a successful login against the actor user
      *
      * @param string $email
@@ -61,7 +70,7 @@ interface ActorUsersInterface
      *
      * @param string $email
      * @param string $resetToken
-     * @param int $resetTtl Seconds till token expires
+     * @param int $resetExpiry Seconds till token expires
      */
-    public function recordPasswordResetRequest(string $email, string $resetToken, int $resetTtl): void;
+    public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): void;
 }
