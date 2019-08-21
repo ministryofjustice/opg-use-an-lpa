@@ -7,6 +7,7 @@ namespace Actor\Handler;
 use Actor\Form\CreateAccount;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
+use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
@@ -22,7 +23,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  * Class CreateAccountHandler
  * @package Actor\Handler
  */
-class CreateAccountHandler extends AbstractHandler
+class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
 

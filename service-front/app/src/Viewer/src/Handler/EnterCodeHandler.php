@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Viewer\Handler;
 
 use Common\Handler\AbstractHandler;
+use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session as SessionTrait;
 use Psr\Http\Message\ResponseInterface;
@@ -16,7 +17,7 @@ use Zend\Diactoros\Response\HtmlResponse;
  * Class EnterCodeHandler
  * @package Viewer\Handler
  */
-class EnterCodeHandler extends AbstractHandler
+class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
     use SessionTrait;
