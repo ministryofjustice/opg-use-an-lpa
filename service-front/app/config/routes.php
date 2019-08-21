@@ -58,6 +58,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     // User management
     $app->route('/forgot-password', Actor\Handler\PasswordResetPageHandler::class, ['GET', 'POST'], 'password-reset');
+    $app->get('/forgot-password/{token}', Actor\Handler\PasswordResetPageHandler::class, 'password-reset-token');
 
     // LPA management
     $app->route('/lpa/add-details', Actor\Handler\LpaAddHandler::class, ['GET', 'POST'], 'lpa.add');
