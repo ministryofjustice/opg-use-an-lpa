@@ -10,6 +10,8 @@ use App\Exception\CreationException;
 use App\Exception\ForbiddenException;
 use App\Exception\NotFoundException;
 use App\Exception\UnauthorizedException;
+use DateTime;
+use DateTimeInterface;
 use Exception;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 
@@ -82,7 +84,7 @@ class UserService
      * @param string $email
      * @param string $password
      * @return array
-     * @throws NotFoundException|ForbiddenException|UnauthorizedException
+     * @throws NotFoundException|ForbiddenException|UnauthorizedException|Exception
      */
     public function authenticate(string $email, string $password) : array
     {
@@ -96,7 +98,10 @@ class UserService
             throw new UnauthorizedException('User account not verified');
         }
 
-        $this->usersRepository->recordSuccessfulLogin($email);
+        $this->usersRepository->recordSuccessfulLogin(
+            $email,
+            (new DateTime('now'))->format(DateTimeInterface::ATOM)
+        );
 
         return $user;
     }

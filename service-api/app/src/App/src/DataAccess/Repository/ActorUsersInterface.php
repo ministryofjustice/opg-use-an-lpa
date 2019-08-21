@@ -52,6 +52,16 @@ interface ActorUsersInterface
      * Records a successful login against the actor user
      *
      * @param string $email
+     * @param string $loginTime An ATOM format datetime string
      */
-    public function recordSuccessfulLogin(string $email) : void;
+    public function recordSuccessfulLogin(string $email, string $loginTime) : void;
+
+    /**
+     * Records a reset token against an actor user account
+     *
+     * @param string $email
+     * @param string $resetToken
+     * @param int $resetTtl Seconds till token expires
+     */
+    public function recordPasswordResetRequest(string $email, string $resetToken, int $resetTtl): void;
 }

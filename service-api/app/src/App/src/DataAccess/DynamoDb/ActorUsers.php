@@ -139,10 +139,8 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function recordSuccessfulLogin(string $email): void
+    public function recordSuccessfulLogin(string $email, string $loginTime): void
     {
-        $loginTime = (new DateTime('now'))->format(DateTimeInterface::ATOM);
-
         $this->client->updateItem([
             'TableName' => $this->actorUsersTable,
             'Key' => [

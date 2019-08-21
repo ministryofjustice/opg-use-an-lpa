@@ -109,7 +109,14 @@ class UserServiceTest extends TestCase
 
         $repoProphecy->get('a@b.com')
             ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
-        $repoProphecy->recordSuccessfulLogin('a@b.com');
+        $repoProphecy->recordSuccessfulLogin('a@b.com', Argument::that(function($dateTime) {
+            $this->assertIsString($dateTime);
+
+            $date = new \DateTime($dateTime);
+            $this->assertInstanceOf(\DateTime::class, $date);
+
+            return true;
+        }));
 
         $us = new UserService($repoProphecy->reveal());
 
