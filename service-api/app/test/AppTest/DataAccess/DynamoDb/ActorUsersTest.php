@@ -15,7 +15,7 @@ use Prophecy\Argument;
 class ActorUsersTest extends TestCase
 {
     /** @test */
-    public function can_record_a_successful_login()
+    public function will_record_a_successful_login()
     {
         $date = (new DateTime('now'))->format(DateTimeInterface::ATOM);
 
@@ -39,7 +39,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function can_record_a_password_reset_request()
+    public function will_record_a_password_reset_request()
     {
         $time = time() + (60 * 60 * 24);
 
@@ -64,7 +64,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function can_reset_a_password_when_given_a_correct_reset_token()
+    public function will_reset_a_password_when_given_a_correct_reset_token()
     {
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
 
@@ -109,7 +109,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function cannot_reset_a_password_when_given_an_correct_reset_token()
+    public function will_not_reset_a_password_when_given_an_correct_reset_token()
     {
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
 
@@ -141,7 +141,7 @@ class ActorUsersTest extends TestCase
      * Pushing an array into the function formatted how you'd expect an AWS response to
      * look gets you back something that behaves correctly for our current purposes.
      *
-     * ```
+     * ```php
      * $result = createAWSResult([
      *   'Items' => [
      *     [
