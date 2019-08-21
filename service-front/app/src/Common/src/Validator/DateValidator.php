@@ -52,7 +52,7 @@ class DateValidator extends AbstractValidator
             return false;
         }
 
-        $parsedDate = $this->parseDateArray($value);
+        $parsedDate = $this->parseDateArray($value['day'], $value['month'], $value['year']);
 
         if (!$parsedDate instanceof DateTime) {
             $this->error(self::DATE_INVALID);
@@ -66,26 +66,33 @@ class DateValidator extends AbstractValidator
     /**
      * A parsed date will be returned if the value array represents a valid date value
      *
-     * @param array $value
-     * @return string|null
+     * @param int $day
+     * @param int $month
+     * @param int $year
+     * @return bool|DateTime|null
      */
-    protected function parseDateArray(array $value)
+    protected function parseDateArray($day, $month, $year)
     {
-        //  Validate the individual values in isolation
-        $dayValidator = new Regex('/\b(0?[1-9]|[12][0-9]|3[01])\b/');
-        $monthValidator = new Regex('/\b(0?[1-9]|1[0-2])\b/');
-        $yearValidator = new Regex('/\b([0-9]?[0-9]?[0-9]?[0-9])\b/');
+        if (is_numeric($day) && $day > 0
+            && is_numeric($month) && $month > 0
+            && is_numeric($year) && $year > 0) {
 
-        if ($dayValidator->isValid($value['day']) && $monthValidator->isValid($value['month']) && $yearValidator->isValid($value['year'])) {
-            //  Check that the values combined are a possible date
-            $format = 'Y-n-j';
-            $formattedDate = sprintf('%s-%s-%s', (int) $value['year'], (int) $value['month'], (int) $value['day']);
+            //  Validate the individual values in isolation
+            $dayValidator = new Regex('/\b(0?[1-9]|[12][0-9]|3[01])\b/');
+            $monthValidator = new Regex('/\b(0?[1-9]|1[0-2])\b/');
+            $yearValidator = new Regex('/\b([0-9]?[0-9]?[0-9]?[0-9])\b/');
 
-            $date = DateTime::createFromFormat($format, $formattedDate);
-            $derivedDate = $date->format($format);
+            if ($dayValidator->isValid($day) && $monthValidator->isValid($month) && $yearValidator->isValid($year)) {
+                //  Check that the values combined are a possible date
+                $format = 'Y-n-j';
+                $formattedDate = sprintf('%s-%s-%s', (int) $year, (int) $month, (int) $day);
 
-            if ($formattedDate == $derivedDate) {
-                return $date;
+                $date = DateTime::createFromFormat($format, $formattedDate);
+                $derivedDate = $date->format($format);
+
+                if ($formattedDate == $derivedDate) {
+                    return $date;
+                }
             }
         }
 

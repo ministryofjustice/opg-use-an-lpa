@@ -35,22 +35,22 @@ class DobValidator extends DateValidator
 
         if ($valid) {
             //  This can't fail if the parent validation has run successfully
-            $date = $this->parseDateArray($value);
+            $date = $this->parseDateArray($value['day'], $value['month'], $value['year']);
             $now = new DateTime();
 
             if ($date > $now) {
                 $this->error(self::AGE_NEGATIVE);
 
                 $valid = false;
-            }
+            } else {
+                //  Validate the age is 18
+                $then = $now->modify('-18 years');
 
-            //  Validate the age is 18
-            $then = $now->modify('-18 years');
+                if ($date > $then) {
+                    $this->error(self::AGE_TOO_YOUNG);
 
-            if ($date > $then) {
-                $this->error(self::AGE_TOO_YOUNG);
-
-                $valid = false;
+                    $valid = false;
+                }
             }
         }
 

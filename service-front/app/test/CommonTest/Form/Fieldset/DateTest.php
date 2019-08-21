@@ -2,15 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ActorTest\Form;
+namespace CommonTest\Form;
 
-use Common\Form\AbstractForm;
-use Common\Form\Element\Csrf;
 use Common\Form\Fieldset\Date;
 use PHPUnit\Framework\TestCase;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Form\Element\Text;
-use Zend\InputFilter\InputFilter;
 
 class DateTest extends TestCase
 {
