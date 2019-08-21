@@ -1,12 +1,16 @@
 <?php
 
-namespace Actor\Form\Fieldset;
+namespace Common\Form\Fieldset;
 
 use Zend\Form\Fieldset;
 
 /**
  * Class Date
- * @package Actor\Form\Fieldset
+ *
+ * This fieldset is only suitable for catching AD dates
+ * To validate this fieldset use the Common\Validator\DateValidator or any of it's descendant validators
+ *
+ * @package Common\Form\Fieldset
  */
 class Date extends Fieldset
 {
@@ -20,17 +24,17 @@ class Date extends Fieldset
         parent::__construct($name, $options);
 
         $this->add([
-            'name' => $this->getName() . '-day',
+            'name' => 'day',
             'type' => 'Text',
         ]);
 
         $this->add([
-            'name' => $this->getName() . '-month',
+            'name' => 'month',
             'type' => 'Text',
         ]);
 
         $this->add([
-            'name' => $this->getName() . '-year',
+            'name' => 'year',
             'type' => 'Text',
         ]);
     }

@@ -1,5 +1,5 @@
 {%- block form_open -%}
-    <form name="{{ name }}" method="post">
+    <form name="{{ form.getName() }}" method="post" action="{{ path() }}">
 {%- endblock form_open -%}
 
 
@@ -9,15 +9,18 @@
 
 
 {%- block form_element_simple -%}
-    {%- set name = element.getName() -%}
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
-        <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ name }}">
+        <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ element.getName() }}">
             {{ label | raw }}
         </label>
 
         {{- block('input_hint') -}}
 
-        {{ govuk_error(element) }}
+        {% if fieldset is not defined or fieldset is empty %}
+
+            {{ govuk_error(element) }}
+
+        {% endif %}
 
         {% if input_prefix is defined %}
 
@@ -27,8 +30,8 @@
 
         {% endif %}
 
-        <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}" id="{{ name }}"
-               name="{{ name }}" type="{{ type }}" value="{{ value }}" />
+        <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
+               id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}" />
     </div>
 {%- endblock form_element_simple -%}
 
@@ -67,10 +70,9 @@
 
 
 {%- block form_fieldset_date -%}
-    {%- set name = element.getName() -%}
-    <div class="govuk-form-group {{- block('form_group_error_class') -}}">
+    <div class="govuk-form-group {% if fieldset.getMessages() is not empty %}govuk-form-group--error{% endif %}">
 
-        <fieldset class="govuk-fieldset" aria-describedby="{{ name }}-hint" role="group">
+        <fieldset name="{{ fieldset.getName() }}" class="govuk-fieldset" aria-describedby="{{ fieldset.getName() }}-hint" role="group">
 
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                 <h1 class="govuk-fieldset__heading">
@@ -78,24 +80,22 @@
                 </h1>
             </legend>
 
-            {{- block('input_hint') -}}
+            {{ govuk_error(fieldset) }}
 
-            {{ govuk_error(element) }}
-
-            <div class="govuk-date-input" id="{{ name }}">
+            <div class="govuk-date-input" id="{{ fieldset.getName() }}">
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(element.get(name ~ '-day'), { 'label': 'Day', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }) }}
+                    {{ govuk_form_element(fieldset.get('day'), { 'label': 'Day', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
 
                 </div>
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(element.get(name ~ '-month'), { 'label': 'Month', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }) }}
+                    {{ govuk_form_element(fieldset.get('month'), { 'label': 'Month', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
 
                 </div>
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(element.get(name ~ '-year'), { 'label': 'Year', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-4', 'label_class': 'govuk-date-input__label'} }) }}
+                    {{ govuk_form_element(fieldset.get('year'), { 'label': 'Year', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-4', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
 
                 </div>
             </div>
@@ -145,7 +145,7 @@
 
 {%- block input_hint -%}
     {% if hint is defined %}
-        <span id="{{ name }}-hint" class="govuk-hint">
+        <span id="{{ element.getName() }}-hint" class="govuk-hint">
             {{ hint }}
         </span>
     {% endif %}

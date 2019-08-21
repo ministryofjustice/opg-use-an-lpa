@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Common\View\Twig;
 
-use Actor\Form\Fieldset\Date;
 use Common\Form\AbstractForm;
+use Common\Form\Fieldset\Date;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -61,7 +61,7 @@ class GovUKZendFormExtension extends AbstractExtension
         $template = $twigEnv->load('@partials/govuk_form.html.twig');
 
         return $template->renderBlock('form_open', [
-            'name' => $form->getName(),
+            'form' => $form,
         ]);
     }
 
@@ -84,13 +84,14 @@ class GovUKZendFormExtension extends AbstractExtension
      * @param Environment $twigEnv
      * @param ElementInterface $element
      * @param array $options
+     * @param FieldsetInterface|null $fieldset
      * @return string
      * @throws \Throwable
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function formElement(Environment $twigEnv, ElementInterface $element, array $options = []) : string
+    public function formElement(Environment $twigEnv, ElementInterface $element, array $options = [], FieldsetInterface $fieldset = null) : string
     {
         $elementBlock = $this->getBlockForElement($element);
 
@@ -104,6 +105,7 @@ class GovUKZendFormExtension extends AbstractExtension
             array_merge(
                 [
                     'element' => $element,
+                    'fieldset' => $fieldset,
                 ],
                 $options
             )
@@ -133,7 +135,7 @@ class GovUKZendFormExtension extends AbstractExtension
         return $template->renderBlock($elementBlock,
             array_merge(
                 [
-                    'element' => $fieldset,
+                    'fieldset' => $fieldset,
                 ],
                 $options
             )

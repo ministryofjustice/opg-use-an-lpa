@@ -10,13 +10,10 @@ use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Common\Service\User\UserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
@@ -55,13 +52,24 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
         $form = new LpaAdd($this->getCsrfGuard($request));
 
         if ($request->getMethod() === 'POST') {
+            $form->setData($request->getParsedBody());
 
-            //TODO
+            if ($form->isValid()) {
 
+                //  TODO - Do nothing for now - a confirmation screen will be added later
+                // @codeCoverageIgnoreStart
+                echo 'OK - validation has passed but the LPA has not been added';
+                echo '<br/>';
+                echo '<br/>';
+                echo '<a href="/lpa/add-details">Return to add screen</a>';
+                die();
+                // @codeCoverageIgnoreStop
+
+            }
         }
 
         return new HtmlResponse($this->renderer->render('actor::lpa-add', [
-            'form' => $form,
+            'form' => $form->prepare(),
             'user' => $this->getUser($request)
         ]));
     }

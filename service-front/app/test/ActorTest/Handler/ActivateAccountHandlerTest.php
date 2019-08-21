@@ -8,6 +8,7 @@ use Common\Service\User\UserService;
 use Actor\Handler\ActivateAccountHandler;
 use PHPUnit\Framework\TestCase;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Psr\Http\Message\ServerRequestInterface;
@@ -61,5 +62,23 @@ class ActivateAccountHandlerTest extends TestCase
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
+    }
+
+    public function testHandleActivateFailed()
+    {
+        $handler = new ActivateAccountHandler(
+            $this->templateRendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->userServiceProphecy->reveal()
+        );
+
+        $this->urlHelperProphecy->generate('home', [], [])
+            ->willReturn('/');
+
+        $this->userServiceProphecy->activate('tok123')->willReturn(false);
+
+        $response = $handler->handle($this->requestProphecy->reveal());
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 }

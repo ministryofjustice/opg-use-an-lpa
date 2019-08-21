@@ -7,14 +7,14 @@ namespace Actor\Handler;
 use Actor\Form\CreateAccount;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
+use Common\Handler\CsrfGuardAware;
+use Common\Handler\Traits\CsrfGuard;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -23,8 +23,10 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  * Class CreateAccountHandler
  * @package Actor\Handler
  */
-class CreateAccountHandler extends AbstractHandler
+class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
 {
+    use CsrfGuard;
+
     /** @var UserService */
     private $userService;
 
@@ -63,9 +65,7 @@ class CreateAccountHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        /** @var CsrfGuardInterface $guard */
-        $guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
-        $form = new CreateAccount($guard);
+        $form = new CreateAccount($this->getCsrfGuard($request));
 
         if ($request->getMethod() === 'POST') {
             //  Check to see if this a post to register an account or to resend the activation token
