@@ -224,6 +224,10 @@ locals {
     },
     "environment": [
     {
+      "name": "DYNAMODB_TABLE_ACTOR_LPA_CODES",
+      "value": "${aws_dynamodb_table.actor_lpa_codes_table.name}"
+    },
+    {
       "name": "DYNAMODB_TABLE_ACTOR_USERS",
       "value": "${aws_dynamodb_table.actor_users_table.name}"
     },

@@ -1,3 +1,24 @@
+resource "aws_dynamodb_table" "actor_lpa_codes_table" {
+  name         = "${terraform.workspace}-LpaActorCodes"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LpaActorCode"
+
+  attribute {
+    name = "LpaActorCode"
+    type = "S"
+  }
+
+  point_in_time_recovery {
+    enabled = true
+  }
+
+  tags = "${local.default_tags}"
+
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
 resource "aws_dynamodb_table" "actor_users_table" {
   name         = "${terraform.workspace}-ActorUsers"
   billing_mode = "PAY_PER_REQUEST"
