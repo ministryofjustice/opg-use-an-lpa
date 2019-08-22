@@ -548,6 +548,8 @@ orbs:
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
                 behave
+          - store_artifacts:
+              path: failed_scenarios_screenshots/
           - run:
               name: Remove CircleCI ingress to environment
               command: |
