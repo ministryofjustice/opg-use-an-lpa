@@ -547,7 +547,7 @@ orbs:
                 echo $TF_WORKSPACE
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
                 echo $SHORT_HASH
-                behave
+                behave -v --logging-level DEBUG
           - store_artifacts:
               path: features/failed_scenarios_screenshots
           - run:
