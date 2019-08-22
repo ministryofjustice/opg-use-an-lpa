@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\PasswordReset;
+use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
+use Common\Handler\CsrfGuardAware;
+use Common\Handler\Traits\CsrfGuard;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Psr\Http\Message\ResponseInterface;
@@ -16,8 +19,10 @@ use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
-class PasswordResetPageHandler extends AbstractHandler
+class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
 {
+    use CsrfGuard;
+
     /** @var UserService */
     private $userService;
 
@@ -57,9 +62,7 @@ class PasswordResetPageHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        /** @var CsrfGuardInterface $guard */
-        $guard = $request->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE);
-        $form = new PasswordReset($guard);
+        $form = new PasswordReset($this->getCsrfGuard($request));
 
         if ($request->getMethod() === 'POST') {
             $form->setData($request->getParsedBody());
@@ -67,8 +70,19 @@ class PasswordResetPageHandler extends AbstractHandler
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                $resetToken = $this->userService->requestPasswordReset($data['email']);
+                try {
+                    $resetToken = $this->userService->requestPasswordReset($data['email']);
 
+                    $passwordResetPath = $this->urlHelper->generate('password-reset-token', [
+                        'token' => $resetToken,
+                    ]);
+
+                    $passwordResetUrl = $this->serverUrlHelper->generate($passwordResetPath);
+
+                    $this->emailClient->sendPasswordResetEmail($data['email'], $passwordResetUrl);
+                } catch(ApiException $ae) {
+                    // the password reset request returned a 404 indicating the user did not exist
+                }
 
                 return new HtmlResponse($this->renderer->render('actor::password-reset-done',[
                     'email' => $data['email']

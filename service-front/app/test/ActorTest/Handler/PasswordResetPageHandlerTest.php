@@ -6,6 +6,7 @@ namespace ActorTest;
 
 use Actor\Form\PasswordReset;
 use Actor\Handler\PasswordResetPageHandler;
+use Common\Exception\ApiException;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use PHPUnit\Framework\TestCase;
@@ -199,6 +200,51 @@ class PasswordResetPageHandlerTest extends TestCase
 
         $this->userServiceProphecy->requestPasswordReset('a@b.com')
             ->willReturn('passwordResetAABBCCDDEE');
+
+        $this->urlHelperProphecy->generate('password-reset-token', [ 'token' => 'passwordResetAABBCCDDEE' ])
+            ->willReturn('/password-reset/passwordResetAABBCCDDEE');
+
+        $this->serverUrlHelperProphecy->generate('/password-reset/passwordResetAABBCCDDEE')
+            ->willReturn('http://localhost:9002/password-reset/passwordResetAABBCCDDEE');
+
+        $this->templateRendererProphecy->render('actor::password-reset-done', new CallbackToken(function($options) {
+            $this->assertIsArray($options);
+            $this->assertArrayHasKey('email', $options);
+            $this->assertIsString($options['email']);
+
+            return true;
+        }))
+            ->willReturn('');
+
+        //  Set up the handler
+        $handler = new PasswordResetPageHandler(
+            $this->templateRendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->userServiceProphecy->reveal(),
+            $this->emailClientProphecy->reveal(),
+            $this->serverUrlHelperProphecy->reveal()
+        );
+
+        $response = $handler->handle($this->requestProphecy->reveal());
+
+        $this->assertInstanceOf(HtmlResponse::class, $response);
+    }
+
+    /** @test */
+    public function when_actor_not_found_a_html_response_is_given_email_not_sent()
+    {
+        $this->requestProphecy->getMethod()
+            ->willReturn('POST');
+
+        $this->requestProphecy->getParsedBody()
+            ->willReturn([
+                '__csrf' => self::CSRF_CODE,
+                'email' => 'a@b.com',
+                'email_confirm' => 'a@b.com'
+            ]);
+
+        $this->userServiceProphecy->requestPasswordReset('a@b.com')
+            ->willThrow(new ApiException('User not found'));
 
         $this->templateRendererProphecy->render('actor::password-reset-done', new CallbackToken(function($options) {
             $this->assertIsArray($options);
