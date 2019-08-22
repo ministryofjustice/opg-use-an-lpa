@@ -549,7 +549,7 @@ orbs:
                 echo $SHORT_HASH
                 behave
           - store_artifacts:
-              path: failed_scenarios_screenshots/
+              path: features/failed_scenarios_screenshots
           - run:
               name: Remove CircleCI ingress to environment
               command: |
