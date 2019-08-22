@@ -64,4 +64,29 @@ class LpaAddHandlerTest extends TestCase
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
+
+    public function testPostInvalidHtmlResponse()
+    {
+        $this->requestProphecy->getMethod()
+            ->willReturn('POST');
+
+        $this->requestProphecy->getParsedBody()
+            ->willReturn([
+                '__csrf' => self::CSRF_CODE,
+                'passcode' => '',
+                'reference_number' => '',
+                'dob' => [
+                    'day' => '',
+                    'month' => '',
+                    'year' => '',
+                ],
+            ]);
+
+        //  Set up the handler
+        $handler = new LpaAddHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal());
+
+        $response = $handler->handle($this->requestProphecy->reveal());
+
+        $this->assertInstanceOf(HtmlResponse::class, $response);
+    }
 }

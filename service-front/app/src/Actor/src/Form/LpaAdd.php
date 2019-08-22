@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Actor\Form;
 
-use Actor\Form\Fieldset\Date;
 use Common\Form\AbstractForm;
+use Common\Form\Fieldset\Date;
+use Common\Validator\DobValidator;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
+use Zend\Filter\StringTrim;
 use Zend\InputFilter\InputFilterProviderInterface;
+use Zend\Validator\NotEmpty;
+use Zend\Validator\Regex;
+use Zend\Validator\StringLength;
 
 /**
  * Class LpaAdd
@@ -44,7 +49,66 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
     public function getInputFilterSpecification() : array
     {
         return [
-            //TODO
+            'passcode' => [
+                'filters'  => [
+                    ['name' => StringTrim::class],
+                ],
+                'validators' => [
+                    [
+                        'name'                   => NotEmpty::class,
+                        'break_chain_on_failure' => true,
+                        'options'                => [
+                            'message'  => 'Enter your one-time passcode',
+                        ],
+                    ],
+                    [
+                        'name'    => StringLength::class,
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min'      => 12,
+                            'max'      => 12,
+                            'message'  => 'Your passcode must be 12 characters long',
+                        ],
+                    ],
+                    [
+                        'name'    => Regex::class,
+                        'options' => [
+                            'pattern' => '/[a-zA-Z0-9]{12}/',
+                            'message' => 'Your passcode must only include letters and numbers',
+                        ],
+                    ],
+                ]
+            ],
+            'reference_number' => [
+                'filters'  => [
+                    ['name' => StringTrim::class],
+                ],
+                'validators' => [
+                    [
+                        'name'                   => NotEmpty::class,
+                        'break_chain_on_failure' => true,
+                        'options'                => [
+                            'message'  => 'Enter a reference number',
+                        ],
+                    ],
+                    [
+                        'name'    => StringLength::class,
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min'      => 12,
+                            'max'      => 12,
+                            'message'  => 'The reference number must be 12 numbers long',
+                        ],
+                    ],
+                ]
+            ],
+            'dob' => [
+                'validators' => [
+                    [
+                        'name' => DobValidator::class,
+                    ],
+                ]
+            ],
         ];
     }
 }
