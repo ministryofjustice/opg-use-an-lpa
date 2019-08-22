@@ -203,9 +203,13 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): void
+    public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): array
     {
-        $this->client->updateItem([
+        if (!$this->exists($email)) {
+            throw new NotFoundException("User not found");
+        }
+
+        $user = $this->client->updateItem([
             'TableName' => $this->actorUsersTable,
             'Key' => [
                 'Email' => [
@@ -221,7 +225,10 @@ class ActorUsers implements ActorUsersInterface
                 ':re' => [
                     'N' => (string) $resetExpiry
                 ]
-            ]
+            ],
+            'ReturnValues' => 'ALL_NEW'
         ]);
+
+        return $this->getData($user);
     }
 }

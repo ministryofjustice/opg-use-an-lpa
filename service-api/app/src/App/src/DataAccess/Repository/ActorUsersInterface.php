@@ -71,6 +71,8 @@ interface ActorUsersInterface
      * @param string $email
      * @param string $resetToken
      * @param int $resetExpiry Seconds till token expires
+     * @return array The worked on actor user record
+     * @throws NotFoundException
      */
-    public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): void;
+    public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): array;
 }

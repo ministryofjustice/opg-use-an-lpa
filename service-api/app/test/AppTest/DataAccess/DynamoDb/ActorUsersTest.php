@@ -41,22 +41,54 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function will_record_a_password_reset_request()
     {
+        $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
+        $dynamoDbClientProphecy
+            ->getItem(Argument::that(function(array $data) {
+                $this->assertIsArray($data);
+
+                // we don't care what the array looks like as it's specific to the AWS api and may change
+                // we do care that the data *at least* contains the items we want to affect
+                $this->assertStringContainsString('users-table', serialize($data));
+                $this->assertStringContainsString('test@example.com', serialize($data));
+
+                return true;
+            }))
+            ->willReturn($this->createAWSResult([
+                'Item' => [
+                    'Email' => [
+                        'S' => 'test@example.com',
+                    ],
+                ]
+            ]));
+
         $time = time() + (60 * 60 * 24);
 
-        $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
-        $dynamoDbClientProphecy->updateItem(Argument::that(function(array $data) use ($time) {
-            $this->assertIsArray($data);
+        $dynamoDbClientProphecy
+            ->updateItem(Argument::that(function(array $data) use ($time) {
+                $this->assertIsArray($data);
 
-            // we don't care what the array looks like as it's specific to the AWS api and may change
-            // we do care that the data *at least* contains the items we want to affect
-            $this->assertStringContainsString('users-table', serialize($data));
-            $this->assertStringContainsString('test@example.com', serialize($data));
-            $this->assertStringContainsString('resetTokenAABBCCDDEE', serialize($data));
-            $this->assertStringContainsString((string) $time, serialize($data));
+                // we don't care what the array looks like as it's specific to the AWS api and may change
+                // we do care that the data *at least* contains the items we want to affect
+                $this->assertStringContainsString('users-table', serialize($data));
+                $this->assertStringContainsString('test@example.com', serialize($data));
+                $this->assertStringContainsString('resetTokenAABBCCDDEE', serialize($data));
+                $this->assertStringContainsString((string) $time, serialize($data));
 
-            return true;
-        }))
-            ->shouldBeCalled();
+                return true;
+            }))
+            ->willReturn($this->createAWSResult([
+                'Item' => [
+                    'Email' => [
+                        'S' => 'test@example.com',
+                    ],
+                    'PasswordResetToken' => [
+                        'S' => 'resetTokenAABBCCDDEE',
+                    ],
+                    'PasswordResetExpiry' => [
+                        'N' => '12345678912',
+                    ],
+                ]
+            ]));
 
         $actorRepo = new ActorUsers($dynamoDbClientProphecy->reveal(), 'users-table');
 
