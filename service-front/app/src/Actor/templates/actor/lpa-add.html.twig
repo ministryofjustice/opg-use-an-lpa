@@ -16,11 +16,15 @@
 
             <div class="govuk-grid-column-two-thirds">
 
+                {{ govuk_error_summary(form) }}
+
                 <h1 class="govuk-heading-l">Add a lasting power of attorney</h1>
 
                 <p class="govuk-body">You'll need the details from the letter we sent you when the LPA was registered.</p>
 
                 {{ govuk_form_open(form) }}
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
 
                     {{ govuk_form_element(form.get('passcode'), { 'label': 'One-time passcode', 'hint': 'Passcodes are 13 characters long and start with a C', 'input_prefix': 'C - ', 'attr' : {'class': 'govuk-input--width-10'} }) }}
 
