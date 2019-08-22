@@ -47,11 +47,9 @@ def step_impl(context, help_link):
 
 @when('the share code form is submitted')
 def step_impl(context):
-    button_element = context.browser.find_element_by_xpath(
-        "//button[@class='govuk-button']")
-    button_element.click()
-    # share_code_form = context.browser.find_element_by_css_selector('form[name="share_code"]')
-    # share_code_form.submit()
+    share_code_form = context.browser.find_element_by_css_selector(
+        'form[name="share_code"]')
+    share_code_form.submit()
 
 
 # THENS
