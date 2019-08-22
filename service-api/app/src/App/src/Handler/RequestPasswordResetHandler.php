@@ -8,9 +8,10 @@ use App\Exception\BadRequestException;
 use App\Service\User\UserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
 
-class RequestPasswordResetHandler
+class RequestPasswordResetHandler implements RequestHandlerInterface
 {
     /**
      * @var UserService
