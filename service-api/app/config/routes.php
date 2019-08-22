@@ -40,6 +40,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/v1/user', App\Handler\UserHandler::class, 'user.get');
     $app->post('/v1/user', App\Handler\UserHandler::class, 'user.create');
     $app->patch('/v1/user-activation', App\Handler\UserActivateHandler::class, 'user.activate');
+    $app->patch('/v1/request-password-reset', App\Handler\RequestPasswordResetHandler::class, 'user.activate');
 
     $app->patch('/v1/auth', App\Handler\AuthHandler::class, 'user.auth');
 };

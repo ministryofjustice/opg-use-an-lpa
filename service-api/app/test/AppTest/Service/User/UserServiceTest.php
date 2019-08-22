@@ -166,4 +166,21 @@ class UserServiceTest extends TestCase
         $this->expectException(UnauthorizedException::class);
         $return = $us->authenticate('a@b.com', self::PASS);
     }
+
+    /** @test */
+    public function will_generate_and_record_a_password_reset_token()
+    {
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+
+        $repoProphecy->recordPasswordResetRequest('a@b.com', Argument::type('string'), Argument::type('int'))
+            ->shouldBeCalled();
+
+        $us = new UserService($repoProphecy->reveal());
+
+        $return = $us->requestPasswordReset('a@b.com');
+
+        $this->assertIsArray($return);
+        $this->assertArrayHasKey('PasswordResetToken', $return);
+        $this->assertIsString($return['PasswordResetToken']);
+    }
 }
