@@ -172,8 +172,12 @@ class UserServiceTest extends TestCase
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
 
-        $repoProphecy->recordPasswordResetRequest('a@b.com', Argument::type('string'), Argument::type('int'))
-            ->shouldBeCalled();
+        $repoProphecy
+            ->recordPasswordResetRequest('a@b.com', Argument::type('string'), Argument::type('int'))
+            ->willReturn([
+                'Email' => 'a@b.com',
+                'PasswordResetToken' => 'resetTokenAABBCCDDEE'
+            ]);
 
         $us = new UserService($repoProphecy->reveal());
 

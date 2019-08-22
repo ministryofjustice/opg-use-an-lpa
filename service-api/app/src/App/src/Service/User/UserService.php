@@ -120,11 +120,6 @@ class UserService
         $resetToken = Base64UrlSafe::encode(random_bytes(32));
         $resetExpiry = time() + (60 * 60 * 24);
 
-        $this->usersRepository->recordPasswordResetRequest($email, $resetToken, $resetExpiry);
-
-        return [
-            'Email'               => $email,
-            'PasswordResetToken'  => $resetToken
-        ];
+        return $this->usersRepository->recordPasswordResetRequest($email, $resetToken, $resetExpiry);
     }
 }
