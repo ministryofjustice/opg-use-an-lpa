@@ -158,9 +158,12 @@ class ActorUsersTest extends TestCase
      */
     private function createAWSResult(array $items = []): Result
     {
-        $awsResult = $this->createMock(Result::class);
-
+        // wrap our array in a basic iterator
         $iterator = new \ArrayIterator($items);
+
+        // using PHPUnit's mock as opposed to Prophecy since Prophecy doesn't support
+        // "return by reference" which is what `foreach` expects.
+        $awsResult = $this->createMock(Result::class);
 
         $awsResult->expects($this->once())
             ->method('offsetExists')
