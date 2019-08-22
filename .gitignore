@@ -6,3 +6,4 @@ geckodriver.log
 .vscode/
 **__pycache__
 **/cluster_config.json
+features/failed_scenarios_screenshots/
