@@ -22,6 +22,11 @@ trait DynamoHydrateTrait
             return $this->extractData($result['Item'], $dateFields);
         }
 
+        // updateItem calls return an AWS Result object with "Attributes"
+        if (isset($result['Attributes'])) {
+            return $this->extractData($result['Attributes'], $dateFields);
+        }
+
         return [];
     }
 
