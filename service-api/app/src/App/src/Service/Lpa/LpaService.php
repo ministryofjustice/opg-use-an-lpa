@@ -14,27 +14,35 @@ use DateTime;
 class LpaService
 {
     /**
+     * @var Repository\ActorLpaCodesInterface
+     */
+    private $actorLpaCodesRepository;
+
+    /**
      * @var Repository\ViewerCodesInterface
      */
-    private $codesRepository;
+    private $viewerCodesRepository;
 
     /**
      * @var Repository\ViewerCodeActivityInterface
      */
-    private $activityRepository;
+    private $viewerCodeActivityRepository;
 
     /**
      * LpaService constructor.
-     * @param Repository\ViewerCodesInterface $codesRepository
-     * @param Repository\ViewerCodeActivityInterface $activityRepository
+     * @param Repository\ViewerCodesInterface $viewerCodesRepository
+     * @param Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository
+     * @param Repository\ActorLpaCodesInterface $actorLpaCodesRepository
      */
     public function __construct(
-        Repository\ViewerCodesInterface $codesRepository,
-        Repository\ViewerCodeActivityInterface $activityRepository
+        Repository\ViewerCodesInterface $viewerCodesRepository,
+        Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
+        Repository\ActorLpaCodesInterface $actorLpaCodesRepository
     )
     {
-        $this->codesRepository = $codesRepository;
-        $this->activityRepository = $activityRepository;
+        $this->viewerCodesRepository = $viewerCodesRepository;
+        $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
+        $this->actorLpaCodesRepository = $actorLpaCodesRepository;
     }
 
     /**
@@ -65,16 +73,68 @@ class LpaService
      */
     public function getByCode(string $shareCode) : array
     {
-        $viewerCodeData = $this->codesRepository->get($shareCode);
+        $viewerCodeData = $this->viewerCodesRepository->get($shareCode);
 
         if ($viewerCodeData['Expires'] < new DateTime()) {
             throw new GoneException('Share code expired');
         }
 
         //  Record the lookup in the activity table
-        $this->activityRepository->recordSuccessfulLookupActivity($viewerCodeData['ViewerCode']);
+        $this->viewerCodeActivityRepository->recordSuccessfulLookupActivity($viewerCodeData['ViewerCode']);
 
         return $this->getById($viewerCodeData['SiriusId']);
+    }
+
+    /**
+     * Search for an LPA actor code
+     *
+     * @param string $code
+     * @param string $uid
+     * @param string $dob
+     * @return array
+     */
+    public function search(string $code, string $uid, string $dob)
+    {
+        try {
+            $actorLpaCodeData = $this->actorLpaCodesRepository->get($code);
+
+            if ($uid != $actorLpaCodeData['SiriusId']) {
+                throw new NotFoundException();
+            }
+
+            $lpaData = $this->getById($uid);
+
+            if (empty($lpaData)) {
+                throw new NotFoundException();
+            }
+
+            //  Compare the date of birth given for the donor or attorneys
+            //TODO - Use the specific actor type here? (e.g. Attorney 1, Donor, etc)
+            if (isset($lpaData['donor']['dob'])) {
+                $donorDob = new DateTime($lpaData['donor']['dob']);
+
+                if ($donorDob->format('Y-m-d') == $dob) {
+                    return $lpaData;
+                }
+            }
+
+            if (isset($lpaData['attorneys']) && is_array($lpaData['attorneys'])) {
+                foreach ($lpaData['attorneys'] as $attorney) {
+                    if (isset($attorney['dob'])) {
+                        $attorneyDob = new DateTime($attorney['dob']);
+
+                        if ($attorneyDob->format('Y-m-d') == $dob) {
+                            return $lpaData;
+                        }
+                    }
+                }
+            }
+
+            throw new NotFoundException();
+        } catch (NotFoundException $nfe) {
+            //  Repackage the NotFoundException to remove the code based exception
+            throw new NotFoundException('No LPA found');
+        }
     }
 
     /**
