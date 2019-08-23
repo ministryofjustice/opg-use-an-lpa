@@ -109,7 +109,14 @@ class UserServiceTest extends TestCase
 
         $repoProphecy->get('a@b.com')
             ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
-        $repoProphecy->recordSuccessfulLogin('a@b.com');
+        $repoProphecy->recordSuccessfulLogin('a@b.com', Argument::that(function($dateTime) {
+            $this->assertIsString($dateTime);
+
+            $date = new \DateTime($dateTime);
+            $this->assertInstanceOf(\DateTime::class, $date);
+
+            return true;
+        }));
 
         $us = new UserService($repoProphecy->reveal());
 
@@ -158,5 +165,26 @@ class UserServiceTest extends TestCase
 
         $this->expectException(UnauthorizedException::class);
         $return = $us->authenticate('a@b.com', self::PASS);
+    }
+
+    /** @test */
+    public function will_generate_and_record_a_password_reset_token()
+    {
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+
+        $repoProphecy
+            ->recordPasswordResetRequest('a@b.com', Argument::type('string'), Argument::type('int'))
+            ->willReturn([
+                'Email' => 'a@b.com',
+                'PasswordResetToken' => 'resetTokenAABBCCDDEE'
+            ]);
+
+        $us = new UserService($repoProphecy->reveal());
+
+        $return = $us->requestPasswordReset('a@b.com');
+
+        $this->assertIsArray($return);
+        $this->assertArrayHasKey('PasswordResetToken', $return);
+        $this->assertIsString($return['PasswordResetToken']);
     }
 }

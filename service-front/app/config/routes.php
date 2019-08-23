@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Actor\Handler\LoginPageHandler;
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Application;
 use Zend\Expressive\MiddlewareFactory;
@@ -45,12 +46,22 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
 {
     $app->get('/', Actor\Handler\HomePageHandler::class, 'home');
+
+    // User creation
     $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');
     $app->get('/create-account-success', Actor\Handler\CreateAccountSuccessHandler::class, 'create-account-success');
-    $app->route('/lpa/add-details', Actor\Handler\LpaAddHandler::class, ['GET', 'POST'], 'lpa.add');
+    $app->get('/activate-account/{token}', Actor\Handler\ActivateAccountHandler::class, 'activate-account');
+
+    // User auth
     $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
     $app->get('/logout', Actor\Handler\LogoutPageHandler::class, 'logout');
-    $app->get('/activate-account/{token}', Actor\Handler\ActivateAccountHandler::class, 'activate-account');
+
+    // User management
+    $app->route('/forgot-password', Actor\Handler\PasswordResetPageHandler::class, ['GET', 'POST'], 'password-reset');
+    $app->get('/forgot-password/{token}', Actor\Handler\PasswordResetPageHandler::class, 'password-reset-token');
+
+    // LPA management
+    $app->route('/lpa/add-details', Actor\Handler\LpaAddHandler::class, ['GET', 'POST'], 'lpa.add');
 };
 
 switch (getenv('CONTEXT')){

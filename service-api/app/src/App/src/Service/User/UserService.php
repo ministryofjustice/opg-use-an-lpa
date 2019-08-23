@@ -10,10 +10,13 @@ use App\Exception\CreationException;
 use App\Exception\ForbiddenException;
 use App\Exception\NotFoundException;
 use App\Exception\UnauthorizedException;
+use DateTime;
+use DateTimeInterface;
 use Exception;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 
 use function password_verify;
+use function random_bytes;
 
 /**
  * Class UserService
@@ -82,7 +85,7 @@ class UserService
      * @param string $email
      * @param string $password
      * @return array
-     * @throws NotFoundException|ForbiddenException|UnauthorizedException
+     * @throws NotFoundException|ForbiddenException|UnauthorizedException|Exception
      */
     public function authenticate(string $email, string $password) : array
     {
@@ -96,8 +99,27 @@ class UserService
             throw new UnauthorizedException('User account not verified');
         }
 
-        $this->usersRepository->recordSuccessfulLogin($email);
+        $this->usersRepository->recordSuccessfulLogin(
+            $email,
+            (new DateTime('now'))->format(DateTimeInterface::ATOM)
+        );
 
         return $user;
+    }
+
+    /**
+     * Generates a password reset token and ensures it's stored
+     * against the actor record alongside its expiry time.
+     *
+     * @param string $email
+     * @return array
+     * @throws Exception
+     */
+    public function requestPasswordReset(string $email): array
+    {
+        $resetToken = Base64UrlSafe::encode(random_bytes(32));
+        $resetExpiry = time() + (60 * 60 * 24);
+
+        return $this->usersRepository->recordPasswordResetRequest($email, $resetToken, $resetExpiry);
     }
 }

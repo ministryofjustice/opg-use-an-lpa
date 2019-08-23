@@ -17,6 +17,7 @@ class EmailClient
      */
     const TEMPLATE_ID_ACCOUNT_ACTIVATION               = 'd897fe13-a0c3-4c50-aa5b-3f0efacda5dc';
     const TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED = '4af9acf0-f2c1-4ecc-8441-0e2173890463';
+    const TEMPLATE_ID_PASSWORD_RESET                   = 'd32af4a6-49ad-4338-a2c2-dcb5801a40fc';
 
     /**
      * @var NotifyClient
@@ -53,5 +54,18 @@ class EmailClient
     public function sendAlreadyRegisteredEmail(string $recipient)
     {
         $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED);
+    }
+
+    /**
+     * Send a password reset request email to a user
+     *
+     * @param string $recipient A valid email address
+     * @param string $passwordResetUrl
+     */
+    public function sendPasswordResetEmail(string $recipient, string $passwordResetUrl)
+    {
+        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_PASSWORD_RESET, [
+            'password-reset-url' => $passwordResetUrl,
+        ]);
     }
 }
