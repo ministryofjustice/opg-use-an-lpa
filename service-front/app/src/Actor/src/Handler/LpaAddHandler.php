@@ -90,6 +90,8 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
                         return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
                             'user' => $this->getUser($request)
                         ]));
+                    } else {
+                        throw $aex;
                     }
                 }
             }
