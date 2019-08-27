@@ -86,8 +86,10 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
 
                 } catch (ApiException $aex) {
                     if ($aex->getCode() == StatusCodeInterface::STATUS_NOT_FOUND) {
-echo 'NOT FOUND!!';
-die();
+                        //  Show LPA not found page
+                        return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
+                            'user' => $this->getUser($request)
+                        ]));
                     }
                 }
             }
