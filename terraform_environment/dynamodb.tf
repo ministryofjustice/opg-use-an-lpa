@@ -1,10 +1,10 @@
 resource "aws_dynamodb_table" "actor_lpa_codes_table" {
-  name         = "${terraform.workspace}-LpaActorCodes"
+  name         = "${terraform.workspace}-ActorLpaCodes"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "LpaActorCode"
+  hash_key     = "ActorLpaCode"
 
   attribute {
-    name = "LpaActorCode"
+    name = "ActorLpaCode"
     type = "S"
   }
 
