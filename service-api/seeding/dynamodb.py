@@ -33,31 +33,48 @@ else:
         aws_session_token=session['Credentials']['SessionToken']
     )
 
-table = dynamodb.Table(os.environ['DYNAMODB_TABLE_VIEWER_CODES'])
+viewerCodesTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_VIEWER_CODES'])
 
-items = [
+viewerCodes = [
     {
         'ViewerCode': "123456789012",
-        'SiriusId': "12345678901",
+        'SiriusId': "123456789012",
         'Expires': "2020-01-01 12:34:56",
     },
     {
         'ViewerCode': "987654321098",
-        'SiriusId': "98765432109",
+        'SiriusId': "987654321098",
         'Expires': "2020-01-01 12:34:56",
     },
     {
         'ViewerCode': "222222222222",
-        'SiriusId': "22222222222",
+        'SiriusId': "222222222222",
         'Expires': "2019-01-01 12:34:56",
     },
 ]
 
-for i in items:
-    table.put_item(
+for i in viewerCodes:
+    viewerCodesTable.put_item(
        Item=i,
     )
-    response = table.get_item(
+    response = viewerCodesTable.get_item(
         Key={'ViewerCode': i['ViewerCode']}
+    )
+    print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
+
+actorLpaCodesTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_ACTOR_LPA_CODES'])
+
+actorLpaCodes = [
+    {
+        'ActorLpaCode': "123456789012",
+    },
+]
+
+for i in actorLpaCodes:
+    actorLpaCodesTable.put_item(
+       Item=i,
+    )
+    response = actorLpaCodesTable.get_item(
+        Key={'ActorLpaCode': i['ActorLpaCode']}
     )
     print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))

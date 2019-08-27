@@ -15,11 +15,11 @@ class LpaHandlerTest extends TestCase
 {
     public function testHandleForId()
     {
-        $uid = '12345678901';
+        $uid = '123456789012';
         $shareCode = null;
 
         $expectedData = [
-            'id'        => '12345678901',
+            'id'        => '123456789012',
             'type'      => 'property-and-financial',
             'donor'     => [],
             'attorneys' => [],
@@ -59,7 +59,7 @@ class LpaHandlerTest extends TestCase
         $shareCode = '123456789012';
 
         $expectedData = [
-            'id'        => '12345678901',
+            'id'        => '123456789012',
             'type'      => 'property-and-financial',
             'donor'     => [],
             'attorneys' => [],

@@ -22,7 +22,7 @@ class LpaSearchHandlerTest extends TestCase
         ];
 
         $expectedData = [
-            'id'        => '12345678901',
+            'id'        => '123456789012',
             'type'      => 'property-and-financial',
             'donor'     => [],
             'attorneys' => [],

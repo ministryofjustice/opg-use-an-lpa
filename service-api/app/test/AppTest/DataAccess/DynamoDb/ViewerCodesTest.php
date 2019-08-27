@@ -30,7 +30,7 @@ class ViewerCodesTest extends TestCase
 
         $expectedData = [
             'ViewerCode' => $testCode,
-            'SiriusId'   => '12345678901',
+            'SiriusId'   => '123456789012',
             'Expires'    => new DateTime('2019-01-01 12:34:56'),
         ];
 
