@@ -98,7 +98,7 @@ class LpaService
         try {
             $actorLpaCodeData = $this->actorLpaCodesRepository->get($code);
 
-            if ($uid != $actorLpaCodeData['SiriusId']) {
+            if ($uid != $actorLpaCodeData['ActorLpaCode']) {
                 throw new NotFoundException();
             }
 

@@ -80,6 +80,9 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
                     echo sprintf('OK - validation has passed but the LPA (ID: %s) has not been added', $lpaData->id);
                     echo '<br/>';
                     echo '<br/>';
+                    print_r($lpaData);
+                    echo '<br/>';
+                    echo '<br/>';
                     echo '<a href="/lpa/add-details">Return to add screen</a>';
                     die();
                     // @codeCoverageIgnoreStop
