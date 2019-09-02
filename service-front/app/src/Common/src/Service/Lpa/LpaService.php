@@ -65,13 +65,6 @@ class LpaService
     /**
      * Search for an LPA using credentials
      *
-     * @param string $on
-     * @return ArrayObject|null
-     * @throws \Http\Client\Exception
-     */
-
-
-    /**
      * @param string $passcode
      * @param string $referenceNumber
      * @param string $dob

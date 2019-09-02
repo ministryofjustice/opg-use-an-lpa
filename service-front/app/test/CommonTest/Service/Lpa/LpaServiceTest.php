@@ -11,25 +11,25 @@ use ArrayObject;
 
 class LpaServiceTest extends TestCase
 {
-    public function testConstructor()
+    /**
+     * Client
+     */
+    private $apiClientProphecy;
+
+    public function setUp()
     {
-        $apiClientProphecy = $this->prophesize(Client::class);
-
-        $service = new LpaService($apiClientProphecy->reveal());
-
-        $this->assertInstanceOf(LpaService::class, $service);
+        $this->apiClientProphecy = $this->prophesize(Client::class);
     }
 
     public function testGetLpa()
     {
-        $apiClientProphecy = $this->prophesize(Client::class);
-        $apiClientProphecy->httpGet('/v1/lpa-by-code/123456789012')
+        $this->apiClientProphecy->httpGet('/v1/lpa-by-code/123456789012')
             ->willReturn([
                 'id'      => 123456789012,
                 'isValid' => true,
             ]);
 
-        $service = new LpaService($apiClientProphecy->reveal());
+        $service = new LpaService($this->apiClientProphecy->reveal());
 
         $lpa = $service->getLpaByCode('1234-5678-9012');
 
@@ -40,11 +40,10 @@ class LpaServiceTest extends TestCase
 
     public function testGetLpaNotFound()
     {
-        $apiClientProphecy = $this->prophesize(Client::class);
-        $apiClientProphecy->httpGet('/v1/lpa-by-code/123412341234')
+        $this->apiClientProphecy->httpGet('/v1/lpa-by-code/123412341234')
             ->willReturn(null);
 
-        $service = new LpaService($apiClientProphecy->reveal());
+        $service = new LpaService($this->apiClientProphecy->reveal());
 
         $lpa = $service->getLpaByCode('1234-1234-1234');
 
@@ -54,14 +53,13 @@ class LpaServiceTest extends TestCase
 
     public function testGetLpaById()
     {
-        $apiClientProphecy = $this->prophesize(Client::class);
-        $apiClientProphecy->httpGet('/v1/lpa/123456789012')
+        $this->apiClientProphecy->httpGet('/v1/lpa/123456789012')
             ->willReturn([
                 'id'      => 123456789012,
                 'isValid' => true,
             ]);
 
-        $service = new LpaService($apiClientProphecy->reveal());
+        $service = new LpaService($this->apiClientProphecy->reveal());
 
         $lpa = $service->getLpaById(123456789012);
 
@@ -70,4 +68,30 @@ class LpaServiceTest extends TestCase
         $this->assertEquals(true, $lpa->isValid);
     }
 
+    public function testSearch()
+    {
+        $passcode = '123456789012';
+        $referenceNumber = '123456789012';
+        $dob = '1980-01-01';
+
+        $params = [
+            'code' => $passcode,
+            'uid'  => $referenceNumber,
+            'dob'  => $dob,
+        ];
+
+        $this->apiClientProphecy->httpGet('/v1/lpa-search', $params)
+            ->willReturn([
+                'id'      => 123456789012,
+                'isValid' => true,
+            ]);
+
+        $service = new LpaService($this->apiClientProphecy->reveal());
+
+        $lpa = $service->search($passcode, $referenceNumber, $dob);
+
+        $this->assertInstanceOf(ArrayObject::class, $lpa);
+        $this->assertEquals(123456789012, $lpa->id);
+        $this->assertEquals(true, $lpa->isValid);
+    }
 }

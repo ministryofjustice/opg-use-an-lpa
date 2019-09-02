@@ -104,10 +104,6 @@ class LpaService
 
             $lpaData = $this->getById($uid);
 
-            if (empty($lpaData)) {
-                throw new NotFoundException();
-            }
-
             //  Compare the date of birth given for the donor or attorneys
             //TODO - Use the specific actor type here? (e.g. Attorney 1, Donor, etc)
             if (isset($lpaData['donor']['dob'])) {
