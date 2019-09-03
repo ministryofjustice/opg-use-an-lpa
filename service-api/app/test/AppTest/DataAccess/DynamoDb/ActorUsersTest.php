@@ -27,7 +27,8 @@ class ActorUsersTest extends TestCase
         $this->dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
     }
 
-    public function testAdd()
+    /** @test */
+    public function will_add_a_new_user()
     {
         $email = 'a@b.com';
         $password = 'P@55word';
@@ -85,7 +86,8 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($expectedData, $data);
     }
 
-    public function testAddNotFound()
+    /** @test */
+    public function will_add_a_new_user_but_then_fail_to_find()
     {
         $email = 'a@b.com';
         $password = 'P@55word';
@@ -137,7 +139,8 @@ class ActorUsersTest extends TestCase
         $actorRepo->add($email, $password, $activationToken, $activationTtl);
     }
 
-    public function testGet()
+    /** @test */
+    public function will_get_a_user_record()
     {
         $email = 'a@b.com';
 
@@ -167,7 +170,8 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($expectedData, $data);
     }
 
-    public function testGetNotFound()
+    /** @test */
+    public function will_fail_to_get_a_user_record()
     {
         $email = 'c@d.com';
 
@@ -194,7 +198,8 @@ class ActorUsersTest extends TestCase
         $actorRepo->get($email);
     }
 
-    public function testActivate()
+    /** @test */
+    public function will_activate_a_user_account()
     {
         $email = 'a@b.com';
         $activationToken = 'activateTok123';
@@ -273,7 +278,8 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($expectedData, $data);
     }
 
-    public function testActivateNotFound()
+    /** @test */
+    public function will_fail_to_activate_a_user_not_found()
     {
         $activationToken = 'activateTok123';
 
@@ -308,7 +314,8 @@ class ActorUsersTest extends TestCase
         $actorRepo->activate($activationToken);
     }
 
-    public function testExists()
+    /** @test */
+    public function will_find_a_user_exists()
     {
         $email = 'a@b.com';
 
@@ -336,7 +343,8 @@ class ActorUsersTest extends TestCase
         $this->assertTrue($actorRepo->exists($email));
     }
 
-    public function testNotExists()
+    /** @test */
+    public function will_not_find_a_user()
     {
         $email = 'c@d.com';
 
