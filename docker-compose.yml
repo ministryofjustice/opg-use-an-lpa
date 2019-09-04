@@ -166,6 +166,10 @@ services:
   # ---------------------------
   # Local Development
 
+  gateway:
+    environment:
+      LAMBDAS_JSON_PROVIDER_PATH: ${PWD}/test-data/api-gateway.json
+
   localstack:
     image: localstack/localstack
     ports:

@@ -5,11 +5,18 @@ OPG Use My LPA: Managed by opg-org-infra &amp; Terraform
 
 ## Setup
 
+Clone the following two repositories into the same base directory:
+* https://github.com/ministryofjustice/opg-use-an-lpa
+* https://github.com/ministryofjustice/opg-sirius-api-gateway
+
 All commands assume a working directory of `opg-use-my-lpa`.
 
 To bring up the local environment
 ```bash
-docker-compose up
+docker-compose -f docker-compose.yml \
+-f ../opg-sirius-api-gateway/docker-compose.yml \
+-f ../opg-sirius-api-gateway/docker-compose-integration.yml up
+
 ```
 
 If you plan on developing the application you should also enable development mode.
