@@ -6,6 +6,7 @@ namespace ActorTest\Handler;
 
 use Actor\Form\LpaAdd;
 use Actor\Handler\LpaAddHandler;
+use Common\Service\Lpa\LpaService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument\Token\CallbackToken;
 use Psr\Http\Message\ServerRequestInterface;
@@ -41,6 +42,8 @@ class LpaAddHandlerTest extends TestCase
 
         $this->authenticatorProphecy = $this->prophesize(AuthenticationInterface::class);
 
+        $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
+
         $csrfProphecy = $this->prophesize(CsrfGuardInterface::class);
         $csrfProphecy->generateToken()
             ->willReturn(self::CSRF_CODE);
@@ -58,7 +61,7 @@ class LpaAddHandlerTest extends TestCase
             ->willReturn('GET');
 
         //  Set up the handler
-        $handler = new LpaAddHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal());
+        $handler = new LpaAddHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
@@ -83,7 +86,7 @@ class LpaAddHandlerTest extends TestCase
             ]);
 
         //  Set up the handler
-        $handler = new LpaAddHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal());
+        $handler = new LpaAddHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
