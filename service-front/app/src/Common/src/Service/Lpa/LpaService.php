@@ -63,6 +63,31 @@ class LpaService
     }
 
     /**
+     * Search for an LPA using credentials
+     *
+     * @param string $passcode
+     * @param string $referenceNumber
+     * @param string $dob
+     * @return ArrayObject|null
+     */
+    public function search(string $passcode, string $referenceNumber, string $dob) : ?ArrayObject
+    {
+        $data = [
+            'code' => $passcode,
+            'uid'  => $referenceNumber,
+            'dob'  => $dob,
+        ];
+
+        $lpaData = $this->apiClient->httpGet('/v1/lpa-search', $data);
+
+        if (is_array($lpaData)) {
+            $lpaData = $this->parseLpaData($lpaData);
+        }
+
+        return $lpaData;
+    }
+
+    /**
      * @param array $data
      * @return ArrayObject
      */

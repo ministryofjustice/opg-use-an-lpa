@@ -8,6 +8,7 @@ namespace Actor;
  * The configuration provider for the Actor module
  *
  * @see https://docs.zendframework.com/zend-component-installer/
+ * @codeCoverageIgnore
  */
 class ConfigProvider
 {

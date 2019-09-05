@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace AppTest\DataAccess\DynamoDb;
 
-use App\DataAccess\DynamoDb\ViewerCodeActivity;
-use App\DataAccess\DynamoDb\ViewerCodeActivityFactory;
+use App\DataAccess\DynamoDb\ActorLpaCodes;
+use App\DataAccess\DynamoDb\ActorLpaCodesFactory;
 use Aws\DynamoDb\DynamoDbClient;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Exception;
 
-class ViewerCodeActivityFactoryTest extends TestCase
+class ActorLpaCodesFactoryTest extends TestCase
 {
     public function testValidConfig()
     {
@@ -24,14 +24,14 @@ class ViewerCodeActivityFactoryTest extends TestCase
         $containerProphecy->get('config')->willReturn([
             'repositories' => [
                 'dynamodb' => [
-                    'viewer-activity-table' => 'test-table'
+                    'actor-lpa-codes-table' => 'test-table'
                 ]
             ]
         ]);
 
-        $factory = new ViewerCodeActivityFactory();
+        $factory = new ActorLpaCodesFactory();
         $repo = $factory($containerProphecy->reveal());
-        $this->assertInstanceOf(ViewerCodeActivity::class, $repo);
+        $this->assertInstanceOf(ActorLpaCodes::class, $repo);
     }
 
     public function testInvalidConfig()
@@ -44,10 +44,10 @@ class ViewerCodeActivityFactoryTest extends TestCase
 
         $containerProphecy->get('config')->willReturn([]);
 
-        $factory = new ViewerCodeActivityFactory();
+        $factory = new ActorLpaCodesFactory();
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Viewer Activity table configuration not present');
+        $this->expectExceptionMessage('Actor LPA Codes table configuration not present');
 
         $factory($containerProphecy->reveal());
     }

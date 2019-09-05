@@ -53,7 +53,7 @@ class ActorUsers implements ActorUsersInterface
         try {
             return $this->get($email);
         } catch(NotFoundException $nfe) {
-            throw new CreationException('Unable to retrieve newly created actor from database', null, $nfe);
+            throw new CreationException('Unable to retrieve newly created actor from database', [], $nfe);
         }
     }
 
@@ -107,7 +107,7 @@ class ActorUsers implements ActorUsersInterface
         $email = $userData['Email'];
 
         //  Update the item by removing the activation token
-        $result = $this->client->updateItem([
+        $this->client->updateItem([
             'TableName' => $this->actorUsersTable,
             'Key' => [
                 'Email' => [
