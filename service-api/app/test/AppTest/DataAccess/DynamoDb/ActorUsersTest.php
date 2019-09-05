@@ -35,13 +35,6 @@ class ActorUsersTest extends TestCase
         $activationToken = 'actok123';
         $activationTtl = time() + 3600;
 
-        $expectedData = [
-            'Email'           => $email,
-            'Password'        => $password,
-            'ActivationToken' => $activationToken,
-            'ExpiresTTL'      => (string) $activationTtl,
-        ];
-
         $this->dynamoDbClientProphecy->putItem(Argument::that(function ($data) use ($email, $password, $activationToken, $activationTtl) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -77,13 +70,31 @@ class ActorUsersTest extends TestCase
 
                 return true;
             }))
-            ->willReturn($this->generateAwsResult($expectedData));
+            ->willReturn($this->createAWSResult([
+                'Item' => [
+                    'Email' => [
+                        'S' => $email,
+                    ],
+                    'Password' => [
+                        'S' => $password,
+                    ],
+                    'ActivationToken' => [
+                        'S' => $activationToken,
+                    ],
+                    'ExpiresTTL' => [
+                        'N' => $activationTtl,
+                    ],
+                ],
+            ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $data = $actorRepo->add($email, $password, $activationToken, $activationTtl);
+        $result = $actorRepo->add($email, $password, $activationToken, $activationTtl);
 
-        $this->assertEquals($expectedData, $data);
+        $this->assertEquals($email, $result['Email']);
+        $this->assertEquals($password, $result['Password']);
+        $this->assertEquals($activationToken, $result['ActivationToken']);
+        $this->assertEquals($activationTtl, $result['ExpiresTTL']);
     }
 
     /** @test */
@@ -129,7 +140,9 @@ class ActorUsersTest extends TestCase
 
                 return true;
             }))
-            ->willReturn($this->generateAwsResult([]));
+            ->willReturn($this->createAWSResult([
+                'Item' => []
+            ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
@@ -144,10 +157,6 @@ class ActorUsersTest extends TestCase
     {
         $email = 'a@b.com';
 
-        $expectedData = [
-            'Email' => $email,
-        ];
-
         $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($email) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -161,13 +170,19 @@ class ActorUsersTest extends TestCase
 
                 return true;
             }))
-            ->willReturn($this->generateAwsResult($expectedData));
+            ->willReturn($this->createAWSResult([
+                'Item' => [
+                    'Email' => [
+                        'S' => $email,
+                    ],
+                ],
+            ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $data = $actorRepo->get($email);
+        $result = $actorRepo->get($email);
 
-        $this->assertEquals($expectedData, $data);
+        $this->assertEquals($email, $result['Email']);
     }
 
     /** @test */
@@ -188,7 +203,9 @@ class ActorUsersTest extends TestCase
 
                 return true;
             }))
-            ->willReturn($this->generateAwsResult([]));
+            ->willReturn($this->createAWSResult([
+                'Item' => []
+            ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
@@ -211,8 +228,6 @@ class ActorUsersTest extends TestCase
             'ExpiresTTL'      => (string) time(),
         ];
 
-        $expectedDataItems = [$expectedData];
-
         $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($activationToken) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -234,7 +249,24 @@ class ActorUsersTest extends TestCase
 
                 return true;
             }))
-            ->willReturn($this->generateAwsResultCollection($expectedDataItems));
+            ->willReturn($this->createAWSResult([
+                'Items' => [
+                    [
+                        'Email' => [
+                            'S' => $email,
+                        ],
+                        'Password' => [
+                            'S' => 'H@shedP@55word',
+                        ],
+                        'ActivationToken' => [
+                            'S' => $activationToken,
+                        ],
+                        'ExpiresTTL' => [
+                            'N' => time(),
+                        ],
+                    ]
+                ]
+            ]));
 
         $this->dynamoDbClientProphecy->updateItem(Argument::that(function(array $data) use ($email) {
                 $this->assertArrayHasKey('TableName', $data);
@@ -269,13 +301,31 @@ class ActorUsersTest extends TestCase
 
                 return true;
             }))
-            ->willReturn($this->generateAwsResult($expectedData));
+            ->willReturn($this->createAWSResult([
+                'Item' => [
+                    'Email' => [
+                        'S' => $email,
+                    ],
+                    'Password' => [
+                        'S' => 'H@shedP@55word',
+                    ],
+                    'ActivationToken' => [
+                        'S' => $activationToken,
+                    ],
+                    'ExpiresTTL' => [
+                        'N' => time(),
+                    ],
+                ]
+            ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $data = $actorRepo->activate($activationToken);
+        $result = $actorRepo->activate($activationToken);
 
-        $this->assertEquals($expectedData, $data);
+        $this->assertEquals($email, $result['Email']);
+        $this->assertEquals('H@shedP@55word', $result['Password']);
+        $this->assertEquals($activationToken, $result['ActivationToken']);
+        $this->assertEquals(time(), $result['ExpiresTTL']);
     }
 
     /** @test */
@@ -304,7 +354,9 @@ class ActorUsersTest extends TestCase
 
                 return true;
             }))
-            ->willReturn($this->generateAwsResultCollection([]));
+            ->willReturn($this->createAWSResult([
+                'Items' => [],
+            ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
@@ -319,10 +371,6 @@ class ActorUsersTest extends TestCase
     {
         $email = 'a@b.com';
 
-        $expectedData = [
-            'Email' => $email,
-        ];
-
         $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($email) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -336,7 +384,13 @@ class ActorUsersTest extends TestCase
 
                 return true;
             }))
-            ->willReturn($this->generateAwsResult($expectedData));
+            ->willReturn($this->createAWSResult([
+                'Item' => [
+                    'Email' => [
+                        'S' => $email,
+                    ],
+                ],
+            ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
@@ -361,7 +415,9 @@ class ActorUsersTest extends TestCase
 
                 return true;
             }))
-            ->willReturn($this->generateAwsResult([]));
+            ->willReturn($this->createAWSResult([
+                'Item' => []
+            ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
@@ -545,55 +601,5 @@ class ActorUsersTest extends TestCase
         $result = $actorRepo->resetPassword('badResetTokenAABBCCDDEE', 'passwordHash');
 
         $this->assertFalse($result);
-    }
-
-    /**
-     * Function to mock the AWS result so that calling a Dynamo instance isn't necessary
-     *
-     * General guidance is "Don't mock interfaces you don't control" but pending a big rewrite
-     * of the DynamoDB layer this is going to have to do.
-     *
-     * Pushing an array into the function formatted how you'd expect an AWS response to
-     * look gets you back something that behaves correctly for our current purposes.
-     *
-     * ```php
-     * $result = createAWSResult([
-     *   'Items' => [
-     *     [
-     *       'Email' => [
-     *         'S' => 'test@example.com',
-     *       ],
-     *       'PasswordResetToken' => [
-     *         'S' => 'resetTokenAABBCCDDEE',
-     *       ],
-     *     ]
-     *   ]
-     * ])
-     * ```
-     */
-    private function createAWSResult(array $items = []): Result
-    {
-        // wrap our array in a basic iterator
-        $iterator = new \ArrayIterator($items);
-
-        // using PHPUnit's mock as opposed to Prophecy since Prophecy doesn't support
-        // "return by reference" which is what `foreach` expects.
-        $awsResult = $this->createMock(Result::class);
-
-        $awsResult
-            ->method('offsetExists')
-            ->with($this->isType('string'))
-            ->will($this->returnCallback(function($index) use ($iterator) {
-                return $iterator->offsetExists($index);
-            }));
-
-        $awsResult
-            ->method('offsetGet')
-            ->with($this->isType('string'))
-            ->will($this->returnCallback(function($index) use ($iterator) {
-                return $iterator->offsetGet($index);
-            }));
-
-        return $awsResult;
     }
 }

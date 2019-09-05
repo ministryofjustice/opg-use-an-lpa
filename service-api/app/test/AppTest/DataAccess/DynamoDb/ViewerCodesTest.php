@@ -28,12 +28,6 @@ class ViewerCodesTest extends TestCase
     {
         $testCode = '123456789012';
 
-        $expectedData = [
-            'ViewerCode' => $testCode,
-            'SiriusId'   => '123456789012',
-            'Expires'    => new DateTime('2019-01-01 12:34:56'),
-        ];
-
         $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($testCode) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -47,13 +41,27 @@ class ViewerCodesTest extends TestCase
 
                 return true;
             }))
-            ->willReturn($this->generateAwsResult($expectedData));
+            ->willReturn($this->createAWSResult([
+                'Item' => [
+                    'ViewerCode' => [
+                        'S' => $testCode,
+                    ],
+                    'SiriusId' => [
+                        'S' => '123456789012',
+                    ],
+                    'Expires' => [
+                        'S' => '2019-01-01 12:34:56',
+                    ],
+                ]
+            ]));
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $data = $repo->get($testCode);
+        $result = $repo->get($testCode);
 
-        $this->assertEquals($expectedData, $data);
+        $this->assertEquals($testCode, $result['ViewerCode']);
+        $this->assertEquals('123456789012', $result['SiriusId']);
+        $this->assertEquals(new DateTime('2019-01-01 12:34:56'), $result['Expires']);
     }
 
     public function testGetNotFound()
@@ -73,7 +81,9 @@ class ViewerCodesTest extends TestCase
 
                 return true;
             }))
-            ->willReturn($this->generateAwsResult([]));
+            ->willReturn($this->createAWSResult([
+                'Item' => []
+            ]));
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 

@@ -7,37 +7,56 @@ use DateTime;
 
 trait GenerateAwsResultTrait
 {
-    private function generateAwsResult(array $data) : Result
+    /**
+     * Function to mock the AWS result so that calling a Dynamo instance isn't necessary
+     *
+     * General guidance is "Don't mock interfaces you don't control" but pending a big rewrite
+     * of the DynamoDB layer this is going to have to do.
+     *
+     * Pushing an array into the function formatted how you'd expect an AWS response to
+     * look gets you back something that behaves correctly for our current purposes.
+     *
+     * ```php
+     * $result = createAWSResult([
+     *   'Items' => [
+     *     [
+     *       'Email' => [
+     *         'S' => 'test@example.com',
+     *       ],
+     *       'PasswordResetToken' => [
+     *         'S' => 'resetTokenAABBCCDDEE',
+     *       ],
+     *     ]
+     *   ]
+     * ])
+     * ```
+     *
+     * @param array $items
+     * @return Result
+     */
+    private function createAWSResult(array $items = []): Result
     {
-        return new Result([
-            'Item' => $this->parseToAwsItemArray($data)
-        ]);
-    }
+        // wrap our array in a basic iterator
+        $iterator = new \ArrayIterator($items);
 
-    private function generateAwsResultCollection(array $dataItems) : Result
-    {
-        //  Reformat the data array and set in an AWS response
-        foreach ($dataItems as $idx => $data) {
-            $dataItems[$idx] = $this->parseToAwsItemArray($data);
-        }
+        // using PHPUnit's mock as opposed to Prophecy since Prophecy doesn't support
+        // "return by reference" which is what `foreach` expects.
+        $awsResult = $this->createMock(Result::class);
 
-        return new Result([
-            'Items' => $dataItems,
-        ]);
-    }
+        $awsResult
+            ->method('offsetExists')
+            ->with($this->isType('string'))
+            ->will($this->returnCallback(function($index) use ($iterator) {
+                return $iterator->offsetExists($index);
+            }));
 
-    private function parseToAwsItemArray(array $data) : array
-    {
-        foreach ($data as $field => $value) {
-            if ($value instanceof DateTime) {
-                $value = $value->format('Y-m-d H:i:s');
-            }
+        $awsResult
+            ->method('offsetGet')
+            ->with($this->isType('string'))
+            ->will($this->returnCallback(function($index) use ($iterator) {
+                return $iterator->offsetGet($index);
+            }));
 
-            $data[$field] = [
-                (is_numeric($value) ? 'N' : 'S') => $value,
-            ];
-        }
-
-        return $data;
+        return $awsResult;
     }
 }

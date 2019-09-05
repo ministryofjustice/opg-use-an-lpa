@@ -28,10 +28,6 @@ class ActorLpaCodesTest extends TestCase
     {
         $testCode = '123456789012';
 
-        $expectedData = [
-            'ActorLpaCode' => $testCode,
-        ];
-
         $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($testCode) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -45,13 +41,19 @@ class ActorLpaCodesTest extends TestCase
 
                 return true;
             }))
-            ->willReturn($this->generateAwsResult($expectedData));
+            ->willReturn($this->createAWSResult([
+                'Item' => [
+                    'ActorLpaCode' => [
+                        'S' => $testCode,
+                    ],
+                ],
+            ]));
 
         $repo = new ActorLpaCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $data = $repo->get($testCode);
+        $result = $repo->get($testCode);
 
-        $this->assertEquals($expectedData, $data);
+        $this->assertEquals($testCode, $result['ActorLpaCode']);
     }
 
     public function testGetNotFound()
@@ -71,7 +73,9 @@ class ActorLpaCodesTest extends TestCase
 
                 return true;
             }))
-            ->willReturn($this->generateAwsResult([]));
+            ->willReturn($this->createAWSResult([
+                'Item' => []
+            ]));
 
         $repo = new ActorLpaCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
