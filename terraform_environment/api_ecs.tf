@@ -132,6 +132,8 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
 
     resources = [
+      "${aws_dynamodb_table.actor_lpa_codes_table.arn}",
+      "${aws_dynamodb_table.actor_lpa_codes_table.arn}/index/*",
       "${aws_dynamodb_table.actor_users_table.arn}",
       "${aws_dynamodb_table.actor_users_table.arn}/index/*",
       "${aws_dynamodb_table.viewer_codes_table.arn}",
@@ -223,6 +225,10 @@ locals {
         }
     },
     "environment": [
+    {
+      "name": "DYNAMODB_TABLE_ACTOR_LPA_CODES",
+      "value": "${aws_dynamodb_table.actor_lpa_codes_table.name}"
+    },
     {
       "name": "DYNAMODB_TABLE_ACTOR_USERS",
       "value": "${aws_dynamodb_table.actor_users_table.name}"

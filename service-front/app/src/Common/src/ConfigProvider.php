@@ -14,6 +14,7 @@ use Zend;
  * The configuration provider for the Common module
  *
  * @see https://docs.zendframework.com/zend-component-installer/
+ * @codeCoverageIgnore
  */
 class ConfigProvider
 {

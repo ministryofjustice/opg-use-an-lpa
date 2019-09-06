@@ -54,7 +54,7 @@ workflows:
 
       - hold-for-destruction:
           name: hold_env_for_destruction
-          type: approval 
+          type: approval
           requires: [dev_run_behave_tests]
           filters:
             branches:
@@ -353,7 +353,7 @@ orbs:
 
       codecov_php-unit_upload:
         #
-        # Upload all php-unit test results 
+        # Upload all php-unit test results
         #   to Codecov.
         #
         executor: python
@@ -363,7 +363,7 @@ orbs:
               at: build
           - run:
               name: Upload to Codecov
-              command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN || echo 'Codecov upload failed'                                
+              command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN || echo 'Codecov upload failed'
       #----------------------------------------------------
       # Terraform
 
@@ -500,6 +500,7 @@ orbs:
               command: |
                 sudo pip3 install boto3
                 export AWS_ACCOUNT_ID=$(cat /tmp/cluster_config.json | jq .account_id | xargs)
+                export DYNAMODB_TABLE_ACTOR_LPA_CODES=$(cat /tmp/cluster_config.json | jq .actor_lpa_codes_table | xargs)
                 export DYNAMODB_TABLE_VIEWER_CODES=$(cat /tmp/cluster_config.json | jq .viewer_codes_table | xargs)
                 python service-api/seeding/dynamodb.py
 
@@ -538,7 +539,7 @@ orbs:
                 if [ "${TF_WORKSPACE}" != "production" ]; then
                   python features/ci_ingress.py /tmp/cluster_config.json --add
                 fi
-                
+
           - run:
               name: Run suite
               command: |
