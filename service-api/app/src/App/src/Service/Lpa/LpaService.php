@@ -55,8 +55,15 @@ class LpaService
     public function getById(string $lpaId) : array
     {
         //  TODO - Remove the use of mock data when connected to Sirius gateway
-        foreach ($this->lpaDatasets as $lpaDataset) {
-            if (isset($lpaDataset['id']) && $lpaDataset['id'] == $lpaId) {
+        //  For now load the data from the local json file
+        $data = file_get_contents(__DIR__ . '/lpas-gateway.json');
+        $lpaDatasets = json_decode($data, true);
+
+        foreach ($lpaDatasets as $lpaDataset) {
+            //  Filter dashes out of the Sirius Uid before comparison
+            $siriusUid = str_replace('-', '', $lpaDataset['uId']);
+
+            if ($siriusUid == $lpaId) {
                 return $lpaDataset;
             }
         }
@@ -82,7 +89,7 @@ class LpaService
         //  Record the lookup in the activity table
         $this->viewerCodeActivityRepository->recordSuccessfulLookupActivity($viewerCodeData['ViewerCode']);
 
-        return $this->getById($viewerCodeData['SiriusId']);
+        return $this->getById($viewerCodeData['SiriusUid']);
     }
 
     /**
@@ -98,32 +105,34 @@ class LpaService
         try {
             $actorLpaCodeData = $this->actorLpaCodesRepository->get($code);
 
-            if ($uid != $actorLpaCodeData['ActorLpaCode']) {
+            if ($uid != $actorLpaCodeData['SiriusUid']) {
                 throw new NotFoundException();
             }
 
             $lpaData = $this->getById($uid);
 
-            //  Compare the date of birth given for the donor or attorneys
-            //TODO - Use the specific actor type here? (e.g. Attorney 1, Donor, etc)
-            if (isset($lpaData['donor']['dob'])) {
-                $donorDob = new DateTime($lpaData['donor']['dob']);
+            //  Use the actor sirius Uid and dob provided to confirm that this LPA data should be returned
+            $actorSiriusUid = $actorLpaCodeData['ActorSiriusUid'];
 
-                if ($donorDob->format('Y-m-d') == $dob) {
-                    return $lpaData;
+            //  Try to find actor data based on the Uid
+            $actorData = [];
+
+            if (isset($lpaData['donor']['uId']) && str_replace('-', '', $lpaData['donor']['uId']) == $actorSiriusUid) {
+                $actorData = $lpaData['donor'];
+            } elseif (isset($lpaData['attorneys']) && is_array($lpaData['attorneys'])) {
+                foreach ($lpaData['attorneys'] as $attorney) {
+                    if (isset($attorney['uId']) && str_replace('-', '', $attorney['uId']) == $actorSiriusUid) {
+                        $actorData = $attorney;
+                    }
                 }
             }
 
-            if (isset($lpaData['attorneys']) && is_array($lpaData['attorneys'])) {
-                foreach ($lpaData['attorneys'] as $attorney) {
-                    if (isset($attorney['dob'])) {
-                        $attorneyDob = new DateTime($attorney['dob']);
+            //  Compare the date of birth for the actor
+            if (!empty($actorData)
+                && isset($actorData['dob'])
+                && $actorData['dob'] == $dob) {
 
-                        if ($attorneyDob->format('Y-m-d') == $dob) {
-                            return $lpaData;
-                        }
-                    }
-                }
+                return $lpaData;
             }
 
             throw new NotFoundException();
@@ -132,128 +141,4 @@ class LpaService
             throw new NotFoundException('No LPA found');
         }
     }
-
-    /**
-     * TODO - Mock LPA data....to be removed when Sirius connectivity is established
-     *
-     * @var array
-     */
-    private $lpaDatasets = [
-        [
-            'id' => '123456789012',
-            'caseNumber' => '787640393837',
-            'type' => 'property-and-financial',
-            'donor' => [
-                'name' => [
-                    'title' => 'Mr',
-                    'first' => 'Jordan',
-                    'last' => 'Johnson',
-                ],
-                'dob' => '1980-01-01T00:00:00+00:00',
-                'address' => [
-                    'address1' => '1 High Street',
-                    'address2' => 'Hampton',
-                    'address3' => 'Wessex',
-                    'postcode' => 'LH1 7QQ',
-                ],
-            ],
-            'attorneys' => [
-                [
-                    'name' => [
-                        'title' => 'Mr',
-                        'first' => 'Peter',
-                        'last' => 'Smith',
-                    ],
-                    'dob' => '1984-02-14T00:00:00+00:00',
-                    'address' => [
-                        'address1' => '1 High Street',
-                        'address2' => 'Hampton',
-                        'address3' => 'Wessex',
-                        'postcode' => 'LH1 7QQ',
-                    ],
-                ],
-                [
-                    'name' => [
-                        'title' => 'Miss',
-                        'first' => 'Celia',
-                        'last' => 'Smith',
-                    ],
-                    'dob' => '1988-11-12T00:00:00+00:00',
-                    'address' => [
-                        'address1' => '1 Avenue Road',
-                        'address2' => 'Great Hampton',
-                        'address3' => 'Wessex',
-                        'postcode' => 'LH4 8PU',
-                    ],
-                ],
-            ],
-            'decisions' => [
-                'how' => 'jointly',
-                'when' => 'no-capacity',
-            ],
-            'preferences' => false,
-            'instructions' => false,
-            'dateDonorSigned' => '2017-02-25T00:00:00+00:00',
-            'dateRegistration' => '2017-04-15T00:00:00+00:00',
-            'dateLastConfirmedStatus' => '2019-04-22T00:00:00+00:00',
-        ],
-        [
-            'id' => '987654321098',
-            'caseNumber' => '787640393837',
-            'type' => 'property-and-financial',
-            'donor' => [
-                'name' => [
-                    'title' => 'Mr',
-                    'first' => 'Jordan',
-                    'last' => 'Johnson',
-                ],
-                'dob' => '1980-01-01T00:00:00+00:00',
-                'address' => [
-                    'address1' => '1 High Street',
-                    'address2' => 'Hampton',
-                    'address3' => 'Wessex',
-                    'postcode' => 'LH1 7QQ',
-                ],
-            ],
-            'attorneys' => [
-                [
-                    'name' => [
-                        'title' => 'Mr',
-                        'first' => 'Peter',
-                        'last' => 'Smith',
-                    ],
-                    'dob' => '1984-02-14T00:00:00+00:00',
-                    'address' => [
-                        'address1' => '1 High Street',
-                        'address2' => 'Hampton',
-                        'address3' => 'Wessex',
-                        'postcode' => 'LH1 7QQ',
-                    ],
-                ],
-                [
-                    'name' => [
-                        'title' => 'Miss',
-                        'first' => 'Celia',
-                        'last' => 'Smith',
-                    ],
-                    'dob' => '1988-11-12T00:00:00+00:00',
-                    'address' => [
-                        'address1' => '1 Avenue Road',
-                        'address2' => 'Great Hampton',
-                        'address3' => 'Wessex',
-                        'postcode' => 'LH4 8PU',
-                    ],
-                ],
-            ],
-            'decisions' => [
-                'how' => 'jointly',
-                'when' => 'no-capacity',
-            ],
-            'preferences' => false,
-            'instructions' => false,
-            'dateDonorSigned' => '2017-02-25T00:00:00+00:00',
-            'dateRegistration' => '2017-04-15T00:00:00+00:00',
-            'dateCancelled' => '2018-04-25T00:00:00+00:00',
-        ],
-    ];
 }

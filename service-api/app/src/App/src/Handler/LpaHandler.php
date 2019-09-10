@@ -33,19 +33,13 @@ class LpaHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        //  TODO - Possibly split this logic into a separate handler later
-        $uid = $request->getAttribute('uid');
         $shareCode = $request->getAttribute('shareCode');
 
-        $data = [];
-
-        if (!empty($uid)) {
-            $data = $this->lpaService->getById($uid);
-        } elseif (!empty($shareCode)) {
-            $data = $this->lpaService->getByCode($shareCode);
-        } else {
-            throw new RuntimeException('Missing LPA identifier');
+        if (empty($shareCode)) {
+            throw new RuntimeException('Missing LPA share code');
         }
+
+        $data = $this->lpaService->getByCode($shareCode);
 
         return new JsonResponse($data);
     }

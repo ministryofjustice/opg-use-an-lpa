@@ -46,7 +46,7 @@ class ViewerCodesTest extends TestCase
                     'ViewerCode' => [
                         'S' => $testCode,
                     ],
-                    'SiriusId' => [
+                    'SiriusUid' => [
                         'S' => '123456789012',
                     ],
                     'Expires' => [
@@ -60,7 +60,7 @@ class ViewerCodesTest extends TestCase
         $result = $repo->get($testCode);
 
         $this->assertEquals($testCode, $result['ViewerCode']);
-        $this->assertEquals('123456789012', $result['SiriusId']);
+        $this->assertEquals('123456789012', $result['SiriusUid']);
         $this->assertEquals(new DateTime('2019-01-01 12:34:56'), $result['Expires']);
     }
 
