@@ -38,7 +38,7 @@ viewerCodesTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_VIEWER_CODES'])
 viewerCodes = [
     {
         'ViewerCode': "123456789012",
-        'SiriusUid': "700000000047",
+        'SiriusUid': "700000001094",
         'Expires': "2020-01-01 12:34:56",
     },
     {
