@@ -61,7 +61,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/forgot-password/{token}', Actor\Handler\PasswordResetPageHandler::class, 'password-reset-token');
 
     // LPA management
-    $app->route('/lpa/add-details', Actor\Handler\LpaAddHandler::class, ['GET', 'POST'], 'lpa.add');
+    $app->route('/lpa/add-details', [
+        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\LpaAddHandler::class
+    ], ['GET', 'POST'], 'lpa.add');
 };
 
 switch (getenv('CONTEXT')){

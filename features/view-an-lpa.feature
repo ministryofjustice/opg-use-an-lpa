@@ -6,7 +6,7 @@ Feature: View a lasting power of attorney
 
   Scenario: Go to the service homepage
     Given I go to the viewer service homepage
-    Then the "Use your LPA Homepage" page is displayed
+    Then the "View a lasting power of attorney" page is displayed
 
   Scenario: Start the service when I click on the button
     Given I go to the viewer service homepage

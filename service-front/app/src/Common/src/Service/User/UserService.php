@@ -6,7 +6,6 @@ use Common\Entity\User;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Fig\Http\Message\StatusCodeInterface;
-use ArrayObject;
 use Exception;
 use RuntimeException;
 use Zend\Expressive\Authentication\UserInterface;

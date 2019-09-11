@@ -9,6 +9,7 @@ use App\DataAccess\DynamoDb\ActorUsersFactory;
 use Aws\DynamoDb\DynamoDbClient;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Exception;
 
 class ActorUsersFactoryTest extends TestCase
 {
@@ -34,6 +35,7 @@ class ActorUsersFactoryTest extends TestCase
         $this->assertInstanceOf(ActorUsers::class, $repo);
     }
 
+    /** @test */
     public function it_throws_an_exception_when_not_configured_correctly()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -46,7 +48,7 @@ class ActorUsersFactoryTest extends TestCase
 
         $factory = new ActorUsersFactory();
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Actor Users table configuration not present');
 
         $factory($containerProphecy->reveal());
