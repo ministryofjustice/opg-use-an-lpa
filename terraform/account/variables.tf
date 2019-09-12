@@ -1,7 +1,8 @@
 variable "default_role" {
-  default = "ci"
+  default = "opg-use-an-lpa-ci"
 }
 
 variable "management_role" {
-  default = "ci"
+  default = "opg-use-an-lpa-ci"
 }
+

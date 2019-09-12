@@ -2,7 +2,7 @@
 
 This terraform configuration manages per-account or otherwise shared resources.
 
-Per-environment resources are managed in ../terraform_environment
+Per-environment resources are managed in ../environment
 
 ## Running Terraform Locally
 

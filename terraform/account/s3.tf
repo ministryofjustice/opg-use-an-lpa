@@ -7,7 +7,7 @@ data "aws_iam_policy_document" "viewer_loadbalancer" {
     sid = "accessLogBucketAccess"
 
     resources = [
-      "${aws_s3_bucket.access_log.arn}",
+      aws_s3_bucket.access_log.arn,
       "${aws_s3_bucket.access_log.arn}/*",
     ]
 
@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "viewer_loadbalancer" {
     actions = ["s3:PutObject"]
 
     principals {
-      identifiers = ["${data.aws_elb_service_account.main.id}"]
+      identifiers = [data.aws_elb_service_account.main.id]
 
       type = "AWS"
     }
@@ -25,11 +25,11 @@ data "aws_iam_policy_document" "viewer_loadbalancer" {
 resource "aws_s3_bucket" "access_log" {
   bucket = "opg-ual-${terraform.workspace}-lb-access-logs"
   acl    = "private"
-  tags   = "${local.default_tags}"
+  tags   = local.default_tags
 
   server_side_encryption_configuration {
-    "rule" {
-      "apply_server_side_encryption_by_default" {
+    rule {
+      apply_server_side_encryption_by_default {
         sse_algorithm = "aws:kms"
       }
     }
@@ -37,6 +37,7 @@ resource "aws_s3_bucket" "access_log" {
 }
 
 resource "aws_s3_bucket_policy" "access_log" {
-  bucket = "${aws_s3_bucket.access_log.id}"
-  policy = "${data.aws_iam_policy_document.viewer_loadbalancer.json}"
+  bucket = aws_s3_bucket.access_log.id
+  policy = data.aws_iam_policy_document.viewer_loadbalancer.json
 }
+
