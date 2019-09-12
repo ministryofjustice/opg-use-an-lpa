@@ -2,18 +2,18 @@
 
 This terraform configuration manages per-environment resources.
 
-Per-account or otherwise shared resources are managed in `../terraform_shared`
+Per-account or otherwise shared resources are managed in `../account`
 
 ## Namespace resources
 It is important to namespace resources to avoid getting errors for creating resources that already exist.
 
 There are two namespace variables available.
 
-`${terraform.workspace}`
+`${local.environment}`
 returns the workspace name
 
 ```
-"${terraform.workspace}-use-an-lpa"
+"${local.environment}-use-an-lpa"
 ``` 
 can return `UML-93-use-an-lpa` or `production-use-an-lpa`
 

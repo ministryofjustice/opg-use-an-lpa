@@ -1,10 +1,10 @@
 resource "aws_ecs_cluster" "use-an-lpa" {
-  name = "${terraform.workspace}-use-an-lpa"
-  tags = "${local.default_tags}"
+  name = "${local.environment}-use-an-lpa"
+  tags = local.default_tags
 }
 
 data "aws_iam_policy_document" "task_role_assume_policy" {
-  "statement" {
+  statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
 
@@ -16,13 +16,13 @@ data "aws_iam_policy_document" "task_role_assume_policy" {
 }
 
 resource "aws_iam_role" "execution_role" {
-  name               = "${terraform.workspace}-execution-role-ecs-cluster"
-  assume_role_policy = "${data.aws_iam_policy_document.execution_role_assume_policy.json}"
-  tags               = "${local.default_tags}"
+  name               = "${local.environment}-execution-role-ecs-cluster"
+  assume_role_policy = data.aws_iam_policy_document.execution_role_assume_policy.json
+  tags               = local.default_tags
 }
 
 data "aws_iam_policy_document" "execution_role_assume_policy" {
-  "statement" {
+  statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
 
@@ -34,13 +34,13 @@ data "aws_iam_policy_document" "execution_role_assume_policy" {
 }
 
 resource "aws_iam_role_policy" "execution_role" {
-  name   = "${terraform.workspace}_execution_role"
-  policy = "${data.aws_iam_policy_document.execution_role.json}"
-  role   = "${aws_iam_role.execution_role.id}"
+  name   = "${local.environment}_execution_role"
+  policy = data.aws_iam_policy_document.execution_role.json
+  role   = aws_iam_role.execution_role.id
 }
 
 data "aws_iam_policy_document" "execution_role" {
-  "statement" {
+  statement {
     effect    = "Allow"
     resources = ["*"]
 
@@ -53,13 +53,14 @@ data "aws_iam_policy_document" "execution_role" {
       "logs:PutLogEvents",
     ]
   }
-  "statement" {
-    effect    = "Allow"
+  statement {
+    effect = "Allow"
 
-    resources = ["${data.aws_secretsmanager_secret.notify_api_key.arn}"]
+    resources = [data.aws_secretsmanager_secret.notify_api_key.arn]
 
     actions = [
       "secretsmanager:GetSecretValue",
     ]
   }
 }
+

@@ -3,19 +3,19 @@
 
 resource "aws_ecs_service" "api" {
   name            = "api"
-  cluster         = "${aws_ecs_cluster.use-an-lpa.id}"
-  task_definition = "${aws_ecs_task_definition.api.arn}"
+  cluster         = aws_ecs_cluster.use-an-lpa.id
+  task_definition = aws_ecs_task_definition.api.arn
   desired_count   = 1
   launch_type     = "FARGATE"
 
   network_configuration {
-    security_groups  = ["${aws_security_group.api_ecs_service.id}"]
-    subnets          = ["${data.aws_subnet.private.*.id}"]
+    security_groups  = [aws_security_group.api_ecs_service.id]
+    subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
 
   service_registries {
-    registry_arn = "${aws_service_discovery_service.api.arn}"
+    registry_arn = aws_service_discovery_service.api.arn
   }
 }
 
@@ -26,7 +26,7 @@ resource "aws_service_discovery_service" "api" {
   name = "api"
 
   dns_config {
-    namespace_id = "${aws_service_discovery_private_dns_namespace.internal.id}"
+    namespace_id = aws_service_discovery_private_dns_namespace.internal.id
 
     dns_records {
       ttl  = 10
@@ -50,9 +50,9 @@ locals {
 // The Api service's Security Groups
 
 resource "aws_security_group" "api_ecs_service" {
-  name_prefix = "${terraform.workspace}-api-ecs-service"
-  vpc_id      = "${data.aws_vpc.default.id}"
-  tags        = "${local.default_tags}"
+  name_prefix = "${local.environment}-api-ecs-service"
+  vpc_id      = data.aws_vpc.default.id
+  tags        = local.default_tags
 }
 
 //----------------------------------
@@ -63,8 +63,8 @@ resource "aws_security_group_rule" "api_ecs_service_viewer_ingress" {
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
-  security_group_id        = "${aws_security_group.api_ecs_service.id}"
-  source_security_group_id = "${aws_security_group.viewer_ecs_service.id}"
+  security_group_id        = aws_security_group.api_ecs_service.id
+  source_security_group_id = aws_security_group.viewer_ecs_service.id
 }
 
 //----------------------------------
@@ -75,8 +75,8 @@ resource "aws_security_group_rule" "api_ecs_service_actor_ingress" {
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
-  security_group_id        = "${aws_security_group.api_ecs_service.id}"
-  source_security_group_id = "${aws_security_group.actor_ecs_service.id}"
+  security_group_id        = aws_security_group.api_ecs_service.id
+  source_security_group_id = aws_security_group.actor_ecs_service.id
 }
 
 //----------------------------------
@@ -87,37 +87,37 @@ resource "aws_security_group_rule" "api_ecs_service_egress" {
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.api_ecs_service.id}"
+  security_group_id = aws_security_group.api_ecs_service.id
 }
 
 //--------------------------------------
 // Api ECS Service Task level config
 
 resource "aws_ecs_task_definition" "api" {
-  family                   = "${terraform.workspace}-api"
+  family                   = "${local.environment}-api"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.api_web}, ${local.api_app}]"
-  task_role_arn            = "${aws_iam_role.api_task_role.arn}"
-  execution_role_arn       = "${aws_iam_role.execution_role.arn}"
-  tags                     = "${local.default_tags}"
+  task_role_arn            = aws_iam_role.api_task_role.arn
+  execution_role_arn       = aws_iam_role.execution_role.arn
+  tags                     = local.default_tags
 }
 
 //----------------
 // Permissions
 
 resource "aws_iam_role" "api_task_role" {
-  name               = "${terraform.workspace}-api-task-role"
-  assume_role_policy = "${data.aws_iam_policy_document.task_role_assume_policy.json}"
-  tags               = "${local.default_tags}"
+  name               = "${local.environment}-api-task-role"
+  assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
+  tags               = local.default_tags
 }
 
 resource "aws_iam_role_policy" "api_permissions_role" {
-  name   = "${terraform.workspace}-apiApplicationPermissions"
-  policy = "${data.aws_iam_policy_document.api_permissions_role.json}"
-  role   = "${aws_iam_role.api_task_role.id}"
+  name   = "${local.environment}-apiApplicationPermissions"
+  policy = data.aws_iam_policy_document.api_permissions_role.json
+  role   = aws_iam_role.api_task_role.id
 }
 
 /*
@@ -132,14 +132,14 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
 
     resources = [
-      "${aws_dynamodb_table.actor_lpa_codes_table.arn}",
+      aws_dynamodb_table.actor_lpa_codes_table.arn,
       "${aws_dynamodb_table.actor_lpa_codes_table.arn}/index/*",
-      "${aws_dynamodb_table.actor_users_table.arn}",
+      aws_dynamodb_table.actor_users_table.arn,
       "${aws_dynamodb_table.actor_users_table.arn}/index/*",
-      "${aws_dynamodb_table.viewer_codes_table.arn}",
+      aws_dynamodb_table.viewer_codes_table.arn,
       "${aws_dynamodb_table.viewer_codes_table.arn}/index/*",
-      "${aws_dynamodb_table.viewer_activity_table.arn}",
-      "${aws_dynamodb_table.viewer_activity_table.arn}/index/*"
+      aws_dynamodb_table.viewer_activity_table.arn,
+      "${aws_dynamodb_table.viewer_activity_table.arn}/index/*",
     ]
   }
 
@@ -199,7 +199,9 @@ locals {
       "value": "${var.container_version}"
     }]
   }
-  EOF
+  
+EOF
+
 
   api_app = <<EOF
   {
@@ -246,7 +248,9 @@ locals {
       "value": "${var.container_version}"
     }]
   }
-  EOF
+  
+EOF
+
 }
 
 output "api_web_deployed_version" {
@@ -256,3 +260,4 @@ output "api_web_deployed_version" {
 output "api_app_deployed_version" {
   value = "${data.aws_ecr_repository.use_an_lpa_api_app.repository_url}:${var.container_version}"
 }
+

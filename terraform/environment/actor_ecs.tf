@@ -3,33 +3,33 @@
 
 resource "aws_ecs_service" "actor" {
   name            = "actor"
-  cluster         = "${aws_ecs_cluster.use-an-lpa.id}"
-  task_definition = "${aws_ecs_task_definition.actor.arn}"
+  cluster         = aws_ecs_cluster.use-an-lpa.id
+  task_definition = aws_ecs_task_definition.actor.arn
   desired_count   = 1
   launch_type     = "FARGATE"
 
   network_configuration {
-    security_groups  = ["${aws_security_group.actor_ecs_service.id}"]
-    subnets          = ["${data.aws_subnet.private.*.id}"]
+    security_groups  = [aws_security_group.actor_ecs_service.id]
+    subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
 
   load_balancer {
-    target_group_arn = "${aws_lb_target_group.actor.arn}"
+    target_group_arn = aws_lb_target_group.actor.arn
     container_name   = "web"
     container_port   = 80
   }
 
-  depends_on = ["aws_lb.actor"]
+  depends_on = [aws_lb.actor]
 }
 
 //----------------------------------
 // The service's Security Groups
 
 resource "aws_security_group" "actor_ecs_service" {
-  name_prefix = "${terraform.workspace}-actor-ecs-service"
-  vpc_id      = "${data.aws_vpc.default.id}"
-  tags        = "${local.default_tags}"
+  name_prefix = "${local.environment}-actor-ecs-service"
+  vpc_id      = data.aws_vpc.default.id
+  tags        = local.default_tags
 }
 
 // 80 in from the ELB
@@ -38,8 +38,8 @@ resource "aws_security_group_rule" "actor_ecs_service_ingress" {
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
-  security_group_id        = "${aws_security_group.actor_ecs_service.id}"
-  source_security_group_id = "${aws_security_group.actor_loadbalancer.id}"
+  security_group_id        = aws_security_group.actor_ecs_service.id
+  source_security_group_id = aws_security_group.actor_loadbalancer.id
 }
 
 // Anything out
@@ -49,37 +49,37 @@ resource "aws_security_group_rule" "actor_ecs_service_egress" {
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.actor_ecs_service.id}"
+  security_group_id = aws_security_group.actor_ecs_service.id
 }
 
 //--------------------------------------
 // Actor ECS Service Task level config
 
 resource "aws_ecs_task_definition" "actor" {
-  family                   = "${terraform.workspace}-actor"
+  family                   = "${local.environment}-actor"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.actor_web}, ${local.actor_app}]"
-  task_role_arn            = "${aws_iam_role.actor_task_role.arn}"
-  execution_role_arn       = "${aws_iam_role.execution_role.arn}"
-  tags                     = "${local.default_tags}"
+  task_role_arn            = aws_iam_role.actor_task_role.arn
+  execution_role_arn       = aws_iam_role.execution_role.arn
+  tags                     = local.default_tags
 }
 
 //----------------
 // Permissions
 
 resource "aws_iam_role" "actor_task_role" {
-  name               = "${terraform.workspace}-actor-task-role"
-  assume_role_policy = "${data.aws_iam_policy_document.task_role_assume_policy.json}"
-  tags               = "${local.default_tags}"
+  name               = "${local.environment}-actor-task-role"
+  assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
+  tags               = local.default_tags
 }
 
 resource "aws_iam_role_policy" "actor_permissions_role" {
-  name   = "${terraform.workspace}-ActorApplicationPermissions"
-  policy = "${data.aws_iam_policy_document.actor_permissions_role.json}"
-  role   = "${aws_iam_role.actor_task_role.id}"
+  name   = "${local.environment}-ActorApplicationPermissions"
+  policy = data.aws_iam_policy_document.actor_permissions_role.json
+  role   = aws_iam_role.actor_task_role.id
 }
 
 /*
@@ -94,7 +94,7 @@ data "aws_iam_policy_document" "actor_permissions_role" {
       "kms:GenerateDataKey",
     ]
 
-    resources = ["${data.aws_kms_alias.sessions_actor.target_key_arn}"]
+    resources = [data.aws_kms_alias.sessions_actor.target_key_arn]
   }
 }
 
@@ -143,7 +143,9 @@ locals {
       "value": "${var.container_version}"
     }]
   }
-  EOF
+  
+EOF
+
 
   actor_app = <<EOF
   {
@@ -191,7 +193,9 @@ locals {
       "value": "http://${local.api_service_fqdn}"
     }]
   }
-  EOF
+  
+EOF
+
 }
 
 output "front_web_deployed_version" {
@@ -201,3 +205,4 @@ output "front_web_deployed_version" {
 output "front_app_deployed_version" {
   value = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}:${var.container_version}"
 }
+

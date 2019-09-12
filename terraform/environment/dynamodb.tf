@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "actor_lpa_codes_table" {
-  name         = "${terraform.workspace}-ActorLpaCodes"
+  name         = "${local.environment}-ActorLpaCodes"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "ActorLpaCode"
 
@@ -12,7 +12,7 @@ resource "aws_dynamodb_table" "actor_lpa_codes_table" {
     enabled = true
   }
 
-  tags = "${local.default_tags}"
+  tags = local.default_tags
 
   lifecycle {
     prevent_destroy = false
@@ -20,25 +20,23 @@ resource "aws_dynamodb_table" "actor_lpa_codes_table" {
 }
 
 resource "aws_dynamodb_table" "actor_users_table" {
-  name         = "${terraform.workspace}-ActorUsers"
+  name         = "${local.environment}-ActorUsers"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Email"
 
-  attribute = [
-    {
-      name = "Email"
-      type = "S"
-    },
-    {
-      name = "ActivationToken"
-      type = "S"
-    }
-  ]
+  attribute {
+    name = "Email"
+    type = "S"
+  }
+  attribute {
+    name = "ActivationToken"
+    type = "S"
+  }
 
   global_secondary_index {
-    name               = "ActivationTokenIndex"
-    hash_key           = "ActivationToken"
-    projection_type    = "KEYS_ONLY"
+    name            = "ActivationTokenIndex"
+    hash_key        = "ActivationToken"
+    projection_type = "KEYS_ONLY"
   }
 
   ttl {
@@ -50,7 +48,7 @@ resource "aws_dynamodb_table" "actor_users_table" {
     enabled = true
   }
 
-  tags = "${local.default_tags}"
+  tags = local.default_tags
 
   lifecycle {
     prevent_destroy = false
@@ -58,7 +56,7 @@ resource "aws_dynamodb_table" "actor_users_table" {
 }
 
 resource "aws_dynamodb_table" "viewer_codes_table" {
-  name         = "${terraform.workspace}-ViewerCodes"
+  name         = "${local.environment}-ViewerCodes"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "ViewerCode"
 
@@ -71,7 +69,7 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     enabled = true
   }
 
-  tags = "${local.default_tags}"
+  tags = local.default_tags
 
   lifecycle {
     prevent_destroy = false
@@ -79,29 +77,28 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
 }
 
 resource "aws_dynamodb_table" "viewer_activity_table" {
-  name         = "${terraform.workspace}-ViewerActivity"
+  name         = "${local.environment}-ViewerActivity"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "ViewerCode"
   range_key    = "Viewed"
 
-  attribute = [
-    {
-      name = "ViewerCode"
-      type = "S"
-    },
-    {
-      name = "Viewed"
-      type = "S"
-    }
-  ]
+  attribute {
+    name = "ViewerCode"
+    type = "S"
+  }
+  attribute {
+    name = "Viewed"
+    type = "S"
+  }
 
   point_in_time_recovery {
     enabled = true
   }
 
-  tags = "${local.default_tags}"
+  tags = local.default_tags
 
   lifecycle {
     prevent_destroy = false
   }
 }
+
