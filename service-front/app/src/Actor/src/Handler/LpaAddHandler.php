@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\LpaAdd;
-use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
+use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
-use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -27,6 +26,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
 {
     use CsrfGuard;
+    use SessionTrait;
     use User;
 
     /**
@@ -60,6 +60,8 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
+        $session = $this->getSession($request, 'session');
+
         $form = new LpaAdd($this->getCsrfGuard($request));
 
         if ($request->getMethod() === 'POST') {
@@ -72,31 +74,12 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
                 //  Convert the date of birth
                 $dobString = sprintf('%s-%s-%s', $postData['dob']['year'], $postData['dob']['month'], $postData['dob']['day']);
 
-                try {
-                    $lpaData = $this->lpaService->search($postData['passcode'], $postData['reference_number'], $dobString);
+                //  Set the data in the session and pass to the check handler
+                $session->set('passcode', $postData['passcode']);
+                $session->set('reference_number', $postData['reference_number']);
+                $session->set('dob', $dobString);
 
-                    //  TODO - Do nothing for now - a confirmation screen will be added later
-                    // @codeCoverageIgnoreStart
-                    echo sprintf('OK - validation has passed but the LPA (ID: %s) has not been added', $lpaData->id);
-                    echo '<br/>';
-                    echo '<br/>';
-                    print_r($lpaData);
-                    echo '<br/>';
-                    echo '<br/>';
-                    echo '<a href="/lpa/add-details">Return to add screen</a>';
-                    die();
-                    // @codeCoverageIgnoreStop
-
-                } catch (ApiException $aex) {
-                    if ($aex->getCode() == StatusCodeInterface::STATUS_NOT_FOUND) {
-                        //  Show LPA not found page
-                        return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                            'user' => $this->getUser($request)
-                        ]));
-                    } else {
-                        throw $aex;
-                    }
-                }
+                return $this->redirectToRoute('lpa.check');
             }
         }
 

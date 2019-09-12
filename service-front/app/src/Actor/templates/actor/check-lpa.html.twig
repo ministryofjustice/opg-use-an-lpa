@@ -1,0 +1,88 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Code found - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@partials/new-service.html.twig') }}
+
+        <a href="/" class="govuk-back-link">Back</a>
+
+        <main class="govuk-main-wrapper">
+
+            <h1 class="govuk-heading-xl">Is this the LPA you want to add?</h1>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <dl class="govuk-summary-list govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Type of LPA
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ lpa.caseSubtype == 'pfa' ? 'Property and finance' : 'Health and welfare' }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Donor name
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ actor_name(lpa.donor) }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Your name
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ actor_name(user) }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Your role on this LPA
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ userRole }}
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">Warning</span>
+                            Check that these details are correct before continuing
+                        </strong>
+                    </div>
+
+                    <details class="govuk-details" role="group">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                What to do if the details are wrong
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p>If the information is wrong, or if a name is mispelled, please contact us on 02342 435920.</p>
+
+                            <p>Opening hours are Monday, Tuesday, Thursday, Friday 9am to 5pm. Wednesday 10am to 5pm.</p>
+                        </div>
+                    </details>
+
+                    <a href="#" role="button" draggable="false" class="govuk-button govuk-!-margin-right-1">
+                        Continue
+                    </a>
+
+                    <a href="{{ path('lpa.add') }}" role="button" class="govuk-button govuk-button--secondary">
+                        Cancel
+                    </a>
+
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+{% endblock %}
