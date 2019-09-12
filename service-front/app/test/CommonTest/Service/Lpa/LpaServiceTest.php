@@ -27,6 +27,10 @@ class LpaServiceTest extends TestCase
             ->willReturn([
                 'id'      => 123456789012,
                 'isValid' => true,
+                'another' => [
+                    'some'  => 1,
+                    'value' => 2,
+                ],
             ]);
 
         $service = new LpaService($this->apiClientProphecy->reveal());
@@ -57,6 +61,10 @@ class LpaServiceTest extends TestCase
             ->willReturn([
                 'id'      => 123456789012,
                 'isValid' => true,
+                'another' => [
+                    'some'  => 1,
+                    'value' => 2,
+                ],
             ]);
 
         $service = new LpaService($this->apiClientProphecy->reveal());
@@ -84,6 +92,10 @@ class LpaServiceTest extends TestCase
             ->willReturn([
                 'id'      => 123456789012,
                 'isValid' => true,
+                'another' => [
+                    'some'  => 1,
+                    'value' => 2,
+                ],
             ]);
 
         $service = new LpaService($this->apiClientProphecy->reveal());

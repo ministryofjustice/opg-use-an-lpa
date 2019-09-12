@@ -11,24 +11,76 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument\Token\CallbackToken;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Expressive\Helper\UrlHelper;
+use Zend\Expressive\Session\SessionInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 class LpaAddHandlerTest extends TestCase
 {
     const CSRF_CODE = '1234';
 
+    /**
+     * @var TemplateRendererInterface
+     */
     private $rendererProphecy;
+
+    /**
+     * @var UrlHelper
+     */
     private $urlHelperProphecy;
-    private $requestProphecy;
+
+    /**
+     * @var LpaService
+     */
+    private $lpaServiceProphecy;
+
+    /**
+     * @var AuthenticationInterface
+     */
     private $authenticatorProphecy;
+
+    /**
+     * @var ServerRequestInterface
+     */
+    private $requestProphecy;
 
     public function setUp()
     {
         $this->rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
+
+        $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);
+
+        $this->authenticatorProphecy = $this->prophesize(AuthenticationInterface::class);
+
+        $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
+
+        $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
+
+        $csrfProphecy = $this->prophesize(CsrfGuardInterface::class);
+        $csrfProphecy->generateToken()
+            ->willReturn(self::CSRF_CODE);
+        $csrfProphecy->validateToken(self::CSRF_CODE)
+            ->willReturn(true);
+        $this->requestProphecy->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE)
+            ->willReturn($csrfProphecy->reveal());
+
+        $sessionProphecy = $this->prophesize(SessionInterface::class);
+        $sessionProphecy->set('passcode', '100000000001');
+        $sessionProphecy->set('reference_number', '700000000001');
+        $sessionProphecy->set('dob', '1980-01-01');
+        $this->requestProphecy->getAttribute('session', null)
+            ->willReturn($sessionProphecy->reveal());
+    }
+
+    public function testGetReturnsHtmlResponse()
+    {
+        $this->requestProphecy->getMethod()
+            ->willReturn('GET');
+
         $this->rendererProphecy->render('actor::lpa-add', new CallbackToken(function($options) {
                 $this->assertIsArray($options);
                 $this->assertArrayHasKey('form', $options);
@@ -38,28 +90,6 @@ class LpaAddHandlerTest extends TestCase
             }))
             ->willReturn('');
 
-        $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);
-
-        $this->authenticatorProphecy = $this->prophesize(AuthenticationInterface::class);
-
-        $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
-
-        $csrfProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $csrfProphecy->generateToken()
-            ->willReturn(self::CSRF_CODE);
-        $csrfProphecy->validateToken(self::CSRF_CODE)
-            ->willReturn(true);
-
-        $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
-        $this->requestProphecy->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE)
-            ->willReturn($csrfProphecy->reveal());
-    }
-
-    public function testGetReturnsHtmlResponse()
-    {
-        $this->requestProphecy->getMethod()
-            ->willReturn('GET');
-
         //  Set up the handler
         $handler = new LpaAddHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
 
@@ -68,7 +98,7 @@ class LpaAddHandlerTest extends TestCase
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 
-    public function testPostInvalidHtmlResponse()
+    public function testPostInvalidData()
     {
         $this->requestProphecy->getMethod()
             ->willReturn('POST');
@@ -85,11 +115,48 @@ class LpaAddHandlerTest extends TestCase
                 ],
             ]);
 
+        $this->rendererProphecy->render('actor::lpa-add', new CallbackToken(function($options) {
+                $this->assertIsArray($options);
+                $this->assertArrayHasKey('form', $options);
+                $this->assertInstanceOf(LpaAdd::class, $options['form']);
+
+                return true;
+            }))
+            ->willReturn('');
+
         //  Set up the handler
         $handler = new LpaAddHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
+    }
+
+    public function testPostValidData()
+    {
+        $this->requestProphecy->getMethod()
+            ->willReturn('POST');
+
+        $this->requestProphecy->getParsedBody()
+            ->willReturn([
+                '__csrf' => self::CSRF_CODE,
+                'passcode' => '100000000001',
+                'reference_number' => '700000000001',
+                'dob' => [
+                    'day' => '01',
+                    'month' => '01',
+                    'year' => '1980',
+                ],
+            ]);
+
+        $this->urlHelperProphecy->generate('lpa.check', [], [])
+            ->willReturn('/lpa/check');
+
+        //  Set up the handler
+        $handler = new LpaAddHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
+
+        $response = $handler->handle($this->requestProphecy->reveal());
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 }

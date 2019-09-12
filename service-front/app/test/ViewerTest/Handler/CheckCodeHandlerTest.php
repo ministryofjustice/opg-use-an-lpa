@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ViewerTest\Handler;
 
 use Common\Exception\ApiException;
+use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\LpaService;
 use Psr\Http\Message\StreamInterface;
 use Viewer\Handler\CheckCodeHandler;
@@ -59,7 +60,6 @@ class CheckCodeHandlerTest extends TestCase
 
         // The Session
         $this->sessionProphecy = $this->prophesize(SessionInterface::class);
-        $this->sessionProphecy->get('code')->willReturn(self::TEST_CODE);
         $this->requestProphecy->getAttribute('session', Argument::any())->willreturn($this->sessionProphecy->reveal());
     }
 
@@ -81,6 +81,8 @@ class CheckCodeHandlerTest extends TestCase
         $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE)->willReturn(null);
 
         $this->templateRendererProphecy->render('viewer::check-code-not-found', Argument::any())->willReturn('');
+
+        $this->sessionProphecy->get('code')->willReturn(self::TEST_CODE);
 
         //---
 
@@ -108,7 +110,8 @@ class CheckCodeHandlerTest extends TestCase
 
         $this->templateRendererProphecy->render('viewer::check-code-expired', Argument::any())
             ->willReturn('');
-        //---
+
+        $this->sessionProphecy->get('code')->willReturn(self::TEST_CODE);
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
@@ -140,11 +143,25 @@ class CheckCodeHandlerTest extends TestCase
             ['lpa' => $lpa]
         )->willReturn('');
 
-        //---
+        $this->sessionProphecy->get('code')->willReturn(self::TEST_CODE);
 
         $response = $handler->handle($this->requestProphecy->reveal());
         $this->assertInstanceOf(HtmlResponse::class, $response);
+    }
 
+    public function testInvalidDetailsTimeout()
+    {
+        $handler = new CheckCodeHandler(
+            $this->templateRendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->lpaServiceProphecy->reveal()
+        );
+
+        $this->sessionProphecy->get('code')->willReturn(null);
+
+        $this->expectException(SessionTimeoutException::class);
+
+        $handler->handle($this->requestProphecy->reveal());
     }
 
     /**

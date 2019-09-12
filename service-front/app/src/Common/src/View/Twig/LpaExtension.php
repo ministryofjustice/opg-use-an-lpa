@@ -6,7 +6,6 @@ namespace Common\View\Twig;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use ArrayObject;
 use DateTime;
 
 /**
@@ -28,13 +27,14 @@ class LpaExtension extends AbstractExtension
     }
 
     /**
-     * @param ArrayObject $actor
+     * @param iterable $actor
      * @return string
      */
-    public function actorAddress(ArrayObject $actor)
+    public function actorAddress(iterable $actor)
     {
         //  Multiple addresses can appear for an actor - just use the first one
         if (isset($actor['addresses']) && !empty($actor['addresses'])) {
+
             $filteredAddress = $this->filterData($actor['addresses'][0], [
                 'addressLine1',
                 'addressLine2',
@@ -51,10 +51,10 @@ class LpaExtension extends AbstractExtension
     }
 
     /**
-     * @param ArrayObject $actor
+     * @param iterable $actor
      * @return string
      */
-    public function actorName(ArrayObject $actor)
+    public function actorName(iterable $actor)
     {
         $filteredName = $this->filterData($actor, [
             'salutation',
@@ -68,11 +68,11 @@ class LpaExtension extends AbstractExtension
     /**
      * Filter the data in to the fields provided and in the same order
      *
-     * @param ArrayObject $data
+     * @param iterable $data
      * @param array $filterFields
      * @return array
      */
-    private function filterData(ArrayObject $data, array $filterFields)
+    private function filterData(iterable $data, array $filterFields)
     {
         $filteredData = [];
 
@@ -87,17 +87,15 @@ class LpaExtension extends AbstractExtension
 
     /**
      * @param string|null $date
-     * @param string $formatOut
-     * @param string $formatIn
      * @return string
      */
-    public function lpaDate(?string $date, $formatOut = 'j F Y', $formatIn = 'Y-m-d')
+    public function lpaDate(?string $date)
     {
         if (!empty($date)) {
-            $date = DateTime::createFromFormat($formatIn, $date);
+            $date = DateTime::createFromFormat('Y-m-d', $date);
 
             if ($date instanceof DateTime) {
-                return $date->format($formatOut);
+                return $date->format('j F Y');
             }
         }
 

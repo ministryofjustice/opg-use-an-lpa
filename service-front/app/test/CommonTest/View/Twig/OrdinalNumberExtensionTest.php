@@ -20,14 +20,20 @@ class OrdinalNumberExtensionTest extends TestCase
         $this->assertTrue(is_array($filters));
         $this->assertEquals(1, count($filters));
 
-        $filter = array_pop($filters);
+        $expectedFilters = [
+            'ordinal' => 'makeOrdinal',
+        ];
 
-        $this->assertInstanceOf(TwigFilter::class, $filter);
-        $this->assertEquals('ordinal', $filter->getName());
+        //  Check each filter
+        foreach ($filters as $filter) {
+            $this->assertInstanceOf(TwigFilter::class, $filter);
+            /** @var TwigFilter $filter */
+            $this->assertContains($filter->getName(), array_keys($expectedFilters));
 
-        $filterCallable = $filter->getCallable();
-        $this->assertInstanceOf(OrdinalNumberExtension::class, $filterCallable[0]);
-        $this->assertEquals('makeOrdinal', $filterCallable[1]);
+            $filterCallable = $filter->getCallable();
+            $this->assertInstanceOf(OrdinalNumberExtension::class, $filterCallable[0]);
+            $this->assertEquals($expectedFilters[$filter->getName()], $filterCallable[1]);
+        }
     }
 
     /**
