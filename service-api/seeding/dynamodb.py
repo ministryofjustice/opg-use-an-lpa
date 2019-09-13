@@ -5,14 +5,17 @@ import json
 if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
     # For local development
     dynamodb_endpoint_url = 'http://' + os.environ['AWS_ENDPOINT_DYNAMODB']
-    dynamodb = boto3.resource('dynamodb', region_name='eu-west-1', endpoint_url=dynamodb_endpoint_url)
+    dynamodb = boto3.resource(
+        'dynamodb', region_name='eu-west-1', endpoint_url=dynamodb_endpoint_url)
 
 else:
 
     if os.getenv('CI'):
-        role_arn = 'arn:aws:iam::{}:role/ci'.format(os.environ['AWS_ACCOUNT_ID'])
+        role_arn = 'arn:aws:iam::{}:role/opg-use-an-lpa-ci'.format(
+            os.environ['AWS_ACCOUNT_ID'])
     else:
-        role_arn = 'arn:aws:iam::{}:role/account-write'.format(os.environ['AWS_ACCOUNT_ID'])
+        role_arn = 'arn:aws:iam::{}:role/operator'.format(
+            os.environ['AWS_ACCOUNT_ID'])
 
     # Get a auth token
     session = boto3.client(
@@ -55,14 +58,15 @@ viewerCodes = [
 
 for i in viewerCodes:
     viewerCodesTable.put_item(
-       Item=i,
+        Item=i,
     )
     response = viewerCodesTable.get_item(
         Key={'ViewerCode': i['ViewerCode']}
     )
     print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
 
-actorLpaCodesTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_ACTOR_LPA_CODES'])
+actorLpaCodesTable = dynamodb.Table(
+    os.environ['DYNAMODB_TABLE_ACTOR_LPA_CODES'])
 
 actorLpaCodes = [
     {
@@ -72,7 +76,7 @@ actorLpaCodes = [
 
 for i in actorLpaCodes:
     actorLpaCodesTable.put_item(
-       Item=i,
+        Item=i,
     )
     response = actorLpaCodesTable.get_item(
         Key={'ActorLpaCode': i['ActorLpaCode']}
