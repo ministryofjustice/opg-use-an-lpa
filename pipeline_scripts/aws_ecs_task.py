@@ -17,9 +17,9 @@ def read_parameters_from_file(config_file):
 
 def set_iam_role_session(account_id):
     if os.getenv('CI'):
-        role_arn = 'arn:aws:iam::{}:role/ci'.format(account_id)
+        role_arn = 'arn:aws:iam::{}:role/opg-use-an-lpa-ci'.format(account_id)
     else:
-        role_arn = 'arn:aws:iam::{}:role/account-read'.format(account_id)
+        role_arn = 'arn:aws:iam::{}:role/operator'.format(account_id)
 
     sts = boto3.client(
         'sts',
