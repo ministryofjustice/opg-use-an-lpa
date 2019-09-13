@@ -4,7 +4,7 @@ terraform {
     key            = "opg-use-my-lpa-environment/terraform.tfstate"
     encrypt        = true
     region         = "eu-west-1"
-    role_arn       = "arn:aws:iam::311462405659:role/state_write"
+    role_arn       = "arn:aws:iam::311462405659:role/opg-use-an-lpa-ci"
     dynamodb_table = "remote_lock"
   }
 }
