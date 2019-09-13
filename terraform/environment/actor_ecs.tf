@@ -10,7 +10,7 @@ resource "aws_ecs_service" "actor" {
 
   network_configuration {
     security_groups  = [aws_security_group.actor_ecs_service.id]
-    subnets          = data.aws_subnet.private.*.id
+    subnets          = data.aws_subnet_ids.private.ids
     assign_public_ip = false
   }
 

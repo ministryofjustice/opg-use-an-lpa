@@ -13,7 +13,7 @@ resource "aws_lb" "actor" {
   name               = "${local.environment}-actor"
   internal           = false
   load_balancer_type = "application"
-  subnets            = data.aws_subnet.public.*.id
+  subnets            = data.aws_subnet_ids.public.ids
   tags               = local.default_tags
 
   security_groups = [
