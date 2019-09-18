@@ -1,10 +1,10 @@
-resource "aws_dynamodb_table" "actor_lpa_codes_table" {
-  name         = "${local.environment}-ActorLpaCodes"
+resource "aws_dynamodb_table" "actor_codes_table" {
+  name         = "${local.environment}-ActorCodes"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "ActorLpaCode"
+  hash_key     = "ActorCode"
 
   attribute {
-    name = "ActorLpaCode"
+    name = "ActorCode"
     type = "S"
   }
 
