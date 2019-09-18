@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\DataAccess\DynamoDb;
 
-use App\DataAccess\Repository\ActorLpaCodesInterface;
+use App\DataAccess\Repository\ActorCodesInterface;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
 
-class ActorLpaCodes implements ActorLpaCodesInterface
+class ActorLpaCodes implements ActorCodesInterface
 {
     use DynamoHydrateTrait;
 
@@ -41,11 +41,13 @@ class ActorLpaCodes implements ActorLpaCodesInterface
         $result = $this->client->getItem([
             'TableName' => $this->actorLpaCodesTable,
             'Key' => [
-                'ActorLpaCode' => [
+                'ActorCode' => [
                     'S' => $code,
                 ],
             ],
         ]);
+
+        var_dump($result); die;
 
         $codeData = $this->getData($result);
 
