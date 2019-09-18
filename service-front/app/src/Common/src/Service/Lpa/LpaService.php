@@ -26,11 +26,11 @@ class LpaService
     }
 
     /**
-     * @param int $lpaId
+     * @param string $lpaId
      * @return ArrayObject|null
      * @throws \Http\Client\Exception
      */
-    public function getLpaById(int $lpaId) : ?ArrayObject
+    public function getLpaById(string $lpaId) : ?ArrayObject
     {
         $lpaData = $this->apiClient->httpGet('/v1/lpa/' . $lpaId);
 

@@ -30,6 +30,18 @@ class LpaServiceTest extends TestCase
      */
     private $viewerCodeActivityProphecy;
 
+    /**
+     * VALID VALUES AS PER THE SAMPLE DATA IN THE lpas-gateway.json file
+     * TODO - Move this data into a mock when a client for the Gateway is injected into the LpaService
+     */
+    private $validLpaId = '700000000047';
+    private $validActorDonorCode = '100000000070';
+    private $validActorDonorUid = '700000000070';
+    private $validActorDonorDob = '1948-11-01';
+    private $validActorAttorneyCode = '100000000096';
+    private $validActorAttorneyUid = '700000000096';
+    private $validActorAttorneyDob = '1975-10-05';
+
     public function setUp()
     {
         $this->actorLpaCodesProphecy = $this->prophesize(ActorLpaCodesInterface::class);
@@ -43,13 +55,11 @@ class LpaServiceTest extends TestCase
             $this->viewerCodeActivityProphecy->reveal(),
             $this->actorLpaCodesProphecy->reveal());
 
-        $lpaId = '123456789012';
-
-        $data = $service->getById($lpaId);
+        $data = $service->getById($this->validLpaId);
 
         $this->assertTrue(is_array($data));
-        $this->assertArrayHasKey('id', $data);
-        $this->assertEquals($lpaId, $data['id']);
+        $this->assertArrayHasKey('uId', $data);
+        $this->assertEquals($this->validLpaId, str_replace('-', '', $data['uId']));
     }
 
     public function testGetByIdNotFound()
@@ -67,13 +77,12 @@ class LpaServiceTest extends TestCase
     public function testGetByCode()
     {
         $shareCode = 'ABCDABCDABCD';
-        $lpaId = '123456789012';
 
         $this->viewerCodesProphecy->get($shareCode)
             ->willReturn([
                 'Expires'    => new DateTime('+1 hour'),
                 'ViewerCode' => $shareCode,
-                'SiriusId'   => $lpaId,
+                'SiriusUid'  => $this->validLpaId,
             ]);
 
         $this->viewerCodeActivityProphecy->recordSuccessfulLookupActivity($shareCode)
@@ -86,8 +95,8 @@ class LpaServiceTest extends TestCase
         $data = $service->getByCode($shareCode);
 
         $this->assertTrue(is_array($data));
-        $this->assertArrayHasKey('id', $data);
-        $this->assertEquals($lpaId, $data['id']);
+        $this->assertArrayHasKey('uId', $data);
+        $this->assertEquals($this->validLpaId, str_replace('-', '', $data['uId']));
     }
 
     public function testGetByCodeExpired()
@@ -98,7 +107,7 @@ class LpaServiceTest extends TestCase
             ->willReturn([
                 'Expires'    => new DateTime(),
                 'ViewerCode' => $shareCode,
-                'SiriusId'   => '456',
+                'SiriusUid'  => '456',
             ]);
 
         $service = new LpaService($this->viewerCodesProphecy->reveal(),
@@ -113,46 +122,42 @@ class LpaServiceTest extends TestCase
 
     public function testSearchDonorMatch()
     {
-        $code = '123456789012';
-        $uid = '123456789012';
-        $dob = '1980-01-01';
-
-        $this->actorLpaCodesProphecy->get($code)
+        $this->actorLpaCodesProphecy->get($this->validActorDonorCode)
             ->willReturn([
-                'ActorLpaCode' => $uid,
+                'ActorLpaCode'   => $this->validActorDonorCode,
+                'SiriusUid'      => $this->validLpaId,
+                'ActorSiriusUid' => $this->validActorDonorUid,
             ]);
 
         $service = new LpaService($this->viewerCodesProphecy->reveal(),
             $this->viewerCodeActivityProphecy->reveal(),
             $this->actorLpaCodesProphecy->reveal());
 
-        $data = $service->search($code, $uid, $dob);
+        $data = $service->search($this->validActorDonorCode, $this->validLpaId, $this->validActorDonorDob);
 
         $this->assertTrue(is_array($data));
-        $this->assertArrayHasKey('id', $data);
-        $this->assertEquals($uid, $data['id']);
+        $this->assertArrayHasKey('uId', $data);
+        $this->assertEquals($this->validLpaId, str_replace('-', '', $data['uId']));
     }
 
     public function testSearchAttorneyMatch()
     {
-        $code = '123456789012';
-        $uid = '123456789012';
-        $dob = '1984-02-14';
-
-        $this->actorLpaCodesProphecy->get($code)
+        $this->actorLpaCodesProphecy->get($this->validActorAttorneyCode)
             ->willReturn([
-                'ActorLpaCode' => $uid,
+                'ActorLpaCode'   => $this->validActorAttorneyCode,
+                'SiriusUid'      => $this->validLpaId,
+                'ActorSiriusUid' => $this->validActorAttorneyUid,
             ]);
 
         $service = new LpaService($this->viewerCodesProphecy->reveal(),
             $this->viewerCodeActivityProphecy->reveal(),
             $this->actorLpaCodesProphecy->reveal());
 
-        $data = $service->search($code, $uid, $dob);
+        $data = $service->search($this->validActorAttorneyCode, $this->validLpaId, $this->validActorAttorneyDob);
 
         $this->assertTrue(is_array($data));
-        $this->assertArrayHasKey('id', $data);
-        $this->assertEquals($uid, $data['id']);
+        $this->assertArrayHasKey('uId', $data);
+        $this->assertEquals($this->validLpaId, str_replace('-', '', $data['uId']));
     }
 
     public function testSearchCodeMismatch()
@@ -163,7 +168,9 @@ class LpaServiceTest extends TestCase
 
         $this->actorLpaCodesProphecy->get($code)
             ->willReturn([
-                'ActorLpaCode' => 'm15match',
+                'ActorLpaCode'   => 'm15match',
+                'SiriusUid'      => 'm15match',
+                'ActorSiriusUid' => 'm15match',
             ]);
 
         $service = new LpaService($this->viewerCodesProphecy->reveal(),
@@ -178,13 +185,13 @@ class LpaServiceTest extends TestCase
 
     public function testSearchDobMismatch()
     {
-        $code = '123456789012';
-        $uid = '123456789012';
-        $dob = '1988-02-01';
+        $dob = '2000-02-01';
 
-        $this->actorLpaCodesProphecy->get($code)
+        $this->actorLpaCodesProphecy->get($this->validActorDonorCode)
             ->willReturn([
-                'ActorLpaCode' => $uid,
+                'ActorLpaCode'   => $this->validActorDonorCode,
+                'SiriusUid'      => $this->validLpaId,
+                'ActorSiriusUid' => $this->validActorDonorUid,
             ]);
 
         $service = new LpaService($this->viewerCodesProphecy->reveal(),
@@ -194,6 +201,6 @@ class LpaServiceTest extends TestCase
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('No LPA found');
 
-        $service->search($code, $uid, $dob);
+        $service->search($this->validActorDonorCode, $this->validLpaId, $dob);
     }
 }

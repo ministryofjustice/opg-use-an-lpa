@@ -53,7 +53,7 @@
             <div class="govuk-grid-row">
 
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-l">{{ lpa.donor.name.first }} {{ lpa.donor.name.last }}'s {{ lpa.type == 'property-and-financial' ? 'property and finance' : 'health and welfare' }} LPA</h1>
+                    <h1 class="govuk-heading-l">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}'s {{ lpa.caseSubtype == 'pfa' ? 'property and finance' : 'health and welfare' }} LPA</h1>
                 </div>
 
                 <div class="govuk-grid-column-one-third">
@@ -68,11 +68,11 @@
 
                 <div class="govuk-grid-column-full">
 
-                    {% if lpa.dateCancelled is defined %}
+                    {% if lpa.status == 'Cancelled' %}
 
                         <div class="govuk-panel govuk-panel--failed">
 
-                            <h1 class="govuk-panel__title">This LPA was cancelled on {{ lpa.dateCancelled | date('j F Y') }}</h1>
+                            <h1 class="govuk-panel__title">This LPA was cancelled on {# TODO #}??</h1>
 
                         </div>
 
@@ -82,11 +82,11 @@
 
                             <h1 class="govuk-panel__title">This LPA is valid</h1>
 
-                            <div class="govuk-panel__body govuk-!-font-size-24">Status last confirmed on {{ lpa.dateLastConfirmedStatus | date('j F Y') }}</div>
+                            <div class="govuk-panel__body govuk-!-font-size-24">Status last confirmed on {# TODO #}??</div>
 
                             <br/>
 
-                            <div class="govuk-panel__body govuk-!-font-size-24">{{ lpa.decisions.when == 'no-capacity' ? 'This LPA can only be used when the donor does not have mental capacity' : '??' }}</div>
+                            <div class="govuk-panel__body govuk-!-font-size-24">{# TODO #}This LPA can be used when... ??</div>
 
                         </div>
 
@@ -107,19 +107,29 @@
                         <tbody class="govuk-table__body">
                             <tr class="govuk-table__row">
                                 <th class="govuk-table__header govuk-!-width-one-third" scope="row">Name</th>
-                                <td class="govuk-table__cell">{{ lpa.donor.name.title }} {{ lpa.donor.name.first }} {{ lpa.donor.name.last }}</td>
+                                <td class="govuk-table__cell">{{ actor_name(lpa.donor) }}</td>
                             </tr>
                             <tr class="govuk-table__row">
                                 <th class="govuk-table__header govuk-!-width-one-third" scope="row">Date of birth</th>
-                                <td class="govuk-table__cell">{{ lpa.donor.dob | date('j F Y') }}</td>
+                                <td class="govuk-table__cell">{{ lpa_date(lpa.donor.dob) }}</td>
                             </tr>
                             <tr class="govuk-table__row underline">
                                 <th class="govuk-table__header govuk-!-width-one-third" scope="row">Address</th>
-                                <td class="govuk-table__cell">{{ lpa.donor.address | join(', ') }}</td>
+                                <td class="govuk-table__cell">{{ actor_address(lpa.donor) }}</td>
                             </tr>
                             <tr class="govuk-table__row">
                                 <th class="govuk-table__header govuk-!-width-one-third" scope="row">How decisions are made</th>
-                                <td class="govuk-table__cell">{{ lpa.decisions.how == 'jointly' ? 'The attorneys must act jointly' : '??' }}</td>
+                                <td class="govuk-table__cell">
+                                    {% if lpa.caseAttorneySingular %}
+                                        The attorneys may act individually
+                                    {% elseif lpa.caseAttorneyJointly %}
+                                        The attorneys must act jointly
+                                    {% elseif lpa.caseAttorneyJointlyAndSeverally %}
+                                        The attorneys must act jointly and severally
+                                    {% elseif lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
+                                        The attorneys must act jointly for some decisions, and jointly and severally for other decisions
+                                    {% endif %}
+                                </td>
                             </tr>
                         </tbody>
 
@@ -129,20 +139,20 @@
 
                         <table class="govuk-table">
 
-                            <caption class="govuk-table__caption">{{ loop.index | ordinal }} Attorney</caption>
+                            <caption class="govuk-table__caption">{{ lpa.attorneys | length == 1 ? 'The' : loop.index | ordinal }} attorney</caption>
 
                             <tbody class="govuk-table__body">
                                 <tr class="govuk-table__row">
                                     <th class="govuk-table__header govuk-!-width-one-third" scope="row">Name</th>
-                                    <td class="govuk-table__cell">{{ attorney.name.title }} {{ attorney.name.first }} {{ attorney.name.last }}</td>
+                                    <td class="govuk-table__cell">{{ actor_name(attorney) }}</td>
                                 </tr>
                                 <tr class="govuk-table__row">
                                     <th class="govuk-table__header govuk-!-width-one-third" scope="row">Date of birth</th>
-                                    <td class="govuk-table__cell">{{ attorney.dob | date('j F Y') }}</td>
+                                    <td class="govuk-table__cell">{{ lpa_date(attorney.dob) }}</td>
                                 </tr>
                                 <tr class="govuk-table__row underline">
                                     <th class="govuk-table__header govuk-!-width-one-third" scope="row">Address</th>
-                                    <td class="govuk-table__cell">{{ attorney.address | join(', ') }}</td>
+                                    <td class="govuk-table__cell">{{ actor_address(attorney) }}</td>
                                 </tr>
                             </tbody>
 
@@ -157,29 +167,29 @@
                         <tbody class="govuk-table__body">
                             <tr class="govuk-table__row">
                                 <th class="govuk-table__header govuk-!-width-one-third" scope="row">Preferences</th>
-                                <td class="govuk-table__cell">{{ lpa.preferences ? 'Yes' : 'No' }}</td>
+                                <td class="govuk-table__cell">??</td>
                             </tr>
                             <tr class="govuk-table__row">
                                 <th class="govuk-table__header govuk-!-width-one-third" scope="row">Instructions</th>
-                                <td class="govuk-table__cell">{{ lpa.instructions ? 'Yes' : 'No' }}</td>
+                                <td class="govuk-table__cell">??</td>
                             </tr>
                             <tr class="govuk-table__row">
                                 <th class="govuk-table__header govuk-!-width-one-third" scope="row">Date donor signed LPA</th>
-                                <td class="govuk-table__cell">{{ lpa.dateDonorSigned | date('j F Y') }}</td>
+                                <td class="govuk-table__cell">{{ lpa_date(lpa.lpaDonorSignatureDate) }}</td>
                             </tr>
                             <tr class="govuk-table__row">
                                 <th class="govuk-table__header govuk-!-width-one-third" scope="row">Registration date</th>
-                                <td class="govuk-table__cell">{{ lpa.dateRegistration | date('j F Y') }}</td>
+                                <td class="govuk-table__cell">{{ lpa_date(lpa.registrationDate) }}</td>
                             </tr>
 
-                            {% if lpa.dateCancelled is not defined %}
+                            {% if lpa.status != 'Cancelled' %}
                                 <tr class="govuk-table__row">
                                     <th class="govuk-table__header govuk-!-width-one-third" scope="row">When can the LPA be used?</th>
-                                    <td class="govuk-table__cell">{{ lpa.decisions.when == 'no-capacity' ? 'When the donor does not have mental capacity' : '??' }}</td>
+                                    <td class="govuk-table__cell">{# TODO #}This LPA can be used when... ??</td>
                                 </tr>
                                 <tr class="govuk-table__row">
                                     <th class="govuk-table__header govuk-!-width-one-third" scope="row">LPA case number</th>
-                                    <td class="govuk-table__cell">{{ lpa.caseNumber | split('', 4) | join(' ') }}</td>
+                                    <td class="govuk-table__cell">{# TODO #}??</td>
                                 </tr>
                             {% endif %}
 

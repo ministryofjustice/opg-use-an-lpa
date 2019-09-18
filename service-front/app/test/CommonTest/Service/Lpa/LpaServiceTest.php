@@ -27,6 +27,10 @@ class LpaServiceTest extends TestCase
             ->willReturn([
                 'id'      => 123456789012,
                 'isValid' => true,
+                'another' => [
+                    'some'  => 1,
+                    'value' => 2,
+                ],
             ]);
 
         $service = new LpaService($this->apiClientProphecy->reveal());
@@ -57,11 +61,15 @@ class LpaServiceTest extends TestCase
             ->willReturn([
                 'id'      => 123456789012,
                 'isValid' => true,
+                'another' => [
+                    'some'  => 1,
+                    'value' => 2,
+                ],
             ]);
 
         $service = new LpaService($this->apiClientProphecy->reveal());
 
-        $lpa = $service->getLpaById(123456789012);
+        $lpa = $service->getLpaById('123456789012');
 
         $this->assertInstanceOf(ArrayObject::class, $lpa);
         $this->assertEquals(123456789012, $lpa->id);
@@ -84,6 +92,10 @@ class LpaServiceTest extends TestCase
             ->willReturn([
                 'id'      => 123456789012,
                 'isValid' => true,
+                'another' => [
+                    'some'  => 1,
+                    'value' => 2,
+                ],
             ]);
 
         $service = new LpaService($this->apiClientProphecy->reveal());
