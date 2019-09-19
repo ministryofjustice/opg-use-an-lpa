@@ -49,7 +49,7 @@ class ActorCodeConfirmHandler implements RequestHandlerInterface
         }
 
         return new JsonResponse([
-            'user-lpa-actor-map' => $response
+            'user-lpa-actor-token' => $response
         ], 201);
     }
 
