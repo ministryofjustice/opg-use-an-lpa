@@ -33,6 +33,7 @@
         "paragonie/constant_time_encoding": "^2.2",
         "php-http/guzzle6-adapter": "^2.0",
         "psr/http-client-implementation": "^1.0",
+        "ramsey/uuid": "^3.8",
         "zendframework/zend-component-installer": "^2.1.1",
         "zendframework/zend-config-aggregator": "^1.0",
         "zendframework/zend-diactoros": "^1.7.1 || ^2.0",
