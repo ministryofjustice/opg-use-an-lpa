@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\DataAccess\DynamoDb;
 
 use App\DataAccess\Repository\ActorCodesInterface;
-use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
 
 class ActorCodes implements ActorCodesInterface
@@ -50,5 +49,27 @@ class ActorCodes implements ActorCodesInterface
         $codeData = $this->getData($result);
 
         return !empty($codeData) ? $codeData : null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function flagCodeAsUsed(string $code)
+    {
+        $this->client->updateItem([
+            'TableName' => $this->actorLpaCodesTable,
+            'Key' => [
+                'ActorCode' => [
+                    'S' => $code,
+                ],
+            ],
+            'UpdateExpression' => 'set Active=:active',
+            'ExpressionAttributeValues'=> [
+                ':active' => [
+                    'BOOL' => false,
+                ],
+            ]
+        ]);
+
     }
 }

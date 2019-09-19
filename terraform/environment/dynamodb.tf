@@ -102,3 +102,34 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
   }
 }
 
+resource "aws_dynamodb_table" "user_lpa_actor_map" {
+  name         = "${local.environment}-UserLpaActorMap"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "Id"
+
+  attribute {
+    name = "Id"
+    type = "S"
+  }
+
+  attribute {
+    name = "UserId"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "UserIndex"
+    hash_key        = "UserId"
+    projection_type = "ALL"
+  }
+
+  point_in_time_recovery {
+    enabled = true
+  }
+
+  tags = local.default_tags
+
+  lifecycle {
+    prevent_destroy = false
+  }
+}

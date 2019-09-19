@@ -26,6 +26,7 @@ return [
             'actor-users-table' => getenv('DYNAMODB_TABLE_ACTOR_USERS') ?: null,
             'viewer-codes-table' => getenv('DYNAMODB_TABLE_VIEWER_CODES') ?: null,
             'viewer-activity-table' => getenv('DYNAMODB_TABLE_VIEWER_ACTIVITY') ?: null,
+            'user-lpa-actor-map' => getenv('DYNAMODB_TABLE_USER_LPA_ACTOR_MAP') ?: null,
         ]
     ],
 

@@ -58,6 +58,16 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
     --region eu-west-1 \
     --endpoint $DYNAMODN_ENDPOINT
+
+    aws dynamodb create-table \
+    --attribute-definitions AttributeName=Id,AttributeType=S AttributeName=UserId,AttributeType=S \
+    --table-name UserLpaActorMap \
+    --key-schema AttributeName=Id,KeyType=HASH \
+    --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
+    --region eu-west-1 \
+    --endpoint $DYNAMODN_ENDPOINT \
+    --global-secondary-indexes IndexName=UserIndex,KeySchema=["{AttributeName=UserId,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
+
 fi
 
 # Run the seeding script

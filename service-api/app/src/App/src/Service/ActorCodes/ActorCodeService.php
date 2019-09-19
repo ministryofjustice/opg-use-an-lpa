@@ -6,6 +6,7 @@ namespace App\Service\ActorCodes;
 
 use App\DataAccess\Repository;
 use App\Service\Lpa\LpaService;
+use Ramsey\Uuid\Uuid;
 
 class ActorCodeService
 {
@@ -13,6 +14,8 @@ class ActorCodeService
      * @var Repository\ActorCodesInterface
      */
     private $actorCodesRepository;
+
+    private $userLpaActorMapRepository;
 
     /**
      * @var LpaService
@@ -22,27 +25,36 @@ class ActorCodeService
     /**
      * ActorCodeService constructor.
      * @param Repository\ActorCodesInterface $viewerCodesRepository
+     * @param Repository\UserLpaActorMapInterface $userLpaActorMapRepository
      * @param LpaService $lpaService
      */
     public function __construct(
         Repository\ActorCodesInterface $viewerCodesRepository,
+        Repository\UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaService $lpaService
     )
     {
         $this->lpaService = $lpaService;
         $this->actorCodesRepository = $viewerCodesRepository;
+        $this->userLpaActorMapRepository = $userLpaActorMapRepository;
     }
 
     /**
-     * Returns null if details are not valid.
-     * Or an array holding the usage_token if the LPA is added successfully.
+     * Confirms adding an LPA into a user's account.
+     *
+     * Transaction:
+     *  1 - Validate the code's details
+     *  2 - Add a mapping into our DB for the code
+     *  3 - Mark the code as used
+     *  4 - Undo 2 if 3 fails.
      *
      * @param string $code
      * @param string $uid
      * @param string $dob
      * @return array|null
+     * @throws \Exception
      */
-    public function confirmDetails(string $code, string $uid, string $dob) : ?array {
+    public function confirmDetails(string $code, string $uid, string $dob) : ?string {
 
         $details = $this->validateDetails($code, $uid, $dob);
 
@@ -53,15 +65,37 @@ class ActorCodeService
 
         //---
 
-        /*
-         * Transaction:
-         *      1 - Create row in our table
-         *      2 - Mark the code as used
-         *      3 - Rollback 1 if 2 fails.
-         */
+        $id = null;
 
+        do {
+            $added = false;
 
-        var_dump($details); die;
+            $id = Uuid::uuid4()->toString();
+
+            try {
+                $this->userLpaActorMapRepository->create(
+                    $id,
+                    'user-1',
+                    $details['lpa']['uId'],
+                    $details['actor']['details']['id']
+                );
+
+                $added = true;
+            } catch (Repository\KeyCollisionException $e) {
+                // Allows the loop to repeat with a new ID.
+            }
+
+        } while(!$added);
+
+        //----
+
+        try {
+            $this->actorCodesRepository->flagCodeAsUsed($code);
+        } catch (\Exception $e){
+            $this->userLpaActorMapRepository->delete($id);
+        }
+
+        return $id;
     }
 
     /**
@@ -78,6 +112,13 @@ class ActorCodeService
         $details = $this->actorCodesRepository->get($code);
 
         if (is_null($details)) {
+            return null;
+        }
+
+        //-----------------------
+        // Ensure the code is active
+
+        if ($details['Active'] !== true) {
             return null;
         }
 
@@ -129,7 +170,6 @@ class ActorCodeService
         if ($code != $details['ActorCode'] || $uid != $lpa['uId'] || $dob != $actor['dob']) {
             return null;
         }
-
 
         //---
 

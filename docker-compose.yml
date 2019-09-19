@@ -130,6 +130,7 @@ services:
       DYNAMODB_TABLE_ACTOR_USERS: 'ActorUsers'
       DYNAMODB_TABLE_VIEWER_CODES: 'ViewerCodes'
       DYNAMODB_TABLE_VIEWER_ACTIVITY: 'ViewerActivity'
+      DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: 'UserLpaActorMap'
 
       SIRIUS_API_ENDPOINT: 'http://gateway:5000'
 

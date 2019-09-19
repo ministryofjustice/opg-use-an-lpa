@@ -46,7 +46,8 @@ class ConfigProvider
                 DataAccess\Repository\ActorUsersInterface::class => DataAccess\DynamoDb\ActorUsers::class,
                 DataAccess\Repository\ViewerCodeActivityInterface::class => DataAccess\DynamoDb\ViewerCodeActivity::class,
                 DataAccess\Repository\ViewerCodesInterface::class => DataAccess\DynamoDb\ViewerCodes::class,
-                DataAccess\Repository\LpasInterface::class => DataAccess\ApiGateway\Lpas::class
+                DataAccess\Repository\UserLpaActorMapInterface::class => DataAccess\DynamoDb\UserLpaActorMap::class,
+                DataAccess\Repository\LpasInterface::class => DataAccess\ApiGateway\Lpas::class,
             ],
 
             'factories'  => [
@@ -60,6 +61,7 @@ class ConfigProvider
                 DataAccess\DynamoDb\ActorUsers::class => DataAccess\DynamoDb\ActorUsersFactory::class,
                 DataAccess\DynamoDb\ViewerCodeActivity::class => DataAccess\DynamoDb\ViewerCodeActivityFactory::class,
                 DataAccess\DynamoDb\ViewerCodes::class => DataAccess\DynamoDb\ViewerCodesFactory::class,
+                DataAccess\DynamoDb\UserLpaActorMap::class => DataAccess\DynamoDb\UserLpaActorMapFactory::class,
                 DataAccess\ApiGateway\Lpas::class => DataAccess\ApiGateway\LpasFactory::class,
 
                 // Handlers

@@ -73,21 +73,25 @@ actorLpaCodes = [
         'ActorCode': "RY4KKKVMRVAK",
         'ActorLpaId': 3,
         'SiriusUid': "700000000047",
+        'Active': True,
     },
     {
         'ActorCode': "XYUPHWQRECHV",
         'ActorLpaId': 8,
         'SiriusUid': "700000000138",
+        'Active': True,
     },
     {
         'ActorCode': "JJGWG6JTRLAY",
         'ActorLpaId': 13,
         'SiriusUid': "700000000252",
+        'Active': True,
     },
     {
         'ActorCode': "MDCKNUA9UMLA",
         'ActorLpaId': 21,
         'SiriusUid': "700000000344",
+        'Active': True,
     },
 ]
 
