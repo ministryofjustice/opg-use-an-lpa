@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
+/**
+ * Interface for recording activity around the Viewer Code.
+ *
+ * Interface ViewerCodeActivityInterface
+ * @package App\DataAccess\Repository
+ */
 interface ViewerCodeActivityInterface
 {
     /**

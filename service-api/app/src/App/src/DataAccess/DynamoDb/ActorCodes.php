@@ -8,7 +8,7 @@ use App\DataAccess\Repository\ActorCodesInterface;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
 
-class ActorLpaCodes implements ActorCodesInterface
+class ActorCodes implements ActorCodesInterface
 {
     use DynamoHydrateTrait;
 
@@ -36,7 +36,7 @@ class ActorLpaCodes implements ActorCodesInterface
     /**
      * @inheritDoc
      */
-    public function get(string $code) : array
+    public function get(string $code) : ?array
     {
         $result = $this->client->getItem([
             'TableName' => $this->actorLpaCodesTable,
@@ -47,14 +47,8 @@ class ActorLpaCodes implements ActorCodesInterface
             ],
         ]);
 
-        var_dump($result); die;
-
         $codeData = $this->getData($result);
 
-        if (empty($codeData)) {
-            throw new NotFoundException('Code not found');
-        }
-
-        return $codeData;
+        return !empty($codeData) ? $codeData : null;
     }
 }

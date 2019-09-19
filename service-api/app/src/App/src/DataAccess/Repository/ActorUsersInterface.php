@@ -8,6 +8,12 @@ use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use Exception;
 
+/**
+ * Interface for Data relating to Users of the Actor System.
+ *
+ * Interface ActorUsersInterface
+ * @package App\DataAccess\Repository
+ */
 interface ActorUsersInterface
 {
     /**

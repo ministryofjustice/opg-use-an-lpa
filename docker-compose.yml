@@ -38,7 +38,7 @@ services:
       AWS_ENDPOINT_KMS: http://kms:8080
       AWS_ACCESS_KEY_ID: '-'
       AWS_SECRET_ACCESS_KEY: '-'
-      ENABLE_XDEBUG: 'true'
+      #ENABLE_XDEBUG: 'true'
       PHP_IDE_CONFIG: serverName=viewer-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
 
@@ -79,7 +79,7 @@ services:
       AWS_ENDPOINT_KMS: http://kms:8080
       AWS_ACCESS_KEY_ID: '-'
       AWS_SECRET_ACCESS_KEY: '-'
-      ENABLE_XDEBUG: 'true'
+      #ENABLE_XDEBUG: 'true'
       PHP_IDE_CONFIG: serverName=actor-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
 
@@ -126,16 +126,18 @@ services:
     volumes:
       - ./service-api/app:/app
     environment:
-      DYNAMODB_TABLE_ACTOR_LPA_CODES: 'ActorLpaCodes'
+      DYNAMODB_TABLE_ACTOR_CODES: 'ActorCodes'
       DYNAMODB_TABLE_ACTOR_USERS: 'ActorUsers'
       DYNAMODB_TABLE_VIEWER_CODES: 'ViewerCodes'
       DYNAMODB_TABLE_VIEWER_ACTIVITY: 'ViewerActivity'
+
+      SIRIUS_API_ENDPOINT: 'http://gateway:5000'
 
       # Local only
       AWS_ACCESS_KEY_ID: '-'
       AWS_ENDPOINT_DYNAMODB: http://localstack:4569
       AWS_SECRET_ACCESS_KEY: '-'
-      ENABLE_XDEBUG: 'true'
+      #ENABLE_XDEBUG: 'true'
       PHP_IDE_CONFIG: serverName=api-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
 
@@ -161,7 +163,7 @@ services:
     environment:
       AWS_ACCESS_KEY_ID: '-'
       AWS_SECRET_ACCESS_KEY: '-'
-      DYNAMODB_TABLE_ACTOR_LPA_CODES: 'ActorLpaCodes'
+      DYNAMODB_TABLE_ACTOR_CODES: 'ActorCodes'
       DYNAMODB_TABLE_VIEWER_CODES: 'ViewerCodes'
       AWS_ENDPOINT_DYNAMODB: localstack:4569
 
@@ -189,9 +191,9 @@ services:
       REGION: eu-west-1
       SEED_PATH: /init/kms-seed.yaml
 
-  feature-tests:
-    build:
-      context: .
-      dockerfile: features/Dockerfile
-    volumes:
-      - ./features:/feature-tests
+#  feature-tests:
+#    build:
+#      context: .
+#      dockerfile: features/Dockerfile
+#    volumes:
+#      - ./features:/feature-tests

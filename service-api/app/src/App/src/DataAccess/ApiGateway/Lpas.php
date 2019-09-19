@@ -1,0 +1,119 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\DataAccess\ApiGateway;
+
+use App\DataAccess\Repository\LpasInterface;
+use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Pool;
+
+/**
+ * Looks up LPAs in the Sirius API Gateway.
+ *
+ * Class Lpas
+ * @package App\DataAccess\ApiGateway
+ */
+class Lpas implements LpasInterface
+{
+    /**
+     * @var HttpClient
+     */
+    private $httpClient;
+
+    /**
+     * @var string
+     */
+    private $apiBaseUri;
+
+    /**
+     * Lpas constructor.
+     * @param HttpClient $httpClient
+     * @param string $apiUrl
+     * @param string $awsRegion
+     */
+    public function __construct(HttpClient $httpClient, string $apiUrl)
+    {
+        $this->httpClient = $httpClient;
+        $this->apiBaseUri = $apiUrl;
+    }
+
+    /**
+     * Looks up an LPA based on its Sirius uid.
+     *
+     * @param string $uid
+     * @return array|null
+     */
+    public function get(string $uid) : ?array
+    {
+        $result = $this->lookup([$uid]);
+        return !empty($result) ? current($result) : null;
+    }
+
+    /**
+     * Looks up the all the LPA uids in the passed array.
+     *
+     * @param array $uids
+     * @return array
+     */
+    public function lookup(array $uids) : array
+    {
+        // Builds an array of Requests to send
+        // The key for each request is the original uid.
+        $requests = array_combine(
+            $uids,  // Use as array key
+            array_map(function($v){
+                $url = $this->apiBaseUri . sprintf("/v1/use-an-lpa/lpas/%s", $v);
+                return new Request('GET', $url, [
+                    'Accept'        => 'application/json',
+                    'Content-type'  => 'application/json'
+                ]);
+            }, $uids)
+        );
+
+        //---
+
+        // Responses from the pool
+        $results = [];
+
+        $pool = new Pool($this->httpClient, $requests, [
+            'concurrency' => 50,
+            'options' => [
+                'http_errors' => false,
+            ],
+            'fulfilled' => function ($response, $id) use (&$results) {
+                $results[$id] = $response;
+            },
+            'rejected' => function ($reason, $id){
+                // Log?
+            },
+        ]);
+
+        // Initiate transfers and create a promise
+        $promise = $pool->promise();
+
+        // Force the pool of requests to complete
+        $promise->wait();
+
+        //---
+
+        // Handle all request response now
+        foreach ($results as $uid=>$result) {
+            $statusCode = $result->getStatusCode();
+
+            switch ($statusCode) {
+                case 200:
+                    # TODO: We can some more error checking around this.
+                    $results[$uid] = json_decode((string)$result->getBody(), true);
+                    break;
+                default:
+                    // We only care about 200s at the moment.
+                    unset($results[$uid]);
+            }
+        }
+
+        return $results;
+    }
+
+}

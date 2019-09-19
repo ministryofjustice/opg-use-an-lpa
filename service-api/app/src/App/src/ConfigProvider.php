@@ -42,10 +42,11 @@ class ConfigProvider
                 Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
 
                 // Data Access
-                DataAccess\Repository\ActorLpaCodesInterface::class => DataAccess\DynamoDb\ActorLpaCodes::class,
+                DataAccess\Repository\ActorCodesInterface::class => DataAccess\DynamoDb\ActorCodes::class,
                 DataAccess\Repository\ActorUsersInterface::class => DataAccess\DynamoDb\ActorUsers::class,
                 DataAccess\Repository\ViewerCodeActivityInterface::class => DataAccess\DynamoDb\ViewerCodeActivity::class,
                 DataAccess\Repository\ViewerCodesInterface::class => DataAccess\DynamoDb\ViewerCodes::class,
+                DataAccess\Repository\LpasInterface::class => DataAccess\ApiGateway\Lpas::class
             ],
 
             'factories'  => [
@@ -55,10 +56,11 @@ class ConfigProvider
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
 
                 // Data Access
-                DataAccess\DynamoDb\ActorLpaCodes::class => DataAccess\DynamoDb\ActorLpaCodesFactory::class,
+                DataAccess\DynamoDb\ActorCodes::class => DataAccess\DynamoDb\ActorCodesFactory::class,
                 DataAccess\DynamoDb\ActorUsers::class => DataAccess\DynamoDb\ActorUsersFactory::class,
                 DataAccess\DynamoDb\ViewerCodeActivity::class => DataAccess\DynamoDb\ViewerCodeActivityFactory::class,
                 DataAccess\DynamoDb\ViewerCodes::class => DataAccess\DynamoDb\ViewerCodesFactory::class,
+                DataAccess\ApiGateway\Lpas::class => DataAccess\ApiGateway\LpasFactory::class,
 
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class

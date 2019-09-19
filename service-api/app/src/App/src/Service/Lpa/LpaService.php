@@ -14,7 +14,7 @@ use DateTime;
 class LpaService
 {
     /**
-     * @var Repository\ActorLpaCodesInterface
+     * @var Repository\ActorCodesInterface
      */
     private $actorLpaCodesRepository;
 
@@ -29,46 +29,39 @@ class LpaService
     private $viewerCodeActivityRepository;
 
     /**
+     * @var Repository\LpasInterface
+     */
+    private $lpaRepository;
+
+    /**
      * LpaService constructor.
      * @param Repository\ViewerCodesInterface $viewerCodesRepository
      * @param Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository
-     * @param Repository\ActorLpaCodesInterface $actorLpaCodesRepository
+     * @param Repository\ActorCodesInterface $actorLpaCodesRepository
      */
     public function __construct(
         Repository\ViewerCodesInterface $viewerCodesRepository,
         Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
-        Repository\ActorLpaCodesInterface $actorLpaCodesRepository
+        Repository\ActorCodesInterface $actorLpaCodesRepository,
+        Repository\LpasInterface $lpaRepository
     )
     {
         $this->viewerCodesRepository = $viewerCodesRepository;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
         $this->actorLpaCodesRepository = $actorLpaCodesRepository;
+
+        $this->lpaRepository = $lpaRepository;
     }
 
     /**
      * Get an LPA using the ID value
      *
-     * @param string $lpaId
-     * @return array
-     * @throws NotFoundException
+     * @param string $uid
+     * @return ?array
      */
-    public function getById(string $lpaId) : array
+    public function getByUid(string $uid) : ?array
     {
-        //  TODO - Remove the use of mock data when connected to Sirius gateway
-        //  For now load the data from the local json file
-        $data = file_get_contents(__DIR__ . '/lpas-gateway.json');
-        $lpaDatasets = json_decode($data, true);
-
-        foreach ($lpaDatasets as $lpaDataset) {
-            //  Filter dashes out of the Sirius Uid before comparison
-            $siriusUid = str_replace('-', '', $lpaDataset['uId']);
-
-            if ($siriusUid == $lpaId) {
-                return $lpaDataset;
-            }
-        }
-
-        throw new NotFoundException('LPA not found');
+        return $this->lpaRepository->get($uid);
     }
 
     /**
