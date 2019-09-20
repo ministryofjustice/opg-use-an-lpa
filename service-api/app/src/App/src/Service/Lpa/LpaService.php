@@ -14,11 +14,6 @@ use DateTime;
 class LpaService
 {
     /**
-     * @var Repository\ActorCodesInterface
-     */
-    private $actorLpaCodesRepository;
-
-    /**
      * @var Repository\ViewerCodesInterface
      */
     private $viewerCodesRepository;
@@ -34,23 +29,21 @@ class LpaService
     private $lpaRepository;
 
     /**
-     * LpaService constructor.
-     * @param Repository\ViewerCodesInterface $viewerCodesRepository
-     * @param Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository
-     * @param Repository\ActorCodesInterface $actorLpaCodesRepository
+     * @var Repository\UserLpaActorMapInterface
      */
+    private $userLpaActorMapRepository;
+
     public function __construct(
         Repository\ViewerCodesInterface $viewerCodesRepository,
         Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
-        Repository\ActorCodesInterface $actorLpaCodesRepository,
-        Repository\LpasInterface $lpaRepository
+        Repository\LpasInterface $lpaRepository,
+        Repository\UserLpaActorMapInterface $userLpaActorMapRepository
     )
     {
         $this->viewerCodesRepository = $viewerCodesRepository;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
-        $this->actorLpaCodesRepository = $actorLpaCodesRepository;
-
         $this->lpaRepository = $lpaRepository;
+        $this->userLpaActorMapRepository = $userLpaActorMapRepository;
     }
 
     /**
@@ -64,12 +57,40 @@ class LpaService
         return $this->lpaRepository->get($uid);
     }
 
+    public function getAllForUser(string $userId) : array
+    {
+        // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
+        $lpaActorMaps = $this->userLpaActorMapRepository->getUsersLpas($userId);
+
+        $lpaUids = array_column($lpaActorMaps, 'SiriusUid');
+
+        if (empty($lpaUids)) {
+            return [];
+        }
+
+        // Return all the LPA details based on the Sirius Ids.
+        $lpas = $this->lpaRepository->lookup($lpaUids);
+
+        $result = [];
+
+        // Map the results... #TODO: into an UserLpaActorObject.
+        foreach($lpaActorMaps as $item) {
+            $result[$item['Id']] = [
+                'user-lpa-actor-token' => $item['Id'],
+                'lpa' => (isset($lpas[$item['SiriusUid']])) ? $lpas[$item['SiriusUid']] : null,
+                'actor' => 'details to add...',
+            ];
+        }
+
+        return $result;
+    }
+
     /**
      * Get an LPA using the share code
      *
      * @param string $shareCode
      * @return array
-     * @throws GoneException
+     * @throws \Exception
      */
     public function getByCode(string $shareCode) : array
     {
@@ -85,53 +106,5 @@ class LpaService
         return $this->getById($viewerCodeData['SiriusUid']);
     }
 
-    /**
-     * Search for an LPA actor code
-     *
-     * @param string $code
-     * @param string $uid
-     * @param string $dob
-     * @return array
-     */
-    public function search(string $code, string $uid, string $dob)
-    {
-        try {
-            $actorLpaCodeData = $this->actorLpaCodesRepository->get($code);
 
-            if ($uid != $actorLpaCodeData['SiriusUid']) {
-                throw new NotFoundException();
-            }
-
-            $lpaData = $this->getById($uid);
-
-            //  Use the actor sirius Uid and dob provided to confirm that this LPA data should be returned
-            $actorSiriusUid = $actorLpaCodeData['ActorSiriusUid'];
-
-            //  Try to find actor data based on the Uid
-            $actorData = [];
-
-            if (isset($lpaData['donor']['uId']) && str_replace('-', '', $lpaData['donor']['uId']) == $actorSiriusUid) {
-                $actorData = $lpaData['donor'];
-            } elseif (isset($lpaData['attorneys']) && is_array($lpaData['attorneys'])) {
-                foreach ($lpaData['attorneys'] as $attorney) {
-                    if (isset($attorney['uId']) && str_replace('-', '', $attorney['uId']) == $actorSiriusUid) {
-                        $actorData = $attorney;
-                    }
-                }
-            }
-
-            //  Compare the date of birth for the actor
-            if (!empty($actorData)
-                && isset($actorData['dob'])
-                && $actorData['dob'] == $dob) {
-
-                return $lpaData;
-            }
-
-            throw new NotFoundException();
-        } catch (NotFoundException $nfe) {
-            //  Repackage the NotFoundException to remove the code based exception
-            throw new NotFoundException('No LPA found');
-        }
-    }
 }

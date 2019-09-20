@@ -38,6 +38,9 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/v1/lpa-by-code/{shareCode}', App\Handler\LpaHandler::class, 'lpa.by.share-code');
 
 
+    $app->get('/v1/lpas', App\Handler\LpasCollectionHandler::class, 'lpa.collection');
+
+
     $app->post('/v1/actor-codes/summary', App\Handler\ActorCodeSummaryHandler::class, 'lpa.actor-code.summary');
     $app->post('/v1/actor-codes/confirm', App\Handler\ActorCodeConfirmHandler::class, 'lpa.actor-code.confirm');
 

@@ -100,8 +100,19 @@ class UserLpaActorMap implements UserLpaActorMapInterface
     /**
      * @inheritDoc
      */
-    public function getUsersLpas(string$userId) : ?array
+    public function getUsersLpas(string $userId) : ?array
     {
-        die(__METHOD__.' not implemented yet.');
+        $result = $this->client->query([
+            'TableName' => $this->userLpaActorTable,
+            'IndexName' => 'UserIndex',
+            'KeyConditionExpression' => 'UserId = :user_id',
+            'ExpressionAttributeValues' => [
+                ':user_id' => [
+                    'S' => $userId,
+                ],
+            ]
+        ]);
+
+        return $this->getDataCollection($result);
     }
 }
