@@ -77,8 +77,8 @@ class LpaService
         foreach($lpaActorMaps as $item) {
             $result[$item['Id']] = [
                 'user-lpa-actor-token' => $item['Id'],
+                'actor' => $actor = $this->lookupActorInLpa($lpas[$item['SiriusUid']], $item['ActorId']),
                 'lpa' => (isset($lpas[$item['SiriusUid']])) ? $lpas[$item['SiriusUid']] : null,
-                'actor' => 'details to add...',
             ];
         }
 
@@ -107,4 +107,46 @@ class LpaService
     }
 
 
+    /**
+     * Given an LPA and an Actor ID, this returns the actor's details, and what type of actor they are.
+     *
+     * @param array $lpa
+     * @param int $actorId
+     * @return array|null
+     */
+    public function lookupActorInLpa(array $lpa, int $actorId) : ?array
+    {
+        $actor = null;
+        $actorType = null;
+
+        // Determine if the actor is a primary attorney
+        if (isset($lpa['attorneys']) && is_array($lpa['attorneys'])) {
+            foreach ($lpa['attorneys'] as $attorney) {
+                if ($attorney['id'] == $actorId) {
+                    $actor = $attorney;
+                    $actorType = 'primary-attorney';
+                    break;
+                }
+            }
+        }
+
+        // If no an attorney, check if they're the donor.
+        if (is_null($actor) &&
+            isset($lpa['donor']) &&
+            is_array($lpa['donor']) &&
+            $lpa['donor']['id'] == $actorId)
+        {
+            $actor = $lpa['donor'];
+            $actorType = 'donor';
+        }
+
+        if (is_null($actor)) {
+            return null;
+        }
+
+        return [
+            'type' => $actorType,
+            'details' => $actor,
+        ];
+    }
 }

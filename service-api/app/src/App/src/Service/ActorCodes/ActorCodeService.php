@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\ActorCodes;
 
 use App\DataAccess\Repository;
+use App\DataModel\UserLpaActor;
 use App\Service\Lpa\LpaService;
 use Ramsey\Uuid\Uuid;
 
@@ -135,31 +136,7 @@ class ActorCodeService
         //----------------------
         // Find the actor in the LPA
 
-        # TODO: Should this be a function somewhere?
-
-        $actor = null;
-        $actorType = null;
-
-        // Determine if the actor is a primary attorney
-        if (isset($lpa['attorneys']) && is_array($lpa['attorneys'])) {
-            foreach ($lpa['attorneys'] as $attorney) {
-                if ($attorney['id'] == $details['ActorLpaId']) {
-                    $actor = $attorney;
-                    $actorType = 'primary-attorney';
-                    break;
-                }
-            }
-        }
-
-        // If no an attorney, check if they're the donor.
-        if (is_null($actor) &&
-            isset($lpa['donor']) &&
-            is_array($lpa['donor']) &&
-            $lpa['donor']['id'] == $details['ActorLpaId'])
-        {
-            $actor = $lpa['donor'];
-            $actorType = 'donor';
-        }
+        $actor = $this->lpaService->lookupActorInLpa($lpa, $details['ActorLpaId']);
 
         if (is_null($actor)) {
             return null;
@@ -168,18 +145,15 @@ class ActorCodeService
         //----------------------
         // Validate the details match
 
-        if ($code != $details['ActorCode'] || $uid != $lpa['uId'] || $dob != $actor['dob']) {
+        if ($code != $details['ActorCode'] || $uid != $lpa['uId'] || $dob != $actor['details']['dob']) {
             return null;
         }
 
         //---
 
         return [
+            'actor' => $actor,
             'lpa' => $lpa,
-            'actor' => [
-                'tpye' => $actorType,
-                'details' => $actor
-            ]
         ];
 
     }
