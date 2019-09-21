@@ -57,6 +57,30 @@ class LpaService
         return $this->lpaRepository->get($uid);
     }
 
+    public function getByUserLpaActorToken(string $token, ?string $userId = null) : ?array
+    {
+        $map = $this->userLpaActorMapRepository->get($token);
+
+        // If a userId was passed, ensure that is matches the passed token
+        if (!is_null($userId) && $userId !== $map['UserId']) {
+            return null;
+        }
+
+        //---
+
+        $lpa = $this->getByUid($map['SiriusUid']);
+
+        if (empty($lpa)) {
+            return null;
+        }
+
+        return [
+            'user-lpa-actor-token' => $map['Id'],
+            'actor' => $actor = $this->lookupActorInLpa($lpa, $map['ActorId']),
+            'lpa' => $lpa,
+        ];
+    }
+
     public function getAllForUser(string $userId) : array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
@@ -73,12 +97,12 @@ class LpaService
 
         $result = [];
 
-        // Map the results... #TODO: into an UserLpaActorObject.
+        // Map the results... #TODO: into an UserLpaActorObject?
         foreach($lpaActorMaps as $item) {
             $result[$item['Id']] = [
                 'user-lpa-actor-token' => $item['Id'],
                 'actor' => $actor = $this->lookupActorInLpa($lpas[$item['SiriusUid']], $item['ActorId']),
-                'lpa' => (isset($lpas[$item['SiriusUid']])) ? $lpas[$item['SiriusUid']] : null,
+                'lpa' => $lpas[$item['SiriusUid']],
             ];
         }
 
