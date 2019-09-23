@@ -25,6 +25,10 @@ resource "aws_dynamodb_table" "actor_users_table" {
   hash_key     = "Email"
 
   attribute {
+    name = "Id"
+    type= "S"
+  }
+  attribute {
     name = "Email"
     type = "S"
   }
@@ -33,6 +37,11 @@ resource "aws_dynamodb_table" "actor_users_table" {
     type = "S"
   }
 
+  global_secondary_index {
+    hash_key = "EmailIndex"
+    name = "Email"
+    projection_type = "KEYS_ONLY"
+  }
   global_secondary_index {
     name            = "ActivationTokenIndex"
     hash_key        = "ActivationToken"
