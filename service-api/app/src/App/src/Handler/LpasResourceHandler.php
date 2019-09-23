@@ -34,13 +34,18 @@ class LpasResourceHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
+        if (is_null($request->getAttribute('user-id'))) {
+            throw new BadRequestException("'user-id' missing.");
+        }
+
         if (is_null($request->getAttribute('user-lpa-actor-token'))) {
             throw new BadRequestException("'user-lpa-actor-token' missing.");
         }
 
-        $user = $request->getAttribute('user-id', false);
-
-        $result = $this->lpaService->getByUserLpaActorToken($request->getAttribute('user-lpa-actor-token'), $user);
+        $result = $this->lpaService->getByUserLpaActorToken(
+            $request->getAttribute('user-lpa-actor-token'),
+            $request->getAttribute('user-id')
+        );
 
         return new JsonResponse($result);
     }

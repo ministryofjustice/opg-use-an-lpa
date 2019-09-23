@@ -65,6 +65,13 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     type = "S"
   }
 
+  global_secondary_index {
+    name            = "SiriusUidIndex"
+    hash_key        = "SiriusUid"
+    range_key       = "Expires"
+    projection_type = "ALL"
+  }
+
   point_in_time_recovery {
     enabled = true
   }

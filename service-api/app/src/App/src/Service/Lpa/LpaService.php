@@ -3,7 +3,6 @@
 namespace App\Service\Lpa;
 
 use App\DataAccess\Repository;
-use App\Exception\NotFoundException;
 use App\Exception\GoneException;
 use DateTime;
 
@@ -57,12 +56,12 @@ class LpaService
         return $this->lpaRepository->get($uid);
     }
 
-    public function getByUserLpaActorToken(string $token, ?string $userId = null) : ?array
+    public function getByUserLpaActorToken(string $token, string $userId) : ?array
     {
         $map = $this->userLpaActorMapRepository->get($token);
 
-        // If a userId was passed, ensure that is matches the passed token
-        if (!is_null($userId) && $userId !== $map['UserId']) {
+        // Ensure the passed userId matches the passed token
+        if ($userId !== $map['UserId']) {
             return null;
         }
 
@@ -73,6 +72,8 @@ class LpaService
         if (empty($lpa)) {
             return null;
         }
+
+        //---
 
         return [
             'user-lpa-actor-token' => $map['Id'],
@@ -138,7 +139,7 @@ class LpaService
      * @param int $actorId
      * @return array|null
      */
-    public function lookupActorInLpa(array $lpa, int $actorId) : ?array
+    public static function lookupActorInLpa(array $lpa, int $actorId) : ?array
     {
         $actor = null;
         $actorType = null;

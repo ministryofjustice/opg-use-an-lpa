@@ -44,12 +44,13 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --time-to-live-specification "Enabled=true, AttributeName=ExpiresTTL"
 
     aws dynamodb create-table \
-    --attribute-definitions AttributeName=ViewerCode,AttributeType=S \
+    --attribute-definitions AttributeName=ViewerCode,AttributeType=S AttributeName=SiriusUid,AttributeType=S AttributeName=Expires,AttributeType=S \
     --table-name ViewerCodes \
     --key-schema AttributeName=ViewerCode,KeyType=HASH \
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
     --region eu-west-1 \
-    --endpoint $DYNAMODN_ENDPOINT
+    --endpoint $DYNAMODN_ENDPOINT \
+    --global-secondary-indexes IndexName=SiriusUidIndex,KeySchema=["{AttributeName=SiriusUid,KeyType=HASH},{AttributeName=Expires,KeyType=RANGE}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
 
     aws dynamodb create-table \
     --attribute-definitions AttributeName=ViewerCode,AttributeType=S AttributeName=Viewed,AttributeType=S \
