@@ -50,7 +50,7 @@ class ViewerCodes implements ViewerCodesInterface
             ],
         ]);
 
-        $codeData = $this->getData($result, ['Expires']);
+        $codeData = $this->getData($result, ['Added','Expires']);
 
         if (empty($codeData)) {
             throw new NotFoundException('Code not found');

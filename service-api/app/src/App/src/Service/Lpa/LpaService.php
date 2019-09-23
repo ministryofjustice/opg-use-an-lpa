@@ -2,6 +2,7 @@
 
 namespace App\Service\Lpa;
 
+use RuntimeException;
 use App\DataAccess\Repository;
 use App\Exception\GoneException;
 use DateTime;
@@ -51,7 +52,7 @@ class LpaService
      * @param string $uid
      * @return ?array
      */
-    public function getByUid(string $uid) : ?array
+    public function getByUid(string $uid) : ?Repository\Response\LpaInterface
     {
         return $this->lpaRepository->get($uid);
     }
@@ -77,8 +78,9 @@ class LpaService
 
         return [
             'user-lpa-actor-token' => $map['Id'],
-            'actor' => $actor = $this->lookupActorInLpa($lpa, $map['ActorId']),
-            'lpa' => $lpa,
+            'date' => $lpa->getLookupTime()->format('c'),
+            'actor' => $actor = $this->lookupActorInLpa($lpa->getData(), $map['ActorId']),
+            'lpa' => $lpa->getData(),
         ];
     }
 
@@ -100,10 +102,13 @@ class LpaService
 
         // Map the results... #TODO: into an UserLpaActorObject?
         foreach($lpaActorMaps as $item) {
+            $lpa = $lpas[$item['SiriusUid']];
+
             $result[$item['Id']] = [
                 'user-lpa-actor-token' => $item['Id'],
-                'actor' => $actor = $this->lookupActorInLpa($lpas[$item['SiriusUid']], $item['ActorId']),
-                'lpa' => $lpas[$item['SiriusUid']],
+                'date' => $lpa->getLookupTime()->format('c'),
+                'actor' => $actor = $this->lookupActorInLpa($lpa->getData(), $item['ActorId']),
+                'lpa' => $lpa->getData(),
             ];
         }
 
@@ -111,24 +116,61 @@ class LpaService
     }
 
     /**
-     * Get an LPA using the share code
-     *
-     * @param string $shareCode
-     * @return array
+     * Get an LPA using the share code.
+     * 
+     * @param string $viewerCode
+     * @param string $donorSurname
+     * @param bool $logActivity
+     * @return array|null
      * @throws \Exception
      */
-    public function getByCode(string $shareCode) : array
+    public function getByViewerCode(string $viewerCode, string $donorSurname, bool $logActivity) : ?array
     {
-        $viewerCodeData = $this->viewerCodesRepository->get($shareCode);
+        $viewerCodeData = $this->viewerCodesRepository->get($viewerCode);
 
-        if ($viewerCodeData['Expires'] < new DateTime()) {
+        if (empty($viewerCodeData)) {
+            return null;
+        }
+
+        $lpa = $this->getByUid($viewerCodeData['SiriusUid']);
+
+        //---
+
+        // Check donor's surname
+
+        if (!isset($lpa->getData()['donor']['surname'])
+            || strtolower($lpa->getData()['donor']['surname']) !== strtolower($donorSurname)
+        ){
+            return null;
+        }
+
+        //---
+
+        // Whilst the checks in this section could be done before we lookup the LPA, they are done
+        // at this point as we only want to acknowledge if a code has expired iff donor surname matched.
+
+        if (!isset($viewerCodeData['Expires']) || !($viewerCodeData['Expires'] instanceof DateTime)) {
+            throw new RuntimeException("'Expires' filed missing or invalid.");
+        }
+
+        if (new DateTime() > $viewerCodeData['Expires']) {
             throw new GoneException('Share code expired');
         }
 
-        //  Record the lookup in the activity table
-        $this->viewerCodeActivityRepository->recordSuccessfulLookupActivity($viewerCodeData['ViewerCode']);
+        //---
 
-        return $this->getById($viewerCodeData['SiriusUid']);
+        if ($logActivity) {
+            // Record the lookup in the activity table
+            // We only do this if it was a 'full' lookup. i.e. not just the confirmation page.
+            $this->viewerCodeActivityRepository->recordSuccessfulLookupActivity($viewerCodeData['ViewerCode']);
+        }
+
+        return [
+            'date' => $lpa->getLookupTime()->format('c'),
+            'expires' => $viewerCodeData['Expires']->format('c'),
+            'organisation' => $viewerCodeData['Organisation'],
+            'lpa' => $lpa->getData(),
+        ];
     }
 
 

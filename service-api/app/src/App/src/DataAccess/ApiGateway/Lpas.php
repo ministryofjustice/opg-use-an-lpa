@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\DataAccess\ApiGateway;
 
+use DateTime;
 use App\DataAccess\Repository\LpasInterface;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Pool;
+use App\DataAccess\Repository\Response;
 
 /**
  * Looks up LPAs in the Sirius API Gateway.
@@ -43,9 +45,10 @@ class Lpas implements LpasInterface
      * Looks up an LPA based on its Sirius uid.
      *
      * @param string $uid
-     * @return array|null
+     * @return Response\LpaInterface|null
+     * @throws \Exception
      */
-    public function get(string $uid) : ?array
+    public function get(string $uid) : ?Response\LpaInterface
     {
         $result = $this->lookup([$uid]);
         return !empty($result) ? current($result) : null;
@@ -56,6 +59,7 @@ class Lpas implements LpasInterface
      *
      * @param array $uids
      * @return array
+     * @throws \Exception
      */
     public function lookup(array $uids) : array
     {
@@ -105,7 +109,10 @@ class Lpas implements LpasInterface
             switch ($statusCode) {
                 case 200:
                     # TODO: We can some more error checking around this.
-                    $results[$uid] = json_decode((string)$result->getBody(), true);
+                    $results[$uid] = new Response\Lpa(
+                        json_decode((string)$result->getBody(), true),
+                        new DateTime($result->getHeaderLine('Date'))
+                    );
                     break;
                 default:
                     // We only care about 200s at the moment.

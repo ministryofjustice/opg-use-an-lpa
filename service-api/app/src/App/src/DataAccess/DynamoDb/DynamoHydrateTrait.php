@@ -64,7 +64,7 @@ trait DynamoHydrateTrait
             $thisVal = $marshaler->unmarshalValue($value);
 
             if (in_array($key, $dateFields)) {
-                $thisVal = DateTime::createFromFormat('Y-m-d H:i:s', $thisVal);
+                $thisVal = new DateTime($thisVal);
             }
 
             $item[$key] = $thisVal;
