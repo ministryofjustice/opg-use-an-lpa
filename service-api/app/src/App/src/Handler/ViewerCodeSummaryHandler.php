@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\Exception\NotFoundException;
 use App\Service\Lpa\LpaService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -41,6 +42,10 @@ class ViewerCodeSummaryHandler implements RequestHandlerInterface
         }
 
         $data = $this->lpaService->getByViewerCode($params['code'], $params['name'], false);
+
+        if (is_null($data)){
+            throw new NotFoundException();
+        }
 
         return new JsonResponse($data);
     }

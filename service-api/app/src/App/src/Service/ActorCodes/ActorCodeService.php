@@ -136,7 +136,7 @@ class ActorCodeService
         //----------------------
         // Find the actor in the LPA
 
-        $actor = $this->lpaService->lookupActorInLpa($lpa, $details['ActorLpaId']);
+        $actor = $this->lpaService->lookupActorInLpa($lpa->getData(), $details['ActorLpaId']);
 
         if (is_null($actor)) {
             return null;
@@ -145,7 +145,7 @@ class ActorCodeService
         //----------------------
         // Validate the details match
 
-        if ($code != $details['ActorCode'] || $uid != $lpa['uId'] || $dob != $actor['details']['dob']) {
+        if ($code != $details['ActorCode'] || $uid != $lpa->getData()['uId'] || $dob != $actor['details']['dob']) {
             return null;
         }
 
@@ -153,7 +153,7 @@ class ActorCodeService
 
         return [
             'actor' => $actor,
-            'lpa' => $lpa,
+            'lpa' => $lpa->getData(),
         ];
 
     }
