@@ -46,7 +46,7 @@ class ActorCodes implements ActorCodesInterface
             ],
         ]);
 
-        $codeData = $this->getData($result);
+        $codeData = $this->getData($result, ['Expires']);
 
         return !empty($codeData) ? $codeData : null;
     }

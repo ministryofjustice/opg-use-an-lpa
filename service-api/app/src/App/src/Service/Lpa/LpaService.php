@@ -177,6 +177,8 @@ class LpaService
     /**
      * Given an LPA and an Actor ID, this returns the actor's details, and what type of actor they are.
      *
+     * TODO: Confirm if we need to look in Trust Corporations, or if an active Trust Corporation would appear in `attorneys`.
+     *
      * @param array $lpa
      * @param int $actorId
      * @return array|null
