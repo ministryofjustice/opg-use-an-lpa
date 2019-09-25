@@ -183,7 +183,7 @@ class LpaService
      * @param int $actorId
      * @return array|null
      */
-    public static function lookupActorInLpa(array $lpa, int $actorId) : ?array
+    public function lookupActorInLpa(array $lpa, int $actorId) : ?array
     {
         $actor = null;
         $actorType = null;

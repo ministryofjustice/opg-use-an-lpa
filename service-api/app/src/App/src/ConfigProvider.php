@@ -54,7 +54,6 @@ class ConfigProvider
                 // Services
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 Aws\DynamoDb\DynamoDbClient::class => Service\Aws\DynamoDbClientFactory::class,
-                Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
 
                 // Data Access
                 DataAccess\DynamoDb\ActorCodes::class => DataAccess\DynamoDb\ActorCodesFactory::class,

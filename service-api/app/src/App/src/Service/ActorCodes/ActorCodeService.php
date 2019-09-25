@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\ActorCodes;
 
 use App\DataAccess\Repository;
-use App\DataModel\UserLpaActor;
 use App\Service\Lpa\LpaService;
 use Ramsey\Uuid\Uuid;
 
@@ -16,6 +15,9 @@ class ActorCodeService
      */
     private $actorCodesRepository;
 
+    /**
+     * @var Repository\UserLpaActorMapInterface
+     */
     private $userLpaActorMapRepository;
 
     /**
@@ -39,6 +41,66 @@ class ActorCodeService
         $this->actorCodesRepository = $viewerCodesRepository;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
     }
+
+
+    /**
+     * @param string $code
+     * @param string $uid
+     * @param string $dob
+     * @return array|null
+     */
+    public function validateDetails(string $code, string $uid, string $dob) : ?array
+    {
+        //-----------------------
+        // Lookup the LPA and the Actor's LPA ID.
+
+        $details = $this->actorCodesRepository->get($code);
+
+        if (is_null($details)) {
+            return null;
+        }
+
+        //-----------------------
+        // Ensure the code is active
+
+        if ($details['Active'] !== true) {
+            return null;
+        }
+
+        //-----------------------
+        // Lookup the full LPA
+
+        $lpa = $this->lpaService->getByUid($details['SiriusUid']);
+
+        if (is_null($lpa)) {
+            return null;
+        }
+
+        //----------------------
+        // Find the actor in the LPA
+
+        $actor = $this->lpaService->lookupActorInLpa($lpa->getData(), $details['ActorLpaId']);
+
+        if (is_null($actor)) {
+            return null;
+        }
+
+        //----------------------
+        // Validate the details match
+
+        if ($code !== $details['ActorCode'] || $uid !== $lpa->getData()['uId'] || $dob !== $actor['details']['dob']) {
+            return null;
+        }
+
+        //---
+
+        return [
+            'actor' => $actor,
+            'lpa' => $lpa->getData(),
+        ];
+
+    }
+
 
     /**
      * Confirms adding an LPA into a user's account.
@@ -98,64 +160,6 @@ class ActorCodeService
         }
 
         return $id;
-    }
-
-    /**
-     * @param string $code
-     * @param string $uid
-     * @param string $dob
-     * @return array|null
-     */
-    public function validateDetails(string $code, string $uid, string $dob) : ?array
-    {
-        //-----------------------
-        // Lookup the LPA and the Actor's LPA ID.
-
-        $details = $this->actorCodesRepository->get($code);
-
-        if (is_null($details)) {
-            return null;
-        }
-
-        //-----------------------
-        // Ensure the code is active
-
-        if ($details['Active'] !== true) {
-            return null;
-        }
-
-        //-----------------------
-        // Lookup the full LPA
-
-        $lpa = $this->lpaService->getByUid($details['SiriusUid']);
-
-        if (is_null($lpa)) {
-            return null;
-        }
-
-        //----------------------
-        // Find the actor in the LPA
-
-        $actor = $this->lpaService->lookupActorInLpa($lpa->getData(), $details['ActorLpaId']);
-
-        if (is_null($actor)) {
-            return null;
-        }
-
-        //----------------------
-        // Validate the details match
-
-        if ($code != $details['ActorCode'] || $uid != $lpa->getData()['uId'] || $dob != $actor['details']['dob']) {
-            return null;
-        }
-
-        //---
-
-        return [
-            'actor' => $actor,
-            'lpa' => $lpa->getData(),
-        ];
-
     }
 
 }
