@@ -49,7 +49,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
             ],
         ]);
 
-        $codeData = $this->getData($result);
+        $codeData = $this->getData($result, ['Added']);
 
         return !empty($codeData) ? $codeData : null;
     }
@@ -113,6 +113,6 @@ class UserLpaActorMap implements UserLpaActorMapInterface
             ]
         ]);
 
-        return $this->getDataCollection($result);
+        return $this->getDataCollection($result, ['Added']);
     }
 }

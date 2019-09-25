@@ -14,7 +14,7 @@ interface ViewerCodesInterface
      * @param string $code
      * @return array
      */
-    public function get(string $code) : array;
+    public function get(string $code) : ?array;
 
     /**
      * Adds a code to the database.

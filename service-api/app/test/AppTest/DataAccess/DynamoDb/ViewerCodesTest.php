@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace AppTest\DataAccess\DynamoDb;
 
 use App\DataAccess\DynamoDb\ViewerCodes;
-use App\Exception\NotFoundException;
+use App\DataAccess\Repository\KeyCollisionException;
+use Aws\DynamoDb\Exception\DynamoDbException;
 use Aws\DynamoDb\DynamoDbClient;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -24,9 +25,10 @@ class ViewerCodesTest extends TestCase
         $this->dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
     }
 
-    public function testGet()
+    /** @test */
+    public function can_lookup_a_code()
     {
-        $testCode = '123456789012';
+        $testCode = 'test-code';
 
         $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($testCode) {
                 $this->assertArrayHasKey('TableName', $data);
@@ -64,9 +66,10 @@ class ViewerCodesTest extends TestCase
         $this->assertEquals(new DateTime('2019-01-01 12:34:56'), $result['Expires']);
     }
 
-    public function testGetNotFound()
+    /** @test */
+    public function cannot_lookup_a_missing_code()
     {
-        $testCode = '123456789012';
+        $testCode = 'test-code';
 
         $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($testCode) {
                 $this->assertArrayHasKey('TableName', $data);
@@ -87,9 +90,92 @@ class ViewerCodesTest extends TestCase
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('Code not found');
+        $result = $repo->get($testCode);
 
-        $repo->get($testCode);
+        // Null is returned on a Not Found
+
+        $this->assertNull($result);
+    }
+
+    /** @test */
+    public function add_unique_code()
+    {
+        $testCode               = 'test-code';
+        $testUserLpaActorToken  = 'test-token';
+        $testSiriusUid          = 'test-uid';
+        $testExpires           = new DateTime();
+        $testOrganisation       = 'test-organisation';
+
+        $this->dynamoDbClientProphecy->putItem(Argument::that(function(array $data) use (
+            $testCode,
+            $testUserLpaActorToken,
+            $testSiriusUid,
+            $testExpires,
+            $testOrganisation
+        ) {
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+
+            //---
+
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertArrayHasKey('Item', $data);
+            $this->assertArrayHasKey('ConditionExpression', $data);
+
+            $this->assertEquals('attribute_not_exists(ViewerCode)', $data['ConditionExpression']);
+
+            $this->assertEquals(['S'=>$testCode], $data['Item']['ViewerCode']);
+            $this->assertEquals(['S'=>$testUserLpaActorToken], $data['Item']['UserLpaActor']);
+            $this->assertEquals(['S'=>$testSiriusUid], $data['Item']['SiriusUid']);
+            $this->assertEquals(['S'=>$testExpires->format('c')], $data['Item']['Expires']);
+            $this->assertEquals(['S'=>$testOrganisation], $data['Item']['Organisation']);
+
+            // Checks 'now' is correct, we a little bit of leeway
+            $this->assertEqualsWithDelta(time(), strtotime($data['Item']['Added']['S']), 5);
+
+            return true;
+        }))->shouldBeCalled();
+
+        $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $repo->add($testCode, $testUserLpaActorToken, $testSiriusUid, $testExpires, $testOrganisation);
+    }
+
+    /** @test */
+    public function add_conflicting_code()
+    {
+        $this->dynamoDbClientProphecy->putItem(Argument::any())
+            ->willThrow(new DynamoDbException(
+                'exception',
+                $this->prophesize(\Aws\CommandInterface::class)->reveal(),
+                ['code' => 'ConditionalCheckFailedException']
+            ))
+            ->shouldBeCalled();
+
+        //---
+
+        $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        // We expect our own KeyCollisionException
+        $this->expectException(KeyCollisionException::class);
+
+        $repo->add('test-val', 'test-val', 'test-val', new DateTime, 'test-val');
+    }
+
+    /** @test */
+    public function test_unknown_exception_when_adding_code()
+    {
+        $this->dynamoDbClientProphecy->putItem(Argument::any())
+            ->willThrow(DynamoDbException::class)
+            ->shouldBeCalled();
+
+        //---
+
+        $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        // We should now expect a DynamoDbException
+        $this->expectException(DynamoDbException::class);
+
+        $repo->add('test-val', 'test-val', 'test-val', new DateTime, 'test-val');
     }
 }

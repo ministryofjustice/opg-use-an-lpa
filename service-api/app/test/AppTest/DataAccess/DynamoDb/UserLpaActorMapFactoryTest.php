@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace AppTest\DataAccess\DynamoDb;
 
-use App\DataAccess\DynamoDb\ActorCodes;
-use App\DataAccess\DynamoDb\ActorCodesFactory;
+use App\DataAccess\DynamoDb\UserLpaActorMap;
+use App\DataAccess\DynamoDb\UserLpaActorMapFactory;
 use Aws\DynamoDb\DynamoDbClient;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Exception;
 
-class ActorCodesFactoryTest extends TestCase
+class UserLpaActorMapFactoryTest extends TestCase
 {
     /** @test */
     public function can_instantiate()
@@ -25,14 +25,14 @@ class ActorCodesFactoryTest extends TestCase
         $containerProphecy->get('config')->willReturn([
             'repositories' => [
                 'dynamodb' => [
-                    'actor-codes-table' => 'test-table'
+                    'user-lpa-actor-map' => 'test-table'
                 ]
             ]
         ]);
 
-        $factory = new ActorCodesFactory();
+        $factory = new UserLpaActorMapFactory();
         $repo = $factory($containerProphecy->reveal());
-        $this->assertInstanceOf(ActorCodes::class, $repo);
+        $this->assertInstanceOf(UserLpaActorMap::class, $repo);
     }
 
     /** @test */
@@ -46,10 +46,10 @@ class ActorCodesFactoryTest extends TestCase
 
         $containerProphecy->get('config')->willReturn([]);
 
-        $factory = new ActorCodesFactory();
+        $factory = new UserLpaActorMapFactory();
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Actor Codes table configuration not present');
+        $this->expectExceptionMessage('UserLpaActorMap table configuration not present');
 
         $factory($containerProphecy->reveal());
     }

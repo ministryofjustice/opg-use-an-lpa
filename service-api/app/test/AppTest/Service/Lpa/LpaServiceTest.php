@@ -52,7 +52,8 @@ class LpaServiceTest extends TestCase
         );
     }
 
-    public function testGetById()
+    /** @test */
+    public function can_get_by_id()
     {
         $testUid = '700012349874';
         $mockLpaResponse = $this->prophesize(Repository\Response\LpaInterface::class)->reveal();

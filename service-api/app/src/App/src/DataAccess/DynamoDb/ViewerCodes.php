@@ -6,7 +6,6 @@ namespace App\DataAccess\DynamoDb;
 
 use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\ViewerCodesInterface;
-use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTime;
@@ -39,7 +38,7 @@ class ViewerCodes implements ViewerCodesInterface
     /**
      * @inheritDoc
      */
-    public function get(string $code) : array
+    public function get(string $code) : ?array
     {
         $result = $this->client->getItem([
             'TableName' => $this->viewerCodesTable,
@@ -52,11 +51,7 @@ class ViewerCodes implements ViewerCodesInterface
 
         $codeData = $this->getData($result, ['Added','Expires']);
 
-        if (empty($codeData)) {
-            throw new NotFoundException('Code not found');
-        }
-
-        return $codeData;
+        return !empty($codeData) ? $codeData : null;
     }
 
     /**

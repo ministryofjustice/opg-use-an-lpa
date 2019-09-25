@@ -23,10 +23,11 @@ class ActorCodesTest extends TestCase
         $this->dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
     }
 
-    public function testGet()
+    /** @test */
+    public function can_lookup_a_code()
     {
-        $testCode = 'XYUPHWQRECHV';
-        $testSiriusUid = '700000000138';
+        $testCode = 'test-code';
+        $testSiriusUid = 'test-uid';
         $testActorId = 1;
         $testExpires = gmdate('c');
         $testActive = true;
@@ -62,7 +63,7 @@ class ActorCodesTest extends TestCase
                         'N' => $testActorId,
                     ],
                 ],
-            ]));
+            ]))->shouldBeCalled();
 
         $repo = new ActorCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
@@ -76,9 +77,10 @@ class ActorCodesTest extends TestCase
         $this->assertEquals($testActorId, $result['ActorLpaId']);
     }
 
-    public function testGetNotFound()
+    /** @test */
+    public function cannot_lookup_a_missing_code()
     {
-        $testCode = 'XYUPHWQRECHV';
+        $testCode = 'test-code';
 
         $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($testCode) {
                 $this->assertArrayHasKey('TableName', $data);
@@ -95,7 +97,7 @@ class ActorCodesTest extends TestCase
             }))
             ->willReturn($this->createAWSResult([
                 'Item' => []
-            ]));
+            ]))->shouldBeCalled();
 
         $repo = new ActorCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
@@ -104,5 +106,37 @@ class ActorCodesTest extends TestCase
         // Null is returned on a Not Found
 
         $this->assertNull($result);
+    }
+
+    /** @test */
+    public function can_make_a_code_as_used()
+    {
+        $testCode = 'test-code';
+
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function(array $data) use ($testCode) {
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+
+            //---
+
+            $this->assertArrayHasKey('Key', $data);
+            $this->assertArrayHasKey('UpdateExpression', $data);
+            $this->assertArrayHasKey('ExpressionAttributeValues', $data);
+
+            $this->assertArrayHasKey('ActorCode', $data['Key']);
+            $this->assertEquals(['S' => $testCode], $data['Key']['ActorCode']);
+
+
+            $this->assertEquals('set Active=:active', $data['UpdateExpression']);
+
+            $this->assertArrayHasKey(':active', $data['ExpressionAttributeValues']);
+            $this->assertEquals(['BOOL' => false], $data['ExpressionAttributeValues'][':active']);
+
+            return true;
+        }))->shouldBeCalled();
+
+        $repo = new ActorCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $repo->flagCodeAsUsed($testCode);
     }
 }
