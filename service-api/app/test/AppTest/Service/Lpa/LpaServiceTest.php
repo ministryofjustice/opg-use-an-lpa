@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository;
-use App\Exception\GoneException;
-use App\Exception\NotFoundException;
 use App\Service\Lpa\LpaService;
 use PHPUnit\Framework\TestCase;
-use DateTime;
 
 class LpaServiceTest extends TestCase
 {
