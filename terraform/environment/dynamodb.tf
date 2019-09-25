@@ -65,6 +65,16 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     type = "S"
   }
 
+  attribute {
+    name = "SiriusUid"
+    type = "S"
+  }
+
+  attribute {
+    name = "Expires"
+    type = "S"
+  }
+
   global_secondary_index {
     name            = "SiriusUidIndex"
     hash_key        = "SiriusUid"
