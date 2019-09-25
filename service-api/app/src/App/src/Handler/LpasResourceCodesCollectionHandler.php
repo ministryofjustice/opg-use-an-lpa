@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
+use App\Exception\NotFoundException;
 use App\Service\ViewerCodes\ViewerCodeService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -67,6 +68,10 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
                 $request->getAttribute('user-id'),
                 $organisation
             );
+
+            if (!is_string($result)){
+                throw new NotFoundException();
+            }
 
             return new JsonResponse($result);
         } else {
