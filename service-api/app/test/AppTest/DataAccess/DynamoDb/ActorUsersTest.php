@@ -325,7 +325,7 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($email, $result['Email']);
         $this->assertEquals('H@shedP@55word', $result['Password']);
         $this->assertEquals($activationToken, $result['ActivationToken']);
-        $this->assertEquals(time(), $result['ExpiresTTL']);
+        $this->assertEqualsWithDelta(time(), $result['ExpiresTTL'], 3);
     }
 
     /** @test */
