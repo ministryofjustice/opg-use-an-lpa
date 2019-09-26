@@ -69,7 +69,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
                 $organisation
             );
 
-            if (!is_string($result)){
+            if (is_null($result)){
                 throw new NotFoundException();
             }
 

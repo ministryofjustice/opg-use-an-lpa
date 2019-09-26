@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
+use App\Exception\NotFoundException;
 use App\Service\Lpa\LpaService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,6 +47,10 @@ class LpasResourceHandler implements RequestHandlerInterface
             $request->getAttribute('user-lpa-actor-token'),
             $request->getAttribute('user-id')
         );
+
+        if (is_null($result)){
+            throw new NotFoundException();
+        }
 
         return new JsonResponse($result);
     }
