@@ -40,20 +40,20 @@ Feature: View a lasting power of attorney
 
   Scenario: Show an error page when I search for an LPA with an LPA code that has expired
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "2222-2222-2222"
+    And the share code input is populated with "N4KB-EBEZ-MNJF"
     When the share code form is submitted
     Then the "Expired Code" page is displayed
 
   Scenario: Show the confirmation page when I search for an LPA with a valid LPA code
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "1234-5678-9012"
+    And the share code input is populated with "P9H8-A6ML-D3AM"
     When the share code form is submitted
     Then the "Confirmation" page is displayed
-    And an LPA summary for a Property and finance LPA for donor Rachel Sanderson is displayed
+    And an LPA summary for a Property and finance LPA for donor Jack Allen is displayed
 
   Scenario: Show the wrong details help comment on confirmation code page when I click the link
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "1234-5678-9012"
+    And the share code input is populated with "P9H8-A6ML-D3AM"
     When the share code form is submitted
     Then the "Confirmation" page is displayed
     Given the "What to do if the details are wrong" help section is not visible
@@ -62,8 +62,8 @@ Feature: View a lasting power of attorney
 
   Scenario: Show the full LPA details for an active LPA when I click "Continue" on the confirmation page
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "1234-5678-9012"
+    And the share code input is populated with "P9H8-A6ML-D3AM"
     When the share code form is submitted
     Then the "Confirmation" page is displayed
     When I click the "Continue" button
-    Then the "Rachel Sanderson's property and finance LPA" page is displayed
+    Then the "Jack Allen's property and finance LPA" page is displayed
