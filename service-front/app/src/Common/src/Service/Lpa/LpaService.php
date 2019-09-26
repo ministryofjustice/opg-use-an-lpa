@@ -55,7 +55,7 @@ class LpaService
 
         $lpaData = $this->apiClient->httpPost('/v1/viewer-codes/summary', [
             'code' => $shareCode,
-            'name' => 'Allen'       #TODO: Hard coded until form element is added.
+            'name' => 'Sanderson'       #TODO: Hard coded until form element is added.
         ]);
 
         if (is_array($lpaData)) {
