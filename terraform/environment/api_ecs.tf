@@ -248,6 +248,10 @@ EOF
     {
       "name": "CONTAINER_VERSION",
       "value": "${var.container_version}"
+    },
+    {
+      "name": "SIRIUS_API_ENDPOINT",
+      "value": "https://api.dev.sirius.opg.digital"
     }]
   }
   
