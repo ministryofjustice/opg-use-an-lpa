@@ -49,7 +49,7 @@ Feature: View a lasting power of attorney
     And the share code input is populated with "P9H8-A6ML-D3AM"
     When the share code form is submitted
     Then the "Confirmation" page is displayed
-    And an LPA summary for a Property and finance LPA for donor Jack Allen is displayed
+    And an LPA summary for a Property and finance LPA for donor Rachel Sanderson is displayed
 
   Scenario: Show the wrong details help comment on confirmation code page when I click the link
     Given I go to the enter code page on the viewer service
@@ -66,4 +66,4 @@ Feature: View a lasting power of attorney
     When the share code form is submitted
     Then the "Confirmation" page is displayed
     When I click the "Continue" button
-    Then the "Jack Allen's property and finance LPA" page is displayed
+    Then the "Rachel Sanderson's property and finance LPA" page is displayed
