@@ -246,6 +246,10 @@ EOF
       "value": "${aws_dynamodb_table.viewer_activity_table.name}"
     },
     {
+      "name": "DYNAMODB_TABLE_USER_LPA_ACTOR_MAP",
+      "value": "${aws_dynamodb_table.user_lpa_actor_map.name}"
+    },
+    {
       "name": "CONTAINER_VERSION",
       "value": "${var.container_version}"
     },
