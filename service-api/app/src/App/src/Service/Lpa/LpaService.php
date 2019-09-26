@@ -57,6 +57,13 @@ class LpaService
         return $this->lpaRepository->get($uid);
     }
 
+    /**
+     * Given a user token and a user id (who should own the token), return the actor and LPA details.
+     *
+     * @param string $token
+     * @param string $userId
+     * @return array|null
+     */
     public function getByUserLpaActorToken(string $token, string $userId) : ?array
     {
         $map = $this->userLpaActorMapRepository->get($token);
@@ -70,7 +77,7 @@ class LpaService
 
         $lpa = $this->getByUid($map['SiriusUid']);
 
-        if (empty($lpa)) {
+        if (is_null($lpa)) {
             return null;
         }
 
@@ -84,6 +91,12 @@ class LpaService
         ];
     }
 
+    /**
+     * Return all LPAs for the given user_id
+     *
+     * @param string $userId
+     * @return array
+     */
     public function getAllForUser(string $userId) : array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
@@ -100,7 +113,7 @@ class LpaService
 
         $result = [];
 
-        // Map the results... #TODO: into an UserLpaActorObject?
+        // Map the results...
         foreach($lpaActorMaps as $item) {
             $lpa = $lpas[$item['SiriusUid']];
 
@@ -128,7 +141,7 @@ class LpaService
     {
         $viewerCodeData = $this->viewerCodesRepository->get($viewerCode);
 
-        if (empty($viewerCodeData)) {
+        if (is_null($viewerCodeData)) {
             return null;
         }
 
@@ -138,7 +151,8 @@ class LpaService
 
         // Check donor's surname
 
-        if (!isset($lpa->getData()['donor']['surname'])
+        if (is_null($lpa)
+            || !isset($lpa->getData()['donor']['surname'])
             || strtolower($lpa->getData()['donor']['surname']) !== strtolower($donorSurname)
         ){
             return null;
