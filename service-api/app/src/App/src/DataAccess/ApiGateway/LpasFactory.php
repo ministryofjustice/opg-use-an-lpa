@@ -6,6 +6,7 @@ namespace App\DataAccess\ApiGateway;
 
 use Psr\Container\ContainerInterface;
 use GuzzleHttp\Client as HttpClient;
+use Aws\Signature\SignatureV4;
 
 class LpasFactory
 {
@@ -20,6 +21,7 @@ class LpasFactory
 
         return new Lpas(
             $container->get(HttpClient::class),
+            new SignatureV4('execute-api', 'eu-west-1'),
             $config['sirius_api']['endpoint']
         );
     }

@@ -10,6 +10,8 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Pool;
 use App\DataAccess\Repository\Response;
+use Aws\Signature\SignatureV4 as AwsSignatureV4;
+use Aws\Credentials\CredentialProvider as AwsCredentialProvider;
 
 /**
  * Looks up LPAs in the Sirius API Gateway.
@@ -30,15 +32,21 @@ class Lpas implements LpasInterface
     private $apiBaseUri;
 
     /**
+     * @var AwsSignatureV4
+     */
+    private $awsSignature;
+
+    /**
      * Lpas constructor.
      * @param HttpClient $httpClient
      * @param string $apiUrl
      * @param string $awsRegion
      */
-    public function __construct(HttpClient $httpClient, string $apiUrl)
+    public function __construct(HttpClient $httpClient, AwsSignatureV4 $awsSignature, string $apiUrl)
     {
         $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiUrl;
+        $this->awsSignature = $awsSignature;
     }
 
     /**
@@ -63,16 +71,21 @@ class Lpas implements LpasInterface
      */
     public function lookup(array $uids) : array
     {
+        $provider = AwsCredentialProvider::defaultProvider();
+        $credentials = $provider()->wait();
+
         // Builds an array of Requests to send
         // The key for each request is the original uid.
         $requests = array_combine(
             $uids,  // Use as array key
-            array_map(function($v){
+            array_map(function($v) use ($credentials){
                 $url = $this->apiBaseUri . sprintf("/v1/use-an-lpa/lpas/%s", $v);
-                return new Request('GET', $url, [
+                $request = new Request('GET', $url, [
                     'Accept'        => 'application/json',
                     'Content-type'  => 'application/json'
                 ]);
+
+                return $this->awsSignature->signRequest($request, $credentials);
             }, $uids)
         );
 
