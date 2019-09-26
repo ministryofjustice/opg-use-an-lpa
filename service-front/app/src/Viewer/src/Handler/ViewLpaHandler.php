@@ -56,7 +56,7 @@ class ViewLpaHandler extends AbstractHandler
         $lpa = $this->lpaService->getLpaByCode($code);
 
         return new HtmlResponse($this->renderer->render('viewer::view-lpa', [
-            'lpa' => $lpa,
+            'lpa' => $lpa->lpa,
         ]));
     }
 }
