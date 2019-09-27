@@ -81,7 +81,7 @@ class CodeGeneratorTest extends TestCase
         // We want teh value to be 1.0, within 1 decimal place.
         // e.g. 1.03 should pass. 1.09 should not.
         $this->assertEquals(1, round($ratio, 1),
-            'There is an element of change that this test might fail. Try re-running if nothing has changed.'
+            'There is an element of chance that this test might fail. Try re-running if nothing has changed.'
         );
     }
 }
