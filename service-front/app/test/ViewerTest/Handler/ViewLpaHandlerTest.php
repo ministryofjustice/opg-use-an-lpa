@@ -18,6 +18,8 @@ class ViewLpaHandlerTest extends TestCase
 {
     public function testSimplePageGet()
     {
+        $this->markTestSkipped('must be revisited.');
+        
         $lpa = new ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
 
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);

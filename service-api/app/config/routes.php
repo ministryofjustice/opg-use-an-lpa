@@ -37,6 +37,19 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/v1/lpa-search', App\Handler\LpaSearchHandler::class, 'lpa.search');
     $app->get('/v1/lpa-by-code/{shareCode}', App\Handler\LpaHandler::class, 'lpa.by.share-code');
 
+
+    $app->get('/v1/lpas', App\Handler\LpasCollectionHandler::class, 'lpa.collection');
+    $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.resource');
+    $app->post('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/codes', App\Handler\LpasResourceCodesCollectionHandler::class, 'lpa.resource.code');
+
+
+    $app->post('/v1/actor-codes/summary', App\Handler\ActorCodeSummaryHandler::class, 'lpa.actor-code.summary');
+    $app->post('/v1/actor-codes/confirm', App\Handler\ActorCodeConfirmHandler::class, 'lpa.actor-code.confirm');
+
+    $app->post('/v1/viewer-codes/summary', App\Handler\ViewerCodeSummaryHandler::class, 'lpa.viewer-code.summary');
+    $app->post('/v1/viewer-codes/full', App\Handler\ViewerCodeFullHandler::class, 'lpa.viewer-code.full');
+
+
     $app->get('/v1/user', App\Handler\UserHandler::class, 'user.get');
     $app->post('/v1/user', App\Handler\UserHandler::class, 'user.create');
     $app->patch('/v1/user-activation', App\Handler\UserActivateHandler::class, 'user.activate');

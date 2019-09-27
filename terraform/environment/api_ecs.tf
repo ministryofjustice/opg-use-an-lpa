@@ -132,14 +132,16 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
 
     resources = [
-      aws_dynamodb_table.actor_lpa_codes_table.arn,
-      "${aws_dynamodb_table.actor_lpa_codes_table.arn}/index/*",
+      aws_dynamodb_table.actor_codes_table.arn,
+      "${aws_dynamodb_table.actor_codes_table.arn}/index/*",
       aws_dynamodb_table.actor_users_table.arn,
       "${aws_dynamodb_table.actor_users_table.arn}/index/*",
       aws_dynamodb_table.viewer_codes_table.arn,
       "${aws_dynamodb_table.viewer_codes_table.arn}/index/*",
       aws_dynamodb_table.viewer_activity_table.arn,
       "${aws_dynamodb_table.viewer_activity_table.arn}/index/*",
+      aws_dynamodb_table.user_lpa_actor_map.arn,
+      "${aws_dynamodb_table.user_lpa_actor_map.arn}/index/*",
     ]
   }
 
@@ -228,8 +230,8 @@ EOF
     },
     "environment": [
     {
-      "name": "DYNAMODB_TABLE_ACTOR_LPA_CODES",
-      "value": "${aws_dynamodb_table.actor_lpa_codes_table.name}"
+      "name": "DYNAMODB_TABLE_ACTOR_CODES",
+      "value": "${aws_dynamodb_table.actor_codes_table.name}"
     },
     {
       "name": "DYNAMODB_TABLE_ACTOR_USERS",
@@ -244,8 +246,16 @@ EOF
       "value": "${aws_dynamodb_table.viewer_activity_table.name}"
     },
     {
+      "name": "DYNAMODB_TABLE_USER_LPA_ACTOR_MAP",
+      "value": "${aws_dynamodb_table.user_lpa_actor_map.name}"
+    },
+    {
       "name": "CONTAINER_VERSION",
       "value": "${var.container_version}"
+    },
+    {
+      "name": "SIRIUS_API_ENDPOINT",
+      "value": "https://api.dev.sirius.opg.digital"
     }]
   }
   

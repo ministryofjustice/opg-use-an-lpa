@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\Exception\NotFoundException;
 use App\Service\Lpa\LpaService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,10 +13,10 @@ use Zend\Diactoros\Response\JsonResponse;
 use RuntimeException;
 
 /**
- * Class LpaHandler
+ * Class LpaSearchHandler
  * @package App\Handler
  */
-class LpaHandler implements RequestHandlerInterface
+class ViewerCodeFullHandler implements RequestHandlerInterface
 {
     /**
      * @var LpaService
@@ -30,16 +31,21 @@ class LpaHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Exception
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $shareCode = $request->getAttribute('shareCode');
+        $params = $request->getParsedBody();
 
-        if (empty($shareCode)) {
-            throw new RuntimeException('Missing LPA share code');
+        if (!isset($params['code']) || !isset($params['name'])) {
+            throw new RuntimeException("'code' and 'name' are required fields.");
         }
 
-        $data = $this->lpaService->getByCode($shareCode);
+        $data = $this->lpaService->getByViewerCode($params['code'], $params['name'], true);
+
+        if (is_null($data)){
+            throw new NotFoundException();
+        }
 
         return new JsonResponse($data);
     }

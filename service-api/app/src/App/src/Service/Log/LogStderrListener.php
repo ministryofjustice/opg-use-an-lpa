@@ -14,6 +14,8 @@ class LogStderrListener
     /**
      * Style and output errors to STDERR (For use with Docker)
      *
+     * @codeCoverageIgnore
+     *
      * @param Throwable $error
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response

@@ -61,7 +61,7 @@ class CheckCodeHandler extends AbstractHandler
                 if ($lpa instanceof ArrayObject) {
                     // Then we found a LPA for the given code
                     return new HtmlResponse($this->renderer->render('viewer::check-code-found', [
-                        'lpa' => $lpa,
+                        'lpa' => $lpa->lpa,
                     ]));
                 }
             } catch (ApiException $apiEx) {

@@ -19,10 +19,11 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     # ----------------------------------------------------------
     # Add any setup here that is performed with Terraform in AWS.
 
+    # Temporary table.
     aws dynamodb create-table \
-    --attribute-definitions AttributeName=ActorLpaCode,AttributeType=S \
-    --table-name ActorLpaCodes \
-    --key-schema AttributeName=ActorLpaCode,KeyType=HASH \
+    --attribute-definitions AttributeName=ActorCode,AttributeType=S \
+    --table-name ActorCodes \
+    --key-schema AttributeName=ActorCode,KeyType=HASH \
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
     --region eu-west-1 \
     --endpoint $DYNAMODN_ENDPOINT
@@ -43,12 +44,13 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --time-to-live-specification "Enabled=true, AttributeName=ExpiresTTL"
 
     aws dynamodb create-table \
-    --attribute-definitions AttributeName=ViewerCode,AttributeType=S \
+    --attribute-definitions AttributeName=ViewerCode,AttributeType=S AttributeName=SiriusUid,AttributeType=S AttributeName=Expires,AttributeType=S \
     --table-name ViewerCodes \
     --key-schema AttributeName=ViewerCode,KeyType=HASH \
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
     --region eu-west-1 \
-    --endpoint $DYNAMODN_ENDPOINT
+    --endpoint $DYNAMODN_ENDPOINT \
+    --global-secondary-indexes IndexName=SiriusUidIndex,KeySchema=["{AttributeName=SiriusUid,KeyType=HASH},{AttributeName=Expires,KeyType=RANGE}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
 
     aws dynamodb create-table \
     --attribute-definitions AttributeName=ViewerCode,AttributeType=S AttributeName=Viewed,AttributeType=S \
@@ -57,6 +59,16 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
     --region eu-west-1 \
     --endpoint $DYNAMODN_ENDPOINT
+
+    aws dynamodb create-table \
+    --attribute-definitions AttributeName=Id,AttributeType=S AttributeName=UserId,AttributeType=S \
+    --table-name UserLpaActorMap \
+    --key-schema AttributeName=Id,KeyType=HASH \
+    --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
+    --region eu-west-1 \
+    --endpoint $DYNAMODN_ENDPOINT \
+    --global-secondary-indexes IndexName=UserIndex,KeySchema=["{AttributeName=UserId,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
+
 fi
 
 # Run the seeding script

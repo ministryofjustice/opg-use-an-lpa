@@ -126,10 +126,13 @@ services:
     volumes:
       - ./service-api/app:/app
     environment:
-      DYNAMODB_TABLE_ACTOR_LPA_CODES: 'ActorLpaCodes'
+      DYNAMODB_TABLE_ACTOR_CODES: 'ActorCodes'
       DYNAMODB_TABLE_ACTOR_USERS: 'ActorUsers'
       DYNAMODB_TABLE_VIEWER_CODES: 'ViewerCodes'
       DYNAMODB_TABLE_VIEWER_ACTIVITY: 'ViewerActivity'
+      DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: 'UserLpaActorMap'
+
+      SIRIUS_API_ENDPOINT: 'http://gateway:5000'
 
       # Local only
       AWS_ACCESS_KEY_ID: '-'
@@ -161,7 +164,7 @@ services:
     environment:
       AWS_ACCESS_KEY_ID: '-'
       AWS_SECRET_ACCESS_KEY: '-'
-      DYNAMODB_TABLE_ACTOR_LPA_CODES: 'ActorLpaCodes'
+      DYNAMODB_TABLE_ACTOR_CODES: 'ActorCodes'
       DYNAMODB_TABLE_VIEWER_CODES: 'ViewerCodes'
       AWS_ENDPOINT_DYNAMODB: localstack:4569
 
@@ -189,9 +192,9 @@ services:
       REGION: eu-west-1
       SEED_PATH: /init/kms-seed.yaml
 
-  feature-tests:
-    build:
-      context: .
-      dockerfile: features/Dockerfile
-    volumes:
-      - ./features:/feature-tests
+#  feature-tests:
+#    build:
+#      context: .
+#      dockerfile: features/Dockerfile
+#    volumes:
+#      - ./features:/feature-tests

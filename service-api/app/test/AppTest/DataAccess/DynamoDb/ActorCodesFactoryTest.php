@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace AppTest\DataAccess\DynamoDb;
 
-use App\DataAccess\DynamoDb\ActorLpaCodes;
-use App\DataAccess\DynamoDb\ActorLpaCodesFactory;
+use App\DataAccess\DynamoDb\ActorCodes;
+use App\DataAccess\DynamoDb\ActorCodesFactory;
 use Aws\DynamoDb\DynamoDbClient;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Exception;
 
-class ActorLpaCodesFactoryTest extends TestCase
+class ActorCodesFactoryTest extends TestCase
 {
-    public function testValidConfig()
+    /** @test */
+    public function can_instantiate()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
@@ -24,17 +25,18 @@ class ActorLpaCodesFactoryTest extends TestCase
         $containerProphecy->get('config')->willReturn([
             'repositories' => [
                 'dynamodb' => [
-                    'actor-lpa-codes-table' => 'test-table'
+                    'actor-codes-table' => 'test-table'
                 ]
             ]
         ]);
 
-        $factory = new ActorLpaCodesFactory();
+        $factory = new ActorCodesFactory();
         $repo = $factory($containerProphecy->reveal());
-        $this->assertInstanceOf(ActorLpaCodes::class, $repo);
+        $this->assertInstanceOf(ActorCodes::class, $repo);
     }
 
-    public function testInvalidConfig()
+    /** @test */
+    public function cannot_instantiate()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
@@ -44,10 +46,10 @@ class ActorLpaCodesFactoryTest extends TestCase
 
         $containerProphecy->get('config')->willReturn([]);
 
-        $factory = new ActorLpaCodesFactory();
+        $factory = new ActorCodesFactory();
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Actor LPA Codes table configuration not present');
+        $this->expectExceptionMessage('Actor Codes table configuration not present');
 
         $factory($containerProphecy->reveal());
     }

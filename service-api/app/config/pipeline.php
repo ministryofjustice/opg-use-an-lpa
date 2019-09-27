@@ -62,6 +62,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     //  Handle any API problem exception types
     $app->pipe(Middleware\ProblemDetailsMiddleware::class);
 
+    $app->pipe(Middleware\UserIdentificationMiddleware::class);
+
     // Seed the UrlHelper with the routing results:
     $app->pipe(UrlHelperMiddleware::class);
 

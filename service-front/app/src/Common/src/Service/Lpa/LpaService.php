@@ -53,7 +53,10 @@ class LpaService
         //  Filter dashes out of the share code
         $shareCode = str_replace('-', '', $shareCode);
 
-        $lpaData = $this->apiClient->httpGet('/v1/lpa-by-code/' . $shareCode);
+        $lpaData = $this->apiClient->httpPost('/v1/viewer-codes/summary', [
+            'code' => $shareCode,
+            'name' => 'Sanderson'       #TODO: Hard coded until form element is added.
+        ]);
 
         if (is_array($lpaData)) {
             $lpaData = $this->parseLpaData($lpaData);

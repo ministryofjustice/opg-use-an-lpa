@@ -4,6 +4,7 @@ namespace App\DataAccess\DynamoDb;
 
 use Aws\Result;
 use DateTime;
+use Aws\DynamoDb\Marshaler;
 
 /**
  * Trait DynamoHydrateTrait
@@ -57,11 +58,13 @@ trait DynamoHydrateTrait
     {
         $item = [];
 
+        $marshaler = new Marshaler();
+
         foreach ($resultItem as $key => $value) {
-            $thisVal = current($value);
+            $thisVal = $marshaler->unmarshalValue($value);
 
             if (in_array($key, $dateFields)) {
-                $thisVal = DateTime::createFromFormat('Y-m-d H:i:s', $thisVal);
+                $thisVal = new DateTime($thisVal);
             }
 
             $item[$key] = $thisVal;

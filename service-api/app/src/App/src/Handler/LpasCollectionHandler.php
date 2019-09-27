@@ -15,7 +15,7 @@ use RuntimeException;
  * Class LpaSearchHandler
  * @package App\Handler
  */
-class LpaSearchHandler implements RequestHandlerInterface
+class LpasCollectionHandler implements RequestHandlerInterface
 {
     /**
      * @var LpaService
@@ -33,14 +33,10 @@ class LpaSearchHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $params = $request->getQueryParams();
+        $user = $request->getAttribute('user-id');
 
-        if (!isset($params['code']) || !isset($params['uid']) || !isset($params['dob'])) {
-            throw new RuntimeException('Missing LPA search parameters');
-        }
+        $result = $this->lpaService->getAllForUser($user);
 
-        $data = $this->lpaService->search($params['code'], $params['uid'], $params['dob']);
-
-        return new JsonResponse($data);
+        return new JsonResponse($result);
     }
 }
