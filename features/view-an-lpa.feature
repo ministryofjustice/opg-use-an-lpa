@@ -56,9 +56,9 @@ Feature: View a lasting power of attorney
     And the share code input is populated with "P9H8-A6ML-D3AM"
     When the share code form is submitted
     Then the "Is this the LPA you want to view?" page is displayed
-    Given the "What to do if the details are wrong" help section is not visible
-    When I click on the "What to do if the details are wrong" help section
-    Then the "What to do if the details are wrong" help section is visible
+    Given the "If you need to access this LPA after" help section is not visible
+    When I click on the "If you need to access this LPA after" help section
+    Then the "If you need to access this LPA after" help section is visible
 
   Scenario: Show the full LPA details for an active LPA when I click "Continue" on the confirmation page
     Given I go to the enter code page on the viewer service
