@@ -204,4 +204,13 @@ class LpaExtensionTest extends TestCase
 
         $this->assertGreaterThan(0, $days);
     }
+
+    public function testDaysRemainingIsNull()
+    {
+        $extension = new LpaExtension();
+
+        $days = $extension->daysRemaining(null);
+
+        $this->assertEquals('', $days);
+    }
 }

@@ -110,11 +110,15 @@ class LpaExtension extends AbstractExtension
      * @return string
      * @throws \Exception
      */
-    public function daysRemaining(string $expiryDate) : string
+    public function daysRemaining(?string $expiryDate) : string
     {
-        $expires = new DateTime($expiryDate);
-        $now = new DateTime("now");
-        $difference = $expires->diff($now)->format('%a');
+        $difference = '';
+
+        if (!empty($expiryDate)) {
+            $expires = new DateTime($expiryDate);
+            $now = new DateTime("now");
+            $difference = $expires->diff($now)->format('%a');
+        }
 
         return $difference;
     }
