@@ -23,6 +23,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('actor_address', [$this, 'actorAddress']),
             new TwigFunction('actor_name', [$this, 'actorName']),
             new TwigFunction('lpa_date', [$this, 'lpaDate']),
+            new TwigFunction('days_remaining_to_expiry', [$this, 'daysRemaining']),
         ];
     }
 
@@ -101,4 +102,21 @@ class LpaExtension extends AbstractExtension
 
         return '';
     }
+
+    /**
+     * Calculates the days remaining until the viewer code expires
+     *
+     * @param string $expiryDate
+     * @return string
+     * @throws \Exception
+     */
+    public function daysRemaining(string $expiryDate) : string
+    {
+        $expires = new DateTime($expiryDate);
+        $now = new DateTime("now");
+        $difference = $expires->diff($now)->format('%a');
+
+        return $difference;
+    }
+
 }

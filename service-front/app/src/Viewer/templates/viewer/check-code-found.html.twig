@@ -27,7 +27,7 @@
                         </tr>
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="row">Code expires</th>
-                            <td class="govuk-table__cell">in {{ daysRemaining }} days, on {{ lpa_date(expires) }}</td>
+                            <td class="govuk-table__cell">in {{ days_remaining_to_expiry(lpa.expires) }} days, on {{ lpa_date(expires) }}</td>
                         </tr>
                         </tbody>
                     </table>

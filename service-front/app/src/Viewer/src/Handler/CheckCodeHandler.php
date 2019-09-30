@@ -62,12 +62,10 @@ class CheckCodeHandler extends AbstractHandler
                 if ($lpa instanceof ArrayObject) {
                     // Then we found a LPA for the given code
                     $expires = new DateTime($lpa->expires);
-                    $daysRemaining = $this->daysRemaining($expires);
 
                     return new HtmlResponse($this->renderer->render('viewer::check-code-found', [
                         'lpa' => $lpa->lpa,
                         'expires' => $expires->format('Y-m-d'),
-                        'daysRemaining' => $daysRemaining,
                     ]));
                 }
             } catch (ApiException $apiEx) {
@@ -81,20 +79,5 @@ class CheckCodeHandler extends AbstractHandler
 
         //  We don't have a code so the session has timed out
         throw new SessionTimeoutException();
-    }
-
-    /**
-     * Calculates the days remaining until the viewer code expires
-     *
-     * @param DateTime $expires
-     * @return string
-     * @throws \Exception
-     */
-    public function daysRemaining(DateTime $expires)
-    {
-        $now = new DateTime("now");
-        $difference = $expires->diff($now, true)->format('%a');
-
-        return $difference;
     }
 }
