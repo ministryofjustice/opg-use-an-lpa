@@ -16,6 +16,7 @@ use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use ArrayObject;
+use DateTime;
 
 /**
  * Class CheckCodeHandler
@@ -57,11 +58,17 @@ class CheckCodeHandler extends AbstractHandler
 
             try {
                 $lpa = $this->lpaService->getLpaByCode($code);
+                $expires = new DateTime($lpa->expires);
 
                 if ($lpa instanceof ArrayObject) {
                     // Then we found a LPA for the given code
+
+                    $daysRemaining = $this->daysRemaining($expires);
+
                     return new HtmlResponse($this->renderer->render('viewer::check-code-found', [
                         'lpa' => $lpa->lpa,
+                        'expires' => $expires->format('Y-m-d'),
+                        'daysRemaining' => $daysRemaining,
                     ]));
                 }
             } catch (ApiException $apiEx) {
@@ -75,5 +82,20 @@ class CheckCodeHandler extends AbstractHandler
 
         //  We don't have a code so the session has timed out
         throw new SessionTimeoutException();
+    }
+
+    /**
+     * Calculates the days remaining until the viewer code expires
+     *
+     * @param DateTime $expires
+     * @return string
+     * @throws \Exception
+     */
+    public function daysRemaining(DateTime $expires)
+    {
+        $now = new DateTime("now");
+        $difference = $expires->diff($now, true)->format('%a');
+
+        return $difference;
     }
 }
