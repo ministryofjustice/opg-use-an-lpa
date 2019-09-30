@@ -58,11 +58,10 @@ class CheckCodeHandler extends AbstractHandler
 
             try {
                 $lpa = $this->lpaService->getLpaByCode($code);
-                $expires = new DateTime($lpa->expires);
 
                 if ($lpa instanceof ArrayObject) {
                     // Then we found a LPA for the given code
-
+                    $expires = new DateTime($lpa->expires);
                     $daysRemaining = $this->daysRemaining($expires);
 
                     return new HtmlResponse($this->renderer->render('viewer::check-code-found', [
