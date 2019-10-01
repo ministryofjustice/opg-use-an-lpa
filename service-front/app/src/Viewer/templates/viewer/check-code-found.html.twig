@@ -10,19 +10,12 @@
 
         <main class="govuk-main-wrapper " id="main-content" role="main">
 
-            <h1 class="govuk-heading-xl">Confirmation</h1>
-
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">Is this the LPA you want to view?</h1>
+
                     <table id="confirmation-table" class="govuk-table">
-                        <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header govuk-!-font-weight-regular" scope="col">Please check that the
-                                information
-                                below is correct.</th>
-                            <th class="govuk-table__header" scope="col"></th>
-                        </tr>
-                        </thead>
                         <tbody class="govuk-table__body">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="row">Type of LPA</th>
@@ -32,17 +25,13 @@
                             <th class="govuk-table__header" scope="row">Donor name</th>
                             <td class="govuk-table__cell">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}</td>
                         </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">Code expires</th>
+                            <td class="govuk-table__cell">in {{ days_remaining_to_expiry(expires) }} days, on {{ lpa_date(expires) }}</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-
-            <div class="govuk-warning-text">
-                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                <strong class="govuk-warning-text__text">
-                    <span class="govuk-warning-text__assistive">Warning</span>
-                    Check that these details are correct before continuing.
-                </strong>
             </div>
 
             <div class="govuk-grid-row">
@@ -51,26 +40,35 @@
                     <details class="govuk-details" role="group">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
-                                What to do if the details are wrong
+                                If you need to access this LPA after {{ lpa_date(expires) }}
                             </span>
                         </summary>
                         <div class="govuk-details__text">
-                            <p class="govuk-body">Please go back and check that you entered the right reference number and registration code. Remember that the donor and each attorney on an LPA have their own unique registration code.</p>
+                            <p class="govuk-body">You will be able to view this LPA until {{ lpa_date(expires) }}. After this date, the access code will expire.</p>
 
-                            <p class="govuk-body">If the information is still wrong, or if a name is misspelt, please contact us on 02342 435920.</p>
-
-                            <p class="govuk-body">Opening hours are Monday, Tuesday, Thursday, Friday 9am to 5pm. Wednesday 10am to 5pm.</p>
+                            <p class="govuk-body">If your organisation needs more time to process this LPA, or if you need to view the LPA again at a later date, ask the the donor or attorney to generate a new access code for you. They can do this at <a href="www.use-an-lpa.gov.uk">www.use-an-lpa.gov.uk</a></p>
                         </div>
                     </details>
 
                 </div>
             </div>
 
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    Check that these details are correct before continuing
+                </strong>
+            </div>
+
             <a href="{{ path('view-lpa') }}" role="button" draggable="false" class="govuk-button">
                 Continue
             </a>
 
-        </main>
+            <p class="govuk-body">
+                <a href="{{ path('enter-code') }}">Re-enter the code</a>
+            </p>
 
+        </main>
     </div>
 {% endblock %}

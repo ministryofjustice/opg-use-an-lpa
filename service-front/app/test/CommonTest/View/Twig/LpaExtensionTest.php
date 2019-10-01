@@ -7,6 +7,7 @@ namespace CommonTest\View\Twig;
 use Common\View\Twig\LpaExtension;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;
+use DateTime;
 
 class LpaExtensionTest extends TestCase
 {
@@ -17,12 +18,13 @@ class LpaExtensionTest extends TestCase
         $functions = $extension->getFunctions();
 
         $this->assertTrue(is_array($functions));
-        $this->assertEquals(3, count($functions));
+        $this->assertEquals(4, count($functions));
 
         $expectedFunctions = [
-            'actor_address' => 'actorAddress',
-            'actor_name'    => 'actorName',
-            'lpa_date'      => 'lpaDate',
+            'actor_address'             => 'actorAddress',
+            'actor_name'                => 'actorName',
+            'lpa_date'                  => 'lpaDate',
+            'days_remaining_to_expiry'  => 'daysRemaining',
         ];
 
         //  Check each function
@@ -190,5 +192,25 @@ class LpaExtensionTest extends TestCase
                 '',
             ]
         ];
+    }
+
+    public function testDaysRemainingIsPositive()
+    {
+        $extension = new LpaExtension();
+
+        $date = new DateTime('+1 week');
+
+        $days = $extension->daysRemaining($date->format('Y-m-d'));
+
+        $this->assertGreaterThan(0, $days);
+    }
+
+    public function testDaysRemainingIsNull()
+    {
+        $extension = new LpaExtension();
+
+        $days = $extension->daysRemaining(null);
+
+        $this->assertEquals('', $days);
     }
 }

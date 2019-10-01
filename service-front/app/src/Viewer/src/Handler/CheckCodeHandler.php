@@ -16,6 +16,7 @@ use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use ArrayObject;
+use DateTime;
 
 /**
  * Class CheckCodeHandler
@@ -60,8 +61,11 @@ class CheckCodeHandler extends AbstractHandler
 
                 if ($lpa instanceof ArrayObject) {
                     // Then we found a LPA for the given code
+                    $expires = new DateTime($lpa->expires);
+
                     return new HtmlResponse($this->renderer->render('viewer::check-code-found', [
                         'lpa' => $lpa->lpa,
+                        'expires' => $expires->format('Y-m-d'),
                     ]));
                 }
             } catch (ApiException $apiEx) {
