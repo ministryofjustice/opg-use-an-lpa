@@ -76,6 +76,23 @@ class CheckLpaHandlerTest extends TestCase
         $this->requestProphecy->getAttribute('session', Argument::any())->willreturn($this->sessionProphecy->reveal());
     }
 
+    /**
+     * Iterates an array recursively to turn it into an array object.
+     *
+     * @param array $in
+     * @return ArrayObject
+     */
+    public function recursiveArrayToArrayObject(array $in)
+    {
+        foreach ($in as $dataItemName => $dataItem) {
+            if (is_array($dataItem)) {
+                $in[$dataItemName] = $this->recursiveArrayToArrayObject($dataItem);
+            }
+        }
+
+        return new ArrayObject($in, ArrayObject::ARRAY_AS_PROPS);
+    }
+
     public function testValidDonorDetails()
     {
         $handler = new CheckLpaHandler(
@@ -85,14 +102,20 @@ class CheckLpaHandlerTest extends TestCase
             $this->lpaServiceProphecy->reveal()
         );
 
-        $this->lpaServiceProphecy->search(
+        $this->lpaServiceProphecy->getLpaByPasscode(
             self::TEST_PASSCODE,
             self::TEST_REF_NUMBER,
-            self::TEST_DOB)->willReturn(new ArrayObject([
-            'donor' => [
-                'dob' => '1980-01-01'
-            ]
-        ]));
+            self::TEST_DOB)->willReturn($this->recursiveArrayToArrayObject(
+                [
+                    'actor' => [],
+                    'lpa' => [
+                        'donor' => [
+                            'dob' => '1980-01-01'
+                        ]
+                    ]
+                ]
+            )
+        );
 
         $this->templateRendererProphecy->render('actor::check-lpa', Argument::any())->willReturn('');
 
@@ -110,16 +133,20 @@ class CheckLpaHandlerTest extends TestCase
             $this->lpaServiceProphecy->reveal()
         );
 
-        $this->lpaServiceProphecy->search(
+        $this->lpaServiceProphecy->getLpaByPasscode(
             self::TEST_PASSCODE,
             self::TEST_REF_NUMBER,
-            self::TEST_DOB)->willReturn(new ArrayObject([
-            'attorneys' => [
+            self::TEST_DOB)->willReturn($this->recursiveArrayToArrayObject(
                 [
-                    'dob' => '1980-01-01'
+                    'actor' => [],
+                    'lpa' => [
+                        'donor' => [
+                            'dob' => '1980-01-01'
+                        ]
+                    ]
                 ]
-            ]
-        ]));
+            )
+        );
 
         $this->templateRendererProphecy->render('actor::check-lpa', Argument::any())->willReturn('');
 
@@ -153,7 +180,7 @@ class CheckLpaHandlerTest extends TestCase
             $this->lpaServiceProphecy->reveal()
         );
 
-        $this->lpaServiceProphecy->search(
+        $this->lpaServiceProphecy->getLpaByPasscode(
             self::TEST_PASSCODE,
             self::TEST_REF_NUMBER,
             self::TEST_DOB)->willThrow($this->getException(StatusCodeInterface::STATUS_NOT_FOUND));
@@ -174,7 +201,7 @@ class CheckLpaHandlerTest extends TestCase
             $this->lpaServiceProphecy->reveal()
         );
 
-        $this->lpaServiceProphecy->search(
+        $this->lpaServiceProphecy->getLpaByPasscode(
             self::TEST_PASSCODE,
             self::TEST_REF_NUMBER,
             self::TEST_DOB)->willThrow($this->getException(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR));
