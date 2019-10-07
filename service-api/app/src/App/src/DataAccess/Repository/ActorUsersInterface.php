@@ -19,14 +19,23 @@ interface ActorUsersInterface
     /**
      * Add an actor user
      *
+     * @param string $id
      * @param string $email
      * @param string $password
      * @param string $activationToken
      * @param int $activationTtl
      * @return array
-     * @throws CreationException
      */
-    public function add(string $email, string $password, string $activationToken, int $activationTtl) : array;
+    public function add(string $id, string $email, string $password, string $activationToken, int $activationTtl) : array;
+
+    /**
+     * Get an actor user from the database
+     *
+     * @param string $id
+     * @return array
+     * @throws NotFoundException
+     */
+    public function get(string $id) : array;
 
     /**
      * Get an actor user from the database
@@ -35,7 +44,7 @@ interface ActorUsersInterface
      * @return array
      * @throws NotFoundException
      */
-    public function get(string $email) : array;
+    public function getByEmail(string $email) : array;
 
     /**
      * Activate the user account in the database using the token value
