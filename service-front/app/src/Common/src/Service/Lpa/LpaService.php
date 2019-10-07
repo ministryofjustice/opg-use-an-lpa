@@ -94,7 +94,7 @@ class LpaService
         $lpaData = $this->apiClient->httpPost('/v1/actor-codes/summary', $data);
 
         if (is_array($lpaData)) {
-            return $this->lpaFactory->createLpaFromData($lpaData);
+            return $this->lpaFactory->createLpaFromData($lpaData['lpa']);
         }
 
         return null;

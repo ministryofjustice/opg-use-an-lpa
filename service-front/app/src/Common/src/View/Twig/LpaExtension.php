@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common\View\Twig;
 
+use Common\Entity\CaseActor;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use DateTime;
@@ -52,18 +53,17 @@ class LpaExtension extends AbstractExtension
     }
 
     /**
-     * @param iterable $actor
+     * @param CaseActor $actor
      * @return string
      */
-    public function actorName(iterable $actor)
+    public function actorName(CaseActor $actor)
     {
-        $filteredName = $this->filterData($actor, [
-            'salutation',
-            'firstname',
-            'surname',
-        ]);
-
-        return implode(' ', $filteredName);
+        return sprintf(
+            '%s %s %s',
+            $actor->getSalutation(),
+            $actor->getFirstname(),
+            $actor->getSurname()
+        );
     }
 
     /**

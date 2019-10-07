@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
@@ -73,14 +74,16 @@ class CheckLpaHandler extends AbstractHandler
                     //  Check the logged in user role for this LPA
                     $user = null;
                     $userRole = null;
+                    $comparableDob = \DateTime::createFromFormat('!Y-m-d', $dob);
 
-                    if (!is_null($lpa->getDonor()->getDob()) && $lpa->getDonor()->getDob() == $dob) {
+                    if (!is_null($lpa->getDonor()->getDob()) && $lpa->getDonor()->getDob() == $comparableDob) {
                         $user = $lpa->getDonor();
                         $userRole = 'Donor';
                     } elseif (!is_null($lpa->getAttorneys()) && is_iterable($lpa->getAttorneys())) {
                         //  Loop through the attorneys
+                        /** @var CaseActor $attorney */
                         foreach ($lpa->getAttorneys() as $attorney) {
-                            if (!is_null($attorney->getDob()) && $attorney->getDob() == $dob) {
+                            if (!is_null($attorney->getDob()) && $attorney->getDob() == $comparableDob) {
                                 $user = $attorney;
                                 $userRole = 'Attorney';
                             }
