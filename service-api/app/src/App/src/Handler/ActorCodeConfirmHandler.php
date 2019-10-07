@@ -39,7 +39,7 @@ class ActorCodeConfirmHandler implements RequestHandlerInterface
 
         $user = $request->getAttribute('user-id');
 
-        if (!isset($data['actor-code']) || !isset($data['uid'])| !isset($data['dob'])) {
+        if (!isset($data['actor-code']) || !isset($data['uid']) || !isset($data['dob'])) {
             throw new BadRequestException("'actor-code', 'uid' and 'dob' are required fields");
         }
 
