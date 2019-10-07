@@ -58,12 +58,12 @@ class LpaExtension extends AbstractExtension
      */
     public function actorName(CaseActor $actor)
     {
-        return sprintf(
-            '%s %s %s',
+        return implode(' ', array_filter([
             $actor->getSalutation(),
             $actor->getFirstname(),
+            $actor->getMiddlenames(),
             $actor->getSurname()
-        );
+        ]));
     }
 
     /**
