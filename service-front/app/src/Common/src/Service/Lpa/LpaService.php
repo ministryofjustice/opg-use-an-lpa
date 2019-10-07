@@ -2,6 +2,7 @@
 
 namespace Common\Service\Lpa;
 
+use Common\Entity\Lpa;
 use Common\Service\ApiClient\Client as ApiClient;
 use ArrayObject;
 
@@ -17,12 +18,19 @@ class LpaService
     private $apiClient;
 
     /**
+     * @var LpaFactory
+     */
+    private $lpaFactory;
+
+    /**
      * LpaService constructor.
      * @param ApiClient $apiClient
+     * @param LpaFactory $lpaFactory
      */
-    public function __construct(ApiClient $apiClient)
+    public function __construct(ApiClient $apiClient, LpaFactory $lpaFactory)
     {
         $this->apiClient = $apiClient;
+        $this->lpaFactory = $lpaFactory;
     }
 
     /**
@@ -75,7 +83,7 @@ class LpaService
      * @param string $dob
      * @return ArrayObject|null
      */
-    public function getLpaByPasscode(string $passcode, string $referenceNumber, string $dob) : ?ArrayObject
+    public function getLpaByPasscode(string $passcode, string $referenceNumber, string $dob) : ?Lpa
     {
         $data = [
             'actor-code' => $passcode,
@@ -86,10 +94,10 @@ class LpaService
         $lpaData = $this->apiClient->httpPost('/v1/actor-codes/summary', $data);
 
         if (is_array($lpaData)) {
-            $lpaData = $this->parseLpaData($lpaData);
+            return $this->lpaFactory->createLpaFromData($lpaData);
         }
 
-        return $lpaData;
+        return null;
     }
 
     /**
@@ -104,7 +112,6 @@ class LpaService
             }
         }
 
-        //  TODO - Transform the data array into a data object
         return new ArrayObject($data, ArrayObject::ARRAY_AS_PROPS);
     }
 }

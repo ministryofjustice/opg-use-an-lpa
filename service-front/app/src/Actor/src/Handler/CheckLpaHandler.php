@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\Session as SessionTrait;
@@ -66,24 +67,20 @@ class CheckLpaHandler extends AbstractHandler
         if (isset($passcode) && isset($referenceNumber) && isset($dob)) {
 
             try {
-                $lpaData = $this->lpaService->getLpaByPasscode($passcode, $referenceNumber, $dob);
+                $lpa = $this->lpaService->getLpaByPasscode($passcode, $referenceNumber, $dob);
 
-                // The lpa comes back as two concurrent records. An actor which has been pulled from the
-                // relevant attorneys section and the complete lpa record itself.
-                $lpa = $lpaData['lpa'];
-
-                if ($lpa instanceof ArrayObject) {
+                if (!is_null($lpa)) {
                     //  Check the logged in user role for this LPA
                     $user = null;
                     $userRole = null;
 
-                    if (isset($lpa->donor->dob) && $lpa->donor->dob == $dob) {
-                        $user = $lpa->donor;
+                    if (!is_null($lpa->getDonor()->getDob()) && $lpa->getDonor()->getDob() == $dob) {
+                        $user = $lpa->getDonor();
                         $userRole = 'Donor';
-                    } elseif (isset($lpa->attorneys) && is_iterable($lpa->attorneys)) {
+                    } elseif (!is_null($lpa->getAttorneys()) && is_iterable($lpa->getAttorneys())) {
                         //  Loop through the attorneys
-                        foreach ($lpa->attorneys as $attorney) {
-                            if (isset($attorney->dob) && $attorney->dob == $dob) {
+                        foreach ($lpa->getAttorneys() as $attorney) {
+                            if (!is_null($attorney->getDob()) && $attorney->getDob() == $dob) {
                                 $user = $attorney;
                                 $userRole = 'Attorney';
                             }
