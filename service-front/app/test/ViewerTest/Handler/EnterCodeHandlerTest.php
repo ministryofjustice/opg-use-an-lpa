@@ -20,6 +20,8 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 class EnterCodeHandlerTest extends TestCase
 {
     const CSRF_CODE = "1234";
+    const TEST_LPA_CODE = '1234-5678-9012';
+    const TEST_SURNAME = 'test_surname';
 
     /**
      * @var TemplateRendererInterface
@@ -36,6 +38,16 @@ class EnterCodeHandlerTest extends TestCase
      */
     private $requestProphecy;
 
+    /**
+     * @var LpaService
+     */
+    private $lpaServiceProphecy;
+
+    /**
+     * @var AuthenticationInterface
+     */
+    private $authenticatorProphecy;
+
     public function setUp()
     {
         // Constructor Parameters
@@ -46,7 +58,8 @@ class EnterCodeHandlerTest extends TestCase
         $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
         $sessionProphecy = $this->prophesize(SessionInterface::class);
-        $sessionProphecy->set('code', '1234-5678-9012');
+        $sessionProphecy->set('code', self::TEST_LPA_CODE);
+        $sessionProphecy->set('surname', self::TEST_SURNAME);
 
         $csrfProphecy = $this->prophesize(CsrfGuardInterface::class);
         $csrfProphecy->generateToken()
@@ -101,7 +114,8 @@ class EnterCodeHandlerTest extends TestCase
             ->willReturn("POST");
         $this->requestProphecy->getParsedBody()
             ->willReturn([
-                'lpa_code' => '1234-5678-9012',
+                'lpa_code' => self::TEST_LPA_CODE,
+                'donor_surname' => self::TEST_SURNAME,
                 '__csrf'   => self::CSRF_CODE
             ]);
 
@@ -126,10 +140,11 @@ class EnterCodeHandlerTest extends TestCase
         $this->requestProphecy->getMethod()
             ->willReturn("POST");
         $this->requestProphecy->getParsedBody()
-            ->willReturn(['lpa_code' => '1234-5678-9012']);
+            ->willReturn(['lpa_code' => self::TEST_LPA_CODE, 'donor_surname' => self::TEST_SURNAME]);
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
+
 }

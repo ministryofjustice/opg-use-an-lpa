@@ -53,11 +53,12 @@ class CheckCodeHandler extends AbstractHandler
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         $code = $this->getSession($request,'session')->get('code');
+        $surname = $this->getSession($request,'session')->get('surname');
 
         if (isset($code)) {
 
             try {
-                $lpa = $this->lpaService->getLpaByCode($code);
+                $lpa = $this->lpaService->getLpaByCode($code, $surname);
 
                 if ($lpa instanceof ArrayObject) {
                     // Then we found a LPA for the given code

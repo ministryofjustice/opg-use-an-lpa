@@ -12,7 +12,7 @@
 
         <div class="govuk-grid-row">
 
-            <div class="govuk-grid-column-one-half">
+            <div class="govuk-grid-column-two-thirds">
 
                 {{ govuk_error_summary(form) }}
 
@@ -21,27 +21,28 @@
                     <fieldset class="govuk-fieldset">
 
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                            <h1 class="govuk-fieldset__heading">
-                                Enter Code
+                            <h1 class="govuk-heading-xl">
+                                Enter the LPA access code
                             </h1>
                         </legend>
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
-                        {{ govuk_form_element(form.get('lpa_code'), { 'label': 'LPA code' }) }}
+                        <div class="govuk-!-width-one-half">
 
-                        <details class="govuk-details" role="group">
-                            <summary class="govuk-details__summary">
-                                <span class="govuk-details__summary-text">
-                                    What is a share code?
-                                </span>
-                            </summary>
-                            <div class="govuk-details__text">
-                                <p class="govuk-body">A share code is given to you by the donor or an attorney named on the lasting power of attorney.</p>
-                            </div>
-                        </details>
+                            {{ govuk_form_element(form.get('donor_surname'), { 'label': 'Donor surname' }) }}
 
-                        <button type="submit" class="govuk-button">Save and continue</button>
+                            {{ govuk_form_element(form.get('lpa_code'), { 'label': 'LPA access code', 'input_prefix': 'V - ', 'attr' : {'class': 'govuk-input--width-10'}}) }}
+
+                        </div>
+
+                        <div class="govuk-inset-text">
+                            <p class="govuk-!-font-weight-bold">What is an LPA access code?</p>
+
+                            An LPA access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney.
+                        </div>
+
+                        <button type="submit" class="govuk-button">Continue</button>
 
                     </fieldset>
 
