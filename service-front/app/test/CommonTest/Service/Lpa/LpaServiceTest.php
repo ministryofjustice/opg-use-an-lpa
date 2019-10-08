@@ -104,7 +104,7 @@ class LpaServiceTest extends TestCase
 
         $service = new LpaService($this->apiClientProphecy->reveal());
 
-        $lpa = $service->search($passcode, $referenceNumber, $dob);
+        $lpa = $service->getLpaByPasscode($passcode, $referenceNumber, $dob);
 
         $this->assertInstanceOf(ArrayObject::class, $lpa);
         $this->assertEquals(123456789012, $lpa->id);

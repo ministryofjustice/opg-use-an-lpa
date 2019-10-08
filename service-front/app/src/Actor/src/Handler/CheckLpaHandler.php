@@ -66,20 +66,24 @@ class CheckLpaHandler extends AbstractHandler
         if (isset($passcode) && isset($referenceNumber) && isset($dob)) {
 
             try {
-                $lpa = $this->lpaService->search($passcode, $referenceNumber, $dob);
+                $lpaData = $this->lpaService->getLpaByPasscode($passcode, $referenceNumber, $dob);
+
+                // The lpa comes back as two concurrent records. An actor which has been pulled from the
+                // relevant attorneys section and the complete lpa record itself.
+                $lpa = $lpaData['lpa'];
 
                 if ($lpa instanceof ArrayObject) {
                     //  Check the logged in user role for this LPA
                     $user = null;
                     $userRole = null;
 
-                    if (isset($lpa['donor']['dob']) && $lpa['donor']['dob'] == $dob) {
-                        $user = $lpa['donor'];
+                    if (isset($lpa->donor->dob) && $lpa->donor->dob == $dob) {
+                        $user = $lpa->donor;
                         $userRole = 'Donor';
-                    } elseif (isset($lpa['attorneys']) && is_iterable($lpa['attorneys'])) {
+                    } elseif (isset($lpa->attorneys) && is_iterable($lpa->attorneys)) {
                         //  Loop through the attorneys
-                        foreach ($lpa['attorneys'] as $attorney) {
-                            if (isset($attorney['dob']) && $attorney['dob'] == $dob) {
+                        foreach ($lpa->attorneys as $attorney) {
+                            if (isset($attorney->dob) && $attorney->dob == $dob) {
                                 $user = $attorney;
                                 $userRole = 'Attorney';
                             }
@@ -106,7 +110,9 @@ class CheckLpaHandler extends AbstractHandler
 
         }
 
-        //  We don't have a code so the session has timed out
+        // We don't have a code so the session has timed out
+        // TODO this can be reached if the session is still perfectly valid but the lpa search/response
+        //      failed in some way. Make this better.
         throw new SessionTimeoutException();
     }
 }
