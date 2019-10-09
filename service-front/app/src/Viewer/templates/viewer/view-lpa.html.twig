@@ -4,42 +4,9 @@
 
 {% block content %}
     <style>
-        .logo {
-            padding: 40px 0 0 10px;
-            background-image: url(/assets/images/org-crest.png);
-            background-position: 9px top;
-            border-left: 2px solid;
-            background-repeat: no-repeat;
-        }
-
-        .logo p {
-            position: relative;
-            top: 3px;
-            font-family: Helvetica, Arial;
-            font-size: 27px;
-        }
-
         .govuk-panel.govuk-panel--failed {
             color: #fff;
             background: #B10E1E;
-        }
-
-        .govuk-table caption {
-            margin-bottom: 10px;
-        }
-
-        .govuk-table tbody {
-            border-top: 1px solid #bfc1c3;
-            border-bottom: 1px solid #bfc1c3;
-        }
-
-        .govuk-table .govuk-table__header,
-        .govuk-table .govuk-table__cell {
-            border-bottom-width: 0;
-        }
-
-        .govuk-table tr.underline {
-            border-bottom: 1px solid #bfc1c3;
         }
     </style>
 
@@ -47,6 +14,14 @@
         {{ include('@partials/new-service.html.twig') }}
 
         <main class="govuk-main-wrapper">
+            <div class="govuk-grid-row">
+
+                <div class="govuk-grid-column-two-thirds">
+                    <span class="govuk-caption-l" style="margin-top: 0px;">Health and welfare</span>
+                    <h1 class="govuk-heading-l" style="margin-bottom: 0px; color:#005ea5">Nicholas Brown</h1>
+                </div>
+
+            </div>
 
             <div class="govuk-grid-row">
 
@@ -81,106 +56,133 @@
 
                     {% endif %}
 
-                    <div class="govuk-grid-column-two-thirds">
-                        <h2 class="govuk-heading-l">The donor</h2>
-                    </div>
+                </div>
+            </div>
+            <div class="govuk-grid-row">
 
-                    <table class="govuk-table">
+                <div class="govuk-grid-column-two-thirds">
+                    <h2 class="govuk-heading-l">The donor</h2>
 
-                        <tbody class="govuk-table__body">
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header govuk-!-width-one-third" scope="row">Name</th>
-                                <td class="govuk-table__cell">{{ actor_name(lpa.donor) }}</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header govuk-!-width-one-third" scope="row">Date of birth</th>
-                                <td class="govuk-table__cell">{{ lpa_date(lpa.donor.dob) }}</td>
-                            </tr>
-                            <tr class="govuk-table__row underline">
-                                <th class="govuk-table__header govuk-!-width-one-third" scope="row">Address</th>
-                                <td class="govuk-table__cell">{{ actor_address(lpa.donor) }}</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header govuk-!-width-one-third" scope="row">How decisions are made</th>
-                                <td class="govuk-table__cell">
-                                    {% if lpa.caseAttorneySingular %}
-                                        The attorneys may act individually
-                                    {% elseif lpa.caseAttorneyJointly %}
-                                        The attorneys must act jointly
-                                    {% elseif lpa.caseAttorneyJointlyAndSeverally %}
-                                        The attorneys must act jointly and severally
-                                    {% elseif lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
-                                        The attorneys must act jointly for some decisions, and jointly and severally for other decisions
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        </tbody>
+                    <dl class="govuk-summary-list govuk-summary-list--no-border">
 
-                    </table>
+                        
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">Name</dt>
+                                <dd class="govuk-summary-list__value">{{ actor_name(lpa.donor) }}</dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">Date of birth</dt>
+                                <dd class="govuk-summary-list__value">{{ lpa_date(lpa.donor.dob) }}</dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">Address</dt>
+                                <dd class="govuk-summary-list__value">{{ actor_address(lpa.donor) }}</dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                
+                            </div>
 
-                    {% for attorney in lpa.attorneys %}
-
-                        <table class="govuk-table">
-
-                            <caption class="govuk-table__caption">{{ lpa.attorneys | length == 1 ? 'The' : loop.index | ordinal }} attorney</caption>
-
-                            <tbody class="govuk-table__body">
-                                <tr class="govuk-table__row">
-                                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Name</th>
-                                    <td class="govuk-table__cell">{{ actor_name(attorney) }}</td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Date of birth</th>
-                                    <td class="govuk-table__cell">{{ lpa_date(attorney.dob) }}</td>
-                                </tr>
-                                <tr class="govuk-table__row underline">
-                                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Address</th>
-                                    <td class="govuk-table__cell">{{ actor_address(attorney) }}</td>
-                                </tr>
-                            </tbody>
-
-                        </table>
-
-                    <table class="govuk-table">
-
-                        <caption class="govuk-table__caption">LPA details</caption>
-
-                        <tbody class="govuk-table__body">
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header govuk-!-width-one-third" scope="row">Preferences</th>
-                                <td class="govuk-table__cell">??</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header govuk-!-width-one-third" scope="row">Instructions</th>
-                                <td class="govuk-table__cell">??</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header govuk-!-width-one-third" scope="row">Date donor signed LPA</th>
-                                <td class="govuk-table__cell">{{ lpa_date(lpa.lpaDonorSignatureDate) }}</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header govuk-!-width-one-third" scope="row">Registration date</th>
-                                <td class="govuk-table__cell">{{ lpa_date(lpa.registrationDate) }}</td>
-                            </tr>
-
-                            {% if lpa.status != 'Cancelled' %}
-                                <tr class="govuk-table__row">
-                                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">When can the LPA be used?</th>
-                                    <td class="govuk-table__cell">{# TODO #}This LPA can be used when... ??</td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">LPA case number</th>
-                                    <td class="govuk-table__cell">{# TODO #}??</td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-
-                        </tbody>
-
-                    </table>
+                    </dl>
 
                 </div>
 
+            </div>
+            <dl class="govuk-summary-list govuk-summary-list--no-border">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+                        </div>
+                </div>
+
+            </dl>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                <h2 class="govuk-heading-l">The attorneys</h2>
+
+                <dl class="govuk-summary-list govuk-summary-list--no-border">
+                        <dt class="govuk-summary-list__key">How decisions are made</dt>
+                        <dd class="govuk-summary-list__value">
+                            {% if lpa.caseAttorneySingular %}
+                                The attorneys may act individually
+                            {% elseif lpa.caseAttorneyJointly %}
+                                The attorneys must act jointly
+                            {% elseif lpa.caseAttorneyJointlyAndSeverally %}
+                                The attorneys must act jointly and severally
+                            {% elseif lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
+                                The attorneys must act jointly for some decisions, and jointly and severally for other decisions
+                            {% endif %}
+                        </dd>
+                    </dl>
+
+                {% for attorney in lpa.attorneys %}
+
+                    <h3 class="govuk-heading-m">{{ lpa.attorneys | length == 1 ? 'The' : loop.index | ordinal }} attorney</h3>
+
+                    <dl class="govuk-summary-list govuk-summary-list--no-border">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Name</dt>
+                            <dd class="govuk-summary-list__value">{{ actor_name(attorney) }}</dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Date of birth</dt>
+                            <dd class="govuk-summary-list__value">{{ lpa_date(attorney.dob) }}</dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Address</dt>
+                            <dd class="govuk-summary-list__value">{{ actor_address(attorney) }}</dd>
+                        </div>
+                    </dl>
+
+                </div>
+            </div>
+            <dl class="govuk-summary-list govuk-summary-list--no-border">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+                        </div>
+                </div>
+
+            </dl>
+            <div class="govuk-grid-row">
+
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h2 class="govuk-heading-l">LPA details</h2>
+
+                    <dl class="govuk-summary-list govuk-summary-list--no-border">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Preferences</dt>
+                            <dd class="govuk-summary-list__value">??</dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Instructions</dt>
+                            <dd class="govuk-summary-list__value">??</dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Date donor signed LPA</dt>
+                            <dd class="govuk-summary-list__value">{{ lpa_date(lpa.lpaDonorSignatureDate) }}</dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Registration date</dt>
+                            <dd class="govuk-summary-list__value">{{ lpa_date(lpa.registrationDate) }}</dd>
+                        </div>
+
+                        {% if lpa.status != 'Cancelled' %}
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">When can the LPA be used?</dt>
+                                <dd class="govuk-summary-list__value">{# TODO #}This LPA can be used when... ??</dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">LPA case number</dt>
+                                <dd class="govuk-summary-list__value">{# TODO #}??</dd>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    </tbody>
+
+                </div>
             </div>
 
         </main>
