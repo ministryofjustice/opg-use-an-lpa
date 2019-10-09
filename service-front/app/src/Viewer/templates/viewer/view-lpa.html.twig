@@ -46,25 +46,14 @@
     <div class="govuk-width-container">
         {{ include('@partials/new-service.html.twig') }}
 
-        <a href="/" class="govuk-back-link">Back</a>
-
         <main class="govuk-main-wrapper">
 
             <div class="govuk-grid-row">
 
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-l">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}'s {{ lpa.caseSubtype == 'pfa' ? 'property and finance' : 'health and welfare' }} LPA</h1>
+                    <span class="govuk-caption-l" style="margin-top: 0px"></span>
+                    <h1 class="govuk-heading-l" style="margin-bottom: 0px; color: #005ea5;";></h1>
                 </div>
-
-                <div class="govuk-grid-column-one-third">
-                    <div class="logo">
-                        <p class="govuk-body-l">Office of the<br/>Public Guardian</p>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="govuk-grid-row">
 
                 <div class="govuk-grid-column-full">
 
@@ -92,17 +81,11 @@
 
                     {% endif %}
 
-                    <br/>
-
-                    <p class="govuk-body">
-                        You can <a href="#" class="govuk-link">download</a> a copy of this page. Portable document format (PDF)
-                    </p>
-
-                    <br/>
+                    <div class="govuk-grid-column-two-thirds">
+                        <h2 class="govuk-heading-l">The donor</h2>
+                    </div>
 
                     <table class="govuk-table">
-
-                        <caption class="govuk-table__caption">The donor</caption>
 
                         <tbody class="govuk-table__body">
                             <tr class="govuk-table__row">
@@ -158,8 +141,6 @@
 
                         </table>
 
-                    {% endfor %}
-
                     <table class="govuk-table">
 
                         <caption class="govuk-table__caption">LPA details</caption>
@@ -192,6 +173,7 @@
                                     <td class="govuk-table__cell">{# TODO #}??</td>
                                 </tr>
                             {% endif %}
+                        {% endfor %}
 
                         </tbody>
 
