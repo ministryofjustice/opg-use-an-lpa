@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Common\Entity\CaseActor;
-use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\Session as SessionTrait;
@@ -19,7 +18,6 @@ use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use ArrayObject;
 
 /**
  * Class CheckLpaHandler
