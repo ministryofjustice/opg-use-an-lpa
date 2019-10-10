@@ -8,7 +8,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
 
   // Path to your entry point. From this file Webpack will begin his work
-  entry: './src/javascript/index.js',
+  entry: './src/index.js',
 
   module: {
     rules: [
@@ -53,6 +53,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
         {from:'src/robots.txt',to:'robots.txt'},
+        {from:'src/stylesheets',to:'stylesheets'},
         {from:'node_modules/govuk-frontend/govuk/assets',to:'assets'}
     ]),
   ],
