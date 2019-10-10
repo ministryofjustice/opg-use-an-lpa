@@ -1,8 +1,7 @@
 // Webpack uses this to work with directories
 const path = require('path');
-const TerserJSPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // This is main configuration object.
 // Here you write different options and tell Webpack what to do
@@ -10,17 +9,6 @@ module.exports = {
 
   // Path to your entry point. From this file Webpack will begin his work
   entry: './src/javascript/index.js',
-
-  optimization: {
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
-  },
-
-  // Path and filename of your result bundle.
-  // Webpack will bundle all JavaScript into this file
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
-  },
 
   module: {
     rules: [
@@ -43,19 +31,41 @@ module.exports = {
                 },
             ],
         },
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env'],
+              plugins: ['@babel/plugin-transform-reserved-words', '@babel/plugin-transform-member-expression-literals', '@babel/plugin-transform-property-literals']
+            }
+          }
+        }
     ],
   },
   plugins: [
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
-      filename: '[name].css',
-      chunkFilename: '[id].css',
+      filename: 'stylesheets/[name].css',
+      chunkFilename: 'stylesheets/[id].css',
     }),
+    new CopyWebpackPlugin([
+        {from:'src/robots.txt',to:'robots.txt'},
+        {from:'node_modules/govuk-frontend/govuk/assets',to:'assets'}
+    ]),
   ],
   // Default mode for Webpack is production.
   // Depending on mode Webpack will apply different things
   // on final bundle. For now we don't need production's JavaScript 
   // minifying and other thing so let's set mode to development
-  mode: 'development'
+  mode: 'development',
+  // Path and filename of your result bundle.
+  // Webpack will bundle all JavaScript into this file
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'javascript/bundle.js',
+    sourceMapFilename: '[name].js.map'
+  }
 };
