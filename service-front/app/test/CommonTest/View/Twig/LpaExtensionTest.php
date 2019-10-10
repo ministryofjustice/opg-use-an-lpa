@@ -174,6 +174,9 @@ class LpaExtensionTest extends TestCase
 
     public function lpaDateDataProvider()
     {
+        $today = new DateTime("today");
+        $today = $today->format("j F Y");
+
         return [
             [
                 '1980-01-01',
@@ -182,6 +185,10 @@ class LpaExtensionTest extends TestCase
             [
                 '1948-02-17',
                 '17 February 1948',
+            ],
+            [
+                'today',
+                $today,
             ],
             [
                 'not-a-date',

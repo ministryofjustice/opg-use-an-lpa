@@ -93,7 +93,11 @@ class LpaExtension extends AbstractExtension
     public function lpaDate(?string $date)
     {
         if (!empty($date)) {
-            $date = DateTime::createFromFormat('Y-m-d', $date);
+            if ($date == "today"){
+                $date = new DateTime("today");
+            } else {
+                $date = DateTime::createFromFormat('Y-m-d', $date);
+            }
 
             if ($date instanceof DateTime) {
                 return $date->format('j F Y');
