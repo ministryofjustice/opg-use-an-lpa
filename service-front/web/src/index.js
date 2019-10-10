@@ -1,4 +1,4 @@
-import "../node_modules/govuk-frontend/govuk/all.scss";
+import './main.scss'
 import { initAll } from 'govuk-frontend'
 
 initAll()
