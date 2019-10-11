@@ -81,6 +81,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         $actorCode = $this->lpaService->confirmLpaAddition($passcode, $referenceNumber, $dob);
 
                         if (!is_null($actorCode)) {
+                            // TODO UML-209 this will need to go to the dashboard
                             return new RedirectResponse($this->urlHelper->generate('lpa.add'));
                         }
                     }

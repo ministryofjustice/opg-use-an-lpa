@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use Common\Entity\CaseActor;
 use Common\View\Twig\LpaExtension;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;
@@ -11,7 +12,8 @@ use DateTime;
 
 class LpaExtensionTest extends TestCase
 {
-    public function testGetFunctions()
+    /** @test */
+    public function it_returns_an_array_of_exported_twig_functions()
     {
         $extension = new LpaExtension();
 
@@ -40,9 +42,10 @@ class LpaExtensionTest extends TestCase
     }
 
     /**
+     * @test
      * @dataProvider addressDataProvider
      */
-    public function testActorAddress($addressLines, $expected)
+    public function it_concatenates_an_address_array_into_a_comma_separated_string($addressLines, $expected)
     {
         $extension = new LpaExtension();
 
@@ -114,13 +117,20 @@ class LpaExtensionTest extends TestCase
     }
 
     /**
+     * @test
      * @dataProvider nameDataProvider
      */
-    public function testActorName($nameLines, $expected)
+    public function it_concatenates_name_parts_into_a_single_string($nameLines, $expected)
     {
         $extension = new LpaExtension();
 
-        $name = $extension->actorName($nameLines);
+        $actor = new CaseActor();
+        if (isset($nameLines['salutation'])) { $actor->setSalutation($nameLines['salutation']); }
+        if (isset($nameLines['firstname'])) { $actor->setFirstname($nameLines['firstname']); }
+        if (isset($nameLines['middlenames'])) { $actor->setMiddlenames($nameLines['middlenames']); }
+        if (isset($nameLines['surname'])) { $actor->setSurname($nameLines['surname']); }
+
+        $name = $extension->actorName($actor);
 
         $this->assertEquals($expected, $name);
     }
@@ -138,18 +148,18 @@ class LpaExtensionTest extends TestCase
             ],
             [
                 [
-                    'salutation' => 'Mrs',
-                    'firstname'  => 'Someone',
-                    'surname'    => 'Taylor',
+                    'salutation' => 'Mr',
+                    'firstname'  => 'Jack',
+                    'middlenames' => 'Oliver',
+                    'surname'    => 'Allen',
                 ],
-                'Mrs Someone Taylor'
+                'Mr Jack Oliver Allen'
             ],
             [
                 [
-                    'salutation'  => 'Mrs',
-                    'firstname'   => 'Someone',
-                    'ignoreField' => 'This value won\'t show',
-                    'surname'     => 'Taylor',
+                    'salutation' => 'Mrs',
+                    'firstname'  => 'Someone',
+                    'surname'    => 'Taylor',
                 ],
                 'Mrs Someone Taylor'
             ],
@@ -161,9 +171,10 @@ class LpaExtensionTest extends TestCase
     }
 
     /**
+     * @test
      * @dataProvider lpaDateDataProvider
      */
-    public function testLpaDate($date, $expected)
+    public function it_creates_a_correctly_formatted_string_from_an_iso_date($date, $expected)
     {
         $extension = new LpaExtension();
 
@@ -194,7 +205,8 @@ class LpaExtensionTest extends TestCase
         ];
     }
 
-    public function testDaysRemainingIsPositive()
+    /** @test */
+    public function it_calculates_the_number_of_days_to_a_date_in_the_future_is_positive()
     {
         $extension = new LpaExtension();
 
@@ -205,7 +217,8 @@ class LpaExtensionTest extends TestCase
         $this->assertGreaterThan(0, $days);
     }
 
-    public function testDaysRemainingIsNull()
+    /** @test */
+    public function it_returns_an_empty_string_if_expiry_date_is_null()
     {
         $extension = new LpaExtension();
 
