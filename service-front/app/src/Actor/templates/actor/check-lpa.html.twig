@@ -71,14 +71,17 @@
                         </div>
                     </details>
 
-                    <a href="{{ path('lpa.confirm') }}" role="button" draggable="false" class="govuk-button govuk-!-margin-right-1">
-                        Continue
-                    </a>
+                    {{ govuk_form_open(form) }}
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <button type="submit" class="govuk-button">Continue</button>
 
                     <a href="{{ path('lpa.add') }}" role="button" class="govuk-button govuk-button--secondary">
                         Cancel
                     </a>
 
+                    {{ govuk_form_close() }}
                 </div>
             </div>
 

@@ -4,17 +4,23 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Actor\Form\LpaConfirm;
 use Common\Entity\CaseActor;
+use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
+use Common\Handler\CsrfGuardAware;
+use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
+use Common\Handler\UserAware;
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\LpaService;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -23,8 +29,9 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  * Class CheckLpaHandler
  * @package Actor\Handler
  */
-class CheckLpaHandler extends AbstractHandler
+class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAware
 {
+    use CsrfGuard;
     use SessionTrait;
     use User;
 
@@ -59,36 +66,34 @@ class CheckLpaHandler extends AbstractHandler
     {
         $session = $this->getSession($request,'session');
 
+        $form = new LpaConfirm($this->getCsrfGuard($request));
+
         $passcode = $session->get('passcode');
         $referenceNumber = $session->get('reference_number');
         $dob = $session->get('dob');
 
         if (isset($passcode) && isset($referenceNumber) && isset($dob)) {
-
             try {
+                if ($request->getMethod() === 'POST') {
+                    $form->setData($request->getParsedBody());
+
+                    if ($form->isValid()) {
+                        $actorCode = $this->lpaService->confirmLpaAddition($passcode, $referenceNumber, $dob);
+
+                        if (!is_null($actorCode)) {
+                            return new RedirectResponse($this->urlHelper->generate('lpa.add'));
+                        }
+                    }
+                }
+
+                // is a GET or failed POST
                 $lpa = $this->lpaService->getLpaByPasscode($passcode, $referenceNumber, $dob);
 
                 if (!is_null($lpa)) {
-                    //  Check the logged in user role for this LPA
-                    $user = null;
-                    $userRole = null;
-                    $comparableDob = \DateTime::createFromFormat('!Y-m-d', $dob);
-
-                    if (!is_null($lpa->getDonor()->getDob()) && $lpa->getDonor()->getDob() == $comparableDob) {
-                        $user = $lpa->getDonor();
-                        $userRole = 'Donor';
-                    } elseif (!is_null($lpa->getAttorneys()) && is_iterable($lpa->getAttorneys())) {
-                        //  Loop through the attorneys
-                        /** @var CaseActor $attorney */
-                        foreach ($lpa->getAttorneys() as $attorney) {
-                            if (!is_null($attorney->getDob()) && $attorney->getDob() == $comparableDob) {
-                                $user = $attorney;
-                                $userRole = 'Attorney';
-                            }
-                        }
-                    }
+                    list($user, $userRole) = $this->resolveLpaData($lpa, $dob);
 
                     return new HtmlResponse($this->renderer->render('actor::check-lpa', [
+                        'form'     => $form,
                         'lpa'      => $lpa,
                         'user'     => $user,
                         'userRole' => $userRole,
@@ -112,5 +117,29 @@ class CheckLpaHandler extends AbstractHandler
         // TODO this can be reached if the session is still perfectly valid but the lpa search/response
         //      failed in some way. Make this better.
         throw new SessionTimeoutException();
+    }
+
+    protected function resolveLpaData(Lpa $lpa, string $dob) : array
+    {
+        //  Check the logged in user role for this LPA
+        $user = null;
+        $userRole = null;
+        $comparableDob = \DateTime::createFromFormat('!Y-m-d', $dob);
+
+        if (!is_null($lpa->getDonor()->getDob()) && $lpa->getDonor()->getDob() == $comparableDob) {
+            $user = $lpa->getDonor();
+            $userRole = 'Donor';
+        } elseif (!is_null($lpa->getAttorneys()) && is_iterable($lpa->getAttorneys())) {
+            //  Loop through the attorneys
+            /** @var CaseActor $attorney */
+            foreach ($lpa->getAttorneys() as $attorney) {
+                if (!is_null($attorney->getDob()) && $attorney->getDob() == $comparableDob) {
+                    $user = $attorney;
+                    $userRole = 'Attorney';
+                }
+            }
+        }
+
+        return [$user, $userRole];
     }
 }
