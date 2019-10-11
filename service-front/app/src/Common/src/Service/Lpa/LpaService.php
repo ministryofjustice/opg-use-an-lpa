@@ -93,11 +93,7 @@ class LpaService
 
         $lpaData = $this->apiClient->httpPost('/v1/actor-codes/summary', $data);
 
-        if (is_array($lpaData)) {
-            return $this->lpaFactory->createLpaFromData($lpaData['lpa']);
-        }
-
-        return null;
+        return isset($lpaData['lpa']) ? $this->lpaFactory->createLpaFromData($lpaData['lpa']) : null;
     }
 
     /**
@@ -118,11 +114,7 @@ class LpaService
 
         $lpaData = $this->apiClient->httpPost('/v1/actor-codes/confirm', $data);
 
-        if (is_array($lpaData)) {
-            return $lpaData['user-lpa-actor-token'] ?? null;
-        }
-
-        return null;
+        return $lpaData['user-lpa-actor-token'] ?? null;
     }
 
     /**
