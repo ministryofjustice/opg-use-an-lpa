@@ -32,7 +32,9 @@ class LpaService
      */
     public function getLpaById(string $lpaId) : ?ArrayObject
     {
-        $lpaData = $this->apiClient->httpGet('/v1/lpa/' . $lpaId);
+        $lpaData = $this->apiClient->httpGet('/v1/lpas/', [
+            'reference_number' => $lpaId,
+        ]);
 
         if (is_array($lpaData)) {
             $lpaData = $this->parseLpaData($lpaData);

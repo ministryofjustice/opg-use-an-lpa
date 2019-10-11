@@ -69,6 +69,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckLpaHandler::class
     ], 'lpa.check');
+    $app->get('/lpa/view-lpa', [
+        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\ViewLpaSummaryHandler::class
+    ], 'lpa.view');
 };
 
 switch (getenv('CONTEXT')){
