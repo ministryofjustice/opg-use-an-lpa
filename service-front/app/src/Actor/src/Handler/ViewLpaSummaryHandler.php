@@ -54,7 +54,7 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
 //
 //        $lpa = $this->lpaService->getLpaById($id);
 
-        return new HtmlResponse($this->renderer->render('actor::home-page'));
+        return new HtmlResponse($this->renderer->render('actor::view-lpa-summary'));
     }
 
 }
