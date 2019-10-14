@@ -66,22 +66,24 @@ class LpaService
     }
 
     /**
-     * Search for an LPA using credentials
+     * Get an LPA using a users supplied one time passcode, LPA uid and the actors DoB
+     *
+     * Used when an actor adds an LPA to their UaLPA account
      *
      * @param string $passcode
      * @param string $referenceNumber
      * @param string $dob
      * @return ArrayObject|null
      */
-    public function search(string $passcode, string $referenceNumber, string $dob) : ?ArrayObject
+    public function getLpaByPasscode(string $passcode, string $referenceNumber, string $dob) : ?ArrayObject
     {
         $data = [
-            'code' => $passcode,
+            'actor-code' => $passcode,
             'uid'  => $referenceNumber,
             'dob'  => $dob,
         ];
 
-        $lpaData = $this->apiClient->httpGet('/v1/lpa-search', $data);
+        $lpaData = $this->apiClient->httpPost('/v1/actor-codes/summary', $data);
 
         if (is_array($lpaData)) {
             $lpaData = $this->parseLpaData($lpaData);
