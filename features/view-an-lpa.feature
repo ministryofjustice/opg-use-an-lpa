@@ -66,4 +66,4 @@ Feature: View a lasting power of attorney
     When the share code form is submitted
     Then the "Is this the LPA you want to view?" page is displayed
     When I click the "Continue" button
-    Then the "Rachel Sanderson's property and finance LPA" page is displayed
+    Then the "Rachel Sanderson" page is displayed
