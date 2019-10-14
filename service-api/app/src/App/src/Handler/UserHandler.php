@@ -58,7 +58,7 @@ class UserHandler implements RequestHandlerInterface
             throw new BadRequestException('Email address must be provided');
         }
 
-        $data = $this->userService->get($params['email']);
+        $data = $this->userService->getByEmail($params['email']);
 
         return new JsonResponse($data);
     }

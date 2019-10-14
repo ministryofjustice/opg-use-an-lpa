@@ -27,7 +27,7 @@ class UserHandlerTest extends TestCase
         ];
 
         $userServiceProphecy = $this->prophesize(UserService::class);
-        $userServiceProphecy->get($email)
+        $userServiceProphecy->getByEmail($email)
             ->willReturn($expectedData);
 
         //  Set up the handler
