@@ -104,7 +104,7 @@ class UserService
         }
 
         $this->usersRepository->recordSuccessfulLogin(
-            $email,
+            $user['Id'],
             (new DateTime('now'))->format(DateTimeInterface::ATOM)
         );
 

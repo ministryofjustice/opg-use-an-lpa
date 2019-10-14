@@ -38,7 +38,7 @@ interface ActorUsersInterface
     public function get(string $id) : array;
 
     /**
-     * Get an actor user from the database
+     * Get an actor user from the database using their email
      *
      * @param string $email
      * @return array
@@ -75,10 +75,10 @@ interface ActorUsersInterface
     /**
      * Records a successful login against the actor user
      *
-     * @param string $email
+     * @param string $id
      * @param string $loginTime An ATOM format datetime string
      */
-    public function recordSuccessfulLogin(string $email, string $loginTime) : void;
+    public function recordSuccessfulLogin(string $id, string $loginTime) : void;
 
     /**
      * Records a reset token against an actor user account

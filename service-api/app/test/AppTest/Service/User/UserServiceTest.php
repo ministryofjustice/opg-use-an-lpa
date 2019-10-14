@@ -119,8 +119,8 @@ class UserServiceTest extends TestCase
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
-        $repoProphecy->recordSuccessfulLogin('a@b.com', Argument::that(function($dateTime) {
+            ->willReturn(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
+        $repoProphecy->recordSuccessfulLogin('1234-1234-1234', Argument::that(function($dateTime) {
             $this->assertIsString($dateTime);
 
             $date = new \DateTime($dateTime);
@@ -133,7 +133,7 @@ class UserServiceTest extends TestCase
 
         $return = $us->authenticate('a@b.com', self::PASS);
 
-        $this->assertEquals(['Email' => 'a@b.com', 'Password' => self::PASS_HASH], $return);
+        $this->assertEquals(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH], $return);
     }
 
     /** @test */
