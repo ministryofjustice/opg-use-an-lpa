@@ -38,6 +38,22 @@ class LpaService
      * @return ArrayObject|null
      * @throws \Http\Client\Exception
      */
+    public function getLpas() : ?ArrayObject
+    {
+        $lpaData = $this->apiClient->httpGet('/v1/lpas');
+
+        if (is_array($lpaData)) {
+            $lpaData = $this->parseLpaData($lpaData);
+        }
+
+        return $lpaData;
+    }
+
+    /**
+     * @param string $lpaId
+     * @return ArrayObject|null
+     * @throws \Http\Client\Exception
+     */
     public function getLpaById(string $lpaId) : ?ArrayObject
     {
         $lpaData = $this->apiClient->httpGet('/v1/lpa/' . $lpaId);

@@ -42,7 +42,9 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        if (!true) {
+        $lpas = $this->lpaService->getLpas();
+
+        if (is_null($lpas)) {
             return new RedirectResponse($this->urlHelper->generate('lpa.add'));
         }
 
