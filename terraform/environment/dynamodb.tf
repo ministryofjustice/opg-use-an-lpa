@@ -38,8 +38,8 @@ resource "aws_dynamodb_table" "actor_users_table" {
   }
 
   global_secondary_index {
-    hash_key = "EmailIndex"
-    name = "Email"
+    name            = "EmailIndex"
+    hash_key        = "Email"
     projection_type = "KEYS_ONLY"
   }
   global_secondary_index {
