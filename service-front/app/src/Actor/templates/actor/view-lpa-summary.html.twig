@@ -7,6 +7,8 @@
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
 
+    {{ govuk_form_element(form.get('__csrf')) }}
+
     <a href="/lpa/check" class="govuk-back-link">Back</a>
 
     <main class="govuk-main-wrapper">
