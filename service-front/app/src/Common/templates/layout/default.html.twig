@@ -15,10 +15,10 @@
     <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('assets/images/govuk-apple-touch-icon-152x152.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('assets/images/govuk-apple-touch-icon.png') }}">
     <!--[if !IE 8]><!-->
-    <link rel="stylesheet" href="{{ asset('stylesheets/govuk-frontend-2.13.0.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('stylesheets/main.css') }}">
     <!--<![endif]-->
     <!--[if IE 8]>
-    <link rel="stylesheet" href="{{ asset('stylesheets/govuk-frontend-ie8-2.13.0.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('stylesheets/govuk-frontend-ie8-3.3.0.min.css') }}">
     <![endif]-->
     {% block stylesheets %}{% endblock %}
 
@@ -85,8 +85,7 @@
     </div>
 </footer>
 
-<script src="{{ asset('javascript/govuk-frontend-2.13.0.min.js') }}"></script>
-<script>window.GOVUKFrontend.initAll()</script>
+<script src="{{ asset('javascript/bundle.js') }}"></script>
 {% block javascript %}{% endblock %}
 </body>
 </html>
