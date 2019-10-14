@@ -212,7 +212,7 @@ class ActorUsers implements ActorUsersInterface
         $this->client->updateItem([
             'TableName' => $this->actorUsersTable,
             'Key' => [
-                'Email' => [
+                'Id' => [
                     'S' => $id,
                 ],
             ],
