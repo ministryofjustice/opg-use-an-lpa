@@ -22,7 +22,7 @@ resource "aws_dynamodb_table" "actor_codes_table" {
 resource "aws_dynamodb_table" "actor_users_table" {
   name         = "${local.environment}-ActorUsers"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "Email"
+  hash_key     = "Id"
 
   attribute {
     name = "Id"
