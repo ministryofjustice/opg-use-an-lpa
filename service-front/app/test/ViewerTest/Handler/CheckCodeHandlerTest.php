@@ -7,6 +7,7 @@ namespace ViewerTest\Handler;
 use Common\Exception\ApiException;
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\LpaService;
+use phpDocumentor\Reflection\Types\String_;
 use Psr\Http\Message\StreamInterface;
 use Viewer\Handler\CheckCodeHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -22,6 +23,7 @@ use ArrayObject;
 class CheckCodeHandlerTest extends TestCase
 {
     const TEST_CODE = 'test-code';
+    const TEST_SURNAME = 'test-surname';
 
     /**
      * @var TemplateRendererInterface
@@ -64,10 +66,11 @@ class CheckCodeHandlerTest extends TestCase
     }
 
     /**
-     * Tests the case where an invalid (not found) code is within the session.
-     * We expect the 'Invalid Code' template.
+     * Tests the case where an invalid (not found) code is within the session
+     * And/or the donor's surname does not match the code.
+     * We expect the 'LPA not found' template.
      */
-    public function testInvalidCode()
+    public function testInvalidCodeAndOrNotMatchingSurname()
     {
         $handler = new CheckCodeHandler(
             $this->templateRendererProphecy->reveal(),
@@ -77,12 +80,13 @@ class CheckCodeHandlerTest extends TestCase
 
         //---
 
-        // Return null. i.e. code not found.
-        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE)->willReturn(null);
+        // Return null. i.e. code not found or donors surname doesn't match (if code was valid)
+        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE, self::TEST_SURNAME)->willReturn(null);
 
         $this->templateRendererProphecy->render('viewer::check-code-not-found', Argument::any())->willReturn('');
 
         $this->sessionProphecy->get('code')->willReturn(self::TEST_CODE);
+        $this->sessionProphecy->get('surname')->willReturn(self::TEST_SURNAME);
 
         //---
 
@@ -105,13 +109,14 @@ class CheckCodeHandlerTest extends TestCase
 
         //---
         // Throw 410 exception
-        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE)
+        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE, self::TEST_SURNAME)
             ->willThrow($this->getException(410));
 
         $this->templateRendererProphecy->render('viewer::check-code-expired', Argument::any())
             ->willReturn('');
 
         $this->sessionProphecy->get('code')->willReturn(self::TEST_CODE);
+        $this->sessionProphecy->get('surname')->willReturn(self::TEST_SURNAME);
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
@@ -119,13 +124,12 @@ class CheckCodeHandlerTest extends TestCase
     }
 
     /**
-     * Tests the case the a valid code is passed within the session.
+     * Tests the case the a valid code and matching donor surname is passed within the session
      * We expect the code to be looked up, and a valid response.
      * Then we expect the confirmation template.
      */
-    public function testValidCode()
+    public function testValidCodeAndSurnameMatches()
     {
-        $this->markTestSkipped('must be revisited.');
         $handler = new CheckCodeHandler(
             $this->templateRendererProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),
@@ -134,17 +138,19 @@ class CheckCodeHandlerTest extends TestCase
 
         //---
 
-        $lpa = new ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
+        $lpa = new ArrayObject(['expires' => '2019-12-12'], ArrayObject::ARRAY_AS_PROPS);
 
-        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE)->willReturn($lpa);
+        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE, self::TEST_SURNAME)->willReturn($lpa);
 
         //---
 
         $this->templateRendererProphecy->render('viewer::check-code-found',
-            ['lpa' => $lpa]
+            ['lpa'     => $lpa->lpa,
+             'expires' => $lpa->expires]
         )->willReturn('');
 
         $this->sessionProphecy->get('code')->willReturn(self::TEST_CODE);
+        $this->sessionProphecy->get('surname')->willReturn(self::TEST_SURNAME);
 
         $response = $handler->handle($this->requestProphecy->reveal());
         $this->assertInstanceOf(HtmlResponse::class, $response);
@@ -159,6 +165,7 @@ class CheckCodeHandlerTest extends TestCase
         );
 
         $this->sessionProphecy->get('code')->willReturn(null);
+        $this->sessionProphecy->get('surname')->willReturn(null);
 
         $this->expectException(SessionTimeoutException::class);
 

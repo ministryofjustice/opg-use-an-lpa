@@ -22,6 +22,11 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
             'name' => 'lpa_code',
             'type' => 'Text',
         ]);
+
+        $this->add([
+            'name' => 'donor_surname',
+            'type' => 'Text',
+        ]);
     }
 
     public function getInputFilterSpecification() : array
@@ -39,6 +44,12 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                             Regex::NOT_MATCH => 'Enter an LPA share code in the correct format.'
                         ]
                     ])
+                ]
+            ],
+            'donor_surname' => [
+                'required' => true,
+                'filters'  => [
+                    ['name' => StringTrim::class],
                 ]
             ]
         ];

@@ -23,8 +23,9 @@ class ShareCodeTest extends TestCase
      * @var array
      */
     private $elements = [
-        '__csrf'   => Csrf::class,
-        'lpa_code' => Text::class,
+        '__csrf'        => Csrf::class,
+        'lpa_code'      => Text::class,
+        'donor_surname' => Text::class,
     ];
 
     public function setUp()
