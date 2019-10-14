@@ -57,11 +57,6 @@ module.exports = {
         {from:'node_modules/govuk-frontend/govuk/assets',to:'assets'}
     ]),
   ],
-  // Default mode for Webpack is production.
-  // Depending on mode Webpack will apply different things
-  // on final bundle. For now we don't need production's JavaScript 
-  // minifying and other thing so let's set mode to development
-  mode: 'development',
   // Path and filename of your result bundle.
   // Webpack will bundle all JavaScript into this file
   output: {
