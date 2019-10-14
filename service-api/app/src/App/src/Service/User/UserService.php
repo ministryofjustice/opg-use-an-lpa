@@ -15,6 +15,7 @@ use DateTimeInterface;
 use Exception;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 
+use Ramsey\Uuid\Uuid;
 use function password_verify;
 use function random_bytes;
 
@@ -49,11 +50,14 @@ class UserService
             throw new ConflictException('User already exists with email address ' . $data['email']);
         }
 
+        // Generate unique id for user
+        $id = Uuid::uuid4()->toString();
+
         //  An unactivated user account can only exist for 24 hours before it is deleted
         $activationToken = Base64UrlSafe::encode(random_bytes(32));
         $activationTtl = time() + (60 * 60 * 24);
 
-        return $this->usersRepository->add($data['email'], $data['password'], $activationToken, $activationTtl);
+        return $this->usersRepository->add($id, $data['email'], $data['password'], $activationToken, $activationTtl);
     }
 
     /**
@@ -63,9 +67,9 @@ class UserService
      * @return array
      * @throws NotFoundException
      */
-    public function get(string $email) : array
+    public function getByEmail(string $email) : array
     {
-        return $this->usersRepository->get($email);
+        return $this->usersRepository->getByEmail($email);
     }
 
     /**
@@ -89,7 +93,7 @@ class UserService
      */
     public function authenticate(string $email, string $password) : array
     {
-        $user = $this->usersRepository->get($email);
+        $user = $this->usersRepository->getByEmail($email);
 
         if ( ! password_verify($password, $user['Password'])) {
             throw new ForbiddenException('Authentication failed');
