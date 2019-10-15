@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Common\View\Twig;
 
+use Common\Entity\Address;
+use Common\Entity\CaseActor;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use DateTime;
@@ -28,75 +30,58 @@ class LpaExtension extends AbstractExtension
     }
 
     /**
-     * @param iterable $actor
+     * @param CaseActor $actor
      * @return string
      */
-    public function actorAddress(iterable $actor)
+    public function actorAddress(CaseActor $actor)
     {
         //  Multiple addresses can appear for an actor - just use the first one
-        if (isset($actor['addresses']) && !empty($actor['addresses'])) {
+        if (is_array($actor->getAddresses()) && count($actor->getAddresses()) > 0) {
 
-            $filteredAddress = $this->filterData($actor['addresses'][0], [
-                'addressLine1',
-                'addressLine2',
-                'addressLine3',
-                'town',
-                'county',
-                'postcode',
-            ]);
+            /** @var Address $address */
+            $address = $actor->getAddresses()[0];
 
-            return implode(', ', $filteredAddress);
+            return implode(', ', array_filter([
+                $address->getAddressLine1(),
+                $address->getAddressLine2(),
+                $address->getAddressLine3(),
+                $address->getTown(),
+                $address->getCounty(),
+                $address->getPostcode()
+            ]));
         }
 
         return '';
     }
 
     /**
-     * @param iterable $actor
+     * @param CaseActor $actor
      * @return string
      */
-    public function actorName(iterable $actor)
+    public function actorName(CaseActor $actor)
     {
-        $filteredName = $this->filterData($actor, [
-            'salutation',
-            'firstname',
-            'surname',
-        ]);
-
-        return implode(' ', $filteredName);
+        return implode(' ', array_filter([
+            $actor->getSalutation(),
+            $actor->getFirstname(),
+            $actor->getMiddlenames(),
+            $actor->getSurname()
+        ]));
     }
 
     /**
-     * Filter the data in to the fields provided and in the same order
+     * Takes an input date, whether as a string (relative or absolute) or as a Datetime
+     * and converts it for display in an LPA context.
      *
-     * @param iterable $data
-     * @param array $filterFields
-     * @return array
-     */
-    private function filterData(iterable $data, array $filterFields)
-    {
-        $filteredData = [];
-
-        foreach ($filterFields as $filterField) {
-            if (array_key_exists($filterField, $data) && !empty($data[$filterField])) {
-                $filteredData[] = $data[$filterField];
-            }
-        }
-
-        return $filteredData;
-    }
-
-    /**
-     * @param string|null $date
+     * @param DateTime|string|null $date
      * @return string
      * @throws \Exception
      */
-    public function lpaDate(?string $date)
+    public function lpaDate($date)
     {
-        if (!empty($date)) {
-            if ($date == "today"){
+        if (!is_null($date)) {
+            if ($date === "today"){
                 $date = new DateTime("today");
-            } else {
+            } elseif (is_string($date)) {
                 $date = DateTime::createFromFormat('Y-m-d', $date);
             }
 

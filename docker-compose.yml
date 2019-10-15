@@ -194,7 +194,6 @@ services:
 
 #  feature-tests:
 #    build:
-#      context: .
-#      dockerfile: features/Dockerfile
+#      context: features/
 #    volumes:
-#      - ./features:/feature-tests
+#      - ./features:/tests/features
