@@ -3,7 +3,7 @@
     "id": 1,
     "uId": "700000000047",
     "receiptDate": "2014-09-26",
-    "registrationDate": null,
+    "registrationDate": "2019-10-13",
     "rejectedDate": null,
     "donor": {
       "id": 1,
@@ -91,8 +91,8 @@
       }
     ],
     "attorneyActDecisions": null,
-    "applicationHasRestrictions": false,
-    "applicationHasGuidance": false,
+    "applicationHasRestrictions": true,
+    "applicationHasGuidance": true,
     "lpaDonorSignatureDate": "2019-08-22",
     "lifeSustainingTreatment": null
   },
