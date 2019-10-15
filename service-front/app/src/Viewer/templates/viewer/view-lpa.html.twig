@@ -4,25 +4,6 @@
 
 {% block content %}
 
-    <style>
-        .govuk-panel.govuk-panel--confirmation {
-            padding: 35px;
-            border: 5px solid transparent;
-            margin-bottom: 30px;
-        }
-        .govuk-panel.govuk-panel--failed {
-            color: #fff;
-            background: #B10E1E;
-            padding: 35px;
-            border: 5px solid transparent;
-            margin-bottom: 30px;
-        }
-        .govuk-panel__body{
-            margin-bottom: 20px;
-        }
-    </style>
-
-
     <div class="govuk-width-container">
         {{ include('@partials/new-service.html.twig') }}
 
@@ -30,14 +11,14 @@
             <div class="govuk-grid-row">
 
                 <div class="govuk-grid-column-two-thirds">
-                    <span class="govuk-caption-l" style="margin-top: 0px">
+                    <span class="govuk-caption-l">
                         {% if lpa.caseSubtype == "pfa" %}
                             Property and Finance
                         {% else %}
                             Health and Welfare
                         {% endif %}
                     </span>
-                    <h1 class="govuk-heading-l" style="color:#005ea5">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}</h1>
+                    <h1 class="govuk-heading-l lpa-header-alt-1">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}</h1>
                 </div>
 
             </div>
@@ -261,7 +242,7 @@
                             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
                         </div>
                     </div>
-                    <div class="govuk-grid-row" style="margin-bottom: 50px">
+                    <div class="govuk-grid-row">
                         <div class="govuk-grid-column-full">
                             <p class="govuk-body">
                                 <a href="{{ path('enter-code') }}">I want to check another LPA</a>
