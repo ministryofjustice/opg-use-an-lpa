@@ -29,13 +29,15 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --endpoint $DYNAMODN_ENDPOINT
 
     aws dynamodb create-table \
-    --attribute-definitions AttributeName=Email,AttributeType=S AttributeName=ActivationToken,AttributeType=S \
+    --attribute-definitions AttributeName=Id,AttributeType=S AttributeName=Email,AttributeType=S AttributeName=ActivationToken,AttributeType=S \
     --table-name ActorUsers \
-    --key-schema AttributeName=Email,KeyType=HASH \
+    --key-schema AttributeName=Id,KeyType=HASH \
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
     --region eu-west-1 \
     --endpoint $DYNAMODN_ENDPOINT \
-    --global-secondary-indexes IndexName=ActivationTokenIndex,KeySchema=["{AttributeName=ActivationToken,KeyType=HASH}"],Projection="{ProjectionType=KEYS_ONLY}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
+    --global-secondary-indexes \
+      IndexName=EmailIndex,KeySchema=["{AttributeName=Email,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}" \
+      IndexName=ActivationTokenIndex,KeySchema=["{AttributeName=ActivationToken,KeyType=HASH}"],Projection="{ProjectionType=KEYS_ONLY}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
 
     aws dynamodb update-time-to-live \
     --table-name ActorUsers \
