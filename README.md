@@ -1,4 +1,5 @@
 # opg-use-my-lpa
+
 OPG Use My LPA: Managed by opg-org-infra &amp; Terraform
 
 [![CircleCI](https://circleci.com/gh/ministryofjustice/opg-use-an-lpa.svg?style=svg)](https://circleci.com/gh/ministryofjustice/opg-use-an-lpa)
@@ -6,12 +7,14 @@ OPG Use My LPA: Managed by opg-org-infra &amp; Terraform
 ## Setup
 
 Clone the following two repositories into the same base directory:
-* https://github.com/ministryofjustice/opg-use-an-lpa
-* https://github.com/ministryofjustice/opg-sirius-api-gateway
+
+- https://github.com/ministryofjustice/opg-use-an-lpa
+- https://github.com/ministryofjustice/opg-sirius-api-gateway
 
 All commands assume a working directory of `opg-use-my-lpa`.
 
 To bring up the local environment
+
 ```bash
 docker-compose -f docker-compose.yml \
 -f ../opg-sirius-api-gateway/docker-compose.yml \
@@ -20,6 +23,7 @@ docker-compose -f docker-compose.yml \
 ```
 
 If you plan on developing the application you should also enable development mode.
+
 ```bash
 docker-compose run front-composer composer development-enable
 docker-compose exec viewer-app rm -f /tmp/config-cache.php
@@ -37,6 +41,7 @@ The API service will be available via http://localhost:9003
 ### Tests
 
 To run the unit tests (the command for viewer-app and actor-app will run exactly the same suite of unit tests in the front service)
+
 ```bash
 docker-compose run viewer-app /app/vendor/bin/phpunit
 docker-compose run actor-app /app/vendor/bin/phpunit
@@ -53,6 +58,7 @@ docker-compose run feature-tests
 ```
 
 To run a tagged subset of tests
+
 ```bash
 docker-compose run feature-tests behave --tags=<TAG_NAME>
 ```
@@ -62,6 +68,7 @@ docker-compose run feature-tests behave --tags=<TAG_NAME>
 Composer install is run when the app container is built, and on a standard `docker-compose up`.
 
 It can also be run independently with:
+
 ```bash
 docker-compose run api-composer
 
@@ -69,6 +76,7 @@ docker-compose run front-composer
 ```
 
 New packages can be added with:
+
 ```bash
 docker-compose run api-composer composer require author/package
 
@@ -76,8 +84,21 @@ docker-compose run front-composer composer require author/package
 ```
 
 Packages can be removed with:
+
 ```bash
 docker-compose run api-composer composer remove author/package
 
 docker-compose run front-composer composer remove author/package
+```
+
+## Changing the frontend in local development
+
+We have now implemented Webpack as our build tool for the front end code. When you first open the site, go to your command line and go to the folder `service-front/web/`.
+
+From here run the command `npm run watch`. Leaving this running will create the styles from the `src` directory and show on the site. Any changes you make will automatically be rebuilt for you on save.
+
+The command altogether is the following
+
+```
+cd service-front/web/ && npm run watch
 ```
