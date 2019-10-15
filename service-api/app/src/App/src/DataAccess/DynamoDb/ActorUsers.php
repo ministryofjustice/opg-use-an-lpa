@@ -38,11 +38,12 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function add(string $email, string $password, string $activationToken, int $activationTtl): array
+    public function add(string $id, string $email, string $password, string $activationToken, int $activationTtl): array
     {
         $this->client->putItem([
             'TableName' => $this->actorUsersTable,
             'Item' => [
+                'Id' => ['S' => $id],
                 'Email' => ['S' => $email],
                 'Password' => ['S' => password_hash($password, PASSWORD_DEFAULT)],
                 'ActivationToken' => ['S' => $activationToken],
@@ -51,7 +52,7 @@ class ActorUsers implements ActorUsersInterface
         ]);
 
         try {
-            return $this->get($email);
+            return $this->get($id);
         } catch(NotFoundException $nfe) {
             throw new CreationException('Unable to retrieve newly created actor from database', [], $nfe);
         }
@@ -60,13 +61,13 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function get(string $email): array
+    public function get(string $id): array
     {
         $result = $this->client->getItem([
             'TableName' => $this->actorUsersTable,
             'Key' => [
-                'Email' => [
-                    'S' => $email,
+                'Id' => [
+                    'S' => $id,
                 ],
             ],
         ]);
@@ -78,6 +79,31 @@ class ActorUsers implements ActorUsersInterface
         }
 
         return $userData;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getByEmail(string $email): array
+    {
+        $marshaler = new Marshaler();
+
+        $result = $this->client->query([
+            'TableName' => $this->actorUsersTable,
+            'IndexName' => 'EmailIndex',
+            'KeyConditionExpression' => 'Email = :email',
+            'ExpressionAttributeValues'=> $marshaler->marshalItem([
+                ':email' => $email,
+            ]),
+        ]);
+
+        $usersData = $this->getDataCollection($result);
+
+        if (empty($usersData)) {
+            throw new NotFoundException('User not found');
+        }
+
+        return array_pop($usersData);
     }
 
     /**
@@ -104,20 +130,20 @@ class ActorUsers implements ActorUsersInterface
 
         //  Use the returned value to get the user
         $userData = array_pop($usersData);
-        $email = $userData['Email'];
+        $id = $userData['Id'];
 
         //  Update the item by removing the activation token
         $this->client->updateItem([
             'TableName' => $this->actorUsersTable,
             'Key' => [
-                'Email' => [
-                    'S' => $email,
+                'Id' => [
+                    'S' => $id,
                 ],
             ],
             'UpdateExpression' => 'remove ActivationToken',
         ]);
 
-        return $this->get($email);
+        return $this->get($id);
     }
 
     /**
@@ -126,7 +152,7 @@ class ActorUsers implements ActorUsersInterface
     public function exists(string $email): bool
     {
         try {
-            $userData = $this->get($email);
+            $_ = $this->getByEmail($email);
         } catch (NotFoundException $nfe) {
             return false;
         }
@@ -157,14 +183,14 @@ class ActorUsers implements ActorUsersInterface
 
         //  Use the returned value to get the user
         $userData = array_pop($usersData);
-        $email = $userData['Email'];
+        $id = $userData['Id'];
 
         //  Update the item by removing the activation token
         $this->client->updateItem([
             'TableName' => $this->actorUsersTable,
             'Key' => [
-                'Email' => [
-                    'S' => $email,
+                'Id' => [
+                    'S' => $id,
                 ],
             ],
             'UpdateExpression' => 'SET Password=:p REMOVE PasswordResetToken, PasswordResetExpiry',
@@ -181,13 +207,13 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function recordSuccessfulLogin(string $email, string $loginTime): void
+    public function recordSuccessfulLogin(string $id, string $loginTime): void
     {
         $this->client->updateItem([
             'TableName' => $this->actorUsersTable,
             'Key' => [
-                'Email' => [
-                    'S' => $email,
+                'Id' => [
+                    'S' => $id,
                 ],
             ],
             'UpdateExpression' =>
@@ -205,15 +231,32 @@ class ActorUsers implements ActorUsersInterface
      */
     public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): array
     {
-        if (!$this->exists($email)) {
-            throw new NotFoundException("User not found");
+        $marshaler = new Marshaler();
+
+        $result = $this->client->query([
+            'TableName' => $this->actorUsersTable,
+            'IndexName' => 'EmailToken',
+            'KeyConditionExpression' => 'EmailToken = :email',
+            'ExpressionAttributeValues'=> $marshaler->marshalItem([
+                ':email' => $email,
+            ]),
+        ]);
+
+        $usersData = $this->getDataCollection($result);
+
+        if (empty($usersData)) {
+            throw new NotFoundException('User not found for token');
         }
+
+        //  Use the returned value to get the user
+        $userData = array_pop($usersData);
+        $id = $userData['Id'];
 
         $user = $this->client->updateItem([
             'TableName' => $this->actorUsersTable,
             'Key' => [
-                'Email' => [
-                    'S' => $email,
+                'Id' => [
+                    'S' => $id,
                 ],
             ],
             'UpdateExpression' =>

@@ -19,23 +19,32 @@ interface ActorUsersInterface
     /**
      * Add an actor user
      *
+     * @param string $id
      * @param string $email
      * @param string $password
      * @param string $activationToken
      * @param int $activationTtl
      * @return array
-     * @throws CreationException
      */
-    public function add(string $email, string $password, string $activationToken, int $activationTtl) : array;
+    public function add(string $id, string $email, string $password, string $activationToken, int $activationTtl) : array;
 
     /**
      * Get an actor user from the database
+     *
+     * @param string $id
+     * @return array
+     * @throws NotFoundException
+     */
+    public function get(string $id) : array;
+
+    /**
+     * Get an actor user from the database using their email
      *
      * @param string $email
      * @return array
      * @throws NotFoundException
      */
-    public function get(string $email) : array;
+    public function getByEmail(string $email) : array;
 
     /**
      * Activate the user account in the database using the token value
@@ -66,10 +75,10 @@ interface ActorUsersInterface
     /**
      * Records a successful login against the actor user
      *
-     * @param string $email
+     * @param string $id
      * @param string $loginTime An ATOM format datetime string
      */
-    public function recordSuccessfulLogin(string $email, string $loginTime) : void;
+    public function recordSuccessfulLogin(string $id, string $loginTime) : void;
 
     /**
      * Records a reset token against an actor user account

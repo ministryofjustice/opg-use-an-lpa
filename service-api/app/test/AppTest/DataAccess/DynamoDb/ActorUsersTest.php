@@ -30,23 +30,25 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function will_add_a_new_user()
     {
+        $id = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
         $password = 'P@55word';
         $activationToken = 'actok123';
         $activationTtl = time() + 3600;
 
-        $this->dynamoDbClientProphecy->putItem(Argument::that(function ($data) use ($email, $password, $activationToken, $activationTtl) {
+        $this->dynamoDbClientProphecy
+            ->putItem(Argument::that(function ($data) use ($id, $email, $password, $activationToken, $activationTtl) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
-                //---
-
                 $this->assertArrayHasKey('Item', $data);
+                $this->assertArrayHasKey('Id', $data['Item']);
                 $this->assertArrayHasKey('Email', $data['Item']);
                 $this->assertArrayHasKey('Password', $data['Item']);
                 $this->assertArrayHasKey('ActivationToken', $data['Item']);
                 $this->assertArrayHasKey('ExpiresTTL', $data['Item']);
 
+                $this->assertEquals(['S' => $id], $data['Item']['Id']);
                 $this->assertEquals(['S' => $email], $data['Item']['Email']);
                 //  Can't directly compare the password value so just verify it
                 $this->assertTrue(password_verify($password, $data['Item']['Password']['S']));
@@ -57,21 +59,23 @@ class ActorUsersTest extends TestCase
             }))
             ->shouldBeCalled();
 
-        $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($email) {
+        $this->dynamoDbClientProphecy
+            ->getItem(Argument::that(function(array $data) use ($id) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
-                //---
-
                 $this->assertArrayHasKey('Key', $data);
-                $this->assertArrayHasKey('Email', $data['Key']);
+                $this->assertArrayHasKey('Id', $data['Key']);
 
-                $this->assertEquals(['S' => $email], $data['Key']['Email']);
+                $this->assertEquals(['S' => $id], $data['Key']['Id']);
 
                 return true;
             }))
             ->willReturn($this->createAWSResult([
                 'Item' => [
+                    'Id' => [
+                        'S' => $id,
+                    ],
                     'Email' => [
                         'S' => $email,
                     ],
@@ -89,8 +93,9 @@ class ActorUsersTest extends TestCase
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $actorRepo->add($email, $password, $activationToken, $activationTtl);
+        $result = $actorRepo->add($id, $email, $password, $activationToken, $activationTtl);
 
+        $this->assertEquals($id, $result['Id']);
         $this->assertEquals($email, $result['Email']);
         $this->assertEquals($password, $result['Password']);
         $this->assertEquals($activationToken, $result['ActivationToken']);
@@ -98,25 +103,27 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_add_a_new_user_but_then_fail_to_find()
+    public function will_throw_exception_when_adding_a_new_user_that_doesnt_succeed()
     {
+        $id = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
         $password = 'P@55word';
         $activationToken = 'actok123';
         $activationTtl = time() + 3600;
 
-        $this->dynamoDbClientProphecy->putItem(Argument::that(function ($data) use ($email, $password, $activationToken, $activationTtl) {
+        $this->dynamoDbClientProphecy
+            ->putItem(Argument::that(function ($data) use ($id, $email, $password, $activationToken, $activationTtl) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
-                //---
-
                 $this->assertArrayHasKey('Item', $data);
+                $this->assertArrayHasKey('Id', $data['Item']);
                 $this->assertArrayHasKey('Email', $data['Item']);
                 $this->assertArrayHasKey('Password', $data['Item']);
                 $this->assertArrayHasKey('ActivationToken', $data['Item']);
                 $this->assertArrayHasKey('ExpiresTTL', $data['Item']);
 
+                $this->assertEquals(['S' => $id], $data['Item']['Id']);
                 $this->assertEquals(['S' => $email], $data['Item']['Email']);
                 //  Can't directly compare the password value so just verify it
                 $this->assertTrue(password_verify($password, $data['Item']['Password']['S']));
@@ -125,18 +132,17 @@ class ActorUsersTest extends TestCase
 
                 return true;
             }))
-            ->shouldBeCalled();
+                ->shouldBeCalled();
 
-        $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($email) {
+        $this->dynamoDbClientProphecy
+            ->getItem(Argument::that(function(array $data) use ($id) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
-                //---
-
                 $this->assertArrayHasKey('Key', $data);
-                $this->assertArrayHasKey('Email', $data['Key']);
+                $this->assertArrayHasKey('Id', $data['Key']);
 
-                $this->assertEquals(['S' => $email], $data['Key']['Email']);
+                $this->assertEquals(['S' => $id], $data['Key']['Id']);
 
                 return true;
             }))
@@ -149,57 +155,92 @@ class ActorUsersTest extends TestCase
         $this->expectException(CreationException::class);
         $this->expectExceptionMessage('Unable to retrieve newly created actor from database');
 
-        $actorRepo->add($email, $password, $activationToken, $activationTtl);
+        $actorRepo->add($id, $email, $password, $activationToken, $activationTtl);
     }
 
     /** @test */
     public function will_get_a_user_record()
     {
-        $email = 'a@b.com';
+        $id = '12345-1234-1234-1234-12345';
 
-        $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($email) {
+        $this->dynamoDbClientProphecy
+            ->getItem(Argument::that(function(array $data) use ($id) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
-                //---
-
                 $this->assertArrayHasKey('Key', $data);
-                $this->assertArrayHasKey('Email', $data['Key']);
+                $this->assertArrayHasKey('Id', $data['Key']);
 
-                $this->assertEquals(['S' => $email], $data['Key']['Email']);
+                $this->assertEquals(['S' => $id], $data['Key']['Id']);
 
                 return true;
             }))
             ->willReturn($this->createAWSResult([
                 'Item' => [
-                    'Email' => [
-                        'S' => $email,
+                    'Id' => [
+                        'S' => $id,
                     ],
                 ],
             ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $actorRepo->get($email);
+        $result = $actorRepo->get($id);
 
-        $this->assertEquals($email, $result['Email']);
+        $this->assertEquals($id, $result['Id']);
+    }
+
+    /** @test */
+    public function will_get_a_user_record_by_email()
+    {
+        $email = 'a@b.com';
+        $id = '12345-1234-1234-1234-12345';
+
+        $this->dynamoDbClientProphecy
+            ->query(Argument::that(function(array $data) use ($email) {
+                $this->assertArrayHasKey('TableName', $data);
+                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+                $this->assertArrayHasKey('IndexName', $data);
+                $this->assertEquals('EmailIndex', $data['IndexName']);
+
+                $this->assertArrayHasKey('ExpressionAttributeValues', $data);
+                $this->assertArrayHasKey(':email', $data['ExpressionAttributeValues']);
+
+                $this->assertEquals(['S' => $email], $data['ExpressionAttributeValues'][':email']);
+
+                return true;
+            }))
+            ->willReturn($this->createAWSResult([
+                'Items' => [
+                    [
+                        'Id' => [
+                            'S' => $id,
+                        ]
+                    ],
+                ],
+            ]));
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $result = $actorRepo->getByEmail($email);
+
+        $this->assertEquals($id, $result['Id']);
     }
 
     /** @test */
     public function will_fail_to_get_a_user_record()
     {
-        $email = 'c@d.com';
+        $id = '12345-1234-1234-1234-12345';
 
-        $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($email) {
+        $this->dynamoDbClientProphecy
+            ->getItem(Argument::that(function(array $data) use ($id) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
-                //---
-
                 $this->assertArrayHasKey('Key', $data);
-                $this->assertArrayHasKey('Email', $data['Key']);
+                $this->assertArrayHasKey('Id', $data['Key']);
 
-                $this->assertEquals(['S' => $email], $data['Key']['Email']);
+                $this->assertEquals(['S' => $id], $data['Key']['Id']);
 
                 return true;
             }))
@@ -212,46 +253,77 @@ class ActorUsersTest extends TestCase
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('User not found');
 
-        $actorRepo->get($email);
+        $actorRepo->get($id);
     }
 
     /** @test */
-    public function will_activate_a_user_account()
+    public function will_fail_to_get_a_user_record_by_email()
     {
-        $email = 'a@b.com';
-        $activationToken = 'activateTok123';
+        $email = 'c@d.com';
 
-        $expectedData = [
-            'Email'           => $email,
-            'Password'        => 'H@shedP@55word',
-            'ActivationToken' => $activationToken,
-            'ExpiresTTL'      => (string) time(),
-        ];
-
-        $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($activationToken) {
+        $this->dynamoDbClientProphecy
+            ->query(Argument::that(function(array $data) use ($email) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
                 //---
 
                 $this->assertArrayHasKey('IndexName', $data);
-                $this->assertEquals('ActivationTokenIndex', $data['IndexName']);
-
-                //---
-
-                $this->assertArrayHasKey('KeyConditionExpression', $data);
-                $this->assertEquals('ActivationToken = :activationToken', $data['KeyConditionExpression']);
+                $this->assertEquals('EmailIndex', $data['IndexName']);
 
                 //---
 
                 $this->assertArrayHasKey('ExpressionAttributeValues', $data);
-                $this->assertEquals([':activationToken' => ['S' => $activationToken]], $data['ExpressionAttributeValues']);
+                $this->assertArrayHasKey(':email', $data['ExpressionAttributeValues']);
+
+                $this->assertEquals(['S' => $email], $data['ExpressionAttributeValues'][':email']);
+
+                return true;
+            }))
+            ->willReturn($this->createAWSResult([
+                'Item' => []
+            ]));
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('User not found');
+
+        $actorRepo->getByEmail($email);
+    }
+
+    /** @test */
+    public function will_activate_a_user_account()
+    {
+        $id = '12345-1234-1234-1234-12345';
+        $email = 'a@b.com';
+        $activationToken = 'activateTok123';
+
+        $expectedData = [
+            'Id'              => $id,
+            'Email'           => $email,
+            'Password'        => 'H@shedP@55word',
+            'ActivationToken' => $activationToken,
+            'ExpiresTTL'      => (string) time(),
+        ];
+
+        $this->dynamoDbClientProphecy
+            ->query(Argument::that(function(array $data) use ($activationToken) {
+                $this->assertIsArray($data);
+
+                // we don't care what the array looks like as it's specific to the AWS api and may change
+                // we do care that the data *at least* contains the items we want to affect
+                $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
+                $this->assertStringContainsString($activationToken, serialize($data));
 
                 return true;
             }))
             ->willReturn($this->createAWSResult([
                 'Items' => [
                     [
+                        'Id' => [
+                            'S' => $id,
+                        ],
                         'Email' => [
                             'S' => $email,
                         ],
@@ -268,16 +340,14 @@ class ActorUsersTest extends TestCase
                 ]
             ]));
 
-        $this->dynamoDbClientProphecy->updateItem(Argument::that(function(array $data) use ($email) {
-                $this->assertArrayHasKey('TableName', $data);
-                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+        $this->dynamoDbClientProphecy
+            ->updateItem(Argument::that(function(array $data) use ($id) {
+                $this->assertIsArray($data);
 
-                //---
-
-                $this->assertArrayHasKey('Key', $data);
-                $this->assertArrayHasKey('Email', $data['Key']);
-
-                $this->assertEquals(['S' => $email], $data['Key']['Email']);
+                // we don't care what the array looks like as it's specific to the AWS api and may change
+                // we do care that the data *at least* contains the items we want to affect
+                $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
+                $this->assertStringContainsString($id, serialize($data));
 
                 //---
 
@@ -288,21 +358,22 @@ class ActorUsersTest extends TestCase
             }))
             ->shouldBeCalled();
 
-        $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($email) {
-                $this->assertArrayHasKey('TableName', $data);
-                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+        $this->dynamoDbClientProphecy
+            ->getItem(Argument::that(function(array $data) use ($id) {
+                $this->assertIsArray($data);
 
-                //---
-
-                $this->assertArrayHasKey('Key', $data);
-                $this->assertArrayHasKey('Email', $data['Key']);
-
-                $this->assertEquals(['S' => $email], $data['Key']['Email']);
+                // we don't care what the array looks like as it's specific to the AWS api and may change
+                // we do care that the data *at least* contains the items we want to affect
+                $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
+                $this->assertStringContainsString($id, serialize($data));
 
                 return true;
             }))
             ->willReturn($this->createAWSResult([
                 'Item' => [
+                    'Id' => [
+                        'S' => $id,
+                    ],
                     'Email' => [
                         'S' => $email,
                     ],
@@ -333,26 +404,16 @@ class ActorUsersTest extends TestCase
     {
         $activationToken = 'activateTok123';
 
-        $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($activationToken) {
-                $this->assertArrayHasKey('TableName', $data);
-                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+        $this->dynamoDbClientProphecy
+            ->query(Argument::that(function(array $data) use ($activationToken) {
+                $this->assertIsArray($data);
 
-                //---
+                // we don't care what the array looks like as it's specific to the AWS api and may change
+                // we do care that the data *at least* contains the items we want to affect
+                $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
+                $this->assertStringContainsString($activationToken, serialize($data));
 
-                $this->assertArrayHasKey('IndexName', $data);
-                $this->assertEquals('ActivationTokenIndex', $data['IndexName']);
-
-                //---
-
-                $this->assertArrayHasKey('KeyConditionExpression', $data);
-                $this->assertEquals('ActivationToken = :activationToken', $data['KeyConditionExpression']);
-
-                //---
-
-                $this->assertArrayHasKey('ExpressionAttributeValues', $data);
-                $this->assertEquals([':activationToken' => ['S' => $activationToken]], $data['ExpressionAttributeValues']);
-
-                return true;
+                    return true;
             }))
             ->willReturn($this->createAWSResult([
                 'Items' => [],
@@ -369,25 +430,26 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function will_find_a_user_exists()
     {
+        $id = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
 
-        $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($email) {
-                $this->assertArrayHasKey('TableName', $data);
-                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+        $this->dynamoDbClientProphecy
+            ->query(Argument::that(function(array $data) use ($email) {
+                $this->assertIsArray($data);
 
-                //---
-
-                $this->assertArrayHasKey('Key', $data);
-                $this->assertArrayHasKey('Email', $data['Key']);
-
-                $this->assertEquals(['S' => $email], $data['Key']['Email']);
+                // we don't care what the array looks like as it's specific to the AWS api and may change
+                // we do care that the data *at least* contains the items we want to affect
+                $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
+                $this->assertStringContainsString($email, serialize($data));
 
                 return true;
             }))
             ->willReturn($this->createAWSResult([
-                'Item' => [
-                    'Email' => [
-                        'S' => $email,
+                'Items' => [
+                    [
+                        'Id' => [
+                            'S' => $id,
+                        ]
                     ],
                 ],
             ]));
@@ -402,21 +464,19 @@ class ActorUsersTest extends TestCase
     {
         $email = 'c@d.com';
 
-        $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($email) {
-                $this->assertArrayHasKey('TableName', $data);
-                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+        $this->dynamoDbClientProphecy
+            ->query(Argument::that(function(array $data) use ($email) {
+                $this->assertIsArray($data);
 
-                //---
-
-                $this->assertArrayHasKey('Key', $data);
-                $this->assertArrayHasKey('Email', $data['Key']);
-
-                $this->assertEquals(['S' => $email], $data['Key']['Email']);
+                // we don't care what the array looks like as it's specific to the AWS api and may change
+                // we do care that the data *at least* contains the items we want to affect
+                $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
+                $this->assertStringContainsString($email, serialize($data));
 
                 return true;
             }))
             ->willReturn($this->createAWSResult([
-                'Item' => []
+                'Items' => []
             ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
@@ -429,7 +489,8 @@ class ActorUsersTest extends TestCase
     {
         $date = (new DateTime('now'))->format(DateTimeInterface::ATOM);
 
-        $this->dynamoDbClientProphecy->updateItem(Argument::that(function(array $data) use ($date) {
+        $this->dynamoDbClientProphecy
+            ->updateItem(Argument::that(function(array $data) use ($date) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -450,36 +511,41 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function will_record_a_password_reset_request()
     {
+        $id = '12345-1234-1234-1234-12345';
+        $email = 'a@b.com';
+
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
         $dynamoDbClientProphecy
-            ->getItem(Argument::that(function(array $data) {
+            ->query(Argument::that(function(array $data) use ($email) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
                 // we do care that the data *at least* contains the items we want to affect
                 $this->assertStringContainsString('users-table', serialize($data));
-                $this->assertStringContainsString('test@example.com', serialize($data));
+                $this->assertStringContainsString($email, serialize($data));
 
                 return true;
             }))
             ->willReturn($this->createAWSResult([
-                'Item' => [
-                    'Email' => [
-                        'S' => 'test@example.com',
-                    ],
+                'Items' => [
+                    [
+                        'Id' => [
+                            'S' => $id,
+                        ]
+                    ]
                 ]
             ]));
 
         $time = time() + (60 * 60 * 24);
 
         $dynamoDbClientProphecy
-            ->updateItem(Argument::that(function(array $data) use ($time) {
+            ->updateItem(Argument::that(function(array $data) use ($id, $time) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
                 // we do care that the data *at least* contains the items we want to affect
                 $this->assertStringContainsString('users-table', serialize($data));
-                $this->assertStringContainsString('test@example.com', serialize($data));
+                $this->assertStringContainsString($id, serialize($data));
                 $this->assertStringContainsString('resetTokenAABBCCDDEE', serialize($data));
                 $this->assertStringContainsString((string) $time, serialize($data));
 
@@ -487,8 +553,11 @@ class ActorUsersTest extends TestCase
             }))
             ->willReturn($this->createAWSResult([
                 'Attributes' => [
+                    'Id' => [
+                        'S' => $id,
+                    ],
                     'Email' => [
-                        'S' => 'test@example.com',
+                        'S' => $email,
                     ],
                     'PasswordResetToken' => [
                         'S' => 'resetTokenAABBCCDDEE',
@@ -501,10 +570,11 @@ class ActorUsersTest extends TestCase
 
         $actorRepo = new ActorUsers($dynamoDbClientProphecy->reveal(), 'users-table');
 
-        $result = $actorRepo->recordPasswordResetRequest('test@example.com', 'resetTokenAABBCCDDEE', $time);
+        $result = $actorRepo->recordPasswordResetRequest($email, 'resetTokenAABBCCDDEE', $time);
 
         $this->assertIsArray($result);
-        $this->assertEquals('test@example.com', $result['Email']);
+        $this->assertEquals($id, $result['Id']);
+        $this->assertEquals($email, $result['Email']);
         $this->assertEquals('resetTokenAABBCCDDEE', $result['PasswordResetToken']);
         $this->assertEquals('12345678912', $result['PasswordResetExpiry']);
     }
@@ -512,69 +582,76 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function will_fail_to_record_a_password_reset_request_if_user_does_not_exist()
     {
+        $email = 'a@b.com';
+
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
         $dynamoDbClientProphecy
-            ->getItem(Argument::that(function(array $data) {
+            ->query(Argument::that(function(array $data) use ($email) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
                 // we do care that the data *at least* contains the items we want to affect
                 $this->assertStringContainsString('users-table', serialize($data));
-                $this->assertStringContainsString('test@example.com', serialize($data));
+                $this->assertStringContainsString($email, serialize($data));
 
                 return true;
             }))
-            ->willThrow(new NotFoundException("User not found"));
+            ->willReturn($this->createAWSResult([
+                'Items' => []
+            ]));
 
         $actorRepo = new ActorUsers($dynamoDbClientProphecy->reveal(), 'users-table');
 
         $time = time() + (60 * 60 * 24);
 
         $this->expectException(NotFoundException::class);
-        $result = $actorRepo->recordPasswordResetRequest('test@example.com', 'resetTokenAABBCCDDEE', $time);
+        $result = $actorRepo->recordPasswordResetRequest($email, 'resetTokenAABBCCDDEE', $time);
     }
 
     /** @test */
     public function will_reset_a_password_when_given_a_correct_reset_token()
     {
+        $id = '12345-1234-1234-1234-12345';
+        $resetToken = 'resetTokenAABBCCDDEE';
+
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
-
         $dynamoDbClientProphecy
-            ->query(
-                Argument::that(function(array $data) {
-                    $this->assertIsArray($data);
+            ->query(Argument::that(function(array $data) use ($resetToken) {
+                $this->assertIsArray($data);
 
-                    return true;
-                })
-            )
+                // we don't care what the array looks like as it's specific to the AWS api and may change
+                // we do care that the data *at least* contains the items we want to affect
+                $this->assertStringContainsString('users-table', serialize($data));
+                $this->assertStringContainsString($resetToken, serialize($data));
+
+                return true;
+            }))
             ->willReturn($this->createAWSResult([
                 'Items' => [
                     [
-                        'Email' => [
-                            'S' => 'test@example.com',
-                        ],
-                        'PasswordResetToken' => [
-                            'S' => 'resetTokenAABBCCDDEE',
-                        ],
+                        'Id' => [
+                            'S' => $id,
+                        ]
                     ]
                 ]
             ]));
 
-        $dynamoDbClientProphecy->updateItem(Argument::that(function(array $data) {
-            $this->assertIsArray($data);
+        $dynamoDbClientProphecy
+            ->updateItem(Argument::that(function(array $data) use ($id) {
+                $this->assertIsArray($data);
 
-            // we don't care what the array looks like as it's specific to the AWS api and may change
-            // we do care that the data *at least* contains the items we want to affect
-            $this->assertStringContainsString('users-table', serialize($data));
-            $this->assertStringContainsString('test@example.com', serialize($data));
+                // we don't care what the array looks like as it's specific to the AWS api and may change
+                // we do care that the data *at least* contains the items we want to affect
+                $this->assertStringContainsString('users-table', serialize($data));
+                $this->assertStringContainsString($id, serialize($data));
 
-            return true;
-        }))
+                return true;
+            }))
             ->shouldBeCalled();
 
         $actorRepo = new ActorUsers($dynamoDbClientProphecy->reveal(), 'users-table');
 
-        $result = $actorRepo->resetPassword('resetTokenAABBCCDDEE', 'passwordHash');
+        $result = $actorRepo->resetPassword($resetToken, 'password');
 
         $this->assertTrue($result);
     }
