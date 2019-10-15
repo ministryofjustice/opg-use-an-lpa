@@ -45,17 +45,17 @@ class LpaService
      * Get an LPA
      *
      * @param string $shareCode
+     * @param string $donorSurname
      * @return ArrayObject|null
-     * @throws \Http\Client\Exception
      */
-    public function getLpaByCode(string $shareCode) : ?ArrayObject
+    public function getLpaByCode(string $shareCode, string $donorSurname) : ?ArrayObject
     {
         //  Filter dashes out of the share code
         $shareCode = str_replace('-', '', $shareCode);
 
         $lpaData = $this->apiClient->httpPost('/v1/viewer-codes/summary', [
             'code' => $shareCode,
-            'name' => 'Sanderson'       #TODO: Hard coded until form element is added.
+            'name' => $donorSurname,
         ]);
 
         if (is_array($lpaData)) {

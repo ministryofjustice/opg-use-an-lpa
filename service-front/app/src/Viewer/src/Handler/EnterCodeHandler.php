@@ -37,6 +37,7 @@ class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
 
             if ($form->isValid()) {
                 $session->set('code', $form->getData()['lpa_code']);
+                $session->set('surname', $form->getData()['donor_surname']);
 
                 return $this->redirectToRoute('check-code');
             }
