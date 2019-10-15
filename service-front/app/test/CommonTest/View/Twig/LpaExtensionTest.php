@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use Common\Entity\Address;
 use Common\Entity\CaseActor;
 use Common\View\Twig\LpaExtension;
 use PHPUnit\Framework\TestCase;
@@ -49,18 +50,20 @@ class LpaExtensionTest extends TestCase
     {
         $extension = new LpaExtension();
 
-        //  Construct the actor data
-        $addresses = [];
+        $address = new Address();
+        if (isset($addressLines['addressLine1'])) { $address->setAddressLine1($addressLines['addressLine1']); }
+        if (isset($addressLines['addressLine2'])) { $address->setAddressLine2($addressLines['addressLine2']); }
+        if (isset($addressLines['addressLine3'])) { $address->setAddressLine3($addressLines['addressLine3']); }
+        if (isset($addressLines['town'])) { $address->setTown($addressLines['town']); }
+        if (isset($addressLines['county'])) { $address->setCounty($addressLines['county']); }
+        if (isset($addressLines['postcode'])) { $address->setPostcode($addressLines['postcode']); }
 
-        if (!empty($addressLines)) {
-            $addresses[] = $addressLines;
-        }
+        $actor = new CaseActor();
+        $actor->setAddresses([$address]);
 
-        $address = $extension->actorAddress([
-            'addresses' => $addresses,
-        ]);
+        $addressString = $extension->actorAddress($actor);
 
-        $this->assertEquals($expected, $address);
+        $this->assertEquals($expected, $addressString);
     }
 
     public function addressDataProvider()
