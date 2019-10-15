@@ -87,16 +87,19 @@ class LpaExtension extends AbstractExtension
     }
 
     /**
-     * @param string|null $date
+     * Takes an input date, whether as a string (relative or absolute) or as a Datetime
+     * and converts it for display in an LPA context.
+     *
+     * @param DateTime|string|null $date
      * @return string
      * @throws \Exception
      */
-    public function lpaDate(?string $date)
+    public function lpaDate($date)
     {
-        if (!empty($date)) {
-            if ($date == "today"){
+        if (!is_null($date)) {
+            if ($date === "today"){
                 $date = new DateTime("today");
-            } else {
+            } elseif (is_string($date)) {
                 $date = DateTime::createFromFormat('Y-m-d', $date);
             }
 
