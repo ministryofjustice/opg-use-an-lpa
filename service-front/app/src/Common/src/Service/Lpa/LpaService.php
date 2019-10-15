@@ -67,6 +67,7 @@ class LpaService
         ]);
 
         if (is_array($lpaData)) {
+            $lpaData['lpa'] = $this->lpaFactory->createLpaFromData($lpaData['lpa']);
             $lpaData = $this->parseLpaData($lpaData);
         }
 
