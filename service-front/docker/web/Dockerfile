@@ -5,7 +5,7 @@ COPY service-front/web ./
 RUN npm install
 RUN npm rebuild node-sass
 
-RUN npm run watch
+RUN npm run build
 
 FROM nginx:stable-alpine
 
