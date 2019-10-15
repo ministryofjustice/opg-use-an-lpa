@@ -23,11 +23,13 @@
 
             </div>
 
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full">
-                    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-                </div>
-            </div>
+            <nav class="moj-sub-navigation" aria-label="Sub navigation">
+                <ul class="moj-sub-navigation__list">
+                    <li class="moj-sub-navigation__item">
+                    <a class="moj-sub-navigation__link" href="#">Download a copy of this page</a>
+                    </li>
+                </ul>
+            </nav>
 
             <div class="govuk-grid-row" >
 
@@ -51,27 +53,27 @@
 
                             <h1 class="govuk-panel__title">This LPA is valid</h1>
 
-                            <div class="govuk-panel__body govuk-!-font-size-24">
-                                {% if lpa.caseSubtype == "pfa" %}
-                                    {% if lpa.attorneyActDecisions %}
-                                        While the donor has mental capacity, this lpa should only be used with the donor’s permission
+                            <div class="govuk-panel__body">
+                                <p class="govuk-!-font-size-24">
+                                    {% if lpa.caseSubtype == "pfa" %}
+                                        {% if lpa.attorneyActDecisions %}
+                                            While the donor has mental capacity, this lpa should only be used with the donor’s permission
+                                        {% else %}
+                                            This LPA can only be used when the donor does not have mental capacity
+                                        {% endif %}
                                     {% else %}
-                                        This LPA can only be used when the donor does not have mental capacity
+                                        {% if lpa.lifeSustainingTreatment %}
+                                            The attorneys have the authority to make decisions about life-sustaining treatment
+                                        {% else %}
+                                            The attorneys do NOT have the authority to make decisions about life-sustaining treatment
+                                        {% endif %}
                                     {% endif %}
-                                {% else %}
-                                    {% if lpa.lifeSustainingTreatment %}
-                                        The attorneys have the authority to make decisions about life-sustaining treatment
-                                    {% else %}
-                                        The attorneys do NOT have the authority to make decisions about life-sustaining treatment
-                                    {% endif %}
-                                {% endif %}
 
-                            </div>
+                                </p>
 
-                            <br/>
-
-                            <div class="govuk-panel__body govuk-!-font-size-24">
-                                <strong>The information on this LPA summary was correct on {{ lpa_date("today") }}</strong>
+                                <p class="govuk-!-font-size-24 govuk-!-font-weight-bold">
+                                    The information on this LPA summary was correct on {{ lpa_date("today") }}
+                                </p>
                             </div>
 
                         </div>
