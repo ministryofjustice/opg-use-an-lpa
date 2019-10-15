@@ -40,10 +40,20 @@ class Client
      * @param string $apiBaseUri
      * @param string|null $token
      */
-    public function __construct(ClientInterface $httpClient, string $apiBaseUri, ?string $token)
+    public function __construct(ClientInterface $httpClient, string $apiBaseUri)
     {
         $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiBaseUri;
+    }
+
+    /**
+     * Sets up the client object to attach authentication headers
+     * to outgoing requests.
+     *
+     * @param string $token
+     */
+    public function setUserTokenHeader(string $token) : void
+    {
         $this->token = $token;
     }
 
@@ -217,7 +227,7 @@ class Client
 
         //  If the logged in user has an auth token already then set that in the header
         if (isset($this->token)) {
-            $headerLines['token'] = $this->token;
+            $headerLines['User-Token'] = $this->token;
         }
 
         return $headerLines;

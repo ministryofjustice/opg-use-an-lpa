@@ -78,7 +78,12 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     $form->setData($request->getParsedBody());
 
                     if ($form->isValid()) {
-                        $actorCode = $this->lpaService->confirmLpaAddition($passcode, $referenceNumber, $dob);
+                        $actorCode = $this->lpaService->confirmLpaAddition(
+                            $this->getUser($request)->getIdentity(),
+                            $passcode,
+                            $referenceNumber,
+                            $dob
+                        );
 
                         if (!is_null($actorCode)) {
                             // TODO UML-209 this will need to go to the dashboard
@@ -88,7 +93,12 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 }
 
                 // is a GET or failed POST
-                $lpa = $this->lpaService->getLpaByPasscode($passcode, $referenceNumber, $dob);
+                $lpa = $this->lpaService->getLpaByPasscode(
+                    $this->getUser($request)->getIdentity(),
+                    $passcode,
+                    $referenceNumber,
+                    $dob
+                );
 
                 if (!is_null($lpa)) {
                     list($user, $userRole) = $this->resolveLpaData($lpa, $dob);
