@@ -8,6 +8,7 @@ use Common\Service\Lpa\LpaFactory;
 use Common\Entity\Lpa;
 use Common\Entity\CaseActor;
 use Common\Entity\Address;
+use Exception;
 use Zend\Stdlib\Exception\InvalidArgumentException;
 use DateTime;
 
@@ -26,11 +27,12 @@ final class Sirius implements LpaFactory
      *
      * @param array $data
      * @return Lpa
+     * @throws InvalidArgumentException|Exception
      */
     public function createLpaFromData(array $data) : Lpa
     {
-        if ( ! array_key_exists('uId', $data)) {
-            throw new InvalidArgumentException("The data array passed to " . __CLASS__ . " must contain valid Lpa data");
+        if (!array_key_exists('uId', $data)) {
+            throw new InvalidArgumentException("The data array passed to " . __METHOD__ . " must contain valid Lpa data");
         }
 
         $lpa = new Lpa();
@@ -66,10 +68,18 @@ final class Sirius implements LpaFactory
         return $lpa;
     }
 
-    private function createCaseActorFromData(array $caseActorData) : CaseActor
+    /**
+     * @param array $caseActorData
+     * @return CaseActor
+     * @throws Exception
+     */
+    public function createCaseActorFromData(array $caseActorData) : CaseActor
     {
-        $actor = new CaseActor();
+        if (!array_key_exists('uId', $caseActorData)) {
+            throw new InvalidArgumentException("The data array passed to " . __METHOD__ . " must contain valid CaseActor data");
+        }
 
+        $actor = new CaseActor();
         if (isset($caseActorData['id'])) { $actor->setId($caseActorData['id']); }
         if (isset($caseActorData['uId'])) { $actor->setUId($caseActorData['uId']); }
         if (isset($caseActorData['email'])) { $actor->setEmail($caseActorData['email']); }
@@ -84,10 +94,17 @@ final class Sirius implements LpaFactory
         return $actor;
     }
 
-    private function createAddressFromData(array $addressData) : Address
+    /**
+     * @param array $addressData
+     * @return Address
+     * @throws InvalidArgumentException
+     */
+    public function createAddressFromData(array $addressData) : Address
     {
+        if (!array_key_exists('id', $addressData)) {
+            throw new InvalidArgumentException("The data array passed to " . __METHOD__ . " must contain valid Address data");
+        }
         $address = new Address();
-
         if (isset($addressData['id'])) { $address->setId($addressData['id']); }
         if (isset($addressData['town'])) { $address->setTown($addressData['town']); }
         if (isset($addressData['county'])) { $address->setCounty($addressData['county']); }
