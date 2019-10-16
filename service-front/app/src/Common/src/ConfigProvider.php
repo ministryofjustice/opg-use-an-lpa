@@ -6,6 +6,7 @@ namespace Common;
 
 use Aws;
 use Common\Entity\UserFactory;
+use Common\Service\Lpa\LpaFactory;
 use Http;
 use Psr;
 use Zend;
@@ -50,7 +51,9 @@ class ConfigProvider
 
                 // Auth
                 Zend\Expressive\Authentication\UserRepositoryInterface::class => Service\User\UserService::class,
-                Zend\Expressive\Authentication\AuthenticationInterface::class => Zend\Expressive\Authentication\Session\PhpSession::class
+                Zend\Expressive\Authentication\AuthenticationInterface::class => Zend\Expressive\Authentication\Session\PhpSession::class,
+
+                Service\Lpa\LpaFactory::class => Service\Lpa\Factory\Sirius::class
             ],
 
             'factories'  => [

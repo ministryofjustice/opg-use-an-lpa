@@ -13,11 +13,14 @@ def step_impl(context):
 def step_impl(context):
   context.browser.get(get_frontend_url('viewer', '/enter-code'))
 
-@given('the share code input is populated with "{share_code}"')
-def step_impl(context, share_code):
+@given('the share code input is populated with "{share_code}" and "{donor_surname}"')
+def step_impl(context, share_code, donor_surname):
   share_code_input = context.browser.find_element_by_css_selector('form[name="share_code"] input[name="lpa_code"]')
   share_code_input.clear()  # Be sure the input is empty
   share_code_input.send_keys(share_code)
+  donor_surname_input = context.browser.find_element_by_css_selector('form[name="share_code"] input[name="donor_surname"]')
+  donor_surname_input.clear()  # Be sure the input is empty
+  donor_surname_input.send_keys(donor_surname)
 
 
 # WHENS

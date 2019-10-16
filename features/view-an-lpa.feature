@@ -11,49 +11,44 @@ Feature: View a lasting power of attorney
   Scenario: Start the service when I click on the button
     Given I go to the viewer service homepage
     When I click the "Start now" button
-    Then the "Enter Code" page is displayed
+    Then the "Enter the LPA access code" page is displayed
 
-  Scenario: Show the share code help comment on enter code page when I click the link
-    Given I go to the enter code page on the viewer service
-    And the "What is a share code?" help section is not visible
-    When I click on the "What is a share code?" help section
-    Then the "What is a share code?" help section is visible
-
-  Scenario: Show an error message when I try to search for an LPA without entering an LPA code
+  Scenario: Show an error message when I try to search for an LPA without entering an LPA code or donor surname
     Given I go to the enter code page on the viewer service
     When the share code form is submitted
     Then error message "Value is required and can't be empty" is displayed in the error summary
-    And error message "Value is required and can't be empty" is displayed next to the LPA code input
+    And error message "Value is required and can't be empty" is displayed next to the LPA access code input
+    And error message "Value is required and can't be empty" is displayed next to the Donor surname input
 
   Scenario: Show an error message when I search for an LPA with an LPA code that is the wrong format
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "wrong-format"
+    And the share code input is populated with "wrong-format" and "donor-surname"
     When the share code form is submitted
     Then error message "Enter an LPA share code in the correct format." is displayed in the error summary
-    And error message "Enter an LPA share code in the correct format." is displayed next to the LPA code input
+    And error message "Enter an LPA share code in the correct format." is displayed next to the LPA access code input
 
-  Scenario: Show an error page when I search for an LPA with an LPA code that does not exist
+  Scenario: Show an error page when I search for an LPA with an invalid LPA code and surname that does not exist
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "1111-1111-1111"
+    And the share code input is populated with "1111-1111-1111" and "test-surname"
     When the share code form is submitted
-    Then the "Invalid Code" page is displayed
+    Then the "We could not find an LPA matching those details" page is displayed
 
   Scenario: Show an error page when I search for an LPA with an LPA code that has expired
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "N4KB-EBEZ-MNJF"
+    And the share code input is populated with "N4KB-EBEZ-MNJF" and "Sanderson"
     When the share code form is submitted
     Then the "Expired Code" page is displayed
 
-  Scenario: Show the confirmation page when I search for an LPA with a valid LPA code
+  Scenario: Show the confirmation page when I search for an LPA with a valid LPA code and matching donor's surname
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "P9H8-A6ML-D3AM"
+    And the share code input is populated with "P9H8-A6ML-D3AM" and "Sanderson"
     When the share code form is submitted
     Then the "Is this the LPA you want to view?" page is displayed
     And an LPA summary for a Property and finance LPA for donor Rachel Sanderson is displayed
 
   Scenario: Show the wrong details help comment on confirmation code page when I click the link
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "P9H8-A6ML-D3AM"
+    And the share code input is populated with "P9H8-A6ML-D3AM" and "Sanderson"
     When the share code form is submitted
     Then the "Is this the LPA you want to view?" page is displayed
     Given the "If you need to access this LPA after" help section is not visible
@@ -62,8 +57,8 @@ Feature: View a lasting power of attorney
 
   Scenario: Show the full LPA details for an active LPA when I click "Continue" on the confirmation page
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "P9H8-A6ML-D3AM"
+    And the share code input is populated with "P9H8-A6ML-D3AM" and "Sanderson"
     When the share code form is submitted
     Then the "Is this the LPA you want to view?" page is displayed
     When I click the "Continue" button
-    Then the "Rachel Sanderson's property and finance LPA" page is displayed
+    Then the "Rachel Sanderson" page is displayed

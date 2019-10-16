@@ -12,7 +12,7 @@ services:
       context: .
       dockerfile: service-front/docker/web/Dockerfile
     volumes:
-      - ./service-front/web:/web
+      - ./service-front/web/dist:/web
     ports:
       - 9001:80
     environment:
@@ -53,7 +53,7 @@ services:
       context: .
       dockerfile: service-front/docker/web/Dockerfile
     volumes:
-      - ./service-front/web:/web
+      - ./service-front/web/dist:/web
     ports:
       - 9002:80
     environment:
@@ -109,7 +109,7 @@ services:
       context: .
       dockerfile: service-api/docker/web/Dockerfile
     volumes:
-      - ./service-api/web:/web
+      - ./service-api/web/dist:/web
     ports:
       - 9003:80
     environment:
@@ -194,7 +194,6 @@ services:
 
 #  feature-tests:
 #    build:
-#      context: .
-#      dockerfile: features/Dockerfile
+#      context: features/
 #    volumes:
-#      - ./features:/feature-tests
+#      - ./features:/tests/features

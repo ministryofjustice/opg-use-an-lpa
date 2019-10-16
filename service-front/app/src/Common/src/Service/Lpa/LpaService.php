@@ -2,6 +2,7 @@
 
 namespace Common\Service\Lpa;
 
+use Common\Entity\Lpa;
 use Common\Service\ApiClient\Client as ApiClient;
 use ArrayObject;
 
@@ -17,12 +18,19 @@ class LpaService
     private $apiClient;
 
     /**
+     * @var LpaFactory
+     */
+    private $lpaFactory;
+
+    /**
      * LpaService constructor.
      * @param ApiClient $apiClient
+     * @param LpaFactory $lpaFactory
      */
-    public function __construct(ApiClient $apiClient)
+    public function __construct(ApiClient $apiClient, LpaFactory $lpaFactory)
     {
         $this->apiClient = $apiClient;
+        $this->lpaFactory = $lpaFactory;
     }
 
     /**
@@ -47,20 +55,21 @@ class LpaService
      * Get an LPA
      *
      * @param string $shareCode
+     * @param string $donorSurname
      * @return ArrayObject|null
-     * @throws \Http\Client\Exception
      */
-    public function getLpaByCode(string $shareCode) : ?ArrayObject
+    public function getLpaByCode(string $shareCode, string $donorSurname) : ?ArrayObject
     {
         //  Filter dashes out of the share code
         $shareCode = str_replace('-', '', $shareCode);
 
         $lpaData = $this->apiClient->httpPost('/v1/viewer-codes/summary', [
             'code' => $shareCode,
-            'name' => 'Sanderson'       #TODO: Hard coded until form element is added.
+            'name' => $donorSurname,
         ]);
 
         if (is_array($lpaData)) {
+            $lpaData['lpa'] = $this->lpaFactory->createLpaFromData($lpaData['lpa']);
             $lpaData = $this->parseLpaData($lpaData);
         }
 
@@ -75,23 +84,40 @@ class LpaService
      * @param string $passcode
      * @param string $referenceNumber
      * @param string $dob
-     * @return ArrayObject|null
+     * @return Lpa|null
      */
-    public function getLpaByPasscode(string $passcode, string $referenceNumber, string $dob) : ?ArrayObject
+    public function getLpaByPasscode(string $passcode, string $referenceNumber, string $dob) : ?Lpa
     {
         $data = [
             'actor-code' => $passcode,
-            'uid'  => $referenceNumber,
-            'dob'  => $dob,
+            'uid'        => $referenceNumber,
+            'dob'        => $dob,
         ];
 
         $lpaData = $this->apiClient->httpPost('/v1/actor-codes/summary', $data);
 
-        if (is_array($lpaData)) {
-            $lpaData = $this->parseLpaData($lpaData);
-        }
+        return isset($lpaData['lpa']) ? $this->lpaFactory->createLpaFromData($lpaData['lpa']) : null;
+    }
 
-        return $lpaData;
+    /**
+     * Confirm the addition of an LPA to an actors UaLPA account
+     *
+     * @param string $passcode
+     * @param string $referenceNumber
+     * @param string $dob
+     * @return string|null The unique actor token that links an actor record and lpa together
+     */
+    public function confirmLpaAddition(string $passcode, string $referenceNumber, string $dob) : ?string
+    {
+        $data = [
+            'actor-code' => $passcode,
+            'uid'        => $referenceNumber,
+            'dob'        => $dob,
+        ];
+
+        $lpaData = $this->apiClient->httpPost('/v1/actor-codes/confirm', $data);
+
+        return $lpaData['user-lpa-actor-token'] ?? null;
     }
 
     /**
@@ -106,7 +132,6 @@ class LpaService
             }
         }
 
-        //  TODO - Transform the data array into a data object
         return new ArrayObject($data, ArrayObject::ARRAY_AS_PROPS);
     }
 }
