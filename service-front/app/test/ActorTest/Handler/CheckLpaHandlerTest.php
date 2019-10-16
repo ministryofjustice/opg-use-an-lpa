@@ -128,6 +128,7 @@ class CheckLpaHandlerTest extends TestCase
         $lpa = (new LpaFactory())->createLpaFromData([
             'uId' => '700000000047',
             'donor' => [
+                'uId' => '700000000082',
                 'dob' => '1980-01-01'
             ]
         ]);
@@ -164,10 +165,12 @@ class CheckLpaHandlerTest extends TestCase
         $lpa = (new LpaFactory())->createLpaFromData([
             'uId' => '700000000047',
             'donor' => [
+                'uId' => '700000000082',
                 'dob' => '1975-01-01'
             ],
             'attorneys' => [
                 [
+                    'uId' => '700000000023',
                     'dob' => '1980-01-01'
                 ]
             ]
@@ -338,6 +341,7 @@ class CheckLpaHandlerTest extends TestCase
         $lpa = (new LpaFactory())->createLpaFromData([
             'uId' => '700000000047',
             'donor' => [
+                'uId' => '700000000082',
                 'dob' => '1980-01-01'
             ]
         ]);
