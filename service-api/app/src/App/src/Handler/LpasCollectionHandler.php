@@ -33,7 +33,7 @@ class LpasCollectionHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $user = $request->getAttribute('user-id');
+        $user = $request->getAttribute('actor-id');
 
         $result = $this->lpaService->getAllForUser($user);
 
