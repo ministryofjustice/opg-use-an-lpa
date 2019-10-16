@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "Web components for the use lpa service",
   "main": "index.js",
+  "repository": "git@github.com:ministryofjustice/opg-use-an-lpa.git",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack -p --progress --config webpack.config.js"
+    "build": "webpack -p --progress --config webpack.config.js",
+    "watch": "webpack -p --progress --watch --config webpack.config.js"
   },
   "author": "John Nolan <john.nolan@digital.justice.gov.uk>",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.6.3",
     "@babel/plugin-transform-member-expression-literals": "^7.2.0",
