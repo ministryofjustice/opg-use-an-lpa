@@ -58,14 +58,19 @@ class LpaExtension extends AbstractExtension
      * @param CaseActor $actor
      * @return string
      */
-    public function actorName(CaseActor $actor)
+    public function actorName(CaseActor $actor, bool $withSalutation = true)
     {
-        return implode(' ', array_filter([
-            $actor->getSalutation(),
-            $actor->getFirstname(),
-            $actor->getMiddlenames(),
-            $actor->getSurname()
-        ]));
+        $nameData = [];
+
+        if ($withSalutation) {
+            $nameData[] = $actor->getSalutation();
+        }
+
+        $nameData[] = $actor->getFirstname();
+        $nameData[] = $actor->getMiddlenames();
+        $nameData[] = $actor->getSurname();
+
+        return implode(' ', array_filter($nameData));
     }
 
     /**
