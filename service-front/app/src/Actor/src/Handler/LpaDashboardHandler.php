@@ -42,14 +42,18 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $lpas = $this->lpaService->getLpas();
+        $user = $this->getUser($request);
+        $identity = (!is_null($user)) ? $user->getIdentity() : null;
 
-        if (is_null($lpas)) {
+        $lpas = $this->lpaService->getLpas($identity);
+
+        if (count($lpas) === 0) {
             return new RedirectResponse($this->urlHelper->generate('lpa.add'));
         }
 
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
-            'user' => $this->getUser($request)
+            'user' => $this->getUser($request),
+            'lpas' => $lpas
         ]));
     }
 }
