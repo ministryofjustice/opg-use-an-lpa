@@ -68,18 +68,21 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
         $form = new LpaConfirm($this->getCsrfGuard($request));
 
+        $user = $this->getUser($request);
+        $identity = (!is_null($user)) ? $user->getIdentity() : null;
+
         $passcode = $session->get('passcode');
         $referenceNumber = $session->get('reference_number');
         $dob = $session->get('dob');
 
-        if (isset($passcode) && isset($referenceNumber) && isset($dob)) {
+        if (isset($identity) && isset($passcode) && isset($referenceNumber) && isset($dob)) {
             try {
                 if ($request->getMethod() === 'POST') {
                     $form->setData($request->getParsedBody());
 
                     if ($form->isValid()) {
                         $actorCode = $this->lpaService->confirmLpaAddition(
-                            $this->getUser($request)->getIdentity(),
+                            $identity,
                             $passcode,
                             $referenceNumber,
                             $dob
@@ -94,7 +97,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
                 // is a GET or failed POST
                 $lpa = $this->lpaService->getLpaByPasscode(
-                    $this->getUser($request)->getIdentity(),
+                    $identity,
                     $passcode,
                     $referenceNumber,
                     $dob
