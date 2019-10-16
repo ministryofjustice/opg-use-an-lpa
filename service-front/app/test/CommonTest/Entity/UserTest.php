@@ -23,10 +23,13 @@ class UserTest extends TestCase
     public function it_returns_valid_user_details()
     {
         $date = new DateTime();
-        $user = new User('test', [], ['LastLogin' => $date->format(DateTimeInterface::ATOM)]);
+        $user = new User('test', [], [
+            'Email'     => 'a@b.com',
+            'LastLogin' => $date->format(DateTimeInterface::ATOM)
+        ]);
 
         $this->assertIsArray($user->getDetails());
-        $this->assertCount(1, $user->getDetails());
+        $this->assertCount(2, $user->getDetails());
         $this->assertArrayHasKey('LastLogin', $user->getDetails());
     }
 

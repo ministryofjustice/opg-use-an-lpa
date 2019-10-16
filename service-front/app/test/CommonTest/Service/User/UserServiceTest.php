@@ -104,14 +104,16 @@ class UserServiceTest extends TestCase
                 'password' => 'test'
             ])
             ->willReturn([
-                'Email'        => 'test@example.com',
+                'Id'        => '01234567-0123-0123-0123-012345678901',
+                'Email'     => 'test@example.com',
                 'LastLogin' => '2019-07-10T09:00:00'
             ]);
 
         $userFactoryCallable = function($identity, $roles, $details) {
-            $this->assertEquals('test@example.com', $identity);
+            $this->assertEquals('01234567-0123-0123-0123-012345678901', $identity);
             $this->assertIsArray($roles);
             $this->assertIsArray($details);
+            $this->assertArrayHasKey('Email', $details);
             $this->assertArrayHasKey('LastLogin', $details);
 
             return new User($identity, $roles, $details);
@@ -122,9 +124,9 @@ class UserServiceTest extends TestCase
         $return = $service->authenticate('test@example.com', 'test');
 
         $this->assertInstanceOf(User::class, $return);
-        $this->assertEquals('test@example.com', $return->getIdentity());
+        $this->assertEquals('01234567-0123-0123-0123-012345678901', $return->getIdentity());
         $this->assertEquals(new DateTime('2019-07-10T09:00:00'), $return->getDetail('lastLogin'));
-
+        $this->assertEquals('test@example.com', $return->getDetail('email'));
     }
 
     /** @test */

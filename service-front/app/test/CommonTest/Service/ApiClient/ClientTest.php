@@ -336,13 +336,14 @@ class ClientTest extends TestCase
             $this->assertInstanceOf(RequestInterface::class, $request);
 
             $headers = $request->getHeaders();
-            $this->assertArrayHasKey('token', $headers);
-            $this->assertEquals('test_token', $headers['token'][0]);
+            $this->assertArrayHasKey('User-Token', $headers);
+            $this->assertEquals('test_token', $headers['User-Token'][0]);
             return true;
         }))
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'test_token');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost');
+        $client->setUserTokenHeader('test_token');
 
         $data = $client->httpGet('/simple_get');
         $this->assertIsArray($data);

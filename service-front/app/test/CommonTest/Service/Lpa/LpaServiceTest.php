@@ -91,6 +91,7 @@ class LpaServiceTest extends TestCase
     /** @test */
     public function it_finds_an_lpa_by_passcode()
     {
+        $token = '01234567-01234-01234-01234-012345678901';
         $passcode = '123456789012';
         $referenceNumber = '123456789012';
         $dob = '1980-01-01';
@@ -119,12 +120,13 @@ class LpaServiceTest extends TestCase
             ->willReturn([
                 'lpa' => $lpaData
             ]);
+        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
         $this->lpaFactoryProphecy->createLpaFromData($lpaData)->willReturn($lpa);
 
         $service = new LpaService($this->apiClientProphecy->reveal(), $this->lpaFactoryProphecy->reveal());
 
-        $lpa = $service->getLpaByPasscode($passcode, $referenceNumber, $dob);
+        $lpa = $service->getLpaByPasscode($token, $passcode, $referenceNumber, $dob);
 
         $this->assertInstanceOf(Lpa::class, $lpa);
         $this->assertEquals(123456789012, $lpa->getUId());
@@ -135,6 +137,7 @@ class LpaServiceTest extends TestCase
     /** @test */
     public function an_invalid_find_by_passcode_response_returns_null()
     {
+        $token = '01234567-01234-01234-01234-012345678901';
         $passcode = '123456789012';
         $referenceNumber = '123456789012';
         $dob = '1980-01-01';
@@ -147,10 +150,11 @@ class LpaServiceTest extends TestCase
 
         $this->apiClientProphecy->httpPost('/v1/actor-codes/summary', $params)
             ->willReturn([ 'bad-response' => 'bad']);
+        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
         $service = new LpaService($this->apiClientProphecy->reveal(), $this->lpaFactoryProphecy->reveal());
 
-        $lpa = $service->getLpaByPasscode($passcode, $referenceNumber, $dob);
+        $lpa = $service->getLpaByPasscode($token, $passcode, $referenceNumber, $dob);
 
         $this->assertNull($lpa);
     }
@@ -158,6 +162,7 @@ class LpaServiceTest extends TestCase
     /** @test */
     public function it_confirms_an_lpa_by_passcode()
     {
+        $token = '01234567-01234-01234-01234-012345678901';
         $passcode = '123456789012';
         $referenceNumber = '123456789012';
         $dob = '1980-01-01';
@@ -172,10 +177,11 @@ class LpaServiceTest extends TestCase
             ->willReturn([
                 'user-lpa-actor-token' => 'actor-lpa-code'
             ]);
+        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
         $service = new LpaService($this->apiClientProphecy->reveal(), $this->lpaFactoryProphecy->reveal());
 
-        $lpaCode = $service->confirmLpaAddition($passcode, $referenceNumber, $dob);
+        $lpaCode = $service->confirmLpaAddition($token, $passcode, $referenceNumber, $dob);
 
         $this->assertEquals('actor-lpa-code', $lpaCode);
     }
@@ -183,6 +189,7 @@ class LpaServiceTest extends TestCase
     /** @test */
     public function an_invalid_confirmation_of_lpa_by_passcode_returns_null()
     {
+        $token = '01234567-01234-01234-01234-012345678901';
         $passcode = '123456789012';
         $referenceNumber = '123456789012';
         $dob = '1980-01-01';
@@ -197,10 +204,11 @@ class LpaServiceTest extends TestCase
             ->willReturn([
                 'bad_response' => 'bad'
             ]);
+        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
         $service = new LpaService($this->apiClientProphecy->reveal(), $this->lpaFactoryProphecy->reveal());
 
-        $lpaCode = $service->confirmLpaAddition($passcode, $referenceNumber, $dob);
+        $lpaCode = $service->confirmLpaAddition($token, $passcode, $referenceNumber, $dob);
 
         $this->assertNull($lpaCode);
     }
