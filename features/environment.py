@@ -21,5 +21,9 @@ def after_scenario(context, scenario):
     if scenario.status == "failed":
         if not os.path.exists("features/failed_scenarios_screenshots"):
             os.makedirs("features/failed_scenarios_screenshots")
-        os.chdir("features/failed_scenarios_screenshots")
-        context.browser.save_screenshot(scenario.name + "_failed.png")
+
+        print (
+            "Saving screenshot to \"%s/features/failed_scenarios_screenshots/%s_failed.png\"" %
+            (os.getcwd(), scenario.name)
+        )
+        context.browser.save_screenshot("features/failed_scenarios_screenshots/" + scenario.name + "_failed.png")
