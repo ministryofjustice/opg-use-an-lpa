@@ -30,26 +30,51 @@ class LpaServiceTest extends TestCase
         $this->lpaFactoryProphecy = $this->prophesize(LpaFactory::class);
     }
 
-    public function testGetLpa()
+    /** @test */
+    public function it_gets_a_list_of_lpas_for_a_user()
     {
-        $this->markTestSkipped('must be revisited.');
-        $this->apiClientProphecy->httpGet('/v1/lpa-by-code/123456789012')
+        $token = '01234567-01234-01234-01234-012345678901';
+        $referenceNumber = '123456789012';
+        $dob = '1980-01-01';
+
+        $lpaData = [
+            'other' => 'other data',
+            'lpa' => [
+                'uId' => $referenceNumber,
+                'donor' => [
+                    'uId' => $referenceNumber,
+                    'dob' => $dob
+                ]
+            ]
+        ];
+
+        $lpa = new Lpa();
+        $lpa->setUId($referenceNumber);
+
+        $donor = new CaseActor();
+        $donor->setUId($referenceNumber);
+        $donor->setDob(new \DateTime($dob));
+        $lpa->setDonor($donor);
+
+        $this->apiClientProphecy->httpGet('/v1/lpas')
             ->willReturn([
-                'id'      => 123456789012,
-                'isValid' => true,
-                'another' => [
-                    'some'  => 1,
-                    'value' => 2,
-                ],
+                '0123-01-01-01-012345' => $lpaData // UserLpaActorMap from DynamoDb
             ]);
+        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
-        $service = new LpaService($this->apiClientProphecy->reveal());
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData['lpa'])->willReturn($lpa);
 
-        $lpa = $service->getLpaByCode('1234-5678-9012');
+        $service = new LpaService($this->apiClientProphecy->reveal(), $this->lpaFactoryProphecy->reveal());
 
-        $this->assertInstanceOf(ArrayObject::class, $lpa);
-        $this->assertEquals(123456789012, $lpa->id);
-        $this->assertEquals(true, $lpa->isValid);
+        $lpas = $service->getLpas($token);
+
+        $this->assertInstanceOf(ArrayObject::class, $lpas);
+        $this->assertArrayHasKey('0123-01-01-01-012345', $lpas);
+
+        $parsedLpa = $lpas['0123-01-01-01-012345'];
+        $this->assertInstanceOf(ArrayObject::class, $parsedLpa);
+        $this->assertEquals('other data', $parsedLpa->other);
+        $this->assertInstanceOf(Lpa::class, $parsedLpa->lpa);
     }
 
     public function testGetLpaNotFound()

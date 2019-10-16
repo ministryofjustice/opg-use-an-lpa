@@ -5,6 +5,7 @@ namespace Common\Service\Lpa;
 use Common\Entity\Lpa;
 use Common\Service\ApiClient\Client as ApiClient;
 use ArrayObject;
+use Exception;
 
 /**
  * Class LpaService
@@ -34,12 +35,15 @@ class LpaService
     }
 
     /**
-     * @param string $lpaId
+     * Get the users currently registered LPAs
+     *
+     * @param $userToken
      * @return ArrayObject|null
-     * @throws \Http\Client\Exception
      */
-    public function getLpas() : ?ArrayObject
+    public function getLpas(string $userToken) : ?ArrayObject
     {
+        $this->apiClient->setUserTokenHeader($userToken);
+
         $lpaData = $this->apiClient->httpGet('/v1/lpas');
 
         if (is_array($lpaData)) {
@@ -50,12 +54,14 @@ class LpaService
     }
 
     /**
+     * @param string $userToken
      * @param string $lpaId
      * @return ArrayObject|null
-     * @throws \Http\Client\Exception
      */
-    public function getLpaById(string $lpaId) : ?ArrayObject
+    public function getLpaById(string $userToken, string $lpaId) : ?ArrayObject
     {
+        $this->apiClient->setUserTokenHeader($userToken);
+
         $lpaData = $this->apiClient->httpGet('/v1/lpa/' . $lpaId);
 
         if (is_array($lpaData)) {
@@ -83,7 +89,6 @@ class LpaService
         ]);
 
         if (is_array($lpaData)) {
-            $lpaData['lpa'] = $this->lpaFactory->createLpaFromData($lpaData['lpa']);
             $lpaData = $this->parseLpaData($lpaData);
         }
 
@@ -95,6 +100,7 @@ class LpaService
      *
      * Used when an actor adds an LPA to their UaLPA account
      *
+     * @param string $userToken
      * @param string $passcode
      * @param string $referenceNumber
      * @param string $dob
@@ -119,6 +125,7 @@ class LpaService
     /**
      * Confirm the addition of an LPA to an actors UaLPA account
      *
+     * @param string $userToken
      * @param string $passcode
      * @param string $referenceNumber
      * @param string $dob
