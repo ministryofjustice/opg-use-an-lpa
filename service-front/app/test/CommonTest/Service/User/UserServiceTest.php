@@ -164,8 +164,9 @@ class UserServiceTest extends TestCase
                 'password' => 'test'
             ])
             ->willReturn([
-                'Email'        => 'test@example.com',
-                'LastLogin' => 'baddatetime'
+                'Id'        => '01234567-0123-0123-0123-012345678901',
+                'Email'     => 'test@example.com',
+                'LastLogin' => '2019-07-10T09:00:00'
             ]);
 
         $userFactoryCallable = function($identity, $roles, $details) {
@@ -175,7 +176,7 @@ class UserServiceTest extends TestCase
 
         $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $return = $service->authenticate('test@example.com', 'test');
     }
 
