@@ -140,14 +140,30 @@ class LpaService
     }
 
     /**
+     * Attempts to convert the data arrays received via the various endpoints into an ArrayObject containing
+     * scalar and object values.
+     *
+     * Currently fairly naive in its assumption that the data types are stored under explicit keys, which
+     * may change.
+     *
      * @param array $data
      * @return ArrayObject
+     * @throws Exception
      */
-    private function parseLpaData(array $data): ArrayObject
+    private function parseLpaData(array $data) : ArrayObject
     {
         foreach ($data as $dataItemName => $dataItem) {
-            if (is_array($dataItem)) {
-                $data[$dataItemName] = $this->parseLpaData($dataItem);
+            switch($dataItemName) {
+                case 'lpa':
+                    $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
+                    break;
+                case 'actor':
+                    $data['actor']['details'] = $this->lpaFactory->createCaseActorFromData($dataItem['details']);
+                    break;
+                default:
+                    if (is_array($dataItem)) {
+                        $data[$dataItemName] = $this->parseLpaData($dataItem);
+                    }
             }
         }
 
