@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Actor\Handler\ChangeDetailsHandler;
 use Actor\Handler\LoginPageHandler;
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Application;
+use Zend\Expressive\Authentication\AuthenticationMiddleware;
 use Zend\Expressive\MiddlewareFactory;
 
 /**
@@ -72,7 +74,11 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->route('/lpa/view-lpa', [
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ViewLpaSummaryHandler::class
-    ], ['GET', 'POST'], 'lpa.view');
+    ], ['GET'], 'lpa.view');
+    $app->route('/lpa/change-details', [
+        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\ChangeDetailsHandler::class
+    ], ['GET'], 'lpa.change-details');
 };
 
 switch (getenv('CONTEXT')){

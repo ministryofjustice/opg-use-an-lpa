@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use ArrayObject;
+use Common\Entity\CaseActor;
+use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\CsrfGuard;
@@ -62,31 +64,12 @@ class ViewLpaSummaryHandler extends AbstractHandler
         $dob = $session->get('dob');
 
         if (isset($passcode) && isset($referenceNumber) && isset($dob)) {
-
             try {
-                $lpaData = $this->lpaService->getLpaByPasscode($passcode, $referenceNumber, $dob);
 
-                // The lpa comes back as two concurrent records. An actor which has been pulled from the
-                // relevant attorneys section and the complete lpa record itself.
-                $lpa = $lpaData['lpa'];
+                $lpa = $this->lpaService->getLpaByPasscode($passcode, $referenceNumber, $dob);
 
-                if ($lpa instanceof ArrayObject) {
-                    //  Check the logged in user role for this LPA
-                    $user = null;
-                    $userRole = null;
-
-                    if (isset($lpa->donor->dob) && $lpa->donor->dob == $dob) {
-                        $user = $lpa->donor;
-                        $userRole = 'Donor';
-                    } elseif (isset($lpa->attorneys) && is_iterable($lpa->attorneys)) {
-                        //  Loop through the attorneys
-                        foreach ($lpa->attorneys as $attorney) {
-                            if (isset($attorney->dob) && $attorney->dob == $dob) {
-                                $user = $attorney;
-                                $userRole = 'Attorney';
-                            }
-                        }
-                    }
+                if (!is_null($lpa)) {
+                    list($user, $userRole) = $this->resolveLpaData($lpa, $dob);
 
                     return new HtmlResponse($this->renderer->render('actor::view-lpa-summary', [
                         'lpa'      => $lpa,
@@ -108,14 +91,34 @@ class ViewLpaSummaryHandler extends AbstractHandler
 
         }
 
-//        $id = $this->getSession($request,'session')->get('reference_number');
-//
-//        if (!isset($id)) {
-//            throw new SessionTimeoutException;
-//        }
-//
-//        $lpa = $this->lpaService->getLpaById($id);
-
-        return new HtmlResponse($this->renderer->render('actor::view-lpa-summary'));
+        // We don't have a code so the session has timed out
+        // TODO this can be reached if the session is still perfectly valid but the lpa search/response
+        //      failed in some way. Make this better.
+        throw new SessionTimeoutException();
     }
+
+    protected function resolveLpaData(Lpa $lpa, string $dob) : array
+    {
+        //  Check the logged in user role for this LPA
+        $user = null;
+        $userRole = null;
+        $comparableDob = \DateTime::createFromFormat('!Y-m-d', $dob);
+
+        if (!is_null($lpa->getDonor()->getDob()) && $lpa->getDonor()->getDob() == $comparableDob) {
+            $user = $lpa->getDonor();
+            $userRole = 'Donor';
+        } elseif (!is_null($lpa->getAttorneys()) && is_iterable($lpa->getAttorneys())) {
+            //  Loop through the attorneys
+            /** @var CaseActor $attorney */
+            foreach ($lpa->getAttorneys() as $attorney) {
+                if (!is_null($attorney->getDob()) && $attorney->getDob() == $comparableDob) {
+                    $user = $attorney;
+                    $userRole = 'Attorney';
+                }
+            }
+        }
+
+        return [$user, $userRole];
+    }
+
 }
