@@ -41,6 +41,17 @@
             </div>
         </div>
 
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+
+                {% for lpaData in lpas %}
+                    {% set lpa = lpaData.lpa %}
+                    {{ include('@actor/partials/lpa-details.html.twig') }}
+                {% endfor %}
+
+            </div>
+        </div>
+
     </main>
 </div>
 {% endblock %}
