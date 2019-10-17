@@ -28,7 +28,7 @@
 
                     {{ govuk_form_element(form.get('passcode'), { 'label': 'One-time passcode', 'hint': 'Passcodes are 13 characters long and start with a C', 'input_prefix': 'C - ', 'attr' : {'class': 'govuk-input--width-10'} }) }}
 
-                    <details class="govuk-details" role="group">
+                    <details class="govuk-details" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
                                 Where to find your one-time passcode
@@ -48,7 +48,7 @@
 
                     {{ govuk_form_element(form.get('reference_number'), { 'label': 'LPA reference number', 'hint': 'Reference numbers are 12 numbers long', 'attr' : {'class': 'govuk-input--width-20'} }) }}
 
-                    <details class="govuk-details" role="group">
+                    <details class="govuk-details" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
                                 Where to find the reference number
