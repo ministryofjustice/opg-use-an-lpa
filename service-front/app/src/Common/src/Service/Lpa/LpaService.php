@@ -86,7 +86,7 @@ class LpaService
      * @param string $dob
      * @return Lpa|null
      */
-    public function getLpaByPasscode(string $passcode, string $referenceNumber, string $dob) : ?Lpa
+    public function getLpaByPasscode(string $userToken, string $passcode, string $referenceNumber, string $dob) : ?Lpa
     {
         $data = [
             'actor-code' => $passcode,
@@ -94,6 +94,9 @@ class LpaService
             'dob'        => $dob,
         ];
 
+        $this->apiClient->setUserTokenHeader($userToken);
+
+        // TODO $lpaData also contains an CaseActor 'actor' that we should probably return
         $lpaData = $this->apiClient->httpPost('/v1/actor-codes/summary', $data);
 
         return isset($lpaData['lpa']) ? $this->lpaFactory->createLpaFromData($lpaData['lpa']) : null;
@@ -107,13 +110,15 @@ class LpaService
      * @param string $dob
      * @return string|null The unique actor token that links an actor record and lpa together
      */
-    public function confirmLpaAddition(string $passcode, string $referenceNumber, string $dob) : ?string
+    public function confirmLpaAddition(string $userToken, string $passcode, string $referenceNumber, string $dob) : ?string
     {
         $data = [
             'actor-code' => $passcode,
             'uid'        => $referenceNumber,
             'dob'        => $dob,
         ];
+
+        $this->apiClient->setUserTokenHeader($userToken);
 
         $lpaData = $this->apiClient->httpPost('/v1/actor-codes/confirm', $data);
 
