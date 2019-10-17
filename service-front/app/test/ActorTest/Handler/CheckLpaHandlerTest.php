@@ -6,6 +6,7 @@ namespace ActorTest\Handler;
 
 use Actor\Handler\CheckLpaHandler;
 use Common\Entity\Lpa;
+use Common\Entity\User;
 use Common\Exception\ApiException;
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\Factory\Sirius as LpaFactory;
@@ -111,6 +112,10 @@ class CheckLpaHandlerTest extends TestCase
     /** @test */
     public function will_show_a_confirmation_page_if_valid_details_given_as_donor()
     {
+        $actorId = '01234567-0123-0123-0123-012345678901';
+
+        $this->authenticateRequest($actorId);
+
         $this->requestProphecy->getMethod()->willReturn('GET');
 
         $handler = new CheckLpaHandler(
@@ -128,6 +133,7 @@ class CheckLpaHandlerTest extends TestCase
         ]);
 
         $this->lpaServiceProphecy->getLpaByPasscode(
+            $actorId,
             self::TEST_PASSCODE,
             self::TEST_REF_NUMBER,
             self::TEST_DOB)->willReturn($lpa);
@@ -142,6 +148,10 @@ class CheckLpaHandlerTest extends TestCase
     /** @test */
     public function will_show_a_confirmation_page_if_valid_details_given_as_attorney()
     {
+        $actorId = '01234567-0123-0123-0123-012345678901';
+
+        $this->authenticateRequest($actorId);
+
         $this->requestProphecy->getMethod()->willReturn('GET');
 
         $handler = new CheckLpaHandler(
@@ -164,6 +174,7 @@ class CheckLpaHandlerTest extends TestCase
         ]);
 
         $this->lpaServiceProphecy->getLpaByPasscode(
+            $actorId,
             self::TEST_PASSCODE,
             self::TEST_REF_NUMBER,
             self::TEST_DOB)->willReturn($lpa);
@@ -176,8 +187,29 @@ class CheckLpaHandlerTest extends TestCase
     }
 
     /** @test */
+    public function empty_identity_results_in_session_error()
+    {
+        $this->authenticatorProphecy->authenticate($this->requestProphecy->reveal())->willReturn(null);
+
+        $handler = new CheckLpaHandler(
+            $this->templateRendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->authenticatorProphecy->reveal(),
+            $this->lpaServiceProphecy->reveal()
+        );
+
+        $this->expectException(SessionTimeoutException::class);
+
+        $handler->handle($this->requestProphecy->reveal());
+    }
+
+    /** @test */
     public function empty_password_detail_results_in_session_error()
     {
+        $actorId = '01234567-0123-0123-0123-012345678901';
+
+        $this->authenticateRequest($actorId);
+
         $this->sessionProphecy->get('passcode')->willReturn(null);
 
         $handler = new CheckLpaHandler(
@@ -195,6 +227,10 @@ class CheckLpaHandlerTest extends TestCase
     /** @test */
     public function no_lpa_found_when_details_incorrect()
     {
+        $actorId = '01234567-0123-0123-0123-012345678901';
+
+        $this->authenticateRequest($actorId);
+
         $this->requestProphecy->getMethod()->willReturn('GET');
 
         $handler = new CheckLpaHandler(
@@ -205,6 +241,7 @@ class CheckLpaHandlerTest extends TestCase
         );
 
         $this->lpaServiceProphecy->getLpaByPasscode(
+            $actorId,
             self::TEST_PASSCODE,
             self::TEST_REF_NUMBER,
             self::TEST_DOB)->willThrow($this->getException(StatusCodeInterface::STATUS_NOT_FOUND));
@@ -219,6 +256,10 @@ class CheckLpaHandlerTest extends TestCase
     /** @test */
     public function it_propagates_api_errors_correctly()
     {
+        $actorId = '01234567-0123-0123-0123-012345678901';
+
+        $this->authenticateRequest($actorId);
+
         $this->requestProphecy->getMethod()->willReturn('GET');
 
         $handler = new CheckLpaHandler(
@@ -229,6 +270,7 @@ class CheckLpaHandlerTest extends TestCase
         );
 
         $this->lpaServiceProphecy->getLpaByPasscode(
+            $actorId,
             self::TEST_PASSCODE,
             self::TEST_REF_NUMBER,
             self::TEST_DOB)->willThrow($this->getException(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR));
@@ -241,6 +283,10 @@ class CheckLpaHandlerTest extends TestCase
     /** @test */
     public function it_confirms_an_lpa_when_post_occurs()
     {
+        $actorId = '01234567-0123-0123-0123-012345678901';
+
+        $this->authenticateRequest($actorId);
+
         $this->requestProphecy->getMethod()->willReturn('POST');
 
         $this->requestProphecy->getParsedBody()
@@ -258,6 +304,7 @@ class CheckLpaHandlerTest extends TestCase
         );
 
         $this->lpaServiceProphecy->confirmLpaAddition(
+            $actorId,
             self::TEST_PASSCODE,
             self::TEST_REF_NUMBER,
             self::TEST_DOB)->willReturn('actor-lpa-code');
@@ -270,6 +317,10 @@ class CheckLpaHandlerTest extends TestCase
     /** @test */
     public function it_returns_form_errors_when_invalid_form_is_submitted()
     {
+        $actorId = '01234567-0123-0123-0123-012345678901';
+
+        $this->authenticateRequest($actorId);
+
         $this->requestProphecy->getMethod()->willReturn('POST');
 
         $this->requestProphecy->getParsedBody()
@@ -292,6 +343,7 @@ class CheckLpaHandlerTest extends TestCase
         ]);
 
         $this->lpaServiceProphecy->getLpaByPasscode(
+            $actorId,
             self::TEST_PASSCODE,
             self::TEST_REF_NUMBER,
             self::TEST_DOB)->willReturn($lpa);
@@ -306,6 +358,10 @@ class CheckLpaHandlerTest extends TestCase
     /** @test */
     public function it_returns_a_session_timeout_when_posting_is_valid_but_incorrect()
     {
+        $actorId = '01234567-0123-0123-0123-012345678901';
+
+        $this->authenticateRequest($actorId);
+
         $this->requestProphecy->getMethod()->willReturn('POST');
 
         $this->requestProphecy->getParsedBody()
@@ -321,11 +377,13 @@ class CheckLpaHandlerTest extends TestCase
         );
 
         $this->lpaServiceProphecy->confirmLpaAddition(
+            $actorId,
             self::TEST_PASSCODE,
             self::TEST_REF_NUMBER,
             self::TEST_DOB)->willReturn(null);
 
         $this->lpaServiceProphecy->getLpaByPasscode(
+            $actorId,
             self::TEST_PASSCODE,
             self::TEST_REF_NUMBER,
             self::TEST_DOB)->willReturn(null);
@@ -333,6 +391,13 @@ class CheckLpaHandlerTest extends TestCase
         $this->expectException(SessionTimeoutException::class);
 
         $response = $handler->handle($this->requestProphecy->reveal());
+    }
+
+    private function authenticateRequest(string $actorId)
+    {
+        $identity = $this->prophesize(User::class);
+        $identity->getIdentity()->willReturn($actorId);
+        $this->authenticatorProphecy->authenticate($this->requestProphecy->reveal())->willReturn($identity->reveal());
     }
 
     /**

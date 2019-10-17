@@ -49,6 +49,10 @@ module.exports = {
       { from: 'src/robots.txt', to: 'robots.txt' },
       { from: 'src/stylesheets', to: 'stylesheets' },
       { from: 'node_modules/govuk-frontend/govuk/assets', to: 'assets' },
+      {
+        from: 'node_modules/@ministryofjustice/frontend/moj/assets',
+        to: 'assets',
+      },
     ]),
   ],
 };

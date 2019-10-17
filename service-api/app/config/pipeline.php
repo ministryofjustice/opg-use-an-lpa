@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Middleware;
+use App\Middleware\UserIdentificationMiddleware;
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Application;
 use Zend\Expressive\Handler\NotFoundHandler;
@@ -62,8 +63,6 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     //  Handle any API problem exception types
     $app->pipe(Middleware\ProblemDetailsMiddleware::class);
 
-    $app->pipe(Middleware\UserIdentificationMiddleware::class);
-
     // Seed the UrlHelper with the routing results:
     $app->pipe(UrlHelperMiddleware::class);
 
@@ -73,6 +72,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - route-based authentication
     // - route-based validation
     // - etc.
+    $app->pipe('/v1/actor-codes', UserIdentificationMiddleware::class);
+    $app->pipe('/v1/lpas', UserIdentificationMiddleware::class);
 
     // Register the dispatch middleware in the middleware pipeline
     $app->pipe(DispatchMiddleware::class);

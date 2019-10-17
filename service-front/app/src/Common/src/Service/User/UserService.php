@@ -87,9 +87,10 @@ class UserService implements UserRepositoryInterface
 
             if (!is_null($userData)) {
                 return ($this->userModelFactory)(
-                    $userData['Email'],
+                    $userData['Id'],
                     [],
                     [
+                        'Email'     => $userData['Email'],
                         'LastLogin' => $userData['LastLogin']
                     ]
                 );

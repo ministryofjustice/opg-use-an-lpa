@@ -1,0 +1,48 @@
+.lpa-signin {
+  border-bottom: 1px solid #bfc1c3;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  margin: 0 auto;
+
+  &::after {
+    clear: both;
+    content: '';
+    display: table;
+  }
+
+  &::before {
+    content: '';
+    display: table;
+  }
+
+  p {
+    float: left;
+    padding: 0;
+    margin: 0;
+  }
+
+  .navigation {
+    float: none;
+    clear: both;
+    margin: 0;
+    padding: 0;
+
+    li {
+      list-style-position: inside;
+      list-style-type: none;
+      display: inline;
+      margin-left: 0;
+      margin-right: 10px;
+    }
+
+    @media screen and (min-width: 769px) {
+      float: right;
+      clear: none;
+
+      li {
+        margin-right: 0;
+        margin-left: 10px;
+      }
+    }
+  }
+}
