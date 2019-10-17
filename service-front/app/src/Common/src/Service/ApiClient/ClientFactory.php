@@ -30,7 +30,6 @@ class ClientFactory
         return new Client(
             $container->get(ClientInterface::class),
             $config['api']['uri'],
-            null
         );
     }
 }
