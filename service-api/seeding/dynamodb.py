@@ -77,28 +77,28 @@ actorLpaCodesTable = dynamodb.Table(
 actorLpaCodes = [
     {
         'ActorCode': "RY4KKKVMRVAK",
-        'ActorLpaId': 3,
+        'ActorLpaId': 9,
         'SiriusUid': "700000000047",
         'Active': True,
         'Expires': "2020-09-25T00:00:00Z",
     },
     {
         'ActorCode': "XYUPHWQRECHV",
-        'ActorLpaId': 8,
+        'ActorLpaId': 25,
         'SiriusUid': "700000000138",
         'Active': True,
         'Expires': "2020-09-25T00:00:00Z",
     },
     {
         'ActorCode': "JJGWG6JTRLAY",
-        'ActorLpaId': 13,
+        'ActorLpaId': 45,
         'SiriusUid': "700000000252",
         'Active': True,
         'Expires': "2020-09-25T00:00:00Z",
     },
     {
         'ActorCode': "MDCKNUA9UMLA",
-        'ActorLpaId': 21,
+        'ActorLpaId': 64,
         'SiriusUid': "700000000344",
         'Active': True,
         'Expires': "2018-09-25T00:00:00Z",
