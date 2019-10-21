@@ -21,6 +21,9 @@ class User implements UserInterface
     /** @var string */
     protected $identity;
 
+    /** @var string */
+    protected $email;
+
     /** @var DateTime */
     protected $lastLogin;
 
@@ -28,6 +31,8 @@ class User implements UserInterface
     {
         $this->identity = $identity;
         $this->lastLogin = null;
+
+        $this->email = $details['Email'] ?? null;
 
         if (array_key_exists('LastLogin', $details)) {
             $this->setLastLogin($details['LastLogin']);
@@ -77,6 +82,7 @@ class User implements UserInterface
     public function getDetails(): array
     {
         return [
+            'Email'     => $this->email,
             'LastLogin' => $this->lastLogin
         ];
     }

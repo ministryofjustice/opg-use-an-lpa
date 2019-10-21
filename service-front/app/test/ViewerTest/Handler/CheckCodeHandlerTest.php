@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler;
 
+use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\LpaService;
@@ -138,16 +139,23 @@ class CheckCodeHandlerTest extends TestCase
 
         //---
 
-        $lpa = new ArrayObject(['expires' => '2019-12-12'], ArrayObject::ARRAY_AS_PROPS);
+        $lpa = new Lpa();
+        $lpa->setUId('700000000047');
 
-        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE, self::TEST_SURNAME)->willReturn($lpa);
+        $lpaData = new ArrayObject(['expires' => '2019-12-12', 'lpa' => $lpa], ArrayObject::ARRAY_AS_PROPS);
+
+        $this->lpaServiceProphecy
+            ->getLpaByCode(self::TEST_CODE, self::TEST_SURNAME)
+            ->willReturn($lpaData);
 
         //---
 
-        $this->templateRendererProphecy->render('viewer::check-code-found',
-            ['lpa'     => $lpa->lpa,
-             'expires' => $lpa->expires]
-        )->willReturn('');
+        $this->templateRendererProphecy
+            ->render('viewer::check-code-found', [
+                'lpa'     => $lpaData->lpa,
+                'expires' => $lpaData->expires
+            ])
+            ->willReturn('');
 
         $this->sessionProphecy->get('code')->willReturn(self::TEST_CODE);
         $this->sessionProphecy->get('surname')->willReturn(self::TEST_SURNAME);
