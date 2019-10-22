@@ -69,7 +69,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
                     'Id'        => ['S' => $lpaActorToken],
                     'UserId'    => ['S' => $userId],
                     'SiriusUid' => ['S' => $siriusUid],
-                    'ActorId'   => ['N' => $actorId],
+                    'ActorId'   => ['N' => (string)$actorId],
                     'Added'     => ['S' => $now],
                 ],
                 'ConditionExpression' => 'attribute_not_exists(Id)'
