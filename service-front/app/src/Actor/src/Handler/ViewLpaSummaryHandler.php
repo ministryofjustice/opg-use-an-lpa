@@ -59,14 +59,17 @@ class ViewLpaSummaryHandler extends AbstractHandler
     {
         $session = $this->getSession($request,'session');
 
+        $user = $this->getUser($request);
+        $identity = (!is_null($user)) ? $user->getIdentity() : null;
+
         $passcode = $session->get('passcode');
         $referenceNumber = $session->get('reference_number');
         $dob = $session->get('dob');
 
-        if (isset($passcode) && isset($referenceNumber) && isset($dob)) {
+        if (isset($identity) && isset($passcode) && isset($referenceNumber) && isset($dob)) {
             try {
 
-                $lpa = $this->lpaService->getLpaByPasscode($passcode, $referenceNumber, $dob);
+                $lpa = $this->lpaService->getLpaByPasscode($identity, $passcode, $referenceNumber, $dob);
 
                 if (!is_null($lpa)) {
                     list($user, $userRole) = $this->resolveLpaData($lpa, $dob);
