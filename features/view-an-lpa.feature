@@ -37,7 +37,7 @@ Feature: View a lasting power of attorney
     Given I go to the enter code page on the viewer service
     And the share code input is populated with "N4KB-EBEZ-MNJF" and "Sanderson"
     When the share code form is submitted
-    Then the "Expired Code" page is displayed
+    Then the "Expired code" page is displayed
 
   Scenario: Show the confirmation page when I search for an LPA with a valid LPA code and matching donor's surname
     Given I go to the enter code page on the viewer service

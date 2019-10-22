@@ -16,22 +16,23 @@ use ArrayObject;
 
 class ViewLpaHandlerTest extends TestCase
 {
-    public function testSimplePageGet()
+    const TEST_LPA_CODE = '1234-5678-9012';
+    const TEST_SURNAME = 'test_surname';
+
+    public function testSimplePageGetReturnsHtmResponse()
     {
-        $this->markTestSkipped('must be revisited.');
-        
         $lpa = new ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
 
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
         $rendererProphecy->render('viewer::view-lpa', [
-                'lpa' => $lpa,
+                'lpa' => $lpa->lpa,
             ])
             ->willReturn('');
 
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
 
         $lpaServiceProphecy = $this->prophesize(LpaService::class);
-        $lpaServiceProphecy->getLpaByCode('1234-5678-9012')
+        $lpaServiceProphecy->getLpaByCode(self::TEST_LPA_CODE, self::TEST_SURNAME)
             ->willReturn($lpa);
 
         //  Set up the handler
@@ -40,7 +41,8 @@ class ViewLpaHandlerTest extends TestCase
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
         $sessionProphecy = $this->prophesize(SessionInterface::class );
-        $sessionProphecy->get('code')->willReturn('1234-5678-9012');
+        $sessionProphecy->get('code')->willReturn(self::TEST_LPA_CODE);
+        $sessionProphecy->get('surname')->willReturn(self::TEST_SURNAME);
 
         $requestProphecy->getAttribute('session', null)->willReturn($sessionProphecy->reveal());
         $response = $handler->handle($requestProphecy->reveal());
