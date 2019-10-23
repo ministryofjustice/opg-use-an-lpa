@@ -73,6 +73,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckLpaHandler::class
     ], ['GET', 'POST'], 'lpa.check');
+    $app->route('/lpa/code-make',[
+        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\CreateShareCodeHandler::class
+    ], ['GET', 'POST'], 'lpa.create-code');
 };
 
 switch (getenv('CONTEXT')){
