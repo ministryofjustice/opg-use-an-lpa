@@ -142,9 +142,13 @@ class UserLpaActorMapTest extends TestCase
             $this->assertEquals('attribute_not_exists(Id)', $data['ConditionExpression']);
 
             $this->assertEquals(['S'=>$testToken], $data['Item']['Id']);
+            $this->assertIsString($data['Item']['Id']['S']);
             $this->assertEquals(['S'=>$testUserId], $data['Item']['UserId']);
+            $this->assertIsString($data['Item']['UserId']['S']);
             $this->assertEquals(['S'=>$testSiriusUid], $data['Item']['SiriusUid']);
+            $this->assertIsString($data['Item']['SiriusUid']['S']);
             $this->assertEquals(['N'=>$testActorId], $data['Item']['ActorId']);
+            $this->assertIsString($data['Item']['ActorId']['N']);
 
             // Checks 'now' is correct, we a little bit of leeway
             $this->assertEqualsWithDelta(time(), strtotime($data['Item']['Added']['S']), 5);
