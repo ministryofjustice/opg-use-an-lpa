@@ -57,71 +57,16 @@ class ViewLpaSummaryHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $session = $this->getSession($request,'session');
 
         $user = $this->getUser($request);
         $identity = (!is_null($user)) ? $user->getIdentity() : null;
 
-        $passcode = $session->get('passcode');
-        $referenceNumber = $session->get('reference_number');
-        $dob = $session->get('dob');
+        $lpa = $this->lpaService->getLpaById($identity, '700000000047');
 
-        if (isset($identity) && isset($passcode) && isset($referenceNumber) && isset($dob)) {
-            try {
-
-                $lpa = $this->lpaService->getLpaByPasscode($identity, $passcode, $referenceNumber, $dob);
-
-                if (!is_null($lpa)) {
-                    list($user, $userRole) = $this->resolveLpaData($lpa, $dob);
-
-                    return new HtmlResponse($this->renderer->render('actor::view-lpa-summary', [
-                        'lpa'      => $lpa,
-                        'user'     => $user,
-                        'userRole' => $userRole,
-                    ]));
-                }
-
-            } catch (ApiException $aex) {
-                if ($aex->getCode() == StatusCodeInterface::STATUS_NOT_FOUND) {
-                    //  Show LPA not found page
-                    return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                        'user' => $this->getUser($request)
-                    ]));
-                } else {
-                    throw $aex;
-                }
-            }
-
-        }
-
-        // We don't have a code so the session has timed out
-        // TODO this can be reached if the session is still perfectly valid but the lpa search/response
-        //      failed in some way. Make this better.
-        throw new SessionTimeoutException();
-    }
-
-    protected function resolveLpaData(Lpa $lpa, string $dob) : array
-    {
-        //  Check the logged in user role for this LPA
-        $user = null;
-        $userRole = null;
-        $comparableDob = \DateTime::createFromFormat('!Y-m-d', $dob);
-
-        if (!is_null($lpa->getDonor()->getDob()) && $lpa->getDonor()->getDob() == $comparableDob) {
-            $user = $lpa->getDonor();
-            $userRole = 'Donor';
-        } elseif (!is_null($lpa->getAttorneys()) && is_iterable($lpa->getAttorneys())) {
-            //  Loop through the attorneys
-            /** @var CaseActor $attorney */
-            foreach ($lpa->getAttorneys() as $attorney) {
-                if (!is_null($attorney->getDob()) && $attorney->getDob() == $comparableDob) {
-                    $user = $attorney;
-                    $userRole = 'Attorney';
-                }
-            }
-        }
-
-        return [$user, $userRole];
+        return new HtmlResponse($this->renderer->render('actor::view-lpa-summary', [
+            'user' => $user,
+            'lpa' => $lpa
+        ]));
     }
 
 }

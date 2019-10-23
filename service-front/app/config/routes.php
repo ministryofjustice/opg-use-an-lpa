@@ -75,7 +75,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckLpaHandler::class
     ], ['GET', 'POST'], 'lpa.check');
-    $app->get('/lpa/view-lpa', [
+    $app->get('/lpa/view-lpa/{lpaId}', [
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ViewLpaSummaryHandler::class
     ], 'lpa.view');
