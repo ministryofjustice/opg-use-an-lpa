@@ -34,8 +34,6 @@ use Zend\Expressive\MiddlewareFactory;
  */
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
     $app->get('/healthcheck', App\Handler\HealthcheckHandler::class, 'healthcheck');
-    $app->get('/v1/lpa-search', App\Handler\LpaSearchHandler::class, 'lpa.search');
-    $app->get('/v1/lpa-by-code/{shareCode}', App\Handler\LpaHandler::class, 'lpa.by.share-code');
 
     $app->get('/v1/lpas', App\Handler\LpasCollectionHandler::class, 'lpa.collection');
     $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.resource');

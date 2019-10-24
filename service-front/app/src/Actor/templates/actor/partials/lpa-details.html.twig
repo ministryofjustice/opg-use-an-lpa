@@ -1,0 +1,22 @@
+<span class="govuk-heading-l govuk-!-margin-top-3 govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</span>
+
+<hr class="govuk-section-break govuk-section-break--s govuk-section-break--visible">
+
+<dl class="govuk-summary-list">
+
+    <div class="govuk-summary-list__row govuk-!-margin-bottom-0 govuk-!-margin-top-4">
+        <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-width-one-third">
+            <span class="govuk-heading-m govuk-!-margin-bottom-0">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' : 'Health and welfare' }}</span>
+        </dt>
+        <dd class="govuk-summary-list__value govuk-!-padding-top-4 govuk-!-padding-bottom-4 govuk-!-margin-bottom-0">
+            <p class="govuk-!-margin-top-0">
+                <a href="">Give an organisation access</a><br>
+                <a href="">Check access codes</a><br>
+                <a href="">View LPA summary</a>
+            </p>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <span class="moj-badge moj-badge--grey">0 active codes</span>
+        </dd>
+    </div>
+</dl>

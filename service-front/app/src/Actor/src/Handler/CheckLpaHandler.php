@@ -90,7 +90,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
                         if (!is_null($actorCode)) {
                             // TODO UML-209 this will need to go to the dashboard
-                            return new RedirectResponse($this->urlHelper->generate('lpa.add'));
+                            return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
                         }
                     }
                 }
