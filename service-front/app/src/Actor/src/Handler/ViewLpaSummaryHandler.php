@@ -57,11 +57,12 @@ class ViewLpaSummaryHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $actorToken = $request->getQueryParams();
 
         $user = $this->getUser($request);
         $identity = (!is_null($user)) ? $user->getIdentity() : null;
 
-        $lpa = $this->lpaService->getLpaById($identity, '700000000047');
+        $lpa = $this->lpaService->getLpaById($actorToken['user-lpa-actor-token'], '700000000252');
 
         return new HtmlResponse($this->renderer->render('actor::view-lpa-summary', [
             'user' => $user,

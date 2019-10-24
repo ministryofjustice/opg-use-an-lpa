@@ -62,7 +62,7 @@ class LpaService
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
-        $lpaData = $this->apiClient->httpGet('/v1/lpa/' . $lpaId);
+        $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $userToken);
 
         if (is_array($lpaData)) {
             $lpaData = $this->parseLpaData($lpaData);
