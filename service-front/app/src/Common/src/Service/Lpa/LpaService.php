@@ -37,8 +37,9 @@ class LpaService
     /**
      * Get the users currently registered LPAs
      *
-     * @param $userToken
+     * @param string $userToken
      * @return ArrayObject|null
+     * @throws Exception
      */
     public function getLpas(string $userToken) : ?ArrayObject
     {
@@ -54,15 +55,16 @@ class LpaService
     }
 
     /**
-     * @param string $userToken
      * @param string $lpaId
+     * @param string $userToken
      * @return ArrayObject|null
+     * @throws Exception
      */
     public function getLpaById(string $userToken, string $lpaId) : ?ArrayObject
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
-        $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $userToken);
+        $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $lpaId);
 
         if (is_array($lpaData)) {
             $lpaData = $this->parseLpaData($lpaData);
