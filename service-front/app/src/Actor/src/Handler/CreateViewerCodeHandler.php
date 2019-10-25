@@ -83,18 +83,17 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
 
         // the lpa actor token is either a query parameter or a form value.
         // get it from the form if it doesn't exist as a parameter
-        if (!isset($form->getData()['lpa_token'])) {
-            $actorLpaToken = $request->getQueryParams()['lpa'];
-            $form->setData(['lpa_token' => $actorLpaToken]);
+        if (isset($request->getQueryParams()['lpa'])) {
+            $form->setData(['lpa_token' => $request->getQueryParams()['lpa']]);
+        }
 
-            if (is_null($actorLpaToken)) {
-                throw new InvalidRequestException('No actor-lpa token specified');
-            }
+        if (is_null($form->get('lpa_token')->getValue())) {
+            throw new InvalidRequestException('No actor-lpa token specified');
         }
 
         return new HtmlResponse($this->renderer->render('actor::lpa-create-viewercode', [
             'user'       => $user,
-            'actorToken' => $form->getData()['lpa_token'],
+            'actorToken' => $form->get('lpa_token')->getValue(),
             'form'       => $form
         ]));
     }
