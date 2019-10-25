@@ -9,14 +9,20 @@
 
     {{ include('@partials/account-bar.html.twig') }}
 
-    <a href="/lpa/check" class="govuk-back-link">Back</a>
+    <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back</a>
 
     <main class="govuk-main-wrapper">
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-third">
-                <span class="govuk-caption-l">Property and Finance</span>
-                <h1 class="govuk-heading-l">Nicholas Brown</h1>
+                <span class="govuk-caption-l">
+                    {% if lpa.caseSubtype == "pfa" %}
+                        Property and Finance
+                    {% else %}
+                        Health and Welfare
+                    {% endif %}
+                </span>
+                <h1 class="govuk-heading-l">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}</h1>
             </div>
         </div>
 
@@ -30,14 +36,14 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                <h1 class="govuk-heading-xl" style="margin-bottom: 50px">LPA summary</h1>
+                <h1 class="govuk-heading-xl">LPA summary</h1>
             </div>
         </div>
 
-        <div class="govuk-grid-column-full" style="border: 5px solid #006435; margin-bottom: 30px">
-            <div class="govuk-phase-banner__text" style="padding-top: 20px">
-                <h2 class="govuk-heading-m">This LPA is registered</h2>
-                <h1 class="govuk-body">
+        <div class="govuk-grid-row" style="border: 5px solid #006435; margin: 0px 0px 30px 0px; padding: 5px">
+            <div class="govuk-grid-column-full" style="padding: 0px">
+                <h2 class="govuk-heading-m" style="margin-bottom: 10px">This LPA is registered</h2>
+                <p class="govuk-body" style="margin-bottom: 0px">
                     {% if lpa.caseSubtype == "pfa" %}
                         {% if lpa.attorneyActDecisions %}
                             While the donor has mental capacity, this lpa should only be used with the donor’s permission
@@ -51,7 +57,7 @@
                             The attorneys do NOT have the authority to make decisions about life-sustaining treatment
                         {% endif %}
                     {% endif %}
-                </h1>
+                </p>
             </div>
         </div>
 
@@ -74,34 +80,31 @@
                     </div>
                 </dl>
                 <p class="govuk-body">
-                    <a href="{{ path('lpa.change-details') }}">Need to change the donor's details?</a>
+                    <a href="#">Need to change the donor's details?</a>
                 </p>
             </div>
         </div>
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-            </div>
-        </div>
+        {{ include('@partials/section-break.html.twig') }}
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <h2 class="govuk-heading-l">The attorneys</h2>
-
                 <dl class="govuk-summary-list govuk-summary-list--no-border">
-                    <dt class="govuk-summary-list__key">How decisions are made</dt>
-                    <dd class="govuk-summary-list__value">
-                        {% if lpa.caseAttorneySingular %}
-                            The attorneys may act individually
-                        {% elseif lpa.caseAttorneyJointly %}
-                            The attorneys must act jointly
-                        {% elseif lpa.caseAttorneyJointlyAndSeverally %}
-                            The attorneys must act jointly and severally
-                        {% elseif lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
-                            The attorneys must act jointly for some decisions, and jointly and severally for other decisions
-                        {% endif %}
-                    </dd>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">How decisions are made</dt>
+                        <dd class="govuk-summary-list__value">
+                            {% if lpa.caseAttorneySingular %}
+                                The attorneys may act individually
+                            {% elseif lpa.caseAttorneyJointly %}
+                                The attorneys must act jointly
+                            {% elseif lpa.caseAttorneyJointlyAndSeverally %}
+                                The attorneys must act jointly and severally
+                            {% elseif lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
+                                The attorneys must act jointly for some decisions, and jointly and severally for other decisions
+                            {% endif %}
+                        </dd>
+                    </div>
                 </dl>
 
                 {% for attorney in lpa.attorneys %}
@@ -111,30 +114,26 @@
                     <dl class="govuk-summary-list govuk-summary-list--no-border">
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">Name</dt>
-                            <dd class="govuk-summary-list__value">??</dd>
+                            <dd class="govuk-summary-list__value">{{ actor_name(attorney) }}</dd>
                         </div>
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">Date of birth</dt>
-                            <dd class="govuk-summary-list__value">??</dd>
+                            <dd class="govuk-summary-list__value">{{ lpa_date(attorney.dob) }}</dd>
                         </div>
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">Address</dt>
-                            <dd class="govuk-summary-list__value">??</dd>
+                            <dd class="govuk-summary-list__value">{{ actor_address(attorney) }}</dd>
                         </div>
                     </dl>
                 {% endfor %}
                 <p class="govuk-body">
-                    <a href="{{ path('lpa.change-details') }}">Need to change an attorney's details?</a>
+                    <a href="#">Need to change an attorney's details?</a>
                 </p>
             </div>
         </div>
 
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-            </div>
-        </div>
+        {{ include('@partials/section-break.html.twig') }}
 
         <div class="govuk-grid-row">
 
@@ -205,11 +204,8 @@
                 </dl>
             </div>
 
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full">
-                    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-                </div>
-            </div>
+            {{ include('@partials/section-break.html.twig') }}
+
             <div class="govuk-warning-text">
                 <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                 <strong class="govuk-warning-text__text">

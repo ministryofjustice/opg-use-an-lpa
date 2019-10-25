@@ -79,6 +79,7 @@ class LpaService
      * @param string $shareCode
      * @param string $donorSurname
      * @return ArrayObject|null
+     * @throws Exception
      */
     public function getLpaByCode(string $shareCode, string $donorSurname) : ?ArrayObject
     {
@@ -107,6 +108,7 @@ class LpaService
      * @param string $referenceNumber
      * @param string $dob
      * @return Lpa|null
+     * @throws Exception
      */
     public function getLpaByPasscode(string $userToken, string $passcode, string $referenceNumber, string $dob) : ?Lpa
     {
