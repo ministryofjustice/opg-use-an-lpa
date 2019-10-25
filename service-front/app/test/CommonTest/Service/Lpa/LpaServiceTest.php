@@ -94,22 +94,45 @@ class LpaServiceTest extends TestCase
     public function testGetLpaById()
     {
         $this->markTestSkipped('must be revisited.');
-        $this->apiClientProphecy->httpGet('/v1/lpa/123456789012')
+        $token = '01234567-01234-01234-01234-012345678901';
+        $lpaId = '98756432-54321-54321-54321-987654321098';
+        $referenceNumber = '123456789012';
+        $dob = '1980-01-01';
+
+        $lpaData = [
+            'other' => 'other data',
+            'lpa' => [
+                'uId' => $referenceNumber,
+                'donor' => [
+                    'uId' => $referenceNumber,
+                    'dob' => $dob
+                ]
+            ]
+        ];
+
+        $lpa = new Lpa();
+        $lpa->setUId($referenceNumber);
+
+        $donor = new CaseActor();
+        $donor->setUId($referenceNumber);
+        $donor->setDob(new \DateTime($dob));
+        $lpa->setDonor($donor);
+
+        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaId)
             ->willReturn([
-                'id'      => 123456789012,
-                'isValid' => true,
-                'another' => [
-                    'some'  => 1,
-                    'value' => 2,
-                ],
+                '0123-01-01-01-012345' => $lpaData
             ]);
 
-        $service = new LpaService($this->apiClientProphecy->reveal());
+        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
-        $lpa = $service->getLpaById('123456789012');
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData['lpa'])->willReturn($lpa);
 
-        $this->assertInstanceOf(ArrayObject::class, $lpa);
-        $this->assertEquals(123456789012, $lpa->id);
+        $service = new LpaService($this->apiClientProphecy->reveal(), $this->lpaFactoryProphecy->reveal());
+
+        $lpa = $service->getLpaById($token, $lpaId);
+
+        $this->assertInstanceOf(ArrayObject::class, $lpa->lpa);
+        $this->assertEquals($lpaId, $lpa->id);
         $this->assertEquals(true, $lpa->isValid);
     }
 
