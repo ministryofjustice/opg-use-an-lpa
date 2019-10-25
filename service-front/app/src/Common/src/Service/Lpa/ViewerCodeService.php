@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Common\Service\Lpa;
 
+use ArrayObject;
 use Common\Service\ApiClient\Client as ApiClient;
-use Zend\Stdlib\ArrayObject;
 
 /**
  * Class ViewerCodeService
