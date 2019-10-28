@@ -1,0 +1,54 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Add a lasting power of attorney - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@partials/new-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back</a>
+
+        <main class="govuk-main-wrapper">
+
+            <div class="govuk-grid-row govuk-!-margin-top-0 govuk-!-padding-bottom-0">
+
+                <div class="govuk-grid-column-two-thirds">
+                    <span class="govuk-caption-l govuk-!-margin-top-0">Property and finance</span>
+                    <h1 class="govuk-heading-l govuk-!-margin-bottom-0">Nicholas Brown</h1>
+                </div>
+
+            </div>
+
+            {{ include('@actor/partials/lpa-sub-navigation.html.twig') }}
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+
+                        <div class="govuk-panel govuk-panel--confirmation push-bottom">
+                            <h1 class="govuk-panel__title">
+                               {{ add_hyphen_to_viewer_code(code) }}
+                            </h1>
+
+                            <div class="govuk-panel__body">
+                                Give this access code to {{ organisation }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds">
+                        <p class="govuk-body-l">Ask {{ organisation }} how they want you to give them the code. They should then go to www.gov.uk/view-an-lpa to use it. </p>
+                        <p class="govuk-body">This code expires in 30 days, on {{ expires | date ('jS F Y') }}.</p>
+
+                        <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button">
+                            Give another organisation access
+                        </a>
+                    </div>
+                </div>
+        </main>
+    </div>
+{% endblock %}

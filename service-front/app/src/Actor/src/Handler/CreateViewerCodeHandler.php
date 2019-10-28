@@ -78,14 +78,13 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
                     $validated['org_name']
                 );
 
-                // we successfully created a code. Set the details in the session and
-                // bounce the request onwards.
-                $session = $this->getSession($request, 'session');
-                $session->set('code', $codeData['code']);
-                $session->set('expires', $codeData['expires']);
-                $session->set('organisation', $codeData['organisation']);
-
-                return $this->redirectToRoute('lpa.create-code');
+                return new HtmlResponse($this->renderer->render('actor::lpa-show-viewercode', [
+                    'user'         => $user,
+                    'actorToken'   => $validated['lpa_token'],
+                    'code'         => $codeData['code'],
+                    'expires'      => $codeData['expires'],
+                    'organisation' => $codeData['organisation']
+                ]));
             }
         }
 
