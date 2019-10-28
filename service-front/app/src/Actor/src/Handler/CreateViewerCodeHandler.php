@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\CreateShareCode;
-use App\Service\Lpa\LpaService;
+use Common\Entity\Lpa;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
@@ -13,6 +13,7 @@ use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\ViewerCodeService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -31,16 +32,23 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
      * @var ViewerCodeService
      */
     private $viewerCodeService;
+    /**
+     * @var LpaService
+     */
+    private $lpaService;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
+        LpaService $lpaService,
         ViewerCodeService $viewerCodeService)
     {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
+
+        $this->lpaService = $lpaService;
         $this->viewerCodeService = $viewerCodeService;
     }
 
@@ -91,10 +99,20 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
+        $lpa = $this->fetchLpa($identity, $form->get('lpa_token')->getValue());
+
         return new HtmlResponse($this->renderer->render('actor::lpa-create-viewercode', [
             'user'       => $user,
+            'lpa'        => $lpa,
             'actorToken' => $form->get('lpa_token')->getValue(),
             'form'       => $form
         ]));
+    }
+
+    private function fetchLpa(string $userToken, string $actorLpaToken): ?Lpa
+    {
+        $lpaData = $this->lpaService->getLpaById($userToken, $actorLpaToken);
+
+        return isset($lpaData->lpa) ? $lpaData->lpa : null;
     }
 }
