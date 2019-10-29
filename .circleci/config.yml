@@ -153,6 +153,7 @@ workflows:
           filters: { branches: { only: [master] } }
 
 orbs:
+  slack: circleci/slack@3.3.0
   use-my-lpa:
     commands:
       install_aws_cli:
