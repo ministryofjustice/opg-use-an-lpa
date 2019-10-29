@@ -91,36 +91,25 @@ class LpaServiceTest extends TestCase
         $this->assertNull($lpa);
     }
 
-    public function testGetLpaById()
+    /** @test */
+    public function it_gets_an_Lpa_by_Id()
     {
-        $this->markTestSkipped('must be revisited.');
         $token = '01234567-01234-01234-01234-012345678901';
-        $lpaId = '98756432-54321-54321-54321-987654321098';
-        $referenceNumber = '123456789012';
-        $dob = '1980-01-01';
+        $lpaId = '98765432-01234-01234-01234-012345678901';
 
         $lpaData = [
-            'other' => 'other data',
+            'user-lpa-actor-token' => $lpaId,
             'lpa' => [
-                'uId' => $referenceNumber,
-                'donor' => [
-                    'uId' => $referenceNumber,
-                    'dob' => $dob
-                ]
+                'id' => '70000000047'
             ]
         ];
 
         $lpa = new Lpa();
-        $lpa->setUId($referenceNumber);
-
-        $donor = new CaseActor();
-        $donor->setUId($referenceNumber);
-        $donor->setDob(new \DateTime($dob));
-        $lpa->setDonor($donor);
 
         $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaId)
             ->willReturn([
-                '0123-01-01-01-012345' => $lpaData
+                'lpa' => $lpaData['lpa'],
+                'lpaId' => $lpaData['user-lpa-actor-token']
             ]);
 
         $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
@@ -131,9 +120,26 @@ class LpaServiceTest extends TestCase
 
         $lpa = $service->getLpaById($token, $lpaId);
 
-        $this->assertInstanceOf(ArrayObject::class, $lpa->lpa);
-        $this->assertEquals($lpaId, $lpa->id);
-        $this->assertEquals(true, $lpa->isValid);
+        $this->assertInstanceOf(Lpa::class, $lpa);
+
+    }
+
+    /** @test */
+    public function an_invalid_Lpa_id_returns_null()
+    {
+        $token = '01234567-01234-01234-01234-012345678901';
+        $lpaId = '98765432-01234-01234-01234-012345678901';
+
+        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaId)
+            ->willReturn([ 'bad-response' => 'bad']);
+
+        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
+
+        $service = new LpaService($this->apiClientProphecy->reveal(), $this->lpaFactoryProphecy->reveal());
+
+        $lpa = $service->getLpaById($token, $lpaId);
+
+        $this->assertNull($lpa);
     }
 
     /** @test */

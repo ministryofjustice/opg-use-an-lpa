@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Common\Handler\AbstractHandler;
-use Common\Handler\Traits\Session as SessionAlias;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Authentication\AuthenticationInterface;
@@ -22,7 +22,6 @@ use Zend\Diactoros\Response\HtmlResponse;
  */
 class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
 {
-    use SessionAlias;
     use User;
 
     /**
@@ -45,14 +44,14 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $actorLpaToken = $request->getQueryParams()['lpa'];
 
         if (is_null($actorLpaToken)) {
-            throw new InvalidRequestException('No actor-lpa token specified');
+            throw new Exception('No actor-lpa token specified'); // TODO change back to InvalidRequestException when merged
         }
 
         $user = $this->getUser($request);
@@ -60,9 +59,13 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
 
         $lpa = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
+        if ($lpa == null){
+            throw new Exception('Lpa not found');
+        }
+
         return new HtmlResponse($this->renderer->render('actor::view-lpa-summary', [
             'user' => $user,
-            'lpa' => $lpa->lpa
+            'lpa' => $lpa
         ]));
     }
 

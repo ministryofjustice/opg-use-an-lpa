@@ -55,22 +55,18 @@ class LpaService
     }
 
     /**
-     * @param string $lpaId
      * @param string $userToken
-     * @return ArrayObject|null
+     * @param string $lpaId
+     * @return Lpa|null
      * @throws Exception
      */
-    public function getLpaById(string $userToken, string $lpaId) : ?ArrayObject
+    public function getLpaById(string $userToken, string $lpaId) : ?Lpa
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
         $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $lpaId);
 
-        if (is_array($lpaData)) {
-            $lpaData = $this->parseLpaData($lpaData);
-        }
-
-        return $lpaData;
+        return isset($lpaData['lpa']) ? $this->lpaFactory->createLpaFromData($lpaData['lpa']) : null;
     }
 
     /**
