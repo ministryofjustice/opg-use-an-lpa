@@ -35,7 +35,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        if (is_null($request->getAttribute('user-id'))) {
+        if (is_null($request->getAttribute('actor-id'))) {
             throw new BadRequestException("'user-id' missing.");
         }
 
@@ -65,7 +65,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
 
             $result = $this->viewerCodeService->addCode(
                 $request->getAttribute('user-lpa-actor-token'),
-                $request->getAttribute('user-id'),
+                $request->getAttribute('actor-id'),
                 $organisation
             );
 

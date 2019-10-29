@@ -54,15 +54,21 @@ class LpaService
     }
 
     /**
+     * Get an LPA registered to an account
+     *
+     * The $actorLpaToken *must* be registered to the $userToken account or a Not Found
+     * response will be returned.
+     *
      * @param string $userToken
-     * @param string $lpaId
+     * @param string $actorLpaToken
      * @return ArrayObject|null
+     * @throws Exception
      */
-    public function getLpaById(string $userToken, string $lpaId) : ?ArrayObject
+    public function getLpaById(string $userToken, string $actorLpaToken) : ?ArrayObject
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
-        $lpaData = $this->apiClient->httpGet('/v1/lpa/' . $lpaId);
+        $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
 
         if (is_array($lpaData)) {
             $lpaData = $this->parseLpaData($lpaData);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler;
 
+use Common\Entity\Lpa;
 use Common\Service\Lpa\LpaService;
 use Viewer\Handler\ViewLpaHandler;
 use PHPUnit\Framework\TestCase;
@@ -19,13 +20,17 @@ class ViewLpaHandlerTest extends TestCase
     const TEST_LPA_CODE = '1234-5678-9012';
     const TEST_SURNAME = 'test_surname';
 
-    public function testSimplePageGetReturnsHtmResponse()
+    /** @test */
+    public function it_returns_an_html_response_when_appropriate_session_data_in_place()
     {
-        $lpa = new ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
+        $lpa = new Lpa();
+        $lpa->setUId('700000000047');
+
+        $lpaData = new ArrayObject(['expires' => '2019-12-12', 'lpa' => $lpa], ArrayObject::ARRAY_AS_PROPS);
 
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
         $rendererProphecy->render('viewer::view-lpa', [
-                'lpa' => $lpa->lpa,
+                'lpa' => $lpaData->lpa,
             ])
             ->willReturn('');
 
@@ -33,7 +38,7 @@ class ViewLpaHandlerTest extends TestCase
 
         $lpaServiceProphecy = $this->prophesize(LpaService::class);
         $lpaServiceProphecy->getLpaByCode(self::TEST_LPA_CODE, self::TEST_SURNAME)
-            ->willReturn($lpa);
+            ->willReturn($lpaData);
 
         //  Set up the handler
         $handler = new ViewLpaHandler($rendererProphecy->reveal(), $urlHelperProphecy->reveal(), $lpaServiceProphecy->reveal());

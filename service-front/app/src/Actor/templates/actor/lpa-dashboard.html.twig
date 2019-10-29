@@ -45,7 +45,8 @@
             <div class="govuk-grid-column-full">
 
                 {% for lpaData in lpas %}
-                    {% set lpa = lpaData.lpa %}
+                    {% set lpa = lpaData['lpa'] %}
+                    {% set actorToken = lpaData['user-lpa-actor-token'] %}
                     {{ include('@actor/partials/lpa-details.html.twig') }}
                 {% endfor %}
 

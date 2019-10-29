@@ -28,6 +28,7 @@ class GovUKZendFormExtension extends AbstractExtension
     private $blockMappings = [
         Element\Checkbox::class => 'form_input_checkbox',
         Element\Csrf::class     => 'form_input_hidden',
+        Element\Hidden::class   => 'form_input_hidden',
         Element\Password::class => 'form_input_password',
         Element\Text::class     => 'form_input_text',
         //  Fieldsets
