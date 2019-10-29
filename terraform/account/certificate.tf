@@ -21,7 +21,7 @@ resource "aws_acm_certificate_validation" "certificate_viewer" {
 }
 
 resource "aws_acm_certificate" "certificate_viewer" {
-  domain_name       = "${local.dev_wildcard}viewer.${local.dns_namespace_acc}use-an-lpa.opg.service.justice.gov.uk"
+  domain_name       = "${local.dev_wildcard}view.${local.dns_namespace_acc}lastingpowerofattorney.opg.service.justice.gov.uk"
   validation_method = "DNS"
 }
 
@@ -43,7 +43,7 @@ resource "aws_acm_certificate_validation" "certificate_actor" {
 }
 
 resource "aws_acm_certificate" "certificate_actor" {
-  domain_name       = "${local.dev_wildcard}actor.${local.dns_namespace_acc}use-an-lpa.opg.service.justice.gov.uk"
+  domain_name       = "${local.dev_wildcard}use.${local.dns_namespace_acc}lastingpowerofattorney.opg.service.justice.gov.uk"
   validation_method = "DNS"
 }
 
