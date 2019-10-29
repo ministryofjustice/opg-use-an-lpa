@@ -59,6 +59,11 @@ workflows:
             branches:
               ignore: master
 
+      - slack_notify_domain:
+          name: post_environment_domains
+          requires: [dev_run_behave_tests]
+          filters: { branches: { ignore: [master] } }
+
       - hold-for-destruction:
           name: hold_env_for_destruction
           type: approval
@@ -141,6 +146,11 @@ workflows:
           filters:
             branches:
               only: master
+
+      - slack_notify_production_release:
+          name: post_production_release_message
+          requires: [prod_run_healthcheck_test]
+          filters: { branches: { only: [master] } }
 
 orbs:
   use-my-lpa:
@@ -603,3 +613,35 @@ orbs:
 
                 actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
                 # TODO Add for actor when endpoint exists.
+jobs:
+  slack_notify_domain:
+    docker:
+      - image: circleci/python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Get URLs
+          command: |
+            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+            echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+      - slack/notify:
+          title: "Use a Lasting Power of Attorney Development Environment Ready"
+          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN/start \ncuse url: https://$USE_DOMAIN"
+  slack_notify_production_release:
+    docker:
+      - image: circleci/python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Get URLs
+          command: |
+            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+            echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+      - slack/notify:
+          title: "Use a Lasting Power of Attorney Production Release Successful"
+          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN/start \ncuse url: https://$USE_DOMAIN"
+          webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
