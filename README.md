@@ -90,15 +90,3 @@ docker-compose run api-composer composer remove author/package
 
 docker-compose run front-composer composer remove author/package
 ```
-
-## Changing the frontend in local development
-
-We have now implemented Webpack as our build tool for the front end code. When you first open the site, go to your command line and go to the folder `service-front/web/`.
-
-From here run the command `npm run watch`. Leaving this running will create the styles from the `src` directory and show on the site. Any changes you make will automatically be rebuilt for you on save.
-
-The command altogether is the following
-
-```
-cd service-front/web/ && npm run watch
-```
