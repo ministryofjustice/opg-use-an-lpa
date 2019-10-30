@@ -61,6 +61,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/forgot-password/{token}', Actor\Handler\PasswordResetPageHandler::class, 'password-reset-token');
 
     // LPA management
+    $app->get('/lpa/dashboard', [
+        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\LpaDashboardHandler::class
+    ], 'lpa.dashboard');
     $app->route('/lpa/add-details', [
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaAddHandler::class
@@ -69,6 +73,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckLpaHandler::class
     ], ['GET', 'POST'], 'lpa.check');
+    $app->route('/lpa/code-make',[
+        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\CreateViewerCodeHandler::class
+    ], ['GET', 'POST'], 'lpa.create-code');
 };
 
 switch (getenv('CONTEXT')){

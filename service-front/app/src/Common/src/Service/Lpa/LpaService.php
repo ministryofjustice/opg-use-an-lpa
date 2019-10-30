@@ -5,6 +5,7 @@ namespace Common\Service\Lpa;
 use Common\Entity\Lpa;
 use Common\Service\ApiClient\Client as ApiClient;
 use ArrayObject;
+use Exception;
 
 /**
  * Class LpaService
@@ -34,13 +35,40 @@ class LpaService
     }
 
     /**
-     * @param string $lpaId
+     * Get the users currently registered LPAs
+     *
+     * @param $userToken
      * @return ArrayObject|null
-     * @throws \Http\Client\Exception
      */
-    public function getLpaById(string $lpaId) : ?ArrayObject
+    public function getLpas(string $userToken) : ?ArrayObject
     {
-        $lpaData = $this->apiClient->httpGet('/v1/lpa/' . $lpaId);
+        $this->apiClient->setUserTokenHeader($userToken);
+
+        $lpaData = $this->apiClient->httpGet('/v1/lpas');
+
+        if (is_array($lpaData)) {
+            $lpaData = $this->parseLpaData($lpaData);
+        }
+
+        return $lpaData;
+    }
+
+    /**
+     * Get an LPA registered to an account
+     *
+     * The $actorLpaToken *must* be registered to the $userToken account or a Not Found
+     * response will be returned.
+     *
+     * @param string $userToken
+     * @param string $actorLpaToken
+     * @return ArrayObject|null
+     * @throws Exception
+     */
+    public function getLpaById(string $userToken, string $actorLpaToken) : ?ArrayObject
+    {
+        $this->apiClient->setUserTokenHeader($userToken);
+
+        $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
 
         if (is_array($lpaData)) {
             $lpaData = $this->parseLpaData($lpaData);
@@ -67,7 +95,6 @@ class LpaService
         ]);
 
         if (is_array($lpaData)) {
-            $lpaData['lpa'] = $this->lpaFactory->createLpaFromData($lpaData['lpa']);
             $lpaData = $this->parseLpaData($lpaData);
         }
 
@@ -79,6 +106,7 @@ class LpaService
      *
      * Used when an actor adds an LPA to their UaLPA account
      *
+     * @param string $userToken
      * @param string $passcode
      * @param string $referenceNumber
      * @param string $dob
@@ -103,6 +131,7 @@ class LpaService
     /**
      * Confirm the addition of an LPA to an actors UaLPA account
      *
+     * @param string $userToken
      * @param string $passcode
      * @param string $referenceNumber
      * @param string $dob
@@ -124,14 +153,30 @@ class LpaService
     }
 
     /**
+     * Attempts to convert the data arrays received via the various endpoints into an ArrayObject containing
+     * scalar and object values.
+     *
+     * Currently fairly naive in its assumption that the data types are stored under explicit keys, which
+     * may change.
+     *
      * @param array $data
      * @return ArrayObject
+     * @throws Exception
      */
-    private function parseLpaData(array $data): ArrayObject
+    private function parseLpaData(array $data) : ArrayObject
     {
         foreach ($data as $dataItemName => $dataItem) {
-            if (is_array($dataItem)) {
-                $data[$dataItemName] = $this->parseLpaData($dataItem);
+            switch($dataItemName) {
+                case 'lpa':
+                    $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
+                    break;
+                case 'actor':
+                    $data['actor']['details'] = $this->lpaFactory->createCaseActorFromData($dataItem['details']);
+                    break;
+                default:
+                    if (is_array($dataItem)) {
+                        $data[$dataItemName] = $this->parseLpaData($dataItem);
+                    }
             }
         }
 

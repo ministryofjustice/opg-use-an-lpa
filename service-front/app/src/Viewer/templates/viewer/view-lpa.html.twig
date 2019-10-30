@@ -18,18 +18,19 @@
                             Health and Welfare
                         {% endif %}
                     </span>
-                    <h1 class="govuk-heading-l lpa-header-alt-1">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}</h1>
-                </div>
 
+                    <h1 class="govuk-heading-l">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}</h1>
+
+                </div>
             </div>
 
-            <nav class="moj-sub-navigation" aria-label="Sub navigation">
-                <ul class="moj-sub-navigation__list">
-                    <li class="moj-sub-navigation__item">
-                    <a class="moj-sub-navigation__link" href="#">Download a copy of this page</a>
-                    </li>
-                </ul>
-            </nav>
+            <dl class="govuk-summary-list govuk-summary-list--no-border">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+                    </div>
+                </div>
+            </dl>
 
             <div class="govuk-grid-row" >
 
@@ -142,7 +143,7 @@
 
                     {% for attorney in lpa.attorneys %}
 
-                        <h3 class="govuk-heading-m">{{ lpa.attorneys | length == 1 ? 'The' : loop.index | ordinal }} attorney</h3>
+                        <h3 class="govuk-heading-m">{{ lpa.attorneys | length == 1 ? '1st' : loop.index | ordinal }} attorney</h3>
 
                         <dl class="govuk-summary-list govuk-summary-list--no-border">
                             <div class="govuk-summary-list__row">
