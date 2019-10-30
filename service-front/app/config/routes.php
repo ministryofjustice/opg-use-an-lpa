@@ -79,10 +79,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ViewLpaSummaryHandler::class
     ], 'lpa.view');
-    $app->get('/lpa/change-details', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
-        Actor\Handler\ChangeDetailsHandler::class
-    ], 'lpa.change-details');
     $app->route('/lpa/code-make',[
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CreateViewerCodeHandler::class
