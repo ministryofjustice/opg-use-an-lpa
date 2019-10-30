@@ -117,6 +117,14 @@ workflows:
             branches:
               only: master
 
+      - hold-for-uat:
+          name: hold_env_for_uat_preproduction
+          type: approval
+          requires: [preprod_run_behave_tests]
+          filters:
+            branches:
+              only: master
+
       # Provision and test production
       - use-my-lpa/apply_shared_terraform:
           name: production_apply_shared_terraform
