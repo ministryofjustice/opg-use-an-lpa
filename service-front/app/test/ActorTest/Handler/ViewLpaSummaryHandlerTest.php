@@ -6,6 +6,7 @@ namespace ViewerTest\Handler;
 
 use Actor\Handler\ViewLpaSummaryHandler;
 use Common\Entity\Lpa;
+use Common\Exception\InvalidRequestException;
 use Exception;
 use Prophecy\Argument;
 use Common\Service\Lpa\LpaService;
@@ -153,7 +154,7 @@ class ViewLpaSummaryHandlerTest extends TestCase
         $this->requestProphecy->getQueryParams()
             ->willReturn(null);
 
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidRequestException::class);
 
         $handler->handle($this->requestProphecy->reveal());
 

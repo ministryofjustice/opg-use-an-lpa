@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Exception;
+use Common\Exception\InvalidRequestException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
-use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Authentication\AuthenticationInterface;
@@ -44,14 +45,14 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws Exception
+     * @throws InvalidRequestException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $actorLpaToken = $request->getQueryParams()['lpa'];
 
         if (is_null($actorLpaToken)) {
-            throw new Exception('No actor-lpa token specified'); // TODO change back to InvalidRequestException when merged
+            throw new InvalidRequestException('No actor-lpa token specified');
         }
 
         $user = $this->getUser($request);
