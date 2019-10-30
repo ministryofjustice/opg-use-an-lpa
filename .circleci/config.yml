@@ -129,7 +129,7 @@ workflows:
       - use-my-lpa/apply_shared_terraform:
           name: production_apply_shared_terraform
           workspace: production
-          requires: [preprod_run_behave_tests]
+          requires: [hold_env_for_uat_preproduction]
           filters:
             branches:
               only: master
