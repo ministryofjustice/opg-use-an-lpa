@@ -603,7 +603,7 @@ jobs:
             echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Development Environment Ready"
-          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \ncuse url: https://$USE_DOMAIN"
+          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
   slack_notify_production_release:
     docker:
       - image: circleci/python
@@ -618,5 +618,5 @@ jobs:
             echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Production Release Successful"
-          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \ncuse url: https://$USE_DOMAIN"
+          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
