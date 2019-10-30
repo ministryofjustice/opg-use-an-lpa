@@ -15,8 +15,8 @@
             <div class="govuk-grid-row govuk-!-margin-top-0 govuk-!-padding-bottom-0">
 
                 <div class="govuk-grid-column-two-thirds">
-                    <span class="govuk-caption-l govuk-!-margin-top-0">Property and finance</span>
-                    <h1 class="govuk-heading-l govuk-!-margin-bottom-0">Nicholas Brown</h1>
+                    <span class="govuk-caption-l govuk-!-margin-top-0">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' : 'Health and welfare' }}</span>
+                    <h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ actor_name(lpa.donor, false) }}</h1>
                 </div>
 
             </div>
