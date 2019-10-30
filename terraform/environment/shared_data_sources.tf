@@ -35,11 +35,11 @@ data "aws_acm_certificate" "certificate_actor" {
 }
 
 data "aws_acm_certificate" "certificate_view" {
-  domain = "${local.dev_wildcard}view.${local.dns_namespace_acc}lastingpowerofattorney.opg.service.justice.gov.uk"
+  domain = "${local.dev_wildcard}view.lastingpowerofattorney.opg.service.justice.gov.uk"
 }
 
 data "aws_acm_certificate" "certificate_use" {
-  domain = "${local.dev_wildcard}use.${local.dns_namespace_acc}lastingpowerofattorney.opg.service.justice.gov.uk"
+  domain = "${local.dev_wildcard}use.lastingpowerofattorney.opg.service.justice.gov.uk"
 }
 
 data "aws_kms_alias" "sessions_viewer" {

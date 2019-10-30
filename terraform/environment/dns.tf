@@ -9,13 +9,13 @@ resource "aws_service_discovery_private_dns_namespace" "internal" {
 }
 
 //-------------------------------------------------------------
-// Viewer
+// View
 
 resource "aws_route53_record" "viewer-use-my-lpa" {
   # view.lastingpowerofattorney.opg.service.justice.gov.uk 
   provider = aws.management
   zone_id  = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
-  name     = "${local.dns_namespace_env}view.${local.dns_namespace_acc}lastingpowerofattorney"
+  name     = "${local.dns_namespace_env}view.lastingpowerofattorney"
   type     = "A"
 
   alias {
@@ -34,13 +34,13 @@ output "viewer-use-an-lpa-domain" {
 }
 
 //-------------------------------------------------------------
-// Actor
+// Use
 
 resource "aws_route53_record" "actor-use-my-lpa" {
   # use.lastingpowerofattorney.opg.service.justice.gov.uk 
   provider = aws.management
   zone_id  = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
-  name     = "${local.dns_namespace_env}use.${local.dns_namespace_acc}lastingpowerofattorney"
+  name     = "${local.dns_namespace_env}use.lastingpowerofattorney"
   type     = "A"
 
   alias {
