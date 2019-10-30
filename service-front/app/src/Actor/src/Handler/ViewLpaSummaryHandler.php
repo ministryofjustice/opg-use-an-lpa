@@ -66,7 +66,8 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
 
         return new HtmlResponse($this->renderer->render('actor::view-lpa-summary', [
             'user' => $user,
-            'lpa' => $lpa
+            'lpa' => $lpa,
+            'actorLpaToken' => $actorLpaToken
         ]));
     }
 

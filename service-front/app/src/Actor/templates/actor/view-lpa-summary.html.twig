@@ -26,13 +26,7 @@
             </div>
         </div>
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full" style="padding-bottom: 20px; border-bottom: 1px solid lightgray; margin-bottom: 30px">
-                <a href="#" class="govuk-body" style="margin-right: 20px">Give an organisation access</a>
-                <a href="#" class="govuk-body" style="margin-right: 20px">Check access codes</a>
-                <a href="" class="govuk-body" style="margin-right: 20px">View LPA summary</a>
-            </div>
-        </div>
+        {{ include('@actor/partials/lpa-sub-navigation.html.twig') }}
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
@@ -40,7 +34,7 @@
             </div>
         </div>
 
-        <div class="govuk-grid-row">
+        <div class="govuk-grid-row lpa-border">
             <div class="govuk-grid-column-full" style="padding: 0px">
                 <h2 class="govuk-heading-m" style="margin-bottom: 10px">This LPA is registered</h2>
                 <p class="govuk-body" style="margin-bottom: 0px">
