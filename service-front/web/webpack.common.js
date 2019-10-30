@@ -1,20 +1,13 @@
-// Webpack uses this to work with directories
-const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-// This is main configuration object.
-// Here you write different options and tell Webpack what to do
 module.exports = {
-  // Path to your entry point. From this file Webpack will begin his work
   entry: './src/index.js',
-
   module: {
     rules: [
       {
         test: /\.s[ac]ss$/i,
         use: [
-          // Creates `style` nodes from JS strings
           MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
@@ -49,8 +42,6 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // both options are optional
       filename: 'stylesheets/[name].css',
       chunkFilename: 'stylesheets/[id].css',
     }),
@@ -64,11 +55,4 @@ module.exports = {
       },
     ]),
   ],
-  // Path and filename of your result bundle.
-  // Webpack will bundle all JavaScript into this file
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'javascript/bundle.js',
-    sourceMapFilename: '[name].js.map',
-  },
 };

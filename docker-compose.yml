@@ -1,6 +1,23 @@
 version: "2.1"
 
+volumes:
+  webpack_dist:
+
 services:
+  # ---------------------------
+  # Webpack Watch for Development
+
+  webpack:
+    container_name: webpack
+    image: webpack
+    build:
+      context: .
+      dockerfile: service-front/web/Dockerfile
+    entrypoint: >
+      sh -c "npm i && npm run watch"
+    volumes:
+      - ./service-front/web:/web
+      - webpack_dist:/dist
 
   # ---------------------------
   # Viewer Front
@@ -10,15 +27,17 @@ services:
     image: front-web
     build:
       context: .
-      dockerfile: service-front/docker/web/Dockerfile
+      dockerfile: service-front/docker/web/Development.Dockerfile
     volumes:
-      - ./service-front/web/dist:/web
+      - webpack_dist:/web
     ports:
       - 9001:80
     environment:
       APP_HOST: viewer-app
       APP_PORT: 9000
       NGINX_LOG_LEVEL: warn
+    depends_on:
+      - webpack
 
   viewer-app:
     container_name: viewer-app
@@ -30,18 +49,17 @@ services:
       - ./service-front/app:/app
     environment:
       # Always required
-      CONTEXT: 'viewer'
-      KMS_SESSION_CMK_ALIAS: 'alias/viewer-sessions-cmk-alias'
+      CONTEXT: "viewer"
+      KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
 
       # Local only
       API_SERVICE_URL: http://api-web
       AWS_ENDPOINT_KMS: http://kms:8080
-      AWS_ACCESS_KEY_ID: '-'
-      AWS_SECRET_ACCESS_KEY: '-'
-      ENABLE_XDEBUG: 'true'
+      AWS_ACCESS_KEY_ID: "-"
+      AWS_SECRET_ACCESS_KEY: "-"
+      ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=viewer-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
-
 
   # ---------------------------
   # Actor Front
@@ -51,15 +69,17 @@ services:
     image: front-web
     build:
       context: .
-      dockerfile: service-front/docker/web/Dockerfile
+      dockerfile: service-front/docker/web/Development.Dockerfile
     volumes:
-      - ./service-front/web/dist:/web
+      - webpack_dist:/web
     ports:
       - 9002:80
     environment:
       APP_HOST: actor-app
       APP_PORT: 9000
       NGINX_LOG_LEVEL: warn
+    depends_on:
+      - webpack
 
   actor-app:
     container_name: actor-app
@@ -71,18 +91,17 @@ services:
       - ./service-front/app:/app
     environment:
       # Always required
-      CONTEXT: 'actor'
-      KMS_SESSION_CMK_ALIAS: 'alias/viewer-sessions-cmk-alias'
+      CONTEXT: "actor"
+      KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
 
       # Local only
       API_SERVICE_URL: http://api-web
       AWS_ENDPOINT_KMS: http://kms:8080
-      AWS_ACCESS_KEY_ID: '-'
-      AWS_SECRET_ACCESS_KEY: '-'
-      ENABLE_XDEBUG: 'true'
+      AWS_ACCESS_KEY_ID: "-"
+      AWS_SECRET_ACCESS_KEY: "-"
+      ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=actor-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
-
 
   # ---------------------------
   # Front Composer (Shared)
@@ -126,19 +145,19 @@ services:
     volumes:
       - ./service-api/app:/app
     environment:
-      DYNAMODB_TABLE_ACTOR_CODES: 'ActorCodes'
-      DYNAMODB_TABLE_ACTOR_USERS: 'ActorUsers'
-      DYNAMODB_TABLE_VIEWER_CODES: 'ViewerCodes'
-      DYNAMODB_TABLE_VIEWER_ACTIVITY: 'ViewerActivity'
-      DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: 'UserLpaActorMap'
+      DYNAMODB_TABLE_ACTOR_CODES: "ActorCodes"
+      DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
+      DYNAMODB_TABLE_VIEWER_CODES: "ViewerCodes"
+      DYNAMODB_TABLE_VIEWER_ACTIVITY: "ViewerActivity"
+      DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
 
-      SIRIUS_API_ENDPOINT: 'http://gateway:5000'
+      SIRIUS_API_ENDPOINT: "http://gateway:5000"
 
       # Local only
-      AWS_ACCESS_KEY_ID: '-'
+      AWS_ACCESS_KEY_ID: "-"
       AWS_ENDPOINT_DYNAMODB: http://localstack:4569
-      AWS_SECRET_ACCESS_KEY: '-'
-      ENABLE_XDEBUG: 'true'
+      AWS_SECRET_ACCESS_KEY: "-"
+      ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=api-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
 
@@ -162,10 +181,10 @@ services:
     depends_on:
       - localstack
     environment:
-      AWS_ACCESS_KEY_ID: '-'
-      AWS_SECRET_ACCESS_KEY: '-'
-      DYNAMODB_TABLE_ACTOR_CODES: 'ActorCodes'
-      DYNAMODB_TABLE_VIEWER_CODES: 'ViewerCodes'
+      AWS_ACCESS_KEY_ID: "-"
+      AWS_SECRET_ACCESS_KEY: "-"
+      DYNAMODB_TABLE_ACTOR_CODES: "ActorCodes"
+      DYNAMODB_TABLE_VIEWER_CODES: "ViewerCodes"
       AWS_ENDPOINT_DYNAMODB: localstack:4569
 
   # ---------------------------
@@ -191,7 +210,6 @@ services:
     environment:
       REGION: eu-west-1
       SEED_PATH: /init/kms-seed.yaml
-
 #  feature-tests:
 #    build:
 #      context: features/
