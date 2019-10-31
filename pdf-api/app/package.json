@@ -1,0 +1,21 @@
+{
+  "name": "opg-puppeteer-pdf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:webserver": "node -r esm src/app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "govuk-frontend": "^3.3.0",
+    "handlebars": "^4.4.3",
+    "pdf-lib": "^1.2.1",
+    "puppeteer": "^1.20.0"
+  }
+}
