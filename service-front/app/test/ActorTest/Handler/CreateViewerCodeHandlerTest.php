@@ -27,8 +27,6 @@ class CreateViewerCodeHandlerTest extends TestCase
     const CSRF_CODE = '123456';
     const IDENTITY_TOKEN = '01234567-01234-01234-01234-012345678901';
     const LPA_ID = '01234567-01234-01234-01234-012345678901';
-    const IDENTITY = '2d4b9e94-aff6-47c7-b734-de1b65f03b39';
-    const LPA_TOKEN = '69397007-84f0-4ff5-9b7e-563fc4383f88';
     const ORG_NAME = 'HSBC';
 
     /**
@@ -79,8 +77,6 @@ class CreateViewerCodeHandlerTest extends TestCase
         $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $this->sessionProphecy = $this->prophesize(SessionInterface::class);
         $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
-        $this->viewerCodeServiceProphecy = $this->prophesize(ViewerCodeService::class);
-
 
         $csrfProphecy = $this->prophesize(CsrfGuardInterface::class);
         $csrfProphecy->generateToken()
@@ -174,6 +170,7 @@ class CreateViewerCodeHandlerTest extends TestCase
     public function it_shows_viewer_code_when_post_occurs()
     {
         $actorId = '01234567-0123-0123-0123-012345678901';
+        $this->viewerCodeServiceProphecy = $this->prophesize(ViewerCodeService::class);
 
         $this->authenticateRequest($actorId);
 
@@ -194,8 +191,8 @@ class CreateViewerCodeHandlerTest extends TestCase
         );
 
         $this->viewerCodeServiceProphecy->createShareCode(
-            self::IDENTITY,
-            self::LPA_TOKEN,
+            self::IDENTITY_TOKEN,
+            self::LPA_ID,
             self::ORG_NAME)->willReturn('viewer-lpa-code');
 
         $this->requestProphecy->getQueryParams()
