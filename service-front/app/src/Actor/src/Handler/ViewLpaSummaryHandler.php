@@ -60,10 +60,6 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
 
         $lpa = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
-        if ($lpa == null){
-            throw new Exception('Lpa not found');
-        }
-
         return new HtmlResponse($this->renderer->render('actor::view-lpa-summary', [
             'actorLpaToken' => $actorLpaToken,
             'user' => $user,

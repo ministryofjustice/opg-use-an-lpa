@@ -6,6 +6,7 @@ namespace CommonTest\Service\Lpa;
 
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
+use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
@@ -125,21 +126,22 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function an_invalid_Lpa_id_returns_null()
+    public function an_invalid_Lpa_id_throws_exception()
     {
         $token = '01234567-01234-01234-01234-012345678901';
         $lpaId = '98765432-01234-01234-01234-012345678901';
 
         $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaId)
-            ->willReturn([ 'bad-response' => 'bad']);
+            ->willThrow(new ApiException('Error whilst making http GET request', 404));
 
         $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
         $service = new LpaService($this->apiClientProphecy->reveal(), $this->lpaFactoryProphecy->reveal());
 
-        $lpa = $service->getLpaById($token, $lpaId);
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(404);
 
-        $this->assertNull($lpa);
+        $service->getLpaById($token, $lpaId);
     }
 
     /** @test */

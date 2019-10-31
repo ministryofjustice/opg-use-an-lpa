@@ -7,7 +7,7 @@ namespace ViewerTest\Handler;
 use Actor\Handler\ViewLpaSummaryHandler;
 use Common\Entity\Lpa;
 use Common\Exception\InvalidRequestException;
-use Exception;
+use Common\Exception\ApiException;
 use Prophecy\Argument;
 use Common\Service\Lpa\LpaService;
 use PHPUnit\Framework\TestCase;
@@ -132,12 +132,13 @@ class ViewLpaSummaryHandlerTest extends TestCase
 
         $this->lpaServiceProphecy
             ->getLpaById(self::IDENTITY_TOKEN, self::LPA_ID)
-            ->willReturn(null);
+            ->willThrow(new ApiException('Error whilst making http GET request', 404));
 
-        $this->expectException(Exception::class);
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('Error whilst making http GET request');
+        $this->expectExceptionCode(404);
 
         $handler->handle($this->requestProphecy->reveal());
-
     }
 
     public function test_will_throw_error_if_token_is_null()
