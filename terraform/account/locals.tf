@@ -7,7 +7,7 @@ locals {
   account = var.accounts[local.account_name]
 
   dns_namespace_acc = terraform.workspace == "production" ? "" : "${local.account_name}."
-  dev_wildcard      = local.account_name != "development" ? "" : "*."
+  dev_wildcard      = local.account_name == "production" ? "" : "*."
 
   mandatory_moj_tags = {
     business-unit    = "OPG"
