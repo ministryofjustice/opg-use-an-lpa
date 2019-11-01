@@ -5,20 +5,21 @@ import os
 import sys
 
 class CodeGeneration:
-    lpauids = ''
     aws_account_id = ''
     aws_iam_session = ''
     aws_ecs_client = ''
     aws_ecs_cluster = ''
+    aws_ec2_client = ''
+    aws_private_subnets = ''
+    code_creation_security_group = ''
     environment = ''
     code_creation_task_definition = ''
     code_creation_task = ''
     nextForwardToken = ''
     logStreamName = ''
 
-    def __init__(self, environment, lpauids):
+    def __init__(self, environment):
         self.environment=environment
-        self.lpauids=lpauids
         self.aws_ecs_cluster=os.environ.get('AWS_ECS_CLUSTER')
 
         self.set_iam_role_session()
@@ -30,13 +31,26 @@ class CodeGeneration:
             aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
             aws_session_token=os.environ.get('AWS_SESSION_TOKEN'))
 
+        self.aws_ec2_client = boto3.client(
+            'ec2',
+            region_name='eu-west-1',
+            aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+            aws_session_token=os.environ.get('AWS_SESSION_TOKEN'))
+
+        self.get_code_creation_task_definition()
+        self.get_subnet_id()
+
+        self.code_creation_security_group = self.get_security_group_id('{}-code-creation-ecs-service'.format(
+            self.environment))
+
     def get_code_creation_task_definition(self):
       # get the latest task definition for seeding
       # returns task definition arn
 
         self.code_creation_task_definition = self.aws_ecs_client.list_task_definitions(
             familyPrefix='{}-code-creation'.format(self.environment),
-            status='ACTIVE',
+            status='INACTIVE',
             sort='DESC',
             maxResults=1
         )['taskDefinitionArns'][0]
@@ -45,8 +59,8 @@ class CodeGeneration:
     def set_iam_role_session(self):
         self.aws_account_id=os.environ.get('AWS_ACCOUNT_ID')
 
-        role_arn = 'arn:aws:iam::{}:role/{}-code-creation-task-role'.format(
-            self.aws_account_id, self.environment)
+        role_arn = 'arn:aws:iam::{}:role/operator'.format(
+            self.aws_account_id)
 
         sts = boto3.client(
             'sts',
@@ -59,7 +73,38 @@ class CodeGeneration:
         )
         self.aws_iam_session = session
 
-    def run_creation_task(self):
+    def get_security_group_id(self, security_group_name):
+      # get security group ids by security group name
+      # returns security group id
+        security_group_id = self.aws_ec2_client.describe_security_groups(
+            Filters=[
+                {
+                    'Name': 'group-name',
+                    'Values': [security_group_name + "*"]
+                },
+            ],
+            MaxResults=50
+        )['SecurityGroups'][0]['GroupId']
+        return security_group_id
+
+    def get_subnet_id(self):
+      # get ids for private subnets
+      # returns a list of private subnet ids
+        subnets = self.aws_ec2_client.describe_subnets(
+            Filters=[
+                {
+                    'Name': 'tag:Name',
+                    'Values': [
+                        'private',
+                    ]
+                },
+            ],
+            MaxResults=5
+        )
+        for subnet in subnets['Subnets']:
+            self.aws_private_subnets.append(subnet['SubnetId'])
+
+    def run_creation_task(self, lpauids):
       # run a code creation task in ecs
 
         print("starting creation task...")
@@ -74,10 +119,20 @@ class CodeGeneration:
                             'php',
                             'console.php',
                             'actorcode:create',
-                            self.lpauids
+                            lpauids
                         ]
                     }
-                ]}
+                ]
+            },
+            networkConfiguration={
+                'awsvpcConfiguration': {
+                    'subnets': self.aws_private_subnets,
+                    'securityGroups': [
+                        self.code_creation_security_group,
+                    ],
+                    'assignPublicIp': 'DISABLED'
+                }
+            },
         )
         self.code_creation_task = running_tasks['tasks'][0]['taskArn']
         print(self.code_creation_task)
@@ -148,8 +203,8 @@ def main(argv):
         print('generate-actor-codes.py <environment> <comma separated lpa uids>')
         sys.exit()
 
-    work = CodeGeneration(argv[0], argv[1])
-    work.run_creation_task()
+    work = CodeGeneration(argv[0])
+    work.run_creation_task(argv[1])
     work.wait_for_task_to_start()
     work.print_task_logs()
 
