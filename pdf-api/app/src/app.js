@@ -2,23 +2,29 @@ const express = require("express");
 const app = express();
 const router = express.Router();
 import GeneratePdf from "./lib/generatePdf";
+import TemplateList from "./lib/templateList";
 
 const port = 8080;
+const templateList = TemplateList();
 
 router.use(function(req, res, next) {
   next();
 });
 
 router.post("/:templateid", async (req, res) => {
-  const result = await GeneratePdf(req.params.templateid, req.body);
-  // TODO: Catch 404 or invalid data
-  res.writeHead(200, {
-    "Content-Type": "application/pdf",
-    "Content-Disposition": `attachment; filename=${req.params.templateid}.pdf`,
-    "Content-Length": result.length
-  });
+  const templateId = req.params.templateid;
+  if (templateList.indexOf(templateId) > -1) {
+    const result = await GeneratePdf(templateId, req.body);
+    res.writeHead(200, {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment; filename=${templateId}.pdf`,
+      "Content-Length": result.length
+    });
 
-  res.end(Buffer.from(result, "binary"));
+    res.end(Buffer.from(result, "binary"));
+  } else {
+    res.status(404).send("Not found");
+  }
 });
 
 app.use(express.json());
