@@ -24,13 +24,7 @@
                 </div>
             </div>
 
-            <dl class="govuk-summary-list govuk-summary-list--no-border">
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-full">
-                        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-                    </div>
-                </div>
-            </dl>
+            {{ include('@partials/section-break.html.twig') }}
 
             <div class="govuk-grid-row" >
 
@@ -90,7 +84,6 @@
 
                     <dl class="govuk-summary-list govuk-summary-list--no-border">
 
-
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">Name</dt>
                             <dd class="govuk-summary-list__value">{{ actor_name(lpa.donor) }}</dd>
@@ -106,20 +99,12 @@
                         <div class="govuk-summary-list__row">
 
                         </div>
-
                     </dl>
-
                 </div>
 
             </div>
 
-            <dl class="govuk-summary-list govuk-summary-list--no-border">
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-full">
-                        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-                    </div>
-                </div>
-            </dl>
+            {{ include('@partials/section-break.html.twig') }}
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
@@ -162,14 +147,9 @@
                     {% endfor %}
                 </div>
             </div>
-            <dl class="govuk-summary-list govuk-summary-list--no-border">
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-full">
-                        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-                    </div>
-                </div>
 
-            </dl>
+            {{ include('@partials/section-break.html.twig') }}
+
             <div class="govuk-grid-row">
 
                 <div class="govuk-grid-column-two-thirds">
@@ -240,11 +220,9 @@
                 </div>
 
                 <dl class="govuk-summary-list govuk-summary-list--no-border">
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-full">
-                            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-                        </div>
-                    </div>
+
+                    {{ include('@partials/section-break.html.twig') }}
+
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-full">
                             <p class="govuk-body">

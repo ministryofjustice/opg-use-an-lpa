@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Actor\Handler\ChangeDetailsHandler;
 use Actor\Handler\LoginPageHandler;
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Application;
+use Zend\Expressive\Authentication\AuthenticationMiddleware;
 use Zend\Expressive\MiddlewareFactory;
 
 /**
@@ -73,6 +75,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckLpaHandler::class
     ], ['GET', 'POST'], 'lpa.check');
+    $app->get('/lpa/view-lpa', [
+        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\ViewLpaSummaryHandler::class
+    ], 'lpa.view');
     $app->route('/lpa/code-make',[
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CreateViewerCodeHandler::class

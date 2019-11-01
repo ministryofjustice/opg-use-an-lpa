@@ -6,6 +6,7 @@ namespace CommonTest\Service\Lpa;
 
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
+use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
@@ -91,26 +92,56 @@ class LpaServiceTest extends TestCase
         $this->assertNull($lpa);
     }
 
-    public function testGetLpaById()
+    /** @test */
+    public function it_gets_an_Lpa_by_Id()
     {
-        $this->markTestSkipped('must be revisited.');
-        $this->apiClientProphecy->httpGet('/v1/lpa/123456789012')
+        $token = '01234567-01234-01234-01234-012345678901';
+        $lpaId = '98765432-01234-01234-01234-012345678901';
+
+        $lpaData = [
+            'user-lpa-actor-token' => $lpaId,
+            'lpa' => [
+                'id' => '70000000047'
+            ]
+        ];
+
+        $lpa = new Lpa();
+
+        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaId)
             ->willReturn([
-                'id'      => 123456789012,
-                'isValid' => true,
-                'another' => [
-                    'some'  => 1,
-                    'value' => 2,
-                ],
+                'lpa' => $lpaData['lpa'],
+                'lpaId' => $lpaData['user-lpa-actor-token']
             ]);
 
-        $service = new LpaService($this->apiClientProphecy->reveal());
+        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
-        $lpa = $service->getLpaById('123456789012');
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData['lpa'])->willReturn($lpa);
 
-        $this->assertInstanceOf(ArrayObject::class, $lpa);
-        $this->assertEquals(123456789012, $lpa->id);
-        $this->assertEquals(true, $lpa->isValid);
+        $service = new LpaService($this->apiClientProphecy->reveal(), $this->lpaFactoryProphecy->reveal());
+
+        $lpa = $service->getLpaById($token, $lpaId);
+
+        $this->assertInstanceOf(Lpa::class, $lpa);
+
+    }
+
+    /** @test */
+    public function an_invalid_Lpa_id_throws_exception()
+    {
+        $token = '01234567-01234-01234-01234-012345678901';
+        $lpaId = '98765432-01234-01234-01234-012345678901';
+
+        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaId)
+            ->willThrow(new ApiException('Error whilst making http GET request', 404));
+
+        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
+
+        $service = new LpaService($this->apiClientProphecy->reveal(), $this->lpaFactoryProphecy->reveal());
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(404);
+
+        $service->getLpaById($token, $lpaId);
     }
 
     /** @test */
