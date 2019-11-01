@@ -5,18 +5,18 @@
 
             <ul class="moj-sub-navigation__list">
                 <li class="moj-sub-navigation__item">
-                    <a class="moj-sub-navigation__link" href="{{ path('lpa.create-code', {}, {'lpa-actor-token':  actorLpaToken }) }}">
+                    <a class="moj-sub-navigation__link" {% if path() == path('lpa.create-code') %} aria-current="page" {% endif %} href="{{ path('lpa.create-code', {}, {'lpa':  actorToken }) }}">
                         Give an organisation access
                     </a>
                 </li>
 
                 <li class="moj-sub-navigation__item">
-                    <a class="moj-sub-navigation__link"  href="/use-lpa//lpa/current-codes">
+                    <a class="moj-sub-navigation__link" href="#">
                         Check access codes
                     </a>
                 </li>
                 <li class="moj-sub-navigation__item">
-                    <a class="moj-sub-navigation__link" {% if path() == '/lpa/view-lpa' %} aria-current="page" {% endif %} href="{{ path('lpa.view', {}, {'lpa-actor-token': actorLpaToken }) }}">
+                    <a class="moj-sub-navigation__link" {% if path() == path('lpa.view') %} aria-current="page" {% endif %} href="{{ path('lpa.view', {}, {'lpa': actorToken }) }}">
                         View LPA summary
                     </a>
                 </li>

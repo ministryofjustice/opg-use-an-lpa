@@ -49,7 +49,7 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $actorLpaToken = $request->getQueryParams()['lpa-actor-token'];
+        $actorLpaToken = $request->getQueryParams()['lpa'];
 
         if (is_null($actorLpaToken)) {
             throw new InvalidRequestException('No actor-lpa token specified');
@@ -61,7 +61,7 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
         $lpa = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
         return new HtmlResponse($this->renderer->render('actor::view-lpa-summary', [
-            'actorLpaToken' => $actorLpaToken,
+            'actorToken' => $actorLpaToken,
             'user' => $user,
             'lpa' => $lpa,
         ]));
