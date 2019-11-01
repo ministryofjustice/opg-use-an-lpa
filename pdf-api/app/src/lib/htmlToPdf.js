@@ -15,7 +15,7 @@ const htmlToPdf = async html => {
   const page = await browser.newPage();
   await page.emulateMedia("screen");
   page.addStyleTag({ path: "./src/templates/main.css" });
-  await page.setContent(html);
+  await page.setContent(html, { waitUntil: "networkidle" });
   const pdf = await page.pdf({
     printBackground: true,
     width: 1100,
