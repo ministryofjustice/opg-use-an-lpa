@@ -7,10 +7,6 @@ import TemplateList from "./lib/templateList";
 const port = 8080;
 const templateList = TemplateList();
 
-router.use(function(req, res, next) {
-  next();
-});
-
 router.post("/:templateid", async (req, res) => {
   const templateId = req.params.templateid;
   if (templateList.indexOf(templateId) > -1) {

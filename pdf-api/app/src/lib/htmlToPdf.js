@@ -19,7 +19,7 @@ const htmlToPdf = async html => {
   const pdf = await page.pdf({
     printBackground: true,
     width: 1100,
-    height: 1950
+    height: 2000
   });
   await browser.close();
 
