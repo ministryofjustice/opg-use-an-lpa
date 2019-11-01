@@ -22,6 +22,9 @@ class CodeGeneration:
         self.environment=environment
         self.aws_ecs_cluster=os.environ.get('AWS_ECS_CLUSTER')
 
+        if (self.aws_ecs_cluster == None):
+            self.aws_ecs_cluster='{}-use-an-lpa'.format(self.environment)
+
         self.set_iam_role_session()
 
         self.aws_ecs_client=boto3.client(
@@ -76,6 +79,7 @@ class CodeGeneration:
     def get_security_group_id(self, security_group_name):
       # get security group ids by security group name
       # returns security group id
+
         security_group_id = self.aws_ec2_client.describe_security_groups(
             Filters=[
                 {
@@ -90,6 +94,7 @@ class CodeGeneration:
     def get_subnet_id(self):
       # get ids for private subnets
       # returns a list of private subnet ids
+      
         subnets = self.aws_ec2_client.describe_subnets(
             Filters=[
                 {
