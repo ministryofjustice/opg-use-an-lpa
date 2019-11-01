@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Handler\LpasCollectionHandler;
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Application;
 use Zend\Expressive\MiddlewareFactory;
