@@ -66,6 +66,7 @@ class ViewLpaSummaryHandlerTest extends TestCase
 
         $this->templateRendererProphecy->render('actor::view-lpa-summary', Argument::that(function($options) {
             $this->assertIsArray($options);
+            $this->assertArrayHasKey('actorToken', $options);
             $this->assertArrayHasKey('lpa', $options);
             $this->assertArrayHasKey('user', $options);
             return true;
@@ -90,7 +91,7 @@ class ViewLpaSummaryHandlerTest extends TestCase
 
         $this->requestProphecy->getQueryParams()
             ->willReturn([
-                'lpa-actor-token' => self::LPA_ID
+                'lpa' => self::LPA_ID
             ]);
 
         $lpa = new Lpa();
@@ -101,7 +102,7 @@ class ViewLpaSummaryHandlerTest extends TestCase
 
         $this->templateRendererProphecy
             ->render('actor:view-lpa-summary', [
-                'actorLpaToken' => self::LPA_ID,
+                'actorToken' => self::LPA_ID,
                 'user' => self::IDENTITY_TOKEN,
                 'lpa' => $lpa,
             ])
@@ -127,7 +128,7 @@ class ViewLpaSummaryHandlerTest extends TestCase
 
         $this->requestProphecy->getQueryParams()
             ->willReturn([
-                'lpa-actor-token' => self::LPA_ID
+                'lpa' => self::LPA_ID
             ]);
 
         $this->lpaServiceProphecy
