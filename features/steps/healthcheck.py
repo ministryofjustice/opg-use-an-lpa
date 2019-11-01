@@ -3,7 +3,7 @@ import json
 import requests
 from modules import get_frontend_url
 
-HEALTHCHECK_URL = get_frontend_url("viewer") + '/healthcheck'
+HEALTHCHECK_URL = get_frontend_url("view") + '/healthcheck'
 
 # View-An-LPA
 @given('I fetch the healthcheck endpoint')

@@ -26,7 +26,7 @@ resource "aws_dynamodb_table" "actor_users_table" {
 
   attribute {
     name = "Id"
-    type= "S"
+    type = "S"
   }
   attribute {
     name = "Email"

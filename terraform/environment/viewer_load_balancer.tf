@@ -33,7 +33,7 @@ resource "aws_lb_listener" "viewer_loadbalancer" {
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
 
-  certificate_arn = data.aws_acm_certificate.certificate_viewer.arn
+  certificate_arn = data.aws_acm_certificate.certificate_view.arn
 
   default_action {
     target_group_arn = aws_lb_target_group.viewer.arn

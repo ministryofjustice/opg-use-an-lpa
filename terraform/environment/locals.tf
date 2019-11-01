@@ -10,7 +10,7 @@ locals {
   sirius_account_id = var.sirius_account_ids[local.account_name]
 
   dns_namespace_acc = terraform.workspace == "production" ? "" : "${local.account_name}."
-  dns_namespace_env = local.account_name != "development" ? "" : "${terraform.workspace}."
+  dns_namespace_env = local.account_name == "production" ? "" : "${terraform.workspace}."
 
   dev_wildcard = local.account_name != "development" ? "" : "*."
 
