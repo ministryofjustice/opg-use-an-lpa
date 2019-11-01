@@ -10,11 +10,12 @@ class CodeGeneration:
     aws_ecs_client = ''
     aws_ecs_cluster = ''
     aws_ec2_client = ''
-    aws_private_subnets = ''
+    aws_private_subnets = []
     code_creation_security_group = ''
     environment = ''
     code_creation_task_definition = ''
     code_creation_task = ''
+    aws_logs_client = ''
     nextForwardToken = ''
     logStreamName = ''
 
@@ -30,16 +31,23 @@ class CodeGeneration:
         self.aws_ecs_client=boto3.client(
             'ecs',
             region_name='eu-west-1',
-            aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
-            aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
-            aws_session_token=os.environ.get('AWS_SESSION_TOKEN'))
+            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
+            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
+            aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
 
         self.aws_ec2_client = boto3.client(
             'ec2',
             region_name='eu-west-1',
-            aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
-            aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
-            aws_session_token=os.environ.get('AWS_SESSION_TOKEN'))
+            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
+            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
+            aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+
+        self.aws_logs_client = boto3.client(
+            'logs',
+            region_name='eu-west-1',
+            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
+            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
+            aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
 
         self.get_code_creation_task_definition()
         self.get_subnet_id()
@@ -53,11 +61,10 @@ class CodeGeneration:
 
         self.code_creation_task_definition = self.aws_ecs_client.list_task_definitions(
             familyPrefix='{}-code-creation'.format(self.environment),
-            status='INACTIVE',
+            status='ACTIVE',
             sort='DESC',
             maxResults=1
         )['taskDefinitionArns'][0]
-        print(self.code_creation_task_definition)
 
     def set_iam_role_session(self):
         self.aws_account_id=os.environ.get('AWS_ACCOUNT_ID')
@@ -94,7 +101,7 @@ class CodeGeneration:
     def get_subnet_id(self):
       # get ids for private subnets
       # returns a list of private subnet ids
-      
+
         subnets = self.aws_ec2_client.describe_subnets(
             Filters=[
                 {
@@ -113,6 +120,7 @@ class CodeGeneration:
       # run a code creation task in ecs
 
         print("starting creation task...")
+        print(self.code_creation_task_definition)
         running_tasks = self.aws_ecs_client.run_task(
             cluster=self.aws_ecs_cluster,
             taskDefinition=self.code_creation_task_definition,
@@ -120,6 +128,7 @@ class CodeGeneration:
             overrides={
                 'containerOverrides': [
                     {
+                        'name': 'app',
                         'command': [
                             'php',
                             'console.php',
@@ -189,7 +198,7 @@ class CodeGeneration:
       # get logs while task is running
       # after task finishes, print remaining logs
 
-        self.logStreamName = 'code_creation_app.use-an-lpa/app/{}'.format(
+        self.logStreamName = 'code-creation-app.use-an-lpa/app/{}'.format(
             self.code_creation_task.rsplit('/', 1)[-1])
         print("Streaming logs for logstream: ".format(self.logStreamName))
 
