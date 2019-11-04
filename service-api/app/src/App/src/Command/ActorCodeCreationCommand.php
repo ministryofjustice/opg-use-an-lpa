@@ -94,17 +94,20 @@ class ActorCodeCreationCommand extends Command
     private function resolveLpaActors(&$lpas): void
     {
         $lpaData = array_map(
-            function($lpaUId, $lpaData) {
+            function($lpaUId) {
                 $lpa = $this->retrieveLpa((string) $lpaUId);
 
-                $actors = array_merge([ $lpa['donor'] ], $lpa['attorneys']);
+                return array_map(function($actor) {
+                    return array_intersect_key($actor, [
+                        'id'          => '',
+                        'uId'         => '',
+                        'firstname'   => '',
+                        'middlenames' => '',
+                        'surname'     => ''
+                    ]);
+                }, array_merge([ $lpa['donor'] ], $lpa['attorneys']));
 
-                $actors = array_map(function($actor) {
-                    return $this->filterActorFields($actor);
-                }, $actors);
-
-                return $actors;
-            }, array_keys($lpas), $lpas);
+            }, array_keys($lpas));
 
         $lpas = array_combine(array_keys($lpas), $lpaData);
     }
@@ -118,17 +121,6 @@ class ActorCodeCreationCommand extends Command
         }
 
         return $lpa->getData();
-    }
-
-    private function filterActorFields(array $actor): array
-    {
-        return [
-            'id'          => $actor['id'],
-            'uid'         => $actor['uId'],
-            'firstname'   => $actor['firstname'],
-            'middlenames' => $actor['middlenames'],
-            'surname'     => $actor['surname']
-        ];
     }
 
     private function generateCodes(&$lpas): void
