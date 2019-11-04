@@ -19,8 +19,8 @@ workflows:
           name: app_api_build
       - use-my-lpa/docker_build_api_web:
           name: web_api_build
-      - use-my-lpa/docker_build_pdf_api_app:
-          name: pdf_api_app
+      - use-my-lpa/docker_build_pdf:
+          name: pdf
 
       - use-my-lpa/codecov_php-unit_upload:
           name: codecov_upload
@@ -371,7 +371,7 @@ orbs:
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
 
-      docker_build_pdf_api_app:
+      docker_build_pdf:
         #
         # Build Docker container for Front App
         #   and runs the Unit Tests.
@@ -380,7 +380,7 @@ orbs:
         parameters:
           container_repo_url:
             type: string
-            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/pdf_api_app
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/pdf
         steps:
           - checkout
           - install_aws_cli
@@ -390,15 +390,15 @@ orbs:
           - run:
               name: Build
               command: |
-                docker build --file pdf-api/docker/app/Dockerfile --tag pdf-api-app:latest .
+                docker build --file pdf/docker/app/Dockerfile --tag pdf:latest .
           - ecr_login
           - run:
               name: Push container
               command: |
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
 
-                docker tag pdf-api-app:latest << parameters.container_repo_url >>:latest
-                docker tag pdf-api-app:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag pdf:latest << parameters.container_repo_url >>:latest
+                docker tag pdf:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
