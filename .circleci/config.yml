@@ -20,7 +20,7 @@ workflows:
       - use-my-lpa/docker_build_api_web:
           name: web_api_build
       - use-my-lpa/docker_build_pdf:
-          name: pdf
+          name: pdf_build
 
       - use-my-lpa/codecov_php-unit_upload:
           name: codecov_upload
@@ -373,7 +373,7 @@ orbs:
 
       docker_build_pdf:
         #
-        # Build Docker container for Front App
+        # Build Docker container for PDF Generator
         #   and runs the Unit Tests.
         #
         executor: python
