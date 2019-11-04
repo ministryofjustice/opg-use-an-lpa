@@ -16,9 +16,9 @@ RUN  apt-get update \
     && chmod +x /usr/sbin/wait-for-it.sh
 
 WORKDIR /src/app
-COPY pdf-api/app/package.json ./package.json
+COPY pdf/app/package.json ./package.json
 RUN npm install
-COPY pdf-api/app/src ./src
+COPY pdf/app/src ./src
 
 EXPOSE 8080
 
