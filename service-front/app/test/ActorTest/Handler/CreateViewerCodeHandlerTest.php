@@ -20,12 +20,14 @@ use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Session\SessionInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
+use Common\Entity\User;
 
 class CreateViewerCodeHandlerTest extends TestCase
 {
-    const CSRF_CODE      = '123456';
+    const CSRF_CODE = '123456';
     const IDENTITY_TOKEN = '01234567-01234-01234-01234-012345678901';
-    const LPA_ID         = '01234567-01234-01234-01234-012345678901';
+    const LPA_ID = '01234567-01234-01234-01234-012345678901';
+    const ORG_NAME = 'HSBC';
 
     /**
      * @var TemplateRendererInterface
@@ -57,6 +59,16 @@ class CreateViewerCodeHandlerTest extends TestCase
      */
     private $userProphecy;
 
+    /**
+     * @var ObjectProphecy|LpaService
+     */
+    private $lpaServiceProphecy;
+
+    /**
+     * @var ObjectProphecy|ViewerCodeService
+     */
+    private $viewerCodeServiceProphecy;
+
     public function setUp()
     {
         $this->rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
@@ -64,6 +76,7 @@ class CreateViewerCodeHandlerTest extends TestCase
         $this->authenticatorProphecy = $this->prophesize(AuthenticationInterface::class);
         $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $this->sessionProphecy = $this->prophesize(SessionInterface::class);
+        $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
 
         $csrfProphecy = $this->prophesize(CsrfGuardInterface::class);
         $csrfProphecy->generateToken()
@@ -73,7 +86,7 @@ class CreateViewerCodeHandlerTest extends TestCase
         $this->requestProphecy->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE)
             ->willReturn($csrfProphecy->reveal());
 
-        $this->rendererProphecy->render('actor::lpa-create-viewercode', Argument::that(function($options) {
+        $this->rendererProphecy->render('actor::lpa-create-viewercode', Argument::that(function ($options) {
             $this->assertIsArray($options);
 
             $this->assertArrayHasKey('lpa', $options);
@@ -151,5 +164,52 @@ class CreateViewerCodeHandlerTest extends TestCase
 
         $this->expectException(InvalidRequestException::class);
         $response = $handler->handle($this->requestProphecy->reveal());
+    }
+
+    /** @test */
+    public function it_shows_viewer_code_when_post_occurs()
+    {
+        $actorId = '01234567-0123-0123-0123-012345678901';
+        $this->viewerCodeServiceProphecy = $this->prophesize(ViewerCodeService::class);
+
+        $this->authenticateRequest($actorId);
+
+        $this->requestProphecy->getMethod()->willReturn('POST');
+
+        $this->requestProphecy->getParsedBody()
+            ->willReturn([
+                '__csrf' => self::CSRF_CODE
+            ]);
+        $this->urlHelperProphecy->generate(Argument::type('string'))->willReturn('http://localhost');
+
+        $handler = new CreateViewerCodeHandler(
+            $this->rendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->authenticatorProphecy->reveal(),
+            $this->lpaServiceProphecy->reveal(),
+            $this->viewerCodeServiceProphecy->reveal()
+        );
+
+        $this->viewerCodeServiceProphecy->createShareCode(
+            self::IDENTITY_TOKEN,
+            self::LPA_ID,
+            self::ORG_NAME)->willReturn('viewer-lpa-code');
+
+        $this->requestProphecy->getQueryParams()
+            ->willReturn([
+                'lpa' => self::LPA_ID
+            ]);
+
+        $response = $handler->handle($this->requestProphecy->reveal());
+
+        $this->assertInstanceOf(HtmlResponse::class, $response);
+
+    }
+
+    private function authenticateRequest(string $actorId)
+    {
+        $identity = $this->prophesize(User::class);
+        $identity->getIdentity()->willReturn($actorId);
+        $this->authenticatorProphecy->authenticate($this->requestProphecy->reveal())->willReturn($identity->reveal());
     }
 }

@@ -21,14 +21,16 @@ class LpaExtensionTest extends TestCase
         $functions = $extension->getFunctions();
 
         $this->assertTrue(is_array($functions));
-        $this->assertEquals(4, count($functions));
 
         $expectedFunctions = [
             'actor_address'             => 'actorAddress',
             'actor_name'                => 'actorName',
             'lpa_date'                  => 'lpaDate',
             'days_remaining_to_expiry'  => 'daysRemaining',
+            'add_hyphen_to_viewer_code' => 'formatViewerCode',
+
         ];
+        $this->assertEquals(count($expectedFunctions), count($functions));
 
         //  Check each function
         foreach ($functions as $function) {
@@ -228,5 +230,15 @@ class LpaExtensionTest extends TestCase
         $days = $extension->daysRemaining(null);
 
         $this->assertEquals('', $days);
+    }
+
+    /** @test */
+    public function it_returns_an_hyphenated_viewer_code()
+    {
+        $extension = new LpaExtension();
+
+        $viewerCode = $extension->formatViewerCode('111122223333');
+
+        $this->assertEquals('V - 1111 - 2222 - 3333', $viewerCode);
     }
 }
