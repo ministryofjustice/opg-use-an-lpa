@@ -10,12 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "cheerio": "^1.0.0-rc.3",
     "esm": "^3.2.25",
-    "express": "^4.17.1",
-    "govuk-frontend": "^3.3.0",
-    "handlebars": "^4.4.3",
     "pdf-lib": "^1.2.1",
+    "polka": "^0.5.2",
     "puppeteer": "^1.20.0"
   }
 }

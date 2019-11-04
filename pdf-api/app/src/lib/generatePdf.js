@@ -1,12 +1,13 @@
 const fs = require("fs");
 import htmlToPdf from "./htmlToPdf";
-import htmlParser from "./htmlParser";
+import stripAnchorTags from "./stripAnchorTags";
 import { PDFDocument } from "pdf-lib";
 
-const generatePdf = async (templateId, data) => {
-  const html = fs.readFileSync(`./src/templates/${templateId}.html`, "utf8");
-  const parsedHtml = await htmlParser(html, data);
-  const pdf = await htmlToPdf(parsedHtml);
+const generatePdf = async (html, options) => {
+  if (options.stripTags) {
+    html = await stripAnchorTags(html);
+  }
+  const pdf = await htmlToPdf(html);
 
   const pdfDoc = await PDFDocument.load(pdf.buffer);
 

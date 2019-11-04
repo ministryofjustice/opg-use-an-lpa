@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-
+//TODO:  Error handling needed here?
 const htmlToPdf = async html => {
   const browser = await puppeteer.launch({
     args: [
@@ -12,18 +12,24 @@ const htmlToPdf = async html => {
     ]
   });
 
-  const page = await browser.newPage();
-  await page.emulateMedia("screen");
-  page.addStyleTag({ path: "./src/templates/main.css" });
-  await page.setContent(html, { waitUntil: "networkidle" });
-  const pdf = await page.pdf({
-    printBackground: true,
-    width: 1100,
-    height: 2000
-  });
-  await browser.close();
+  let pdf;
 
-  return pdf;
+  try {
+    const page = await browser.newPage();
+    await page.emulateMedia("screen");
+
+    await page.setContent(html, { waitUntil: "load" });
+    pdf = await page.pdf({
+      printBackground: true,
+      width: 1100,
+      height: 2000
+    });
+    await browser.close();
+  } catch (error) {
+    await browser.close();
+  } finally {
+    return pdf;
+  }
 };
 
 export default htmlToPdf;
