@@ -23,5 +23,15 @@
     "@babel/preset-env": "^7.6.3",
     "babel-jest": "^24.9.0",
     "jest": "^24.9.0"
+  },
+  "jest": {
+    "testMatch": [
+      "**/?(*.)+(test).js"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ]
   }
 }
