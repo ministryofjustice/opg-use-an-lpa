@@ -1,0 +1,46 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Change Details {{ parent() }} {% endblock %}
+
+{% block content %}
+
+    <div class="govuk-width-container">
+        {{ include('@partials/new-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        <a href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}" class="govuk-back-link">Back</a>
+
+        <main class="govuk-main-wrapper">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">Let us know if a donor's or attorney's details change</h1>
+
+                    <p class="govuk-body">It's important that the information the Office of the Public Guardian (OPG) holds about donors, attorneys and LPAs is up to date.</p>
+
+                    <p class="govuk-body">For example, you should contact OPG if:</p>
+
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>the donor or an attorney has changed their name by marriage or deed poll</li>
+                        <li>the donor or an attorney has moved house</li>
+                        <li>the donor's or an attorney's name or address is misspelled</li>
+                        <li>a date of birth is wrong</li>
+                        <li>an attorney has died or can no longer be an attorney</li>
+                        <li>the donor wants to remove an attorney from the LPA</li>
+                    </ul>
+
+                    <p class="govuk-body">We will update the online LPA summary and our records.</p>
+
+                    <div class="govuk-inset-text">
+                        Do not make any changes to the paper LPA yourself. If you do, the LPA will be invalid and you will no longer be able to use it.
+                    </div>
+
+                    <a href="https://www.gov.uk/power-of-attorney/change-your-lasting-power-of-attorney" role="button" class="govuk-button">Find out more</a>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+{% endblock %}
