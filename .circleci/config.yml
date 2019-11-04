@@ -6,9 +6,7 @@ workflows:
       # Common tasks
       - use-my-lpa/lint_terraform:
           name: lint_terraform
-          filters:
-            branches:
-              ignore: master
+          filters: { branches: { ignore: [master] } }
 
       - use-my-lpa/docker_build_front_app:
           name: app_front_build
@@ -29,12 +27,12 @@ workflows:
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
           name: dev_apply_shared_terraform
+          filters: { branches: { ignore: [master] } }
           requires: [lint_terraform]
-          filters:
-            branches:
-              ignore: master
+
       - use-my-lpa/apply_environment_terraform:
           name: dev_apply_environment_terraform
+          filters: { branches: { ignore: [master] } }
           requires:
             [
               dev_apply_shared_terraform,
@@ -43,49 +41,43 @@ workflows:
               web_api_build,
               app_api_build,
             ]
-          filters:
-            branches:
-              ignore: master
 
       - use-my-lpa/seed_database:
           name: dev_seed_database
+          filters: { branches: { ignore: [master] } }
           requires: [dev_apply_environment_terraform]
-          filters:
-            branches:
-              ignore: master
 
       - use-my-lpa/run_behave_suite:
           name: dev_run_behave_tests
+          filters: { branches: { ignore: [master] } }
           requires: [dev_seed_database]
-          filters:
-            branches:
-              ignore: master
+
+      - slack_notify_domain:
+          name: post_environment_domains
+          filters: { branches: { ignore: [master] } }
+          requires: [dev_run_behave_tests]
 
       - hold-for-destruction:
           name: hold_env_for_destruction
           type: approval
+          filters: { branches: { ignore: [master] } }
           requires: [dev_run_behave_tests]
-          filters:
-            branches:
-              ignore: master
 
       - use-my-lpa/destroy_dev_environment:
           name: dev_destroy_environment
+          filters: { branches: { ignore: [master] } }
           requires: [hold_env_for_destruction]
-          filters:
-            branches:
-              ignore: master
 
       # Provision and test preproduction
       - use-my-lpa/apply_shared_terraform:
           name: preprod_apply_shared_terraform
           workspace: preproduction
-          filters:
-            branches:
-              only: master
+          filters: { branches: { only: [master] } }
+
       - use-my-lpa/apply_environment_terraform:
           name: preprod_apply_environment_terraform
           workspace: preproduction
+          filters: { branches: { only: [master] } }
           requires:
             [
               preprod_apply_shared_terraform,
@@ -94,37 +86,29 @@ workflows:
               web_api_build,
               app_api_build,
             ]
-          filters:
-            branches:
-              only: master
 
       - use-my-lpa/seed_database:
           name: preprod_seed_database
           #workspace: preproduction   # Not needed as the target account is within the config file.
+          filters: { branches: { only: [master] } }
           requires: [preprod_apply_environment_terraform]
-          filters:
-            branches:
-              only: master
 
       - use-my-lpa/run_behave_suite:
           name: preprod_run_behave_tests
           workspace: preproduction
+          filters: { branches: { only: [master] } }
           requires: [preprod_seed_database]
-          filters:
-            branches:
-              only: master
 
       # Provision and test production
       - use-my-lpa/apply_shared_terraform:
           name: production_apply_shared_terraform
           workspace: production
+          filters: { branches: { only: [master] } }
           requires: [preprod_run_behave_tests]
-          filters:
-            branches:
-              only: master
       - use-my-lpa/apply_environment_terraform:
           name: production_apply_environment_terraform
           workspace: production
+          filters: { branches: { only: [master] } }
           requires:
             [
               production_apply_shared_terraform,
@@ -133,18 +117,19 @@ workflows:
               web_api_build,
               app_api_build,
             ]
-          filters:
-            branches:
-              only: master
 
       - use-my-lpa/run_healthcheck_test:
           name: prod_run_healthcheck_test
+          filters: { branches: { only: [master] } }
           requires: [production_apply_environment_terraform]
-          filters:
-            branches:
-              only: master
+
+      - slack_notify_production_release:
+          name: post_production_release_message
+          filters: { branches: { only: [master] } }
+          requires: [prod_run_healthcheck_test]
 
 orbs:
+  slack: circleci/slack@3.3.0
   use-my-lpa:
     commands:
       install_aws_cli:
@@ -641,3 +626,35 @@ orbs:
 
                 actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
                 # TODO Add for actor when endpoint exists.
+jobs:
+  slack_notify_domain:
+    docker:
+      - image: circleci/python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Get URLs
+          command: |
+            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+            echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+      - slack/notify:
+          title: "Use a Lasting Power of Attorney Development Environment Ready"
+          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
+  slack_notify_production_release:
+    docker:
+      - image: circleci/python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Get URLs
+          command: |
+            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+            echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+      - slack/notify:
+          title: "Use a Lasting Power of Attorney Production Release Successful"
+          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
+          webhook: ${PROD_RELEASE_SLACK_WEBHOOK}

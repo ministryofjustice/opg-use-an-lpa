@@ -26,6 +26,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('actor_name', [$this, 'actorName']),
             new TwigFunction('lpa_date', [$this, 'lpaDate']),
             new TwigFunction('days_remaining_to_expiry', [$this, 'daysRemaining']),
+            new TwigFunction('add_hyphen_to_viewer_code', [$this, 'formatViewerCode']),
         ];
     }
 
@@ -116,6 +117,20 @@ class LpaExtension extends AbstractExtension
         }
 
         return $difference;
+    }
+
+    /**
+     * Create a hyphenated viewer code
+     *
+     * @param string $viewerCode
+     * @return string
+     */
+    public function formatViewerCode(?string $viewerCode) : string
+    {
+        $viewerCodeParts = str_split($viewerCode, 4);
+        array_unshift($viewerCodeParts, 'V');
+
+        return implode(" - ", $viewerCodeParts);
     }
 
 }

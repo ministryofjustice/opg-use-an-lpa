@@ -37,8 +37,9 @@ class LpaService
     /**
      * Get the users currently registered LPAs
      *
-     * @param $userToken
+     * @param string $userToken
      * @return ArrayObject|null
+     * @throws Exception
      */
     public function getLpas(string $userToken) : ?ArrayObject
     {
@@ -54,27 +55,18 @@ class LpaService
     }
 
     /**
-     * Get an LPA registered to an account
-     *
-     * The $actorLpaToken *must* be registered to the $userToken account or a Not Found
-     * response will be returned.
-     *
      * @param string $userToken
      * @param string $actorLpaToken
-     * @return ArrayObject|null
+     * @return Lpa|null
      * @throws Exception
      */
-    public function getLpaById(string $userToken, string $actorLpaToken) : ?ArrayObject
+    public function getLpaById(string $userToken, string $actorLpaToken) : ?Lpa
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
         $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
 
-        if (is_array($lpaData)) {
-            $lpaData = $this->parseLpaData($lpaData);
-        }
-
-        return $lpaData;
+        return isset($lpaData['lpa']) ? $this->lpaFactory->createLpaFromData($lpaData['lpa']) : null;
     }
 
     /**
@@ -83,6 +75,7 @@ class LpaService
      * @param string $shareCode
      * @param string $donorSurname
      * @return ArrayObject|null
+     * @throws Exception
      */
     public function getLpaByCode(string $shareCode, string $donorSurname) : ?ArrayObject
     {
@@ -111,6 +104,7 @@ class LpaService
      * @param string $referenceNumber
      * @param string $dob
      * @return Lpa|null
+     * @throws Exception
      */
     public function getLpaByPasscode(string $userToken, string $passcode, string $referenceNumber, string $dob) : ?Lpa
     {
