@@ -6,6 +6,7 @@ namespace App\DataAccess\DynamoDb;
 
 use App\DataAccess\Repository\ViewerCodeActivityInterface;
 use Aws\DynamoDb\DynamoDbClient;
+use Aws\DynamoDb\Marshaler;
 use DateTime;
 
 class ViewerCodeActivity implements ViewerCodeActivityInterface
@@ -56,20 +57,25 @@ class ViewerCodeActivity implements ViewerCodeActivityInterface
     {
         $marshaler = new Marshaler();
 
-        foreach($accessCodes as $code){
+        foreach($accessCodes as $key => $code){
 
             $result = $this->client->scan([
                 'TableName' => $this->viewerActivityTable,
                 'ProjectionExpression' => 'ViewerCode, Viewed',
                 'FilterExpression' => 'ViewerCode = :code',
                 'ExpressionAttributeValues'=> $marshaler->marshalItem([
-                    ':code' => $code
+                    ':code' => $code['ViewerCode']
                 ]),
             ]);
+
+            if ($result['Count'] === 0){
+                $accessCodes[$key]['Viewed'] = "Not Viewed";
+            } else {
+                $accessCodes[$key]['Viewed'] = "Viewed";
+            }
+
         }
 
-        $accessCodeStatuses = $this->getDataCollection($result);
-
-        return !empty($accessCodeStatuses) ? $accessCodeStatuses : null;
+        return !empty($accessCodes) ? $accessCodes : null;
     }
 }

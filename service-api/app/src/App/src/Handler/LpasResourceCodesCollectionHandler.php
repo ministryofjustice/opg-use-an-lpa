@@ -32,7 +32,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
 
     public function __construct(
         ViewerCodeService $viewerCodeService,
-        ViewerCodeActivityInterface $viewerCodeActivityRepository)
+        Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository)
     {
         $this->viewerCodeService = $viewerCodeService;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
@@ -91,9 +91,9 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
                 $request->getAttribute('actor-id')
             );
 
-            $statuses = $this->viewerCodeActivityRepository->getActivityStatusesForViewerCodes($viewerCodes);
+            $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getActivityStatusesForViewerCodes($viewerCodes);
 
-            return new JsonResponse($viewerCodes);
+            return new JsonResponse($viewerCodesAndStatuses);
         }
 
     }
