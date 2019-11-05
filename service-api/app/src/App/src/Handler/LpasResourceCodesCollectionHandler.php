@@ -24,7 +24,8 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
      */
     private $viewerCodeService;
 
-    public function __construct(ViewerCodeService $viewerCodeService)
+    public function __construct(
+        ViewerCodeService $viewerCodeService)
     {
         $this->viewerCodeService = $viewerCodeService;
     }
@@ -43,7 +44,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
             throw new BadRequestException("'user-lpa-actor-token' missing.");
         }
 
-        if ($request->getMethod() == 'POST') {
+        if ($request->getMethod() === 'POST') {
 
             $data = $request->getParsedBody();
 
@@ -74,8 +75,15 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
             }
 
             return new JsonResponse($result);
+
         } else {
-            die('GET Not Implemented');
+
+            $result = $this->viewerCodeService->getCodes(
+                $request->getAttribute('user-lpa-actor-token'),
+                $request->getAttribute('actor-id')
+            );
+
+            return new JsonResponse($result);
         }
 
     }

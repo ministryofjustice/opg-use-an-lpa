@@ -91,4 +91,18 @@ class ViewerCodeService
         ];
     }
 
+    public function getCodes(string $token, string $userId)
+    {
+        $map = $this->userLpaActorMapRepository->get($token);
+
+        // Ensure the passed userId matches the passed token
+        if ($userId !== $map['UserId']) {
+            return null;
+        }
+
+        $accessCodes = $this->viewerCodesRepository->getCodesByUserLpaActorId($token);
+
+        return $accessCodes;
+    }
+
 }

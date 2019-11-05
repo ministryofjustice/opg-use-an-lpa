@@ -17,6 +17,14 @@ interface ViewerCodesInterface
     public function get(string $code) : ?array;
 
     /**
+     * Get a list of viewer codes from the database for a given LPA actor Id
+     *
+     * @param string $userLpaActorId
+     * @return array|null
+     */
+    public function getCodesByUserLpaActorId(string $userLpaActorId) : ?array;
+
+    /**
      * Adds a code to the database.
      *
      * $siriusUid is denormalised.

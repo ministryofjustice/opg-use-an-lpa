@@ -7,8 +7,10 @@ namespace App\DataAccess\DynamoDb;
 use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\ViewerCodesInterface;
 use Aws\DynamoDb\DynamoDbClient;
+use Aws\DynamoDb\Marshaler;
 use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTime;
+use Zend\Stdlib\ArrayObject;
 
 class ViewerCodes implements ViewerCodesInterface
 {
@@ -52,6 +54,27 @@ class ViewerCodes implements ViewerCodesInterface
         $codeData = $this->getData($result, ['Added','Expires']);
 
         return !empty($codeData) ? $codeData : null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCodesByUserLpaActorId(string $userLpaActor) : array
+    {
+        $marshaler = new Marshaler();
+
+        $result = $this->client->scan([
+            'TableName' => $this->viewerCodesTable,
+            'ProjectionExpression' => 'ViewerCode, Added, Expires, Organisation',
+            'FilterExpression' => 'UserLpaActor = :actor',
+            'ExpressionAttributeValues'=> $marshaler->marshalItem([
+                ':actor' => $userLpaActor
+            ]),
+        ]);
+
+        $accessCodes = $this->getDataCollection($result);
+
+        return !empty($accessCodes) ? $accessCodes : null;
     }
 
     /**

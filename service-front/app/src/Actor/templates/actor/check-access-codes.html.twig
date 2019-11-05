@@ -1,0 +1,87 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Check Access Codes {{ parent() }} {% endblock %}
+
+{% block content %}
+
+    <div class="govuk-width-container">
+        {{ include('@partials/new-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        <a href="{{ path('lpa.dashboard', {}, {'lpa': actorToken}) }}" class="govuk-back-link">Back</a>
+
+        <main class="govuk-main-wrapper">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-third">
+                <span class="govuk-caption-l">
+                    {% if lpa.caseSubtype == "pfa" %}
+                        Property and Finance
+                    {% else %}
+                        Health and Welfare
+                    {% endif %}
+                </span>
+                    <h1 class="govuk-heading-l">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}</h1>
+                </div>
+            </div>
+
+            {{ include('@actor/partials/lpa-sub-navigation.html.twig') }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h2 class="govuk-heading-xl">Check access codes</h2>
+
+                    <h2 class="govuk-heading-m">Active codes</h2>
+
+                    <p class="govuk-body">Give an organisation their access code so they can view this LPA.<br>
+                        They should go to www.gov.uk/view-an-lpa to use the code.</p>
+
+                    {% for code in shareCodes %}
+                    <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+                        <div class="govuk-accordion__section ">
+                            <div class="govuk-accordion__section-header">
+                                <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
+                                  {{ code }}
+                                </span>
+                                </h2>
+                            </div>
+                            <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
+                                <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">Access code</dt>
+                                        <dd class="govuk-summary-list__value">??</dd>
+                                    </div>
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">Created by</dt>
+                                        <dd class="govuk-summary-list__value">??</dd>
+                                    </div>
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">LPA viewed</dt>
+                                        <dd class="govuk-summary-list__value">??</dd>
+                                    </div>
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">Expires</dt>
+                                        <dd class="govuk-summary-list__value">??</dd>
+                                    </div>
+                                </dl>
+
+                                <a href="#" role="button" draggable="false" class="govuk-button govuk-button--warning">
+                                    Cancel organisation's access
+                                </a>
+
+                                <p class="govuk-body-s">
+                                    The other attorneys on this LPA can see this code, but cannot cancel it.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+{% endblock %}

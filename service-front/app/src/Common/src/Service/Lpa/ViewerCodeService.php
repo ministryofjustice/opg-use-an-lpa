@@ -45,4 +45,24 @@ class ViewerCodeService {
 
         return $lpaData;
     }
+
+    /**
+     * Gets a list of viewer codes for a given lpa
+     *
+     * @param string $userToken
+     * @param string $lpaId
+     * @return ArrayObject|null
+     */
+    public function getShareCodes(string $userToken, string $lpaId) :?ArrayObject
+    {
+        $this->apiClient->setUserTokenHeader($userToken);
+
+        $shareCodes = $this->apiClient->httpGet('/v1/lpas/' . $lpaId . '/codes');
+
+        if (is_array($shareCodes)) {
+            $shareCodes = new ArrayObject($shareCodes, ArrayObject::ARRAY_AS_PROPS);
+        }
+
+        return $shareCodes;
+    }
 }
