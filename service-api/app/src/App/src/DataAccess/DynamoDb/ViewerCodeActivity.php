@@ -10,6 +10,7 @@ use DateTime;
 
 class ViewerCodeActivity implements ViewerCodeActivityInterface
 {
+    use DynamoHydrateTrait;
     /**
      * @var DynamoDbClient
      */
@@ -46,5 +47,29 @@ class ViewerCodeActivity implements ViewerCodeActivityInterface
                 'Viewed'        => ['S' => $now],
             ]
         ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getActivityStatusesForViewerCodes(array $accessCodes) : array
+    {
+        $marshaler = new Marshaler();
+
+        foreach($accessCodes as $code){
+
+            $result = $this->client->scan([
+                'TableName' => $this->viewerActivityTable,
+                'ProjectionExpression' => 'ViewerCode, Viewed',
+                'FilterExpression' => 'ViewerCode = :code',
+                'ExpressionAttributeValues'=> $marshaler->marshalItem([
+                    ':code' => $code
+                ]),
+            ]);
+        }
+
+        $accessCodeStatuses = $this->getDataCollection($result);
+
+        return !empty($accessCodeStatuses) ? $accessCodeStatuses : null;
     }
 }

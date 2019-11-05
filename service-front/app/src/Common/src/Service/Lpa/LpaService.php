@@ -94,6 +94,23 @@ class LpaService
         return $lpaData;
     }
 
+    public function getLpaByCodeAndUpdateViewerActivity(string $shareCode, string $donorSurname) : ?ArrayObject
+    {
+        //  Filter dashes out of the share code
+        $shareCode = str_replace('-', '', $shareCode);
+
+        $lpaData = $this->apiClient->httpPost('/v1/viewer-codes/full', [
+            'code' => $shareCode,
+            'name' => $donorSurname,
+        ]);
+
+        if (is_array($lpaData)) {
+            $lpaData = $this->parseLpaData($lpaData);
+        }
+
+        return $lpaData;
+    }
+
     /**
      * Get an LPA using a users supplied one time passcode, LPA uid and the actors DoB
      *

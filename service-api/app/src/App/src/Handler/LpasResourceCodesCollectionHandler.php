@@ -11,6 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
+use App\DataAccess\Repository;
 use RuntimeException;
 
 /**
@@ -24,10 +25,17 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
      */
     private $viewerCodeService;
 
+    /**
+     * @var Repository\ViewerCodeActivityInterface
+     */
+    private $viewerCodeActivityRepository;
+
     public function __construct(
-        ViewerCodeService $viewerCodeService)
+        ViewerCodeService $viewerCodeService,
+        ViewerCodeActivityInterface $viewerCodeActivityRepository)
     {
         $this->viewerCodeService = $viewerCodeService;
+        $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
     }
 
     /**
@@ -78,12 +86,14 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
 
         } else {
 
-            $result = $this->viewerCodeService->getCodes(
+            $viewerCodes = $this->viewerCodeService->getCodes(
                 $request->getAttribute('user-lpa-actor-token'),
                 $request->getAttribute('actor-id')
             );
 
-            return new JsonResponse($result);
+            $statuses = $this->viewerCodeActivityRepository->getActivityStatusesForViewerCodes($viewerCodes);
+
+            return new JsonResponse($viewerCodes);
         }
 
     }

@@ -43,7 +43,7 @@
                             <div class="govuk-accordion__section-header">
                                 <h2 class="govuk-accordion__section-heading">
                                 <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
-                                  {{ code }}
+                                  {{ code.Organisation }}
                                 </span>
                                 </h2>
                             </div>
@@ -52,7 +52,7 @@
 
                                     <div class="govuk-summary-list__row">
                                         <dt class="govuk-summary-list__key">Access code</dt>
-                                        <dd class="govuk-summary-list__value">??</dd>
+                                        <dd class="govuk-summary-list__value">{{ add_hyphen_to_viewer_code(code.ViewerCode) }}</dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
                                         <dt class="govuk-summary-list__key">Created by</dt>
@@ -64,7 +64,7 @@
                                     </div>
                                     <div class="govuk-summary-list__row">
                                         <dt class="govuk-summary-list__key">Expires</dt>
-                                        <dd class="govuk-summary-list__value">??</dd>
+                                        <dd class="govuk-summary-list__value">{{ code.Expires|date("d/m/Y", false) }}</dd>
                                     </div>
                                 </dl>
 

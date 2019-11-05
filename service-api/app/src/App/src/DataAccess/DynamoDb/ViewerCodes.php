@@ -10,7 +10,6 @@ use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
 use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTime;
-use Zend\Stdlib\ArrayObject;
 
 class ViewerCodes implements ViewerCodesInterface
 {
