@@ -22,4 +22,4 @@ COPY pdf/app/src ./src
 
 EXPOSE 8080
 
-CMD [ "node", "-r", "esm", "src/app.js" ]
+CMD [ "node", "-r", "esm", "src/server.js" ]

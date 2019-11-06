@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import app from "./app";
+const app = require("./app");
 
 const port = 8080;
 const server = app.listen(port, err => {
