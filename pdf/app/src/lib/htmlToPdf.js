@@ -1,5 +1,4 @@
 const puppeteer = require("puppeteer");
-//TODO:  Error handling needed here?
 const htmlToPdf = async html => {
   const browser = await puppeteer.launch({
     args: [

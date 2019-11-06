@@ -2,13 +2,11 @@ const bodyParser = require("body-parser");
 const polka = require("polka");
 import GeneratePdf from "./lib/generatePdf";
 
-const port = 8080;
-
 function stripAnchorTagsFromHtml(headers) {
   return headers["strip-anchor-tags"] !== undefined;
 }
 
-polka()
+const app = polka()
   .use(bodyParser.text({ type: "text/html", limit: "2000kb" }))
   .post("/generate-pdf", async (req, res) => {
     const result = await GeneratePdf(req.body, {
@@ -22,8 +20,6 @@ polka()
     });
 
     res.end(Buffer.from(result, "binary"));
-  })
-  .listen(port, err => {
-    if (err) throw err;
-    console.log(`> Running on localhost:${port}`);
   });
+
+module.exports = app;
