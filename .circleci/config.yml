@@ -375,7 +375,7 @@ orbs:
           - run:
               name: Build
               command: |
-                docker build --file pdf/docker/app/Dockerfile --tag pdf:latest .
+                docker build --file service-pdf/docker/app/Dockerfile --tag pdf:latest .
           - ecr_login
           - run:
               name: Push container
