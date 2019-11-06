@@ -186,6 +186,10 @@ EOF
     {
       "name": "API_SERVICE_URL",
       "value": "http://${local.api_service_fqdn}"
+    },
+    {
+      "name": "PDF_SERVICE_URL",
+      "value": "http://${local.pdf_service_fqdn}"
     }]
   }
   
