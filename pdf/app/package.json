@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "CI=true jest --coverage",
     "test:watch": "jest --watch",
-    "start:webserver": "node -r esm src/app.js"
+    "start:webserver": "node -r esm src/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -22,11 +22,16 @@
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
     "babel-jest": "^24.9.0",
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "supertest": "^4.0.2"
   },
   "jest": {
+    "resetMocks": true,
     "testMatch": [
       "**/?(*.)+(test).js"
+    ],
+    "testPathIgnorePatterns": [
+      "src/server.js"
     ],
     "collectCoverageFrom": [
       "src/**/*.js",
