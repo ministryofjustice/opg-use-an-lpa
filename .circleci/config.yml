@@ -54,11 +54,6 @@ workflows:
           filters: { branches: { ignore: [master] } }
           requires: [dev_seed_database]
 
-      - slack_notify_domain:
-          name: post_environment_domains
-          filters: { branches: { ignore: [master] } }
-          requires: [dev_run_behave_tests]
-
       - hold-for-destruction:
           name: hold_env_for_destruction
           type: approval
@@ -124,11 +119,6 @@ workflows:
           name: prod_run_healthcheck_test
           filters: { branches: { only: [master] } }
           requires: [production_apply_environment_terraform]
-
-      - slack_notify_production_release:
-          name: post_production_release_message
-          filters: { branches: { only: [master] } }
-          requires: [prod_run_healthcheck_test]
 
 orbs:
   slack: circleci/slack@3.3.0
