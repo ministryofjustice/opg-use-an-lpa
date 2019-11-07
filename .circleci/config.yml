@@ -180,7 +180,7 @@ orbs:
           - checkout
           - restore_cache:
               name: Restore node modules cache
-              key: node_modules-{{ checksum "package-lock.json" }}
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
           - run:
               name: Install dependencies
               command: |
