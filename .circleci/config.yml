@@ -152,7 +152,7 @@ orbs:
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
 
     executors:
-      node10:
+      node-ten:
         docker: [image: circleci/node:10.16.3]
       node:
         docker: [image: circleci/node:8.0]
@@ -165,10 +165,10 @@ orbs:
 
     jobs:
       node_test_service_pdf:
-        executor: node10
+        executor: node-ten
         steps:
           - checkout
-        - restore_cache:
+          - restore_cache:
               name: Restore node modules cache
               key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
           - run:
