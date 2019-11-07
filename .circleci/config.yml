@@ -10,8 +10,7 @@ workflows:
 
       - use-my-lpa/node_test_web:
           name: test_web
-      - use-my-lpa/node_test_service_pdf:
-          name: test_service_pdf
+
       - use-my-lpa/docker_build_front_app:
           name: app_front_build
       - use-my-lpa/docker_build_front_web:
