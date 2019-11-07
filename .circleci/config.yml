@@ -185,7 +185,7 @@ orbs:
               name: Install dependencies
               command: |
                 if [ ! -d node_modules ]; then
-                  cd service-front/web/ && npm ci
+                  cd service-front/web/ && npm install
                 fi
           - run:
               name: Run Tests
@@ -656,35 +656,3 @@ orbs:
 
                 actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
                 # TODO Add for actor when endpoint exists.
-jobs:
-  slack_notify_domain:
-    docker:
-      - image: circleci/python
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp
-      - run:
-          name: Get URLs
-          command: |
-            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
-            echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
-      - slack/notify:
-          title: "Use a Lasting Power of Attorney Development Environment Ready"
-          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
-  slack_notify_production_release:
-    docker:
-      - image: circleci/python
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp
-      - run:
-          name: Get URLs
-          command: |
-            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
-            echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
-      - slack/notify:
-          title: "Use a Lasting Power of Attorney Production Release Successful"
-          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
-          webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
