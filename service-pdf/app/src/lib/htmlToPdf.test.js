@@ -6,13 +6,13 @@ describe("Given you pass HTML to be returned into PDF", () => {
   describe("Given a PDF is not generated correctly due to an error", () => {
     test("it should return null and throw an error", () => {
       return expect(
-        htmlToPdf(testHtml, { waitUntil: "loadss" })
+        htmlToPdf(testHtml, { waitUntil: "loads" })
       ).rejects.toThrow("PDF Generation Error");
     });
   });
   describe("Given a PDF is valid and to be generated", () => {
     test("it should generate a PDF using puppeteer successfully", async () => {
-      const pdf = await htmlToPdf(testHtml, { waitUntil: "load" });
+      const pdf = await htmlToPdf(testHtml, { waitUntil: "loads" });
 
       expect(pdf).not.toBeNull();
       expect(pdf).toBeInstanceOf(Uint8Array);
