@@ -161,7 +161,7 @@ orbs:
 
     executors:
       node:
-        docker: [image: circleci/node:8-alpine]
+        docker: [image: circleci/node:8.0]
       python:
         docker: [image: circleci/python]
       python-browsers:
