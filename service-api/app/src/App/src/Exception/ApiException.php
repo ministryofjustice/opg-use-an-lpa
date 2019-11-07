@@ -60,7 +60,7 @@ class ApiException extends AbstractApiException
      */
     public function getAdditionalData() : array
     {
-        return json_decode($this->getResponse()->getBody(), true);
+        return json_decode($this->getResponse()->getBody()->getContents(), true);
     }
 
     public static function create(string $message = null, ResponseInterface $response = null, Throwable $previous = null) : ApiException
@@ -68,7 +68,7 @@ class ApiException extends AbstractApiException
         $code = self::DEFAULT_ERROR;
 
         if (! is_null($response)) {
-            $body = json_decode($response->getBody(), true);
+            $body = json_decode($response->getBody()->getContents(), true);
             $code = $response->getStatusCode();
 
             //  If no message was provided create one from the response data

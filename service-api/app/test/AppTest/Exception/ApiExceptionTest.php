@@ -8,10 +8,12 @@ use App\Exception\AbstractApiException;
 use App\Exception\ApiException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 class ApiExceptionTest extends TestCase
 {
-    public function testCreatesInstanceWithoutResponse()
+    /** @test */
+    public function creates_instance_without_response()
     {
         $instance = ApiException::create('test');
 
@@ -22,7 +24,8 @@ class ApiExceptionTest extends TestCase
         $this->assertEquals(ApiException::DEFAULT_ERROR, $instance->getCode());
     }
 
-    public function testCreatesInstanceWithResponse()
+    /** @test */
+    public function creates_instance_with_response()
     {
         $message = 'api message';
         $additionalData = [
@@ -30,9 +33,13 @@ class ApiExceptionTest extends TestCase
             'data' => 'here,'
         ];
 
+        $streamProphecy = $this->prophesize(StreamInterface::class);
+        $streamProphecy->getContents()
+            ->willReturn(json_encode($additionalData));
+
         $responseProphecy = $this->prophesize(ResponseInterface::class);
         $responseProphecy->getBody()
-            ->willReturn( json_encode($additionalData));
+            ->willReturn($streamProphecy->reveal());
         $responseProphecy->getStatusCode()
             ->willReturn(404);
 
