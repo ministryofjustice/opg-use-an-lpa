@@ -2,7 +2,7 @@ FROM node:8-alpine as builder
 
 WORKDIR /usr/src/app
 COPY service-front/web ./
-RUN npm ci
+RUN npm install
 RUN npm rebuild node-sass
 
 RUN npm run build

@@ -10,6 +10,8 @@ workflows:
 
       - use-my-lpa/node_test_web:
           name: test_web
+      - use-my-lpa/node_test_service_pdf:
+          name: test_service_pdf
       - use-my-lpa/docker_build_front_app:
           name: app_front_build
       - use-my-lpa/docker_build_front_web:
@@ -150,6 +152,8 @@ orbs:
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
 
     executors:
+      node10:
+        docker: [image: circleci/node:10.16.3]
       node:
         docker: [image: circleci/node:8.0]
       python:
@@ -160,6 +164,28 @@ orbs:
         docker: [image: hashicorp/terraform:0.12.8]
 
     jobs:
+      node_test_service_pdf:
+        executor: node10
+        steps:
+          - checkout
+        - restore_cache:
+              name: Restore node modules cache
+              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
+          - run:
+              name: Install dependencies
+              command: |
+                if [ ! -d service-pdf/app/node_modules ]; then
+                  cd service-front/web/ && npm install
+                fi
+          - run:
+              name: Run Tests
+              command: cd service-front/web/ && npm run test
+          - save_cache:
+              name: Save node modules cache
+              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
+              paths:
+                - service-front/web/node_modules
+
       node_test_web:
         #
         # Build Docker container for Front App
