@@ -1,0 +1,49 @@
+<div class="govuk-accordion__section ">
+    <div class="govuk-accordion__section-header">
+        <h2 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
+          {{ code.Organisation }}
+        </span>
+        </h2>
+    </div>
+    <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
+        <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Access code</dt>
+                <dd class="govuk-summary-list__value">{{ add_hyphen_to_viewer_code(code.ViewerCode) }}</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Created by</dt>
+                <dd class="govuk-summary-list__value">{{ code.CreatedBy }}</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">LPA viewed</dt>
+                <dd class="govuk-summary-list__value">
+                    {% if code.Viewed == true %}
+                        Viewed
+                    {% else %}
+                        Not Viewed
+                    {% endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                {% if check_if_code_has_expired(code.Expires|date("Y/m/d", false)) == false %}
+                    <dt class="govuk-summary-list__key">Expires</dt>
+                    <dd class="govuk-summary-list__value">{{ code.Expires|date("d/m/Y", false) }}</dd>
+                {% else %}
+                    <dt class="govuk-summary-list__key">Expired</dt>
+                    <dd class="govuk-summary-list__value">{{ code.Expires|date("d/m/Y", false) }}</dd>
+                {% endif %}
+            </div>
+        </dl>
+
+        <a href="#" role="button" draggable="false" class="govuk-button govuk-button--warning">
+            Cancel organisation's access
+        </a>
+
+        <p class="govuk-body-s">
+            The other attorneys on this LPA can see this code, but cannot cancel it.
+        </p>
+    </div>
+</div>
