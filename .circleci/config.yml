@@ -174,7 +174,7 @@ orbs:
           - run:
               name: Install dependencies
               command: |
-                if [ ! -d node_modules ]; then
+                if [ ! -d service-front/web/node_modules ]; then
                   cd service-front/web/ && npm install
                 fi
           - run:
