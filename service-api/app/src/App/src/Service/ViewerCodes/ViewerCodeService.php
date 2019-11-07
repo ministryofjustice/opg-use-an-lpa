@@ -100,7 +100,9 @@ class ViewerCodeService
             return null;
         }
 
-        $accessCodes = $this->viewerCodesRepository->getCodesByUserLpaActorId($token);
+        $siriusUid = $map['SiriusUid'];
+
+        $accessCodes = $this->viewerCodesRepository->getCodesByUserLpaActorId($siriusUid, $token); //need to pass in sirius uid
 
         return $accessCodes;
     }

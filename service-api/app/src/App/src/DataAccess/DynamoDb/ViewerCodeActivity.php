@@ -59,23 +59,21 @@ class ViewerCodeActivity implements ViewerCodeActivityInterface
 
         foreach($accessCodes as $key => $code){
 
-            $result = $this->client->scan([
+            $result = $this->client->query([
                 'TableName' => $this->viewerActivityTable,
-                'ProjectionExpression' => 'ViewerCode, Viewed',
-                'FilterExpression' => 'ViewerCode = :code',
+                'KeyConditionExpression' => 'ViewerCode = :code',
                 'ExpressionAttributeValues'=> $marshaler->marshalItem([
                     ':code' => $code['ViewerCode']
                 ]),
             ]);
 
             if ($result['Count'] === 0){
-                $accessCodes[$key]['Viewed'] = "Not Viewed";
+                $accessCodes[$key]['Viewed'] = false;
             } else {
-                $accessCodes[$key]['Viewed'] = "Viewed";
+                $accessCodes[$key]['Viewed'] = true;
             }
-
         }
 
-        return !empty($accessCodes) ? $accessCodes : null;
+        return $accessCodes;
     }
 }

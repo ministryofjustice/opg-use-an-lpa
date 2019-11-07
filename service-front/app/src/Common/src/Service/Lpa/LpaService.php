@@ -77,29 +77,18 @@ class LpaService
      * @return ArrayObject|null
      * @throws Exception
      */
-    public function getLpaByCode(string $shareCode, string $donorSurname) : ?ArrayObject
+    public function getLpaByCode(string $shareCode, string $donorSurname, bool $track) : ?ArrayObject
     {
         //  Filter dashes out of the share code
         $shareCode = str_replace('-', '', $shareCode);
 
-        $lpaData = $this->apiClient->httpPost('/v1/viewer-codes/summary', [
-            'code' => $shareCode,
-            'name' => $donorSurname,
-        ]);
-
-        if (is_array($lpaData)) {
-            $lpaData = $this->parseLpaData($lpaData);
+        if($track){
+            $trackRoute = 'full';
+        } else {
+            $trackRoute = 'summary';
         }
 
-        return $lpaData;
-    }
-
-    public function getLpaByCodeAndUpdateViewerActivity(string $shareCode, string $donorSurname) : ?ArrayObject
-    {
-        //  Filter dashes out of the share code
-        $shareCode = str_replace('-', '', $shareCode);
-
-        $lpaData = $this->apiClient->httpPost('/v1/viewer-codes/full', [
+        $lpaData = $this->apiClient->httpPost('/v1/viewer-codes/' . $trackRoute, [
             'code' => $shareCode,
             'name' => $donorSurname,
         ]);

@@ -71,11 +71,24 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware
             $actorLpaToken
         );
 
+        foreach($shareCodes as $key => $code){
+
+            if ($lpa->getDonor()->getId() == $code['ActorId']){
+                $shareCodes[$key]['CreatedBy'] = $lpa->getDonor()->getFirstname();
+            }
+
+            foreach ($lpa->getAttorneys() as $attorney){
+                if ($attorney->getId() == $code['ActorId']){
+                    $shareCodes[$key]['CreatedBy'] = $attorney->getFirstname() . ' ' . $attorney->getSurname();
+                }
+            }
+        }
+
         return new HtmlResponse($this->renderer->render('actor::check-access-codes', [
             'actorToken' => $actorLpaToken,
             'user' => $user,
             'lpa' => $lpa,
-            'shareCodes' => $shareCodes
+            'shareCodes' => $shareCodes,
         ]));
     }
 }

@@ -115,6 +115,7 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
     {
         $lpa = $this->lpaService->getLpaById($userToken, $actorLpaToken);
 
+        //could it be null
         return $lpa;
     }
 }

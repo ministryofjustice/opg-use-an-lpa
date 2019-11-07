@@ -58,22 +58,29 @@ class ViewerCodes implements ViewerCodesInterface
     /**
      * @inheritDoc
      */
-    public function getCodesByUserLpaActorId(string $userLpaActor) : array
+    public function getCodesByUserLpaActorId(string $siriusUid, string $userLpaActor) : array
     {
         $marshaler = new Marshaler();
 
-        $result = $this->client->scan([
+        $result = $this->client->query([
             'TableName' => $this->viewerCodesTable,
-            'ProjectionExpression' => 'ViewerCode, Added, Expires, Organisation',
+            'IndexName' => 'SiriusUidIndex',
+            'KeyConditionExpression' => 'SiriusUid = :uId',
             'FilterExpression' => 'UserLpaActor = :actor',
             'ExpressionAttributeValues'=> $marshaler->marshalItem([
+                ':uId' => $siriusUid,
                 ':actor' => $userLpaActor
             ]),
         ]);
 
-        $accessCodes = $this->getDataCollection($result);
+        if ($result['Count'] !== 0){
 
-        return !empty($accessCodes) ? $accessCodes : null;
+            $accessCodes = $this->getDataCollection($result);
+            return $accessCodes;
+
+        } else {
+            return null;
+        }
     }
 
     /**

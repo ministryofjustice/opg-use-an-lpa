@@ -30,12 +30,19 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
      */
     private $viewerCodeActivityRepository;
 
+    /**
+     * @var Repository\UserLpaActorMapInterface
+     */
+    private $userLpaActorMap;
+
     public function __construct(
         ViewerCodeService $viewerCodeService,
-        Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository)
+        Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
+        Repository\UserLpaActorMapInterface $userLpaActorMap)
     {
         $this->viewerCodeService = $viewerCodeService;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
+        $this->userLpaActorMap = $userLpaActorMap;
     }
 
     /**
@@ -92,6 +99,13 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
             );
 
             $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getActivityStatusesForViewerCodes($viewerCodes);
+
+            $actorId = $this->userLpaActorMap->getUsersLpas($request->getAttribute('actor-id'));
+
+            //adds an actorId for each code in the array
+            foreach ($viewerCodesAndStatuses as $key => $code){
+                $viewerCodesAndStatuses[$key]['ActorId'] = $actorId[0]['ActorId'];
+            }
 
             return new JsonResponse($viewerCodesAndStatuses);
         }

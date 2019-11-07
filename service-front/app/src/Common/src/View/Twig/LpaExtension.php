@@ -26,6 +26,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('actor_name', [$this, 'actorName']),
             new TwigFunction('lpa_date', [$this, 'lpaDate']),
             new TwigFunction('days_remaining_to_expiry', [$this, 'daysRemaining']),
+            new TwigFunction('check_if_code_has_expired', [$this, 'hasCodeExpired']),
             new TwigFunction('add_hyphen_to_viewer_code', [$this, 'formatViewerCode']),
         ];
     }
@@ -117,6 +118,30 @@ class LpaExtension extends AbstractExtension
         }
 
         return $difference;
+    }
+
+    /**
+     * Checks whether the code has expired or not
+     *
+     * @param string|null $expiryDate
+     * @return bool
+     * @throws \Exception
+     */
+    public function hasCodeExpired(?string $expiryDate) : bool
+    {
+        $hasExpired = false;
+
+        if (!empty($expiryDate)) {
+            $expires = new DateTime($expiryDate);
+            $now = new DateTime("now");
+            $difference = $now->diff($expires)->format('%R%a');
+
+            if ($difference < 0){
+                $hasExpired = true;
+            }
+        }
+
+        return $hasExpired;
     }
 
     /**
