@@ -8,6 +8,8 @@ workflows:
           name: lint_terraform
           filters: { branches: { ignore: [master] } }
 
+      - use-my-lpa/node_test_web:
+          name: node_test_web
       - use-my-lpa/docker_build_front_app:
           name: app_front_build
       - use-my-lpa/docker_build_front_web:
@@ -130,6 +132,7 @@ workflows:
 
 orbs:
   slack: circleci/slack@3.3.0
+  node: circleci/node@1.1
   use-my-lpa:
     commands:
       install_aws_cli:
@@ -158,6 +161,9 @@ orbs:
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
 
     executors:
+      node:
+        name: node/default
+        tag: "10.4"
       python:
         docker: [image: circleci/python]
       python-browsers:
@@ -166,6 +172,20 @@ orbs:
         docker: [image: hashicorp/terraform:0.12.8]
 
     jobs:
+      node_test_web:
+        #
+        # Build Docker container for Front App
+        #   and runs the Unit Tests.
+        #
+        executor: node
+        working_directory: service-front/web/
+        steps:
+          - checkout
+          - node/with-cache:
+              steps:
+                - run: npm install
+          - run: npm run test
+
       #----------------------------------------------------
       # Front Services (Actor & Viewer)
 
