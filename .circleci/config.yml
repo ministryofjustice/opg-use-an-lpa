@@ -184,7 +184,7 @@ orbs:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
               paths:
-                - node_modules
+                - service-front/web/node_modules
 
       #----------------------------------------------------
       # Front Services (Actor & Viewer)
