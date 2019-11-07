@@ -160,7 +160,8 @@ orbs:
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
 
     executors:
-      node: circleci/node@1.1
+      node:
+        docker: [image: circleci/node@1.1.6]
       python:
         docker: [image: circleci/python]
       python-browsers:
@@ -174,9 +175,7 @@ orbs:
         # Build Docker container for Front App
         #   and runs the Unit Tests.
         #
-        executor:
-          name: node
-          tag: "10.4"
+        executor: node
         working_directory: service-front/web/
         steps:
           - checkout
