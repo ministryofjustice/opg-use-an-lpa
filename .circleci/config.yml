@@ -161,7 +161,7 @@ orbs:
 
     executors:
       node:
-        docker: [image: circleci/node@1.1.6]
+        docker: [image: circleci/node:chakracore-10.13.0]
       python:
         docker: [image: circleci/python]
       python-browsers:
