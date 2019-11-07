@@ -10,7 +10,8 @@
     "build:pdf": "webpack -p --progress --config webpack.pdf.development.js",
     "build:pdf_production": "webpack -p --progress --config webpack.pdf.production.js",
     "build": "webpack -p --progress --config webpack.production.js",
-    "watch": "webpack -p --progress --watch --config webpack.development.js"
+    "watch": "webpack -p --progress --watch --config webpack.development.js",
+    "access-check": "pa11y http://localhost:9001"
   },
   "author": "John Nolan <john.nolan@digital.justice.gov.uk>",
   "license": "MIT",
