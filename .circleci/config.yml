@@ -176,11 +176,10 @@ orbs:
         #   and runs the Unit Tests.
         #
         executor: node
-        working_directory: service-front/web/
         steps:
           - checkout
-          - run: npm install
-          - run: npm run test
+          - run: cd service-front/web/ && npm install
+          - run: cd service-front/web/ && npm run test
 
       #----------------------------------------------------
       # Front Services (Actor & Viewer)
