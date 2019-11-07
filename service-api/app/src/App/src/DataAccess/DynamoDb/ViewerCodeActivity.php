@@ -53,11 +53,11 @@ class ViewerCodeActivity implements ViewerCodeActivityInterface
     /**
      * @inheritDoc
      */
-    public function getActivityStatusesForViewerCodes(array $accessCodes) : array
+    public function getStatusesForViewerCodes(array $viewerCodes) : array
     {
         $marshaler = new Marshaler();
 
-        foreach($accessCodes as $key => $code){
+        foreach($viewerCodes as $key => $code){
 
             $result = $this->client->query([
                 'TableName' => $this->viewerActivityTable,
@@ -68,12 +68,12 @@ class ViewerCodeActivity implements ViewerCodeActivityInterface
             ]);
 
             if ($result['Count'] === 0){
-                $accessCodes[$key]['Viewed'] = false;
+                $viewerCodes[$key]['Viewed'] = false;
             } else {
-                $accessCodes[$key]['Viewed'] = true;
+                $viewerCodes[$key]['Viewed'] = true;
             }
         }
 
-        return $accessCodes;
+        return $viewerCodes;
     }
 }

@@ -98,7 +98,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
                 $request->getAttribute('actor-id')
             );
 
-            $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getActivityStatusesForViewerCodes($viewerCodes);
+            $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($viewerCodes);
 
             $actorId = $this->userLpaActorMap->getUsersLpas($request->getAttribute('actor-id'));
 

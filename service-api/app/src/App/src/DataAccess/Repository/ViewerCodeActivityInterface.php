@@ -25,5 +25,5 @@ interface ViewerCodeActivityInterface
      * @param array $viewerCodes
      * @return array
      */
-    public function getActivityStatusesForViewerCodes(array $viewerCodes) : array;
+    public function getStatusesForViewerCodes(array $viewerCodes) : array;
 }
