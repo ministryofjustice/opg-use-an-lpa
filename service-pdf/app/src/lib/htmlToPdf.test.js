@@ -6,7 +6,7 @@ describe("Given you pass HTML to be returned into PDF", () => {
   describe("Given a PDF is not generated correctly due to an error", () => {
     test("it should return null and throw an error", () => {
       return expect(
-        htmlToPdf(testHtml, { waitUntil: "loads" })
+        htmlToPdf(testHtml, { waitUntil: "loadss" })
       ).rejects.toThrow("PDF Generation Error");
     });
   });
