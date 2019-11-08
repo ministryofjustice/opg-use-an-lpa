@@ -184,8 +184,13 @@ orbs:
                   cd service-pdf/app/ && npm install
                 fi
           - run:
-              name: Run Tests
-              command: cd service-pdf/app/ && npm run test
+              name: Install JUnit coverage reporter
+              command: npm install --save-dev jest-junit
+          - run:
+              name: Run tests with JUnit as reporter
+              command: cd service-pdf/app/ && jest --ci --runInBand --reporters=default --reporters=jest-junit
+              environment:
+                JEST_JUNIT_OUTPUT_DIR: "service-pdf/app/reports/junit/js-test-results.xml"
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
@@ -210,8 +215,13 @@ orbs:
                   cd service-front/web/ && npm install
                 fi
           - run:
-              name: Run Tests
-              command: cd service-front/web/ && npm run test
+              name: Install JUnit coverage reporter
+              command: npm install --save-dev jest-junit
+          - run:
+              name: Run tests with JUnit as reporter
+              command: cd service-front/app/ && jest --ci --runInBand --reporters=default --reporters=jest-junit
+              environment:
+                JEST_JUNIT_OUTPUT_DIR: "service-front/app/reports/junit/js-test-results.xml"
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
