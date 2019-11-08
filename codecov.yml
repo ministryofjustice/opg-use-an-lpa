@@ -38,3 +38,12 @@ coverage:
         if_no_uploads: error
         if_not_found: success
         if_ci_failed: error
+      web: # declare a new status context for service-front
+        target: auto # set coverage target
+        threshold: 5% # allow coverage to drop by x% and post a success
+        base: pr # will only use the pull request base. Commits not on a pull request will not receive this status.
+        paths:
+          - service-front/web/src
+        if_no_uploads: error
+        if_not_found: success
+        if_ci_failed: error

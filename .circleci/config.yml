@@ -205,7 +205,6 @@ orbs:
               paths:
                 - service-pdf/
               when: always
-
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
@@ -230,14 +229,27 @@ orbs:
                   cd service-front/web/ && npm install
                 fi
           - run:
-              name: Run tests with JUnit as reporter
-              command: cd service-front/web/ && mkdir -p ./test-results/junit && ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit --collectCoverage=true
+              name: Run tests with Jest
+              command: cd service-front/web/ && mkdir -p ./test-results/junit && ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit
           - store_test_results:
               path: service-front/web/test-results
           - store_artifacts:
               path: service-front/web/test-results/junit
+          - run:
+              name: Run coverage with Jest
+              command: |
+                mkdir -p /root/project/build/web-js
+                cd service-front/web/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
+                cp -a ./coverage /root/project/build/web-js
+          - store_test_results:
+              path: build/web-js/
           - store_artifacts:
-              path: service-front/web/coverage
+              path: build/web-js/
+          - persist_to_workspace:
+              root: build
+              paths:
+                - web-js/
+              when: always
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
