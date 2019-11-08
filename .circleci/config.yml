@@ -184,17 +184,12 @@ orbs:
                   cd service-pdf/app/ && npm install
                 fi
           - run:
-              name: Install JUnit coverage reporter
-              command: cd service-pdf/app/ && npm install --save-dev jest-junit
-          - run:
               name: Run tests with JUnit as reporter
-              command: cd service-pdf/app/ && npm run test:ci
-              environment:
-                JEST_JUNIT_OUTPUT_DIR: "service-pdf/app/reports/junit/js-test-results.xml"
+              command: cd service-pdf/app/ && mkdir -p ./test-results/junit && npm run test:ci
           - store_test_results:
-              path: service-pdf/app/reports/junit
+              path: service-pdf/app/test-results
           - store_artifacts:
-              path: service-pdf/app/reports/junit
+              path: service-pdf/app/test-results/junit
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
@@ -219,17 +214,12 @@ orbs:
                   cd service-front/web/ && npm install
                 fi
           - run:
-              name: Install JUnit coverage reporter
-              command: cd service-front/web/ && npm install --save-dev jest-junit
-          - run:
               name: Run tests with JUnit as reporter
-              command: cd service-front/web/ && npm run test:ci
-              environment:
-                JEST_JUNIT_OUTPUT_DIR: "service-front/web/reports/junit/js-test-results.xml"
+              command: cd service-front/web/ && mkdir -p ./test-results/junit && npm run test:ci
           - store_test_results:
-              path: service-front/web/reports/junit
+              path: service-front/web/test-results
           - store_artifacts:
-              path: service-front/web/reports/junit
+              path: service-front/web/test-results/junit
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
