@@ -185,10 +185,10 @@ orbs:
                 fi
           - run:
               name: Install JUnit coverage reporter
-              command: npm install --save-dev jest-junit
+              command: cd service-pdf/app/ && npm install --save-dev jest-junit
           - run:
               name: Run tests with JUnit as reporter
-              command: cd service-pdf/app/ && jest --ci --runInBand --reporters=default --reporters=jest-junit
+              command: cd service-pdf/app/ && node jest --ci --runInBand --reporters=default --reporters=jest-junit
               environment:
                 JEST_JUNIT_OUTPUT_DIR: "service-pdf/app/reports/junit/js-test-results.xml"
           - save_cache:
@@ -216,12 +216,12 @@ orbs:
                 fi
           - run:
               name: Install JUnit coverage reporter
-              command: npm install --save-dev jest-junit
+              command: cd service-front/web/ && npm install --save-dev jest-junit
           - run:
               name: Run tests with JUnit as reporter
-              command: cd service-front/app/ && jest --ci --runInBand --reporters=default --reporters=jest-junit
+              command: cd service-front/web/ && node jest --ci --runInBand --reporters=default --reporters=jest-junit
               environment:
-                JEST_JUNIT_OUTPUT_DIR: "service-front/app/reports/junit/js-test-results.xml"
+                JEST_JUNIT_OUTPUT_DIR: "service-front/web/reports/junit/js-test-results.xml"
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
