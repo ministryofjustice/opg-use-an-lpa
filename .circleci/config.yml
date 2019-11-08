@@ -238,9 +238,9 @@ orbs:
           - run:
               name: Run coverage with Jest
               command: |
-                mkdir -p /root/project/build/web-js
+                mkdir -p /home/circleci/project/build/web-js
                 cd service-front/web/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
-                cp -a ./coverage /root/project/build/web-js
+                cp -a ./coverage /home/circleci/project/build/web-js
           - store_test_results:
               path: build/web-js/
           - store_artifacts:
