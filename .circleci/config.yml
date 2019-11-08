@@ -188,7 +188,7 @@ orbs:
               command: cd service-pdf/app/ && npm install --save-dev jest-junit
           - run:
               name: Run tests with JUnit as reporter
-              command: cd service-pdf/app/ && node jest --ci --runInBand --reporters=default --reporters=jest-junit
+              command: cd service-pdf/app/ && npm run test:ci
               environment:
                 JEST_JUNIT_OUTPUT_DIR: "service-pdf/app/reports/junit/js-test-results.xml"
           - save_cache:
@@ -219,7 +219,7 @@ orbs:
               command: cd service-front/web/ && npm install --save-dev jest-junit
           - run:
               name: Run tests with JUnit as reporter
-              command: cd service-front/web/ && node jest --ci --runInBand --reporters=default --reporters=jest-junit
+              command: cd service-front/web/ && npm run test:ci
               environment:
                 JEST_JUNIT_OUTPUT_DIR: "service-front/web/reports/junit/js-test-results.xml"
           - save_cache:
