@@ -185,11 +185,13 @@ orbs:
                 fi
           - run:
               name: Run tests with JUnit as reporter
-              command: cd service-pdf/app/ && mkdir -p ./test-results/junit && ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit
+              command: cd service-pdf/app/ && mkdir -p ./test-results/junit && ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit --collectCoverage=true
           - store_test_results:
               path: service-pdf/app/test-results
           - store_artifacts:
               path: service-pdf/app/test-results/junit
+          - store_artifacts:
+              path: service-pdf/app/coverage
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
@@ -215,11 +217,13 @@ orbs:
                 fi
           - run:
               name: Run tests with JUnit as reporter
-              command: cd service-front/web/ && mkdir -p ./test-results/junit && ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit
+              command: cd service-front/web/ && mkdir -p ./test-results/junit && ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit --collectCoverage=true
           - store_test_results:
               path: service-front/web/test-results
           - store_artifacts:
               path: service-front/web/test-results/junit
+          - store_artifacts:
+              path: service-pdf/app/coverage
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-front/web/package-lock.json" }}

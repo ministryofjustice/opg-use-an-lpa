@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "CI=true jest --coverage",
-    "test:ci": "CI=true jest --ci --runInBand --reporters=default --reporters=jest-junit",
     "test:watch": "jest --watch",
     "start:webserver": "node -r esm src/server.js"
   },
