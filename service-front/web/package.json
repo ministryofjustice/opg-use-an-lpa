@@ -6,7 +6,7 @@
   "repository": "git@github.com:ministryofjustice/opg-use-an-lpa.git",
   "scripts": {
     "test": "CI=true jest --coverage",
-    "test:ci": "CI=true jest --ci --runInBand --reporters=default --reporters=jest-junit",
+    "test:ci": "CI=true jest --ci --runInBand --reporters=default --reporters=jest-junit --testResultsProcessor='jest-junit'",
     "test:watch": "jest --watch",
     "build": "webpack -p --progress --config webpack.production.js",
     "watch": "webpack -p --progress --watch --config webpack.development.js"
