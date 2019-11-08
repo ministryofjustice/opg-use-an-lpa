@@ -17,17 +17,22 @@ workflows:
           name: app_front_build
       - use-my-lpa/docker_build_front_web:
           name: web_front_build
+          requires: [test_web]
 
       - use-my-lpa/docker_build_api_app:
           name: app_api_build
       - use-my-lpa/docker_build_api_web:
           name: web_api_build
+          requires: [test_web]
+
       - use-my-lpa/docker_build_pdf:
           name: pdf_build
+          requires: [test_pdf]
 
       - use-my-lpa/codecov_php-unit_upload:
           name: codecov_upload
-          requires: [app_front_build, app_api_build, web_api_build]
+          requires:
+            [app_front_build, app_api_build, web_api_build, test_web, test_pdf]
 
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
