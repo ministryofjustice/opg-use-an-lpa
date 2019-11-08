@@ -10,6 +10,8 @@ workflows:
 
       - use-my-lpa/node_test_web:
           name: test_web
+      - use-my-lpa/node_test_service_pdf:
+          name: test_pdf
 
       - use-my-lpa/docker_build_front_app:
           name: app_front_build
@@ -151,6 +153,8 @@ orbs:
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
 
     executors:
+      puppeteer:
+        docker: [image: buildkite/puppeteer]
       node-ten:
         docker: [image: circleci/node:10.16.3]
       node:
@@ -164,7 +168,7 @@ orbs:
 
     jobs:
       node_test_service_pdf:
-        executor: node-ten
+        executor: puppeteer
         steps:
           - checkout
           - restore_cache:

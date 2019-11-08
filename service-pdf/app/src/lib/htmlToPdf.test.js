@@ -12,7 +12,7 @@ describe("Given you pass HTML to be returned into PDF", () => {
   });
   describe("Given a PDF is valid and to be generated", () => {
     test("it should generate a PDF using puppeteer successfully", async () => {
-      const pdf = await htmlToPdf(testHtml, { waitUntil: "loads" });
+      const pdf = await htmlToPdf(testHtml, { waitUntil: "load" });
 
       expect(pdf).not.toBeNull();
       expect(pdf).toBeInstanceOf(Uint8Array);
