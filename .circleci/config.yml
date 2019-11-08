@@ -195,6 +195,7 @@ orbs:
               command: |
                 mkdir -p build/service-pdf
                 cd service-pdf/app/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
+                cd service-pdf/app/ && cp -a ./coverage /build/service-pdf/jest
           - store_test_results:
               path: build/service-pdf/
           - store_artifacts:
