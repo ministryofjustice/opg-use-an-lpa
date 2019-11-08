@@ -18,7 +18,7 @@ RUN  apt-get update \
 WORKDIR /src/app
 COPY service-pdf/app/package.json ./package.json
 RUN npm install
-COPY service-pdf/app/src ./src
+COPY service-pdf/app .
 
 EXPOSE 8080
 
