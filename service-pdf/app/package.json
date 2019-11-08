@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "CI=true jest --coverage",
-    "test:ci": "CI=true jest --ci --runInBand --reporters=default --reporters=jest-junit --testResultsProcessor='jest-junit'",
+    "test:ci": "CI=true jest --ci --runInBand --reporters=default --reporters=jest-junit",
     "test:watch": "jest --watch",
     "start:webserver": "node -r esm src/server.js"
   },
@@ -28,7 +28,8 @@
     "supertest": "^4.0.2"
   },
   "jest-junit": {
-    "output": "./test-results/junit/results.xml"
+    "outputDirectory": "./test-results/junit",
+    "outputName": "results.xml"
   },
   "jest": {
     "resetMocks": true,
