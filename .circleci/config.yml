@@ -193,9 +193,9 @@ orbs:
           - run:
               name: Run coverage with Jest
               command: |
-                mkdir -p build/service-pdf/jest
+                mkdir -p /root/project/build/service-pdf
                 cd service-pdf/app/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
-                cp -a ./coverage build/service-pdf/jest
+                cp -a ./coverage /root/project/build/service-pdf
           - store_test_results:
               path: build/service-pdf/
           - store_artifacts:
