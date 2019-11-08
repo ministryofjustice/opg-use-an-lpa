@@ -19,7 +19,6 @@ WORKDIR /src/app
 COPY service-pdf/app/package.json ./package.json
 RUN npm install
 COPY service-pdf/app .
-RUN npm run test
 
 EXPOSE 8080
 

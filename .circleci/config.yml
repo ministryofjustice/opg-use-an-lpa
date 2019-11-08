@@ -155,8 +155,6 @@ orbs:
     executors:
       puppeteer:
         docker: [image: buildkite/puppeteer]
-      node-ten:
-        docker: [image: circleci/node:10.16.3]
       node:
         docker: [image: circleci/node:8.0]
       python:
