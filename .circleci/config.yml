@@ -191,6 +191,10 @@ orbs:
               command: cd service-pdf/app/ && npm run test:ci
               environment:
                 JEST_JUNIT_OUTPUT_DIR: "service-pdf/app/reports/junit/js-test-results.xml"
+          - store_test_results:
+              path: service-pdf/app/reports/junit
+          - store_artifacts:
+              path: service-pdf/app/reports/junit
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
@@ -222,6 +226,10 @@ orbs:
               command: cd service-front/web/ && npm run test:ci
               environment:
                 JEST_JUNIT_OUTPUT_DIR: "service-front/web/reports/junit/js-test-results.xml"
+          - store_test_results:
+              path: service-front/web/reports/junit
+          - store_artifacts:
+              path: service-front/web/reports/junit
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
