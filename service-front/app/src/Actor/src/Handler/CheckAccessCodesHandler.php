@@ -16,7 +16,7 @@ use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Diactoros\Response\HtmlResponse;
-
+use DateTime;
 
 class CheckAccessCodesHandler extends AbstractHandler implements UserAware
 {
@@ -82,6 +82,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware
                     $shareCodes[$key]['CreatedBy'] = $attorney->getFirstname() . ' ' . $attorney->getSurname();
                 }
             }
+
         }
 
         return new HtmlResponse($this->renderer->render('actor::check-access-codes', [

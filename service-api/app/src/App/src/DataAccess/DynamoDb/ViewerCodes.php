@@ -79,7 +79,8 @@ class ViewerCodes implements ViewerCodesInterface
             return $accessCodes;
 
         } else {
-            return null;
+            //the user has not yet created any access codes
+            return [];
         }
     }
 

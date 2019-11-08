@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
+use App\Exception\NotFoundException;
 use DateTime;
 
 interface ViewerCodesInterface
@@ -17,13 +18,13 @@ interface ViewerCodesInterface
     public function get(string $code) : ?array;
 
     /**
-     * Get a list of viewer codes from the database for a given LPA
+     * Gets a list of viewer codes for a given LPA
      *
      * @param string $siriusUid
      * @param string $userLpaActorId
-     * @return array|null
+     * @return array
      */
-    public function getCodesByUserLpaActorId(string $siriusUid, string $userLpaActorId) : ?array;
+    public function getCodesByUserLpaActorId(string $siriusUid, string $userLpaActorId) : array;
 
     /**
      * Adds a code to the database.

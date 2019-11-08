@@ -6,6 +6,7 @@ namespace Common\View\Twig;
 
 use Common\Entity\Address;
 use Common\Entity\CaseActor;
+use Common\Form\Fieldset\Date;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use DateTime;
@@ -25,6 +26,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('actor_address', [$this, 'actorAddress']),
             new TwigFunction('actor_name', [$this, 'actorName']),
             new TwigFunction('lpa_date', [$this, 'lpaDate']),
+            new TwigFunction('code_date', [$this, 'codeDate']),
             new TwigFunction('days_remaining_to_expiry', [$this, 'daysRemaining']),
             new TwigFunction('check_if_code_has_expired', [$this, 'hasCodeExpired']),
             new TwigFunction('add_hyphen_to_viewer_code', [$this, 'formatViewerCode']),
@@ -86,7 +88,7 @@ class LpaExtension extends AbstractExtension
     public function lpaDate($date)
     {
         if (!is_null($date)) {
-            if ($date === "today"){
+            if ($date === "today") {
                 $date = new DateTime("today");
             } elseif (is_string($date)) {
                 $date = DateTime::createFromFormat('Y-m-d', $date);
@@ -98,6 +100,24 @@ class LpaExtension extends AbstractExtension
         }
 
         return '';
+    }
+
+    /**
+     * Takes an input date, whether as a string (relative or absolute) or as a Datetime
+     * and converts it for displaying codes on check access codes page
+     *
+     * @param DateTime|string|null $date
+     * @return string
+     */
+    public function codeDate($date) {
+
+        $date = DateTime::createFromFormat('Y-m-d\TH:i:sP', $date);
+
+        if ($date instanceof DateTime) {
+            return $date->format('d/m/Y');
+        } else {
+            return '';
+        }
     }
 
     /**

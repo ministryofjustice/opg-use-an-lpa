@@ -82,7 +82,7 @@ class LpaService
         //  Filter dashes out of the share code
         $shareCode = str_replace('-', '', $shareCode);
 
-        if($track){
+        if ($track) {
             $trackRoute = 'full';
         } else {
             $trackRoute = 'summary';
