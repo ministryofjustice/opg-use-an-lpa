@@ -192,7 +192,9 @@ orbs:
               path: service-pdf/app/test-results/junit
           - run:
               name: Run coverage with Jest
-              command: cd service-pdf/app/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
+              command: |
+                mkdir -p build/service-pdf
+                cd service-pdf/app/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
           - store_test_results:
               path: build/service-pdf/
           - store_artifacts:
