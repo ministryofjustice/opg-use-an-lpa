@@ -22,7 +22,7 @@
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">LPA viewed</dt>
                 <dd class="govuk-summary-list__value">
-                    {% if code.Viewed == true %}
+                    {% if code.Viewed %}
                         Viewed
                     {% else %}
                         Not Viewed
@@ -31,7 +31,7 @@
             </div>
 
             <div class="govuk-summary-list__row">
-                {% if check_if_code_has_expired(code.Expires) == false %}
+                {% if not check_if_code_has_expired(code.Expires) %}
                     <dt class="govuk-summary-list__key">Expires</dt>
                     <dd class="govuk-summary-list__value">{{ code_date(code.Expires) }}</dd>
                 {% else %}

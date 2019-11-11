@@ -82,7 +82,7 @@ class CheckCodeHandlerTest extends TestCase
         //---
 
         // Return null. i.e. code not found or donors surname doesn't match (if code was valid)
-        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE, self::TEST_SURNAME)->willReturn(null);
+        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE, self::TEST_SURNAME, false)->willReturn(null);
 
         $this->templateRendererProphecy->render('viewer::check-code-not-found', Argument::any())->willReturn('');
 
@@ -110,7 +110,7 @@ class CheckCodeHandlerTest extends TestCase
 
         //---
         // Throw 410 exception
-        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE, self::TEST_SURNAME)
+        $this->lpaServiceProphecy->getLpaByCode(self::TEST_CODE, self::TEST_SURNAME, false)
             ->willThrow($this->getException(410));
 
         $this->templateRendererProphecy->render('viewer::check-code-expired', Argument::any())
@@ -145,7 +145,7 @@ class CheckCodeHandlerTest extends TestCase
         $lpaData = new ArrayObject(['expires' => '2019-12-12', 'lpa' => $lpa], ArrayObject::ARRAY_AS_PROPS);
 
         $this->lpaServiceProphecy
-            ->getLpaByCode(self::TEST_CODE, self::TEST_SURNAME)
+            ->getLpaByCode(self::TEST_CODE, self::TEST_SURNAME, false)
             ->willReturn($lpaData);
 
         //---

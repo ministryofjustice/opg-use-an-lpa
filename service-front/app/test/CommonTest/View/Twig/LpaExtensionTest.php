@@ -26,7 +26,9 @@ class LpaExtensionTest extends TestCase
             'actor_address'             => 'actorAddress',
             'actor_name'                => 'actorName',
             'lpa_date'                  => 'lpaDate',
+            'code_date'                 => 'codeDate',
             'days_remaining_to_expiry'  => 'daysRemaining',
+            'check_if_code_has_expired' => 'hasCodeExpired',
             'add_hyphen_to_viewer_code' => 'formatViewerCode',
 
         ];
@@ -206,6 +208,74 @@ class LpaExtensionTest extends TestCase
             [
                 null,
                 '',
+            ]
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider codeDateDataProvider
+     */
+    public function it_creates_a_correctly_formatted_string_from_an_iso_date_for_check_codes($date, $expected)
+    {
+        $extension = new LpaExtension();
+
+        $name = $extension->codeDate($date);
+
+        $this->assertEquals($expected, $name);
+    }
+
+    public function codeDateDataProvider()
+    {
+        return [
+            [
+                '2019-11-01T23:59:59+00:00',
+                '01/11/2019',
+            ],
+            [
+                '1972-03-22T23:59:59+00:00',
+                '22/03/1972',
+            ],
+            [
+                'not-a-date',
+                '',
+            ],
+            [
+                null,
+                '',
+            ]
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider expiryDateProvider
+     */
+    public function it_checks_if_a_code_has_expired($expiryDate, $expected){
+
+        $extension = new LpaExtension();
+
+        $status = $extension->hasCodeExpired($expiryDate);
+
+        $this->assertEquals($expected, $status);
+    }
+
+    public function expiryDateProvider()
+    {
+        $future = new DateTime('+1 week');
+
+        return [
+            [
+                $future->format('Y-m-d'),
+                false,
+            ],
+            [
+                '1972-03-22T23:59:59+00:00',
+                true,
+            ],
+            [
+                '',
+                false,
             ]
         ];
     }

@@ -57,7 +57,7 @@ class ViewerCodeActivity implements ViewerCodeActivityInterface
     {
         $marshaler = new Marshaler();
 
-        foreach($viewerCodes as $key => $code){
+        foreach ($viewerCodes as $key => $code) {
 
             $result = $this->client->query([
                 'TableName' => $this->viewerActivityTable,
@@ -67,7 +67,7 @@ class ViewerCodeActivity implements ViewerCodeActivityInterface
                 ]),
             ]);
 
-            if ($result['Count'] === 0){
+            if ($result['Count'] === 0) {
                 $viewerCodes[$key]['Viewed'] = false;
             } else {
                 $viewerCodes[$key]['Viewed'] = true;

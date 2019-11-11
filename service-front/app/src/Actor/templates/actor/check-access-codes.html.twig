@@ -48,7 +48,7 @@
 
                         {% for code in shareCodes %}
 
-                            {% if check_if_code_has_expired(code.Expires) == true %}
+                            {% if check_if_code_has_expired(code.Expires) %}
                                 {% set containsInactive = true %}
                             {% else %}
                                 {% set containsActive = true %}

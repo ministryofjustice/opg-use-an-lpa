@@ -111,13 +111,18 @@ class LpaExtension extends AbstractExtension
      */
     public function codeDate($date) {
 
-        $date = DateTime::createFromFormat('Y-m-d\TH:i:sP', $date);
+        if (!is_null($date)) {
+            $date = DateTime::createFromFormat('Y-m-d\TH:i:sP', $date);
 
-        if ($date instanceof DateTime) {
-            return $date->format('d/m/Y');
-        } else {
-            return '';
+            if ($date instanceof DateTime) {
+                return $date->format('d/m/Y');
+            } else {
+                return '';
+            }
         }
+
+        return '';
+
     }
 
     /**
@@ -147,16 +152,15 @@ class LpaExtension extends AbstractExtension
      * @return bool
      * @throws \Exception
      */
-    public function hasCodeExpired(?string $expiryDate) : bool
+    public function hasCodeExpired(?string $expiryDate) : ?bool
     {
         $hasExpired = false;
 
         if (!empty($expiryDate)) {
             $expires = new DateTime($expiryDate);
             $now = new DateTime("now");
-            $difference = $now->diff($expires)->format('%R%a');
 
-            if ($difference < 0){
+            if ($now > $expires) {
                 $hasExpired = true;
             }
         }

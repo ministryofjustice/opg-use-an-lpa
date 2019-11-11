@@ -73,7 +73,7 @@ class ViewerCodes implements ViewerCodesInterface
             ]),
         ]);
 
-        if ($result['Count'] !== 0){
+        if ($result['Count'] !== 0) {
 
             $accessCodes = $this->getDataCollection($result);
             return $accessCodes;
