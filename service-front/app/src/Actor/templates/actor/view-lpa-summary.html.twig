@@ -74,7 +74,7 @@
                     </div>
                 </dl>
                 <p class="govuk-body">
-                    <a href="#">Need to change the donor's details?</a>
+                    <a href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">Need to change the donor's details?</a>
                 </p>
             </div>
         </div>
@@ -121,7 +121,7 @@
                     </dl>
                 {% endfor %}
                 <p class="govuk-body">
-                    <a href="#">Need to change an attorney's details?</a>
+                    <a href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">Need to change an attorney's details?</a>
                 </p>
             </div>
         </div>
