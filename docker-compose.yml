@@ -22,6 +22,18 @@ services:
   # ---------------------------
   # Viewer Front
 
+  service-pdf:
+    container_name: service-pdf
+    image: service-pdf
+    build:
+      context: .
+      dockerfile: service-pdf/docker/app/Dockerfile
+    ports:
+      - 9004:8080
+
+  # ---------------------------
+  # Viewer Front
+
   viewer-web:
     container_name: viewer-web
     image: front-web

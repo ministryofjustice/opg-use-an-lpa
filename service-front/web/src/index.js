@@ -1,6 +1,10 @@
+/* istanbul ignore file */
+
 import './main.scss';
+import './scss/lpa.scss';
 import { initAll } from 'govuk-frontend';
+import jsEnabled from './javascript/jsEnabled';
 
 initAll();
 
-document.body.classList.add('js-enabled');
+jsEnabled(document.body);
