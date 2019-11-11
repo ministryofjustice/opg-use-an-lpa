@@ -68,7 +68,8 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware
 
         $shareCodes = $this->viewerCodeService->getShareCodes(
             $identity,
-            $actorLpaToken
+            $actorLpaToken,
+            false
         );
 
         foreach ($shareCodes as $key => $code) {

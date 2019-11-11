@@ -127,7 +127,7 @@ class CheckAccessCodesHandlerTest extends TestCase
             ->willReturn($lpa);
 
         $this->viewerCodeServiceProphecy
-            ->getShareCodes(self::IDENTITY_TOKEN,self::LPA_ID)
+            ->getShareCodes(self::IDENTITY_TOKEN,self::LPA_ID, false)
             ->willReturn($shareCodes);
 
         $this->templateRendererProphecy

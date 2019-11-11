@@ -24,6 +24,11 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
     use User;
 
     /**
+     * @var LpaService
+     */
+    private $lpaService;
+
+    /**
      * @var ViewerCodeService
      */
     private $viewerCodeService;
@@ -54,6 +59,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
      *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -68,29 +74,15 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
 
         foreach ($lpas as $lpaKey => $lpaData) {
 
-            $counter = 0;
             $actorToken = $lpaData['user-lpa-actor-token'];
 
             $shareCodes = $this->viewerCodeService->getShareCodes(
                 $identity,
-                $actorToken
+                $actorToken,
+                true
             );
 
-            if (!empty($shareCodes[0])) {
-                foreach ($shareCodes as $codeKey => $code) {
-                    $expiryDate = new DateTime($code['Expires']);
-                    $expiryDate = $expiryDate->format('Y-m-d');
-                    if ($this->lpaExtension->hasCodeExpired($expiryDate)){
-                        $lpas[$lpaKey]['activeCodeCount'] = $counter;
-                    } else {
-                        $counter += 1;
-                        $lpas[$lpaKey]['activeCodeCount'] = $counter;
-                    }
-                }
-            } else {
-                $lpas[$lpaKey]['activeCodeCount'] = $counter;
-            }
-
+            $lpas[$lpaKey]['activeCodeCount'] = $shareCodes['activeCodeCount'];
         }
 
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [

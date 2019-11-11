@@ -275,7 +275,7 @@ class LpaExtensionTest extends TestCase
             ],
             [
                 '',
-                false,
+                null,
             ]
         ];
     }

@@ -149,23 +149,16 @@ class LpaExtension extends AbstractExtension
      * Checks whether the code has expired or not
      *
      * @param string|null $expiryDate
-     * @return bool
+     * @return bool|null
      * @throws \Exception
      */
     public function hasCodeExpired(?string $expiryDate) : ?bool
     {
-        $hasExpired = false;
-
-        if (!empty($expiryDate)) {
-            $expires = new DateTime($expiryDate);
-            $now = new DateTime("now");
-
-            if ($now > $expires) {
-                $hasExpired = true;
-            }
+        if (!empty($expiryDate && $date = new DateTime($expiryDate))) {
+            return $date < (new DateTime('now'));
         }
 
-        return $hasExpired;
+        return null;
     }
 
     /**

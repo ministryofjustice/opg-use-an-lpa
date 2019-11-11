@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace AppTest\DataAccess\DynamoDb;
 
 use App\DataAccess\DynamoDb\ViewerCodeActivity;
-use App\DataAccess\DynamoDb\ViewerCodeActivityFactory;
-use App\DataAccess\DynamoDb\ViewerCodes;
 use Aws\DynamoDb\DynamoDbClient;
 use DateTime;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
 use Prophecy\Argument;
 
 class ViewerCodeActivityTest extends TestCase
