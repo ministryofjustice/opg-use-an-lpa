@@ -228,6 +228,44 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
+    public function will_get_a_user_record_by_password_reset_token()
+    {
+        $token = 'RESET_TOKEN_1234';
+        $email = 'a@b.com';
+        $id = '12345-1234-1234-1234-12345';
+
+        $this->dynamoDbClientProphecy
+            ->query(Argument::that(function(array $data) use ($token) {
+                $this->assertArrayHasKey('TableName', $data);
+                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+                $this->assertArrayHasKey('IndexName', $data);
+                $this->assertEquals('PasswordResetTokenIndex', $data['IndexName']);
+
+                $this->assertArrayHasKey('ExpressionAttributeValues', $data);
+                $this->assertArrayHasKey(':rt', $data['ExpressionAttributeValues']);
+
+                $this->assertEquals(['S' => $token], $data['ExpressionAttributeValues'][':rt']);
+
+                return true;
+            }))
+            ->willReturn($this->createAWSResult([
+                'Items' => [
+                    [
+                        'Id' => [
+                            'S' => $id,
+                        ]
+                    ],
+                ],
+            ]));
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $result = $actorRepo->getIdByPasswordResetToken($token);
+
+        $this->assertEquals($id, $result);
+    }
+
+    /** @test */
     public function will_fail_to_get_a_user_record()
     {
         $id = '12345-1234-1234-1234-12345';
@@ -609,32 +647,11 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_reset_a_password_when_given_a_correct_reset_token()
+    public function will_reset_a_password_when_given_a_correct_user_id()
     {
         $id = '12345-1234-1234-1234-12345';
-        $resetToken = 'resetTokenAABBCCDDEE';
 
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
-        $dynamoDbClientProphecy
-            ->query(Argument::that(function(array $data) use ($resetToken) {
-                $this->assertIsArray($data);
-
-                // we don't care what the array looks like as it's specific to the AWS api and may change
-                // we do care that the data *at least* contains the items we want to affect
-                $this->assertStringContainsString('users-table', serialize($data));
-                $this->assertStringContainsString($resetToken, serialize($data));
-
-                return true;
-            }))
-            ->willReturn($this->createAWSResult([
-                'Items' => [
-                    [
-                        'Id' => [
-                            'S' => $id,
-                        ]
-                    ]
-                ]
-            ]));
 
         $dynamoDbClientProphecy
             ->updateItem(Argument::that(function(array $data) use ($id) {
@@ -651,32 +668,34 @@ class ActorUsersTest extends TestCase
 
         $actorRepo = new ActorUsers($dynamoDbClientProphecy->reveal(), 'users-table');
 
-        $result = $actorRepo->resetPassword($resetToken, 'password');
+        $result = $actorRepo->resetPassword($id, 'password');
 
         $this->assertTrue($result);
     }
 
     /** @test */
-    public function will_not_reset_a_password_when_given_an_correct_reset_token()
+    public function will_not_reset_a_password_when_given_an_incorrect_user_id()
     {
+        $id = '12345-1234-1234-1234-12345';
+
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
 
         $dynamoDbClientProphecy
-            ->query(
-                Argument::that(function(array $data) {
-                    $this->assertIsArray($data);
+            ->updateItem(Argument::that(function(array $data) use ($id) {
+                $this->assertIsArray($data);
 
-                    return true;
-                })
-            )
-            ->willReturn($this->createAWSResult([
-                'Items' => []
-            ]));
+                // we don't care what the array looks like as it's specific to the AWS api and may change
+                // we do care that the data *at least* contains the items we want to affect
+                $this->assertStringContainsString('users-table', serialize($data));
+                $this->assertStringContainsString($id, serialize($data));
+
+                return true;
+            }))
+            ->willThrow(new \Exception());
 
         $actorRepo = new ActorUsers($dynamoDbClientProphecy->reveal(), 'users-table');
 
-        $result = $actorRepo->resetPassword('badResetTokenAABBCCDDEE', 'passwordHash');
-
-        $this->assertFalse($result);
+        $this->expectException(\Exception::class);
+        $result = $actorRepo->resetPassword($id, 'passwordToHash');
     }
 }

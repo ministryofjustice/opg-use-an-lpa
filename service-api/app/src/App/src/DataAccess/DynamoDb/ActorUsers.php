@@ -106,6 +106,28 @@ class ActorUsers implements ActorUsersInterface
         return array_pop($usersData);
     }
 
+    public function getIdByPasswordResetToken(string $resetToken): string
+    {
+        $marshaler = new Marshaler();
+
+        $result = $this->client->query([
+            'TableName' => $this->actorUsersTable,
+            'IndexName' => 'PasswordResetTokenIndex',
+            'KeyConditionExpression' => 'PasswordResetToken = :rt',
+            'ExpressionAttributeValues'=> $marshaler->marshalItem([
+                ':rt' => $resetToken,
+            ]),
+        ]);
+
+        $usersData = $this->getDataCollection($result);
+
+        if (empty($usersData)) {
+            throw new NotFoundException('User not found');
+        }
+
+        return (array_pop($usersData))['Id'];
+    }
+
     /**
      * @inheritDoc
      */
@@ -163,29 +185,9 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function resetPassword(string $resetToken, string $password): bool
+    public function resetPassword(string $id, string $password): bool
     {
-        $marshaler = new Marshaler();
-
-        $result = $this->client->query([
-            'TableName' => $this->actorUsersTable,
-            'KeyConditionExpression' => 'PasswordResetToken = :rt',
-            'ExpressionAttributeValues'=> $marshaler->marshalItem([
-                ':rt' => $resetToken,
-            ]),
-        ]);
-
-        $usersData = $this->getDataCollection($result);
-
-        if (empty($usersData)) {
-            return false;
-        }
-
-        //  Use the returned value to get the user
-        $userData = array_pop($usersData);
-        $id = $userData['Id'];
-
-        //  Update the item by removing the activation token
+        //  Update the item by setting the password and removing the reset token/expiry
         $this->client->updateItem([
             'TableName' => $this->actorUsersTable,
             'Key' => [
@@ -231,25 +233,7 @@ class ActorUsers implements ActorUsersInterface
      */
     public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): array
     {
-        $marshaler = new Marshaler();
-
-        $result = $this->client->query([
-            'TableName' => $this->actorUsersTable,
-            'IndexName' => 'EmailToken',
-            'KeyConditionExpression' => 'EmailToken = :email',
-            'ExpressionAttributeValues'=> $marshaler->marshalItem([
-                ':email' => $email,
-            ]),
-        ]);
-
-        $usersData = $this->getDataCollection($result);
-
-        if (empty($usersData)) {
-            throw new NotFoundException('User not found for token');
-        }
-
-        //  Use the returned value to get the user
-        $userData = array_pop($usersData);
+        $userData = $this->getByEmail($email);
         $id = $userData['Id'];
 
         $user = $this->client->updateItem([
