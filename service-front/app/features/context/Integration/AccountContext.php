@@ -9,7 +9,8 @@ use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
-use PHPUnit\Framework\Assert;
+
+require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
 /**
  * A behat context that encapsulates user account steps
@@ -81,13 +82,13 @@ class AccountContext implements Context
 
         $token = $this->userService->requestPasswordReset($expectedEmail);
 
-        Assert::assertIsString($token);
-        Assert::assertEquals($expectedToken, $token);
+        assertInternalType('string', $token);
+        assertEquals($expectedToken, $token);
 
         $request = $this->apiFixtures->getLastRequest();
         $requestBody = $request->getBody()->getContents();
 
-        Assert::assertStringContainsString($expectedEmail, $requestBody);
+        assertContains($expectedEmail, $requestBody);
     }
 
     /**
@@ -108,9 +109,9 @@ class AccountContext implements Context
         $request = $this->apiFixtures->getLastRequest();
         $requestBody = $request->getBody()->getContents();
 
-        Assert::assertStringContainsString($expectedEmail, $requestBody);
-        Assert::assertStringContainsString(json_encode($expectedUrl), $requestBody);
-        Assert::assertStringContainsString($expectedTemplateId, $requestBody);
+        assertContains($expectedEmail, $requestBody);
+        assertContains(json_encode($expectedUrl), $requestBody);
+        assertContains($expectedTemplateId, $requestBody);
     }
 
     /**
