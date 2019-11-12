@@ -23,4 +23,10 @@ return [
     'api' => [
         'uri' => 'http://localhost',
     ],
+
+    'notify' => [
+        'api' => [
+            'key' => 'this-is-not-a-real-key',
+        ],
+    ],
 ];
