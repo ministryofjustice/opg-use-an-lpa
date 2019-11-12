@@ -36,6 +36,10 @@ resource "aws_dynamodb_table" "actor_users_table" {
     name = "ActivationToken"
     type = "S"
   }
+  attribute {
+    name = "PasswordResetToken"
+    type = "S"
+  }
 
   global_secondary_index {
     name            = "EmailIndex"
@@ -45,6 +49,11 @@ resource "aws_dynamodb_table" "actor_users_table" {
   global_secondary_index {
     name            = "ActivationTokenIndex"
     hash_key        = "ActivationToken"
+    projection_type = "KEYS_ONLY"
+  }
+  global_secondary_index {
+    name            = "PasswordResetTokenIndex"
+    hash_key        = "PasswordResetToken"
     projection_type = "KEYS_ONLY"
   }
 
