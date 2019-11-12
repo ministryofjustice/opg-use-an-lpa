@@ -222,6 +222,11 @@ services:
     environment:
       REGION: eu-west-1
       SEED_PATH: /init/kms-seed.yaml
+
+  zap:
+    build:
+      context: zap
+      
 #  feature-tests:
 #    build:
 #      context: features/
