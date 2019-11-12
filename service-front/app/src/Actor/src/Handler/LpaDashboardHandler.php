@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Common\Handler\AbstractHandler;
-use Common\View\Twig\LpaExtension;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
@@ -17,7 +16,6 @@ use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Common\Service\Lpa\ViewerCodeService;
-use DateTime;
 
 class LpaDashboardHandler extends AbstractHandler implements UserAware
 {
@@ -33,25 +31,18 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
      */
     private $viewerCodeService;
 
-    /**
-     * @var ViewerCodeService
-     */
-    private $lpaExtension;
-
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
         LpaService $lpaService,
-        ViewerCodeService $viewerCodeService,
-        LpaExtension $lpaExtension)
+        ViewerCodeService $viewerCodeService)
     {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
         $this->lpaService = $lpaService;
         $this->viewerCodeService = $viewerCodeService;
-        $this->lpaExtension = $lpaExtension;
     }
 
     /**
