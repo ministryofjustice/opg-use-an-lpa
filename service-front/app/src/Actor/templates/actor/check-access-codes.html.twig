@@ -14,15 +14,15 @@
         <main class="govuk-main-wrapper">
 
             <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-third">
+                <div class="govuk-grid-column-two-thirds">
                 <span class="govuk-caption-l">
                     {% if lpa.caseSubtype == "pfa" %}
-                        Property and Finance
+                        Property and finance
                     {% else %}
-                        Health and Welfare
+                        Health and welfare
                     {% endif %}
                 </span>
-                    <h1 class="govuk-heading-l">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}</h1>
+                    <h1 class="govuk-heading-l">{{ actor_name(lpa.donor, false) }}</h1>
                 </div>
             </div>
 

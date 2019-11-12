@@ -262,15 +262,21 @@ class LpaExtensionTest extends TestCase
 
     public function expiryDateProvider()
     {
-        $future = new DateTime('+1 week');
+        $future = (new DateTime('+1 week'))->format('Y-m-d');
+        $past = (new DateTime('-1 week'))->format('Y-m-d');
+        $endOfToday = (new DateTime('now'))->setTime(23,59,59)->format('Y-m-d');
 
         return [
             [
-                $future->format('Y-m-d'),
+                $future,
                 false,
             ],
             [
-                '1972-03-22T23:59:59+00:00',
+                $past,
+                true,
+            ],
+            [
+                $endOfToday,
                 true,
             ],
             [

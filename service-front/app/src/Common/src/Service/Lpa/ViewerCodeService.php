@@ -73,7 +73,7 @@ class ViewerCodeService {
     }
 
 
-    public function getNumberOfActiveCodes(ArrayObject $shareCodes) :?ArrayObject
+    private function getNumberOfActiveCodes(ArrayObject $shareCodes) :?ArrayObject
     {
         $counter = 0;
 
@@ -82,7 +82,7 @@ class ViewerCodeService {
             foreach ($shareCodes as $codeKey => $code) {
 
                 //if the code has not expired
-                if (new DateTime($code['Expires']) > (new DateTime('now'))) {
+                if (new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23,59,59)) {
                     $counter += 1;
                 }
             }

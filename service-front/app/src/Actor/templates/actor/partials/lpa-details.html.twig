@@ -16,13 +16,17 @@
             </p>
         </dd>
         <dd class="govuk-summary-list__actions">
-            <span class="moj-badge moj-badge--grey">
-                {% if activeCodeCount == 1 %}
-                {{ activeCodeCount }} active code
-                {% else %}
-                {{ activeCodeCount }} active codes
-                {% endif %}
-            </span>
+            {% if activeCodeCount >= 1 %}
+                <span class="moj-badge moj-badge--green">
+                    {% if activeCodeCount == 1 %}
+                        {{ activeCodeCount }} active code
+                    {% else %}
+                        {{ activeCodeCount }} active codes
+                    {% endif %}
+                </span>
+            {% else %}
+                <span class="moj-badge moj-badge--grey">{{ activeCodeCount }} active codes</span>
+            {% endif %}
         </dd>
     </div>
 </dl>

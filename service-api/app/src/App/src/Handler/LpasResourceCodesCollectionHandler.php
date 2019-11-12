@@ -85,7 +85,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
                 $organisation
             );
 
-            if (is_null($result)){
+            if (is_null($result)) {
                 throw new NotFoundException();
             }
 
@@ -98,7 +98,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
                 $request->getAttribute('actor-id')
             );
 
-            if (!empty($viewerCodes)){
+            if (!empty($viewerCodes)) {
                 $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($viewerCodes);
 
                 $actorId = $this->userLpaActorMap->getUsersLpas($request->getAttribute('actor-id'));

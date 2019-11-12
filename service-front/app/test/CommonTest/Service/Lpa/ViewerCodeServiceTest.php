@@ -101,9 +101,11 @@ class ViewerCodeServiceTest extends TestCase
     public function gets_number_of_active_codes_for_lpa()
     {
         $lpaId = '98765432-01234-01234-01234-012345678902';
-        $now =  (new DateTime('now'))->format('Y-m-d');
-        $futureWeek = (new DateTime('+ 1 week'))->format('Y-m-d');
-        $pastWeek = (new DateTime('- 1 week'))->format('Y-m-d');
+
+        $endOfToday =  (new DateTime('now'))->setTime(23,59,59)->format('Y-m-d H:i:s');
+        $currentDateTime =  (new DateTime('now'))->setTime(16,59,59)->format('Y-m-d H:i:s');
+        $futureWeek = (new DateTime('+1 week'))->format('Y-m-d H:i:s');
+        $pastWeek = (new DateTime('-1 week'))->format('Y-m-d H:i:s');
 
         $return = [
             [
@@ -116,7 +118,7 @@ class ViewerCodeServiceTest extends TestCase
             ],
             [
                 'UserLpaActor' => $lpaId,
-                'Expires' => $now,
+                'Expires' => $endOfToday,
             ],
         ];
 
@@ -130,9 +132,9 @@ class ViewerCodeServiceTest extends TestCase
 
         $this->assertInstanceOf(ArrayObject::class, $shareCodes);
         $this->assertEquals($lpaId, $shareCodes[0]['UserLpaActor']);
-        $this->assertLessThan($now, $shareCodes[0]['Expires']);
-        $this->assertGreaterThan($now, $shareCodes[1]['Expires']);
-        $this->assertEquals($now, $shareCodes[2]['Expires']);
-        $this->assertEquals(1, $shareCodes['activeCodeCount']);
+        $this->assertLessThan($currentDateTime, $shareCodes[0]['Expires']);
+        $this->assertGreaterThan($currentDateTime, $shareCodes[1]['Expires']);
+        $this->assertGreaterThan($currentDateTime, $shareCodes[2]['Expires']);
+        $this->assertEquals(2, $shareCodes['activeCodeCount']);
     }
 }
