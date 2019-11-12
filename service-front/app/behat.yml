@@ -3,15 +3,17 @@ default:
     filters:
       tags: '~@wip'
 
+  extensions:
+    Roave\BehatPsrContainer\PsrContainerExtension:
+      container: 'features/bootstrap/container.php'
+
   suites:
-    common_features:
+    actor_integration:
+      services: "@psr_container"
+      contexts:
+        - BehatTest\Context\Integration\AccountContext:
+          - "@guzzle.mockhandler"
+          - "@Common\\Service\\User\\UserService"
+          - "@Common\\Service\\Email\\EmailClient"
       filters:
-        tags: '@common'
-    actor_features:
-      filters:
-        tags: '@actor'
-    viewer_features:
-      paths: [ '%paths.base%/../../features/' ]
-      contexts: [ ViewerContext ]
-      filters:
-        tags: '@viewer'
+        tags: '@actor,@integration'
