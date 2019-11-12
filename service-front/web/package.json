@@ -7,7 +7,8 @@
   "scripts": {
     "test": "CI=true jest --coverage",
     "test:watch": "jest --watch",
-    "build:pdf": "webpack -p --progress --config webpack.pdf.js",
+    "build:pdf": "webpack -p --progress --config webpack.pdf.development.js",
+    "build:pdf_production": "webpack -p --progress --config webpack.pdf.production.js",
     "build": "webpack -p --progress --config webpack.production.js",
     "watch": "webpack -p --progress --watch --config webpack.development.js"
   },

@@ -2,13 +2,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: './src/pdf.js',
-  resolve: {
-    modules: [__dirname, 'node_modules'],
-  },
-  output: {
-    path: '/dist',
-    filename: 'build.js',
-  },
   module: {
     rules: [
       {
