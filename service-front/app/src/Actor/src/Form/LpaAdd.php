@@ -6,6 +6,7 @@ namespace Actor\Form;
 
 use Common\Form\AbstractForm;
 use Common\Form\Fieldset\Date;
+use Common\Form\Fieldset\DatePrefixFilter;
 use Common\Validator\DobValidator;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Filter\StringTrim;
@@ -103,6 +104,9 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                 ]
             ],
             'dob' => [
+                'filters'  => [
+                    ['name' => DatePrefixFilter::class],
+                ],
                 'validators' => [
                     [
                         'name' => DobValidator::class,

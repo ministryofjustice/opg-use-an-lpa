@@ -73,11 +73,13 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
 
                 //  Convert the date of birth
                 $dobString = sprintf('%s-%s-%s', $postData['dob']['year'], $postData['dob']['month'], $postData['dob']['day']);
+                //$dobFormatted = sprintf("%04d-%02d-%02d", $postData['dob']['year'], $postData['dob']['month'], $postData['dob']['day']);
 
                 //  Set the data in the session and pass to the check handler
                 $session->set('passcode', $postData['passcode']);
                 $session->set('reference_number', $postData['reference_number']);
                 $session->set('dob', $dobString);
+                //$session->set('dob', $dobFormatted);
 
                 return $this->redirectToRoute('lpa.check');
             }
