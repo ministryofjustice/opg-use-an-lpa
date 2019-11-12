@@ -299,7 +299,7 @@ orbs:
               name: Run integration tests
               command: |
                 docker run -d --name inttests front-app:latest
-                docker exec inttests /app/vendor/bin/behat -f pretty -o std -f junit -o /app/build/reports/results.xml
+                docker exec inttests /app/vendor/bin/behat -f pretty -o std -f junit -o /app/build/reports/
           - run:
               name: Fetch test results
               command: |
