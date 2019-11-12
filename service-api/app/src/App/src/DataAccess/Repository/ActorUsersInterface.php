@@ -47,6 +47,14 @@ interface ActorUsersInterface
     public function getByEmail(string $email) : array;
 
     /**
+     * Gets an actor user when queried for by a password reset token
+     *
+     * @param string $resetToken
+     * @return string
+     */
+    public function getIdByPasswordResetToken(string $resetToken) : string;
+
+    /**
      * Activate the user account in the database using the token value
      *
      * @param string $activationToken
@@ -66,11 +74,11 @@ interface ActorUsersInterface
     /**
      * Reset a password in the system using a reset token and the intended password
      *
-     * @param string $resetToken
+     * @param string $id The Id of the user to reset the password for
      * @param string $password
      * @return bool The password reset was successful or not
      */
-    public function resetPassword(string $resetToken, string $password): bool;
+    public function resetPassword(string $id, string $password): bool;
 
     /**
      * Records a successful login against the actor user

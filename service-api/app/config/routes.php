@@ -51,6 +51,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->post('/v1/user', App\Handler\UserHandler::class, 'user.create');
     $app->patch('/v1/user-activation', App\Handler\UserActivateHandler::class, 'user.activate');
     $app->patch('/v1/request-password-reset', App\Handler\RequestPasswordResetHandler::class, 'user.password-reset');
+    $app->patch('/v1/complete-password-reset', App\Handler\CompletePasswordResetHandler::class, 'user.complete-password-reset');
 
     $app->patch('/v1/auth', App\Handler\AuthHandler::class, 'user.auth');
 };

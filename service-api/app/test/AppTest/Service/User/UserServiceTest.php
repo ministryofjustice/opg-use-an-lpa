@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace AppTest\Service\User;
 
 use App\DataAccess\Repository\ActorUsersInterface;
+use App\Exception\BadRequestException;
 use App\Exception\ConflictException;
 use App\Exception\ForbiddenException;
 use App\Exception\NotFoundException;
 use App\Exception\UnauthorizedException;
 use App\Service\User\UserService;
+use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Ramsey\Uuid\Uuid;
@@ -197,5 +199,66 @@ class UserServiceTest extends TestCase
         $this->assertIsArray($return);
         $this->assertArrayHasKey('PasswordResetToken', $return);
         $this->assertIsString($return['PasswordResetToken']);
+    }
+
+    /** @test */
+    public function will_reset_a_password_given_a_valid_token()
+    {
+        $token = 'RESET_TOKEN_123';
+        $password = 'newpassword';
+        $id = '12345-1234-1234-1234-12345';
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+
+        $repoProphecy
+            ->getIdByPasswordResetToken($token)
+            ->willReturn($id)
+            ->shouldBeCalled();
+
+        $repoProphecy
+            ->get($id)
+            ->willReturn([
+                'Id' => $id,
+                'PasswordResetToken' => $token,
+                'PasswordResetExpiry' => (new \DateTime('+1 week'))->format(DATE_ATOM)
+            ])
+            ->shouldBeCalled();
+
+        $repoProphecy
+            ->resetPassword($id, $password)
+            ->shouldBeCalled();
+
+        $us = new UserService($repoProphecy->reveal());
+
+        $us->completePasswordReset($token, $password);
+    }
+
+    /** @test */
+    public function will_not_reset_password_with_expired_token()
+    {
+        $token = 'RESET_TOKEN_123';
+        $password = 'newpassword';
+        $id = '12345-1234-1234-1234-12345';
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+
+        $repoProphecy
+            ->getIdByPasswordResetToken($token)
+            ->willReturn($id)
+            ->shouldBeCalled();
+
+        $repoProphecy
+            ->get($id)
+            ->willReturn([
+                'Id' => $id,
+                'PasswordResetToken' => $token,
+                'PasswordResetExpiry' => (new \DateTime('-1 week'))->format(DATE_ATOM)
+            ])
+            ->shouldBeCalled();
+
+        $us = new UserService($repoProphecy->reveal());
+
+        $this->expectException(BadRequestException::class);
+        $us->completePasswordReset($token, $password);
     }
 }
