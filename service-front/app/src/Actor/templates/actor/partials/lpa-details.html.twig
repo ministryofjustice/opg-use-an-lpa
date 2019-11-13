@@ -11,12 +11,22 @@
         <dd class="govuk-summary-list__value govuk-!-padding-top-4 govuk-!-padding-bottom-4 govuk-!-margin-bottom-0">
             <p class="govuk-!-margin-top-0">
                 <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">Give an organisation access</a><br>
-                <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">Check access codes</a><br>
+                <a href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}">Check access codes</a><br>
                 <a href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">View LPA summary</a>
             </p>
         </dd>
         <dd class="govuk-summary-list__actions">
-            <span class="moj-badge moj-badge--grey">0 active codes</span>
+            {% if activeCodeCount >= 1 %}
+                <span class="moj-badge moj-badge--green">
+                    {% if activeCodeCount == 1 %}
+                        {{ activeCodeCount }} active code
+                    {% else %}
+                        {{ activeCodeCount }} active codes
+                    {% endif %}
+                </span>
+            {% else %}
+                <span class="moj-badge moj-badge--grey">0 active codes</span>
+            {% endif %}
         </dd>
     </div>
 </dl>
