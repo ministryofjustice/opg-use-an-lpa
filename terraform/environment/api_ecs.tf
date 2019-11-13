@@ -255,7 +255,7 @@ EOF
     },
     {
       "name": "SIRIUS_API_ENDPOINT",
-      "value": "https://api.dev.sirius.opg.digital"
+      "value": "${local.api_gateway_endpoint}"
     }]
   }
   
