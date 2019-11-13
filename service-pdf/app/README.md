@@ -8,7 +8,7 @@ To start the service locally without docker, run `npm run start:webserver`.
 
 Locally this will run at [http://localhost:9004](http://localhost:9004)
 
-When on staging or live, the url will be available in the PHP Environment variable ``
+When on staging or live, the url will be available in the PHP Environment variable `PDF_SERVICE_URL`
 
 ## Testing
 
