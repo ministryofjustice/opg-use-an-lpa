@@ -155,7 +155,7 @@ class LpaExtension extends AbstractExtension
     public function hasCodeExpired(?string $expiryDate) : ?bool
     {
         if (!empty($expiryDate && $date = new DateTime($expiryDate))) {
-            return $date <= (new DateTime('now'));
+            return $date <= (new DateTime('now'))->setTime(23,59,59);
         }
 
         return null;

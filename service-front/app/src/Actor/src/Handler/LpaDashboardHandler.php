@@ -65,16 +65,16 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
 
         foreach ($lpas as $lpaKey => $lpaData) {
 
-        $actorToken = $lpaData['user-lpa-actor-token'];
+            $actorToken = $lpaData['user-lpa-actor-token'];
 
-        $shareCodes = $this->viewerCodeService->getShareCodes(
-            $identity,
-            $actorToken,
-            true
-        );
+            $shareCodes = $this->viewerCodeService->getShareCodes(
+                $identity,
+                $actorToken,
+                true
+            );
 
-        $lpas[$lpaKey]['activeCodeCount'] = $shareCodes['activeCodeCount'];
-    }
+            $lpas[$lpaKey]['activeCodeCount'] = $shareCodes['activeCodeCount'];
+        }
 
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
             'user' => $this->getUser($request),
