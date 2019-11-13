@@ -105,7 +105,9 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
             ],
             'dob' => [
                 'filters'  => [
-                    ['name' => DatePrefixFilter::class],
+                    [
+                        'name' => DatePrefixFilter::class
+                    ],
                 ],
                 'validators' => [
                     [
