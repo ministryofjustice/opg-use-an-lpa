@@ -8,6 +8,7 @@ use Common\Exception\ApiException;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
+use Http\Client\Exception\HttpException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -86,7 +87,9 @@ class Client
                     throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
-            throw ApiException::create('Error whilst making http GET request', null, $ex);
+            $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
+
+            throw ApiException::create('Error whilst making http GET request', $response, $ex);
         }
     }
 
@@ -117,7 +120,9 @@ class Client
                     throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
-            throw ApiException::create('Error whilst making http POST request', null, $ex);
+            $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
+
+            throw ApiException::create('Error whilst making http POST request', $response, $ex);
         }
     }
 
@@ -148,7 +153,9 @@ class Client
                     throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
-            throw ApiException::create('Error whilst making http PUT request', null, $ex);
+            $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
+
+            throw ApiException::create('Error whilst making http PUT request', $response, $ex);
         }
     }
 
@@ -179,7 +186,9 @@ class Client
                     throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
-            throw ApiException::create('Error whilst making http PATCH request', null, $ex);
+            $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
+
+            throw ApiException::create('Error whilst making http PATCH request', $response, $ex);
         }
     }
 
@@ -209,7 +218,9 @@ class Client
                     throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
-            throw ApiException::create('Error whilst making http DELETE request', null, $ex);
+            $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
+
+            throw ApiException::create('Error whilst making http DELETE request', $response, $ex);
         }
     }
 
