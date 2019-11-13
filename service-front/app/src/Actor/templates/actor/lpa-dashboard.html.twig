@@ -47,6 +47,7 @@
                 {% for lpaData in lpas %}
                     {% set lpa = lpaData['lpa'] %}
                     {% set actorToken = lpaData['user-lpa-actor-token'] %}
+                    {% set activeCodeCount = lpaData['activeCodeCount'] %}
                     {{ include('@actor/partials/lpa-details.html.twig') }}
                 {% endfor %}
 
