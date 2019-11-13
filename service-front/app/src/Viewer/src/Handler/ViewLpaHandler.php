@@ -43,7 +43,7 @@ class ViewLpaHandler extends AbstractHandler
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Http\Client\Exception
+     * @throws \Exception
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
@@ -54,7 +54,7 @@ class ViewLpaHandler extends AbstractHandler
             throw new SessionTimeoutException;
         }
 
-        $lpa = $this->lpaService->getLpaByCode($code, $surname);
+        $lpa = $this->lpaService->getLpaByCode($code, $surname, true);
 
         return new HtmlResponse($this->renderer->render('viewer::view-lpa', [
             'lpa' => $lpa->lpa,
