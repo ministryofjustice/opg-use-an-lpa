@@ -11,6 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
+use App\DataAccess\Repository;
 use RuntimeException;
 
 /**
@@ -24,9 +25,24 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
      */
     private $viewerCodeService;
 
-    public function __construct(ViewerCodeService $viewerCodeService)
+    /**
+     * @var Repository\ViewerCodeActivityInterface
+     */
+    private $viewerCodeActivityRepository;
+
+    /**
+     * @var Repository\UserLpaActorMapInterface
+     */
+    private $userLpaActorMap;
+
+    public function __construct(
+        ViewerCodeService $viewerCodeService,
+        Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
+        Repository\UserLpaActorMapInterface $userLpaActorMap)
     {
         $this->viewerCodeService = $viewerCodeService;
+        $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
+        $this->userLpaActorMap = $userLpaActorMap;
     }
 
     /**
@@ -43,7 +59,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
             throw new BadRequestException("'user-lpa-actor-token' missing.");
         }
 
-        if ($request->getMethod() == 'POST') {
+        if ($request->getMethod() === 'POST') {
 
             $data = $request->getParsedBody();
 
@@ -69,13 +85,33 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
                 $organisation
             );
 
-            if (is_null($result)){
+            if (is_null($result)) {
                 throw new NotFoundException();
             }
 
             return new JsonResponse($result);
+
         } else {
-            die('GET Not Implemented');
+
+            $viewerCodes = $this->viewerCodeService->getCodes(
+                $request->getAttribute('user-lpa-actor-token'),
+                $request->getAttribute('actor-id')
+            );
+
+            if (!empty($viewerCodes)) {
+                $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($viewerCodes);
+
+                $actorId = $this->userLpaActorMap->getUsersLpas($request->getAttribute('actor-id'));
+
+                //adds an actorId for each code in the array
+                foreach ($viewerCodesAndStatuses as $key => $code){
+                    $viewerCodesAndStatuses[$key]['ActorId'] = $actorId[0]['ActorId'];
+                }
+
+                return new JsonResponse($viewerCodesAndStatuses);
+            }
+
+            return new JsonResponse($viewerCodes);
         }
 
     }

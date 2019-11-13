@@ -58,7 +58,7 @@ class CheckCodeHandler extends AbstractHandler
         if (isset($code)) {
 
             try {
-                $lpa = $this->lpaService->getLpaByCode($code, $surname);
+                $lpa = $this->lpaService->getLpaByCode($code, $surname, false);
 
                 if ($lpa instanceof ArrayObject) {
                     // Then we found a LPA for the given code
