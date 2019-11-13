@@ -75,7 +75,7 @@ class AccountContext implements Context
         $expectedToken = '1234567890';
 
         $this->apiFixtures->append(
-            new Response('200', [], json_encode([
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
                 'PasswordResetToken' => $expectedToken
             ]))
         );
@@ -101,14 +101,14 @@ class AccountContext implements Context
         $expectedTemplateId = 'd32af4a6-49ad-4338-a2c2-dcb5801a40fc';
 
         $this->apiFixtures->append(
-            new Response('200', [], json_encode([]))
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode([]))
         );
 
         $this->emailClient->sendPasswordResetEmail($expectedEmail, $expectedUrl);
 
         $request = $this->apiFixtures->getLastRequest();
-        $requestBody = $request->getBody()->getContents();
 
+        $requestBody = $request->getBody()->getContents();
         assertContains($expectedEmail, $requestBody);
         assertContains(json_encode($expectedUrl), $requestBody);
         assertContains($expectedTemplateId, $requestBody);
