@@ -102,10 +102,10 @@ class ViewerCodeServiceTest extends TestCase
     {
         $lpaId = '98765432-01234-01234-01234-012345678902';
 
-        $endOfToday =  (new DateTime('now'))->setTime(23,59,59)->format('Y-m-d H:i:s');
-        $currentDateTime =  (new DateTime('now'))->setTime(16,59,59)->format('Y-m-d H:i:s');
-        $futureWeek = (new DateTime('+1 week'))->format('Y-m-d H:i:s');
-        $pastWeek = (new DateTime('-1 week'))->format('Y-m-d H:i:s');
+        $endOfToday =  (new DateTime('now'))->setTime(23,59,59)->format('c');
+        $currentDateTime =  (new DateTime('now'))->setTime(16,59,59)->format('c');
+        $futureWeek = (new DateTime('+1 week'))->format('c');
+        $pastWeek = (new DateTime('-1 week'))->format('c');
 
         $return = [
             [
