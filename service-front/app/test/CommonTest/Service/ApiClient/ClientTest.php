@@ -7,6 +7,7 @@ namespace CommonTest\Service\ApiClient;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
 use Fig\Http\Message\StatusCodeInterface;
+use Http\Client\Exception\HttpException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -89,7 +90,9 @@ class ClientTest extends TestCase
     /** @test */
     public function client_throws_error_with_get_request()
     {
-        $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
+        $exceptionProphecy = $this->prophesize(HttpException::class);
+        $exceptionProphecy->getResponse()
+            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)->reveal());
 
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
