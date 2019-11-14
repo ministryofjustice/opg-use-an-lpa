@@ -23,7 +23,12 @@
     "@babel/preset-env": "^7.6.3",
     "babel-jest": "^24.9.0",
     "jest": "^24.9.0",
+    "jest-junit": "^9.0.0",
     "supertest": "^4.0.2"
+  },
+  "jest-junit": {
+    "outputDirectory": "./test-results/junit",
+    "outputName": "results.xml"
   },
   "jest": {
     "resetMocks": true,
