@@ -8,21 +8,31 @@ workflows:
           name: lint_terraform
           filters: { branches: { ignore: [master] } }
 
+      - use-my-lpa/node_test_web:
+          name: test_web
+      - use-my-lpa/node_test_service_pdf:
+          name: test_pdf
+
       - use-my-lpa/docker_build_front_app:
           name: app_front_build
       - use-my-lpa/docker_build_front_web:
           name: web_front_build
+          requires: [test_web]
 
       - use-my-lpa/docker_build_api_app:
           name: app_api_build
       - use-my-lpa/docker_build_api_web:
           name: web_api_build
+          requires: [test_web]
+
       - use-my-lpa/docker_build_pdf:
           name: pdf_build
+          requires: [test_pdf]
 
       - use-my-lpa/codecov_php-unit_upload:
           name: codecov_upload
-          requires: [app_front_build, app_api_build, web_api_build]
+          requires:
+            [app_front_build, app_api_build, web_api_build, test_web, test_pdf]
 
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
@@ -158,6 +168,10 @@ orbs:
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
 
     executors:
+      puppeteer:
+        docker: [image: buildkite/puppeteer]
+      node:
+        docker: [image: circleci/node:8.0]
       python:
         docker: [image: circleci/python]
       python-browsers:
@@ -166,6 +180,92 @@ orbs:
         docker: [image: hashicorp/terraform:0.12.8]
 
     jobs:
+      node_test_service_pdf:
+        executor: puppeteer
+        steps:
+          - checkout
+          - restore_cache:
+              name: Restore node modules cache
+              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
+          - run:
+              name: Install dependencies
+              command: |
+                if [ ! -d service-pdf/app/node_modules ]; then
+                  cd service-pdf/app/ && npm install
+                fi
+          - run:
+              name: Run tests with Jest
+              command: cd service-pdf/app/ && mkdir -p ./test-results/junit && ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit
+          - store_test_results:
+              path: service-pdf/app/test-results
+          - store_artifacts:
+              path: service-pdf/app/test-results/junit
+          - run:
+              name: Run coverage with Jest
+              command: |
+                mkdir -p /root/project/build/service-pdf
+                cd service-pdf/app/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
+                cp -a ./coverage /root/project/build/service-pdf
+          - store_test_results:
+              path: build/service-pdf/
+          - store_artifacts:
+              path: build/service-pdf/
+          - persist_to_workspace:
+              root: build
+              paths:
+                - service-pdf/
+              when: always
+          - save_cache:
+              name: Save node modules cache
+              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
+              paths:
+                - service-pdf/app/node_modules
+
+      node_test_web:
+        #
+        # Build Docker container for Front App
+        #   and runs the Unit Tests.
+        #
+        executor: node
+        steps:
+          - checkout
+          - restore_cache:
+              name: Restore node modules cache
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
+          - run:
+              name: Install dependencies
+              command: |
+                if [ ! -d service-front/web/node_modules ]; then
+                  cd service-front/web/ && npm install
+                fi
+          - run:
+              name: Run tests with Jest
+              command: cd service-front/web/ && mkdir -p ./test-results/junit && ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit
+          - store_test_results:
+              path: service-front/web/test-results
+          - store_artifacts:
+              path: service-front/web/test-results/junit
+          - run:
+              name: Run coverage with Jest
+              command: |
+                mkdir -p /home/circleci/project/build/web-js
+                cd service-front/web/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
+                cp -a ./coverage /home/circleci/project/build/web-js
+          - store_test_results:
+              path: build/web-js/
+          - store_artifacts:
+              path: build/web-js/
+          - persist_to_workspace:
+              root: build
+              paths:
+                - web-js/
+              when: always
+          - save_cache:
+              name: Save node modules cache
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
+              paths:
+                - service-front/web/node_modules
+
       #----------------------------------------------------
       # Front Services (Actor & Viewer)
 
@@ -626,6 +726,7 @@ orbs:
 
                 actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
                 # TODO Add for actor when endpoint exists.
+
 jobs:
   slack_notify_domain:
     docker:
@@ -637,7 +738,7 @@ jobs:
       - run:
           name: Get URLs
           command: |
-            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV	
             echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Development Environment Ready"
@@ -652,7 +753,7 @@ jobs:
       - run:
           name: Get URLs
           command: |
-            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV	
             echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Production Release Successful"
