@@ -14,8 +14,11 @@ skinparam rectangle<<boundary>> {
     RoundCorner 5
 }
 
+together {
 Person(actor, "Actor")
 Person(viewer, "Viewer")
+}
+
 
 System_Boundary(umpla_vpc, "Use MY LPA VPC") {
 
@@ -23,6 +26,8 @@ System_Boundary(umpla_vpc, "Use MY LPA VPC") {
         Container(viewer_web_app, "Viewer Web Application", "Nginx Container")
         Container(viewer_php_app, "Viewer PHP Application", "PHP Container") 
     }
+
+    SystemDb(kms, "KMS", "Key Management")
 
     System_Boundary(actor_web_boundary, "Actor") {    
         Container(actor_web_app, "Actor Web Application", "Nginx Container")
@@ -37,6 +42,7 @@ System_Boundary(umpla_vpc, "Use MY LPA VPC") {
     }
     SystemDb(dynamodb, "DynamoDB", "User Data")
     SystemDb(secrets_manager, "Secrets Manager", "Secrets")
+
 }
 System_Boundary(sirius_vpc, "Sirius VPC") {
     System(api_gateway, "Sirius API Gateway")
@@ -51,6 +57,9 @@ Rel(viewer_php_app, dns_load_balancing, "HTTP");
 Rel(actor, actor_web_app, "HTTPS")
 Rel(actor_web_app, actor_php_app, "socket")
 Rel(actor_php_app, dns_load_balancing, "HTTP")
+
+Rel(viewer_php_app, kms, "HTTPS)")
+Rel_R(actor_php_app,kms, "HTTPS")
 
 Rel_D(dns_load_balancing, api_web, "Gets Data from", "HTTP")
 
