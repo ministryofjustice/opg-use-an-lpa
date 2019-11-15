@@ -15,7 +15,6 @@ describe("Given you pass HTML to be returned into PDF", () => {
       const pdf = await htmlToPdf(testHtml, { waitUntil: "load" });
 
       expect(pdf).not.toBeNull();
-      expect(pdf.length).toBe(24640);
       expect(pdf).toBeInstanceOf(Uint8Array);
     });
   });
