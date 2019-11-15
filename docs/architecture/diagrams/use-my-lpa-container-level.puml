@@ -1,0 +1,65 @@
+@startuml Use My LPA Containers
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Container.puml
+
+skinparam rectangle<<container>> {
+    RoundCorner 5
+}
+skinparam rectangle<<system>> {
+    RoundCorner 5
+}
+skinparam rectangle<<Person>> {
+    RoundCorner 5
+}
+skinparam rectangle<<boundary>> {
+    RoundCorner 5
+}
+
+Person(actor, "Actor")
+Person(viewer, "Viewer")
+
+System_Boundary(umpla_vpc, "Use MY LPA VPC") {
+
+    System_Boundary(viewer_web_boundary, "Viewer") {
+        Container(viewer_web_app, "Viewer Web Application", "Nginx Container")
+        Container(viewer_php_app, "Viewer PHP Application", "PHP Container") 
+    }
+
+    System_Boundary(actor_web_boundary, "Actor") {    
+        Container(actor_web_app, "Actor Web Application", "Nginx Container")
+        Container(actor_php_app, "Actor PHP Application", "PHP Container")
+    }
+
+    System(dns_load_balancing, "DNS Load Balancing")
+
+    System_Boundary(api_web_boundary, "API") {
+        Container(api_web, "API Web Application", "Nginx Container")
+        Container(api_php, "API PHP Application", "PHP Container")
+    }
+    SystemDb(dynamodb, "DynamoDB", "User Data")
+    SystemDb(secrets_manager, "Secrets Manager", "Secrets")
+}
+System_Boundary(sirius_vpc, "Sirius VPC") {
+    System(api_gateway, "Sirius API Gateway")
+    System(api_gateway_lambda, "Lambda", "Python Lambda x n")
+    System(sirius_public_api, "Sirius Public API")
+    SystemDb(api_gateway_dynamo, "DynamoDB", "Cache")
+}
+Rel(viewer, viewer_web_app,"HTTPS")
+Rel(viewer_web_app, viewer_php_app,"socket")
+Rel(viewer_php_app, dns_load_balancing, "HTTP");
+
+Rel(actor, actor_web_app, "HTTPS")
+Rel(actor_web_app, actor_php_app, "socket")
+Rel(actor_php_app, dns_load_balancing, "HTTP")
+
+Rel_D(dns_load_balancing, api_web, "Gets Data from", "HTTP")
+
+Rel_D(api_web, api_php,"socket")
+Rel_D(api_php, api_gateway,"HTTPS")
+Rel_L(api_php, dynamodb, "HTTPS")
+Rel_R(api_php, secrets_manager, "HTTPS")
+Rel_D(api_gateway, api_gateway_lambda, "Gets LPA Data from", "HTTP")
+Rel(api_gateway_lambda, sirius_public_api, "HTTP")
+Rel_L(api_gateway_lambda, api_gateway_dynamo, "HTTPS")
+
+@enduml
