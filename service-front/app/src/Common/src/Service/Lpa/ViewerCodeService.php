@@ -6,6 +6,7 @@ namespace Common\Service\Lpa;
 
 use ArrayObject;
 use Common\Service\ApiClient\Client as ApiClient;
+use DateTime;
 
 /**
  * Class ViewerCodeService
@@ -45,4 +46,52 @@ class ViewerCodeService {
 
         return $lpaData;
     }
+
+    /**
+     * Gets a list of viewer codes for a given lpa
+     *
+     * @param string $userToken
+     * @param string $lpaId
+     * @param bool $withActiveCount
+     * @return ArrayObject|null
+     */
+    public function getShareCodes(string $userToken, string $lpaId, bool $withActiveCount) :?ArrayObject
+    {
+        $this->apiClient->setUserTokenHeader($userToken);
+
+        $shareCodes = $this->apiClient->httpGet('/v1/lpas/' . $lpaId . '/codes');
+
+        if (is_array($shareCodes)) {
+            $shareCodes = new ArrayObject($shareCodes, ArrayObject::ARRAY_AS_PROPS);
+        }
+
+        if ($withActiveCount) {
+            $shareCodes = $this->getNumberOfActiveCodes($shareCodes);
+        }
+
+        return $shareCodes;
+    }
+
+
+    private function getNumberOfActiveCodes(ArrayObject $shareCodes) :?ArrayObject
+    {
+        $counter = 0;
+
+        if (!empty($shareCodes[0])) {
+
+            foreach ($shareCodes as $codeKey => $code) {
+
+                //if the code has not expired
+                if (new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23,59,59)) {
+                    $counter += 1;
+                }
+            }
+        }
+
+        $shareCodes['activeCodeCount'] = $counter;
+
+        return $shareCodes;
+
+    }
+
 }

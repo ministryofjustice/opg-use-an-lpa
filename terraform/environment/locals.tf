@@ -9,6 +9,8 @@ locals {
 
   sirius_account_id = var.sirius_account_ids[local.account_name]
 
+  api_gateway_endpoint = var.api_gateway_endpoints[local.account_name]
+
   dns_namespace_acc = terraform.workspace == "production" ? "" : "${local.account_name}."
   dns_namespace_env = local.account_name == "production" ? "" : "${terraform.workspace}."
 
@@ -42,6 +44,10 @@ variable "account_mapping" {
 }
 
 variable "sirius_account_ids" {
+  type = map(string)
+}
+
+variable "api_gateway_endpoints" {
   type = map(string)
 }
 

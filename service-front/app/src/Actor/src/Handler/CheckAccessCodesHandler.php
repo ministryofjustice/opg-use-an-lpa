@@ -8,6 +8,7 @@ use Common\Exception\InvalidRequestException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Common\Service\Lpa\ViewerCodeService;
 use Common\Service\Lpa\LpaService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -15,14 +16,16 @@ use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use DateTime;
 
-/**
- * Class ViewLpaSummaryHandler
- * @package Actor\Handler
- */
-class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
+class CheckAccessCodesHandler extends AbstractHandler implements UserAware
 {
     use User;
+
+    /**
+     * @var ViewerCodeService
+     */
+    private $viewerCodeService;
 
     /**
      * @var LpaService
@@ -33,15 +36,19 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
-        LpaService $lpaService)
+        LpaService $lpaService,
+        ViewerCodeService $viewerCodeService)
     {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
         $this->lpaService = $lpaService;
+        $this->viewerCodeService = $viewerCodeService;
     }
 
     /**
+     * Handles a request and produces a response
+     *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      * @throws InvalidRequestException
@@ -59,11 +66,30 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
 
         $lpa = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
-        return new HtmlResponse($this->renderer->render('actor::view-lpa-summary', [
+        $shareCodes = $this->viewerCodeService->getShareCodes(
+            $identity,
+            $actorLpaToken,
+            false
+        );
+
+        foreach ($shareCodes as $key => $code) {
+
+            if ($lpa->getDonor()->getId() == $code['ActorId']) {
+                $shareCodes[$key]['CreatedBy'] = $lpa->getDonor()->getFirstname();
+            }
+
+            foreach ($lpa->getAttorneys() as $attorney) {
+                if ($attorney->getId() == $code['ActorId']) {
+                    $shareCodes[$key]['CreatedBy'] = $attorney->getFirstname() . ' ' . $attorney->getSurname();
+                }
+            }
+        }
+
+        return new HtmlResponse($this->renderer->render('actor::check-access-codes', [
             'actorToken' => $actorLpaToken,
             'user' => $user,
             'lpa' => $lpa,
+            'shareCodes' => $shareCodes,
         ]));
     }
-
 }

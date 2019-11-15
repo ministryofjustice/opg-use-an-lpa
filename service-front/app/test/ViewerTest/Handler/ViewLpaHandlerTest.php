@@ -37,7 +37,7 @@ class ViewLpaHandlerTest extends TestCase
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
 
         $lpaServiceProphecy = $this->prophesize(LpaService::class);
-        $lpaServiceProphecy->getLpaByCode(self::TEST_LPA_CODE, self::TEST_SURNAME)
+        $lpaServiceProphecy->getLpaByCode(self::TEST_LPA_CODE, self::TEST_SURNAME, true)
             ->willReturn($lpaData);
 
         //  Set up the handler

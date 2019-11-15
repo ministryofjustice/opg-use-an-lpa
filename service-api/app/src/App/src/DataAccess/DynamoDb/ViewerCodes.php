@@ -7,6 +7,7 @@ namespace App\DataAccess\DynamoDb;
 use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\ViewerCodesInterface;
 use Aws\DynamoDb\DynamoDbClient;
+use Aws\DynamoDb\Marshaler;
 use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTime;
 
@@ -52,6 +53,35 @@ class ViewerCodes implements ViewerCodesInterface
         $codeData = $this->getData($result, ['Added','Expires']);
 
         return !empty($codeData) ? $codeData : null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCodesByUserLpaActorId(string $siriusUid, string $userLpaActor) : array
+    {
+        $marshaler = new Marshaler();
+
+        $result = $this->client->query([
+            'TableName' => $this->viewerCodesTable,
+            'IndexName' => 'SiriusUidIndex',
+            'KeyConditionExpression' => 'SiriusUid = :uId',
+            'FilterExpression' => 'UserLpaActor = :actor',
+            'ExpressionAttributeValues'=> $marshaler->marshalItem([
+                ':uId' => $siriusUid,
+                ':actor' => $userLpaActor
+            ]),
+        ]);
+
+        if ($result['Count'] !== 0) {
+
+            $accessCodes = $this->getDataCollection($result);
+            return $accessCodes;
+
+        } else {
+            //the user has not yet created any access codes
+            return [];
+        }
     }
 
     /**
