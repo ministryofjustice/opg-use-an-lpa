@@ -352,7 +352,7 @@ class ActorUsersTest extends TestCase
                 //---
 
                 $this->assertArrayHasKey('UpdateExpression', $data);
-                $this->assertEquals('remove ActivationToken', $data['UpdateExpression']);
+                $this->assertEquals('remove ActivationToken, ExpiresTTL', $data['UpdateExpression']);
 
                 return true;
             }))

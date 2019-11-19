@@ -140,7 +140,7 @@ class ActorUsers implements ActorUsersInterface
                     'S' => $id,
                 ],
             ],
-            'UpdateExpression' => 'remove ActivationToken',
+            'UpdateExpression' => 'remove ActivationToken, ExpiresTTL',
         ]);
 
         return $this->get($id);
