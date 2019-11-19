@@ -1,0 +1,39 @@
+<?php
+
+namespace Common\Form\Fieldset;
+
+use Zend\Filter\AbstractFilter;
+
+class DatePrefixFilter extends AbstractFilter
+{
+
+    /**
+     * Defined by Zend\Filter\FilterInterface
+     *
+     * Returns the array $value with zero prefixed at the beginning of the values for day and month
+     *
+     * @param  array $value
+     * @return array
+     */
+    public function filter($value) : array
+    {
+        if ($value != null && ($value['day'] < 9 || $value['month'] < 9)) {
+            return $this->formatWithLeadingZero($value);
+        }
+        return $value;
+    }
+
+    /**
+     *
+     * @param array $value
+     * @param array $formattedDate
+     * @return array
+     */
+    protected function formatWithLeadingZero($value) : array
+    {
+        $value['day'] = str_pad($value['day'], 2, 0, STR_PAD_LEFT);
+        $value['month'] = str_pad($value['month'], 2, 0, STR_PAD_LEFT);
+
+        return $value;
+    }
+}

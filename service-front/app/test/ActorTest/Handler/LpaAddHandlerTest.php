@@ -48,6 +48,11 @@ class LpaAddHandlerTest extends TestCase
      */
     private $requestProphecy;
 
+    /**
+     * @var SessionInterface
+     */
+    private $sessionProphecy;
+
     public function setUp()
     {
         $this->rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
@@ -60,6 +65,8 @@ class LpaAddHandlerTest extends TestCase
 
         $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
+        $this->sessionProphecy = $this->prophesize(SessionInterface::class);
+
         $csrfProphecy = $this->prophesize(CsrfGuardInterface::class);
         $csrfProphecy->generateToken()
             ->willReturn(self::CSRF_CODE);
@@ -68,12 +75,8 @@ class LpaAddHandlerTest extends TestCase
         $this->requestProphecy->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE)
             ->willReturn($csrfProphecy->reveal());
 
-        $sessionProphecy = $this->prophesize(SessionInterface::class);
-        $sessionProphecy->set('passcode', '100000000001');
-        $sessionProphecy->set('reference_number', '700000000001');
-        $sessionProphecy->set('dob', '1980-01-01');
         $this->requestProphecy->getAttribute('session', null)
-            ->willReturn($sessionProphecy->reveal());
+            ->willReturn($this->sessionProphecy->reveal());
     }
 
     public function testGetReturnsHtmlResponse()
@@ -132,22 +135,21 @@ class LpaAddHandlerTest extends TestCase
         $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 
-    public function testPostValidData()
+    /**
+     * @dataProvider validSubmissions
+     * @test
+     */
+    public function redirects_with_all_valid_submissions(array $expected, string $dob)
     {
         $this->requestProphecy->getMethod()
             ->willReturn('POST');
 
+        $this->sessionProphecy->set('passcode', $expected['passcode']);
+        $this->sessionProphecy->set('reference_number', $expected['reference_number']);
+        $this->sessionProphecy->set('dob', $dob);
+
         $this->requestProphecy->getParsedBody()
-            ->willReturn([
-                '__csrf' => self::CSRF_CODE,
-                'passcode' => '100000000001',
-                'reference_number' => '700000000001',
-                'dob' => [
-                    'day' => '01',
-                    'month' => '01',
-                    'year' => '1980',
-                ],
-            ]);
+            ->willReturn($expected);
 
         $this->urlHelperProphecy->generate('lpa.check', [], [])
             ->willReturn('/lpa/check');
@@ -158,5 +160,63 @@ class LpaAddHandlerTest extends TestCase
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    public function validSubmissions(): array
+    {
+        return [
+            [
+               [
+                    '__csrf' => self::CSRF_CODE,
+                    'passcode' => '100000000001',
+                    'reference_number' => '700000000001',
+                    'dob' => [
+                        'day' => '01',
+                        'month' => '01',
+                        'year' => '1980',
+                    ]
+                ],
+                '1980-01-01'
+            ],
+            [
+                [
+                    '__csrf' => self::CSRF_CODE,
+                    'passcode' => '100000000001',
+                    'reference_number' => '700000000001',
+                    'dob' => [
+                        'day' => '1',
+                        'month' => '01',
+                        'year' => '1980',
+                    ]
+                ],
+                '1980-01-01'
+            ],
+            [
+                [
+                    '__csrf' => self::CSRF_CODE,
+                    'passcode' => '100000000001',
+                    'reference_number' => '700000000001',
+                    'dob' => [
+                        'day' => '01',
+                        'month' => '1',
+                        'year' => '1980',
+                    ]
+                ],
+                '1980-01-01'
+            ],
+            [
+                [
+                    '__csrf' => self::CSRF_CODE,
+                    'passcode' => '100000000001',
+                    'reference_number' => '700000000001',
+                    'dob' => [
+                        'day' => '10',
+                        'month' => '11',
+                        'year' => '1980',
+                    ]
+                ],
+                '1980-11-10'
+            ]
+        ];
     }
 }
