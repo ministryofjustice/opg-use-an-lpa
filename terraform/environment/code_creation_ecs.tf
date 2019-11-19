@@ -80,7 +80,7 @@ data "aws_iam_policy_document" "code_creation_permissions_role" {
 // Code Creation ECS Service Task Container level config
 
 locals {
- code_creation_app = <<EOF
+  code_creation_app = <<EOF
   {
     "cpu": 1,
     "essential": true,
@@ -124,7 +124,7 @@ locals {
     },
     {
       "name": "SIRIUS_API_ENDPOINT",
-      "value": "https://api.dev.sirius.opg.digital"
+      "value": "${local.api_gateway_endpoint}"
     }]
   }
   
