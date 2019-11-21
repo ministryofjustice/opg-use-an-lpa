@@ -39,7 +39,7 @@
 
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-two-thirds">
-                        <p class="govuk-body-l">Ask {{ organisation }} how they want you to give them the code. They should then go to www.gov.uk/view-an-lpa to use it. </p>
+                        <p class="govuk-body-l">Ask {{ organisation }} how they want you to give them the code. They should then go to https://view.lastingpowerofattorney.opg.service.justice.gov.uk to use it. </p>
                         <p class="govuk-body">This code expires in 30 days, on {{ expires | date ('jS F Y') }}.</p>
 
                         <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button">
