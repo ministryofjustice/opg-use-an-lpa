@@ -299,8 +299,8 @@ orbs:
               name: Run integration/acceptance tests
               command: |
                 docker run -d --name inttests front-app:latest
-                docker exec inttests /app/vendor/bin/behat -p integration -f pretty,junit -o ,/app/build/reports/
-                docker exec inttests /app/vendor/bin/behat -p acceptance -f pretty,junit -o ,/app/build/reports/
+                docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
+                docker exec inttests /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
           - run:
               name: Fetch test results
               command: |
