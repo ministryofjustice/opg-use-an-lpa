@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use Behat\Behat\Context\Context;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
+use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
+use Psr\Container\ContainerInterface;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -17,8 +20,12 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  *
  * Account creation, login, password reset etc.
  */
-class AccountContext implements Context
+class AccountContext implements Context, Psr11AwareContext
 {
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
     /**
      * @var MockHandler
      */
@@ -32,22 +39,13 @@ class AccountContext implements Context
      */
     private $emailClient;
 
-    /**
-     * Initializes context.
-     *
-     * Every scenario gets its own context instance.
-     * You can also pass arbitrary arguments to the
-     * context constructor through behat.yml.
-     *
-     * @param MockHandler $apiFixtures
-     * @param UserService $userService
-     * @param EmailClient $emailClient
-     */
-    public function __construct(MockHandler $apiFixtures, UserService $userService, EmailClient $emailClient)
+    public function setContainer(ContainerInterface $container): void
     {
-        $this->apiFixtures = $apiFixtures;
-        $this->userService = $userService;
-        $this->emailClient = $emailClient;
+        $this->container = $container;
+
+        $this->apiFixtures = $this->container->get(MockHandler::class);
+        $this->userService = $this->container->get(UserService::class);
+        $this->emailClient = $this->container->get(EmailClient::class);
     }
 
     /**
@@ -86,8 +84,10 @@ class AccountContext implements Context
         assertEquals($expectedToken, $token);
 
         $request = $this->apiFixtures->getLastRequest();
-        $requestBody = $request->getBody()->getContents();
+        assertEquals('/v1/request-password-reset', $request->getUri()->getPath());
+        assertEquals('PATCH', $request->getMethod());
 
+        $requestBody = $request->getBody()->getContents();
         assertContains($expectedEmail, $requestBody);
     }
 
@@ -119,11 +119,7 @@ class AccountContext implements Context
      */
     public function iHaveAskedForMyPasswordToBeReset()
     {
-        $this->apiFixtures->append(
-            new Response('200', [], json_encode([]))
-        );
-
-        throw new \Behat\Behat\Tester\Exception\PendingException();
+        // Not needed for this context
     }
 
     /**
@@ -131,7 +127,28 @@ class AccountContext implements Context
      */
     public function iFollowMyUniqueInstructionsOnHowToResetMyPassword()
     {
-        throw new \Behat\Behat\Tester\Exception\PendingException();
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I follow my unique expired instructions on how to reset my password$/
+     */
+    public function iFollowMyUniqueExpiredInstructionsOnHowToResetMyPassword()
+    {
+        $expectedToken = '1234567890';
+
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_GONE, [], json_encode([]))
+        );
+
+        $this->userService->canPasswordReset($expectedToken);
+
+        $request = $this->apiFixtures->getLastRequest();
+        assertEquals('/v1/can-password-reset', $request->getUri()->getPath());
+        assertEquals('GET', $request->getMethod());
+
+        $query = $request->getUri()->getQuery();
+        assertContains($expectedToken, $query);
     }
 
     /**
@@ -139,7 +156,22 @@ class AccountContext implements Context
      */
     public function iChooseANewPassword()
     {
-        throw new \Behat\Behat\Tester\Exception\PendingException();
+        $expectedToken = '1234567890';
+        $expectedPassword = 'newpassword';
+
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode([]))
+        );
+
+        $this->userService->completePasswordReset($expectedToken, $expectedPassword);
+
+        $request = $this->apiFixtures->getLastRequest();
+        assertEquals('/v1/complete-password-reset', $request->getUri()->getPath());
+        assertEquals('PATCH', $request->getMethod());
+
+        $requestBody = $request->getBody()->getContents();
+        assertContains($expectedToken, $requestBody);
+        assertContains($expectedPassword, $requestBody);
     }
 
     /**
@@ -147,6 +179,30 @@ class AccountContext implements Context
      */
     public function myPasswordHasBeenAssociatedWithMyUserAccount()
     {
-        throw new \Behat\Behat\Tester\Exception\PendingException();
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^my password has not been associated with my user account$/
+     */
+    public function myPasswordHasNotBeenAssociatedWithMyUserAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I am told that my instructions have expired$/
+     */
+    public function iAmToldThatMyInstructionsHaveExpired()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I am unable to continue to reset my password$/
+     */
+    public function iAmUnableToContinueToResetMyPassword()
+    {
+        // Not needed for this context
     }
 }

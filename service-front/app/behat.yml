@@ -4,16 +4,25 @@ default:
       tags: '~@wip'
 
   extensions:
-    Roave\BehatPsrContainer\PsrContainerExtension:
-      container: 'features/bootstrap/container.php'
+    Acpr\Behat\Psr\ServiceContainer\Extension:
+      application: "%paths.base%/features/bootstrap/app.php"
+      container: "%paths.base%/features/bootstrap/container.php"
+    Behat\MinkExtension:
+      base_url: 'http://localhost'
+      psr: ~
 
+integration:
   suites:
-    actor_integration:
-      services: "@psr_container"
+    actor:
       contexts:
-        - BehatTest\Context\Integration\AccountContext:
-          - "@guzzle.mockhandler"
-          - "@Common\\Service\\User\\UserService"
-          - "@Common\\Service\\Email\\EmailClient"
+        - BehatTest\Context\Integration\AccountContext
       filters:
-        tags: '@actor,@integration'
+        tags: "@actor&&@integration"
+
+acceptance:
+  suites:
+    actor:
+      contexts:
+        - BehatTest\Context\UI\AccountContext
+      filters:
+        tags: "@actor&&@ui"
