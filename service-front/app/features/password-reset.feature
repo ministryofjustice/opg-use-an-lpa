@@ -11,7 +11,7 @@ Feature: Password Reset
     When I ask for my password to be reset
     Then I receive unique instructions on how to reset my password
 
-  @integration
+  @integration @wip
   Scenario: The user can follow their unique instructions to supply a new password
     Given I am a user of the lpa application
     And I have asked for my password to be reset
