@@ -2,11 +2,8 @@
 
 declare(strict_types=1);
 
-use Actor\Handler\ChangeDetailsHandler;
-use Actor\Handler\LoginPageHandler;
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Application;
-use Zend\Expressive\Authentication\AuthenticationMiddleware;
 use Zend\Expressive\MiddlewareFactory;
 
 /**
