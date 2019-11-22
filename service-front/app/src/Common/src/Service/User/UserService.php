@@ -138,6 +138,33 @@ class UserService implements UserRepositoryInterface
             return $data['PasswordResetToken'];
         }
 
-        throw new RuntimeException("Error whilst requesting password reset token", 500);
+        throw new RuntimeException('Error whilst requesting password reset token', 500);
+    }
+
+    public function canPasswordReset(string $token): bool
+    {
+        try {
+            $data = $this->apiClient->httpGet('/v1/can-password-reset', [
+                'token' => $token,
+            ]);
+
+            if (!is_null($data) && isset($data['Id'])) {
+                return true;
+            }
+        } catch(ApiException $ex) {
+            if ($ex->getCode() !== StatusCodeInterface::STATUS_GONE) {
+                throw $ex;
+            }
+        }
+
+        return false;
+    }
+
+    public function completePasswordReset(string $token, string $password): void
+    {
+        $this->apiClient->httpPatch('/v1/complete-password-reset', [
+            'token' => $token,
+            'password' => $password
+        ]);
     }
 }

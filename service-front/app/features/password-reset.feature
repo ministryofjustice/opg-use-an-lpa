@@ -11,7 +11,7 @@ Feature: Password Reset
     When I ask for my password to be reset
     Then I receive unique instructions on how to reset my password
 
-  @integration @wip
+  @integration
   Scenario: The user can follow their unique instructions to supply a new password
     Given I am a user of the lpa application
     And I have asked for my password to be reset
@@ -19,7 +19,7 @@ Feature: Password Reset
     And I choose a new password
     Then my password has been associated with my user account
 
-  @integration @wip
+  @integration
   Scenario: The user cannot follow expired instructions to supply a new password
     Given I am a user of the lpa application
     And I have asked for my password to be reset
