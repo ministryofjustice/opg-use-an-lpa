@@ -10,7 +10,6 @@ return [
 
     'dependencies' => [
         'factories' => [
-            GuzzleHttp\HandlerStack::class => BehatTest\GuzzleHttp\MockHandlerStackFactory::class,
             Http\Adapter\Guzzle6\Client::class => BehatTest\Http\Adapter\Guzzle6\TestClientFactory::class,
 
             Aws\Sdk::class => BehatTest\Common\Service\Aws\SdkFactory::class,
