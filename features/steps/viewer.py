@@ -78,16 +78,6 @@ def step_impl(context, error_message, input_label):
     assert error_message in error_message_element.text
 
 
-@then('an LPA summary for a {lpa_type} LPA for donor {donor_name} is displayed')
-def step_impl(context, lpa_type, donor_name):
-    lpa_type_element = context.browser.find_element_by_xpath(
-        '//table[@id="confirmation-table"]//td[contains(text(),"' + lpa_type + '")]')
-    assert lpa_type_element.text == lpa_type
-    donor_name_element = context.browser.find_element_by_xpath(
-        '//table[@id="confirmation-table"]//td[contains(text(),"' + donor_name + '")]')
-    assert donor_name_element.text == donor_name
-
-
 # STEPS
 @step('the "{help_link}" help section is {visibility}')
 def step_impl(context, help_link, visibility):
