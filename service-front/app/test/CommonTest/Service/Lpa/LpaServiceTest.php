@@ -95,7 +95,6 @@ class LpaServiceTest extends TestCase
         ])
             ->willReturn([
                 '0123-01-01-01-012345' => $lpaData
-
             ]);
 
         $this->lpaFactoryProphecy->createLpaFromData($lpaData['lpa'])->willReturn($lpaType);
@@ -153,7 +152,8 @@ class LpaServiceTest extends TestCase
         $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
-        ])->willThrow(new ApiException('',StatusCodeInterface::STATUS_GONE));
+        ])
+            ->willThrow(new ApiException('',StatusCodeInterface::STATUS_GONE));
 
         $service = new LpaService($this->apiClientProphecy->reveal(), $this->lpaFactoryProphecy->reveal());
 
@@ -355,5 +355,4 @@ class LpaServiceTest extends TestCase
 
         $this->assertNull($lpaCode);
     }
-
 }
