@@ -51,6 +51,7 @@ interface ActorUsersInterface
      *
      * @param string $resetToken
      * @return string
+     * @throws NotFoundException
      */
     public function getIdByPasswordResetToken(string $resetToken) : string;
 
