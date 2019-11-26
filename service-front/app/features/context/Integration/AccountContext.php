@@ -7,7 +7,6 @@ namespace BehatTest\Context\Integration;
 use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
@@ -177,14 +176,6 @@ class AccountContext implements Context, Psr11AwareContext
      * @Then /^my password has been associated with my user account$/
      */
     public function myPasswordHasBeenAssociatedWithMyUserAccount()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Then /^my password has not been associated with my user account$/
-     */
-    public function myPasswordHasNotBeenAssociatedWithMyUserAccount()
     {
         // Not needed for this context
     }

@@ -10,7 +10,6 @@ use Behat\Behat\Tester\Exception\PendingException;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
-use JSHayes\FakeRequests\MockHandler;
 use Psr\Http\Message\RequestInterface;
 use function random_bytes;
 
@@ -156,14 +155,6 @@ class AccountContext extends BaseUIContext
         //$this->assertPageContainsText('Password successfully reset');
 
         assertEquals(true, $this->apiFixtures->isEmpty());
-    }
-
-    /**
-     * @Then /^my password has not been associated with my user account$/
-     */
-    public function myPasswordHasNotBeenAssociatedWithMyUserAccount()
-    {
-        throw new PendingException();
     }
 
     /**
