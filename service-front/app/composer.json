@@ -30,6 +30,10 @@
         {
             "type": "vcs",
             "url":  "git@github.com:taylorsj1980/notifications-php-client.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@github.com:ministryofjustice/behat-psr-extension.git"
         }
     ],
     "require": {
