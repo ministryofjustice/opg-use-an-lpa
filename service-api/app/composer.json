@@ -67,7 +67,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "AppTest\\": "test/AppTest/"
+            "AppTest\\": "test/AppTest/",
+            "BehatTest\\": "test/BehatTest/",
+            "BehatTest\\Context\\": "features/context/"
         }
     },
     "scripts": {
