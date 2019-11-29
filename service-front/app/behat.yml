@@ -1,0 +1,28 @@
+default:
+  gherkin:
+    filters:
+      tags: '~@wip'
+
+  extensions:
+    Acpr\Behat\Psr\ServiceContainer\Extension:
+      application: "%paths.base%/features/bootstrap/app.php"
+      container: "%paths.base%/features/bootstrap/container.php"
+    Behat\MinkExtension:
+      base_url: 'http://localhost'
+      psr: ~
+
+integration:
+  suites:
+    actor:
+      contexts:
+        - BehatTest\Context\Integration\AccountContext
+      filters:
+        tags: "@actor&&@integration"
+
+acceptance:
+  suites:
+    actor:
+      contexts:
+        - BehatTest\Context\UI\AccountContext
+      filters:
+        tags: "@actor&&@ui"

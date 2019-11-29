@@ -25,6 +25,12 @@
         "slack": "https://zendframework-slack.herokuapp.com",
         "forum": "https://discourse.zendframework.com/c/questions/expressive"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "git@github.com:ministryofjustice/behat-psr-extension.git"
+        }
+    ],
     "require": {
         "php": "^7.1",
         "aws/aws-sdk-php": "^3.93",
@@ -44,12 +50,15 @@
         "zendframework/zend-stdlib": "^3.1"
     },
     "require-dev": {
+        "behat/behat": "^3.5",
+        "cooperaj/behat-psr-extension": "v1.0.0",
+        "filp/whoops": "^2.1.12",
+        "jshayes/fake-requests": "^2.3",
         "phpunit/phpunit": "^7.0.1",
         "roave/security-advisories": "dev-master",
         "squizlabs/php_codesniffer": "^2.9.1",
         "zendframework/zend-expressive-tooling": "^1.0",
-        "zfcampus/zf-development-mode": "^3.1",
-        "filp/whoops": "^2.1.12"
+        "zfcampus/zf-development-mode": "^3.1"
     },
     "autoload": {
         "psr-4": {
@@ -58,7 +67,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "AppTest\\": "test/AppTest/"
+            "AppTest\\": "test/AppTest/",
+            "BehatTest\\": "test/BehatTest/",
+            "BehatTest\\Context\\": "features/context/"
         }
     },
     "scripts": {
