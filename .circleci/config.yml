@@ -296,10 +296,18 @@ orbs:
                 docker exec tests docker-php-ext-enable xdebug
                 docker exec tests /app/vendor/bin/phpunit
           - run:
+              name: Run integration/acceptance tests
+              command: |
+                docker run -d --name inttests front-app:latest
+                docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
+                docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 \
+                  /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
+          - run:
               name: Fetch test results
               command: |
                 mkdir -p build/service-front
                 docker cp tests:/app/build/reports build/service-front/phpunit
+                docker cp inttests:/app/build/reports build/service-front/behat
               when: always
           - store_test_results:
               path: build/service-front/
