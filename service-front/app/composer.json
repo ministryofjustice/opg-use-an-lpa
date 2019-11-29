@@ -30,6 +30,10 @@
         {
             "type": "vcs",
             "url":  "git@github.com:taylorsj1980/notifications-php-client.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@github.com:ministryofjustice/behat-psr-extension.git"
         }
     ],
     "require": {
@@ -56,12 +60,14 @@
         "zendframework/zend-stdlib": "^3.1"
     },
     "require-dev": {
+        "behat/behat": "^3.5",
+        "cooperaj/behat-psr-extension": "dev-master",
+        "filp/whoops": "^2.1.12",
         "phpunit/phpunit": "^7.0.1",
         "roave/security-advisories": "dev-master",
         "squizlabs/php_codesniffer": "^2.9.1",
         "zendframework/zend-expressive-tooling": "^1.0",
-        "zfcampus/zf-development-mode": "^3.1",
-        "filp/whoops": "^2.1.12"
+        "zfcampus/zf-development-mode": "^3.1"
     },
     "autoload": {
         "psr-4": {
@@ -72,7 +78,11 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "ViewerTest\\": "test/ViewerTest/"
+            "ActorTest\\": "test/ActorTest/",
+            "CommonTest\\": "test/Common/Test/",
+            "ViewerTest\\": "test/ViewerTest/",
+            "BehatTest\\": "test/BehatTest/",
+            "BehatTest\\Context\\": "features/context/"
         }
     },
     "scripts": {
