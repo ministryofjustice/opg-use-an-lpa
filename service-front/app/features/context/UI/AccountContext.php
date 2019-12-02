@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
+use Alphagov\Notifications\Client;
 use Aws\Result;
+use Behat\Behat\Tester\Exception\PendingException;
 use BehatTest\Context\ActorContextTrait as ActorContext;
-use GuzzleHttp\Handler\MockHandler;
+use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\RequestInterface;
 use function random_bytes;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
@@ -58,11 +61,12 @@ class AccountContext extends BaseUIContext
         $this->assertPageAddress('/forgot-password');
 
         // API call for password reset request
-        $mockHandler = $this->container->get(MockHandler::class);
-        $mockHandler->append(new Response(200, [], json_encode([ 'PasswordResetToken' => '123456' ])));
+        $this->apiFixtures->patch('/v1/request-password-reset')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'PasswordResetToken' => '123456' ])));
 
         // API call for Notify
-        $mockHandler->append(new Response(200, [], json_encode([])));
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->fillField('email', 'test@example.com');
         $this->fillField('email_confirm', 'test@example.com');
@@ -78,9 +82,7 @@ class AccountContext extends BaseUIContext
 
         $this->assertPageContainsText('We\'ve emailed a link to test@example.com');
 
-        // verify we've used all the expected mock responses
-        $mockHandler = $this->container->get(MockHandler::class);
-        assertEquals($mockHandler->count(), 0);
+        assertEquals(true, $this->apiFixtures->isEmpty());
     }
 
     /**
@@ -88,7 +90,9 @@ class AccountContext extends BaseUIContext
      */
     public function iHaveAskedForMyPasswordToBeReset()
     {
-        // Not needed for this context
+        // API fixture for reset token check
+        $this->apiFixtures->get('/v1/can-password-reset')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])));
     }
 
     /**
@@ -96,7 +100,9 @@ class AccountContext extends BaseUIContext
      */
     public function iFollowMyUniqueInstructionsOnHowToResetMyPassword()
     {
-        // Not needed for this context
+        $this->visit('/forgot-password/123456');
+
+        $this->assertPageContainsText('Change your password');
     }
 
     /**
@@ -104,6 +110,12 @@ class AccountContext extends BaseUIContext
      */
     public function iFollowMyUniqueExpiredInstructionsOnHowToResetMyPassword()
     {
+        // remove successful reset token and add failure state
+        $this->apiFixtures->getHandlers()->pop();
+        $this->apiFixtures->get('/v1/can-password-reset')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_GONE));
+
+        $this->visit('/forgot-password/123456');
     }
 
     /**
@@ -111,6 +123,26 @@ class AccountContext extends BaseUIContext
      */
     public function iChooseANewPassword()
     {
+        $this->assertPageAddress('/forgot-password/123456');
+
+        // API fixture for reset token check
+        $this->apiFixtures->get('/v1/can-password-reset')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])));
+
+        // API fixture for password reset
+        $this->apiFixtures->patch('/v1/complete-password-reset')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $params = json_decode($request->getBody()->getContents(), true);
+
+                assertInternalType('array', $params);
+                assertArrayHasKey('token', $params);
+                assertArrayHasKey('password', $params);
+            });
+
+        $this->fillField('password', 'n3wPassWord');
+        $this->fillField('password_confirm', 'n3wPassWord');
+        $this->pressButton('Change password');
     }
 
     /**
@@ -118,15 +150,11 @@ class AccountContext extends BaseUIContext
      */
     public function myPasswordHasBeenAssociatedWithMyUserAccount()
     {
-        // Not needed for this context
-    }
+        $this->assertPageAddress('/login');
+        // TODO when flash message are in place
+        //$this->assertPageContainsText('Password successfully reset');
 
-    /**
-     * @Then /^my password has not been associated with my user account$/
-     */
-    public function myPasswordHasNotBeenAssociatedWithMyUserAccount()
-    {
-        // Not needed for this context
+        assertEquals(true, $this->apiFixtures->isEmpty());
     }
 
     /**
@@ -134,7 +162,9 @@ class AccountContext extends BaseUIContext
      */
     public function iAmToldThatMyInstructionsHaveExpired()
     {
-        // Not needed for this context
+        $this->assertPageAddress('/forgot-password/123456');
+
+        $this->assertPageContainsText('invalid or has expired');
     }
 
     /**
@@ -143,5 +173,31 @@ class AccountContext extends BaseUIContext
     public function iAmUnableToContinueToResetMyPassword()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @Given /^I choose a new invalid password of "(.*)"$/
+     */
+    public function iChooseANewInvalid($password)
+    {
+        $this->assertPageAddress('/forgot-password/123456');
+
+        // API fixture for reset token check
+        $this->apiFixtures->get('/v1/can-password-reset')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])));
+
+        $this->fillField('password', $password);
+        $this->fillField('password_confirm', $password);
+        $this->pressButton('Change password');
+    }
+
+    /**
+     * @Then /^I am told that my password is invalid because it needs at least (.*)$/
+     */
+    public function iAmToldThatMyPasswordIsInvalidBecauseItNeedsAtLeast($reason)
+    {
+        $this->assertPageAddress('/forgot-password/123456');
+
+        $this->assertPageContainsText('at least ' . $reason);
     }
 }

@@ -5,17 +5,20 @@ declare(strict_types=1);
 namespace App\Service\User;
 
 use App\DataAccess\Repository;
+use App\Exception\BadRequestException;
 use App\Exception\ConflictException;
 use App\Exception\CreationException;
 use App\Exception\ForbiddenException;
+use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Exception\UnauthorizedException;
+use App\Service\ApiClient\ApiException;
 use DateTime;
 use DateTimeInterface;
 use Exception;
 use ParagonIE\ConstantTime\Base64UrlSafe;
-
 use Ramsey\Uuid\Uuid;
+
 use function password_verify;
 use function random_bytes;
 
@@ -125,5 +128,54 @@ class UserService
         $resetExpiry = time() + (60 * 60 * 24);
 
         return $this->usersRepository->recordPasswordResetRequest($email, $resetToken, $resetExpiry);
+    }
+
+    /**
+     * Checks to see if a token exists against a user record and it has not expired
+     *
+     * @param string $resetToken
+     * @return string
+     * @throws Exception
+     */
+    public function canResetPassword(string $resetToken): string
+    {
+        try {
+            // PasswordResetToken index is KEY only so fetch the id to do work on
+            $userId = $this->usersRepository->getIdByPasswordResetToken($resetToken);
+
+            $user = $this->usersRepository->get($userId);
+
+            if (new DateTime('@' . $user['PasswordResetExpiry']) >= new DateTime('now')) {
+                return $userId;
+            }
+        } catch(NotFoundException $ex) {
+            // token not found in usersRepository
+        }
+
+        throw new GoneException('Reset token not found');
+    }
+
+    /**
+     * Accepts a previously generated token and new password and attempts to
+     * reset the users password to the new value if the token is found and has
+     * not expired.
+     *
+     * @param string $resetToken
+     * @param string $password
+     * @throws Exception
+     */
+    public function completePasswordReset(string $resetToken, string $password): void
+    {
+        // PasswordResetToken index is KEY only so fetch the id to do work on
+        $userId = $this->usersRepository->getIdByPasswordResetToken($resetToken);
+
+        $user = $this->usersRepository->get($userId);
+
+        if (new DateTime('@' . $user['PasswordResetExpiry']) < new DateTime('now')) {
+            throw new BadRequestException('Password reset token has expired');
+        }
+
+        // also removes reset token
+        $this->usersRepository->resetPassword($userId, $password);
     }
 }
