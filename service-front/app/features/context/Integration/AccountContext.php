@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace BehatTest\Context\Integration;
 
 use Acpr\Behat\Psr\Context\Psr11AwareContext;
+use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
+use JSHayes\FakeRequests\MockHandler;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\RequestInterface;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -19,24 +21,22 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * A behat context that encapsulates user account steps
  *
  * Account creation, login, password reset etc.
+ *
+ * @property string email
+ * @property string resetToken
  */
 class AccountContext implements Context, Psr11AwareContext
 {
-    /**
-     * @var ContainerInterface
-     */
+    /** @var ContainerInterface */
     private $container;
-    /**
-     * @var MockHandler
-     */
+
+    /** @var MockHandler */
     private $apiFixtures;
-    /**
-     * @var UserService
-     */
+
+    /** @var UserService */
     private $userService;
-    /**
-     * @var EmailClient
-     */
+
+    /** @var EmailClient */
     private $emailClient;
 
     public function setContainer(ContainerInterface $container): void
@@ -53,7 +53,7 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iAmAUserOfTheLpaApplication()
     {
-        // Not needed for this context
+        $this->email = "test@example.com";
     }
 
     /**
@@ -69,26 +69,22 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iAskForMyPasswordToBeReset()
     {
-        $expectedEmail = 'test@example.com';
-        $expectedToken = '1234567890';
+        $this->resetToken = '1234567890';
 
-        $this->apiFixtures->append(
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'PasswordResetToken' => $expectedToken
-            ]))
-        );
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/request-password-reset')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([ 'PasswordResetToken' => $this->resetToken ])
+                )
+            );
 
-        $token = $this->userService->requestPasswordReset($expectedEmail);
+        $token = $this->userService->requestPasswordReset($this->email);
 
         assertInternalType('string', $token);
-        assertEquals($expectedToken, $token);
-
-        $request = $this->apiFixtures->getLastRequest();
-        assertEquals('/v1/request-password-reset', $request->getUri()->getPath());
-        assertEquals('PATCH', $request->getMethod());
-
-        $requestBody = $request->getBody()->getContents();
-        assertContains($expectedEmail, $requestBody);
+        assertEquals($this->resetToken, $token);
     }
 
     /**
@@ -96,22 +92,23 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iReceiveUniqueInstructionsOnHowToResetMyPassword()
     {
-        $expectedEmail = 'test@example.com';
-        $expectedUrl = 'http://localhost/forgot-password/1234567890';
+        $expectedUrl = 'http://localhost/forgot-password/' . $this->resetToken;
         $expectedTemplateId = 'd32af4a6-49ad-4338-a2c2-dcb5801a40fc';
 
-        $this->apiFixtures->append(
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode([]))
-        );
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(function (RequestInterface $request, array $options)
+                    use ($expectedUrl, $expectedTemplateId) {
+                $requestBody = $request->getBody()->getContents();
 
-        $this->emailClient->sendPasswordResetEmail($expectedEmail, $expectedUrl);
+                assertContains($this->resetToken, $requestBody);
+                assertContains(json_encode($expectedUrl), $requestBody);
+                assertContains($expectedTemplateId, $requestBody);
+            });
 
-        $request = $this->apiFixtures->getLastRequest();
 
-        $requestBody = $request->getBody()->getContents();
-        assertContains($expectedEmail, $requestBody);
-        assertContains(json_encode($expectedUrl), $requestBody);
-        assertContains($expectedTemplateId, $requestBody);
+        $this->emailClient->sendPasswordResetEmail($this->email, $expectedUrl);
     }
 
     /**
@@ -119,7 +116,7 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iHaveAskedForMyPasswordToBeReset()
     {
-        // Not needed for this context
+        $this->resetToken = '1234567890';
     }
 
     /**
@@ -127,7 +124,15 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iFollowMyUniqueInstructionsOnHowToResetMyPassword()
     {
-        // Not needed for this context
+        $this->apiFixtures->get('/v1/can-password-reset')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $query = $request->getUri()->getQuery();
+                assertContains($this->resetToken, $query);
+            });
+
+        $canReset = $this->userService->canPasswordReset($this->resetToken);
+        assertTrue($canReset);
     }
 
     /**
@@ -135,20 +140,15 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iFollowMyUniqueExpiredInstructionsOnHowToResetMyPassword()
     {
-        $expectedToken = '1234567890';
+        $this->apiFixtures->get('/v1/can-password-reset')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_GONE))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $query = $request->getUri()->getQuery();
+                assertContains($this->resetToken, $query);
+            });
 
-        $this->apiFixtures->append(
-            new Response(StatusCodeInterface::STATUS_GONE, [], json_encode([]))
-        );
-
-        $this->userService->canPasswordReset($expectedToken);
-
-        $request = $this->apiFixtures->getLastRequest();
-        assertEquals('/v1/can-password-reset', $request->getUri()->getPath());
-        assertEquals('GET', $request->getMethod());
-
-        $query = $request->getUri()->getQuery();
-        assertContains($expectedToken, $query);
+        $canReset = $this->userService->canPasswordReset($this->resetToken);
+        assertFalse($canReset);
     }
 
     /**
@@ -156,36 +156,26 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iChooseANewPassword()
     {
-        $expectedToken = '1234567890';
         $expectedPassword = 'newpassword';
 
-        $this->apiFixtures->append(
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode([]))
-        );
+        // API fixture for password reset
+        $this->apiFixtures->patch('/v1/complete-password-reset')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])))
+            ->inspectRequest(function (RequestInterface $request, array $options) use ($expectedPassword) {
+                $params = json_decode($request->getBody()->getContents(), true);
 
-        $this->userService->completePasswordReset($expectedToken, $expectedPassword);
+                assertInternalType('array', $params);
+                assertEquals($this->resetToken, $params['token']);
+                assertEquals($expectedPassword, $params['password']);
+            });
 
-        $request = $this->apiFixtures->getLastRequest();
-        assertEquals('/v1/complete-password-reset', $request->getUri()->getPath());
-        assertEquals('PATCH', $request->getMethod());
-
-        $requestBody = $request->getBody()->getContents();
-        assertContains($expectedToken, $requestBody);
-        assertContains($expectedPassword, $requestBody);
+        $this->userService->completePasswordReset($this->resetToken, $expectedPassword);
     }
 
     /**
      * @Then /^my password has been associated with my user account$/
      */
     public function myPasswordHasBeenAssociatedWithMyUserAccount()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Then /^my password has not been associated with my user account$/
-     */
-    public function myPasswordHasNotBeenAssociatedWithMyUserAccount()
     {
         // Not needed for this context
     }
@@ -202,6 +192,22 @@ class AccountContext implements Context, Psr11AwareContext
      * @Given /^I am unable to continue to reset my password$/
      */
     public function iAmUnableToContinueToResetMyPassword()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I choose a new invalid password of "(.*)"$/
+     */
+    public function iChooseANewInvalid($password)
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I am told that my password is invalid because it needs at least (.*)$/
+     */
+    public function iAmToldThatMyPasswordIsInvalidBecauseItNeedsAtLeast($reason)
     {
         // Not needed for this context
     }

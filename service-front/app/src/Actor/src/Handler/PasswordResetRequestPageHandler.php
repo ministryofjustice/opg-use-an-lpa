@@ -4,47 +4,56 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
-use Actor\Form\PasswordReset;
+use Actor\Form\PasswordResetRequest;
+use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
+use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
-class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
+class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
 
     /** @var UserService */
     private $userService;
 
+    /** @var EmailClient */
+    private $emailClient;
+
     /** @var ServerUrlHelper */
     private $serverUrlHelper;
 
     /**
-     * PasswordResetPageHandler constructor.
+     * PasswordResetRequestPageHandler constructor.
      *
      * @codeCoverageIgnore
      *
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param UserService $userService
+     * @param EmailClient $emailClient
      * @param ServerUrlHelper $serverUrlHelper
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         UserService $userService,
+        EmailClient $emailClient,
         ServerUrlHelper $serverUrlHelper)
     {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;
+        $this->emailClient = $emailClient;
         $this->serverUrlHelper = $serverUrlHelper;
     }
 
@@ -56,9 +65,7 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $form = new PasswordReset($this->getCsrfGuard($request));
-
-        $tokenValid = $this->userService->canPasswordReset($request->getAttribute('token'));
+        $form = new PasswordResetRequest($this->getCsrfGuard($request));
 
         if ($request->getMethod() === 'POST') {
             $form->setData($request->getParsedBody());
@@ -66,19 +73,28 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                $this->userService->completePasswordReset($request->getAttribute('token'), $data['password']);
+                try {
+                    $resetToken = $this->userService->requestPasswordReset($data['email']);
 
-                //  Redirect to the login screen with success flash message
-                return $this->redirectToRoute('login');
+                    $passwordResetPath = $this->urlHelper->generate('password-reset-token', [
+                        'token' => $resetToken,
+                    ]);
+
+                    $passwordResetUrl = $this->serverUrlHelper->generate($passwordResetPath);
+
+                    $this->emailClient->sendPasswordResetEmail($data['email'], $passwordResetUrl);
+                } catch(ApiException $ae) {
+                    // the password reset request returned a 404 indicating the user did not exist
+                }
+
+                return new HtmlResponse($this->renderer->render('actor::password-reset-request-done',[
+                    'email' => $data['email']
+                ]));
             }
         }
 
-        if ($tokenValid) {
-            return new HtmlResponse($this->renderer->render('actor::password-reset', [
-                'form' => $form->prepare()
-            ]));
-        }
-
-        return new HtmlResponse($this->renderer->render('actor::password-reset-not-found'));
+        return new HtmlResponse($this->renderer->render('actor::password-reset-request',[
+            'form' => $form
+        ]));
     }
 }

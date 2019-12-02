@@ -8,7 +8,7 @@ use Acpr\Behat\Psr\Context\Psr11MinkAwareContext;
 use Acpr\Behat\Psr\Context\RuntimeMinkContext;
 use Aws\MockHandler as AwsMockHandler;
 use Behat\MinkExtension\Context\MinkContext;
-use GuzzleHttp\Handler\MockHandler;
+use JSHayes\FakeRequests\MockHandler;
 use Psr\Container\ContainerInterface;
 
 abstract class BaseUIContext extends MinkContext implements Psr11MinkAwareContext
