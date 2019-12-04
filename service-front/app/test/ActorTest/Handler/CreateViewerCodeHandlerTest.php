@@ -21,6 +21,8 @@ use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Session\SessionInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Common\Entity\User;
+use ArrayObject;
+use Common\Service\Lpa\Factory\Sirius as LpaFactory;
 
 class CreateViewerCodeHandlerTest extends TestCase
 {
@@ -167,6 +169,45 @@ class CreateViewerCodeHandlerTest extends TestCase
     }
 
     /** @test */
+    public function it_shows_error_when_invalid_form_is_submitted()
+    {
+        $actorId = '01234567-0123-0123-0123-012345678901';
+        $this->viewerCodeServiceProphecy = $this->prophesize(ViewerCodeService::class);
+
+        $this->authenticateRequest($actorId);
+
+        $this->requestProphecy->getMethod()->willReturn('POST');
+
+        $this->requestProphecy->getParsedBody()
+            ->willReturn([
+                '__csrf' => self::CSRF_CODE
+            ]);
+
+        $handler = new CreateViewerCodeHandler(
+            $this->rendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->authenticatorProphecy->reveal(),
+            $this->lpaServiceProphecy->reveal(),
+            $this->viewerCodeServiceProphecy->reveal()
+        );
+
+        $this->viewerCodeServiceProphecy->createShareCode(
+            self::IDENTITY_TOKEN,
+            self::LPA_ID,
+            '')->willReturn('');
+
+        $this->requestProphecy->getQueryParams()
+            ->willReturn([
+                'lpa' => self::LPA_ID
+            ]);
+
+        $response = $handler->handle($this->requestProphecy->reveal());
+
+        $this->assertInstanceOf(HtmlResponse::class, $response);
+
+    }
+
+    /** @test */
     public function it_shows_viewer_code_when_post_occurs()
     {
         $actorId = '01234567-0123-0123-0123-012345678901';
@@ -199,6 +240,73 @@ class CreateViewerCodeHandlerTest extends TestCase
             ->willReturn([
                 'lpa' => self::LPA_ID
             ]);
+
+        $response = $handler->handle($this->requestProphecy->reveal());
+
+        $this->assertInstanceOf(HtmlResponse::class, $response);
+
+    }
+
+    /** @test */
+    public function it_navigates_to_show_viewer_code_when_post_occurs()
+    {
+        $actorId = '01234567-0123-0123-0123-012345678901';
+        $this->viewerCodeServiceProphecy = $this->prophesize(ViewerCodeService::class);
+
+        $this->authenticateRequest($actorId);
+
+        $this->requestProphecy->getMethod()->willReturn('POST');
+
+        $this->requestProphecy->getParsedBody()
+            ->willReturn([
+                '__csrf' => self::CSRF_CODE
+            ]);
+        $this->urlHelperProphecy->generate(Argument::type('string'))->willReturn('http://localhost');
+
+        $handler = new CreateViewerCodeHandler(
+            $this->rendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->authenticatorProphecy->reveal(),
+            $this->lpaServiceProphecy->reveal(),
+            $this->viewerCodeServiceProphecy->reveal()
+        );
+
+        $viewerCode = new ArrayObject(['code' => 'FJ6LJ6VQKHF8', 'expires' => '2019-12-28T23:59:59+00:00', 'organisation' => 'HSBC']);
+
+        $lpa = (new LpaFactory())->createLpaFromData([
+            'uId' => '700000000047',
+            'donor' => [
+                'uId' => '700000000082',
+                'dob' => '1975-01-01'
+            ],
+            'attorneys' => [
+                [
+                    'uId' => '700000000023',
+                    'dob' => '1980-01-01'
+                ]
+            ]
+        ]);
+
+        $this->viewerCodeServiceProphecy->createShareCode(
+            self::IDENTITY_TOKEN,
+            self::LPA_ID,
+            self::ORG_NAME)->willReturn($viewerCode);
+
+        $this->requestProphecy->getQueryParams()
+            ->willReturn([
+                'lpa' => self::LPA_ID
+            ]);
+
+        $this->rendererProphecy
+            ->render('actor::lpa-show-viewercode', [
+            'user'         => self::IDENTITY_TOKEN,
+            'actorToken'   => self::LPA_ID,
+            'code'         => $viewerCode['code'],
+            'expires'      => $viewerCode['expires'],
+            'organisation' => $viewerCode['organisation'],
+            'lpa'          => $lpa
+        ])
+            ->willReturn('');
 
         $response = $handler->handle($this->requestProphecy->reveal());
 

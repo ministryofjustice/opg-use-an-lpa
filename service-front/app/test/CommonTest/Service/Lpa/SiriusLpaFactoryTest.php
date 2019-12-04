@@ -25,12 +25,28 @@ class LpaFactoryTest extends TestCase
         $this->simpleExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/fixtures/simple_example.json'), true);
     }
 
-    public function testBadDataThrowsException()
+    public function testBadDataThrowsExceptionInCreateLpa()
     {
         $factory = new Sirius();
 
         $this->expectException(\Zend\Stdlib\Exception\InvalidArgumentException::class);
         $lpa = $factory->createLpaFromData([]);
+    }
+
+    public function testBadDataThrowsExceptionInCreateCaseActor()
+    {
+        $factory = new Sirius();
+
+        $this->expectException(\Zend\Stdlib\Exception\InvalidArgumentException::class);
+        $caseActor = $factory->createCaseActorFromData([]);
+    }
+
+    public function testBadDataThrowsExceptionInCreateAddress()
+    {
+        $factory = new Sirius();
+
+        $this->expectException(\Zend\Stdlib\Exception\InvalidArgumentException::class);
+        $address = $factory->createAddressFromData([]);
     }
 
     public function testCanCreateEmptyLpa()
