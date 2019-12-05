@@ -162,10 +162,12 @@
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">When can the LPA be used?</dt>
                             <dd class="govuk-summary-list__value">
-                                {% if lpa.attorneyActDecisions %}
-                                    While the donor has mental capacity, this lpa should only be used with the donor’s permission
-                                {% else %}
-                                    This LPA can only be used when the donor does not have mental capacity
+                                {% if lpa.attorneyActDecisions == 'When Registered' %}
+                                    While the donor has mental capacity, this LPA should only be used with the donor’s permission
+                                {% elseif lpa.attorneyActDecisions == 'Loss of capacity' %}
+                                    This LPA can only be used when the donor has lost capacity
+                                {% elseif lpa.attorneyActDecisions == null %}
+                                    There is no response to this question on the LPA
                                 {% endif %}
                             </dd>
                         </div>
