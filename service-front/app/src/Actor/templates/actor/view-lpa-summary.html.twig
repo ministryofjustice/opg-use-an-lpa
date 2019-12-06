@@ -39,15 +39,17 @@
                 <h2 class="govuk-heading-m heading-m-alt-1">This LPA is registered</h2>
                 <p class="govuk-body body-alt-1">
                     {% if lpa.caseSubtype == "pfa" %}
-                        {% if lpa.attorneyActDecisions %}
-                            While the donor has mental capacity, this lpa should only be used with the donor’s permission
-                        {% else %}
-                            This LPA can only be used when the donor does not have mental capacity
+                        {% if lpa.attorneyActDecisions == 'When Registered' %}
+                            While the donor has mental capacity, this LPA should only be used with the donor’s permission
+                        {% elseif lpa.attorneyActDecisions == 'Loss of capacity' %}
+                            This LPA can only be used when the donor has lost capacity
+                        {% elseif lpa.attorneyActDecisions == null %}
+                            This LPA can be used as soon as it's registered unless instructions say otherwise.
                         {% endif %}
                     {% else %}
-                        {% if lpa.lifeSustainingTreatment %}
+                        {% if lpa.lifeSustainingTreatment == 'yes' %}
                             The attorneys have the authority to make decisions about life-sustaining treatment
-                        {% else %}
+                        {% elseif lpa.lifeSustainingTreatment == 'no' %}
                             The attorneys do NOT have the authority to make decisions about life-sustaining treatment
                         {% endif %}
                     {% endif %}
@@ -167,16 +169,16 @@
                                 {% elseif lpa.attorneyActDecisions == 'Loss of capacity' %}
                                     This LPA can only be used when the donor has lost capacity
                                 {% elseif lpa.attorneyActDecisions == null %}
-                                    There is no response to this question on the LPA
+                                    This LPA can be used as soon as it's registered unless instructions say otherwise.
                                 {% endif %}
                             </dd>
                         </div>
                     {% else %}
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">Life sustaining <br>treatment</dt>
-                            {% if lpa.lifeSustainingTreatment %}
+                            {% if lpa.lifeSustainingTreatment == 'yes' %}
                                 <dd class="govuk-summary-list__value">The attorneys have the authority to make decisions about life-sustaining treatment</dd>
-                            {% else %}
+                            {% elseif lpa.lifeSustainingTreatment == 'no' %}
                                 <dd class="govuk-summary-list__value">The attorneys do not have the authority to make decisions about life-sustaining treatment</dd>
                             {% endif %}
                         </div>
