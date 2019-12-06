@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Handler;
+namespace Common\Handler;
 
 use Common\Service\ApiClient\Client as ApiClient;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -13,7 +13,7 @@ use Exception;
 
 /**
  * Class HealthcheckHandler
- * @package Viewer\Handler
+ * @package Common\Handler
  */
 class HealthcheckHandler implements RequestHandlerInterface
 {

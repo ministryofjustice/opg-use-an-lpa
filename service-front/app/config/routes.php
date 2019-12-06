@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Common\Handler\HealthcheckHandler;
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Application;
 use Zend\Expressive\MiddlewareFactory;
@@ -36,7 +37,7 @@ use Zend\Expressive\MiddlewareFactory;
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
 {
     $app->get('/', Viewer\Handler\HomePageHandler::class, 'home');
-    $app->get('/healthcheck', Viewer\Handler\HealthcheckHandler::class, 'healthcheck');
+    $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->route('/enter-code', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'enter-code');
     $app->get('/check-code', Viewer\Handler\CheckCodeHandler::class, 'check-code');
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
@@ -45,6 +46,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
 {
     $app->get('/', Actor\Handler\HomePageHandler::class, 'home');
+    $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
 
     // User creation
     $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');
