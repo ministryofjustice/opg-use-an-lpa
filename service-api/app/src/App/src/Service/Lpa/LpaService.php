@@ -33,17 +33,24 @@ class LpaService
      */
     private $userLpaActorMapRepository;
 
+    /**
+     * @var LpaFilterFactory
+     */
+    private $lpaFilterFactory;
+
     public function __construct(
         Repository\ViewerCodesInterface $viewerCodesRepository,
         Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
         Repository\LpasInterface $lpaRepository,
-        Repository\UserLpaActorMapInterface $userLpaActorMapRepository
+        Repository\UserLpaActorMapInterface $userLpaActorMapRepository,
+        LpaFilterFactory $lpaFilterFactory
     )
     {
         $this->viewerCodesRepository = $viewerCodesRepository;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
         $this->lpaRepository = $lpaRepository;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
+        $this->lpaFilterFactory = $lpaFilterFactory;
     }
 
     /**
@@ -54,7 +61,7 @@ class LpaService
      */
     public function getByUid(string $uid) : ?Repository\Response\LpaInterface
     {
-        return $this->lpaRepository->get($uid);
+        return ($this->lpaFilterFactory)($this->lpaRepository->get($uid));
     }
 
     /**

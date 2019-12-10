@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
+use App\Service\Lpa\LpaFilterFactory;
 use Prophecy\Argument;
-use StdClass;
 use RuntimeException;
 use DateTime;
 use App\DataAccess\Repository;
@@ -35,6 +35,11 @@ class LpaServiceTest extends TestCase
      */
     private $userLpaActorMapInterfaceProphecy;
 
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy
+     */
+    private $lpaFilterFactoryProphecy;
+
 
     public function setUp()
     {
@@ -42,6 +47,7 @@ class LpaServiceTest extends TestCase
         $this->viewerCodeActivityInterfaceProphecy = $this->prophesize(Repository\ViewerCodeActivityInterface::class);
         $this->lpasInterfaceProphecy = $this->prophesize(Repository\LpasInterface::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(Repository\UserLpaActorMapInterface::class);
+        $this->lpaFilterFactoryProphecy = $this->prophesize(LpaFilterFactory::class);
     }
 
     //-------------------------------------------------------------------------
@@ -54,7 +60,8 @@ class LpaServiceTest extends TestCase
             $this->viewerCodeActivityInterfaceProphecy->reveal(),
             $this->lpasInterfaceProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
-            );
+            $this->lpaFilterFactoryProphecy->reveal()
+        );
     }
 
     /** @test */
@@ -68,6 +75,7 @@ class LpaServiceTest extends TestCase
         $service = $this->getLpaService();
 
         $this->lpasInterfaceProphecy->get($testUid)->willReturn($mockLpaResponse);
+        $this->lpaFilterFactoryProphecy->__invoke($mockLpaResponse)->willReturn($mockLpaResponse);
 
         $result = $service->getByUid($testUid);
 
@@ -111,6 +119,8 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
+        $this->lpaFilterFactoryProphecy->__invoke($t->Lpa)->willReturn($t->Lpa);
+
         $result = $service->getByUserLpaActorToken($t->Token, $t->SiriusUid);
 
         $this->assertIsArray($result);
@@ -132,6 +142,8 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
+        $this->lpaFilterFactoryProphecy->__invoke($t->Lpa)->willReturn($t->Lpa);
+
         $result = $service->getByUserLpaActorToken($t->Token, 'different-user-id');
 
         $this->assertNull($result);
@@ -146,6 +158,8 @@ class LpaServiceTest extends TestCase
         $this->lpasInterfaceProphecy->get($t->SiriusUid)->willReturn(null);
 
         $service = $this->getLpaService();
+
+        $this->lpaFilterFactoryProphecy->__invoke(null)->willReturn(null);
 
         $result = $service->getByUserLpaActorToken($t->Token, $t->SiriusUid);
 
@@ -276,6 +290,8 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
+        $this->lpaFilterFactoryProphecy->__invoke($t->Lpa)->willReturn($t->Lpa);
+
         //---
 
         // This should NOT be called when logging = false.
@@ -304,6 +320,8 @@ class LpaServiceTest extends TestCase
         $t = $this->init_valid_get_by_viewer_account();
 
         $service = $this->getLpaService();
+
+        $this->lpaFilterFactoryProphecy->__invoke($t->Lpa)->willReturn($t->Lpa);
 
         //---
 
@@ -376,6 +394,8 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
+        $this->lpaFilterFactoryProphecy->__invoke($t->Lpa)->willReturn($t->Lpa);
+
         //---
 
         $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn([
@@ -399,6 +419,8 @@ class LpaServiceTest extends TestCase
         $t = $this->init_valid_get_by_viewer_account();
 
         $service = $this->getLpaService();
+
+        $this->lpaFilterFactoryProphecy->__invoke($t->Lpa)->willReturn($t->Lpa);
 
         //---
 
