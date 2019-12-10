@@ -13,6 +13,7 @@ use Zend\Diactoros\Response\JsonResponse;
 use App\Service\ApiClient\Client as ApiClient;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
+use App\DataAccess\Repository\LpasInterface;
 
 /**
  * Class HealthcheckHandler
@@ -37,11 +38,17 @@ class HealthcheckHandler implements RequestHandlerInterface
      */
     protected $version;
 
-    public function __construct(string $version, ApiClient $api, DynamoDbClient $dbClient)
+    /**
+     * @var Repository\LpasInterface
+     */
+    private $lpaRepository;
+
+    public function __construct(string $version, ApiClient $api, DynamoDbClient $dbClient, LpasInterface $lpaRepository)
     {
         $this->apiClient = $api;
         $this->version = $version;
         $this->dbClient = $dbClient;
+        $this->lpaRepository = $lpaRepository;
     }
 
     /**
@@ -62,7 +69,7 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     protected function isHealthy() : bool
     {
-        if ($this->checkDynamoEndpoint()['healthy'])
+        if ($this->checkDynamoEndpoint()['healthy'] && $this->checkApiEndpoint()['healthy'])
         {
             return true;
         } else {
@@ -78,11 +85,10 @@ class HealthcheckHandler implements RequestHandlerInterface
         $start = microtime(true);
 
         try {
-            $data = $this->apiClient->httpGet('/lpas/700000000000');
+            $data = $this->lpaRepository->get("700000000000");
 
-            // TODO fix up with actual check
             // when $data == null a 404 has been returned from the api
-            if (!is_null($data)) {
+            if (is_null($data)) {
                 $data['healthy'] = true;
             } else {
                 $data['healthy'] = false;
@@ -104,10 +110,12 @@ class HealthcheckHandler implements RequestHandlerInterface
 
         $start = microtime(true);
 
-        try {
-            $data = $this->dbClient->listTables();
+        $tableNames = ["ActorCodes", "ActorUsers", "UserLpaActorMap", "ViewerActivity", "ViewerCodes"];
 
-            if (!empty($data["TableNames"])) {
+        try {
+            $dbTables = $this->dbClient->listTables();
+
+            if ($dbTables["TableNames"] == $tableNames) {
                 $data['healthy'] = true;
             } else {
                 $data['healthy'] = false;

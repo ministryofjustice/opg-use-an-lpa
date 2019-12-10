@@ -43,21 +43,21 @@ class HealthcheckHandler implements RequestHandlerInterface
             "healthy" => $this->isHealthy(),
             "version" => $this->version,
             "dependencies" => [
-                "api" => $this->checkApiEndpoint()
+                "API and Dynamo" => $this->checkApiEndpointAndDynamo()
             ]
         ]);
     }
 
     protected function isHealthy() : bool
     {
-        if ($this->checkApiEndpoint()['healthy']) {
+        if ($this->checkApiEndpointAndDynamo()['healthy']) {
             return true;
         } else {
             return false;
         }
     }
 
-    protected function checkApiEndpoint() : array
+    protected function checkApiEndpointAndDynamo() : array
     {
         $data = [];
 
@@ -65,7 +65,7 @@ class HealthcheckHandler implements RequestHandlerInterface
 
         try {
             $data = $this->apiClient->httpGet('/healthcheck');
-            print_r($data["dependencies"]["dynamo"]);
+
         } catch (Exception $e) {
             $data['healthy'] = false;
         }
