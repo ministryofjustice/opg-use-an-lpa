@@ -6,10 +6,10 @@ namespace App\Service\Lpa;
 
 use App\DataAccess\Repository\Response\LpaInterface;
 
-class LpaFilterFactory
+class LpaDataCleanseDecoratorFactory
 {
     public function __invoke(?LpaInterface $lpa): ?LpaInterface
     {
-        return $lpa !== null ? new LpaFilter($lpa) : null;
+        return $lpa !== null ? new LpaDataCleanseDecorator($lpa) : null;
     }
 }

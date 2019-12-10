@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\Service\Lpa\LpaFilterFactory;
+use App\Service\Lpa\LpaDataCleanseDecoratorFactory;
 use Prophecy\Argument;
 use RuntimeException;
 use DateTime;
@@ -47,7 +47,7 @@ class LpaServiceTest extends TestCase
         $this->viewerCodeActivityInterfaceProphecy = $this->prophesize(Repository\ViewerCodeActivityInterface::class);
         $this->lpasInterfaceProphecy = $this->prophesize(Repository\LpasInterface::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(Repository\UserLpaActorMapInterface::class);
-        $this->lpaFilterFactoryProphecy = $this->prophesize(LpaFilterFactory::class);
+        $this->lpaFilterFactoryProphecy = $this->prophesize(LpaDataCleanseDecoratorFactory::class);
     }
 
     //-------------------------------------------------------------------------

@@ -34,7 +34,7 @@ class LpaService
     private $userLpaActorMapRepository;
 
     /**
-     * @var LpaFilterFactory
+     * @var LpaDataCleanseDecoratorFactory
      */
     private $lpaFilterFactory;
 
@@ -43,7 +43,7 @@ class LpaService
         Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
         Repository\LpasInterface $lpaRepository,
         Repository\UserLpaActorMapInterface $userLpaActorMapRepository,
-        LpaFilterFactory $lpaFilterFactory
+        LpaDataCleanseDecoratorFactory $lpaFilterFactory
     )
     {
         $this->viewerCodesRepository = $viewerCodesRepository;

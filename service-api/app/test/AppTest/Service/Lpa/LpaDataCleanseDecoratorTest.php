@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\Response\LpaInterface;
-use App\Service\Lpa\LpaFilter;
+use App\Service\Lpa\LpaDataCleanseDecorator;
 use PHPUnit\Framework\TestCase;
 
-class LpaFilterTest extends TestCase
+class LpaDataCleanseDecoratorTest extends TestCase
 {
     /** @test */
     public function it_decorates_a_lpa_object() {
@@ -19,7 +19,7 @@ class LpaFilterTest extends TestCase
                 'attorneys' => []
             ]);
 
-        $decoratedLpaInterface = new LpaFilter($lpaResponseProphecy->reveal());
+        $decoratedLpaInterface = new LpaDataCleanseDecorator($lpaResponseProphecy->reveal());
 
         $this->assertNotEquals($lpaResponseProphecy->reveal(), $decoratedLpaInterface);
         $this->assertArrayHasKey('id', $decoratedLpaInterface->getData());
@@ -40,7 +40,7 @@ class LpaFilterTest extends TestCase
                 ]
             ]);
 
-        $decoratedLpaInterface = new LpaFilter($lpaResponseProphecy->reveal());
+        $decoratedLpaInterface = new LpaDataCleanseDecorator($lpaResponseProphecy->reveal());
         $lpa = $decoratedLpaInterface->getData();
 
         $this->assertCount(0, $lpa['attorneys']);

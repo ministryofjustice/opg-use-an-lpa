@@ -7,7 +7,7 @@ namespace App\Service\Lpa;
 use App\DataAccess\Repository\Response\LpaInterface;
 use DateTime;
 
-class LpaFilter implements LpaInterface
+class LpaDataCleanseDecorator implements LpaInterface
 {
     /**
      * @var LpaInterface
