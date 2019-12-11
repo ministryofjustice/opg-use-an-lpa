@@ -23,6 +23,6 @@ acceptance:
   suites:
     actor:
       contexts:
-        - BehatTest\Context\UI\AccountContext
+        - BehatTest\Context\Acceptance\AccountContext
       filters:
         tags: "@actor&&@acceptance"
