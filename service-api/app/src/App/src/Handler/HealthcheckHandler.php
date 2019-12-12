@@ -99,9 +99,9 @@ class HealthcheckHandler implements RequestHandlerInterface
     {
         $data = [];
 
-        $start = microtime(true);
-
         $tableNames = ["ActorCodes", "ActorUsers", "UserLpaActorMap", "ViewerActivity", "ViewerCodes"];
+
+        $start = microtime(true);
 
         try {
             $dbTables = $this->dbClient->listTables();
