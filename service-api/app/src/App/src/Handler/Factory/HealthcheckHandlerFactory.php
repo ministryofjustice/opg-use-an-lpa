@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Handler\Factory;
 
-use Aws\DynamoDb\DynamoDbClient;
 use Psr\Container\ContainerInterface;
 use App\Handler\HealthcheckHandler;
 use App\DataAccess\Repository\LpasInterface;
+use App\DataAccess\Repository\ActorCodesInterface;
 
 class HealthcheckHandlerFactory
 {
@@ -15,7 +15,7 @@ class HealthcheckHandlerFactory
     {
         return new HealthcheckHandler(
             $container->get('config')['version'],
-            $container->get(DynamoDbClient::class),
-            $container->get(LpasInterface::class));
+            $container->get(LpasInterface::class),
+            $container->get(ActorCodesInterface::class));
     }
 }

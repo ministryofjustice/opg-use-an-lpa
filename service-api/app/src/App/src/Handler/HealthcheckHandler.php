@@ -9,8 +9,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\JsonResponse;
-use Aws\DynamoDb\DynamoDbClient;
 use App\DataAccess\Repository\LpasInterface;
+Use App\DataAccess\Repository\ActorCodesInterface;
 
 /**
  * Class HealthcheckHandler
@@ -19,14 +19,14 @@ use App\DataAccess\Repository\LpasInterface;
 class HealthcheckHandler implements RequestHandlerInterface
 {
     /**
-     * @var DynamoDbClient
-     */
-    private $dbClient;
-
-    /**
      * @var string
      */
     protected $version;
+
+    /**
+     * @var ActorCodesInterface
+     */
+    private $actorCodes;
 
     /**
      * @var LpasInterface
@@ -35,12 +35,12 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     public function __construct(
         string $version,
-        DynamoDbClient $dbClient,
-        LpasInterface $lpaInterface)
+        LpasInterface $lpaInterface,
+        ActorCodesInterface $actorCodes)
     {
         $this->version = $version;
-        $this->dbClient = $dbClient;
         $this->lpaInterface = $lpaInterface;
+        $this->actorCodes = $actorCodes;
     }
 
     /**
@@ -97,9 +97,9 @@ class HealthcheckHandler implements RequestHandlerInterface
         $start = microtime(true);
 
         try {
-            $dbTables = $this->dbClient->listTables();
+            $dbTables = $this->actorCodes->get('XXXXXXXXXXXX');
 
-            if (count($dbTables["TableNames"]) > 1) {
+            if (is_null($dbTables["TableNames"])) {
                 $data['healthy'] = true;
             } else {
                 $data['healthy'] = false;

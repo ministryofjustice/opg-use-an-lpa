@@ -46,8 +46,6 @@ class HealthcheckHandler implements RequestHandlerInterface
                 "api" => $this->checkApiEndpoint()
             ]
         ]);
-
-
     }
 
     protected function isHealthy() : bool

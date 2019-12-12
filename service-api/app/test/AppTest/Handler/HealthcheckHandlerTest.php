@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Handler;
 
 use App\DataAccess\Repository\LpasInterface;
-use Aws\DynamoDb\DynamoDbClient;
+use App\DataAccess\Repository\ActorCodesInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use App\Handler\HealthcheckHandler;
@@ -13,13 +13,13 @@ use Zend\Diactoros\Response\JsonResponse;
 
 class HealthcheckHandlerTest extends TestCase
 {
-    private $dbClientProphecy;
+    private $actorCodesProphecy;
 
     private $lpaInterface;
 
     protected function setUp()
     {
-        $this->dbClientProphecy = $this->prophesize(DynamoDbClient::class);
+        $this->actorCodesProphecy = $this->prophesize(ActorCodesInterface::class);
         $this->lpaInterface = $this->prophesize(LpasInterface::class);
     }
 
@@ -28,16 +28,13 @@ class HealthcheckHandlerTest extends TestCase
     {
         $version = 'dev';
 
-        $tableNames = ["ActorCodes", "ActorUsers", "UserLpaActorMap", "ViewerActivity", "ViewerCodes"];
-
         $this->lpaInterface->get("700000000000")
             ->willReturn(null);
 
-        $this->dbClientProphecy->listTables()->willReturn([
-            "TableNames" => $tableNames
-        ]);
+        $this->actorCodesProphecy->get('XXXXXXXXXXXX')
+            ->willReturn(null);
 
-        $healthcheck = new HealthcheckHandler($version, $this->dbClientProphecy->reveal(), $this->lpaInterface->reveal());
+        $healthcheck = new HealthcheckHandler($version, $this->lpaInterface->reveal(), $this->actorCodesProphecy->reveal());
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 

@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use App\Handler\Factory\HealthcheckHandlerFactory;
 use App\Handler\HealthcheckHandler;
 use Psr\Container\ContainerInterface;
-use Aws\DynamoDb\DynamoDbClient;
+use App\DataAccess\Repository\ActorCodesInterface;
 use App\DataAccess\Repository\LpasInterface;
 
 class HealthcheckHandlerFactoryTest extends TestCase
@@ -17,14 +17,14 @@ class HealthcheckHandlerFactoryTest extends TestCase
     {
         $factory = new HealthcheckHandlerFactory();
 
-        $dbClient = $this->prophesize(DynamoDbClient::class);
+        $actorCodes = $this->prophesize(ActorCodesInterface::class);
         $lpaInterface = $this->prophesize(LpasInterface::class);
         $container = $this->prophesize(ContainerInterface::class);
 
         $container->get('config')
             ->willReturn(['version' => 'dev']);
-        $container->get(DynamoDbClient::class)
-        ->willReturn($dbClient->reveal());
+        $container->get(ActorCodesInterface::class)
+        ->willReturn($actorCodes->reveal());
         $container->get(LpasInterface::class)
             ->willReturn($lpaInterface->reveal());
 
