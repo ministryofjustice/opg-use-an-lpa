@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Front Integration" type="PhpBehatConfigurationType" singleton="false">
+    <BehatRunner configuration_file="$PROJECT_DIR$/service-front/app/behat.yml" scenario="" scope="Yml" options="--profile=integration --tags=integration&amp;&amp;wip,integration" use_alternative_configuration_file="true" />
+    <CommandLine>
+      <PhpTestInterpreterSettings>
+        <option name="interpreterName" value="front-app" />
+      </PhpTestInterpreterSettings>
+    </CommandLine>
+    <method v="2" />
+  </configuration>
+</component>
