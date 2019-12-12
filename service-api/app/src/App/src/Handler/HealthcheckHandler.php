@@ -61,12 +61,7 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     protected function isHealthy() : bool
     {
-        if ($this->checkDynamoEndpoint()['healthy'] && $this->checkApiEndpoint()['healthy'])
-        {
-            return true;
-        } else {
-            return false;
-        }
+        return ($this->checkDynamoEndpoint()['healthy'] && $this->checkApiEndpoint()['healthy']);
     }
 
     protected function checkApiEndpoint() : array
@@ -99,14 +94,12 @@ class HealthcheckHandler implements RequestHandlerInterface
     {
         $data = [];
 
-        $tableNames = ["ActorCodes", "ActorUsers", "UserLpaActorMap", "ViewerActivity", "ViewerCodes"];
-
         $start = microtime(true);
 
         try {
             $dbTables = $this->dbClient->listTables();
 
-            if ($dbTables["TableNames"] == $tableNames) {
+            if (count($dbTables["TableNames"]) > 1) {
                 $data['healthy'] = true;
             } else {
                 $data['healthy'] = false;

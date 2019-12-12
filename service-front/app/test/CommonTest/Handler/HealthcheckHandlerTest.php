@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ViewerTest\Handler;
+namespace Common\Handler;
 
 use Common\Service\ApiClient\Client as ApiClient;
-use Common\Handler\HealthcheckHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
@@ -15,12 +14,12 @@ class HealthcheckHandlerTest extends TestCase
     /**
      * @dataProvider responseDataProvider
      */
-    public function testReturnsExpectedJsonResponse(int $status, array $response)
+    public function testReturnsExpectedJsonResponse(array $responseJson)
     {
         $version = 'dev';
         $apiClientProphecy = $this->prophesize(ApiClient::class);
         $apiClientProphecy->httpGet('/healthcheck')
-            ->willReturn($response);
+            ->willReturn($responseJson);
 
         //  Set up the handler
         $handler = new HealthcheckHandler($version, $apiClientProphecy->reveal());
@@ -28,19 +27,19 @@ class HealthcheckHandlerTest extends TestCase
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
         $response = $handler->handle($requestProphecy->reveal());
-        $json = json_decode((string) $response->getBody()->getContents());
+        $json = json_decode($response->getBody()->getContents(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertObjectHasAttribute('healthy', $json);
-        $this->assertEquals($version, $json->version);
-        $this->assertObjectHasAttribute('dependencies', $json);
+        $this->assertArrayHasKey('healthy', $json);
+        $this->assertEquals($version, $json['version']);
+        $this->assertArrayHasKey('dependencies', $json);
 
-        $dependencies = $json->dependencies;
-        $this->assertObjectHasAttribute('apiAndDynamo', $dependencies);
+        $dependencies = $json['dependencies'];
+        $this->assertArrayHasKey('api', $dependencies);
 
-        $api = $dependencies->apiAndDynamo;
-        $this->assertObjectHasAttribute('healthy', $api);
-        $this->assertObjectHasAttribute('version', $api);
+        $api = $dependencies['api'];
+        $this->assertArrayHasKey('healthy', $api);
+        $this->assertEquals(true, $api['healthy']);
     }
 
     /**
@@ -49,18 +48,17 @@ class HealthcheckHandlerTest extends TestCase
     public function responseDataProvider() : array
     {
         $allHealthyResponse = [
-            'healthy' => true,
             'version' => 'dev',
             'dependencies' => [
-                'apiAndDynamo' => [
-                    'healthy' => true,
-                    'version' => 'dev'
-                ]
-            ]
+                'api' => [],
+                'dynamo' => [],
+            ],
+            'healthy' => true,
+            'response_time' => 0
         ];
 
         return [
-            [ 200, $allHealthyResponse ]
+            [$allHealthyResponse]
         ];
     }
 }
