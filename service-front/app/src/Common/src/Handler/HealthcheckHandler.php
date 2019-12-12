@@ -43,9 +43,11 @@ class HealthcheckHandler implements RequestHandlerInterface
             "healthy" => $this->isHealthy(),
             "version" => $this->version,
             "dependencies" => [
-                "API and Dynamo" => $this->checkApiEndpointAndDynamo()
+                "apiAndDynamo" => $this->checkApiEndpointAndDynamo()
             ]
         ]);
+
+
     }
 
     protected function isHealthy() : bool

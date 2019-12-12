@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ViewerTest\Handler;
 
 use Common\Service\ApiClient\Client as ApiClient;
-use Viewer\Handler\HealthcheckHandler;
+use Common\Handler\HealthcheckHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
@@ -36,9 +36,9 @@ class HealthcheckHandlerTest extends TestCase
         $this->assertObjectHasAttribute('dependencies', $json);
 
         $dependencies = $json->dependencies;
-        $this->assertObjectHasAttribute('api', $dependencies);
+        $this->assertObjectHasAttribute('apiAndDynamo', $dependencies);
 
-        $api = $dependencies->api;
+        $api = $dependencies->apiAndDynamo;
         $this->assertObjectHasAttribute('healthy', $api);
         $this->assertObjectHasAttribute('version', $api);
     }
@@ -52,7 +52,7 @@ class HealthcheckHandlerTest extends TestCase
             'healthy' => true,
             'version' => 'dev',
             'dependencies' => [
-                'api' => [
+                'apiAndDynamo' => [
                     'healthy' => true,
                     'version' => 'dev'
                 ]

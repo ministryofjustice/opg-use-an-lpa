@@ -7,7 +7,6 @@ namespace App\Handler\Factory;
 use Aws\DynamoDb\DynamoDbClient;
 use Psr\Container\ContainerInterface;
 use App\Handler\HealthcheckHandler;
-use App\Service\ApiClient\Client as ApiClient;
 use App\DataAccess\Repository\LpasInterface;
 
 class HealthcheckHandlerFactory
@@ -16,7 +15,6 @@ class HealthcheckHandlerFactory
     {
         return new HealthcheckHandler(
             $container->get('config')['version'],
-            $container->get(ApiClient::class),
             $container->get(DynamoDbClient::class),
             $container->get(LpasInterface::class));
     }

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace ViewerTest\Handler\Factory;
 
 use Common\Service\ApiClient\Client as ApiClient;
-use Viewer\Handler\Factory\HealthcheckHandlerFactory;
-use Viewer\Handler\HealthcheckHandler;
+use Common\Handler\Factory\HealthcheckHandlerFactory;
+use Common\Handler\HealthcheckHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 

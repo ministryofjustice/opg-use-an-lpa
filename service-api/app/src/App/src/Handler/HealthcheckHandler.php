@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-use App\DataAccess\DynamoDb\DynamoHydrateTrait;
 use Exception;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\JsonResponse;
-use App\Service\ApiClient\Client as ApiClient;
 use Aws\DynamoDb\DynamoDbClient;
-use Aws\DynamoDb\Exception\DynamoDbException;
 use App\DataAccess\Repository\LpasInterface;
 
 /**
@@ -21,17 +18,10 @@ use App\DataAccess\Repository\LpasInterface;
  */
 class HealthcheckHandler implements RequestHandlerInterface
 {
-    use DynamoHydrateTrait;
-
     /**
      * @var DynamoDbClient
      */
     private $dbClient;
-
-    /**
-     * @var ApiClient
-     */
-    protected $apiClient;
 
     /**
      * @var string
@@ -39,16 +29,18 @@ class HealthcheckHandler implements RequestHandlerInterface
     protected $version;
 
     /**
-     * @var Repository\LpasInterface
+     * @var LpasInterface
      */
-    private $lpaRepository;
+    private $lpaInterface;
 
-    public function __construct(string $version, ApiClient $api, DynamoDbClient $dbClient, LpasInterface $lpaRepository)
+    public function __construct(
+        string $version,
+        DynamoDbClient $dbClient,
+        LpasInterface $lpaInterface)
     {
-        $this->apiClient = $api;
         $this->version = $version;
         $this->dbClient = $dbClient;
-        $this->lpaRepository = $lpaRepository;
+        $this->lpaInterface = $lpaInterface;
     }
 
     /**
@@ -75,7 +67,6 @@ class HealthcheckHandler implements RequestHandlerInterface
         } else {
             return false;
         }
-
     }
 
     protected function checkApiEndpoint() : array
@@ -85,7 +76,7 @@ class HealthcheckHandler implements RequestHandlerInterface
         $start = microtime(true);
 
         try {
-            $data = $this->lpaRepository->get("700000000000");
+            $data = $this->lpaInterface->get("700000000000");
 
             // when $data == null a 404 has been returned from the api
             if (is_null($data)) {
