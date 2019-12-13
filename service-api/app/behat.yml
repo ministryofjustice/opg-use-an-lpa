@@ -17,7 +17,7 @@ integration:
       contexts:
         - BehatTest\Context\Integration\AccountContext
       filters:
-        tags: "@actor&&@integration"
+        tags: "@integration"
 
 acceptance:
   suites:
@@ -25,4 +25,4 @@ acceptance:
       contexts:
         - BehatTest\Context\Acceptance\AccountContext
       filters:
-        tags: "@actor&&@acceptance"
+        tags: "@acceptance"

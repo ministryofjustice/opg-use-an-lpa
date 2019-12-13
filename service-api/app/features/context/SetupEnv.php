@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context;
 
-trait SetupEnvTrait
+trait SetupEnv
 {
     /**
      * @BeforeSuite

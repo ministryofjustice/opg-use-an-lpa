@@ -12,13 +12,15 @@ Feature: Password Reset
     Given I have forgotten my password
     When I ask for my password to be reset
     Then I receive unique instructions on how to reset my password
- 
+
+  @integration @acceptance
   Scenario: The user can follow their unique instructions to supply a new password
     Given I have asked for my password to be reset
     When I follow my unique instructions on how to reset my password
     And I choose a new password
     Then my password has been associated with my user account
 
+  @integration @acceptance
   Scenario: The user cannot follow expired instructions to supply a new password
     Given I have asked for my password to be reset
     When I follow my unique expired instructions on how to reset my password
