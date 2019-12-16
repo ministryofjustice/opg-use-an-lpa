@@ -134,7 +134,32 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function iChooseANewPassword()
     {
-        throw new PendingException();
+        // ActorUsers::getIdByPasswordResetToken
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'    => $this->userAccountId,
+                    'Email' => $this->userAccountEmail
+                ])
+            ]
+        ]));
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'                  => $this->userAccountId,
+                'Email'               => $this->userAccountEmail,
+                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry']
+            ])
+        ]));
+
+        // ActorUsers::resetPassword
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiPatch('/v1/complete-password-reset', [
+            'token'    => $this->passwordResetData['PasswordResetToken'],
+            'password' => 'newPassw0rd'
+        ]);
     }
 
     /**
@@ -142,7 +167,10 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function myPasswordHasBeenAssociatedWithMyUserAccount()
     {
-        throw new PendingException();
+        $this->assertSession()->statusCodeEquals(200);
+
+        $response = $this->getResponseAsJson();
+        assertInternalType('array', $response);
     }
 
     /**
