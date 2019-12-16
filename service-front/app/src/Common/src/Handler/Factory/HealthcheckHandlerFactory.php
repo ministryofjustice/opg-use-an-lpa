@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Handler\Factory;
+namespace Common\Handler\Factory;
 
 use Common\Service\ApiClient\Client as ApiClient;
 use Psr\Container\ContainerInterface;
-use Viewer\Handler\HealthcheckHandler;
+use Common\Handler\HealthcheckHandler;
 
 class HealthcheckHandlerFactory
 {

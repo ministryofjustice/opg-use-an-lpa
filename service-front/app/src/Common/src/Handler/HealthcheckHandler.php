@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Handler;
+namespace Common\Handler;
 
 use Common\Service\ApiClient\Client as ApiClient;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -13,7 +13,7 @@ use Exception;
 
 /**
  * Class HealthcheckHandler
- * @package Viewer\Handler
+ * @package Common\Handler
  */
 class HealthcheckHandler implements RequestHandlerInterface
 {
@@ -50,7 +50,11 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     protected function isHealthy() : bool
     {
-        return true;
+        if ($this->checkApiEndpoint()['healthy']) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     protected function checkApiEndpoint() : array
@@ -61,6 +65,7 @@ class HealthcheckHandler implements RequestHandlerInterface
 
         try {
             $data = $this->apiClient->httpGet('/healthcheck');
+
         } catch (Exception $e) {
             $data['healthy'] = false;
         }
