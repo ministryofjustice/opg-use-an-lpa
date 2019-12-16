@@ -22,8 +22,7 @@ class HealthcheckHandlerTest extends TestCase
         $this->actorCodesProphecy = $this->prophesize(ActorCodesInterface::class);
         $this->lpaInterface = $this->prophesize(LpasInterface::class);
     }
-
-    /** @test */
+    
     public function testReturnsExpectedJsonResponse()
     {
         $version = 'dev';

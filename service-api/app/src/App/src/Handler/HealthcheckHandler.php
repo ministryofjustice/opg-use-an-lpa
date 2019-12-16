@@ -99,7 +99,7 @@ class HealthcheckHandler implements RequestHandlerInterface
         try {
             $dbTables = $this->actorCodes->get('XXXXXXXXXXXX');
 
-            if (is_null($dbTables["TableNames"])) {
+            if (is_null($dbTables)) {
                 $data['healthy'] = true;
             } else {
                 $data['healthy'] = false;
