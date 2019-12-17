@@ -544,7 +544,11 @@ orbs:
                 chmod +x php-coveralls.phar
           - run:
               name: Upload report
-              command: ./php-coveralls.phar --coverage_clover build/service-front/phpunit/coverage.xml --coverage_clover build/service-api/phpunit/coverage.xml
+              command: |
+                ./php-coveralls.phar \
+                  --json_path build/coveralls-upload.json \
+                  --coverage_clover build/service-front/phpunit/coverage.xml \
+                  --coverage_clover build/service-api/phpunit/coverage.xml
 
       #----------------------------------------------------
       # Terraform
