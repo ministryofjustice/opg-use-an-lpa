@@ -34,6 +34,11 @@ workflows:
           requires:
             [app_front_build, app_api_build, web_api_build, test_web, test_pdf]
 
+      - use-my-lpa/coveralls_upload:
+          name: coveralls_upload
+          requires:
+            [app_front_build, app_api_build, web_api_build, test_web, test_pdf]
+
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
           name: dev_apply_shared_terraform
