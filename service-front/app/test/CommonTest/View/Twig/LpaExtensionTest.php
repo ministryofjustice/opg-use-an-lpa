@@ -120,6 +120,10 @@ class LpaExtensionTest extends TestCase
                 null,
                 ''
             ],
+            [
+                [],
+                ''
+            ],
         ];
     }
 
@@ -200,6 +204,10 @@ class LpaExtensionTest extends TestCase
             [
                 '1948-02-17',
                 '17 February 1948',
+            ],
+            [
+                'today',
+                (new DateTime('now'))->format('j F Y')
             ],
             [
                 'not-a-date',
