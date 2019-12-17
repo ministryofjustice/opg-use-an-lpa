@@ -170,6 +170,8 @@ orbs:
     executors:
       puppeteer:
         docker: [image: buildkite/puppeteer]
+      php:
+        docker: [image: circleci/php:7-cli]
       node:
         docker: [image: circleci/node:8.0]
       python:
@@ -523,6 +525,22 @@ orbs:
           - run:
               name: Upload to Codecov
               command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN || echo 'Codecov upload failed'
+
+      coveralls_upload:
+        executor: php
+        steps:
+          - checkout
+          - attach_workspace:
+              at: build
+          - run:
+              name: Install coveralls upload tool
+              command: |
+                wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.2.0/php-coveralls.phar
+                chmod +x coveralls.phar
+          - run:
+              name: Upload report
+              command: ./coveralls.phar --coverage-clover service-front/phpunit/coverage.xml --coverage-clover service-api/phpunit/coverage.xml
+
       #----------------------------------------------------
       # Terraform
 
