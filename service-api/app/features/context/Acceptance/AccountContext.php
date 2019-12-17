@@ -8,6 +8,7 @@ use Aws\DynamoDb\Marshaler;
 use Aws\Result;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatTest\Context\SetupEnv;
+use Fig\Http\Message\StatusCodeInterface;
 
 /**
  * Class AccountContext
@@ -76,7 +77,7 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function iReceiveUniqueInstructionsOnHowToResetMyPassword()
     {
-        $this->assertSession()->statusCodeEquals(200);
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
         assertEquals($this->userAccountId, $response['Id']);
@@ -123,7 +124,7 @@ class AccountContext extends BaseAcceptanceContext
 
         // --
 
-        $this->assertSession()->statusCodeEquals(200);
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
         assertEquals($this->userAccountId, $response['Id']);
@@ -167,10 +168,10 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function myPasswordHasBeenAssociatedWithMyUserAccount()
     {
-        $this->assertSession()->statusCodeEquals(200);
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
-        assertInternalType('array', $response);
+        assertInternalType('array', $response); // empty array response
     }
 
     /**
@@ -178,7 +179,29 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function iFollowMyUniqueExpiredInstructionsOnHowToResetMyPassword()
     {
-        throw new PendingException();
+        // expire the password reset token
+        $this->passwordResetData['PasswordResetExpiry'] = time() - (60 * 60 * 12); // 12 hours in the past
+
+        // ActorUsers::getIdByPasswordResetToken
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'    => $this->userAccountId,
+                    'Email' => $this->userAccountEmail
+                ])
+            ]
+        ]));
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'                  => $this->userAccountId,
+                'Email'               => $this->userAccountEmail,
+                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry']
+            ])
+        ]));
+
+        $this->apiGet('/v1/can-password-reset?token=' . $this->passwordResetData['PasswordResetToken']);
     }
 
     /**
@@ -186,15 +209,43 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function iAmToldThatMyInstructionsHaveExpired()
     {
-        throw new PendingException();
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_GONE);
     }
 
     /**
      * @Then I am unable to continue to reset my password
+     *
+     * Typically this endpoint wouldn't be called as we stop at the previous step, in this
+     * case though we're using it to test that the endpoint still denies an expired token
+     * when directly calling the reset
      */
     public function iAmUnableToContinueToResetMyPassword()
     {
-        throw new PendingException();
+        // ActorUsers::getIdByPasswordResetToken
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'    => $this->userAccountId,
+                    'Email' => $this->userAccountEmail
+                ])
+            ]
+        ]));
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'                  => $this->userAccountId,
+                'Email'               => $this->userAccountEmail,
+                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry']
+            ])
+        ]));
+
+        $this->apiPatch('/v1/complete-password-reset', [
+            'token'    => $this->passwordResetData['PasswordResetToken'],
+            'password' => 'newPassw0rd'
+        ]);
+
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
 
     /**
