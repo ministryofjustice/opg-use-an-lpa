@@ -37,7 +37,7 @@ workflows:
       - use-my-lpa/coveralls_upload:
           name: coveralls_upload
           requires:
-            [app_front_build, app_api_build, web_api_build, test_web, test_pdf]
+            [app_front_build, app_api_build, test_web, test_pdf]
 
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
@@ -541,10 +541,10 @@ orbs:
               name: Install coveralls upload tool
               command: |
                 wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.2.0/php-coveralls.phar
-                chmod +x coveralls.phar
+                chmod +x php-coveralls.phar
           - run:
               name: Upload report
-              command: ./coveralls.phar --coverage-clover service-front/phpunit/coverage.xml --coverage-clover service-api/phpunit/coverage.xml
+              command: ./php-coveralls.phar --coverage-clover service-front/phpunit/coverage.xml --coverage-clover service-api/phpunit/coverage.xml
 
       #----------------------------------------------------
       # Terraform
