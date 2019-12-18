@@ -28,7 +28,7 @@ workflows:
       - use-my-lpa/docker_build_pdf:
           name: pdf_build
           requires: [test_pdf]
-#
+
 #      - use-my-lpa/codecov_php-unit_upload:
 #          name: codecov_upload
 #          requires:
@@ -37,7 +37,7 @@ workflows:
       - use-my-lpa/coveralls_upload:
           name: coveralls_upload
           requires:
-            [app_front_build, app_api_build]
+            [app_front_build, app_api_build, test_web, test_pdf]
 
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
