@@ -16,7 +16,7 @@ class PasswordResetRequestTest extends TestCase implements TestsZendForm
 {
     use ZendFormTests;
 
-    /** @var PasswordReset */
+    /** @var PasswordResetRequest */
     protected $form;
 
     public function getForm(): AbstractForm
