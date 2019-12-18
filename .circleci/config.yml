@@ -543,12 +543,17 @@ orbs:
                 wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.2.0/php-coveralls.phar
                 chmod +x php-coveralls.phar
           - run:
+              name: Fix coverage report paths
+              command: |
+                sed 's_/app/src/_/home/circleci/project/service-api/app/src/_' <build/service-api/phpunit/coverage.xml > build/service-api/phpunit/coverage-fixed.xml
+                sed 's_/app/src/_/home/circleci/project/service-front/app/src/_' <build/service-front/phpunit/coverage.xml > build/service-front/phpunit/coverage-fixed.xml
+          - run:
               name: Upload report
               command: |
                 ./php-coveralls.phar -v \
                   --json_path build/coveralls-upload.json \
-                  --coverage_clover build/service-front/phpunit/coverage.xml \
-                  --coverage_clover build/service-api/phpunit/coverage.xml
+                  --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
+                  --coverage_clover build/service-front/phpunit/coverage-fixed.xml
 
       #----------------------------------------------------
       # Terraform
