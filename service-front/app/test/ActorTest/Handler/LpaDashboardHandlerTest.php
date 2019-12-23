@@ -72,14 +72,6 @@ class LpaDashboardHandlerTest extends TestCase
         // The request
         $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
-        $this->templateRendererProphecy->render('actor::lpa-dashboard', Argument::that(function ($options) {
-            $this->assertIsArray($options);
-            $this->assertArrayHasKey('user', $options);
-            $this->assertArrayHasKey('lpas', $options);
-            return true;
-        }))
-            ->willReturn('');
-
         $this->userProphecy = $this->prophesize(UserInterface::class);
         $this->userProphecy->getIdentity()->willReturn(self::IDENTITY_TOKEN);
     }
@@ -87,6 +79,15 @@ class LpaDashboardHandlerTest extends TestCase
     /** @test */
     public function dashboard_is_displayed_with_lpas_added()
     {
+
+        $this->templateRendererProphecy->render('actor:lpa-dashboard', Argument::that(function ($options) {
+            $this->assertIsArray($options);
+            $this->assertArrayHasKey('user', $options);
+            $this->assertArrayHasKey('lpas', $options);
+            return true;
+        }))
+            ->willReturn('');
+
         $this->authenticatorProphecy->authenticate(Argument::type(ServerRequestInterface::class))
             ->willReturn($this->userProphecy->reveal());
 
@@ -115,12 +116,12 @@ class LpaDashboardHandlerTest extends TestCase
             ->getShareCodes(self::IDENTITY_TOKEN, self::USER_LPA_ACTOR_TOKEN, true)
             ->willReturn($shareCodes);
 
-        $this->templateRendererProphecy
-            ->render('actor:lpa-dashboard', [
-                'user' => self::IDENTITY_TOKEN,
-                'lpa' => $lpas,
-            ])
-            ->willReturn('');
+//        $this->templateRendererProphecy
+//            ->render('actor:lpa-dashboard', [
+//                'user' => self::IDENTITY_TOKEN,
+//                'lpa' => $lpas,
+//            ])
+//            ->willReturn('');
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
@@ -128,7 +129,7 @@ class LpaDashboardHandlerTest extends TestCase
     }
 
     /** @test */
-    public function user_is_redirected_to_add_page_when_no_lpas_added()
+    public function user_is_shown_blank_dashboard_when_no_lpas_added()
     {
         $this->authenticatorProphecy->authenticate(Argument::type(ServerRequestInterface::class))
             ->willReturn($this->userProphecy->reveal());
@@ -147,11 +148,23 @@ class LpaDashboardHandlerTest extends TestCase
             ->getLpas(self::IDENTITY_TOKEN)
             ->willReturn($lpas);
 
-        $this->urlHelperProphecy->generate('lpa.add');
+//        $this->templateRendererProphecy
+//            ->render('actor::lpa-blank-dashboard', [
+//                'user' => self::IDENTITY_TOKEN,
+//            ])
+//            ->willReturn('');
+
+        $this->templateRendererProphecy->render('actor:lpa-blank-dashboard', Argument::that(function ($options) {
+            $this->assertIsArray($options);
+            $this->assertArrayHasKey('user', $options);
+            return true;
+        }))
+            ->willReturn('');
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
-        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertInstanceOf(HtmlResponse::class, $response);
+        //$this->assertContains();
     }
 
 }
