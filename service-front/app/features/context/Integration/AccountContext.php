@@ -24,6 +24,8 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  *
  * @property string email
  * @property string resetToken
+ * @property string activationToken
+ * @property string password
  */
 class AccountContext implements Context, Psr11AwareContext
 {
@@ -211,4 +213,118 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
+
+    /**
+     * @Given /^I am not a user of the lpa application$/
+     */
+    public function iAmNotAUserOfTheLpaApplication()
+    {
+        $this->email = " ";
+    }
+
+    /**
+     * @Given /^I want to create a new account$/
+     */
+    public function iWantToCreateANewAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I create an account$/
+     */
+    public function iCreateAnAccount()
+    {
+        $this->activationToken = 'activate1234567890';
+        $this->password = 'n3wPassWord';
+
+
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([ 'activationToken' => $this->activationToken])
+                )
+            );
+
+        $userData = $this->userService->create($this->email, $this->password);
+
+        assertInternalType('string', $userData['activationToken']);
+        assertEquals($this->resetToken, $userData['activationToken']);
+    }
+
+    /**
+     * @Then /^I receive unique instructions on how to create an account$/
+     */
+    public function iReceiveUniqueInstructionsOnHowToCreateAnAccount()
+    {
+        $expectedUrl = 'http://localhost/activate-account/' . $this->activationToken;
+        $expectedTemplateId = 'd897fe13-a0c3-4c50-aa5b-3f0efacda5dc';
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(function (RequestInterface $request, array $options)
+            use ($expectedUrl, $expectedTemplateId) {
+                $requestBody = $request->getBody()->getContents();
+
+                assertContains($this->resetToken, $requestBody);
+                assertContains(json_encode($expectedUrl), $requestBody);
+                assertContains($expectedTemplateId, $requestBody);
+            });
+
+
+        $this->emailClient->sendPasswordResetEmail($this->email, $expectedUrl);
+    }
+
+    /**
+     * @Given /^I have asked for creating new account$/
+     */
+    public function iHaveAskedForCreatingNewAccount()
+    {
+        $this->activationToken = 'activate1234567890';
+    }
+
+    /**
+     * @When /^I follow the instructions on how to activate my account$/
+     */
+    public function iFollowTheInstructionsOnHowToActivateMyAccount()
+    {
+        $this->apiFixtures->patch('/v1/user-activation')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'activation_token' => $this->activationToken])))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $query = $request->getUri()->getQuery();
+                assertContains($this->activationToken, $query);
+            });
+
+        $canActivate = $this->userService->activate($this->activationToken);
+        assertTrue($canActivate);
+    }
+
+    /**
+     * @Then /^my account is activated$/
+     */
+    public function myAccountIsActivated()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I follow my unique instructions after 24 hours$/
+     */
+    public function iFollowMyUniqueInstructionsAfter24Hours()
+    {
+        $this->apiFixtures->patch('/v1/user-activation')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_GONE))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $query = $request->getUri()->getQuery();
+                assertContains($this->activationTokenToken, $query);
+            });
+
+        $canActivate= $this->userService->activate($this->activationToken);
+        assertFalse($canActivate);
+    }
+
 }
