@@ -50,11 +50,10 @@ class ActivateAccountHandler extends AbstractHandler
 
         if (!$activated) {
             //  If the user activate failed (probably because the token has been used) then redirect home
-            return $this->redirectToRoute('home');
+            //return $this->redirectToRoute('home');
+            return new HtmlResponse($this->renderer->render('actor::activate-account-not-found'));
         }
-
-        //  TODO - Populate this response properly later
-
+        
         return new HtmlResponse($this->renderer->render('actor::activate-account'));
     }
 }
