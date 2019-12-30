@@ -196,11 +196,13 @@
                         {% else %}
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">Life sustaining <br>treatment</dt>
-                                {% if lpa.lifeSustainingTreatment %}
-                                    <dd class="govuk-summary-list__value">The attorneys have the authority to make decisions about life-sustaining treatment</dd>
-                                {% else %}
-                                    <dd class="govuk-summary-list__value">The attorneys do not have the authority to make decisions about life-sustaining treatment</dd>
-                                {% endif %}
+                                <dd class="govuk-summary-list__value">
+                                    {% if lpa.lifeSustainingTreatment %}
+                                        The attorneys have the authority to make decisions about life-sustaining treatment</dd>
+                                    {% else %}
+                                        The attorneys do not have the authority to make decisions about life-sustaining treatment</dd>
+                                    {% endif %}
+                                <dd class="govuk-summary-list__value">
                             </div>
                         {% endif %}
 
