@@ -1,0 +1,66 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Change Details {{ parent() }} {% endblock %}
+
+{% block content %}
+
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        <a href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}" class="govuk-back-link">Back</a>
+
+        <main class="govuk-main-wrapper">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">Your details</h1>
+
+                            <dl class="govuk-summary-list">
+
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Email address
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        {{ user.getDetail('email') }}
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" href="change-email">
+                                            Change<span class="govuk-visually-hidden"> email address</span>
+                                        </a>
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Password
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        ***********
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" href="change-password">
+                                            Change<span class="govuk-visually-hidden"> password</span>
+                                        </a>
+                                    </dd>
+                                </div>
+                            </dl>
+
+                    <a href="delete-confirm" role="button" draggable="false" class="govuk-button govuk-button govuk-button--warning">
+                        Delete account
+                    </a>
+
+                    <div class="govuk-inset-text">
+                        <span>Need to update the online LPA summary?</span><br>
+                        <span>
+                             <a href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">Change a donor's or attorney's details</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+{% endblock %}

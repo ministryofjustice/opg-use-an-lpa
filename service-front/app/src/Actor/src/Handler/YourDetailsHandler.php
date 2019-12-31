@@ -15,7 +15,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 
 
-class ChangeDetailsHandler extends AbstractHandler
+class YourDetailsHandler extends AbstractHandler
 {
     use SessionTrait;
     use User;
@@ -39,11 +39,17 @@ class ChangeDetailsHandler extends AbstractHandler
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $actorLpaToken = $request->getQueryParams()['lpa'];
+
         $user = $this->getUser($request);
 
-        return new HtmlResponse($this->renderer->render('actor::change-details', [
+        return new HtmlResponse($this->renderer->render('actor::your-details', [
             'actorToken' => $actorLpaToken,
             'user' => $user,
         ]));
     }
 }
+
+
+
+
+
