@@ -37,6 +37,14 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                 'filters'  => [
                     ['name' => StringTrim::class],
                 ],
+                'validators' => [
+                    new Regex([
+                        'pattern' => '/[\w\d\s\]{4,4}[\S\s?\-][\w\d\s]{4,4}[\S\s?\-][\w\d\s]{4,4}/',
+                        'message' => [
+                            Regex::NOT_MATCH => 'Enter an LPA share code in the correct format.'
+                        ]
+                    ])
+                ]
             ],
             'donor_surname' => [
                 'required' => true,

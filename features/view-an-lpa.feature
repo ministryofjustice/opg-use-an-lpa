@@ -20,28 +20,28 @@ Feature: View a lasting power of attorney
     And error message "Value is required and can't be empty" is displayed next to the LPA access code input
     And error message "Value is required and can't be empty" is displayed next to the Donor surname input
 
-#  Scenario: Show an error message when I search for an LPA with an LPA code that is the wrong format
-#    Given I go to the enter code page on the viewer service
-#    And the share code input is populated with "wrong-format" and "donor-surname"
-#    When the share code form is submitted
-#    Then error message "Enter an LPA share code in the correct format." is displayed in the error summary
-#    And error message "Enter an LPA share code in the correct format." is displayed next to the LPA access code input
+  Scenario: Show an error message when I search for an LPA with an LPA code that is the wrong format
+    Given I go to the enter code page on the viewer service
+    And the share code input is populated with "wrong-format" and "donor-surname"
+    When the share code form is submitted
+    Then error message "Enter an LPA share code in the correct format." is displayed in the error summary
+    And error message "Enter an LPA share code in the correct format." is displayed next to the LPA access code input
 
   Scenario: Show an error page when I search for an LPA with an invalid LPA code and surname that does not exist
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "1111-1111-1111" and "test-surname"
+    And the share code input is populated with "111111111111" and "test-surname"
     When the share code form is submitted
     Then the "We could not find an LPA matching those details" page is displayed
 
   Scenario: Show an error page when I search for an LPA with an LPA code that has expired
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "N4KB-EBEZ-MNJF" and "Sanderson"
+    And the share code input is populated with "n4kb-ebez-mnjf" and "Sanderson"
     When the share code form is submitted
     Then the "Expired code" page is displayed
 
   Scenario: Show the confirmation page when I search for an LPA with a valid LPA code and matching donor's surname
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "P9H8-A6ML-D3AM" and "Sanderson"
+    And the share code input is populated with "P9H8 A6ml D3AM" and "Sanderson"
     When the share code form is submitted
     Then the "Is this the LPA you want to view?" page is displayed
 
