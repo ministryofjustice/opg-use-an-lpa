@@ -41,13 +41,13 @@ Feature: View a lasting power of attorney
 
   Scenario: Show the confirmation page when I search for an LPA with a valid LPA code and matching donor's surname
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "2DBM ADB2 U2F6" and "Sanderson"
+    And the share code input is populated with "P9H8 A6ML D3AM" and "Sanderson"
     When the share code form is submitted
     Then the "Is this the LPA you want to view?" page is displayed
 
   Scenario: Show the wrong details help comment on confirmation code page when I click the link
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "2DBM-ADB2-U2F6" and "Sanderson"
+    And the share code input is populated with "p9h8 a6ml d3am" and "Sanderson"
     When the share code form is submitted
     Then the "Is this the LPA you want to view?" page is displayed
     Given the "If you need to access this LPA after" help section is not visible
@@ -56,7 +56,7 @@ Feature: View a lasting power of attorney
 
   Scenario: Show the full LPA details for an active LPA when I click "Continue" on the confirmation page
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "2dbm-adb2-u2f6" and "Sanderson"
+    And the share code input is populated with "P9H8A6MLD3AM" and "Sanderson"
     When the share code form is submitted
     Then the "Is this the LPA you want to view?" page is displayed
     When I click the "Continue" button
