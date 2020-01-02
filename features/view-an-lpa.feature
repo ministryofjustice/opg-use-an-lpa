@@ -20,12 +20,12 @@ Feature: View a lasting power of attorney
     And error message "Value is required and can't be empty" is displayed next to the LPA access code input
     And error message "Value is required and can't be empty" is displayed next to the Donor surname input
 
-  Scenario: Show an error message when I search for an LPA with an LPA code that is the wrong format
-    Given I go to the enter code page on the viewer service
-    And the share code input is populated with "wrong-format" and "donor-surname"
-    When the share code form is submitted
-    Then error message "Enter an LPA share code in the correct format." is displayed in the error summary
-    And error message "Enter an LPA share code in the correct format." is displayed next to the LPA access code input
+#  Scenario: Show an error message when I search for an LPA with an LPA code that is the wrong format
+#    Given I go to the enter code page on the viewer service
+#    And the share code input is populated with "wrong-format" and "donor-surname"
+#    When the share code form is submitted
+#    Then error message "Enter an LPA share code in the correct format." is displayed in the error summary
+#    And error message "Enter an LPA share code in the correct format." is displayed next to the LPA access code input
 
   Scenario: Show an error page when I search for an LPA with an invalid LPA code and surname that does not exist
     Given I go to the enter code page on the viewer service
