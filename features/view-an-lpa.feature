@@ -56,7 +56,7 @@ Feature: View a lasting power of attorney
 
   Scenario: Show the full LPA details for an active LPA when I click "Continue" on the confirmation page
     Given I go to the enter code page on the viewer service
-    And the share code input is populated with "P9H8-A6ML-D3AM" and "Sanderson"
+    And the share code input is populated with "2dbm-adb2-u2f6" and "Sanderson"
     When the share code form is submitted
     Then the "Is this the LPA you want to view?" page is displayed
     When I click the "Continue" button
