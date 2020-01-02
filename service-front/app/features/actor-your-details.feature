@@ -13,3 +13,11 @@ Feature: YourDetails
     And  I ask for my details to be reset
     Then I can change my email if required
     And I can change my passcode if required
+
+  @ui
+  Scenario: The user can request login details reset
+    When I sign in
+    And  I ask for my details to be reset
+    And  I ask for a change of donors or attorneys details
+    Then I am given instruction on how to do the required
+

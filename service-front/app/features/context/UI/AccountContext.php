@@ -227,6 +227,8 @@ class AccountContext extends BaseUIContext
         $this->pressButton('Continue');
     }
 
+
+    // Move all below to new context file UML 334
     /**
      * @When /^I ask for my details to be reset$/
      */
@@ -265,6 +267,29 @@ class AccountContext extends BaseUIContext
 
     }
 
+    /**
+     * @When /^I ask for a change of donors or attorneys details$/
+     */
+    public function iAskForAChangeOfDonorsOrAttorneysDetails()
+    {
+        $this->assertPageAddress('/your-details');
 
+        $this->assertPageContainsText('Change a donor\'s or attorney\'s details');
+        $this->clickLink('Change a donor\'s or attorney\'s details');
+    }
+
+    /**
+     * @Then /^I am given instruction on how to do the required$/
+     */
+    public function iAmGivenInstructionOnHowToDoTheRequired()
+    {
+        $this->assertPageAddress('/lpa/change-details');
+
+        $this->assertPageContainsText('Let us know if a donor\'s or attorney\'s details change');
+        $this->assertPageContainsText('Find out more');
+
+    }
+
+    // UML 334 END
 
 }
