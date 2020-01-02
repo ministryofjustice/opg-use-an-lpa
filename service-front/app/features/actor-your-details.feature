@@ -9,7 +9,7 @@ Feature: YourDetails
 
   @ui
   Scenario: The user can request login details reset
-    Given I have created an account
-    When I ask for my details to be reset
+    When I sign in
+    And  I ask for my details to be reset
     Then I can change my email if required
     And I can change my passcode if required

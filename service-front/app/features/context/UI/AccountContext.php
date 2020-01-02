@@ -200,4 +200,71 @@ class AccountContext extends BaseUIContext
 
         $this->assertPageContainsText('at least ' . $reason);
     }
+
+    /**
+     * @When /^I sign in$/
+     */
+    public function iSignIn()
+    {
+        $this->visit('/login');
+        $this->assertPageAddress('/login');
+        $this->assertPageContainsText('Continue');
+
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'        => '123',
+                'Email'     => $this->email,
+                'LastLogin' => null
+            ])));
+
+        // Dashboard page checks for all LPA's for a user
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpas)));
+
+        $this->fillField('email', $this->email);
+        $this->fillField('password', $this->password);
+        $this->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I ask for my details to be reset$/
+     */
+    public function iAskForMyDetailsToBeReset()
+    {
+        $this->assertPageAddress('/lpa/dashboard');
+
+        $this->assertPageContainsText('Your details');
+        $this->clickLink('Your details');
+
+    }
+
+    /**
+     * @Then /^I can change my email if required$/
+     */
+    public function iCanChangeMyEmailIfRequired()
+    {
+        $this->assertPageAddress('/your-details');
+
+        $this->assertPageContainsText('Email address');
+        $this->assertPageContains('Change);
+        // $this->clickLink(');
+
+    }
+
+    /**
+     * @Then /^I can change my passcode if required$/
+     */
+    public function iCanChangeMyPasscodeIfRequired()
+    {
+        $this->assertPageAddress('/your-details');
+
+        $this->assertPageContainsText('Password');
+        $this->assertPageContains('Change);
+        // $this->clickLink(');
+
+    }
+
+
+
 }
