@@ -56,7 +56,7 @@ viewerCodes = [
     {
         'ViewerCode': "N4KBEBEZMNJF",
         'SiriusUid': "700000000047",
-        'Expires': "2020-06-01 12:34:56",
+        'Expires': "2020-01-01 12:34:56",
         'Added': "2019-01-01 12:34:56",
         'Organisation': "Test Organisation",
     },
