@@ -15,7 +15,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 
 
-class YourDetailsHandler extends AbstractHandler
+class YourDetailsHandler extends AbstractHandler implements UserAware
 {
     use SessionTrait;
     use User;
