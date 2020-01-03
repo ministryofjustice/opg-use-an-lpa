@@ -206,6 +206,10 @@ class AccountContext extends BaseUIContext
      */
     public function iSignIn()
     {
+
+        $email = 'test@test.com';
+        $password = 'pa33w0rd';
+
         $this->visit('/login');
         $this->assertPageAddress('/login');
         $this->assertPageContainsText('Continue');
@@ -214,27 +218,27 @@ class AccountContext extends BaseUIContext
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
                 'Id'        => '123',
-                'Email'     => $this->email,
+                'Email'     => $email,
                 'LastLogin' => null
             ])));
 
         // Dashboard page checks for all LPA's for a user
         $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpas)));
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
-        $this->fillField('email', $this->email);
-        $this->fillField('password', $this->password);
+        $this->fillField('email', $email);
+        $this->fillField('password', $password);
         $this->pressButton('Continue');
     }
 
 
     // Move all below to new context file UML 334
     /**
-     * @When /^I ask for my details to be reset$/
+     * @When /^I want my details to be reset$/
      */
-    public function iAskForMyDetailsToBeReset()
+    public function iWantMyDetailsToBeReset()
     {
-        $this->assertPageAddress('/lpa/dashboard');
+        $this->assertPageAddress('/lpa/add-details');
 
         $this->assertPageContainsText('Your details');
         $this->clickLink('Your details');
@@ -249,7 +253,7 @@ class AccountContext extends BaseUIContext
         $this->assertPageAddress('/your-details');
 
         $this->assertPageContainsText('Email address');
-        $this->assertPageContains('Change);
+        $this->assertPageContainsText('Change');
         // $this->clickLink(');
 
     }
@@ -262,7 +266,7 @@ class AccountContext extends BaseUIContext
         $this->assertPageAddress('/your-details');
 
         $this->assertPageContainsText('Password');
-        $this->assertPageContains('Change);
+        $this->assertPageContainsText('Change');
         // $this->clickLink(');
 
     }
@@ -273,6 +277,7 @@ class AccountContext extends BaseUIContext
     public function iAskForAChangeOfDonorsOrAttorneysDetails()
     {
         $this->assertPageAddress('/your-details');
+        
 
         $this->assertPageContainsText('Change a donor\'s or attorney\'s details');
         $this->clickLink('Change a donor\'s or attorney\'s details');

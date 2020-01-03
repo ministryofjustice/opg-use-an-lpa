@@ -9,7 +9,7 @@
 
         {{ include('@partials/account-bar.html.twig') }}
 
-        <a href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}" class="govuk-back-link">Back</a>
+        <a href="{{ path('login') }}" class="govuk-back-link">Back</a>
 
         <main class="govuk-main-wrapper">
 
@@ -54,7 +54,7 @@
                     <div class="govuk-inset-text">
                         <span>Need to update the online LPA summary?</span><br>
                         <span>
-                             <a href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">Change a donor's or attorney's details</a>
+                             <a href="{{ path('lpa.change-details') }}">Change a donor's or attorney's details</a>
                         </span>
                     </div>
                 </div>

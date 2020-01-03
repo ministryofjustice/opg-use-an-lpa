@@ -39,12 +39,9 @@ class YourDetailsHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $actorLpaToken = $request->getQueryParams()['lpa'];
-
         $user = $this->getUser($request);
 
         return new HtmlResponse($this->renderer->render('actor::your-details', [
-            'actorToken' => $actorLpaToken,
             'user' => $user,
         ]));
     }
