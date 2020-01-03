@@ -72,15 +72,12 @@ class ActivateAccountHandlerTest extends TestCase
             $this->userServiceProphecy->reveal()
         );
 
-//        $this->urlHelperProphecy->generate('home', [], [])
-//            ->willReturn('/');
-
         $this->userServiceProphecy->activate('tok123')->willReturn(false);
 
         $this->templateRendererProphecy->render('actor::activate-account-not-found')->willReturn('');
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
-        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 }
