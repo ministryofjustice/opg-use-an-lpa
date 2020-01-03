@@ -13,6 +13,7 @@ use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Common\Handler\UserAware;
 
 
 class YourDetailsHandler extends AbstractHandler implements UserAware
