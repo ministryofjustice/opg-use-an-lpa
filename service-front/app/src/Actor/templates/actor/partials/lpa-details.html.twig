@@ -15,7 +15,7 @@
                 <a href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">View LPA summary</a>
             </p>
         </dd>
-        <dd class="govuk-summary-list__actions">
+        <dd class="govuk-summary-list__actions govuk-!-width-one-third">
             {% if activeCodeCount >= 1 %}
                 <span class="moj-badge moj-badge--green">
                     {% if activeCodeCount == 1 %}
@@ -25,7 +25,7 @@
                     {% endif %}
                 </span>
             {% else %}
-                <span class="moj-badge moj-badge--grey">0 active codes</span>
+                <span class="moj-badge moj-badge--grey">No organisations have access</span>
             {% endif %}
         </dd>
     </div>
