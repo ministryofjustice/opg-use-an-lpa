@@ -277,9 +277,9 @@ class AccountContext extends BaseUIContext
     public function iAskForAChangeOfDonorsOrAttorneysDetails()
     {
         $this->assertPageAddress('/your-details');
-        
-
         $this->assertPageContainsText('Change a donor\'s or attorney\'s details');
+
+        $this->activationToken = 'activate1234567890';
         $this->clickLink('Change a donor\'s or attorney\'s details');
     }
 
@@ -288,6 +288,7 @@ class AccountContext extends BaseUIContext
      */
     public function iAmGivenInstructionOnHowToDoTheRequired()
     {
+
         $this->assertPageAddress('/lpa/change-details');
 
         $this->assertPageContainsText('Let us know if a donor\'s or attorney\'s details change');

@@ -39,10 +39,11 @@ class ChangeDetailsHandler extends AbstractHandler
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $actorLpaToken = $request->getQueryParams()['lpa'];
+
         $user = $this->getUser($request);
 
         return new HtmlResponse($this->renderer->render('actor::change-details', [
-            'actorToken' => $actorLpaToken,
+           'actorToken' => $actorLpaToken,
             'user' => $user,
         ]));
     }
