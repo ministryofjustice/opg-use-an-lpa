@@ -74,7 +74,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name'    => Regex::class,
                         'options' => [
-                            'pattern' => '/[[:alnum:]]{12}|[[:alnum:]]{4}-[[:alnum:]]{4}-[[:alnum:]]{4}|[[:alnum:]]{4}\s[[:alnum:]]{4}\s[[:alnum:]]{4}/',
+                            'pattern' => '/[[:alnum:]]{4}(?\'dash\' |-|)[[:alnum:]]{4}(\g{dash})[[:alnum:]]{4}/',
                             'message' => 'Your passcode must only include letters and numbers',
                         ],
                     ],
@@ -104,7 +104,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name'    => Regex::class,
                         'options' => [
-                            'pattern' => '/\d{12}|\d{4}-\d{4}-\d{4}|\d{4}\s\d{4}\s\d{4}/',
+                            'pattern' => '/\d{4}(?\'dash\' |-|)\d{4}(\g{dash})\d{4}/',
                             'message' => 'The reference number must only include numbers',
                         ],
                     ],
