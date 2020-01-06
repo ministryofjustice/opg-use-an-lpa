@@ -11,6 +11,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
 
+/**
+ * Class CompletePasswordResetHandler
+ *
+ * @package App\Handler
+ * @codeCoverageIgnore
+ */
 class CompletePasswordResetHandler implements RequestHandlerInterface
 {
     /**

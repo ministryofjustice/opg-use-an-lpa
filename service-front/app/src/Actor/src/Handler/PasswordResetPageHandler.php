@@ -16,6 +16,12 @@ use Zend\Expressive\Helper\ServerUrlHelper;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
+/**
+ * Class PasswordResetPageHandler
+ *
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
