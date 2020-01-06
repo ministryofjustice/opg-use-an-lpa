@@ -17,12 +17,12 @@ integration:
       contexts:
         - BehatTest\Context\Integration\AccountContext
       filters:
-        tags: "@actor&&@integration"
+        tags: "@integration"
 
 acceptance:
   suites:
     actor:
       contexts:
-        - BehatTest\Context\UI\AccountContext
+        - BehatTest\Context\Acceptance\AccountContext
       filters:
-        tags: "@actor&&@acceptance"
+        tags: "@acceptance"

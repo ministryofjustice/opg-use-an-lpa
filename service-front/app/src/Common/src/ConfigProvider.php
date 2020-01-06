@@ -75,6 +75,9 @@ class ConfigProvider
 
                 // Auth
                 Zend\Expressive\Authentication\UserInterface::class => Entity\UserFactory::class,
+
+                // Handlers
+                Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
             ],
 
             'delegators' => [

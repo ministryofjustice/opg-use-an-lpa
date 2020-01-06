@@ -9,7 +9,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\JsonResponse;
-use App\Service\ApiClient\Client as ApiClient;
+use App\DataAccess\Repository\LpasInterface;
+Use App\DataAccess\Repository\ActorCodesInterface;
 
 /**
  * Class HealthcheckHandler
@@ -18,19 +19,28 @@ use App\Service\ApiClient\Client as ApiClient;
 class HealthcheckHandler implements RequestHandlerInterface
 {
     /**
-     * @var ApiClient
-     */
-    protected $apiClient;
-
-    /**
      * @var string
      */
     protected $version;
 
-    public function __construct(string $version, ApiClient $api)
+    /**
+     * @var ActorCodesInterface
+     */
+    private $actorCodes;
+
+    /**
+     * @var LpasInterface
+     */
+    private $lpaInterface;
+
+    public function __construct(
+        string $version,
+        LpasInterface $lpaInterface,
+        ActorCodesInterface $actorCodes)
     {
-        $this->apiClient = $api;
         $this->version = $version;
+        $this->lpaInterface = $lpaInterface;
+        $this->actorCodes = $actorCodes;
     }
 
     /**
@@ -40,18 +50,18 @@ class HealthcheckHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         return new JsonResponse([
-            "healthy" => $this->isHealthy(),
             "version" => $this->version,
             "dependencies" => [
-                "api" => $this->checkApiEndpoint()
-            ]
+                "api" => $this->checkApiEndpoint(),
+                "dynamo" => $this->checkDynamoEndpoint()
+            ],
+            "healthy" => $this->isHealthy()
         ]);
     }
 
     protected function isHealthy() : bool
     {
-        // TODO actual checks that verify service health
-        return true;
+        return ($this->checkDynamoEndpoint()['healthy'] && $this->checkApiEndpoint()['healthy']);
     }
 
     protected function checkApiEndpoint() : array
@@ -61,15 +71,40 @@ class HealthcheckHandler implements RequestHandlerInterface
         $start = microtime(true);
 
         try {
-//            $data = $this->apiClient->httpGet('/lpas/700000000000');
-//
-//            // TODO fix up with actual check
-//            // when $data == null a 404 has been returned from the api
-//            if (is_null($data)) {
-//                $data['healthy'] = true;
-//            }
+            $data = $this->lpaInterface->get("700000000000");
 
-            $data['healthy'] = true;
+            // when $data == null a 404 has been returned from the api
+            if (is_null($data)) {
+                $data['healthy'] = true;
+            } else {
+                $data['healthy'] = false;
+            }
+
+        } catch (Exception $e) {
+            $data['healthy'] = false;
+            $data['message'] = $e->getMessage();
+        }
+
+        $data['response_time'] = round(microtime(true) - $start, 3);
+
+        return $data;
+    }
+
+    protected function checkDynamoEndpoint() : array
+    {
+        $data = [];
+
+        $start = microtime(true);
+
+        try {
+            $dbTables = $this->actorCodes->get('XXXXXXXXXXXX');
+
+            if (is_null($dbTables)) {
+                $data['healthy'] = true;
+            } else {
+                $data['healthy'] = false;
+            }
+
         } catch (Exception $e) {
             $data['healthy'] = false;
             $data['message'] = $e->getMessage();

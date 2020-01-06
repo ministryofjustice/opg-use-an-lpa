@@ -35,7 +35,7 @@ class ConfigProvider
         return [
             'factories'  => [
                 // Handlers
-                Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
+                \Common\Handler\HealthcheckHandler::class => \Common\Handler\Factory\HealthcheckHandlerFactory::class,
             ],
         ];
     }
