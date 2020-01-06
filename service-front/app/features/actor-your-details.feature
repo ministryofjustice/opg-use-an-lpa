@@ -19,5 +19,5 @@ Feature: YourDetails
     When I sign in
     And  I want my details to be reset
     And  I ask for a change of donors or attorneys details
-    #Then I am given instruction on how to do the required
+    Then I am given instruction on how to do the required
 

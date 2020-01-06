@@ -242,7 +242,6 @@ class AccountContext extends BaseUIContext
 
         $this->assertPageContainsText('Your details');
         $this->clickLink('Your details');
-
     }
 
     /**
@@ -254,8 +253,6 @@ class AccountContext extends BaseUIContext
 
         $this->assertPageContainsText('Email address');
         $this->assertPageContainsText('Change');
-        // $this->clickLink(');
-
     }
 
     /**
@@ -267,8 +264,6 @@ class AccountContext extends BaseUIContext
 
         $this->assertPageContainsText('Password');
         $this->assertPageContainsText('Change');
-        // $this->clickLink(');
-
     }
 
     /**
@@ -278,8 +273,6 @@ class AccountContext extends BaseUIContext
     {
         $this->assertPageAddress('/your-details');
         $this->assertPageContainsText('Change a donor\'s or attorney\'s details');
-
-        $this->activationToken = 'activate1234567890';
         $this->clickLink('Change a donor\'s or attorney\'s details');
     }
 
@@ -295,7 +288,4 @@ class AccountContext extends BaseUIContext
         $this->assertPageContainsText('Find out more');
 
     }
-
-    // UML 334 END
-
 }

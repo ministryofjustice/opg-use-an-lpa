@@ -7,6 +7,7 @@ namespace Actor\Handler;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
+use Common\Handler\UserAware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Authentication\AuthenticationInterface;
@@ -15,7 +16,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 
 
-class ChangeDetailsHandler extends AbstractHandler
+class ChangeDetailsHandler extends AbstractHandler implements UserAware
 {
     use SessionTrait;
     use User;
@@ -38,12 +39,22 @@ class ChangeDetailsHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $actorLpaToken = $request->getQueryParams()['lpa'];
+        $actorLpaToken = "null";
+        $array = $request->getQueryParams();
+
+        if (!empty($array))
+        {
+            $actorLpaToken = $request->getQueryParams()['lpa'];
+        }
+
+        // TODO - actorLPAToken could be null if coming from Your Details page
+        // TODO - back button navigation logic to be fixed as part of Ticket UML-460
+        // If actor token null passed , back button in view should navigate to Your Details page
 
         $user = $this->getUser($request);
 
         return new HtmlResponse($this->renderer->render('actor::change-details', [
-           'actorToken' => $actorLpaToken,
+            'actorToken' => $actorLpaToken,
             'user' => $user,
         ]));
     }
