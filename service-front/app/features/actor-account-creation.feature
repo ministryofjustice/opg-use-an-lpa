@@ -22,4 +22,11 @@ Feature: Account creation
     Given I have asked for creating new account
     When I follow my unique instructions after 24 hours
     # TODO The account activation expiry feature is wrong at the moment and need fixing. New ticket created:
-    #Then I am told my unique instructions to activate my account have expired
+    # Then I am told my unique instructions to activate my account have expired
+
+   @ui
+   Scenario: The user account creates an account which already exists
+     Given I am not a user of the lpa application
+     And I want to create a new account
+     When I create an account using duplicate details
+     Then I receive unique instructions on how to create an account

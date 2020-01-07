@@ -184,14 +184,47 @@ class AccountContext extends BaseUIContext
         $this->visit('/activate-account/' . $this->activationToken);
     }
 
-
     /**
      * @Then /^I am told my unique instructions to activate my account have expired$/
      */
     public function iAmToldMyUniqueInstructionsToActivateMyAccountHaveExpired()
     {
         throw new PendingException();
+
+       // $this->assertPageAddress('/activate-account-not-found');
+       // $this->assertPageContainsText('You created the account more than 24 hours ago');
     }
+
+    /**
+     * @When /^I create an account using duplicate details$/
+     */
+    public function iCreateAnAccountUsingDuplicateDetails()
+    {
+        $this->email = 'test@example.com';
+        $this->password = 'n3wPassWord';
+        $this->activationToken = 'activate1234567890';
+
+        $this->assertPageAddress('/create-account');
+
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([
+                'Email'           => $this->email,
+                'ActivationToken' => $this->activationToken,
+            ])));
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->fillField('email', $this->email);
+        $this->fillField('email_confirm', $this->email);
+        $this->fillField('password', $this->password);
+        $this->fillField('password_confirm', $this->password);
+        $this->fillField('terms', 1);
+        $this->pressButton('Create account');
+    }
+
 
 
     /**
