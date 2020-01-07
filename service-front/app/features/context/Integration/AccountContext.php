@@ -252,7 +252,7 @@ class AccountContext implements Context, Psr11AwareContext
         $userData = $this->userService->create($this->email, $this->password);
 
         assertInternalType('string', $userData['activationToken']);
-        assertEquals($this->resetToken, $userData['activationToken']);
+        assertEquals($this->activationToken, $userData['activationToken']);
     }
 
     /**

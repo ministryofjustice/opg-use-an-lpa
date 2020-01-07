@@ -247,8 +247,6 @@ class AccountContext extends BaseUIContext
         $this->assertPageContainsText('Email and password combination not recognised. Please try signing in again below or create an account');
     }
 
-
-
     /**
      * @Given /^I am unable to continue to create my account$/
      */
