@@ -12,6 +12,10 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use function random_bytes;
+use Behat\Mink\Mink,
+    Behat\Mink\Session,
+    Behat\Mink\Driver\GoutteDriver,
+    Behat\Mink\Driver\Goutte\Client as GoutteClient;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -202,7 +206,7 @@ class AccountContext extends BaseUIContext
     }
 
     /**
-     * @When /^I sign in$/
+     * @Given /^I am signed in$/
      */
     public function iSignIn()
     {
@@ -229,18 +233,22 @@ class AccountContext extends BaseUIContext
         $this->fillField('email', $email);
         $this->fillField('password', $password);
         $this->pressButton('Continue');
+        $this->assertPageAddress('/lpa/add-details');
     }
 
+    /**
+     * @Given /^I view my user details$/
+     */
+    public function iViewMyUserDetails()
+    {
+        $this->assertPageContainsText('Your details');
+    }
 
-    // Move all below to new context file UML 334
     /**
      * @When /^I want my details to be reset$/
      */
     public function iWantMyDetailsToBeReset()
     {
-        $this->assertPageAddress('/lpa/add-details');
-
-        $this->assertPageContainsText('Your details');
         $this->clickLink('Your details');
     }
 
@@ -252,7 +260,29 @@ class AccountContext extends BaseUIContext
         $this->assertPageAddress('/your-details');
 
         $this->assertPageContainsText('Email address');
-        $this->assertPageContainsText('Change');
+
+        // Choose a Mink driver.
+//        $driver = new \Behat\Mink\Driver\GoutteDriver();
+//        $session = new \Behat\Mink\Session($driver);
+//        // start the session
+//        $session->start();
+//        $session->visit('/your-details');
+//        $page = $session->getPage();
+//        // get the current page URL:
+//        echo $session->getCurrentUrl();
+
+        $mink = new Mink(array(
+            'goutte' => new Session(new GoutteDriver(new GoutteClient())),
+        ));
+
+        $session = $mink->getSession('goutte');
+        $session->visit('/your-details');
+        $page = $session->getPage();
+        // get the current page URL:
+        echo $session->getCurrentUrl();
+
+       // $anchorsWithoutUrl = $page->findAll('xpath', '//a[not(@href)]');
+        //$this->assertPageContainsText('Change');
     }
 
     /**
@@ -277,9 +307,9 @@ class AccountContext extends BaseUIContext
     }
 
     /**
-     * @Then /^I am given instruction on how to do the required$/
+     * @Then /^Then I am given instructions on how to change donor or attorney details$/
      */
-    public function iAmGivenInstructionOnHowToDoTheRequired()
+    public function iAmGivenInstructionOnHowToChangeDonorOrAttorneyDetails()
     {
 
         $this->assertPageAddress('/lpa/change-details');
