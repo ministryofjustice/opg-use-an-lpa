@@ -56,7 +56,7 @@ viewerCodes = [
     {
         'ViewerCode': "N4KBEBEZMNJF",
         'SiriusUid': "700000000047",
-        'Expires': "2019-06-01 12:34:56",
+        'Expires': "2020-01-01 12:34:56",
         'Added': "2019-01-01 12:34:56",
         'Organisation': "Test Organisation",
     },
@@ -80,21 +80,21 @@ actorLpaCodes = [
         'ActorLpaId': 9,
         'SiriusUid': "700000000047",
         'Active': True,
-        'Expires': "2020-09-25T00:00:00Z",
+        'Expires': "2021-09-25T00:00:00Z",
     },
     {
         'ActorCode': "XYUPHWQRECHV",
         'ActorLpaId': 25,
         'SiriusUid': "700000000138",
         'Active': True,
-        'Expires': "2020-09-25T00:00:00Z",
+        'Expires': "2021-09-25T00:00:00Z",
     },
     {
         'ActorCode': "JJGWG6JTRLAY",
         'ActorLpaId': 45,
         'SiriusUid': "700000000252",
         'Active': True,
-        'Expires': "2020-09-25T00:00:00Z",
+        'Expires': "2021-09-25T00:00:00Z",
     },
     {
         'ActorCode': "MDCKNUA9UMLA",
