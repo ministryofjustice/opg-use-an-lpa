@@ -14,6 +14,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use function random_bytes;
+use Zend\Dom\Query;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -259,19 +260,11 @@ class AccountContext extends BaseUIContext
 
         $this->assertPageContainsText('Email address');
 
-        // Choose a Mink driver.
-        //$driver = new GoutteDriver();
-       // $session = new Session($driver);
-
-        // start the session
-     //   $session->start();
-      //  $session->visit('/your-details');
-     //   $page = $session->getPage();
-        // get the current page URL:
-     //    echo $session->getCurrentUrl();
-
-       // $anchorsWithoutUrl = $page->findAll('xpath', '//a[contains(@href)]');
-        $this->assertPageContainsText('Change');
+        $session = $this->getSession();
+        $page = $session->getPage();
+        $element = $page->find('css', 'dl>div>dd>a[href]');
+        $changeEmailText = $element->getText();
+        $this->assertPageContainsText($changeEmailText);
     }
 
     /**
@@ -282,7 +275,10 @@ class AccountContext extends BaseUIContext
         $this->assertPageAddress('/your-details');
 
         $this->assertPageContainsText('Password');
-        $this->assertPageContainsText('Change');
+        $session = $this->getSession();
+        $page = $session->getPage();
+        $changeEmailText = $page->find('css', 'dl>div>dd>a[href="change-password"]')->getText();
+        $this->assertPageContainsText($changeEmailText);
     }
 
     /**
