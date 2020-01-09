@@ -18,7 +18,6 @@ use Common\Handler\UserAware;
 
 class YourDetailsHandler extends AbstractHandler implements UserAware
 {
-    use SessionTrait;
     use User;
 
     public function __construct(

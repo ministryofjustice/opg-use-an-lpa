@@ -256,14 +256,25 @@ class AccountContext extends BaseUIContext
      */
     public function iCanChangeMyEmailIfRequired()
     {
+        $email = 'test@test.com';
+
         $this->assertPageAddress('/your-details');
 
         $this->assertPageContainsText('Email address');
 
         $session = $this->getSession();
         $page = $session->getPage();
-        $element = $page->find('css', 'dl>div>dd>a[href]');
-        $changeEmailText = $element->getText();
+
+        $userEmailValue = $page->find('css', 'dl>div>dd')->getText();
+        if ($userEmailValue != $email) {
+            throw new \Exception('The user email is '. $userEmailValue);
+        }
+        $this->assertPageContainsText($userEmailValue);
+
+        $changeEmailText = $page->find('css', 'dl>div>dd>a[href]')->getText();
+        if ($changeEmailText != 'Change email address') {
+            throw new \Exception('Actual element text is '. $changeEmailText);
+        }
         $this->assertPageContainsText($changeEmailText);
     }
 
@@ -277,8 +288,12 @@ class AccountContext extends BaseUIContext
         $this->assertPageContainsText('Password');
         $session = $this->getSession();
         $page = $session->getPage();
-        $changeEmailText = $page->find('css', 'dl>div>dd>a[href="change-password"]')->getText();
-        $this->assertPageContainsText($changeEmailText);
+        $changePasswordText = $page->find('css', 'dl>div>dd>a[href="change-password"]')->getText();
+
+        if ($changePasswordText != 'Change password') {
+            throw new \Exception('Actual element text is '. $changePasswordText);
+        }
+        $this->assertPageContainsText($changePasswordText);
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Common\Handler\AbstractHandler;
+use Common\Handler\SessionAware;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
@@ -18,7 +19,6 @@ use Zend\Diactoros\Response\HtmlResponse;
 
 class ChangeDetailsHandler extends AbstractHandler implements UserAware
 {
-    use SessionTrait;
     use User;
 
     public function __construct(
