@@ -280,10 +280,11 @@ class AccountContext extends BaseUIContext
      */
     public function iCanChangeMyPasscodeIfRequired()
     {
-        $changePasswordtext = "change-password";
-        $this->assertPageAddress('/your-details');
+        $changePasswordtext = "Change password";
 
+        $this->assertPageAddress('/your-details');
         $this->assertPageContainsText('Password');
+
         $session = $this->getSession();
         $page = $session->getPage();
 
