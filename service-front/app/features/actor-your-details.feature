@@ -10,8 +10,8 @@ Feature: YourDetails
 
   @ui
   Scenario: The user can request to see their details and reset their details
-    And I view my user details
     When I want my details to be reset
+    And I view my user details
     Then I can change my email if required
     And I can change my passcode if required
 

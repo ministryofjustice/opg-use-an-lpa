@@ -16,6 +16,12 @@ use Zend\Diactoros\Response\HtmlResponse;
 use Common\Handler\UserAware;
 
 
+/**
+ * Class YourDetailsHandler
+ *
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class YourDetailsHandler extends AbstractHandler implements UserAware
 {
     use User;

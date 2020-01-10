@@ -14,7 +14,6 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use function random_bytes;
-use Zend\Dom\Query;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -257,6 +256,8 @@ class AccountContext extends BaseUIContext
     public function iCanChangeMyEmailIfRequired()
     {
         $email = 'test@test.com';
+        $changeEmailText = 'Change email address';
+
 
         $this->assertPageAddress('/your-details');
 
@@ -265,16 +266,12 @@ class AccountContext extends BaseUIContext
         $session = $this->getSession();
         $page = $session->getPage();
 
-        $userEmailValue = $page->find('css', 'dl>div>dd')->getText();
+        $userEmailValue = $page->find('css','dl>div>dd')->getText();
         if ($userEmailValue != $email) {
             throw new \Exception('The user email is '. $userEmailValue);
         }
-        $this->assertPageContainsText($userEmailValue);
-
-        $changeEmailText = $page->find('css', 'dl>div>dd>a[href]')->getText();
-        if ($changeEmailText != 'Change email address') {
-            throw new \Exception('Actual element text is '. $changeEmailText);
-        }
+        $page->findLink($changeEmailText)->getXpath();
+        $this->assertResponseContains('href');
         $this->assertPageContainsText($changeEmailText);
     }
 
@@ -283,17 +280,16 @@ class AccountContext extends BaseUIContext
      */
     public function iCanChangeMyPasscodeIfRequired()
     {
+        $changePasswordtext = "change-password";
         $this->assertPageAddress('/your-details');
 
         $this->assertPageContainsText('Password');
         $session = $this->getSession();
         $page = $session->getPage();
-        $changePasswordText = $page->find('css', 'dl>div>dd>a[href="change-password"]')->getText();
 
-        if ($changePasswordText != 'Change password') {
-            throw new \Exception('Actual element text is '. $changePasswordText);
-        }
-        $this->assertPageContainsText($changePasswordText);
+        $page->findLink($changePasswordtext)->getXpath();
+        $this->assertResponseContains('href');
+        $this->assertPageContainsText($changePasswordtext);
     }
 
     /**

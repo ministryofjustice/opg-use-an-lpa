@@ -16,7 +16,12 @@ use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 
-
+/**
+ * Class ChangeDetailsHandler
+ *
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class ChangeDetailsHandler extends AbstractHandler implements UserAware
 {
     use User;
