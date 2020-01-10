@@ -37,12 +37,42 @@ class LpaDataCleanseDecoratorTest extends TestCase
                     [
                         'id' => 0,
                         'firstname' => '',
-                        'surname' => ''
+                        'surname' => '',
+                        'systemStatus' => true
                     ],
                     [
                         'id' => 1,
                         'firstname' => 'Test',
-                        'surname' => 'Testerson'
+                        'surname' => 'Testerson',
+                        'systemStatus' => true
+                    ]
+                ]
+            ]);
+
+        $decoratedLpaInterface = new LpaDataCleanseDecorator($lpaResponseProphecy->reveal());
+        $lpa = $decoratedLpaInterface->getData();
+
+        $this->assertCount(1, $lpa['attorneys']);
+    }
+
+    /** @test */
+    public function it_removes_inactive_attorneys() {
+        $lpaResponseProphecy = $this->prophesize(LpaInterface::class);
+        $lpaResponseProphecy->getData()
+            ->willReturn([
+                'id' => '12345',
+                'attorneys' => [
+                    [
+                        'id' => 0,
+                        'firstname' => 'Testing',
+                        'surname' => 'Testerson',
+                        'systemStatus' => true
+                    ],
+                    [
+                        'id' => 1,
+                        'firstname' => 'Test',
+                        'surname' => 'Testerson',
+                        'systemStatus' => false
                     ]
                 ]
             ]);
@@ -78,7 +108,8 @@ class LpaDataCleanseDecoratorTest extends TestCase
                     [
                         'id' => 0,
                         'firstname' => 'Test',
-                        'surname' => 'Testerson'
+                        'surname' => 'Testerson',
+                        'systemStatus' => true
                     ]
                 ]
             ]);
