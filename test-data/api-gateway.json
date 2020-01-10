@@ -311,6 +311,31 @@
           }
         ],
         "companyName": null,
+        "systemStatus": false
+      },
+      {
+        "id": 9,
+        "uId": "7000-0000-0815",
+        "dob": "1975-10-05",
+        "email": "TheresaSimpson@opgtest.com",
+        "salutation": "Mr",
+        "firstname": "",
+        "middlenames": null,
+        "surname": "",
+        "addresses": [
+          {
+            "id": 9,
+            "town": "",
+            "county": "",
+            "postcode": "CW6 1ER",
+            "country": "",
+            "type": "Primary",
+            "addressLine1": "48 Harrogate Road",
+            "addressLine2": "RUSHTON",
+            "addressLine3": ""
+          }
+        ],
+        "companyName": null,
         "systemStatus": true
       }
     ],
