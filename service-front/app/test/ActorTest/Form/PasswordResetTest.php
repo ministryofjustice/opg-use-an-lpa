@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace ActorTest\Form;
 
-use Actor\Form\LpaAdd;
+use Actor\Form\PasswordReset;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use Common\Form\Fieldset\Date;
 use PHPUnit\Framework\TestCase;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Form\Element\Text;
+use Zend\Form\Element\Password;
 
-class LpaAddTest extends TestCase implements TestsZendForm
+class PasswordResetTest extends TestCase implements TestsZendForm
 {
     use ZendFormTests;
 
-    /** @var LpaAdd */
+    /** @var PasswordReset */
     protected $form;
 
     public function getForm(): AbstractForm
@@ -26,22 +25,21 @@ class LpaAddTest extends TestCase implements TestsZendForm
 
     public function getFormName(): string
     {
-        return 'lpa_add';
+        return 'password-reset';
     }
 
     public function getFormElements(): array
     {
         return [
             '__csrf'           => Csrf::class,
-            'passcode'         => Text::class,
-            'reference_number' => Text::class,
-            'dob'              => Date::class,
+            'password'         => Password::class,
+            'password_confirm' => Password::class
         ];
     }
 
     public function setUp()
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new LpaAdd($guardProphecy->reveal());
+        $this->form = new PasswordReset($guardProphecy->reveal());
     }
 }
