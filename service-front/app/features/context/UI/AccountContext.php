@@ -7,8 +7,6 @@ namespace BehatTest\Context\UI;
 use Alphagov\Notifications\Client;
 use Aws\Result;
 use Behat\Behat\Tester\Exception\PendingException;
-use Behat\Mink\Driver\GoutteDriver;
-use Behat\Mink\Session;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
