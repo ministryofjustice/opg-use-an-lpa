@@ -11,6 +11,7 @@ use Common\Service\Lpa\LpaService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Diactoros\StreamFactory;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
@@ -54,7 +55,7 @@ class ViewLpaHandler extends AbstractHandler
             throw new SessionTimeoutException;
         }
 
-        $lpa = $this->lpaService->getLpaByCode($code, $surname, true);
+        $lpa = $this->lpaService->getLpaByCode($code, $surname, LpaService::FULL);
 
         return new HtmlResponse($this->renderer->render('viewer::view-lpa', [
             'lpa' => $lpa->lpa,
