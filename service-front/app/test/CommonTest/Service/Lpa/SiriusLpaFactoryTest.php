@@ -72,6 +72,7 @@ class LpaFactoryTest extends TestCase
 
         $this->assertInstanceOf(CaseActor::class, $lpa->getAttorneys()[0]);
         $this->assertEquals(new DateTime('1980-10-10'), $lpa->getAttorneys()[0]->getDob()); // from full_example.json
+        $this->assertEquals(true, $lpa->getAttorneys()[0]->getSystemStatus());
     }
 
     public function testCanCreateLpaFromSimpleExample()
@@ -90,6 +91,7 @@ class LpaFactoryTest extends TestCase
 
         $this->assertInstanceOf(CaseActor::class, $lpa->getAttorneys()[0]);
         $this->assertEquals(new DateTime('1980-10-10'), $lpa->getAttorneys()[0]->getDob()); // from simple_example.json
+        $this->assertEquals(true, $lpa->getAttorneys()[0]->getSystemStatus());
 
         $this->assertCount(0, $lpa->getReplacementAttorneys());
     }

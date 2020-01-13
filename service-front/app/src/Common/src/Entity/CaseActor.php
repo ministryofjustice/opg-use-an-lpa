@@ -35,6 +35,9 @@ class CaseActor
     /** @var string|null */
     protected $companyName = null;
 
+    /** @var bool */
+    protected $systemStatus = null;
+
     /** @var Address[] */
     protected $addresses = [];
 
@@ -136,5 +139,15 @@ class CaseActor
     public function setAddresses(array $addresses) : void
     {
         $this->addresses = $addresses;
+    }
+
+    public function getSystemStatus() : bool
+    {
+        return $this->systemStatus;
+    }
+
+    public function setSystemStatus(bool $systemStatus) : void
+    {
+        $this->systemStatus = $systemStatus;
     }
 }
