@@ -10,6 +10,10 @@ return [
         'uri' => getenv('API_SERVICE_URL') ?: null,
     ],
 
+    'pdf' => [
+        'uri' => getenv('PDF_SERVICE_URL') ?: null,
+    ],
+
     'aws' => [
         'region'    => 'eu-west-1',
         'version'   => 'latest',
