@@ -21,8 +21,7 @@ Feature: Account creation
   Scenario: The user cannot follow expired instructions to create new account
     Given I have asked for creating new account
     When I follow my unique instructions after 24 hours
-    # TODO The account activation expiry feature is wrong at the moment and need fixing. New ticket created:
-    # Then I am told my unique instructions to activate my account have expired
+    Then I am told my unique instructions to activate my account have expired
 
    @ui
    Scenario: The user account creates an account which already exists

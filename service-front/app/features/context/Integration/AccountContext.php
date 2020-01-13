@@ -231,6 +231,31 @@ class AccountContext implements Context, Psr11AwareContext
     }
 
     /**
+     * @When /^I create an account using duplicate details$/
+     */
+    public function iCreateAnAccountUsingDuplicateDetails()
+    {
+        $this->activationToken = 'activate1234567890';
+        $this->password = 'n3wPassWord';
+
+
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_CONFLICT,
+                    [],
+                    json_encode([ 'activationToken' => $this->activationToken])
+                )
+            );
+
+        $userData = $this->userService->create($this->email, $this->password);
+
+        assertInternalType('string', $userData['activationToken']);
+        assertEquals($this->activationToken, $userData['activationToken']);
+    }
+
+    /**
      * @When /^I create an account$/
      */
     public function iCreateAnAccount()
@@ -270,13 +295,13 @@ class AccountContext implements Context, Psr11AwareContext
             use ($expectedUrl, $expectedTemplateId) {
                 $requestBody = $request->getBody()->getContents();
 
-                assertContains($this->resetToken, $requestBody);
+                assertContains($this->activationToken, $requestBody);
                 assertContains(json_encode($expectedUrl), $requestBody);
                 assertContains($expectedTemplateId, $requestBody);
             });
 
 
-        $this->emailClient->sendPasswordResetEmail($this->email, $expectedUrl);
+        $this->emailClient->sendAccountActivationEmail($this->email, $expectedUrl);
     }
 
     /**
@@ -325,6 +350,14 @@ class AccountContext implements Context, Psr11AwareContext
 
         $canActivate= $this->userService->activate($this->activationToken);
         assertFalse($canActivate);
+    }
+
+    /**
+     * @Then /^I am told my unique instructions to activate my account have expired$/
+     */
+    public function iAmToldMyUniqueInstructionsToActivateMyAccountHaveExpired()
+    {
+        // Not needed for this context
     }
 
 }

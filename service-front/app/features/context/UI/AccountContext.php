@@ -189,10 +189,9 @@ class AccountContext extends BaseUIContext
      */
     public function iAmToldMyUniqueInstructionsToActivateMyAccountHaveExpired()
     {
-        throw new PendingException();
-
-       // $this->assertPageAddress('/activate-account-not-found');
-       // $this->assertPageContainsText('You created the account more than 24 hours ago');
+        $this->activationToken = 'activate1234567890';
+        $this->assertPageAddress('/activate-account/'. $this->activationToken);
+        $this->assertPageContainsText('You created the account more than 24 hours ago');
     }
 
     /**
