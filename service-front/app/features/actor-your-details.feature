@@ -10,14 +10,13 @@ Feature: YourDetails
 
   @ui
   Scenario: The user can request to see their details and reset their details
-    When I want my details to be reset
-    And I view my user details
+    Given I view my user details
     Then I can change my email if required
     And I can change my passcode if required
 
   @ui
   Scenario: The user can request login details reset
-    When I want my details to be reset
-    And  I ask for a change of donors or attorneys details
+    Given I view my user details
+    When I ask for a change of donors or attorneys details
     Then Then I am given instructions on how to change donor or attorney details
 

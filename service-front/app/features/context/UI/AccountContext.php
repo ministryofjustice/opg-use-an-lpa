@@ -15,6 +15,14 @@ use function random_bytes;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
+/**
+ * Class AccountContext
+ *
+ * @package BehatTest\Context\UI
+ *
+ * @property $userEmail
+ * @property $userPassword
+ */
 class AccountContext extends BaseUIContext
 {
     use ActorContext;
@@ -206,9 +214,8 @@ class AccountContext extends BaseUIContext
      */
     public function iSignIn()
     {
-
-        $email = 'test@test.com';
-        $password = 'pa33w0rd';
+        $this->userEmail = 'test@test.com';
+        $this->userPassword = 'pa33w0rd';
 
         $this->visit('/login');
         $this->assertPageAddress('/login');
@@ -218,7 +225,7 @@ class AccountContext extends BaseUIContext
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
                 'Id'        => '123',
-                'Email'     => $email,
+                'Email'     => $this->userEmail,
                 'LastLogin' => null
             ])));
 
@@ -226,26 +233,23 @@ class AccountContext extends BaseUIContext
         $this->apiFixtures->get('/v1/lpas')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
-        $this->fillField('email', $email);
-        $this->fillField('password', $password);
+        $this->fillField('email', $this->userEmail);
+        $this->fillField('password', $this->userPassword);
+
         $this->pressButton('Continue');
+
+        // ---
+
         $this->assertPageAddress('/lpa/add-details');
     }
 
     /**
-     * @Given /^I view my user details$/
+     * @When /^I view my user details$/
      */
     public function iViewMyUserDetails()
     {
+        $this->visit('/your-details');
         $this->assertPageContainsText('Your details');
-    }
-
-    /**
-     * @When /^I want my details to be reset$/
-     */
-    public function iWantMyDetailsToBeReset()
-    {
-        $this->clickLink('Your details');
     }
 
     /**
@@ -253,24 +257,19 @@ class AccountContext extends BaseUIContext
      */
     public function iCanChangeMyEmailIfRequired()
     {
-        $email = 'test@test.com';
-        $changeEmailText = 'Change email address';
-
-
         $this->assertPageAddress('/your-details');
-
+        
         $this->assertPageContainsText('Email address');
+        $this->assertPageContainsText($this->userEmail);
 
         $session = $this->getSession();
         $page = $session->getPage();
 
-        $userEmailValue = $page->find('css','dl>div>dd')->getText();
-        if ($userEmailValue != $email) {
-            throw new \Exception('The user email is '. $userEmailValue);
+        $changeEmailText = 'Change email address';
+        $link = $page->findLink($changeEmailText);
+        if ($link === null) {
+            throw new \Exception($changeEmailText . ' link not found');
         }
-        $page->findLink($changeEmailText)->getXpath();
-        $this->assertResponseContains('href');
-        $this->assertPageContainsText($changeEmailText);
     }
 
     /**
@@ -278,17 +277,18 @@ class AccountContext extends BaseUIContext
      */
     public function iCanChangeMyPasscodeIfRequired()
     {
-        $changePasswordtext = "Change password";
-
         $this->assertPageAddress('/your-details');
+
         $this->assertPageContainsText('Password');
 
         $session = $this->getSession();
         $page = $session->getPage();
 
-        $page->findLink($changePasswordtext)->getXpath();
-        $this->assertResponseContains('href');
-        $this->assertPageContainsText($changePasswordtext);
+        $changePasswordtext = "Change password";
+        $link = $page->findLink($changePasswordtext);
+        if ($link === null) {
+            throw new \Exception($changePasswordtext . ' link not found');
+        }
     }
 
     /**
@@ -297,6 +297,7 @@ class AccountContext extends BaseUIContext
     public function iAskForAChangeOfDonorsOrAttorneysDetails()
     {
         $this->assertPageAddress('/your-details');
+
         $this->assertPageContainsText('Change a donor\'s or attorney\'s details');
         $this->clickLink('Change a donor\'s or attorney\'s details');
     }
@@ -306,11 +307,9 @@ class AccountContext extends BaseUIContext
      */
     public function iAmGivenInstructionOnHowToChangeDonorOrAttorneyDetails()
     {
-
         $this->assertPageAddress('/lpa/change-details');
 
         $this->assertPageContainsText('Let us know if a donor\'s or attorney\'s details change');
         $this->assertPageContainsText('Find out more');
-
     }
 }
