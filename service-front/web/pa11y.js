@@ -24,7 +24,7 @@ It checks code quality, so won't pick up content issues such as a picture of an 
     auth_config.actions=[
         'set field #username to test@test.com', //check user
         'set field #password to password1', //check pwd
-        'click element #submit',
+        'click element button[type="submit"]',
     ]
 
     //set of page tests to run, array of pa11y calls returning promises
