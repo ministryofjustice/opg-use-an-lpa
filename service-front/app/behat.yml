@@ -16,6 +16,7 @@ integration:
     actor:
       contexts:
         - BehatTest\Context\Integration\AccountContext
+        - BehatTest\Context\Integration\ViewerContext
       filters:
         tags: "@integration"
 
