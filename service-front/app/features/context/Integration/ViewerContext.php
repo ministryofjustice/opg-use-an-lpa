@@ -20,6 +20,9 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
 /**
  * Class ViewerContext
  *
+ * @property $lpaSurname
+ * @property $lpaShareCode
+ * @property $lpaData
  * @property $viewedLpa
  */
 class ViewerContext implements Context, Psr11AwareContext
@@ -40,13 +43,13 @@ class ViewerContext implements Context, Psr11AwareContext
     }
 
     /**
-     * @Given /^I am viewing a valid LPA$/
+     * @Given /^I have been given access to an LPA via share code$/
      */
-    public function iAmViewingAValidLPA()
+    public function iHaveBeenGivenAccessToAnLPAViaShareCode()
     {
-        $lpaCode = '1111-1111-1111';
-        $lpaSurname = 'Testerson';
-        $lpaData = [
+        $this->lpaShareCode = '1111-1111-1111';
+        $this->lpaSurname = 'Testerson';
+        $this->lpaData = [
             'id' => 1,
             'uId' => '7000-0000-0000',
             'receiptDate' => '2014-09-26',
@@ -74,21 +77,48 @@ class ViewerContext implements Context, Psr11AwareContext
                 ]
             ]
         ];
+    }
 
+    /**
+     * @Given /^I access the viewer service$/
+     */
+    public function iAccessTheViewerService() {
+        // not used in this context
+    }
+
+    /**
+     * @When /^I give a valid LPA share code$/
+     */
+    public function iGiveAValidLPAShareCode() {
+        // not used in this context
+    }
+
+    /**
+     * @When /^I confirm the LPA is correct$/
+     */
+    public function iConfirmTheLPAIsCorrect() {
+        // not used in this context
+    }
+
+    /**
+     * @Given /^I am viewing a valid LPA$/
+     */
+    public function iAmViewingAValidLPA()
+    {
         $this->apiFixtures->post('/v1/viewer-codes/full')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'lpa' => $lpaData
+                'lpa' => $this->lpaData
             ])))
-            ->inspectRequest(function (RequestInterface $request, array $options) use ($lpaSurname) {
+            ->inspectRequest(function (RequestInterface $request, array $options) {
                 $body = json_decode($request->getBody()->getContents());
 
                 assertEquals('111111111111', $body->code); // code gets hyphens removed
-                assertEquals($lpaSurname, $body->name);
+                assertEquals($this->lpaSurname, $body->name);
             });
 
         $lpaService = $this->container->get(LpaService::class);
 
-        $this->viewedLpa = ($lpaService->getLpaByCode($lpaCode, $lpaSurname, LpaService::FULL))['lpa'];
+        $this->viewedLpa = ($lpaService->getLpaByCode($this->lpaShareCode, $this->lpaSurname, LpaService::FULL))['lpa'];
     }
 
     /**
@@ -97,7 +127,7 @@ class ViewerContext implements Context, Psr11AwareContext
     public function iChooseToDownloadADocumentVersionOfTheLPA()
     {
         $this->apiFixtures->post('/generate-pdf')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])))
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], ''))
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 assertContains('Mr Test Testable Testerson', $request->getBody()->getContents());
             });
