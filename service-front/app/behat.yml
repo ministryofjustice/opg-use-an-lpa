@@ -24,6 +24,7 @@ acceptance:
   suites:
     actor:
       contexts:
+        - Behat\MinkExtension\Context\MinkContext
         - BehatTest\Context\UI\AccountContext
       filters:
         tags: "@actor&&@ui"

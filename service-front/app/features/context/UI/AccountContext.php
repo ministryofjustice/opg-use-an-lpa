@@ -5,15 +5,10 @@ declare(strict_types=1);
 namespace BehatTest\Context\UI;
 
 use Alphagov\Notifications\Client;
-use Aws\Result;
-use Behat\Behat\Tester\Exception\PendingException;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
-use function random_bytes;
-
-require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
 /**
  * Class AccountContext
@@ -28,27 +23,13 @@ class AccountContext extends BaseUIContext
     use ActorContext;
 
     /**
-     * @BeforeScenario
-     */
-    public function seedFixtures()
-    {
-        // KMS is polled for encryption data on first page load
-        $this->awsFixtures->append(
-            new Result([
-                'Plaintext' => random_bytes(32),
-                'CiphertextBlob' => random_bytes(32)
-            ])
-        );
-    }
-
-    /**
      * @Given /^I am a user of the lpa application$/
      */
     public function iAmAUserOfTheLpaApplication()
     {
-        $this->iAmOnHomepage();
+        $this->ui->iAmOnHomepage();
 
-        $this->clickLink('Sign in');
+        $this->ui->clickLink('Sign in');
     }
 
     /**
@@ -56,9 +37,9 @@ class AccountContext extends BaseUIContext
      */
     public function iHaveForgottenMyPassword()
     {
-        $this->assertPageAddress('/login');
+        $this->ui->assertPageAddress('/login');
 
-        $this->clickLink('Forgotten your password?');
+        $this->ui->clickLink('Forgotten your password?');
     }
 
     /**
@@ -66,7 +47,7 @@ class AccountContext extends BaseUIContext
      */
     public function iAskForMyPasswordToBeReset()
     {
-        $this->assertPageAddress('/forgot-password');
+        $this->ui->assertPageAddress('/forgot-password');
 
         // API call for password reset request
         $this->apiFixtures->patch('/v1/request-password-reset')
@@ -76,9 +57,9 @@ class AccountContext extends BaseUIContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
-        $this->fillField('email', 'test@example.com');
-        $this->fillField('email_confirm', 'test@example.com');
-        $this->pressButton('Email me the link');
+        $this->ui->fillField('email', 'test@example.com');
+        $this->ui->fillField('email_confirm', 'test@example.com');
+        $this->ui->pressButton('Email me the link');
     }
 
     /**
@@ -86,9 +67,9 @@ class AccountContext extends BaseUIContext
      */
     public function iReceiveUniqueInstructionsOnHowToResetMyPassword()
     {
-        $this->assertPageAddress('/forgot-password');
+        $this->ui->assertPageAddress('/forgot-password');
 
-        $this->assertPageContainsText('We\'ve emailed a link to test@example.com');
+        $this->ui->assertPageContainsText('We\'ve emailed a link to test@example.com');
 
         assertEquals(true, $this->apiFixtures->isEmpty());
     }
@@ -108,9 +89,9 @@ class AccountContext extends BaseUIContext
      */
     public function iFollowMyUniqueInstructionsOnHowToResetMyPassword()
     {
-        $this->visit('/forgot-password/123456');
+        $this->ui->visit('/forgot-password/123456');
 
-        $this->assertPageContainsText('Change your password');
+        $this->ui->assertPageContainsText('Change your password');
     }
 
     /**
@@ -123,7 +104,7 @@ class AccountContext extends BaseUIContext
         $this->apiFixtures->get('/v1/can-password-reset')
             ->respondWith(new Response(StatusCodeInterface::STATUS_GONE));
 
-        $this->visit('/forgot-password/123456');
+        $this->ui->visit('/forgot-password/123456');
     }
 
     /**
@@ -131,7 +112,7 @@ class AccountContext extends BaseUIContext
      */
     public function iChooseANewPassword()
     {
-        $this->assertPageAddress('/forgot-password/123456');
+        $this->ui->assertPageAddress('/forgot-password/123456');
 
         // API fixture for reset token check
         $this->apiFixtures->get('/v1/can-password-reset')
@@ -148,9 +129,9 @@ class AccountContext extends BaseUIContext
                 assertArrayHasKey('password', $params);
             });
 
-        $this->fillField('password', 'n3wPassWord');
-        $this->fillField('password_confirm', 'n3wPassWord');
-        $this->pressButton('Change password');
+        $this->ui->fillField('password', 'n3wPassWord');
+        $this->ui->fillField('password_confirm', 'n3wPassWord');
+        $this->ui->pressButton('Change password');
     }
 
     /**
@@ -158,7 +139,7 @@ class AccountContext extends BaseUIContext
      */
     public function myPasswordHasBeenAssociatedWithMyUserAccount()
     {
-        $this->assertPageAddress('/login');
+        $this->ui->assertPageAddress('/login');
         // TODO when flash message are in place
         //$this->assertPageContainsText('Password successfully reset');
 
@@ -170,9 +151,9 @@ class AccountContext extends BaseUIContext
      */
     public function iAmToldThatMyInstructionsHaveExpired()
     {
-        $this->assertPageAddress('/forgot-password/123456');
+        $this->ui->assertPageAddress('/forgot-password/123456');
 
-        $this->assertPageContainsText('invalid or has expired');
+        $this->ui->assertPageContainsText('invalid or has expired');
     }
 
     /**
@@ -188,15 +169,15 @@ class AccountContext extends BaseUIContext
      */
     public function iChooseANewInvalid($password)
     {
-        $this->assertPageAddress('/forgot-password/123456');
+        $this->ui->assertPageAddress('/forgot-password/123456');
 
         // API fixture for reset token check
         $this->apiFixtures->get('/v1/can-password-reset')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])));
 
-        $this->fillField('password', $password);
-        $this->fillField('password_confirm', $password);
-        $this->pressButton('Change password');
+        $this->ui->fillField('password', $password);
+        $this->ui->fillField('password_confirm', $password);
+        $this->ui->pressButton('Change password');
     }
 
     /**
@@ -204,9 +185,9 @@ class AccountContext extends BaseUIContext
      */
     public function iAmToldThatMyPasswordIsInvalidBecauseItNeedsAtLeast($reason)
     {
-        $this->assertPageAddress('/forgot-password/123456');
+        $this->ui->assertPageAddress('/forgot-password/123456');
 
-        $this->assertPageContainsText('at least ' . $reason);
+        $this->ui->assertPageContainsText('at least ' . $reason);
     }
 
     /**
