@@ -198,9 +198,9 @@ class AccountContext extends BaseUIContext
         $this->userEmail = 'test@test.com';
         $this->userPassword = 'pa33w0rd';
 
-        $this->visit('/login');
-        $this->assertPageAddress('/login');
-        $this->assertPageContainsText('Continue');
+        $this->ui->visit('/login');
+        $this->ui->assertPageAddress('/login');
+        $this->ui->assertElementContainsText('button[type=submit]', 'Continue');
 
         // API call for password reset request
         $this->apiFixtures->patch('/v1/auth')
@@ -214,14 +214,13 @@ class AccountContext extends BaseUIContext
         $this->apiFixtures->get('/v1/lpas')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
-        $this->fillField('email', $this->userEmail);
-        $this->fillField('password', $this->userPassword);
-
-        $this->pressButton('Continue');
+        $this->ui->fillField('email', $this->userEmail);
+        $this->ui->fillField('password', $this->userPassword);
+        $this->ui->pressButton('Continue');
 
         // ---
 
-        $this->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add-details');
     }
 
     /**
@@ -229,8 +228,8 @@ class AccountContext extends BaseUIContext
      */
     public function iViewMyUserDetails()
     {
-        $this->visit('/your-details');
-        $this->assertPageContainsText('Your details');
+        $this->ui->visit('/your-details');
+        $this->ui->assertPageContainsText('Your details');
     }
 
     /**
@@ -238,10 +237,10 @@ class AccountContext extends BaseUIContext
      */
     public function iCanChangeMyEmailIfRequired()
     {
-        $this->assertPageAddress('/your-details');
+        $this->ui->assertPageAddress('/your-details');
         
-        $this->assertPageContainsText('Email address');
-        $this->assertPageContainsText($this->userEmail);
+        $this->ui->assertPageContainsText('Email address');
+        $this->ui->assertPageContainsText($this->userEmail);
 
         $session = $this->getSession();
         $page = $session->getPage();
@@ -258,9 +257,9 @@ class AccountContext extends BaseUIContext
      */
     public function iCanChangeMyPasscodeIfRequired()
     {
-        $this->assertPageAddress('/your-details');
+        $this->ui->assertPageAddress('/your-details');
 
-        $this->assertPageContainsText('Password');
+        $this->ui->assertPageContainsText('Password');
 
         $session = $this->getSession();
         $page = $session->getPage();
@@ -277,10 +276,10 @@ class AccountContext extends BaseUIContext
      */
     public function iAskForAChangeOfDonorsOrAttorneysDetails()
     {
-        $this->assertPageAddress('/your-details');
+        $this->ui->assertPageAddress('/your-details');
 
-        $this->assertPageContainsText('Change a donor\'s or attorney\'s details');
-        $this->clickLink('Change a donor\'s or attorney\'s details');
+        $this->ui->assertPageContainsText('Change a donor\'s or attorney\'s details');
+        $this->ui->clickLink('Change a donor\'s or attorney\'s details');
     }
 
     /**
@@ -288,9 +287,9 @@ class AccountContext extends BaseUIContext
      */
     public function iAmGivenInstructionOnHowToChangeDonorOrAttorneyDetails()
     {
-        $this->assertPageAddress('/lpa/change-details');
+        $this->ui->assertPageAddress('/lpa/change-details');
 
-        $this->assertPageContainsText('Let us know if a donor\'s or attorney\'s details change');
-        $this->assertPageContainsText('Find out more');
+        $this->ui->assertPageContainsText('Let us know if a donor\'s or attorney\'s details change');
+        $this->ui->assertPageContainsText('Find out more');
     }
 }
