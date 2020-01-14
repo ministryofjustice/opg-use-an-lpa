@@ -41,6 +41,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->route('/enter-code', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'enter-code');
     $app->get('/check-code', Viewer\Handler\CheckCodeHandler::class, 'check-code');
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
+    $app->get('/download-lpa', Viewer\Handler\DownloadLpaHandler::class, 'download-lpa');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void

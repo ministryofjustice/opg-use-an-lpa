@@ -39,22 +39,44 @@ class PdfService
         $this->apiBaseUri = $apiBaseUri;
     }
 
+    /**
+     * @param Lpa $lpa
+     * @return StreamInterface
+     */
     public function getLpaAsPdf(Lpa $lpa): StreamInterface
+    {
+        $renderedLpa = $this->renderLpaAsHtml($lpa);
+
+        return $this->requestPdfFromService($renderedLpa);
+    }
+
+    /**
+     * @param Lpa $lpa
+     * @return string
+     */
+    private function renderLpaAsHtml(Lpa $lpa): string
+    {
+        return $this->renderer->render('viewer::view-lpa', [
+            'lpa' => $lpa,
+        ]);
+    }
+
+    /**
+     * @param string $htmlToRender
+     * @return StreamInterface
+     * @throws ApiException
+     */
+    private function requestPdfFromService(string $htmlToRender): StreamInterface
     {
         $url = new Uri($this->apiBaseUri . '/generate-pdf');
 
-        $request = new Request('POST', $url, [], $this->renderer->render('viewer::view-lpa', [
-            'lpa' => $lpa,
-        ]));
+        $request = new Request('POST', $url, [], $htmlToRender);
 
         try {
             $response = $this->httpClient->sendRequest($request);
 
             switch ($response->getStatusCode()) {
                 case StatusCodeInterface::STATUS_OK:
-                case StatusCodeInterface::STATUS_CREATED:
-                case StatusCodeInterface::STATUS_ACCEPTED:
-                case StatusCodeInterface::STATUS_NO_CONTENT:
                     return $response->getBody();
                 default:
                     throw ApiException::create(null, $response);
