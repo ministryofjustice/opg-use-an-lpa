@@ -26,4 +26,10 @@ acceptance:
       contexts:
         - BehatTest\Context\UI\AccountContext
       filters:
-        tags: "@ui"
+        tags: "@actor&&@ui"
+    viewer:
+      contexts:
+        - Behat\MinkExtension\Context\MinkContext
+        - BehatTest\Context\UI\ViewerContext
+      filters:
+        tags: "@viewer&&@ui"
