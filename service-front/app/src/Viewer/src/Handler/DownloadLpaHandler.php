@@ -15,7 +15,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class DownloadLpaHandler
+ *
  * @package Viewer\Handler
+ * @codeCoverageIgnore
  */
 class DownloadLpaHandler implements RequestHandlerInterface
 {
