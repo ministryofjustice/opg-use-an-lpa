@@ -39,7 +39,7 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                 ],
                 'validators' => [
                     new Regex([
-                        'pattern' => '/[\w\d]{4,4}-[\w\d]{4,4}-[\w\d]{4,4}/',
+                        'pattern' => '/[[:alnum:]]{4,4}(?\'dash\' |-)?[[:alnum:]]{4,4}(\g{dash})?[[:alnum:]]{4,4}/',
                         'message' => [
                             Regex::NOT_MATCH => 'Enter an LPA share code in the correct format.'
                         ]
