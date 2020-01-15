@@ -15,6 +15,14 @@ use function random_bytes;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
+/**
+ * Class AccountContext
+ *
+ * @package BehatTest\Context\UI
+ *
+ * @property $userEmail
+ * @property $userPassword
+ */
 class AccountContext extends BaseUIContext
 {
     use ActorContext;
@@ -199,5 +207,109 @@ class AccountContext extends BaseUIContext
         $this->assertPageAddress('/forgot-password/123456');
 
         $this->assertPageContainsText('at least ' . $reason);
+    }
+
+    /**
+     * @Given /^I am signed in$/
+     */
+    public function iSignIn()
+    {
+        $this->userEmail = 'test@test.com';
+        $this->userPassword = 'pa33w0rd';
+
+        $this->visit('/login');
+        $this->assertPageAddress('/login');
+        $this->assertPageContainsText('Continue');
+
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'        => '123',
+                'Email'     => $this->userEmail,
+                'LastLogin' => null
+            ])));
+
+        // Dashboard page checks for all LPA's for a user
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->fillField('email', $this->userEmail);
+        $this->fillField('password', $this->userPassword);
+
+        $this->pressButton('Continue');
+
+        // ---
+
+        $this->assertPageAddress('/lpa/add-details');
+    }
+
+    /**
+     * @When /^I view my user details$/
+     */
+    public function iViewMyUserDetails()
+    {
+        $this->visit('/your-details');
+        $this->assertPageContainsText('Your details');
+    }
+
+    /**
+     * @Then /^I can change my email if required$/
+     */
+    public function iCanChangeMyEmailIfRequired()
+    {
+        $this->assertPageAddress('/your-details');
+        
+        $this->assertPageContainsText('Email address');
+        $this->assertPageContainsText($this->userEmail);
+
+        $session = $this->getSession();
+        $page = $session->getPage();
+
+        $changeEmailText = 'Change email address';
+        $link = $page->findLink($changeEmailText);
+        if ($link === null) {
+            throw new \Exception($changeEmailText . ' link not found');
+        }
+    }
+
+    /**
+     * @Then /^I can change my passcode if required$/
+     */
+    public function iCanChangeMyPasscodeIfRequired()
+    {
+        $this->assertPageAddress('/your-details');
+
+        $this->assertPageContainsText('Password');
+
+        $session = $this->getSession();
+        $page = $session->getPage();
+
+        $changePasswordtext = "Change password";
+        $link = $page->findLink($changePasswordtext);
+        if ($link === null) {
+            throw new \Exception($changePasswordtext . ' link not found');
+        }
+    }
+
+    /**
+     * @When /^I ask for a change of donors or attorneys details$/
+     */
+    public function iAskForAChangeOfDonorsOrAttorneysDetails()
+    {
+        $this->assertPageAddress('/your-details');
+
+        $this->assertPageContainsText('Change a donor\'s or attorney\'s details');
+        $this->clickLink('Change a donor\'s or attorney\'s details');
+    }
+
+    /**
+     * @Then /^Then I am given instructions on how to change donor or attorney details$/
+     */
+    public function iAmGivenInstructionOnHowToChangeDonorOrAttorneyDetails()
+    {
+        $this->assertPageAddress('/lpa/change-details');
+
+        $this->assertPageContainsText('Let us know if a donor\'s or attorney\'s details change');
+        $this->assertPageContainsText('Find out more');
     }
 }

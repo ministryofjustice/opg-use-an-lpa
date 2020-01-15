@@ -64,7 +64,8 @@
           "addressLine2": "string",
           "addressLine3": "string"
         }
-      ]
+      ],
+      "systemStatus": true
     }
   ],
   "replacementAttorneys": [
