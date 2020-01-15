@@ -18,6 +18,7 @@ use Fig\Http\Message\StatusCodeInterface;
  * @property $userAccountId
  * @property $userAccountEmail
  * @property $passwordResetData
+ * @property $actorAccountCreateData
  */
 class AccountContext extends BaseAcceptanceContext
 {
@@ -247,6 +248,113 @@ class AccountContext extends BaseAcceptanceContext
 
         $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
+
+    /**
+     * @Given I am not a user of the lpa application
+     */
+    public function iAmNotaUserOftheLpaApplication()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given I want to create a new account
+     */
+    public function iWantTocreateANewAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When I create an account
+     */
+    public function iCreateAnAccount()
+    {
+        $this->actorAccountCreateData = [
+            'Id'                  => $this->userAccountId,
+            'activationToken'     => 'activate1234567890'
+        ];
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'    => $this->userAccountId,
+                    'Email' => $this->userAccountEmail
+                ])
+            ]
+        ]));
+
+        // ActorUsers::add
+        $this->awsFixtures->append(new Result([
+            'Attributes' => $this->marshalAwsResultData([
+                'Id'     => $this->userAccountId,
+                'Email'  => $this->userAccountEmail,
+                'AccountActivationToken'  => $this->actorAccountCreateData[activationToken],
+                'AccountActivationTokenExpiry' => time() + (60 * 60 * 24) // 24 hours in the future
+            ])
+        ]));
+
+        $this->apiPatch('/v1/user', ['email' => $this->userAccountEmail]);
+    }
+
+    /**
+     * @Given I have asked for creating new account
+     */
+    public function iHaveAskedForCreatingNewAccount()
+    {
+        $this->actorAccountCreateData = [
+            'activationToken'     => 'activate1234567890',
+            'activationTokenExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
+        ];
+    }
+
+    /**
+     * @Then I receive unique instructions on how to create an account
+     */
+    public function iReceiveUniqueInstructionsOnHowToCreateAnAccount()
+    {
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+        assertEquals($this->userAccountEmail, $response['Email']);
+        assertEquals($this->actorAccountCreateData['Email'], $response['Email']);
+    }
+
+    /**
+     * @When I follow the instructions on how to activate my account
+     */
+    public function iFollowTheInstructionsOnHowToActivateMyAccount()
+    {
+        // ActorUsers::getIdByPasswordResetToken
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Email' => $this->userAccountEmail,
+                    'Password' => 'newPass0rd'
+                ])
+            ]
+        ]));
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Email'               => $this->userAccountEmail,
+                'ActivationToken'     => 'activate1234567890',
+                'ActivationTokenExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
+            ])
+        ]));
+
+        $this->apiGet('/v1/user-activation?token=' . $this->actorAccountCreateData['ActivationToken']);
+
+        // --
+
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+        assertEquals($this->userAccountId, $response['Id']);
+    }
+
 
     /**
      * Convert a key/value array to a correctly marshaled AwsResult structure.
