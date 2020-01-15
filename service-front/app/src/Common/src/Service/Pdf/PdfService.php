@@ -56,8 +56,11 @@ class PdfService
      */
     private function renderLpaAsHtml(Lpa $lpa): string
     {
-        return $this->renderer->render('viewer::view-lpa', [
+        $pdfStyles = file_get_contents('./assets/stylesheets/pdf.css');
+
+        return $this->renderer->render('viewer::download-lpa', [
             'lpa' => $lpa,
+            'pdfStyles' => $pdfStyles
         ]);
     }
 
@@ -70,7 +73,10 @@ class PdfService
     {
         $url = new Uri($this->apiBaseUri . '/generate-pdf');
 
-        $request = new Request('POST', $url, [], $htmlToRender);
+        $request = new Request('POST', $url, [
+            'Content-Type' => 'text/html',
+            'Strip-Anchor-Tags' => true
+        ], $htmlToRender);
 
         try {
             $response = $this->httpClient->sendRequest($request);
