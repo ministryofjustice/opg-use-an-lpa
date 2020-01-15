@@ -59,9 +59,9 @@
                                             This LPA can be used as soon as it's registered unless instructions say otherwise.
                                         {% endif %}
                                     {% else %}
-                                        {% if lpa.lifeSustainingTreatment %}
+                                        {% if lpa.lifeSustainingTreatment == 'Option A' %}
                                             The attorneys have the authority to make decisions about life-sustaining treatment
-                                        {% else %}
+                                        {% elseif lpa.lifeSustainingTreatment == 'Option B' %}
                                             The attorneys do NOT have the authority to make decisions about life-sustaining treatment
                                         {% endif %}
                                     {% endif %}
@@ -197,12 +197,14 @@
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">Life sustaining <br>treatment</dt>
                                 <dd class="govuk-summary-list__value">
-                                    {% if lpa.lifeSustainingTreatment %}
-                                        The attorneys have the authority to make decisions about life-sustaining treatment</dd>
-                                    {% else %}
-                                        The attorneys do not have the authority to make decisions about life-sustaining treatment</dd>
+                                    {% if lpa.lifeSustainingTreatment == 'Option A' %}
+                                        The attorneys have the authority to make decisions about life-sustaining treatment
+                                    {% elseif lpa.lifeSustainingTreatment == 'Option B' %}
+                                        The attorneys do not have the authority to make decisions about life-sustaining treatment
+                                    {% elseif lpa.lifeSustainingTreatment == null %}
+                                        To view this, ask to see the paper LPA
                                     {% endif %}
-                                <dd class="govuk-summary-list__value">
+                                </dd>
                             </div>
                         {% endif %}
 

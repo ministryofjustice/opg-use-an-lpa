@@ -52,9 +52,7 @@ final class Sirius implements LpaFactory
         if (isset($data['applicationHasGuidance'])) { $lpa->setApplicationHasGuidance($data['applicationHasGuidance']); }
         if (isset($data['lpaDonorSignatureDate'])) { $lpa->setLpaDonorSignatureDate(new DateTime($data['lpaDonorSignatureDate'])); }
 
-        if (isset($data['lifeSustainingTreatment'])) {
-            $lpa->setLifeSustainingTreatment(filter_var($data['lifeSustainingTreatment'], FILTER_VALIDATE_BOOLEAN));
-        }
+        if (isset($data['lifeSustainingTreatment'])) { $lpa->setLifeSustainingTreatment(($data['lifeSustainingTreatment'])); }
 
         if (isset($data['onlineLpaId'])) { $lpa->setOnlineLpaId($data['onlineLpaId']); }
         if (isset($data['attorneyActDecisions'])) { $lpa->setAttorneyActDecisions($data['attorneyActDecisions']); }
