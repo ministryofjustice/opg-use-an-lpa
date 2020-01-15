@@ -120,6 +120,7 @@ class ViewerContext extends BaseUIContext
 
     /**
      * @Given /^I am viewing a valid LPA$/
+     * @Then /^I can see the full details of the valid LPA$/
      */
     public function iAmViewingAValidLPA()
     {
