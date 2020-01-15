@@ -12,7 +12,8 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * Class PdfServiceFactory
- * @package Common\Pdf
+ *
+ * @package Common\Service\Pdf
  */
 class PdfServiceFactory
 {
