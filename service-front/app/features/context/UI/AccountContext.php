@@ -12,6 +12,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use function random_bytes;
+use Exception;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -312,4 +313,96 @@ class AccountContext extends BaseUIContext
         $this->assertPageContainsText('Let us know if a donor\'s or attorney\'s details change');
         $this->assertPageContainsText('Find out more');
     }
+
+    /**
+     * @Given /^I am on the add an LPA page$/
+     */
+    public function iAmOnTheAddAnLPAPage()
+    {
+        $this->visit('/lpa/add-details');
+        $this->assertPageAddress('/lpa/add-details');
+    }
+
+    /**
+     * @When /^I request to add an LPA with valid details$/
+     */
+    public function iRequestToAddAnLPAWithValidDetails()
+    {
+        $this->assertPageAddress('/lpa/add-details');
+
+        // API call for adding an LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                "donor" => [
+                    "id"=> 23,
+                    "uId"=> "7000-0000-0971",
+                    "dob"=> "1948-11-01",
+                    "email"=> "babaragilson@opgtest.com",
+                    "salutation"=> "Mrs",
+                    "firstname"=> "Babara",
+                    "middlenames"=> "Suzanne",
+                    "surname"=> "Gilson",
+                    "addresses"=> [
+                    [
+                        "id"=> 23,
+                      "town"=> "",
+                      "county"=> "",
+                      "postcode"=> "HS8 2YB",
+                      "country"=> "",
+                      "type"=> "Primary",
+                      "addressLine1"=> "24 Gloucester Road",
+                      "addressLine2"=> "CILLE BHRIGHDE",
+                      "addressLine3"=> ""
+                    ]
+                  ],
+                  "companyName"=> null,
+                  "systemStatus"=> true
+    ]
+            ])));
+
+        $this->fillField('passcode', 'XYUPHWQRECHV');
+        $this->fillField('reference_number', '700000000138');
+        $this->fillField('dob[day]', '05');
+        $this->fillField('dob[month]', '10');
+        $this->fillField('dob[year]', '1975');
+        $this->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^My LPA is successfully added$/
+     */
+    public function myLPAIsSuccessfullyAdded()
+    {
+        $this->assertPageAddress('/lpa/check');
+
+        $test = $this->getSession()->getPage()->find('css', 'div>div>h1')->getText();
+        //$this->assertPageContainsText('We could not find that lasting power of attorney');
+        //$this->assertPageContainsText('Is this the LPA you want to add?');
+
+        $expectedDonor = $this->getSession()->getPage()->find('css', 'dl>div>dd')->getText();
+        $actualDonor = 'Mrs Babara Suzanne Gilson';
+
+        if ($expectedDonor !== $actualDonor) {
+            throw new Exception('LPA found for ' . $actualDonor . ' rather than ' . $expectedDonor);
+        }
+
+        $this->pressButton('Continue');
+
+    }
+
+    /**
+     * @Given /^My LPA appears on the dashboard$/
+     */
+    public function myLPAAppearsOnTheDashboard()
+    {
+        $this->assertPageAddress('/lpa/dashboard');
+
+        $expectedDonor = $this->getSession()->getPage()->find('css', 'div>div>span')->getText();
+        $actualDonor = 'Babara Suzanne Gilson';
+
+        if ($expectedDonor !== $actualDonor) {
+            throw new Exception('LPA found for ' . $actualDonor . ' rather than ' . $expectedDonor);
+        }
+    }
+
 }

@@ -211,4 +211,37 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
+
+    /**
+     * @Given /^I am on the add an LPA page$/
+     */
+    public function iAmOnTheAddAnLPAPage()
+    {
+        //throw new PendingException();
+    }
+
+    /**
+     * @When /^I request to add an LPA with valid details$/
+     */
+    public function iRequestToAddAnLPAWithValidDetails()
+    {
+        //throw new PendingException();
+    }
+
+    /**
+     * @Then /^My LPA is successfully added$/
+     */
+    public function myLPAIsSuccessfullyAdded()
+    {
+        //throw new PendingException();
+    }
+
+    /**
+     * @Given /^My LPA appears on the dashboard$/
+     */
+    public function myLPAAppearsOnTheDashboard()
+    {
+        //throw new PendingException();
+    }
+
 }
