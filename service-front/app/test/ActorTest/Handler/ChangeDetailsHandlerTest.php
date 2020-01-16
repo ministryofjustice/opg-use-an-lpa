@@ -12,7 +12,7 @@ use Zend\Expressive\Helper\UrlHelper;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 
-class ViewLpaSummaryHandlerTest extends TestCase
+class ChangeDetailsHandlerTest extends TestCase
 {
 
     const LPA_ID = '98765432-12345-54321-12345-9876543210';
@@ -61,7 +61,8 @@ class ViewLpaSummaryHandlerTest extends TestCase
 
         $this->templateRendererProphecy
             ->render('actor::change-details', [
-                'actorToken' => self::LPA_ID
+                'actorToken' => self::LPA_ID,
+                'user' => null
             ])
             ->willReturn('');
 

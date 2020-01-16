@@ -18,8 +18,8 @@ Feature: Actor login
   @ui @integration
   Scenario: User wants to sign in
     Given My account is active
-    When I revisit to sign in again
-    Then I should be taken to 
+   # When I revisit to sign in again
+   # Then I should be taken to
 
 
 
