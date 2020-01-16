@@ -271,31 +271,34 @@ class AccountContext extends BaseAcceptanceContext
     public function iCreateAnAccount()
     {
         $this->actorAccountCreateData = [
-            'Id'                  => $this->userAccountId,
-            'activationToken'     => 'activate1234567890'
+            'Id'                  => 1,
+            'ActivationToken'     => 'activate1234567890',
+            'Email'               => 'test@test.com',
+            'Password'            => 'Pa33w0rd'
         ];
 
         // ActorUsers::getByEmail
         $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
-                    'Id'    => $this->userAccountId,
-                    'Email' => $this->userAccountEmail
-                ])
-            ]
+            'Items' => []
         ]));
 
         // ActorUsers::add
+        $this->awsFixtures->append(new Result());
+
+        // ActorUsers::get
         $this->awsFixtures->append(new Result([
-            'Attributes' => $this->marshalAwsResultData([
-                'Id'     => $this->userAccountId,
-                'Email'  => $this->userAccountEmail,
-                'AccountActivationToken'  => $this->actorAccountCreateData[activationToken],
-                'AccountActivationTokenExpiry' => time() + (60 * 60 * 24) // 24 hours in the future
+            'Item' => $this->marshalAwsResultData([
+                'Email' => $this->actorAccountCreateData['Email'],
+                'ActivationToken' => $this->actorAccountCreateData['ActivationToken']
             ])
         ]));
 
-        $this->apiPatch('/v1/user', ['email' => $this->userAccountEmail]);
+        $this->apiPost('/v1/user', [
+            'email' => $this->actorAccountCreateData['Email'],
+            'password' => $this->actorAccountCreateData['Password']
+        ]);
+        assertEquals($this->actorAccountCreateData['Email'], $this->getResponseAsJson()['Email']);
+
     }
 
     /**
@@ -304,21 +307,18 @@ class AccountContext extends BaseAcceptanceContext
     public function iHaveAskedForCreatingNewAccount()
     {
         $this->actorAccountCreateData = [
-            'activationToken'     => 'activate1234567890',
-            'activationTokenExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
+            'Id'                  => '11',
+            'ActivationToken'     => 'activate1234567890',
+            'ActivationTokenExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
         ];
     }
 
     /**
-     * @Then I receive unique instructions on how to create an account
+     * @Then I receive unique instructions on how to activate my account
      */
-    public function iReceiveUniqueInstructionsOnHowToCreateAnAccount()
+    public function iReceiveUniqueInstructionsOnHowToActivateMyAccount()
     {
-        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
-
-        $response = $this->getResponseAsJson();
-        assertEquals($this->userAccountEmail, $response['Email']);
-        assertEquals($this->actorAccountCreateData['Email'], $response['Email']);
+        // Not used in this context
     }
 
     /**
@@ -326,35 +326,42 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function iFollowTheInstructionsOnHowToActivateMyAccount()
     {
-        // ActorUsers::getIdByPasswordResetToken
+
+        // ActorUsers::activate
         $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
-                    'Email' => $this->userAccountEmail,
-                    'Password' => 'newPass0rd'
+                    'Id'     => $this->actorAccountCreateData['Id']
                 ])
             ]
         ]));
 
+        // ActorUsers::activate
+        $this->awsFixtures->append(new Result([]));
+
         // ActorUsers::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'Email'               => $this->userAccountEmail,
-                'ActivationToken'     => 'activate1234567890',
-                'ActivationTokenExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
+                'Id' => $this->actorAccountCreateData['Id']
             ])
         ]));
 
-        $this->apiGet('/v1/user-activation?token=' . $this->actorAccountCreateData['ActivationToken']);
-
-        // --
+        $this->apiPatch('/v1/user-activation', ['activation_token' => $this->actorAccountCreateData['ActivationToken']]);
 
         $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
-        assertEquals($this->userAccountId, $response['Id']);
+        assertEquals($this->actorAccountCreateData['Id'], $response['Id']);
     }
 
+
+    /**
+     * @Then my account is activated
+     */
+    public function myAccountIsActivated()
+    {
+        //Not needed in this context
+    }
 
     /**
      * Convert a key/value array to a correctly marshaled AwsResult structure.

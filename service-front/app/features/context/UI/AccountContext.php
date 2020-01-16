@@ -8,10 +8,12 @@ use Alphagov\Notifications\Client;
 use Aws\Result;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatTest\Context\ActorContextTrait as ActorContext;
+use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use function random_bytes;
+use DateTimeInterface;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -113,6 +115,7 @@ class AccountContext extends BaseUIContext
         $this->email = 'test@example.com';
         $this->password = 'n3wPassWord';
         $this->activationToken = 'activate1234567890';
+        $this->lastLogin = new DateTime('now');
     }
 
     /**
@@ -410,9 +413,9 @@ class AccountContext extends BaseUIContext
     }
 
     /**
-     * @When /^I sign in$/
+     * @When /^I sign in for first time$/
      */
-    public function iSignIn()
+    public function iSignInForFirstTime()
     {
         $this->userEmail = 'test@test.com';
         $this->userPassword = 'pa33w0rd';
@@ -435,7 +438,6 @@ class AccountContext extends BaseUIContext
                 'LastLogin' => null
             ])));
 
-
         $this->fillField('email', $this->userEmail);
         $this->fillField('password', $this->userPassword);
         $this->pressButton('Continue');
@@ -446,7 +448,53 @@ class AccountContext extends BaseUIContext
     public function iShouldBeTakenToTheNewUsersFirstPage()
     {
         $this->assertPageAddress('/lpa/add-details');
+    }
 
+    /**
+     * @Then /^I should be taken to the dashboard page$/
+     */
+    public function iShouldBeTakenToTheDashboardPage()
+    {
+
+        $this->assertPageAddress('/lpa/dashboard');
+
+    }
+
+    /**
+     * @When /^I sign in next time$/
+     */
+    public function iSignInNextTime()
+    {
+        $userEmail = 'test@test.com';
+        $userPassword = 'pa33w0rd';
+        $lastLogin = new DateTime('now');
+
+        $date = new DateTime();
+        $date = $date->format(DateTimeInterface::ATOM);
+        $date = new DateTime($date);
+
+
+        $this->visit('/login');
+        $this->assertPageAddress('/login');
+        $this->assertPageContainsText('Continue');
+
+        $lpas = [];
+
+        // Dashboard page checks for LPA's for a user
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        // API call for password reset request
+        $userData = $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'        => '123',
+                'Email'     => $this->email,
+                'LastLogin' => $date->format(DateTimeInterface::ATOM)
+            ])));
+
+        $this->fillField('email', $userEmail);
+        $this->fillField('password', $userPassword);
+        $this->pressButton('Continue');
     }
 
     /**

@@ -26,6 +26,8 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property $userAccountId
  * @property $userAccountEmail
  * @property $passwordResetData
+ * @property $userAccountPassword
+ * @property $userActivationToken
  * @property $actorAccountCreateData
  */
 class AccountContext implements Context, Psr11AwareContext
@@ -103,35 +105,32 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iCreateAnAccount()
     {
-        $actorAccountCreateData = [
-            'email' => 'hello@test.com',
-            'password' => 'n3wPassWord'
-        ];
 
-        $activationToken = 'activate1234567890';
+        $this->userAccountEmail = 'hello@test.com';
+        $this->userAccountPassword = 'n3wPassWord';
 
         // ActorUsers::getByEmail
         $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
-                    'AccountActivationToken'  => $activationToken,
-                    'Email' => 'hello@test.com',
-                    'Password' => 'n3wPassWord'
-                ])
-            ]
+            'Items' => []
         ]));
 
-        // ActorUsers::requestPasswordReset
+        // ActorUsers::add
+        $this->awsFixtures->append(new Result());
+
+        // ActorUsers::get
         $this->awsFixtures->append(new Result([
-            'Attributes' => $this->marshalAwsResultData([
-                'AccountActivationToken'  => $activationToken,
-                'PasswordResetExpiry' => time() + (60 * 60 * 24) // 24 hours in the future
+            'Item' => $this->marshalAwsResultData([
+                'Email' => $this->userAccountEmail,
+                'ActivationToken' => '123456789'
             ])
         ]));
 
         $us = $this->container->get(UserService::class);
 
-        $this->actorCreateData = $us->add($actorAccountCreateData);
+        $this->userActivationToken = $us->add([
+            'email' => $this->userAccountEmail,
+            'password' => $this->userAccountPassword
+        ])['ActivationToken'] ;
     }
 
     /**
@@ -143,11 +142,11 @@ class AccountContext implements Context, Psr11AwareContext
     }
 
     /**
-     * @Then I receive unique instructions on how to create an account
+     * @Then I receive unique instructions on how to activate my account
      */
     public function iReceiveUniqueInstructionsOnHowToCreateAnAccount()
     {
-        assertArrayHasKey('AccountActivationToken', $this->actorCreateData);
+       assertEquals('123456789', $this->userActivationToken);
     }
 
     /**
@@ -322,23 +321,22 @@ class AccountContext implements Context, Psr11AwareContext
     public function iFollowTheInstructionsOnHowToActivateMyAccount()
     {
 
-//        $this->awsFixtures->append(new Result([
-//            'Items' => [
-//                $this->marshalAwsResultData([
-//                    'ActivationToken'     => 'activate1234567890'
-//                ])
-//            ]
-//        ]));
+        // ActorUsers::activate
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'     => '1'
+                ])
+            ]
+        ]));
 
-        // ActorUsers::patch
+        // ActorUsers::activate
+        $this->awsFixtures->append(new Result([]));
+
+        // ActorUsers::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'Id' => [
-                    'S' => '123456789',
-                ]
-              //  'Id'                  => '123456789'
-              //  'ActivationToken'     => 'activate1234567890',
-               // 'ActivationTokenExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
+                'Id' => '123456789'
             ])
         ]));
 
@@ -347,6 +345,14 @@ class AccountContext implements Context, Psr11AwareContext
         $userData = $us->activate($this->actorAccountCreateData['ActivationToken']);
 
         assertNotNull($userData);
+    }
+
+    /**
+     * @then my account is activated
+     */
+    public function myAccountIsActivated()
+    {
+        // Not needed for this context
     }
 
     /**
@@ -422,25 +428,6 @@ class AccountContext implements Context, Psr11AwareContext
         }
 
     }
-
-//$this->activationToken = 'activate1234567890';
-//$this->password = 'n3wPassWord';
-//
-//
-//    // API call for password reset request
-//$this->apiFixtures->post('/v1/user')
-//->respondWith(
-//new Response(
-//StatusCodeInterface::STATUS_CONFLICT,
-//[],
-//json_encode([ 'activationToken' => $this->activationToken])
-//)
-//);
-//
-//$userData = $this->userService->create($this->email, $this->password);
-//
-//assertInternalType('string', $userData['activationToken']);
-//assertEquals($this->activationToken, $userData['activationToken']);
 
     /**
      * Convert a key/value array to a correctly marshaled AwsResult structure.
