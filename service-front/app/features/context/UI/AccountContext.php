@@ -138,41 +138,6 @@ class AccountContext extends BaseUIContext
     }
 
     /**
-     * @When /^I sign in$/
-     */
-    public function iSignIn()
-    {
-        $this->visit('/login');
-        $this->assertPageAddress('/login');
-        $this->assertPageContainsText('Continue');
-
-        // API call for password reset request
-        $this->apiFixtures->patch('/v1/auth')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'Id'        => '123',
-                'Email'     => $this->email,
-                'LastLogin' => null
-            ])));
-
-        // Dashboard page checks for all LPA's for a user
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpas)));
-
-        $this->fillField('email', $this->email);
-        $this->fillField('password', $this->password);
-        $this->pressButton('Continue');
-    }
-
-    /**
-     * @Then /^I should be taken to the new users first page$/
-     */
-    public function iShouldBeTakenToTheNewUsersFirstPage()
-    {
-
-        $this->assertPageAddress('/lpa/add-details');
-    }
-
-    /**
      * @When /^I follow my unique instructions after 24 hours$/
      */
     public function iFollowMyUniqueInstructionsAfter24Hours()
@@ -429,5 +394,56 @@ class AccountContext extends BaseUIContext
         $this->assertPageAddress('/forgot-password/123456');
 
         $this->assertPageContainsText('at least ' . $reason);
+    }
+
+    /**
+     * @Given /^My account is active$/
+     */
+    public function myAccountIsActive()
+    {
+        // API fixture for reset token check
+        $this->apiFixtures->patch('/v1/user-activation')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'activation_token' => $this->activationToken])));
+
+        $this->visit('/activate-account/' . $this->activationToken);
+        $this->assertPageContainsText('Account activated');
+        $this->assertPageContainsText('sign in');
+    }
+
+    /**
+     * @When /^I sign in$/
+     */
+    public function iSignIn()
+    {
+        $this->visit('/login');
+        $this->assertPageAddress('/login');
+        $this->assertPageContainsText('Continue');
+
+        $lpas = [];
+
+        // Dashboard page checks for LPA's for a user
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'        => '123',
+                'Email'     => $this->email,
+                'LastLogin' => null
+            ])));
+
+
+        $this->fillField('email', $this->email);
+        $this->fillField('password', $this->password);
+        $this->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I should be taken to the new users first page$/
+     */
+    public function iShouldBeTakenToTheNewUsersFirstPage()
+    {
+        $this->assertPageAddress('/lpa/add-details');
     }
 }
