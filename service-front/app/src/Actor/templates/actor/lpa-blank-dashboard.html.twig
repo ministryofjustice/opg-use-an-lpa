@@ -1,0 +1,46 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Your lasting power of attorneys {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        <main class="govuk-main-wrapper">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <h1 class="govuk-heading-xl">Your lasting power of attorneys</h1>
+                </div>
+            </div>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <p class="govuk-body-l">Any lasting power of attorney (LPA) you add to your account will appear on this page.</p>
+                    <details class="govuk-details" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                          What can I do with my LPAs?
+                        </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p>From this page you can:</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>give organisations access to an online summary of this LPA by making a secure access code</li>
+                                <li>keep track of which organisations have been given online access to the LPA</li>
+                                <li>view the LPA summary</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <a href="{{ path('lpa.add') }}" draggable="false" class="govuk-button">
+                        Add your first LPA
+                    </a>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+{% endblock %}

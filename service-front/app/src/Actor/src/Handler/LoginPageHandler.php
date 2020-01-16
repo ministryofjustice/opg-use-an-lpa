@@ -57,7 +57,11 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                 $user = $this->getUser($request);
 
                 if ( ! is_null($user)) {
-                    return $this->redirectToRoute('lpa.dashboard');
+                    if (empty($user->getDetail('LastLogin'))){
+                        return $this->redirectToRoute('lpa.add');
+                    } else {
+                        return $this->redirectToRoute('lpa.dashboard');
+                    }
                 }
 
                 // adding an element name allows the form to link the error message to a field. In this case we'll
