@@ -328,37 +328,12 @@ class AccountContext extends BaseUIContext
      */
     public function iRequestToAddAnLPAWithValidDetails()
     {
+        //require __DIR__ . '/../../../test/CommonTest/Service/Lpa/fixtures/full_example.json'
         $this->assertPageAddress('/lpa/add-details');
 
         // API call for adding an LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                "donor" => [
-                    "id"=> 23,
-                    "uId"=> "7000-0000-0971",
-                    "dob"=> "1948-11-01",
-                    "email"=> "babaragilson@opgtest.com",
-                    "salutation"=> "Mrs",
-                    "firstname"=> "Babara",
-                    "middlenames"=> "Suzanne",
-                    "surname"=> "Gilson",
-                    "addresses"=> [
-                    [
-                        "id"=> 23,
-                      "town"=> "",
-                      "county"=> "",
-                      "postcode"=> "HS8 2YB",
-                      "country"=> "",
-                      "type"=> "Primary",
-                      "addressLine1"=> "24 Gloucester Road",
-                      "addressLine2"=> "CILLE BHRIGHDE",
-                      "addressLine3"=> ""
-                    ]
-                  ],
-                  "companyName"=> null,
-                  "systemStatus"=> true
-    ]
-            ])));
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->fillField('passcode', 'XYUPHWQRECHV');
         $this->fillField('reference_number', '700000000138');

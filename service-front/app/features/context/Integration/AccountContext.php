@@ -225,7 +225,22 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iRequestToAddAnLPAWithValidDetails()
     {
-        //throw new PendingException();
+        $expectedUrl = 'http://localhost/lpa/add-details';
+        $expectedTemplateId = 'd32af4a6-49ad-4338-a2c2-dcb5801a40fc';
+
+        // API call for adding an LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(function (RequestInterface $request, array $options)
+            use ($expectedUrl) {
+                $requestBody = $request->getBody()->getContents();
+
+                assertContains(json_encode($expectedUrl), $requestBody);
+                //assertContains($expectedTemplateId, $requestBody);
+            });
+
+
+        //$this->emailClient->sendPasswordResetEmail($this->email, $expectedUrl);
     }
 
     /**
