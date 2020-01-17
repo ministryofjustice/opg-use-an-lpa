@@ -39,7 +39,7 @@ services:
     image: front-web
     build:
       context: .
-      dockerfile: service-front/docker/web/Development.Dockerfile
+      dockerfile: service-front/docker/web/Dockerfile
     volumes:
       - webpack_dist:/web
     ports:
@@ -83,7 +83,7 @@ services:
     image: front-web
     build:
       context: .
-      dockerfile: service-front/docker/web/Development.Dockerfile
+      dockerfile: service-front/docker/web/Dockerfile
     volumes:
       - webpack_dist:/web
     ports:
