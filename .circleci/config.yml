@@ -10,29 +10,27 @@ workflows:
 
       - use-my-lpa/node_test_web:
           name: test_web
+      - use-my-lpa/node_build_web:
+          name: build_web
+          requires: [test_web]
       - use-my-lpa/node_test_service_pdf:
           name: test_pdf
 
       - use-my-lpa/docker_build_front_app:
           name: app_front_build
+          requires: [build_web]
       - use-my-lpa/docker_build_front_web:
           name: web_front_build
-          requires: [test_web]
+          requires: [build_web]
 
       - use-my-lpa/docker_build_api_app:
           name: app_api_build
       - use-my-lpa/docker_build_api_web:
           name: web_api_build
-          requires: [test_web]
 
       - use-my-lpa/docker_build_pdf:
           name: pdf_build
           requires: [test_pdf]
-
-#      - use-my-lpa/codecov_php-unit_upload:
-#          name: codecov_upload
-#          requires:
-#            [app_front_build, app_api_build, test_web, test_pdf]
 
       - use-my-lpa/coveralls_upload:
           name: coveralls_upload
@@ -273,6 +271,37 @@ orbs:
               paths:
                 - service-front/web/node_modules
 
+      node_build_web:
+        #
+        # Build frontend assets (css, js, images)
+        #
+        executor: node
+        steps:
+          - checkout
+          - restore_cache:
+              name: Restore node modules cache
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
+          - run:
+              name: Install dependencies
+              command: |
+                if [ ! -d service-front/web/node_modules ]; then
+                  cd service-front/web/ && npm install
+                fi
+          - run:
+              name: Build assets
+              command: |
+                cd service-front/web/ && npm run build && npm run build:pdf_production
+          - save_cache:
+              name: Save node modules cache
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
+              paths:
+                - service-front/web/node_modules
+          - save_cache:
+              name: Save built assets
+              key: built-web-assets
+              paths:
+                - service-front/web/dist
+
       #----------------------------------------------------
       # Front Services (Actor & Viewer)
 
@@ -292,9 +321,12 @@ orbs:
           - setup_remote_docker:
               version: 18.06.0-ce
               docker_layer_caching: false
+          - restore_cache:
+              keys: built-web-assets
           - run:
               name: Build
               command: |
+                cp -R service-front/web/dist service-front/app/
                 docker build --file service-front/docker/app/Dockerfile --tag front-app:latest .
           - run:
               name: Run unit tests
@@ -356,9 +388,12 @@ orbs:
           - setup_remote_docker:
               version: 18.06.0-ce
               docker_layer_caching: false
+          - restore_cache:
+              keys: built-web-assets
           - run:
               name: Build
               command: |
+                cp -R service-front/web/dist service-front/docker/web/web
                 docker build --file service-front/docker/web/Dockerfile --tag front-web:latest .
           - ecr_login
           - run:

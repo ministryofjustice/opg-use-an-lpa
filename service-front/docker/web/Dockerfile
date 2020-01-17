@@ -11,6 +11,7 @@ RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/r
   && chmod +x /usr/local/bin/waitforit
 
 COPY service-front/docker/web/etc /etc
+COPY service-front/docker/web/web /web
 
 CMD confd -onetime -backend env \
   && nginx -g "daemon off;"
