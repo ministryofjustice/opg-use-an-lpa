@@ -326,7 +326,7 @@ orbs:
           - run:
               name: Build
               command: |
-                mkdir -p service-front/app/assets && cp -R service-front/web/dist/* service-front/app/assets/
+                cp -R service-front/web/dist/stylesheets/pdf.css service-front/app/assets/pdf.css
                 docker build --file service-front/docker/app/Dockerfile --tag front-app:latest .
           - run:
               name: Run unit tests
@@ -393,7 +393,7 @@ orbs:
           - run:
               name: Build
               command: |
-                cp -R service-front/web/dist service-front/docker/web/web
+                cp -R service-front/web/dist/* service-front/docker/web/web/
                 docker build --file service-front/docker/web/Dockerfile --tag front-web:latest .
           - ecr_login
           - run:
