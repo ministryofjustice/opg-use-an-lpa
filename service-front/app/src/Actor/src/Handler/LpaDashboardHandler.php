@@ -60,7 +60,9 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
         $lpas = $this->lpaService->getLpas($identity);
 
         if (count($lpas) === 0) {
-            return new RedirectResponse($this->urlHelper->generate('lpa.add'));
+            return new HtmlResponse($this->renderer->render('actor::lpa-blank-dashboard', [
+                'user' => $user
+            ]));
         }
 
         foreach ($lpas as $lpaKey => $lpaData) {
@@ -77,7 +79,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
         }
 
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
-            'user' => $this->getUser($request),
+            'user' => $user,
             'lpas' => $lpas
         ]));
     }
