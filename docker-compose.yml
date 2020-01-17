@@ -67,7 +67,7 @@ services:
 
       # Local only
       API_SERVICE_URL: http://api-web
-      PDF_SERVICE_URL: http://service-pdf:8080
+      PDF_SERVICE_URL: http://service-pdf
       AWS_ENDPOINT_KMS: http://kms:8080
       AWS_ACCESS_KEY_ID: "-"
       AWS_SECRET_ACCESS_KEY: "-"
