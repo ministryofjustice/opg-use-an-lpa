@@ -15,7 +15,7 @@ class StylesService
      */
     private $stylePath;
 
-    public function __construct(string $stylePath = './assets/pdf.css')
+    public function __construct(string $stylePath = './assets/stylesheets/pdf.css')
     {
         $this->stylePath = $stylePath;
     }

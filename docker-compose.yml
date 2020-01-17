@@ -29,7 +29,7 @@ services:
       context: .
       dockerfile: service-pdf/docker/app/Dockerfile
     ports:
-      - 9004:8080
+      - 9004:80
 
   # ---------------------------
   # Viewer Front
