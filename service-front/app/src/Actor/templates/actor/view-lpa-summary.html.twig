@@ -47,9 +47,9 @@
                             This LPA can be used as soon as it's registered unless instructions say otherwise.
                         {% endif %}
                     {% else %}
-                        {% if lpa.lifeSustainingTreatment == 'Option A' %}
+                        {% if lpa.lifeSustainingTreatment in ['Option A', 'option A', 'option a', 'Option a', 'OPTION A'] %}
                             The attorneys have the authority to make decisions about life-sustaining treatment
-                        {% elseif lpa.lifeSustainingTreatment == 'Option B' %}
+                        {% elseif lpa.lifeSustainingTreatment in ['Option B', 'option B', 'option b', 'Option b', 'OPTION B'] %}
                             The attorneys do NOT have the authority to make decisions about life-sustaining treatment
                         {% endif %}
                     {% endif %}
@@ -177,11 +177,11 @@
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">Life sustaining <br>treatment</dt>
                             <dd class="govuk-summary-list__value">
-                                {% if lpa.lifeSustainingTreatment == 'Option A' %}
+                                {% if lpa.lifeSustainingTreatment in ['Option A', 'option A', 'option a', 'Option a', 'OPTION A'] %}
                                     The attorneys have the authority to make decisions about life-sustaining treatment
-                                {% elseif lpa.lifeSustainingTreatment == 'Option B' %}
+                                {% elseif lpa.lifeSustainingTreatment in ['Option B', 'option B', 'option b', 'Option b', 'OPTION B'] %}
                                     The attorneys do not have the authority to make decisions about life-sustaining treatment
-                                {% elseif lpa.lifeSustainingTreatment == null %}
+                                {% else %}
                                     To view this, ask to see the paper LPA
                                 {% endif %}
                             </dd>
