@@ -32,6 +32,7 @@ class PdfServiceFactory
         return new PdfService(
             $container->get(TemplateRendererInterface::class),
             $container->get(ClientInterface::class),
+            $container->get(StylesService::class),
             $config['pdf']['uri'],
         );
     }

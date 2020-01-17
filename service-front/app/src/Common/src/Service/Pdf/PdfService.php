@@ -28,14 +28,20 @@ class PdfService
     private $httpClient;
 
     /**
+     * @var StylesService
+     */
+    private $styles;
+
+    /**
      * @var string
      */
     private $apiBaseUri;
 
-    public function __construct(TemplateRendererInterface $renderer, ClientInterface $httpClient, string $apiBaseUri)
+    public function __construct(TemplateRendererInterface $renderer, ClientInterface $httpClient, StylesService $styles, string $apiBaseUri)
     {
         $this->renderer = $renderer;
         $this->httpClient = $httpClient;
+        $this->styles = $styles;
         $this->apiBaseUri = $apiBaseUri;
     }
 
@@ -56,11 +62,9 @@ class PdfService
      */
     private function renderLpaAsHtml(Lpa $lpa): string
     {
-        $pdfStyles = file_get_contents('./assets/stylesheets/pdf.css');
-
         return $this->renderer->render('viewer::download-lpa', [
             'lpa' => $lpa,
-            'pdfStyles' => $pdfStyles
+            'pdfStyles' => ($this->styles)()
         ]);
     }
 

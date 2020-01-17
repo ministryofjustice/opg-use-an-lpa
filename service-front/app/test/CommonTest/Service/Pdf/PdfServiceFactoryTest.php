@@ -6,6 +6,7 @@ namespace CommonTest\Service\Pdf;
 
 use Common\Service\Pdf\PdfService;
 use Common\Service\Pdf\PdfServiceFactory;
+use Common\Service\Pdf\StylesService;
 use DI\Factory\RequestedEntry;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -29,6 +30,8 @@ class PdfServiceFactoryTest extends TestCase
         $containerProphecy->get(TemplateRendererInterface::class)->willReturn($templateRendererProphecy->reveal());
         $clientProphecy = $this->prophesize(ClientInterface::class);
         $containerProphecy->get(ClientInterface::class)->willReturn($clientProphecy->reveal());
+        $stylesProphecy = $this->prophesize(StylesService::class);
+        $containerProphecy->get(StylesService::class)->willReturn($stylesProphecy->reveal());
 
         $factory = new PdfServiceFactory();
         $pdfService = $factory(
