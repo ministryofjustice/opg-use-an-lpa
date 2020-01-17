@@ -326,7 +326,7 @@ orbs:
           - run:
               name: Build
               command: |
-                cp -R service-front/web/dist service-front/app/
+                mkdir -p service-front/app/assets && cp -R service-front/web/dist/* service-front/app/assets/
                 docker build --file service-front/docker/app/Dockerfile --tag front-app:latest .
           - run:
               name: Run unit tests
