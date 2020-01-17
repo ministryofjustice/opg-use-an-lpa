@@ -24,7 +24,10 @@ class LpaDataCleanseDecorator implements LpaInterface
      */
     public function getData(): ?array
     {
-        return $this->removeGhostActors($this->lpa->getData());
+        $filteredLpa = $this->removeGhostActors($this->lpa->getData());
+        $filteredLpa = $this->removeInactiveAttorneys($filteredLpa);
+
+        return $filteredLpa;
     }
 
     /**
@@ -57,4 +60,19 @@ class LpaDataCleanseDecorator implements LpaInterface
 
         return $lpaData;
     }
+
+    protected function removeInactiveAttorneys(?array $lpaData): ?array
+    {
+        if ($lpaData === null) {
+            return $lpaData;
+        }
+
+        $lpaData['attorneys'] = array_filter($lpaData['attorneys'], function($attorney) {
+            return ($attorney['systemStatus']);
+        });
+
+        return $lpaData;
+    }
+
+
 }
