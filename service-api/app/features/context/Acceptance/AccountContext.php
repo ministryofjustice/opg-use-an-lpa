@@ -302,6 +302,49 @@ class AccountContext extends BaseAcceptanceContext
     }
 
     /**
+     * @When I create an account using duplicate details
+     */
+    public function iCreateAnAccountUsingDuplicateDetails()
+    {
+        $this->actorAccountCreateData = [
+            'Id'                  => 1,
+            'ActivationToken'     => 'activate1234567890',
+            'Email'               => 'test@test.com',
+            'Password'            => 'Pa33w0rd'
+        ];
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'AccountActivationToken'  => $this->actorAccountCreateData['ActivationToken'] ,
+                    'Email' => $this->actorAccountCreateData['Email'],
+                    'Password' => $this->actorAccountCreateData['Password']
+                ])
+            ]
+        ]));
+
+        // ActorUsers::add
+        $this->awsFixtures->append(new Result());
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Email' => $this->actorAccountCreateData['Email'],
+                'ActivationToken' => $this->actorAccountCreateData['ActivationToken']
+            ])
+        ]));
+
+
+        $this->apiPost('/v1/user', [
+            'email' => $this->actorAccountCreateData['Email'],
+            'password' => $this->actorAccountCreateData['Password']
+        ]);
+        assertContains('User already exists with email address' . ' ' . $this->actorAccountCreateData['Email'], $this->getResponseAsJson());
+
+    }
+
+    /**
      * @Given I have asked for creating new account
      */
     public function iHaveAskedForCreatingNewAccount()
@@ -311,6 +354,14 @@ class AccountContext extends BaseAcceptanceContext
             'ActivationToken'     => 'activate1234567890',
             'ActivationTokenExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
         ];
+    }
+
+    /**
+     * @Then I am informed about an existing account
+     */
+    public function iAmInformedAboutAnExistingAccount()
+    {
+        assertEquals('activate1234567890', $this->actorAccountCreateData['ActivationToken']);
     }
 
     /**
@@ -352,6 +403,41 @@ class AccountContext extends BaseAcceptanceContext
 
         $response = $this->getResponseAsJson();
         assertEquals($this->actorAccountCreateData['Id'], $response['Id']);
+    }
+
+    /**
+     * @When I follow my instructions on how to activate my account after 24 hours
+     */
+    public function iFollowMyInstructionsOnHowToActivateMyAccountAfter24Hours()
+    {
+        // ActorUsers::activate
+        $this->awsFixtures->append(new Result(
+            [
+                'Items' => []
+            ]));
+
+        // ActorUsers::activate
+        $this->awsFixtures->append(new Result([]));
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id' => '1'
+            ])
+        ]));
+
+        $this->apiPatch('/v1/user-activation', ['activation_token' => $this->actorAccountCreateData['ActivationToken']]);
+
+        $response = $this->getResponseAsJson();
+        assertContains("User not found for token", $response);
+    }
+
+    /**
+     * @Then I am told my unique instructions to activate my account have expired
+     */
+    public function iAmToldMyUniqueInstructionsToActivateMyAccountHaveExpired()
+    {
+        // Not used in this context
     }
 
 
