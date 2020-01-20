@@ -71,7 +71,7 @@ class LpaFactoryTest extends TestCase
         $this->assertInstanceOf(Address::class, $lpa->getDonor()->getAddresses()[0]);
 
         $this->assertInstanceOf(CaseActor::class, $lpa->getAttorneys()[0]);
-        $this->assertEquals(new DateTime('1980-10-10'), $lpa->getAttorneys()[0]->getDob()); // from full_example.json
+        $this->assertEquals(new DateTime('1975-10-05'), $lpa->getAttorneys()[0]->getDob()); // from full_example.json
         $this->assertEquals(true, $lpa->getAttorneys()[0]->getSystemStatus());
     }
 
