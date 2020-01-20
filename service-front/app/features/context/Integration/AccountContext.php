@@ -360,4 +360,54 @@ class AccountContext implements Context, Psr11AwareContext
         // Not needed for this context
     }
 
+    /**
+     * @When /^I have not provided required email and password for account creation$/
+     */
+    public function iHaveNotProvidedRequiredEmailAndPasswordForAccountCreation()
+    {
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $userData = $this->userService->create('', '');
+
+        assertEmpty($userData);
+        //assertEquals($this->activationToken, $userData['activationToken']);
+    }
+
+    /**
+     * @Then /^I should be shown account cannot be created due to the below (.*)$/
+     */
+    public function iShouldBeShownAccountCannotBeCreatedDueToTheBelow($reasons)
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I provide mismatching emails and passwords when creating account$/
+     */
+    public function iProvideMismatchingEmailsAndPasswordsWhenCreatingAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I have not agreed to the terms of use$/
+     */
+    public function iHaveNotAgreedToTheTermsOfUse()
+    {
+        // Not needed for this context
+    }
+    
+
+
+
+
+
 }

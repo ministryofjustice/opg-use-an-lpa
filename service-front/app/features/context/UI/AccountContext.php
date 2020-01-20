@@ -399,105 +399,6 @@ class AccountContext extends BaseUIContext
     }
 
     /**
-     * @Given /^My account is active$/
-     */
-    public function myAccountIsActive()
-    {
-        // API fixture for reset token check
-        $this->apiFixtures->patch('/v1/user-activation')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'activation_token' => $this->activationToken])));
-
-        $this->visit('/activate-account/' . $this->activationToken);
-        $this->assertPageContainsText('Account activated');
-        $this->assertPageContainsText('sign in');
-    }
-
-    /**
-     * @When /^I sign in for first time$/
-     */
-    public function iSignInForFirstTime()
-    {
-        $this->userEmail = 'test@test.com';
-        $this->userPassword = 'pa33w0rd';
-
-        $this->visit('/login');
-        $this->assertPageAddress('/login');
-        $this->assertPageContainsText('Continue');
-
-        $lpas = [];
-
-        // Dashboard page checks for LPA's for a user
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
-
-        // API call for password reset request
-        $this->apiFixtures->patch('/v1/auth')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'Id'        => '123',
-                'Email'     => $this->email,
-                'LastLogin' => null
-            ])));
-
-        $this->fillField('email', $this->userEmail);
-        $this->fillField('password', $this->userPassword);
-        $this->pressButton('Continue');
-    }
-    /**
-     * @Then /^I should be taken to the new users first page$/
-     */
-    public function iShouldBeTakenToTheNewUsersFirstPage()
-    {
-        $this->assertPageAddress('/lpa/add-details');
-    }
-
-    /**
-     * @Then /^I should be taken to the dashboard page$/
-     */
-    public function iShouldBeTakenToTheDashboardPage()
-    {
-
-        $this->assertPageAddress('/lpa/dashboard');
-
-    }
-
-    /**
-     * @When /^I sign in next time$/
-     */
-    public function iSignInNextTime()
-    {
-        $userEmail = 'test@test.com';
-        $userPassword = 'pa33w0rd';
-        $lastLogin = new DateTime('now');
-
-        $date = new DateTime();
-        $date = $date->format(DateTimeInterface::ATOM);
-        $date = new DateTime($date);
-
-
-        $this->visit('/login');
-        $this->assertPageAddress('/login');
-        $this->assertPageContainsText('Continue');
-
-        $lpas = [];
-
-        // Dashboard page checks for LPA's for a user
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
-
-        // API call for password reset request
-        $userData = $this->apiFixtures->patch('/v1/auth')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'Id'        => '123',
-                'Email'     => $this->email,
-                'LastLogin' => $date->format(DateTimeInterface::ATOM)
-            ])));
-
-        $this->fillField('email', $userEmail);
-        $this->fillField('password', $userPassword);
-        $this->pressButton('Continue');
-    }
-
-    /**
      * @Given /^I am signed in$/
      */
     public function iAmSignedIn()
@@ -597,4 +498,93 @@ class AccountContext extends BaseUIContext
         $this->assertPageContainsText('Let us know if a donor\'s or attorney\'s details change');
         $this->assertPageContainsText('Find out more');
     }
+
+    /**
+     * @When /^I have not provided required email and password for account creation$/
+     */
+    public function iHaveNotProvidedRequiredEmailAndPasswordForAccountCreation()
+    {
+        $this->assertPageAddress('/create-account');
+
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->fillField('email', '');
+        $this->fillField('email_confirm', '');
+        $this->fillField('password', '');
+        $this->fillField('password_confirm', '');
+        $this->fillField('terms', 1);
+        $this->pressButton('Create account');
+    }
+
+    /**
+     * @When /^I provide mismatching emails and passwords when creating account$/
+     */
+    public function iProvideMismatchingEmailsAndPasswordsWhenCreatingAccount()
+    {
+        $this->email = 'test@example.com';
+        $this->password = 'n3wPassWord';
+        $this->activationToken = 'activate1234567890';
+
+        $this->assertPageAddress('/create-account');
+
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->fillField('email', $this->email);
+        $this->fillField('email_confirm', 'test@exampl.com');
+        $this->fillField('password', '3wPassWord');
+        $this->fillField('password_confirm', $this->password);
+
+        $this->pressButton('Create account');
+    }
+
+    /**
+     * @When /^I have not agreed to the terms of use$/
+     */
+    public function iHaveNotAgreedToTheTermsOfUse()
+    {
+        $this->email = 'test@example.com';
+        $this->password = 'n3wPassWord';
+        $this->activationToken = 'activate1234567890';
+
+        $this->assertPageAddress('/create-account');
+
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->fillField('email', $this->email);
+        $this->fillField('email_confirm', 'test@exampl.com');
+        $this->fillField('password', '3wPassWord');
+        $this->fillField('password_confirm', $this->password);
+
+        $this->pressButton('Create account');
+    }
+
+    /**
+     * @Then /^I should be shown account cannot be created due to the below (.*)$/
+     */
+    public function iShouldBeShownAccountCannotBeCreatedDueToTheBelow($reasons)
+    {
+        $this->assertPageAddress('/create-account');
+
+        $this->assertPageContainsText('' . $reasons);
+
+    }
+
 }

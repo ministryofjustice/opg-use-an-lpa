@@ -29,3 +29,45 @@ Feature: Account creation
      And I want to create a new account
      When I create an account using duplicate details
      Then I receive unique instructions on how to create an account
+
+  @ui @integration
+  Scenario Outline: As a new user I want to be shown the mistakes I make while creating an account
+    Given I am not a user of the lpa application
+    And I want to create a new account
+    When I have not provided required email and password for account creation
+    Then I should be shown account cannot be created due to the below <reasons>
+    Examples:
+      | reasons                           |
+      | Enter your email address          |
+      | Confirm your email address        |
+      | Confirm your password             |
+
+  @ui @integration
+  Scenario Outline: As a new user I want to be shown the mistakes I make while creating an account
+    Given I am not a user of the lpa application
+    And I want to create a new account
+    When I provide mismatching emails and passwords when creating account
+    Then I should be shown account cannot be created due to the below <reasons>
+    Examples:
+      | reasons                          |
+      | The emails did not match         |
+      | The passwords did not match      |
+
+  @ui @integration
+  Scenario Outline: As a new user I want to be shown the mistakes I make while creating an account
+    Given I am not a user of the lpa application
+    And I want to create a new account
+    When I have not agreed to the terms of use
+    Then I should be shown account cannot be created due to the below <reasons>
+    Examples:
+      | reasons                          |
+      | You must accept the terms of use |
+
+
+
+
+
+
+
+
+
