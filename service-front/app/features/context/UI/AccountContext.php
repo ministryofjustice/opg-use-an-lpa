@@ -13,6 +13,7 @@ use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use function random_bytes;
 use Exception;
+use BehatTest\GuzzleHttp;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -23,6 +24,7 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  *
  * @property $userEmail
  * @property $userPassword
+ * @property $lpa
  */
 class AccountContext extends BaseUIContext
 {
@@ -40,6 +42,14 @@ class AccountContext extends BaseUIContext
                 'CiphertextBlob' => random_bytes(32)
             ])
         );
+    }
+
+    /**
+     * @Given /^I have been given access to use an LPA via credentials$/
+     */
+    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
+    {
+        $this->lpa = file_get_contents(__DIR__ . '/../../../test/CommonTest/Service/Lpa/fixtures/full_example.json');
     }
 
     /**
@@ -328,12 +338,15 @@ class AccountContext extends BaseUIContext
      */
     public function iRequestToAddAnLPAWithValidDetails()
     {
-        //require __DIR__ . '/../../../test/CommonTest/Service/Lpa/fixtures/full_example.json'
         $this->assertPageAddress('/lpa/add-details');
 
-        // API call for adding an LPA
+        $fullLPA = json_decode($this->lpa, true);
+
+        // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'lpa' => $fullLPA
+            ])));
 
         $this->fillField('passcode', 'XYUPHWQRECHV');
         $this->fillField('reference_number', '700000000138');
@@ -344,40 +357,34 @@ class AccountContext extends BaseUIContext
     }
 
     /**
-     * @Then /^My LPA is successfully added$/
+     * @Then /^The correct LPA is found and I can confirm to add it$/
      */
-    public function myLPAIsSuccessfullyAdded()
+    public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
     {
         $this->assertPageAddress('/lpa/check');
 
-        $test = $this->getSession()->getPage()->find('css', 'div>div>h1')->getText();
-        //$this->assertPageContainsText('We could not find that lasting power of attorney');
-        //$this->assertPageContainsText('Is this the LPA you want to add?');
+        // API call for adding an LPA
+        $this->apiFixtures->post('/v1/actor-codes/confirm')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_CREATED, [], json_encode([
+                'user-lpa-actor-token' => '038d3eed-29f9-4976-8f30-eff741c33377'
+            ])));
 
-        $expectedDonor = $this->getSession()->getPage()->find('css', 'dl>div>dd')->getText();
-        $actualDonor = 'Mrs Babara Suzanne Gilson';
-
-        if ($expectedDonor !== $actualDonor) {
-            throw new Exception('LPA found for ' . $actualDonor . ' rather than ' . $expectedDonor);
-        }
+        $this->assertPageContainsText('Is this the LPA you want to add?');
+        $this->assertPageContainsText('Mrs Ian Deputy Deputy');
 
         $this->pressButton('Continue');
-
     }
+
 
     /**
-     * @Given /^My LPA appears on the dashboard$/
+     * @Given /^The LPA is successfully added$/
      */
-    public function myLPAAppearsOnTheDashboard()
+    public function theLPAIsSuccessfullyAdded()
     {
         $this->assertPageAddress('/lpa/dashboard');
-
-        $expectedDonor = $this->getSession()->getPage()->find('css', 'div>div>span')->getText();
-        $actualDonor = 'Babara Suzanne Gilson';
-
-        if ($expectedDonor !== $actualDonor) {
-            throw new Exception('LPA found for ' . $actualDonor . ' rather than ' . $expectedDonor);
-        }
+        //$this->assertPageContainsText('Babara Suzanne Gilson');
     }
+
+
 
 }

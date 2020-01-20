@@ -6,6 +6,7 @@ namespace BehatTest\Context\Integration;
 
 use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use Alphagov\Notifications\Client;
+use Common\Service\Lpa\LpaService;
 use Behat\Behat\Context\Context;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
@@ -24,6 +25,13 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  *
  * @property string email
  * @property string resetToken
+ * @property $lpa
+ * @property $userToken
+ * @property $passcode
+ * @property $referenceNo
+ * @property $userDob
+ * @property $userIdentity
+ * @property $userLpaActorToken
  */
 class AccountContext implements Context, Psr11AwareContext
 {
@@ -39,6 +47,9 @@ class AccountContext implements Context, Psr11AwareContext
     /** @var EmailClient */
     private $emailClient;
 
+    /** @var LpaService */
+    private $lpaService;
+
     public function setContainer(ContainerInterface $container): void
     {
         $this->container = $container;
@@ -46,6 +57,23 @@ class AccountContext implements Context, Psr11AwareContext
         $this->apiFixtures = $this->container->get(MockHandler::class);
         $this->userService = $this->container->get(UserService::class);
         $this->emailClient = $this->container->get(EmailClient::class);
+        $this->lpaService  = $this->container->get(LpaService::class);
+    }
+
+    /**
+     * @Given /^I have been given access to use an LPA via credentials$/
+     */
+    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
+    {
+        $this->lpa = file_get_contents(__DIR__ . '/../../../test/CommonTest/Service/Lpa/fixtures/full_example.json');
+    }
+
+    /**
+     * @Given /^I am signed in$/
+     */
+    public function iAmSignedIn()
+    {
+        // Not needed for this context
     }
 
     /**
@@ -217,7 +245,7 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iAmOnTheAddAnLPAPage()
     {
-        //throw new PendingException();
+        // Not needed for this context
     }
 
     /**
@@ -225,38 +253,54 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iRequestToAddAnLPAWithValidDetails()
     {
-        $expectedUrl = 'http://localhost/lpa/add-details';
-        $expectedTemplateId = 'd32af4a6-49ad-4338-a2c2-dcb5801a40fc';
+        $this->userToken = '1234567890';
+        $this->passcode = 'XYUPHWQRECHV';
+        $this->referenceNo = '700000000138';
+        $this->userDob = '1975-10-05';
+
+        $fullLPA = json_decode($this->lpa, true);
+
+        // API call for checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'lpa' => $fullLPA
+            ])));
+
+        $lpa = $this->lpaService->getLpaByPasscode($this->userToken, $this->passcode, $this->referenceNo, $this->userDob);
+
+        if ($lpa->getDonor()->getFirstname() !== 'Ian') {
+            throw new \Exception('Incorrect LPA found');
+        }
+    }
+
+    /**
+     * @Then /^The correct LPA is found and I can confirm to add it$/
+     */
+    public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^The LPA is successfully added$/
+     */
+    public function theLPAIsSuccessfullyAdded()
+    {
+        $this->userIdentity = '11111';
+        $this->userLpaActorToken = '987654321';
 
         // API call for adding an LPA
-        $this->apiFixtures->post('/v1/actor-codes/summary')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(function (RequestInterface $request, array $options)
-            use ($expectedUrl) {
-                $requestBody = $request->getBody()->getContents();
+        $this->apiFixtures->post('/v1/actor-codes/confirm')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_CREATED, [], json_encode([
+                'user-lpa-actor-token' => $this->userLpaActorToken
+            ])));
 
-                assertContains(json_encode($expectedUrl), $requestBody);
-                //assertContains($expectedTemplateId, $requestBody);
-            });
+        $actorCode = $this->lpaService->confirmLpaAddition($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
 
-
-        //$this->emailClient->sendPasswordResetEmail($this->email, $expectedUrl);
+        if (is_null($actorCode)) {
+            throw new \Exception('Lpa not added');
+        }
     }
 
-    /**
-     * @Then /^My LPA is successfully added$/
-     */
-    public function myLPAIsSuccessfullyAdded()
-    {
-        //throw new PendingException();
-    }
-
-    /**
-     * @Given /^My LPA appears on the dashboard$/
-     */
-    public function myLPAAppearsOnTheDashboard()
-    {
-        //throw new PendingException();
-    }
 
 }

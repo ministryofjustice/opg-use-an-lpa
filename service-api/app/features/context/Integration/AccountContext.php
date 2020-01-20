@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BehatTest\Context\Integration;
 
 use App\Exception\GoneException;
+use App\Service\ActorCodes\ActorCodeService;
 use Behat\Behat\Tester\Exception\PendingException;
 use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use App\Service\User\UserService;
@@ -13,7 +14,9 @@ use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\SetupEnv;
+use DateTime;
 use JSHayes\FakeRequests\MockHandler;
+use Exception;
 use Psr\Container\ContainerInterface;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
@@ -26,6 +29,11 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property $userAccountId
  * @property $userAccountEmail
  * @property $passwordResetData
+ * @property $userId
+ * @property $actorId
+ * @property $passcode
+ * @property $referenceNo
+ * @property $userDob
  */
 class AccountContext implements Context, Psr11AwareContext
 {
@@ -46,6 +54,14 @@ class AccountContext implements Context, Psr11AwareContext
 
         $this->apiFixtures = $this->container->get(MockHandler::class);
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
+    }
+
+    /**
+     * @Given /^I have been given access to use an LPA via credentials$/
+     */
+    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
+    {
+        // Not needed for this context
     }
 
     /**
@@ -240,6 +256,86 @@ class AccountContext implements Context, Psr11AwareContext
     public function iAmUnableToContinueToResetMyPassword()
     {
         // Not used in this context
+    }
+
+    /**
+     * @Given /^I am on the add an LPA page$/
+     */
+    public function iAmOnTheAddAnLPAPage()
+    {
+        // Not used in this context
+    }
+
+    /**
+     * @When /^I request to add an LPA with valid details$/
+     */
+    public function iRequestToAddAnLPAWithValidDetails()
+    {
+        $this->passcode = 'XYUPHWQRECHV';
+        $this->referenceNo = '700000000138';
+        $this->userDob = '1975-10-05';
+
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'SiriusUid'    => $this->referenceNo,
+                    'Active' => 'true',
+                    'Expires' => '2021-09-25T00:00:00Z',
+                    'ActorCode' => $this->passcode,
+                    'ActorLpaId'=> 25,
+                ])
+            ]
+        ]));
+
+        $actorCodeService = $this->container->get(ActorCodeService::class);
+
+        $validatedLpa = $actorCodeService->validateDetails($this->passcode, $this->referenceNo, $this->userDob);
+
+        assertEquals($validatedLpa['lpa']['uId'], $this->referenceNo);
+
+    }
+
+    /**
+     * @Then /^The correct LPA is found and I can confirm to add it$/
+     */
+    public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
+    {
+        // not needed for this context
+    }
+
+    /**
+     * @Given /^My LPA is successfully added$/
+     */
+    public function myLPAIsSuccessfullyAdded()
+    {
+        $this->userId = 'abc123';
+        $this->actorId = '101010';
+        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+
+        // UserLpaActorMap::create
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'        => ['S' => $this->userAccountId],
+                    'UserId'    => ['S' => $this->userId],
+                    'SiriusUid' => ['S' => $this->referenceNo],
+                    'ActorId'   => ['N' => $this->actorId],
+                    'Added'     => ['S' => $now],
+                ])
+            ]
+        ]));
+
+        $actorCodeService = $this->container->get(ActorCodeService::class);
+
+        try {
+            $response = $actorCodeService->confirmDetails($this->passcode, $this->referenceNo, $this->userDob, $this->actorId);
+        } catch (Exception $ex) {
+            throw new Exception('Lpa confirmation unsuccessful');
+        }
+
+        assertNotNull($response);
+
     }
 
     /**

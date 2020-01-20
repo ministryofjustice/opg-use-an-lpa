@@ -8,6 +8,7 @@ use Aws\DynamoDb\Marshaler;
 use Aws\Result;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatTest\Context\SetupEnv;
+use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 
 /**
@@ -16,12 +17,25 @@ use Fig\Http\Message\StatusCodeInterface;
  * @package BehatTest\Context\Acceptance
  *
  * @property $userAccountId
+ * @property $userId
+ * @property $actorId
  * @property $userAccountEmail
  * @property $passwordResetData
+ * @property $passcode
+ * @property $referenceNo
+ * @property $userDob
  */
 class AccountContext extends BaseAcceptanceContext
 {
     use SetupEnv;
+
+    /**
+     * @Given /^I have been given access to use an LPA via credentials$/
+     */
+    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
+    {
+        // Not needed for this context
+    }
 
     /**
      * @Given I am a user of the lpa application
@@ -246,6 +260,91 @@ class AccountContext extends BaseAcceptanceContext
         ]);
 
         $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @Given /^I am on the add an LPA page$/
+     */
+    public function iAmOnTheAddAnLPAPage()
+    {
+        // Not used in this context
+    }
+
+    /**
+     * @When /^I request to add an LPA with valid details$/
+     */
+    public function iRequestToAddAnLPAWithValidDetails()
+    {
+        $this->passcode = 'XYUPHWQRECHV';
+        $this->referenceNo = '700000000138';
+        $this->userDob = '1975-10-05';
+
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'SiriusUid'    => $this->referenceNo,
+                    'Active' => 'true',
+                    'Expires' => '2021-09-25T00:00:00Z',
+                    'ActorCode' => $this->passcode,
+                    'ActorLpaId'=> 25,
+                ])
+            ]
+        ]));
+
+        $this->apiPost('/v1/actor-codes/summary', [
+            'actor-code' => $this->passcode,
+            'uid'        => $this->referenceNo,
+            'dob'        => $this->userDob
+        ]);
+
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+        assertEquals($this->referenceNo, $response['uId']);
+
+    }
+
+    /**
+     * @Then /^The correct LPA is found and I can confirm to add it$/
+     */
+    public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
+    {
+        // not needed for this context
+    }
+
+    /**
+     * @Given /^My LPA is successfully added$/
+     */
+    public function myLPAIsSuccessfullyAdded()
+    {
+        $this->userId = 'abc123';
+        $this->actorId = '101010';
+        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+
+        // UserLpaActorMap::create
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'        => ['S' => $this->userAccountId],
+                    'UserId'    => ['S' => $this->userId],
+                    'SiriusUid' => ['S' => $this->referenceNo],
+                    'ActorId'   => ['N' => $this->actorId],
+                    'Added'     => ['S' => $now],
+                ])
+            ]
+        ]));
+
+        $this->apiPost('/v1/actor-codes/confirm', [
+            'actor-code' => $this->passcode,
+            'uid'        => $this->referenceNo,
+            'dob'        => $this->userDob
+        ]);
+
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_CREATED);
+
+        $response = $this->getResponseAsJson();
+        assertEquals('700000000138', $response['uId']);
     }
 
     /**

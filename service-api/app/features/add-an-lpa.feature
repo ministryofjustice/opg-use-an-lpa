@@ -8,7 +8,7 @@ Feature: Add an LPA
     Given I have been given access to use an LPA via credentials
     And I am signed in
 
-  @integration @ui
+  @integration @acceptance
   Scenario: The user can add an LPA to their account
     Given I am on the add an LPA page
     When I request to add an LPA with valid details
