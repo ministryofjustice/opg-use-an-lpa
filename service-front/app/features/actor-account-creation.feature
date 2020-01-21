@@ -62,12 +62,3 @@ Feature: Account creation
     Examples:
       | reasons                          |
       | You must accept the terms of use |
-
-
-
-
-
-
-
-
-
