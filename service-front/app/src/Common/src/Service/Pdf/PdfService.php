@@ -37,8 +37,12 @@ class PdfService
      */
     private $apiBaseUri;
 
-    public function __construct(TemplateRendererInterface $renderer, ClientInterface $httpClient, StylesService $styles, string $apiBaseUri)
-    {
+    public function __construct(
+        TemplateRendererInterface $renderer,
+        ClientInterface $httpClient,
+        StylesService $styles,
+        string $apiBaseUri
+    ) {
         $this->renderer = $renderer;
         $this->httpClient = $httpClient;
         $this->styles = $styles;
@@ -62,10 +66,13 @@ class PdfService
      */
     private function renderLpaAsHtml(Lpa $lpa): string
     {
-        return $this->renderer->render('viewer::download-lpa', [
-            'lpa' => $lpa,
-            'pdfStyles' => ($this->styles)()
-        ]);
+        return $this->renderer->render(
+            'viewer::download-lpa',
+            [
+                'lpa' => $lpa,
+                'pdfStyles' => ($this->styles)(),
+            ]
+        );
     }
 
     /**
@@ -77,10 +84,12 @@ class PdfService
     {
         $url = new Uri($this->apiBaseUri . '/generate-pdf');
 
-        $request = new Request('POST', $url, [
+        $request = new Request(
+            'POST', $url, [
             'Content-Type' => 'text/html',
-            'Strip-Anchor-Tags' => true
-        ], $htmlToRender);
+            'Strip-Anchor-Tags' => true,
+        ], $htmlToRender
+        );
 
         try {
             $response = $this->httpClient->sendRequest($request);

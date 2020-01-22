@@ -20,6 +20,13 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 
 class PdfServiceTest extends TestCase
 {
+    /**
+     * Create a {@link ResponseInterface} prophecy that returns a defined response body and code.
+     *
+     * @param string $body
+     * @param int $code
+     * @return ObjectProphecy
+     */
     protected function setupResponse(string $body, int $code): ObjectProphecy
     {
         $streamProphecy = $this->prophesize(StreamInterface::class);
@@ -41,10 +48,13 @@ class PdfServiceTest extends TestCase
         $lpa = new Lpa();
 
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render('viewer::download-lpa', [
-            'lpa' => $lpa,
-            'pdfStyles' => ''
-        ])->willReturn('<html></html>');
+        $rendererProphecy->render(
+            'viewer::download-lpa',
+            [
+                'lpa' => $lpa,
+                'pdfStyles' => '',
+            ]
+        )->willReturn('<html></html>');
 
         $clientProphecy = $this->prophesize(ClientInterface::class);
         $clientProphecy->sendRequest(Argument::type(RequestInterface::class))
@@ -71,10 +81,13 @@ class PdfServiceTest extends TestCase
         $lpa = new Lpa();
 
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render('viewer::download-lpa', [
-            'lpa' => $lpa,
-            'pdfStyles' => ''
-        ])->willReturn('<html></html>');
+        $rendererProphecy->render(
+            'viewer::download-lpa',
+            [
+                'lpa' => $lpa,
+                'pdfStyles' => '',
+            ]
+        )->willReturn('<html></html>');
 
         $clientProphecy = $this->prophesize(ClientInterface::class);
         $clientProphecy->sendRequest(Argument::type(RequestInterface::class))
@@ -101,10 +114,13 @@ class PdfServiceTest extends TestCase
         $lpa = new Lpa();
 
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render('viewer::download-lpa', [
-            'lpa' => $lpa,
-            'pdfStyles' => ''
-        ])->willReturn('<html></html>');
+        $rendererProphecy->render(
+            'viewer::download-lpa',
+            [
+                'lpa' => $lpa,
+                'pdfStyles' => '',
+            ]
+        )->willReturn('<html></html>');
 
         $clientProphecy = $this->prophesize(ClientInterface::class);
         $clientProphecy->sendRequest(Argument::type(RequestInterface::class))

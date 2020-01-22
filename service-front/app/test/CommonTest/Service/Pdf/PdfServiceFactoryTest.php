@@ -11,16 +11,18 @@ use DI\Factory\RequestedEntry;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
+use RuntimeException;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 class PdfServiceFactoryTest extends TestCase
 {
     /** @test */
-    public function it_creates_a_configured_pdf_service() {
+    public function it_creates_a_configured_pdf_service()
+    {
         $config = [
             'pdf' => [
-                'uri' => 'test'
-            ]
+                'uri' => 'test',
+            ],
         ];
 
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -43,7 +45,8 @@ class PdfServiceFactoryTest extends TestCase
     }
 
     /** @test */
-    public function it_needs_a_configuration_array_and_fails_if_not_there() {
+    public function it_needs_a_configuration_array_and_fails_if_not_there()
+    {
         $config = [
         ];
 
@@ -52,7 +55,7 @@ class PdfServiceFactoryTest extends TestCase
 
         $factory = new PdfServiceFactory();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $pdfService = $factory(
             $containerProphecy->reveal(),
             $this->prophesize(RequestedEntry::class)->reveal()
@@ -60,9 +63,10 @@ class PdfServiceFactoryTest extends TestCase
     }
 
     /** @test */
-    public function it_needs_a_configuration_value_and_fails_if_not_there() {
+    public function it_needs_a_configuration_value_and_fails_if_not_there()
+    {
         $config = [
-            'pdf' => []
+            'pdf' => [],
         ];
 
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -70,7 +74,7 @@ class PdfServiceFactoryTest extends TestCase
 
         $factory = new PdfServiceFactory();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $pdfService = $factory(
             $containerProphecy->reveal(),
             $this->prophesize(RequestedEntry::class)->reveal()

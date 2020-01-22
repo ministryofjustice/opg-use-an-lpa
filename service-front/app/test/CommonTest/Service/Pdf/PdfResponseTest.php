@@ -11,7 +11,8 @@ use Psr\Http\Message\StreamInterface;
 class PdfResponseTest extends TestCase
 {
     /** @test */
-    public function it_is_a_custom_response_that_sets_pdf_headers() {
+    public function it_is_a_custom_response_that_sets_pdf_headers()
+    {
         $streamProphecy = $this->prophesize(StreamInterface::class);
 
         $response = new PdfResponse($streamProphecy->reveal(), 'testFilename');
