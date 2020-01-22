@@ -62,8 +62,11 @@ class AccountContext extends BaseUIContext
 
                     assertInternalType('array', $params);
                     assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('email', $params);
+                    assertArrayHasKey('email_address', $params);
                     assertArrayHasKey('personalisation', $params);
+
+                    assertInternalType('array', $params['personalisation']);
+                    assertArrayHasKey('password-reset-url', $params['personalisation']);
                 }
             );
 
