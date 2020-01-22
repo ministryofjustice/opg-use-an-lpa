@@ -312,9 +312,9 @@ class AccountContext implements Context, Psr11AwareContext
         // Not needed for this context
     }
     /**
-     * @Given I have asked for creating new account
+     * @Given I have asked to create a new account
      */
-    public function iHaveAskedForCreatingNewAccount()
+    public function iHaveAskedToCreateANewAccount()
     {
         $this->actorAccountCreateData = [
             'Id'                  => '123456789',

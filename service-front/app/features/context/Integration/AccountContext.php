@@ -305,9 +305,9 @@ class AccountContext implements Context, Psr11AwareContext
     }
 
     /**
-     * @Given /^I have asked for creating new account$/
+     * @Given I have asked to create a new account
      */
-    public function iHaveAskedForCreatingNewAccount()
+    public function iHaveAskedToCreateANewAccount()
     {
         $this->activationToken = 'activate1234567890';
     }
@@ -378,7 +378,6 @@ class AccountContext implements Context, Psr11AwareContext
         $userData = $this->userService->create('', '');
 
         assertEmpty($userData);
-        //assertEquals($this->activationToken, $userData['activationToken']);
     }
 
     /**
@@ -404,10 +403,4 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
-    
-
-
-
-
-
 }

@@ -13,13 +13,13 @@ Feature: Account creation
 
   @ui
   Scenario: The user can follow their unique instructions to activate new account
-    Given I have asked for creating new account
+    Given I have asked to create a new account
     When I follow the instructions on how to activate my account
     Then my account is activated
 
   @ui
   Scenario: The user cannot follow expired instructions to create new account
-    Given I have asked for creating new account
+    Given I have asked to create a new account
     When I follow my unique instructions after 24 hours
     Then I am told my unique instructions to activate my account have expired
 
