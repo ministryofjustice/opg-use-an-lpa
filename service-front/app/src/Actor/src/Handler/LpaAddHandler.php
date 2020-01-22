@@ -71,6 +71,10 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
                 //  Attempt to retrieve an LPA using the form data
                 $postData = $form->getData();
 
+                //  Filter out dashes and whitespace
+                $postData = str_replace('-', '', $postData);
+                $postData = str_replace(' ', '', $postData);
+
                 //  Convert the date of birth
                 $dobString = sprintf('%s-%s-%s', $postData['dob']['year'], $postData['dob']['month'], $postData['dob']['day']);
 
