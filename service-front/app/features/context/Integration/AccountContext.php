@@ -7,6 +7,7 @@ namespace BehatTest\Context\Integration;
 use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
+use BehatTest\Context\ActorContextTrait as ActorContext;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
@@ -27,6 +28,8 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  */
 class AccountContext implements Context, Psr11AwareContext
 {
+    use ActorContext;
+
     /** @var ContainerInterface */
     private $container;
 
