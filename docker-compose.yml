@@ -29,7 +29,7 @@ services:
       context: .
       dockerfile: service-pdf/docker/app/Dockerfile
     ports:
-      - 9004:8080
+      - 9004:80
 
   # ---------------------------
   # Viewer Front
@@ -39,7 +39,7 @@ services:
     image: front-web
     build:
       context: .
-      dockerfile: service-front/docker/web/Development.Dockerfile
+      dockerfile: service-front/docker/web/Dockerfile
     volumes:
       - webpack_dist:/web
     ports:
@@ -59,6 +59,7 @@ services:
       dockerfile: service-front/docker/app/Dockerfile
     volumes:
       - ./service-front/app:/app
+      - webpack_dist:/app/assets
     environment:
       # Always required
       CONTEXT: "viewer"
@@ -66,6 +67,7 @@ services:
 
       # Local only
       API_SERVICE_URL: http://api-web
+      PDF_SERVICE_URL: http://service-pdf
       AWS_ENDPOINT_KMS: http://kms:8080
       AWS_ACCESS_KEY_ID: "-"
       AWS_SECRET_ACCESS_KEY: "-"
@@ -81,7 +83,7 @@ services:
     image: front-web
     build:
       context: .
-      dockerfile: service-front/docker/web/Development.Dockerfile
+      dockerfile: service-front/docker/web/Dockerfile
     volumes:
       - webpack_dist:/web
     ports:
@@ -101,6 +103,7 @@ services:
       dockerfile: service-front/docker/app/Dockerfile
     volumes:
       - ./service-front/app:/app
+      - webpack_dist:/app/assets
     environment:
       # Always required
       CONTEXT: "actor"
