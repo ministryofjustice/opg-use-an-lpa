@@ -28,7 +28,7 @@ class NotFoundException extends AbstractApiException
      * @param array $additionalData
      * @param Throwable|null $previous
      */
-    public function __construct(string $message = null, array $additionalData = [], Throwable $previous = null)
+    public function __construct(string $message = null, ?array $additionalData = [], ?Throwable $previous = null)
     {
         parent::__construct(self::TITLE, $message, $additionalData, $previous);
     }

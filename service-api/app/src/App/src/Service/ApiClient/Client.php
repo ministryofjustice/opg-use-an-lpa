@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\ApiClient;
 
+use App\Exception\ApiException;
 use Aws\Credentials\CredentialProvider;
 use Aws\Signature\SignatureV4;
 use Fig\Http\Message\StatusCodeInterface;
@@ -72,7 +73,7 @@ class Client
             case StatusCodeInterface::STATUS_OK:
                 return $this->handleResponse($response);
             default:
-                throw new ApiException($response);
+                throw ApiException::create(__METHOD__ . ' failed fetching ' . $path, $response);
         }
     }
 
@@ -99,7 +100,7 @@ class Client
             case StatusCodeInterface::STATUS_NO_CONTENT:
                 return $this->handleResponse($response);
             default:
-                throw new ApiException($response);
+                throw ApiException::create(__METHOD__ . ' failed fetching ' . $path, $response);
         }
     }
 
@@ -126,7 +127,7 @@ class Client
             case StatusCodeInterface::STATUS_NO_CONTENT:
                 return $this->handleResponse($response);
             default:
-                throw new ApiException($response);
+                throw ApiException::create(__METHOD__ . ' failed fetching ' . $path, $response);
         }
     }
 
@@ -153,7 +154,7 @@ class Client
             case StatusCodeInterface::STATUS_NO_CONTENT:
                 return $this->handleResponse($response);
             default:
-                throw new ApiException($response);
+                throw ApiException::create(__METHOD__ . ' failed fetching ' . $path, $response);
         }
     }
 
@@ -179,7 +180,7 @@ class Client
             case StatusCodeInterface::STATUS_NO_CONTENT:
                 return $this->handleResponse($response);
             default:
-                throw new ApiException($response);
+                throw ApiException::create(__METHOD__ . ' failed fetching ' . $path, $response);
         }
     }
 
@@ -218,7 +219,7 @@ class Client
 
         //  If the body isn't an array now then it wasn't JSON before
         if (!is_array($body)) {
-            throw new ApiException($response, 'Malformed JSON response from server');
+            throw ApiException::create('Malformed JSON response from server', $response);
         }
 
         return $body;
