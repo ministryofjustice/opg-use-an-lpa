@@ -24,14 +24,13 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * Account creation, login, password reset etc.
  *
  * @property string email
+ * @property string password
  * @property string resetToken
- * @property $lpa
- * @property $userToken
- * @property $passcode
- * @property $referenceNo
- * @property $userDob
- * @property $userIdentity
- * @property $userLpaActorToken
+ * @property string lpa
+ * @property string passcode
+ * @property string referenceNo
+ * @property string userDob
+ * @property string userIdentity
  */
 class AccountContext implements Context, Psr11AwareContext
 {
@@ -73,7 +72,20 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iAmSignedIn()
     {
-        // Not needed for this context
+        $this->email = 'test@test.com';
+        $this->password = 'pa33w0rd';
+        $this->userIdentity = '123';
+
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'        => $this->userIdentity,
+                'Email'     => $this->email,
+                'LastLogin' => null
+            ])));
+
+        $user = $this->userService->authenticate($this->email, $this->password);
+
+        assertEquals($user->getIdentity(), $this->userIdentity);
     }
 
     /**
@@ -253,7 +265,6 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iRequestToAddAnLPAWithValidDetails()
     {
-        $this->userToken = '1234567890';
         $this->passcode = 'XYUPHWQRECHV';
         $this->referenceNo = '700000000138';
         $this->userDob = '1975-10-05';
@@ -262,15 +273,17 @@ class AccountContext implements Context, Psr11AwareContext
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'lpa' => $fullLPA
-            ])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(['lpa' => $fullLPA])
+                )
+            );
 
-        $lpa = $this->lpaService->getLpaByPasscode($this->userToken, $this->passcode, $this->referenceNo, $this->userDob);
+        $lpa = $this->lpaService->getLpaByPasscode($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
 
-        if ($lpa->getDonor()->getFirstname() !== 'Ian') {
-            throw new \Exception('Incorrect LPA found');
-        }
+        assertEquals($lpa->getUId(), $fullLPA['uId']);
     }
 
     /**
@@ -286,21 +299,18 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function theLPAIsSuccessfullyAdded()
     {
-        $this->userIdentity = '11111';
-        $this->userLpaActorToken = '987654321';
-
         // API call for adding an LPA
         $this->apiFixtures->post('/v1/actor-codes/confirm')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_CREATED, [], json_encode([
-                'user-lpa-actor-token' => $this->userLpaActorToken
-            ])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_CREATED,
+                    [],
+                    json_encode(['user-lpa-actor-token' => $this->userIdentity])
+                )
+            );
 
         $actorCode = $this->lpaService->confirmLpaAddition($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
 
-        if (is_null($actorCode)) {
-            throw new \Exception('Lpa not added');
-        }
+        assertNotNull($actorCode);
     }
-
-
 }

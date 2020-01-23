@@ -1,6 +1,6 @@
 {
   "id": 0,
-  "uId": "7000-0000-0054",
+  "uId": "700000000054",
   "applicationType": "Online",
   "caseSubtype": "hw",
   "receiptDate": "2018-06-30",
@@ -19,7 +19,7 @@
   "attorneyActDecisions": "Example decision",
   "donor": {
     "id": 0,
-    "uId": "7000-0000-0054",
+    "uId": "700000000054",
     "email": "string",
     "dob": "1980-10-10",
     "salutation": "Mrs",
@@ -44,7 +44,7 @@
   "attorneys": [
     {
       "id": 0,
-      "uId": "7000-0000-0054",
+      "uId": "700000000054",
       "email": "string",
       "dob": "1975-10-05",
       "salutation": "Mrs",
@@ -71,7 +71,7 @@
   "replacementAttorneys": [
     {
       "id": 0,
-      "uId": "7000-0000-0054",
+      "uId": "700000000054",
       "email": "string",
       "dob": "1980-10-10",
       "salutation": "Mrs",
@@ -97,7 +97,7 @@
   "trustCorporations": [
     {
       "id": 0,
-      "uId": "7000-0000-0054",
+      "uId": "700000000054",
       "email": "string",
       "dob": "1980-10-10",
       "salutation": "Mrs",
@@ -123,7 +123,7 @@
   "certificateProviders": [
     {
       "id": 0,
-      "uId": "7000-0000-0054",
+      "uId": "700000000054",
       "email": "string",
       "dob": "1980-10-10",
       "salutation": "Mrs",

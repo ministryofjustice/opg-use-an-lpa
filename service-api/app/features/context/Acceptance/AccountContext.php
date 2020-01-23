@@ -8,8 +8,10 @@ use Aws\DynamoDb\Marshaler;
 use Aws\Result;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatTest\Context\SetupEnv;
+use ClassesWithParents\D;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * Class AccountContext
@@ -20,10 +22,13 @@ use Fig\Http\Message\StatusCodeInterface;
  * @property $userId
  * @property $actorId
  * @property $userAccountEmail
+ * @property $userAccountPassword
  * @property $passwordResetData
  * @property $passcode
  * @property $referenceNo
  * @property $userDob
+ * @property $lpa
+ * @property $userToken
  */
 class AccountContext extends BaseAcceptanceContext
 {
@@ -34,7 +39,8 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
-        // Not needed for this context
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '/../../../../../../opg-use-an-lpa/service-front/app/test/CommonTest/Service/Lpa/fixtures/full_example.json'));
+
     }
 
     /**
@@ -44,6 +50,45 @@ class AccountContext extends BaseAcceptanceContext
     {
         $this->userAccountId = '123456789';
         $this->userAccountEmail = 'test@example.com';
+    }
+
+    /**
+     * @Given I am signed in
+     */
+    public function iAmSignedIn()
+    {
+        $this->userAccountPassword = 'pa33w0rd';
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'       => $this->userAccountId,
+                    'Email'    => $this->userAccountEmail,
+                    'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+                ])
+            ]
+        ]));
+
+        // ActorUsers::recordSuccessfulLogin
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'        => $this->userAccountId,
+                    'LastLogin' => null
+                ])
+            ]
+        ]));
+
+        $this->apiPatch('/v1/auth', [
+            'email'    => $this->userAccountEmail,
+            'password' => $this->userAccountPassword
+        ], []);
+
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+        assertEquals($this->userAccountId, $response['Id']);
     }
 
     /**
@@ -83,7 +128,7 @@ class AccountContext extends BaseAcceptanceContext
             ])
         ]));
 
-        $this->apiPatch('/v1/request-password-reset', ['email' => $this->userAccountEmail]);
+        $this->apiPatch('/v1/request-password-reset', ['email' => $this->userAccountEmail], []);
     }
 
     /**
@@ -134,7 +179,7 @@ class AccountContext extends BaseAcceptanceContext
             ])
         ]));
 
-        $this->apiGet('/v1/can-password-reset?token=' . $this->passwordResetData['PasswordResetToken']);
+        $this->apiGet('/v1/can-password-reset?token=' . $this->passwordResetData['PasswordResetToken'], []);
 
         // --
 
@@ -174,7 +219,7 @@ class AccountContext extends BaseAcceptanceContext
         $this->apiPatch('/v1/complete-password-reset', [
             'token'    => $this->passwordResetData['PasswordResetToken'],
             'password' => 'newPassw0rd'
-        ]);
+        ], []);
     }
 
     /**
@@ -215,7 +260,7 @@ class AccountContext extends BaseAcceptanceContext
             ])
         ]));
 
-        $this->apiGet('/v1/can-password-reset?token=' . $this->passwordResetData['PasswordResetToken']);
+        $this->apiGet('/v1/can-password-reset?token=' . $this->passwordResetData['PasswordResetToken'], []);
     }
 
     /**
@@ -257,7 +302,7 @@ class AccountContext extends BaseAcceptanceContext
         $this->apiPatch('/v1/complete-password-reset', [
             'token'    => $this->passwordResetData['PasswordResetToken'],
             'password' => 'newPassw0rd'
-        ]);
+        ], []);
 
         $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
@@ -276,32 +321,37 @@ class AccountContext extends BaseAcceptanceContext
     public function iRequestToAddAnLPAWithValidDetails()
     {
         $this->passcode = 'XYUPHWQRECHV';
-        $this->referenceNo = '700000000138';
+        $this->referenceNo = '700000000054';
         $this->userDob = '1975-10-05';
+        $this->actorId = 0;
+        $this->userId = '111222333444';
 
         // ActorCodes::get
         $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
-                    'SiriusUid'    => $this->referenceNo,
-                    'Active' => 'true',
-                    'Expires' => '2021-09-25T00:00:00Z',
-                    'ActorCode' => $this->passcode,
-                    'ActorLpaId'=> 25,
-                ])
-            ]
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid' => $this->referenceNo,
+                'Active'    => true,
+                'Expires'   => '2021-09-25T00:00:00Z',
+                'ActorCode' => $this->passcode,
+                'ActorLpaId'=> $this->actorId,
+            ])
         ]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->referenceNo)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         $this->apiPost('/v1/actor-codes/summary', [
             'actor-code' => $this->passcode,
             'uid'        => $this->referenceNo,
             'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userId
         ]);
 
         $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
-        assertEquals($this->referenceNo, $response['uId']);
+        assertEquals($this->referenceNo, $response['lpa']['uId']);
 
     }
 
@@ -314,37 +364,52 @@ class AccountContext extends BaseAcceptanceContext
     }
 
     /**
-     * @Given /^My LPA is successfully added$/
+     * @Given /^The LPA is successfully added$/
      */
     public function myLPAIsSuccessfullyAdded()
     {
-        $this->userId = 'abc123';
-        $this->actorId = '101010';
         $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid' => $this->referenceNo,
+                'Active'    => true,
+                'Expires'   => '2021-09-25T00:00:00Z',
+                'ActorCode' => $this->passcode,
+                'ActorLpaId'=> $this->actorId,
+            ])
+        ]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->referenceNo)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // UserLpaActorMap::create
         $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
-                    'Id'        => ['S' => $this->userAccountId],
-                    'UserId'    => ['S' => $this->userId],
-                    'SiriusUid' => ['S' => $this->referenceNo],
-                    'ActorId'   => ['N' => $this->actorId],
-                    'Added'     => ['S' => $now],
-                ])
-            ]
+            'Item' => $this->marshalAwsResultData([
+                'Id'        => $this->userAccountId,
+                'UserId'    => $this->userId,
+                'SiriusUid' => $this->referenceNo,
+                'ActorId'   => $this->actorId,
+                'Added'     => $now,
+            ])
         ]));
+
+        // ActorCodes::flagCodeAsUsed
+        $this->awsFixtures->append(new Result([]));
 
         $this->apiPost('/v1/actor-codes/confirm', [
             'actor-code' => $this->passcode,
             'uid'        => $this->referenceNo,
             'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userId
         ]);
 
         $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_CREATED);
 
         $response = $this->getResponseAsJson();
-        assertEquals('700000000138', $response['uId']);
+        assertNotNull($response['user-lpa-actor-token']);
     }
 
     /**

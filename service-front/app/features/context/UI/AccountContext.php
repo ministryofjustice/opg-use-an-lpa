@@ -8,12 +8,11 @@ use Alphagov\Notifications\Client;
 use Aws\Result;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatTest\Context\ActorContextTrait as ActorContext;
+use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use function random_bytes;
-use Exception;
-use BehatTest\GuzzleHttp;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -25,6 +24,9 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property $userEmail
  * @property $userPassword
  * @property $lpa
+ * @property $lpaData
+ * @property $userId
+ * @property $userLpaActorToken
  */
 class AccountContext extends BaseUIContext
 {
@@ -49,7 +51,43 @@ class AccountContext extends BaseUIContext
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
-        $this->lpa = file_get_contents(__DIR__ . '/../../../test/CommonTest/Service/Lpa/fixtures/full_example.json');
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '/../../../test/CommonTest/Service/Lpa/fixtures/full_example.json'));
+
+        $this->userLpaActorToken = '987654321';
+
+        $this->lpaData = [
+            'user-lpa-actor-token' => $this->userLpaActorToken,
+            'date' => 'today',
+            'actor' => [
+                'type' => 'primary-attorney',
+                'details' => [
+                    'addresses' => [
+                        [
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                            'country'      => '',
+                            'county'       => '',
+                            'id'           => 0,
+                            'postcode'     => '',
+                            'town'         => '',
+                            'type'         => 'Primary'
+                        ]
+                    ],
+                    'companyName' => null,
+                    'dob' => '1975-10-05',
+                    'email' => 'string',
+                    'firstname' => 'Ian',
+                    'id' => 0,
+                    'middlenames' => null,
+                    'salutation' => 'Mr',
+                    'surname' => 'Deputy',
+                    'systemStatus' => true,
+                    'uId' => '700000000054'
+                ],
+            ],
+            'lpa' => $this->lpa
+        ];
     }
 
     /**
@@ -225,8 +263,10 @@ class AccountContext extends BaseUIContext
      */
     public function iSignIn()
     {
+        $this->userId = '1abc2def3ghi';
         $this->userEmail = 'test@test.com';
         $this->userPassword = 'pa33w0rd';
+        $this->userLpaActorToken = '987654321';
 
         $this->visit('/login');
         $this->assertPageAddress('/login');
@@ -235,9 +275,9 @@ class AccountContext extends BaseUIContext
         // API call for password reset request
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'Id'        => '123',
+                'Id'        => $this->userId,
                 'Email'     => $this->userEmail,
-                'LastLogin' => null
+                'LastLogin' => '2020-01-22T16:17:07+00:00'
             ])));
 
         // Dashboard page checks for all LPA's for a user
@@ -251,7 +291,9 @@ class AccountContext extends BaseUIContext
 
         // ---
 
-        $this->assertPageAddress('/lpa/add-details');
+        $this->assertPageAddress('/lpa/dashboard');
+
+        $this->assertPageContainsText('Add your first LPA');
     }
 
     /**
@@ -340,16 +382,18 @@ class AccountContext extends BaseUIContext
     {
         $this->assertPageAddress('/lpa/add-details');
 
-        $fullLPA = json_decode($this->lpa, true);
-
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'lpa' => $fullLPA
-            ])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(['lpa' => $this->lpa])
+                )
+            );
 
         $this->fillField('passcode', 'XYUPHWQRECHV');
-        $this->fillField('reference_number', '700000000138');
+        $this->fillField('reference_number', '700000000054');
         $this->fillField('dob[day]', '05');
         $this->fillField('dob[month]', '10');
         $this->fillField('dob[year]', '1975');
@@ -361,13 +405,35 @@ class AccountContext extends BaseUIContext
      */
     public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
     {
-        $this->assertPageAddress('/lpa/check');
-
         // API call for adding an LPA
         $this->apiFixtures->post('/v1/actor-codes/confirm')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_CREATED, [], json_encode([
-                'user-lpa-actor-token' => '038d3eed-29f9-4976-8f30-eff741c33377'
-            ])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_CREATED,
+                    [],
+                    json_encode(['user-lpa-actor-token' => $this->userLpaActorToken])
+                )
+            );
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->assertPageAddress('/lpa/check');
 
         $this->assertPageContainsText('Is this the LPA you want to add?');
         $this->assertPageContainsText('Mrs Ian Deputy Deputy');
@@ -375,16 +441,13 @@ class AccountContext extends BaseUIContext
         $this->pressButton('Continue');
     }
 
-
     /**
      * @Given /^The LPA is successfully added$/
      */
     public function theLPAIsSuccessfullyAdded()
     {
         $this->assertPageAddress('/lpa/dashboard');
-        //$this->assertPageContainsText('Babara Suzanne Gilson');
+        $this->assertPageContainsText('Ian Deputy Deputy');
+        $this->assertPageContainsText('Health and welfare');
     }
-
-
-
 }

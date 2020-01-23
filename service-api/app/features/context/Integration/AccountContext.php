@@ -15,9 +15,11 @@ use Aws\Result;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\SetupEnv;
 use DateTime;
+use Fig\Http\Message\StatusCodeInterface;
 use JSHayes\FakeRequests\MockHandler;
 use Exception;
 use Psr\Container\ContainerInterface;
+use GuzzleHttp\Psr7\Response;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -30,10 +32,12 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property $userAccountEmail
  * @property $passwordResetData
  * @property $userId
- * @property $actorId
+ * @property $actorLpaId
  * @property $passcode
  * @property $referenceNo
  * @property $userDob
+ * @property $password
+ * @property $lpa
  */
 class AccountContext implements Context, Psr11AwareContext
 {
@@ -61,7 +65,7 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
-        // Not needed for this context
+        $this->lpa = file_get_contents(__DIR__ . '/../../../../../../opg-use-an-lpa/service-front/app/test/CommonTest/Service/Lpa/fixtures/full_example.json');
     }
 
     /**
@@ -71,6 +75,41 @@ class AccountContext implements Context, Psr11AwareContext
     {
         $this->userAccountId = '123456789';
         $this->userAccountEmail = 'test@example.com';
+    }
+
+    /**
+     * @Given I am signed in
+     */
+    public function iAmSignedIn()
+    {
+        $this->password = 'pa33w0rd';
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'       => $this->userAccountId,
+                    'Email'    => $this->userAccountEmail,
+                    'Password' => password_hash($this->password, PASSWORD_DEFAULT)
+                ])
+            ]
+        ]));
+
+        // ActorUsers::recordSuccessfulLogin
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'        => $this->userAccountId,
+                    'LastLogin' => null
+                ])
+            ]
+        ]));
+
+        $us = $this->container->get(UserService::class);
+
+        $user = $us->authenticate($this->userAccountEmail, $this->password);
+
+        assertEquals($this->userAccountId, $user['Id']);
     }
 
     /**
@@ -272,21 +311,31 @@ class AccountContext implements Context, Psr11AwareContext
     public function iRequestToAddAnLPAWithValidDetails()
     {
         $this->passcode = 'XYUPHWQRECHV';
-        $this->referenceNo = '700000000138';
+        $this->referenceNo = '700000000054';
         $this->userDob = '1975-10-05';
+        $this->actorLpaId = 0;
 
         // ActorCodes::get
         $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
-                    'SiriusUid'    => $this->referenceNo,
-                    'Active' => 'true',
-                    'Expires' => '2021-09-25T00:00:00Z',
+            'Item' => $this->marshalAwsResultData([
+                    'SiriusUid' => $this->referenceNo,
+                    'Active'    => true,
+                    'Expires'   => '2021-09-25T00:00:00Z',
                     'ActorCode' => $this->passcode,
-                    'ActorLpaId'=> 25,
+                    'ActorLpaId'=> $this->actorLpaId,
                 ])
-            ]
         ]));
+
+        $lpaArray = json_decode($this->lpa);
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->referenceNo)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($lpaArray)
+                )
+            );
 
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
@@ -305,37 +354,60 @@ class AccountContext implements Context, Psr11AwareContext
     }
 
     /**
-     * @Given /^My LPA is successfully added$/
+     * @Given /^The LPA is successfully added$/
      */
     public function myLPAIsSuccessfullyAdded()
     {
         $this->userId = 'abc123';
-        $this->actorId = '101010';
         $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid' => $this->referenceNo,
+                'Active'    => true,
+                'Expires'   => '2021-09-25T00:00:00Z',
+                'ActorCode' => $this->passcode,
+                'ActorLpaId'=> $this->actorLpaId,
+            ])
+        ]));
+
+        $lpaArray = json_decode($this->lpa);
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->referenceNo)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($lpaArray)
+                )
+            );
 
         // UserLpaActorMap::create
         $this->awsFixtures->append(new Result([
-            'Items' => [
+            'Item' => [
                 $this->marshalAwsResultData([
-                    'Id'        => ['S' => $this->userAccountId],
-                    'UserId'    => ['S' => $this->userId],
-                    'SiriusUid' => ['S' => $this->referenceNo],
-                    'ActorId'   => ['N' => $this->actorId],
-                    'Added'     => ['S' => $now],
+                    'Id'        => $this->userAccountId,
+                    'UserId'    => $this->userId,
+                    'SiriusUid' => $this->referenceNo,
+                    'ActorId'   => $this->actorLpaId,
+                    'Added'     => $now,
                 ])
             ]
         ]));
 
+        // ActorCodes::flagCodeAsUsed
+        $this->awsFixtures->append(new Result([]));
+
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
         try {
-            $response = $actorCodeService->confirmDetails($this->passcode, $this->referenceNo, $this->userDob, $this->actorId);
+            $response = $actorCodeService->confirmDetails($this->passcode, $this->referenceNo, $this->userDob, (string) $this->actorLpaId);
         } catch (Exception $ex) {
             throw new Exception('Lpa confirmation unsuccessful');
         }
 
         assertNotNull($response);
-
     }
 
     /**

@@ -65,7 +65,7 @@ class LpaFactoryTest extends TestCase
 
         $lpa = $factory->createLpaFromData($this->fullExampleFixtureData);
         $this->assertInstanceOf(Lpa::class, $lpa);
-        $this->assertEquals('7000-0000-0054', $lpa->getUId()); // from full_example.json
+        $this->assertEquals('700000000054', $lpa->getUId()); // from full_example.json
 
         $this->assertInstanceOf(CaseActor::class, $lpa->getDonor());
         $this->assertInstanceOf(Address::class, $lpa->getDonor()->getAddresses()[0]);

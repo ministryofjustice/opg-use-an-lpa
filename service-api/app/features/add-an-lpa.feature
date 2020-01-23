@@ -6,6 +6,7 @@ Feature: Add an LPA
 
   Background:
     Given I have been given access to use an LPA via credentials
+    And I am a user of the lpa application
     And I am signed in
 
   @integration @acceptance
