@@ -47,6 +47,37 @@ class ViewerCodeService {
         return $lpaData;
     }
 
+    //SSSSSMMMMM -UML267
+    /**
+     * Cancels a viewer/share code for the given lpa
+     *
+     * @param string $userToken
+     * @param string $lpaId
+     * @param string $organisation
+     * @return ArrayObject|null
+     */
+    public function cancelShareCode(string $userToken, string $lpaId, string $organisation): ?ArrayObject
+    {
+//        var_dump("i am in Front->service->ViewerCodeService.....");
+//        var_dump($userToken);
+//        var_dump($lpaId);
+//        var_dump($organisation);
+//        die;
+
+        $this->apiClient->setUserTokenHeader($userToken);
+
+        $lpaData = $this->apiClient->httpPost('/v1/lpas/' . $lpaId . '/codes', [
+            'organisation' => $organisation
+        ]);
+
+        if (is_array($lpaData)) {
+            $lpaData = new ArrayObject($lpaData, ArrayObject::ARRAY_AS_PROPS);
+        }
+
+        return $lpaData;
+    }
+    //SSSSSMMMMM -UML267
+
     /**
      * Gets a list of viewer codes for a given lpa
      *

@@ -1,0 +1,34 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Change Details {{ parent() }} {% endblock %}
+
+{% block content %}
+
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {#<a href="{{ path('lpa.view') }}" class="govuk-back-link">Back</a>#}
+
+        <main class="govuk-main-wrapper">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">Are you sure you want to cancel this code?</h1>
+
+                    <p class="govuk-body">You're about to cancel the access code for {{ org }}</p><br>
+                    <p class="govuk-body">Doing this will stop the organisation from accessing the LPA summary. You can give access again by creating a new code.</p>
+
+                    <a href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
+                        No, return to access codes
+                    </a>
+                    <a href="{{ path('lpa.cancel-code', {}, {'lpa': actorToken, 'organisation': org }) }}" role="button" draggable="false" class="govuk-button">
+                        Yes, cancel code
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+{% endblock %}
