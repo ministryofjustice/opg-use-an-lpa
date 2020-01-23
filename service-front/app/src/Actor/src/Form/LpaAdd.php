@@ -67,15 +67,15 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         'options' => [
                             'encoding' => 'UTF-8',
                             'min'      => 12,
-                            'max'      => 12,
+                            'max'      => 14,
                             'message'  => 'Your passcode must be 12 characters long',
                         ],
                     ],
                     [
                         'name'    => Regex::class,
                         'options' => [
-                            'pattern' => '/[a-zA-Z0-9]{12}/',
-                            'message' => 'Your passcode must only include letters and numbers',
+                            'pattern' => '/^([[:alnum:]]{4}(?\'dash\' |-|)[[:alnum:]]{4}(\g{dash})[[:alnum:]]{4})$/',
+                            'message' => 'Your passcode must only include letters, numbers and dashes',
                         ],
                     ],
                 ]
@@ -97,8 +97,15 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         'options' => [
                             'encoding' => 'UTF-8',
                             'min'      => 12,
-                            'max'      => 12,
-                            'message'  => 'The reference number must be 12 numbers long',
+                            'max'      => 14,
+                            'message'  => 'The LPA reference number must be 12 numbers long',
+                        ],
+                    ],
+                    [
+                        'name'    => Regex::class,
+                        'options' => [
+                            'pattern' => '/^(\d{4}(?\'dash\' |-|)\d{4}(\g{dash})\d{4})$/',
+                            'message' => 'The reference number must only include numbers',
                         ],
                     ],
                 ]

@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
-use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\LpaService;
+use Common\Service\Pdf\PdfResponse;
+use Common\Service\Pdf\PdfService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\StreamFactory;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class ViewLpaHandler
+ * Class DownloadLpaHandler
+ *
  * @package Viewer\Handler
+ * @codeCoverageIgnore
  */
-class ViewLpaHandler extends AbstractHandler
+class DownloadLpaHandler implements RequestHandlerInterface
 {
     use SessionTrait;
 
@@ -29,16 +29,22 @@ class ViewLpaHandler extends AbstractHandler
     private $lpaService;
 
     /**
-     * ViewLpaHandler constructor.
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param LpaService $lpaService
+     * @var PdfService
      */
-    public function __construct(TemplateRendererInterface $renderer, UrlHelper $urlHelper, LpaService $lpaService)
-    {
-        parent::__construct($renderer, $urlHelper);
+    private $pdfService;
 
+    /**
+     * ViewLpaHandler constructor.
+     *
+     * @param LpaService $lpaService
+     * @param PdfService $pdfService
+     */
+    public function __construct(
+        LpaService $lpaService,
+        PdfService $pdfService)
+    {
         $this->lpaService = $lpaService;
+        $this->pdfService = $pdfService;
     }
 
     /**
@@ -56,9 +62,8 @@ class ViewLpaHandler extends AbstractHandler
         }
 
         $lpa = $this->lpaService->getLpaByCode($code, $surname, LpaService::FULL);
+        $pdfStream = $this->pdfService->getLpaAsPdf($lpa->lpa);
 
-        return new HtmlResponse($this->renderer->render('viewer::view-lpa', [
-            'lpa' => $lpa->lpa,
-        ]));
+        return new PdfResponse($pdfStream, 'lpa-' . $lpa->lpa->getUId());
     }
 }
