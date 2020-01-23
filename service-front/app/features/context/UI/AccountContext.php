@@ -450,4 +450,45 @@ class AccountContext extends BaseUIContext
         $this->assertPageContainsText('Ian Deputy Deputy');
         $this->assertPageContainsText('Health and welfare');
     }
+
+    /**
+     * @When /^I request to add an LPA that does not exist$/
+     */
+    public function iRequestToAddAnLPAThatDoesNotExist()
+    {
+        $this->assertPageAddress('/lpa/add-details');
+
+        // API call for checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )
+            );
+
+        $this->fillField('passcode', 'ABC321GHI567');
+        $this->fillField('reference_number', '700000000001');
+        $this->fillField('dob[day]', '05');
+        $this->fillField('dob[month]', '10');
+        $this->fillField('dob[year]', '1975');
+        $this->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^The LPA is not found$/
+     */
+    public function theLPAIsNotFound()
+    {
+        $this->assertPageAddress('/lpa/check');
+        $this->assertPageContainsText('We could not find that lasting power of attorney');
+    }
+
+    /**
+     * @Given /^I request to go back and try again$/
+     */
+    public function iRequestToGoBackAndTryAgain()
+    {
+        $this->pressButton('Try again');
+        $this->assertPageAddress('/lpa/add-details');
+    }
 }

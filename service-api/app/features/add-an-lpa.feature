@@ -15,3 +15,10 @@ Feature: Add an LPA
     When I request to add an LPA with valid details
     Then The correct LPA is found and I can confirm to add it
     And The LPA is successfully added
+
+  @integration @acceptance
+  Scenario: The user cannot add an LPA to their account
+    Given I am on the add an LPA page
+    When I request to add an LPA that does not exist
+    Then The LPA is not found
+    And I request to go back and try again

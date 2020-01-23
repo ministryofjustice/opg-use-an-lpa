@@ -41,6 +41,11 @@ class AccountContext extends BaseAcceptanceContext
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '/../../../../../../opg-use-an-lpa/service-front/app/test/CommonTest/Service/Lpa/fixtures/full_example.json'));
 
+        $this->passcode = 'XYUPHWQRECHV';
+        $this->referenceNo = '700000000054';
+        $this->userDob = '1975-10-05';
+        $this->actorId = 0;
+        $this->userId = '111222333444';
     }
 
     /**
@@ -320,12 +325,6 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function iRequestToAddAnLPAWithValidDetails()
     {
-        $this->passcode = 'XYUPHWQRECHV';
-        $this->referenceNo = '700000000054';
-        $this->userDob = '1975-10-05';
-        $this->actorId = 0;
-        $this->userId = '111222333444';
-
         // ActorCodes::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
@@ -410,6 +409,50 @@ class AccountContext extends BaseAcceptanceContext
 
         $response = $this->getResponseAsJson();
         assertNotNull($response['user-lpa-actor-token']);
+    }
+
+    /**
+     * @When /^I request to add an LPA that does not exist$/
+     */
+    public function iRequestToAddAnLPAThatDoesNotExist()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->referenceNo)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )
+            );
+
+        $this->apiPost('/v1/actor-codes/summary', [
+            'actor-code' => $this->passcode,
+            'uid'        => $this->referenceNo,
+            'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userId
+        ]);
+    }
+
+    /**
+     * @Then /^The LPA is not found$/
+     */
+    public function theLPAIsNotFound()
+    {
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
+
+        $response = $this->getResponseAsJson();
+
+        assertEmpty($response['data']);
+    }
+
+    /**
+     * @Given /^I request to go back and try again$/
+     */
+    public function iRequestToGoBackAndTryAgain()
+    {
+        // Not needed for this context
     }
 
     /**

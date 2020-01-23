@@ -6,6 +6,7 @@ namespace BehatTest\Context\Integration;
 
 use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use Alphagov\Notifications\Client;
+use Common\Exception\ApiException;
 use Common\Service\Lpa\LpaService;
 use Behat\Behat\Context\Context;
 use Common\Service\Email\EmailClient;
@@ -65,6 +66,10 @@ class AccountContext implements Context, Psr11AwareContext
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
         $this->lpa = file_get_contents(__DIR__ . '/../../../test/CommonTest/Service/Lpa/fixtures/full_example.json');
+
+        $this->passcode = 'XYUPHWQRECHV';
+        $this->referenceNo = '700000000138';
+        $this->userDob = '1975-10-05';
     }
 
     /**
@@ -265,10 +270,6 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iRequestToAddAnLPAWithValidDetails()
     {
-        $this->passcode = 'XYUPHWQRECHV';
-        $this->referenceNo = '700000000138';
-        $this->userDob = '1975-10-05';
-
         $fullLPA = json_decode($this->lpa, true);
 
         // API call for checking LPA
@@ -313,4 +314,41 @@ class AccountContext implements Context, Psr11AwareContext
 
         assertNotNull($actorCode);
     }
+
+    /**
+     * @When /^I request to add an LPA that does not exist$/
+     */
+    public function iRequestToAddAnLPAThatDoesNotExist()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^The LPA is not found$/
+     */
+    public function theLPAIsNotFound()
+    {
+        // API call for checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )
+            );
+
+        try {
+            $this->lpaService->getLpaByPasscode($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
+        } catch (ApiException $aex) {
+            assertEquals($aex->getCode(), 404);
+        }
+    }
+
+    /**
+     * @Given /^I request to go back and try again$/
+     */
+    public function iRequestToGoBackAndTryAgain()
+    {
+        // Not needed for this context
+    }
+
 }

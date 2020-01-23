@@ -66,6 +66,11 @@ class AccountContext implements Context, Psr11AwareContext
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
         $this->lpa = file_get_contents(__DIR__ . '/../../../../../../opg-use-an-lpa/service-front/app/test/CommonTest/Service/Lpa/fixtures/full_example.json');
+
+        $this->passcode = 'XYUPHWQRECHV';
+        $this->referenceNo = '700000000054';
+        $this->userDob = '1975-10-05';
+        $this->actorLpaId = 0;
     }
 
     /**
@@ -310,11 +315,6 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iRequestToAddAnLPAWithValidDetails()
     {
-        $this->passcode = 'XYUPHWQRECHV';
-        $this->referenceNo = '700000000054';
-        $this->userDob = '1975-10-05';
-        $this->actorLpaId = 0;
-
         // ActorCodes::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
@@ -409,6 +409,43 @@ class AccountContext implements Context, Psr11AwareContext
 
         assertNotNull($response);
     }
+
+    /**
+     * @When /^I request to add an LPA that does not exist$/
+     */
+    public function iRequestToAddAnLPAThatDoesNotExist()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->referenceNo)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )
+            );
+    }
+
+    /**
+     * @Then /^The LPA is not found$/
+     */
+    public function theLPAIsNotFound()
+    {
+        $actorCodeService = $this->container->get(ActorCodeService::class);
+
+        $validatedLpa = $actorCodeService->validateDetails($this->passcode, $this->referenceNo, $this->userDob);
+
+        assertNull($validatedLpa);
+    }
+
+    /**
+     * @Given /^I request to go back and try again$/
+     */
+    public function iRequestToGoBackAndTryAgain()
+    {
+        // Not needed for this context
+    }
+
 
     /**
      * Convert a key/value array to a correctly marshaled AwsResult structure.
