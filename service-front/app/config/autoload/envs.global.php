@@ -28,7 +28,7 @@ return [
     'session' => [
 
         // Time in seconds after which a session will expire.
-        'expires' => 60 * 60 * 1,    // 1 hour
+        'expires' => 60 * 20,    // 20 minutes
 
         'key' => [
             // KMS alias to use for data key generation.
