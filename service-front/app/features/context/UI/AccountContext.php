@@ -491,7 +491,4 @@ class AccountContext extends BaseUIContext
 
         $this->ui->pressButton('Create account');
     }
-
-
-
 }
