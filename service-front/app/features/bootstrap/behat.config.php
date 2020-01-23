@@ -20,6 +20,10 @@ return [
         'uri' => 'http://localhost',
     ],
 
+    'pdf' => [
+        'uri' => 'http://pdf-service',
+    ],
+
     'aws' => [
         'debug'   => true,
     ],

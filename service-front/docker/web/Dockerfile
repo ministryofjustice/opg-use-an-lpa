@@ -1,13 +1,3 @@
-FROM node:8-alpine as builder
-
-WORKDIR /usr/src/app
-COPY service-front/web ./
-RUN npm install
-RUN npm rebuild node-sass
-
-RUN npm run build
-RUN npm run build:pdf_production
-
 FROM nginx:stable-alpine
 
 # Add Confd to configure nginx on start
@@ -20,9 +10,8 @@ ENV WAITFORIT_VERSION="v2.4.1"
 RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64 \
   && chmod +x /usr/local/bin/waitforit
 
-COPY --from=builder /usr/src/app/dist /web
-
 COPY service-front/docker/web/etc /etc
+COPY service-front/docker/web/web /web
 
 CMD confd -onetime -backend env \
   && nginx -g "daemon off;"

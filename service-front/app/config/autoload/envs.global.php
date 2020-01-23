@@ -10,6 +10,10 @@ return [
         'uri' => getenv('API_SERVICE_URL') ?: null,
     ],
 
+    'pdf' => [
+        'uri' => getenv('PDF_SERVICE_URL') ?: null,
+    ],
+
     'aws' => [
         'region'    => 'eu-west-1',
         'version'   => 'latest',
@@ -28,7 +32,7 @@ return [
     'session' => [
 
         // Time in seconds after which a session will expire.
-        'expires' => 60 * 60 * 1,    // 1 hour
+        'expires' => 60 * 20,    // 20 minutes
 
         'key' => [
             // KMS alias to use for data key generation.
