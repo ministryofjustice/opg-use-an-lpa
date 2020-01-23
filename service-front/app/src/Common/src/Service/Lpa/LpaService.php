@@ -13,6 +13,9 @@ use Exception;
  */
 class LpaService
 {
+    const FULL = true;
+    const SUMMARY = false;
+
     /**
      * @var ApiClient
      */
@@ -74,17 +77,18 @@ class LpaService
      *
      * @param string $shareCode
      * @param string $donorSurname
+     * @param bool $response
      * @return ArrayObject|null
      * @throws Exception
      */
-    public function getLpaByCode(string $shareCode, string $donorSurname, bool $track) : ?ArrayObject
+    public function getLpaByCode(string $shareCode, string $donorSurname, bool $response = self::SUMMARY) : ?ArrayObject
     {
         //  Filter dashes out of the share code
         $shareCode = str_replace('-', '', $shareCode);
         $shareCode = str_replace(' ', '', $shareCode);
         $shareCode = strtoupper($shareCode);
 
-        if ($track) {
+        if ($response) {
             $trackRoute = 'full';
         } else {
             $trackRoute = 'summary';
