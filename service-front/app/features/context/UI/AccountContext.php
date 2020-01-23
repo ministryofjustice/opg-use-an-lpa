@@ -6,7 +6,6 @@ namespace BehatTest\Context\UI;
 
 use Alphagov\Notifications\Client;
 use BehatTest\Context\ActorContextTrait as ActorContext;
-use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
@@ -26,21 +25,6 @@ use Psr\Http\Message\RequestInterface;
 class AccountContext extends BaseUIContext
 {
     use ActorContext;
-
-    /**
-
-     * @BeforeScenario
-     */
-    public function seedFixtures()
-    {
-        // KMS is polled for encryption data on first page load
-        $this->awsFixtures->append(
-            new Result([
-                'Plaintext' => random_bytes(32),
-                'CiphertextBlob' => random_bytes(32)
-            ])
-        );
-    }
 
     /**
      * @Given /^I have been given access to use an LPA via credentials$/
@@ -286,9 +270,9 @@ class AccountContext extends BaseUIContext
 
         // ---
 
-        $this->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageAddress('/lpa/dashboard');
 
-        $this->assertPageContainsText('Add your first LPA');
+        $this->ui->assertPageContainsText('Add your first LPA');
     }
 
     /**
@@ -366,8 +350,8 @@ class AccountContext extends BaseUIContext
      */
     public function iAmOnTheAddAnLPAPage()
     {
-        $this->visit('/lpa/add-details');
-        $this->assertPageAddress('/lpa/add-details');
+        $this->ui->visit('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add-details');
     }
 
     /**
@@ -375,7 +359,7 @@ class AccountContext extends BaseUIContext
      */
     public function iRequestToAddAnLPAWithValidDetails()
     {
-        $this->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add-details');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
@@ -387,12 +371,12 @@ class AccountContext extends BaseUIContext
                 )
             );
 
-        $this->fillField('passcode', 'XYUPHWQRECHV');
-        $this->fillField('reference_number', '700000000054');
-        $this->fillField('dob[day]', '05');
-        $this->fillField('dob[month]', '10');
-        $this->fillField('dob[year]', '1975');
-        $this->pressButton('Continue');
+        $this->ui->fillField('passcode', 'XYUPHWQRECHV');
+        $this->ui->fillField('reference_number', '700000000054');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
     }
 
     /**
@@ -428,12 +412,12 @@ class AccountContext extends BaseUIContext
                     [],
                     json_encode([])));
 
-        $this->assertPageAddress('/lpa/check');
+        $this->ui->assertPageAddress('/lpa/check');
 
-        $this->assertPageContainsText('Is this the LPA you want to add?');
-        $this->assertPageContainsText('Mrs Ian Deputy Deputy');
+        $this->ui->assertPageContainsText('Is this the LPA you want to add?');
+        $this->ui->assertPageContainsText('Mrs Ian Deputy Deputy');
 
-        $this->pressButton('Continue');
+        $this->ui->pressButton('Continue');
     }
 
     /**
@@ -441,9 +425,9 @@ class AccountContext extends BaseUIContext
      */
     public function theLPAIsSuccessfullyAdded()
     {
-        $this->assertPageAddress('/lpa/dashboard');
-        $this->assertPageContainsText('Ian Deputy Deputy');
-        $this->assertPageContainsText('Health and welfare');
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageContainsText('Ian Deputy Deputy');
+        $this->ui->assertPageContainsText('Health and welfare');
     }
 
     /**
@@ -451,7 +435,7 @@ class AccountContext extends BaseUIContext
      */
     public function iRequestToAddAnLPAThatDoesNotExist()
     {
-        $this->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add-details');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
@@ -461,12 +445,12 @@ class AccountContext extends BaseUIContext
                 )
             );
 
-        $this->fillField('passcode', 'ABC321GHI567');
-        $this->fillField('reference_number', '700000000001');
-        $this->fillField('dob[day]', '05');
-        $this->fillField('dob[month]', '10');
-        $this->fillField('dob[year]', '1975');
-        $this->pressButton('Continue');
+        $this->ui->fillField('passcode', 'ABC321GHI567');
+        $this->ui->fillField('reference_number', '700000000001');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
     }
 
     /**
@@ -474,8 +458,8 @@ class AccountContext extends BaseUIContext
      */
     public function theLPAIsNotFound()
     {
-        $this->assertPageAddress('/lpa/check');
-        $this->assertPageContainsText('We could not find that lasting power of attorney');
+        $this->ui->assertPageAddress('/lpa/check');
+        $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
     }
 
     /**
@@ -483,7 +467,7 @@ class AccountContext extends BaseUIContext
      */
     public function iRequestToGoBackAndTryAgain()
     {
-        $this->pressButton('Try again');
-        $this->assertPageAddress('/lpa/add-details');
+        $this->ui->pressButton('Try again');
+        $this->ui->assertPageAddress('/lpa/add-details');
     }
 }
