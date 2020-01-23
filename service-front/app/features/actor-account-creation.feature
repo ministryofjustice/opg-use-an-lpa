@@ -37,11 +37,11 @@ Feature: Account creation
     When I have not provided required information for account creation such as <email1> <email2> <password1> <password2> <terms>
     Then I should be told my account could not be created due to <reasons>
     Examples:
-      | email1 | email2 | password1 | password2 | terms | reasons                          |
-      |        |        |           |           |       | Enter your email address         |
-      |        |        |           |           |       | Confirm your email address       |
-      |        |        |           |           |       | Confirm your password            |
-      |        |        |           |           |       | You must accept the terms of use |
+      | email1          | email2          | password1 | password2 | terms | reasons                          |
+      |                 |                 | Password1 | Password1 |   1   | Enter your email address         |
+      |test@example.com |                 | Password1 | Password1 |   1   | Confirm your email address       |
+      |test@example.com |test@example.com | Password1 |           |   1   | Confirm your password            |
+      |test@example.com |test@example.com | Password1 | Password1 |       | You must accept the terms of use |
 
   @ui @integration
   Scenario Outline: As a new user I want to be shown the mistakes I make while creating an account
@@ -62,6 +62,6 @@ Feature: Account creation
     Examples:
       | password       | confirm_password  |reasons                     |
       | password       | pass              | The passwords did not match|
-      | password       | pass              | Your password must include at least one capital letter (A-Z)|
-      | password       | pass              | Your password must include at least one digit (0-9)         |
+      | password       | password          | Your password must include at least one capital letter (A-Z)|
+      | password       | password          | Your password must include at least one digit (0-9)         |
 

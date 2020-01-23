@@ -343,9 +343,9 @@ class AccountContext implements Context, Psr11AwareContext
     }
 
     /**
-     * @When /^I have not provided required information for account creation such as (.*)(.*)(.*)(.*)(.*) $/
+     * @When /^I have not provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
      */
-    public function iHaveNotProvidedRequiredEmailAndPasswordForAccountCreationSuch()
+    public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1,$email2,$password1,$password2,$terms)
     {
         // Not needed for this context
     }
