@@ -6,223 +6,21 @@ namespace BehatTest\Context\UI;
 
 use Alphagov\Notifications\Client;
 use BehatTest\Context\ActorContextTrait as ActorContext;
-use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
-use function random_bytes;
-use DateTimeInterface;
-
-require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
 /**
- * A behat context that encapsulates user account steps
+ * Class AccountContext
  *
- * Account creation, login, password reset etc.
+ * @package BehatTest\Context\UI
  *
- * @property string activationToken
- * @property string email
- * @property string password
- * @property array lpas
+ * @property $userEmail
+ * @property $userPassword
  */
 class AccountContext extends BaseUIContext
 {
     use ActorContext;
-
-    /**
-     * @BeforeScenario
-     */
-    public function seedFixtures()
-    {
-        // KMS is polled for encryption data on first page load
-        $this->awsFixtures->append(
-            new Result([
-                'Plaintext' => random_bytes(32),
-                'CiphertextBlob' => random_bytes(32)
-            ])
-        );
-    }
-
-    /**
-     * @Given /^I am not a user of the lpa application$/
-     */
-    public function iAmNotAUserOfTheLpaApplication()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Given /^I want to create a new account$/
-     */
-    public function iWantToCreateANewAccount()
-    {
-        $this->iAmOnHomepage();
-        $this->assertPageContainsText('Create an account');
-
-        $this->pressButton('Create an account');
-    }
-
-    /**
-     * @When /^I create an account$/
-     */
-    public function iCreateAnAccount()
-    {
-        $this->email = 'test@example.com';
-        $this->password = 'n3wPassWord';
-        $this->activationToken = 'activate1234567890';
-
-        $this->assertPageAddress('/create-account');
-
-        // API call for password reset request
-        $this->apiFixtures->post('/v1/user')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'Email'           => $this->email,
-                'ActivationToken' => $this->activationToken,
-            ])));
-
-        // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
-
-        $this->fillField('email', $this->email);
-        $this->fillField('email_confirm', $this->email);
-        $this->fillField('password', $this->password);
-        $this->fillField('password_confirm', $this->password);
-        $this->fillField('terms', 1);
-        $this->pressButton('Create account');
-    }
-
-    /**
-     * @Then /^I receive unique instructions on how to activate my account$/
-     */
-    public function iReceiveUniqueInstructionsOnHowToActivateMyAccount()
-    {
-        $this->assertPageAddress('/create-account-success');
-
-        $this->assertPageContainsText('We\'ve emailed a link to ' . $this->email);
-
-        assertInternalType('string', $this->activationToken);
-        assertEquals(true, $this->apiFixtures->isEmpty());
-    }
-
-    /**
-     * @Given I have asked to create a new account
-     */
-    public function iHaveAskedToCreateANewAccount()
-    {
-        $this->email = 'test@example.com';
-        $this->password = 'n3wPassWord';
-        $this->activationToken = 'activate1234567890';
-    }
-
-    /**
-     * @When /^I follow the instructions on how to activate my account$/
-     */
-    public function iFollowTheInstructionsOnHowToActivateMyAccount()
-    {
-        // API fixture for reset token check
-        $this->apiFixtures->patch('/v1/user-activation')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'activation_token' => $this->activationToken])));
-
-        $this->visit('/activate-account/' . $this->activationToken);
-    }
-
-    /**
-     * @Then /^my account is activated$/
-     */
-    public function myAccountIsActivated()
-    {
-        $this->assertPageContainsText('Account activated');
-        $this->assertPageContainsText('sign in');
-    }
-
-    /**
-     * @When /^I follow my unique instructions after 24 hours$/
-     */
-    public function iFollowMyUniqueInstructionsAfter24Hours()
-    {
-        // remove successful reset token and add failure state
-        $this->apiFixtures->patch('/v1/user-activation')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_NOT_FOUND));
-
-        $this->visit('/activate-account/' . $this->activationToken);
-    }
-
-    /**
-     * @Then /^I am told my unique instructions to activate my account have expired$/
-     */
-    public function iAmToldMyUniqueInstructionsToActivateMyAccountHaveExpired()
-    {
-        $this->activationToken = 'activate1234567890';
-        $this->assertPageAddress('/activate-account/'. $this->activationToken);
-        $this->assertPageContainsText('You created the account more than 24 hours ago');
-    }
-
-    /**
-     * @When /^I create an account using duplicate details$/
-     */
-    public function iCreateAnAccountUsingDuplicateDetails()
-    {
-        $this->email = 'test@example.com';
-        $this->password = 'n3wPassWord';
-        $this->activationToken = 'activate1234567890';
-
-        $this->assertPageAddress('/create-account');
-
-        // API call for password reset request
-        $this->apiFixtures->post('/v1/user')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([
-                'Email'           => $this->email,
-                'ActivationToken' => $this->activationToken,
-            ])));
-
-        // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
-
-        $this->fillField('email', $this->email);
-        $this->fillField('email_confirm', $this->email);
-        $this->fillField('password', $this->password);
-        $this->fillField('password_confirm', $this->password);
-        $this->fillField('terms', 1);
-        $this->pressButton('Create account');
-    }
-
-    /**
-     * @Then /^I am directed to login page$/
-     */
-    public function iAmDirectedToLoginPage()
-    {
-        $this->assertPageAddress('/');
-        $this->assertPageContainsText('Sign in');
-        $this->pressButton('Sign in');
-    }
-
-    /**
-     * @Then /^I am told my account details not recognised$/
-     */
-    public function iAmToldMyAccountDetailsNotRecognised()
-    {
-        $this->assertPageAddress('/login');
-        $this->assertPageContainsText('There is a problem');
-        $this->assertPageContainsText('Email and password combination not recognised. Please try signing in again below or create an account');
-    }
-
-    /**
-     * @Given /^I am unable to continue to create my account$/
-     */
-    public function iAmUnableToContinueToCreateMyAccount()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Then /^I should be taken to the first page$/
-     */
-    public function iShouldBeTakenToTheFirstPage()
-    {
-        $this->assertPageAddress('/lpa/dashboard');
-    }
 
     /**
      * @Given /^I am a user of the lpa application$/
@@ -232,7 +30,6 @@ class AccountContext extends BaseUIContext
         $this->ui->iAmOnHomepage();
 
         $this->ui->clickLink('Sign in');
-
     }
 
     /**
@@ -396,7 +193,7 @@ class AccountContext extends BaseUIContext
     /**
      * @Given /^I am signed in$/
      */
-    public function iAmSignedIn()
+    public function iSignIn()
     {
         $this->userEmail = 'test@test.com';
         $this->userPassword = 'pa33w0rd';
@@ -421,6 +218,8 @@ class AccountContext extends BaseUIContext
         $this->ui->fillField('password', $this->userPassword);
         $this->ui->pressButton('Continue');
 
+        // ---
+
         $this->ui->assertPageAddress('/lpa/add-details');
     }
 
@@ -439,7 +238,7 @@ class AccountContext extends BaseUIContext
     public function iCanChangeMyEmailIfRequired()
     {
         $this->ui->assertPageAddress('/your-details');
-        
+
         $this->ui->assertPageContainsText('Email address');
         $this->ui->assertPageContainsText($this->userEmail);
 
@@ -495,11 +294,154 @@ class AccountContext extends BaseUIContext
     }
 
     /**
+     * @Given /^I am not a user of the lpa application$/
+     */
+    public function iAmNotAUserOfTheLpaApplication()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I want to create a new account$/
+     */
+    public function iWantToCreateANewAccount()
+    {
+        $this->ui->iAmOnHomepage();
+        $this->ui->pressButton('Create an account');
+    }
+
+    /**
+     * @When /^I create an account$/
+     */
+    public function iCreateAnAccount()
+    {
+        $this->email = 'test@example.com';
+        $this->password = 'n3wPassWord';
+        $this->activationToken = 'activate1234567890';
+
+        $this->ui->assertPageAddress('/create-account');
+
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Email'           => $this->email,
+                'ActivationToken' => $this->activationToken,
+            ])));
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->ui->fillField('email', $this->email);
+        $this->ui->fillField('email_confirm', $this->email);
+        $this->ui->fillField('password', $this->password);
+        $this->ui->fillField('password_confirm', $this->password);
+        $this->ui->fillField('terms', 1);
+        $this->ui->pressButton('Create account');
+    }
+
+    /**
+     * @Then /^I receive unique instructions on how to activate my account$/
+     */
+    public function iReceiveUniqueInstructionsOnHowToActivateMyAccount()
+    {
+        $this->ui->assertPageAddress('/create-account-success');
+
+        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->email);
+
+        assertInternalType('string', $this->activationToken);
+        assertEquals(true, $this->apiFixtures->isEmpty());
+    }
+
+    /**
+     * @Given I have asked to create a new account
+    */
+    public function iHaveAskedToCreateANewAccount()
+    {
+        $this->email = 'test@example.com';
+        $this->password = 'n3wPassWord';
+        $this->activationToken = 'activate1234567890';
+    }
+
+    /**
+     * @When /^I follow the instructions on how to activate my account$/
+     */
+    public function iFollowTheInstructionsOnHowToActivateMyAccount()
+    {
+        // API fixture for reset token check
+        $this->apiFixtures->patch('/v1/user-activation')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'activation_token' => $this->activationToken])));
+
+        $this->ui->visit('/activate-account/' . $this->activationToken);
+    }
+
+    /**
+     * @Then /^my account is activated$/
+     */
+    public function myAccountIsActivated()
+    {
+        $this->ui->assertPageContainsText('Account activated');
+        $this->ui->assertPageContainsText('sign in');
+    }
+
+    /**
+     * @When /^I follow my unique instructions after 24 hours$/
+     */
+    public function iFollowMyUniqueInstructionsAfter24Hours()
+    {
+        // remove successful reset token and add failure state
+        $this->apiFixtures->patch('/v1/user-activation')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_NOT_FOUND));
+
+        $this->ui->visit('/activate-account/' . $this->activationToken);
+    }
+
+    /**
+     * @Then /^I am told my unique instructions to activate my account have expired$/
+     */
+    public function iAmToldMyUniqueInstructionsToActivateMyAccountHaveExpired()
+    {
+        $this->activationToken = 'activate1234567890';
+        $this->ui->assertPageAddress('/activate-account/'. $this->activationToken);
+        $this->ui->assertPageContainsText('You created the account more than 24 hours ago');
+    }
+
+    /**
+     * @When /^I create an account using duplicate details$/
+     */
+    public function iCreateAnAccountUsingDuplicateDetails()
+    {
+        $this->email = 'test@example.com';
+        $this->password = 'n3wPassWord';
+        $this->activationToken = 'activate1234567890';
+
+        $this->ui->assertPageAddress('/create-account');
+
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([
+                'Email'           => $this->email,
+                'ActivationToken' => $this->activationToken,
+            ])));
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->ui->fillField('email', $this->email);
+        $this->ui->fillField('email_confirm', $this->email);
+        $this->ui->fillField('password', $this->password);
+        $this->ui->fillField('password_confirm', $this->password);
+        $this->ui->fillField('terms', 1);
+        $this->ui->pressButton('Create account');
+    }
+
+    /**
      * @When /^I have not provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
      */
     public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1,$email2,$password1,$password2,$terms)
     {
-        $this->assertPageAddress('/create-account');
+        $this->ui->assertPageAddress('/create-account');
 
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
@@ -509,58 +451,12 @@ class AccountContext extends BaseUIContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
-        $this->fillField('email', $email1);
-        $this->fillField('email_confirm', $email2);
-        $this->fillField('password', $password1);
-        $this->fillField('password_confirm', $password2);
+        $this->ui->fillField('email', $email1);
+        $this->ui->fillField('email_confirm', $email2);
+        $this->ui->fillField('password', $password1);
+        $this->ui->fillField('password_confirm', $password2);
 
-        $this->pressButton('Create account');
-
-    }
-
-    /**
-     * @When /^I have not provided required email and password for account creation$/
-     */
-    public function iHaveNotProvidedRequiredEmailAndPasswordForAccountCreation()
-    {
-        $this->assertPageAddress('/create-account');
-
-        // API call for password reset request
-        $this->apiFixtures->post('/v1/user')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
-
-        // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
-
-        $this->fillField('email', '');
-        $this->fillField('email_confirm', '');
-        $this->fillField('password', '');
-        $this->fillField('password_confirm', '');
-        $this->pressButton('Create account');
-    }
-
-    /**
-     * @When /^Creating account I provide mismatching (.*) (.*)$/
-     */
-    public function CreatingAccountIProvideMismatching($value1, $value2)
-    {
-        $this->assertPageAddress('/create-account');
-
-        // API call for password reset request
-        $this->apiFixtures->post('/v1/user')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
-
-        // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
-
-        $this->fillField('email', $value1);
-        $this->fillField('email_confirm', $value2);
-        $this->fillField('password',  $value1);
-        $this->fillField('password_confirm', $value2);
-
-        $this->pressButton('Create account');
+        $this->ui->pressButton('Create account');
     }
 
     /**
@@ -568,8 +464,34 @@ class AccountContext extends BaseUIContext
      */
     public function iShouldBeToldMyAccountCouldNotBeCreatedDueTo($reasons)
     {
-        $this->assertPageAddress('/create-account');
+        $this->ui->assertPageAddress('/create-account');
 
-        $this->assertPageContainsText('' . $reasons);
+        $this->ui->assertPageContainsText('' . $reasons);
     }
+
+    /**
+     * @When /^Creating account I provide mismatching (.*) (.*)$/
+     */
+    public function CreatingAccountIProvideMismatching($value1, $value2)
+    {
+        $this->ui->assertPageAddress('/create-account');
+
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->ui->fillField('email', $value1);
+        $this->ui->fillField('email_confirm', $value2);
+        $this->ui->fillField('password',  $value1);
+        $this->ui->fillField('password_confirm', $value2);
+
+        $this->ui->pressButton('Create account');
+    }
+
+
+
 }
