@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\ApiClient;
 
-use App\Service\ApiClient\ApiException;
+use App\Exception\ApiException;
 use App\Service\ApiClient\Client;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;

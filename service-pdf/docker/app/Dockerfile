@@ -20,6 +20,6 @@ COPY service-pdf/app/package.json ./package.json
 RUN npm install
 COPY service-pdf/app .
 
-EXPOSE 8080
+EXPOSE 80
 
 CMD [ "node", "-r", "esm", "src/server.js" ]

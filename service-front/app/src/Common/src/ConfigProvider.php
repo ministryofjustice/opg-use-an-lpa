@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Common;
 
 use Aws;
-use Common\Entity\UserFactory;
-use Common\Service\Lpa\LpaFactory;
 use Http;
 use Psr;
 use Zend;
@@ -60,6 +58,7 @@ class ConfigProvider
 
                 // Services
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
+                Service\Pdf\PdfService::class => Service\Pdf\PdfServiceFactory::class,
                 Service\Session\EncryptedCookiePersistence::class => Service\Session\EncryptedCookiePersistenceFactory::class,
                 Service\Session\KeyManager\KmsManager::class => Service\Session\KeyManager\KmsManagerFactory::class,
 
