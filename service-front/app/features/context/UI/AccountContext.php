@@ -55,7 +55,20 @@ class AccountContext extends BaseUIContext
 
         // API call for Notify
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                    assertArrayHasKey('email_address', $params);
+                    assertArrayHasKey('personalisation', $params);
+
+                    assertInternalType('array', $params['personalisation']);
+                    assertArrayHasKey('password-reset-url', $params['personalisation']);
+                }
+            );
 
         $this->ui->fillField('email', 'test@example.com');
         $this->ui->fillField('email_confirm', 'test@example.com');
