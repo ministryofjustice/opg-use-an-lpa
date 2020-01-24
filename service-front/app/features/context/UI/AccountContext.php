@@ -470,4 +470,43 @@ class AccountContext extends BaseUIContext
         $this->ui->pressButton('Try again');
         $this->ui->assertPageAddress('/lpa/add-details');
     }
+
+    /**
+     * @When /^I request to add an LPA with an invalid passcode format of "([^"]*)"$/
+     */
+    public function iRequestToAddAnLPAWithAnInvalidPasscodeFormatOf1($passcode)
+    {
+        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->fillField('passcode', $passcode);
+        $this->ui->fillField('reference_number', '700000000001');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I am told that my input is invalid and needs to be (.*)$/
+     */
+    public function iAmToldThatMyInputIsInvalidAndNeedsToBe($reason)
+    {
+        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageContainsText($reason);
+    }
+
+    /**
+     * @When /^I request to add an LPA with an invalid reference number format of "([^"]*)"$/
+     */
+    public function iRequestToAddAnLPAWithAnInvalidReferenceNumberFormatOf($referenceNo)
+    {
+        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->fillField('passcode', 'T3STPA22C0D3');
+        $this->ui->fillField('reference_number', $referenceNo);
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+    }
+
+
 }
