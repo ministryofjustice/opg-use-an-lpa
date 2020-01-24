@@ -18,6 +18,7 @@ use Fig\Http\Message\StatusCodeInterface;
  * @property $userAccountId
  * @property $userAccountEmail
  * @property $passwordResetData
+ * @property $actorAccountCreateData
  */
 class AccountContext extends BaseAcceptanceContext
 {
@@ -121,8 +122,6 @@ class AccountContext extends BaseAcceptanceContext
         ]));
 
         $this->apiGet('/v1/can-password-reset?token=' . $this->passwordResetData['PasswordResetToken']);
-
-        // --
 
         $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
@@ -246,6 +245,204 @@ class AccountContext extends BaseAcceptanceContext
         ]);
 
         $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @Given I am not a user of the lpa application
+     */
+    public function iAmNotaUserOftheLpaApplication()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given I want to create a new account
+     */
+    public function iWantTocreateANewAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When I create an account
+     */
+    public function iCreateAnAccount()
+    {
+        $this->actorAccountCreateData = [
+            'Id'                  => 1,
+            'ActivationToken'     => 'activate1234567890',
+            'Email'               => 'test@test.com',
+            'Password'            => 'Pa33w0rd'
+        ];
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => []
+        ]));
+
+        // ActorUsers::add
+        $this->awsFixtures->append(new Result());
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Email' => $this->actorAccountCreateData['Email'],
+                'ActivationToken' => $this->actorAccountCreateData['ActivationToken']
+            ])
+        ]));
+
+        $this->apiPost('/v1/user', [
+            'email' => $this->actorAccountCreateData['Email'],
+            'password' => $this->actorAccountCreateData['Password']
+        ]);
+        assertEquals($this->actorAccountCreateData['Email'], $this->getResponseAsJson()['Email']);
+
+    }
+
+    /**
+     * @When I create an account using duplicate details
+     */
+    public function iCreateAnAccountUsingDuplicateDetails()
+    {
+        $this->actorAccountCreateData = [
+            'Id'                  => 1,
+            'ActivationToken'     => 'activate1234567890',
+            'Email'               => 'test@test.com',
+            'Password'            => 'Pa33w0rd'
+        ];
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'AccountActivationToken'  => $this->actorAccountCreateData['ActivationToken'] ,
+                    'Email' => $this->actorAccountCreateData['Email'],
+                    'Password' => $this->actorAccountCreateData['Password']
+                ])
+            ]
+        ]));
+
+        // ActorUsers::add
+        $this->awsFixtures->append(new Result());
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Email' => $this->actorAccountCreateData['Email'],
+                'ActivationToken' => $this->actorAccountCreateData['ActivationToken']
+            ])
+        ]));
+
+        $this->apiPost('/v1/user', [
+            'email' => $this->actorAccountCreateData['Email'],
+            'password' => $this->actorAccountCreateData['Password']
+        ]);
+        assertContains('User already exists with email address' . ' ' . $this->actorAccountCreateData['Email'], $this->getResponseAsJson());
+
+    }
+
+    /**
+     * @Given I have asked to create a new account
+     */
+    public function iHaveAskedToCreateANewAccount()
+    {
+        $this->actorAccountCreateData = [
+            'Id'                  => '11',
+            'ActivationToken'     => 'activate1234567890',
+            'ActivationTokenExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
+        ];
+    }
+
+    /**
+     * @Then I am informed about an existing account
+     */
+    public function iAmInformedAboutAnExistingAccount()
+    {
+        assertEquals('activate1234567890', $this->actorAccountCreateData['ActivationToken']);
+    }
+
+    /**
+     * @Then I receive unique instructions on how to activate my account
+     */
+    public function iReceiveUniqueInstructionsOnHowToActivateMyAccount()
+    {
+        // Not used in this context
+    }
+
+    /**
+     * @When I follow the instructions on how to activate my account
+     */
+    public function iFollowTheInstructionsOnHowToActivateMyAccount()
+    {
+
+        // ActorUsers::activate
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'     => $this->actorAccountCreateData['Id']
+                ])
+            ]
+        ]));
+
+        // ActorUsers::activate
+        $this->awsFixtures->append(new Result([]));
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id' => $this->actorAccountCreateData['Id']
+            ])
+        ]));
+
+        $this->apiPatch('/v1/user-activation', ['activation_token' => $this->actorAccountCreateData['ActivationToken']]);
+
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+        assertEquals($this->actorAccountCreateData['Id'], $response['Id']);
+    }
+
+    /**
+     * @When I follow my instructions on how to activate my account after 24 hours
+     */
+    public function iFollowMyInstructionsOnHowToActivateMyAccountAfter24Hours()
+    {
+        // ActorUsers::activate
+        $this->awsFixtures->append(new Result(
+            [
+                'Items' => []
+            ]));
+
+        // ActorUsers::activate
+        $this->awsFixtures->append(new Result([]));
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id' => '1'
+            ])
+        ]));
+
+        $this->apiPatch('/v1/user-activation', ['activation_token' => $this->actorAccountCreateData['ActivationToken']]);
+
+        $response = $this->getResponseAsJson();
+        assertContains("User not found for token", $response);
+    }
+
+    /**
+     * @Then I am told my unique instructions to activate my account have expired
+     */
+    public function iAmToldMyUniqueInstructionsToActivateMyAccountHaveExpired()
+    {
+        // Not used in this context
+    }
+
+    /**
+     * @Then my account is activated
+     */
+    public function myAccountIsActivated()
+    {
+        //Not needed in this context
     }
 
     /**
