@@ -50,7 +50,7 @@ class ViewerCodes implements ViewerCodesInterface
             ],
         ]);
 
-        $codeData = $this->getData($result, ['Added','Expires']);
+        $codeData = $this->getData($result, ['Added','Expires','Cancelled']);
 
         return !empty($codeData) ? $codeData : null;
     }
@@ -111,6 +111,28 @@ class ViewerCodes implements ViewerCodesInterface
             }
             throw $e;
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function cancel(string $code, DateTime $cancelledDate)
+    {
+
+        $this->client->updateItem([
+            'TableName' => $this->viewerCodesTable,
+            'Key' => [
+                'ViewerCode' => [
+                    'S' => $code,
+                ],
+            ],
+            'UpdateExpression' => 'SET Cancelled=:c',
+            'ExpressionAttributeValues'=> [
+                ':c' => [
+                    'S' => $cancelledDate->format('c')
+                ]
+            ]
+        ]);
     }
 }
 

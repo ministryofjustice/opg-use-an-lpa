@@ -30,6 +30,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('days_remaining_to_expiry', [$this, 'daysRemaining']),
             new TwigFunction('check_if_code_has_expired', [$this, 'hasCodeExpired']),
             new TwigFunction('add_hyphen_to_viewer_code', [$this, 'formatViewerCode']),
+            new TwigFunction('check_if_code_is_cancelled', [$this, 'isCodeCancelled']),
         ];
     }
 
@@ -143,6 +144,23 @@ class LpaExtension extends AbstractExtension
         }
 
         return $difference;
+    }
+
+    /**
+     * Checks whether the code has been cancelled
+     *
+     * @param string|null $expiryDate
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function isCodeCancelled(?array $code) : ?bool
+    {
+        if (array_key_exists("Cancelled",$code))
+        {
+            return $cancelledStatus = true;
+        }
+
+        return null;
     }
 
     /**

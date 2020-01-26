@@ -10,8 +10,6 @@
         </dt>
         <dd class="govuk-summary-list__value govuk-!-padding-top-4 govuk-!-padding-bottom-4 govuk-!-margin-bottom-0">
             <p class="govuk-!-margin-top-0">
-                {#SSSSSSMMMMMM#}
-                {{ actorToken }}
                 <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">Give an organisation access</a><br>
                 <a href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}">Check access codes</a><br>
                 <a href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">View LPA summary</a>

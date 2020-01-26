@@ -60,63 +60,28 @@ class CancelCodeHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $orgToCancel = $request->getQueryParams()['organisation'];
+       // $orgToCancel = $request->getQueryParams()['organisation'];
+        $orgCode = $request->getQueryParams()['code'];
         $actorLpaToken = $request->getQueryParams()['lpa'];
-
-        // var_dump($actorLpaToken);
-        // var_dump($identity);
 
         if (is_null($actorLpaToken)) {
             throw new InvalidRequestException('No actor-lpa token specified');
         }
-        if (is_null($orgToCancel)) {
-            throw new InvalidRequestException('No organisation specified to cancel');
-        }
 
         $user = $this->getUser($request);
         $identity = (!is_null($user)) ? $user->getIdentity() : null;
-
         $lpa = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
         $codeData = $this->viewerCodeService->cancelShareCode(
             $identity,
             $actorLpaToken,
-            $orgToCancel
+            $orgCode
         );
 
-        $shareCodes = $this->viewerCodeService->getShareCodes(
-            $identity,
-            $actorLpaToken,
-            false
-        );
+        //catch exception if needed
 
-        foreach ($shareCodes as $key => $code) {
+        //redirect to access code
+        return new RedirectResponse($this->urlHelper->generate('lpa.access-codes',[],['lpa' => $actorLpaToken]));
 
-            if ($lpa->getDonor()->getId() == $code['ActorId']) {
-                $shareCodes[$key]['CreatedBy'] = $lpa->getDonor()->getFirstname();
-            }
-
-            foreach ($lpa->getAttorneys() as $attorney) {
-                if ($attorney->getId() == $code['ActorId']) {
-                    $shareCodes[$key]['CreatedBy'] = $attorney->getFirstname() . ' ' . $attorney->getSurname();
-                }
-            }
-        }
-      //  var_dump($shareCodes);
-     //   var_dump("=============");
-     //   var_dump($actorLpaToken);
-      //  var_dump($user);
-      //  var_dump($lpa);
-      // die;
-
-//
-
-        return new HtmlResponse($this->renderer->render('actor::check-access-codes', [
-        //return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
-            'actorToken' => $actorLpaToken,
-            'user' => $user,
-            'lpa' => $lpa,
-            'shareCodes' => $shareCodes,
-        ]));
     }
 }

@@ -90,6 +90,29 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
             }
 
             return new JsonResponse($result);
+        }
+        else if ($request->getMethod() === 'PUT') {
+
+            $data = $request->getParsedBody();
+
+            if (!isset($data['code'])) {
+                throw new RuntimeException("share code is missing.");
+            }
+
+            $code = trim($data['code']);
+
+            $result = $this->viewerCodeService->cancelCode(
+                $request->getAttribute('user-lpa-actor-token'),
+                $request->getAttribute('actor-id'),
+                $code
+            );
+
+            if (is_null($result)) {
+                throw new NotFoundException();
+            }
+
+            return new JsonResponse($result);
+
 
         } else {
 

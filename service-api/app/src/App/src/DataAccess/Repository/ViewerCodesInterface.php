@@ -39,4 +39,13 @@ interface ViewerCodesInterface
      * @return mixed
      */
     public function add(string $code, string $userLpaActorToken, string $siriusUid, DateTime $expires, string $organisation);
+
+    /**
+     * Cancels a code in the database.
+     *
+     * @param string $code
+     * @param DateTime $cancelledDate
+     * @throws NotFoundException
+     */
+    public function cancel(string $code, DateTime $cancelledDate);
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\Lpa;
 
 use ArrayObject;
+use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use DateTime;
 
@@ -47,36 +48,31 @@ class ViewerCodeService {
         return $lpaData;
     }
 
-    //SSSSSMMMMM -UML267
     /**
      * Cancels a viewer/share code for the given lpa
      *
      * @param string $userToken
      * @param string $lpaId
-     * @param string $organisation
-     * @return ArrayObject|null
+     * @param string $shareCode
+     * @return void
+     * @throws ApiException
      */
-    public function cancelShareCode(string $userToken, string $lpaId, string $organisation): ?ArrayObject
+    public function cancelShareCode(string $userToken, string $lpaId, string $shareCode): void
     {
-//        var_dump("i am in Front->service->ViewerCodeService.....");
-//        var_dump($userToken);
-//        var_dump($lpaId);
-//        var_dump($organisation);
-//        die;
-
         $this->apiClient->setUserTokenHeader($userToken);
 
-        $lpaData = $this->apiClient->httpPost('/v1/lpas/' . $lpaId . '/codes', [
-            'organisation' => $organisation
+        $result = $this->apiClient->httpPut('/v1/lpas/' . $lpaId . '/codes', [
+             'code' => $shareCode
         ]);
 
-        if (is_array($lpaData)) {
-            $lpaData = new ArrayObject($lpaData, ArrayObject::ARRAY_AS_PROPS);
-        }
 
-        return $lpaData;
+
+//        if (is_array($result)) {
+//            $lpaData = $this->parseLpaData($lpaData);
+//        }
+
+        //return $result;
     }
-    //SSSSSMMMMM -UML267
 
     /**
      * Gets a list of viewer codes for a given lpa
@@ -113,7 +109,7 @@ class ViewerCodeService {
             foreach ($shareCodes as $codeKey => $code) {
 
                 //if the code has not expired
-                if (new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23,59,59)) {
+                if (new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23,59,59) &&  !(array_key_exists("Cancelled",$code))) {
                     $counter += 1;
                 }
             }

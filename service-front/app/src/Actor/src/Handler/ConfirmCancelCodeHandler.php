@@ -62,6 +62,8 @@ class ConfirmCancelCodeHandler extends AbstractHandler implements UserAware
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $orgToCancel = $request->getQueryParams()['organisation'];
+        $orgCode = $request->getQueryParams()['code'];
+
         $actorLpaToken = $request->getQueryParams()['lpa'];
 
         if (is_null($actorLpaToken)) {
@@ -78,10 +80,11 @@ class ConfirmCancelCodeHandler extends AbstractHandler implements UserAware
         $lpa = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
         return new HtmlResponse($this->renderer->render('actor::confirm-cancel-code', [
-            'actorToken' => $actorLpaToken,
-            'user' => $user,
-            'lpa' => $lpa,
-            'org' => $orgToCancel,
+            'actorToken'    => $actorLpaToken,
+            'user'          => $user,
+            'lpa'           => $lpa,
+            'org'           => $orgToCancel,
+            'orgCode'       => $orgCode,
         ]));
     }
 }

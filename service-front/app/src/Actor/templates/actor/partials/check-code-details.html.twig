@@ -37,18 +37,19 @@
                 {% else %}
                     <dt class="govuk-summary-list__key">Expired</dt>
                     <dd class="govuk-summary-list__value">{{ code_date(code.Expires) }}</dd>
-                    {#{% else %}#}
-                    {#<dt class="govuk-summary-list__key">Cancelled</dt>#}
-                    {#<dd class="govuk-summary-list__value">{{ code_date(code.Cancelled) }}</dd> #}
                 {% endif %}
             </div>
             <div>
                 {% if not check_if_code_has_expired(code.Expires) %}
+                    {% if not check_if_code_is_cancelled(code) %}
                     {#SSSMMMMMM#}
-                    {{ code.Organisation }}
-                    <a href="{{ path('lpa.confirm-cancel-code', {}, {'lpa': actorToken , 'organisation': code.Organisation}) }}" role="button" draggable="false" class="govuk-button govuk-button--warning">
-                        Cancel organisation's access
-                    </a>
+
+                        {#TODOsingle form with just button - post#}
+                        <a href="{{ path('lpa.confirm-cancel-code', {}, {'lpa': actorToken , 'organisation': code.Organisation, 'code' : code.ViewerCode}) }}" role="button" draggable="false" class="govuk-button govuk-button--warning">
+                         Cancel organisation's access
+                        </a>
+
+                    {% endif %}
                 {% endif %}
             </div>
 
@@ -61,15 +62,14 @@
                 </div>
             {% endif %}
 
-            {#Add code to include cancelled codes#}
-            {#{% if check_if_code_has_expired(code.Cancelled) %}#}
-            {#<div class="govuk-summary-list__row">#}
-            {#<dt class="govuk-summary-list__key">Status</dt>#}
-            {#<dd class="govuk-summary-list__value">#}
-            {#<span class="moj-badge moj-badge--red">CANCELLED</span>#}
-            {#</dd>#}
-            {#</div>#}
-            {#{% endif %}#}
+            {% if check_if_code_is_cancelled(code) %}
+            <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Status</dt>
+            <dd class="govuk-summary-list__value">
+            <span class="moj-badge moj-badge--red">CANCELLED</span>
+            </dd>
+            </div>
+            {% endif %}
 
         </dl>
     </div>
