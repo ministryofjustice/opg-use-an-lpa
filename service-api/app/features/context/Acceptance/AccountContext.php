@@ -40,7 +40,7 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '/../../../../../../opg-use-an-lpa/service-front/app/test/CommonTest/Service/Lpa/fixtures/full_example.json'));
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '/../../../../../service-front/app/test/CommonTest/Service/Lpa/fixtures/full_example.json'));
 
         $this->passcode = 'XYUPHWQRECHV';
         $this->referenceNo = '700000000054';
@@ -328,10 +328,10 @@ class AccountContext extends BaseAcceptanceContext
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
                 'SiriusUid' => $this->referenceNo,
-                'Active'    => true,
-                'Expires'   => '2021-09-25T00:00:00Z',
+                'Active' => true,
+                'Expires' => '2021-09-25T00:00:00Z',
                 'ActorCode' => $this->passcode,
-                'ActorLpaId'=> $this->actorId,
+                'ActorLpaId' => $this->actorId,
             ])
         ]));
 
@@ -340,8 +340,8 @@ class AccountContext extends BaseAcceptanceContext
 
         $this->apiPost('/v1/actor-codes/summary', [
             'actor-code' => $this->passcode,
-            'uid'        => $this->referenceNo,
-            'dob'        => $this->userDob
+            'uid' => $this->referenceNo,
+            'dob' => $this->userDob
         ], [
             'user-token' => $this->userId
         ]);
@@ -350,7 +350,9 @@ class AccountContext extends BaseAcceptanceContext
 
         $response = $this->getResponseAsJson();
         assertEquals($this->referenceNo, $response['lpa']['uId']);
+    }
 
+    /**
      * @Given I am not a user of the lpa application
      */
     public function iAmNotaUserOftheLpaApplication()
@@ -397,7 +399,7 @@ class AccountContext extends BaseAcceptanceContext
         $this->apiPost('/v1/user', [
             'email' => $this->actorAccountCreateData['Email'],
             'password' => $this->actorAccountCreateData['Password']
-        ]);
+        ], []);
         assertEquals($this->actorAccountCreateData['Email'], $this->getResponseAsJson()['Email']);
 
     }
@@ -546,7 +548,7 @@ class AccountContext extends BaseAcceptanceContext
         assertEmpty($response);
     }
       
-    /*
+    /**
      * @When I create an account using duplicate details
      */
     public function iCreateAnAccountUsingDuplicateDetails()
@@ -583,7 +585,7 @@ class AccountContext extends BaseAcceptanceContext
         $this->apiPost('/v1/user', [
             'email' => $this->actorAccountCreateData['Email'],
             'password' => $this->actorAccountCreateData['Password']
-        ]);
+        ], []);
         assertContains('User already exists with email address' . ' ' . $this->actorAccountCreateData['Email'], $this->getResponseAsJson());
 
     }
@@ -641,7 +643,7 @@ class AccountContext extends BaseAcceptanceContext
             ])
         ]));
 
-        $this->apiPatch('/v1/user-activation', ['activation_token' => $this->actorAccountCreateData['ActivationToken']]);
+        $this->apiPatch('/v1/user-activation', ['activation_token' => $this->actorAccountCreateData['ActivationToken']], []);
 
         $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
@@ -670,7 +672,7 @@ class AccountContext extends BaseAcceptanceContext
             ])
         ]));
 
-        $this->apiPatch('/v1/user-activation', ['activation_token' => $this->actorAccountCreateData['ActivationToken']]);
+        $this->apiPatch('/v1/user-activation', ['activation_token' => $this->actorAccountCreateData['ActivationToken']], []);
 
         $response = $this->getResponseAsJson();
         assertContains("User not found for token", $response);
