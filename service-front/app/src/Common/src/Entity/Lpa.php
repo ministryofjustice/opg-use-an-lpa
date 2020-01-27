@@ -53,7 +53,7 @@ class Lpa
     /** @var DateTime|null */
     protected $lpaDonorSignatureDate = null;
 
-    /** @var bool|null */
+    /** @var string|null */
     protected $lifeSustainingTreatment = null;
 
     /** @var string|null */
@@ -227,12 +227,12 @@ class Lpa
         $this->lpaDonorSignatureDate = $lpaDonorSignatureDate;
     }
 
-    public function getLifeSustainingTreatment() : ?bool
+    public function getLifeSustainingTreatment() : ?string
     {
         return $this->lifeSustainingTreatment;
     }
 
-    public function setLifeSustainingTreatment(?bool $lifeSustainingTreatment) : void
+    public function setLifeSustainingTreatment(?string $lifeSustainingTreatment) : void
     {
         $this->lifeSustainingTreatment = $lifeSustainingTreatment;
     }
