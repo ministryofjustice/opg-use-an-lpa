@@ -12,18 +12,23 @@ use Psr\Http\Client\ClientInterface;
 
 class EmailClientFactoryTest extends TestCase
 {
-    public function testInvoke()
+    /**
+     * @test
+     */
+    public function can_create_an_instance_of_the_email_client()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
         $containerProphecy->get('config')
-            ->willReturn([
-                'notify' => [
-                    'api' => [
-                        'key' => 'notreal_key_testingtestin-12345678-1234-4321-abcd-123456789012-12345678-1234-4321-abcd-123456789012'
+            ->willReturn(
+                [
+                    'notify' => [
+                        'api' => [
+                            'key' => 'notreal_key_testingtestin-12345678-1234-4321-abcd-123456789012-12345678-1234-4321-abcd-123456789012',
+                        ],
                     ],
-                ],
-            ]);
+                ]
+            );
 
         $httpClientPropercy = $this->prophesize(ClientInterface::class);
 
@@ -37,19 +42,18 @@ class EmailClientFactoryTest extends TestCase
         $this->assertInstanceOf(EmailClient::class, $emailClient);
     }
 
-    public function testMissingConfig()
+    /**
+     * @test
+     */
+    public function throws_exception_when_missing_configuration()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Missing notify API key');
-
-        $containerProphecy
-            ->get('config')
-            ->willReturn([]);
+        $containerProphecy->get('config')->willReturn([]);
 
         $factory = new EmailClientFactory();
 
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Missing notify API key');
         $emailClient = $factory($containerProphecy->reveal());
     }
 }

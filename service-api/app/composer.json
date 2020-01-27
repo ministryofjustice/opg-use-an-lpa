@@ -51,7 +51,7 @@
     },
     "require-dev": {
         "behat/behat": "^3.5",
-        "cooperaj/behat-psr-extension": "v2.0",
+        "cooperaj/behat-psr-extension": "^v2.0",
         "filp/whoops": "^2.1.12",
         "jshayes/fake-requests": "^2.3",
         "phpunit/phpunit": "^7.0.1",
