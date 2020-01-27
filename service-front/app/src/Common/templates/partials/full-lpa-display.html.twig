@@ -120,13 +120,13 @@
                     <dt class="govuk-summary-list__key">How decisions are made</dt>
                     <dd class="govuk-summary-list__value">
                         {% if lpa.caseAttorneySingular %}
-                            The attorneys may act individually
+                            Decisions are made by one attorney
                         {% elseif lpa.caseAttorneyJointly %}
-                            The attorneys must act jointly
+                            Attorneys must make decisions jointly (together)
                         {% elseif lpa.caseAttorneyJointlyAndSeverally %}
-                            The attorneys must act jointly and severally
+                            Attorneys can make decisions jointly (together) and severally (separately)
                         {% elseif lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
-                            The attorneys must act jointly for some decisions, and jointly and severally for other decisions
+                            Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper LPA to find out what decisions must be made jointly.
                         {% endif %}
                     </dd>
                 </dl>
