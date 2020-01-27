@@ -81,7 +81,7 @@
     "autoload-dev": {
         "psr-4": {
             "ActorTest\\": "test/ActorTest/",
-            "CommonTest\\": "test/Common/Test/",
+            "CommonTest\\": "test/CommonTest/",
             "ViewerTest\\": "test/ViewerTest/",
             "BehatTest\\": "test/BehatTest/",
             "BehatTest\\Context\\": "features/context/"

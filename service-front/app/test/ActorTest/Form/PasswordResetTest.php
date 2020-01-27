@@ -7,6 +7,7 @@ namespace ActorTest\Form;
 use Actor\Form\PasswordReset;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
+use CommonTest\Form\{TestsZendForm, ZendFormTests};
 use PHPUnit\Framework\TestCase;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Form\Element\Password;
