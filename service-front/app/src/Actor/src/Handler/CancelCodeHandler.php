@@ -16,6 +16,7 @@ use Zend\Diactoros\Response\HtmlResponse;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\ViewerCodeService;
+use Zend\Diactoros\Response\RedirectResponse;
 
 
 /**
@@ -60,7 +61,6 @@ class CancelCodeHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-       // $orgToCancel = $request->getQueryParams()['organisation'];
         $orgCode = $request->getQueryParams()['code'];
         $actorLpaToken = $request->getQueryParams()['lpa'];
 
@@ -72,16 +72,14 @@ class CancelCodeHandler extends AbstractHandler implements UserAware
         $identity = (!is_null($user)) ? $user->getIdentity() : null;
         $lpa = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
-        $codeData = $this->viewerCodeService->cancelShareCode(
+        $this->viewerCodeService->cancelShareCode(
             $identity,
             $actorLpaToken,
             $orgCode
         );
 
-        //catch exception if needed
-
         //redirect to access code
-        return new RedirectResponse($this->urlHelper->generate('lpa.access-codes',[],['lpa' => $actorLpaToken]));
+       return new RedirectResponse($this->urlHelper->generate('lpa.access-codes',[],['lpa' => $actorLpaToken]));
 
     }
 }

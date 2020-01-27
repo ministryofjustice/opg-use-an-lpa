@@ -61,17 +61,9 @@ class ViewerCodeService {
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
-        $result = $this->apiClient->httpPut('/v1/lpas/' . $lpaId . '/codes', [
+        $this->apiClient->httpPut('/v1/lpas/' . $lpaId . '/codes', [
              'code' => $shareCode
         ]);
-
-
-
-//        if (is_array($result)) {
-//            $lpaData = $this->parseLpaData($lpaData);
-//        }
-
-        //return $result;
     }
 
     /**

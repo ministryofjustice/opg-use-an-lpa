@@ -45,7 +45,7 @@ interface ViewerCodesInterface
      *
      * @param string $code
      * @param DateTime $cancelledDate
-     * @throws NotFoundException
+     * @return bool The code cancellation was successful or not
      */
-    public function cancel(string $code, DateTime $cancelledDate);
+    public function cancel(string $code, DateTime $cancelledDate): bool;
 }

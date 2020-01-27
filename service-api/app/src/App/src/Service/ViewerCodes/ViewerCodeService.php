@@ -107,6 +107,15 @@ class ViewerCodeService
         return $accessCodes;
     }
 
+
+    /**
+     * Cancels a access code initiated by the actor
+     *
+     * @param string $userLpaActorToken
+     * @param string $userId
+     * @param string $code
+     * @throws Exception
+     */
     public function cancelCode(string $userLpaActorToken, string $userId, string $code): void
     {
         $map = $this->userLpaActorMapRepository->get($userLpaActorToken);

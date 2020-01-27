@@ -116,9 +116,9 @@ class ViewerCodes implements ViewerCodesInterface
     /**
      * @inheritDoc
      */
-    public function cancel(string $code, DateTime $cancelledDate)
+    public function cancel(string $code, DateTime $cancelledDate): bool
     {
-
+        //  Update the item by cancelling the code and setting cancelled date
         $this->client->updateItem([
             'TableName' => $this->viewerCodesTable,
             'Key' => [
@@ -133,6 +133,8 @@ class ViewerCodes implements ViewerCodesInterface
                 ]
             ]
         ]);
+
+        return true;
     }
 }
 

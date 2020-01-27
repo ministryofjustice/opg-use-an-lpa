@@ -93,6 +93,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         }
         else if ($request->getMethod() === 'PUT') {
 
+
             $data = $request->getParsedBody();
 
             if (!isset($data['code'])) {
@@ -101,17 +102,13 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
 
             $code = trim($data['code']);
 
-            $result = $this->viewerCodeService->cancelCode(
+            $this->viewerCodeService->cancelCode(
                 $request->getAttribute('user-lpa-actor-token'),
                 $request->getAttribute('actor-id'),
                 $code
             );
 
-            if (is_null($result)) {
-                throw new NotFoundException();
-            }
-
-            return new JsonResponse($result);
+            return new JsonResponse([]);
 
 
         } else {
