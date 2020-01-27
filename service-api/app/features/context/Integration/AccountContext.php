@@ -14,6 +14,7 @@ use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\SetupEnv;
+use App\Service\Lpa\LpaService;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use JSHayes\FakeRequests\MockHandler;
@@ -71,6 +72,7 @@ class AccountContext implements Context, Psr11AwareContext
         $this->referenceNo = '700000000054';
         $this->userDob = '1975-10-05';
         $this->actorLpaId = 0;
+        $this->userId = '9999999999';
     }
 
     /**
@@ -358,7 +360,6 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function myLPAIsSuccessfullyAdded()
     {
-        $this->userId = 'abc123';
         $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
 
         // ActorCodes::get
@@ -444,6 +445,45 @@ class AccountContext implements Context, Psr11AwareContext
     public function iRequestToGoBackAndTryAgain()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @When /^I fill in the form and click the cancel button$/
+     */
+    public function iFillInTheFormAndClickTheCancelButton()
+    {
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(new Result([]));
+
+        // API call for finding all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+    }
+
+    /**
+     * @Then /^I am taken back to the dashboard page$/
+     */
+    public function iAmTakenBackToTheDashboardPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^The LPA has not been added$/
+     */
+    public function theLPAHasNotBeenAdded()
+    {
+        $lpaService = $this->container->get(LpaService::class);
+
+        $lpas = $lpaService->getAllForUser($this->userId);
+
+        assertEmpty($lpas);
     }
 
 

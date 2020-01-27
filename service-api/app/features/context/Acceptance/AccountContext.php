@@ -456,6 +456,49 @@ class AccountContext extends BaseAcceptanceContext
     }
 
     /**
+     * @When /^I fill in the form and click the cancel button$/
+     */
+    public function iFillInTheFormAndClickTheCancelButton()
+    {
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(new Result([]));
+
+        // API call for finding all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $this->apiGet('/v1/lpas', [
+            'user-token' => $this->userId
+        ]);
+    }
+
+    /**
+     * @Then /^I am taken back to the dashboard page$/
+     */
+    public function iAmTakenBackToTheDashboardPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^The LPA has not been added$/
+     */
+    public function theLPAHasNotBeenAdded()
+    {
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        assertEmpty($response);
+    }
+
+    /**
      * Convert a key/value array to a correctly marshaled AwsResult structure.
      *
      * AwsResult data is in a special array format that tells you

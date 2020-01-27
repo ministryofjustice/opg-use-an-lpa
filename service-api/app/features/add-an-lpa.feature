@@ -22,3 +22,10 @@ Feature: Add an LPA
     When I request to add an LPA that does not exist
     Then The LPA is not found
     And I request to go back and try again
+
+  @integration @acceptance
+  Scenario: The user can cancel adding their LPA
+    Given I am on the add an LPA page
+    When I fill in the form and click the cancel button
+    Then I am taken back to the dashboard page
+    And The LPA has not been added

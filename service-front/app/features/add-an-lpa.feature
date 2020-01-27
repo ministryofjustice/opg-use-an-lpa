@@ -23,6 +23,13 @@ Feature: Add an LPA
     Then The LPA is not found
     And I request to go back and try again
 
+  @integration @ui
+  Scenario: The user can cancel adding their LPA
+    Given I am on the add an LPA page
+    When I fill in the form and click the cancel button
+    Then I am taken back to the dashboard page
+    And The LPA has not been added
+
   @ui
   Scenario Outline: The user cannot add an LPA with an invalid passcode
     Given I am on the add an LPA page
@@ -52,5 +59,18 @@ Feature: Add an LPA
       | 7000-0000-00011 | The LPA reference number must be 12 numbers long |
       | 70000000000 | The LPA reference number must be 12 numbers long |
       |  | Enter a reference number |
+
+  @ui
+  Scenario Outline: The user cannot add an LPA with an invalid DOB
+    Given I am on the add an LPA page
+    When I request to add an LPA with an invalid DOB format of "<day>" "<month>" "<year>"
+    Then I am told that my input is invalid and needs to be <reason>
+
+    Examples:
+      | day | month | year | reason |
+      | 32 | 05 | 1975 | Enter a real date of birth |
+      | 10 | 13 | 1975 | Enter a real date of birth |
+      | XZ | 10 | 1975 | Enter a real date of birth |
+      | 10 | 05 | 3000 | Your date of birth must be in the past |
 
 

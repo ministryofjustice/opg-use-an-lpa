@@ -508,5 +508,59 @@ class AccountContext extends BaseUIContext
         $this->ui->pressButton('Continue');
     }
 
+    /**
+     * @When /^I request to add an LPA with an invalid DOB format of "([^"]*)" "([^"]*)" "([^"]*)"$/
+     */
+    public function iRequestToAddAnLPAWithAnInvalidDOBFormatOf1($day, $month, $year)
+    {
+        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->fillField('passcode', 'T3STPA22C0D3');
+        $this->ui->fillField('reference_number', '700000000001');
+        $this->ui->fillField('dob[day]', $day);
+        $this->ui->fillField('dob[month]', $month);
+        $this->ui->fillField('dob[year]', $year);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I fill in the form and click the cancel button$/
+     */
+    public function iFillInTheFormAndClickTheCancelButton()
+    {
+        // API call for finding all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->fillField('passcode', 'T3STPA22C0D3');
+        $this->ui->fillField('reference_number', '700000000001');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->clickLink('Cancel');
+    }
+
+    /**
+     * @Then /^I am taken back to the dashboard page$/
+     */
+    public function iAmTakenBackToTheDashboardPage()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    /**
+     * @Given /^The LPA has not been added$/
+     */
+    public function theLPAHasNotBeenAdded()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageContainsText('Add your first LPA');
+    }
 
 }
