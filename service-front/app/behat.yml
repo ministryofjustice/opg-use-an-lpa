@@ -16,6 +16,7 @@ integration:
     actor:
       contexts:
         - BehatTest\Context\Integration\AccountContext
+        - BehatTest\Context\Integration\ViewerContext
       filters:
         tags: "@integration"
 
@@ -23,6 +24,13 @@ acceptance:
   suites:
     actor:
       contexts:
+        - Behat\MinkExtension\Context\MinkContext
         - BehatTest\Context\UI\AccountContext
       filters:
-        tags: "@ui"
+        tags: "@actor&&@ui"
+    viewer:
+      contexts:
+        - Behat\MinkExtension\Context\MinkContext
+        - BehatTest\Context\UI\ViewerContext
+      filters:
+        tags: "@viewer&&@ui"

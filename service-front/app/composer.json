@@ -29,7 +29,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url":  "git@github.com:taylorsj1980/notifications-php-client.git"
+            "url": "git@github.com:ministryofjustice/notifications-php-client.git"
         },
         {
             "type": "vcs",
@@ -43,7 +43,7 @@
         "elie29/zend-phpdi-config": "^3.0",
         "paragonie/halite": "^4.5",
         "php-http/guzzle6-adapter": "^2.0",
-        "taylorsj1980/notifications-php-client": "^2.0",
+        "alphagov/notifications-php-client": "^2.0",
         "zendframework/zend-component-installer": "^2.1.1",
         "zendframework/zend-config-aggregator": "^1.0",
         "zendframework/zend-crypt": "^3.3",
@@ -61,10 +61,11 @@
     },
     "require-dev": {
         "behat/behat": "^3.5",
-        "cooperaj/behat-psr-extension": "^1.0",
+        "cooperaj/behat-psr-extension": "^2.0",
         "filp/whoops": "^2.1.12",
         "jshayes/fake-requests": "^2.3",
-        "phpunit/phpunit": "^7.0.1",
+        "mikey179/vfsstream": "^1.6",
+        "phpunit/phpunit": "^7.0",
         "roave/security-advisories": "dev-master",
         "squizlabs/php_codesniffer": "^2.9.1",
         "zendframework/zend-expressive-tooling": "^1.0",
@@ -80,7 +81,7 @@
     "autoload-dev": {
         "psr-4": {
             "ActorTest\\": "test/ActorTest/",
-            "CommonTest\\": "test/Common/Test/",
+            "CommonTest\\": "test/CommonTest/",
             "ViewerTest\\": "test/ViewerTest/",
             "BehatTest\\": "test/BehatTest/",
             "BehatTest\\Context\\": "features/context/"

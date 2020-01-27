@@ -7,6 +7,7 @@ namespace BehatTest\Context\Integration;
 use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
+use BehatTest\Context\ActorContextTrait as ActorContext;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
@@ -24,9 +25,15 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  *
  * @property string email
  * @property string resetToken
+ * @property string activationToken
+ * @property string password
+ * @property string userEmail
+ * @property string userPasswordResetToken
  */
 class AccountContext implements Context, Psr11AwareContext
 {
+    use ActorContext;
+
     /** @var ContainerInterface */
     private $container;
 
@@ -53,7 +60,7 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iAmAUserOfTheLpaApplication()
     {
-        $this->email = "test@example.com";
+        $this->userEmail = "test@example.com";
     }
 
     /**
@@ -69,7 +76,7 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iAskForMyPasswordToBeReset()
     {
-        $this->resetToken = '1234567890';
+        $this->userPasswordResetToken = '1234567890';
 
         // API call for password reset request
         $this->apiFixtures->patch('/v1/request-password-reset')
@@ -77,14 +84,14 @@ class AccountContext implements Context, Psr11AwareContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([ 'PasswordResetToken' => $this->resetToken ])
+                    json_encode([ 'PasswordResetToken' => $this->userPasswordResetToken ])
                 )
             );
 
-        $token = $this->userService->requestPasswordReset($this->email);
+        $token = $this->userService->requestPasswordReset($this->userEmail);
 
         assertInternalType('string', $token);
-        assertEquals($this->resetToken, $token);
+        assertEquals($this->userPasswordResetToken, $token);
     }
 
     /**
@@ -92,23 +99,23 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iReceiveUniqueInstructionsOnHowToResetMyPassword()
     {
-        $expectedUrl = 'http://localhost/forgot-password/' . $this->resetToken;
+        $expectedUrl = 'http://localhost/forgot-password/' . $this->userPasswordResetToken;
         $expectedTemplateId = 'd32af4a6-49ad-4338-a2c2-dcb5801a40fc';
 
         // API call for Notify
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(function (RequestInterface $request, array $options)
-                    use ($expectedUrl, $expectedTemplateId) {
+            use ($expectedUrl, $expectedTemplateId) {
                 $requestBody = $request->getBody()->getContents();
 
-                assertContains($this->resetToken, $requestBody);
+                assertContains($this->userPasswordResetToken, $requestBody);
                 assertContains(json_encode($expectedUrl), $requestBody);
                 assertContains($expectedTemplateId, $requestBody);
             });
 
 
-        $this->emailClient->sendPasswordResetEmail($this->email, $expectedUrl);
+        $this->emailClient->sendPasswordResetEmail($this->userEmail, $expectedUrl);
     }
 
     /**
@@ -116,7 +123,7 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iHaveAskedForMyPasswordToBeReset()
     {
-        $this->resetToken = '1234567890';
+        $this->userPasswordResetToken = '1234567890';
     }
 
     /**
@@ -128,10 +135,10 @@ class AccountContext implements Context, Psr11AwareContext
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])))
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $query = $request->getUri()->getQuery();
-                assertContains($this->resetToken, $query);
+                assertContains($this->userPasswordResetToken, $query);
             });
 
-        $canReset = $this->userService->canPasswordReset($this->resetToken);
+        $canReset = $this->userService->canPasswordReset($this->userPasswordResetToken);
         assertTrue($canReset);
     }
 
@@ -144,10 +151,10 @@ class AccountContext implements Context, Psr11AwareContext
             ->respondWith(new Response(StatusCodeInterface::STATUS_GONE))
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $query = $request->getUri()->getQuery();
-                assertContains($this->resetToken, $query);
+                assertContains($this->userPasswordResetToken, $query);
             });
 
-        $canReset = $this->userService->canPasswordReset($this->resetToken);
+        $canReset = $this->userService->canPasswordReset($this->userPasswordResetToken);
         assertFalse($canReset);
     }
 
@@ -165,11 +172,11 @@ class AccountContext implements Context, Psr11AwareContext
                 $params = json_decode($request->getBody()->getContents(), true);
 
                 assertInternalType('array', $params);
-                assertEquals($this->resetToken, $params['token']);
+                assertEquals($this->userPasswordResetToken, $params['token']);
                 assertEquals($expectedPassword, $params['password']);
             });
 
-        $this->userService->completePasswordReset($this->resetToken, $expectedPassword);
+        $this->userService->completePasswordReset($this->userPasswordResetToken, $expectedPassword);
     }
 
     /**
@@ -208,6 +215,158 @@ class AccountContext implements Context, Psr11AwareContext
      * @Then /^I am told that my password is invalid because it needs at least (.*)$/
      */
     public function iAmToldThatMyPasswordIsInvalidBecauseItNeedsAtLeast($reason)
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I am not a user of the lpa application$/
+     */
+    public function iAmNotAUserOfTheLpaApplication()
+    {
+        $this->userEmail = " ";
+    }
+
+    /**
+     * @Given /^I want to create a new account$/
+     */
+    public function iWantToCreateANewAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I create an account using duplicate details$/
+     */
+    public function iCreateAnAccountUsingDuplicateDetails()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I create an account$/
+     */
+    public function iCreateAnAccount()
+    {
+        $this->activationToken = 'activate1234567890';
+        $this->password = 'n3wPassWord';
+
+
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([ 'activationToken' => $this->activationToken])
+                )
+            );
+
+        $userData = $this->userService->create($this->userEmail, $this->password);
+
+        assertInternalType('string', $userData['activationToken']);
+        assertEquals($this->activationToken, $userData['activationToken']);
+    }
+
+    /**
+     * @Then /^I receive unique instructions on how to activate my account$/
+     */
+    public function iReceiveUniqueInstructionsOnHowToActivateMyAccount()
+    {
+        $expectedUrl = 'http://localhost/activate-account/' . $this->activationToken;
+        $expectedTemplateId = 'd897fe13-a0c3-4c50-aa5b-3f0efacda5dc';
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(function (RequestInterface $request, array $options)
+            use ($expectedUrl, $expectedTemplateId) {
+                $requestBody = $request->getBody()->getContents();
+
+                assertContains($this->activationToken, $requestBody);
+                assertContains(json_encode($expectedUrl), $requestBody);
+                assertContains($expectedTemplateId, $requestBody);
+            });
+
+        $this->emailClient->sendAccountActivationEmail($this->userEmail, $expectedUrl);
+    }
+
+    /**
+     * @Given I have asked to create a new account
+     */
+    public function iHaveAskedToCreateANewAccount()
+    {
+        $this->activationToken = 'activate1234567890';
+    }
+
+    /**
+     * @When /^I follow the instructions on how to activate my account$/
+     */
+    public function iFollowTheInstructionsOnHowToActivateMyAccount()
+    {
+        $this->apiFixtures->patch('/v1/user-activation')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'activation_token' => $this->activationToken])))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $query = $request->getUri()->getQuery();
+                assertContains($this->activationToken, $query);
+            });
+
+        $canActivate = $this->userService->activate($this->activationToken);
+        assertTrue($canActivate);
+    }
+
+    /**
+     * @Then /^my account is activated$/
+     */
+    public function myAccountIsActivated()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I follow my unique instructions after 24 hours$/
+     */
+    public function iFollowMyUniqueInstructionsAfter24Hours()
+    {
+        $this->apiFixtures->patch('/v1/user-activation')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_GONE))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $query = $request->getUri()->getQuery();
+                assertContains($this->activationTokenToken, $query);
+            });
+
+        $canActivate= $this->userService->activate($this->activationToken);
+        assertFalse($canActivate);
+    }
+
+    /**
+     * @Then /^I am told my unique instructions to activate my account have expired$/
+     */
+    public function iAmToldMyUniqueInstructionsToActivateMyAccountHaveExpired()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I have not provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
+     */
+    public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1,$email2,$password1,$password2,$terms)
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should be told my account could not be created due to (.*)$/
+     */
+    public function iShouldBeToldMyAccountCouldNotBeCreatedDueTo()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^Creating account I provide mismatching (.*) (.*)$/
+     */
+    public function CreatingAccountIProvideMismatching()
     {
         // Not needed for this context
     }

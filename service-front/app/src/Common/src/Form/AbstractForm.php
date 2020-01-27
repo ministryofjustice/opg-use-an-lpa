@@ -70,7 +70,7 @@ abstract class AbstractForm extends Form
      */
     public function getErrorMessages() : array
     {
-        return $this->errorMessages ;
+        return $this->errorMessages;
     }
 
     /**

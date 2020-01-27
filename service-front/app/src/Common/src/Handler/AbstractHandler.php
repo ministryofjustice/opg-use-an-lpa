@@ -7,12 +7,13 @@ namespace Common\Handler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * Class AbstractHandler
+ *
  * @package Common\Handler
  */
 abstract class AbstractHandler implements RequestHandlerInterface
@@ -25,6 +26,7 @@ abstract class AbstractHandler implements RequestHandlerInterface
 
     /**
      * AbstractHandler constructor.
+     *
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      */
@@ -48,11 +50,11 @@ abstract class AbstractHandler implements RequestHandlerInterface
      * @param $route
      * @param array $routeParams
      * @param array $queryParams
-     * @return Response\RedirectResponse
+     * @return RedirectResponse
      */
-    protected function redirectToRoute($route, $routeParams = [], $queryParams = [])
+    protected function redirectToRoute($route, $routeParams = [], $queryParams = []): RedirectResponse
     {
-        return new Response\RedirectResponse(
+        return new RedirectResponse(
             $this->urlHelper->generate($route, $routeParams, $queryParams)
         );
     }
