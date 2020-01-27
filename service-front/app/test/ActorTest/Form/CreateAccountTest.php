@@ -7,11 +7,10 @@ namespace ActorTest\Form;
 use Actor\Form\CreateAccount;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
+use CommonTest\Form\{TestsZendForm, ZendFormTests};
 use PHPUnit\Framework\TestCase;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Form\Element\Checkbox;
-use Zend\Form\Element\Password;
-use Zend\Form\Element\Text;
+use Zend\Form\Element\{Checkbox, Password, Text};
 
 class CreateAccountTest extends TestCase implements TestsZendForm
 {
