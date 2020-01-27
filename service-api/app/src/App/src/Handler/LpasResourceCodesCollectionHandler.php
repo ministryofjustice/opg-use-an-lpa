@@ -48,8 +48,26 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws Exception
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
+    {
+        switch ($request->getMethod()) {
+            case 'POST':
+                return $this->handlePost($request);
+            case 'PUT':
+                return $this->handlePut($request);
+            default:
+                return $this->handleGet($request);
+        }
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     * @throws Exception|BadRequestException|ConflictException|NotFoundException
+     */
+    private function handlePost(ServerRequestInterface $request) : ResponseInterface
     {
         if (is_null($request->getAttribute('actor-id'))) {
             throw new BadRequestException("'user-id' missing.");
@@ -59,80 +77,91 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
             throw new BadRequestException("'user-lpa-actor-token' missing.");
         }
 
-        if ($request->getMethod() === 'POST') {
-
-            $data = $request->getParsedBody();
-
-            if (!isset($data['organisation'])) {
-                throw new RuntimeException("'organisation' is missing.");
-            }
-
-            //---
-
-            // Sense check the passed organisation
-
-            $organisation = trim($data['organisation']);
-
-            if (empty($organisation) || strlen($organisation) > 200) {
-                throw new RuntimeException("'organisation' is malformed.");
-            }
-
-            //---
-
-            $result = $this->viewerCodeService->addCode(
-                $request->getAttribute('user-lpa-actor-token'),
-                $request->getAttribute('actor-id'),
-                $organisation
-            );
-
-            if (is_null($result)) {
-                throw new NotFoundException();
-            }
-
-            return new JsonResponse($result);
+        $data = $request->getParsedBody();
+        if (!isset($data['organisation'])) {
+            throw new RuntimeException("'organisation' is missing.");
         }
-        else if ($request->getMethod() === 'PUT') {
 
+        // Sense check the passed organisation
+        $organisation = trim($data['organisation']);
 
-            $data = $request->getParsedBody();
-
-            if (!isset($data['code'])) {
-                throw new RuntimeException("share code is missing.");
-            }
-
-            $code = trim($data['code']);
-
-            $this->viewerCodeService->cancelCode(
-                $request->getAttribute('user-lpa-actor-token'),
-                $request->getAttribute('actor-id'),
-                $code
-            );
-
-            return new JsonResponse([]);
-
-
-        } else {
-
-            $viewerCodes = $this->viewerCodeService->getCodes(
-                $request->getAttribute('user-lpa-actor-token'),
-                $request->getAttribute('actor-id')
-            );
-
-            if (!empty($viewerCodes)) {
-                $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($viewerCodes);
-
-                $actorId = $this->userLpaActorMap->getUsersLpas($request->getAttribute('actor-id'));
-
-                //adds an actorId for each code in the array
-                foreach ($viewerCodesAndStatuses as $key => $code){
-                    $viewerCodesAndStatuses[$key]['ActorId'] = $actorId[0]['ActorId'];
-                }
-
-                return new JsonResponse($viewerCodesAndStatuses);
-            }
-
-            return new JsonResponse($viewerCodes);
+        if (empty($organisation) || strlen($organisation) > 200) {
+            throw new RuntimeException("'organisation' is malformed.");
         }
+
+        $result = $this->viewerCodeService->addCode(
+            $request->getAttribute('user-lpa-actor-token'),
+            $request->getAttribute('actor-id'),
+            $organisation
+        );
+
+        if (is_null($result)) {
+            throw new NotFoundException();
+        }
+
+        return new JsonResponse($result);
+
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     * @throws BadRequestException|NotFoundException
+     */
+    private function handlePut(ServerRequestInterface $request) : ResponseInterface
+    {
+        $data = $request->getParsedBody();
+
+        if (!isset($data['code'])) {
+            throw new RuntimeException("share code is missing.");
+        }
+
+        $code = trim($data['code']);
+
+        $this->viewerCodeService->cancelCode(
+            $request->getAttribute('user-lpa-actor-token'),
+            $request->getAttribute('actor-id'),
+            $code
+        );
+
+        return new JsonResponse([]);
+
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     * @throws BadRequestException|NotFoundException
+     */
+    private function handleGet(ServerRequestInterface $request) : ResponseInterface
+    {
+        if (is_null($request->getAttribute('actor-id'))) {
+            throw new BadRequestException("'user-id' missing.");
+        }
+
+        if (is_null($request->getAttribute('user-lpa-actor-token'))) {
+            throw new BadRequestException("'user-lpa-actor-token' missing.");
+        }
+
+        $viewerCodes = $this->viewerCodeService->getCodes(
+            $request->getAttribute('user-lpa-actor-token'),
+            $request->getAttribute('actor-id')
+        );
+
+        if (!empty($viewerCodes)) {
+            $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($viewerCodes);
+
+            $actorId = $this->userLpaActorMap->getUsersLpas($request->getAttribute('actor-id'));
+
+            //adds an actorId for each code in the array
+            foreach ($viewerCodesAndStatuses as $key => $code){
+                $viewerCodesAndStatuses[$key]['ActorId'] = $actorId[0]['ActorId'];
+            }
+
+            return new JsonResponse($viewerCodesAndStatuses);
+        }
+
+        return new JsonResponse($viewerCodes);
 
     }
 }
