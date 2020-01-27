@@ -1,0 +1,24 @@
+{% block content %}
+    <div class="govuk-width-container">
+        <main class="govuk-main-wrapper">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <fieldset class="govuk-fieldset">
+                        {#{{ govuk_form_element(form.get('__csrf')) }}#}
+
+                        {#{{ govuk_form_element(form.get('email'), { 'label': 'Email address', 'attr': { 'class': 'govuk-!-width-one-half', 'auto-complete': 'username' } }) }}#}
+
+                        {#{{ govuk_form_element(form.get('password'), { 'label': 'Password', 'attr': { 'class': 'govuk-!-width-one-half', 'auto-complete': 'current-password' } }) }}#}
+
+                        <input type="hidden" id="cancelCode" name="cancelCode" value={{ code.ViewerCode }}>
+                        <button type="submit" class="govuk-button">Cancel organisation's access</button>
+
+                    </fieldset>
+
+                    {{ govuk_form_close() }}
+
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

@@ -48,6 +48,7 @@
                         <a href="{{ path('lpa.confirm-cancel-code', {}, {'lpa': actorToken , 'organisation': code.Organisation, 'code' : code.ViewerCode}) }}" role="button" draggable="false" class="govuk-button govuk-button--warning">
                          Cancel organisation's access
                         </a>
+                        {#{{ include('@actor/partials/cancel-code-option.html.twig') }}#}
 
                     {% endif %}
                 {% endif %}
