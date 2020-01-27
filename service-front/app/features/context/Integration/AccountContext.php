@@ -263,7 +263,7 @@ class AccountContext implements Context, Psr11AwareContext
         // Not needed for this context
     }
 
-    /*
+    /**
      * @Given /^I am not a user of the lpa application$/
      */
     public function iAmNotAUserOfTheLpaApplication()

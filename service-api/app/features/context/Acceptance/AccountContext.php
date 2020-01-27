@@ -40,7 +40,7 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '/../../../../../service-front/app/test/CommonTest/Service/Lpa/fixtures/full_example.json'));
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '/../../../../app/test/BehatTest/Common/Service/Lpa/example_lpa.json'));
 
         $this->passcode = 'XYUPHWQRECHV';
         $this->referenceNo = '700000000054';
