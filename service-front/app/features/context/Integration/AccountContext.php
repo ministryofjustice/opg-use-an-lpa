@@ -31,7 +31,6 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property string password
  * @property string userEmail
  * @property string userPasswordResetToken
- * @property string password
  * @property string lpa
  * @property string passcode
  * @property string referenceNo

@@ -357,7 +357,7 @@ class AccountContext implements Context, Psr11AwareContext
         // Not used in this context
     }
 
-    /*              
+    /**
      * @Given I am not a user of the lpa application
      */
     public function iAmNotaUserOftheLpaApplication()
