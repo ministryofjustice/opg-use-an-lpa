@@ -17,19 +17,142 @@ use Psr\Http\Message\RequestInterface;
  *
  * @property $userEmail
  * @property $userPassword
+ * @property $userActive
  */
 class AccountContext extends BaseUIContext
 {
     use ActorContext;
 
     /**
+     * @Given /^I access the login form$/
+     */
+    public function iAccessTheLoginForm()
+    {
+        $this->ui->visit('/login');
+        $this->ui->assertPageAddress('/login');
+        $this->ui->assertElementContainsText('button[type=submit]', 'Continue');
+    }
+
+    /**
      * @Given /^I am a user of the lpa application$/
      */
     public function iAmAUserOfTheLpaApplication()
     {
+        $this->userEmail = 'test@test.com';
+        $this->userPassword = 'pa33w0rd';
+        $this->userActive = true;
+
         $this->ui->iAmOnHomepage();
 
         $this->ui->clickLink('Sign in');
+    }
+
+    /**
+     * @Given /^I am currently signed in$/
+     */
+    public function iAmCurrentlySignedIn()
+    {
+        // do all the steps to sign in
+        $this->iAccessTheLoginForm();
+        $this->iEnterCorrectCredentials();
+        $this->iSignIn();
+    }
+
+    /**
+     * @Then /^I am directed to my dashboard$/
+     */
+    public function iAmDirectedToMyPersonalDashboard()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    /**
+     * @Then /^I am told my account has not been activated$/
+     */
+    public function iAmToldMyAccountHasNotBeenActivated()
+    {
+        // TODO UML-501
+        //      When a user account has not been activated we will need a better user flow
+        //      around how this works. Probably taking them to a help page that details
+        //      what they need to do, including resending the email.
+        $this->ui->assertPageContainsText('Email and password combination not recognised');
+    }
+
+    /**
+     * @Then /^I am told my credentials are incorrect$/
+     */
+    public function iAmToldMyCredentialsAreIncorrect()
+    {
+        $this->ui->assertPageContainsText('Email and password combination not recognised');
+    }
+
+    /**
+     * @When /^I attempt to sign in again$/
+     */
+    public function iAttemptToSignInAgain()
+    {
+        $this->ui->visit('/login');
+    }
+
+    /**
+     * @When /^I enter correct credentials$/
+     */
+    public function iEnterCorrectCredentials()
+    {
+        $this->ui->fillField('email', $this->userEmail);
+        $this->ui->fillField('password', $this->userPassword);
+
+        if ($this->userActive) {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
+                    [
+                        'Id'        => '123',
+                        'Email'     => $this->userEmail,
+                        'LastLogin' => null
+                    ]
+                )));
+
+            // Dashboard page checks for all LPA's for a user
+            $this->apiFixtures->get('/v1/lpas')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+        } else {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
+        }
+
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When I enter incorrect login password
+     */
+    public function iEnterIncorrectLoginPassword()
+    {
+        $this->ui->fillField('email', $this->userEmail);
+        $this->ui->fillField('password', "inoc0rrectPassword");
+
+        // API call for authentication
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])));
+
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When I enter incorrect login email
+     */
+    public function iEnterIncorrectLoginEmail()
+    {
+        $this->ui->fillField('email', $this->userEmail);
+        $this->ui->fillField('password', "inoc0rrectPassword");
+
+        // API call for authentication
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_NOT_FOUND, [], json_encode([])));
+
+        $this->ui->pressButton('Continue');
     }
 
     /**
@@ -73,6 +196,14 @@ class AccountContext extends BaseUIContext
         $this->ui->fillField('email', 'test@example.com');
         $this->ui->fillField('email_confirm', 'test@example.com');
         $this->ui->pressButton('Email me the link');
+    }
+
+    /**
+     * @Given /^I have not activated my account$/
+     */
+    public function iHaveNotActivatedMyAccount()
+    {
+        $this->userActive = false;
     }
 
     /**
@@ -208,32 +339,10 @@ class AccountContext extends BaseUIContext
      */
     public function iSignIn()
     {
-        $this->userEmail = 'test@test.com';
-        $this->userPassword = 'pa33w0rd';
-
-        $this->ui->visit('/login');
-        $this->ui->assertPageAddress('/login');
-        $this->ui->assertElementContainsText('button[type=submit]', 'Continue');
-
-        // API call for password reset request
-        $this->apiFixtures->patch('/v1/auth')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'Id'        => '123',
-                'Email'     => $this->userEmail,
-                'LastLogin' => null
-            ])));
-
-        // Dashboard page checks for all LPA's for a user
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
-
-        $this->ui->fillField('email', $this->userEmail);
-        $this->ui->fillField('password', $this->userPassword);
-        $this->ui->pressButton('Continue');
-
-        // ---
-
-        $this->ui->assertPageAddress('/lpa/add-details');
+        $link = $this->ui->getSession()->getPage()->find('css', 'a[href="/logout"]');
+        if ($link === null) {
+            throw new \Exception('Sign out link not found');
+        }
     }
 
     /**

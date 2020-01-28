@@ -6,7 +6,7 @@ Feature: Your Details dashboard
 
   Background:
     Given I am a user of the lpa application
-    And I am signed in
+    And I am currently signed in
 
   @ui
   Scenario: The user can request to see their details and reset their details
