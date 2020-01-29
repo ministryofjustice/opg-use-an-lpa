@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace ActorTest\Form;
 
-use Actor\Form\CreateAccount;
+use Actor\Form\Login;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\{TestsZendForm, ZendFormTests};
 use PHPUnit\Framework\TestCase;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Form\Element\{Checkbox, Password, Text};
+use Zend\Form\Element\{Password, Text};
 
-class CreateAccountTest extends TestCase implements TestsZendForm
+class LoginTest extends TestCase implements TestsZendForm
 {
     use ZendFormTests;
 
-    /** @var CreateAccount */
+    /** @var Login */
     protected $form;
 
     public function getForm(): AbstractForm
@@ -26,7 +26,7 @@ class CreateAccountTest extends TestCase implements TestsZendForm
 
     public function getFormName(): string
     {
-        return 'create_account';
+        return 'login';
     }
 
     public function getFormElements(): array
@@ -34,16 +34,13 @@ class CreateAccountTest extends TestCase implements TestsZendForm
         return [
             '__csrf'           => Csrf::class,
             'email'            => Text::class,
-            'email_confirm'    => Text::class,
             'password'         => Password::class,
-            'password_confirm' => Password::class,
-            'terms'            => Checkbox::class,
         ];
     }
 
     public function setUp()
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new CreateAccount($guardProphecy->reveal());
+        $this->form = new Login($guardProphecy->reveal());
     }
 }

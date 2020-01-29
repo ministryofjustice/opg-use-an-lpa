@@ -13,13 +13,16 @@ use Common\Handler\UserAware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * Class CreateAccountHandler
+ *
  * @package Actor\Handler
+ * @codeCoverageIgnore
  */
 class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
@@ -68,6 +71,12 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                 // link to the email field to allow the user to correct their mistake.
                 $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
             }
+        }
+
+        // user is already logged in. check done *after* POST method above due to the way
+        // the auth middleware functions
+        if ($this->getUser($request) !== null) {
+            return $this->redirectToRoute('lpa.dashboard');
         }
 
         return new HtmlResponse($this->renderer->render('actor::login', [

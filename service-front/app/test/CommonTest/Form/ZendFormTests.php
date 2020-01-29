@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ActorTest\Form;
+namespace CommonTest\Form;
 
 use Common\Form\AbstractForm;
 use Zend\InputFilter\InputFilter;
