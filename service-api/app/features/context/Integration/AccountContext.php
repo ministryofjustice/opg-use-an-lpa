@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use App\Exception\GoneException;
 use App\Service\ActorCodes\ActorCodeService;
-use Behat\Behat\Tester\Exception\PendingException;
-use Acpr\Behat\Psr\Context\Psr11AwareContext;
+use App\Service\Lpa\LpaService;
 use App\Service\User\UserService;
 use Aws\DynamoDb\Marshaler;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\SetupEnv;
-use App\Service\Lpa\LpaService;
 use DateTime;
-use Fig\Http\Message\StatusCodeInterface;
-use JSHayes\FakeRequests\MockHandler;
 use Exception;
-use Psr\Container\ContainerInterface;
+use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
+use JSHayes\FakeRequests\MockHandler;
+use Psr\Container\ContainerInterface;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -69,7 +68,7 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
-        $this->lpa = file_get_contents(__DIR__ . '/../../../../app/test/BehatTest/Common/Service/Lpa/example_lpa.json');
+        $this->lpa = file_get_contents(__DIR__ . '../../../../test/AppTest/Lpa/fixtures/example_lpa.json');
 
         $this->passcode = 'XYUPHWQRECHV';
         $this->referenceNo = '700000000054';
@@ -88,9 +87,9 @@ class AccountContext implements Context, Psr11AwareContext
     }
 
     /**
-     * @Given I am signed in
+     * @Given I am currently signed in
      */
-    public function iAmSignedIn()
+    public function iAmCurrentlySignedIn()
     {
         $this->password = 'pa33w0rd';
 

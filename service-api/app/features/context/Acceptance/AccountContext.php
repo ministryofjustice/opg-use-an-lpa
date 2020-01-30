@@ -6,9 +6,7 @@ namespace BehatTest\Context\Acceptance;
 
 use Aws\DynamoDb\Marshaler;
 use Aws\Result;
-use Behat\Behat\Tester\Exception\PendingException;
 use BehatTest\Context\SetupEnv;
-use ClassesWithParents\D;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -28,7 +26,6 @@ use GuzzleHttp\Psr7\Response;
  * @property $referenceNo
  * @property $userDob
  * @property $lpa
- * @property $userToken
  * @property $actorAccountCreateData
  */
 class AccountContext extends BaseAcceptanceContext
@@ -40,7 +37,8 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '/../../../../app/test/BehatTest/Common/Service/Lpa/example_lpa.json'));
+
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/AppTest/Lpa/fixtures/example_lpa.json'));
 
         $this->passcode = 'XYUPHWQRECHV';
         $this->referenceNo = '700000000054';
@@ -59,9 +57,9 @@ class AccountContext extends BaseAcceptanceContext
     }
 
     /**
-     * @Given I am signed in
+     * @Given I am currently signed in
      */
-    public function iAmSignedIn()
+    public function iAmCurrentlySignedIn()
     {
         $this->userAccountPassword = 'pa33w0rd';
 

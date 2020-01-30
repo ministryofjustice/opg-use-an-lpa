@@ -7,7 +7,7 @@ Feature: Add an LPA
   Background:
     Given I have been given access to use an LPA via credentials
     And I am a user of the lpa application
-    And I am signed in
+    And I am currently signed in
 
   @integration @acceptance
   Scenario: The user can add an LPA to their account
@@ -17,7 +17,7 @@ Feature: Add an LPA
     And The LPA is successfully added
 
   @integration @acceptance
-  Scenario: The user cannot add an LPA to their account
+  Scenario: The user cannot add an LPA to their account as it does not exist
     Given I am on the add an LPA page
     When I request to add an LPA that does not exist
     Then The LPA is not found

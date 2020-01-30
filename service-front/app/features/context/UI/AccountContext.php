@@ -89,6 +89,7 @@ class AccountContext extends BaseUIContext
         $this->userEmail = 'test@test.com';
         $this->userPassword = 'pa33w0rd';
         $this->userActive = true;
+        $this->userId = '123';
 
         $this->ui->iAmOnHomepage();
 
@@ -103,7 +104,7 @@ class AccountContext extends BaseUIContext
         // do all the steps to sign in
         $this->iAccessTheLoginForm();
         $this->iEnterCorrectCredentials();
-        $this->iSignIn();
+        $this->iAmSignedIn();
     }
 
     /**
@@ -155,9 +156,9 @@ class AccountContext extends BaseUIContext
             $this->apiFixtures->patch('/v1/auth')
                 ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
                     [
-                        'Id'        => '123',
+                        'Id'        => $this->userId,
                         'Email'     => $this->userEmail,
-                        'LastLogin' => null
+                        'LastLogin' => '2020-01-01'
                     ]
                 )));
 
@@ -171,6 +172,21 @@ class AccountContext extends BaseUIContext
         }
 
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^I am signed in$/
+     */
+    public function iAmSignedIn()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+
+        $this->ui->assertPageContainsText('Add your first LPA');
+
+        $link = $this->ui->getSession()->getPage()->find('css', 'a[href="/logout"]');
+        if ($link === null) {
+            throw new \Exception('Sign out link not found');
+        }
     }
 
     /**
@@ -380,48 +396,6 @@ class AccountContext extends BaseUIContext
         $this->ui->assertPageAddress('/forgot-password/123456');
 
         $this->ui->assertPageContainsText('at least ' . $reason);
-    }
-
-    /**
-     * @Given /^I am signed in$/
-     */
-    public function iSignIn()
-    {
-        $this->userId = '1abc2def3ghi';
-        $this->userEmail = 'test@test.com';
-        $this->userPassword = 'pa33w0rd';
-        $this->userLpaActorToken = '987654321';
-
-        $this->ui->visit('/login');
-        $this->ui->assertPageAddress('/login');
-        $this->ui->assertElementContainsText('button[type=submit]', 'Continue');
-
-        // API call for password reset request
-        $this->apiFixtures->patch('/v1/auth')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'Id'        => $this->userId,
-                'Email'     => $this->userEmail,
-                'LastLogin' => '2020-01-22T16:17:07+00:00'
-            ])));
-
-        // Dashboard page checks for all LPA's for a user
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
-
-        $this->ui->fillField('email', $this->userEmail);
-        $this->ui->fillField('password', $this->userPassword);
-        $this->ui->pressButton('Continue');
-
-        // ---
-
-        $this->ui->assertPageAddress('/lpa/dashboard');
-
-        $this->ui->assertPageContainsText('Add your first LPA');
-
-        $link = $this->ui->getSession()->getPage()->find('css', 'a[href="/logout"]');
-        if ($link === null) {
-            throw new \Exception('Sign out link not found');
-        }
     }
 
     /**
@@ -635,9 +609,9 @@ class AccountContext extends BaseUIContext
     }
 
     /**
-     * @Then /^I am told that my input is invalid and needs to be (.*)$/
+     * @Then /^I am told that my input is invalid because (.*)$/
      */
-    public function iAmToldThatMyInputIsInvalidAndNeedsToBe($reason)
+    public function iAmToldThatMyInputIsInvalidBecause($reason)
     {
         $this->ui->assertPageAddress('/lpa/add-details');
         $this->ui->assertPageContainsText($reason);

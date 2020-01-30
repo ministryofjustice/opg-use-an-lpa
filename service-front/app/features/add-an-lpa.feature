@@ -5,9 +5,9 @@ Feature: Add an LPA
   I can add an LPA to my account
 
   Background:
-    Given I have been given access to use an LPA via credentials
-    And I am a user of the lpa application
-    And I am signed in
+    Given I am a user of the lpa application
+    And I am currently signed in
+    And I have been given access to use an LPA via credentials
 
   @integration @ui
   Scenario: The user can add an LPA to their account
@@ -17,7 +17,7 @@ Feature: Add an LPA
     And The LPA is successfully added
 
   @integration @ui
-  Scenario: The user cannot add an LPA to their account
+  Scenario: The user cannot add an LPA to their account as it does not exist
     Given I am on the add an LPA page
     When I request to add an LPA that does not exist
     Then The LPA is not found
@@ -34,7 +34,7 @@ Feature: Add an LPA
   Scenario Outline: The user cannot add an LPA with an invalid passcode
     Given I am on the add an LPA page
     When I request to add an LPA with an invalid passcode format of "<passcode>"
-    Then I am told that my input is invalid and needs to be <reason>
+    Then I am told that my input is invalid because <reason>
 
     Examples:
       | passcode | reason |
@@ -49,7 +49,7 @@ Feature: Add an LPA
   Scenario Outline: The user cannot add an LPA with an invalid reference number
     Given I am on the add an LPA page
     When I request to add an LPA with an invalid reference number format of "<referenceNo>"
-    Then I am told that my input is invalid and needs to be <reason>
+    Then I am told that my input is invalid because <reason>
 
     Examples:
       | referenceNo | reason |
@@ -64,7 +64,7 @@ Feature: Add an LPA
   Scenario Outline: The user cannot add an LPA with an invalid DOB
     Given I am on the add an LPA page
     When I request to add an LPA with an invalid DOB format of "<day>" "<month>" "<year>"
-    Then I am told that my input is invalid and needs to be <reason>
+    Then I am told that my input is invalid because <reason>
 
     Examples:
       | day | month | year | reason |

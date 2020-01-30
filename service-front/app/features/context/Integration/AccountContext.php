@@ -6,11 +6,11 @@ namespace BehatTest\Context\Integration;
 
 use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use Alphagov\Notifications\Client;
-use Common\Exception\ApiException;
-use Common\Service\Lpa\LpaService;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
+use Common\Exception\ApiException;
 use Common\Service\Email\EmailClient;
+use Common\Service\Lpa\LpaService;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -79,9 +79,9 @@ class AccountContext implements Context, Psr11AwareContext
     }
 
     /**
-     * @Given /^I am signed in$/
+     * @Given /^I am currently signed in$/
      */
-    public function iAmSignedIn()
+    public function iAmCurrentlySignedIn()
     {
         $this->userEmail = 'test@test.com';
         $this->password = 'pa33w0rd';
