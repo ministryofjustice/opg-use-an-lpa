@@ -26,16 +26,16 @@
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
-                    {{ govuk_form_element(form.get('passcode'), { 'label': 'One-time passcode', 'hint': 'Passcodes are 13 characters long and start with a C', 'input_prefix': 'C - ', 'attr' : {'class': 'govuk-input--width-10'} }) }}
+                    {{ govuk_form_element(form.get('passcode'), { 'label': 'activation code', 'hint': 'Activation codes are 13 characters long and start with a C', 'input_prefix': 'C - ', 'attr' : {'class': 'govuk-input--width-10'} }) }}
 
                     <details class="govuk-details" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
-                                Where to find your one-time passcode
+                                Where to find your activation code
                             </span>
                         </summary>
                         <div class="govuk-details__text">
-                            <p>Your one-time passcode is printed on the letter that told you the LPA had been registered. The donor and each attorney will have their own unique passcode.</p>
+                            <p>Your axctivation code is printed on the letter that told you the LPA had been registered. The donor and each attorney will have their own activation code.</p>
                             <p>
                                 If you cannot find it, please call us:<br/>
                                 Telephone: 0300 456 0300<br/>
