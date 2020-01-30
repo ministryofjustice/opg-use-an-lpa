@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
-use Common\Handler\AbstractHandler;
-use Common\Handler\Traits\Session as SessionTrait;
-use Common\Handler\Traits\User;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Actor\Form\CancelCode;
+use Common\Exception\InvalidRequestException;
+use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
+use Common\Service\{Lpa\LpaService, Lpa\ViewerCodeService};
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use Common\Handler\UserAware;
-use Common\Service\Lpa\LpaService;
-use Common\Service\Lpa\ViewerCodeService;
-use Zend\Diactoros\Response\RedirectResponse;
 
 
 /**
@@ -25,9 +21,11 @@ use Zend\Diactoros\Response\RedirectResponse;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class CancelCodeHandler extends AbstractHandler implements UserAware
+class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
     use User;
+    use Session;
+    use CsrfGuard;
 
     /**
      * @var ViewerCodeService
@@ -61,25 +59,28 @@ class CancelCodeHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $orgCode = $request->getQueryParams()['code'];
-        $actorLpaToken = $request->getQueryParams()['lpa'];
 
-        if (is_null($actorLpaToken)) {
-            throw new InvalidRequestException('No actor-lpa token specified');
-        }
+        $form = new CancelCode($this->getCsrfGuard($request));
 
         $user = $this->getUser($request);
         $identity = (!is_null($user)) ? $user->getIdentity() : null;
-        $lpa = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
-        $this->viewerCodeService->cancelShareCode(
-            $identity,
-            $actorLpaToken,
-            $orgCode
-        );
+        $form->setData($request->getParsedBody());
 
-        //redirect to access code
-       return new RedirectResponse($this->urlHelper->generate('lpa.access-codes',[],['lpa' => $actorLpaToken]));
+        if ($form->isValid()) {
+            $validated = $form->getData();
 
+            $lpa = $this->lpaService->getLpaById($identity, $validated['lpa_token']);
+
+            $this->viewerCodeService->cancelShareCode(
+                $identity,
+                $validated['lpa_token'],
+                $validated['viewer_code']
+            );
+
+            return new RedirectResponse($this->urlHelper->generate('lpa.access-codes',[],['lpa' => $validated['lpa_token']]));
+        }
+
+        throw new InvalidRequestException('Invalid form submission');
     }
 }

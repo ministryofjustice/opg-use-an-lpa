@@ -613,4 +613,61 @@ class AccountContext extends BaseUIContext
 
         $this->ui->pressButton('Create account');
     }
+
+    //Actor code cancellation
+    /**
+     * @Given I have added a LPA
+     */
+    public function iHaveAddedALPA()
+    {
+        $this->iAccessTheLoginForm();
+        $this->iEnterCorrectCredentials();
+        $this->iSignIn();
+
+        $this->ui->assertPageAddress('/lpa/add-details');
+
+        $this->passcode = 'RY4KKKVMRVAK';
+        $this->referenceNumber = '700000000047';
+        $this->dob = '05/10/1975';
+
+        $this->ui->pressButton('Continue');
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        ///lpa/dashboard
+       // /lpa/check
+     //   $this->ui->clickLink('Add your first LPA');
+
+    }
+
+    /**
+     * @Given I have generated an access code for an organisation
+     */
+    public function iHaveGeneratedAnAccessCodeForAnOrganisation()
+    {
+        $this->code = 'YKRCHVNR4T86';
+        $this->expires = '26/02/2020';
+        $this->organisation = 'Natwest';
+    }
+
+    /**
+     * @When /^I cancel the code$/
+     */
+    public function iCancelTheCode()
+    {
+        $this->ui->visit('/lpa/access-codes');
+       // $this->ui->assertPageContainsText('Check access codes');
+       // $this->ui->assertPageContainsText('Cancel organisation\'s access');
+      //  $this->ui->pressButton('Cancel organisation\'s access');
+    }
+
+    /**
+     * @Then /^I should be asked confirmation of cancellation/
+     */
+    public function iShouldBeAskedConfirmationOfCancellation()
+    {
+        $this->ui->assertPageAddress('/lpa/confirm-cancel-code');
+
+        $this->ui->assertPageContainsText('Are you sure you want to cancel this code?');
+    }
+
+
 }

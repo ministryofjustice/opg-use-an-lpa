@@ -93,14 +93,14 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckAccessCodesHandler::class
     ], ['GET', 'POST'], 'lpa.access-codes');
-    $app->get('/lpa/confirm-cancel-code', [
+    $app->post('/lpa/confirm-cancel-code', [
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ConfirmCancelCodeHandler::class
     ],  'lpa.confirm-cancel-code');
-    $app->route('/lpa/cancel-code', [
+    $app->post('/lpa/cancel-code', [
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CancelCodeHandler::class
-    ], ['GET', 'PUT'],'lpa.cancel-code');
+    ],'lpa.cancel-code');
     $app->get('/lpa/change-details', [
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangeDetailsHandler::class

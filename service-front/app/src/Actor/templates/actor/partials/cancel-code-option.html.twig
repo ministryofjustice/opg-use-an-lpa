@@ -3,17 +3,15 @@
         <main class="govuk-main-wrapper">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <fieldset class="govuk-fieldset">
-                        {#{{ govuk_form_element(form.get('__csrf')) }}#}
 
-                        {#{{ govuk_form_element(form.get('email'), { 'label': 'Email address', 'attr': { 'class': 'govuk-!-width-one-half', 'auto-complete': 'username' } }) }}#}
+                    {{ govuk_form_open(code.form) }}
 
-                        {#{{ govuk_form_element(form.get('password'), { 'label': 'Password', 'attr': { 'class': 'govuk-!-width-one-half', 'auto-complete': 'current-password' } }) }}#}
+                        {{ govuk_form_element(code.form.get('__csrf')) }}
+                        {{ govuk_form_element(code.form.get('lpa_token')) }}
+                        {{ govuk_form_element(code.form.get('viewer_code')) }}
+                        {{ govuk_form_element(code.form.get('organisation')) }}
 
-                        <input type="hidden" id="cancelCode" name="cancelCode" value={{ code.ViewerCode }}>
-                        <button type="submit" class="govuk-button">Cancel organisation's access</button>
-
-                    </fieldset>
+                        <button type="submit" class="govuk-button govuk-button--warning">Cancel organisation's access</button>
 
                     {{ govuk_form_close() }}
 

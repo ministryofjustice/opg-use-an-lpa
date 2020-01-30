@@ -42,14 +42,7 @@
             <div>
                 {% if not check_if_code_has_expired(code.Expires) %}
                     {% if not check_if_code_is_cancelled(code) %}
-                    {#SSSMMMMMM#}
-
-                        {#TODOsingle form with just button - post#}
-                        <a href="{{ path('lpa.confirm-cancel-code', {}, {'lpa': actorToken , 'organisation': code.Organisation, 'code' : code.ViewerCode}) }}" role="button" draggable="false" class="govuk-button govuk-button--warning">
-                         Cancel organisation's access
-                        </a>
-                        {#{{ include('@actor/partials/cancel-code-option.html.twig') }}#}
-
+                        {{ include('@actor/partials/cancel-code-option.html.twig') }}
                     {% endif %}
                 {% endif %}
             </div>

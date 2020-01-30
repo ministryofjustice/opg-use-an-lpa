@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
-use Common\Handler\AbstractHandler;
-use Common\Handler\Traits\Session as SessionTrait;
-use Common\Handler\Traits\User;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Actor\Form\CancelCode;
+use Common\Exception\InvalidRequestException;
+use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
+use Common\Service\{Lpa\LpaService, Lpa\ViewerCodeService};
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use Common\Handler\UserAware;
-use Common\Service\Lpa\LpaService;
-use Common\Service\Lpa\ViewerCodeService;
 
 
 /**
@@ -24,9 +21,11 @@ use Common\Service\Lpa\ViewerCodeService;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class ConfirmCancelCodeHandler extends AbstractHandler implements UserAware
+class ConfirmCancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
     use User;
+    use Session;
+    use CsrfGuard;
 
     /**
      * @var LpaService
@@ -61,30 +60,27 @@ class ConfirmCancelCodeHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $orgToCancel = $request->getQueryParams()['organisation'];
-        $orgCode = $request->getQueryParams()['code'];
-
-        $actorLpaToken = $request->getQueryParams()['lpa'];
-
-        if (is_null($actorLpaToken)) {
-            throw new InvalidRequestException('No actor token specified');
-        }
-
-        if (is_null($orgToCancel)) {
-            throw new InvalidRequestException('No organisation specified');
-        }
+        $form = new CancelCode($this->getCsrfGuard($request));
+        $form->setAttribute('action',$this->urlHelper->generate('lpa.cancel-code'));
 
         $user = $this->getUser($request);
         $identity = (!is_null($user)) ? $user->getIdentity() : null;
 
-        $lpa = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
-        return new HtmlResponse($this->renderer->render('actor::confirm-cancel-code', [
-            'actorToken'    => $actorLpaToken,
-            'user'          => $user,
-            'lpa'           => $lpa,
-            'org'           => $orgToCancel,
-            'orgCode'       => $orgCode,
-        ]));
+        $form->setData($request->getParsedBody());
+
+        if ($form->isValid()) {
+            $validated = $form->getData();
+
+            $lpa = $this->lpaService->getLpaById($identity, $validated['lpa_token']);
+
+            return new HtmlResponse($this->renderer->render('actor::confirm-cancel-code', [
+                'form'          => $form,
+                'user'          => $user,
+            ]));
+        }
+
+        throw new InvalidRequestException('Invalid form submission');
+
     }
 }
