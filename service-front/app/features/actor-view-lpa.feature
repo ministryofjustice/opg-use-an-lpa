@@ -14,5 +14,4 @@ Feature: View an LPA that I have added to my account
   Scenario: The user can view an LPA added to their account
     Given I am on the dashboard page
     When I request to view an LPA
-    Then The full LPA is displayed
-    And The LPA is successfully added
+    Then The full LPA is displayed correctly

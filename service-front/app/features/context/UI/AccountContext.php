@@ -884,4 +884,56 @@ class AccountContext extends BaseUIContext
 
         $this->ui->pressButton('Create account');
     }
+
+    /**
+     * @Given /^I have added an LPA to my account$/
+     */
+    public function iHaveAddedAnLPAToMyAccount()
+    {
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+        $this->iAmOnTheAddAnLPAPage();
+        $this->iRequestToAddAnLPAWithValidDetails();
+        $this->theCorrectLPAIsFoundAndICanConfirmToAddIt();
+        $this->theLPAIsSuccessfullyAdded();
+    }
+
+    /**
+     * @Given /^I am on the dashboard page$/
+*/
+    public function iAmOnTheDashboardPage()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    /**
+     * @When /^I request to view an LPA$/
+     */
+    public function iRequestToViewAnLPA()
+    {
+        $this->ui->assertPageContainsText('View LPA summary');
+
+        // API call for Lpa by Id
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ],
+            )));
+
+        $this->ui->clickLink('View LPA summary');
+    }
+
+    /**
+     * @Then /^The full LPA is displayed correctly$/
+     */
+    public function theFullLPAIsDisplayedCorrectly()
+    {
+        $this->ui->assertPageAddress('/lpa/view-lpa');
+    }
 }
