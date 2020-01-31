@@ -572,9 +572,9 @@ class AccountContext implements Context, Psr11AwareContext
     }
 
     /**
-     * @When /^I request to view an LPA$/
+     * @When /^I request to view an LPA that is valid$/
      */
-    public function iRequestToViewAnLPA()
+    public function iRequestToViewAnLPAThatIsValid()
     {
         $this->actorLpaToken = '24680';
 
@@ -591,7 +591,6 @@ class AccountContext implements Context, Psr11AwareContext
                         'actor'                => []
                     ]
                 )));
-
     }
 
     /**
