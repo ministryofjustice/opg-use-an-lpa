@@ -6,6 +6,7 @@ namespace Common\Service\Pdf;
 
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
+use Common\Service\Log\RequestTracing;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
@@ -18,14 +19,19 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 class PdfService
 {
     /**
-     * @var TemplateRendererInterface
+     * @var string
      */
-    private $renderer;
+    private $apiBaseUri;
 
     /**
      * @var ClientInterface
      */
     private $httpClient;
+
+    /**
+     * @var TemplateRendererInterface
+     */
+    private $renderer;
 
     /**
      * @var StylesService
@@ -35,18 +41,21 @@ class PdfService
     /**
      * @var string
      */
-    private $apiBaseUri;
+    private $traceId;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         ClientInterface $httpClient,
         StylesService $styles,
-        string $apiBaseUri
-    ) {
+        string $apiBaseUri,
+        string $traceId = null
+    )
+    {
         $this->renderer = $renderer;
         $this->httpClient = $httpClient;
         $this->styles = $styles;
         $this->apiBaseUri = $apiBaseUri;
+        $this->traceId = $traceId;
     }
 
     /**
@@ -85,10 +94,10 @@ class PdfService
         $url = new Uri($this->apiBaseUri . '/generate-pdf');
 
         $request = new Request(
-            'POST', $url, [
-            'Content-Type' => 'text/html',
-            'Strip-Anchor-Tags' => true,
-        ], $htmlToRender
+            'POST',
+            $url,
+            $this->generateHeaders(),
+            $htmlToRender
         );
 
         try {
@@ -105,5 +114,22 @@ class PdfService
 
             throw ApiException::create('Error whilst making http POST request', $response, $ex);
         }
+    }
+
+    /**
+     * @return string
+     */
+    private function generateHeaders(): array
+    {
+        $headers = [
+            'Content-Type'      => 'text/html',
+            'Strip-Anchor-Tags' => true,
+        ];
+
+        if (isset($this->traceId)) {
+            $headers[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
+        }
+
+        return $headers;
     }
 }

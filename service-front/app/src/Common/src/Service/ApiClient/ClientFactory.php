@@ -30,6 +30,7 @@ class ClientFactory
         return new Client(
             $container->get(ClientInterface::class),
             $config['api']['uri'],
+            (string) $container->get('trace-id')
         );
     }
 }

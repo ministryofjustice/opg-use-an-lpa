@@ -35,16 +35,22 @@ class Client
     private $token;
 
     /**
+     * @var string
+     */
+    private $traceId;
+
+    /**
      * Client constructor
      *
      * @param ClientInterface $httpClient
      * @param string $apiBaseUri
      * @param string|null $token
      */
-    public function __construct(ClientInterface $httpClient, string $apiBaseUri)
+    public function __construct(ClientInterface $httpClient, string $apiBaseUri, string $traceId = null)
     {
         $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiBaseUri;
+        $this->traceId = $traceId;
     }
 
     /**
@@ -235,6 +241,11 @@ class Client
             'Accept'        => 'application/json',
             'Content-Type'  => 'application/json',
         ];
+
+        // the trace Id is used for logging of the path of requests through infrastructure
+        if (isset($this->traceId)) {
+            $headerLines['X-Amzn-Trace-Id'] = $this->traceId;
+        }
 
         //  If the logged in user has an auth token already then set that in the header
         if (isset($this->token)) {
