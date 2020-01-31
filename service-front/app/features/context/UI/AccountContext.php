@@ -906,12 +906,12 @@ class AccountContext extends BaseUIContext
     }
 
     /**
-     * @When /^I request to view an LPA that is valid$/
+     * @When /^I request to view an LPA which status is "([^"]*)"$/
      */
-    public function iRequestToViewAnLPAThatIsValid()
+    public function iRequestToViewAnLPAWhichStatusIs($status)
     {
         $this->ui->assertPageContainsText('View LPA summary');
-        $this->lpa->status = "Registered";
+        $this->lpa->status = $status;
 
         // API call for Lpa by Id
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
@@ -925,18 +925,18 @@ class AccountContext extends BaseUIContext
                         'lpa'                  => $this->lpa,
                         'actor'                => [],
                     ],
-            )));
+                        )));
 
 
         $this->ui->clickLink('View LPA summary');
     }
 
     /**
-     * @Then /^The full LPA is displayed correctly$/
+     * @Then /^The full LPA is displayed with the correct (.*)$/
      */
-    public function theFullLPAIsDisplayedCorrectly()
+    public function theFullLPAIsDisplayedWithTheCorrect($message)
     {
         $this->ui->assertPageAddress('/lpa/view-lpa');
-        $this->ui->assertPageContainsText('This LPA is registered');
+        $this->ui->assertPageContainsText($message);
     }
 }

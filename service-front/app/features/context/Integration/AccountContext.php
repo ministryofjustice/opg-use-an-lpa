@@ -572,11 +572,12 @@ class AccountContext implements Context, Psr11AwareContext
     }
 
     /**
-     * @When /^I request to view an LPA that is valid$/
+     * @When /^I request to view an LPA which status is "([^"]*)"$/
      */
-    public function iRequestToViewAnLPAThatIsValid()
+    public function iRequestToViewAnLPAWhichStatusIs($status)
     {
         $this->actorLpaToken = '24680';
+        $this->lpa['status'] = $status;
 
         // API call for getting the LPA by id
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
@@ -594,9 +595,9 @@ class AccountContext implements Context, Psr11AwareContext
     }
 
     /**
-     * @Then /^The full LPA is displayed correctly$/
+     * @Then /^The full LPA is displayed with the correct (.*)$/
      */
-    public function theFullLPAIsDisplayedCorrectly()
+    public function theFullLPAIsDisplayedWithTheCorrect($message)
     {
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 

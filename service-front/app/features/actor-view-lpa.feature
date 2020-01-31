@@ -11,7 +11,12 @@ Feature: View an LPA that I have added to my account
     And I have added an LPA to my account
 
   @integration @ui
-  Scenario: The user can view a valid LPA added to their account
+  Scenario Outline: The user can view an LPA added to their account
     Given I am on the dashboard page
-    When I request to view an LPA that is valid
-    Then The full LPA is displayed correctly
+    When I request to view an LPA which status is "<status>"
+    Then The full LPA is displayed with the correct <message>
+
+    Examples:
+      | status | message |
+      | registered | This LPA is registered |
+      | cancelled | This LPA has been cancelled |

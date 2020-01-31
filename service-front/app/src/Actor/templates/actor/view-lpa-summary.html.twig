@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        {% if lpa.status == 'Cancelled' %}
+        {% if lpa.status|lower == 'cancelled' %}
 
             <div class="govuk-grid-row lpa-cancelled-border">
                 <div class="govuk-grid-column-full column-full-alt-1">
