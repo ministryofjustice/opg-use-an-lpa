@@ -7,15 +7,15 @@ namespace BehatTest\Context\Integration;
 use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ViewerContextTrait;
+use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Pdf\PdfService;
+use DI\Container;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
-
-require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
 /**
  * Class ViewerContext
@@ -25,19 +25,18 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property $lpaData
  * @property $viewedLpa
  */
-class ViewerContext implements Context, Psr11AwareContext
+class ViewerContext extends BaseIntegrationContext
 {
     use ViewerContextTrait;
-
-    /** @var ContainerInterface */
-    private $container;
 
     /** @var MockHandler */
     private $apiFixtures;
 
-    public function setContainer(ContainerInterface $container): void
+    protected function prepareContext(): void
     {
-        $this->container = $container;
+        // This is populated into the container using a Middleware which these integration
+        // tests wouldn't normally touch but the container expects
+        $this->container->set(RequestTracing::TRACE_CONTAINER_NAME, 'Root=1-1-11');
 
         $this->apiFixtures = $this->container->get(MockHandler::class);
     }
