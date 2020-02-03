@@ -899,7 +899,7 @@ class AccountContext extends BaseUIContext
 
     /**
      * @Given /^I am on the dashboard page$/
-*/
+     */
     public function iAmOnTheDashboardPage()
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
@@ -913,7 +913,7 @@ class AccountContext extends BaseUIContext
         $this->ui->assertPageContainsText('View LPA summary');
         $this->lpa->status = $status;
 
-        // API call for Lpa by Id
+        // API call for get LpaById
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
             ->respondWith(
                 new Response(
@@ -924,9 +924,7 @@ class AccountContext extends BaseUIContext
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
                         'actor'                => [],
-                    ],
-                        )));
-
+                    ])));
 
         $this->ui->clickLink('View LPA summary');
     }

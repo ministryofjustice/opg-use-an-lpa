@@ -27,6 +27,7 @@ use GuzzleHttp\Psr7\Response;
  * @property $userDob
  * @property $lpa
  * @property $actorAccountCreateData
+ * @property $userLpaActorToken
  */
 class AccountContext extends BaseAcceptanceContext
 {
@@ -413,7 +414,7 @@ class AccountContext extends BaseAcceptanceContext
     /**
      * @Given /^The LPA is successfully added$/
      */
-    public function myLPAIsSuccessfullyAdded()
+    public function theLPAIsSuccessfullyAdded()
     {
         $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
 
@@ -690,6 +691,73 @@ class AccountContext extends BaseAcceptanceContext
     public function myAccountIsActivated()
     {
         //Not needed in this context
+    }
+
+    /**
+     * @Given /^I have added an LPA to my account$/
+     */
+    public function iHaveAddedAnLPAToMyAccount()
+    {
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+        $this->iAmOnTheAddAnLPAPage();
+        $this->iRequestToAddAnLPAWithValidDetails();
+        $this->theCorrectLPAIsFoundAndICanConfirmToAddIt();
+        $this->theLPAIsSuccessfullyAdded();
+    }
+
+    /**
+     * @Given /^I am on the dashboard page$/
+     */
+    public function iAmOnTheDashboardPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to view an LPA which status is "([^"]*)"$/
+     */
+    public function iRequestToViewAnLPAWhichStatusIs($status)
+    {
+        $this->userLpaActorToken = '13579';
+        $this->lpa->status = $status;
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->referenceNo,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorId,
+                'UserId'           => $this->userId
+            ])
+        ]));
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->referenceNo)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // LpaService::getLpaById
+        $this->apiGet('/v1/lpas/' . $this->userLpaActorToken,
+            [
+                'user-token' => $this->userId
+            ]
+        );
+
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        assertEquals($this->userLpaActorToken, $response['user-lpa-actor-token']);
+        assertEquals($this->referenceNo, $response['lpa']['uId']);
+        assertEquals($status, $response['lpa']['status']);
+    }
+
+    /**
+     * @Then /^The full LPA is displayed with the correct (.*)$/
+     */
+    public function theFullLPAIsDisplayedWithTheCorrect($message)
+    {
+        // Not needed for this context
     }
 
     /**
