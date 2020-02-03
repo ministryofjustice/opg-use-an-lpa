@@ -10,8 +10,8 @@ return [
 
     'dependencies' => [
         'factories' => [
-            GuzzleHttp\HandlerStack::class => BehatTest\GuzzleHttp\MockHandlerStackFactory::class,
             Http\Adapter\Guzzle6\Client::class => BehatTest\Http\Adapter\Guzzle6\TestClientFactory::class,
+            GuzzleHttp\Client::class => BehatTest\GuzzleHttp\TestClientFactory::class,
 
             Aws\Sdk::class => BehatTest\Common\Service\Aws\SdkFactory::class,
         ],
@@ -39,6 +39,6 @@ return [
     ],
 
     'sirius_api' => [
-        'endpoint' => 'https://sirius/v1/use-an-lpa',
+        'endpoint' => 'https://sirius',
     ],
 ];

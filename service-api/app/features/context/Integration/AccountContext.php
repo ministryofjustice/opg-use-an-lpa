@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
-use App\Exception\GoneException;
-use Behat\Behat\Tester\Exception\PendingException;
 use Acpr\Behat\Psr\Context\Psr11AwareContext;
+use App\Exception\GoneException;
+use App\Service\ActorCodes\ActorCodeService;
+use App\Service\Lpa\LpaService;
 use App\Service\User\UserService;
 use Aws\DynamoDb\Marshaler;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\SetupEnv;
+use DateTime;
+use Exception;
+use Fig\Http\Message\StatusCodeInterface;
+use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
 use Psr\Container\ContainerInterface;
 
@@ -26,6 +31,13 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property $userAccountId
  * @property $userAccountEmail
  * @property $passwordResetData
+ * @property $userId
+ * @property $actorLpaId
+ * @property $passcode
+ * @property $referenceNo
+ * @property $userDob
+ * @property $password
+ * @property $lpa
  * @property $userAccountPassword
  * @property $userActivationToken
  * @property $actorAccountCreateData
@@ -52,12 +64,61 @@ class AccountContext implements Context, Psr11AwareContext
     }
 
     /**
+     * @Given /^I have been given access to use an LPA via credentials$/
+     */
+    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
+    {
+        $this->lpa = file_get_contents(__DIR__ . '../../../../test/fixtures/example_lpa.json');
+
+        $this->passcode = 'XYUPHWQRECHV';
+        $this->referenceNo = '700000000054';
+        $this->userDob = '1975-10-05';
+        $this->actorLpaId = 0;
+        $this->userId = '9999999999';
+    }
+
+    /**
      * @Given I am a user of the lpa application
      */
     public function iAmAUserOfTheLpaApplication()
     {
         $this->userAccountId = '123456789';
         $this->userAccountEmail = 'test@example.com';
+    }
+
+    /**
+     * @Given I am currently signed in
+     */
+    public function iAmCurrentlySignedIn()
+    {
+        $this->password = 'pa33w0rd';
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'       => $this->userAccountId,
+                    'Email'    => $this->userAccountEmail,
+                    'Password' => password_hash($this->password, PASSWORD_DEFAULT)
+                ])
+            ]
+        ]));
+
+        // ActorUsers::recordSuccessfulLogin
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'        => $this->userAccountId,
+                    'LastLogin' => null
+                ])
+            ]
+        ]));
+
+        $us = $this->container->get(UserService::class);
+
+        $user = $us->authenticate($this->userAccountEmail, $this->password);
+
+        assertEquals($this->userAccountId, $user['Id']);
     }
 
     /**
@@ -448,7 +509,189 @@ class AccountContext implements Context, Psr11AwareContext
             assertContains('User already exists with email address' . ' ' . $actorAccountCreateData['email'], $ex->getMessage());
         }
     }
+  
+    /**
+     * @Given /^I am on the add an LPA page$/
+     */
+    public function iAmOnTheAddAnLPAPage()
+    {
+        // Not used in this context
+    }
 
+    /**
+     * @When /^I request to add an LPA with valid details$/
+     */
+    public function iRequestToAddAnLPAWithValidDetails()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                    'SiriusUid' => $this->referenceNo,
+                    'Active'    => true,
+                    'Expires'   => '2021-09-25T00:00:00Z',
+                    'ActorCode' => $this->passcode,
+                    'ActorLpaId'=> $this->actorLpaId,
+                ])
+        ]));
+
+        $lpaArray = json_decode($this->lpa);
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->referenceNo)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($lpaArray)
+                )
+            );
+
+        $actorCodeService = $this->container->get(ActorCodeService::class);
+
+        $validatedLpa = $actorCodeService->validateDetails($this->passcode, $this->referenceNo, $this->userDob);
+
+        assertEquals($validatedLpa['lpa']['uId'], $this->referenceNo);
+
+    }
+
+    /**
+     * @Then /^The correct LPA is found and I can confirm to add it$/
+     */
+    public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
+    {
+        // not needed for this context
+    }
+
+    /**
+     * @Given /^The LPA is successfully added$/
+     */
+    public function myLPAIsSuccessfullyAdded()
+    {
+        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid' => $this->referenceNo,
+                'Active'    => true,
+                'Expires'   => '2021-09-25T00:00:00Z',
+                'ActorCode' => $this->passcode,
+                'ActorLpaId'=> $this->actorLpaId,
+            ])
+        ]));
+
+        $lpaArray = json_decode($this->lpa);
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->referenceNo)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($lpaArray)
+                )
+            );
+
+        // UserLpaActorMap::create
+        $this->awsFixtures->append(new Result([
+            'Item' => [
+                $this->marshalAwsResultData([
+                    'Id'        => $this->userAccountId,
+                    'UserId'    => $this->userId,
+                    'SiriusUid' => $this->referenceNo,
+                    'ActorId'   => $this->actorLpaId,
+                    'Added'     => $now,
+                ])
+            ]
+        ]));
+                          
+        // ActorCodes::flagCodeAsUsed
+        $this->awsFixtures->append(new Result([]));
+
+        $actorCodeService = $this->container->get(ActorCodeService::class);
+
+        try {
+            $response = $actorCodeService->confirmDetails($this->passcode, $this->referenceNo, $this->userDob, (string) $this->actorLpaId);
+        } catch (Exception $ex) {
+            throw new Exception('Lpa confirmation unsuccessful');
+        }
+
+        assertNotNull($response);
+    }
+
+    /**
+     * @When /^I request to add an LPA that does not exist$/
+     */
+    public function iRequestToAddAnLPAThatDoesNotExist()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->referenceNo)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )
+            );
+    }
+
+    /**
+     * @Then /^The LPA is not found$/
+     */
+    public function theLPAIsNotFound()
+    {
+        $actorCodeService = $this->container->get(ActorCodeService::class);
+
+        $validatedLpa = $actorCodeService->validateDetails($this->passcode, $this->referenceNo, $this->userDob);
+
+        assertNull($validatedLpa);
+    }
+
+    /**
+     * @Given /^I request to go back and try again$/
+     */
+    public function iRequestToGoBackAndTryAgain()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I fill in the form and click the cancel button$/
+     */
+    public function iFillInTheFormAndClickTheCancelButton()
+    {
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(new Result([]));
+
+        // API call for finding all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+    }
+
+    /**
+     * @Then /^I am taken back to the dashboard page$/
+     */
+    public function iAmTakenBackToTheDashboardPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^The LPA has not been added$/
+     */
+    public function theLPAHasNotBeenAdded()
+    {
+        $lpaService = $this->container->get(LpaService::class);
+
+        $lpas = $lpaService->getAllForUser($this->userId);
+
+        assertEmpty($lpas);
+    }
+  
     /**
      * Convert a key/value array to a correctly marshaled AwsResult structure.
      *

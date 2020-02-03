@@ -8,7 +8,9 @@ use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
+use Common\Exception\ApiException;
 use Common\Service\Email\EmailClient;
+use Common\Service\Lpa\LpaService;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -29,6 +31,11 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property string password
  * @property string userEmail
  * @property string userPasswordResetToken
+ * @property string lpa
+ * @property string passcode
+ * @property string referenceNo
+ * @property string userDob
+ * @property string userIdentity
  */
 class AccountContext implements Context, Psr11AwareContext
 {
@@ -46,6 +53,9 @@ class AccountContext implements Context, Psr11AwareContext
     /** @var EmailClient */
     private $emailClient;
 
+    /** @var LpaService */
+    private $lpaService;
+
     public function setContainer(ContainerInterface $container): void
     {
         $this->container = $container;
@@ -53,6 +63,40 @@ class AccountContext implements Context, Psr11AwareContext
         $this->apiFixtures = $this->container->get(MockHandler::class);
         $this->userService = $this->container->get(UserService::class);
         $this->emailClient = $this->container->get(EmailClient::class);
+        $this->lpaService  = $this->container->get(LpaService::class);
+    }
+
+    /**
+     * @Given /^I have been given access to use an LPA via credentials$/
+     */
+    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
+    {
+        $this->lpa = file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json');
+
+        $this->passcode = 'XYUPHWQRECHV';
+        $this->referenceNo = '700000000138';
+        $this->userDob = '1975-10-05';
+    }
+
+    /**
+     * @Given /^I am currently signed in$/
+     */
+    public function iAmCurrentlySignedIn()
+    {
+        $this->userEmail = 'test@test.com';
+        $this->password = 'pa33w0rd';
+        $this->userIdentity = '123';
+
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'        => $this->userIdentity,
+                'Email'     => $this->userEmail,
+                'LastLogin' => null
+            ])));
+
+        $user = $this->userService->authenticate($this->userEmail, $this->password);
+
+        assertEquals($user->getIdentity(), $this->userIdentity);
     }
 
     /**
@@ -236,6 +280,14 @@ class AccountContext implements Context, Psr11AwareContext
     }
 
     /**
+     * @Given /^I am on the add an LPA page$/
+     */
+    public function iAmOnTheAddAnLPAPage()
+    {
+        // Not needed for this context
+    }
+      
+    /**
      * @When /^I create an account using duplicate details$/
      */
     public function iCreateAnAccountUsingDuplicateDetails()
@@ -254,7 +306,7 @@ class AccountContext implements Context, Psr11AwareContext
 
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
-            ->respondWith(
+          ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
@@ -268,6 +320,128 @@ class AccountContext implements Context, Psr11AwareContext
         assertEquals($this->activationToken, $userData['activationToken']);
     }
 
+    /**
+     * @When /^I request to add an LPA with valid details$/
+     */
+    public function iRequestToAddAnLPAWithValidDetails()
+    {
+        $fullLPA = json_decode($this->lpa, true);
+
+        // API call for checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(['lpa' => $fullLPA])
+                )
+            );
+
+        $lpa = $this->lpaService->getLpaByPasscode($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
+
+        assertEquals($lpa->getUId(), $fullLPA['uId']);
+    }
+
+    /**
+     * @Then /^The correct LPA is found and I can confirm to add it$/
+     */
+    public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^The LPA is successfully added$/
+     */
+    public function theLPAIsSuccessfullyAdded()
+    {
+        // API call for adding an LPA
+        $this->apiFixtures->post('/v1/actor-codes/confirm')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_CREATED,
+                    [],
+                    json_encode(['user-lpa-actor-token' => $this->userIdentity])
+                )
+            );
+
+        $actorCode = $this->lpaService->confirmLpaAddition($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
+
+        assertNotNull($actorCode);
+    }
+
+    /**
+     * @When /^I request to add an LPA that does not exist$/
+     */
+    public function iRequestToAddAnLPAThatDoesNotExist()
+    {
+        // Not needed for this context
+    }
+ 
+    /**
+     * @Then /^The LPA is not found$/
+     */
+    public function theLPAIsNotFound()
+    {
+        // API call for checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )
+            );
+
+        try {
+            $this->lpaService->getLpaByPasscode($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
+        } catch (ApiException $aex) {
+            assertEquals($aex->getCode(), 404);
+        }
+    }
+
+    /**
+     * @Given /^I request to go back and try again$/
+     */
+    public function iRequestToGoBackAndTryAgain()
+    {
+        // Not needed for this context
+    }
+  
+    /**
+     * @When /^I fill in the form and click the cancel button$/
+     */
+    public function iFillInTheFormAndClickTheCancelButton()
+    {
+        // API call for finding all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $lpas = $this->lpaService->getLpas($this->userIdentity);
+
+        assertEmpty($lpas);
+    }
+
+    /**
+     * @Then /^I am taken back to the dashboard page$/
+     */
+    public function iAmTakenBackToTheDashboardPage()
+    {
+        // Not needed for this context
+    }
+  
+    /**
+     * @Given /^The LPA has not been added$/
+     */
+    public function theLPAHasNotBeenAdded()
+    {
+        // Not needed for this context
+    }
+     
     /**
      * @Then /^I receive unique instructions on how to activate my account$/
      */
