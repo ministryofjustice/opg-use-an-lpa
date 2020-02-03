@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Service\ApiClient;
 
+use Common\Service\Log\RequestTracing;
 use DI\Factory\RequestedEntry;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
@@ -30,7 +31,7 @@ class ClientFactory
         return new Client(
             $container->get(ClientInterface::class),
             $config['api']['uri'],
-            (string) $container->get('trace-id')
+            $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );
     }
 }

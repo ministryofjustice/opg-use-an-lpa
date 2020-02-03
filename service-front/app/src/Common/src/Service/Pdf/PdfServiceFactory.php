@@ -35,7 +35,7 @@ class PdfServiceFactory
             $container->get(ClientInterface::class),
             $container->get(StylesService::class),
             $config['pdf']['uri'],
-            $container->get(RequestTracing::TRACE_CONTAINER_NAME)
+            $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );
     }
 }

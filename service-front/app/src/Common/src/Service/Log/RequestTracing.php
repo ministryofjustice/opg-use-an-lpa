@@ -9,10 +9,10 @@ class RequestTracing
     /**
      * The http header that amazon attaches to requests that come through its LB
      */
-    const TRACE_HEADER_NAME = 'x-amzn-trace-id';
+    public const TRACE_HEADER_NAME = 'x-amzn-trace-id';
 
     /**
      * The name of the configuration value stored in the DI container
      */
-    const TRACE_CONTAINER_NAME = 'trace-id';
+    public const TRACE_PARAMETER_NAME = 'trace-id';
 }

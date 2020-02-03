@@ -38,8 +38,8 @@ class RequestTracingMiddleware implements MiddlewareInterface
         $traceId = (count($traceId) > 0) ? $traceId[0] : '';
 
         // for factories to use when making services.
-        $this->container->setValue(RequestTracing::TRACE_CONTAINER_NAME, $traceId);
+        $this->container->setValue(RequestTracing::TRACE_PARAMETER_NAME, $traceId);
 
-        return $delegate->handle($request->withAttribute(RequestTracing::TRACE_CONTAINER_NAME, $traceId));
+        return $delegate->handle($request->withAttribute(RequestTracing::TRACE_PARAMETER_NAME, $traceId));
     }
 }

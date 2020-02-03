@@ -59,7 +59,7 @@ class AccountContext extends BaseIntegrationContext
     {
         // This is populated into the container using a Middleware which these integration
         // tests wouldn't normally touch but the container expects
-        $this->container->set(RequestTracing::TRACE_CONTAINER_NAME, 'Root=1-1-11');
+        $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
 
         $this->apiFixtures = $this->container->get(MockHandler::class);
         $this->userService = $this->container->get(UserService::class);
