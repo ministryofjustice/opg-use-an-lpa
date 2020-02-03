@@ -880,4 +880,57 @@ class AccountContext extends BaseUIContext
 
         $this->ui->pressButton('Create account');
     }
+
+    /**
+     * @Given /^I have added an LPA to my account$/
+     */
+    public function iHaveAddedAnLPAToMyAccount()
+    {
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+        $this->iAmOnTheAddAnLPAPage();
+        $this->iRequestToAddAnLPAWithValidDetails();
+        $this->theCorrectLPAIsFoundAndICanConfirmToAddIt();
+        $this->theLPAIsSuccessfullyAdded();
+    }
+
+    /**
+     * @Given /^I am on the dashboard page$/
+     */
+    public function iAmOnTheDashboardPage()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    /**
+     * @When /^I request to view an LPA which status is "([^"]*)"$/
+     */
+    public function iRequestToViewAnLPAWhichStatusIs($status)
+    {
+        $this->ui->assertPageContainsText('View LPA summary');
+        $this->lpa->status = $status;
+
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        $this->ui->clickLink('View LPA summary');
+    }
+
+    /**
+     * @Then /^The full LPA is displayed with the correct (.*)$/
+     */
+    public function theFullLPAIsDisplayedWithTheCorrect($message)
+    {
+        $this->ui->assertPageAddress('/lpa/view-lpa');
+        $this->ui->assertPageContainsText($message);
+    }
 }

@@ -10,6 +10,7 @@ use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use Common\Exception\ApiException;
 use Common\Service\Email\EmailClient;
+use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
@@ -32,10 +33,12 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property string userEmail
  * @property string userPasswordResetToken
  * @property string lpa
+ * @property string lpaJson
  * @property string passcode
  * @property string referenceNo
  * @property string userDob
  * @property string userIdentity
+ * @property string actorLpaToken
  */
 class AccountContext implements Context, Psr11AwareContext
 {
@@ -56,6 +59,9 @@ class AccountContext implements Context, Psr11AwareContext
     /** @var LpaService */
     private $lpaService;
 
+    /** @var LpaFactory */
+    private $lpaFactory;
+
     public function setContainer(ContainerInterface $container): void
     {
         $this->container = $container;
@@ -64,6 +70,7 @@ class AccountContext implements Context, Psr11AwareContext
         $this->userService = $this->container->get(UserService::class);
         $this->emailClient = $this->container->get(EmailClient::class);
         $this->lpaService  = $this->container->get(LpaService::class);
+        $this->lpaFactory  = $this->container->get(LpaFactory::class);
     }
 
     /**
@@ -71,7 +78,8 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
-        $this->lpa = file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json');
+        $this->lpaJson = file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json');
+        $this->lpa = json_decode($this->lpaJson, true);
 
         $this->passcode = 'XYUPHWQRECHV';
         $this->referenceNo = '700000000138';
@@ -325,21 +333,19 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iRequestToAddAnLPAWithValidDetails()
     {
-        $fullLPA = json_decode($this->lpa, true);
-
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode(['lpa' => $fullLPA])
+                    json_encode(['lpa' => $this->lpa])
                 )
             );
 
         $lpa = $this->lpaService->getLpaByPasscode($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
 
-        assertEquals($lpa->getUId(), $fullLPA['uId']);
+        assertEquals($lpa->getUId(), $this->lpa['uId']);
     }
 
     /**
@@ -543,5 +549,60 @@ class AccountContext implements Context, Psr11AwareContext
     public function CreatingAccountIProvideMismatching()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @Given /^I have added an LPA to my account$/
+     */
+    public function iHaveAddedAnLPAToMyAccount()
+    {
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+        $this->iAmOnTheAddAnLPAPage();
+        $this->iRequestToAddAnLPAWithValidDetails();
+        $this->theCorrectLPAIsFoundAndICanConfirmToAddIt();
+        $this->theLPAIsSuccessfullyAdded();
+    }
+
+    /**
+     * @Given /^I am on the dashboard page$/
+     */
+    public function iAmOnTheDashboardPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to view an LPA which status is "([^"]*)"$/
+     */
+    public function iRequestToViewAnLPAWhichStatusIs($status)
+    {
+        $this->actorLpaToken = '24680';
+        $this->lpa['status'] = $status;
+
+        // API call for getting the LPA by id
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => []
+                    ]
+                )));
+    }
+
+    /**
+     * @Then /^The full LPA is displayed with the correct (.*)$/
+     */
+    public function theFullLPAIsDisplayedWithTheCorrect($message)
+    {
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
+
+        assertEquals($lpa, $lpaObject);
     }
 }
