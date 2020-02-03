@@ -54,7 +54,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $data = $client->httpGet('/simple_get');
 
@@ -67,7 +67,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $data = $client->httpGet('/simple_get', ['simple_query' => 'query_value']);
 
@@ -80,7 +80,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -97,7 +97,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
@@ -117,7 +117,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $data = $client->httpPost('/simple_post', ['simple_query' => 'query_value']);
 
@@ -130,7 +130,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -147,7 +147,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
@@ -167,7 +167,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $data = $client->httpPut('/simple_put', ['simple_query' => 'query_value']);
 
@@ -180,7 +180,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -197,7 +197,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
@@ -217,7 +217,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $data = $client->httpPatch('/simple_patch', ['simple_query' => 'query_value']);
 
@@ -230,7 +230,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -247,7 +247,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
@@ -267,7 +267,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $data = $client->httpDelete('/simple_delete', ['simple_query' => 'query_value']);
 
@@ -280,7 +280,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -297,7 +297,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
@@ -326,7 +326,7 @@ class ClientTest extends TestCase
         }))
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $data = $client->httpGet('/simple_get');
         $this->assertIsArray($data);
@@ -357,7 +357,7 @@ class ClientTest extends TestCase
         }))
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
         $client->setUserTokenHeader('test_token');
 
         $data = $client->httpGet('/simple_get');
@@ -414,7 +414,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('<xml>we_dont_do_xml</xml>', StatusCodeInterface::STATUS_OK));
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         try {
             $data = $client->httpGet('/simple_get');

@@ -6,7 +6,7 @@ namespace Common\Middleware\Logging;
 
 use Common\Service\Container\ModifiableContainerInterface;
 use Common\Service\Log\RequestTracing;
-use Psr\Http\Server\RequestHandlerInterface as DelegateInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -32,7 +32,7 @@ class RequestTracingMiddleware implements MiddlewareInterface
         $this->container = $container;
     }
 
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate): ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate): ResponseInterface
     {
         $traceId = $request->getHeader(RequestTracing::TRACE_HEADER_NAME);
         $traceId = (count($traceId) > 0) ? $traceId[0] : '';

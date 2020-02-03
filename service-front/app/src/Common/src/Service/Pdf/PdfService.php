@@ -48,7 +48,7 @@ class PdfService
         ClientInterface $httpClient,
         StylesService $styles,
         string $apiBaseUri,
-        string $traceId = null
+        string $traceId
     )
     {
         $this->renderer = $renderer;
@@ -126,7 +126,7 @@ class PdfService
             'Strip-Anchor-Tags' => true,
         ];
 
-        if (isset($this->traceId)) {
+        if (!empty($this->traceId)) {
             $headers[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
         }
 

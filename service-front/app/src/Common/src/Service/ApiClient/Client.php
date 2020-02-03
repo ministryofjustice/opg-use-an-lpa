@@ -47,7 +47,7 @@ class Client
      * @param string $apiBaseUri
      * @param string|null $token
      */
-    public function __construct(ClientInterface $httpClient, string $apiBaseUri, string $traceId = null)
+    public function __construct(ClientInterface $httpClient, string $apiBaseUri, string $traceId)
     {
         $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiBaseUri;
@@ -244,7 +244,7 @@ class Client
         ];
 
         // the trace Id is used for logging of the path of requests through infrastructure
-        if (isset($this->traceId)) {
+        if (!empty($this->traceId)) {
             $headerLines[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
         }
 
