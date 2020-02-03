@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\ApiClient;
 
 use Common\Exception\ApiException;
+use Common\Service\Log\RequestTracing;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
@@ -244,7 +245,7 @@ class Client
 
         // the trace Id is used for logging of the path of requests through infrastructure
         if (isset($this->traceId)) {
-            $headerLines['X-Amzn-Trace-Id'] = $this->traceId;
+            $headerLines[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
         }
 
         //  If the logged in user has an auth token already then set that in the header

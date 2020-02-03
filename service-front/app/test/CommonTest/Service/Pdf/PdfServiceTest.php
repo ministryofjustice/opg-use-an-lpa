@@ -57,7 +57,15 @@ class PdfServiceTest extends TestCase
         )->willReturn('<html></html>');
 
         $clientProphecy = $this->prophesize(ClientInterface::class);
-        $clientProphecy->sendRequest(Argument::type(RequestInterface::class))
+        $clientProphecy->sendRequest(Argument::that(function(RequestInterface $request) {
+            $this->assertCount(1, $request->getHeader('Content-Type'));
+            $this->assertEquals('text/html', $request->getHeader('Content-Type')[0]);
+
+            $this->assertCount(1, $request->getHeader('Strip-Anchor-Tags'));
+            $this->assertEquals('1', $request->getHeader('Strip-Anchor-Tags')[0]);
+
+            return true;
+        }))
             ->willReturn($this->setupResponse('', 200));
 
         $stylesProphecy = $this->prophesize(StylesService::class);
@@ -67,7 +75,8 @@ class PdfServiceTest extends TestCase
             $rendererProphecy->reveal(),
             $clientProphecy->reveal(),
             $stylesProphecy->reveal(),
-            'http://pdf-service:8080'
+            'http://pdf-service:8080',
+            'Root=1-1-11'
         );
 
         $pdfStream = $service->getLpaAsPdf($lpa);
@@ -100,7 +109,8 @@ class PdfServiceTest extends TestCase
             $rendererProphecy->reveal(),
             $clientProphecy->reveal(),
             $stylesProphecy->reveal(),
-            'http://pdf-service:8080'
+            'http://pdf-service:8080',
+            'Root=1-1-11'
         );
 
         $this->expectException(ApiException::class);
@@ -133,11 +143,51 @@ class PdfServiceTest extends TestCase
             $rendererProphecy->reveal(),
             $clientProphecy->reveal(),
             $stylesProphecy->reveal(),
-            'http://pdf-service:8080'
+            'http://pdf-service:8080',
+            'Root=1-1-11'
         );
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(500);
         $pdfStream = $service->getLpaAsPdf($lpa);
+    }
+
+    /** @test */
+    public function it_correctly_attaches_a_tracing_header()
+    {
+        $lpa = new Lpa();
+
+        $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
+        $rendererProphecy->render(
+            'viewer::download-lpa',
+            [
+                'lpa' => $lpa,
+                'pdfStyles' => '',
+            ]
+        )->willReturn('<html></html>');
+
+        $clientProphecy = $this->prophesize(ClientInterface::class);
+        $clientProphecy->sendRequest(Argument::that(function(RequestInterface $request) {
+            $this->assertCount(1, $request->getHeader('x-amzn-trace-id'));
+            $this->assertEquals('Root=1-1-11', $request->getHeader('x-amzn-trace-id')[0]);
+
+            return true;
+        }))
+            ->willReturn($this->setupResponse('', 200));
+
+        $stylesProphecy = $this->prophesize(StylesService::class);
+        $stylesProphecy->__invoke()->willReturn('');
+
+        $service = new PdfService(
+            $rendererProphecy->reveal(),
+            $clientProphecy->reveal(),
+            $stylesProphecy->reveal(),
+            'http://pdf-service:8080',
+            'Root=1-1-11'
+        );
+
+        $pdfStream = $service->getLpaAsPdf($lpa);
+
+        $this->assertInstanceOf(StreamInterface::class, $pdfStream);
     }
 }

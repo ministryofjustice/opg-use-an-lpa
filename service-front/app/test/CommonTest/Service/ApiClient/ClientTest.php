@@ -140,7 +140,9 @@ class ClientTest extends TestCase
     /** @test */
     public function client_throws_error_with_post_request()
     {
-        $exceptionProphecy = $this->prophesize(ApiException::class);
+        $exceptionProphecy = $this->prophesize(HttpException::class);
+        $exceptionProphecy->getResponse()
+            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)->reveal());
 
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
@@ -148,6 +150,7 @@ class ClientTest extends TestCase
         $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
 
         $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $data = $client->httpPost('/simple_post', ['simple_query' => 'query_value']);
     }
 
@@ -187,7 +190,9 @@ class ClientTest extends TestCase
     /** @test */
     public function client_throws_error_with_put_request()
     {
-        $exceptionProphecy = $this->prophesize(ApiException::class);
+        $exceptionProphecy = $this->prophesize(HttpException::class);
+        $exceptionProphecy->getResponse()
+            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)->reveal());
 
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
@@ -195,6 +200,7 @@ class ClientTest extends TestCase
         $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
 
         $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $data = $client->httpPut('/simple_put', ['simple_query' => 'query_value']);
     }
 
@@ -234,7 +240,9 @@ class ClientTest extends TestCase
     /** @test */
     public function client_throws_error_with_patch_request()
     {
-        $exceptionProphecy = $this->prophesize(ApiException::class);
+        $exceptionProphecy = $this->prophesize(HttpException::class);
+        $exceptionProphecy->getResponse()
+            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)->reveal());
 
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
@@ -242,6 +250,7 @@ class ClientTest extends TestCase
         $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
 
         $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $data = $client->httpPatch('/simple_patch', ['simple_query' => 'query_value']);
     }
 
@@ -281,7 +290,9 @@ class ClientTest extends TestCase
     /** @test */
     public function client_throws_error_with_delete_request()
     {
-        $exceptionProphecy = $this->prophesize(ApiException::class);
+        $exceptionProphecy = $this->prophesize(HttpException::class);
+        $exceptionProphecy->getResponse()
+            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)->reveal());
 
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
@@ -289,6 +300,7 @@ class ClientTest extends TestCase
         $client = new Client($this->apiClient->reveal(), 'https://localhost', null);
 
         $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $data = $client->httpDelete('/simple_delete', ['simple_query' => 'query_value']);
     }
 
@@ -365,6 +377,38 @@ class ClientTest extends TestCase
     }
 
     /** @test */
+    public function sets_trace_id_in_header_if_supplied()
+    {
+        $this->apiClient->sendRequest(Argument::that(function($request) {
+            $this->assertInstanceOf(RequestInterface::class, $request);
+
+            $headers = $request->getHeaders();
+            $this->assertArrayHasKey('x-amzn-trace-id', $headers);
+            $this->assertEquals('Root=1-1-11', $headers['x-amzn-trace-id'][0]);
+            return true;
+        }))
+            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
+
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'Root=1-1-11');
+        $client->setUserTokenHeader('test_token');
+
+        $data = $client->httpGet('/simple_get');
+        $this->assertIsArray($data);
+
+        $data = $client->httpPost('/simple_post', []);
+        $this->assertIsArray($data);
+
+        $data = $client->httpPut('/simple_put', []);
+        $this->assertIsArray($data);
+
+        $data = $client->httpPatch('/simple_patch', []);
+        $this->assertIsArray($data);
+
+        $data = $client->httpDelete('/simple_delete');
+        $this->assertIsArray($data);
+    }
+
+    /** @test */
     public function gracefully_handles_malformed_response_data()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -410,9 +454,9 @@ class ClientTest extends TestCase
     public function validStatusCodes(): array {
         return [
             [ StatusCodeInterface::STATUS_OK ],
-            [ StatusCodeInterface::STATUS_CREATED],
-            [ StatusCodeInterface::STATUS_ACCEPTED],
-            [ StatusCodeInterface::STATUS_NO_CONTENT],
+            [ StatusCodeInterface::STATUS_CREATED ],
+            [ StatusCodeInterface::STATUS_ACCEPTED ],
+            [ StatusCodeInterface::STATUS_NO_CONTENT ],
         ];
     }
 }
