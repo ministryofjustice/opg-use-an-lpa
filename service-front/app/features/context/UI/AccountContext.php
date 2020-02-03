@@ -17,12 +17,60 @@ use Psr\Http\Message\RequestInterface;
  *
  * @property $userEmail
  * @property $userPassword
+ * @property $lpa
+ * @property $lpaData
+ * @property $userId
+ * @property $userLpaActorToken
  * @property $userActive
  */
 class AccountContext extends BaseUIContext
 {
     use ActorContext;
 
+    /**
+     * @Given /^I have been given access to use an LPA via credentials$/
+     */
+    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
+    {
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
+
+        $this->userLpaActorToken = '987654321';
+
+        $this->lpaData = [
+            'user-lpa-actor-token' => $this->userLpaActorToken,
+            'date' => 'today',
+            'actor' => [
+                'type' => 'primary-attorney',
+                'details' => [
+                    'addresses' => [
+                        [
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                            'country'      => '',
+                            'county'       => '',
+                            'id'           => 0,
+                            'postcode'     => '',
+                            'town'         => '',
+                            'type'         => 'Primary'
+                        ]
+                    ],
+                    'companyName' => null,
+                    'dob' => '1975-10-05',
+                    'email' => 'string',
+                    'firstname' => 'Ian',
+                    'id' => 0,
+                    'middlenames' => null,
+                    'salutation' => 'Mr',
+                    'surname' => 'Deputy',
+                    'systemStatus' => true,
+                    'uId' => '700000000054'
+                ],
+            ],
+            'lpa' => $this->lpa
+        ];
+    }
+  
     /**
      * @Given /^I access the login form$/
      */
@@ -41,6 +89,7 @@ class AccountContext extends BaseUIContext
         $this->userEmail = 'test@test.com';
         $this->userPassword = 'pa33w0rd';
         $this->userActive = true;
+        $this->userId = '123';
 
         $this->ui->iAmOnHomepage();
 
@@ -55,7 +104,7 @@ class AccountContext extends BaseUIContext
         // do all the steps to sign in
         $this->iAccessTheLoginForm();
         $this->iEnterCorrectCredentials();
-        $this->iSignIn();
+        $this->iAmSignedIn();
     }
 
     /**
@@ -107,9 +156,9 @@ class AccountContext extends BaseUIContext
             $this->apiFixtures->patch('/v1/auth')
                 ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
                     [
-                        'Id'        => '123',
+                        'Id'        => $this->userId,
                         'Email'     => $this->userEmail,
-                        'LastLogin' => null
+                        'LastLogin' => '2020-01-01'
                     ]
                 )));
 
@@ -123,6 +172,17 @@ class AccountContext extends BaseUIContext
         }
 
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^I am signed in$/
+     */
+    public function iAmSignedIn()
+    {
+        $link = $this->ui->getSession()->getPage()->find('css', 'a[href="/logout"]');
+        if ($link === null) {
+            throw new \Exception('Sign out link not found');
+        }
     }
 
     /**
@@ -335,17 +395,6 @@ class AccountContext extends BaseUIContext
     }
 
     /**
-     * @Given /^I am signed in$/
-     */
-    public function iSignIn()
-    {
-        $link = $this->ui->getSession()->getPage()->find('css', 'a[href="/logout"]');
-        if ($link === null) {
-            throw new \Exception('Sign out link not found');
-        }
-    }
-
-    /**
      * @When /^I view my user details$/
      */
     public function iViewMyUserDetails()
@@ -413,6 +462,224 @@ class AccountContext extends BaseUIContext
 
         $this->ui->assertPageContainsText('Let us know if a donor\'s or attorney\'s details change');
         $this->ui->assertPageContainsText('Find out more');
+    }
+
+    /**
+     * @Given /^I am on the add an LPA page$/
+     */
+    public function iAmOnTheAddAnLPAPage()
+    {
+        $this->ui->visit('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add-details');
+    }
+
+    /**
+     * @When /^I request to add an LPA with valid details$/
+     */
+    public function iRequestToAddAnLPAWithValidDetails()
+    {
+        $this->ui->assertPageAddress('/lpa/add-details');
+
+        // API call for checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(['lpa' => $this->lpa])
+                )
+            );
+
+        $this->ui->fillField('passcode', 'XYUPHWQRECHV');
+        $this->ui->fillField('reference_number', '700000000054');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^The correct LPA is found and I can confirm to add it$/
+     */
+    public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
+    {
+        // API call for adding an LPA
+        $this->apiFixtures->post('/v1/actor-codes/confirm')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_CREATED,
+                    [],
+                    json_encode(['user-lpa-actor-token' => $this->userLpaActorToken])
+                )
+            );
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->ui->assertPageAddress('/lpa/check');
+
+        $this->ui->assertPageContainsText('Is this the LPA you want to add?');
+        $this->ui->assertPageContainsText('Mrs Ian Deputy Deputy');
+
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^The LPA is successfully added$/
+     */
+    public function theLPAIsSuccessfullyAdded()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageContainsText('Ian Deputy Deputy');
+        $this->ui->assertPageContainsText('Health and welfare');
+    }
+
+    /**
+     * @When /^I request to add an LPA that does not exist$/
+     */
+    public function iRequestToAddAnLPAThatDoesNotExist()
+    {
+        $this->ui->assertPageAddress('/lpa/add-details');
+
+        // API call for checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )
+            );
+
+        $this->ui->fillField('passcode', 'ABC321GHI567');
+        $this->ui->fillField('reference_number', '700000000001');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^The LPA is not found$/
+     */
+    public function theLPAIsNotFound()
+    {
+        $this->ui->assertPageAddress('/lpa/check');
+        $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
+    }
+
+    /**
+     * @Given /^I request to go back and try again$/
+     */
+    public function iRequestToGoBackAndTryAgain()
+    {
+        $this->ui->pressButton('Try again');
+        $this->ui->assertPageAddress('/lpa/add-details');
+    }
+
+    /**
+     * @When /^I request to add an LPA with an invalid passcode format of "([^"]*)"$/
+     */
+    public function iRequestToAddAnLPAWithAnInvalidPasscodeFormatOf1($passcode)
+    {
+        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->fillField('passcode', $passcode);
+        $this->ui->fillField('reference_number', '700000000001');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I am told that my input is invalid because (.*)$/
+     */
+    public function iAmToldThatMyInputIsInvalidBecause($reason)
+    {
+        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageContainsText($reason);
+    }
+
+    /**
+     * @When /^I request to add an LPA with an invalid reference number format of "([^"]*)"$/
+     */
+    public function iRequestToAddAnLPAWithAnInvalidReferenceNumberFormatOf($referenceNo)
+    {
+        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->fillField('passcode', 'T3STPA22C0D3');
+        $this->ui->fillField('reference_number', $referenceNo);
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I request to add an LPA with an invalid DOB format of "([^"]*)" "([^"]*)" "([^"]*)"$/
+     */
+    public function iRequestToAddAnLPAWithAnInvalidDOBFormatOf1($day, $month, $year)
+    {
+        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->fillField('passcode', 'T3STPA22C0D3');
+        $this->ui->fillField('reference_number', '700000000001');
+        $this->ui->fillField('dob[day]', $day);
+        $this->ui->fillField('dob[month]', $month);
+        $this->ui->fillField('dob[year]', $year);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I fill in the form and click the cancel button$/
+     */
+    public function iFillInTheFormAndClickTheCancelButton()
+    {
+        // API call for finding all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->fillField('passcode', 'T3STPA22C0D3');
+        $this->ui->fillField('reference_number', '700000000001');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->clickLink('Cancel');
+    }
+
+    /**
+     * @Then /^I am taken back to the dashboard page$/
+     */
+    public function iAmTakenBackToTheDashboardPage()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    /**
+     * @Given /^The LPA has not been added$/
+     */
+    public function theLPAHasNotBeenAdded()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageContainsText('Add your first LPA');
     }
 
     /**
@@ -614,60 +881,57 @@ class AccountContext extends BaseUIContext
         $this->ui->pressButton('Create account');
     }
 
-    //Actor code cancellation
     /**
-     * @Given I have added a LPA
+     * @Given /^I have added an LPA to my account$/
      */
-    public function iHaveAddedALPA()
+    public function iHaveAddedAnLPAToMyAccount()
     {
-        $this->iAccessTheLoginForm();
-        $this->iEnterCorrectCredentials();
-        $this->iSignIn();
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+        $this->iAmOnTheAddAnLPAPage();
+        $this->iRequestToAddAnLPAWithValidDetails();
+        $this->theCorrectLPAIsFoundAndICanConfirmToAddIt();
+        $this->theLPAIsSuccessfullyAdded();
+    }
 
-        $this->ui->assertPageAddress('/lpa/add-details');
-
-        $this->passcode = 'RY4KKKVMRVAK';
-        $this->referenceNumber = '700000000047';
-        $this->dob = '05/10/1975';
-
-        $this->ui->pressButton('Continue');
+    /**
+     * @Given /^I am on the dashboard page$/
+     */
+    public function iAmOnTheDashboardPage()
+    {
         $this->ui->assertPageAddress('/lpa/dashboard');
-        ///lpa/dashboard
-       // /lpa/check
-     //   $this->ui->clickLink('Add your first LPA');
-
     }
 
     /**
-     * @Given I have generated an access code for an organisation
+     * @When /^I request to view an LPA which status is "([^"]*)"$/
      */
-    public function iHaveGeneratedAnAccessCodeForAnOrganisation()
+    public function iRequestToViewAnLPAWhichStatusIs($status)
     {
-        $this->code = 'YKRCHVNR4T86';
-        $this->expires = '26/02/2020';
-        $this->organisation = 'Natwest';
+        $this->ui->assertPageContainsText('View LPA summary');
+        $this->lpa->status = $status;
+
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        $this->ui->clickLink('View LPA summary');
     }
 
     /**
-     * @When /^I cancel the code$/
+     * @Then /^The full LPA is displayed with the correct (.*)$/
      */
-    public function iCancelTheCode()
+    public function theFullLPAIsDisplayedWithTheCorrect($message)
     {
-        $this->ui->visit('/lpa/access-codes');
-       // $this->ui->assertPageContainsText('Check access codes');
-       // $this->ui->assertPageContainsText('Cancel organisation\'s access');
-      //  $this->ui->pressButton('Cancel organisation\'s access');
+        $this->ui->assertPageAddress('/lpa/view-lpa');
+        $this->ui->assertPageContainsText($message);
     }
-
-    /**
-     * @Then /^I should be asked confirmation of cancellation/
-     */
-    public function iShouldBeAskedConfirmationOfCancellation()
-    {
-        $this->ui->assertPageAddress('/lpa/confirm-cancel-code');
-
-        $this->ui->assertPageContainsText('Are you sure you want to cancel this code?');
-    }
-
 
 }

@@ -21,8 +21,8 @@ class LpaFactoryTest extends TestCase
 
     public function setUp()
     {
-        $this->fullExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/fixtures/full_example.json'), true);
-        $this->simpleExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/fixtures/simple_example.json'), true);
+        $this->fullExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/full_example.json'), true);
+        $this->simpleExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/simple_example.json'), true);
     }
 
     public function testBadDataThrowsExceptionInCreateLpa()
@@ -65,13 +65,13 @@ class LpaFactoryTest extends TestCase
 
         $lpa = $factory->createLpaFromData($this->fullExampleFixtureData);
         $this->assertInstanceOf(Lpa::class, $lpa);
-        $this->assertEquals('7000-0000-0054', $lpa->getUId()); // from full_example.json
+        $this->assertEquals('700000000054', $lpa->getUId()); // from full_example.json
 
         $this->assertInstanceOf(CaseActor::class, $lpa->getDonor());
         $this->assertInstanceOf(Address::class, $lpa->getDonor()->getAddresses()[0]);
 
         $this->assertInstanceOf(CaseActor::class, $lpa->getAttorneys()[0]);
-        $this->assertEquals(new DateTime('1980-10-10'), $lpa->getAttorneys()[0]->getDob()); // from full_example.json
+        $this->assertEquals(new DateTime('1975-10-05'), $lpa->getAttorneys()[0]->getDob()); // from full_example.json
         $this->assertEquals(true, $lpa->getAttorneys()[0]->getSystemStatus());
     }
 

@@ -1,5 +1,11 @@
-.lpa-border {
+.lpa-valid-border {
   border:  5px solid #006435;
+  margin: 0px 0px 30px 0px;
+  padding: 10px
+}
+
+.lpa-cancelled-border {
+  border:  5px solid #b10e1e;
   margin: 0px 0px 30px 0px;
   padding: 10px
 }
