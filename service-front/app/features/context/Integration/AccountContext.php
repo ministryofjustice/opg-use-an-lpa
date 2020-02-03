@@ -78,7 +78,7 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
-        $this->lpaJson = file_get_contents(__DIR__ . '/../../../test/CommonTest/Service/Lpa/fixtures/full_example.json');
+        $this->lpaJson = file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json');
         $this->lpa = json_decode($this->lpaJson, true);
 
         $this->passcode = 'XYUPHWQRECHV';
