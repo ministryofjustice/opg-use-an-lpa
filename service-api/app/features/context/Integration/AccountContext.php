@@ -68,7 +68,7 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
-        $this->lpa = file_get_contents(__DIR__ . '../../../../test/AppTest/Lpa/fixtures/example_lpa.json');
+        $this->lpa = file_get_contents(__DIR__ . '../../../../test/fixtures/example_lpa.json');
 
         $this->passcode = 'XYUPHWQRECHV';
         $this->referenceNo = '700000000054';

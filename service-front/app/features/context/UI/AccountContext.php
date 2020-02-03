@@ -32,7 +32,7 @@ class AccountContext extends BaseUIContext
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '/../../../test/CommonTest/Service/Lpa/fixtures/full_example.json'));
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
 
         $this->userLpaActorToken = '987654321';
 
@@ -179,10 +179,6 @@ class AccountContext extends BaseUIContext
      */
     public function iAmSignedIn()
     {
-        $this->ui->assertPageAddress('/lpa/dashboard');
-
-        $this->ui->assertPageContainsText('Add your first LPA');
-
         $link = $this->ui->getSession()->getPage()->find('css', 'a[href="/logout"]');
         if ($link === null) {
             throw new \Exception('Sign out link not found');
