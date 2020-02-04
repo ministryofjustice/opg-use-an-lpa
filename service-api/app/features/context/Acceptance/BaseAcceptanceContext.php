@@ -10,6 +10,7 @@ use Aws\MockHandler as AwsMockHandler;
 use Behat\MinkExtension\Context\RawMinkContext;
 use JSHayes\FakeRequests\MockHandler;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\BrowserKit\Client;
 use Zend\Expressive\Application;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
@@ -53,18 +54,46 @@ abstract class BaseAcceptanceContext extends RawMinkContext implements Psr11Mink
         return json_decode($this->getSession()->getPage()->getContent(), true);
     }
 
-    protected function apiGet(string $url): void
+    protected function apiGet(string $url, array $headers): void
     {
-        $this->getSession()->getDriver()->getClient()->request('GET', $url);
+        $this->getSession()->getDriver()->getClient()->request(
+            'GET',
+            $url,
+            [],
+            [],
+            $this->createServerParams($headers)
+        );
     }
 
-    protected function apiPost(string $url, array $data): void
+    protected function apiPost(string $url, array $data, array $headers): void
     {
-        $this->getSession()->getDriver()->getClient()->request('POST', $url, $data);
+        $this->getSession()->getDriver()->getClient()->request(
+            'POST',
+            $url,
+            $data,
+            [],
+            $this->createServerParams($headers)
+        );
     }
 
-    protected function apiPatch(string $url, array $data): void
+    protected function apiPatch(string $url, array $data, array $headers): void
     {
-        $this->getSession()->getDriver()->getClient()->request('PATCH', $url, $data);
+        $this->getSession()->getDriver()->getClient()->request(
+            'PATCH',
+            $url,
+            $data,
+            [],
+            $this->createServerParams($headers)
+        );
+    }
+
+    private function createServerParams(array $headers): array
+    {
+        $serverParams = [];
+        foreach ($headers as $headerName => $value) {
+            $serverParams['HTTP_'.$headerName] = $value;
+        }
+
+        return $serverParams;
     }
 }
