@@ -934,4 +934,29 @@ class AccountContext extends BaseUIContext
         $this->ui->assertPageContainsText($message);
     }
 
+    //
+    /**
+     * @Given /^I have generated an access code for an organisation$/
+     */
+    public function iHaveGeneratedAnAccessCodeForAnOrganisation()
+    {
+        $this->ui->visit('/lpa/code-make?lpa=' .$this->userLpaActorToken);
+        $this->ui->assertPageAddress('/lpa/code-make?lpa=' .$this->userLpaActorToken);
+
+        $this->apiFixtures->post('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(['lpaData' => $this->lpaData])));
+
+        $this->apiFixtures->get('/v1/lpas/' .$this->userLpaActorToken)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['lpa' => $this->lpa])));
+
+
+        $this->ui->fillField('org_name', 'Some Organisation');
+        // $this->ui->fillField('lpa_token', $this->userLpaActorToken);
+        $this->ui->pressButton('Continue');
+    }
+
 }
