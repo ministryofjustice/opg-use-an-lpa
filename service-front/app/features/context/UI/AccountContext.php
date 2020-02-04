@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace BehatTest\Context\UI;
 
 use Alphagov\Notifications\Client;
+use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
+use BehatTest\Context\BaseUiContextTrait;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
@@ -23,9 +25,10 @@ use Psr\Http\Message\RequestInterface;
  * @property $userLpaActorToken
  * @property $userActive
  */
-class AccountContext extends BaseUIContext
+class AccountContext implements Context
 {
     use ActorContext;
+    use BaseUiContextTrait;
 
     /**
      * @Given /^I have been given access to use an LPA via credentials$/
@@ -98,6 +101,7 @@ class AccountContext extends BaseUIContext
 
     /**
      * @Given /^I am currently signed in$/
+     * @When /^I sign in$/
      */
     public function iAmCurrentlySignedIn()
     {
@@ -140,6 +144,10 @@ class AccountContext extends BaseUIContext
      */
     public function iAttemptToSignInAgain()
     {
+        // Dashboard page checks for all LPA's for a user
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
         $this->ui->visit('/login');
     }
 
@@ -339,6 +347,21 @@ class AccountContext extends BaseUIContext
     }
 
     /**
+     * @When /^I view my dashboard$/
+     */
+    public function iViewMyDashboard()
+    {
+        // Dashboard page checks for all LPA's for a user
+        $request = $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->setLastRequest($request);
+
+        $this->ui->visit('/lpa/dashboard');
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    /**
      * @Then /^my password has been associated with my user account$/
      */
     public function myPasswordHasBeenAssociatedWithMyUserAccount()
@@ -413,7 +436,7 @@ class AccountContext extends BaseUIContext
         $this->ui->assertPageContainsText('Email address');
         $this->ui->assertPageContainsText($this->userEmail);
 
-        $session = $this->getSession();
+        $session = $this->ui->getSession();
         $page = $session->getPage();
 
         $changeEmailText = 'Change email address';
@@ -432,7 +455,7 @@ class AccountContext extends BaseUIContext
 
         $this->ui->assertPageContainsText('Password');
 
-        $session = $this->getSession();
+        $session = $this->ui->getSession();
         $page = $session->getPage();
 
         $changePasswordtext = "Change password";

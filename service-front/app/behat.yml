@@ -25,12 +25,16 @@ acceptance:
     actor:
       contexts:
         - Behat\MinkExtension\Context\MinkContext
+        - BehatTest\Context\UI\BaseUiContext
         - BehatTest\Context\UI\AccountContext
+        - BehatTest\Context\UI\CommonContext
       filters:
         tags: "@actor&&@ui"
     viewer:
       contexts:
         - Behat\MinkExtension\Context\MinkContext
+        - BehatTest\Context\UI\BaseUiContext
         - BehatTest\Context\UI\ViewerContext
+        - BehatTest\Context\UI\CommonContext
       filters:
         tags: "@viewer&&@ui"
