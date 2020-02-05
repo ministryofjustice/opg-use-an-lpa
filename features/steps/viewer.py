@@ -77,6 +77,12 @@ def step_impl(context, error_message, input_label):
         '//label[contains(text(), "' + input_label + '")]/../span[contains(concat(" ", @class, " "), " govuk-error-message ")]')
     assert error_message in error_message_element.text
 
+@then('another error message "{error_message}" is displayed next to the {input_label} input')
+def step_impl(context, error_message, input_label):
+    error_message_element = context.browser.find_element_by_xpath(
+        '//label[contains(text(), "' + input_label + '")]/../span[contains(concat(" ", @class, " "), " govuk-error-message ")][2]')
+    assert error_message in error_message_element.text
+
 
 # STEPS
 @step('the "{help_link}" help section is {visibility}')
