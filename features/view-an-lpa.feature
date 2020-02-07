@@ -17,8 +17,7 @@ Feature: View a lasting power of attorney
     Given I go to the enter code page on the viewer service
     When the share code form is submitted
     Then error message "Enter the donor's surname" is displayed in the error summary
-    And error message "LPA access codes are 13 numbers and letters long and start with a V" is displayed next to the LPA access code input
-    And another error message "Enter the LPA access code" is displayed next to the LPA access code input
+    And error message "Enter the LPA access code" is displayed next to the LPA access code input
     And error message "Enter the donor's surname" is displayed next to the Donor surname input
 
   Scenario: Show an error message when I search for an LPA with an LPA code that is the wrong format
