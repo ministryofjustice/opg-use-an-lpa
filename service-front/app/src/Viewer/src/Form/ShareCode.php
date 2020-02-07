@@ -39,19 +39,19 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                     ['name' => StringTrim::class],
                 ],
                 'validators' => [
-                    new Regex([
-                        'pattern' => '/^[[:alnum:]]{4,4}(?\'dash\' |-)?[[:alnum:]]{4,4}(\g{dash})?[[:alnum:]]{4,4}$/',
-                        'message' => [
-                            Regex::NOT_MATCH => 'LPA access codes are 13 numbers and letters long and start with a V'
-                        ]
-                    ]),
                     [
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'message'  => 'Enter the LPA access code',
                         ],
-                    ]
+                    ],
+                    new Regex([
+                        'pattern' => '/^[[:alnum:]]{4,4}(?\'dash\' |-)?[[:alnum:]]{4,4}(\g{dash})?[[:alnum:]]{4,4}$/',
+                        'message' => [
+                            Regex::NOT_MATCH => 'LPA access codes are 13 numbers and letters long and start with a V'
+                        ]
+                    ])
                 ]
             ],
             'donor_surname' => [
