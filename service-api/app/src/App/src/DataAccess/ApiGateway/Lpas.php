@@ -63,7 +63,7 @@ class Lpas implements LpasInterface
      * @return Response\LpaInterface|null
      * @throws \Exception
      */
-    public function get(string $uid) : ?Response\LpaInterface
+    public function get(string $uid): ?Response\LpaInterface
     {
         $result = $this->lookup([$uid]);
         return !empty($result) ? current($result) : null;
@@ -76,7 +76,7 @@ class Lpas implements LpasInterface
      * @return array
      * @throws \Exception
      */
-    public function lookup(array $uids) : array
+    public function lookup(array $uids): array
     {
         $provider = AwsCredentialProvider::defaultProvider();
         $credentials = $provider()->wait();
@@ -85,7 +85,7 @@ class Lpas implements LpasInterface
         // The key for each request is the original uid.
         $requests = array_combine(
             $uids,  // Use as array key
-            array_map(function($v) use ($credentials){
+            array_map(function ($v) use ($credentials) {
                 $url = $this->apiBaseUri . sprintf("/v1/use-an-lpa/lpas/%s", $v);
 
                 $request = new Request('GET', $url, $this->buildHeaders());
@@ -107,7 +107,7 @@ class Lpas implements LpasInterface
             'fulfilled' => function ($response, $id) use (&$results) {
                 $results[$id] = $response;
             },
-            'rejected' => function ($reason, $id){
+            'rejected' => function ($reason, $id) {
                 // Log?
             },
         ]);
@@ -121,7 +121,7 @@ class Lpas implements LpasInterface
         //---
 
         // Handle all request response now
-        foreach ($results as $uid=>$result) {
+        foreach ($results as $uid => $result) {
             $statusCode = $result->getStatusCode();
 
             switch ($statusCode) {

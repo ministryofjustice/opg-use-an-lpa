@@ -13,7 +13,7 @@ class ViewerCodeActivityFactory
     {
         $config = $container->get('config');
 
-        if ( !isset($config['repositories']['dynamodb']['viewer-activity-table'])) {
+        if (!isset($config['repositories']['dynamodb']['viewer-activity-table'])) {
             throw new \Exception('Viewer Activity table configuration not present');
         }
 

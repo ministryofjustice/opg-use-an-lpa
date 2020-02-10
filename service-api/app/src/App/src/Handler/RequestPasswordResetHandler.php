@@ -15,7 +15,7 @@ use Zend\Diactoros\Response\JsonResponse;
  * Class RequestPasswordResetHandler
  *
  * @package App\Handler
- * @codeCoverageIgnore 
+ * @codeCoverageIgnore
  */
 class RequestPasswordResetHandler implements RequestHandlerInterface
 {

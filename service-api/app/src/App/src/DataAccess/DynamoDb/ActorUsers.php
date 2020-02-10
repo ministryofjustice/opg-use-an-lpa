@@ -53,7 +53,7 @@ class ActorUsers implements ActorUsersInterface
 
         try {
             return $this->get($id);
-        } catch(NotFoundException $nfe) {
+        } catch (NotFoundException $nfe) {
             throw new CreationException('Unable to retrieve newly created actor from database', [], $nfe);
         }
     }
@@ -92,7 +92,7 @@ class ActorUsers implements ActorUsersInterface
             'TableName' => $this->actorUsersTable,
             'IndexName' => 'EmailIndex',
             'KeyConditionExpression' => 'Email = :email',
-            'ExpressionAttributeValues'=> $marshaler->marshalItem([
+            'ExpressionAttributeValues' => $marshaler->marshalItem([
                 ':email' => $email,
             ]),
         ]);
@@ -114,7 +114,7 @@ class ActorUsers implements ActorUsersInterface
             'TableName' => $this->actorUsersTable,
             'IndexName' => 'PasswordResetTokenIndex',
             'KeyConditionExpression' => 'PasswordResetToken = :rt',
-            'ExpressionAttributeValues'=> $marshaler->marshalItem([
+            'ExpressionAttributeValues' => $marshaler->marshalItem([
                 ':rt' => $resetToken,
             ]),
         ]);
@@ -139,7 +139,7 @@ class ActorUsers implements ActorUsersInterface
             'TableName' => $this->actorUsersTable,
             'IndexName' => 'ActivationTokenIndex',
             'KeyConditionExpression' => 'ActivationToken = :activationToken',
-            'ExpressionAttributeValues'=> $marshaler->marshalItem([
+            'ExpressionAttributeValues' => $marshaler->marshalItem([
                 ':activationToken' => $activationToken,
             ]),
         ]);
@@ -196,7 +196,7 @@ class ActorUsers implements ActorUsersInterface
                 ],
             ],
             'UpdateExpression' => 'SET Password=:p REMOVE PasswordResetToken, PasswordResetExpiry',
-            'ExpressionAttributeValues'=> [
+            'ExpressionAttributeValues' => [
                 ':p' => [
                     'S' => password_hash($password, PASSWORD_DEFAULT)
                 ]
@@ -220,7 +220,7 @@ class ActorUsers implements ActorUsersInterface
             ],
             'UpdateExpression' =>
                 'SET LastLogin=:ll',
-            'ExpressionAttributeValues'=> [
+            'ExpressionAttributeValues' => [
                 ':ll' => [
                     'S' => $loginTime
                 ]
@@ -245,7 +245,7 @@ class ActorUsers implements ActorUsersInterface
             ],
             'UpdateExpression' =>
                 'SET PasswordResetToken=:rt, PasswordResetExpiry=:re',
-            'ExpressionAttributeValues'=> [
+            'ExpressionAttributeValues' => [
                 ':rt' => [
                     'S' => $resetToken
                 ],

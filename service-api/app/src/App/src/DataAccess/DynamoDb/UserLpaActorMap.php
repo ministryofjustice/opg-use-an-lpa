@@ -38,7 +38,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
     /**
      * @inheritDoc
      */
-    public function get(string $lpaActorToken) : ?array
+    public function get(string $lpaActorToken): ?array
     {
         $result = $this->client->getItem([
             'TableName' => $this->userLpaActorTable,
@@ -60,7 +60,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
     public function create(string $lpaActorToken, string $userId, string $siriusUid, int $actorId)
     {
         // The current DateTime, including microseconds
-        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+        $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
 
         try {
             $this->client->putItem([
@@ -74,7 +74,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
                 ],
                 'ConditionExpression' => 'attribute_not_exists(Id)'
             ]);
-        } catch (DynamoDbException $e){
+        } catch (DynamoDbException $e) {
             if ($e->getAwsErrorCode() === 'ConditionalCheckFailedException') {
                 throw new KeyCollisionException();
             }
@@ -100,7 +100,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
     /**
      * @inheritDoc
      */
-    public function getUsersLpas(string $userId) : ?array
+    public function getUsersLpas(string $userId): ?array
     {
         $result = $this->client->query([
             'TableName' => $this->userLpaActorTable,
