@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\ApiClient;
 
 use App\Exception\ApiException;
+use App\Service\Log\RequestTracing;
 use Aws\Credentials\CredentialProvider;
 use Aws\Signature\SignatureV4;
 use Fig\Http\Message\StatusCodeInterface;
@@ -37,15 +38,21 @@ class Client
     private $awsRegion;
 
     /**
+     * @var string
+     */
+    private $traceId;
+
+    /**
      * Client constructor
      *
      * @param ClientInterface $httpClient
      */
-    public function __construct(ClientInterface $httpClient, string $apiUrl, string $awsRegion)
+    public function __construct(ClientInterface $httpClient, string $apiUrl, string $awsRegion, string $traceId)
     {
         $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiUrl;
         $this->awsRegion = $awsRegion;
+        $this->traceId = $traceId;
     }
 
     /**
@@ -202,6 +209,10 @@ class Client
             'Accept'        => 'application/json',
             'Content-Type'  => 'application/json',
         ];
+
+        if (!empty($this->traceId)) {
+            $headerLines[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
+        }
 
         return $headerLines;
     }

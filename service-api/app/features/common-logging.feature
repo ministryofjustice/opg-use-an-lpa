@@ -9,7 +9,7 @@ Feature: Full featured logging capabilities are available
     And I have been given access to use an LPA via credentials
     And I am currently signed in
 
-  @ui
+  @acceptance
   Scenario: An inbound tracing header is attached to outbound requests
     Given I attach a tracing header to my requests
     When I view my dashboard

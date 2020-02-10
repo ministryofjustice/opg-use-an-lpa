@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\ApiClient;
 
+use App\Service\Log\RequestTracing;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 
@@ -24,7 +25,8 @@ class ClientFactory
         return new Client(
             $container->get(ClientInterface::class),
             $config['sirius_api']['endpoint'],
-            $config['aws']['region']
+            $config['aws']['region'],
+            $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );
     }
 }
