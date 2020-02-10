@@ -15,7 +15,6 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Common\Handler\UserAware;
 
-
 /**
  * Class YourDetailsHandler
  *
@@ -29,8 +28,8 @@ class YourDetailsHandler extends AbstractHandler implements UserAware
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper)
-    {
+        UrlHelper $urlHelper
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
@@ -51,8 +50,3 @@ class YourDetailsHandler extends AbstractHandler implements UserAware
         ]));
     }
 }
-
-
-
-
-

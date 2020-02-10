@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Entity;
 
-use \DateTime;
+use DateTime;
 
 class CaseActor
 {
@@ -41,112 +41,112 @@ class CaseActor
     /** @var Address[] */
     protected $addresses = [];
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId(int $id) : void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    public function getUId() : ?string
+    public function getUId(): ?string
     {
         return $this->uId;
     }
 
-    public function setUId(string $uId) : void
+    public function setUId(string $uId): void
     {
         $this->uId = $uId;
     }
 
-    public function getEmail() : ?string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email) : void
+    public function setEmail(string $email): void
     {
         $this->email = $email;
     }
 
-    public function getDob() : ?DateTime
+    public function getDob(): ?DateTime
     {
         return $this->dob;
     }
 
-    public function setDob(DateTime $dob) : void
+    public function setDob(DateTime $dob): void
     {
         $this->dob = $dob;
     }
 
-    public function getSalutation() : ?string
+    public function getSalutation(): ?string
     {
         return $this->salutation;
     }
 
-    public function setSalutation(string $salutation) : void
+    public function setSalutation(string $salutation): void
     {
         $this->salutation = $salutation;
     }
 
-    public function getFirstname() : ?string
+    public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname) : void
+    public function setFirstname(string $firstname): void
     {
         $this->firstname = $firstname;
     }
 
-    public function getMiddlenames() : ?string
+    public function getMiddlenames(): ?string
     {
         return $this->middlenames;
     }
 
-    public function setMiddlenames(string $middlenames) : void
+    public function setMiddlenames(string $middlenames): void
     {
         $this->middlenames = $middlenames;
     }
 
-    public function getCompanyName() : ?string
+    public function getCompanyName(): ?string
     {
         return $this->companyName;
     }
 
-    public function setCompanyName(string $companyName) : void
+    public function setCompanyName(string $companyName): void
     {
         $this->companyName = $companyName;
     }
 
-    public function getSurname() : ?string
+    public function getSurname(): ?string
     {
         return $this->surname;
     }
 
-    public function setSurname(string $surname) : void
+    public function setSurname(string $surname): void
     {
         $this->surname = $surname;
     }
 
-    public function getAddresses() : array
+    public function getAddresses(): array
     {
         return $this->addresses;
     }
 
-    public function setAddresses(array $addresses) : void
+    public function setAddresses(array $addresses): void
     {
         $this->addresses = $addresses;
     }
 
-    public function getSystemStatus() : bool
+    public function getSystemStatus(): bool
     {
         return $this->systemStatus;
     }
 
-    public function setSystemStatus(bool $systemStatus) : void
+    public function setSystemStatus(bool $systemStatus): void
     {
         $this->systemStatus = $systemStatus;
     }

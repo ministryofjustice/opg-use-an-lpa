@@ -33,7 +33,7 @@ class KeyCache
      * @return array|bool
      * @codeCoverageIgnore
      */
-    public function store(string $key, $value, int $ttl = 0 )
+    public function store(string $key, $value, int $ttl = 0)
     {
         return apcu_store($key, $value, $ttl);
     }

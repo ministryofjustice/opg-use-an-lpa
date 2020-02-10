@@ -36,8 +36,8 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
         LpaService $lpaService,
-        ViewerCodeService $viewerCodeService)
-    {
+        ViewerCodeService $viewerCodeService
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
@@ -66,7 +66,6 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
         }
 
         foreach ($lpas as $lpaKey => $lpaData) {
-
             $actorToken = $lpaData['user-lpa-actor-token'];
 
             $shareCodes = $this->viewerCodeService->getShareCodes(

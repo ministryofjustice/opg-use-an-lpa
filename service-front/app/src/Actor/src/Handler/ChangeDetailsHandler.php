@@ -29,8 +29,8 @@ class ChangeDetailsHandler extends AbstractHandler implements UserAware
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper)
-    {
+        UrlHelper $urlHelper
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
@@ -47,8 +47,7 @@ class ChangeDetailsHandler extends AbstractHandler implements UserAware
         $actorLpaToken = "null";
         $array = $request->getQueryParams();
 
-        if (!empty($array))
-        {
+        if (!empty($array)) {
             $actorLpaToken = $request->getQueryParams()['lpa'];
         }
 

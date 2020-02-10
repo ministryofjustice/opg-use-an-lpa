@@ -38,8 +38,8 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authenticator)
-    {
+        AuthenticationInterface $authenticator
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
@@ -49,7 +49,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $form = new Login($this->getCsrfGuard($request));
 
@@ -59,8 +59,8 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             if ($form->isValid()) {
                 $user = $this->getUser($request);
 
-                if ( ! is_null($user)) {
-                    if (empty($user->getDetail('LastLogin'))){
+                if (! is_null($user)) {
+                    if (empty($user->getDetail('LastLogin'))) {
                         return $this->redirectToRoute('lpa.add');
                     } else {
                         return $this->redirectToRoute('lpa.dashboard');
