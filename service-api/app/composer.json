@@ -73,22 +73,17 @@
         }
     },
     "scripts": {
-        "post-create-project-cmd": [
-            "@development-enable"
-        ],
-        "development-disable": "zf-development-mode disable",
-        "development-enable": "zf-development-mode enable",
-        "development-status": "zf-development-mode status",
-        "expressive": "expressive --ansi",
         "check": [
             "@cs-check",
-            "@test"
+            "@unit-test",
+            "@acc-test",
+            "@int-test"
         ],
         "clear-config-cache": "php bin/clear-config-cache.php",
-        "cs-check": "phpcs",
-        "cs-fix": "phpcbf",
-        "serve": "php -S 0.0.0.0:8080 -t public/",
-        "test": "phpunit --colors=always",
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+        "cs-check": "docker-compose -f ../../docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose-integration.yml run api-app /app/vendor/bin/phpcs",
+        "cs-fix": "docker-compose -f ../../docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose-integration.yml run api-app /app/vendor/bin/phpcbf",
+        "unit-test": "docker-compose -f ../../docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose-integration.yml run api-app /app/vendor/bin/phpunit --colors=always",
+        "acc-test": "docker-compose -f ../../docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose-integration.yml run api-app /app/vendor/bin/behat -p acceptance",
+        "int-test": "docker-compose -f ../../docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose-integration.yml run api-app /app/vendor/bin/behat -p integration"
     }
 }
