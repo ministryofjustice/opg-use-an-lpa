@@ -14,6 +14,8 @@ use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\SetupEnv;
+use Common\Service\Lpa\ViewerCodeService;
+use DateInterval;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
@@ -42,6 +44,8 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property $userActivationToken
  * @property $actorAccountCreateData
  * @property $userLpaActorToken
+ * @property $organisation
+ * @property $accessCode
  */
 class AccountContext implements Context, Psr11AwareContext
 {
@@ -74,7 +78,7 @@ class AccountContext implements Context, Psr11AwareContext
         $this->passcode = 'XYUPHWQRECHV';
         $this->referenceNo = '700000000054';
         $this->userDob = '1975-10-05';
-        $this->actorLpaId = 0;
+        $this->actorLpaId = 9;
         $this->userId = '9999999999';
     }
 
@@ -566,6 +570,7 @@ class AccountContext implements Context, Psr11AwareContext
     public function theLPAIsSuccessfullyAdded()
     {
         $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+        $this->userLpaActorToken = '13579';
 
         // ActorCodes::get
         $this->awsFixtures->append(new Result([
@@ -714,7 +719,6 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iRequestToViewAnLPAWhichStatusIs($status)
     {
-        $this->userLpaActorToken = '13579';
         $this->lpa->status = $status;
 
         // UserLpaActorMap::get
@@ -756,6 +760,46 @@ class AccountContext implements Context, Psr11AwareContext
     public function theFullLPAIsDisplayedWithTheCorrect($message)
     {
         // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to give an organisation access to one of my LPAs$/
+     */
+    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
+    {
+        $this->organisation = "TestOrg";
+        $this->accessCode = "XYZ321ABC987";
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->referenceNo,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorLpaId,
+                'UserId'           => $this->userId
+            ])
+        ]));
+
+        // ViewerCodes::add
+        $this->awsFixtures->append(new Result());
+    }
+
+    /**
+     * @Then /^I am given a unique access code$/
+     */
+    public function iAmGivenAUniqueAccessCode()
+    {
+        $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
+        $codeData = $viewerCodeService->addCode($this->userLpaActorToken, $this->userId, $this->organisation);
+
+        $codeExpiry = (new DateTime($codeData['expires']))->format('Y-m-d');
+        $in30Days = ((new DateTime('now'))->add(new DateInterval('P30D'))->format('Y-m-d'));
+
+        assertArrayHasKey('code', $codeData);
+        assertNotNull($codeData['code']);
+        assertEquals($codeExpiry, $in30Days);
+        assertEquals($codeData['organisation'], $this->organisation);
     }
   
     /**

@@ -8,6 +8,7 @@ use Aws\DynamoDb\Marshaler;
 use Aws\Result;
 use BehatTest\Context\SetupEnv;
 use DateTime;
+use DateInterval;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 
@@ -28,6 +29,8 @@ use GuzzleHttp\Psr7\Response;
  * @property $lpa
  * @property $actorAccountCreateData
  * @property $userLpaActorToken
+ * @property $organisation
+ * @property $accessCode
  */
 class AccountContext extends BaseAcceptanceContext
 {
@@ -44,7 +47,7 @@ class AccountContext extends BaseAcceptanceContext
         $this->passcode = 'XYUPHWQRECHV';
         $this->referenceNo = '700000000054';
         $this->userDob = '1975-10-05';
-        $this->actorId = 0;
+        $this->actorId = 9;
         $this->userId = '111222333444';
     }
 
@@ -416,6 +419,7 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function theLPAIsSuccessfullyAdded()
     {
+        $this->userLpaActorToken = '13579';
         $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
 
         // ActorCodes::get
@@ -718,7 +722,6 @@ class AccountContext extends BaseAcceptanceContext
      */
     public function iRequestToViewAnLPAWhichStatusIs($status)
     {
-        $this->userLpaActorToken = '13579';
         $this->lpa->status = $status;
 
         // UserLpaActorMap::get
@@ -758,6 +761,54 @@ class AccountContext extends BaseAcceptanceContext
     public function theFullLPAIsDisplayedWithTheCorrect($message)
     {
         // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to give an organisation access to one of my LPAs$/
+     */
+    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
+    {
+        $this->organisation = "TestOrg";
+        $this->accessCode = "XYZ321ABC987";
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->referenceNo,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorId,
+                'UserId'           => $this->userId
+            ])
+        ]));
+
+        // ViewerCodes::add
+        $this->awsFixtures->append(new Result());
+
+        // ViewerCodeService::createShareCode
+        $this->apiPost('/v1/lpas/' . $this->userLpaActorToken . '/codes', ['organisation' => $this->organisation],
+            [
+                'user-token' => $this->userId
+            ]
+        );
+    }
+
+    /**
+     * @Then /^I am given a unique access code$/
+     */
+    public function iAmGivenAUniqueAccessCode()
+    {
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        $codeExpiry = (new DateTime($response['expires']))->format('Y-m-d');
+        $in30Days = ((new DateTime('now'))->add(new DateInterval('P30D'))->format('Y-m-d'));
+
+        assertArrayHasKey('code', $response);
+        assertNotNull($response['code']);
+        assertEquals($codeExpiry, $in30Days);
+        assertEquals($response['organisation'], $this->organisation);
     }
 
     /**

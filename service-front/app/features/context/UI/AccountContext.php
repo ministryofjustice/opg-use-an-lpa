@@ -22,6 +22,9 @@ use Psr\Http\Message\RequestInterface;
  * @property $userId
  * @property $userLpaActorToken
  * @property $userActive
+ * @property $actorId
+ * @property $accessCode
+ * @property $organisation
  */
 class AccountContext extends BaseUIContext
 {
@@ -35,6 +38,7 @@ class AccountContext extends BaseUIContext
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
 
         $this->userLpaActorToken = '987654321';
+        $this->actorId = 9;
 
         $this->lpaData = [
             'user-lpa-actor-token' => $this->userLpaActorToken,
@@ -933,4 +937,128 @@ class AccountContext extends BaseUIContext
         $this->ui->assertPageAddress('/lpa/view-lpa');
         $this->ui->assertPageContainsText($message);
     }
+
+    /**
+     * @When /^I request to give an organisation access to one of my LPAs$/
+     */
+    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
+    {
+        $this->organisation = "TestOrg";
+        $this->accessCode = "XYZ321ABC987";
+
+        // API call for get LpaById (when give organisation access is clicked)
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        // API call to make code
+        $this->apiFixtures->post('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                            'code' => $this->accessCode,
+                            'expires' => '2021-03-07T23:59:59+00:00',
+                            'organisation'=> $this->organisation
+                        ]
+                    )
+                ));
+
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        $this->ui->clickLink('Give an organisation access');
+        $this->ui->fillField('org_name', $this->organisation);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I am given a unique access code$/
+     */
+    public function iAmGivenAUniqueAccessCode()
+    {
+        $this->ui->assertPageAddress('/lpa/code-make');
+        $this->ui->assertPageContainsText('XYZ3 - 21AB - C987');
+        $this->ui->assertPageContainsText('Give this access code to ' . $this->organisation);
+    }
+
+    /**
+     * @Given /^I have created an access code$/
+     */
+    public function iHaveCreatedAnAccessCode()
+    {
+        $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
+        $this->iAmGivenAUniqueAccessCode();
+    }
+
+    /**
+     * @When /^I click to check my access codes$/
+     */
+    public function iClickToCheckMyAccessCodes()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        // API call to make code
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                            0 => [
+                                'SiriusUid'    => $this->lpa->uId,
+                                'Added'        => '2020-01-01T23:59:59+00:00',
+                                'Expires'      => '2021-01-01T23:59:59+00:00',
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => $this->organisation,
+                                'ViewerCode'   => $this->accessCode,
+                                'Viewed'       => false,
+                                'ActorId'      => $this->actorId
+                            ]
+                        ]
+                    )
+                ));
+
+        $this->ui->clickLink('Check access codes');
+    }
+
+    /**
+     * @Then /^I can see all of my access codes and their details$/
+     */
+    public function iCanSeeAllOfMyAccessCodesAndTheirDetails()
+    {
+        $this->ui->assertPageContainsText('Active codes');
+        $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
+    }
+
 }
