@@ -8,6 +8,7 @@ use Common\Form\AbstractForm;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Filter\StringTrim;
 use Zend\InputFilter\InputFilterProviderInterface;
+use Zend\Validator\NotEmpty;
 use Zend\Validator\Regex;
 
 class ShareCode extends AbstractForm implements InputFilterProviderInterface
@@ -38,10 +39,17 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                     ['name' => StringTrim::class],
                 ],
                 'validators' => [
+                    [
+                        'name'                   => NotEmpty::class,
+                        'break_chain_on_failure' => true,
+                        'options'                => [
+                            'message'  => 'Enter the LPA access code',
+                        ],
+                    ],
                     new Regex([
-                        'pattern' => '/[[:alnum:]]{4,4}(?\'dash\' |-)?[[:alnum:]]{4,4}(\g{dash})?[[:alnum:]]{4,4}/',
+                        'pattern' => '/^[[:alnum:]]{4,4}(?\'dash\' |-)?[[:alnum:]]{4,4}(\g{dash})?[[:alnum:]]{4,4}$/',
                         'message' => [
-                            Regex::NOT_MATCH => 'Enter an LPA share code in the correct format.'
+                            Regex::NOT_MATCH => 'LPA access codes are 13 numbers and letters long and start with a V'
                         ]
                     ])
                 ]
@@ -50,6 +58,15 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                 'required' => true,
                 'filters'  => [
                     ['name' => StringTrim::class],
+                ],
+                'validators' => [
+                    [
+                        'name'                   => NotEmpty::class,
+                        'break_chain_on_failure' => true,
+                        'options'                => [
+                            'message'  => 'Enter the donor\'s surname',
+                        ],
+                    ]
                 ]
             ]
         ];
