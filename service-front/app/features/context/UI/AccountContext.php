@@ -1028,7 +1028,7 @@ class AccountContext extends BaseUIContext
                         'actor'                => [],
                     ])));
 
-        // API call to make code
+        // API call to get access codes
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
             ->respondWith(
                 new Response(
