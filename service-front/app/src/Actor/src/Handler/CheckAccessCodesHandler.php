@@ -53,6 +53,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+
         $actorLpaToken = $request->getQueryParams()['lpa'];
 
         if (is_null($actorLpaToken)) {

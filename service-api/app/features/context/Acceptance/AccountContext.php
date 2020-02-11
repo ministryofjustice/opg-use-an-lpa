@@ -28,6 +28,9 @@ use GuzzleHttp\Psr7\Response;
  * @property $lpa
  * @property $actorAccountCreateData
  * @property $userLpaActorToken
+ * @property string viewerCode
+ * @property string organisation
+ * @property string actorLpaToken
  */
 class AccountContext extends BaseAcceptanceContext
 {
@@ -758,6 +761,269 @@ class AccountContext extends BaseAcceptanceContext
     public function theFullLPAIsDisplayedWithTheCorrect($message)
     {
         // Not needed for this context
+    }
+
+    /**
+     * @Given I have generated an access code for an organisation
+     */
+    public function iHaveGeneratedAnAccessCodeForAnOrganisation()
+    {
+        $this->actorLpaToken = '987654321';
+        $this->organisation = 'Natwest';
+        $this->viewerCode = '38ME32GJPU9M';
+        $this->userId = '12345';
+    }
+
+    /**
+     * @Given /^I am on the create viewer code page$/
+     */
+    public function iAmOnTheCreateViewerCodePage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I want to see the code details/
+     */
+    public function iWantToSeeTheCodeDetails()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I see the option to cancel the code/
+     */
+    public function iSeeTheOptionToCancelTheCode()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I want to be asked for confirmation prior to cancellation/
+     */
+    public function iWantToBeAskedForConfirmationPriorToCancellation()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to cancel the organisation access code/
+     */
+    public function iRequestToCancelTheOrganisationAccessCode()
+    {
+        $this->iRequestToViewTheCheckAccessCodePage();
+        $this->iCancelTheOrganisationAccessCode();
+    }
+
+    /**
+     * @When /^I am on the confirm cancel code page/
+     */
+    public function iAmOnTheConfirmCancelCodePage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should be shown the details of the cancelled viewer code with cancelled status/
+     */
+    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to view the check access code page$/
+     */
+    public function iRequestToViewTheCheckAccessCodePage()
+    {
+        $userLpaActorToken = '13579';
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => '700000000054',
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $userLpaActorToken,
+                'ActorId'          => $this->actorId,
+                'UserId'           => $this->userId
+            ])
+        ]));
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->referenceNo)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // LpaService::getLpaById
+        $this->apiGet('/v1/lpas/' . $userLpaActorToken,
+            [
+                'user-token' => $this->userId
+            ]
+        );
+
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+        $response = $this->getResponseAsJson();
+        assertEquals($userLpaActorToken, $response['user-lpa-actor-token']);
+
+        // userLpaActorMap::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => '700000000054',
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $userLpaActorToken,
+                'ActorId'          => $this->actorId,
+                'UserId'           => $this->userId
+            ])
+        ]));
+
+        //viewerCodesRepository::getCodesByUserLpaActorId
+        $this->awsFixtures->append(new Result([
+            'Items' => $this->marshalAwsResultData([
+
+                    'SiriusUid'     => '700000000054',
+                    'Added'         => (new DateTime('2020-03-04'))->format('Y-m-d\TH:i:s.u\Z'),
+                    'Expires'       => (new DateTime('2020-04-05'))->format('Y-m-d\TH:i:s.u\Z'),
+                    'UserLpaActor'  => $userLpaActorToken,
+                    'Organisation'  => $this->organisation,
+                    'ViewerCode'    => $this->viewerCode,
+                    'Viewed'        => false,
+                    'ActorId'       => 0,
+
+            ])
+        ]));
+
+        // ViewerCodeService::getShareCodes
+        $this->apiGet('/v1/lpas/' . $userLpaActorToken . '/codes',
+            [
+                'user-token' => $this->userId
+            ]
+        );
+
+      // $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+      //  $response = $this->getResponseAsJson();
+       // var_dump($response);
+       // die;
+       // assertEquals($userLpaActorToken, $response['user-lpa-actor-token']);
+
+    }
+
+    /**
+     * @When /^I cancel the organisation access code/
+     */
+    public function iCancelTheOrganisationAccessCode()
+    {
+        $this->userLpaActorToken = '13579';
+        $userId = '111222333444';
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->referenceNo,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorId,
+                'UserId'           => $userId
+            ])
+        ]));
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->referenceNo)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // LpaService::getLpaById
+        $this->apiGet('/v1/lpas/' . $this->userLpaActorToken,
+            [
+                //'user-token' => $userId,
+                'actor-lpa-token' => $this->userLpaActorToken
+            ]
+        );
+        $this->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+        $response = $this->getResponseAsJson();
+        assertEquals($this->userLpaActorToken, $response['user-lpa-actor-token']);
+
+//        // viewerCodeService::getShareCodes
+//        $this->awsFixtures->append(new Result([
+//            'Item' => $this->marshalAwsResultData([
+//                0 => [
+//                    'SiriusUid'     => '700000000047',
+//                    'Added'         => '2020-03-04T23:59:59+00:00',
+//                    'Expires'       => '2020-04-05T23:59:59+00:00',
+//                    'UserLpaActor'  => $this->actorLpaToken,
+//                    'Organisation'  => $this->organisation,
+//                    'ViewerCode'    => $this->viewerCode,
+//                    'Viewed'        => false,
+//                    'ActorId'       => 0,
+//                ]
+//            ])
+//        ]));
+//
+//       // $this->api('/v1/lpas/' . $this->userLpaActorToken . '/codes', ['code' => $shareCodes], []);
+//        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+//            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+    }
+
+    /**
+     * @When /^I confirm cancellation of the chosen viewer code/
+     */
+    public function iConfirmCancellationOfTheChosenViewerCode()
+    {
+        $this->userLpaActorToken = '13579';
+        $userId = '111222333444';
+
+        $shareCodes = [
+            0 => [
+                'SiriusUid'     => '700000000047',
+                'Added'         => '2020-03-04T23:59:59+00:00',
+                'Expires'       => '2020-04-05T23:59:59+00:00',
+                'Cancelled'     => '2020-04-05T23:59:59+00:00',
+                'UserLpaActor'  => $this->actorLpaToken,
+                'Organisation'  => $this->organisation,
+                'ViewerCode'    => $this->viewerCode,
+                'Viewed'        => false,
+                'ActorId'       => 0,
+            ]
+        ];
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->referenceNo,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorId,
+                'UserId'           => $userId
+            ])
+        ]));
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->referenceNo)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // LpaService::getLpaById
+        $this->apiGet('/v1/lpas/' . $this->userLpaActorToken,
+            [
+                //'user-token' => $userId,
+                'actor-lpa-token' => $this->userLpaActorToken
+            ]
+        );
+        // viewerCodeService::getShareCodes
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                0 => [
+                    'SiriusUid'     => '700000000047',
+                    'Added'         => '2020-03-04T23:59:59+00:00',
+                    'Expires'       => '2020-04-05T23:59:59+00:00',
+                    'Cancelled'     => '2020-04-05T23:59:59+00:00',
+                    'UserLpaActor'  => $this->actorLpaToken,
+                    'Organisation'  => $this->organisation,
+                    'ViewerCode'    => $this->viewerCode,
+                    'Viewed'        => false,
+                    'ActorId'       => 0,
+                ]
+            ])
+        ]));
+
+        $this->api('/v1/lpas/' . $this->userLpaActorToken . '/codes', ['code' => $shareCodes], []);
     }
 
     /**

@@ -12,6 +12,7 @@ use Common\Exception\ApiException;
 use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
+use Common\Service\Lpa\ViewerCodeService;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -39,6 +40,8 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property string userDob
  * @property string userIdentity
  * @property string actorLpaToken
+ * @property string viewerCode
+ * @property string organisation
  */
 class AccountContext implements Context, Psr11AwareContext
 {
@@ -59,6 +62,9 @@ class AccountContext implements Context, Psr11AwareContext
     /** @var LpaService */
     private $lpaService;
 
+    /** @var ViewerCodeService */
+    private $viewerCodeService;
+
     /** @var LpaFactory */
     private $lpaFactory;
 
@@ -70,6 +76,7 @@ class AccountContext implements Context, Psr11AwareContext
         $this->userService = $this->container->get(UserService::class);
         $this->emailClient = $this->container->get(EmailClient::class);
         $this->lpaService  = $this->container->get(LpaService::class);
+        $this->viewerCodeService  = $this->container->get(ViewerCodeService::class);
         $this->lpaFactory  = $this->container->get(LpaFactory::class);
     }
 
@@ -604,5 +611,243 @@ class AccountContext implements Context, Psr11AwareContext
         $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
 
         assertEquals($lpa, $lpaObject);
+    }
+
+    /**
+     * @Given /^I have generated an access code for an organisation$/
+     */
+    public function iHaveGeneratedAnAccessCodeForAnOrganisation()
+    {
+        $this->actorLpaToken = '987654321';
+        $this->organisation = 'Natwest';
+        $this->viewerCode = '38ME32GJPU9M';
+    }
+
+    /**
+     * @Given /^I am on the create viewer code page$/
+     */
+    public function iAmOnTheCreateViewerCodePage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to view the check access code page$/
+     */
+    public function iRequestToViewTheCheckAccessCodePage()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        assertNotNull($lpa);
+
+        //API call for getShareCodes
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => [
+                            'SiriusUid'     => '700000000047',
+                            'Added'         => '2020-03-04T23:59:59+00:00',
+                            'Expires'       => '2020-04-05T23:59:59+00:00',
+                            'UserLpaActor'  => $this->actorLpaToken,
+                            'Organisation'  => $this->organisation,
+                            'ViewerCode'    => $this->viewerCode,
+                            'Viewed'        => false,
+                            'ActorId'       => 0,
+                        ]
+                    ])));
+
+        $shareCodes = $this->viewerCodeService->getShareCodes(
+            $this->userIdentity,
+            $this->actorLpaToken,
+            false
+        );
+
+        assertNotNull($shareCodes);
+    }
+
+    /**
+     * @Then /^I want to see the code details/
+     */
+    public function iWantToSeeTheCodeDetails()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I cancel the organisation access code/
+     */
+    public function iCancelTheOrganisationAccessCode()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        assertNotNull($lpa);
+
+        //API call for getShareCodes
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => [
+                            'SiriusUid'     => '700000000047',
+                            'Added'         => '2020-03-04T23:59:59+00:00',
+                            'Expires'       => '2020-04-05T23:59:59+00:00',
+                            'UserLpaActor'  => $this->actorLpaToken,
+                            'Organisation'  => $this->organisation,
+                            'ViewerCode'    => $this->viewerCode,
+                            'Viewed'        => false,
+                            'ActorId'       => 0,
+                        ]
+                    ])));
+
+        $shareCodes = $this->viewerCodeService->getShareCodes(
+            $this->userIdentity,
+            $this->actorLpaToken,
+            false
+        );
+
+        assertEquals($shareCodes[0]['Organisation'], $this->organisation);
+    }
+
+    /**
+     * @Then /^I want to be asked for confirmation prior to cancellation/
+     */
+    public function iWantToBeAskedForConfirmationPriorToCancellation()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to cancel the organisation access code/
+     */
+    public function iRequestToCancelTheOrganisationAccessCode()
+    {
+        $this->iRequestToViewTheCheckAccessCodePage();
+        $this->iCancelTheOrganisationAccessCode();
+    }
+
+    /**
+     * @When /^I am on the confirm cancel code page/
+     */
+    public function iAmOnTheConfirmCancelCodePage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I confirm cancellation of the chosen viewer code/
+     */
+    public function iConfirmCancellationOfTheChosenViewerCode()
+    {
+        // API call for get LpaById in CancelCodeHandler
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+        assertNotNull($lpa);
+
+        // API call for cancelShareCode in CancelCodeHandler
+        $this->apiFixtures->put('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([ ])));
+
+        $this->viewerCodeService->cancelShareCode(
+            $this->userIdentity,
+            $this->actorLpaToken,
+            $this->viewerCode
+        );
+
+        // API call for get LpaById in CancelCodeHandler
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        // API call for getShareCodes in CheckAccessCodesHandler
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => [
+                            'SiriusUid'     => '700000000047',
+                            'Added'         => '2020-03-04T23:59:59+00:00',
+                            'Expires'       => '2020-04-05T23:59:59+00:00',
+                            'Cancelled'     => '2020-04-05T23:59:59+00:00',
+                            'UserLpaActor'  => $this->actorLpaToken,
+                            'Organisation'  => $this->organisation,
+                            'ViewerCode'    => $this->viewerCode,
+                            'Viewed'        => false,
+                            'ActorId'       => 0,
+                        ]
+                    ])));
+
+        $shareCodes = $this->viewerCodeService->getShareCodes(
+            $this->userIdentity,
+            $this->actorLpaToken,
+            false
+        );
+
+        assertEquals($shareCodes[0]['Organisation'], $this->organisation);
+    }
+
+    /**
+     * @Then /^I should be shown the details of the cancelled viewer code with cancelled status/
+     */
+    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus()
+    {
+        // Not needed for this context
     }
 }
