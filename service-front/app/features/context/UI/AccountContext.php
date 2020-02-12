@@ -144,6 +144,10 @@ class AccountContext extends BaseUIContext
      */
     public function iAttemptToSignInAgain()
     {
+        // Dashboard page checks for all LPA's for a user
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
         $this->ui->visit('/login');
     }
 
