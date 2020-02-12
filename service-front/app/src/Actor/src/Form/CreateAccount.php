@@ -36,11 +36,6 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
         ]);
 
         $this->add([
-            'name' => 'email_confirm',
-            'type' => 'Text',
-        ]);
-
-        $this->add([
             'name' => 'password',
             'type' => 'Password',
         ]);
@@ -81,35 +76,6 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => EmailAddressValidator::class,
                         'break_chain_on_failure' => true,
                     ]
-                ],
-            ],
-            'email_confirm'    => [
-                'required' => true,
-                'filters'  => [
-                    [
-                        'name' => StringToLower::class,
-                    ],
-                ],
-                'validators' => [
-                    [
-                        'name'                   => NotEmpty::class,
-                        'break_chain_on_failure' => true,
-                        'options'                => [
-                            'messages'           => [
-                                NotEmpty::IS_EMPTY => 'Confirm your email address',
-                            ],
-                        ],
-                    ],
-                    [
-                        'name'                   => Identical::class,
-                        'break_chain_on_failure' => true,
-                        'options'                => [
-                            'token'    => 'email',
-                            'messages' => [
-                                Identical::NOT_SAME => 'The emails did not match',
-                            ],
-                        ],
-                    ],
                 ],
             ],
             'password'         => [

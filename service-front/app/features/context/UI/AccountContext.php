@@ -722,7 +722,6 @@ class AccountContext extends BaseUIContext
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $this->email);
-        $this->ui->fillField('email_confirm', $this->email);
         $this->ui->fillField('password', $this->password);
         $this->ui->fillField('password_confirm', $this->password);
         $this->ui->fillField('terms', 1);
@@ -818,7 +817,6 @@ class AccountContext extends BaseUIContext
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $this->email);
-        $this->ui->fillField('email_confirm', $this->email);
         $this->ui->fillField('password', $this->password);
         $this->ui->fillField('password_confirm', $this->password);
         $this->ui->fillField('terms', 1);
@@ -841,7 +839,6 @@ class AccountContext extends BaseUIContext
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $email1);
-        $this->ui->fillField('email_confirm', $email2);
         $this->ui->fillField('password', $password1);
         $this->ui->fillField('password_confirm', $password2);
 
@@ -874,7 +871,6 @@ class AccountContext extends BaseUIContext
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $value1);
-        $this->ui->fillField('email_confirm', $value2);
         $this->ui->fillField('password',  $value1);
         $this->ui->fillField('password_confirm', $value2);
 
