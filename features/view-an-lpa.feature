@@ -16,16 +16,16 @@ Feature: View a lasting power of attorney
   Scenario: Show an error message when I try to search for an LPA without entering an LPA code or donor surname
     Given I go to the enter code page on the viewer service
     When the share code form is submitted
-    Then error message "Value is required and can't be empty" is displayed in the error summary
-    And error message "Value is required and can't be empty" is displayed next to the LPA access code input
-    And error message "Value is required and can't be empty" is displayed next to the Donor surname input
+    Then error message "Enter the donor's surname" is displayed in the error summary
+    And error message "Enter the LPA access code" is displayed next to the LPA access code input
+    And error message "Enter the donor's surname" is displayed next to the Donor surname input
 
   Scenario: Show an error message when I search for an LPA with an LPA code that is the wrong format
     Given I go to the enter code page on the viewer service
     And the share code input is populated with "2DBM&ADB2U2F6" and "Sanderson"
     When the share code form is submitted
-    Then error message "Enter an LPA share code in the correct format." is displayed in the error summary
-    And error message "Enter an LPA share code in the correct format." is displayed next to the LPA access code input
+    Then error message "LPA access codes are 13 numbers and letters long and start with a V" is displayed in the error summary
+    And error message "LPA access codes are 13 numbers and letters long and start with a V" is displayed next to the LPA access code input
 
   Scenario: Show an error page when I search for an LPA with an invalid LPA code and surname that does not exist
     Given I go to the enter code page on the viewer service
