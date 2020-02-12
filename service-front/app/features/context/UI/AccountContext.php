@@ -32,6 +32,7 @@ class AccountContext implements Context
 
     /**
      * @Given /^I have been given access to use an LPA via credentials$/
+     * @Given /^I have added an LPA to my account$/
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
@@ -901,22 +902,29 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I have added an LPA to my account$/
-     */
-    public function iHaveAddedAnLPAToMyAccount()
-    {
-        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
-        $this->iAmOnTheAddAnLPAPage();
-        $this->iRequestToAddAnLPAWithValidDetails();
-        $this->theCorrectLPAIsFoundAndICanConfirmToAddIt();
-        $this->theLPAIsSuccessfullyAdded();
-    }
-
-    /**
      * @Given /^I am on the dashboard page$/
      */
     public function iAmOnTheDashboardPage()
     {
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->ui->visit('/lpa/dashboard');
         $this->ui->assertPageAddress('/lpa/dashboard');
     }
 

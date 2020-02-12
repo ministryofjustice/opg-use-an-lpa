@@ -6,6 +6,7 @@ namespace BehatTest\Context;
 
 use Aws\DynamoDb\Marshaler;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use BehatTest\Context\Acceptance\BaseAcceptanceContext;
 use JSHayes\FakeRequests\MockHandler;
@@ -104,12 +105,24 @@ trait BaseAcceptanceContextTrait
 
     private function createServerParams(array $headers): array
     {
+        // this headerThief madness allows access to the private 'serverParameters' property of the BrowserKitDriver
+        // the reason we need this is that by calling `request()` on the client directly we skip the merging of
+        // headers that the driver does before calling the client, so we do that manually here with this magic.
+        $driverHeaders = \Closure::bind(
+            function (BrowserKitDriver $driver): array {
+                return $driver->serverParameters;
+            },
+            null,
+            $this->ui->getSession()->getDriver()
+        );
+        $presetHeaders = $driverHeaders($this->ui->getSession()->getDriver());
+
         $serverParams = [];
         foreach ($headers as $headerName => $value) {
             $serverParams['HTTP_'.$headerName] = $value;
         }
 
-        return $serverParams;
+        return array_merge($presetHeaders, $serverParams);
     }
 
     /**

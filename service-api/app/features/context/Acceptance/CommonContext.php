@@ -37,6 +37,7 @@ class CommonContext implements Context
     public function myOutboundRequestsHaveAttachedTracingHeaders()
     {
         $request = $this->getLastRequest();
-        $request->getRequest()->assertHasHeader(strtolower('X-Amzn-Trace-Id'));
+
+        $request->getRequest()->assertHasHeader(strtolower('X-Amzn-Trace-Id'), $this->traceId);
     }
 }
