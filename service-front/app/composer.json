@@ -89,6 +89,9 @@
         }
     },
     "scripts": {
+        "development-disable": "zf-development-mode disable",
+        "development-enable": "zf-development-mode enable",
+        "development-status": "zf-development-mode status",
         "check": [
             "@cs-check",
             "@unit-test",
