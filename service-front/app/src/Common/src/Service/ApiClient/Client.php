@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\ApiClient;
 
 use Common\Exception\ApiException;
+use Common\Service\Log\RequestTracing;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
@@ -35,16 +36,22 @@ class Client
     private $token;
 
     /**
+     * @var string
+     */
+    private $traceId;
+
+    /**
      * Client constructor
      *
      * @param ClientInterface $httpClient
      * @param string $apiBaseUri
      * @param string|null $token
      */
-    public function __construct(ClientInterface $httpClient, string $apiBaseUri)
+    public function __construct(ClientInterface $httpClient, string $apiBaseUri, string $traceId)
     {
         $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiBaseUri;
+        $this->traceId = $traceId;
     }
 
     /**
@@ -235,6 +242,11 @@ class Client
             'Accept'        => 'application/json',
             'Content-Type'  => 'application/json',
         ];
+
+        // the trace Id is used for logging of the path of requests through infrastructure
+        if (!empty($this->traceId)) {
+            $headerLines[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
+        }
 
         //  If the logged in user has an auth token already then set that in the header
         if (isset($this->token)) {

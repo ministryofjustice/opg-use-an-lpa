@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
+use Behat\Behat\Context\Context;
+use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ViewerContextTrait;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -18,9 +20,10 @@ use Psr\Http\Message\RequestInterface;
  * @property $lpaShareCode
  * @property $lpaData
  */
-class ViewerContext extends BaseUIContext
+class ViewerContext implements Context
 {
     use ViewerContextTrait;
+    use BaseUiContextTrait;
 
     /**
      * @Given /^I have been given access to an LPA via share code$/

@@ -4,22 +4,18 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
-use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use Alphagov\Notifications\Client;
-use Behat\Behat\Context\Context;
-use BehatTest\Context\ActorContextTrait as ActorContext;
 use Common\Exception\ApiException;
+use BehatTest\Context\ActorContextTrait;
 use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
+use Common\Service\Log\RequestTracing;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
-
-require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
 /**
  * A behat context that encapsulates user account steps
@@ -40,12 +36,9 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property string userIdentity
  * @property string actorLpaToken
  */
-class AccountContext implements Context, Psr11AwareContext
+class AccountContext extends BaseIntegrationContext
 {
-    use ActorContext;
-
-    /** @var ContainerInterface */
-    private $container;
+    use ActorContextTrait;
 
     /** @var MockHandler */
     private $apiFixtures;
@@ -62,9 +55,11 @@ class AccountContext implements Context, Psr11AwareContext
     /** @var LpaFactory */
     private $lpaFactory;
 
-    public function setContainer(ContainerInterface $container): void
+    protected function prepareContext(): void
     {
-        $this->container = $container;
+        // This is populated into the container using a Middleware which these integration
+        // tests wouldn't normally touch but the container expects
+        $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
 
         $this->apiFixtures = $this->container->get(MockHandler::class);
         $this->userService = $this->container->get(UserService::class);
@@ -294,7 +289,7 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
-      
+
     /**
      * @When /^I create an account using duplicate details$/
      */
@@ -314,7 +309,7 @@ class AccountContext implements Context, Psr11AwareContext
 
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
-          ->respondWith(
+            ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
@@ -383,7 +378,7 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
- 
+
     /**
      * @Then /^The LPA is not found$/
      */
@@ -411,7 +406,7 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
-  
+
     /**
      * @When /^I fill in the form and click the cancel button$/
      */
@@ -439,7 +434,7 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
-  
+
     /**
      * @Given /^The LPA has not been added$/
      */
@@ -447,7 +442,7 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
-     
+
     /**
      * @Then /^I receive unique instructions on how to activate my account$/
      */

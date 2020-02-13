@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Pdf;
 
+use Common\Service\Log\RequestTracing;
 use Common\Service\Pdf\PdfService;
 use Common\Service\Pdf\PdfServiceFactory;
 use Common\Service\Pdf\StylesService;
@@ -34,6 +35,7 @@ class PdfServiceFactoryTest extends TestCase
         $containerProphecy->get(ClientInterface::class)->willReturn($clientProphecy->reveal());
         $stylesProphecy = $this->prophesize(StylesService::class);
         $containerProphecy->get(StylesService::class)->willReturn($stylesProphecy->reveal());
+        $containerProphecy->get(RequestTracing::TRACE_PARAMETER_NAME)->willReturn('Root=1-1-11');
 
         $factory = new PdfServiceFactory();
         $pdfService = $factory(

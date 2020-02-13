@@ -18,8 +18,6 @@ return [
     ],
 
     'aws' => [
-        'debug'   => true,
-
         'region'  => 'eu-west-1',
         'version' => 'latest',
 
