@@ -154,5 +154,4 @@ class Lpas implements LpasInterface
 
         return $headerLines;
     }
-
 }
