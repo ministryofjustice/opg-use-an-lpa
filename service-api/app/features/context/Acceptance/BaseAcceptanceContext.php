@@ -76,6 +76,17 @@ abstract class BaseAcceptanceContext extends RawMinkContext implements Psr11Mink
         );
     }
 
+    protected function apiPut(string $url, array $data, array $headers): void
+    {
+        $this->getSession()->getDriver()->getClient()->request(
+            'PUT',
+            $url,
+            $data,
+            [],
+            $this->createServerParams($headers)
+        );
+    }
+
     protected function apiPatch(string $url, array $data, array $headers): void
     {
         $this->getSession()->getDriver()->getClient()->request(

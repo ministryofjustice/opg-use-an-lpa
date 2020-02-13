@@ -40,8 +40,7 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property string userDob
  * @property string userIdentity
  * @property string actorLpaToken
- * @property string viewerCode
- * @property string organisation
+ * @property int actorId
  */
 class AccountContext implements Context, Psr11AwareContext
 {
@@ -62,22 +61,22 @@ class AccountContext implements Context, Psr11AwareContext
     /** @var LpaService */
     private $lpaService;
 
-    /** @var ViewerCodeService */
-    private $viewerCodeService;
-
     /** @var LpaFactory */
     private $lpaFactory;
+
+    /** @var ViewerCodeService */
+    private $viewerCodeService;
 
     public function setContainer(ContainerInterface $container): void
     {
         $this->container = $container;
 
-        $this->apiFixtures = $this->container->get(MockHandler::class);
-        $this->userService = $this->container->get(UserService::class);
-        $this->emailClient = $this->container->get(EmailClient::class);
-        $this->lpaService  = $this->container->get(LpaService::class);
-        $this->viewerCodeService  = $this->container->get(ViewerCodeService::class);
-        $this->lpaFactory  = $this->container->get(LpaFactory::class);
+        $this->apiFixtures       = $this->container->get(MockHandler::class);
+        $this->userService       = $this->container->get(UserService::class);
+        $this->emailClient       = $this->container->get(EmailClient::class);
+        $this->lpaService        = $this->container->get(LpaService::class);
+        $this->lpaFactory        = $this->container->get(LpaFactory::class);
+        $this->viewerCodeService = $this->container->get(ViewerCodeService::class);
     }
 
     /**
@@ -301,7 +300,7 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
-      
+
     /**
      * @When /^I create an account using duplicate details$/
      */
@@ -321,7 +320,7 @@ class AccountContext implements Context, Psr11AwareContext
 
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
-          ->respondWith(
+            ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
@@ -368,6 +367,9 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function theLPAIsSuccessfullyAdded()
     {
+        $this->actorLpaToken = '24680';
+        $this->actorId = 9;
+
         // API call for adding an LPA
         $this->apiFixtures->post('/v1/actor-codes/confirm')
             ->respondWith(
@@ -390,7 +392,7 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
- 
+
     /**
      * @Then /^The LPA is not found$/
      */
@@ -418,7 +420,7 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
-  
+
     /**
      * @When /^I fill in the form and click the cancel button$/
      */
@@ -446,7 +448,7 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
-  
+
     /**
      * @Given /^The LPA has not been added$/
      */
@@ -454,7 +456,7 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
-     
+
     /**
      * @Then /^I receive unique instructions on how to activate my account$/
      */
@@ -583,7 +585,6 @@ class AccountContext implements Context, Psr11AwareContext
      */
     public function iRequestToViewAnLPAWhichStatusIs($status)
     {
-        $this->actorLpaToken = '24680';
         $this->lpa['status'] = $status;
 
         // API call for getting the LPA by id
@@ -593,12 +594,12 @@ class AccountContext implements Context, Psr11AwareContext
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode([
-                        'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => []
-                    ]
-                )));
+                            'user-lpa-actor-token' => $this->actorLpaToken,
+                            'date'                 => 'date',
+                            'lpa'                  => $this->lpa,
+                            'actor'                => []
+                        ]
+                    )));
     }
 
     /**
@@ -614,27 +615,86 @@ class AccountContext implements Context, Psr11AwareContext
     }
 
     /**
-     * @Given /^I have generated an access code for an organisation$/
+     * @When /^I request to give an organisation access to one of my LPAs$/
      */
-    public function iHaveGeneratedAnAccessCodeForAnOrganisation()
+    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
     {
-        $this->actorLpaToken = '987654321';
-        $this->organisation = 'Natwest';
-        $this->viewerCode = '38ME32GJPU9M';
+        $this->organisation = "TestOrg";
+        $this->accessCode = "XYZ321ABC987";
+
+        // API call for get LpaById (when give organisation access is clicked)
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        // API call to make code
+        $this->apiFixtures->post('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                            'code' => $this->accessCode,
+                            'expires' => '2021-03-07T23:59:59+00:00',
+                            'organisation'=> $this->organisation
+                        ]
+                    )
+                ));
+
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+
+
     }
 
     /**
-     * @Given /^I am on the create viewer code page$/
+     * @Then /^I am given a unique access code$/
      */
-    public function iAmOnTheCreateViewerCodePage()
+    public function iAmGivenAUniqueAccessCode()
     {
-        // Not needed for this context
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        $codeData = $this->viewerCodeService->createShareCode($this->userIdentity, $this->actorLpaToken, $this->organisation);
+
+        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
+
+        assertEquals($lpa, $lpaObject);
+        assertEquals($this->accessCode, $codeData['code']);
+        assertEquals($this->organisation, $codeData['organisation']);
     }
 
     /**
-     * @When /^I request to view the check access code page$/
+     * @Given /^I have created an access code$/
      */
-    public function iRequestToViewTheCheckAccessCodePage()
+    public function iHaveCreatedAnAccessCode()
+    {
+        $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
+        $this->iAmGivenAUniqueAccessCode();
+    }
+
+    /**
+     * @When /^I click to check my access codes$/
+     */
+    public function iClickToCheckMyAccessCodes()
     {
         // API call for get LpaById
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
@@ -649,42 +709,72 @@ class AccountContext implements Context, Psr11AwareContext
                         'actor'                => [],
                     ])));
 
-        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
-
-        assertNotNull($lpa);
-
-        //API call for getShareCodes
+        // API call to make code
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode([
-                        0 => [
-                            'SiriusUid'     => '700000000047',
-                            'Added'         => '2020-03-04T23:59:59+00:00',
-                            'Expires'       => '2020-04-05T23:59:59+00:00',
-                            'UserLpaActor'  => $this->actorLpaToken,
-                            'Organisation'  => $this->organisation,
-                            'ViewerCode'    => $this->viewerCode,
-                            'Viewed'        => false,
-                            'ActorId'       => 0,
+                            0 => [
+                                'SiriusUid'    => $this->lpa['uId'],
+                                'Added'        => '2020-01-01T23:59:59+00:00',
+                                'Expires'      => '2021-01-01T23:59:59+00:00',
+                                'UserLpaActor' => $this->actorLpaToken,
+                                'Organisation' => $this->organisation,
+                                'ViewerCode'   => $this->accessCode,
+                                'Viewed'       => false,
+                                'ActorId'      => $this->actorId
+                            ]
                         ]
-                    ])));
+                    )
+                ));
 
-        $shareCodes = $this->viewerCodeService->getShareCodes(
-            $this->userIdentity,
-            $this->actorLpaToken,
-            false
-        );
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
-        assertNotNull($shareCodes);
+        $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
+
+        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
+
+        assertEquals($lpa, $lpaObject);
+        assertEquals($this->accessCode, $shareCodes[0]['ViewerCode']);
+        assertEquals($this->organisation, $shareCodes[0]['Organisation']);
+        assertEquals($this->actorId, $shareCodes[0]['ActorId']);
+        assertEquals($this->actorLpaToken, $shareCodes[0]['UserLpaActor']);
+        assertEquals(false, $shareCodes[0]['Viewed']);
+
     }
 
     /**
-     * @Then /^I want to see the code details/
+     * @Then /^I can see all of my access codes and their details$/
      */
-    public function iWantToSeeTheCodeDetails()
+    public function iCanSeeAllOfMyAccessCodesAndTheirDetails()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I have generated an access code for an organisation and can see the details$/
+     */
+    public function iHaveGeneratedAnAccessCodeForAnOrganisationAndCanSeeTheDetails()
+    {
+        $this->iHaveCreatedAnAccessCode();
+        $this->iClickToCheckMyAccessCodes();
+        $this->iCanSeeAllOfMyAccessCodesAndTheirDetails();
+    }
+
+    /**
+     * @When /^I want to cancel the access code for an organisation$/
+     */
+    public function iWantToCancelTheAccessCodeForAnOrganisation()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I want to see the option to cancel the code$/
+     */
+    public function iWantToSeeTheOptionToCancelTheCode()
     {
         // Not needed for this context
     }
@@ -719,14 +809,14 @@ class AccountContext implements Context, Psr11AwareContext
                     [],
                     json_encode([
                         0 => [
-                            'SiriusUid'     => '700000000047',
-                            'Added'         => '2020-03-04T23:59:59+00:00',
-                            'Expires'       => '2020-04-05T23:59:59+00:00',
-                            'UserLpaActor'  => $this->actorLpaToken,
-                            'Organisation'  => $this->organisation,
-                            'ViewerCode'    => $this->viewerCode,
-                            'Viewed'        => false,
-                            'ActorId'       => 0,
+                            'SiriusUid'    => $this->lpa['uId'],
+                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'Expires'      => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->actorLpaToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode'   => $this->accessCode,
+                            'Viewed'       => false,
+                            'ActorId'      => $this->actorId
                         ]
                     ])));
 
@@ -743,23 +833,6 @@ class AccountContext implements Context, Psr11AwareContext
      * @Then /^I want to be asked for confirmation prior to cancellation/
      */
     public function iWantToBeAskedForConfirmationPriorToCancellation()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @When /^I request to cancel the organisation access code/
-     */
-    public function iRequestToCancelTheOrganisationAccessCode()
-    {
-        $this->iRequestToViewTheCheckAccessCodePage();
-        $this->iCancelTheOrganisationAccessCode();
-    }
-
-    /**
-     * @When /^I am on the confirm cancel code page/
-     */
-    public function iAmOnTheConfirmCancelCodePage()
     {
         // Not needed for this context
     }
@@ -796,7 +869,7 @@ class AccountContext implements Context, Psr11AwareContext
         $this->viewerCodeService->cancelShareCode(
             $this->userIdentity,
             $this->actorLpaToken,
-            $this->viewerCode
+            $this->accessCode
         );
 
         // API call for get LpaById in CancelCodeHandler
@@ -822,15 +895,15 @@ class AccountContext implements Context, Psr11AwareContext
                     [],
                     json_encode([
                         0 => [
-                            'SiriusUid'     => '700000000047',
-                            'Added'         => '2020-03-04T23:59:59+00:00',
-                            'Expires'       => '2020-04-05T23:59:59+00:00',
-                            'Cancelled'     => '2020-04-05T23:59:59+00:00',
-                            'UserLpaActor'  => $this->actorLpaToken,
-                            'Organisation'  => $this->organisation,
-                            'ViewerCode'    => $this->viewerCode,
-                            'Viewed'        => false,
-                            'ActorId'       => 0,
+                            'SiriusUid'    => $this->lpa['uId'],
+                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'Expires'      => '2021-01-01T23:59:59+00:00',
+                            'Cancelled'    => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->actorLpaToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode'   => $this->accessCode,
+                            'Viewed'       => false,
+                            'ActorId'      => $this->actorId
                         ]
                     ])));
 
@@ -841,6 +914,7 @@ class AccountContext implements Context, Psr11AwareContext
         );
 
         assertEquals($shareCodes[0]['Organisation'], $this->organisation);
+        assertEquals($shareCodes[0]['Cancelled'], '2021-01-01T23:59:59+00:00');
     }
 
     /**
@@ -850,4 +924,6 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
+
+
 }
