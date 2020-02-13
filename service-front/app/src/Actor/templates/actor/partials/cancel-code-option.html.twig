@@ -2,20 +2,16 @@
     <div class="govuk-width-container">
         <main class="govuk-main-wrapper">
             <div class="govuk-grid-row">
+            {{ govuk_form_open(code.form) }}
                 <div class="govuk-grid-column-two-thirds">
-
-                    {{ govuk_form_open(code.form) }}
 
                         {{ govuk_form_element(code.form.get('__csrf')) }}
                         {{ govuk_form_element(code.form.get('lpa_token')) }}
                         {{ govuk_form_element(code.form.get('viewer_code')) }}
                         {{ govuk_form_element(code.form.get('organisation')) }}
-
-                        <button type="submit" class="govuk-button govuk-button--warning">Cancel organisation's access</button>
-
-                    {{ govuk_form_close() }}
-
                 </div>
+                <button type="submit" class="govuk-button govuk-button--warning">Cancel organisation's access</button>
+            {{ govuk_form_close() }}
             </div>
         </main>
     </div>
