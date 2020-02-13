@@ -34,24 +34,15 @@ Feature: Account creation
   Scenario Outline: As a new user I want to be shown the mistakes I make while creating an account
     Given I am not a user of the lpa application
     And I want to create a new account
-    When I have not provided required information for account creation such as <email1> <email2> <password1> <password2> <terms>
+    When I have not provided required information for account creation such as <email1> <password1> <password2> <terms>
     Then I should be told my account could not be created due to <reasons>
     Examples:
-      | email1          | email2          | password1 | password2 | terms | reasons                          |
-      |                 |                 | Password1 | Password1 |   1   | Enter your email address         |
-      |test@example.com |                 | Password1 | Password1 |   1   | Confirm your email address       |
-      |test@example.com |test@example.com | Password1 |           |   1   | Confirm your password            |
-      |test@example.com |test@example.com | Password1 | Password1 |       | You must accept the terms of use |
+      | email1          | password1 | password2 | terms | reasons                          |
+      |                 | Password1 | Password1 |   1   | Enter your email address         |
+      |invalid_email    | Password1 | Password1 |   1   | Enter a valid email address      |
+      |test@example.com | Password1 |           |   1   | Confirm your password            |
+      |test@example.com | Password1 | Password1 |       | You must accept the terms of use |
 
-  @ui @integration
-  Scenario Outline: As a new user I want to be shown the mistakes I make while creating an account
-    Given I am not a user of the lpa application
-    And I want to create a new account
-    When Creating account I provide mismatching <email> <confirm_email>
-    Then I should be told my account could not be created due to <reasons>
-    Examples:
-      | email           | confirm_email  |reasons                     |
-      | test@example.com|test@exampl.com |The emails did not match    |
 
   @ui @integration
   Scenario Outline: As a new user I want to be shown the mistakes I make while creating an account
