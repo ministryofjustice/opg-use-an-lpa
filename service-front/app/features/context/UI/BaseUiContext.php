@@ -12,35 +12,43 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\MinkExtension\Context\RawMinkContext;
 use JSHayes\FakeRequests\MockHandler;
+use JSHayes\FakeRequests\RequestHandler;
 use Psr\Container\ContainerInterface;
 
 use function random_bytes;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
-abstract class BaseUIContext extends RawMinkContext implements Psr11MinkAwareContext
+/**
+ * Class BaseUiContext
+ *
+ * @package BehatTest\Context\UI
+ *
+ * @property RequestHandler $lastApiRequest
+ */
+class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
 {
     use RuntimeMinkContext;
 
     /**
      * @var ContainerInterface
      */
-    protected $container;
+    public $container;
 
     /**
      * @var MockHandler
      */
-    protected $apiFixtures;
+    public $apiFixtures;
 
     /**
      * @var AwsMockHandler
      */
-    protected $awsFixtures;
+    public $awsFixtures;
 
     /**
      * @var MinkContext
      */
-    protected $ui;
+    public $ui;
 
     public function setContainer(ContainerInterface $container): void
     {
@@ -66,22 +74,12 @@ abstract class BaseUIContext extends RawMinkContext implements Psr11MinkAwareCon
     {
         // KMS is polled for encryption data on first page load
         $this->awsFixtures->append(
-            new Result([
-                'Plaintext' => random_bytes(32),
-                'CiphertextBlob' => random_bytes(32)
-            ])
+            new Result(
+                [
+                    'Plaintext' => random_bytes(32),
+                    'CiphertextBlob' => random_bytes(32)
+                ]
+            )
         );
-    }
-
-    /**
-     * Checks the response for a particular header being set with a specified value
-     *
-     * @param $name
-     * @param $value
-     * @throws \Behat\Mink\Exception\ExpectationException
-     */
-    public function assertResponseHeader($name, $value)
-    {
-        $this->assertSession()->responseHeaderEquals($name, $value);
     }
 }

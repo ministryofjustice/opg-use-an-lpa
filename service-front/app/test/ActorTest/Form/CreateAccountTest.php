@@ -34,7 +34,6 @@ class CreateAccountTest extends TestCase implements TestsZendForm
         return [
             '__csrf'           => Csrf::class,
             'email'            => Text::class,
-            'email_confirm'    => Text::class,
             'password'         => Password::class,
             'password_confirm' => Password::class,
             'terms'            => Checkbox::class,

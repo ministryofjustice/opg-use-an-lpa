@@ -131,7 +131,6 @@ class CreateAccountHandlerTest extends TestCase
             ->willReturn([
                 '__csrf'           => self::CSRF_CODE,
                 'email'            => 'a@b.com',
-                'email_confirm'    => 'a@b.com',
                 'password'         => 'P@55word',
                 'password_confirm' => 'P@55word',
                 'terms'            => '1',
@@ -175,7 +174,6 @@ class CreateAccountHandlerTest extends TestCase
             ->willReturn([
                 '__csrf'           => self::CSRF_CODE,
                 'email'            => 'a@b.com',
-                'email_confirm'    => 'a@b.com',
                 'password'         => 'P@55word',
                 'password_confirm' => 'P@55word',
                 'terms'            => '1',
@@ -205,7 +203,6 @@ class CreateAccountHandlerTest extends TestCase
             ->willReturn([
                 '__csrf'           => self::CSRF_CODE,
                 'email'            => 'a@b.com',
-                'email_confirm'    => 'a@b.com',
                 'password'         => 'P@55word',
                 'password_confirm' => 'P@55word',
                 'terms'            => '1',

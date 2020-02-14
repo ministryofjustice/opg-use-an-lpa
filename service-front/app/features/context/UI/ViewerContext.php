@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
+use Behat\Behat\Context\Context;
+use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ViewerContextTrait;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -18,9 +20,10 @@ use Psr\Http\Message\RequestInterface;
  * @property $lpaShareCode
  * @property $lpaData
  */
-class ViewerContext extends BaseUIContext
+class ViewerContext implements Context
 {
     use ViewerContextTrait;
+    use BaseUiContextTrait;
 
     /**
      * @Given /^I have been given access to an LPA via share code$/
@@ -177,4 +180,45 @@ class ViewerContext extends BaseUIContext
             'attachment; filename=lpa-' . $this->lpaData['uId'] . '.pdf'
         );
     }
+
+    /**
+     * @Given /^I am on the enter code page$/
+     */
+    public function iAmOnTheEnterCodePage()
+    {
+        $this->ui->visit('/enter-code');
+        $this->ui->assertPageAddress('/enter-code');
+    }
+
+    /**
+     * @When /^I request to view an LPA with an invalid access code of "([^"]*)"$/
+     */
+    public function iRequestToViewAnLPAWithAnInvalidAccessCodeOf($accessCode)
+    {
+        $this->ui->fillField('lpa_code', $accessCode);
+        $this->ui->fillField('donor_surname', 'TestSurname');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I request to view an LPA with an invalid donor's surname of "([^"]*)"$/
+     */
+    public function iRequestToViewAnLPAWithAnInvalidDonorSSurnameOf($surname)
+    {
+        $this->ui->fillField('lpa_code', 'T32TAC3SCOD3');
+        $this->ui->fillField('donor_surname', $surname);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I am told that my input is invalid because (.*)$/
+     */
+    public function iAmToldThatMyInputIsInvalidBecause($reason)
+    {
+        $this->ui->assertPageAddress('/enter-code');
+        $this->ui->assertPageContainsText($reason);
+    }
+
+
+
 }

@@ -4,23 +4,19 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
-use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use Alphagov\Notifications\Client;
-use Behat\Behat\Context\Context;
-use BehatTest\Context\ActorContextTrait as ActorContext;
 use Common\Exception\ApiException;
+use BehatTest\Context\ActorContextTrait;
 use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\ViewerCodeService;
+use Common\Service\Log\RequestTracing;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
-
-require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
 /**
  * A behat context that encapsulates user account steps
@@ -42,12 +38,9 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @property string actorLpaToken
  * @property int actorId
  */
-class AccountContext implements Context, Psr11AwareContext
+class AccountContext extends BaseIntegrationContext
 {
-    use ActorContext;
-
-    /** @var ContainerInterface */
-    private $container;
+    use ActorContextTrait;
 
     /** @var MockHandler */
     private $apiFixtures;
@@ -67,9 +60,13 @@ class AccountContext implements Context, Psr11AwareContext
     /** @var ViewerCodeService */
     private $viewerCodeService;
 
-    public function setContainer(ContainerInterface $container): void
+   // public function setContainer(ContainerInterface $container): void
+
+    protected function prepareContext(): void
     {
-        $this->container = $container;
+        // This is populated into the container using a Middleware which these integration
+        // tests wouldn't normally touch but the container expects
+        $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
 
         $this->apiFixtures       = $this->container->get(MockHandler::class);
         $this->userService       = $this->container->get(UserService::class);
@@ -924,6 +921,4 @@ class AccountContext implements Context, Psr11AwareContext
     {
         // Not needed for this context
     }
-
-
 }

@@ -54,6 +54,9 @@ class ConfigProvider
                 Zend\Expressive\Authentication\UserRepositoryInterface::class => Service\User\UserService::class,
                 Zend\Expressive\Authentication\AuthenticationInterface::class => Zend\Expressive\Authentication\Session\PhpSession::class,
 
+                // allows value setting on the container at runtime.
+                Service\Container\ModifiableContainerInterface::class => Service\Container\PhpDiModifiableContainer::class,
+
                 Service\Lpa\LpaFactory::class => Service\Lpa\Factory\Sirius::class
             ],
 

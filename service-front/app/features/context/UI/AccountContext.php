@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace BehatTest\Context\UI;
 
 use Alphagov\Notifications\Client;
+use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
+use BehatTest\Context\BaseUiContextTrait;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
@@ -26,12 +28,14 @@ use Psr\Http\Message\RequestInterface;
  * @property $accessCode
  * @property $organisation
  */
-class AccountContext extends BaseUIContext
+class AccountContext implements Context
 {
     use ActorContext;
+    use BaseUiContextTrait;
 
     /**
      * @Given /^I have been given access to use an LPA via credentials$/
+     * @Given /^I have added an LPA to my account$/
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
@@ -102,6 +106,7 @@ class AccountContext extends BaseUIContext
 
     /**
      * @Given /^I am currently signed in$/
+     * @When /^I sign in$/
      */
     public function iAmCurrentlySignedIn()
     {
@@ -144,6 +149,10 @@ class AccountContext extends BaseUIContext
      */
     public function iAttemptToSignInAgain()
     {
+        // Dashboard page checks for all LPA's for a user
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
         $this->ui->visit('/login');
     }
 
@@ -343,6 +352,21 @@ class AccountContext extends BaseUIContext
     }
 
     /**
+     * @When /^I view my dashboard$/
+     */
+    public function iViewMyDashboard()
+    {
+        // Dashboard page checks for all LPA's for a user
+        $request = $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->setLastRequest($request);
+
+        $this->ui->visit('/lpa/dashboard');
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    /**
      * @Then /^my password has been associated with my user account$/
      */
     public function myPasswordHasBeenAssociatedWithMyUserAccount()
@@ -417,7 +441,7 @@ class AccountContext extends BaseUIContext
         $this->ui->assertPageContainsText('Email address');
         $this->ui->assertPageContainsText($this->userEmail);
 
-        $session = $this->getSession();
+        $session = $this->ui->getSession();
         $page = $session->getPage();
 
         $changeEmailText = 'Change email address';
@@ -436,7 +460,7 @@ class AccountContext extends BaseUIContext
 
         $this->ui->assertPageContainsText('Password');
 
-        $session = $this->getSession();
+        $session = $this->ui->getSession();
         $page = $session->getPage();
 
         $changePasswordtext = "Change password";
@@ -726,7 +750,6 @@ class AccountContext extends BaseUIContext
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $this->email);
-        $this->ui->fillField('email_confirm', $this->email);
         $this->ui->fillField('password', $this->password);
         $this->ui->fillField('password_confirm', $this->password);
         $this->ui->fillField('terms', 1);
@@ -822,7 +845,6 @@ class AccountContext extends BaseUIContext
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $this->email);
-        $this->ui->fillField('email_confirm', $this->email);
         $this->ui->fillField('password', $this->password);
         $this->ui->fillField('password_confirm', $this->password);
         $this->ui->fillField('terms', 1);
@@ -845,7 +867,6 @@ class AccountContext extends BaseUIContext
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $email1);
-        $this->ui->fillField('email_confirm', $email2);
         $this->ui->fillField('password', $password1);
         $this->ui->fillField('password_confirm', $password2);
 
@@ -878,7 +899,6 @@ class AccountContext extends BaseUIContext
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $value1);
-        $this->ui->fillField('email_confirm', $value2);
         $this->ui->fillField('password',  $value1);
         $this->ui->fillField('password_confirm', $value2);
 
@@ -886,22 +906,29 @@ class AccountContext extends BaseUIContext
     }
 
     /**
-     * @Given /^I have added an LPA to my account$/
-     */
-    public function iHaveAddedAnLPAToMyAccount()
-    {
-        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
-        $this->iAmOnTheAddAnLPAPage();
-        $this->iRequestToAddAnLPAWithValidDetails();
-        $this->theCorrectLPAIsFoundAndICanConfirmToAddIt();
-        $this->theLPAIsSuccessfullyAdded();
-    }
-
-    /**
      * @Given /^I am on the dashboard page$/
      */
     public function iAmOnTheDashboardPage()
     {
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->ui->visit('/lpa/dashboard');
         $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
