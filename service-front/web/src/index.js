@@ -8,7 +8,7 @@ import disableButtonOnClick from './javascript/disableButtonOnClick'
 initAll();
 
 jsEnabled(document.body);
-disableButtonOnClick();
+disableButtonOnClick(document.getElementsByTagName('form'));
 
 
 
