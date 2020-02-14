@@ -10,10 +10,10 @@ variable "container_version" {
 variable "accounts" {
   type = map(
     object({
-      account_id            = string
-      is_production         = bool
-      sirius_account_ids    = string
-      api_gateway_endpoints = string
+      account_id           = string
+      is_production        = bool
+      sirius_account_id    = string
+      api_gateway_endpoint = string
     })
   )
 }
