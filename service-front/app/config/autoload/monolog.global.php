@@ -16,7 +16,21 @@ return [
                 'options' => [
                     'stream' => 'php://stdout',
                 ],
+                'processors' => [
+                    'psrLogProcessor',
+                    'requestTracingProcessor'
+                ],
             ],
-        ]
+        ],
+        'processors' => [
+            'psrLogProcessor' => [
+                'type' => 'psrLogMessage',
+                'options' => [], // No options
+            ],
+            'requestTracingProcessor' => [
+                'type' => \Common\Service\Log\RequestTracingLogProcessorFactory::class,
+                'options' => [], // No options
+            ],
+        ],
     ],
 ];
