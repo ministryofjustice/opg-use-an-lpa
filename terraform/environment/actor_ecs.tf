@@ -143,7 +143,7 @@ locals {
       "value": "${var.container_version}"
     }]
   }
-  
+
 EOF
 
 
@@ -191,9 +191,13 @@ EOF
     {
       "name": "API_SERVICE_URL",
       "value": "http://${local.api_service_fqdn}"
+    },
+    {
+      "name": "SESSION_EXPIRES",
+      "value": "${local.account.session_expires_use}"
     }]
   }
-  
+
 EOF
 
 }
@@ -205,4 +209,3 @@ output "front_web_deployed_version" {
 output "front_app_deployed_version" {
   value = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}:${var.container_version}"
 }
-
