@@ -3,21 +3,14 @@
 import './scss.js';
 import { initAll } from 'govuk-frontend';
 import jsEnabled from './javascript/jsEnabled';
+import disableButtonOnClick from './javascript/disableButtonOnClick'
 
 initAll();
 
 jsEnabled(document.body);
+disableButtonOnClick();
 
-var btn = document.getElementsByClassName('govuk-button');
-debugger;
-for (var i = 0; i < btn.length; i++) {
 
-    btn[i].addEventListener('click', function disableButton() {
-        debugger;
-        this.disabled = true;
-
-    })
-}
 
 
 
