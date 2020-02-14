@@ -9,10 +9,3 @@ initAll();
 
 jsEnabled(document.body);
 disableButtonOnClick(document.getElementsByTagName('form'));
-
-
-
-
-
-
-
