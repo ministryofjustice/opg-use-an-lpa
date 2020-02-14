@@ -28,8 +28,8 @@ locals {
   api_gateway_endpoint = local.account.api_gateway_endpoint
 
 
-  dns_namespace_acc = terraform.workspace == "production" ? "" : "${local.account_name}."
-  dns_namespace_env = local.account_name == "production" ? "" : "${terraform.workspace}."
+  dns_namespace_acc = local.environment == "production" ? "" : "${local.account_name}."
+  dns_namespace_env = local.account_name == "production" ? "" : "${local.environment}."
   dev_wildcard      = local.account_name == "production" ? "" : "*."
 
   mandatory_moj_tags = {
