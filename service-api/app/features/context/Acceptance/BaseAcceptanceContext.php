@@ -55,63 +55,10 @@ class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareCont
         $this->awsFixtures = $container->get(AwsMockHandler::class);
     }
 
-    protected function getResponseAsJson(): array
-    {
-        assertJson($this->getSession()->getPage()->getContent());
-        return json_decode($this->getSession()->getPage()->getContent(), true);
-    }
-
-    protected function apiGet(string $url, array $headers): void
-    {
-        $this->getSession()->getDriver()->getClient()->request(
-            'GET',
-            $url,
-            [],
-            [],
-            $this->createServerParams($headers)
-        );
-    }
-
-    protected function apiPost(string $url, array $data, array $headers): void
-    {
-        $this->getSession()->getDriver()->getClient()->request(
-            'POST',
-            $url,
-            $data,
-            [],
-            $this->createServerParams($headers)
-        );
-    }
-
-    protected function apiPut(string $url, array $data, array $headers): void
-    {
-        $this->getSession()->getDriver()->getClient()->request(
-            'PUT',
-            $url,
-            $data,
-            [],
-            $this->createServerParams($headers)
-        );
-    }
-
-    protected function apiPatch(string $url, array $data, array $headers): void
-    {
-        $this->getSession()->getDriver()->getClient()->request(
-            'PATCH',
-            $url,
-            $data,
-            [],
-            $this->createServerParams($headers)
-        );
-    }
-
-   // private function createServerParams(array $headers): array
-
     /**
      * @BeforeScenario
      */
     public function gatherContexts(BeforeScenarioScope $scope)
-
     {
         $environment = $scope->getEnvironment();
         $this->ui = $environment->getContext(MinkContext::class);
