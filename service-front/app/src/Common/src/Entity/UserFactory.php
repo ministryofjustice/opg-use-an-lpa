@@ -16,9 +16,9 @@ use Zend\Expressive\Authentication\UserInterface;
  */
 class UserFactory
 {
-    public function __invoke(ContainerInterface $container) : callable
+    public function __invoke(ContainerInterface $container): callable
     {
-        return function (string $identity, array $roles = [], array $details = []) : UserInterface {
+        return function (string $identity, array $roles = [], array $details = []): UserInterface {
             return new User($identity, $roles, $details);
         };
     }

@@ -13,7 +13,7 @@ class UserLpaActorMapFactory
     {
         $config = $container->get('config');
 
-        if ( !isset($config['repositories']['dynamodb']['user-lpa-actor-map'])) {
+        if (!isset($config['repositories']['dynamodb']['user-lpa-actor-map'])) {
             throw new \Exception('UserLpaActorMap table configuration not present');
         }
 

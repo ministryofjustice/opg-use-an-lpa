@@ -22,12 +22,12 @@ class CodeGenerator
      * @return string
      * @throws \Exception
      */
-    public static function generateCode() : string
+    public static function generateCode(): string
     {
         $result = '';
 
         for ($i = 0; $i < self::CODE_LENGTH; $i++) {
-            $index = random_int(0, strlen(self::ALLOWED_CHARACTERS)-1);
+            $index = random_int(0, strlen(self::ALLOWED_CHARACTERS) - 1);
             $result .= self::ALLOWED_CHARACTERS[$index];
         }
 

@@ -32,7 +32,7 @@ class UserActivateHandler implements RequestHandlerInterface
      * @return ResponseInterface
      * @throws \Exception
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
 

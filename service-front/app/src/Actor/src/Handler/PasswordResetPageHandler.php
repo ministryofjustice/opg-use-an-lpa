@@ -46,8 +46,8 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         UserService $userService,
-        ServerUrlHelper $serverUrlHelper)
-    {
+        ServerUrlHelper $serverUrlHelper
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;

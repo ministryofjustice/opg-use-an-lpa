@@ -19,7 +19,7 @@ class HomePageHandler extends AbstractHandler
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new HtmlResponse($this->renderer->render('viewer::home-page'));
     }

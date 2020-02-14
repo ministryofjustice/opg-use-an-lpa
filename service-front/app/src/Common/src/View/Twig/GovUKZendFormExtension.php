@@ -38,7 +38,7 @@ class GovUKZendFormExtension extends AbstractExtension
     /**
      * @return array
      */
-    public function getFunctions() : array
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('govuk_form_open', [$this, 'formOpen'], ['needs_environment' => true, 'is_safe' => ['html']]),
@@ -92,7 +92,7 @@ class GovUKZendFormExtension extends AbstractExtension
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function formElement(Environment $twigEnv, ElementInterface $element, array $options = [], FieldsetInterface $fieldset = null) : string
+    public function formElement(Environment $twigEnv, ElementInterface $element, array $options = [], FieldsetInterface $fieldset = null): string
     {
         $elementBlock = $this->getBlockForElement($element);
 
@@ -102,7 +102,8 @@ class GovUKZendFormExtension extends AbstractExtension
             $element->setLabel($options['label']);
         }
 
-        return $template->renderBlock($elementBlock,
+        return $template->renderBlock(
+            $elementBlock,
             array_merge(
                 [
                     'element' => $element,
@@ -123,7 +124,7 @@ class GovUKZendFormExtension extends AbstractExtension
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function formFieldset(Environment $twigEnv, FieldsetInterface $fieldset, array $options = []) : string
+    public function formFieldset(Environment $twigEnv, FieldsetInterface $fieldset, array $options = []): string
     {
         $elementBlock = $this->getBlockForElement($fieldset);
 
@@ -133,7 +134,8 @@ class GovUKZendFormExtension extends AbstractExtension
             $fieldset->setLabel($options['label']);
         }
 
-        return $template->renderBlock($elementBlock,
+        return $template->renderBlock(
+            $elementBlock,
             array_merge(
                 [
                     'fieldset' => $fieldset,
@@ -148,7 +150,7 @@ class GovUKZendFormExtension extends AbstractExtension
      * @return string
      * @throws Exception
      */
-    private function getBlockForElement(ElementInterface $element) : string
+    private function getBlockForElement(ElementInterface $element): string
     {
         $eleClass = get_class($element);
 

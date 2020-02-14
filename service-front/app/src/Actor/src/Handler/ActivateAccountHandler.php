@@ -30,8 +30,8 @@ class ActivateAccountHandler extends AbstractHandler
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UserService $userService)
-    {
+        UserService $userService
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;
@@ -42,7 +42,7 @@ class ActivateAccountHandler extends AbstractHandler
      * @return ResponseInterface
      * @throws \Http\Client\Exception
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $activationToken = $request->getAttribute('token');
 
@@ -52,7 +52,7 @@ class ActivateAccountHandler extends AbstractHandler
             //  If the user activate failed (probably because the token has been used) then redirect home
             return new HtmlResponse($this->renderer->render('actor::activate-account-not-found'));
         }
-        
+
         return new HtmlResponse($this->renderer->render('actor::activate-account'));
     }
 }

@@ -57,7 +57,7 @@ abstract class AbstractApiException extends RuntimeException
     /**
      * @return string
      */
-    public function getTitle() : string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -65,7 +65,7 @@ abstract class AbstractApiException extends RuntimeException
     /**
      * @return array
      */
-    public function getAdditionalData() : array
+    public function getAdditionalData(): array
     {
         return $this->additionalData;
     }

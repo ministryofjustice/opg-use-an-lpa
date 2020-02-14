@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Entity;
 
-use \DateTime;
+use DateTime;
 
 class Lpa
 {
@@ -77,232 +77,232 @@ class Lpa
     /** @var CaseActor[] */
     protected $trustCorporations = [];
 
-    public function getUId() : ?string
+    public function getUId(): ?string
     {
         return $this->uId;
     }
 
-    public function setUId(string $uId) : void
+    public function setUId(string $uId): void
     {
         $this->uId = $uId;
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId(int $id) : void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    public function getApplicationType() : ?string
+    public function getApplicationType(): ?string
     {
         return $this->applicationType;
     }
 
-    public function setApplicationType(string $applicationType) : void
+    public function setApplicationType(string $applicationType): void
     {
         $this->applicationType = $applicationType;
     }
 
-    public function getCaseSubtype() : ?string
+    public function getCaseSubtype(): ?string
     {
         return $this->caseSubtype;
     }
 
-    public function setCaseSubtype(string $caseSubtype) : void
+    public function setCaseSubtype(string $caseSubtype): void
     {
         $this->caseSubtype = $caseSubtype;
     }
 
-    public function getReceiptDate() : ?DateTime
+    public function getReceiptDate(): ?DateTime
     {
         return $this->receiptDate;
     }
 
-    public function setReceiptDate(DateTime $receiptDate) : void
+    public function setReceiptDate(DateTime $receiptDate): void
     {
         $this->receiptDate = $receiptDate;
     }
 
-    public function getRejectedDate() : ?DateTime
+    public function getRejectedDate(): ?DateTime
     {
         return $this->rejectedDate;
     }
 
-    public function setRejectedDate(DateTime $rejectedDate) : void
+    public function setRejectedDate(DateTime $rejectedDate): void
     {
         $this->rejectedDate = $rejectedDate;
     }
 
-    public function getRegistrationDate() : ?DateTime
+    public function getRegistrationDate(): ?DateTime
     {
         return $this->registrationDate;
     }
 
-    public function setRegistrationDate(DateTime $registrationDate) : void
+    public function setRegistrationDate(DateTime $registrationDate): void
     {
         $this->registrationDate = $registrationDate;
     }
 
-    public function getStatus() : ?string
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus(string $status) : void
+    public function setStatus(string $status): void
     {
         $this->status = $status;
     }
 
-    public function getCaseAttorneySingular() : ?bool
+    public function getCaseAttorneySingular(): ?bool
     {
         return $this->caseAttorneySingular;
     }
 
-    public function setCaseAttorneySingular(bool $caseAttorneySingular) : void
+    public function setCaseAttorneySingular(bool $caseAttorneySingular): void
     {
         $this->caseAttorneySingular = $caseAttorneySingular;
     }
 
-    public function getCaseAttorneyJointlyAndSeverally() : ?bool
+    public function getCaseAttorneyJointlyAndSeverally(): ?bool
     {
         return $this->caseAttorneyJointlyAndSeverally;
     }
 
-    public function setCaseAttorneyJointlyAndSeverally(bool $caseAttorneyJointlyAndSeverally) : void
+    public function setCaseAttorneyJointlyAndSeverally(bool $caseAttorneyJointlyAndSeverally): void
     {
         $this->caseAttorneyJointlyAndSeverally = $caseAttorneyJointlyAndSeverally;
     }
 
-    public function getCaseAttorneyJointly() : ?bool
+    public function getCaseAttorneyJointly(): ?bool
     {
         return $this->caseAttorneyJointly;
     }
 
-    public function setCaseAttorneyJointly(bool $caseAttorneyJointly) : void
+    public function setCaseAttorneyJointly(bool $caseAttorneyJointly): void
     {
         $this->caseAttorneyJointly = $caseAttorneyJointly;
     }
 
-    public function getCaseAttorneyJointlyAndJointlyAndSeverally() : ?bool
+    public function getCaseAttorneyJointlyAndJointlyAndSeverally(): ?bool
     {
         return $this->caseAttorneyJointlyAndJointlyAndSeverally;
     }
 
-    public function setCaseAttorneyJointlyAndJointlyAndSeverally(bool $caseAttorneyJointlyAndJointlyAndSeverally) : void
+    public function setCaseAttorneyJointlyAndJointlyAndSeverally(bool $caseAttorneyJointlyAndJointlyAndSeverally): void
     {
         $this->caseAttorneyJointlyAndJointlyAndSeverally = $caseAttorneyJointlyAndJointlyAndSeverally;
     }
 
-    public function getApplicationHasRestrictions() : ?bool
+    public function getApplicationHasRestrictions(): ?bool
     {
         return $this->applicationHasRestrictions;
     }
 
-    public function setApplicationHasRestrictions(bool $applicationHasRestrictions) : void
+    public function setApplicationHasRestrictions(bool $applicationHasRestrictions): void
     {
         $this->applicationHasRestrictions = $applicationHasRestrictions;
     }
 
-    public function getApplicationHasGuidance() : ?bool
+    public function getApplicationHasGuidance(): ?bool
     {
         return $this->applicationHasGuidance;
     }
 
-    public function setApplicationHasGuidance(bool $applicationHasGuidance) : void
+    public function setApplicationHasGuidance(bool $applicationHasGuidance): void
     {
         $this->applicationHasGuidance = $applicationHasGuidance;
     }
 
-    public function getLpaDonorSignatureDate() : ?DateTime
+    public function getLpaDonorSignatureDate(): ?DateTime
     {
         return $this->lpaDonorSignatureDate;
     }
 
-    public function setLpaDonorSignatureDate(DateTime $lpaDonorSignatureDate) : void
+    public function setLpaDonorSignatureDate(DateTime $lpaDonorSignatureDate): void
     {
         $this->lpaDonorSignatureDate = $lpaDonorSignatureDate;
     }
 
-    public function getLifeSustainingTreatment() : ?string
+    public function getLifeSustainingTreatment(): ?string
     {
         return $this->lifeSustainingTreatment;
     }
 
-    public function setLifeSustainingTreatment(?string $lifeSustainingTreatment) : void
+    public function setLifeSustainingTreatment(?string $lifeSustainingTreatment): void
     {
         $this->lifeSustainingTreatment = $lifeSustainingTreatment;
     }
 
-    public function getOnlineLpaId() : ?string
+    public function getOnlineLpaId(): ?string
     {
         return $this->onlineLpaId;
     }
 
-    public function setOnlineLpaId(string $onlineLpaId) : void
+    public function setOnlineLpaId(string $onlineLpaId): void
     {
         $this->onlineLpaId = $onlineLpaId;
     }
 
-    public function getAttorneyActDecisions() : ?string
+    public function getAttorneyActDecisions(): ?string
     {
         return $this->attorneyActDecisions;
     }
 
-    public function setAttorneyActDecisions(string $attorneyActDecisions) : void
+    public function setAttorneyActDecisions(string $attorneyActDecisions): void
     {
         $this->attorneyActDecisions = $attorneyActDecisions;
     }
 
-    public function getDonor() : ?CaseActor
+    public function getDonor(): ?CaseActor
     {
         return $this->donor;
     }
 
-    public function setDonor(CaseActor $donor) : void
+    public function setDonor(CaseActor $donor): void
     {
         $this->donor = $donor;
     }
 
-    public function getAttorneys() : array
+    public function getAttorneys(): array
     {
         return $this->attorneys;
     }
 
-    public function setAttorneys(array $attorneys) : void
+    public function setAttorneys(array $attorneys): void
     {
         $this->attorneys = $attorneys;
     }
 
-    public function getReplacementAttorneys() : array
+    public function getReplacementAttorneys(): array
     {
         return $this->replacementAttorneys;
     }
 
-    public function setReplacementAttorneys(array $replacementAttorneys) : void
+    public function setReplacementAttorneys(array $replacementAttorneys): void
     {
         $this->replacementAttorneys = $replacementAttorneys;
     }
 
-    public function getCertificateProviders() : array
+    public function getCertificateProviders(): array
     {
         return $this->certificateProviders;
     }
 
-    public function setCertificateProviders(array $certificateProviders) : void
+    public function setCertificateProviders(array $certificateProviders): void
     {
         $this->certificateProviders = $certificateProviders;
     }
 
-    public function getTrustCorporations() : array
+    public function getTrustCorporations(): array
     {
         return $this->trustCorporations;
     }
 
-    public function setTrustCorporations(array $trustCorporations) : void
+    public function setTrustCorporations(array $trustCorporations): void
     {
         $this->trustCorporations = $trustCorporations;
     }

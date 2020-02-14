@@ -30,7 +30,7 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
         ]);
     }
 
-    public function getInputFilterSpecification() : array
+    public function getInputFilterSpecification(): array
     {
         return [
             'lpa_code' => [

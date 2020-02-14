@@ -33,7 +33,7 @@ class ActorCodeSummaryHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $data = $request->getParsedBody();
 
@@ -44,11 +44,10 @@ class ActorCodeSummaryHandler implements RequestHandlerInterface
         $response = $this->actorCodeService->validateDetails($data['actor-code'], $data['uid'], $data['dob']);
 
         // We deliberately don't return details of why the (validated) code was not found.
-        if (!is_array($response)){
+        if (!is_array($response)) {
             throw new NotFoundException();
         }
 
         return new JsonResponse($response, 200);
     }
-
 }

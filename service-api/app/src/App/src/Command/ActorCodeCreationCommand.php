@@ -51,12 +51,14 @@ class ActorCodeCreationCommand extends Command
             ->addArgument(
                 'lpas',
                 InputArgument::REQUIRED,
-                'A comma separated list of LPA uIds')
+                'A comma separated list of LPA uIds'
+            )
             ->addOption(
                 'dryrun',
                 'd',
                 InputOption::VALUE_NONE,
-                'Generate and return actorcodes for LPA\'s but do not save them to DynamoDB')
+                'Generate and return actorcodes for LPA\'s but do not save them to DynamoDB'
+            )
             ->addOption(
                 'replace',
                 'r',
@@ -86,18 +88,20 @@ class ActorCodeCreationCommand extends Command
 
         return array_combine(
             $lpas,
-            array_map(function() {
+            array_map(function () {
                 return [];
-            }, $lpas));
+            },
+            $lpas)
+        );
     }
 
     private function resolveLpaActors(&$lpas): void
     {
         $lpaData = array_map(
-            function($lpaUId) {
+            function ($lpaUId) {
                 $lpa = $this->retrieveLpa((string) $lpaUId);
 
-                return array_map(function($actor) {
+                return array_map(function ($actor) {
                     return array_intersect_key($actor, [
                         'id'          => '',
                         'uId'         => '',
@@ -106,8 +110,9 @@ class ActorCodeCreationCommand extends Command
                         'surname'     => ''
                     ]);
                 }, array_merge([ $lpa['donor'] ], $lpa['attorneys']));
-
-            }, array_keys($lpas));
+            },
+            array_keys($lpas)
+        );
 
         $lpas = array_combine(array_keys($lpas), $lpaData);
     }
@@ -126,7 +131,7 @@ class ActorCodeCreationCommand extends Command
     private function generateCodes(&$lpas): void
     {
         $lpaData = array_map(
-            function($lpaData) {
+            function ($lpaData) {
 
                 return array_map(
                     function ($lpaActor) {
@@ -134,9 +139,12 @@ class ActorCodeCreationCommand extends Command
                             'code' => CodeGenerator::generateCode(),
                             'expiry' => (new \DateTime('23:59:59 + 12 months'))->format(DATE_ATOM)
                         ]);
-                    }, $lpaData);
-
-            }, $lpas);
+                    },
+                    $lpaData
+                );
+            },
+            $lpas
+        );
 
         $lpas = array_combine(array_keys($lpas), $lpaData);
     }
@@ -144,7 +152,7 @@ class ActorCodeCreationCommand extends Command
     private function saveCodes(array &$lpas, bool $replace = false)
     {
         $lpaData = array_map(
-            function($lpaUId, $lpaData) use ($replace) {
+            function ($lpaUId, $lpaData) use ($replace) {
 
                 return array_filter(
                     array_map(
@@ -156,11 +164,14 @@ class ActorCodeCreationCommand extends Command
                             }
 
                             return null;
-
-                        }, $lpaData)
+                        },
+                        $lpaData
+                    )
                 );
-
-            }, array_keys($lpas), $lpas);
+            },
+            array_keys($lpas),
+            $lpas
+        );
 
         $lpas = array_combine(array_keys($lpas), $lpaData);
     }
@@ -180,7 +191,7 @@ class ActorCodeCreationCommand extends Command
         $result = $this->client->scan([
             'TableName' => $this->actorCodesTable,
             'FilterExpression' => 'SiriusUid = :lpaUId AND ActorLpaId = :actorLpaId',
-            'ExpressionAttributeValues'=> $marshaler->marshalItem([
+            'ExpressionAttributeValues' => $marshaler->marshalItem([
                 ':lpaUId'     => $lpaUId,
                 ':actorLpaId' => (int) $actorLpaId
             ]),

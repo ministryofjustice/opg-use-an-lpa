@@ -41,8 +41,8 @@ class DownloadLpaHandler implements RequestHandlerInterface
      */
     public function __construct(
         LpaService $lpaService,
-        PdfService $pdfService)
-    {
+        PdfService $pdfService
+    ) {
         $this->lpaService = $lpaService;
         $this->pdfService = $pdfService;
     }
@@ -52,13 +52,13 @@ class DownloadLpaHandler implements RequestHandlerInterface
      * @return ResponseInterface
      * @throws \Exception
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $code = $this->getSession($request,'session')->get('code');
-        $surname = $this->getSession($request,'session')->get('surname');
+        $code = $this->getSession($request, 'session')->get('code');
+        $surname = $this->getSession($request, 'session')->get('surname');
 
         if (!isset($code)) {
-            throw new SessionTimeoutException;
+            throw new SessionTimeoutException();
         }
 
         $lpa = $this->lpaService->getLpaByCode($code, $surname, LpaService::FULL);

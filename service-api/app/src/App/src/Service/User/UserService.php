@@ -47,7 +47,7 @@ class UserService
      * @return array
      * @throws Exception|CreationException|ConflictException
      */
-    public function add(array $data) : array
+    public function add(array $data): array
     {
         if ($this->usersRepository->exists($data['email'])) {
             throw new ConflictException('User already exists with email address ' . $data['email']);
@@ -70,7 +70,7 @@ class UserService
      * @return array
      * @throws NotFoundException
      */
-    public function getByEmail(string $email) : array
+    public function getByEmail(string $email): array
     {
         return $this->usersRepository->getByEmail($email);
     }
@@ -81,7 +81,7 @@ class UserService
      * @param string $activationToken
      * @return array
      */
-    public function activate(string $activationToken) : array
+    public function activate(string $activationToken): array
     {
         return $this->usersRepository->activate($activationToken);
     }
@@ -94,11 +94,11 @@ class UserService
      * @return array
      * @throws NotFoundException|ForbiddenException|UnauthorizedException|Exception
      */
-    public function authenticate(string $email, string $password) : array
+    public function authenticate(string $email, string $password): array
     {
         $user = $this->usersRepository->getByEmail($email);
 
-        if ( ! password_verify($password, $user['Password'])) {
+        if (! password_verify($password, $user['Password'])) {
             throw new ForbiddenException('Authentication failed');
         }
 
@@ -148,7 +148,7 @@ class UserService
             if (new DateTime('@' . $user['PasswordResetExpiry']) >= new DateTime('now')) {
                 return $userId;
             }
-        } catch(NotFoundException $ex) {
+        } catch (NotFoundException $ex) {
             // token not found in usersRepository
         }
 

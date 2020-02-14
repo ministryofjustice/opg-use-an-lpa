@@ -9,16 +9,17 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 
 class ClientFactory
-{   
+{
+
     public function __invoke(ContainerInterface $container)
     {
         $config = $container->get('config');
 
-        if ( ! array_key_exists('sirius_api', $config)) {
+        if (! array_key_exists('sirius_api', $config)) {
             throw new \Exception('Sirius API configuration not present');
         }
 
-        if ( ! array_key_exists('aws', $config)) {
+        if (! array_key_exists('aws', $config)) {
             throw new \Exception('AWS configuration not present');
         }
 

@@ -13,7 +13,7 @@ interface LpaInterface
      *
      * @return array|null
      */
-    public function getData() : ?array;
+    public function getData(): ?array;
 
     /**
      * Returns the Date & Time that the data was looked up in Sirius main database.
@@ -23,5 +23,5 @@ interface LpaInterface
      *
      * @return DateTime|null
      */
-    public function getLookupTime() : ?DateTime;
+    public function getLookupTime(): ?DateTime;
 }

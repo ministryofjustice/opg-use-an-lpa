@@ -45,8 +45,8 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
-        LpaService $lpaService)
-    {
+        LpaService $lpaService
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
@@ -58,7 +58,7 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
      * @return ResponseInterface
      * @throws \Http\Client\Exception
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $session = $this->getSession($request, 'session');
 
