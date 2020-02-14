@@ -986,6 +986,10 @@ class AccountContext implements Context
                         'actor'                => [],
                     ])));
 
+        $this->ui->assertPageAddress('lpa/dashboard');
+        $this->ui->clickLink('Give an organisation access');
+        $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
+
         // API call to make code
         $this->apiFixtures->post('/v1/lpas/' . $this->userLpaActorToken . '/codes')
             ->respondWith(
@@ -1013,7 +1017,8 @@ class AccountContext implements Context
                         'actor'                => [],
                     ])));
 
-        $this->ui->clickLink('Give an organisation access');
+
+
         $this->ui->fillField('org_name', $this->organisation);
         $this->ui->pressButton('Continue');
     }
@@ -1101,7 +1106,7 @@ class AccountContext implements Context
     public function iHaveCreatedAnAccessCode()
     {
         $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
-        $this->iAmGivenAUniqueAccessCode();
+        #$this->iAmGivenAUniqueAccessCode();
     }
 
     /**

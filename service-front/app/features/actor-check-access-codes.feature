@@ -11,6 +11,7 @@ Feature: The user is able to check the access codes they have created
 
   @ui @integration
   Scenario: As a user I can see the access codes I have created
-    Given I have created an access code
+    Given I am on the dashboard page
+    And I have created an access code
     When I click to check my access codes
     Then I can see all of my access codes and their details

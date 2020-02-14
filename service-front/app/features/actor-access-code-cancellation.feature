@@ -8,8 +8,8 @@ Feature: Actor able to cancel access code
     Given I am a user of the lpa application
     And I am currently signed in
     And I have added an LPA to my account
-    And I have generated an access code for an organisation and can see the details
-
+    And I am on the dashboard page
+    
   @ui @integration
   Scenario: As a user be able to see option for cancelling the access code for an organisation
     Given I have generated an access code for an organisation and can see the details
