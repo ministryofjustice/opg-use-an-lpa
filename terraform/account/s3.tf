@@ -23,7 +23,7 @@ data "aws_iam_policy_document" "viewer_loadbalancer" {
 }
 
 resource "aws_s3_bucket" "access_log" {
-  bucket = "opg-ual-${terraform.workspace}-lb-access-logs"
+  bucket = "opg-ual-${local.environment}-lb-access-logs"
   acl    = "private"
   tags   = local.default_tags
 
@@ -40,4 +40,3 @@ resource "aws_s3_bucket_policy" "access_log" {
   bucket = aws_s3_bucket.access_log.id
   policy = data.aws_iam_policy_document.viewer_loadbalancer.json
 }
-
