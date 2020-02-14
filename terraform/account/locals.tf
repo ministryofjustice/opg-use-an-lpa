@@ -1,20 +1,30 @@
-locals {
-  account_name = lookup(
-    var.account_mapping,
-    terraform.workspace,
-    var.account_mapping["development"],
-  )
-  account = var.accounts[local.account_name]
+variable "account_mapping" {
+  type = map(string)
+}
 
-  dns_namespace_acc = terraform.workspace == "production" ? "" : "${local.account_name}."
+variable "accounts" {
+  type = map(
+    object({
+      account_id    = string
+      is_production = bool
+    })
+  )
+}
+
+locals {
+  account_name = lookup(var.account_mapping, terraform.workspace, "development")
+  account      = var.accounts[local.account_name]
+  environment  = lower(terraform.workspace)
+
+  dns_namespace_acc = local.environment == "production" ? "" : "${local.account_name}."
   dev_wildcard      = local.account_name == "production" ? "" : "*."
 
   mandatory_moj_tags = {
     business-unit    = "OPG"
     application      = "use-an-lpa"
-    environment-name = terraform.workspace
+    environment-name = local.environment
     owner            = "Katie Gibbs: katie.gibbs@digital.justice.gov.uk"
-    is-production    = var.is_production[local.account_name]
+    is-production    = local.account.is_production
   }
 
   optional_tags = {
@@ -23,16 +33,3 @@ locals {
 
   default_tags = merge(local.mandatory_moj_tags, local.optional_tags)
 }
-
-variable "accounts" {
-  type = map(string)
-}
-
-variable "is_production" {
-  type = map(string)
-}
-
-variable "account_mapping" {
-  type = map(string)
-}
-
