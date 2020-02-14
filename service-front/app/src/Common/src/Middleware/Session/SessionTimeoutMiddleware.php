@@ -29,11 +29,11 @@ class SessionTimeoutMiddleware implements MiddlewareInterface
         $this->renderer = $renderer;
     }
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         try {
             return $handler->handle($request);
-        } catch (SessionTimeoutException $e){
+        } catch (SessionTimeoutException $e) {
             return new HtmlResponse($this->renderer->render('error::session-timeout'));
         }
     }

@@ -35,7 +35,7 @@ class ActorCodes implements ActorCodesInterface
     /**
      * @inheritDoc
      */
-    public function get(string $code) : ?array
+    public function get(string $code): ?array
     {
         $result = $this->client->getItem([
             'TableName' => $this->actorLpaCodesTable,
@@ -64,12 +64,11 @@ class ActorCodes implements ActorCodesInterface
                 ],
             ],
             'UpdateExpression' => 'set Active=:active',
-            'ExpressionAttributeValues'=> [
+            'ExpressionAttributeValues' => [
                 ':active' => [
                     'BOOL' => false,
                 ],
             ]
         ]);
-
     }
 }

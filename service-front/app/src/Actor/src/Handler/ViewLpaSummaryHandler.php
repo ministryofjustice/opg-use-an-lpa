@@ -33,8 +33,8 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
-        LpaService $lpaService)
-    {
+        LpaService $lpaService
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
@@ -65,5 +65,4 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
             'lpa' => $lpa,
         ]));
     }
-
 }

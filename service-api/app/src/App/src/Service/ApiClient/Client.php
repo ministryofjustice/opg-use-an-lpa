@@ -203,7 +203,7 @@ class Client
      *
      * @return array
      */
-    private function buildHeaders() : array
+    private function buildHeaders(): array
     {
         $headerLines = [
             'Accept'        => 'application/json',

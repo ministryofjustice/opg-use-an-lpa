@@ -29,11 +29,13 @@ final class Lpa implements LpaInterface
         $this->lookupTime = $lookupTime;
     }
 
-    public function getData() : ?array {
+    public function getData(): ?array
+    {
         return $this->data;
     }
 
-    public function getLookupTime() : ?DateTime {
+    public function getLookupTime(): ?DateTime
+    {
         return $this->lookupTime;
     }
 }

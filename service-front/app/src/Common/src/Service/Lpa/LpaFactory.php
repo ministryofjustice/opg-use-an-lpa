@@ -19,19 +19,19 @@ interface LpaFactory
      * @return Lpa
      * @throws InvalidArgumentException|Exception
      */
-    public function createLpaFromData(array $data) : Lpa;
+    public function createLpaFromData(array $data): Lpa;
 
     /**
      * @param array $caseActorData
      * @return CaseActor
      * @throws InvalidArgumentException|Exception
      */
-    public function createCaseActorFromData(array $caseActorData) : CaseActor;
+    public function createCaseActorFromData(array $caseActorData): CaseActor;
 
     /**
      * @param array $addressData
      * @return Address
      * @throws InvalidArgumentException
      */
-    public function createAddressFromData(array $addressData) : Address;
+    public function createAddressFromData(array $addressData): Address;
 }

@@ -49,8 +49,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
-        LpaService $lpaService)
-    {
+        LpaService $lpaService
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
@@ -62,9 +62,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
      * @return ResponseInterface
      * @throws \Http\Client\Exception
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $session = $this->getSession($request,'session');
+        $session = $this->getSession($request, 'session');
 
         $form = new LpaConfirm($this->getCsrfGuard($request));
 
@@ -89,7 +89,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         );
 
                         if (!is_null($actorCode)) {
-
                             return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
                         }
                     }
@@ -113,7 +112,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         'userRole' => $userRole,
                     ]));
                 }
-
             } catch (ApiException $aex) {
                 if ($aex->getCode() == StatusCodeInterface::STATUS_NOT_FOUND) {
                     //  Show LPA not found page
@@ -124,7 +122,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     throw $aex;
                 }
             }
-
         }
 
         // We don't have a code so the session has timed out
@@ -133,7 +130,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         throw new SessionTimeoutException();
     }
 
-    protected function resolveLpaData(Lpa $lpa, string $dob) : array
+    protected function resolveLpaData(Lpa $lpa, string $dob): array
     {
         //  Check the logged in user role for this LPA
         $user = null;

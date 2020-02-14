@@ -65,19 +65,16 @@ class KmsManager implements KeyManagerInterface
      * @return Key
      * @throws InvalidKey
      */
-    public function getEncryptionKey() : Key
+    public function getEncryptionKey(): Key
     {
         $currentKey = $this->cache->get(static::CURRENT_ENCRYPTION_KEY);
 
         if ($currentKey !== false) {
-
             // If we found a current key
 
             $id = $currentKey['id'];
             $material = $currentKey['key_material'];
-
         } else {
-
             // Else we get a new key
 
             $newKey = $this->kmsClient->generateDataKey([
@@ -113,19 +110,18 @@ class KmsManager implements KeyManagerInterface
      * @return Key
      * @throws InvalidKey
      */
-    public function getDecryptionKey(string $id) : Key
+    public function getDecryptionKey(string $id): Key
     {
         $material = $this->cache->get($id);
 
         if (!($material instanceof HiddenString)) {
-
             // Then we don't know the key. Pull it out of KMS.
 
             try {
                 $key = $this->kmsClient->decrypt([
                     'CiphertextBlob' => Base64UrlSafe::decode($id),
                 ]);
-            } catch (KmsException $e){
+            } catch (KmsException $e) {
                 if ($e->getAwsErrorCode() == 'InvalidCiphertextException') {
                     throw new KeyNotFoundException();
                 }
@@ -144,5 +140,4 @@ class KmsManager implements KeyManagerInterface
 
         return new Key($id, new EncryptionKey($material));
     }
-
 }

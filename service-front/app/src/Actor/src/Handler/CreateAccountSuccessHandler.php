@@ -43,8 +43,8 @@ class CreateAccountSuccessHandler extends AbstractHandler
         UrlHelper $urlHelper,
         UserService $userService,
         EmailClient $emailClient,
-        ServerUrlHelper $serverUrlHelper)
-    {
+        ServerUrlHelper $serverUrlHelper
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;
@@ -57,7 +57,7 @@ class CreateAccountSuccessHandler extends AbstractHandler
      * @return ResponseInterface
      * @throws \Http\Client\Exception
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         /*
          * IMPORTANT: - This handler is currently configured to receive a GET request ONLY

@@ -13,7 +13,7 @@ class ActorUsersFactory
     {
         $config = $container->get('config');
 
-        if ( !isset($config['repositories']['dynamodb']['actor-users-table'])) {
+        if (!isset($config['repositories']['dynamodb']['actor-users-table'])) {
             throw new \Exception('Actor Users table configuration not present');
         }
 

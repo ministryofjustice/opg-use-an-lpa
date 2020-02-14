@@ -151,7 +151,7 @@ class UserService implements UserRepositoryInterface
             if (!is_null($data) && isset($data['Id'])) {
                 return true;
             }
-        } catch(ApiException $ex) {
+        } catch (ApiException $ex) {
             if ($ex->getCode() !== StatusCodeInterface::STATUS_GONE) {
                 throw $ex;
             }

@@ -47,7 +47,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
     /**
      * @return array
      */
-    public function getInputFilterSpecification() : array
+    public function getInputFilterSpecification(): array
     {
         return [
             'passcode' => [

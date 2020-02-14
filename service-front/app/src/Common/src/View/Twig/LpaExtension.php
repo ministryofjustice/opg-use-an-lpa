@@ -20,7 +20,7 @@ class LpaExtension extends AbstractExtension
     /**
      * @return array
      */
-    public function getFunctions() : array
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('actor_address', [$this, 'actorAddress']),
@@ -109,7 +109,8 @@ class LpaExtension extends AbstractExtension
      * @param DateTime|string|null $date
      * @return string
      */
-    public function codeDate($date) {
+    public function codeDate($date)
+    {
 
         if (!is_null($date)) {
             $date = DateTime::createFromFormat('Y-m-d\TH:i:sP', $date);
@@ -122,7 +123,6 @@ class LpaExtension extends AbstractExtension
         }
 
         return '';
-
     }
 
     /**
@@ -132,7 +132,7 @@ class LpaExtension extends AbstractExtension
      * @return string
      * @throws \Exception
      */
-    public function daysRemaining(?string $expiryDate) : string
+    public function daysRemaining(?string $expiryDate): string
     {
         $difference = '';
 
@@ -152,10 +152,10 @@ class LpaExtension extends AbstractExtension
      * @return bool|null
      * @throws \Exception
      */
-    public function hasCodeExpired(?string $expiryDate) : ?bool
+    public function hasCodeExpired(?string $expiryDate): ?bool
     {
         if (!empty($expiryDate && $date = new DateTime($expiryDate))) {
-            return $date <= (new DateTime('now'))->setTime(23,59,59);
+            return $date <= (new DateTime('now'))->setTime(23, 59, 59);
         }
 
         return null;
@@ -167,12 +167,11 @@ class LpaExtension extends AbstractExtension
      * @param string $viewerCode
      * @return string
      */
-    public function formatViewerCode(?string $viewerCode) : string
+    public function formatViewerCode(?string $viewerCode): string
     {
         $viewerCodeParts = str_split($viewerCode, 4);
         array_unshift($viewerCodeParts, 'V');
 
         return implode(" - ", $viewerCodeParts);
     }
-
 }

@@ -42,11 +42,11 @@ class CsrfGuardValidator extends ZendCsrf
         parent::__construct($options);
     }
 
-    public function isValid($value, $context = null) : bool
+    public function isValid($value, $context = null): bool
     {
         $this->setValue($value);
 
-        if ( ! $this->getGuard()->validateToken($value)) {
+        if (! $this->getGuard()->validateToken($value)) {
             $this->error(self::NOT_SAME);
             return false;
         }
@@ -54,17 +54,17 @@ class CsrfGuardValidator extends ZendCsrf
         return true;
     }
 
-    public function getGuard() : CsrfGuardInterface
+    public function getGuard(): CsrfGuardInterface
     {
         return $this->guard;
     }
 
-    public function setGuard(CsrfGuardInterface $guard) : void
+    public function setGuard(CsrfGuardInterface $guard): void
     {
         $this->guard = $guard;
     }
 
-    protected function generateHash() : void
+    protected function generateHash(): void
     {
         $token = $this->getGuard()->generateToken();
 

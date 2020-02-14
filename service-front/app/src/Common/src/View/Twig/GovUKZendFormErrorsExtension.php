@@ -17,7 +17,7 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
     /**
      * @return array
      */
-    public function getFunctions() : array
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('govuk_error', [$this, 'errorMessage'], ['needs_environment' => true, 'is_safe' => ['html']]),
@@ -34,7 +34,7 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function errorMessage(Environment $twigEnv, ElementInterface $element) : string
+    public function errorMessage(Environment $twigEnv, ElementInterface $element): string
     {
         $template = $twigEnv->load(self::THEME_FILE);
 
@@ -53,7 +53,7 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function errorSummary(Environment $twigEnv, FormInterface $form) : string
+    public function errorSummary(Environment $twigEnv, FormInterface $form): string
     {
         $template = $twigEnv->load(self::THEME_FILE);
 
@@ -75,7 +75,7 @@ class GovUKZendFormErrorsExtension extends AbstractExtension
      * @param array $messages
      * @return array
      */
-    private function flattenMessages(array $messages) : array
+    private function flattenMessages(array $messages): array
     {
         $messagesToPrint = [];
 

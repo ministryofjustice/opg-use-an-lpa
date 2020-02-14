@@ -54,8 +54,8 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
         UrlHelper $urlHelper,
         UserService $userService,
         EmailClient $emailClient,
-        ServerUrlHelper $serverUrlHelper)
-    {
+        ServerUrlHelper $serverUrlHelper
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;
@@ -89,17 +89,17 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
                     $passwordResetUrl = $this->serverUrlHelper->generate($passwordResetPath);
 
                     $this->emailClient->sendPasswordResetEmail($data['email'], $passwordResetUrl);
-                } catch(ApiException $ae) {
+                } catch (ApiException $ae) {
                     // the password reset request returned a 404 indicating the user did not exist
                 }
 
-                return new HtmlResponse($this->renderer->render('actor::password-reset-request-done',[
+                return new HtmlResponse($this->renderer->render('actor::password-reset-request-done', [
                     'email' => $data['email']
                 ]));
             }
         }
 
-        return new HtmlResponse($this->renderer->render('actor::password-reset-request',[
+        return new HtmlResponse($this->renderer->render('actor::password-reset-request', [
             'form' => $form
         ]));
     }

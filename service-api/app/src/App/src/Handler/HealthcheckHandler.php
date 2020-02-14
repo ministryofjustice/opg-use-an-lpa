@@ -10,7 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\JsonResponse;
 use App\DataAccess\Repository\LpasInterface;
-Use App\DataAccess\Repository\ActorCodesInterface;
+use App\DataAccess\Repository\ActorCodesInterface;
 
 /**
  * Class HealthcheckHandler
@@ -36,8 +36,8 @@ class HealthcheckHandler implements RequestHandlerInterface
     public function __construct(
         string $version,
         LpasInterface $lpaInterface,
-        ActorCodesInterface $actorCodes)
-    {
+        ActorCodesInterface $actorCodes
+    ) {
         $this->version = $version;
         $this->lpaInterface = $lpaInterface;
         $this->actorCodes = $actorCodes;
@@ -47,7 +47,7 @@ class HealthcheckHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new JsonResponse([
             "version" => $this->version,
@@ -59,12 +59,12 @@ class HealthcheckHandler implements RequestHandlerInterface
         ]);
     }
 
-    protected function isHealthy() : bool
+    protected function isHealthy(): bool
     {
         return ($this->checkDynamoEndpoint()['healthy'] && $this->checkApiEndpoint()['healthy']);
     }
 
-    protected function checkApiEndpoint() : array
+    protected function checkApiEndpoint(): array
     {
         $data = [];
 
@@ -79,7 +79,6 @@ class HealthcheckHandler implements RequestHandlerInterface
             } else {
                 $data['healthy'] = false;
             }
-
         } catch (Exception $e) {
             $data['healthy'] = false;
             $data['message'] = $e->getMessage();
@@ -90,7 +89,7 @@ class HealthcheckHandler implements RequestHandlerInterface
         return $data;
     }
 
-    protected function checkDynamoEndpoint() : array
+    protected function checkDynamoEndpoint(): array
     {
         $data = [];
 
@@ -104,7 +103,6 @@ class HealthcheckHandler implements RequestHandlerInterface
             } else {
                 $data['healthy'] = false;
             }
-
         } catch (Exception $e) {
             $data['healthy'] = false;
             $data['message'] = $e->getMessage();

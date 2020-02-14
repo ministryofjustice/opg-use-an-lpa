@@ -49,8 +49,7 @@ class PdfService
         StylesService $styles,
         string $apiBaseUri,
         string $traceId
-    )
-    {
+    ) {
         $this->renderer = $renderer;
         $this->httpClient = $httpClient;
         $this->styles = $styles;

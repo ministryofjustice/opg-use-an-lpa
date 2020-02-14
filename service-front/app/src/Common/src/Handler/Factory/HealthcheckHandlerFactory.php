@@ -10,7 +10,7 @@ use Common\Handler\HealthcheckHandler;
 
 class HealthcheckHandlerFactory
 {
-    public function __invoke(ContainerInterface $container) : HealthcheckHandler
+    public function __invoke(ContainerInterface $container): HealthcheckHandler
     {
         return new HealthcheckHandler($container->get('config')['version'], $container->get(ApiClient::class));
     }
