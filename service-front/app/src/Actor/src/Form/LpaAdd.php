@@ -59,7 +59,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message'  => 'Enter your activation code',
+                            'message'  => 'Enter your activation key',
                         ],
                     ],
                     [
@@ -68,14 +68,14 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                             'encoding' => 'UTF-8',
                             'min'      => 12,
                             'max'      => 14,
-                            'message'  => 'Your activation code must be 12 numbers and letters long',
+                            'message'  => 'Your activation key must be 12 numbers and letters long',
                         ],
                     ],
                     [
                         'name'    => Regex::class,
                         'options' => [
                             'pattern' => '/^([[:alnum:]]{4}(?\'dash\' |-|)[[:alnum:]]{4}(\g{dash})[[:alnum:]]{4})$/',
-                            'message' => 'Your activation code must only include letters, numbers and dashes',
+                            'message' => 'Your activation key must only include letters, numbers and dashes',
                         ],
                     ],
                 ]
