@@ -4,12 +4,22 @@ declare(strict_types=1);
 
 namespace Common\Service\Log;
 
+use Psr\Log\LoggerInterface;
 use Throwable;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class LogStderrListener
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * Style and output errors to STDERR (For use with Docker)
@@ -20,14 +30,15 @@ class LogStderrListener
      */
     public function __invoke(Throwable $error, ServerRequestInterface $request, ResponseInterface $response)
     {
-        $output = "---------------------------------------------\n";
-        $output .= $error->getMessage() . "\n";
-        $output .= 'On line ' . $error->getLine() . ' in ' . $error->getFile() . "\n";
-        $output .= $error->getTraceAsString() . "\n";
-        $output .= "---------------------------------------------\n";
-
-        $fh = fopen('php://stderr', 'a');
-        fwrite($fh, $output);
-        fclose($fh);
+        $this->logger->error(
+            '{message} on line {line} in {file}',
+            [
+                'message' => $error->getMessage(),
+                'line'    => $error->getLine(),
+                'file'    => $error->getFile(),
+                'code'    => $error->getCode(),
+                'trace'   => $error->getTraceAsString()
+            ]
+        );
     }
 }
