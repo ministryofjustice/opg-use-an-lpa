@@ -20,6 +20,8 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 use Common\Service\Lpa\ViewerCodeService;
 use ArrayObject;
 use Common\Exception\InvalidRequestException;
+use Zend\Expressive\Csrf\CsrfGuardInterface;
+use Zend\Expressive\Csrf\CsrfMiddleware;
 
 class CheckAccessCodesHandlerTest extends TestCase
 {
@@ -28,6 +30,7 @@ class CheckAccessCodesHandlerTest extends TestCase
     const ACTOR_ID = 10;
     const FIRST_NAME = "John";
     const SUR_NAME = "Will";
+    const CSRF_CODE = '1234';
 
     /**
      * @var TemplateRendererInterface
@@ -76,6 +79,11 @@ class CheckAccessCodesHandlerTest extends TestCase
         // The request
         $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
+        $csrfProphecy = $this->prophesize(CsrfGuardInterface::class);
+
+        $this->requestProphecy->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE)
+            ->willReturn($csrfProphecy->reveal());
+
         $this->templateRendererProphecy->render('actor::check-access-codes', Argument::that(function($options) {
             $this->assertIsArray($options);
             $this->assertArrayHasKey('actorToken', $options);
@@ -119,7 +127,7 @@ class CheckAccessCodesHandlerTest extends TestCase
         $lpa->setDonor($donor);
         $lpa->setAttorneys([$attorney]);
 
-        $shareCodes = new ArrayObject([['ActorId' => self::ACTOR_ID]], ArrayObject::ARRAY_AS_PROPS);
+        $shareCodes = new ArrayObject([['ActorId' => self::ACTOR_ID, 'ViewerCode' => 'ABCD', 'Organisation' => 'TestOrg']], ArrayObject::ARRAY_AS_PROPS);
 
         $this->lpaServiceProphecy
             ->getLpaById(self::IDENTITY_TOKEN, self::LPA_ID)
@@ -129,6 +137,9 @@ class CheckAccessCodesHandlerTest extends TestCase
             ->getShareCodes(self::IDENTITY_TOKEN, self::LPA_ID, false)
             ->willReturn($shareCodes);
 
+
+        $this->urlHelperProphecy->generate(Argument::type('string'))->willReturn('confirm-cancel-code');
+
         $this->templateRendererProphecy
             ->render('actor:check-access-codes', [
                 'actorToken' => self::LPA_ID,
@@ -137,7 +148,7 @@ class CheckAccessCodesHandlerTest extends TestCase
                 'shareCodes' => $shareCodes
             ])
             ->willReturn('');
-
+        
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
@@ -200,7 +211,7 @@ class CheckAccessCodesHandlerTest extends TestCase
         $lpa->setDonor($donor);
         $lpa->setAttorneys([$attorney]);
 
-        $shareCodes = new ArrayObject([['ActorId' => self::ACTOR_ID,'CreatedBy' => self::FIRST_NAME]], ArrayObject::ARRAY_AS_PROPS);
+        $shareCodes = new ArrayObject([['ActorId' => self::ACTOR_ID,'CreatedBy' => self::FIRST_NAME, 'ViewerCode' => 'ABCD', 'Organisation' => 'TestOrg']], ArrayObject::ARRAY_AS_PROPS);
 
 
         $this->lpaServiceProphecy
@@ -210,6 +221,8 @@ class CheckAccessCodesHandlerTest extends TestCase
         $this->viewerCodeServiceProphecy
             ->getShareCodes(self::IDENTITY_TOKEN, self::LPA_ID, false)
             ->willReturn($shareCodes);
+
+        $this->urlHelperProphecy->generate(Argument::type('string'))->willReturn('confirm-cancel-code');
 
         $this->templateRendererProphecy
             ->render('actor:check-access-codes', [
@@ -263,7 +276,7 @@ class CheckAccessCodesHandlerTest extends TestCase
         $lpa->setDonor($donor);
         $lpa->setAttorneys([$attorney]);
 
-        $shareCodes = new ArrayObject([['ActorId' => self::ACTOR_ID,'CreatedBy' => self::FIRST_NAME]], ArrayObject::ARRAY_AS_PROPS);
+        $shareCodes = new ArrayObject([['ActorId' => self::ACTOR_ID,'CreatedBy' => self::FIRST_NAME, 'ViewerCode' => 'ABCD', 'Organisation' => 'TestOrg']], ArrayObject::ARRAY_AS_PROPS);
 
 
         $this->lpaServiceProphecy
@@ -273,6 +286,8 @@ class CheckAccessCodesHandlerTest extends TestCase
         $this->viewerCodeServiceProphecy
             ->getShareCodes(self::IDENTITY_TOKEN, self::LPA_ID, false)
             ->willReturn($shareCodes);
+
+        $this->urlHelperProphecy->generate(Argument::type('string'))->willReturn('confirm-cancel-code');
 
         $this->templateRendererProphecy
             ->render('actor:check-access-codes', [
