@@ -26,5 +26,6 @@ Feature: Actor able to cancel access code
   Scenario: As a user be able to view the cancelled viewer codes
     Given I have generated an access code for an organisation and can see the details
     When I cancel the organisation access code
+    Then I want to be asked for confirmation prior to cancellation
     And I confirm cancellation of the chosen viewer code
-    Then I should be shown the details of the cancelled viewer code with cancelled status
+    And I should be shown the details of the cancelled viewer code with cancelled status

@@ -1106,7 +1106,7 @@ class AccountContext implements Context
     public function iHaveCreatedAnAccessCode()
     {
         $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
-        #$this->iAmGivenAUniqueAccessCode();
+        $this->iAmGivenAUniqueAccessCode();
     }
 
     /**
@@ -1291,8 +1291,8 @@ class AccountContext implements Context
                         0 => [
                             'SiriusUid'    => $this->lpa->uId,
                             'Added'        => '2020-01-01T23:59:59+00:00',
-                            'Expires'      => '2021-01-01T23:59:59+00:00',
-                            'Cancelled'    => '2021-01-01T23:59:59+00:00',
+                            'Expires'      => '2021-01-05T23:59:59+00:00',
+                            'Cancelled'    => '2021-01-02T23:59:59+00:00',
                             'UserLpaActor' => $this->userLpaActorToken,
                             'Organisation' => $this->organisation,
                             'ViewerCode'   => $this->accessCode,
@@ -1302,6 +1302,7 @@ class AccountContext implements Context
                     ])));
 
         $this->ui->pressButton("Yes, cancel code");
+
     }
 
     /**
@@ -1309,13 +1310,13 @@ class AccountContext implements Context
      */
     public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus()
     {
-
         $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
 
         $this->ui->assertPageContainsText('Check Access Codes');
+        $this->ui->assertPageContainsText("Cancel organisation's access");
         $this->ui->assertPageContainsText('Active codes');
         //$this->ui->assertPageContainsText('Inactive codes');
-        //$this->ui->assertPageContainsText('Status');
+       // $this->ui->assertPageContainsText($this->accessCode);
         //$this->ui->assertPageContainsText('Cancelled');
     }
 

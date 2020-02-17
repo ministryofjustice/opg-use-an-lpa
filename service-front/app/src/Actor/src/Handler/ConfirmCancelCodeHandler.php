@@ -60,7 +60,6 @@ class ConfirmCancelCodeHandler extends AbstractHandler implements UserAware, Csr
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-
         $form = new CancelCode($this->getCsrfGuard($request));
 
         $form->setAttribute('action',$this->urlHelper->generate('lpa.cancel-code'));

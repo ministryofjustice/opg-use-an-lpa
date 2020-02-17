@@ -53,7 +53,6 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-
         $actorLpaToken = $request->getQueryParams()['lpa'];
 
         if (is_null($actorLpaToken)) {
@@ -72,6 +71,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         );
 
         foreach ($shareCodes as $key => $code) {
+
             $form = new CancelCode($this->getCsrfGuard($request));
             $form->setAttribute('action',$this->urlHelper->generate('lpa.confirm-cancel-code'));
 
