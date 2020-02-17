@@ -7,6 +7,7 @@ namespace Common\Handler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -18,6 +19,9 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  */
 abstract class AbstractHandler implements RequestHandlerInterface
 {
+    /** @var LoggerInterface|null */
+    protected $logger;
+
     /** @var TemplateRendererInterface */
     protected $renderer;
 
@@ -29,11 +33,16 @@ abstract class AbstractHandler implements RequestHandlerInterface
      *
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
+     * @param LoggerInterface|null $logger
      */
-    public function __construct(TemplateRendererInterface $renderer, UrlHelper $urlHelper)
-    {
+    public function __construct(
+        TemplateRendererInterface $renderer,
+        UrlHelper $urlHelper,
+        ?LoggerInterface $logger = null
+    ) {
         $this->renderer = $renderer;
         $this->urlHelper = $urlHelper;
+        $this->logger = $logger;
     }
 
     /**

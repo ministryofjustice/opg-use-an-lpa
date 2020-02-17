@@ -27,6 +27,12 @@ trait User
      */
     public function getUser(ServerRequestInterface $request): ?UserInterface
     {
+        if ($this->authenticator === null) {
+            throw new \RuntimeException(
+                'Authentication interface property not initialised before attempt to fetch'
+            );
+        }
+
         return $this->authenticator->authenticate($request);
     }
 }
