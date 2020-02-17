@@ -60,7 +60,7 @@ class AccountContext extends BaseIntegrationContext
     /** @var ViewerCodeService */
     private $viewerCodeService;
 
-   // public function setContainer(ContainerInterface $container): void
+    // public function setContainer(ContainerInterface $container): void
 
     protected function prepareContext(): void
     {
@@ -68,11 +68,11 @@ class AccountContext extends BaseIntegrationContext
         // tests wouldn't normally touch but the container expects
         $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
 
-        $this->apiFixtures       = $this->container->get(MockHandler::class);
-        $this->userService       = $this->container->get(UserService::class);
-        $this->emailClient       = $this->container->get(EmailClient::class);
-        $this->lpaService        = $this->container->get(LpaService::class);
-        $this->lpaFactory        = $this->container->get(LpaFactory::class);
+        $this->apiFixtures = $this->container->get(MockHandler::class);
+        $this->userService = $this->container->get(UserService::class);
+        $this->emailClient = $this->container->get(EmailClient::class);
+        $this->lpaService = $this->container->get(LpaService::class);
+        $this->lpaFactory = $this->container->get(LpaFactory::class);
         $this->viewerCodeService = $this->container->get(ViewerCodeService::class);
     }
 
@@ -100,8 +100,8 @@ class AccountContext extends BaseIntegrationContext
 
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'Id'        => $this->userIdentity,
-                'Email'     => $this->userEmail,
+                'Id' => $this->userIdentity,
+                'Email' => $this->userEmail,
                 'LastLogin' => null
             ])));
 
@@ -139,7 +139,7 @@ class AccountContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([ 'PasswordResetToken' => $this->userPasswordResetToken ])
+                    json_encode(['PasswordResetToken' => $this->userPasswordResetToken])
                 )
             );
 
@@ -187,7 +187,7 @@ class AccountContext extends BaseIntegrationContext
     public function iFollowMyUniqueInstructionsOnHowToResetMyPassword()
     {
         $this->apiFixtures->get('/v1/can-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])))
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Id' => '123456'])))
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $query = $request->getUri()->getQuery();
                 assertContains($this->userPasswordResetToken, $query);
@@ -222,7 +222,7 @@ class AccountContext extends BaseIntegrationContext
 
         // API fixture for password reset
         $this->apiFixtures->patch('/v1/complete-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])))
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Id' => '123456'])))
             ->inspectRequest(function (RequestInterface $request, array $options) use ($expectedPassword) {
                 $params = json_decode($request->getBody()->getContents(), true);
 
@@ -321,7 +321,7 @@ class AccountContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([ 'activationToken' => $this->activationToken])
+                    json_encode(['activationToken' => $this->activationToken])
                 )
             );
 
@@ -491,7 +491,7 @@ class AccountContext extends BaseIntegrationContext
     public function iFollowTheInstructionsOnHowToActivateMyAccount()
     {
         $this->apiFixtures->patch('/v1/user-activation')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'activation_token' => $this->activationToken])))
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['activation_token' => $this->activationToken])))
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $query = $request->getUri()->getQuery();
                 assertContains($this->activationToken, $query);
@@ -521,7 +521,7 @@ class AccountContext extends BaseIntegrationContext
                 assertContains($this->activationTokenToken, $query);
             });
 
-        $canActivate= $this->userService->activate($this->activationToken);
+        $canActivate = $this->userService->activate($this->activationToken);
         assertFalse($canActivate);
     }
 
@@ -536,7 +536,7 @@ class AccountContext extends BaseIntegrationContext
     /**
      * @When /^I have not provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
      */
-    public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1,$email2,$password1,$password2,$terms)
+    public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1, $email2, $password1, $password2, $terms)
     {
         // Not needed for this context
     }
@@ -592,9 +592,9 @@ class AccountContext extends BaseIntegrationContext
                     [],
                     json_encode([
                             'user-lpa-actor-token' => $this->actorLpaToken,
-                            'date'                 => 'date',
-                            'lpa'                  => $this->lpa,
-                            'actor'                => []
+                            'date' => 'date',
+                            'lpa' => $this->lpa,
+                            'actor' => []
                         ]
                     )));
     }
@@ -627,9 +627,9 @@ class AccountContext extends BaseIntegrationContext
                     [],
                     json_encode([
                         'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
                     ])));
 
         // API call to make code
@@ -641,7 +641,7 @@ class AccountContext extends BaseIntegrationContext
                     json_encode([
                             'code' => $this->accessCode,
                             'expires' => '2021-03-07T23:59:59+00:00',
-                            'organisation'=> $this->organisation
+                            'organisation' => $this->organisation
                         ]
                     )
                 ));
@@ -654,11 +654,10 @@ class AccountContext extends BaseIntegrationContext
                     [],
                     json_encode([
                         'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
                     ])));
-
 
 
     }
@@ -701,9 +700,9 @@ class AccountContext extends BaseIntegrationContext
                     [],
                     json_encode([
                         'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
                     ])));
 
         // API call to make code
@@ -714,14 +713,14 @@ class AccountContext extends BaseIntegrationContext
                     [],
                     json_encode([
                             0 => [
-                                'SiriusUid'    => $this->lpa['uId'],
-                                'Added'        => '2020-01-01T23:59:59+00:00',
-                                'Expires'      => '2021-01-01T23:59:59+00:00',
+                                'SiriusUid' => $this->lpa['uId'],
+                                'Added' => '2020-01-01T23:59:59+00:00',
+                                'Expires' => '2021-01-01T23:59:59+00:00',
                                 'UserLpaActor' => $this->actorLpaToken,
                                 'Organisation' => $this->organisation,
-                                'ViewerCode'   => $this->accessCode,
-                                'Viewed'       => false,
-                                'ActorId'      => $this->actorId
+                                'ViewerCode' => $this->accessCode,
+                                'Viewed' => false,
+                                'ActorId' => $this->actorId
                             ]
                         ]
                     )
@@ -789,41 +788,14 @@ class AccountContext extends BaseIntegrationContext
                     [],
                     json_encode([
                         'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
                     ])));
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
         assertNotNull($lpa);
-
-        //API call for getShareCodes
-        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([
-                        0 => [
-                            'SiriusUid'    => $this->lpa['uId'],
-                            'Added'        => '2020-01-01T23:59:59+00:00',
-                            'Expires'      => '2021-01-01T23:59:59+00:00',
-                            'UserLpaActor' => $this->actorLpaToken,
-                            'Organisation' => $this->organisation,
-                            'ViewerCode'   => $this->accessCode,
-                            'Viewed'       => false,
-                            'ActorId'      => $this->actorId
-                        ]
-                    ])));
-
-        $shareCodes = $this->viewerCodeService->getShareCodes(
-            $this->userIdentity,
-            $this->actorLpaToken,
-            false
-        );
-
-        assertEquals($shareCodes[0]['Organisation'], $this->organisation);
     }
 
     /**
@@ -847,9 +819,9 @@ class AccountContext extends BaseIntegrationContext
                     [],
                     json_encode([
                         'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
                     ])));
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
@@ -861,7 +833,7 @@ class AccountContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([ ])));
+                    json_encode([])));
 
         $this->viewerCodeService->cancelShareCode(
             $this->userIdentity,
@@ -877,9 +849,9 @@ class AccountContext extends BaseIntegrationContext
                     [],
                     json_encode([
                         'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
                     ])));
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
@@ -892,15 +864,15 @@ class AccountContext extends BaseIntegrationContext
                     [],
                     json_encode([
                         0 => [
-                            'SiriusUid'    => $this->lpa['uId'],
-                            'Added'        => '2020-01-01T23:59:59+00:00',
-                            'Expires'      => '2021-01-01T23:59:59+00:00',
-                            'Cancelled'    => '2021-01-01T23:59:59+00:00',
+                            'SiriusUid' => $this->lpa['uId'],
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Expires' => '2021-01-01T23:59:59+00:00',
+                            'Cancelled' => '2021-01-01T23:59:59+00:00',
                             'UserLpaActor' => $this->actorLpaToken,
                             'Organisation' => $this->organisation,
-                            'ViewerCode'   => $this->accessCode,
-                            'Viewed'       => false,
-                            'ActorId'      => $this->actorId
+                            'ViewerCode' => $this->accessCode,
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId
                         ]
                     ])));
 
@@ -920,5 +892,63 @@ class AccountContext extends BaseIntegrationContext
     public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @When /^I do not confirm cancellation of the chosen viewer code/
+     */
+    public function iDoNotConfirmCancellationOfTheChosenViewerCode()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should be taken back to the access code summary page/
+     */
+    public function iShouldBeTakenBackToTheAccessCodeSummaryPage()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
+                    ])));
+
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        assertNotNull($lpa);
+
+        //API call for getShareCodes
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => [
+                            'SiriusUid' => $this->lpa['uId'],
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Expires' => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->actorLpaToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode' => $this->accessCode,
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId
+                        ]
+                    ])));
+
+        $shareCodes = $this->viewerCodeService->getShareCodes(
+            $this->userIdentity,
+            $this->actorLpaToken,
+            false
+        );
+
+        assertEquals($shareCodes[0]['Organisation'], $this->organisation);
     }
 }
