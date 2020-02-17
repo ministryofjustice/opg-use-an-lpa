@@ -50,7 +50,7 @@ abstract class AbstractForm extends Form
      * @param string $messageKey The key to a message stored in the messageTemplates array of the form
      * @param string $elementName An optional field name to link the error message to
      */
-    public function addErrorMessage(string $messageKey, string $elementName = "") : void
+    public function addErrorMessage(string $messageKey, string $elementName = ""): void
     {
         if (! isset($this->messageTemplates[$messageKey])) {
             throw new InvalidArgumentException("No message template exists for key '$messageKey'");
@@ -68,7 +68,7 @@ abstract class AbstractForm extends Form
      *
      * @return array
      */
-    public function getErrorMessages() : array
+    public function getErrorMessages(): array
     {
         return $this->errorMessages;
     }
@@ -76,7 +76,7 @@ abstract class AbstractForm extends Form
     /**
      * @inheritDoc
      */
-    public function getMessages($elementName = null) : array
+    public function getMessages($elementName = null): array
     {
         if ($elementName) {
             $messages = parent::getMessages($elementName);
@@ -85,5 +85,4 @@ abstract class AbstractForm extends Form
         }
         return $messages;
     }
-
 }

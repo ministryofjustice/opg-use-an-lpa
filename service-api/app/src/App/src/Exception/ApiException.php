@@ -44,10 +44,10 @@ class ApiException extends AbstractApiException
         $this->response = $response;
         $this->code = $code;
 
-        parent::__construct(self::DEFAULT_TITLE, $message,null, $previous);
+        parent::__construct(self::DEFAULT_TITLE, $message, null, $previous);
     }
 
-    public function getResponse() : ResponseInterface
+    public function getResponse(): ResponseInterface
     {
         return $this->response;
     }
@@ -58,12 +58,12 @@ class ApiException extends AbstractApiException
      *
      * @return array
      */
-    public function getAdditionalData() : array
+    public function getAdditionalData(): array
     {
         return json_decode($this->getResponse()->getBody()->getContents(), true);
     }
 
-    public static function create(string $message = null, ResponseInterface $response = null, Throwable $previous = null) : ApiException
+    public static function create(string $message = null, ResponseInterface $response = null, Throwable $previous = null): ApiException
     {
         $code = self::DEFAULT_ERROR;
 
@@ -73,7 +73,6 @@ class ApiException extends AbstractApiException
 
             //  If no message was provided create one from the response data
             if (is_null($message)) {
-
                 //  Try to get the message from the details section of the body
                 if (is_array($body) && isset($body['details'])) {
                     $message = $body['details'];

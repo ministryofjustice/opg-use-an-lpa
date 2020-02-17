@@ -8,7 +8,7 @@ use App\Exception\BadRequestException;
 use App\Exception\ConflictException;
 use App\Exception\NotFoundException;
 use App\Service\User\UserService;
-use \Exception;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -35,7 +35,7 @@ class UserHandler implements RequestHandlerInterface
      * @return ResponseInterface
      * @throws Exception
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         switch ($request->getMethod()) {
             case 'POST':
@@ -50,7 +50,7 @@ class UserHandler implements RequestHandlerInterface
      * @return ResponseInterface
      * @throws BadRequestException|NotFoundException
      */
-    private function handleGet(ServerRequestInterface $request) : ResponseInterface
+    private function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         $params = $request->getQueryParams();
 
@@ -69,7 +69,7 @@ class UserHandler implements RequestHandlerInterface
      * @return ResponseInterface
      * @throws Exception|BadRequestException|ConflictException|NotFoundException
      */
-    private function handlePost(ServerRequestInterface $request) : ResponseInterface
+    private function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
 

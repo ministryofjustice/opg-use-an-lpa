@@ -13,7 +13,8 @@ use DateTime;
  * Class ViewerCodeService
  * @package Common\Service\Lpa
  */
-class ViewerCodeService {
+class ViewerCodeService
+{
 
     /**
      * @var ApiClient
@@ -74,7 +75,7 @@ class ViewerCodeService {
      * @param bool $withActiveCount
      * @return ArrayObject|null
      */
-    public function getShareCodes(string $userToken, string $lpaId, bool $withActiveCount) :?ArrayObject
+    public function getShareCodes(string $userToken, string $lpaId, bool $withActiveCount): ?ArrayObject
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
@@ -92,16 +93,16 @@ class ViewerCodeService {
     }
 
 
-    private function getNumberOfActiveCodes(ArrayObject $shareCodes) :?ArrayObject
+    private function getNumberOfActiveCodes(ArrayObject $shareCodes): ?ArrayObject
     {
         $counter = 0;
 
         if (!empty($shareCodes[0])) {
-
             foreach ($shareCodes as $codeKey => $code) {
-
                 //if the code has not expired
+
                 if (new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23,59,59) &&  !(array_key_exists("Cancelled",$code))) {
+
                     $counter += 1;
                 }
             }
@@ -110,7 +111,5 @@ class ViewerCodeService {
         $shareCodes['activeCodeCount'] = $counter;
 
         return $shareCodes;
-
     }
-
 }

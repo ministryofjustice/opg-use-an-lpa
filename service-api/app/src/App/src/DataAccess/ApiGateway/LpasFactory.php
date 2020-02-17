@@ -27,5 +27,4 @@ class LpasFactory
             $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );
     }
-
 }

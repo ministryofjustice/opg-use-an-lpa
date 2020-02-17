@@ -13,7 +13,7 @@ class ViewerCodesFactory
     {
         $config = $container->get('config');
 
-        if ( !isset($config['repositories']['dynamodb']['viewer-codes-table'])) {
+        if (!isset($config['repositories']['dynamodb']['viewer-codes-table'])) {
             throw new \Exception('Viewer Codes table configuration not present');
         }
 

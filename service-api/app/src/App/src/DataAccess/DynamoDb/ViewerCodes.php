@@ -39,7 +39,7 @@ class ViewerCodes implements ViewerCodesInterface
     /**
      * @inheritDoc
      */
-    public function get(string $code) : ?array
+    public function get(string $code): ?array
     {
         $result = $this->client->getItem([
             'TableName' => $this->viewerCodesTable,
@@ -58,7 +58,7 @@ class ViewerCodes implements ViewerCodesInterface
     /**
      * @inheritDoc
      */
-    public function getCodesByUserLpaActorId(string $siriusUid, string $userLpaActor) : array
+    public function getCodesByUserLpaActorId(string $siriusUid, string $userLpaActor): array
     {
         $marshaler = new Marshaler();
 
@@ -67,17 +67,15 @@ class ViewerCodes implements ViewerCodesInterface
             'IndexName' => 'SiriusUidIndex',
             'KeyConditionExpression' => 'SiriusUid = :uId',
             'FilterExpression' => 'UserLpaActor = :actor',
-            'ExpressionAttributeValues'=> $marshaler->marshalItem([
+            'ExpressionAttributeValues' => $marshaler->marshalItem([
                 ':uId' => $siriusUid,
                 ':actor' => $userLpaActor
             ]),
         ]);
 
         if ($result['Count'] !== 0) {
-
             $accessCodes = $this->getDataCollection($result);
             return $accessCodes;
-
         } else {
             //the user has not yet created any access codes
             return [];
@@ -90,7 +88,7 @@ class ViewerCodes implements ViewerCodesInterface
     public function add(string $code, string $userLpaActorToken, string $siriusUid, DateTime $expires, string $organisation)
     {
         // The current DateTime, including microseconds
-        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+        $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
 
         try {
             $this->client->putItem([
@@ -105,7 +103,7 @@ class ViewerCodes implements ViewerCodesInterface
                 ],
                 'ConditionExpression' => 'attribute_not_exists(ViewerCode)'
             ]);
-        } catch (DynamoDbException $e){
+        } catch (DynamoDbException $e) {
             if ($e->getAwsErrorCode() === 'ConditionalCheckFailedException') {
                 throw new KeyCollisionException();
             }
@@ -137,4 +135,3 @@ class ViewerCodes implements ViewerCodesInterface
         return true;
     }
 }
-

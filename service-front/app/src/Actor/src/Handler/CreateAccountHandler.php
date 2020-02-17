@@ -49,8 +49,8 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
         UrlHelper $urlHelper,
         UserService $userService,
         EmailClient $emailClient,
-        ServerUrlHelper $serverUrlHelper)
-    {
+        ServerUrlHelper $serverUrlHelper
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;
@@ -63,7 +63,7 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
      * @return ResponseInterface
      * @throws \Http\Client\Exception
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $form = new CreateAccount($this->getCsrfGuard($request));
 

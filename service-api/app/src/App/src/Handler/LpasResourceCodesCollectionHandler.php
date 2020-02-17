@@ -38,8 +38,8 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
     public function __construct(
         ViewerCodeService $viewerCodeService,
         Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
-        Repository\UserLpaActorMapInterface $userLpaActorMap)
-    {
+        Repository\UserLpaActorMapInterface $userLpaActorMap
+    ) {
         $this->viewerCodeService = $viewerCodeService;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
         $this->userLpaActorMap = $userLpaActorMap;
@@ -50,7 +50,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
      * @return ResponseInterface
      * @throws Exception
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         switch ($request->getMethod()) {
             case 'POST':
@@ -125,7 +125,6 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         );
 
         return new JsonResponse([]);
-
     }
 
     /**

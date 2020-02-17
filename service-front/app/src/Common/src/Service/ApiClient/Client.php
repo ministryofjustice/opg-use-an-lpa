@@ -60,7 +60,7 @@ class Client
      *
      * @param string $token
      */
-    public function setUserTokenHeader(string $token) : void
+    public function setUserTokenHeader(string $token): void
     {
         $this->token = $token;
     }
@@ -73,7 +73,7 @@ class Client
      * @return array
      * @throws ApiException
      */
-    public function httpGet(string $path, array $query = []) : ?array
+    public function httpGet(string $path, array $query = []): ?array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -108,7 +108,7 @@ class Client
      * @return array
      * @throws ApiException
      */
-    public function httpPost(string $path, array $payload = []) : array
+    public function httpPost(string $path, array $payload = []): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -141,7 +141,7 @@ class Client
      * @return array
      * @throws ApiException
      */
-    public function httpPut(string $path, array $payload = []) : array
+    public function httpPut(string $path, array $payload = []): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -174,7 +174,7 @@ class Client
      * @return array
      * @throws ApiException
      */
-    public function httpPatch(string $path, array $payload = []) : array
+    public function httpPatch(string $path, array $payload = []): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -206,7 +206,7 @@ class Client
      * @return array
      * @throws ApiException
      */
-    public function httpDelete(string $path) : array
+    public function httpDelete(string $path): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -236,7 +236,7 @@ class Client
      *
      * @return array
      */
-    private function buildHeaders() : array
+    private function buildHeaders(): array
     {
         $headerLines = [
             'Accept'        => 'application/json',

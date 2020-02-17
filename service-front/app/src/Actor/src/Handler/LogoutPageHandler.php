@@ -28,7 +28,7 @@ class LogoutPageHandler extends AbstractHandler implements SessionAware
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $session = $this->getSession($request, 'session');
         $session->unset(UserInterface::class);

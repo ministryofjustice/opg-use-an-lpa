@@ -31,7 +31,7 @@ interface UserLpaActorMapInterface
      * @param $lpaActorToken
      * @return mixed
      */
-    public function get(string $lpaActorToken) : ?array;
+    public function get(string $lpaActorToken): ?array;
 
     /**
      * Returns LPA uids for the given user_id.
@@ -39,7 +39,7 @@ interface UserLpaActorMapInterface
      * @param $userId
      * @return mixed
      */
-    public function getUsersLpas(string$userId) : ?array;
+    public function getUsersLpas(string $userId): ?array;
 
     /**
      * Deletes an relation. Should only be called if a rollback is needed.

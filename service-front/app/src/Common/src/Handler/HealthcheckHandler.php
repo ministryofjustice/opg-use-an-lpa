@@ -37,7 +37,7 @@ class HealthcheckHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new JsonResponse([
             "healthy" => $this->isHealthy(),
@@ -48,7 +48,7 @@ class HealthcheckHandler implements RequestHandlerInterface
         ]);
     }
 
-    protected function isHealthy() : bool
+    protected function isHealthy(): bool
     {
         if ($this->checkApiEndpoint()['healthy']) {
             return true;
@@ -57,7 +57,7 @@ class HealthcheckHandler implements RequestHandlerInterface
         }
     }
 
-    protected function checkApiEndpoint() : array
+    protected function checkApiEndpoint(): array
     {
         $data = [];
 
@@ -65,7 +65,6 @@ class HealthcheckHandler implements RequestHandlerInterface
 
         try {
             $data = $this->apiClient->httpGet('/healthcheck');
-
         } catch (Exception $e) {
             $data['healthy'] = false;
         }

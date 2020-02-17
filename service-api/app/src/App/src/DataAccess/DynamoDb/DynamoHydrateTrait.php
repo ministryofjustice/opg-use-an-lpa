@@ -17,7 +17,7 @@ trait DynamoHydrateTrait
      * @param array $dateFields
      * @return array
      */
-    private function getData(Result $result,  array $dateFields = [])
+    private function getData(Result $result, array $dateFields = [])
     {
         if (isset($result['Item'])) {
             return $this->extractData($result['Item'], $dateFields);
@@ -36,7 +36,7 @@ trait DynamoHydrateTrait
      * @param array $dateFields
      * @return array
      */
-    private function getDataCollection(Result $result,  array $dateFields = [])
+    private function getDataCollection(Result $result, array $dateFields = [])
     {
         $items = [];
 
@@ -54,7 +54,7 @@ trait DynamoHydrateTrait
      * @param array $dateFields
      * @return array
      */
-    private function extractData(array $resultItem, array $dateFields = []) : array
+    private function extractData(array $resultItem, array $dateFields = []): array
     {
         $item = [];
 

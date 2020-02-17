@@ -33,7 +33,7 @@ class LpasResourceHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if (is_null($request->getAttribute('actor-id'))) {
             throw new BadRequestException("'actor-id' missing.");
@@ -48,7 +48,7 @@ class LpasResourceHandler implements RequestHandlerInterface
             $request->getAttribute('actor-id')
         );
 
-        if (is_null($result)){
+        if (is_null($result)) {
             throw new NotFoundException();
         }
 

@@ -23,13 +23,13 @@ class LogStderrListener
     public function __invoke(Throwable $error, ServerRequestInterface $request, ResponseInterface $response)
     {
         $output = "---------------------------------------------\n";
-        $output .= $error->getMessage()."\n";
-        $output .= 'On line '.$error->getLine().' in '.$error->getFile()."\n";
-        $output .= $error->getTraceAsString()."\n";
+        $output .= $error->getMessage() . "\n";
+        $output .= 'On line ' . $error->getLine() . ' in ' . $error->getFile() . "\n";
+        $output .= $error->getTraceAsString() . "\n";
         $output .= "---------------------------------------------\n";
 
-        $fh = fopen('php://stderr','a');
-        fwrite($fh,$output);
+        $fh = fopen('php://stderr', 'a');
+        fwrite($fh, $output);
         fclose($fh);
     }
 }

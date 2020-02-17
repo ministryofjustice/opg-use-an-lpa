@@ -32,7 +32,7 @@ class CreateShareCode extends AbstractForm implements InputFilterProviderInterfa
         ]);
     }
 
-    public function getInputFilterSpecification() : array
+    public function getInputFilterSpecification(): array
     {
         return [
             'org_name' => [

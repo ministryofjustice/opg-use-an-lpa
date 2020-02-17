@@ -41,7 +41,7 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
      *
      * @return array
      */
-    public function getInputFilterSpecification() : array
+    public function getInputFilterSpecification(): array
     {
         return [
             'email'            => [

@@ -19,7 +19,7 @@ class LogStderrListenerDelegatorFactory
     {
         $errorHandler = $callback();
         $errorHandler->attachListener(
-            new LogStderrListener
+            new LogStderrListener()
         );
         return $errorHandler;
     }

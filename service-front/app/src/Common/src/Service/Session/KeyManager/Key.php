@@ -41,7 +41,7 @@ class Key
      *
      * @return string
      */
-    public function getId() : string
+    public function getId(): string
     {
         return $this->id;
     }
@@ -51,7 +51,7 @@ class Key
      *
      * @return string
      */
-    public function getKeyMaterial() : string
+    public function getKeyMaterial(): string
     {
         return $this->material->getRawKeyMaterial();
     }

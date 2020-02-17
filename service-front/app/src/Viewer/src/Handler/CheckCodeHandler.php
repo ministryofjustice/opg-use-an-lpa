@@ -38,8 +38,8 @@ class CheckCodeHandler extends AbstractHandler
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        LpaService $lpaService)
-    {
+        LpaService $lpaService
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->lpaService = $lpaService;
@@ -50,13 +50,12 @@ class CheckCodeHandler extends AbstractHandler
      * @return ResponseInterface
      * @throws \Http\Client\Exception
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $code = $this->getSession($request,'session')->get('code');
-        $surname = $this->getSession($request,'session')->get('surname');
+        $code = $this->getSession($request, 'session')->get('code');
+        $surname = $this->getSession($request, 'session')->get('surname');
 
         if (isset($code)) {
-
             try {
                 $lpa = $this->lpaService->getLpaByCode($code, $surname, false);
 

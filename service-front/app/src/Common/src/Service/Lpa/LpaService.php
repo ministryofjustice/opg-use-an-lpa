@@ -44,7 +44,7 @@ class LpaService
      * @return ArrayObject|null
      * @throws Exception
      */
-    public function getLpas(string $userToken) : ?ArrayObject
+    public function getLpas(string $userToken): ?ArrayObject
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
@@ -63,7 +63,7 @@ class LpaService
      * @return Lpa|null
      * @throws Exception
      */
-    public function getLpaById(string $userToken, string $actorLpaToken) : ?Lpa
+    public function getLpaById(string $userToken, string $actorLpaToken): ?Lpa
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
@@ -81,7 +81,7 @@ class LpaService
      * @return ArrayObject|null
      * @throws Exception
      */
-    public function getLpaByCode(string $shareCode, string $donorSurname, bool $response = self::SUMMARY) : ?ArrayObject
+    public function getLpaByCode(string $shareCode, string $donorSurname, bool $response = self::SUMMARY): ?ArrayObject
     {
         //  Filter dashes out of the share code
         $shareCode = str_replace('-', '', $shareCode);
@@ -118,7 +118,7 @@ class LpaService
      * @return Lpa|null
      * @throws Exception
      */
-    public function getLpaByPasscode(string $userToken, string $passcode, string $referenceNumber, string $dob) : ?Lpa
+    public function getLpaByPasscode(string $userToken, string $passcode, string $referenceNumber, string $dob): ?Lpa
     {
         $data = [
             'actor-code' => $passcode,
@@ -143,7 +143,7 @@ class LpaService
      * @param string $dob
      * @return string|null The unique actor token that links an actor record and lpa together
      */
-    public function confirmLpaAddition(string $userToken, string $passcode, string $referenceNumber, string $dob) : ?string
+    public function confirmLpaAddition(string $userToken, string $passcode, string $referenceNumber, string $dob): ?string
     {
         $data = [
             'actor-code' => $passcode,
@@ -169,10 +169,10 @@ class LpaService
      * @return ArrayObject
      * @throws Exception
      */
-    private function parseLpaData(array $data) : ArrayObject
+    private function parseLpaData(array $data): ArrayObject
     {
         foreach ($data as $dataItemName => $dataItem) {
-            switch($dataItemName) {
+            switch ($dataItemName) {
                 case 'lpa':
                     $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
                     break;

@@ -35,8 +35,8 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
         LpaService $lpaService,
-        ViewerCodeService $viewerCodeService)
-    {
+        ViewerCodeService $viewerCodeService
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);

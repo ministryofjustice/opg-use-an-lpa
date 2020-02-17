@@ -54,7 +54,7 @@ class LpaDataCleanseDecorator implements LpaInterface
 
         // --
 
-        $lpaData['attorneys'] = array_filter($lpaData['attorneys'], function($attorney) {
+        $lpaData['attorneys'] = array_filter($lpaData['attorneys'], function ($attorney) {
             return !(empty($attorney['firstname']) && empty($attorney['surname']));
         });
 
@@ -67,12 +67,10 @@ class LpaDataCleanseDecorator implements LpaInterface
             return $lpaData;
         }
 
-        $lpaData['attorneys'] = array_filter($lpaData['attorneys'], function($attorney) {
+        $lpaData['attorneys'] = array_filter($lpaData['attorneys'], function ($attorney) {
             return ($attorney['systemStatus']);
         });
 
         return $lpaData;
     }
-
-
 }

@@ -30,11 +30,12 @@ class DateValidator extends AbstractValidator
      */
     public function isValid($value)
     {
-        if (!is_array($value)
+        if (
+            !is_array($value)
             || !array_key_exists('day', $value)
             || !array_key_exists('month', $value)
-            || !array_key_exists('year', $value)) {
-
+            || !array_key_exists('year', $value)
+        ) {
             $this->error(self::DATE_INVALID_FORMAT);
 
             return false;
@@ -73,10 +74,11 @@ class DateValidator extends AbstractValidator
      */
     protected function parseDateArray($day, $month, $year)
     {
-        if (is_numeric($day) && $day > 0
+        if (
+            is_numeric($day) && $day > 0
             && is_numeric($month) && $month > 0
-            && is_numeric($year) && $year > 0) {
-
+            && is_numeric($year) && $year > 0
+        ) {
             //  Validate the individual values in isolation
             $dayValidator = new Regex('/\b(0?[1-9]|[12][0-9]|3[01])\b/');
             $monthValidator = new Regex('/\b(0?[1-9]|1[0-2])\b/');

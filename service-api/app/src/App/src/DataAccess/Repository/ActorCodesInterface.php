@@ -12,7 +12,7 @@ interface ActorCodesInterface
      * @param string $code
      * @return array
      */
-    public function get(string $code) : ?array;
+    public function get(string $code): ?array;
 
     /**
      * Marks a given actor code as used.

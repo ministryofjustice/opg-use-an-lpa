@@ -44,8 +44,7 @@ class LpaService
         Repository\LpasInterface $lpaRepository,
         Repository\UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaDataCleanseDecoratorFactory $lpaFilterFactory
-    )
-    {
+    ) {
         $this->viewerCodesRepository = $viewerCodesRepository;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
         $this->lpaRepository = $lpaRepository;
@@ -59,7 +58,7 @@ class LpaService
      * @param string $uid
      * @return ?array
      */
-    public function getByUid(string $uid) : ?Repository\Response\LpaInterface
+    public function getByUid(string $uid): ?Repository\Response\LpaInterface
     {
         return ($this->lpaFilterFactory)($this->lpaRepository->get($uid));
     }
@@ -71,7 +70,7 @@ class LpaService
      * @param string $userId
      * @return array|null
      */
-    public function getByUserLpaActorToken(string $token, string $userId) : ?array
+    public function getByUserLpaActorToken(string $token, string $userId): ?array
     {
         $map = $this->userLpaActorMapRepository->get($token);
 
@@ -104,7 +103,7 @@ class LpaService
      * @param string $userId
      * @return array
      */
-    public function getAllForUser(string $userId) : array
+    public function getAllForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMapRepository->getUsersLpas($userId);
@@ -121,7 +120,7 @@ class LpaService
         $result = [];
 
         // Map the results...
-        foreach($lpaActorMaps as $item) {
+        foreach ($lpaActorMaps as $item) {
             $lpa = $lpas[$item['SiriusUid']];
 
             $result[$item['Id']] = [
@@ -137,14 +136,14 @@ class LpaService
 
     /**
      * Get an LPA using the share code.
-     * 
+     *
      * @param string $viewerCode
      * @param string $donorSurname
      * @param bool $logActivity
      * @return array|null
      * @throws \Exception
      */
-    public function getByViewerCode(string $viewerCode, string $donorSurname, bool $logActivity) : ?array
+    public function getByViewerCode(string $viewerCode, string $donorSurname, bool $logActivity): ?array
     {
         $viewerCodeData = $this->viewerCodesRepository->get($viewerCode);
 
@@ -158,10 +157,11 @@ class LpaService
 
         // Check donor's surname
 
-        if (is_null($lpa)
+        if (
+            is_null($lpa)
             || !isset($lpa->getData()['donor']['surname'])
             || strtolower($lpa->getData()['donor']['surname']) !== strtolower($donorSurname)
-        ){
+        ) {
             return null;
         }
 
@@ -204,7 +204,7 @@ class LpaService
      * @param int $actorId
      * @return array|null
      */
-    public function lookupActorInLpa(array $lpa, int $actorId) : ?array
+    public function lookupActorInLpa(array $lpa, int $actorId): ?array
     {
         $actor = null;
         $actorType = null;
@@ -221,11 +221,12 @@ class LpaService
         }
 
         // If no an attorney, check if they're the donor.
-        if (is_null($actor) &&
+        if (
+            is_null($actor) &&
             isset($lpa['donor']) &&
             is_array($lpa['donor']) &&
-            $lpa['donor']['id'] == $actorId)
-        {
+            $lpa['donor']['id'] == $actorId
+        ) {
             $actor = $lpa['donor'];
             $actorType = 'donor';
         }
