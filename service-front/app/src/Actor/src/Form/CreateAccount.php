@@ -52,7 +52,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
         ]);
     }
 
-    public function getInputFilterSpecification() : array
+    public function getInputFilterSpecification(): array
     {
         return [
             'email'            => [

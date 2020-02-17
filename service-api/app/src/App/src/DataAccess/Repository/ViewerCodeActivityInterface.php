@@ -17,7 +17,7 @@ interface ViewerCodeActivityInterface
      *
      * @param string $activityCode
      */
-    public function recordSuccessfulLookupActivity(string $activityCode) : void;
+    public function recordSuccessfulLookupActivity(string $activityCode): void;
 
     /**
      * Checks activity status of all viewer codes for a specific lpa
@@ -25,5 +25,5 @@ interface ViewerCodeActivityInterface
      * @param array $viewerCodes
      * @return array
      */
-    public function getStatusesForViewerCodes(array $viewerCodes) : array;
+    public function getStatusesForViewerCodes(array $viewerCodes): array;
 }

@@ -38,8 +38,8 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
     public function __construct(
         ViewerCodeService $viewerCodeService,
         Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
-        Repository\UserLpaActorMapInterface $userLpaActorMap)
-    {
+        Repository\UserLpaActorMapInterface $userLpaActorMap
+    ) {
         $this->viewerCodeService = $viewerCodeService;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
         $this->userLpaActorMap = $userLpaActorMap;
@@ -49,7 +49,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if (is_null($request->getAttribute('actor-id'))) {
             throw new BadRequestException("'user-id' missing.");
@@ -60,7 +60,6 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         }
 
         if ($request->getMethod() === 'POST') {
-
             $data = $request->getParsedBody();
 
             if (!isset($data['organisation'])) {
@@ -90,9 +89,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
             }
 
             return new JsonResponse($result);
-
         } else {
-
             $viewerCodes = $this->viewerCodeService->getCodes(
                 $request->getAttribute('user-lpa-actor-token'),
                 $request->getAttribute('actor-id')
@@ -104,7 +101,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
                 $actorId = $this->userLpaActorMap->getUsersLpas($request->getAttribute('actor-id'));
 
                 //adds an actorId for each code in the array
-                foreach ($viewerCodesAndStatuses as $key => $code){
+                foreach ($viewerCodesAndStatuses as $key => $code) {
                     $viewerCodesAndStatuses[$key]['ActorId'] = $actorId[0]['ActorId'];
                 }
 
@@ -113,6 +110,5 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
 
             return new JsonResponse($viewerCodes);
         }
-
     }
 }

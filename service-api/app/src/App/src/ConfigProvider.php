@@ -24,7 +24,7 @@ class ConfigProvider
      * method which returns an array with its configuration.
      *
      */
-    public function __invoke() : array
+    public function __invoke(): array
     {
         return [
             'dependencies' => $this->getDependencies(),
@@ -34,12 +34,15 @@ class ConfigProvider
     /**
      * Returns the container dependencies
      */
-    public function getDependencies() : array
+    public function getDependencies(): array
     {
         return [
             'aliases' => [
                 Psr\Http\Client\ClientInterface::class => Http\Adapter\Guzzle6\Client::class,
                 Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
+
+                // allows value setting on the container at runtime.
+                Service\Container\ModifiableContainerInterface::class => Service\Container\PhpDiModifiableContainer::class,
 
                 // Data Access
                 DataAccess\Repository\ActorCodesInterface::class => DataAccess\DynamoDb\ActorCodes::class,

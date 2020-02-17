@@ -33,7 +33,7 @@ class ActorCodeConfirmHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $data = $request->getParsedBody();
 
@@ -46,7 +46,7 @@ class ActorCodeConfirmHandler implements RequestHandlerInterface
         $response = $this->actorCodeService->confirmDetails($data['actor-code'], $data['uid'], $data['dob'], $actorId);
 
         // We deliberately don't return details of why the (validated) code was not found.
-        if (!is_string($response)){
+        if (!is_string($response)) {
             throw new NotFoundException();
         }
 
@@ -54,5 +54,4 @@ class ActorCodeConfirmHandler implements RequestHandlerInterface
             'user-lpa-actor-token' => $response
         ], 201);
     }
-
 }

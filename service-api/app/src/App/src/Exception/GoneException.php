@@ -16,7 +16,7 @@ class GoneException extends AbstractApiException
     /**
      * Exception title
      */
-    const TITLE = 'Gone';
+    public const TITLE = 'Gone';
 
     /**
      * @var int

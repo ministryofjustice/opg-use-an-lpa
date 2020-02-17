@@ -26,7 +26,7 @@ interface ActorUsersInterface
      * @param int $activationTtl
      * @return array
      */
-    public function add(string $id, string $email, string $password, string $activationToken, int $activationTtl) : array;
+    public function add(string $id, string $email, string $password, string $activationToken, int $activationTtl): array;
 
     /**
      * Get an actor user from the database
@@ -35,7 +35,7 @@ interface ActorUsersInterface
      * @return array
      * @throws NotFoundException
      */
-    public function get(string $id) : array;
+    public function get(string $id): array;
 
     /**
      * Get an actor user from the database using their email
@@ -44,7 +44,7 @@ interface ActorUsersInterface
      * @return array
      * @throws NotFoundException
      */
-    public function getByEmail(string $email) : array;
+    public function getByEmail(string $email): array;
 
     /**
      * Gets an actor user when queried for by a password reset token
@@ -53,7 +53,7 @@ interface ActorUsersInterface
      * @return string
      * @throws NotFoundException
      */
-    public function getIdByPasswordResetToken(string $resetToken) : string;
+    public function getIdByPasswordResetToken(string $resetToken): string;
 
     /**
      * Activate the user account in the database using the token value
@@ -62,7 +62,7 @@ interface ActorUsersInterface
      * @return array
      * @throws NotFoundException
      */
-    public function activate(string $activationToken) : array;
+    public function activate(string $activationToken): array;
 
     /**
      * Check for the existence of an actor user
@@ -70,7 +70,7 @@ interface ActorUsersInterface
      * @param string $email
      * @return bool
      */
-    public function exists(string $email) : bool;
+    public function exists(string $email): bool;
 
     /**
      * Reset a password in the system using a reset token and the intended password
@@ -87,7 +87,7 @@ interface ActorUsersInterface
      * @param string $id
      * @param string $loginTime An ATOM format datetime string
      */
-    public function recordSuccessfulLogin(string $id, string $loginTime) : void;
+    public function recordSuccessfulLogin(string $id, string $loginTime): void;
 
     /**
      * Records a reset token against an actor user account

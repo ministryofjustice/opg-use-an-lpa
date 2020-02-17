@@ -64,7 +64,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $data = $client->httpGet('/simple_get');
 
@@ -77,7 +77,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $data = $client->httpGet('/simple_get', ['simple_query' => 'query_value']);
 
@@ -90,7 +90,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -105,7 +105,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $this->expectException(ClientExceptionInterface::class);
         $this->expectExceptionCode(0);
@@ -125,7 +125,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $data = $client->httpPost('/simple_post', ['simple_query' => 'query_value']);
 
@@ -138,7 +138,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -153,7 +153,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $this->expectException(ClientExceptionInterface::class);
         $this->expectExceptionCode(0);
@@ -173,7 +173,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $data = $client->httpPut('/simple_put', ['simple_query' => 'query_value']);
 
@@ -186,7 +186,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -201,7 +201,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $this->expectException(ClientExceptionInterface::class);
         $this->expectExceptionCode(0);
@@ -221,7 +221,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $data = $client->httpPatch('/simple_patch', ['simple_query' => 'query_value']);
 
@@ -234,7 +234,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -249,7 +249,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $this->expectException(ClientExceptionInterface::class);
         $this->expectExceptionCode(0);
@@ -269,7 +269,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $data = $client->httpDelete('/simple_delete', ['simple_query' => 'query_value']);
 
@@ -282,7 +282,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -297,7 +297,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         $this->expectException(ClientExceptionInterface::class);
         $this->expectExceptionCode(0);
@@ -322,11 +322,13 @@ class ClientTest extends TestCase
             $this->assertEquals('application/json', $headers['Accept'][0]);
             $this->assertArrayHasKey('Content-Type', $headers);
             $this->assertEquals('application/json', $headers['Content-Type'][0]);
+            $this->assertArrayHasKey('x-amzn-trace-id', $headers);
+            $this->assertEquals('Root=1-1-11', $headers['x-amzn-trace-id'][0]);
             return true;
         }))
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', 'Root=1-1-11');
 
         $data = $client->httpGet('/simple_get');
         $this->assertIsArray($data);
@@ -352,7 +354,7 @@ class ClientTest extends TestCase
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('<xml>we_dont_do_xml</xml>', StatusCodeInterface::STATUS_OK));
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1');
+        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'eu-west-1', '');
 
         try {
             $data = $client->httpGet('/simple_get');

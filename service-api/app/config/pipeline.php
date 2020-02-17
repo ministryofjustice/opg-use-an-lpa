@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Middleware;
-use App\Middleware\UserIdentificationMiddleware;
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Application;
 use Zend\Expressive\Handler\NotFoundHandler;
@@ -45,6 +43,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - $app->pipe('/docs', $apiDocMiddleware);
     // - $app->pipe('/files', $filesMiddleware);
 
+    $app->pipe(App\Middleware\Logging\RequestTracingMiddleware::class);
+
     // Register the routing middleware in the middleware pipeline.
     // This middleware registers the Zend\Expressive\Router\RouteResult request attribute.
     $app->pipe(RouteMiddleware::class);
@@ -61,7 +61,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->pipe(BodyParamsMiddleware::class);
 
     //  Handle any API problem exception types
-    $app->pipe(Middleware\ProblemDetailsMiddleware::class);
+    $app->pipe(App\Middleware\ProblemDetailsMiddleware::class);
 
     // Seed the UrlHelper with the routing results:
     $app->pipe(UrlHelperMiddleware::class);
@@ -72,8 +72,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - route-based authentication
     // - route-based validation
     // - etc.
-    $app->pipe('/v1/actor-codes', UserIdentificationMiddleware::class);
-    $app->pipe('/v1/lpas', UserIdentificationMiddleware::class);
+    $app->pipe('/v1/actor-codes', App\Middleware\UserIdentificationMiddleware::class);
+    $app->pipe('/v1/lpas', App\Middleware\UserIdentificationMiddleware::class);
 
     // Register the dispatch middleware in the middleware pipeline
     $app->pipe(DispatchMiddleware::class);

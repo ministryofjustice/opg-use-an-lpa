@@ -72,7 +72,7 @@ data "aws_iam_policy_document" "code_creation_permissions_role" {
       "execute-api:Invoke",
     ]
 
-    resources = ["arn:aws:execute-api:eu-west-1:${local.sirius_account_id}:*/*/GET/use-an-lpa/*"]
+    resources = ["arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/GET/use-an-lpa/*"]
   }
 }
 
@@ -124,10 +124,10 @@ locals {
     },
     {
       "name": "SIRIUS_API_ENDPOINT",
-      "value": "${local.api_gateway_endpoint}"
+      "value": "${local.account.api_gateway_endpoint}"
     }]
   }
-  
+
 EOF
 
 }
@@ -135,4 +135,3 @@ EOF
 output "code_creation_app_deployed_version" {
   value = "${data.aws_ecr_repository.use_an_lpa_api_app.repository_url}:${var.container_version}"
 }
-

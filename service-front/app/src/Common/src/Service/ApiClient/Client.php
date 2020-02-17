@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\ApiClient;
 
 use Common\Exception\ApiException;
+use Common\Service\Log\RequestTracing;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
@@ -35,16 +36,22 @@ class Client
     private $token;
 
     /**
+     * @var string
+     */
+    private $traceId;
+
+    /**
      * Client constructor
      *
      * @param ClientInterface $httpClient
      * @param string $apiBaseUri
      * @param string|null $token
      */
-    public function __construct(ClientInterface $httpClient, string $apiBaseUri)
+    public function __construct(ClientInterface $httpClient, string $apiBaseUri, string $traceId)
     {
         $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiBaseUri;
+        $this->traceId = $traceId;
     }
 
     /**
@@ -53,7 +60,7 @@ class Client
      *
      * @param string $token
      */
-    public function setUserTokenHeader(string $token) : void
+    public function setUserTokenHeader(string $token): void
     {
         $this->token = $token;
     }
@@ -66,7 +73,7 @@ class Client
      * @return array
      * @throws ApiException
      */
-    public function httpGet(string $path, array $query = []) : ?array
+    public function httpGet(string $path, array $query = []): ?array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -101,7 +108,7 @@ class Client
      * @return array
      * @throws ApiException
      */
-    public function httpPost(string $path, array $payload = []) : array
+    public function httpPost(string $path, array $payload = []): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -134,7 +141,7 @@ class Client
      * @return array
      * @throws ApiException
      */
-    public function httpPut(string $path, array $payload = []) : array
+    public function httpPut(string $path, array $payload = []): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -167,7 +174,7 @@ class Client
      * @return array
      * @throws ApiException
      */
-    public function httpPatch(string $path, array $payload = []) : array
+    public function httpPatch(string $path, array $payload = []): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -199,7 +206,7 @@ class Client
      * @return array
      * @throws ApiException
      */
-    public function httpDelete(string $path) : array
+    public function httpDelete(string $path): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
@@ -229,12 +236,17 @@ class Client
      *
      * @return array
      */
-    private function buildHeaders() : array
+    private function buildHeaders(): array
     {
         $headerLines = [
             'Accept'        => 'application/json',
             'Content-Type'  => 'application/json',
         ];
+
+        // the trace Id is used for logging of the path of requests through infrastructure
+        if (!empty($this->traceId)) {
+            $headerLines[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
+        }
 
         //  If the logged in user has an auth token already then set that in the header
         if (isset($this->token)) {

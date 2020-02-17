@@ -20,7 +20,7 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
      * @param DelegateInterface $delegate
      * @return ResponseInterface|JsonResponse
      */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate) : ResponseInterface
+    public function process(ServerRequestInterface $request, DelegateInterface $delegate): ResponseInterface
     {
         try {
             $response = $delegate->handle($request);

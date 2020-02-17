@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Service\Pdf;
 
+use Common\Service\Log\RequestTracing;
 use DI\Factory\RequestedEntry;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
@@ -34,6 +35,7 @@ class PdfServiceFactory
             $container->get(ClientInterface::class),
             $container->get(StylesService::class),
             $config['pdf']['uri'],
+            $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );
     }
 }

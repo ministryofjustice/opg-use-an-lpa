@@ -9,11 +9,19 @@ terraform {
   }
 }
 
+variable "default_role" {
+  default = "opg-use-an-lpa-ci"
+}
+
+variable "management_role" {
+  default = "opg-use-an-lpa-ci"
+}
+
 provider "aws" {
   region = "eu-west-1"
 
   assume_role {
-    role_arn     = "arn:aws:iam::${local.account_id}:role/${var.default_role}"
+    role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
     session_name = "terraform-session"
   }
 }
@@ -27,4 +35,3 @@ provider "aws" {
     session_name = "terraform-session"
   }
 }
-

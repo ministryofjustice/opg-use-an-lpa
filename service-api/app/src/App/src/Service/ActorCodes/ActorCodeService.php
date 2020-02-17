@@ -35,8 +35,7 @@ class ActorCodeService
         Repository\ActorCodesInterface $viewerCodesRepository,
         Repository\UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaService $lpaService
-    )
-    {
+    ) {
         $this->lpaService = $lpaService;
         $this->actorCodesRepository = $viewerCodesRepository;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
@@ -49,7 +48,7 @@ class ActorCodeService
      * @param string $dob
      * @return array|null
      */
-    public function validateDetails(string $code, string $uid, string $dob) : ?array
+    public function validateDetails(string $code, string $uid, string $dob): ?array
     {
         //-----------------------
         // Lookup the LPA and the Actor's LPA ID.
@@ -98,7 +97,6 @@ class ActorCodeService
             'actor' => $actor,
             'lpa' => $lpa->getData(),
         ];
-
     }
 
 
@@ -118,7 +116,8 @@ class ActorCodeService
      * @return array|null
      * @throws \Exception
      */
-    public function confirmDetails(string $code, string $uid, string $dob, string $actorId) : ?string {
+    public function confirmDetails(string $code, string $uid, string $dob, string $actorId): ?string
+    {
 
         $details = $this->validateDetails($code, $uid, $dob);
 
@@ -148,18 +147,16 @@ class ActorCodeService
             } catch (Repository\KeyCollisionException $e) {
                 // Allows the loop to repeat with a new ID.
             }
-
-        } while(!$added);
+        } while (!$added);
 
         //----
 
         try {
             $this->actorCodesRepository->flagCodeAsUsed($code);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->userLpaActorMapRepository->delete($id);
         }
 
         return $id;
     }
-
 }

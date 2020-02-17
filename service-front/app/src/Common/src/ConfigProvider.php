@@ -23,7 +23,7 @@ class ConfigProvider
      * To add a bit of a structure, each section is defined in a separate
      * method which returns an array with its configuration.
      */
-    public function __invoke() : array
+    public function __invoke(): array
     {
         return [
             'dependencies' => $this->getDependencies(),
@@ -35,7 +35,7 @@ class ConfigProvider
     /**
      * Returns the container dependencies
      */
-    public function getDependencies() : array
+    public function getDependencies(): array
     {
         return [
 
@@ -50,6 +50,9 @@ class ConfigProvider
                 // Auth
                 Zend\Expressive\Authentication\UserRepositoryInterface::class => Service\User\UserService::class,
                 Zend\Expressive\Authentication\AuthenticationInterface::class => Zend\Expressive\Authentication\Session\PhpSession::class,
+
+                // allows value setting on the container at runtime.
+                Service\Container\ModifiableContainerInterface::class => Service\Container\PhpDiModifiableContainer::class,
 
                 Service\Lpa\LpaFactory::class => Service\Lpa\Factory\Sirius::class
             ],
@@ -90,7 +93,7 @@ class ConfigProvider
     /**
      * Returns the templates configuration
      */
-    public function getTemplates() : array
+    public function getTemplates(): array
     {
         return [
             'paths' => [
@@ -104,7 +107,7 @@ class ConfigProvider
     /**
      * @return array
      */
-    public function getTwig() : array
+    public function getTwig(): array
     {
         return [
             'extensions' => [

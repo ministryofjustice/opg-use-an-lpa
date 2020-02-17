@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\ApiGateway;
 
+use App\Service\Log\RequestTracing;
 use DateTime;
 use App\DataAccess\Repository\LpasInterface;
 use GuzzleHttp\Client as HttpClient;
@@ -37,16 +38,22 @@ class Lpas implements LpasInterface
     private $awsSignature;
 
     /**
+     * @var string
+     */
+    private $traceId;
+
+    /**
      * Lpas constructor.
      * @param HttpClient $httpClient
      * @param string $apiUrl
      * @param string $awsRegion
      */
-    public function __construct(HttpClient $httpClient, AwsSignatureV4 $awsSignature, string $apiUrl)
+    public function __construct(HttpClient $httpClient, AwsSignatureV4 $awsSignature, string $apiUrl, string $traceId)
     {
         $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiUrl;
         $this->awsSignature = $awsSignature;
+        $this->traceId = $traceId;
     }
 
     /**
@@ -56,7 +63,7 @@ class Lpas implements LpasInterface
      * @return Response\LpaInterface|null
      * @throws \Exception
      */
-    public function get(string $uid) : ?Response\LpaInterface
+    public function get(string $uid): ?Response\LpaInterface
     {
         $result = $this->lookup([$uid]);
         return !empty($result) ? current($result) : null;
@@ -69,7 +76,7 @@ class Lpas implements LpasInterface
      * @return array
      * @throws \Exception
      */
-    public function lookup(array $uids) : array
+    public function lookup(array $uids): array
     {
         $provider = AwsCredentialProvider::defaultProvider();
         $credentials = $provider()->wait();
@@ -78,12 +85,10 @@ class Lpas implements LpasInterface
         // The key for each request is the original uid.
         $requests = array_combine(
             $uids,  // Use as array key
-            array_map(function($v) use ($credentials){
+            array_map(function ($v) use ($credentials) {
                 $url = $this->apiBaseUri . sprintf("/v1/use-an-lpa/lpas/%s", $v);
-                $request = new Request('GET', $url, [
-                    'Accept'        => 'application/json',
-                    'Content-type'  => 'application/json'
-                ]);
+
+                $request = new Request('GET', $url, $this->buildHeaders());
 
                 return $this->awsSignature->signRequest($request, $credentials);
             }, $uids)
@@ -102,7 +107,7 @@ class Lpas implements LpasInterface
             'fulfilled' => function ($response, $id) use (&$results) {
                 $results[$id] = $response;
             },
-            'rejected' => function ($reason, $id){
+            'rejected' => function ($reason, $id) {
                 // Log?
             },
         ]);
@@ -116,7 +121,7 @@ class Lpas implements LpasInterface
         //---
 
         // Handle all request response now
-        foreach ($results as $uid=>$result) {
+        foreach ($results as $uid => $result) {
             $statusCode = $result->getStatusCode();
 
             switch ($statusCode) {
@@ -136,4 +141,17 @@ class Lpas implements LpasInterface
         return $results;
     }
 
+    private function buildHeaders(): array
+    {
+        $headerLines = [
+            'Accept'        => 'application/json',
+            'Content-Type'  => 'application/json',
+        ];
+
+        if (!empty($this->traceId)) {
+            $headerLines[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
+        }
+
+        return $headerLines;
+    }
 }

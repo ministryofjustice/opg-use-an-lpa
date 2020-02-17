@@ -37,8 +37,8 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
         LpaService $lpaService,
-        ViewerCodeService $viewerCodeService)
-    {
+        ViewerCodeService $viewerCodeService
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
@@ -73,7 +73,6 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware
         );
 
         foreach ($shareCodes as $key => $code) {
-
             if ($lpa->getDonor()->getId() == $code['ActorId']) {
                 $shareCodes[$key]['CreatedBy'] = $lpa->getDonor()->getFirstname();
             }

@@ -33,7 +33,7 @@ class ViewerCodeSummaryHandler implements RequestHandlerInterface
      * @return ResponseInterface
      * @throws \Exception
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $params = $request->getParsedBody();
 
@@ -43,7 +43,7 @@ class ViewerCodeSummaryHandler implements RequestHandlerInterface
 
         $data = $this->lpaService->getByViewerCode($params['code'], $params['name'], false);
 
-        if (is_null($data)){
+        if (is_null($data)) {
             throw new NotFoundException();
         }
 

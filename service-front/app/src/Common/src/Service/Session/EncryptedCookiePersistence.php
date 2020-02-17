@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The majority of this class is taken from zend-expressive-session-cache.
  * It's been modified to used the cookie for the encrypted session data, rather than the cache id.
@@ -32,7 +33,7 @@ use Zend\Expressive\Session\SessionPersistenceInterface;
  * Class EncryptedCookie
  * @package Common\Service\Session
  */
-class EncryptedCookiePersistence  implements SessionPersistenceInterface
+class EncryptedCookiePersistence implements SessionPersistenceInterface
 {
     /**
      * This unusual past date value is taken from the php-engine source code and
@@ -136,7 +137,7 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
      *
      * @return BlockCipher
      */
-    private function getBlockCipher() : BlockCipher
+    private function getBlockCipher(): BlockCipher
     {
         return BlockCipher::factory('openssl', [
             'algo' => 'aes',
@@ -154,7 +155,7 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
      * @param array $data
      * @return string
      */
-    protected function encodeCookieValue(array $data) : string
+    protected function encodeCookieValue(array $data): string
     {
         if (empty($data)) {
             return '';
@@ -177,7 +178,7 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
      * @param string $data
      * @return array
      */
-    protected function decodeCookieValue(string $data) : array
+    protected function decodeCookieValue(string $data): array
     {
         if (empty($data)) {
             return [];
@@ -187,7 +188,6 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
         list($keyId, $payload) = explode('.', $data, 2);
 
         try {
-
             $key = $this->keyManager->getDecryptionKey($keyId);
 
             $ciphertext = Base64UrlSafe::decode($payload);
@@ -197,10 +197,8 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
                 ->decrypt($ciphertext);
 
             return json_decode($plaintext, true);
-
-        } catch (KeyNotFoundException $e){
+        } catch (KeyNotFoundException $e) {
             # TODO: add logging
-
         }
 
         // Something went wrong. Restart the session.
@@ -211,7 +209,7 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
     //------------------------------------------------------------------------------------------------------------
     // Public methods for the actual starting and writing of the session
 
-    public function initializeSessionFromRequest(ServerRequestInterface $request) : SessionInterface
+    public function initializeSessionFromRequest(ServerRequestInterface $request): SessionInterface
     {
         $sessionData = $this->getCookieFromRequest($request);
 
@@ -228,7 +226,7 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
         return new Session([]);
     }
 
-    public function persistSession(SessionInterface $session, ResponseInterface $response) : ResponseInterface
+    public function persistSession(SessionInterface $session, ResponseInterface $response): ResponseInterface
     {
         // No data? Nothing to do.
         // TODO if a session has been cleared ($session->clear) then it doesn't get persisted?
@@ -279,7 +277,7 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
      * Generate cache http headers for this instance's session cache_limiter and
      * cache_expire values
      */
-    private function generateCacheHeaders() : array
+    private function generateCacheHeaders(): array
     {
         // cache_limiter: 'nocache'
         if ('nocache' === $this->cacheLimiter) {
@@ -322,7 +320,7 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
      *
      * @return string
      */
-    private function determineLastModifiedValue() : string
+    private function determineLastModifiedValue(): string
     {
         $cwd = getcwd();
         foreach (['public/index.php', 'index.php'] as $filename) {
@@ -344,7 +342,7 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
      * @param ServerRequestInterface $request
      * @return string
      */
-    private function getCookieFromRequest(ServerRequestInterface $request) : string
+    private function getCookieFromRequest(ServerRequestInterface $request): string
     {
         return FigRequestCookies::get($request, $this->cookieName)->getValue() ?? '';
     }
@@ -352,7 +350,7 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
     /**
      * Check if the response already carries cache headers
      */
-    private function responseAlreadyHasCacheHeaders(ResponseInterface $response) : bool
+    private function responseAlreadyHasCacheHeaders(ResponseInterface $response): bool
     {
         return (
             $response->hasHeader('Expires')
@@ -362,9 +360,8 @@ class EncryptedCookiePersistence  implements SessionPersistenceInterface
         );
     }
 
-    private function getPersistenceDuration() : int
+    private function getPersistenceDuration(): int
     {
         return $this->sessionExpire;
     }
-
 }

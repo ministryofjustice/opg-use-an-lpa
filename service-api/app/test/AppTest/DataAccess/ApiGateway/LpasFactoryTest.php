@@ -6,6 +6,7 @@ namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\Lpas;
 use App\DataAccess\ApiGateway\LpasFactory;
+use App\Service\Log\RequestTracing;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -22,11 +23,15 @@ class LpasFactoryTest extends TestCase
             $this->prophesize(GuzzleHttpClient::class)->reveal()
         );
 
-        $containerProphecy->get('config')->willReturn([
-            'sirius_api' => [
-                'endpoint' => 'http://test'
+        $containerProphecy->get('config')->willReturn(
+            [
+                'sirius_api' => [
+                    'endpoint' => 'http://test'
+                ]
             ]
-        ]);
+        );
+
+        $containerProphecy->get(RequestTracing::TRACE_PARAMETER_NAME)->willReturn('');
 
         $factory = new LpasFactory();
         $repo = $factory($containerProphecy->reveal());

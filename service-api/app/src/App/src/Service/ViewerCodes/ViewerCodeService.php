@@ -36,14 +36,13 @@ class ViewerCodeService
         Repository\ViewerCodesInterface $viewerCodesRepository,
         Repository\UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaService $lpaService
-    )
-    {
+    ) {
         $this->lpaService = $lpaService;
         $this->viewerCodesRepository = $viewerCodesRepository;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
     }
 
-    public function addCode(string $token, string $userId, string $organisation) : ?array
+    public function addCode(string $token, string $userId, string $organisation): ?array
     {
         $map = $this->userLpaActorMapRepository->get($token);
 
@@ -81,8 +80,7 @@ class ViewerCodeService
             } catch (Repository\KeyCollisionException $e) {
                 // Allows the loop to repeat with a new code.
             }
-
-        } while(!$added);
+        } while (!$added);
 
         return [
             'code' => $code,
@@ -106,5 +104,4 @@ class ViewerCodeService
 
         return $accessCodes;
     }
-
 }

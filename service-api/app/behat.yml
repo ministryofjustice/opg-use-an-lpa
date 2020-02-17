@@ -23,6 +23,9 @@ acceptance:
   suites:
     actor:
       contexts:
+        - Behat\MinkExtension\Context\MinkContext
+        - BehatTest\Context\Acceptance\BaseAcceptanceContext
         - BehatTest\Context\Acceptance\AccountContext
+        - BehatTest\Context\Acceptance\CommonContext
       filters:
         tags: "@acceptance"

@@ -26,7 +26,7 @@ class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $session = $this->getSession($request, 'session');
 
