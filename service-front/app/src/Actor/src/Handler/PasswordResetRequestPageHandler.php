@@ -23,7 +23,6 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  * Class PasswordResetRequestPageHandler
  *
  * @package Actor\Handler
- * @codeCoverageIgnore
  */
 class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGuardAware
 {

@@ -19,7 +19,6 @@ use Common\Handler\UserAware;
  * Class YourDetailsHandler
  *
  * @package Actor\Handler
- * @codeCoverageIgnore
  */
 class YourDetailsHandler extends AbstractHandler implements UserAware
 {

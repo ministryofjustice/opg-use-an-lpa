@@ -22,7 +22,6 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  * Class CreateAccountHandler
  *
  * @package Actor\Handler
- * @codeCoverageIgnore
  */
 class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {

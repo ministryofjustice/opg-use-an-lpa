@@ -20,7 +20,6 @@ use Zend\Diactoros\Response\HtmlResponse;
  * Class ChangeDetailsHandler
  *
  * @package Actor\Handler
- * @codeCoverageIgnore
  */
 class ChangeDetailsHandler extends AbstractHandler implements UserAware
 {
