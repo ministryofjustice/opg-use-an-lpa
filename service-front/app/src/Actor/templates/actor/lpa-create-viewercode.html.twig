@@ -42,7 +42,7 @@
 
                         {{ govuk_form_element(form.get('org_name'), { 'label': 'For example: HSBC, British Gas', 'attr': { 'class': 'govuk-!-width-one-half' } }) }}
 
-                        <button type="submit" class="govuk-button">
+                        <button data-prevent-double-click="true" type="submit" class="govuk-button">
                             Continue
                         </button>
 
