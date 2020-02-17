@@ -23,6 +23,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  * Class CreateAccountHandler
  *
  * @package Actor\Handler
+ * @codeCoverageIgnore
  */
 class LogoutPageHandler extends AbstractHandler implements SessionAware, UserAware, LoggerAware
 {
