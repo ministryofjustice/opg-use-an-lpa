@@ -10,10 +10,13 @@ default:
     Behat\MinkExtension:
       base_url: 'http://localhost'
       psr: ~
+    BehatLocalCodeCoverage\LocalCodeCoverageExtension:
+      target_directory: '%paths.base%/build/reports'
 
 integration:
   suites:
-    actor:
+    actorInt:
+      local_coverage_enabled: true
       contexts:
         - BehatTest\Context\Integration\AccountContext
         - BehatTest\Context\Integration\ViewerContext
@@ -23,6 +26,7 @@ integration:
 acceptance:
   suites:
     actor:
+      local_coverage_enabled: true
       contexts:
         - Behat\MinkExtension\Context\MinkContext
         - BehatTest\Context\UI\BaseUiContext
@@ -31,6 +35,7 @@ acceptance:
       filters:
         tags: "@actor&&@ui"
     viewer:
+      local_coverage_enabled: true
       contexts:
         - Behat\MinkExtension\Context\MinkContext
         - BehatTest\Context\UI\BaseUiContext
