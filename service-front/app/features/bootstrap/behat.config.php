@@ -36,14 +36,8 @@ return [
 
     'monolog' => [
         'handlers' => [
-            'default' => [
-                'type' => 'test'
-            ],
-            'test' => [ // default configuration in normal operation
-                'type' => 'stream',
-                'options' => [
-                    'stream' => 'php://stdout',
-                ],
+            'default' => [ // default configuration in normal operation
+                'type' => 'test',
                 'processors' => [
                     'psrLogProcessor',
                     'requestTracingProcessor'
