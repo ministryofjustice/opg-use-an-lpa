@@ -4,22 +4,21 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler;
 
+use ArrayObject;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\LpaService;
-use phpDocumentor\Reflection\Types\String_;
+use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Viewer\Handler\CheckCodeHandler;
-use Psr\Http\Message\ResponseInterface;
-use PHPUnit\Framework\TestCase;
 use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Expressive\Helper\UrlHelper;
-use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Session\SessionInterface;
-use Prophecy\Argument;
-use ArrayObject;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 class CheckCodeHandlerTest extends TestCase
 {
@@ -51,7 +50,7 @@ class CheckCodeHandlerTest extends TestCase
      */
     private $sessionProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Constructor Parameters
         $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);

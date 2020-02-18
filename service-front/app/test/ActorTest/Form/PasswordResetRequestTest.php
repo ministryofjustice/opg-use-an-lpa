@@ -38,7 +38,7 @@ class PasswordResetRequestTest extends TestCase implements TestsZendForm
         ];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new PasswordResetRequest($guardProphecy->reveal());

@@ -38,7 +38,7 @@ class LoginTest extends TestCase implements TestsZendForm
         ];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new Login($guardProphecy->reveal());

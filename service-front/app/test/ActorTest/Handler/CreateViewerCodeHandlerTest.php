@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace ActorTest\Handler;
 
+use Actor\Form\CreateShareCode;
 use Actor\Handler\CreateViewerCodeHandler;
+use ArrayObject;
+use Common\Entity\User;
 use Common\Exception\InvalidRequestException;
+use Common\Service\Lpa\Factory\Sirius as LpaFactory;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\ViewerCodeService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Http\Message\ServerRequestInterface;
-use Actor\Form\CreateShareCode;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Authentication\UserInterface;
@@ -20,9 +23,6 @@ use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Session\SessionInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use Common\Entity\User;
-use ArrayObject;
-use Common\Service\Lpa\Factory\Sirius as LpaFactory;
 
 class CreateViewerCodeHandlerTest extends TestCase
 {
@@ -71,7 +71,7 @@ class CreateViewerCodeHandlerTest extends TestCase
      */
     private $viewerCodeServiceProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
         $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);

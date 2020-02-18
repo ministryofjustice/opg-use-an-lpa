@@ -16,7 +16,7 @@ class AbstractFormTest extends TestCase
      */
     private $form;
 
-    protected function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
 

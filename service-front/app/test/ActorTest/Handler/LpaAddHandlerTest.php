@@ -53,7 +53,7 @@ class LpaAddHandlerTest extends TestCase
      */
     private $sessionProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
 

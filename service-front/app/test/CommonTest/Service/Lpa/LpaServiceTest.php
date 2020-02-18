@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
-use PHPUnit\Framework\TestCase;
 use Fig\Http\Message\StatusCodeInterface;
-use ArrayObject;
+use PHPUnit\Framework\TestCase;
 
 class LpaServiceTest extends TestCase
 {
@@ -26,7 +26,7 @@ class LpaServiceTest extends TestCase
      */
     private $lpaFactoryProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->apiClientProphecy = $this->prophesize(Client::class);
         $this->lpaFactoryProphecy = $this->prophesize(LpaFactory::class);

@@ -6,11 +6,11 @@ namespace ActorTest\Handler;
 
 use Actor\Handler\ChangeDetailsHandler;
 use PHPUnit\Framework\TestCase;
-use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Expressive\Helper\UrlHelper;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Authentication\AuthenticationInterface;
+use Zend\Expressive\Helper\UrlHelper;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 class ChangeDetailsHandlerTest extends TestCase
 {
@@ -37,7 +37,7 @@ class ChangeDetailsHandlerTest extends TestCase
      */
     private $requestProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);
         $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);

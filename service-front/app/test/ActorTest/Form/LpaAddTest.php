@@ -40,7 +40,7 @@ class LpaAddTest extends TestCase implements TestsZendForm
         ];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new LpaAdd($guardProphecy->reveal());

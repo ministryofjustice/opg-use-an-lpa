@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace ActorTest\Handler;
 
-use Common\Service\User\UserService;
 use Actor\Handler\ActivateAccountHandler;
+use Common\Service\User\UserService;
 use PHPUnit\Framework\TestCase;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\Response\RedirectResponse;
-use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Expressive\Helper\UrlHelper;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Helper\UrlHelper;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 class ActivateAccountHandlerTest extends TestCase
 {
@@ -35,7 +34,7 @@ class ActivateAccountHandlerTest extends TestCase
      */
     private $requestProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Constructor Parameters
         $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);

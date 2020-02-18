@@ -15,8 +15,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Helper\ServerUrlHelper;
-use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Expressive\Helper\UrlHelper;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 class CreateAccountSuccessHandlerTest extends TestCase
 {
@@ -50,7 +50,7 @@ class CreateAccountSuccessHandlerTest extends TestCase
      */
     private $requestProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Constructor Parameters
         $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);

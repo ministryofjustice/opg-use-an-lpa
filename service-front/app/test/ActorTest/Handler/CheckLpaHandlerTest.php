@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ActorTest\Handler;
 
 use Actor\Handler\CheckLpaHandler;
-use Common\Entity\Lpa;
+use ArrayObject;
 use Common\Entity\User;
 use Common\Exception\ApiException;
 use Common\Middleware\Session\SessionTimeoutException;
@@ -26,7 +26,6 @@ use Zend\Expressive\Csrf\CsrfMiddleware;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Session\SessionInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use ArrayObject;
 
 class CheckLpaHandlerTest extends TestCase
 {
@@ -65,7 +64,7 @@ class CheckLpaHandlerTest extends TestCase
      */
     private $sessionProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Constructor Parameters
         $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);

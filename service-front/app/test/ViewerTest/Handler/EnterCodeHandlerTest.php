@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler;
 
-use Viewer\Form\ShareCode;
-use Viewer\Handler\EnterCodeHandler;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument\Token\CallbackToken;
 use Psr\Http\Message\ServerRequestInterface;
+use Viewer\Form\ShareCode;
+use Viewer\Handler\EnterCodeHandler;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
@@ -48,7 +48,7 @@ class EnterCodeHandlerTest extends TestCase
      */
     private $authenticatorProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Constructor Parameters
         $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);

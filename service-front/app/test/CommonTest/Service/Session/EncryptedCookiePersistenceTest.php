@@ -15,19 +15,19 @@
  */
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Session\Cache;
+namespace CommonTest\Service\Session;
 
 use Common\Service\Session\EncryptedCookiePersistence;
 use Common\Service\Session\KeyManager\Key;
 use Common\Service\Session\KeyManager\KeyManagerInterface;
 use ParagonIE\ConstantTime\Base64UrlSafe;
-use Prophecy\Argument;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Prophecy\Prophecy\ObjectProphecy;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Zend\Crypt\BlockCipher;
 use Zend\Expressive\Session\Session;
 
@@ -59,7 +59,7 @@ class EncryptedCookiePersistenceTest extends TestCase
     private $testKey;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         // A real key used within the tests. It doesn't matter what it is.
         $this->testKey = new Key('test-id', new EncryptionKey(new HiddenString(random_bytes(32))));
@@ -163,7 +163,7 @@ class EncryptedCookiePersistenceTest extends TestCase
             preg_match("|{$patternCookie}|", $input, $matches);
 
             // Decompose teh value into the key id, and the data
-            list($keyId, $payload) = explode('.', $matches[1], 2);
+            [$keyId, $payload] = explode('.', $matches[1], 2);
 
             $this->assertEquals($this->testKey->getId(), $keyId);
 
@@ -184,7 +184,7 @@ class EncryptedCookiePersistenceTest extends TestCase
             $this->assertEquals($testData['float'], $value['float']);
             $this->assertEquals($testData['bool'], $value['bool']);
 
-            $this->assertEquals(time(), $value[EncryptedCookiePersistence::SESSION_TIME_KEY], '', 3);
+            $this->assertEqualsWithDelta(time(), $value[EncryptedCookiePersistence::SESSION_TIME_KEY], 3);
 
             //--------
             // Extract the Expires time
@@ -194,7 +194,7 @@ class EncryptedCookiePersistenceTest extends TestCase
             $time = strtotime($matches[1]);
 
             // Check it
-            $this->assertEquals(time() + self::SESSION_EXPIRES, $time, '', 3);
+            $this->assertEqualsWithDelta(time() + self::SESSION_EXPIRES, $time, 3);
 
             return true;
         }))->willReturn($responseProphecy->reveal())->shouldBeCalled();

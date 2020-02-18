@@ -8,8 +8,8 @@ use Common\Entity\Address;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Service\Lpa\Factory\Sirius;
-use PHPUnit\Framework\TestCase;
 use DateTime;
+use PHPUnit\Framework\TestCase;
 
 class LpaFactoryTest extends TestCase
 {
@@ -19,7 +19,7 @@ class LpaFactoryTest extends TestCase
     /** @var array */
     protected $simpleExampleFixtureData;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->fullExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/full_example.json'), true);
         $this->simpleExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/simple_example.json'), true);

@@ -6,16 +6,16 @@ namespace ViewerTest\Handler;
 
 use Actor\Handler\ViewLpaSummaryHandler;
 use Common\Entity\Lpa;
-use Common\Exception\InvalidRequestException;
 use Common\Exception\ApiException;
-use Prophecy\Argument;
+use Common\Exception\InvalidRequestException;
 use Common\Service\Lpa\LpaService;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Authentication\UserInterface;
+use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 class ViewLpaSummaryHandlerTest extends TestCase
@@ -53,7 +53,7 @@ class ViewLpaSummaryHandlerTest extends TestCase
      */
     private $userProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Constructor Parameters
         $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);

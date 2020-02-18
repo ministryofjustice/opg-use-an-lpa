@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace ActorTest\Handler;
 
 use Actor\Handler\CheckAccessCodesHandler;
+use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
+use Common\Exception\InvalidRequestException;
 use Common\Service\Lpa\LpaService;
+use Common\Service\Lpa\ViewerCodeService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -17,9 +20,6 @@ use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Authentication\UserInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use Common\Service\Lpa\ViewerCodeService;
-use ArrayObject;
-use Common\Exception\InvalidRequestException;
 
 class CheckAccessCodesHandlerTest extends TestCase
 {
@@ -64,7 +64,7 @@ class CheckAccessCodesHandlerTest extends TestCase
      */
     private $viewerCodeServiceProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Constructor Parameters
         $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);

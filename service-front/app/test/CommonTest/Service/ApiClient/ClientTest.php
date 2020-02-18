@@ -11,7 +11,6 @@ use Http\Client\Exception\HttpException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -24,7 +23,7 @@ class ClientTest extends TestCase
      */
     protected $apiClient;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->apiClient = $this->prophesize(ClientInterface::class);
     }

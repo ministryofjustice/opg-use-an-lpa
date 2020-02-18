@@ -28,7 +28,7 @@ class ShareCodeTest extends TestCase
         'donor_surname' => Text::class,
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
 
