@@ -3,18 +3,30 @@
 namespace App\Middleware;
 
 use App\Exception\AbstractApiException;
-use Psr\Http\Server\RequestHandlerInterface as DelegateInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface as DelegateInterface;
+use Psr\Log\LoggerInterface;
 use Zend\Diactoros\Response\JsonResponse;
 
 /**
  * Class ProblemDetailsMiddleware
+ *
  * @package App\Middleware
  */
 class ProblemDetailsMiddleware implements MiddlewareInterface
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * @param ServerRequestInterface $request
      * @param DelegateInterface $delegate
@@ -29,14 +41,18 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
         } catch (AbstractApiException $ex) {
             //  Translate this exception type into response JSON
             $problem = [
-                'title'   => $ex->getTitle(),
+                'title' => $ex->getTitle(),
                 'details' => $ex->getMessage(),
-                'data'    => $ex->getAdditionalData(),
+                'data' => $ex->getAdditionalData(),
             ];
 
-            return new JsonResponse($problem, $ex->getCode(), [
+            $this->logger->notice($ex->getMessage(), $ex->getAdditionalData());
+
+            return new JsonResponse(
+                $problem, $ex->getCode(), [
                 'Content-Type' => 'application/problem+json',
-            ]);
+            ]
+            );
         }
     }
 }
