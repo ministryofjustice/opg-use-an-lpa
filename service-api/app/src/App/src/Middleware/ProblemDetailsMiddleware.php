@@ -49,9 +49,9 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
             $this->logger->notice($ex->getMessage(), $ex->getAdditionalData());
 
             return new JsonResponse(
-                $problem, $ex->getCode(), [
-                'Content-Type' => 'application/problem+json',
-            ]
+                $problem,
+                $ex->getCode(),
+                ['Content-Type' => 'application/problem+json']
             );
         }
     }
