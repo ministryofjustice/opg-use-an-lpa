@@ -74,6 +74,7 @@ services:
       ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=viewer-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
+      SESSION_EXPIRES: 20
 
   # ---------------------------
   # Actor Front
@@ -117,6 +118,7 @@ services:
       ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=actor-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
+      SESSION_EXPIRES: 20
 
   # ---------------------------
   # Front Composer (Shared)
