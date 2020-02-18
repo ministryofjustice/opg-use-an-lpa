@@ -998,7 +998,10 @@ class AccountContext extends BaseIntegrationContext
         $this->awsFixtures->append(new Result());
 
         $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
-        $viewerCodeService->cancelCode($this->userLpaActorToken, $this->userId, $this->accessCode);
+        $codeData = $viewerCodeService->cancelCode($this->userLpaActorToken, $this->userId, $this->accessCode);
+
+        assertEmpty($codeData);
+
     }
 
     /**

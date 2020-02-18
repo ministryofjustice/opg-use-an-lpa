@@ -65,15 +65,10 @@ class ConfirmCancelCodeHandler extends AbstractHandler implements UserAware, Csr
         $form->setAttribute('action',$this->urlHelper->generate('lpa.cancel-code'));
 
         $user = $this->getUser($request);
-        $identity = (!is_null($user)) ? $user->getIdentity() : null;
-
+        
         $form->setData($request->getParsedBody());
 
         if ($form->isValid()) {
-
-            $validated = $form->getData();
-
-            $lpa = $this->lpaService->getLpaById($identity, $validated['lpa_token']);
 
             return new HtmlResponse($this->renderer->render('actor::confirm-cancel-code', [
                 'form'          => $form,
