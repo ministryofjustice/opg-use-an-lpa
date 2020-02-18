@@ -13,14 +13,16 @@ $cacheConfig = [
 ];
 
 $aggregator = new ConfigAggregator([
-    \Zend\HttpHandlerRunner\ConfigProvider::class,
-    \Zend\Expressive\Router\FastRouteRouter\ConfigProvider::class,
-    // Include cache configuration
-    new ArrayProvider($cacheConfig),
+                                       \WShafer\PSR11MonoLog\ConfigProvider::class,
+                                       \Zend\HttpHandlerRunner\ConfigProvider::class,
+                                       \Zend\Expressive\Router\FastRouteRouter\ConfigProvider::class,
 
-    \Zend\Expressive\Helper\ConfigProvider::class,
-    \Zend\Expressive\ConfigProvider::class,
-    \Zend\Expressive\Router\ConfigProvider::class,
+                                       // Include cache configuration
+                                       new ArrayProvider($cacheConfig),
+
+                                       \Zend\Expressive\Helper\ConfigProvider::class,
+                                       \Zend\Expressive\ConfigProvider::class,
+                                       \Zend\Expressive\Router\ConfigProvider::class,
 
     // Swoole config to overwrite some services (if installed)
     class_exists(\Zend\Expressive\Swoole\ConfigProvider::class)
