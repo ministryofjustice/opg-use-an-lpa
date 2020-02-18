@@ -34,10 +34,6 @@
         {
             "type": "vcs",
             "url":  "git@github.com:ministryofjustice/behat-psr-extension.git"
-        },
-        {
-            "type": "vcs",
-            "url":  "git@github.com:ministryofjustice/behat-local-code-coverage-extension.git"
         }
     ],
     "require": {
@@ -68,10 +64,10 @@
         "cooperaj/behat-psr-extension": "^2.0",
         "filp/whoops": "^2.1.12",
         "jshayes/fake-requests": "^2.3",
-        "matthiasnoback/behat-local-code-coverage-extension": "dev-master",
+        "matthiasnoback/behat-local-code-coverage-extension": "^0.4",
         "mikey179/vfsstream": "^1.6",
-        "phpunit/phpcov": "^5",
-        "phpunit/phpunit": "^7.0",
+        "phpunit/phpcov": "^6.0.1",
+        "phpunit/phpunit": "^8.5.2",
         "roave/security-advisories": "dev-master",
         "squizlabs/php_codesniffer": "^3.0",
         "vimeo/psalm": "^3.0",
