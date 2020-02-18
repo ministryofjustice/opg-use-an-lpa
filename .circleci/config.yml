@@ -182,7 +182,7 @@ orbs:
       python-browsers:
         docker: [image: circleci/python:3.6-stretch-browsers]
       terraform:
-        docker: [image: hashicorp/terraform:0.12.8]
+        docker: [image: hashicorp/terraform]
 
     jobs:
       node_test_service_pdf:
@@ -822,7 +822,7 @@ jobs:
       - run:
           name: Get URLs
           command: |
-            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV	
+            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
             echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Development Environment Ready"
@@ -837,7 +837,7 @@ jobs:
       - run:
           name: Get URLs
           command: |
-            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV	
+            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
             echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Production Release Successful"
