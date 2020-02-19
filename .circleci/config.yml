@@ -186,6 +186,9 @@ orbs:
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
       get_session_for_redeploy:
+        parameters:
+          environment:
+            type: string
         steps:
           - run:
               name: Get a STS session for AWS
@@ -749,7 +752,8 @@ orbs:
           #     name: Identify Account ID
           #     command: |
           #       export ACCOUNT_ID=$(~/project/pipeline_scripts/identify_account_id.sh <<parameters.environment>>) >> $BASH_ENV
-          - get_session_for_redeploy
+          - get_session_for_redeploy:
+              environment: <<parameters.environment>>
           - run:
               name: Redeploy Services
               command: |
