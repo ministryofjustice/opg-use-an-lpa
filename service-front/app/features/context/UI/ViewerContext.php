@@ -252,12 +252,40 @@ class ViewerContext implements Context
     }
 
     /**
+     * @When /^I give an invalid (.*) and (.*)$/
+     */
+    public function iGiveAnInvalidShareCodeAndSurname($shareCode,$surname)
+    {
+        $this->ui->assertPageAddress('/enter-code');
+
+        // API call for lpa summary check
+        $data = $this->apiFixtures->post('/v1/viewer-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )
+            );
+
+        $this->ui->fillField('donor_surname', $surname);
+        $this->ui->fillField('lpa_code', $shareCode);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I am told that the share code details is invalid$/
+     */
+    public function iAmToldThatTheShareCodeDetailsIsInvalid()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @Then /^I am told that the share code is invalid because (.*)$/
      */
     public function iAmToldThatTheShareCodeIsInvalidBecause($reason)
     {
         $this->ui->assertPageAddress('/check-code');
-         $this->ui->assertPageContainsText($reason);
+        $this->ui->assertPageContainsText($reason);
     }
 
     /**
@@ -277,6 +305,7 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText("Try again");
+        $this->ui->pressButton('Try again');
     }
 
     /**
@@ -284,7 +313,28 @@ class ViewerContext implements Context
      */
     public function iWantToSeePageToEnterAnotherShareCode()
     {
-        $this->ui->pressButton('Try again');
         $this->ui->assertPageAddress('/enter-code');
+    }
+
+    /**
+     * @Given /^I am shown the LPA summary found with valid credentials$/
+     */
+    public function iAmShownTheLPASummaryFoundWithValidCredentials()
+    {
+        $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
+        $this->iAccessTheViewerService();
+        $this->iGiveAValidLPAShareCode();
+        $this->iConfirmTheLPAIsCorrect();
+        $this->iAmViewingAValidLPA();
+    }
+
+    /**
+     * @When /^I request to go back and try again$/
+     */
+    public function iRequestToGoBackAndTryAgain()
+    {
+        $this->ui->assertPageAddress('/view-lpa');
+        $this->ui->assertPageContainsText("I want to check another LPA");
+        $this->ui->clickLink("I want to check another LPA");
     }
 }

@@ -1357,4 +1357,26 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText("V - XYZ3 - 21AB - C987");
         $this->ui->assertPageNotContainsText('Cancelled');
     }
+
+    /**
+     * @When /^One of the generated access code has expired$/
+     */
+    public function oneOfTheGeneratedAccessCodeHasExpired()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should be shown the details of the expired viewer code with expired status $/
+     */
+    public function iShouldBeShownTheDetailsOfTheExpiredViewerCodeWithExpiredStatus ()
+    {
+        $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
+
+        $this->ui->assertPageContainsText('Check Access Codes');
+        $this->ui->assertPageContainsText('Active codes');
+        $this->ui->assertPageContainsText('Inactive codes');
+        $this->ui->assertPageContainsText("V - XYZ3 - 21AB - C987");
+        $this->ui->assertPageContainsText('Expired');
+    }
 }

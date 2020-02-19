@@ -951,4 +951,20 @@ class AccountContext extends BaseIntegrationContext
 
         assertEquals($shareCodes[0]['Organisation'], $this->organisation);
     }
+
+    /**
+     * @When /^One of the generated access code has expired$/
+     */
+    public function oneOfTheGeneratedAccessCodeHasExpired()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should be shown the details of the expired viewer code with expired status $/
+     */
+    public function iShouldBeShownTheDetailsOfTheExpiredViewerCodeWithExpiredStatus ()
+    {
+        // Not needed for this context
+    }
 }

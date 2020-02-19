@@ -100,6 +100,13 @@ class ViewerContext extends BaseIntegrationContext
     }
 
     /**
+     * @When /^I give a share code that's been cancelled$/
+     */
+    public function iGiveAShareCodeThatsBeenCancelled() {
+        // not used in this context
+    }
+
+    /**
      * @Given /^I am viewing a valid LPA$/
      * @Then /^I can see the full details of the valid LPA$/
      */
