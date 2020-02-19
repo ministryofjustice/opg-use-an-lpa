@@ -4,6 +4,10 @@ Feature: View a lasting power of attorney
   I want to enter a code for a lasting power of attorney that has been shared with me,
   So I can view information about a lasting power of attorney to make decisions about how I should serve a customer.
 
+  Scenario: Redirected to service securely
+    Given I go to the viewer service homepage without using https
+    Then the "View a lasting power of attorney" page is displayed
+
   Scenario: Go to the service homepage
     Given I go to the viewer service homepage
     Then the "View a lasting power of attorney" page is displayed
