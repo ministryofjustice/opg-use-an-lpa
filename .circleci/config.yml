@@ -757,10 +757,10 @@ orbs:
           - run:
               name: Redeploy Services
               command: |
-                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service api
-                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service pdf
-                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service actor
-                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service viewer
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service api --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service pdf --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service actor --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service viewer --region eu-west-1
       #----------------------------------------------------
       # Seeding
 
