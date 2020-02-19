@@ -745,7 +745,7 @@ orbs:
           - checkout
           - install_aws_cli
           - run:
-              name: Redeploy Services
+              name: Get STS session
               command: |
                 export ACCOUNT_ID=$(~/project/pipeline_scripts/identify_account_id.sh <<parameters.environment>>)
                 echo $ACCOUNT_ID
@@ -753,6 +753,9 @@ orbs:
                 export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
+          - run:
+              name: Redeploy Services
+              command: |
                 aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service api --region eu-west-1
                 aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service pdf --region eu-west-1
                 aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service actor --region eu-west-1
