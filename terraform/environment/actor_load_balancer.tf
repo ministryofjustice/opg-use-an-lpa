@@ -27,6 +27,22 @@ resource "aws_lb" "actor" {
   }
 }
 
+resource "aws_lb_listener" "actor_loadbalancer_http_redirect" {
+  load_balancer_arn = aws_lb.actor.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = 443
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
 resource "aws_lb_listener" "actor_loadbalancer" {
   load_balancer_arn = aws_lb.actor.arn
   port              = "443"
@@ -41,11 +57,21 @@ resource "aws_lb_listener" "actor_loadbalancer" {
   }
 }
 
+
 resource "aws_security_group" "actor_loadbalancer" {
   name        = "${local.environment}-actor-loadbalancer"
   description = "Allow inbound traffic"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
+}
+
+resource "aws_security_group_rule" "actor_loadbalancer_ingress_http" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.actor_loadbalancer.id
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress" {
@@ -75,4 +101,3 @@ resource "aws_security_group_rule" "actor_loadbalancer_egress" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.actor_loadbalancer.id
 }
-
