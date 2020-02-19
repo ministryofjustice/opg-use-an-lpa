@@ -4,10 +4,10 @@ workflows:
   scheduled_jobs:
     triggers:
       - schedule:
-          cron: "0 0 * * *"
+          cron: "3 * * * *"
           filters:
             branches:
-              only:
+              ignore:
                 - master
     jobs:
       - use-my-lpa/redeploy_latest:
@@ -69,6 +69,7 @@ workflows:
               web_front_build,
               web_api_build,
               app_api_build,
+              pdf_build,
             ]
 
       - use-my-lpa/seed_database:
