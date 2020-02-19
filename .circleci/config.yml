@@ -7,12 +7,16 @@ workflows:
           cron: "3 * * * *"
           filters:
             branches:
-              ignore:
-                - master
+              only:
+                - UML-517-redeploy-demo
     jobs:
       - use-my-lpa/redeploy_latest:
           name: redeploy_demo
           environment: demo
+      - slack_environment_redeploy:
+          name: post_production_release_message
+          environment: demo
+          requires: [redeploy_demo]
 
   path_to_live:
     jobs:
@@ -154,6 +158,7 @@ workflows:
           name: post_production_release_message
           filters: { branches: { only: [master] } }
           requires: [prod_run_healthcheck_test]
+
 
 orbs:
   slack: circleci/slack@3.3.0
@@ -849,6 +854,23 @@ orbs:
                 # TODO Add for actor when endpoint exists.
 
 jobs:
+  slack_environment_redeploy:
+    docker:
+      - image: circleci/python
+    parameters:
+      environment:
+        type: string
+    steps:
+      - checkout
+      - run:
+          name: Get Commit Message
+          command: |
+            echo 'export COMMIT_MESSAGE="$(git log -1 --pretty=%B)"' >> $BASH_ENV
+      - slack/notify:
+          title: "Use a Lasting Power of Attorney <<parameters.environment>> Environment Updated"
+          color: "#4287f5"
+          message: "Scheduled update of <<parameters.environment>> environment complete"
+          footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
   slack_notify_domain:
     docker:
       - image: circleci/python
