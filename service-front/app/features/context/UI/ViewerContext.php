@@ -219,6 +219,72 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText($reason);
     }
 
+    /**
+     * @When /^I give a share code that has got expired$/
+     */
+    public function iGiveAShareCodeThatHasGotExpired() {
+        $this->ui->assertPageAddress('/enter-code');
 
+        $this->apiFixtures->post('/v1/viewer-codes/summary')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_GONE, [], json_encode([])));
 
+        $this->ui->fillField('donor_surname', $this->lpaSurname);
+        $this->ui->fillField('lpa_code', $this->lpaShareCode);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I give a share code that's been cancelled$/
+     */
+    public function iGiveAShareCodeThatsBeenCancelled() {
+        $this->ui->assertPageAddress('/enter-code');
+
+        $this->apiFixtures->post('/v1/viewer-codes/summary')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'lpa'     => $this->lpaData,
+                'expires' => (new \DateTime('+30 days'))->format('c'),
+                'cancelled' => (new \DateTime('-2 days'))->format('c')
+            ])));
+
+        $this->ui->fillField('donor_surname', $this->lpaSurname);
+        $this->ui->fillField('lpa_code', $this->lpaShareCode);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I am told that the share code is invalid because (.*)$/
+     */
+    public function iAmToldThatTheShareCodeIsInvalidBecause($reason)
+    {
+        $this->ui->assertPageAddress('/check-code');
+         $this->ui->assertPageContainsText($reason);
+    }
+
+    /**
+     * @Given /^I attempted an invalid share codes$/
+     */
+    public function iAttemptedAnInvalidShareCodes()
+    {
+        $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
+        $this->iAccessTheViewerService();
+        $this->iGiveAShareCodeThatHasGotExpired();
+    }
+
+    /**
+     * @When /^I want to make an attempt to enter another share code$/
+     */
+    public function iWantToMakeAnAttemptToEnterAnotherShareCode()
+    {
+        $this->ui->assertPageAddress('/check-code');
+        $this->ui->assertPageContainsText("Try again");
+    }
+
+    /**
+     * @Then /^I want to see page to enter another share code$/
+     */
+    public function iWantToSeePageToEnterAnotherShareCode()
+    {
+        $this->ui->pressButton('Try again');
+        $this->ui->assertPageAddress('/enter-code');
+    }
 }
