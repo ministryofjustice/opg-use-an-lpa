@@ -740,7 +740,6 @@ orbs:
               name: Redeploy Services
               command: |
                 export ACCOUNT_ID=$(~/project/pipeline_scripts/identify_account_id.sh <<parameters.environment>>)
-                echo $ACCOUNT_ID
                 temp_role=$(aws sts assume-role --role-arn arn:aws:iam::$ACCOUNT_ID:role/opg-use-an-lpa-ci --role-session-name ci)
                 export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
