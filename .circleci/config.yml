@@ -8,7 +8,7 @@ workflows:
           filters:
             branches:
               only:
-                - UML-517-redeploy-demo
+                - master
     jobs:
       - use-my-lpa/redeploy_latest:
           name: redeploy_demo
