@@ -864,6 +864,7 @@ jobs:
           command: |
             echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
             echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+            echo 'export COMMIT_MESSAGE="$(git log -1 --pretty=%B)"' >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Development Environment Ready"
           color: "#9933ff"
@@ -881,6 +882,7 @@ jobs:
           command: |
             echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
             echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+            echo 'export COMMIT_MESSAGE="$(git log -1 --pretty=%B)"' >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Production Release Successful"
           color: "#9933ff"
