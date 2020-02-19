@@ -17,6 +17,7 @@ $aggregator = new ConfigAggregator([
     \Zend\Expressive\Authentication\ConfigProvider::class,
     \Zend\Expressive\Session\ConfigProvider::class,
     \Zend\Expressive\Csrf\ConfigProvider::class,
+    \WShafer\PSR11MonoLog\ConfigProvider::class,
 
     \Zend\HttpHandlerRunner\ConfigProvider::class,
     \Zend\Expressive\Router\FastRouteRouter\ConfigProvider::class,
