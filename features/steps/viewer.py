@@ -5,6 +5,11 @@ from modules import get_frontend_url
 
 
 # GIVENS
+@given('I go to the viewer service homepage without using https')
+def step_impl(context):
+    context.browser.get(get_frontend_url('view', protocol='http'))
+
+
 @given('I go to the viewer service homepage')
 def step_impl(context):
     context.browser.get(get_frontend_url('view'))
