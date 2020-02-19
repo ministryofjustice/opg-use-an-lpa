@@ -4,7 +4,7 @@ workflows:
   scheduled_jobs:
     triggers:
       - schedule:
-          cron: "50 * * * *"
+          cron: "0 8 * * *"
           filters:
             branches:
               only:
@@ -867,7 +867,7 @@ jobs:
           command: |
             echo 'export COMMIT_MESSAGE="$(git log -1 --pretty=%B)"' >> $BASH_ENV
       - slack/notify:
-          title: "Use a Lasting Power of Attorney <<parameters.environment>> Environment Updated"
+          title: "Use a Lasting Power of Attorney - <<parameters.environment>> environment updated"
           color: "#4287f5"
           message: "Scheduled update of <<parameters.environment>> environment complete"
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
