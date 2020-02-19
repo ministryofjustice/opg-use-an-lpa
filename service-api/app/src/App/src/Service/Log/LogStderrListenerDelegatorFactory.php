@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Log;
 
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class LogStderrListenerDelegatorFactory
 {
@@ -19,7 +20,7 @@ class LogStderrListenerDelegatorFactory
     {
         $errorHandler = $callback();
         $errorHandler->attachListener(
-            new LogStderrListener()
+            new LogStderrListener($container->get(LoggerInterface::class))
         );
         return $errorHandler;
     }

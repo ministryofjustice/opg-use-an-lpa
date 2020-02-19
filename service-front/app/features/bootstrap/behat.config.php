@@ -25,12 +25,34 @@ return [
     ],
 
     'aws' => [
-        'debug'   => true,
+        //'debug'   => true,
     ],
 
     'notify' => [
         'api' => [
             'key' => 'not_a_real_key-22996155-4e04-42d0-8d1a-d1d3998e2149-be30242e-049d-4039-b43e-14aa8a6a76a4',
+        ],
+    ],
+
+    'monolog' => [
+        'handlers' => [
+            'default' => [ // default configuration in normal operation
+                'type' => 'test',
+                'processors' => [
+                    'psrLogProcessor',
+                    'requestTracingProcessor'
+                ],
+            ],
+        ],
+        'processors' => [
+            'psrLogProcessor' => [
+                'type' => 'psrLogMessage',
+                'options' => [], // No options
+            ],
+            'requestTracingProcessor' => [
+                'type' => \Common\Service\Log\RequestTracingLogProcessorFactory::class,
+                'options' => [], // No options
+            ],
         ],
     ],
 
