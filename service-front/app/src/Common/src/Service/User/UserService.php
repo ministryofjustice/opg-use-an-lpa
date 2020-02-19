@@ -95,8 +95,13 @@ class UserService implements UserRepositoryInterface
                     ]
                 );
             }
-        } catch (ApiException $e) {
+        } catch (ApiException $ex) {
             // TODO log or otherwise report authentication issue?
+            if ($ex->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
+                // inactive accounts have status not authorized
+                // we need to pick this up on the login to redirect to the activation resend page.
+                throw $ex;
+            }
         } catch (Exception $e) {
             throw new RuntimeException("Marshaling user login datetime to DateTime failed", 500, $e);
         }

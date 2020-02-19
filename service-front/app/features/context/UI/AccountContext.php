@@ -125,13 +125,9 @@ class AccountContext implements Context
      */
     public function iAmToldMyAccountHasNotBeenActivated()
     {
-        // TODO UML-501
-        //      When a user account has not been activated we will need a better user flow
-        //      around how this works. Probably taking them to a help page that details
-        //      what they need to do, including resending the email.
-        $this->ui->assertPageContainsText('Email and password combination not recognised');
+        $this->ui->assertPageAddress('/create-account-success');
+        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->email);
     }
-
     /**
      * @Then /^I am told my credentials are incorrect$/
      */

@@ -1,6 +1,12 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Account created - {{ parent() }} {% endblock %}
+{% block html_title %}
+    {% if accountExists | default  %}
+        Account not activated - {{ parent() }}
+    {% else %}
+        Account created - {{ parent() }}
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
