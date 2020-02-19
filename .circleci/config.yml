@@ -4,7 +4,7 @@ workflows:
   scheduled_jobs:
     triggers:
       - schedule:
-          cron: "3 * * * *"
+          cron: "50 * * * *"
           filters:
             branches:
               only:
