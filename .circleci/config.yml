@@ -190,6 +190,7 @@ orbs:
           - run:
               name: Get a STS session for AWS
               command: |
+                export ACCOUNT_ID=$(~/project/pipeline_scripts/identify_account_id.sh <<parameters.environment>>) >> $BASH_ENV
                 temp_role=$(aws sts assume-role --role-arn arn:aws:iam::$ACCOUNT_ID:role/opg-use-an-lpa-ci --role-session-name ci)
                 export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
@@ -744,10 +745,10 @@ orbs:
         steps:
           - checkout
           - install_aws_cli
-          - run:
-              name: Identify Account ID
-              command: |
-                export ACCOUNT_ID=$(~/project/pipeline_scripts/identify_account_id.sh <<parameters.environment>>) >> $BASH_ENV
+          # - run:
+          #     name: Identify Account ID
+          #     command: |
+          #       export ACCOUNT_ID=$(~/project/pipeline_scripts/identify_account_id.sh <<parameters.environment>>) >> $BASH_ENV
           - get_session_for_redeploy
           - run:
               name: Redeploy Services
