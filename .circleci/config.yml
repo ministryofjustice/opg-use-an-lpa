@@ -5,6 +5,10 @@ workflows:
     triggers:
       - schedule:
           cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
     jobs:
       - use-my-lpa/redeploy_latest:
           name: redeploy_demo
@@ -13,8 +17,8 @@ workflows:
   path_to_live:
     jobs:
       - use-my-lpa/redeploy_latest:
-        name: redeploy_demo
-        environment: demo
+          name: redeploy_demo_triggered
+          environment: demo
       # Common tasks
       - use-my-lpa/lint_terraform:
           name: lint_terraform
