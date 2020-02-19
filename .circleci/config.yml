@@ -575,29 +575,28 @@ orbs:
           - attach_workspace:
               at: build
           - run:
-              name: Install coveralls upload tool
+              name: Install coverage tooling
               command: |
                 wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.2.0/php-coveralls.phar
                 chmod +x php-coveralls.phar
-                wget https://phar.phpunit.de/phpcov.phar
-                chmod +x phpcov.phar
+                wget https://github.com/cooperaj/php-coverage-path-fixer/releases/download/0.9.0/covpf.phar
+                chmod +x covpf.phar
           - run:
-              name: Merge coverage into single report
+              name: Merge coverage into single prefix fixed report
               command: |
-                ./phpcov.phar merge build/service-front \
-                  --clover=build/service-front/coverage.xml
+                ./covpf.phar build/service-front /app/src /home/circleci/project/service-front/app/src \
+                  --merge=build/service-front/coverage.cov --clover
           - run:
               name: Fix coverage report paths
               command: |
                 sed 's_/app/src/_/home/circleci/project/service-api/app/src/_' <build/service-api/phpunit/coverage.xml > build/service-api/phpunit/coverage-fixed.xml
-                sed 's_/app/src/_/home/circleci/project/service-front/app/src/_' <build/service-front/coverage.xml > build/service-front/coverage-fixed.xml
           - run:
               name: Upload report
               command: |
                 ./php-coveralls.phar -v \
                   --json_path build/coveralls-upload.json \
                   --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
-                  --coverage_clover build/service-front/coverage-fixed.xml
+                  --coverage_clover build/service-front/coverage.xml
 
       #----------------------------------------------------
       # Terraform
