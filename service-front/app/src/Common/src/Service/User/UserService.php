@@ -125,7 +125,7 @@ class UserService implements UserRepositoryInterface
             $this->logger->notice(
                 'Authentication failed for {email} with code {code}',
                 [
-                    'code'  => $e->getCode(),
+                    'code'  => $ex->getCode(),
                     'email' => $email
                 ]
             );
