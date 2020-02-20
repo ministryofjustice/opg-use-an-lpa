@@ -32,7 +32,7 @@ return [
     'session' => [
 
         // Time in seconds after which a session will expire.
-        'expires' => 60 * 20,    // 20 minutes
+        'expires' => 60 * getenv('SESSION_EXPIRES') ?: 1200,    // default to 20 minutes
 
         'key' => [
             // KMS alias to use for data key generation.

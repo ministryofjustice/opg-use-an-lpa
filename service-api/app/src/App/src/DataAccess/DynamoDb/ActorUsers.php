@@ -100,7 +100,7 @@ class ActorUsers implements ActorUsersInterface
         $usersData = $this->getDataCollection($result);
 
         if (empty($usersData)) {
-            throw new NotFoundException('User not found');
+            throw new NotFoundException('User not found for email', ['email' => $email]);
         }
 
         return array_pop($usersData);
@@ -122,7 +122,7 @@ class ActorUsers implements ActorUsersInterface
         $usersData = $this->getDataCollection($result);
 
         if (empty($usersData)) {
-            throw new NotFoundException('User not found');
+            throw new NotFoundException('User not found for reset token');
         }
 
         return (array_pop($usersData))['Id'];
