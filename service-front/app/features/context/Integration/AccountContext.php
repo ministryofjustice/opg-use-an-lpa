@@ -637,9 +637,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request to add an LPA that I have already added$/
+     * @When /^I attempt  to add the same LPA again$/
      */
-    public function iRequestToAddAnLPAThatIHaveAlreadyAdded()
+    public function iAttemptToAddTheSameLPAAgain()
     {
         // API call for adding/checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
@@ -659,38 +659,10 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^The I am told that the LPA was not found$/
+     * @Then /^The LPA should not be found$/
      */
-    public function theIAmToldThatTheLPAWasNotFound()
+    public function theLPAShouldNotBeFound()
     {
         // Not needed for this context
-    }
-
-    /**
-     * @Given /^The LPA should not be duplicated$/
-     */
-    public function theLPAShouldNotBeDuplicated()
-    {
-        //API dashboard call for getting all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->actorLpaToken => $this->lpaData])
-                )
-            );
-
-        //API dashboard call for getting each LPAs share codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])));
-
-        $lpas = $this->lpaService->getLpas($this->userIdentity);
-
-        assertCount(1, $lpas);
     }
 }

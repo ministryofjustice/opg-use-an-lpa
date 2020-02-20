@@ -742,9 +742,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request to add an LPA that I have already added$/
+     * @When /^I attempt to add the same LPA again$/
      */
-    public function iRequestToAddAnLPAThatIHaveAlreadyAdded()
+    public function iAttemptToAddTheSameLPAAgain()
     {
         // ActorCodes::get
         $this->awsFixtures->append(new Result([
@@ -765,42 +765,11 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^The I am told that the LPA was not found$/
+     * @Then /^The LPA should not be found$/
      */
-    public function theIAmToldThatTheLPAWasNotFound()
+    public function theLPAShouldNotBeFound()
     {
         // Not needed for this context
-    }
-
-    /**
-     * @Given /^The LPA should not be duplicated$/
-     */
-    public function theLPAShouldNotBeDuplicated()
-    {
-        // UserLpaActorMap::getUsersLpas
-        $this->awsFixtures->append(
-            new Result([
-                'Items' => [
-                    $this->marshalAwsResultData([
-                        'SiriusUid' => $this->lpaUid,
-                        'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                        'Id'        => $this->userLpaActorToken,
-                        'ActorId'   => $this->actorLpaId,
-                        'UserId'    => $this->userAccountId
-                    ])
-                ]
-            ])
-        );
-
-        // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        $lpaService = $this->container->get(LpaService::class);
-
-        $response = $lpaService->getAllForUser((string) $this->actorLpaId);
-
-        assertCount(1, $response);
     }
   
     /**

@@ -962,9 +962,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request to add an LPA that I have already added$/
+     * @When /^I attempt  to add the same LPA again$/
      */
-    public function iRequestToAddAnLPAThatIHaveAlreadyAdded()
+    public function iAttemptToAddTheSameLPAAgain()
     {
         $this->iAmOnTheAddAnLPAPage();
 
@@ -987,39 +987,10 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^The I am told that the LPA was not found$/
+     * @Then /^The LPA should not be found$/
      */
-    public function theIAmToldThatTheLPAWasNotFound()
+    public function theLPAShouldNotBeFound()
     {
         $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
-    }
-
-    /**
-     * @Given /^The LPA should not be duplicated$/
-     */
-    public function theLPAShouldNotBeDuplicated()
-    {
-        //API dashboard call for getting all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
-
-        //API dashboard call for getting each LPAs share codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])));
-
-        $this->ui->visit('/lpa/dashboard');
-
-        // each lpa added is a list with the dl tag
-        $this->ui->assertNumElements(1, 'dl');
     }
 }
