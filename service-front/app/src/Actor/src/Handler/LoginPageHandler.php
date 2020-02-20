@@ -71,10 +71,10 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                     // adding an element name allows the form to link the error message to a field. In this case we'll
                     // link to the email field to allow the user to correct their mistake.
                     $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
-                } catch (ApiException $ex){
+                } catch (ApiException $e){
                    //401 denotes in this case that we hve not activated,
                    // redirect to correct success page with correct data
-                   if ($ex->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
+                   if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
                        $formValues = $form->getData();
                        $emailAddress = $formValues['email'];
 
