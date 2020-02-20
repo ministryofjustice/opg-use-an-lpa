@@ -740,6 +740,68 @@ class AccountContext extends BaseIntegrationContext
     {
         // Not needed for this context
     }
+
+    /**
+     * @When /^I request to add an LPA that I have already added$/
+     */
+    public function iRequestToAddAnLPAThatIHaveAlreadyAdded()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid' => $this->lpaUid,
+                'Active' => false,
+                'Expires' => '2021-09-25T00:00:00Z',
+                'ActorCode' => $this->passcode,
+                'ActorLpaId' => $this->actorLpaId,
+            ])
+        ]));
+
+        $actorCodeService = $this->container->get(ActorCodeService::class);
+
+        $response = $actorCodeService->validateDetails($this->passcode, $this->lpaUid, $this->userDob);
+
+        assertNull($response);
+    }
+
+    /**
+     * @Then /^The I am told that the LPA was not found$/
+     */
+    public function theIAmToldThatTheLPAWasNotFound()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^The LPA should not be duplicated$/
+     */
+    public function theLPAShouldNotBeDuplicated()
+    {
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(
+            new Result([
+                'Items' => [
+                    $this->marshalAwsResultData([
+                        'SiriusUid' => $this->lpaUid,
+                        'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                        'Id'        => $this->userLpaActorToken,
+                        'ActorId'   => $this->actorLpaId,
+                        'UserId'    => $this->userAccountId
+                    ])
+                ]
+            ])
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        $lpaService = $this->container->get(LpaService::class);
+
+        $response = $lpaService->getAllForUser((string) $this->actorLpaId);
+
+        assertCount(1, $response);
+    }
   
     /**
      * Convert a key/value array to a correctly marshaled AwsResult structure.

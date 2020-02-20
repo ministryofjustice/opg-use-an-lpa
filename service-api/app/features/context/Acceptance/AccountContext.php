@@ -8,6 +8,7 @@ use Aws\Result;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
+use Common\Exception\ApiException;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -794,5 +795,88 @@ class AccountContext implements Context
     public function theFullLPAIsDisplayedWithTheCorrect($message)
     {
         // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to add an LPA that I have already added$/
+     */
+    public function iRequestToAddAnLPAThatIHaveAlreadyAdded()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid' => $this->lpaUid,
+                'Active' => false,
+                'Expires' => '2021-09-25T00:00:00Z',
+                'ActorCode' => $this->oneTimeCode,
+                'ActorLpaId' => $this->actorId,
+            ])
+        ]));
+
+        // LpaService::getLpaById
+        $this->apiPost('/v1/actor-codes/summary',
+            [
+                'actor-code' => $this->oneTimeCode,
+                'uid'        => $this->lpaUid,
+                'dob'        => $this->userDob,
+            ],
+            [
+                'user-token' => $this->userAccountId
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
+
+        $response = $this->getResponseAsJson();
+
+        assertEquals($response['title'], 'Not found');
+        assertEmpty($response['data']);
+    }
+
+    /**
+     * @Then /^The I am told that the LPA was not found$/
+     */
+    public function theIAmToldThatTheLPAWasNotFound()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^The LPA should not be duplicated$/
+     */
+    public function theLPAShouldNotBeDuplicated()
+    {
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(
+            new Result([
+                'Items' => [
+                    $this->marshalAwsResultData([
+                        'SiriusUid' => $this->lpaUid,
+                        'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                        'Id'        => $this->userLpaActorToken,
+                        'ActorId'   => $this->actorId,
+                        'UserId'    => $this->userAccountId
+                    ])
+                ]
+            ])
+        );
+
+        // LpaRepository::get
+        $request = $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // LpaService::getLpaById
+        $this->apiGet(
+            '/v1/lpas',
+            [
+                'user-token' => $this->userLpaActorToken
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        assertCount(1, $response);
     }
 }

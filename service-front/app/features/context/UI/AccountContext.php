@@ -968,7 +968,7 @@ class AccountContext implements Context
     {
         $this->iAmOnTheAddAnLPAPage();
 
-        // API call for checking LPA
+        // API call for adding/checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
             ->respondWith(
                 new Response(
@@ -1019,8 +1019,7 @@ class AccountContext implements Context
 
         $this->ui->visit('/lpa/dashboard');
 
-        $lpa = $this->ui->getSession()->getPage()->find('css', 'dl[class="govuk-summary-list"]');
-
-        $this->ui->assertNumElements(1, $lpa);
+        // each lpa added is a list with the dl tag
+        $this->ui->assertNumElements(1, 'dl');
     }
 }

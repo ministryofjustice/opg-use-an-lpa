@@ -29,3 +29,10 @@ Feature: Add an LPA
     When I fill in the form and click the cancel button
     Then I am taken back to the dashboard page
     And The LPA has not been added
+
+  @integration @acceptance
+  Scenario: The user is shown an error message when attempting to add the same LPA twice
+    Given I have added an LPA to my account
+    When I request to add an LPA that I have already added
+    Then The I am told that the LPA was not found
+    And The LPA should not be duplicated
