@@ -103,7 +103,7 @@ class CreateAccountSuccessHandler extends AbstractHandler
 
         return new HtmlResponse($this->renderer->render('actor::create-account-success', [
             'emailAddress' => $emailAddress,
-            'accountExists' => $accountExists === true ? 'true' : 'false'
+            'accountExists' => $accountExists
         ]));
     }
 }
