@@ -960,4 +960,67 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/lpa/view-lpa');
         $this->ui->assertPageContainsText($message);
     }
+
+    /**
+     * @When /^I request to add an LPA that I have already added$/
+     */
+    public function iRequestToAddAnLPAThatIHaveAlreadyAdded()
+    {
+        $this->iAmOnTheAddAnLPAPage();
+
+        // API call for checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $this->ui->fillField('passcode', 'XYUPHWQRECHV');
+        $this->ui->fillField('reference_number', '700000000054');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^The I am told that the LPA was not found$/
+     */
+    public function theIAmToldThatTheLPAWasNotFound()
+    {
+        $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
+    }
+
+    /**
+     * @Given /^The LPA should not be duplicated$/
+     */
+    public function theLPAShouldNotBeDuplicated()
+    {
+        //API dashboard call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API dashboard call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->ui->visit('/lpa/dashboard');
+
+        $lpa = $this->ui->getSession()->getPage()->find('css', 'dl[class="govuk-summary-list"]');
+
+        $this->ui->assertNumElements(1, $lpa);
+    }
 }
