@@ -1,9 +1,4 @@
-import calendar
-import datetime
-import time
-import urllib.request
 import boto3
-import argparse
 import json
 import os
 
