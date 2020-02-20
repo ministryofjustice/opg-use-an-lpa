@@ -24,9 +24,9 @@ do
 
   if [[ ! " ${protected_workspaces[@]} " =~ " $workspace " ]]; then
     echo "$workspace"
-    terraform workspace select "$workspace"
-    terraform destroy -auto-approve
-    terraform workspace select default
-    terraform workspace delete "$workspace"
+      terraform workspace select "$workspace"
+      terraform destroy -auto-approve
+      terraform workspace select default
+      terraform workspace delete "$workspace"
   fi
 done
