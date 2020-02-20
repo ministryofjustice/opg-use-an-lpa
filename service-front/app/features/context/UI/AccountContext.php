@@ -136,10 +136,9 @@ class AccountContext implements Context
      */
     public function iAmToldMyAccountHasNotBeenActivated()
     {
-        $this->ui->assertPageAddress('/create-account-success');
-        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->email);
-        assertContains('accountExists=true',$this->ui->getSession()->getCurrentUrl());
+         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->email);
     }
+
     /**
      * @Then /^I am told my credentials are incorrect$/
      */

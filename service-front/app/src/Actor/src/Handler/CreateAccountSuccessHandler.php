@@ -76,13 +76,7 @@ class CreateAccountSuccessHandler extends AbstractHandler
         if (is_null($emailAddress)) {
             return $this->redirectToRoute('create-account');
         }
-        if ($accountExists === true)
-        {
-            return new HtmlResponse($this->renderer->render('actor::create-account-success', [
-                'emailAddress' => $emailAddress,
-                'accountExists' => 'true'
-            ]));
-        }
+
         if ($resend === true) {
             try {
                 $userData = $this->userService->getByEmail($emailAddress);
@@ -108,7 +102,8 @@ class CreateAccountSuccessHandler extends AbstractHandler
         }
 
         return new HtmlResponse($this->renderer->render('actor::create-account-success', [
-            'emailAddress' => $emailAddress
+            'emailAddress' => $emailAddress,
+            'accountExists' => $accountExists === true ? 'true' : 'false'
         ]));
     }
 }
