@@ -121,18 +121,18 @@ class UserService implements UserRepositoryInterface
                     ]
                 );
             }
-        } catch (ApiException $ex) {
+        } catch (ApiException $e) {
             $this->logger->notice(
                 'Authentication failed for {email} with code {code}',
                 [
-                    'code'  => $ex->getCode(),
+                    'code'  => $e->getCode(),
                     'email' => $email
                 ]
             );
-            if ($ex->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
+            if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
                 // inactive accounts have status not authorized
                 // we need to pick this up on the login to redirect to the activation resend page.
-                throw $ex;
+                throw $e;
             }
         } catch (Exception $e) {
             throw new RuntimeException('Marshaling user login datetime to DateTime failed', 500, $e);
