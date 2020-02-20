@@ -127,6 +127,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/create-account-success');
         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->email);
+        assertContains('accountExists=true',$this->ui->getSession()->getCurrentUrl());
     }
     /**
      * @Then /^I am told my credentials are incorrect$/
