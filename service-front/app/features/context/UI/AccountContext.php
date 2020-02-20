@@ -982,4 +982,42 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/lpa/view-lpa');
         $this->ui->assertPageContainsText($message);
     }
+
+//    /**
+//     * @Given /^I have logged in previously$/
+//     */
+//    public function iHaveLoggedInPreviously()
+//    {
+//        // do all the steps to sign in
+//        $this->iAccessTheLoginForm();
+//
+//        $this->ui->fillField('email', $this->userEmail);
+//        $this->ui->fillField('password', $this->userPassword);
+//
+//        if ($this->userActive) {
+//            // API call for authentication
+//            $this->apiFixtures->patch('/v1/auth')
+//                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
+//                    [
+//                        'Id'        => $this->userId,
+//                        'Email'     => $this->userEmail,
+//                        'LastLogin' => null,
+//                    ]
+//                )));
+//
+////            // Dashboard page checks for all LPA's for a user
+////            $this->apiFixtures->get('/v1/lpas')
+////                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+//        } else {
+//            // API call for authentication
+//            $this->apiFixtures->patch('/v1/auth')
+//                ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
+//        }
+//
+//        $this->ui->pressButton('Continue');
+//
+//        $this->iAmSignedIn();
+//
+//        $this->iLogoutOfTheApplication();
+//    }
 }
