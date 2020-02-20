@@ -7,6 +7,7 @@ use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Fig\Http\Message\StatusCodeInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Zend\Expressive\Authentication\UserInterface;
 use Zend\Expressive\Authentication\UserRepositoryInterface;
@@ -28,11 +29,16 @@ class UserService implements UserRepositoryInterface
     private $userModelFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * UserService constructor.
      * @param ApiClient $apiClient
      * @param callable $userModelFactory
      */
-    public function __construct(ApiClient $apiClient, callable $userModelFactory)
+    public function __construct(ApiClient $apiClient, callable $userModelFactory, LoggerInterface $logger)
     {
         $this->apiClient = $apiClient;
 
@@ -44,6 +50,8 @@ class UserService implements UserRepositoryInterface
         ) use ($userModelFactory): UserInterface {
             return $userModelFactory($identity, $roles, $details);
         };
+
+        $this->logger = $logger;
     }
 
     /**
@@ -53,10 +61,20 @@ class UserService implements UserRepositoryInterface
      */
     public function create(string $email, string $password): array
     {
-        return $this->apiClient->httpPost('/v1/user', [
+        $data = $this->apiClient->httpPost('/v1/user', [
             'email'    => $email,
             'password' => $password,
         ]);
+
+        $this->logger->info(
+            'Account with Id {id} created using email {email}',
+            [
+                'id'    => $data['Id'],
+                'email' => $email
+            ]
+        );
+
+        return $data;
     }
 
     /**
@@ -86,6 +104,14 @@ class UserService implements UserRepositoryInterface
             ]);
 
             if (!is_null($userData)) {
+                $this->logger->info(
+                    'Authentication successful for account with Id {id}',
+                    [
+                        'id'         => $userData['Id'],
+                        'last-login' => $userData['LastLogin']
+                    ]
+                );
+
                 return ($this->userModelFactory)(
                     $userData['Id'],
                     [],
@@ -96,14 +122,20 @@ class UserService implements UserRepositoryInterface
                 );
             }
         } catch (ApiException $ex) {
-            // TODO log or otherwise report authentication issue?
+            $this->logger->notice(
+                'Authentication failed for {email} with code {code}',
+                [
+                    'code'  => $e->getCode(),
+                    'email' => $email
+                ]
+            );
             if ($ex->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
                 // inactive accounts have status not authorized
                 // we need to pick this up on the login to redirect to the activation resend page.
                 throw $ex;
             }
         } catch (Exception $e) {
-            throw new RuntimeException("Marshaling user login datetime to DateTime failed", 500, $e);
+            throw new RuntimeException('Marshaling user login datetime to DateTime failed', 500, $e);
         }
 
         return null;
@@ -122,6 +154,13 @@ class UserService implements UserRepositoryInterface
             ]);
 
             if (is_array($userData) && !empty($userData)) {
+                $this->logger->info(
+                    'Account with Id {id} has been activated',
+                    [
+                        'id' => $userData['Id']
+                    ]
+                );
+
                 return true;
             }
         } catch (ApiException $ex) {
@@ -129,6 +168,13 @@ class UserService implements UserRepositoryInterface
                 throw $ex;
             }
         }
+
+        $this->logger->notice(
+            'Account activation token {token} is invalid',
+            [
+                'token' => $activationToken
+            ]
+        );
 
         return false;
     }
@@ -140,6 +186,13 @@ class UserService implements UserRepositoryInterface
         ]);
 
         if (!is_null($data) && isset($data['PasswordResetToken'])) {
+            $this->logger->info(
+                'Account with Id {id} has requested a password reset',
+                [
+                    'id' => $data['Id']
+                ]
+            );
+
             return $data['PasswordResetToken'];
         }
 
@@ -154,6 +207,13 @@ class UserService implements UserRepositoryInterface
             ]);
 
             if (!is_null($data) && isset($data['Id'])) {
+                $this->logger->info(
+                    'Password reset token for account with Id {id} was used successfully',
+                    [
+                        'id' => $data['Id']
+                    ]
+                );
+
                 return true;
             }
         } catch (ApiException $ex) {
@@ -161,6 +221,13 @@ class UserService implements UserRepositoryInterface
                 throw $ex;
             }
         }
+
+        $this->logger->notice(
+            'Password reset token {token} is invalid',
+            [
+                'token' => $token
+            ]
+        );
 
         return false;
     }
@@ -171,5 +238,12 @@ class UserService implements UserRepositoryInterface
             'token' => $token,
             'password' => $password
         ]);
+
+        $this->logger->info(
+            'Password reset using token {token} has been successful',
+            [
+                'token' => $token
+            ]
+        );
     }
 }
