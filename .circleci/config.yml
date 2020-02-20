@@ -820,7 +820,7 @@ orbs:
           - run:
               name: Redeploy Services
               command: |
-                export ACCOUNT_ID=$(~/project/pipeline_scripts/identify_account_id.sh <<parameters.environment>>)
+                export ACCOUNT_ID=$(~/project/scripts/pipeline/identify_account_id.sh <<parameters.environment>>)
                 temp_role=$(aws sts assume-role --role-arn arn:aws:iam::$ACCOUNT_ID:role/opg-use-an-lpa-ci --role-session-name ci)
                 export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
@@ -873,7 +873,7 @@ orbs:
               name: Wait for new tasks in services to be running
               command: |
                 sudo pip3 install boto3 -q
-                python pipeline_scripts/aws_ecs_task.py /tmp/cluster_config.json
+                python scripts/pipeline/aws_ecs_task.py /tmp/cluster_config.json
           - run:
               name: Install Behave
               command: sudo pip3 install behave selenium --upgrade
@@ -883,7 +883,7 @@ orbs:
                 export TF_WORKSPACE=$(bash ~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 if [ "${TF_WORKSPACE}" != "production" ]; then
-                  python pipeline_scripts/ci_ingress.py /tmp/cluster_config.json --add
+                  python scripts/pipeline/ci_ingress.py /tmp/cluster_config.json --add
                 fi
 
           - run:
@@ -901,7 +901,7 @@ orbs:
               command: |
                 export TF_WORKSPACE=$(bash ~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                python pipeline_scripts/ci_ingress.py /tmp/cluster_config.json
+                python scripts/pipeline/ci_ingress.py /tmp/cluster_config.json
               when: always
 
       run_healthcheck_test:
@@ -918,7 +918,7 @@ orbs:
               name: Wait for new tasks in services to be running
               command: |
                 sudo pip3 install boto3
-                python pipeline_scripts/aws_ecs_task.py /tmp/cluster_config.json
+                python scripts/pipeline/aws_ecs_task.py /tmp/cluster_config.json
           - run:
               name: Run test
               command: |
