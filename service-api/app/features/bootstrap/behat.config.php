@@ -18,11 +18,33 @@ return [
     ],
 
     'aws' => [
-        'region'  => 'eu-west-1',
+        'region' => 'eu-west-1',
         'version' => 'latest',
 
         'DynamoDb' => [
             'endpoint' => 'https://dynamodb',
+        ],
+    ],
+
+    'monolog' => [
+        'handlers' => [
+            'default' => [ // default configuration in normal operation
+                'type' => 'test',
+                'processors' => [
+                    'psrLogProcessor',
+                    'requestTracingProcessor',
+                ],
+            ],
+        ],
+        'processors' => [
+            'psrLogProcessor' => [
+                'type' => 'psrLogMessage',
+                'options' => [], // No options
+            ],
+            'requestTracingProcessor' => [
+                'type' => \App\Service\Log\RequestTracingLogProcessorFactory::class,
+                'options' => [], // No options
+            ],
         ],
     ],
 
@@ -33,7 +55,7 @@ return [
             'viewer-codes-table' => 'viewer-codes',
             'viewer-activity-table' => 'viewer-activity',
             'user-lpa-actor-map' => 'user-actor-lpa-map',
-        ]
+        ],
     ],
 
     'sirius_api' => [

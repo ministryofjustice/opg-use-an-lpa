@@ -12,11 +12,11 @@ use App\Exception\ForbiddenException;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Exception\UnauthorizedException;
-use App\Service\ApiClient\ApiException;
 use DateTime;
 use DateTimeInterface;
 use Exception;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
 use function password_verify;
@@ -29,17 +29,24 @@ use function random_bytes;
 class UserService
 {
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var Repository\ActorUsersInterface
      */
     private $usersRepository;
 
     /**
      * UserService constructor.
+     *
      * @param Repository\ActorUsersInterface $usersRepository
      */
-    public function __construct(Repository\ActorUsersInterface $usersRepository)
+    public function __construct(Repository\ActorUsersInterface $usersRepository, LoggerInterface $logger)
     {
         $this->usersRepository = $usersRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -50,7 +57,10 @@ class UserService
     public function add(array $data): array
     {
         if ($this->usersRepository->exists($data['email'])) {
-            throw new ConflictException('User already exists with email address ' . $data['email']);
+            throw new ConflictException(
+                'User already exists with email address ' . $data['email'],
+                ['email' => $data['email']]
+            );
         }
 
         // Generate unique id for user
@@ -60,7 +70,17 @@ class UserService
         $activationToken = Base64UrlSafe::encode(random_bytes(32));
         $activationTtl = time() + (60 * 60 * 24);
 
-        return $this->usersRepository->add($id, $data['email'], $data['password'], $activationToken, $activationTtl);
+        $user = $this->usersRepository->add($id, $data['email'], $data['password'], $activationToken, $activationTtl);
+
+        $this->logger->info(
+            'Account with Id {id} created using email {email}',
+            [
+                'id' => $id,
+                'email' => $data['email'],
+            ]
+        );
+
+        return $user;
     }
 
     /**
@@ -83,7 +103,14 @@ class UserService
      */
     public function activate(string $activationToken): array
     {
-        return $this->usersRepository->activate($activationToken);
+        $user = $this->usersRepository->activate($activationToken);
+
+        $this->logger->info(
+            'Account with Id {id} has been activated',
+            ['id' => $user['Id']]
+        );
+
+        return $user;
     }
 
     /**
@@ -99,16 +126,27 @@ class UserService
         $user = $this->usersRepository->getByEmail($email);
 
         if (! password_verify($password, $user['Password'])) {
-            throw new ForbiddenException('Authentication failed');
+            throw new ForbiddenException('Authentication failed for email ' . $email, ['email' => $email ]);
         }
 
         if (array_key_exists('ActivationToken', $user)) {
-            throw new UnauthorizedException('User account not verified');
+            throw new UnauthorizedException(
+                'Authentication attempted against inactive account with Id ' . $user['Id'],
+                ['id' => $user['Id']]
+            );
         }
 
         $this->usersRepository->recordSuccessfulLogin(
             $user['Id'],
             (new DateTime('now'))->format(DateTimeInterface::ATOM)
+        );
+
+        $this->logger->info(
+            'Authentication successful for account with Id {id}',
+            [
+                'id' => $user['Id'],
+                'last-login' => $user['LastLogin'],
+            ]
         );
 
         return $user;
@@ -127,7 +165,23 @@ class UserService
         $resetToken = Base64UrlSafe::encode(random_bytes(32));
         $resetExpiry = time() + (60 * 60 * 24);
 
-        return $this->usersRepository->recordPasswordResetRequest($email, $resetToken, $resetExpiry);
+        try {
+            $user = $this->usersRepository->recordPasswordResetRequest($email, $resetToken, $resetExpiry);
+        } catch (\Exception $e) {
+            $this->logger->notice(
+                'Attempt made to reset password for non-existent account',
+                ['email' => $email]
+            );
+
+            throw $e;
+        }
+
+        $this->logger->info(
+            'Account with Id {id} has requested a password reset',
+            ['id' => $user['Id']]
+        );
+
+        return $user;
     }
 
     /**
@@ -149,7 +203,10 @@ class UserService
                 return $userId;
             }
         } catch (NotFoundException $ex) {
-            // token not found in usersRepository
+            $this->logger->notice(
+                'Account not found for reset token {token}',
+                ['token' => $resetToken]
+            );
         }
 
         throw new GoneException('Reset token not found');
@@ -172,10 +229,18 @@ class UserService
         $user = $this->usersRepository->get($userId);
 
         if (new DateTime('@' . $user['PasswordResetExpiry']) < new DateTime('now')) {
-            throw new BadRequestException('Password reset token has expired');
+            throw new BadRequestException(
+                'Password reset token has expired for account with Id ' . $userId,
+                ['id' => $userId]
+            );
         }
 
         // also removes reset token
         $this->usersRepository->resetPassword($userId, $password);
+
+        $this->logger->info(
+            'Password reset for account with Id {id} was successful',
+            ['id' => $userId]
+        );
     }
 }

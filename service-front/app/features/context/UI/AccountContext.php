@@ -31,6 +31,17 @@ class AccountContext implements Context
     use BaseUiContextTrait;
 
     /**
+     * @Then /^I can no longer access the dashboard page$/
+     */
+    public function iCanNoLongerAccessTheDashboardPage()
+    {
+        $this->ui->visit('/lpa/dashboard');
+
+        // a non-logged in attempt will end up at the login page
+        $this->ui->assertPageAddress('/login');
+    }
+
+    /**
      * @Given /^I have been given access to use an LPA via credentials$/
      * @Given /^I have added an LPA to my account$/
      */
@@ -273,6 +284,15 @@ class AccountContext implements Context
     public function iHaveNotActivatedMyAccount()
     {
         $this->userActive = false;
+    }
+
+    /**
+     * @When /^I logout of the application$/
+     */
+    public function iLogoutOfTheApplication()
+    {
+        $link = $this->ui->getSession()->getPage()->find('css', 'a[href="/logout"]');
+        $link->click();
     }
 
     /**
@@ -925,6 +945,8 @@ class AccountContext implements Context
                     json_encode([])));
 
         $this->ui->visit('/lpa/dashboard');
+
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $this->ui->assertPageAddress('/lpa/dashboard');
     }
 

@@ -9,6 +9,7 @@ use Common\Service\User\UserService;
 use Common\Service\User\UserServiceFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Zend\Expressive\Authentication\UserInterface;
 
 class UserServiceFactoryTest extends TestCase
@@ -17,12 +18,15 @@ class UserServiceFactoryTest extends TestCase
     public function it_creates_a_valid_UserServiceFactory_instance()
     {
         $clientProphecy = $this->prophesize(Client::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy->get(Client::class)
             ->willReturn($clientProphecy->reveal());
         $containerProphecy->get(UserInterface::class)
             ->willReturn(function(){});
+        $containerProphecy->get(LoggerInterface::class)
+            ->willReturn($loggerProphecy->reveal());
 
         $factory = new UserServiceFactory();
 
