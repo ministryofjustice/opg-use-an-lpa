@@ -22,15 +22,9 @@ Feature: Actor able to cancel access code
     When  I cancel the organisation access code
     Then I want to be asked for confirmation prior to cancellation
 
-  @ui @integration
+  @acceptance
   Scenario: As a user be able to view the cancelled viewer codes
     Given I can see all of my access codes and their details
     When I cancel the organisation access code
     And I confirm cancellation of the chosen viewer code
-    Then I should be shown the details of the cancelled viewer code with cancelled status
-
-  @ui @integration
-  Scenario: As a user be able to view the expired viewer codes
-    Given I can see all of my access codes and their details
-    When One of the generated access code has expired
-    Then I should be shown the details of the expired viewer code with expired status
+    Then I should be shown the details of the cancelled code with cancelled status

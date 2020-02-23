@@ -15,3 +15,10 @@ Feature: The user is able to check the access codes they have created
     And I have created an access code
     When I click to check my access codes
     Then I can see all of my access codes and their details
+
+  @ui
+  Scenario: As a user I can see the expired access codes I have created
+    Given I am on the dashboard page
+    Given I have created an access code
+    When I click to check my access code
+    Then I can see the expired access code and details
