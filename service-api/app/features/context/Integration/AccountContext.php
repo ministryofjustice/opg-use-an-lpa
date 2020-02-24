@@ -97,7 +97,8 @@ class AccountContext extends BaseIntegrationContext
                 $this->marshalAwsResultData([
                     'Id'       => $this->userAccountId,
                     'Email'    => $this->userAccountEmail,
-                    'Password' => password_hash($this->password, PASSWORD_DEFAULT)
+                    'Password' => password_hash($this->password, PASSWORD_DEFAULT),
+                    'LastLogin'=> null
                 ])
             ]
         ]));

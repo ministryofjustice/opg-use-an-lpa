@@ -136,7 +136,7 @@ class AccountContext implements Context
      */
     public function iAmToldMyAccountHasNotBeenActivated()
     {
-         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->email);
+         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->userEmail);
     }
 
     /**
