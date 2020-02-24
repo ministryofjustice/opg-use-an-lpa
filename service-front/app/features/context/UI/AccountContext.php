@@ -978,4 +978,37 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/lpa/view-lpa');
         $this->ui->assertPageContainsText($message);
     }
+
+    /**
+     * @When /^I attempt  to add the same LPA again$/
+     */
+    public function iAttemptToAddTheSameLPAAgain()
+    {
+        $this->iAmOnTheAddAnLPAPage();
+
+        // API call for adding/checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $this->ui->fillField('passcode', 'XYUPHWQRECHV');
+        $this->ui->fillField('reference_number', '700000000054');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^The LPA should not be found$/
+     */
+    public function theLPAShouldNotBeFound()
+    {
+        $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
+    }
 }
