@@ -39,9 +39,9 @@ Feature: A user of the system is able to login
     When I attempt to sign in again
     Then I am directed to my dashboard
 
-#  @ui @integration
-#  Scenario: A user is taken to the dashboard page when the login having logged in previously
-#    Given I am a user of the lpa application
-#    And I have logged in previously
-#    When I sign in
-#    Then I am on the dashboard page
+  @ui @integration
+  Scenario: A user is taken to the dashboard page when the login having logged in previously
+    Given I am a user of the lpa application
+    And I have logged in previously
+    When I sign in
+    Then I am taken to the dashboard page

@@ -600,4 +600,49 @@ class AccountContext extends BaseIntegrationContext
 
         assertEquals($lpa, $lpaObject);
     }
+
+    /**
+     * @Given /^I have logged in previously$/
+     */
+    public function iHaveLoggedInPreviously()
+    {
+        $this->iAmCurrentlySignedIn();
+    }
+
+    /**
+     * @When /^I sign in$/
+     */
+    public function iSignIn()
+    {
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'        => $this->userIdentity,
+                'Email'     => $this->userEmail,
+                'LastLogin' => '2020-01-21T15:58:47+00:00'
+            ])));
+
+        $user = $this->userService->authenticate($this->userEmail, $this->password);
+
+        assertEquals($user->getIdentity(), $this->userIdentity);
+    }
+
+    /**
+     * @Then /^I am taken to the dashboard page$/
+     */
+    public function iAmTakenToTheDashboardPage()
+    {
+        // API call for finding all the users added LPAs on dashboard
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $lpas = $this->lpaService->getLpas($this->userIdentity);
+
+        assertEmpty($lpas);
+    }
 }
