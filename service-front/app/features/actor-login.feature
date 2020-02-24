@@ -40,7 +40,7 @@ Feature: A user of the system is able to login
     Then I am directed to my dashboard
 
   @ui @integration
-  Scenario: A user is taken to the dashboard page when the login having logged in previously
+  Scenario: A user is taken to the dashboard page when they login, having logged in previously
     Given I am a user of the lpa application
     And I have logged in previously
     When I sign in

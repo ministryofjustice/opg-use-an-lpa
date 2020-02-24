@@ -131,7 +131,11 @@ class AccountContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([ 'PasswordResetToken' => $this->userPasswordResetToken ])
+                    json_encode(
+                        [
+                            'Id'                 => '123',
+                            'PasswordResetToken' => $this->userPasswordResetToken
+                        ])
                 )
             );
 
@@ -306,14 +310,17 @@ class AccountContext extends BaseIntegrationContext
         $this->activationToken = 'activate1234567890';
         $this->password = 'n3wPassWord';
 
-
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([ 'activationToken' => $this->activationToken])
+                    json_encode(
+                        [
+                            'Id'              => '123',
+                            'activationToken' => $this->activationToken
+                        ])
                 )
             );
 
@@ -480,7 +487,13 @@ class AccountContext extends BaseIntegrationContext
     public function iFollowTheInstructionsOnHowToActivateMyAccount()
     {
         $this->apiFixtures->patch('/v1/user-activation')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'activation_token' => $this->activationToken])))
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [], json_encode(
+                        [
+                            'activation_token' => $this->activationToken
+                        ])))
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $query = $request->getUri()->getQuery();
                 assertContains($this->activationToken, $query);

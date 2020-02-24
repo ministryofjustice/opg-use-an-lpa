@@ -254,7 +254,14 @@ class AccountContext implements Context
 
         // API call for password reset request
         $this->apiFixtures->patch('/v1/request-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'PasswordResetToken' => '123456' ])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [], json_encode(
+                        [
+                            'Id'                 => $this->userId,
+                            'PasswordResetToken' => '123456'
+                        ])));
 
         // API call for Notify
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
@@ -314,7 +321,14 @@ class AccountContext implements Context
     {
         // API fixture for reset token check
         $this->apiFixtures->get('/v1/can-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Id' => '123456'
+                        ])));
     }
 
     /**
@@ -757,6 +771,7 @@ class AccountContext implements Context
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'              => '123',
                 'Email'           => $this->email,
                 'ActivationToken' => $this->activationToken,
             ])));
@@ -802,7 +817,15 @@ class AccountContext implements Context
     {
         // API fixture for reset token check
         $this->apiFixtures->patch('/v1/user-activation')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'activation_token' => $this->activationToken])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Id'               => '123',
+                            'activation_token' => $this->activationToken,
+                        ])));
 
         $this->ui->visit('/activate-account/' . $this->activationToken);
     }
