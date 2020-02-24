@@ -887,9 +887,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I should be shown the details of the cancelled viewer code with cancelled status/
+     * @Then /^I should be shown the details of the viewer code with status(.*)/
      */
-    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus()
+    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithStatus()
     {
         // Not needed for this context
     }

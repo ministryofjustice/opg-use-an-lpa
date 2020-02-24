@@ -966,13 +966,10 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request to give an organisation access to one of my LPAs$/
+     * @When /^I request to give an organisation access$/
      */
-    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
+    public function iRequestToGiveAnOrganisationAccess()
     {
-        $this->organisation = "TestOrg";
-        $this->accessCode = "XYZ321ABC987";
-
         // API call for get LpaById (when give organisation access is clicked)
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
             ->respondWith(
@@ -988,8 +985,20 @@ class AccountContext implements Context
 
         $this->ui->assertPageAddress('lpa/dashboard');
         $this->ui->clickLink('Give an organisation access');
-
         $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
+
+    }
+
+    /**
+     * @When /^I request to give an organisation access to one of my LPAs$/
+     */
+    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
+    {
+        $this->organisation = "TestOrg";
+        $this->accessCode = "XYZ321ABC987";
+
+        // API call for get LpaById (when give organisation access is clicked)
+        $this->iRequestToGiveAnOrganisationAccess();
 
         // API call to make code
         $this->apiFixtures->post('/v1/lpas/' . $this->userLpaActorToken . '/codes')
@@ -1022,29 +1031,6 @@ class AccountContext implements Context
 
         $this->ui->fillField('org_name', $this->organisation);
         $this->ui->pressButton('Continue');
-    }
-
-    /**
-     * @When /^I request to give an organisation access$/
-     */
-    public function iRequestToGiveAnOrganisationAccess()
-    {
-        // API call for get LpaById (when give organisation access is clicked)
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([
-                        'user-lpa-actor-token' => $this->userLpaActorToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => [],
-                    ])));
-
-        $this->ui->clickLink('Give an organisation access');
-        $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
-
     }
 
     /**
@@ -1192,6 +1178,70 @@ class AccountContext implements Context
                 ));
 
         $this->ui->clickLink('Check access codes');
+    }
+
+    /**
+     * @When /^I click to check my active and inactive codes$/
+     */
+    public function iClickToCheckMyActiveAndInactiveCodes()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        // API call to get access codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                            0 => [
+                                'SiriusUid'    => $this->lpa->uId,
+                                'Added'        => '2020-01-01T23:59:59+00:00',
+                                'Expires'      => '2021-02-01T23:59:59+00:00',
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => $this->organisation,
+                                'ViewerCode'   => $this->accessCode,
+                                'Viewed'       => false,
+                                'ActorId'      => $this->actorId
+                            ],
+                            1 => [
+                                'SiriusUid'    => $this->lpa->uId,
+                                'Added'        => '2020-01-01T23:59:59+00:00',
+                                'Expires'      => '2020-02-01T23:59:59+00:00',
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => $this->organisation,
+                                'ViewerCode'   => "ABC321ABCXYZ",
+                                'Viewed'       => false,
+                                'ActorId'      => $this->actorId
+                            ]
+                        ]
+                    )
+                ));
+
+        $this->ui->clickLink('Check access codes');
+    }
+
+    /**
+     * @Then /^I can see the relevant (.*) and (.*) of my access codes and their details$/
+     */
+    public function iCanSeeAllOfMyActiveAndInactiveAccessCodesAndTheirDetails($activeTitle, $inactiveTitle)
+    {
+        $this->ui->assertPageContainsText($activeTitle);
+        $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
+
+        $this->ui->assertPageContainsText($inactiveTitle);
+        $this->ui->assertPageContainsText('V - ABC3 - 21AB - CXYZ');
     }
 
     /**
@@ -1348,34 +1398,6 @@ class AccountContext implements Context
     }
 
     /**
-    * @Then /^I should be shown the details of the cancelled viewer code with cancelled status/
-    */
-    public function iShouldBeShownTheDetailsOfTheCancelledCodeWithCancelledStatus()
-    {
-        $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
-
-        $session = $this->ui->getSession();
-        $page = $session->getPage();
-
-        $codeDetails=[];
-
-        $codeSummary = $page->findAll('css', '.govuk-summary-list__row');
-        foreach ($codeSummary as $codeItem)
-        {
-            $codeDetails[] = ($codeItem->find('css', 'dd'))->getText();
-        }
-
-        assertEquals($codeDetails[0] ,'V - XYZ3 - 21AB - C987');
-        assertEquals($codeDetails[1],'Ian Deputy');
-        assertEquals($codeDetails[2],'Not Viewed');
-        assertEquals($codeDetails[4], 'CANCELLED');
-
-        if ($codeDetails === null) {
-            throw new \Exception( 'Code details not found');
-        }
-    }
-
-    /**
      * @When /^I do not confirm cancellation of the chosen viewer code/
      */
     public function iDoNotConfirmCancellationOfTheChosenViewerCode()
@@ -1430,11 +1452,12 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I can see the expired access code and details$/
+     * @Then /^I should be shown the details of the viewer code with status (.*)/
      */
-    public function  iCanSeeTheExpiredAccessCodeAndDetails()
+    public function iShouldBeShownTheDetailsOfTheCancelledCodeWithCancelledStatus($status)
     {
         $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
+
         $session = $this->ui->getSession();
         $page = $session->getPage();
 
@@ -1449,10 +1472,11 @@ class AccountContext implements Context
         assertEquals($codeDetails[0] ,'V - XYZ3 - 21AB - C987');
         assertEquals($codeDetails[1],'Ian Deputy');
         assertEquals($codeDetails[2],'Not Viewed');
-        assertEquals($codeDetails[4], 'EXPIRED');
+        assertEquals($codeDetails[4], $status);
 
         if ($codeDetails === null) {
             throw new \Exception( 'Code details not found');
         }
     }
+
 }

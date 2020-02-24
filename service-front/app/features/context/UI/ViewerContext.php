@@ -272,14 +272,6 @@ class ViewerContext implements Context
     }
 
     /**
-     * @Then /^I am told that the share code details is invalid$/
-     */
-    public function iAmToldThatTheShareCodeDetailsIsInvalid()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @Then /^I am told that the share code is invalid because (.*)$/
      */
     public function iAmToldThatTheShareCodeIsInvalidBecause($reason)
