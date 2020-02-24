@@ -129,6 +129,11 @@ class UserService implements UserRepositoryInterface
                     'email' => $email
                 ]
             );
+            if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
+                // inactive accounts have status not authorized
+                // we need to pick this up on the login to redirect to the activation resend page.
+                throw $e;
+            }
         } catch (Exception $e) {
             throw new RuntimeException('Marshaling user login datetime to DateTime failed', 500, $e);
         }

@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\Login;
+use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -56,19 +58,32 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             $form->setData($request->getParsedBody());
 
             if ($form->isValid()) {
-                $user = $this->getUser($request);
+               try {
+                    $user = $this->getUser($request);
 
-                if (! is_null($user)) {
-                    if (empty($user->getDetail('LastLogin'))) {
-                        return $this->redirectToRoute('lpa.add');
-                    } else {
-                        return $this->redirectToRoute('lpa.dashboard');
+                    if (! is_null($user)) {
+                        if (empty($user->getDetail('LastLogin'))) {
+                            return $this->redirectToRoute('lpa.add');
+                        } else {
+                            return $this->redirectToRoute('lpa.dashboard');
+                        }
                     }
-                }
+                    // adding an element name allows the form to link the error message to a field. In this case we'll
+                    // link to the email field to allow the user to correct their mistake.
+                    $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
+                } catch (ApiException $e){
+                   //401 denotes in this case that we hve not activated,
+                   // redirect to correct success page with correct data
+                   if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
+                       $formValues = $form->getData();
+                       $emailAddress = $formValues['email'];
 
-                // adding an element name allows the form to link the error message to a field. In this case we'll
-                // link to the email field to allow the user to correct their mistake.
-                $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
+                       return $this->redirectToRoute('create-account-success', [], [
+                           'email' => $emailAddress,
+                           'accountExists' => 'true'
+                       ]);
+                   }
+               }
             }
         }
 
