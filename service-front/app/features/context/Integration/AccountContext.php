@@ -692,8 +692,8 @@ class AccountContext extends BaseIntegrationContext
         $lpas = $this->lpaService->getLpas($this->userIdentity);
 
         assertEmpty($lpas);
-                  
-               
+    }
+
     /**
      * @When /^I attempt  to add the same LPA again$/
      */
