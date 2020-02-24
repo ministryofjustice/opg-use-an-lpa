@@ -579,7 +579,7 @@ orbs:
               command: |
                 wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.2.0/php-coveralls.phar
                 chmod +x php-coveralls.phar
-                wget https://github.com/cooperaj/php-coverage-path-fixer/releases/download/1.0.0/covpf.phar
+                wget https://github.com/cooperaj/php-coverage-path-fixer/releases/download/1.0.1/covpf.phar
                 chmod +x covpf.phar
           - run:
               name: Merge coverage into single prefix fixed report
