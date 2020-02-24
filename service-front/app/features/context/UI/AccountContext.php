@@ -250,7 +250,14 @@ class AccountContext implements Context
 
         // API call for password reset request
         $this->apiFixtures->patch('/v1/request-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'PasswordResetToken' => '123456' ])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [], json_encode(
+                        [
+                            'Id'                 => $this->userId,
+                            'PasswordResetToken' => '123456'
+                        ])));
 
         // API call for Notify
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
@@ -310,7 +317,14 @@ class AccountContext implements Context
     {
         // API fixture for reset token check
         $this->apiFixtures->get('/v1/can-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Id' => '123456'
+                        ])));
     }
 
     /**
@@ -753,6 +767,7 @@ class AccountContext implements Context
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'              => '123',
                 'Email'           => $this->email,
                 'ActivationToken' => $this->activationToken,
             ])));
@@ -798,7 +813,15 @@ class AccountContext implements Context
     {
         // API fixture for reset token check
         $this->apiFixtures->patch('/v1/user-activation')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'activation_token' => $this->activationToken])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Id'               => '123',
+                            'activation_token' => $this->activationToken,
+                        ])));
 
         $this->ui->visit('/activate-account/' . $this->activationToken);
     }
@@ -979,6 +1002,48 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText($message);
     }
 
+    /**
+     * @Given /^I have logged in previously$/
+     */
+    public function iHaveLoggedInPreviously()
+    {
+        // do all the steps to sign in
+        $this->iAccessTheLoginForm();
+
+        $this->ui->fillField('email', $this->userEmail);
+        $this->ui->fillField('password', $this->userPassword);
+
+        if ($this->userActive) {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
+                    [
+                        'Id'        => $this->userId,
+                        'Email'     => $this->userEmail,
+                        'LastLogin' => null,
+                    ]
+                )));
+
+        } else {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
+        }
+
+        $this->ui->pressButton('Continue');
+
+        $this->iAmSignedIn();
+        $this->iLogoutOfTheApplication();
+    }
+
+    /**
+     * @Then /^I am taken to the dashboard page$/
+     */
+    public function iAmTakenToTheDashboardPage()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+  
     /**
      * @When /^I attempt  to add the same LPA again$/
      */
