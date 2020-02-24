@@ -117,7 +117,7 @@ class LpaExtension extends AbstractExtension
             $date = DateTime::createFromFormat('Y-m-d\TH:i:sP', $date);
 
             if ($date instanceof DateTime) {
-                return $date->format('d/m/Y');
+                return $date->format('j F Y');
             } else {
                 return '';
             }

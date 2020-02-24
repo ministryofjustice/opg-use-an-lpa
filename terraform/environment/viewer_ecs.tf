@@ -143,7 +143,7 @@ locals {
       "value": "${var.container_version}"
     }]
   }
-  
+
 EOF
 
 
@@ -190,10 +190,12 @@ EOF
     {
       "name": "PDF_SERVICE_URL",
       "value": "http://${local.pdf_service_fqdn}"
+    },
+    {
+      "name": "SESSION_EXPIRES",
+      "value": "${local.account.session_expires_view}"
     }]
   }
-  
+
 EOF
-
 }
-

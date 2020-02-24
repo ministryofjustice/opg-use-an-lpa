@@ -12,9 +12,9 @@ use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Exception\UnauthorizedException;
 use App\Service\User\UserService;
-use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -31,8 +31,9 @@ class UserServiceTest extends TestCase
     public function can_create_a_valid_instance()
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->assertInstanceOf(UserService::class, $us);
     }
@@ -45,6 +46,7 @@ class UserServiceTest extends TestCase
         $password = 'password1';
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->exists($email)->willReturn(false);
         $repoProphecy
@@ -64,7 +66,7 @@ class UserServiceTest extends TestCase
                 ]
             );
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $return = $us->add(['email' => $email, 'password' => $password]);
 
@@ -77,11 +79,12 @@ class UserServiceTest extends TestCase
         $userData = ['email' => 'a@b.com', 'password' => self::PASS];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->exists($userData['email'])
             ->willReturn(true);
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(ConflictException::class);
         $return = $us->add($userData);
@@ -91,11 +94,12 @@ class UserServiceTest extends TestCase
     public function can_get_a_user_from_storage()
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
             ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $return = $us->getByEmail('a@b.com');
 
@@ -106,11 +110,12 @@ class UserServiceTest extends TestCase
     public function cannot_retrieve_a_user_that_doesnt_exist()
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
             ->willThrow(new NotFoundException());
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(NotFoundException::class);
         $return = $us->getByEmail('a@b.com');
@@ -120,6 +125,7 @@ class UserServiceTest extends TestCase
     public function can_authenticate_a_user_with_valid_credentials()
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
             ->willReturn(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
@@ -132,7 +138,7 @@ class UserServiceTest extends TestCase
             return true;
         }));
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $return = $us->authenticate('a@b.com', self::PASS);
 
@@ -143,11 +149,12 @@ class UserServiceTest extends TestCase
     public function will_not_authenticate_invalid_credentials()
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
             ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(ForbiddenException::class);
         $return = $us->authenticate('a@b.com', 'badpassword');
@@ -157,11 +164,12 @@ class UserServiceTest extends TestCase
     public function will_not_authenticate_unknown_user()
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('baduser@b.com')
             ->willThrow(new NotFoundException());
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(NotFoundException::class);
         $return = $us->authenticate('baduser@b.com', self::PASS);
@@ -171,11 +179,12 @@ class UserServiceTest extends TestCase
     public function will_not_authenticate_unverfied_account()
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
             ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'ActivationToken' => 'aToken']);
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(UnauthorizedException::class);
         $return = $us->authenticate('a@b.com', self::PASS);
@@ -185,6 +194,7 @@ class UserServiceTest extends TestCase
     public function will_generate_and_record_a_password_reset_token()
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy
             ->recordPasswordResetRequest('a@b.com', Argument::type('string'), Argument::type('int'))
@@ -193,7 +203,7 @@ class UserServiceTest extends TestCase
                 'PasswordResetToken' => 'resetTokenAABBCCDDEE'
             ]);
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $return = $us->requestPasswordReset('a@b.com');
 
@@ -210,6 +220,7 @@ class UserServiceTest extends TestCase
         $id = '12345-1234-1234-1234-12345';
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy
             ->getIdByPasswordResetToken($token)
@@ -229,7 +240,7 @@ class UserServiceTest extends TestCase
             ->resetPassword($id, $password)
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $us->completePasswordReset($token, $password);
     }
@@ -242,6 +253,7 @@ class UserServiceTest extends TestCase
         $id = '12345-1234-1234-1234-12345';
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy
             ->getIdByPasswordResetToken($token)
@@ -257,7 +269,7 @@ class UserServiceTest extends TestCase
             ])
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(BadRequestException::class);
         $us->completePasswordReset($token, $password);
@@ -270,6 +282,7 @@ class UserServiceTest extends TestCase
         $id = '12345-1234-1234-1234-12345';
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy
             ->getIdByPasswordResetToken($token)
@@ -285,7 +298,7 @@ class UserServiceTest extends TestCase
             ])
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $result = $us->canResetPassword($token);
 
@@ -299,6 +312,7 @@ class UserServiceTest extends TestCase
         $id = '12345-1234-1234-1234-12345';
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy
             ->getIdByPasswordResetToken($token)
@@ -314,7 +328,7 @@ class UserServiceTest extends TestCase
             ])
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(GoneException::class);
         $result = $us->canResetPassword($token);
@@ -327,13 +341,14 @@ class UserServiceTest extends TestCase
         $id = '12345-1234-1234-1234-12345';
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy
             ->getIdByPasswordResetToken($token)
             ->willThrow(new GoneException())
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal());
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(GoneException::class);
         $result = $us->canResetPassword($token);

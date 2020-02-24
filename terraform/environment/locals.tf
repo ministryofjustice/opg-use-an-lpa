@@ -14,6 +14,8 @@ variable "accounts" {
       is_production        = bool
       sirius_account_id    = string
       api_gateway_endpoint = string
+      session_expires_view = number
+      session_expires_use  = number
     })
   )
 }

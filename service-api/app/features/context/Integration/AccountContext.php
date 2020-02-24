@@ -1009,8 +1009,39 @@ class AccountContext extends BaseIntegrationContext
     */
      public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus()
      {
-        //assertNotNull($shareCode);
+         // Not needed for this context
      }
+
+    /**
+     * @When /^I attempt to add the same LPA again$/
+     */
+    public function iAttemptToAddTheSameLPAAgain()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid' => $this->lpaUid,
+                'Active' => false,
+                'Expires' => '2021-09-25T00:00:00Z',
+                'ActorCode' => $this->passcode,
+                'ActorLpaId' => $this->actorLpaId,
+            ])
+        ]));
+
+        $actorCodeService = $this->container->get(ActorCodeService::class);
+
+        $response = $actorCodeService->validateDetails($this->passcode, $this->lpaUid, $this->userDob);
+
+        assertNull($response);
+    }
+
+    /**
+     * @Then /^The LPA should not be found$/
+     */
+    public function theLPAShouldNotBeFound()
+    {
+        // Not needed for this context
+    }
 
     /**
      * Convert a key/value array to a correctly marshaled AwsResult structure.

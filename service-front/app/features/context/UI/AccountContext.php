@@ -34,6 +34,17 @@ class AccountContext implements Context
     use BaseUiContextTrait;
 
     /**
+     * @Then /^I can no longer access the dashboard page$/
+     */
+    public function iCanNoLongerAccessTheDashboardPage()
+    {
+        $this->ui->visit('/lpa/dashboard');
+
+        // a non-logged in attempt will end up at the login page
+        $this->ui->assertPageAddress('/login');
+    }
+
+    /**
      * @Given /^I have been given access to use an LPA via credentials$/
      * @Given /^I have added an LPA to my account$/
      */
@@ -129,11 +140,7 @@ class AccountContext implements Context
      */
     public function iAmToldMyAccountHasNotBeenActivated()
     {
-        // TODO UML-501
-        //      When a user account has not been activated we will need a better user flow
-        //      around how this works. Probably taking them to a help page that details
-        //      what they need to do, including resending the email.
-        $this->ui->assertPageContainsText('Email and password combination not recognised');
+         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->userEmail);
     }
 
     /**
@@ -247,7 +254,14 @@ class AccountContext implements Context
 
         // API call for password reset request
         $this->apiFixtures->patch('/v1/request-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'PasswordResetToken' => '123456' ])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [], json_encode(
+                        [
+                            'Id'                 => $this->userId,
+                            'PasswordResetToken' => '123456'
+                        ])));
 
         // API call for Notify
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
@@ -280,6 +294,15 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I logout of the application$/
+     */
+    public function iLogoutOfTheApplication()
+    {
+        $link = $this->ui->getSession()->getPage()->find('css', 'a[href="/logout"]');
+        $link->click();
+    }
+
+    /**
      * @Then /^I receive unique instructions on how to reset my password$/
      */
     public function iReceiveUniqueInstructionsOnHowToResetMyPassword()
@@ -298,7 +321,14 @@ class AccountContext implements Context
     {
         // API fixture for reset token check
         $this->apiFixtures->get('/v1/can-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Id' => '123456'
+                        ])));
     }
 
     /**
@@ -741,6 +771,7 @@ class AccountContext implements Context
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'              => '123',
                 'Email'           => $this->email,
                 'ActivationToken' => $this->activationToken,
             ])));
@@ -786,7 +817,15 @@ class AccountContext implements Context
     {
         // API fixture for reset token check
         $this->apiFixtures->patch('/v1/user-activation')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'activation_token' => $this->activationToken])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Id'               => '123',
+                            'activation_token' => $this->activationToken,
+                        ])));
 
         $this->ui->visit('/activate-account/' . $this->activationToken);
     }
@@ -929,6 +968,8 @@ class AccountContext implements Context
                     json_encode([])));
 
         $this->ui->visit('/lpa/dashboard');
+
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
@@ -966,6 +1007,7 @@ class AccountContext implements Context
     }
 
     /**
+<<<<<<< HEAD
      * @When /^I request to give an organisation access to one of my LPAs$/
      */
     public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
@@ -1070,9 +1112,9 @@ class AccountContext implements Context
                     [],
                     json_encode([
                         'user-lpa-actor-token' => $this->userLpaActorToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
                     ])));
 
 
@@ -1081,6 +1123,75 @@ class AccountContext implements Context
     }
 
     /**
+     * @Given /^I have logged in previously$/
+     */
+    public function iHaveLoggedInPreviously()
+    {
+        // do all the steps to sign in
+        $this->iAccessTheLoginForm();
+
+        $this->ui->fillField('email', $this->userEmail);
+        $this->ui->fillField('password', $this->userPassword);
+
+        if ($this->userActive) {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
+                    [
+                        'Id'        => $this->userId,
+                        'Email'     => $this->userEmail,
+                        'LastLogin' => null,
+                    ]
+                )));
+
+        } else {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
+        }
+
+        $this->ui->pressButton('Continue');
+
+        $this->iAmSignedIn();
+        $this->iLogoutOfTheApplication();
+    }
+
+    /**
+     * @Then /^I am taken to the dashboard page$/
+     */
+    public function iAmTakenToTheDashboardPage()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+  
+    /**
+     * @When /^I attempt  to add the same LPA again$/
+     */
+    public function iAttemptToAddTheSameLPAAgain()
+    {
+        $this->iAmOnTheAddAnLPAPage();
+
+        // API call for adding/checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $this->ui->fillField('passcode', 'XYUPHWQRECHV');
+        $this->ui->fillField('reference_number', '700000000054');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+
      * @Then /^I should be told access code could not be created due to (.*)$/
      */
     public function iShouldBeToldAccessCodeCouldNotBeCreatedDueTo($reasons)
@@ -1356,5 +1467,14 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('Active codes');
         $this->ui->assertPageContainsText("V - XYZ3 - 21AB - C987");
         $this->ui->assertPageNotContainsText('Cancelled');
+
+    }
+
+    /**
+     * @Then /^The LPA should not be found$/
+     */
+    public function theLPAShouldNotBeFound()
+    {
+        $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
     }
 }

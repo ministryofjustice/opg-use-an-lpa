@@ -9,7 +9,7 @@ options.headless = True
 def before_tag(context, tag):
     if tag == 'web':
         context.browser = webdriver.Firefox(options=options)
-        context.browser.implicitly_wait(10)
+        context.browser.implicitly_wait(12)
 
 
 def after_tag(context, tag):

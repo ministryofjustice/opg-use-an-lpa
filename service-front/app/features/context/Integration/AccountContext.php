@@ -31,6 +31,7 @@ use Psr\Http\Message\RequestInterface;
  * @property string userPasswordResetToken
  * @property string lpa
  * @property string lpaJson
+ * @property string lpaData
  * @property string passcode
  * @property string referenceNo
  * @property string userDob
@@ -87,6 +88,41 @@ class AccountContext extends BaseIntegrationContext
         $this->passcode = 'XYUPHWQRECHV';
         $this->referenceNo = '700000000138';
         $this->userDob = '1975-10-05';
+        $this->actorLpaToken = '24680';
+
+        $this->lpaData = [
+            'user-lpa-actor-token' => $this->actorLpaToken,
+            'date' => 'today',
+            'actor' => [
+                'type' => 'primary-attorney',
+                'details' => [
+                    'addresses' => [
+                        [
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                            'country'      => '',
+                            'county'       => '',
+                            'id'           => 0,
+                            'postcode'     => '',
+                            'town'         => '',
+                            'type'         => 'Primary'
+                        ]
+                    ],
+                    'companyName' => null,
+                    'dob' => '1975-10-05',
+                    'email' => 'string',
+                    'firstname' => 'Ian',
+                    'id' => 0,
+                    'middlenames' => null,
+                    'salutation' => 'Mr',
+                    'surname' => 'Deputy',
+                    'systemStatus' => true,
+                    'uId' => '700000000054'
+                ],
+            ],
+            'lpa' => $this->lpa
+        ];
     }
 
     /**
@@ -139,7 +175,11 @@ class AccountContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode(['PasswordResetToken' => $this->userPasswordResetToken])
+                    json_encode(
+                        [
+                            'Id'                 => '123',
+                            'PasswordResetToken' => $this->userPasswordResetToken
+                        ])
                 )
             );
 
@@ -314,14 +354,17 @@ class AccountContext extends BaseIntegrationContext
         $this->activationToken = 'activate1234567890';
         $this->password = 'n3wPassWord';
 
-
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode(['activationToken' => $this->activationToken])
+                    json_encode(
+                        [
+                            'Id'              => '123',
+                            'activationToken' => $this->activationToken
+                        ])
                 )
             );
 
@@ -491,7 +534,15 @@ class AccountContext extends BaseIntegrationContext
     public function iFollowTheInstructionsOnHowToActivateMyAccount()
     {
         $this->apiFixtures->patch('/v1/user-activation')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['activation_token' => $this->activationToken])))
+
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [], json_encode(
+                        [
+                            'activation_token' => $this->activationToken
+                        ])))
+
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $query = $request->getUri()->getQuery();
                 assertContains($this->activationToken, $query);
@@ -658,8 +709,6 @@ class AccountContext extends BaseIntegrationContext
                         'lpa' => $this->lpa,
                         'actor' => [],
                     ])));
-
-
     }
 
     /**
@@ -738,7 +787,6 @@ class AccountContext extends BaseIntegrationContext
         assertEquals($this->actorId, $shareCodes[0]['ActorId']);
         assertEquals($this->actorLpaToken, $shareCodes[0]['UserLpaActor']);
         assertEquals(false, $shareCodes[0]['Viewed']);
-
     }
 
     /**
@@ -786,6 +834,7 @@ class AccountContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
+
                     json_encode([
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
@@ -796,6 +845,50 @@ class AccountContext extends BaseIntegrationContext
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
         assertNotNull($lpa);
+    }
+
+    /**
+     * @Given /^I have logged in previously$/
+     */
+    public function iHaveLoggedInPreviously()
+    {
+        $this->iAmCurrentlySignedIn();
+    }
+
+    /**
+     * @When /^I sign in$/
+     */
+    public function iSignIn()
+    {
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'        => $this->userIdentity,
+                'Email'     => $this->userEmail,
+                'LastLogin' => '2020-01-21T15:58:47+00:00'
+            ])));
+
+        $user = $this->userService->authenticate($this->userEmail, $this->password);
+
+        assertEquals($user->getIdentity(), $this->userIdentity);
+    }
+    /**
+     * @Then /^I am taken to the dashboard page$/
+     */
+    public function iAmTakenToTheDashboardPage()
+    {
+        // API call for finding all the users added LPAs on dashboard
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $lpas = $this->lpaService->getLpas($this->userIdentity);
+
+        assertEmpty($lpas);
     }
 
     /**
@@ -950,5 +1043,35 @@ class AccountContext extends BaseIntegrationContext
         );
 
         assertEquals($shareCodes[0]['Organisation'], $this->organisation);
+    }
+
+    /**
+     * @When /^I attempt  to add the same LPA again$/
+     */
+    public function iAttemptToAddTheSameLPAAgain()
+    {
+        // API call for adding/checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        try {
+            $this->lpaService->getLpaByPasscode($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
+        } catch (ApiException $aex) {
+            assertEquals($aex->getCode(), 404);
+        }
+    }
+
+    /**
+     * @Then /^The LPA should not be found$/
+     */
+    public function theLPAShouldNotBeFound()
+    {
+        // Not needed for this context
     }
 }

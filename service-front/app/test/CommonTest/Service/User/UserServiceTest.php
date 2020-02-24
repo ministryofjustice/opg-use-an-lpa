@@ -11,6 +11,7 @@ use Common\Service\User\UserService;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class UserServiceTest extends TestCase
@@ -18,6 +19,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function can_create_a_new_user_account()
     {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPost(
             '/v1/user',
@@ -26,6 +29,7 @@ class UserServiceTest extends TestCase
                 'password' => 'test'
             ])
             ->willReturn([
+                'Id'              => '12345',
                 'Email'           => 'a@b.com',
                 'ActivationToken' => 'activate1234567890',
             ]);
@@ -35,7 +39,7 @@ class UserServiceTest extends TestCase
             $this->fail('User should not be created');
         };
 
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $return = $service->create('test@example.com', 'test');
 
@@ -47,6 +51,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function can_get_an_account_by_email()
     {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpGet(
             '/v1/user',
@@ -62,7 +68,7 @@ class UserServiceTest extends TestCase
             $this->fail('User should not be created');
         };
 
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $return = $service->getByEmail('test@example.com');
 
@@ -73,6 +79,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function passes_exception_when_user_not_found_by_email()
     {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpGet(
             '/v1/user',
@@ -86,7 +94,7 @@ class UserServiceTest extends TestCase
             $this->fail('User should not be created');
         };
 
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
         $this->expectException(ApiException::class);
@@ -96,6 +104,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function can_authenticate_with_good_credentials()
     {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPatch(
             '/v1/auth',
@@ -119,7 +129,7 @@ class UserServiceTest extends TestCase
             return new User($identity, $roles, $details);
         };
 
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $return = $service->authenticate('test@example.com', 'test');
 
@@ -132,6 +142,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function authentication_fails_with_bad_credentials()
     {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPatch(
             '/v1/auth',
@@ -146,7 +158,7 @@ class UserServiceTest extends TestCase
             $this->fail('User should not be created');
         };
 
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $return = $service->authenticate('test@example.com', 'badpass');
 
@@ -156,6 +168,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function bad_datetime_throws_exception_during_authentication()
     {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPatch(
             '/v1/auth',
@@ -174,7 +188,7 @@ class UserServiceTest extends TestCase
             $this->fail('User should not be created');
         };
 
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $this->expectException(RuntimeException::class);
         $return = $service->authenticate('test@example.com', 'test');
@@ -183,6 +197,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function can_activate_a_user()
     {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPatch(
             '/v1/user-activation',
@@ -190,6 +206,7 @@ class UserServiceTest extends TestCase
                 'activation_token' => 'activate1234567890',
             ])
             ->willReturn([
+                'Id'    => '12345',
                 'Email' => 'test@example.com'
             ]);
 
@@ -198,7 +215,7 @@ class UserServiceTest extends TestCase
             $this->fail('User should not be created');
         };
 
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $return = $service->activate('activate1234567890');
 
@@ -208,6 +225,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function can_activate_a_user_and_return_empty_data()
     {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPatch(
             '/v1/user-activation',
@@ -221,7 +240,7 @@ class UserServiceTest extends TestCase
             $this->fail('User should not be created');
         };
 
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $return = $service->activate('activate1234567890');
 
@@ -231,6 +250,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function whilst_activating_an_unknown_user_false_is_returned()
     {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPatch(
             '/v1/user-activation',
@@ -244,7 +265,7 @@ class UserServiceTest extends TestCase
             $this->fail('User should not be created');
         };
 
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $return = $service->activate('activate1234567890');
 
@@ -254,6 +275,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function whilst_activating_a_user_an_exception_can_be_thrown()
     {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPatch(
             '/v1/user-activation',
@@ -267,7 +290,7 @@ class UserServiceTest extends TestCase
             $this->fail('User should not be created');
         };
 
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $this->expectException(ApiException::class);
@@ -277,6 +300,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function can_request_a_password_reset_token_for_a_valid_user()
     {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPatch(
             '/v1/request-password-reset',
@@ -284,7 +309,8 @@ class UserServiceTest extends TestCase
                 'email' => 'test@example.com'
             ])
             ->willReturn([
-                'Email'     => 'test@example.com',
+                'Id'                 => '12345',
+                'Email'              => 'test@example.com',
                 'PasswordResetToken' => 'resettokenAABBCCDDEE'
             ]);
 
@@ -293,7 +319,7 @@ class UserServiceTest extends TestCase
             $this->fail('User should not be created');
         };
 
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $token = $service->requestPasswordReset('test@example.com');
 
@@ -303,6 +329,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function a_password_reset_request_for_an_invalid_user_will_not_be_found()
     {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPatch(
             '/v1/request-password-reset',
@@ -316,7 +344,7 @@ class UserServiceTest extends TestCase
             $this->fail('User should not be created');
         };
 
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
         $this->expectException(ApiException::class);
@@ -326,6 +354,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function exception_thrown_when_api_gives_invalid_response_to_reset_password_request()
     {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpPatch(
             '/v1/request-password-reset',
@@ -341,7 +371,7 @@ class UserServiceTest extends TestCase
             $this->fail('User should not be created');
         };
 
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable);
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $this->expectException(RuntimeException::class);

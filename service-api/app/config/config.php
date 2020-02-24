@@ -12,34 +12,41 @@ $cacheConfig = [
     'config_cache_path' => '/tmp/config-cache.php',
 ];
 
-$aggregator = new ConfigAggregator([
-    \Zend\HttpHandlerRunner\ConfigProvider::class,
-    \Zend\Expressive\Router\FastRouteRouter\ConfigProvider::class,
-    // Include cache configuration
-    new ArrayProvider($cacheConfig),
+$aggregator = new ConfigAggregator(
+    [
+        \WShafer\PSR11MonoLog\ConfigProvider::class,
+        \Zend\HttpHandlerRunner\ConfigProvider::class,
+        \Zend\Expressive\Router\FastRouteRouter\ConfigProvider::class,
 
-    \Zend\Expressive\Helper\ConfigProvider::class,
-    \Zend\Expressive\ConfigProvider::class,
-    \Zend\Expressive\Router\ConfigProvider::class,
+        // Include cache configuration
+        new ArrayProvider($cacheConfig),
 
-    // Swoole config to overwrite some services (if installed)
-    class_exists(\Zend\Expressive\Swoole\ConfigProvider::class)
-        ? \Zend\Expressive\Swoole\ConfigProvider::class
-        : function(){ return[]; },
+        \Zend\Expressive\Helper\ConfigProvider::class,
+        \Zend\Expressive\ConfigProvider::class,
+        \Zend\Expressive\Router\ConfigProvider::class,
 
-    // Default App module config
-    App\ConfigProvider::class,
+        // Swoole config to overwrite some services (if installed)
+        class_exists(\Zend\Expressive\Swoole\ConfigProvider::class)
+            ? \Zend\Expressive\Swoole\ConfigProvider::class
+            : function () {
+            return [];
+        },
 
-    // Load application config in a pre-defined order in such a way that local settings
-    // overwrite global settings. (Loaded as first to last):
-    //   - `global.php`
-    //   - `*.global.php`
-    //   - `local.php`
-    //   - `*.local.php`
-    new PhpFileProvider(realpath(__DIR__) . '/autoload/{{,*.}global,{,*.}local}.php'),
+        // Default App module config
+        App\ConfigProvider::class,
 
-    // Load development config if it exists
-    new PhpFileProvider(realpath(__DIR__) . '/development.config.php'),
-], $cacheConfig['config_cache_path']);
+        // Load application config in a pre-defined order in such a way that local settings
+        // overwrite global settings. (Loaded as first to last):
+        //   - `global.php`
+        //   - `*.global.php`
+        //   - `local.php`
+        //   - `*.local.php`
+        new PhpFileProvider(realpath(__DIR__) . '/autoload/{{,*.}global,{,*.}local}.php'),
+
+        // Load development config if it exists
+        new PhpFileProvider(realpath(__DIR__) . '/development.config.php'),
+    ],
+    $cacheConfig['config_cache_path']
+);
 
 return $aggregator->getMergedConfig();
