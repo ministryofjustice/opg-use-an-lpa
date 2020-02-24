@@ -175,7 +175,11 @@ class AccountContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode(['PasswordResetToken' => $this->userPasswordResetToken])
+                    json_encode(
+                        [
+                            'Id'                 => '123',
+                            'PasswordResetToken' => $this->userPasswordResetToken
+                        ])
                 )
             );
 
@@ -350,14 +354,17 @@ class AccountContext extends BaseIntegrationContext
         $this->activationToken = 'activate1234567890';
         $this->password = 'n3wPassWord';
 
-
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode(['activationToken' => $this->activationToken])
+                    json_encode(
+                        [
+                            'Id'              => '123',
+                            'activationToken' => $this->activationToken
+                        ])
                 )
             );
 
@@ -527,7 +534,15 @@ class AccountContext extends BaseIntegrationContext
     public function iFollowTheInstructionsOnHowToActivateMyAccount()
     {
         $this->apiFixtures->patch('/v1/user-activation')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['activation_token' => $this->activationToken])))
+
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [], json_encode(
+                        [
+                            'activation_token' => $this->activationToken
+                        ])))
+
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $query = $request->getUri()->getQuery();
                 assertContains($this->activationToken, $query);
@@ -923,6 +938,51 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
+     * @Given /^I have logged in previously$/
+     */
+    public function iHaveLoggedInPreviously()
+    {
+        $this->iAmCurrentlySignedIn();
+    }
+
+    /**
+     * @When /^I sign in$/
+     */
+    public function iSignIn()
+    {
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'        => $this->userIdentity,
+                'Email'     => $this->userEmail,
+                'LastLogin' => '2020-01-21T15:58:47+00:00'
+            ])));
+
+        $user = $this->userService->authenticate($this->userEmail, $this->password);
+
+        assertEquals($user->getIdentity(), $this->userIdentity);
+    }
+
+    /**
+     * @Then /^I am taken to the dashboard page$/
+     */
+    public function iAmTakenToTheDashboardPage()
+    {
+        // API call for finding all the users added LPAs on dashboard
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $lpas = $this->lpaService->getLpas($this->userIdentity);
+
+        assertEmpty($lpas);
+    }
+
+    /**
      * @Then /^I should be shown the details of the viewer code with status(.*)/
      */
     public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithStatus()
@@ -1005,7 +1065,7 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I attempt  to add the same LPA again$/
+     * @When /^I attempt to add the same LPA again$/
      */
     public function iAttemptToAddTheSameLPAAgain()
     {

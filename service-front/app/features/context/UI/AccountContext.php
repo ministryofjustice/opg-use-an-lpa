@@ -140,7 +140,7 @@ class AccountContext implements Context
      */
     public function iAmToldMyAccountHasNotBeenActivated()
     {
-         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->email);
+         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->userEmail);
     }
 
     /**
@@ -254,7 +254,14 @@ class AccountContext implements Context
 
         // API call for password reset request
         $this->apiFixtures->patch('/v1/request-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'PasswordResetToken' => '123456' ])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [], json_encode(
+                        [
+                            'Id'                 => $this->userId,
+                            'PasswordResetToken' => '123456'
+                        ])));
 
         // API call for Notify
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
@@ -314,7 +321,14 @@ class AccountContext implements Context
     {
         // API fixture for reset token check
         $this->apiFixtures->get('/v1/can-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Id' => '123456'
+                        ])));
     }
 
     /**
@@ -757,6 +771,7 @@ class AccountContext implements Context
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'              => '123',
                 'Email'           => $this->email,
                 'ActivationToken' => $this->activationToken,
             ])));
@@ -802,7 +817,15 @@ class AccountContext implements Context
     {
         // API fixture for reset token check
         $this->apiFixtures->patch('/v1/user-activation')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'activation_token' => $this->activationToken])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Id'               => '123',
+                            'activation_token' => $this->activationToken,
+                        ])));
 
         $this->ui->visit('/activate-account/' . $this->activationToken);
     }
@@ -1084,27 +1107,45 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I attempt  to add the same LPA again$/
+     * @Given /^I have logged in previously$/
      */
-    public function iAttemptToAddTheSameLPAAgain()
+    public function iHaveLoggedInPreviously()
     {
-        $this->iAmOnTheAddAnLPAPage();
+        // do all the steps to sign in
+        $this->iAccessTheLoginForm();
 
-        // API call for adding/checking LPA
-        $this->apiFixtures->post('/v1/actor-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->ui->fillField('email', $this->userEmail);
+        $this->ui->fillField('password', $this->userPassword);
 
-        $this->ui->fillField('passcode', 'XYUPHWQRECHV');
-        $this->ui->fillField('reference_number', '700000000054');
-        $this->ui->fillField('dob[day]', '05');
-        $this->ui->fillField('dob[month]', '10');
-        $this->ui->fillField('dob[year]', '1975');
+        if ($this->userActive) {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
+                    [
+                        'Id'        => $this->userId,
+                        'Email'     => $this->userEmail,
+                        'LastLogin' => null,
+                    ]
+                )));
+
+        } else {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
+        }
+
+        $this->ui->pressButton('Continue');
+
+        $this->iAmSignedIn();
+        $this->iLogoutOfTheApplication();
+    }
+
+    /**
+     * @Then /^I am taken to the dashboard page$/
+     */
+    public function iAmTakenToTheDashboardPage()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
     /**
@@ -1515,6 +1556,31 @@ class AccountContext implements Context
         if ($codeDetails === null) {
             throw new \Exception( 'Code details not found');
         }
+    }
+
+    /**
+     * @When /^I attempt to add the same LPA again$/
+     */
+    public function iAttemptToAddTheSameLPAAgain()
+    {
+        $this->iAmOnTheAddAnLPAPage();
+
+        // API call for adding/checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $this->ui->fillField('passcode', 'XYUPHWQRECHV');
+        $this->ui->fillField('reference_number', '700000000054');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
     }
 
     /**

@@ -6,6 +6,7 @@ Feature: A user of the system is able to login
 
   Background:
     Given I am a user of the lpa application
+    And I have been given access to use an LPA via credentials
 
   @ui
   Scenario: A user can login
@@ -37,3 +38,10 @@ Feature: A user of the system is able to login
     Given I am currently signed in
     When I attempt to sign in again
     Then I am directed to my dashboard
+
+  @ui @integration
+  Scenario: A user is taken to the dashboard page when they login, having logged in previously
+    Given I am a user of the lpa application
+    And I have logged in previously
+    When I sign in
+    Then I am taken to the dashboard page

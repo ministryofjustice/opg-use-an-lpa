@@ -75,7 +75,8 @@ class AccountContext implements Context
                 $this->marshalAwsResultData([
                     'Id'       => $this->userAccountId,
                     'Email'    => $this->userAccountEmail,
-                    'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+                    'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                    'LastLogin'=> null
                 ])
             ]
         ]));
