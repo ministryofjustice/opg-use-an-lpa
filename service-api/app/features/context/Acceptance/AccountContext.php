@@ -8,6 +8,7 @@ use Aws\Result;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
+use Common\Exception\ApiException;
 use DateTime;
 use DateInterval;
 use Fig\Http\Message\StatusCodeInterface;
@@ -50,7 +51,6 @@ class AccountContext implements Context
         $this->actorId = 9; //0
         $this->userId = '111222333444';
         $this->userLpaActorToken = '111222333444';
-
     }
 
     /**
@@ -1107,7 +1107,6 @@ class AccountContext implements Context
         assertEquals($response[0]['SiriusUid'], $this->lpaUid);
         assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
         assertEquals($response[0]['Added'], '2021-01-05 12:34:56');
-
     }
 
     /**
@@ -1187,6 +1186,45 @@ class AccountContext implements Context
      * @When /^One of the generated access code has expired$/
      */
     public function oneOfTheGeneratedAccessCodeHasExpired()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I attempt to add the same LPA again$/
+     */
+    public function iAttemptToAddTheSameLPAAgain()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid' => $this->lpaUid,
+                'Active' => false,
+                'Expires' => '2021-09-25T00:00:00Z',
+                'ActorCode' => $this->oneTimeCode,
+                'ActorLpaId' => $this->actorId,
+            ])
+        ]));
+
+        // LpaService::getLpaById
+        $this->apiPost('/v1/actor-codes/summary',
+            [
+                'actor-code' => $this->oneTimeCode,
+                'uid'        => $this->lpaUid,
+                'dob'        => $this->userDob,
+            ],
+            [
+                'user-token' => $this->userAccountId
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
+    }
+
+    /**
+     * @Then /^The LPA should not be found$/
+     */
+    public function theLPAShouldNotBeFound()
     {
         // Not needed for this context
     }

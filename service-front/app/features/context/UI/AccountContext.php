@@ -34,6 +34,17 @@ class AccountContext implements Context
     use BaseUiContextTrait;
 
     /**
+     * @Then /^I can no longer access the dashboard page$/
+     */
+    public function iCanNoLongerAccessTheDashboardPage()
+    {
+        $this->ui->visit('/lpa/dashboard');
+
+        // a non-logged in attempt will end up at the login page
+        $this->ui->assertPageAddress('/login');
+    }
+
+    /**
      * @Given /^I have been given access to use an LPA via credentials$/
      * @Given /^I have added an LPA to my account$/
      */
@@ -129,11 +140,7 @@ class AccountContext implements Context
      */
     public function iAmToldMyAccountHasNotBeenActivated()
     {
-        // TODO UML-501
-        //      When a user account has not been activated we will need a better user flow
-        //      around how this works. Probably taking them to a help page that details
-        //      what they need to do, including resending the email.
-        $this->ui->assertPageContainsText('Email and password combination not recognised');
+         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->email);
     }
 
     /**
@@ -277,6 +284,15 @@ class AccountContext implements Context
     public function iHaveNotActivatedMyAccount()
     {
         $this->userActive = false;
+    }
+
+    /**
+     * @When /^I logout of the application$/
+     */
+    public function iLogoutOfTheApplication()
+    {
+        $link = $this->ui->getSession()->getPage()->find('css', 'a[href="/logout"]');
+        $link->click();
     }
 
     /**
@@ -929,6 +945,8 @@ class AccountContext implements Context
                     json_encode([])));
 
         $this->ui->visit('/lpa/dashboard');
+
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
@@ -1057,14 +1075,36 @@ class AccountContext implements Context
                     [],
                     json_encode([
                         'user-lpa-actor-token' => $this->userLpaActorToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
                     ])));
-
-
         $this->ui->fillField('org_name', $organisationname);
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I attempt  to add the same LPA again$/
+     */
+    public function iAttemptToAddTheSameLPAAgain()
+    {
+        $this->iAmOnTheAddAnLPAPage();
+
+        // API call for adding/checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $this->ui->fillField('passcode', 'XYUPHWQRECHV');
+        $this->ui->fillField('reference_number', '700000000054');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
     }
 
     /**
@@ -1380,7 +1420,6 @@ class AccountContext implements Context
                     ])));
 
         $this->ui->pressButton("Yes, cancel code");
-
     }
 
     /**
@@ -1437,7 +1476,6 @@ class AccountContext implements Context
                     ])));
 
         $this->ui->pressButton("No, return to access codes");
-
     }
 
     /**
@@ -1477,6 +1515,14 @@ class AccountContext implements Context
         if ($codeDetails === null) {
             throw new \Exception( 'Code details not found');
         }
+    }
+
+    /**
+     * @Then /^The LPA should not be found$/
+     */
+    public function theLPAShouldNotBeFound()
+    {
+        $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
     }
 
 }

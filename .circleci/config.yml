@@ -1,6 +1,23 @@
 version: 2.1
 
 workflows:
+  scheduled_jobs:
+    triggers:
+      - schedule:
+          cron: "0 8 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - use-my-lpa/redeploy_latest:
+          name: redeploy_demo
+          environment: demo
+      - slack_environment_redeploy:
+          name: post_production_release_message
+          environment: demo
+          requires: [redeploy_demo]
+
   path_to_live:
     jobs:
       # Common tasks
@@ -53,6 +70,7 @@ workflows:
               web_front_build,
               web_api_build,
               app_api_build,
+              pdf_build,
             ]
 
       - use-my-lpa/seed_database:
@@ -141,6 +159,7 @@ workflows:
           filters: { branches: { only: [master] } }
           requires: [prod_run_healthcheck_test]
 
+
 orbs:
   slack: circleci/slack@3.3.0
   use-my-lpa:
@@ -170,6 +189,7 @@ orbs:
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
 
+
     executors:
       puppeteer:
         docker: [image: buildkite/puppeteer]
@@ -182,7 +202,7 @@ orbs:
       python-browsers:
         docker: [image: circleci/python:3.6-stretch-browsers]
       terraform:
-        docker: [image: hashicorp/terraform:0.12.8]
+        docker: [image: hashicorp/terraform]
 
     jobs:
       node_test_service_pdf:
@@ -708,7 +728,29 @@ orbs:
                   echo $TF_WORKSPACE
                   terraform destroy -lock-timeout=300s -auto-approve
                 fi
-
+      redeploy_latest:
+        #
+        # Redeploy ECS services on an environment
+        #
+        executor: python
+        parameters:
+          environment:
+            type: string
+        steps:
+          - checkout
+          - install_aws_cli
+          - run:
+              name: Redeploy Services
+              command: |
+                export ACCOUNT_ID=$(~/project/pipeline_scripts/identify_account_id.sh <<parameters.environment>>)
+                temp_role=$(aws sts assume-role --role-arn arn:aws:iam::$ACCOUNT_ID:role/opg-use-an-lpa-ci --role-session-name ci)
+                export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
+                export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
+                export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service api --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service pdf --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service actor --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service viewer --region eu-west-1
       #----------------------------------------------------
       # Seeding
 
@@ -812,6 +854,23 @@ orbs:
                 # TODO Add for actor when endpoint exists.
 
 jobs:
+  slack_environment_redeploy:
+    docker:
+      - image: circleci/python
+    parameters:
+      environment:
+        type: string
+    steps:
+      - checkout
+      - run:
+          name: Get Commit Message
+          command: |
+            echo 'export COMMIT_MESSAGE="$(git log -1 --pretty=%B)"' >> $BASH_ENV
+      - slack/notify:
+          title: "Use a Lasting Power of Attorney - <<parameters.environment>> environment updated"
+          color: "#4287f5"
+          message: "Scheduled update of <<parameters.environment>> environment complete"
+          footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
   slack_notify_domain:
     docker:
       - image: circleci/python
@@ -822,11 +881,14 @@ jobs:
       - run:
           name: Get URLs
           command: |
-            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV	
+            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
             echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+            echo 'export COMMIT_MESSAGE="$(git log -1 --pretty=%B)"' >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Development Environment Ready"
+          color: "#9933ff"
           message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
+          footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
   slack_notify_production_release:
     docker:
       - image: circleci/python
@@ -837,9 +899,12 @@ jobs:
       - run:
           name: Get URLs
           command: |
-            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV	
+            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
             echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
+            echo 'export COMMIT_MESSAGE="$(git log -1 --pretty=%B)"' >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Production Release Successful"
+          color: "#9933ff"
           message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
+          footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"

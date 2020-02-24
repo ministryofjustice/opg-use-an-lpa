@@ -6,18 +6,21 @@ namespace CommonTest\Service\Log;
 
 use Common\Service\Log\LogStderrListener;
 use Common\Service\Log\LogStderrListenerDelegatorFactory;
+use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 use Zend\Stratigility\Middleware\ErrorHandler;
 
 class LogStderrListenerDelegatorFactoryTest extends TestCase
 {
-    public function testValidConfig()
+    /** @test */
+    public function creates_ands_attaches_configured_logging_delegator()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
-
-        //---
+        $containerProphecy->get(LoggerInterface::class)
+            ->willReturn($this->prophesize(LoggerInterface::class)->reveal());
 
         $errorHandlerProphecy = $this->prophesize(ErrorHandler::class);
 
@@ -29,8 +32,6 @@ class LogStderrListenerDelegatorFactoryTest extends TestCase
         $callable = function () use ($errorHandlerProphecy) {
             return $errorHandlerProphecy->reveal();
         };
-
-        //---
 
         $factory = new LogStderrListenerDelegatorFactory();
 

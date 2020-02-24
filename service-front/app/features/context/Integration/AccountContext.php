@@ -31,6 +31,7 @@ use Psr\Http\Message\RequestInterface;
  * @property string userPasswordResetToken
  * @property string lpa
  * @property string lpaJson
+ * @property string lpaData
  * @property string passcode
  * @property string referenceNo
  * @property string userDob
@@ -87,6 +88,41 @@ class AccountContext extends BaseIntegrationContext
         $this->passcode = 'XYUPHWQRECHV';
         $this->referenceNo = '700000000138';
         $this->userDob = '1975-10-05';
+        $this->actorLpaToken = '24680';
+
+        $this->lpaData = [
+            'user-lpa-actor-token' => $this->actorLpaToken,
+            'date' => 'today',
+            'actor' => [
+                'type' => 'primary-attorney',
+                'details' => [
+                    'addresses' => [
+                        [
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                            'country'      => '',
+                            'county'       => '',
+                            'id'           => 0,
+                            'postcode'     => '',
+                            'town'         => '',
+                            'type'         => 'Primary'
+                        ]
+                    ],
+                    'companyName' => null,
+                    'dob' => '1975-10-05',
+                    'email' => 'string',
+                    'firstname' => 'Ian',
+                    'id' => 0,
+                    'middlenames' => null,
+                    'salutation' => 'Mr',
+                    'surname' => 'Deputy',
+                    'systemStatus' => true,
+                    'uId' => '700000000054'
+                ],
+            ],
+            'lpa' => $this->lpa
+        ];
     }
 
     /**
@@ -964,6 +1000,36 @@ class AccountContext extends BaseIntegrationContext
      * @Then /^I should be shown the details of the expired viewer code with expired status $/
      */
     public function iShouldBeShownTheDetailsOfTheExpiredViewerCodeWithExpiredStatus ()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I attempt  to add the same LPA again$/
+     */
+    public function iAttemptToAddTheSameLPAAgain()
+    {
+        // API call for adding/checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        try {
+            $this->lpaService->getLpaByPasscode($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
+        } catch (ApiException $aex) {
+            assertEquals($aex->getCode(), 404);
+        }
+    }
+
+    /**
+     * @Then /^The LPA should not be found$/
+     */
+    public function theLPAShouldNotBeFound()
     {
         // Not needed for this context
     }

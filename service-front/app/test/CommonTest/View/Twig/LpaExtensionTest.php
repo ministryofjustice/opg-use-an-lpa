@@ -239,11 +239,11 @@ class LpaExtensionTest extends TestCase
         return [
             [
                 '2019-11-01T23:59:59+00:00',
-                '01/11/2019',
+                '1 November 2019',
             ],
             [
                 '1972-03-22T23:59:59+00:00',
-                '22/03/1972',
+                '22 March 1972',
             ],
             [
                 'not-a-date',
