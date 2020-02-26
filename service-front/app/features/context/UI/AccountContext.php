@@ -1220,9 +1220,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I click to check my access code$/
+     * @When /^I click to check my access code that is now expired$/
      */
-    public function iClickToCheckMyAccessCode()
+    public function iClickToCheckMyAccessCodeThatIsNowExpired()
     {
         // API call for get LpaById
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
@@ -1368,19 +1368,6 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/access-codes?lpa=' .$this->userLpaActorToken);
 
-        // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([
-                        'user-lpa-actor-token' => $this->userLpaActorToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => [],
-                    ])));
-
         $this->ui->pressButton("Cancel organisation's access");
 
         $this->iWantToBeAskedForConfirmationPriorToCancellation();
@@ -1403,19 +1390,6 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/lpa/confirm-cancel-code');
         $this->organisation = "TestOrg";
         $this->accessCode = "XYZ321ABC987";
-
-        // API call for get LpaById (when give organisation access is clicked)
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([
-                        'user-lpa-actor-token' => $this->userLpaActorToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => [],
-                    ])));
 
         // API call to cancel code
         $this->apiFixtures->put('/v1/lpas/' . $this->userLpaActorToken . '/codes')
@@ -1452,7 +1426,7 @@ class AccountContext implements Context
                             'UserLpaActor' => $this->userLpaActorToken,
                             'ViewerCode'   => $this->accessCode,
                             'Cancelled'    => '2021-01-02T23:59:59+00:00',
-                            'Expires'      => '2021-01-05T23:59:59+00:00',
+                            'Expires'      => '2021-01-02T23:59:59+00:00',
                             'Viewed'       => false,
                             'ActorId'      => $this->actorId,
                             'form'         => '',
@@ -1519,7 +1493,7 @@ class AccountContext implements Context
     /**
      * @Then /^I should be shown the details of the viewer code with status (.*)/
      */
-    public function iShouldBeShownTheDetailsOfTheCancelledCodeWithCancelledStatus($status)
+    public function iShouldBeShownTheDetailsOfTheCancelledCodeWithStatus($status)
     {
         $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
 

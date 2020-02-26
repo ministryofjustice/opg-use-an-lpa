@@ -69,7 +69,7 @@ class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardA
         if ($form->isValid()) {
             $validated = $form->getData();
 
-            $lpa = $this->lpaService->getLpaById($identity, $validated['lpa_token']);
+           // $lpa = $this->lpaService->getLpaById($identity, $validated['lpa_token']);
 
             $this->viewerCodeService->cancelShareCode(
                 $identity,
