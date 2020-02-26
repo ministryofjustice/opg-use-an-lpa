@@ -1464,20 +1464,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I should be shown the details of the cancelled viewer code with updated status/
-     */
-    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithUpdatedStatus()
-    {
-        $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
-
-        $this->ui->assertPageContainsText('Check Access Codes');
-        $this->ui->assertPageContainsText('Active codes');
-        $this->ui->assertPageContainsText('Inactive codes');
-        $this->ui->assertPageContainsText("V - XYZ3 - 21AB - C987");
-        $this->ui->assertPageContainsText('Cancelled');
-    }
-
-    /**
      * @When /^I do not confirm cancellation of the chosen viewer code/
      */
     public function iDoNotConfirmCancellationOfTheChosenViewerCode()
