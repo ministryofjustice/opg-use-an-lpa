@@ -19,10 +19,9 @@ class ActorCodeCreationCommandFactory
             throw new \Exception('Actor Codes table configuration not present');
         }
 
-        // This factory will only be hit when building the ActorCodeCreationCommand so
-        // the trace-id will not be available to services requesting it. Lpas::class is one
+        // The trace-id is not available to services requesting it under CLI running. Lpas::class is one
         // of those so here we add a dummy value. Runtime modification of the container outside
-        // of testing contexts should noe generally be done.
+        // of testing contexts should not generally be done.
         if ($container instanceof Container) {
             $container->set('trace-id', 'CLI_TRACE_ID');
         }
