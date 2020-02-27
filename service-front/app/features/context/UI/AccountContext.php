@@ -1011,6 +1011,8 @@ class AccountContext implements Context
      */
     public function iRequestToGiveAnOrganisationAccess()
     {
+        $this->iAmOnTheDashboardPage();
+
         // API call for get LpaById (when give organisation access is clicked)
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
             ->respondWith(
@@ -1589,6 +1591,70 @@ class AccountContext implements Context
     public function theLPAShouldNotBeFound()
     {
         $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
+    }
+
+    /**
+     * @Given /^I have 2 active codes for one of my LPAs$/
+     */
+    public function iHave2ActiveCodesForOneOfMyLPAs()
+    {
+        $this->iHaveCreatedAnAccessCode();
+        $this->iHaveCreatedAnAccessCode();
+    }
+
+    /**
+     * @Then /^I can see that my LPA has 2 active codes$/
+     */
+    public function iCanSeeThatMyLPAHas2ActiveCodes()
+    {
+        $this->organisation = "TestOrg";
+        $this->accessCode = "XYZ321ABC987";
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => [
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'Organisation' => $this->organisation,
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'ViewerCode'   => $this->accessCode,
+                            'Expires'      => '2021-01-05T23:59:59+00:00',
+                            'Viewed'       => false,
+                            'ActorId'      => $this->actorId,
+                        ],
+                        1 => [
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'Organisation' => $this->organisation,
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'ViewerCode'   => $this->accessCode,
+                            'Expires'      => '2021-01-05T23:59:59+00:00',
+                            'Viewed'       => false,
+                            'ActorId'      => $this->actorId,
+                        ]
+                    ])));
+
+        $this->ui->visit('/lpa/dashboard');
+
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $this->ui->assertPageAddress('/lpa/dashboard');
+
+        $this->ui->assertPageContainsText('2 active codes');
     }
 
 }
