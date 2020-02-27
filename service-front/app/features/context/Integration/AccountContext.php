@@ -17,6 +17,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
 use Psr\Http\Message\RequestInterface;
+use DateTime;
 
 /**
  * A behat context that encapsulates user account steps
@@ -861,7 +862,7 @@ class AccountContext extends BaseIntegrationContext
             $this->accessCode
         );
 
-        // API call for get LpaById in CancelCodeHandler
+        // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
             ->respondWith(
                 new Response(
@@ -1064,9 +1065,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I click to check my access code that is now expired$/
+     * @When /^I click to check my access code now expired/
      */
-    public function iClickToCheckMyAccessCodeThatIsNowExpired()
+    public function iClickToCheckMyAccessCodeNowExpired()
     {
         // API call for get LpaById
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
@@ -1091,7 +1092,7 @@ class AccountContext extends BaseIntegrationContext
                             0 => [
                                 'SiriusUid' => $this->lpa['uId'],
                                 'Added' => '2020-01-01T23:59:59+00:00',
-                                'Expires' => '2020-01-01T23:59:59+00:00',
+                                'Expires' => '2020-01-02T23:59:59+00:00',
                                 'UserLpaActor' => $this->actorLpaToken,
                                 'Organisation' => $this->organisation,
                                 'ViewerCode' => $this->accessCode,
@@ -1114,6 +1115,9 @@ class AccountContext extends BaseIntegrationContext
         assertEquals($this->actorId, $shareCodes[0]['ActorId']);
         assertEquals($this->actorLpaToken, $shareCodes[0]['UserLpaActor']);
         assertEquals(false, $shareCodes[0]['Viewed']);
+        //check if the code expiry date is in the past
+        assertGreaterThan(strtotime($shareCodes[0]['Expires']),strtotime((new DateTime('now'))->format('Y-m-d')));
+        assertGreaterThan(strtotime($shareCodes[0]['Added']),strtotime($shareCodes[0]['Expires']));
     }
 
     /**

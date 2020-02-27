@@ -73,7 +73,7 @@ Feature: Add an LPA
       | XZ | 10 | 1975 | Enter a real date of birth |
       | 10 | 05 | 3000 | Your date of birth must be in the past |
 
-  @ui
+  @integration @ui
   Scenario: The user is shown an error message when attempting to add the same LPA twice
     Given I have added an LPA to my account
     When I attempt to add the same LPA again

@@ -1220,9 +1220,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I click to check my access code that is now expired$/
+     * @When /^I click to check my access code now expired/
      */
-    public function iClickToCheckMyAccessCodeThatIsNowExpired()
+    public function iClickToCheckMyAccessCodeNowExpired()
     {
         // API call for get LpaById
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
@@ -1428,9 +1428,7 @@ class AccountContext implements Context
                             'Cancelled'    => '2021-01-02T23:59:59+00:00',
                             'Expires'      => '2021-01-02T23:59:59+00:00',
                             'Viewed'       => false,
-                            'ActorId'      => $this->actorId,
-                            'form'         => '',
-                            'CreatedBy'    => 'Someone',
+                            'ActorId'      => $this->actorId
                         ]
                     ])));
 
