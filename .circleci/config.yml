@@ -229,7 +229,7 @@ orbs:
               name: Run coverage with Jest
               command: |
                 mkdir -p /root/project/build/service-pdf
-                cd service-pdf/app/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
+                cd service-pdf/app/ && ./node_modules/.bin/jest --ci --runInBand --coverage --coverageReporters=text-lcov | ./node_modules/.bin/coveralls
                 cp -a ./coverage /root/project/build/service-pdf
           - store_test_results:
               path: build/service-pdf/
@@ -274,7 +274,7 @@ orbs:
               name: Run coverage with Jest
               command: |
                 mkdir -p /home/circleci/project/build/web-js
-                cd service-front/web/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
+                cd service-front/web/ && ./node_modules/.bin/jest --ci --runInBand --coverage --coverageReporters=text-lcov | ./node_modules/.bin/coveralls
                 cp -a ./coverage /home/circleci/project/build/web-js
           - store_test_results:
               path: build/web-js/
