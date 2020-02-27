@@ -275,6 +275,7 @@ orbs:
               command: |
                 mkdir -p /home/circleci/project/build/web-js
                 cd service-front/web/ && ./node_modules/.bin/jest --ci --runInBand --coverage --coverageReporters=text-lcov | ./node_modules/.bin/coveralls
+                ls -a
                 cp -a ./coverage /home/circleci/project/build/web-js
           - store_test_results:
               path: build/web-js/
