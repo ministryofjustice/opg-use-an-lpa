@@ -1,4 +1,7 @@
 # generate actor codes
+**NOTE:** In order to run this script, the following tools will be needed:
+ - Python 
+ - AWS CLI  
 
 This script starts an ECS task to generate actor participant codes.
 
@@ -16,7 +19,7 @@ direnv allow
 source .envrc
 ```
 
-Install python depenencies with pip
+Install python dependencies with pip
 
 ``` bash
 pip install -r requirements.txt
