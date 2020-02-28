@@ -162,10 +162,11 @@ workflows:
 
 orbs:
   coveralls: coveralls/coveralls@1.0.4
+    commands:
+      run-coveralls: coveralls/upload
   slack: circleci/slack@3.3.0
   use-my-lpa:
     commands:
-      run-coveralls: coveralls/upload
       install_aws_cli:
         steps:
           - run:
@@ -190,9 +191,6 @@ orbs:
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
-
-
-
 
     executors:
       puppeteer:
