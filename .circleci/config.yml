@@ -161,6 +161,7 @@ workflows:
 
 
 orbs:
+  coveralls: coveralls/coveralls@1.0.4
   slack: circleci/slack@3.3.0
   use-my-lpa:
     commands:
@@ -234,9 +235,10 @@ orbs:
                 mkdir -p /root/project/build/service-pdf
                 cd service-pdf/app/
                 ./node_modules/.bin/jest --ci --runInBand --coverage
-                cat ./coverage/lcov.info
-                cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
                 cp -a ./coverage /root/project/build/service-pdf
+          - coveralls/upload:
+              flag_name: PDF Test
+              parallel: true
           - store_test_results:
               path: build/service-pdf/
           - store_artifacts:
@@ -285,9 +287,10 @@ orbs:
                 mkdir -p /home/circleci/project/build/web-js
                 cd service-front/web/
                 ./node_modules/.bin/jest --ci --runInBand --coverage
-                cat ./coverage/lcov.info
-                cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
                 cp -a ./coverage /home/circleci/project/build/web-js
+          - coveralls/upload:
+              flag_name: Web Test
+              parallel: true
           - store_test_results:
               path: build/web-js/
           - store_artifacts:
@@ -487,6 +490,9 @@ orbs:
                 docker cp tests:/app/build/reports build/service-api/phpunit
                 docker cp inttests:/app/build/reports build/service-api/behat
               when: always
+          - coveralls/upload:
+              parallel: true
+              flag: Service API
           - store_test_results:
               path: build/service-api/
           - store_artifacts:
@@ -622,7 +628,8 @@ orbs:
                   --json_path build/coveralls-upload.json \
                   --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
                   --coverage_clover build/service-front/phpunit/coverage-fixed.xml
-
+          - coveralls/upload:
+              parallel_finished: true
       #----------------------------------------------------
       # Terraform
 
@@ -920,3 +927,5 @@ jobs:
           message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+
+
