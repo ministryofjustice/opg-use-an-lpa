@@ -232,8 +232,11 @@ orbs:
                 export COVERALLS_SERVICE_NAME=circleci
                 export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
                 mkdir -p /root/project/build/service-pdf
-                service-pdf/app/node_modules/.bin/jest --config=service-pdf/app/jest.config.js --ci --runInBand --coverage && cat service-pdf/app/coverage/lcov.info | service-pdf/app/node_modules/.bin/coveralls
-                cp -a service-pdf/app/coverage /root/project/build/service-pdf
+                cd service-pdf/app/
+                ./node_modules/.bin/jest --ci --runInBand --coverage
+                cat ./coverage/lcov.info
+                cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
+                cp -a ./coverage /root/project/build/service-pdf
           - store_test_results:
               path: build/service-pdf/
           - store_artifacts:
@@ -280,8 +283,11 @@ orbs:
                 export COVERALLS_SERVICE_NAME=circleci
                 export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
                 mkdir -p /home/circleci/project/build/web-js
-                service-front/web/node_modules/.bin/jest --config=service-front/web/jest.config.js --ci --runInBand --coverage && cat service-front/web/coverage/lcov.info | service-front/web/node_modules/.bin/coveralls
-                cp -a service-front/web/coverage /home/circleci/project/build/web-js
+                cd service-front/web/
+                ./node_modules/.bin/jest --ci --runInBand --coverage
+                cat ./coverage/lcov.info
+                cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
+                cp -a ./coverage /home/circleci/project/build/web-js
           - store_test_results:
               path: build/web-js/
           - store_artifacts:
