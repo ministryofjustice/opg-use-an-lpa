@@ -228,8 +228,11 @@ orbs:
           - run:
               name: Run coverage with Jest
               command: |
+                env
+                export COVERALLS_SERVICE_NAME=circleci
+                export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
                 mkdir -p /root/project/build/service-pdf
-                cd service-pdf/app/ && ./node_modules/.bin/jest --ci --runInBand --coverage --coverageReporters=text-lcov | ./node_modules/.bin/coveralls
+                cd service-pdf/app/ && ./node_modules/.bin/jest --ci --runInBand --coverage && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
                 cp -a ./coverage /root/project/build/service-pdf
           - store_test_results:
               path: build/service-pdf/
@@ -273,9 +276,11 @@ orbs:
           - run:
               name: Run coverage with Jest
               command: |
+                env
+                export COVERALLS_SERVICE_NAME=CIRCLECI
+                export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
                 mkdir -p /home/circleci/project/build/web-js
-                cd service-front/web/ && ./node_modules/.bin/jest --ci --runInBand --coverage --coverageReporters=text-lcov | ./node_modules/.bin/coveralls
-                ls -a
+                cd service-front/web/ && ./node_modules/.bin/jest --ci --runInBand --coverage && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
                 cp -a ./coverage /home/circleci/project/build/web-js
           - store_test_results:
               path: build/web-js/
