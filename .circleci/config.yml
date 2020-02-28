@@ -161,11 +161,10 @@ workflows:
 
 
 orbs:
-  coveralls: coveralls/coveralls@1.0.4
-    commands:
-      run-coveralls: coveralls/upload
   slack: circleci/slack@3.3.0
   use-my-lpa:
+    orbs:
+      coveralls: coveralls/coveralls@1.0.4
     commands:
       install_aws_cli:
         steps:
@@ -237,7 +236,7 @@ orbs:
                 cd service-pdf/app/
                 ./node_modules/.bin/jest --ci --runInBand --coverage
                 cp -a ./coverage /root/project/build/service-pdf
-          - run-coveralls:
+          - coveralls/upload:
               flag_name: PDF Test
               parallel: true
           - store_test_results:
@@ -289,7 +288,7 @@ orbs:
                 cd service-front/web/
                 ./node_modules/.bin/jest --ci --runInBand --coverage
                 cp -a ./coverage /home/circleci/project/build/web-js
-          - run-coveralls:
+          - coveralls/upload:
               flag_name: Web Test
               parallel: true
           - store_test_results:
@@ -385,9 +384,9 @@ orbs:
                 docker cp tests:/app/build/reports build/service-front/phpunit
                 docker cp inttests:/app/build/reports build/service-front/behat
               when: always
-          - run-coveralls:
+          - coveralls/upload:
               parallel: true
-              flag: Service Front
+              flag_name: Service Front
           - store_test_results:
               path: build/service-front/
           - store_artifacts:
@@ -494,9 +493,9 @@ orbs:
                 docker cp tests:/app/build/reports build/service-api/phpunit
                 docker cp inttests:/app/build/reports build/service-api/behat
               when: always
-          - run-coveralls:
+          - coveralls/upload:
               parallel: true
-              flag: Service API
+              flag_name: Service API
           - store_test_results:
               path: build/service-api/
           - store_artifacts:
@@ -632,7 +631,7 @@ orbs:
                   --json_path build/coveralls-upload.json \
                   --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
                   --coverage_clover build/service-front/phpunit/coverage-fixed.xml
-          - run-coveralls:
+          - coveralls/upload:
               parallel_finished: true
       #----------------------------------------------------
       # Terraform
