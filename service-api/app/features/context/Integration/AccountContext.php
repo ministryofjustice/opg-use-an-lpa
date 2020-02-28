@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use App\DataAccess\DynamoDb\UserLpaActorMap;
+use App\DataAccess\DynamoDb\ViewerCodeActivity;
 use App\Exception\GoneException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Log\RequestTracing;
@@ -1076,4 +1078,131 @@ class AccountContext extends BaseIntegrationContext
         // Not needed for this context
     }
 
+    /**
+     * @Given /^I have 2 active codes for one of my LPAs$/
+     */
+    public function iHave2ActiveCodesForOneOfMyLPAs()
+    {
+        $this->iHaveCreatedAnAccessCode();
+        $this->iHaveCreatedAnAccessCode();
+    }
+
+    /**
+     * @Then /^I can see that my LPA has 2 active codes$/
+     */
+    public function iCanSeeThatMyLPAHas2ActiveCodes()
+    {
+        // LpaService:getLpas
+
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'SiriusUid'        => $this->lpaUid,
+                    'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                    'Id'               => $this->userLpaActorToken,
+                    'ActorId'          => $this->actorLpaId,
+                    'UserId'           => $this->userId
+                ])
+            ]
+        ]));
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid,)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)));
+
+        $lpaService = $this->container->get(LpaService::class);
+        $lpa = $lpaService->getAllForUser($this->userId);
+
+        assertArrayHasKey($this->userLpaActorToken, $lpa);
+        assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken );
+        assertEquals($lpa[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId );
+        assertEquals($lpa[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid );
+
+        //ViewerCodeService:getShareCodes
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->lpaUid,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorLpaId,
+                'UserId'           => $this->userId
+            ])
+        ]));
+
+        $codeData = [
+            'SiriusUid'        => $this->lpaUid,
+            'Added'            => '2020-01-01T00:00:00Z',
+            'Expires'          => '2021-12-12T00:00:00Z',
+            'UserLpaActor'     => $this->userLpaActorToken,
+            'Organisation'     => $this->organisation,
+            'ViewerCode'       => $this->accessCode
+        ];
+
+        // ViewerCodesRepository::getCodesByUserLpaActorId
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData($codeData),
+                $this->marshalAwsResultData($codeData)
+            ]
+        ]));
+
+        $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
+        $codes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
+
+        assertCount(2, $codes);
+        assertEquals($codes[0], $codeData);
+        assertEquals($codes[1], $codeData);
+
+        // ViewerCodeActivity::getStatusesForViewerCodes
+        $this->awsFixtures->append(new Result());
+
+        // This response is duplicated for the 2nd code
+
+        // ViewerCodeActivity::getStatusesForViewerCodes
+        $this->awsFixtures->append(new Result());
+
+        $viewerCodeService = $this->container->get(ViewerCodeActivity::class);
+        $codesWithStatuses = $viewerCodeService->getStatusesForViewerCodes($codes);
+
+        // Loop for asserting on both the 2 codes returned
+        for ($i=0; $i < 2; $i++) {
+            assertCount(2, $codesWithStatuses);
+            assertEquals($codesWithStatuses[$i]['SiriusUid'], $this->lpaUid);
+            assertEquals($codesWithStatuses[$i]['UserLpaActor'], $this->userLpaActorToken);
+            assertEquals($codesWithStatuses[$i]['Organisation'], $this->organisation);
+            assertEquals($codesWithStatuses[$i]['ViewerCode'], $this->accessCode);
+
+            // Checking that the codes are active
+            assertLessThan($codesWithStatuses[$i]['Expires'], (new DateTime('now'))->format('c'));
+            assertArrayNotHasKey('Cancelled', $codesWithStatuses[$i]);
+        }
+
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'SiriusUid'        => $this->lpaUid,
+                    'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                    'Id'               => $this->userLpaActorToken,
+                    'ActorId'          => $this->actorLpaId,
+                    'UserId'           => $this->userId
+                ])
+            ]
+        ]));
+
+        $userLpaActorMap = $this->container->get(UserLpaActorMap::class);
+        $lpas = $userLpaActorMap->getUsersLpas((string) $this->actorLpaId);
+
+        assertEquals($lpas[0]['SiriusUid'], $this->lpaUid);
+        assertEquals($lpas[0]['Id'], $this->userLpaActorToken);
+        assertEquals($lpas[0]['ActorId'], $this->actorLpaId);
+        assertEquals($lpas[0]['UserId'], $this->userId);
+    }
 }

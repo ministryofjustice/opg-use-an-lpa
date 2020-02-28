@@ -9,7 +9,7 @@ Feature: The user is able to see correct information on their dashboard
     And I am currently signed in
     And I have added an LPA to my account
 
-  @ui @integration
+  @acceptance @integration
   Scenario: As a user I can see the number of active access codes an LPA has
     Given I have 2 active codes for one of my LPAs
     When I am on the dashboard page
