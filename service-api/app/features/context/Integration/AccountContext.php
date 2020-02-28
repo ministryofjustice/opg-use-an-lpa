@@ -1045,7 +1045,6 @@ class AccountContext extends BaseIntegrationContext
 
         assertGreaterThan(strtotime($accessCodes[0]['Cancelled']), strtotime($accessCodes[0]['Expires']));
         assertGreaterThan(strtotime($accessCodes[0]['Cancelled']), strtotime((new DateTime('now'))->format('Y-m-d')));
-
     }
 
     /**
