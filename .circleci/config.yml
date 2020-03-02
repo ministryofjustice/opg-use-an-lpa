@@ -624,12 +624,10 @@ orbs:
           - checkout
           - attach_workspace:
               at: build
-          - coveralls/upload:
-              parallel_finished: true
           - run:
               name: Install coveralls upload tool
               command: |
-                env
+                export COVERALLS_PARALLEL=true
                 wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.2.0/php-coveralls.phar
                 chmod +x php-coveralls.phar
           - run:
@@ -644,7 +642,9 @@ orbs:
                 --json_path build/coveralls-upload.json \
                 --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
                 --coverage_clover build/service-front/phpunit/coverage-fixed.xml
-
+          - notify:
+              webhooks:
+              - url: https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN
 
       #----------------------------------------------------
       # Terraform
