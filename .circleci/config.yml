@@ -229,16 +229,21 @@ orbs:
           - run:
               name: Run coverage with Jest
               command: |
-                env
                 export COVERALLS_SERVICE_NAME=circleci
                 export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
-                mkdir -p /root/project/build/service-pdf
+                mkdir -p /home/circleci/project/build/service-pdf
                 cd service-pdf/app/
                 ./node_modules/.bin/jest --ci --runInBand --coverage
-                cp -a ./coverage /root/project/build/service-pdf
+                cp -a ./coverage /home/circleci/project/build/service-pdf
+                echo '****** BEFORE ******'
+                cat /home/circleci/project/build/service-pdf/lcov.info
+                sed 's_/src/_/home/circleci/project/service-pdf/web/src/_' < /home/circleci/project/build/service-pdf/lcov.info > /home/circleci/project/build/service-pdf/lcov-fixed.info
+                echo '****** AFTER *******'
+                cat /home/circleci/project/build/service-pdf/lcov-fixed.info
           - coveralls/upload:
               flag_name: PDF Test
               parallel: true
+              path_to_lcov: /home/circleci/project/build/service-pdf/lcov-fixed.info
           - store_test_results:
               path: build/service-pdf/
           - store_artifacts:
@@ -281,16 +286,21 @@ orbs:
           - run:
               name: Run coverage with Jest
               command: |
-                env
                 export COVERALLS_SERVICE_NAME=circleci
                 export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
                 mkdir -p /home/circleci/project/build/web-js
                 cd service-front/web/
                 ./node_modules/.bin/jest --ci --runInBand --coverage
                 cp -a ./coverage /home/circleci/project/build/web-js
+                echo '****** BEFORE ******'
+                cat /home/circleci/project/build/web-js/lcov.info
+                sed 's_/src/_/home/circleci/project/service-api/web/src/_' < /home/circleci/project/build/web-js/lcov.info > /home/circleci/project/build/web-js/lcov-fixed.info
+                echo '****** AFTER *******'
+                cat /home/circleci/project/build/web-js/lcov-fixed.info
           - coveralls/upload:
               flag_name: Web Test
               parallel: true
+              path_to_lcov: /home/circleci/project/build/web-js/lcov-fixed.info
           - store_test_results:
               path: build/web-js/
           - store_artifacts:
@@ -384,9 +394,6 @@ orbs:
                 docker cp tests:/app/build/reports build/service-front/phpunit
                 docker cp inttests:/app/build/reports build/service-front/behat
               when: always
-          - coveralls/upload:
-              parallel: true
-              flag_name: Service Front
           - store_test_results:
               path: build/service-front/
           - store_artifacts:
@@ -493,9 +500,6 @@ orbs:
                 docker cp tests:/app/build/reports build/service-api/phpunit
                 docker cp inttests:/app/build/reports build/service-api/behat
               when: always
-          - coveralls/upload:
-              parallel: true
-              flag_name: Service API
           - store_test_results:
               path: build/service-api/
           - store_artifacts:
@@ -628,11 +632,12 @@ orbs:
               name: Upload report
               command: |
                 ./php-coveralls.phar -v \
-                  --json_path build/coveralls-upload.json \
-                  --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
-                  --coverage_clover build/service-front/phpunit/coverage-fixed.xml
+                --json_path build/coveralls-upload.json \
+                --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
+                --coverage_clover build/service-front/phpunit/coverage-fixed.xml
           - coveralls/upload:
-              parallel_finished: true
+             parallel_finished: true
+
       #----------------------------------------------------
       # Terraform
 
