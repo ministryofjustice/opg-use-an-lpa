@@ -236,8 +236,8 @@ orbs:
                 ./node_modules/.bin/jest --ci --runInBand --coverage
                 cp -a ./coverage /home/circleci/project/build/service-pdf
                 echo '****** BEFORE ******'
-                cat /home/circleci/project/build/service-pdf/lcov.info
-                sed 's_/src/_/home/circleci/project/service-pdf/web/src/_' < /home/circleci/project/build/service-pdf/lcov.info > /home/circleci/project/build/service-pdf/lcov-fixed.info
+                cat /home/circleci/project/build/service-pdf/coverage/lcov.info
+                sed 's_/src/_/home/circleci/project/service-pdf/web/src/_' < /home/circleci/project/build/service-pdf/coverage/lcov.info > /home/circleci/project/build/service-pdf/coverage/lcov-fixed.info
                 echo '****** AFTER *******'
                 cat /home/circleci/project/build/service-pdf/lcov-fixed.info
           - coveralls/upload:
@@ -295,12 +295,12 @@ orbs:
                 ls ./coverage
                 cp -a ./coverage /home/circleci/project/build/web-js
                 echo  '** COPIED FILES:'
-                ls /home/circleci/project/build/web-js
+                ls /home/circleci/project/build/web-js/coverage
                 echo '****** BEFORE ******'
-                cat /home/circleci/project/build/web-js/lcov.info
-                sed 's_/src/_/home/circleci/project/service-api/web/src/_' < /home/circleci/project/build/web-js/lcov.info > /home/circleci/project/build/web-js/lcov-fixed.info
+                cat /home/circleci/project/build/web-js/coverage/lcov.info
+                sed 's_/src/_/home/circleci/project/service-api/web/src/_' < /home/circleci/project/build/web-js/coverage/lcov.info > /home/circleci/project/build/web-js/coverage/lcov-fixed.info
                 echo '****** AFTER *******'
-                cat /home/circleci/project/build/web-js/lcov-fixed.info
+                cat /home/circleci/project/build/web-js/coverage/lcov-fixed.info
           - coveralls/upload:
               flag_name: Web Test
               parallel: true
