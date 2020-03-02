@@ -291,7 +291,11 @@ orbs:
                 mkdir -p /home/circleci/project/build/web-js
                 cd service-front/web/
                 ./node_modules/.bin/jest --ci --runInBand --coverage
+                echo  '** COVERAGE FILES:'
+                ls ./coverage
                 cp -a ./coverage /home/circleci/project/build/web-js
+                echo  '** COPIED FILES:'
+                ls /home/circleci/project/build/web-js
                 echo '****** BEFORE ******'
                 cat /home/circleci/project/build/web-js/lcov.info
                 sed 's_/src/_/home/circleci/project/service-api/web/src/_' < /home/circleci/project/build/web-js/lcov.info > /home/circleci/project/build/web-js/lcov-fixed.info
