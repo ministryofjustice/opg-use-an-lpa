@@ -11,6 +11,7 @@ use BehatTest\Context\BaseUiContextTrait;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
+use DateTime;
 
 /**
  * Class AccountContext
@@ -1594,19 +1595,21 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I have 2 active codes for one of my LPAs$/
+     * @Given /^I have 2 codes for one of my LPAs$/
      */
-    public function iHave2ActiveCodesForOneOfMyLPAs()
+    public function iHave2CodesForOneOfMyLPAs()
     {
-        $this->iHaveCreatedAnAccessCode();
-        $this->iHaveCreatedAnAccessCode();
+        // Not needed for one this context
     }
 
     /**
-     * @Then /^I can see that my LPA has (\d+) active (.*) (.*)$/
+     * @Then /^I can see that my LPA has the correct number of active codes (.*) (.*)$/
      */
-    public function iCanSeeThatMyLPAHasActive($arg1, $code1Expiry, $code2Expiry)
+    public function iCanSeeThatMyLPAHasTheCorrectNumberOfActiveCodes($code1Expiry, $code2Expiry)
     {
+        $this->organisation = "TestOrg";
+        $this->accessCode = "XYZ321ABC987";
+
         $code1 = [
             'SiriusUid'    => $this->lpa->uId,
             'Added'        => '2020-01-01T23:59:59+00:00',
@@ -1646,8 +1649,8 @@ class AccountContext implements Context
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode([
-                        0 => [$code1],
-                        1 => [$code2]
+                        0 => $code1,
+                        1 => $code2
                     ])));
 
         $this->ui->visit('/lpa/dashboard');
@@ -1655,65 +1658,21 @@ class AccountContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $this->ui->assertPageAddress('/lpa/dashboard');
 
-        if ($code1 == $code2) {
-            if ($code1['Expires'] < new \DateTime('now') && $code2['Expires'] < new \DateTime('now')) {
-                $this->ui->assertPageContainsText('1 active code');
-            }
+        $today = ((new DateTime('now'))->setTime(23,59,59)->format('c'));
+
+        if ($code1['Expires'] > $today && $code2['Expires'] > $today) {
             $this->ui->assertPageContainsText('2 active codes');
-        } else {
+        } elseif ($code1['Expires'] < $today && $code2['Expires'] < $today) {
+            $this->ui->assertPageContainsText('No organisations have access');
+        } elseif (($code1['Expires'] < $today && $code2['Expires'] > $today) || ($code1['Expires'] > $today && $code2['Expires'] < $today)) {
             $this->ui->assertPageContainsText('1 active code');
         }
     }
 
     /**
-     * @Given /^I have an active code and an inactive code for one of my LPAs$/
+     * @Then /^I can see that no organisations have access to my LPA$/
      */
-    public function iHaveAnActiveCodeAndAnInactiveCodeForOneOfMyLPAs()
-    {
-        // Active Code
-        $this->iHaveCreatedAnAccessCode();
-
-        // Inactive code
-
-        // API call for get LpaById (when give organisation access is clicked)
-        $this->iRequestToGiveAnOrganisationAccess();
-
-        // API call to make code
-        $this->apiFixtures->post('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([
-                            'code' => $this->accessCode,
-                            'expires' => '2020-01-01T23:59:59+00:00',
-                            'organisation'=> $this->organisation
-                        ]
-                    )
-                ));
-
-        // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([
-                        'user-lpa-actor-token' => $this->userLpaActorToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => [],
-                    ])));
-
-        $this->ui->fillField('org_name', $this->organisation);
-        $this->ui->pressButton('Continue');
-
-    }
-
-    /**
-     * @Then /^I can see that my LPA has (\d+) active code$/
-     */
-    public function iCanSeeThatMyLPAHasActiveCode($arg1)
+    public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA()
     {
         //API call for getting all the users added LPAs
         $this->apiFixtures->get('/v1/lpas')
@@ -1731,35 +1690,12 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([
-                        0 => [
-                            'SiriusUid'    => $this->lpa->uId,
-                            'Added'        => '2020-01-01T23:59:59+00:00',
-                            'Organisation' => $this->organisation,
-                            'UserLpaActor' => $this->userLpaActorToken,
-                            'ViewerCode'   => $this->accessCode,
-                            'Expires'      => '2021-01-05T23:59:59+00:00',
-                            'Viewed'       => false,
-                            'ActorId'      => $this->actorId,
-                        ],
-                        1 => [
-                            'SiriusUid'    => $this->lpa->uId,
-                            'Added'        => '2020-01-01T23:59:59+00:00',
-                            'Organisation' => $this->organisation,
-                            'UserLpaActor' => $this->userLpaActorToken,
-                            'ViewerCode'   => $this->accessCode,
-                            'Expires'      => '2020-01-01T23:59:59+00:00',
-                            'Viewed'       => false,
-                            'ActorId'      => $this->actorId,
-                        ]
-                    ])));
+                    json_encode([])));
 
         $this->ui->visit('/lpa/dashboard');
 
-        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $this->ui->assertPageAddress('/lpa/dashboard');
-
-        $this->ui->assertPageContainsText('1 active code');
+        $this->ui->assertPageContainsText('No organisations have access');
     }
 
 }

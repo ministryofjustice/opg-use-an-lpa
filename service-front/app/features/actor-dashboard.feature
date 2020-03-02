@@ -1,4 +1,4 @@
-@actor @dashboard
+@actor @actorDashboard
 Feature: The user is able to see correct information on their dashboard
   As a user
   I want to be able to see any LPA's I have added on my dashboard
@@ -9,20 +9,20 @@ Feature: The user is able to see correct information on their dashboard
     And I am currently signed in
     And I have added an LPA to my account
 
-  @ui @integration
+  @integration @ui
   Scenario Outline: As a user I can see the number of active access codes an LPA has
-    Given I have 2 active codes for one of my LPAs
+    Given I have 2 codes for one of my LPAs
     When I am on the dashboard page
-    Then I can see that my LPA has 2 active <code1> <code2>
+    Then I can see that my LPA has the correct number of active codes <code1Expiry> <code2Expiry>
 
     Examples:
-    | code1 | code2
-    |  'SiriusUid' => $this->lpa->uId, 'Added' => '2020-01-01T23:59:59+00:00', 'Organisation' => $this->organisation, 'UserLpaActor' => $this->userLpaActorToken, 'ViewerCode' => $this->accessCode, 'Expires' => '2021-01-05T23:59:59+00:00', 'Viewed' => false, 'ActorId' => $this->actorId | 'SiriusUid' => $this->lpa->uId, 'Added' => '2020-01-01T23:59:59+00:00', 'Organisation' => $this->organisation, 'UserLpaActor' => $this->userLpaActorToken, 'ViewerCode' => $this->accessCode, 'Expires' => '2021-01-05T23:59:59+00:00', 'Viewed' => false, 'ActorId' => $this->actorId |
-    |  'SiriusUid' => $this->lpa->uId, 'Added' => '2020-01-01T23:59:59+00:00', 'Organisation' => $this->organisation, 'UserLpaActor' => $this->userLpaActorToken, 'ViewerCode' => $this->accessCode, 'Expires' => '2020-01-01T23:59:59+00:00', 'Viewed' => false, 'ActorId' => $this->actorId | 'SiriusUid' => $this->lpa->uId, 'Added' => '2020-01-01T23:59:59+00:00', 'Organisation' => $this->organisation, 'UserLpaActor' => $this->userLpaActorToken, 'ViewerCode' => $this->accessCode, 'Expires' => '2021-01-05T23:59:59+00:00', 'Viewed' => false, 'ActorId' => $this->actorId |
-    |  'SiriusUid' => $this->lpa->uId, 'Added' => '2020-01-01T23:59:59+00:00', 'Organisation' => $this->organisation, 'UserLpaActor' => $this->userLpaActorToken, 'ViewerCode' => $this->accessCode, 'Expires' => '2020-01-05T23:59:59+00:00', 'Viewed' => false, 'ActorId' => $this->actorId | 'SiriusUid' => $this->lpa->uId, 'Added' => '2020-01-01T23:59:59+00:00', 'Organisation' => $this->organisation, 'UserLpaActor' => $this->userLpaActorToken, 'ViewerCode' => $this->accessCode, 'Expires' => '2020-01-05T23:59:59+00:00', 'Viewed' => false, 'ActorId' => $this->actorId |
+      | code1Expiry                | code2Expiry               |
+      |  2021-04-01T23:59:59+01:00 | 2021-04-01T23:59:59+01:00 |
+      |  2019-01-05T23:59:59+00:00 | 2022-01-05T23:59:59+00:00 |
+      |  2019-01-05T23:59:59+00:00 | 2019-01-05T23:59:59+00:00 |
 
-#  @ui @integration
-#  Scenario: As a user I can see the number of active access codes an LPA has
-#    Given I have an active code and an inactive code for one of my LPAs
-#    When I am on the dashboard page
-#    Then I can see that my LPA has 1 active code
+  @integration @ui
+  Scenario: As a user I can see the number of active access codes an LPA has
+    Given I have added an LPA to my account
+    When I am on the dashboard page
+    Then I can see that no organisations have access to my LPA

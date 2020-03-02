@@ -1096,21 +1096,42 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I have 2 active codes for one of my LPAs$/
+     * @Given /^I have 2 codes for one of my LPAs$/
      */
-    public function iHave2ActiveCodesForOneOfMyLPAs()
+    public function iHave2CodesForOneOfMyLPAs()
     {
-        $this->iHaveCreatedAnAccessCode();
-        $this->iHaveCreatedAnAccessCode();
+        // Not needed for this context
     }
 
     /**
-     * @Then /^I can see that my LPA has 2 active codes$/
+     * @Then /^I can see that my LPA has the correct number of active codes (.*) (.*)$/
      */
-    public function iCanSeeThatMyLPAHas2ActiveCodes()
+    public function iCanSeeThatMyLPAHasTheCorrectNumberOfActiveCodes($code1Expiry, $code2Expiry)
     {
         $this->organisation = "TestOrg";
         $this->accessCode = "XYZ321ABC987";
+
+        $code1 = [
+            'SiriusUid'    => $this->referenceNo,
+            'Added'        => '2020-01-01T23:59:59+00:00',
+            'Organisation' => $this->organisation,
+            'UserLpaActor' => $this->actorLpaToken,
+            'ViewerCode'   => $this->accessCode,
+            'Expires'      => $code1Expiry,
+            'Viewed'       => false,
+            'ActorId'      => $this->actorId,
+        ];
+
+        $code2 = [
+            'SiriusUid'    => $this->referenceNo,
+            'Added'        => '2020-01-01T23:59:59+00:00',
+            'Organisation' => $this->organisation,
+            'UserLpaActor' => $this->actorLpaToken,
+            'ViewerCode'   => $this->accessCode,
+            'Expires'      => $code2Expiry,
+            'Viewed'       => false,
+            'ActorId'      => $this->actorId,
+        ];
 
         //API call for getting all the users added LPAs
         $this->apiFixtures->get('/v1/lpas')
@@ -1122,19 +1143,6 @@ class AccountContext extends BaseIntegrationContext
                 )
             );
 
-        // codes generated will be different, this data is duplicated for the response
-        // purely to show that we should get 2 codes back from the API call
-        $codeData = [
-            'SiriusUid' => $this->referenceNo,
-            'Added' => '2020-01-01T23:59:59+00:00',
-            'Organisation' => $this->organisation,
-            'UserLpaActor' => $this->actorLpaToken,
-            'ViewerCode' => $this->accessCode,
-            'Expires' => '2021-01-05T23:59:59+00:00',
-            'Viewed' => false,
-            'ActorId' => $this->actorId,
-        ];
-
         //API call for getting each LPAs share codes
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
             ->respondWith(
@@ -1142,8 +1150,8 @@ class AccountContext extends BaseIntegrationContext
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode([
-                        0 => $codeData,
-                        1 => $codeData
+                        0 => $code1,
+                        1 => $code2
                     ])));
 
         $lpa = $this->lpaService->getLpas($this->userIdentity);
@@ -1154,7 +1162,41 @@ class AccountContext extends BaseIntegrationContext
 
         $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, true);
 
-        assertEquals($shareCodes[0], $codeData);
-        assertEquals($shareCodes[1], $codeData);
+        assertEquals($shareCodes[0], $code1);
+        assertEquals($shareCodes[1], $code2);
+    }
+
+    /**
+     * @Then /^I can see that no organisations have access to my LPA$/
+     */
+    public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA()
+    {
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->actorLpaToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $lpa = $this->lpaService->getLpas($this->userIdentity);
+
+        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
+
+        assertEquals($lpaObject, $lpa[$this->actorLpaToken]['lpa']);
+
+        $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, true);
+
+        assertEquals($shareCodes['activeCodeCount'], 0);
     }
 }
