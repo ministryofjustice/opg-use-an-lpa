@@ -40,6 +40,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.resource');
     $app->post('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/codes', App\Handler\LpasResourceCodesCollectionHandler::class, 'lpa.create.code');
     $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/codes', App\Handler\LpasResourceCodesCollectionHandler::class, 'lpa.get.codes');
+    $app->put('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/codes', App\Handler\LpasResourceCodesCollectionHandler::class, 'lpa.cancel.code');
 
     $app->post('/v1/actor-codes/summary', App\Handler\ActorCodeSummaryHandler::class, 'lpa.actor-code.summary');
     $app->post('/v1/actor-codes/confirm', App\Handler\ActorCodeConfirmHandler::class, 'lpa.actor-code.confirm');

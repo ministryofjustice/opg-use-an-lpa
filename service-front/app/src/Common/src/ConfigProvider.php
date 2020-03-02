@@ -44,6 +44,9 @@ class ConfigProvider
                 Psr\Http\Client\ClientInterface::class => Http\Adapter\Guzzle6\Client::class,
                 Zend\Expressive\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookiePersistence::class,
 
+                // Custom Guard factory to handle multiple forms per page
+                Zend\Expressive\Csrf\CsrfGuardFactoryInterface::class => Service\Csrf\SessionCsrfGuardFactory::class,
+
                 // The Session Key Manager to use
                 Service\Session\KeyManager\KeyManagerInterface::class => Service\Session\KeyManager\KmsManager::class,
 

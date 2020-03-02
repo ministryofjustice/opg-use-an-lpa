@@ -10,6 +10,7 @@ use BehatTest\Context\ActorContextTrait;
 use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
+use Common\Service\Lpa\ViewerCodeService;
 use Common\Service\Log\RequestTracing;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
@@ -36,6 +37,7 @@ use Psr\Http\Message\RequestInterface;
  * @property string userDob
  * @property string userIdentity
  * @property string actorLpaToken
+ * @property int actorId
  */
 class AccountContext extends BaseIntegrationContext
 {
@@ -56,6 +58,11 @@ class AccountContext extends BaseIntegrationContext
     /** @var LpaFactory */
     private $lpaFactory;
 
+    /** @var ViewerCodeService */
+    private $viewerCodeService;
+
+    // public function setContainer(ContainerInterface $container): void
+
     protected function prepareContext(): void
     {
         // This is populated into the container using a Middleware which these integration
@@ -65,8 +72,9 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures = $this->container->get(MockHandler::class);
         $this->userService = $this->container->get(UserService::class);
         $this->emailClient = $this->container->get(EmailClient::class);
-        $this->lpaService  = $this->container->get(LpaService::class);
-        $this->lpaFactory  = $this->container->get(LpaFactory::class);
+        $this->lpaService = $this->container->get(LpaService::class);
+        $this->lpaFactory = $this->container->get(LpaFactory::class);
+        $this->viewerCodeService = $this->container->get(ViewerCodeService::class);
     }
 
     /**
@@ -128,8 +136,8 @@ class AccountContext extends BaseIntegrationContext
 
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'Id'        => $this->userIdentity,
-                'Email'     => $this->userEmail,
+                'Id' => $this->userIdentity,
+                'Email' => $this->userEmail,
                 'LastLogin' => null
             ])));
 
@@ -219,7 +227,7 @@ class AccountContext extends BaseIntegrationContext
     public function iFollowMyUniqueInstructionsOnHowToResetMyPassword()
     {
         $this->apiFixtures->get('/v1/can-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])))
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Id' => '123456'])))
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $query = $request->getUri()->getQuery();
                 assertContains($this->userPasswordResetToken, $query);
@@ -254,7 +262,7 @@ class AccountContext extends BaseIntegrationContext
 
         // API fixture for password reset
         $this->apiFixtures->patch('/v1/complete-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])))
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Id' => '123456'])))
             ->inspectRequest(function (RequestInterface $request, array $options) use ($expectedPassword) {
                 $params = json_decode($request->getBody()->getContents(), true);
 
@@ -399,6 +407,9 @@ class AccountContext extends BaseIntegrationContext
      */
     public function theLPAIsSuccessfullyAdded()
     {
+        $this->actorLpaToken = '24680';
+        $this->actorId = 9;
+
         // API call for adding an LPA
         $this->apiFixtures->post('/v1/actor-codes/confirm')
             ->respondWith(
@@ -523,6 +534,7 @@ class AccountContext extends BaseIntegrationContext
     public function iFollowTheInstructionsOnHowToActivateMyAccount()
     {
         $this->apiFixtures->patch('/v1/user-activation')
+
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
@@ -530,6 +542,7 @@ class AccountContext extends BaseIntegrationContext
                         [
                             'activation_token' => $this->activationToken
                         ])))
+
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $query = $request->getUri()->getQuery();
                 assertContains($this->activationToken, $query);
@@ -559,7 +572,7 @@ class AccountContext extends BaseIntegrationContext
                 assertContains($this->activationTokenToken, $query);
             });
 
-        $canActivate= $this->userService->activate($this->activationToken);
+        $canActivate = $this->userService->activate($this->activationToken);
         assertFalse($canActivate);
     }
 
@@ -574,7 +587,7 @@ class AccountContext extends BaseIntegrationContext
     /**
      * @When /^I have not provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
      */
-    public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1,$email2,$password1,$password2,$terms)
+    public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1, $email2, $password1, $password2, $terms)
     {
         // Not needed for this context
     }
@@ -629,12 +642,12 @@ class AccountContext extends BaseIntegrationContext
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode([
-                        'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => []
-                    ]
-                )));
+                            'user-lpa-actor-token' => $this->actorLpaToken,
+                            'date' => 'date',
+                            'lpa' => $this->lpa,
+                            'actor' => []
+                        ]
+                    )));
     }
 
     /**
@@ -647,6 +660,191 @@ class AccountContext extends BaseIntegrationContext
         $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
 
         assertEquals($lpa, $lpaObject);
+    }
+
+    /**
+     * @When /^I request to give an organisation access to one of my LPAs$/
+     */
+    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
+    {
+        $this->organisation = "TestOrg";
+        $this->accessCode = "XYZ321ABC987";
+
+        // API call for get LpaById (when give organisation access is clicked)
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
+                    ])));
+
+        // API call to make code
+        $this->apiFixtures->post('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                            'code' => $this->accessCode,
+                            'expires' => '2021-03-07T23:59:59+00:00',
+                            'organisation' => $this->organisation
+                        ]
+                    )
+                ));
+
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
+                    ])));
+    }
+
+    /**
+     * @Then /^I am given a unique access code$/
+     */
+    public function iAmGivenAUniqueAccessCode()
+    {
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        $codeData = $this->viewerCodeService->createShareCode($this->userIdentity, $this->actorLpaToken, $this->organisation);
+
+        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
+
+        assertEquals($lpa, $lpaObject);
+        assertEquals($this->accessCode, $codeData['code']);
+        assertEquals($this->organisation, $codeData['organisation']);
+    }
+
+    /**
+     * @Given /^I have created an access code$/
+     */
+    public function iHaveCreatedAnAccessCode()
+    {
+        $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
+        $this->iAmGivenAUniqueAccessCode();
+    }
+
+    /**
+     * @When /^I click to check my access codes$/
+     */
+    public function iClickToCheckMyAccessCodes()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
+                    ])));
+
+        // API call to make code
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                            0 => [
+                                'SiriusUid' => $this->lpa['uId'],
+                                'Added' => '2020-01-01T23:59:59+00:00',
+                                'Expires' => '2021-01-01T23:59:59+00:00',
+                                'UserLpaActor' => $this->actorLpaToken,
+                                'Organisation' => $this->organisation,
+                                'ViewerCode' => $this->accessCode,
+                                'Viewed' => false,
+                                'ActorId' => $this->actorId
+                            ]
+                        ]
+                    )
+                ));
+
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
+
+        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
+
+        assertEquals($lpa, $lpaObject);
+        assertEquals($this->accessCode, $shareCodes[0]['ViewerCode']);
+        assertEquals($this->organisation, $shareCodes[0]['Organisation']);
+        assertEquals($this->actorId, $shareCodes[0]['ActorId']);
+        assertEquals($this->actorLpaToken, $shareCodes[0]['UserLpaActor']);
+        assertEquals(false, $shareCodes[0]['Viewed']);
+    }
+
+    /**
+     * @Then /^I can see all of my access codes and their details$/
+     */
+    public function iCanSeeAllOfMyAccessCodesAndTheirDetails()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I have generated an access code for an organisation and can see the details$/
+     */
+    public function iHaveGeneratedAnAccessCodeForAnOrganisationAndCanSeeTheDetails()
+    {
+        $this->iHaveCreatedAnAccessCode();
+        $this->iClickToCheckMyAccessCodes();
+        $this->iCanSeeAllOfMyAccessCodesAndTheirDetails();
+    }
+
+    /**
+     * @When /^I want to cancel the access code for an organisation$/
+     */
+    public function iWantToCancelTheAccessCodeForAnOrganisation()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I want to see the option to cancel the code$/
+     */
+    public function iWantToSeeTheOptionToCancelTheCode()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I cancel the organisation access code/
+     */
+    public function iCancelTheOrganisationAccessCode()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
+                    ])));
+
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        assertNotNull($lpa);
     }
 
     /**
@@ -673,7 +871,6 @@ class AccountContext extends BaseIntegrationContext
 
         assertEquals($user->getIdentity(), $this->userIdentity);
     }
-
     /**
      * @Then /^I am taken to the dashboard page$/
      */
@@ -692,6 +889,160 @@ class AccountContext extends BaseIntegrationContext
         $lpas = $this->lpaService->getLpas($this->userIdentity);
 
         assertEmpty($lpas);
+    }
+
+    /**
+     * @Then /^I want to be asked for confirmation prior to cancellation/
+     */
+    public function iWantToBeAskedForConfirmationPriorToCancellation()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I confirm cancellation of the chosen viewer code/
+     */
+    public function iConfirmCancellationOfTheChosenViewerCode()
+    {
+        // API call for get LpaById in CancelCodeHandler
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
+                    ])));
+
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+        assertNotNull($lpa);
+
+        // API call for cancelShareCode in CancelCodeHandler
+        $this->apiFixtures->put('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->viewerCodeService->cancelShareCode(
+            $this->userIdentity,
+            $this->actorLpaToken,
+            $this->accessCode
+        );
+
+        // API call for get LpaById in CancelCodeHandler
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
+                    ])));
+
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        // API call for getShareCodes in CheckAccessCodesHandler
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => [
+                            'SiriusUid' => $this->lpa['uId'],
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Expires' => '2021-01-01T23:59:59+00:00',
+                            'Cancelled' => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->actorLpaToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode' => $this->accessCode,
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId
+                        ]
+                    ])));
+
+        $shareCodes = $this->viewerCodeService->getShareCodes(
+            $this->userIdentity,
+            $this->actorLpaToken,
+            false
+        );
+
+        assertEquals($shareCodes[0]['Organisation'], $this->organisation);
+        assertEquals($shareCodes[0]['Cancelled'], '2021-01-01T23:59:59+00:00');
+    }
+
+    /**
+     * @Then /^I should be shown the details of the cancelled viewer code with cancelled status/
+     */
+    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I do not confirm cancellation of the chosen viewer code/
+     */
+    public function iDoNotConfirmCancellationOfTheChosenViewerCode()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should be taken back to the access code summary page/
+     */
+    public function iShouldBeTakenBackToTheAccessCodeSummaryPage()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
+                    ])));
+
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        assertNotNull($lpa);
+
+        //API call for getShareCodes
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => [
+                            'SiriusUid' => $this->lpa['uId'],
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Expires' => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->actorLpaToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode' => $this->accessCode,
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId
+                        ]
+                    ])));
+
+        $shareCodes = $this->viewerCodeService->getShareCodes(
+            $this->userIdentity,
+            $this->actorLpaToken,
+            false
+        );
+
+        assertEquals($shareCodes[0]['Organisation'], $this->organisation);
     }
 
     /**

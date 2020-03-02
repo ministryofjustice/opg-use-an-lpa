@@ -104,4 +104,34 @@ class ViewerCodeService
 
         return $accessCodes;
     }
+
+    /**
+     * Cancels a access code initiated by the actor
+     *
+     * @param string $userLpaActorToken
+     * @param string $userId
+     * @param string $code
+     * @throws Exception
+     */
+    public function cancelCode(string $userLpaActorToken, string $userId, string $code): void
+    {
+        $map = $this->userLpaActorMapRepository->get($userLpaActorToken);
+
+        // Ensure the passed userId matches the passed token
+        if ($userId !== $map['UserId']) {
+            return;
+        }
+
+        $shareCode = $this->viewerCodesRepository->get($code);
+
+        if($shareCode === null){
+            return;
+        }
+
+        $this->viewerCodesRepository->cancel(
+            $code,
+            new DateTime()
+        );
+
+    }
 }

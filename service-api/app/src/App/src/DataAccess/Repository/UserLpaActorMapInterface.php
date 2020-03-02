@@ -14,8 +14,6 @@ use DateTime;
  */
 interface UserLpaActorMapInterface
 {
-
-
     /**
      * Creates a new mapping in the DB
      *

@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Actor\Form\CancelCode;
 use Common\Exception\InvalidRequestException;
-use Common\Handler\AbstractHandler;
-use Common\Handler\Traits\User;
-use Common\Handler\UserAware;
-use Common\Service\Lpa\ViewerCodeService;
-use Common\Service\Lpa\LpaService;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
+use Common\Service\Lpa\{LpaService, ViewerCodeService};
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use DateTime;
 
-class CheckAccessCodesHandler extends AbstractHandler implements UserAware
+class CheckAccessCodesHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
     use User;
+    use Session;
+    use CsrfGuard;
 
     /**
      * @var ViewerCodeService
@@ -73,6 +71,18 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware
         );
 
         foreach ($shareCodes as $key => $code) {
+
+            $form = new CancelCode($this->getCsrfGuard($request));
+            $form->setAttribute('action',$this->urlHelper->generate('lpa.confirm-cancel-code'));
+
+            $form->setData([
+                'lpa_token'=> $actorLpaToken,
+                'viewer_code' => $code['ViewerCode'],
+                'organisation' => $code['Organisation'],
+            ]);
+
+            $shareCodes[$key]['form'] = $form;
+
             if ($lpa->getDonor()->getId() == $code['ActorId']) {
                 $shareCodes[$key]['CreatedBy'] = $lpa->getDonor()->getFirstname();
             }

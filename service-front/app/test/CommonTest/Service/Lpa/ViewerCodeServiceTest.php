@@ -137,4 +137,23 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertGreaterThan($currentDateTime, $shareCodes[2]['Expires']);
         $this->assertEquals(2, $shareCodes['activeCodeCount']);
     }
+
+    /** @test */
+    public function it_cancels_a_new_viewercode_given_correct_details()
+    {
+        $lpaId      = '700000000047';
+        $viewerCode = '123456789012';
+
+        $return = [];
+
+        $this->apiClientProphecy
+            ->httpPut('/v1/lpas/' . $lpaId . '/codes', ['code' => $viewerCode])
+            ->willReturn($return);
+
+        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy->reveal());
+
+        $codeData = $viewerCodeService->cancelShareCode(self::IDENTITY_TOKEN, $lpaId, $viewerCode);
+
+        $this->assertEquals(null,$codeData);
+    }
 }

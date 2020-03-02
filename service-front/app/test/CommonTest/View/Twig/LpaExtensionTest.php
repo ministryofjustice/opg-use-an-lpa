@@ -30,6 +30,7 @@ class LpaExtensionTest extends TestCase
             'days_remaining_to_expiry'  => 'daysRemaining',
             'check_if_code_has_expired' => 'hasCodeExpired',
             'add_hyphen_to_viewer_code' => 'formatViewerCode',
+            'check_if_code_is_cancelled' => 'isCodeCancelled',
 
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
@@ -252,6 +253,50 @@ class LpaExtensionTest extends TestCase
                 null,
                 '',
             ]
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider cancelledDateProvider
+     */
+    public function it_checks_if_a_code_is_cancelled($shareCodeArray, $expected){
+
+        $extension = new LpaExtension();
+
+        $status = $extension->isCodeCancelled($shareCodeArray);
+
+        $this->assertEquals($expected, $status);
+    }
+
+    public function cancelledDateProvider()
+    {
+        $shareCodeWithCancelledStatus = [
+            'SiriusUid'        => '1234',
+            'Added'            => '2021-01-05 12:34:56',
+            'Expires'          => '2022-01-05 12:34:56',
+            'Cancelled'        => '2022-01-06 12:34:56',
+            'UserLpaActor'     => '111',
+            'Organisation'     => 'TestOrg',
+            'ViewerCode'       => 'XYZ321ABC987'
+        ];
+        $shareCodeWithoutCancelledStatus = [
+            'SiriusUid'        => '1234',
+            'Added'            => '2021-01-05 12:34:56',
+            'Expires'          => '2022-01-07 12:34:56',
+            'UserLpaActor'     => '111',
+            'Organisation'     => 'TestOrg',
+            'ViewerCode'       => 'XYZ321ABC987'
+        ];
+        return [
+            [
+                $shareCodeWithoutCancelledStatus,
+                false,
+            ],
+            [
+                $shareCodeWithCancelledStatus,
+                true,
+            ],
         ];
     }
 

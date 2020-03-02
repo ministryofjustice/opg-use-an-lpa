@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\Lpa;
 
 use ArrayObject;
+use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use DateTime;
 
@@ -49,6 +50,24 @@ class ViewerCodeService
     }
 
     /**
+     * Cancels a viewer/share code for the given lpa
+     *
+     * @param string $userToken
+     * @param string $lpaId
+     * @param string $shareCode
+     * @return void
+     * @throws ApiException
+     */
+    public function cancelShareCode(string $userToken, string $lpaId, string $shareCode): void
+    {
+        $this->apiClient->setUserTokenHeader($userToken);
+
+        $this->apiClient->httpPut('/v1/lpas/' . $lpaId . '/codes', [
+             'code' => $shareCode
+        ]);
+    }
+
+    /**
      * Gets a list of viewer codes for a given lpa
      *
      * @param string $userToken
@@ -81,7 +100,9 @@ class ViewerCodeService
         if (!empty($shareCodes[0])) {
             foreach ($shareCodes as $codeKey => $code) {
                 //if the code has not expired
-                if (new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23, 59, 59)) {
+
+                if (new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23,59,59) &&  !(array_key_exists("Cancelled",$code))) {
+
                     $counter += 1;
                 }
             }
