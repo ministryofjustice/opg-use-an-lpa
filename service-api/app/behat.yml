@@ -13,9 +13,10 @@ default:
 
 integration:
   suites:
-    actor:
+    all:
       contexts:
         - BehatTest\Context\Integration\AccountContext
+        - BehatTest\Context\Integration\ViewerContext
       filters:
         tags: "@integration"
 
