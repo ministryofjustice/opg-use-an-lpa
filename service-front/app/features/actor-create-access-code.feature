@@ -25,4 +25,3 @@ Feature: The user is able to create access codes for organisations
     When I request to give an organisation access to one of my LPAs
     Then I am given a unique access code
 
-

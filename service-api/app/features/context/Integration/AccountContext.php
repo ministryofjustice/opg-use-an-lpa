@@ -1212,5 +1212,4 @@ class AccountContext extends BaseIntegrationContext
     {
         // Not needed for this context
     }
-
 }

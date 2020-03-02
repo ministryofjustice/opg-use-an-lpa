@@ -1027,7 +1027,6 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('lpa/dashboard');
         $this->ui->clickLink('Give an organisation access');
         $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
-
     }
 
     /**
@@ -1102,6 +1101,7 @@ class AccountContext implements Context
                         'lpa' => $this->lpa,
                         'actor' => [],
                     ])));
+
         $this->ui->fillField('org_name', $organisationname);
         $this->ui->pressButton('Continue');
     }
@@ -1436,59 +1436,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I do not confirm cancellation of the chosen viewer code/
-     */
-    public function iDoNotConfirmCancellationOfTheChosenViewerCode()
-    {
-        $this->ui->assertPageAddress('/lpa/confirm-cancel-code');
-
-        // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([
-                        'user-lpa-actor-token' => $this->userLpaActorToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => [],
-                    ])));
-
-        // API call for getShareCodes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([
-                        0 => [
-                            'SiriusUid'    => $this->lpa->uId,
-                            'Added'        => '2020-01-01T23:59:59+00:00',
-                            'Organisation' => $this->organisation,
-                            'UserLpaActor' => $this->userLpaActorToken,
-                            'ViewerCode'   => $this->accessCode,
-                            'Expires'      => '2021-01-05T23:59:59+00:00',
-                            'Viewed'       => false,
-                            'ActorId'      => $this->actorId,
-                        ]
-                    ])));
-
-        $this->ui->pressButton("No, return to access codes");
-    }
-
-    /**
-     * @Then /^I should be taken back to the access code summary page/
-     */
-    public function iShouldBeTakenBackToTheAccessCodeSummaryPage()
-    {
-        $this->ui->assertPageContainsText('Check Access Codes');
-        $this->ui->assertPageContainsText('Active codes');
-        $this->ui->assertPageContainsText("V - XYZ3 - 21AB - C987");
-        $this->ui->assertPageNotContainsText('Cancelled');
-    }
-
-    /**
      * @Then /^I should be shown the details of the viewer code with status (.*)/
      */
     public function iShouldBeShownTheDetailsOfTheCancelledCodeWithStatus($status)
@@ -1538,7 +1485,101 @@ class AccountContext implements Context
         $this->ui->fillField('dob[day]', '05');
         $this->ui->fillField('dob[month]', '10');
         $this->ui->fillField('dob[year]', '1975');
+
         $this->ui->pressButton('Continue');
+    }
+
+//    /**
+//     * @When /^I cancel the organisation access code/
+//     */
+//    public function iCancelTheOrganisationAccessCode()
+//    {
+//        $this->ui->assertPageAddress('/lpa/access-codes?lpa=' .$this->userLpaActorToken);
+//
+//        // API call for get LpaById
+//        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+//            ->respondWith(
+//                new Response(
+//                    StatusCodeInterface::STATUS_OK,
+//                    [],
+//                    json_encode([
+//                        'user-lpa-actor-token' => $this->userLpaActorToken,
+//                        'date'                 => 'date',
+//                        'lpa'                  => $this->lpa,
+//                        'actor'                => [],
+//                    ])));
+//
+//        $this->ui->pressButton("Cancel organisation's access");
+//
+//        $this->iWantToBeAskedForConfirmationPriorToCancellation();
+//    }
+
+    /**
+     * @Then /^I should be shown the details of the cancelled viewer code with cancelled status/
+     */
+    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus()
+    {
+        $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
+
+        $this->ui->assertPageContainsText('Check Access Codes');
+        $this->ui->assertPageContainsText('Active codes');
+        $this->ui->assertPageContainsText('Inactive codes');
+        $this->ui->assertPageContainsText("V - XYZ3 - 21AB - C987");
+        $this->ui->assertPageContainsText('Cancelled');
+    }
+
+    /**
+     * @When /^I do not confirm cancellation of the chosen viewer code/
+     */
+    public function iDoNotConfirmCancellationOfTheChosenViewerCode()
+    {
+        $this->ui->assertPageAddress('/lpa/confirm-cancel-code');
+
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        // API call for getShareCodes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => [
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'Organisation' => $this->organisation,
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'ViewerCode'   => $this->accessCode,
+                            'Expires'      => '2021-01-05T23:59:59+00:00',
+                            'Viewed'       => false,
+                            'ActorId'      => $this->actorId,
+                        ]
+                    ])));
+
+        $this->ui->pressButton("No, return to access codes");
+
+    }
+
+    /**
+     * @Then /^I should be taken back to the access code summary page/
+     */
+    public function iShouldBeTakenBackToTheAccessCodeSummaryPage()
+    {
+        $this->ui->assertPageContainsText('Check Access Codes');
+        $this->ui->assertPageContainsText('Active codes');
+        $this->ui->assertPageContainsText("V - XYZ3 - 21AB - C987");
+        $this->ui->assertPageNotContainsText('Cancelled');
     }
 
     /**

@@ -710,8 +710,6 @@ class AccountContext extends BaseIntegrationContext
                         'lpa' => $this->lpa,
                         'actor' => [],
                     ])));
-
-
     }
 
     /**
@@ -790,7 +788,6 @@ class AccountContext extends BaseIntegrationContext
         assertEquals($this->actorId, $shareCodes[0]['ActorId']);
         assertEquals($this->actorLpaToken, $shareCodes[0]['UserLpaActor']);
         assertEquals(false, $shareCodes[0]['Viewed']);
-
     }
 
     /**
@@ -931,7 +928,6 @@ class AccountContext extends BaseIntegrationContext
 
         assertEquals($user->getIdentity(), $this->userIdentity);
     }
-
     /**
      * @Then /^I am taken to the dashboard page$/
      */
