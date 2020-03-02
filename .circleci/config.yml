@@ -190,7 +190,12 @@ orbs:
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
                 eval $(aws ecr get-login --no-include-email --region=eu-west-1)
-
+      notify_coveralls_finished:
+        steps:
+          - run:
+              name: run parallel finished webhook
+              command : |
+                curl https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN
     executors:
       puppeteer:
         docker: [image: buildkite/puppeteer]
@@ -642,10 +647,7 @@ orbs:
                 --json_path build/coveralls-upload.json \
                 --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
                 --coverage_clover build/service-front/phpunit/coverage-fixed.xml
-          - notify:
-              webhooks:
-              - url: https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN
-
+          - notify_coveralls_finished
       #----------------------------------------------------
       # Terraform
 
