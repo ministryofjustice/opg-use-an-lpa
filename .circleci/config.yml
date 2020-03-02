@@ -644,7 +644,7 @@ orbs:
                 --coverage_clover build/service-front/phpunit/coverage-fixed.xml
           - coveralls/upload:
              parallel_finished: true
-             token: '${COVERALLS_REPO_TOKEN}'
+             token: COVERALLS_REPO_TOKEN
 
       #----------------------------------------------------
       # Terraform
