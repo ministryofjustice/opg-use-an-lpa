@@ -1274,7 +1274,7 @@ class AccountContext implements Context
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode($this->lpa)));
-      
+
         // API call to get lpa
         $this->apiGet('/v1/lpas/' . $this->userLpaActorToken,
             [
@@ -1284,7 +1284,7 @@ class AccountContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
-      
+
         assertArrayHasKey('date', $response);
         assertArrayHasKey('actor', $response);
         assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
@@ -1293,22 +1293,20 @@ class AccountContext implements Context
         assertEquals($response['actor']['details']['uId'], $this->lpaUid);
 
         // Get the share codes
-      
-        // UserLpaActorMap::getUsersLpas
+
+        // UserLpaActorMap::get
         $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
-                    'SiriusUid'        => $this->lpaUid,
-                    'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                    'Id'               => $this->userLpaActorToken,
-                    'ActorId'          => $this->actorId,
-                    'UserId'           => $this->userId
-                ])
-            ]
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->lpaUid,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorId,
+                'UserId'           => $this->userId
+            ])
         ]));
-      
-      // ViewerCodes::getCodesByUserLpaActorId
-      $this->awsFixtures->append(new Result([
+
+        // ViewerCodes::getCodesByUserLpaActorId
+        $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
                     'SiriusUid'        => $this->lpaUid,
@@ -1320,12 +1318,12 @@ class AccountContext implements Context
                 ])
             ]
         ]));
-                  
-       // ViewerCodeActivity::getStatusesForViewerCodes
-       $this->awsFixtures->append(new Result());
-      
-       // UserLpaActorMap::getUsersLpas
-       $this->awsFixtures->append(new Result([
+
+        // ViewerCodeActivity::getStatusesForViewerCodes
+        $this->awsFixtures->append(new Result());
+
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
                     'SiriusUid'        => $this->lpaUid,
