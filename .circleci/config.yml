@@ -239,11 +239,11 @@ orbs:
                 cat /home/circleci/project/build/service-pdf/coverage/lcov.info
                 sed 's_/src/_/home/circleci/project/service-pdf/web/src/_' < /home/circleci/project/build/service-pdf/coverage/lcov.info > /home/circleci/project/build/service-pdf/coverage/lcov-fixed.info
                 echo '****** AFTER *******'
-                cat /home/circleci/project/build/service-pdf/lcov-fixed.info
+                cat /home/circleci/project/build/service-pdf/coverage/lcov-fixed.info
           - coveralls/upload:
               flag_name: PDF Test
               parallel: true
-              path_to_lcov: /home/circleci/project/build/service-pdf/lcov-fixed.info
+              path_to_lcov: /home/circleci/project/build/service-pdf/coverage/lcov-fixed.info
           - store_test_results:
               path: build/service-pdf/
           - store_artifacts:
@@ -304,7 +304,7 @@ orbs:
           - coveralls/upload:
               flag_name: Web Test
               parallel: true
-              path_to_lcov: /home/circleci/project/build/web-js/lcov-fixed.info
+              path_to_lcov: /home/circleci/project/build/web-js/coverage/lcov-fixed.info
           - store_test_results:
               path: build/web-js/
           - store_artifacts:
