@@ -198,6 +198,8 @@ orbs:
         docker: [image: circleci/php:7-cli]
       node:
         docker: [image: circleci/node:8.0]
+      node-browsers:
+        docker: [image: circleci/node:8.0-browsers]
       python:
         docker: [image: circleci/python]
       python-browsers:
@@ -207,7 +209,7 @@ orbs:
 
     jobs:
       node_test_service_pdf:
-        executor: node
+        executor: node-browsers
         steps:
           - checkout
           - restore_cache:
