@@ -13,6 +13,7 @@ use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
+use DateTime;
 
 class CheckAccessCodesHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
@@ -71,17 +72,19 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         );
 
         foreach ($shareCodes as $key => $code) {
+          
+            if (!array_key_exists('Cancelled', $code) || (new DateTime('now') > $code['Expires'])) {
+                $form = new CancelCode($this->getCsrfGuard($request));
+                $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-cancel-code'));
 
-            $form = new CancelCode($this->getCsrfGuard($request));
-            $form->setAttribute('action',$this->urlHelper->generate('lpa.confirm-cancel-code'));
+                $form->setData([
+                    'lpa_token' => $actorLpaToken,
+                    'viewer_code' => $code['ViewerCode'],
+                    'organisation' => $code['Organisation'],
+                ]);
 
-            $form->setData([
-                'lpa_token'=> $actorLpaToken,
-                'viewer_code' => $code['ViewerCode'],
-                'organisation' => $code['Organisation'],
-            ]);
-
-            $shareCodes[$key]['form'] = $form;
+                $shareCodes[$key]['form'] = $form;
+            }
 
             if ($lpa->getDonor()->getId() == $code['ActorId']) {
                 $shareCodes[$key]['CreatedBy'] = $lpa->getDonor()->getFirstname();
