@@ -9,12 +9,6 @@ Feature: The user is able to create access codes for organisations
     And I am currently signed in
     And I have added an LPA to my account
 
-  @ui @integration
-  Scenario: As a user I can generate an access code for an organisation
-    Given I am on the dashboard page
-    When I request to give an organisation access to one of my LPAs
-    Then I am given a unique access code
-
   @ui
   Scenario Outline: As a user I to be shown the mistakes I make while creating an access code for an organisation
     Given I am on the dashboard page
@@ -24,3 +18,10 @@ Feature: The user is able to create access codes for organisations
     Examples:
       | organisationname  |  reasons                          |
       |                   |  Enter an organisation name       |
+
+  @ui @integration
+  Scenario: As a user I can generate an access code for an organisation
+    Given I am on the dashboard page
+    When I request to give an organisation access to one of my LPAs
+    Then I am given a unique access code
+

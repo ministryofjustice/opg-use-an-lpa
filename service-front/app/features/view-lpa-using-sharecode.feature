@@ -35,3 +35,47 @@ Feature: View an LPA via sharecode
     Examples:
       | surname | reason |
       |  | Enter the donor's surname |
+
+  @ui
+  Scenario Outline: The user enters an expired sharecode and is shown the reason for not able to see the details of an LPA
+    Given I have been given access to an LPA via share code
+    And I access the viewer service
+    When I give a share code that has got expired
+    Then I am told that the share code is invalid because <reason>
+  Examples:
+  | reason |
+  | The code that you entered has expired |
+
+  @ui
+  Scenario Outline: The user enters a cancelled sharecode and is shown the reason for not able to see the details of an LPA
+    Given I have been given access to an LPA via share code
+    And I access the viewer service
+    When I give a share code that's been cancelled
+    Then I am told that the share code is invalid because <reason>
+    Examples:
+      | reason |
+      | The code you entered has been cancelled |
+
+  @ui
+  Scenario Outline: The user enters a non existing surname and share code and is shown the reason for not able to see the details of an LPA
+    Given I have been given access to an LPA via share code
+    And I access the viewer service
+    When I give an invalid <sharecode> and <surname>
+    Then I am told that the share code is invalid because <reason>
+    Examples:
+      |surname  |sharecode       | reason |
+      | Billson |1110-1111-0111  | We could not find an LPA matching those details |
+
+  @ui
+  Scenario: The user is allowed to re-enter code after an invalid one entered
+    Given I attempted an invalid share codes
+    When I want to make an attempt to enter another share code
+    Then I want to see page to enter another share code
+
+  @ui
+  Scenario: The user is allowed to re-enter code after viewing a valid one
+    Given I am shown the LPA summary found with valid credentials
+    When I request to go back and try again
+    Then I want to see page to enter another share code
+
+

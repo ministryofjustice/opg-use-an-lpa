@@ -2,6 +2,8 @@
 
 namespace App\Service\Lpa;
 
+use Amp\CancelledException;
+use GuzzleHttp\Promise\CancellationException;
 use RuntimeException;
 use App\DataAccess\Repository;
 use App\Exception\GoneException;
@@ -44,7 +46,8 @@ class LpaService
         Repository\LpasInterface $lpaRepository,
         Repository\UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaDataCleanseDecoratorFactory $lpaFilterFactory
-    ) {
+    )
+    {
         $this->viewerCodesRepository = $viewerCodesRepository;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
         $this->lpaRepository = $lpaRepository;
@@ -184,6 +187,16 @@ class LpaService
             // Record the lookup in the activity table
             // We only do this if it was a 'full' lookup. i.e. not just the confirmation page.
             $this->viewerCodeActivityRepository->recordSuccessfulLookupActivity($viewerCodeData['ViewerCode']);
+        }
+
+        if (isset($viewerCodeData['Cancelled'])) {
+            return [
+                'date' => $lpa->getLookupTime()->format('c'),
+                'expires' => $viewerCodeData['Expires']->format('c'),
+                'organisation' => $viewerCodeData['Organisation'],
+                'cancelled' => $viewerCodeData['Cancelled']->format('c'),
+                'lpa' => $lpa->getData(),
+            ];
         }
 
         return [

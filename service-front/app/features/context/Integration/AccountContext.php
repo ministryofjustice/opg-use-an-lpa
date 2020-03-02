@@ -17,6 +17,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
 use Psr\Http\Message\RequestInterface;
+use DateTime;
 
 /**
  * A behat context that encapsulates user account steps
@@ -828,13 +829,42 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iCancelTheOrganisationAccessCode()
     {
-        // API call for get LpaById
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I want to be asked for confirmation prior to cancellation/
+     */
+    public function iWantToBeAskedForConfirmationPriorToCancellation()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I confirm cancellation of the chosen viewer code/
+     */
+    public function iConfirmCancellationOfTheChosenViewerCode()
+    {
+        // API call for cancelShareCode in CancelCodeHandler
+        $this->apiFixtures->put('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->viewerCodeService->cancelShareCode(
+            $this->userIdentity,
+            $this->actorLpaToken,
+            $this->accessCode
+        );
+
+        // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-
                     json_encode([
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
@@ -844,7 +874,34 @@ class AccountContext extends BaseIntegrationContext
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
-        assertNotNull($lpa);
+        // API call for getShareCodes in CheckAccessCodesHandler
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => [
+                            'SiriusUid' => $this->lpa['uId'],
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Expires' => '2021-01-01T23:59:59+00:00',
+                            'Cancelled' => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->actorLpaToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode' => $this->accessCode,
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId
+                        ]
+                    ])));
+
+        $shareCodes = $this->viewerCodeService->getShareCodes(
+            $this->userIdentity,
+            $this->actorLpaToken,
+            false
+        );
+
+        assertEquals($shareCodes[0]['Organisation'], $this->organisation);
+        assertEquals($shareCodes[0]['Cancelled'], '2021-01-01T23:59:59+00:00');
     }
 
     /**
@@ -892,97 +949,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I want to be asked for confirmation prior to cancellation/
+     * @Then /^I should be shown the details of the viewer code with status(.*)/
      */
-    public function iWantToBeAskedForConfirmationPriorToCancellation()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @When /^I confirm cancellation of the chosen viewer code/
-     */
-    public function iConfirmCancellationOfTheChosenViewerCode()
-    {
-        // API call for get LpaById in CancelCodeHandler
-        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([
-                        'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date' => 'date',
-                        'lpa' => $this->lpa,
-                        'actor' => [],
-                    ])));
-
-        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
-        assertNotNull($lpa);
-
-        // API call for cancelShareCode in CancelCodeHandler
-        $this->apiFixtures->put('/v1/lpas/' . $this->actorLpaToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])));
-
-        $this->viewerCodeService->cancelShareCode(
-            $this->userIdentity,
-            $this->actorLpaToken,
-            $this->accessCode
-        );
-
-        // API call for get LpaById in CancelCodeHandler
-        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([
-                        'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date' => 'date',
-                        'lpa' => $this->lpa,
-                        'actor' => [],
-                    ])));
-
-        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
-
-        // API call for getShareCodes in CheckAccessCodesHandler
-        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([
-                        0 => [
-                            'SiriusUid' => $this->lpa['uId'],
-                            'Added' => '2020-01-01T23:59:59+00:00',
-                            'Expires' => '2021-01-01T23:59:59+00:00',
-                            'Cancelled' => '2021-01-01T23:59:59+00:00',
-                            'UserLpaActor' => $this->actorLpaToken,
-                            'Organisation' => $this->organisation,
-                            'ViewerCode' => $this->accessCode,
-                            'Viewed' => false,
-                            'ActorId' => $this->actorId
-                        ]
-                    ])));
-
-        $shareCodes = $this->viewerCodeService->getShareCodes(
-            $this->userIdentity,
-            $this->actorLpaToken,
-            false
-        );
-
-        assertEquals($shareCodes[0]['Organisation'], $this->organisation);
-        assertEquals($shareCodes[0]['Cancelled'], '2021-01-01T23:59:59+00:00');
-    }
-
-    /**
-     * @Then /^I should be shown the details of the cancelled viewer code with cancelled status/
-     */
-    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus()
+    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithStatus()
     {
         // Not needed for this context
     }
@@ -1046,7 +1015,23 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I attempt  to add the same LPA again$/
+     * @When /^One of the generated access code has expired$/
+     */
+    public function oneOfTheGeneratedAccessCodeHasExpired()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should be shown the details of the expired viewer code with expired status $/
+     */
+    public function iShouldBeShownTheDetailsOfTheExpiredViewerCodeWithExpiredStatus ()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I attempt to add the same LPA again$/
      */
     public function iAttemptToAddTheSameLPAAgain()
     {
@@ -1071,6 +1056,136 @@ class AccountContext extends BaseIntegrationContext
      * @Then /^The LPA should not be found$/
      */
     public function theLPAShouldNotBeFound()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I click to check my access code now expired/
+     */
+    public function iClickToCheckMyAccessCodeNowExpired()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
+                    ])));
+
+        // API call to make code
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                            0 => [
+                                'SiriusUid' => $this->lpa['uId'],
+                                'Added' => '2020-01-01T23:59:59+00:00',
+                                'Expires' => '2020-01-02T23:59:59+00:00',
+                                'UserLpaActor' => $this->actorLpaToken,
+                                'Organisation' => $this->organisation,
+                                'ViewerCode' => $this->accessCode,
+                                'Viewed' => false,
+                                'ActorId' => $this->actorId
+                            ]
+                        ]
+                    )
+                ));
+
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
+
+        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
+
+        assertEquals($lpa, $lpaObject);
+        assertEquals($this->accessCode, $shareCodes[0]['ViewerCode']);
+        assertEquals($this->organisation, $shareCodes[0]['Organisation']);
+        assertEquals($this->actorId, $shareCodes[0]['ActorId']);
+        assertEquals($this->actorLpaToken, $shareCodes[0]['UserLpaActor']);
+        assertEquals(false, $shareCodes[0]['Viewed']);
+        //check if the code expiry date is in the past
+        assertGreaterThan(strtotime($shareCodes[0]['Expires']),strtotime((new DateTime('now'))->format('Y-m-d')));
+        assertGreaterThan(strtotime($shareCodes[0]['Added']),strtotime($shareCodes[0]['Expires']));
+    }
+
+    /**
+     * @When /^I click to check my active and inactive codes$/
+     */
+    public function iClickToCheckMyActiveAndInactiveCodes()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
+                    ])));
+
+        // API call to make code
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                            0 => [
+                                'SiriusUid' => $this->lpa['uId'],
+                                'Added' => '2020-01-01T23:59:59+00:00',
+                                'Expires' => '2021-01-01T23:59:59+00:00',
+                                'UserLpaActor' => $this->actorLpaToken,
+                                'Organisation' => $this->organisation,
+                                'ViewerCode' => $this->accessCode,
+                                'Viewed' => false,
+                                'ActorId' => $this->actorId
+                            ],
+                            1 => [
+                                'SiriusUid'    => $this->lpa['uId'],
+                                'Added'        => '2020-01-01T23:59:59+00:00',
+                                'Expires'      => '2020-02-01T23:59:59+00:00',
+                                'UserLpaActor' => $this->actorLpaToken,
+                                'Organisation' => $this->organisation,
+                                'ViewerCode'   => "ABC321ABCXYZ",
+                                'Viewed'       => false,
+                                'ActorId'      => $this->actorId
+                            ]
+                        ]
+                    )
+                ));
+
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
+
+        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
+
+        assertEquals($lpa, $lpaObject);
+        assertEquals($this->accessCode, $shareCodes[0]['ViewerCode']);
+        assertEquals($this->organisation, $shareCodes[0]['Organisation']);
+        assertEquals($this->actorId, $shareCodes[0]['ActorId']);
+        assertEquals($this->actorLpaToken, $shareCodes[0]['UserLpaActor']);
+        assertEquals(false, $shareCodes[0]['Viewed']);
+
+        assertEquals("ABC321ABCXYZ", $shareCodes[1]['ViewerCode']);
+
+    }
+
+    /**
+     * @Then /^I can see the relevant (.*) and (.*) of my access codes and their details$/
+     */
+    public function iCanSeeAllOfMyActiveAndInactiveAccessCodesAndTheirDetails($activeTitle, $inactiveTitle)
     {
         // Not needed for this context
     }
