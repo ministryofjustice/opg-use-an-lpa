@@ -212,7 +212,7 @@ orbs:
           - checkout
           - restore_cache:
               name: Restore node modules cache
-              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
+              key: 'node_modules-{{ checksum "service-pdf/app/package-lock.json" }}-{{ arch }}'
           - run:
               name: Install dependencies
               command: |
@@ -255,7 +255,7 @@ orbs:
               when: always
           - save_cache:
               name: Save node modules cache
-              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
+              key: 'node_modules-{{ checksum "service-pdf/app/package-lock.json" }}-{{ arch }}'
               paths:
                 - service-pdf/app/node_modules
 
@@ -269,7 +269,7 @@ orbs:
           - checkout
           - restore_cache:
               name: Restore node modules cache
-              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
+              key: 'node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}'
           - run:
               name: Install dependencies
               command: |
@@ -316,7 +316,7 @@ orbs:
               when: always
           - save_cache:
               name: Save node modules cache
-              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
+              key: 'node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}'
               paths:
                 - service-front/web/node_modules
 
