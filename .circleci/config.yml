@@ -195,12 +195,14 @@ orbs:
           - run:
               name: run parallel finished webhook
               command : |
-                curl -k https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN -d "payload[build_num]=$CIRCLE_WORKFLOW_ID&payload[status]=done"
+                curl -k https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN -d "payload[build_num]=$CIRCLE_BUILD_NUM&payload[status]=done"
     executors:
       puppeteer:
         docker: [image: buildkite/puppeteer]
       php:
         docker: [image: circleci/php:7-cli]
+      php-node:
+        docker: [image: circleci/php:7-cli-node]
       node:
         docker: [image: circleci/node:8.0]
       node-browsers:
@@ -236,16 +238,10 @@ orbs:
           - run:
               name: Run coverage with Jest
               command: |
-                export COVERALLS_SERVICE_NAME=circleci
-                export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
-                export COVERALLS_PARALLEL=true
-                export COVERALLS_SERVICE_JOB_ID=$CIRCLE_WORKFLOW_ID
                 mkdir -p /home/circleci/project/build/service-pdf
                 cd service-pdf/app/
                 ./node_modules/.bin/jest --ci --runInBand --coverage
                 cp -a ./coverage /home/circleci/project/build/service-pdf
-                cd /home/circleci/project/
-                cat /home/circleci/project/build/service-pdf/coverage/lcov.info | ./service-pdf/app/node_modules/.bin/coveralls --verbose
           - store_test_results:
               path: build/service-pdf/
           - store_artifacts:
@@ -288,16 +284,10 @@ orbs:
           - run:
               name: Run coverage with Jest
               command: |
-                export COVERALLS_SERVICE_NAME=circleci
-                export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
-                export COVERALLS_PARALLEL=true
-                export COVERALLS_SERVICE_JOB_ID=$CIRCLE_WORKFLOW_ID
                 mkdir -p /home/circleci/project/build/web-js
                 cd service-front/web/
                 ./node_modules/.bin/jest --ci --runInBand --coverage
                 cp -a ./coverage /home/circleci/project/build/web-js
-                cd /home/circleci/project/
-                cat /home/circleci/project/build/web-js/coverage/lcov.info | ./service-front/web/node_modules/.bin/coveralls --verbose
           - store_test_results:
               path: build/web-js/
           - store_artifacts:
@@ -610,7 +600,7 @@ orbs:
               command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN || echo 'Codecov upload failed'
 
       coveralls_upload:
-        executor: php
+        executor: php-node
         steps:
           - checkout
           - attach_workspace:
@@ -618,8 +608,6 @@ orbs:
           - run:
               name: Install coveralls upload tool
               command: |
-                export COVERALLS_PARALLEL=true
-                export COVERALLS_SERVICE_JOB_ID=$CIRCLE_WORKFLOW_ID
                 wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.2.0/php-coveralls.phar
                 chmod +x php-coveralls.phar
           - run:
@@ -628,13 +616,23 @@ orbs:
                 sed 's_/app/src/_/home/circleci/project/service-api/app/src/_' <build/service-api/phpunit/coverage.xml > build/service-api/phpunit/coverage-fixed.xml
                 sed 's_/app/src/_/home/circleci/project/service-front/app/src/_' <build/service-front/phpunit/coverage.xml > build/service-front/phpunit/coverage-fixed.xml
           - run:
-              name: Upload report
+              name: Upload reports
               command: |
+                export COVERALLS_SERVICE_NAME=circleci
+                export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
+                export COVERALLS_PARALLEL=true
                 ./php-coveralls.phar -v \
                 --json_path build/coveralls-upload.json \
                 --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
                 --coverage_clover build/service-front/phpunit/coverage-fixed.xml
-          - notify_coveralls_finished
+                cd /home/circleci/project/service-front/web/ && npm install
+                cd /home/circleci/project/service-pdf/app/ && npm install
+                cd /home/circleci/project/
+                cat /home/circleci/project/build/web-js/coverage/lcov.info \
+                | ./service-front/web/node_modules/.bin/coveralls --verbose
+                cat /home/circleci/project/build/service-pdf/coverage/lcov.info \
+                | ./service-pdf/app/node_modules/.bin/coveralls --verbose
+                curl -k https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN -d "payload[build_num]=$CIRCLE_BUILD_NUM&payload[status]=done"
       #----------------------------------------------------
       # Terraform
 
