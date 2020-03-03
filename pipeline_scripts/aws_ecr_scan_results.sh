@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 function get_ecr_scan_findings() {
-  aws ecr describe-image-scan-findings --repository-name ${ECR_PATH}/${1:?} --image-id imageTag=$IMAGE_TAG | jq -r '. | .imageScanStatus.description'
+  aws ecr describe-image-scan-findings --repository-name ${ECR_PATH}/${1:?} --image-id imageTag=$IMAGE_TAG --region eu-west-1 | jq -r '. | .imageScanStatus.description'
 }
 function wait_for_ecs_scan() {
-  aws ecr wait image-scan-complete --repository-name ${ECR_PATH}/${1:?} --image-id imageTag=$IMAGE_TAG
+  aws ecr wait image-scan-complete --repository-name ${ECR_PATH}/${1:?} --image-id imageTag=$IMAGE_TAG --region eu-west-1
 }
 
 function recursive_wait() {
