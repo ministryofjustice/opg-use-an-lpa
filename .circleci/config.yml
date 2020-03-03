@@ -238,12 +238,15 @@ orbs:
               command: |
                 export COVERALLS_SERVICE_NAME=circleci
                 export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
+                export COVERALLS_PARALLEL=true
                 mkdir -p /home/circleci/project/build/service-pdf
                 cd service-pdf/app/
                 ./node_modules/.bin/jest --ci --runInBand --coverage
                 cp -a ./coverage /home/circleci/project/build/service-pdf
                 sed 's_/home/circleci/project/service-pdf/__' < /home/circleci/project/build/service-pdf/coverage/clover.xml > /home/circleci/project/build/service-pdf/coverage/clover-fixed.xml
-                cat /home/circleci/project/build/service-pdf/coverage/lcov.info | ./node_modules/bin/coveralls --verbose
+                mv /home/circleci/project/build/service-pdf/coverage/clover.xml /home/circleci/project/build/service-pdf/coverage/clover-original.xml
+                mv /home/circleci/project/build/service-pdf/coverage/clover-fixed.xml /home/circleci/project/build/service-pdf/coverage/clover.xml
+                cat /home/circleci/project/build/service-pdf/coverage/lcov.info | ./node_modules/.bin/coveralls --verbose
           - store_test_results:
               path: build/service-pdf/
           - store_artifacts:
@@ -288,12 +291,15 @@ orbs:
               command: |
                 export COVERALLS_SERVICE_NAME=circleci
                 export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
+                export COVERALLS_PARALLEL=true
                 mkdir -p /home/circleci/project/build/web-js
                 cd service-front/web/
                 ./node_modules/.bin/jest --ci --runInBand --coverage
                 cp -a ./coverage /home/circleci/project/build/web-js
                 sed  's_/home/circleci/project/service-front/__' < /home/circleci/project/build/web-js/coverage/clover.xml > /home/circleci/project/build/web-js/coverage/clover-fixed.xml
-                cat /home/circleci/project/build/web-js/coverage/lcov.info | ./node_modules/bin/coveralls --verbose
+                mv /home/circleci/project/build/web-js/coverage/clover.xml /home/circleci/project/build/web-js/coverage/clover-original.xml
+                mv /home/circleci/project/build/web-js/coverage/clover-fixed.xml /home/circleci/project/build/web-js/coverage/clover.xml
+                cat /home/circleci/project/build/web-js/coverage/lcov.info | ./node_modules/.bin/coveralls --verbose
           - store_test_results:
               path: build/web-js/
           - store_artifacts:
