@@ -238,6 +238,8 @@ orbs:
               command: |
                 export COVERALLS_SERVICE_NAME=circleci
                 export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
+                export COVERALLS_PARALLEL=true
+                export COVERALLS_SERVICE_JOB_ID=$CIRCLE_BUILD_NUM
                 mkdir -p /home/circleci/project/build/service-pdf
                 cd service-pdf/app/
                 ./node_modules/.bin/jest --ci --runInBand --coverage
@@ -288,6 +290,8 @@ orbs:
               command: |
                 export COVERALLS_SERVICE_NAME=circleci
                 export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
+                export COVERALLS_PARALLEL=true
+                export COVERALLS_SERVICE_JOB_ID=$CIRCLE_BUILD_NUM
                 mkdir -p /home/circleci/project/build/web-js
                 cd service-front/web/
                 ./node_modules/.bin/jest --ci --runInBand --coverage
@@ -614,6 +618,8 @@ orbs:
           - run:
               name: Install coveralls upload tool
               command: |
+                export COVERALLS_PARALLEL=true
+                export COVERALLS_SERVICE_JOB_ID=$CIRCLE_BUILD_NUM
                 wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.2.0/php-coveralls.phar
                 chmod +x php-coveralls.phar
           - run:
@@ -628,6 +634,7 @@ orbs:
                 --json_path build/coveralls-upload.json \
                 --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
                 --coverage_clover build/service-front/phpunit/coverage-fixed.xml
+          - notify_coveralls_finished
       #----------------------------------------------------
       # Terraform
 
