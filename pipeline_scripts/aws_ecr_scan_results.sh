@@ -45,6 +45,7 @@ declare -a images=("api_app"
                     "api_web"
                     "front_app"
                     "front_web"
+                    "pdf"
                     )
 
 ECR_PATH="use_an_lpa"
