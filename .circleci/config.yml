@@ -54,18 +54,7 @@ workflows:
           requires:
             [app_front_build, app_api_build, test_web, test_pdf]
 
-      - use-my-lpa/ecr_scan_results:
-          name: ecr_scan_results
-          requires:
-            [
-              app_front_build,
-              web_front_build,
-              web_api_build,
-              app_api_build,
-              pdf_build,
-            ]
-
-      # Provision and test development
+            # Provision and test development
       - use-my-lpa/apply_shared_terraform:
           name: dev_apply_shared_terraform
           filters: { branches: { ignore: [master] } }
@@ -82,6 +71,18 @@ workflows:
               web_api_build,
               app_api_build,
               pdf_build,
+              ]
+
+      - use-my-lpa/ecr_scan_results:
+          name: ecr_scan_results
+          requires:
+            [
+              app_front_build,
+              web_front_build,
+              web_api_build,
+              app_api_build,
+              pdf_build,
+              dev_apply_environment_terraform,
             ]
 
       - use-my-lpa/seed_database:
