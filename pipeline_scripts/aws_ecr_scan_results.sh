@@ -1,4 +1,4 @@
-#!/usr/bin/env bash#!/usr/bin/env bash
+#!/usr/bin/env bash
 
 function get_ecr_scan_findings() {
   aws ecr describe-image-scan-findings --repository-name ${ECR_PATH}/${1:?} --image-id imageTag=$IMAGE_TAG | jq -r '. | .imageScanStatus.description'
