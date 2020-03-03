@@ -590,11 +590,11 @@ orbs:
         executor: python
         steps:
           - checkout
-          - install_aws_cli
           - run:
               name: Check ECR Scan Results
               command: |
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                sudo pip3 install boto3
                 python pipeline_scripts/aws_ecr_scan_results.py --tag $CIRCLE_BRANCH-$SHORT_HASH
 
       # Code Coverage
