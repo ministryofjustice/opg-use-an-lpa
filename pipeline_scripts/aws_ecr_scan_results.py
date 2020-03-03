@@ -89,7 +89,7 @@ class ECRScanChecker:
         for image in self.images_to_check:
             if self.get_ecr_scan_findings(image, tag)[
                     "imageScanFindings"]["findings"] != []:
-                print("found results for", image, ":")
+                print("found results for", self.aws_ecr_repository_path+image, ":")
                 pp.pprint(self.get_ecr_scan_findings(image, tag)[
                     "imageScanFindings"]["findings"])
                 self.failed_checks += 1
