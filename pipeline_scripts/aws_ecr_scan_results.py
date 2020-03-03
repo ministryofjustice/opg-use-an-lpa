@@ -117,7 +117,7 @@ def main():
 
     parser.add_argument("config_file_path",
                         nargs='?',
-                        default="/tmp/environment_pipeline_tasks_config.json",
+                        default="/tmp/cluster_config.json",
                         type=str,
                         help="Path to config file produced by terraform")
     parser.add_argument("--tag",
