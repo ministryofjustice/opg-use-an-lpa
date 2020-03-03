@@ -243,7 +243,7 @@ orbs:
                 ./node_modules/.bin/jest --ci --runInBand --coverage
                 cp -a ./coverage /home/circleci/project/build/service-pdf
                 sed 's_/home/circleci/project/service-pdf/__' < /home/circleci/project/build/service-pdf/coverage/clover.xml > /home/circleci/project/build/service-pdf/coverage/clover-fixed.xml
-                /home/circleci/project/build/service-pdf/coverage/lcov.info | ./node_modules/bin/coveralls --verbose
+                cat /home/circleci/project/build/service-pdf/coverage/lcov.info | ./node_modules/bin/coveralls --verbose
           - store_test_results:
               path: build/service-pdf/
           - store_artifacts:
@@ -293,7 +293,7 @@ orbs:
                 ./node_modules/.bin/jest --ci --runInBand --coverage
                 cp -a ./coverage /home/circleci/project/build/web-js
                 sed  's_/home/circleci/project/service-front/__' < /home/circleci/project/build/web-js/coverage/clover.xml > /home/circleci/project/build/web-js/coverage/clover-fixed.xml
-                /home/circleci/project/build/web-js/coverage/lcov.info | ./node_modules/bin/coveralls --verbose
+                cat /home/circleci/project/build/web-js/coverage/lcov.info | ./node_modules/bin/coveralls --verbose
           - store_test_results:
               path: build/web-js/
           - store_artifacts:
