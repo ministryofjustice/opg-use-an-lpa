@@ -244,11 +244,10 @@ orbs:
                 cp -a ./coverage /home/circleci/project/build/service-pdf
                 echo '****** BEFORE ******'
                 cat /home/circleci/project/build/service-pdf/coverage/lcov.info
-                sed 's_/src/_/home/circleci/project/service-pdf/web/src/_' < /home/circleci/project/build/service-pdf/coverage/lcov.info > /home/circleci/project/build/service-pdf/coverage/lcov-fixed.info
+                sed 's_/src/_/service-pdf/web/src/_' < /home/circleci/project/build/service-pdf/coverage/lcov.info > /home/circleci/project/build/service-pdf/coverage/lcov-fixed.info
                 echo '****** AFTER *******'
                 cat /home/circleci/project/build/service-pdf/coverage/lcov-fixed.info
           - coveralls/upload:
-              flag_name: PDF Test
               parallel: true
               path_to_lcov: /home/circleci/project/build/service-pdf/coverage/lcov-fixed.info
           - store_test_results:
@@ -305,11 +304,10 @@ orbs:
                 ls /home/circleci/project/build/web-js/coverage
                 echo '****** BEFORE ******'
                 cat /home/circleci/project/build/web-js/coverage/lcov.info
-                sed 's_/src/_/home/circleci/project/service-api/web/src/_' < /home/circleci/project/build/web-js/coverage/lcov.info > /home/circleci/project/build/web-js/coverage/lcov-fixed.info
+                sed 's_/src/_/service-api/web/src/_' < /home/circleci/project/build/web-js/coverage/lcov.info > /home/circleci/project/build/web-js/coverage/lcov-fixed.info
                 echo '****** AFTER *******'
                 cat /home/circleci/project/build/web-js/coverage/lcov-fixed.info
           - coveralls/upload:
-              flag_name: Web Test
               parallel: true
               path_to_lcov: /home/circleci/project/build/web-js/coverage/lcov-fixed.info
           - store_test_results:
@@ -640,13 +638,14 @@ orbs:
               command: |
                 sed 's_/app/src/_/home/circleci/project/service-api/app/src/_' <build/service-api/phpunit/coverage.xml > build/service-api/phpunit/coverage-fixed.xml
                 sed 's_/app/src/_/home/circleci/project/service-front/app/src/_' <build/service-front/phpunit/coverage.xml > build/service-front/phpunit/coverage-fixed.xml
+
           - run:
               name: Upload report
               command: |
                 ./php-coveralls.phar -v \
                 --json_path build/coveralls-upload.json \
                 --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
-                --coverage_clover build/service-front/phpunit/coverage-fixed.xml
+                --coverage_clover build/service-front/phpunit/coverage-fixed.xml \
           - notify_coveralls_finished
       #----------------------------------------------------
       # Terraform
