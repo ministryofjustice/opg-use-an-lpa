@@ -595,7 +595,7 @@ orbs:
               name: Check ECR Scan Results
               command: |
                 export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                pipeline_scripts/aws_ecr_scan_results.sh --tag $CIRCLE_BRANCH-$SHORT_HASH
+                python pipeline_scripts/aws_ecr_scan_results.py --tag $CIRCLE_BRANCH-$SHORT_HASH
 
       # Code Coverage
 
