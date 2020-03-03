@@ -113,7 +113,7 @@ class ECRScanChecker:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Wait for services in an ECS cluster to become stable.")
+        description="Check ECR Scan results for all service container images.")
 
     parser.add_argument("config_file_path",
                         nargs='?',
