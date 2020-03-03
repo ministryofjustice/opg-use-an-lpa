@@ -42,7 +42,7 @@ class ECRScanChecker:
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
-            role_arn = 'arn:aws:iam::{}:role/opg-refunds-ci'.format(
+            role_arn = 'arn:aws:iam::{}:role/opg-use-an-lpa-ci'.format(
                 self.aws_account_id)
         else:
             role_arn = 'arn:aws:iam::{}:role/operator'.format(
