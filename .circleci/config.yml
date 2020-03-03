@@ -54,6 +54,17 @@ workflows:
           requires:
             [app_front_build, app_api_build, test_web, test_pdf]
 
+      - use-my-lpa/ecr_scan_results:
+          name: ecr_scan_results
+          requires:
+            [
+              app_front_build,
+              web_front_build,
+              web_api_build,
+              app_api_build,
+              pdf_build,
+            ]
+
       # Provision and test development
       - use-my-lpa/apply_shared_terraform:
           name: dev_apply_shared_terraform
@@ -570,6 +581,21 @@ orbs:
                 else
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
+
+      ecr_scan_results:
+        #
+        # Wait for ECR scan results
+        #   and fail if non-successful
+        #
+        executor: python
+        steps:
+          - checkout
+          - install_aws_cli
+          - run:
+              name: Check ECR Scan Results
+              command: |
+                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                pipeline_scripts/aws_ecr_scan_results.sh --tag $CIRCLE_BRANCH-$SHORT_HASH
 
       # Code Coverage
 
