@@ -38,12 +38,12 @@ Feature: Add an LPA
 
     Examples:
       | passcode | reason |
-      | T3ST PA22C0D3 | Your passcode must only include letters, numbers and dashes |
-      | T3ST PA22-C0D3 | Your passcode must only include letters, numbers and dashes |
-      | T3STP*22C0!? | Your passcode must only include letters, numbers and dashes |
-      | T3ST - PA22 - C0D3 | Your passcode must be 12 characters long |
-      | T3STPA22C0D | Your passcode must be 12 characters long |
-      |  | Enter your one-time passcode |
+      | T3ST PA22C0D3 | Your activation key must only include letters, numbers and dashes |
+      | T3ST PA22-C0D3 | Your activation key must only include letters, numbers and dashes |
+      | T3STP*22C0!? | Your activation key must only include letters, numbers and dashes |
+      | T3ST - PA22 - C0D3 | Your activation key must be 12 numbers and letters long |
+      | T3STPA22C0D | Your activation key must be 12 numbers and letters long |
+      |  | Enter your activation key |
 
   @ui
   Scenario Outline: The user cannot add an LPA with an invalid reference number
@@ -53,12 +53,12 @@ Feature: Add an LPA
 
     Examples:
       | referenceNo | reason |
-      | 7000-00000001 | The reference number must only include numbers |
-      | 7000-0000 0001 | The reference number must only include numbers |
-      | 7000-0000-ABC! | The reference number must only include numbers |
+      | 7000-00000001 | The LPA reference number must only include numbers |
+      | 7000-0000 0001 | The LPA reference number must only include numbers |
+      | 7000-0000-ABC! | The LPA reference number must only include numbers |
       | 7000-0000-00011 | The LPA reference number must be 12 numbers long |
       | 70000000000 | The LPA reference number must be 12 numbers long |
-      |  | Enter a reference number |
+      |  | Enter an LPA reference number |
 
   @ui
   Scenario Outline: The user cannot add an LPA with an invalid DOB
