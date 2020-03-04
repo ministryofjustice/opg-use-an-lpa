@@ -1,13 +1,17 @@
-@viewer @termsOfUSe
-Feature: View an LPA via sharecode
-  As an organisation who has been given a share code
-  I can enter that code and see the details of an LPA
-  So that I can carry out business functions
+@viewer @termsOfUse
+Feature: View terms of use from enter code page
+  As an organisation using the service
+  I want to check the terms of use
+  So that I can be be sure of my rights and responsibilities for using the service
 
-  @integration @ui
-  Scenario: The user can enter a valid sharecode and see the details of an LPA
-    Given I have been given access to an LPA via share code
-    And I access the viewer service
-    And I give a valid LPA share code
-    When I confirm the LPA is correct
-    Then I can see the full details of the valid LPA
+  @ui
+  Scenario: The user can access the terms of use from the enter code page
+    Given I am on the enter code page
+    When I request to see the viewer terms of use
+    Then I can see the viewer terms of use
+
+  @ui
+  Scenario: The user can go back to the enter code page from the terms of use page
+    Given I am on the terms of use page
+    When I request to go back to the enter code page
+    Then I am taken back to the enter code page
