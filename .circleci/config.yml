@@ -73,7 +73,7 @@ workflows:
               pdf_build,
               ]
 
-      - use-my-lpa/ecr_scan_results:
+      - ecr_scan_results:
           name: ecr_scan_results
           requires:
             [
@@ -583,22 +583,7 @@ orbs:
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
 
-      ecr_scan_results:
-        #
-        # Wait for ECR scan results
-        #   and fail if non-successful
-        #
-        executor: python
-        steps:
-          - checkout
-          - attach_workspace:
-              at: /tmp
-          - run:
-              name: Check ECR Scan Results
-              command: |
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                sudo pip3 install boto3
-                python pipeline_scripts/aws_ecr_scan_results.py --tag $CIRCLE_BRANCH-$SHORT_HASH
+
 
       # Code Coverage
 
@@ -918,6 +903,7 @@ jobs:
           color: "#9933ff"
           message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+
   slack_notify_production_release:
     docker:
       - image: circleci/python
@@ -936,4 +922,24 @@ jobs:
           color: "#9933ff"
           message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
+          footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+
+  ecr_scan_results:
+    docker:
+      - image: circleci/python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Check ECR Scan Results
+          command: |
+            sudo pip3 install boto3
+            export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+            python pipeline_scripts/aws_ecr_scan_results.py --tag $CIRCLE_BRANCH-$SHORT_HASH
+      - slack/notify:
+          title: "ECR Scan Results"
+          color: "#9933ff"
+          message: "View results: $CIRCLE_BUILD_URL"
+          # webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"

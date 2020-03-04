@@ -107,8 +107,7 @@ class ECRScanChecker:
 
     def pipeline_status(self):
         if self.failed_checks > 0:
-            print("ECR scan results failure")
-            exit(1)
+            return "ECR scan results failure"
 
 
 def main():
@@ -130,7 +129,9 @@ def main():
 
     work.recursive_wait(args.tag)
     work.recursive_check(args.tag)
-    work.pipeline_status()
+    status = work.pipeline_status()
+    os.environ['SCAN_FAILURE'] = status
+    print(status)
 
 
 if __name__ == "__main__":
