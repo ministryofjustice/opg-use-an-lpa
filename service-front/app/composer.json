@@ -29,16 +29,12 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@github.com:ministryofjustice/notifications-php-client.git"
-        },
-        {
-            "type": "vcs",
             "url":  "git@github.com:ministryofjustice/behat-psr-extension.git"
         }
     ],
     "require": {
         "php": "^7.1",
-        "alphagov/notifications-php-client": "^2.0",
+        "alphagov/notifications-php-client": "^3.0",
         "aws/aws-sdk-php": "^3.91",
         "dflydev/fig-cookies": "^2.0",
         "elie29/zend-phpdi-config": "^3.0",
