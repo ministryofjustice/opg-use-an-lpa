@@ -32,6 +32,9 @@ class ViewerContext extends BaseIntegrationContext
     /** @var AwsMockHandler */
     private $awsFixtures;
 
+    /** @var LpaService */
+    private $lpaService;
+
     protected function prepareContext(): void
     {
         // This is populated into the container using a Middleware which these integration
@@ -40,6 +43,8 @@ class ViewerContext extends BaseIntegrationContext
 
         $this->apiFixtures = $this->container->get(MockHandler::class);
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
+
+        $this->lpaService = $this->lpaService = $this->container->get(LpaService::class);
     }
 
     /**
@@ -99,12 +104,57 @@ class ViewerContext extends BaseIntegrationContext
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa['uId'])
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
-        $lpaService = $this->container->get(LpaService::class);
-
         // logActivity parameter is false when doing a summary check
-        $lpaData = $lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, false);
+        $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, false);
 
         assertEquals($this->lpa, $lpaData['lpa']);
         assertEquals($lpaExpiry, $lpaData['expires']);
+    }
+
+    /** @When I confirm the LPA is correct */
+    public function iConfirmTheLPAIsCorrect()
+    {
+        $lpaExpiry = (new \DateTime('+20 days'))->format('c');
+
+        // ViewerCodes::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'ViewerCode' => $this->viewerCode,
+                            'SiriusUid'  => $this->lpa['uId'],
+                            'Added'      => (new \DateTime('now'))->format('c'),
+                            'Expires'    => $lpaExpiry
+                        ]
+                    )
+                ]
+            )
+        );
+
+        // Lpas::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa['uId'])
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // ViewerCodeActivity::recordSuccessfulLookupActivity
+        $this->awsFixtures->append(new Result([]));
+
+        // logActivity parameter is false when doing a summary check
+        $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, true);
+
+        assertEquals($this->lpa, $lpaData['lpa']);
+        assertEquals($lpaExpiry, $lpaData['expires']);
+    }
+
+    /** @Then I can see the full details of the valid LPA */
+    public function iCanSeeTheFullDetailsOfTheValidLPA()
+    {
+        // Not used in this context
+    }
+
+    /** @Then I can see the full details of a cancelled LPA */
+    public function iCanSeeTheFullDetailsOfACancelledLPA()
+    {
+        // Not used in this context
     }
 }
