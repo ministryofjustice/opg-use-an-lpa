@@ -1577,9 +1577,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I can see that my LPA has the correct number of active codes (.*) (.*)$/
+     * @Then /^I can see that my LPA has (.*) with expiry dates (.*) (.*)$/
      */
-    public function iCanSeeThatMyLPAHasTheCorrectNumberOfActiveCodes($code1Expiry, $code2Expiry)
+    public function iCanSeeThatMyLPAHasWithExpiryDates($noActiveCodes, $code1Expiry, $code2Expiry)
     {
         $this->organisation = "TestOrg";
         $this->accessCode = "XYZ321ABC987";
@@ -1632,15 +1632,7 @@ class AccountContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $this->ui->assertPageAddress('/lpa/dashboard');
 
-        $today = ((new DateTime('now'))->setTime(23,59,59)->format('c'));
-
-        if ($code1['Expires'] > $today && $code2['Expires'] > $today) {
-            $this->ui->assertPageContainsText('2 active codes');
-        } elseif ($code1['Expires'] < $today && $code2['Expires'] < $today) {
-            $this->ui->assertPageContainsText('No organisations have access');
-        } elseif (($code1['Expires'] < $today && $code2['Expires'] > $today) || ($code1['Expires'] > $today && $code2['Expires'] < $today)) {
-            $this->ui->assertPageContainsText('1 active code');
-        }
+        $this->ui->assertPageContainsText($noActiveCodes);
     }
 
     /**

@@ -1199,11 +1199,11 @@ class AccountContext extends BaseIntegrationContext
     {
         // Not needed for this context
     }
-  
+
     /**
-     * @Then /^I can see that my LPA has the correct number of active codes (.*) (.*)$/
+     * @Then /^I can see that my LPA has (.*) with expiry dates (.*) (.*)$/
      */
-    public function iCanSeeThatMyLPAHasTheCorrectNumberOfActiveCodes($code1Expiry, $code2Expiry)
+    public function iCanSeeThatMyLPAHasWithExpiryDates($noActiveCodes, $code1Expiry, $code2Expiry)
     {
         $this->organisation = "TestOrg";
         $this->accessCode = "XYZ321ABC987";
