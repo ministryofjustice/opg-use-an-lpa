@@ -42,6 +42,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/check-code', Viewer\Handler\CheckCodeHandler::class, 'check-code');
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
     $app->get('/download-lpa', Viewer\Handler\DownloadLpaHandler::class, 'download-lpa');
+    $app->get('/terms-of-use', Viewer\Handler\ViewerTermsOfUseHandler::class, 'viewer-terms-of-use');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
