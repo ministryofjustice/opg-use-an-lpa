@@ -2,50 +2,28 @@
 
 declare(strict_types=1);
 
-namespace BehatTest\Context\Integration;
+namespace BehatTest\Context\Acceptance;
 
-use App\Service\Log\RequestTracing;
-use App\Service\Lpa\LpaService;
-use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
+use Behat\Behat\Context\Context;
+use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
-use JSHayes\FakeRequests\MockHandler;
 
 /**
- * Class ViewerContext
+ * Class AccountContext
  *
- * @package BehatTest\Context\Integration
+ * @package BehatTest\Context\Acceptance
  *
- * @property string viewerCode The share code given to an organisation
- * @property string donorSurname The surname of the donors LPA reference by the share code
- * @property array lpa LPA data as returned by the API gateway
+ * @property string viewerCode
+ * @property string donorSurname
+ * @property array lpa
  */
-class ViewerContext extends BaseIntegrationContext
+class ViewerContext implements Context
 {
+    use BaseAcceptanceContextTrait;
     use SetupEnv;
-
-    /** @var MockHandler */
-    private $apiFixtures;
-
-    /** @var AwsMockHandler */
-    private $awsFixtures;
-
-    /** @var LpaService */
-    private $lpaService;
-
-    protected function prepareContext(): void
-    {
-        // This is populated into the container using a Middleware which these integration
-        // tests wouldn't normally touch but the container expects
-        $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
-
-        $this->apiFixtures = $this->container->get(MockHandler::class);
-        $this->awsFixtures = $this->container->get(AwsMockHandler::class);
-
-        $this->lpaService = $this->lpaService = $this->container->get(LpaService::class);
-    }
 
     /**
      * @Given I have been given access to an LPA via share code
@@ -104,11 +82,13 @@ class ViewerContext extends BaseIntegrationContext
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa['uId'])
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
-        // logActivity parameter is false when doing a summary check
-        $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, false);
-
-        assertEquals($this->lpa, $lpaData['lpa']);
-        assertEquals($lpaExpiry, $lpaData['expires']);
+        $this->apiPost(
+            '/v1/viewer-codes/summary',
+            [
+                'code' => $this->viewerCode,
+                'name' => $this->donorSurname
+            ]
+        );
     }
 
     /**
@@ -116,6 +96,16 @@ class ViewerContext extends BaseIntegrationContext
      */
     public function iConfirmTheLPAIsCorrect()
     {
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $lpaData = $this->getResponseAsJson();
+
+        assertArrayHasKey('date', $lpaData);
+        assertArrayHasKey('expires', $lpaData);
+        assertArrayHasKey('organisation', $lpaData);
+        assertArrayHasKey('lpa', $lpaData);
+
+        assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
+
         $lpaExpiry = (new \DateTime('+20 days'))->format('c');
 
         // ViewerCodes::get
@@ -141,11 +131,13 @@ class ViewerContext extends BaseIntegrationContext
         // ViewerCodeActivity::recordSuccessfulLookupActivity
         $this->awsFixtures->append(new Result([]));
 
-        // logActivity parameter is false when doing a summary check
-        $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, true);
-
-        assertEquals($this->lpa, $lpaData['lpa']);
-        assertEquals($lpaExpiry, $lpaData['expires']);
+        $this->apiPost(
+            '/v1/viewer-codes/full',
+            [
+                'code' => $this->viewerCode,
+                'name' => $this->donorSurname
+            ]
+        );
     }
 
     /**
@@ -153,7 +145,15 @@ class ViewerContext extends BaseIntegrationContext
      */
     public function iCanSeeTheFullDetailsOfTheValidLPA()
     {
-        // Not used in this context
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $lpaData = $this->getResponseAsJson();
+
+        assertArrayHasKey('date', $lpaData);
+        assertArrayHasKey('expires', $lpaData);
+        assertArrayHasKey('organisation', $lpaData);
+        assertArrayHasKey('lpa', $lpaData);
+
+        assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
     }
 
     /**
@@ -161,6 +161,15 @@ class ViewerContext extends BaseIntegrationContext
      */
     public function iCanSeeTheFullDetailsOfACancelledLPA()
     {
-        // Not used in this context
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $lpaData = $this->getResponseAsJson();
+
+        assertArrayHasKey('date', $lpaData);
+        assertArrayHasKey('expires', $lpaData);
+        assertArrayHasKey('organisation', $lpaData);
+        assertArrayHasKey('lpa', $lpaData);
+
+        assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
+        assertEquals('Cancelled', $lpaData['lpa']['status']);
     }
 }
