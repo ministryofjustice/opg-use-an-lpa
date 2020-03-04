@@ -96,6 +96,14 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             }
         }
 
+//        var_dump("--------1");
+//        var_dump($actorLpaToken);
+//        var_dump("--------2");
+//        var_dump($user);
+//        var_dump("--------3");
+//        var_dump($shareCodes);
+//        die;
+
         return new HtmlResponse($this->renderer->render('actor::check-access-codes', [
             'actorToken' => $actorLpaToken,
             'user' => $user,

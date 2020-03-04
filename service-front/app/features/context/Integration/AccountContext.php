@@ -1189,4 +1189,53 @@ class AccountContext extends BaseIntegrationContext
     {
         // Not needed for this context
     }
+
+    /**
+     * @When /^I check my access codes$/
+     */
+    public function iCheckMyAccessCodes()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
+                    ])));
+
+        // API call to make code
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                ));
+
+        $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
+
+        assertEmpty($shareCodes);
+    }
+
+    /**
+     * @Then /^I should be told that I have not created any access codes yet$/
+     */
+    public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should be able to click a link to go and create the access codes$/
+     */
+    public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes()
+    {
+        $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
+    }
+
 }

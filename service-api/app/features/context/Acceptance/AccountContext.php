@@ -1352,4 +1352,90 @@ class AccountContext implements Context
         //check if the code expiry date is in the past
         assertGreaterThan(strtotime($response[0]['Expires']),strtotime((new DateTime('now'))->format('Y-m-d')));
     }
+
+    /**
+     * @When /^I check my access codes$/
+     */
+    public function iCheckMyAccessCodes()
+    {
+        // Get the LPA
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->lpaUid,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorId,
+                'UserId'           => $this->userId
+            ])
+        ]));
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)));
+
+        // API call to get lpa
+        $this->apiGet('/v1/lpas/' . $this->userLpaActorToken,
+            [
+                'user-token' => $this->userId
+            ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
+        assertEquals($response['lpa']['uId'], $this->lpa->uId);
+        assertEquals($response['actor']['details']['id'], $this->actorId);
+
+        // Get the share codes
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->lpaUid,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorId,
+                'UserId'           => $this->userId
+            ])
+        ]));
+
+        // ViewerCodes::getCodesByUserLpaActorId
+        $this->awsFixtures->append(new Result([]));
+
+
+        // API call to get access codes
+        $this->apiGet('/v1/lpas/' . $this->userLpaActorToken . '/codes',
+            [
+                'user-token' => $this->userId
+            ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+        $response = $this->getResponseAsJson();
+
+        assertEmpty($response);
+    }
+
+    /**
+     * @Then /^I should be told that I have not created any access codes yet$/
+     */
+    public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should be able to click a link to go and create the access codes$/
+     */
+    public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes()
+    {
+
+        $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
+    }
 }
