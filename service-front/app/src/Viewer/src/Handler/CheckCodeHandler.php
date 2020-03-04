@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
+use ArrayObject;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\LpaService;
+use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use ArrayObject;
-use DateTime;
 
 /**
  * Class CheckCodeHandler
@@ -57,7 +57,7 @@ class CheckCodeHandler extends AbstractHandler
 
         if (isset($code)) {
             try {
-                $lpa = $this->lpaService->getLpaByCode($code, $surname, false);
+                $lpa = $this->lpaService->getLpaByCode($code, $surname, LpaService::SUMMARY);
 
                 if ($lpa instanceof ArrayObject) {
                     // Then we found a LPA for the given code
@@ -66,14 +66,16 @@ class CheckCodeHandler extends AbstractHandler
                     if (isset($lpa->cancelled)) {
                         return new HtmlResponse($this->renderer->render('viewer::check-code-cancelled'));
                     } else {
-                        return new HtmlResponse($this->renderer->render('viewer::check-code-found', [
-                        'lpa' => $lpa->lpa,
-                        'expires' => $expires->format('Y-m-d'),
-                        ]));
+                        return new HtmlResponse($this->renderer->render(
+                            'viewer::check-code-found',
+                            [
+                                'lpa' => $lpa->lpa,
+                                'expires' => $expires->format('Y-m-d')
+                            ]
+                        ));
                     }
                 }
             } catch (ApiException $apiEx) {
-
                 if ($apiEx->getCode() == StatusCodeInterface::STATUS_GONE) {
                     return new HtmlResponse($this->renderer->render('viewer::check-code-expired'));
                 }
