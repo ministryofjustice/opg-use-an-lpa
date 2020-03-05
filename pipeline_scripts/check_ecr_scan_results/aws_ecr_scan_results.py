@@ -11,9 +11,7 @@ class ECRScanChecker:
     aws_iam_session = ''
     aws_ecr_client = ''
     aws_ecr_repository_path = ''
-    failed_checks = 0
     images_to_check = []
-    ecr_scan_results = []
     report = ''
 
     def __init__(self, config_file):
