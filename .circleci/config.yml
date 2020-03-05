@@ -937,9 +937,8 @@ jobs:
             sudo pip3 install boto3
             export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
             python pipeline_scripts/aws_ecr_scan_results.py --tag $CIRCLE_BRANCH-$SHORT_HASH
-      - slack/notify:
-          title: "ECR Scan Results"
-          color: "#9933ff"
-          message: "View results: $CIRCLE_BUILD_URL"
-          # webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
-          footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+            mv cluster_config.json /tmp/
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - findings.txt
