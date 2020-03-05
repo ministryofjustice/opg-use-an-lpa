@@ -98,7 +98,7 @@ workflows:
       - slack_notify_domain:
           name: post_environment_domains
           filters: { branches: { ignore: [master] } }
-          requires: [dev_run_behave_tests]
+          requires: [dev_run_behave_tests, ecr_scan_results]
 
       - hold-for-destruction:
           name: hold_env_for_destruction
