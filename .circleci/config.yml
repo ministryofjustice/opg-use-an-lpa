@@ -316,11 +316,11 @@ orbs:
               key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
               paths:
                 - service-front/web/node_modules
-          - save_cache:
-              name: Save built assets
-              key: built-web-assets
+          - persist_to_workspace:
+              root: build
               paths:
                 - service-front/web/dist
+              when: always
 
       #----------------------------------------------------
       # Front Services (Actor & Viewer)
@@ -341,13 +341,13 @@ orbs:
           - setup_remote_docker:
               version: 18.06.0-ce
               docker_layer_caching: false
-          - restore_cache:
-              keys: built-web-assets
+          - attach_workspace:
+              at: build
           - run:
               name: Build
               command: |
                 mkdir -p service-front/app/assets/stylesheets \
-                  && cp -R service-front/web/dist/stylesheets/pdf.css service-front/app/assets/stylesheets/pdf.css
+                  && cp -R build/service-front/web/dist/stylesheets/pdf.css service-front/app/assets/stylesheets/pdf.css
                 docker build --file service-front/docker/app/Dockerfile --tag front-app:latest .
           - run:
               name: Run unit tests
@@ -409,12 +409,12 @@ orbs:
           - setup_remote_docker:
               version: 18.06.0-ce
               docker_layer_caching: false
-          - restore_cache:
-              keys: built-web-assets
+          - attach_workspace:
+              at: build
           - run:
               name: Build
               command: |
-                cp -R service-front/web/dist/* service-front/docker/web/web/
+                cp -R build/service-front/web/dist/* service-front/docker/web/web/
                 docker build --file service-front/docker/web/Dockerfile --tag front-web:latest .
           - ecr_login
           - run:
