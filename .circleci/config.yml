@@ -49,8 +49,8 @@ workflows:
           name: pdf_build
           requires: [test_pdf]
 
-      - use-my-lpa/coveralls_upload:
-          name: coveralls_upload
+      - use-my-lpa/codecov_upload:
+          name: codecov_upload
           requires:
             [app_front_build, app_api_build, test_web, test_pdf]
 
@@ -585,7 +585,7 @@ orbs:
 
       # Code Coverage
 
-      codecov_php-unit_upload:
+      codecov_upload:
         #
         # Upload all php-unit test results
         #   to Codecov.
@@ -597,7 +597,12 @@ orbs:
               at: build
           - run:
               name: Upload to Codecov
-              command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN || echo 'Codecov upload failed'
+                command: |
+                  cd build/
+                  bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN -f service-api/phpunit/coverage.xml || echo 'Codecov api php coverage upload failed'
+                  bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN -f service-front/phpunit/coverage.xml || echo 'Codecov front php coverage upload failed'
+                  bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN -f web-js/coverage/lcov.info  || echo 'Codecov web front coverage upload failed'
+                  bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN -f service-pdf/coverage/lcov.info  || echo 'Codecov service pdf coverage upload failed'
 
       coveralls_upload:
         executor: php-node
