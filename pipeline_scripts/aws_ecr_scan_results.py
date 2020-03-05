@@ -93,6 +93,11 @@ class ECRScanChecker:
                 pp.pprint(self.get_ecr_scan_findings(image, tag)[
                     "imageScanFindings"]["findings"])
                 self.failed_checks += 1
+                # Use file to refer to the file object
+                with open('/tmp/findings.txt', 'a') as file:
+
+                    file.write(str(self.get_ecr_scan_findings(image, tag)[
+                        "imageScanFindings"]["findings"]))
 
     def get_ecr_scan_findings(self, image, tag):
         repository_name = self.aws_ecr_repository_path+image
@@ -103,6 +108,7 @@ class ECRScanChecker:
             },
             maxResults=1
         )
+
         return response
 
     def pipeline_status(self):
