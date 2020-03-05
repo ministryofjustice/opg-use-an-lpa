@@ -39,6 +39,8 @@ use DateTime;
  * @property string userIdentity
  * @property string actorLpaToken
  * @property int actorId
+ * @property string $organisation
+ * @property string $accessCode
  */
 class AccountContext extends BaseIntegrationContext
 {
@@ -1085,7 +1087,7 @@ class AccountContext extends BaseIntegrationContext
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode([
-                            0 => [
+                          0 => [
                                 'SiriusUid' => $this->lpa['uId'],
                                 'Added' => '2020-01-01T23:59:59+00:00',
                                 'Expires' => '2020-01-02T23:59:59+00:00',
@@ -1115,7 +1117,7 @@ class AccountContext extends BaseIntegrationContext
         assertGreaterThan(strtotime($shareCodes[0]['Expires']),strtotime((new DateTime('now'))->format('Y-m-d')));
         assertGreaterThan(strtotime($shareCodes[0]['Added']),strtotime($shareCodes[0]['Expires']));
     }
-
+  
     /**
      * @When /^I click to check my active and inactive codes$/
      */
@@ -1188,5 +1190,110 @@ class AccountContext extends BaseIntegrationContext
     public function iCanSeeAllOfMyActiveAndInactiveAccessCodesAndTheirDetails($activeTitle, $inactiveTitle)
     {
         // Not needed for this context
+    }
+  
+    /**
+     * @Given /^I have 2 codes for one of my LPAs$/
+     */
+    public function iHave2CodesForOneOfMyLPAs()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I can see that my LPA has (.*) with expiry dates (.*) (.*)$/
+     */
+    public function iCanSeeThatMyLPAHasWithExpiryDates($noActiveCodes, $code1Expiry, $code2Expiry)
+    {
+        $this->organisation = "TestOrg";
+        $this->accessCode = "XYZ321ABC987";
+
+        $code1 = [
+            'SiriusUid'    => $this->referenceNo,
+            'Added'        => '2020-01-01T23:59:59+00:00',
+            'Organisation' => $this->organisation,
+            'UserLpaActor' => $this->actorLpaToken,
+            'ViewerCode'   => $this->accessCode,
+            'Expires'      => $code1Expiry,
+            'Viewed'       => false,
+            'ActorId'      => $this->actorId,
+        ];
+
+        $code2 = [
+            'SiriusUid'    => $this->referenceNo,
+            'Added'        => '2020-01-01T23:59:59+00:00',
+            'Organisation' => $this->organisation,
+            'UserLpaActor' => $this->actorLpaToken,
+            'ViewerCode'   => $this->accessCode,
+            'Expires'      => $code2Expiry,
+            'Viewed'       => false,
+            'ActorId'      => $this->actorId,
+        ];
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->actorLpaToken => $this->lpaData])
+                )
+            );
+      
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => $code1,
+                        1 => $code2
+                    ])));
+
+        $lpa = $this->lpaService->getLpas($this->userIdentity);
+
+        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
+
+        assertEquals($lpaObject, $lpa[$this->actorLpaToken]['lpa']);
+
+        $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, true);
+
+        assertEquals($shareCodes[0], $code1);
+        assertEquals($shareCodes[1], $code2);
+    }
+  
+    /**
+     * @Then /^I can see that no organisations have access to my LPA$/
+     */
+    public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA()
+    {
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->actorLpaToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $lpa = $this->lpaService->getLpas($this->userIdentity);
+
+        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
+
+        assertEquals($lpaObject, $lpa[$this->actorLpaToken]['lpa']);
+
+        $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, true);
+
+        assertEquals($shareCodes['activeCodeCount'], 0);
     }
 }
