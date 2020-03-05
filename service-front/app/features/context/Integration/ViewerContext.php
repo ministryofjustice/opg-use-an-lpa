@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
-use Acpr\Behat\Psr\Context\Psr11AwareContext;
-use Behat\Behat\Context\Context;
 use BehatTest\Context\ViewerContextTrait;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Pdf\PdfService;
-use DI\Container;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -79,6 +75,15 @@ class ViewerContext extends BaseIntegrationContext
     }
 
     /**
+     * @Given /^I have been given access to a cancelled LPA via share code$/
+     */
+    public function iHaveBeenGivenAccessToACancelledLPAViaShareCode() {
+        $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
+
+        $this->lpaData['status'] = 'Cancelled';
+    }
+
+    /**
      * @Given /^I access the viewer service$/
      */
     public function iAccessTheViewerService() {
@@ -109,6 +114,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Given /^I am viewing a valid LPA$/
      * @Then /^I can see the full details of the valid LPA$/
+     * @Then /^I can see the full details of a cancelled LPA$/
      */
     public function iAmViewingAValidLPA()
     {

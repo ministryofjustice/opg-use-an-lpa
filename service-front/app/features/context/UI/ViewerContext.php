@@ -62,6 +62,15 @@ class ViewerContext implements Context
     }
 
     /**
+     * @Given /^I have been given access to a cancelled LPA via share code$/
+     */
+    public function iHaveBeenGivenAccessToACancelledLPAViaShareCode() {
+        $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
+
+        $this->lpaData['status'] = 'Cancelled';
+    }
+
+    /**
      * @Given /^I access the viewer service$/
      */
     public function iAccessTheViewerService() {
@@ -132,6 +141,18 @@ class ViewerContext implements Context
             $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
         );
         $this->ui->assertPageContainsText('This LPA is valid');
+    }
+
+    /**
+     * @Then /^I can see the full details of a cancelled LPA$/
+     */
+    public function iCanSeeTheFullDetailsOfACancelledLPA()
+    {
+        $this->ui->assertPageAddress('/view-lpa');
+        $this->ui->assertPageContainsText(
+            $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
+        );
+        $this->ui->assertPageContainsText('This LPA has been cancelled');
     }
 
     /**
@@ -328,5 +349,48 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/view-lpa');
         $this->ui->assertPageContainsText("I want to check another LPA");
         $this->ui->clickLink("I want to check another LPA");
+    }
+
+    /**
+     * @When /^I request to see the viewer terms of use$/
+     */
+    public function iRequestToSeeTheViewerTermsOfUse()
+    {
+        $this->ui->clickLink("terms of use");
+    }
+
+    /**
+     * @Then /^I can see the viewer terms of use$/
+     */
+    public function iCanSeeTheViewerTermsOfUse()
+    {
+        $this->ui->assertPageAddress('/terms-of-use');
+        $this->ui->assertPageContainsText('Terms of use');
+    }
+
+    /**
+     * @Given /^I am on the terms of use page$/
+     */
+    public function iAmOnTheTermsOfUsePage()
+    {
+        $this->ui->visit('/terms-of-use');
+        $this->ui->assertPageAddress('/terms-of-use');
+    }
+
+    /**
+     * @When /^I request to go back to the enter code page$/
+     */
+    public function iRequestToGoBackToTheEnterCodePage()
+    {
+        $this->ui->clickLink('Back');
+    }
+
+    /**
+     * @Then /^I am taken back to the enter code page$/
+     */
+    public function iAmTakenBackToTheEnterCodePage()
+    {
+        $this->ui->assertPageAddress('/enter-code');
+        $this->ui->assertPageContainsText('Enter the LPA access code');
     }
 }
