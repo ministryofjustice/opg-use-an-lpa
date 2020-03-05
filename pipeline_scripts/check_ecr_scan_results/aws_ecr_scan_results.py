@@ -115,6 +115,12 @@ class ECRScanChecker:
         return response
 
     def post_to_slack(self, slack_webhook):
+        if os.getenv('CI'):
+            ci_footer = "*Github Branch:* {1}\n\n*Job Link:* {2}\n\n".format(
+                os.getenv('CIRCLE_BRANCH'),
+                os.getenv('CIRCLE_BUILD_URL'))
+            self.report += ci_footer
+
         post_data = json.dumps({"text": self.report})
         response = requests.post(
             slack_webhook, data=post_data,
