@@ -1,7 +1,10 @@
 # generate actor codes
-**NOTE:** In order to run this script, the following tools will be needed:
+**NOTE:** In order to run this script, the following tools will be needed on a Mac:
+ - homebrew 
  - Python 
- - AWS CLI  
+ - aws-vault, with your credentials set up : https://github.com/99designs/aws-vault  
+ - you may need to refer to the onboarding instructions for AWS if you do not have an aws identity set up:  
+  https://ministryofjustice.github.io/opg-new-starter/amazon.html
 
 This script starts an ECS task to generate actor participant codes.
 
