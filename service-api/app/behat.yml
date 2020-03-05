@@ -13,9 +13,10 @@ default:
 
 integration:
   suites:
-    actor:
+    all:
       contexts:
         - BehatTest\Context\Integration\AccountContext
+        - BehatTest\Context\Integration\ViewerContext
       filters:
         tags: "@integration"
 
@@ -28,4 +29,12 @@ acceptance:
         - BehatTest\Context\Acceptance\AccountContext
         - BehatTest\Context\Acceptance\CommonContext
       filters:
-        tags: "@acceptance"
+        tags: "@actor&&@acceptance"
+    viewer:
+      contexts:
+        - Behat\MinkExtension\Context\MinkContext
+        - BehatTest\Context\Acceptance\BaseAcceptanceContext
+        - BehatTest\Context\Acceptance\ViewerContext
+        - BehatTest\Context\Acceptance\CommonContext
+      filters:
+        tags: "@viewer&&@acceptance"

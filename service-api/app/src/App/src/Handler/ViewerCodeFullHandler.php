@@ -9,12 +9,13 @@ use App\Service\Lpa\LpaService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response\JsonResponse;
 use RuntimeException;
+use Zend\Diactoros\Response\JsonResponse;
 
 /**
  * Class LpaSearchHandler
  * @package App\Handler
+ * @codeCoverageIgnore
  */
 class ViewerCodeFullHandler implements RequestHandlerInterface
 {

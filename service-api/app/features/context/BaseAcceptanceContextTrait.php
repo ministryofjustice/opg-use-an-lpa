@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace BehatTest\Context;
 
 use Aws\DynamoDb\Marshaler;
+use Aws\MockHandler as AwsMockHandler;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use BehatTest\Context\Acceptance\BaseAcceptanceContext;
 use JSHayes\FakeRequests\MockHandler;
-use Aws\MockHandler as AwsMockHandler;
 use JSHayes\FakeRequests\RequestHandler;
 
 trait BaseAcceptanceContextTrait
@@ -70,7 +70,7 @@ trait BaseAcceptanceContextTrait
         return $marshaler->marshalItem($input);
     }
 
-    protected function apiGet(string $url, array $headers): void
+    protected function apiGet(string $url, ?array $headers = null): void
     {
         $this->ui->getSession()->getDriver()->getClient()->request(
             'GET',
@@ -81,7 +81,7 @@ trait BaseAcceptanceContextTrait
         );
     }
 
-    protected function apiPost(string $url, array $data, array $headers): void
+    protected function apiPost(string $url, array $data, ?array $headers = null): void
     {
         $this->ui->getSession()->getDriver()->getClient()->request(
             'POST',
@@ -92,7 +92,7 @@ trait BaseAcceptanceContextTrait
         );
     }
 
-    protected function apiPut(string $url, array $data, array $headers): void
+    protected function apiPut(string $url, array $data, ?array $headers = null): void
     {
         $this->getSession()->getDriver()->getClient()->request(
             'PUT',
@@ -103,7 +103,7 @@ trait BaseAcceptanceContextTrait
         );
     }
 
-    protected function apiPatch(string $url, array $data, array $headers): void
+    protected function apiPatch(string $url, array $data, ?array $headers = null): void
     {
         $this->ui->getSession()->getDriver()->getClient()->request(
             'PATCH',
@@ -114,7 +114,7 @@ trait BaseAcceptanceContextTrait
         );
     }
 
-    private function createServerParams(array $headers): array
+    private function createServerParams(?array $headers = []): array
     {
         // this headerThief madness allows access to the private 'serverParameters' property of the BrowserKitDriver
         // the reason we need this is that by calling `request()` on the client directly we skip the merging of
@@ -129,7 +129,7 @@ trait BaseAcceptanceContextTrait
         $presetHeaders = $driverHeaders($this->ui->getSession()->getDriver());
 
         $serverParams = [];
-        foreach ($headers as $headerName => $value) {
+        foreach (($headers ?: []) as $headerName => $value) {
             $serverParams['HTTP_'.$headerName] = $value;
         }
 
