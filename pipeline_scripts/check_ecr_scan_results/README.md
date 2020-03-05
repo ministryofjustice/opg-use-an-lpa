@@ -1,6 +1,6 @@
 # Check AWS ECR scan results
 
-This script returns ECR scan results for known vulnereabilities.
+This script returns ECR scan results for known vulnerabilities.
 
 Information about ECR scan on push is available at <https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-scanning.html>
 
