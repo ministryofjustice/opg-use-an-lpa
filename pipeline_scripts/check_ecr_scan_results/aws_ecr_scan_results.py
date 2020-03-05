@@ -99,7 +99,7 @@ class ECRScanChecker:
                 title = "\n\n:warning: *AWS ECR Scan found results for {}:* \n\n".format(
                     self.aws_ecr_repository_path+image)
                 result = "*Image:* {0} \n*Severity:* {1} \n*CVE:* {2} \n*Description:* {3} \n*Link:* {4}\n\n".format(
-                    image, severity, cve, description, link)
+                    self.aws_ecr_repository_path+image, severity, cve, description, link)
                 self.report += title + result
                 print(self.report)
 
