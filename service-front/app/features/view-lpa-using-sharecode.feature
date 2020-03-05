@@ -5,12 +5,20 @@ Feature: View an LPA via sharecode
   So that I can carry out business functions
 
   @integration @ui
-  Scenario: The user can enter a valid sharecode and see the details of an LPA
+  Scenario: View an LPA
     Given I have been given access to an LPA via share code
     And I access the viewer service
     And I give a valid LPA share code
     When I confirm the LPA is correct
     Then I can see the full details of the valid LPA
+
+  @integration @ui
+  Scenario: View a cancelled LPA
+    Given I have been given access to a cancelled LPA via share code
+    And I access the viewer service
+    And I give a valid LPA share code
+    When I confirm the LPA is correct
+    Then I can see the full details of a cancelled LPA
 
   @ui
   Scenario Outline: The user is shown the correct error messages when entering invalid details

@@ -11,6 +11,7 @@ use BehatTest\Context\BaseUiContextTrait;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
+use DateTime;
 
 /**
  * Class AccountContext
@@ -1011,6 +1012,8 @@ class AccountContext implements Context
      */
     public function iRequestToGiveAnOrganisationAccess()
     {
+        $this->iAmOnTheDashboardPage();
+
         // API call for get LpaById (when give organisation access is clicked)
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
             ->respondWith(
@@ -1489,31 +1492,6 @@ class AccountContext implements Context
         $this->ui->pressButton('Continue');
     }
 
-//    /**
-//     * @When /^I cancel the organisation access code/
-//     */
-//    public function iCancelTheOrganisationAccessCode()
-//    {
-//        $this->ui->assertPageAddress('/lpa/access-codes?lpa=' .$this->userLpaActorToken);
-//
-//        // API call for get LpaById
-//        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-//            ->respondWith(
-//                new Response(
-//                    StatusCodeInterface::STATUS_OK,
-//                    [],
-//                    json_encode([
-//                        'user-lpa-actor-token' => $this->userLpaActorToken,
-//                        'date'                 => 'date',
-//                        'lpa'                  => $this->lpa,
-//                        'actor'                => [],
-//                    ])));
-//
-//        $this->ui->pressButton("Cancel organisation's access");
-//
-//        $this->iWantToBeAskedForConfirmationPriorToCancellation();
-//    }
-
     /**
      * @Then /^I should be shown the details of the cancelled viewer code with cancelled status/
      */
@@ -1590,4 +1568,162 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
     }
 
+    /**
+     * @Given /^I have 2 codes for one of my LPAs$/
+     */
+    public function iHave2CodesForOneOfMyLPAs()
+    {
+        // Not needed for one this context
+    }
+
+    /**
+     * @Then /^I can see that my LPA has (.*) with expiry dates (.*) (.*)$/
+     */
+    public function iCanSeeThatMyLPAHasWithExpiryDates($noActiveCodes, $code1Expiry, $code2Expiry)
+    {
+        $this->organisation = "TestOrg";
+        $this->accessCode = "XYZ321ABC987";
+
+        $code1 = [
+            'SiriusUid'    => $this->lpa->uId,
+            'Added'        => '2020-01-01T23:59:59+00:00',
+            'Organisation' => $this->organisation,
+            'UserLpaActor' => $this->userLpaActorToken,
+            'ViewerCode'   => $this->accessCode,
+            'Expires'      => $code1Expiry,
+            'Viewed'       => false,
+            'ActorId'      => $this->actorId,
+        ];
+
+        $code2 = [
+            'SiriusUid'    => $this->lpa->uId,
+            'Added'        => '2020-01-01T23:59:59+00:00',
+            'Organisation' => $this->organisation,
+            'UserLpaActor' => $this->userLpaActorToken,
+            'ViewerCode'   => $this->accessCode,
+            'Expires'      => $code2Expiry,
+            'Viewed'       => false,
+            'ActorId'      => $this->actorId,
+        ];
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => $code1,
+                        1 => $code2
+                    ])));
+
+        $this->ui->visit('/lpa/dashboard');
+
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $this->ui->assertPageAddress('/lpa/dashboard');
+
+        $this->ui->assertPageContainsText($noActiveCodes);
+    }
+
+    /**
+     * @Then /^I can see that no organisations have access to my LPA$/
+     */
+    public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA()
+    {
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->ui->visit('/lpa/dashboard');
+
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageContainsText('No organisations have access');
+    }
+
+    /**
+     * @Then /^I should be told that I have not created any access codes yet$/
+     */
+    public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet()
+    {
+        $this->ui->assertPageContainsText('Check access codes');
+        $this->ui->assertPageContainsText('There are no access codes for this LPA');
+        $this->ui->assertPageContainsText('Give an organisation access');
+    }
+    
+    /**
+     * @When /^I check my access codes/
+     */
+    public function iCheckMyAccessCodes()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        // API call to get access codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->ui->clickLink('Check access codes');
+    }
+    
+    /**
+     * @Then /^I should be able to click a link to go and create the access codes$/
+     */
+    public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes()
+    {
+        // API call for get LpaById (when give organisation access is clicked)
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        $this->ui->clickLink('Give an organisation access');
+        $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
+        $this->ui->assertPageContainsText('Which organisation do you want to give access to');
+
+    }
 }
