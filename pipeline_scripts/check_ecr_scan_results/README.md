@@ -6,10 +6,9 @@ Information about ECR scan on push is available at <https://docs.aws.amazon.com/
 
 The script takes arguments for image tag to return results for, the Slack webhook to use for posting results and whether to post to slack.
 
-If ommitted, the image tag will default to `latest`, and the webhoook will default to the system environment variable `$SLACK_WEBHOOK`.
+If omitted, the image tag will default to `latest`, and the webhook will default to the system environment variable `$SLACK_WEBHOOK`.
 
-
-## Install python depenencies with pip
+## Install python dependencies with pip
 
 ``` bash
 pip install -r requirements.txt
