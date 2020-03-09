@@ -75,6 +75,7 @@ workflows:
 
       - ecr_scan_results:
           name: ecr_scan_results_development
+          filters: { branches: { ignore: [master] } }
           requires:
             [
               app_front_build,
@@ -131,6 +132,7 @@ workflows:
             ]
       - ecr_scan_results:
           name: ecr_scan_results_master
+          filters: { branches: { only: [master] } }
           requires:
             [
               app_front_build,
