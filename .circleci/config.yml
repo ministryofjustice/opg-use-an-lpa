@@ -54,7 +54,7 @@ workflows:
           requires:
             [app_front_build, app_api_build, test_web, test_pdf]
 
-      # Provision and test development
+            # Provision and test development
       - use-my-lpa/apply_shared_terraform:
           name: dev_apply_shared_terraform
           filters: { branches: { ignore: [master] } }
@@ -71,6 +71,18 @@ workflows:
               web_api_build,
               app_api_build,
               pdf_build,
+              ]
+
+      - ecr_scan_results:
+          name: ecr_scan_results
+          requires:
+            [
+              app_front_build,
+              web_front_build,
+              web_api_build,
+              app_api_build,
+              pdf_build,
+              dev_apply_environment_terraform,
             ]
 
       - use-my-lpa/seed_database:
@@ -86,7 +98,7 @@ workflows:
       - slack_notify_domain:
           name: post_environment_domains
           filters: { branches: { ignore: [master] } }
-          requires: [dev_run_behave_tests]
+          requires: [dev_run_behave_tests, ecr_scan_results]
 
       - hold-for-destruction:
           name: hold_env_for_destruction
@@ -571,6 +583,8 @@ orbs:
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
 
+
+
       # Code Coverage
 
       codecov_php-unit_upload:
@@ -889,6 +903,7 @@ jobs:
           color: "#9933ff"
           message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+
   slack_notify_production_release:
     docker:
       - image: circleci/python
@@ -908,3 +923,17 @@ jobs:
           message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+
+  ecr_scan_results:
+    docker:
+      - image: circleci/python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Check ECR Scan Results
+          command: |
+            sudo pip3 install -r pipeline_scripts/check_ecr_scan_results/requirements.txt
+            export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+            python pipeline_scripts/check_ecr_scan_results/aws_ecr_scan_results.py --tag $CIRCLE_BRANCH-$SHORT_HASH
