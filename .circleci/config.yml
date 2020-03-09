@@ -74,7 +74,7 @@ workflows:
               ]
 
       - ecr_scan_results:
-          name: ecr_scan_results
+          name: ecr_scan_results_development
           requires:
             [
               app_front_build,
@@ -98,7 +98,7 @@ workflows:
       - slack_notify_domain:
           name: post_environment_domains
           filters: { branches: { ignore: [master] } }
-          requires: [dev_run_behave_tests, ecr_scan_results]
+          requires: [dev_run_behave_tests]
 
       - hold-for-destruction:
           name: hold_env_for_destruction
@@ -128,6 +128,17 @@ workflows:
               web_front_build,
               web_api_build,
               app_api_build,
+            ]
+      - ecr_scan_results:
+          name: ecr_scan_results_master
+          requires:
+            [
+              app_front_build,
+              web_front_build,
+              web_api_build,
+              app_api_build,
+              pdf_build,
+              preprod_apply_environment_terraform,
             ]
 
       - use-my-lpa/seed_database:
