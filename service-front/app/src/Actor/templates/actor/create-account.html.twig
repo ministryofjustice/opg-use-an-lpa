@@ -54,7 +54,13 @@
 
                                 {{ govuk_form_element(form.get('password_confirm'), { 'label': 'Confirm Password' }) }}
 
-                                {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="#" class="govuk-link">terms of use</a>' }) }}
+                                <label class="govuk-label govuk-checkboxes__label" for="{{ govuk_form_element(form.get('terms')) }}">
+                                    I agree to the <a href="{{ path('lpa.terms-of-use') }}" target="_blank">terms of use</a>
+                                </label>
+
+{#                                {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the ' ~ <a href = "{{ path('lpa.terms-of-use') }}" class="govuk-link">terms of use</a>}) }}#}
+
+{#                                {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the ', 'label_attr' : {'label_class': 'govuk-link'} 'terms of use' }) }}#}
 
                                 <button type="submit" class="govuk-button">Create account</button>
 
