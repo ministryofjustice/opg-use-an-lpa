@@ -1212,7 +1212,79 @@ class AccountContext extends BaseIntegrationContext
     {
         // Not needed for this context
     }
-          
+
+    /**
+     * @When /^I check my access codes$/
+     */
+    public function iCheckMyAccessCodes()
+    {
+        //Get the LPA
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->lpaUid,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorLpaId,
+                'UserId'           => $this->userId
+            ])
+        ]));
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)));
+
+        $lpaService = $this->container->get(LpaService::class);
+
+        $lpaData = $lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string) $this->userId);
+
+        assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
+        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+        assertEquals($this->lpaUid, $lpaData['actor']['details']['uId']);
+
+        // Get the share codes
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->lpaUid,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorLpaId,
+                'UserId'           => $this->userId
+            ])
+        ]));
+
+        // ViewerCodes::getCodesByUserLpaActorId
+        $this->awsFixtures->append(new Result([]));
+
+        $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
+        $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
+
+        assertEmpty($accessCodes);
+    }
+
+    /**
+     * @Then /^I should be told that I have not created any access codes yet$/
+     */
+    public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should be able to click a link to go and create the access codes$/
+     */
+    public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes()
+    {
+        $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
+    }
+
     /**
      * @Given /^I have 2 codes for one of my LPAs$/
      */
@@ -1410,3 +1482,4 @@ class AccountContext extends BaseIntegrationContext
         assertEmpty($codes);
     }
 }
+

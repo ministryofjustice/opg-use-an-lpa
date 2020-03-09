@@ -1185,14 +1185,6 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I can see the relevant (.*) and (.*) of my access codes and their details$/
-     */
-    public function iCanSeeAllOfMyActiveAndInactiveAccessCodesAndTheirDetails($activeTitle, $inactiveTitle)
-    {
-        // Not needed for this context
-    }
-  
-    /**
      * @Given /^I have 2 codes for one of my LPAs$/
      */
     public function iHave2CodesForOneOfMyLPAs()
@@ -1239,7 +1231,7 @@ class AccountContext extends BaseIntegrationContext
                     json_encode([$this->actorLpaToken => $this->lpaData])
                 )
             );
-      
+
         //API call for getting each LPAs share codes
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
             ->respondWith(
@@ -1262,7 +1254,7 @@ class AccountContext extends BaseIntegrationContext
         assertEquals($shareCodes[0], $code1);
         assertEquals($shareCodes[1], $code2);
     }
-  
+
     /**
      * @Then /^I can see that no organisations have access to my LPA$/
      */
@@ -1295,5 +1287,61 @@ class AccountContext extends BaseIntegrationContext
         $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, true);
 
         assertEquals($shareCodes['activeCodeCount'], 0);
+    }
+
+    /**
+     * @Then /^I can see the relevant (.*) and (.*) of my access codes and their details$/
+     */
+    public function iCanSeeAllOfMyActiveAndInactiveAccessCodesAndTheirDetails($activeTitle, $inactiveTitle)
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I check my access codes$/
+     */
+    public function iCheckMyAccessCodes()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => [],
+                    ])));
+
+        // API call to make code
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                ));
+
+        $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
+
+        assertEmpty($shareCodes);
+    }
+
+    /**
+     * @Then /^I should be told that I have not created any access codes yet$/
+     */
+    public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should be able to click a link to go and create the access codes$/
+     */
+    public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes()
+    {
+        $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
     }
 }
