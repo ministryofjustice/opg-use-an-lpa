@@ -57,6 +57,50 @@ resource "aws_lb_listener" "viewer_loadbalancer" {
   }
 }
 
+# maintenance site switching
+resource "aws_ssm_parameter" "viewer_maintenance_switch" {
+  name            = "${local.environment}_viewer_enable_maintenance"
+  type            = "String"
+  value           = "false"
+  description     = "values of either 'true' or 'false' only"
+  allowed_pattern = "^(true|false)"
+  overwrite       = true
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+
+locals {
+  path_pattern = {
+    field  = "path-pattern"
+    values = ["/maintenance"]
+  }
+  host_pattern = {
+    field  = "host-header"
+    values = [aws_route53_record.viewer-use-my-lpa.fqdn]
+  }
+  rule_condition = aws_ssm_parameter.viewer_maintenance_switch.value ? local.host_pattern : local.path_pattern
+}
+
+resource "aws_lb_listener_rule" "viewer_maintenance" {
+  listener_arn = aws_lb_listener.viewer_loadbalancer.arn
+
+  action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/html"
+      message_body = file("${path.module}/maintenance/viewer_maintenance.html")
+      status_code  = "503"
+    }
+  }
+
+  condition {
+    field  = local.rule_condition.field
+    values = local.rule_condition.values
+  }
+}
+
 resource "aws_security_group" "viewer_loadbalancer" {
   name        = "${local.environment}-viewer-loadbalancer"
   description = "Allow inbound traffic"

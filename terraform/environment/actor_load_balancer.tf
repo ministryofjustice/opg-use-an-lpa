@@ -57,6 +57,7 @@ resource "aws_lb_listener" "actor_loadbalancer" {
   }
 }
 
+# maintenance site switching
 resource "aws_ssm_parameter" "actor_maintenance_switch" {
   name            = "${local.environment}_actor_enable_maintenance"
   type            = "String"
@@ -69,7 +70,6 @@ resource "aws_ssm_parameter" "actor_maintenance_switch" {
   }
 }
 
-# maintenance site switching
 locals {
   path_pattern = {
     field  = "path-pattern"
