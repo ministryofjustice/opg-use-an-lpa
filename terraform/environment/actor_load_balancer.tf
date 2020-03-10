@@ -71,15 +71,15 @@ resource "aws_ssm_parameter" "actor_maintenance_switch" {
 }
 
 locals {
-  path_pattern = {
+  actor_path_pattern = {
     field  = "path-pattern"
     values = ["/maintenance"]
   }
-  host_pattern = {
+  actor_host_pattern = {
     field  = "host-header"
     values = [aws_route53_record.actor-use-my-lpa.fqdn]
   }
-  rule_condition = aws_ssm_parameter.actor_maintenance_switch.value ? local.host_pattern : local.path_pattern
+  actor_rule_condition = aws_ssm_parameter.actor_maintenance_switch.value ? local.actor_host_pattern : local.actor_path_pattern
 }
 
 resource "aws_lb_listener_rule" "actor_maintenance" {
@@ -96,8 +96,8 @@ resource "aws_lb_listener_rule" "actor_maintenance" {
   }
 
   condition {
-    field  = local.rule_condition.field
-    values = local.rule_condition.values
+    field  = local.actor_rule_condition.field
+    values = local.actor_rule_condition.values
   }
 }
 

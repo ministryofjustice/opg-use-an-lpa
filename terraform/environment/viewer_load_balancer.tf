@@ -71,15 +71,15 @@ resource "aws_ssm_parameter" "viewer_maintenance_switch" {
 }
 
 locals {
-  path_pattern = {
+  viewer_path_pattern = {
     field  = "path-pattern"
     values = ["/maintenance"]
   }
-  host_pattern = {
+  viewer_host_pattern = {
     field  = "host-header"
     values = [aws_route53_record.viewer-use-my-lpa.fqdn]
   }
-  rule_condition = aws_ssm_parameter.viewer_maintenance_switch.value ? local.host_pattern : local.path_pattern
+  viewer_rule_condition = aws_ssm_parameter.viewer_maintenance_switch.value ? local.viewer_host_pattern : local.viewer_path_pattern
 }
 
 resource "aws_lb_listener_rule" "viewer_maintenance" {
@@ -96,8 +96,8 @@ resource "aws_lb_listener_rule" "viewer_maintenance" {
   }
 
   condition {
-    field  = local.rule_condition.field
-    values = local.rule_condition.values
+    field  = local.viewer_rule_condition.field
+    values = local.viewer_rule_condition.values
   }
 }
 
