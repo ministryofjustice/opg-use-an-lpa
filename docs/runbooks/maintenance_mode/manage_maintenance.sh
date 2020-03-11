@@ -27,12 +27,14 @@ function enable_maintenance() {
   case $FRONT_END in
     use)
     MM_RULE_ARN=$MM_USE_RULE_ARN
+    SERVICE="actor"
     ;;
     view)
     MM_RULE_ARN=$MM_VIEW_RULE_ARN
+    SERVICE="viewer"
     ;;
   esac
-  aws ssm put-parameter --name "${ENVIRONMENT}_enable_maintenance" --type "String" --value "true" --overwrite
+  aws ssm put-parameter --name "${ENVIRONMENT}_${SERVICE}_enable_maintenance" --type "String" --value "true" --overwrite
   aws elbv2 modify-rule \
   --rule-arn $MM_RULE_ARN \
   --conditions Field=host-header,Values="${MM_DNS_PREFIX}${FRONT_END}.lastingpowerofattorney.opg.service.justice.gov.uk"
@@ -43,12 +45,14 @@ function disable_maintenance() {
   case $FRONT_END in
     use)
     MM_RULE_ARN=$MM_USE_RULE_ARN
+    SERVICE="actor"
     ;;
     view)
     MM_RULE_ARN=$MM_VIEW_RULE_ARN
+    SERVICE="viewer"
     ;;
   esac
-  aws ssm put-parameter --name "${ENVIRONMENT}_enable_maintenance" --type "String" --value "false" --overwrite
+  aws ssm put-parameter --name "${ENVIRONMENT}_${SERVICE}_enable_maintenance" --type "String" --value "false" --overwrite
   aws elbv2 modify-rule \
   --rule-arn $MM_RULE_ARN \
   --conditions Field=path-pattern,Values='/maintenance'
