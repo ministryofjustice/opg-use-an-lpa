@@ -75,7 +75,9 @@ function parse_args() {
   done
 }
 
-function start() {
+function start_both() {
+  get_alb_rule_arn_view
+  get_alb_rule_arn_use
   if [ $MAINTENANCE_MODE = "True" ]
   then
     enable_maintenance view
@@ -85,8 +87,25 @@ function start() {
     disable_maintenance use
   fi
 }
+function start_use() {
+  get_alb_rule_arn_use
+  if [ $MAINTENANCE_MODE = "True" ]
+  then
+    enable_maintenance use
+  else
+    disable_maintenance use
+  fi
+}
+function start_view() {
+  get_alb_rule_arn_view
+  if [ $MAINTENANCE_MODE = "True" ]
+  then
+    enable_maintenance view
+  else
+    disable_maintenance view
+  fi
+}
 
 MAINTENANCE_MODE=False
 parse_args $@
-get_alb_rule_arn
-start
+start_both
