@@ -157,4 +157,28 @@ class ViewerContext extends BaseIntegrationContext
     {
         // not used in this context
     }
+
+    /**
+     * @When /^I realise the LPA is incorrect$/
+     */
+    public function iRealiseTheLPAIsCorrect()
+    {
+        // not used in this context
+    }
+
+    /**
+     * @Then /^I want to see an option to re-enter code$/
+     */
+    public function iWantToSeeAnOptionToReEnterCode()
+    {
+        // not used in this context
+    }
+
+    /**
+     * @Then /^I want to see an option to check another LPA$/
+     */
+    public function iWantToSeeAnOptionToCheckAnotherLPA()
+    {
+        // not used in this context
+    }
 }
