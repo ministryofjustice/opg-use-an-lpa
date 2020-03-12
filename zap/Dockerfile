@@ -7,7 +7,7 @@ USER root
 RUN apk upgrade \
  && apk add python3 py3-pip \
  && rm -rf /var/cache/apk/* \
- && pip3 install --no-cache-dir --upgrade pip zapcli
+ && pip3 install --no-cache-dir --upgrade zapcli
 
 COPY ./scripts/ /scripts
 
