@@ -16,10 +16,17 @@ return [
                 'options' => [
                     'stream' => 'php://stdout',
                 ],
+                'formatter' => 'jsonFormatter',
                 'processors' => [
                     'psrLogProcessor',
                     'requestTracingProcessor'
                 ],
+            ],
+        ],
+        'formatters' => [
+            'jsonFormatter' => [
+                'type' => 'json',
+                'options' => [],
             ],
         ],
         'processors' => [
