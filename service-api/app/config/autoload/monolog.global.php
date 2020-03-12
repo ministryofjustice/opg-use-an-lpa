@@ -36,7 +36,7 @@ return [
                 'options' => [], // No options
             ],
             'requestTracingProcessor' => [
-                'type' => \Common\Service\Log\RequestTracingLogProcessorFactory::class,
+                'type' => \App\Service\Log\RequestTracingLogProcessorFactory::class,
                 'options' => [], // No options
             ],
         ],
