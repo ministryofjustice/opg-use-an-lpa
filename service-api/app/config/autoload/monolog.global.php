@@ -15,6 +15,7 @@ return [
                 'type' => 'stream',
                 'options' => [
                     'stream' => 'php://stdout',
+                    'level' => getenv('LOGGING_LEVEL') ?: \Monolog\Logger::NOTICE
                 ],
                 'formatter' => 'jsonFormatter',
                 'processors' => [
