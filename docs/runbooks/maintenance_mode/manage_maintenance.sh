@@ -13,7 +13,6 @@ function set_service_name() {
 }
 
 function get_alb_rule_arn() {
-  local front_end=${1:?}
   MM_ALB_ARN=$(aws elbv2 describe-load-balancers --names  "${ENVIRONMENT}-${SERVICE}" | jq -r .[][]."LoadBalancerArn")
   MM_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn ${MM_ALB_ARN} | jq -r '.[][]  | select(.Protocol == "HTTPS") | .ListenerArn')
   MM_RULE_ARN=$(aws elbv2 describe-rules --listener-arn ${MM_LISTENER_ARN} | jq -r '.[][]  | select(.Priority == "1") | .RuleArn')
@@ -32,7 +31,6 @@ function enable_maintenance() {
 }
 
 function disable_maintenance() {
-  local front_end=${1:?}
   aws ssm put-parameter --name "${ENVIRONMENT}_${SERVICE}_enable_maintenance" --type "String" --value "false" --overwrite
   aws elbv2 modify-rule \
   --rule-arn $MM_RULE_ARN \
@@ -65,24 +63,15 @@ function parse_args() {
   done
 }
 
-function start_use() {
-  set_service_name use
-  get_alb_rule_arn use
+function start() {
+  local front_end=${1:?}
+  set_service_name $front_end
+  get_alb_rule_arn
   if [ $MAINTENANCE_MODE = "True" ]
   then
-    enable_maintenance use
+    enable_maintenance $front_end
   else
-    disable_maintenance use
-  fi
-}
-function start_view() {
-  set_service_name view
-  get_alb_rule_arn view
-  if [ $MAINTENANCE_MODE = "True" ]
-  then
-    enable_maintenance view
-  else
-    disable_maintenance view
+    disable_maintenance
   fi
 }
 
@@ -92,13 +81,13 @@ parse_args $@
 
 case $FRONT_TO_SET in
     use)
-    start_use
+    start use
     ;;
     view)
-    start_view
+    start view
     ;;
     *)
-    start_use
-    start_view
+    start use
+    start view
     ;;
 esac
