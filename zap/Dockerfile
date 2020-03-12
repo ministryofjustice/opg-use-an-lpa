@@ -4,12 +4,10 @@ WORKDIR /zap
 
 USER root
 
-RUN apk upgrade
-RUN  apk add python3 py3-pip
-RUN rm -rf /var/cache/apk/*
-RUN pip3 install --no-cache-dir --upgrade pip
-RUN pip3 install --no-cache-dir --upgrade setuptools
-RUN pip3 install --no-cache-dir --upgrade zapcli
+RUN apk upgrade \
+ && apk add python3 py3-pip \
+ && rm -rf /var/cache/apk/* \
+ && pip3 install --no-cache-dir --upgrade pip zapcli
 
 COPY ./scripts/ /scripts
 
