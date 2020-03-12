@@ -16,14 +16,16 @@ function get_alb_rule_arn() {
   MM_ALB_ARN=$(aws elbv2 describe-load-balancers --names  "${ENVIRONMENT}-${SERVICE}" | jq -r .[][]."LoadBalancerArn")
   MM_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn ${MM_ALB_ARN} | jq -r '.[][]  | select(.Protocol == "HTTPS") | .ListenerArn')
   MM_RULE_ARN=$(aws elbv2 describe-rules --listener-arn ${MM_LISTENER_ARN} | jq -r '.[][]  | select(.Priority == "1") | .RuleArn')
-  if [ $ENVIRONMENT = "production" ]
-  then
-    MM_USE_DNS_PREFIX=""
-  fi
+
 }
 
 function enable_maintenance() {
   local front_end=${1:?}
+  MM_DNS_PREFIX="${ENVIRONMENT}."
+  if [ $ENVIRONMENT = "production" ]
+  then
+    MM_DNS_PREFIX=""
+  fi
   aws ssm put-parameter --name "${ENVIRONMENT}_${SERVICE}_enable_maintenance" --type "String" --value "true" --overwrite
   aws elbv2 modify-rule \
   --rule-arn $MM_RULE_ARN \
