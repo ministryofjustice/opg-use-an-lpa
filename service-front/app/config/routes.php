@@ -107,7 +107,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Actor\Handler\ChangeDetailsHandler::class
     ], 'lpa.change-details');
     $app->get('/lpa/terms-of-use', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ActorTermsOfUseHandler::class
     ], 'lpa.terms-of-use');
 };
