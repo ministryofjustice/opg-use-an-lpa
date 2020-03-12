@@ -1,21 +1,22 @@
 #!/usr/bin/env bash
 
-function get_alb_rule_arn_view() {
-  MM_VIEW_DNS_PREFIX="${ENVIRONMENT}."
-  MM_VIEW_ALB_ARN=$(aws elbv2 describe-load-balancers --names  "${ENVIRONMENT}-viewer" | jq -r .[][]."LoadBalancerArn")
-  MM_VIEW_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn ${MM_VIEW_ALB_ARN} | jq -r '.[][]  | select(.Protocol == "HTTPS") | .ListenerArn')
-  MM_VIEW_RULE_ARN=$(aws elbv2 describe-rules --listener-arn ${MM_VIEW_LISTENER_ARN} | jq -r '.[][]  | select(.Priority == "1") | .RuleArn')
-  if [ $ENVIRONMENT = "production" ]
-  then
-    MM_VIEW_DNS_PREFIX=""
-  fi
+function set_service_name() {
+  local front_end=${1:?}
+  case $front_end in
+    use)
+    SERVICE="actor"
+    ;;
+    view)
+    SERVICE="viewer"
+    ;;
+  esac
 }
 
-function get_alb_rule_arn_use() {
-  MM_USE_DNS_PREFIX="${ENVIRONMENT}."
-  MM_USE_ALB_ARN=$(aws elbv2 describe-load-balancers --names  "${ENVIRONMENT}-actor" | jq -r .[][]."LoadBalancerArn")
-  MM_USE_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn ${MM_USE_ALB_ARN} | jq -r '.[][]  | select(.Protocol == "HTTPS") | .ListenerArn')
-  MM_USE_RULE_ARN=$(aws elbv2 describe-rules --listener-arn ${MM_USE_LISTENER_ARN} | jq -r '.[][]  | select(.Priority == "1") | .RuleArn')
+function get_alb_rule_arn() {
+  local front_end=${1:?}
+  MM_ALB_ARN=$(aws elbv2 describe-load-balancers --names  "${ENVIRONMENT}-${SERVICE}" | jq -r .[][]."LoadBalancerArn")
+  MM_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn ${MM_ALB_ARN} | jq -r '.[][]  | select(.Protocol == "HTTPS") | .ListenerArn')
+  MM_RULE_ARN=$(aws elbv2 describe-rules --listener-arn ${MM_LISTENER_ARN} | jq -r '.[][]  | select(.Priority == "1") | .RuleArn')
   if [ $ENVIRONMENT = "production" ]
   then
     MM_USE_DNS_PREFIX=""
@@ -23,38 +24,15 @@ function get_alb_rule_arn_use() {
 }
 
 function enable_maintenance() {
-  FRONT_END=${1:?}
-  case $FRONT_END in
-    use)
-    MM_RULE_ARN=$MM_USE_RULE_ARN
-    MM_DNS_PREFIX=$MM_USE_DNS_PREFIX
-    SERVICE="actor"
-    ;;
-    view)
-    MM_RULE_ARN=$MM_VIEW_RULE_ARN
-    MM_DNS_PREFIX=$MM_VIEW_DNS_PREFIX
-    SERVICE="viewer"
-    echo "switched to view"
-    ;;
-  esac
+  local front_end=${1:?}
   aws ssm put-parameter --name "${ENVIRONMENT}_${SERVICE}_enable_maintenance" --type "String" --value "true" --overwrite
   aws elbv2 modify-rule \
   --rule-arn $MM_RULE_ARN \
-  --conditions Field=host-header,Values="${MM_DNS_PREFIX}${FRONT_END}.lastingpowerofattorney.opg.service.justice.gov.uk"
+  --conditions Field=host-header,Values="${MM_DNS_PREFIX}${front_end}.lastingpowerofattorney.opg.service.justice.gov.uk"
 }
 
 function disable_maintenance() {
-  FRONT_END=${1:?}
-  case $FRONT_END in
-    use)
-    MM_RULE_ARN=$MM_USE_RULE_ARN
-    SERVICE="actor"
-    ;;
-    view)
-    MM_RULE_ARN=$MM_VIEW_RULE_ARN
-    SERVICE="viewer"
-    ;;
-  esac
+  local front_end=${1:?}
   aws ssm put-parameter --name "${ENVIRONMENT}_${SERVICE}_enable_maintenance" --type "String" --value "false" --overwrite
   aws elbv2 modify-rule \
   --rule-arn $MM_RULE_ARN \
@@ -88,7 +66,8 @@ function parse_args() {
 }
 
 function start_use() {
-  get_alb_rule_arn_use
+  set_service_name use
+  get_alb_rule_arn use
   if [ $MAINTENANCE_MODE = "True" ]
   then
     enable_maintenance use
@@ -97,7 +76,8 @@ function start_use() {
   fi
 }
 function start_view() {
-  get_alb_rule_arn_view
+  set_service_name view
+  get_alb_rule_arn view
   if [ $MAINTENANCE_MODE = "True" ]
   then
     enable_maintenance view
