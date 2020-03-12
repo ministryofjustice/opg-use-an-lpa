@@ -59,7 +59,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message'  => 'Enter your one-time passcode',
+                            'message'  => 'Enter your activation key',
                         ],
                     ],
                     [
@@ -68,14 +68,14 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                             'encoding' => 'UTF-8',
                             'min'      => 12,
                             'max'      => 14,
-                            'message'  => 'Your passcode must be 12 characters long',
+                            'message'  => 'Your activation key must be 12 numbers and letters long',
                         ],
                     ],
                     [
                         'name'    => Regex::class,
                         'options' => [
                             'pattern' => '/^([[:alnum:]]{4}(?\'dash\' |-|)[[:alnum:]]{4}(\g{dash})[[:alnum:]]{4})$/',
-                            'message' => 'Your passcode must only include letters, numbers and dashes',
+                            'message' => 'Your activation key must only include letters, numbers and dashes',
                         ],
                     ],
                 ]
@@ -89,7 +89,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message'  => 'Enter a reference number',
+                            'message'  => 'Enter an LPA reference number',
                         ],
                     ],
                     [
@@ -105,7 +105,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         'name'    => Regex::class,
                         'options' => [
                             'pattern' => '/^(\d{4}(?\'dash\' |-|)\d{4}(\g{dash})\d{4})$/',
-                            'message' => 'The reference number must only include numbers',
+                            'message' => 'The LPA reference number must only include numbers',
                         ],
                     ],
                 ]

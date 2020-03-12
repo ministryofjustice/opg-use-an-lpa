@@ -508,8 +508,8 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/your-details');
 
-        $this->ui->assertPageContainsText('Change a donor\'s or attorney\'s details');
-        $this->ui->clickLink('Change a donor\'s or attorney\'s details');
+        $this->ui->assertPageContainsText('Change a donor or attorney\'s details');
+        $this->ui->clickLink('Change a donor or attorney\'s details');
     }
 
     /**

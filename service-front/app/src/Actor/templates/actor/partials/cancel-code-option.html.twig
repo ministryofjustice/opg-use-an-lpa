@@ -10,7 +10,7 @@
                         {{ govuk_form_element(code.form.get('viewer_code')) }}
                         {{ govuk_form_element(code.form.get('organisation')) }}
                 </div>
-                <button type="submit" class="govuk-button govuk-button--warning">Cancel organisation's access</button>
+                <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-button--warning">Cancel organisation's access</button>
             {{ govuk_form_close() }}
             </div>
         </main>

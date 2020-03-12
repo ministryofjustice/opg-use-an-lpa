@@ -28,7 +28,7 @@
                     <a href="{{ path('lpa.access-codes', {}, {'lpa': form.get('lpa_token').getValue() }) }}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
                         No, return to access codes
                     </a>
-                    <button type="submit" class="govuk-button govuk-button--warning">Yes, cancel code</button>
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-button--warning">Yes, cancel code</button>
 
                     {{ govuk_form_close() }}
 

@@ -54,7 +54,7 @@ workflows:
           requires:
             [app_front_build, app_api_build, test_web, test_pdf]
 
-      # Provision and test development
+            # Provision and test development
       - use-my-lpa/apply_shared_terraform:
           name: dev_apply_shared_terraform
           filters: { branches: { ignore: [master] } }
@@ -71,6 +71,19 @@ workflows:
               web_api_build,
               app_api_build,
               pdf_build,
+              ]
+
+      - ecr_scan_results:
+          name: ecr_scan_results_development
+          filters: { branches: { ignore: [master] } }
+          requires:
+            [
+              app_front_build,
+              web_front_build,
+              web_api_build,
+              app_api_build,
+              pdf_build,
+              dev_apply_environment_terraform,
             ]
 
       - use-my-lpa/seed_database:
@@ -116,6 +129,18 @@ workflows:
               web_front_build,
               web_api_build,
               app_api_build,
+            ]
+      - ecr_scan_results:
+          name: ecr_scan_results_master
+          filters: { branches: { only: [master] } }
+          requires:
+            [
+              app_front_build,
+              web_front_build,
+              web_api_build,
+              app_api_build,
+              pdf_build,
+              preprod_apply_environment_terraform,
             ]
 
       - use-my-lpa/seed_database:
@@ -316,11 +341,11 @@ orbs:
               key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
               paths:
                 - service-front/web/node_modules
-          - save_cache:
-              name: Save built assets
-              key: built-web-assets
+          - persist_to_workspace:
+              root: ~/project
               paths:
                 - service-front/web/dist
+              when: always
 
       #----------------------------------------------------
       # Front Services (Actor & Viewer)
@@ -341,13 +366,13 @@ orbs:
           - setup_remote_docker:
               version: 18.06.0-ce
               docker_layer_caching: false
-          - restore_cache:
-              keys: built-web-assets
+          - attach_workspace:
+              at: ~/project
           - run:
               name: Build
               command: |
                 mkdir -p service-front/app/assets/stylesheets \
-                  && cp -R service-front/web/dist/stylesheets/pdf.css service-front/app/assets/stylesheets/pdf.css
+                  && cp -R ~/project/service-front/web/dist/stylesheets/pdf.css service-front/app/assets/stylesheets/pdf.css
                 docker build --file service-front/docker/app/Dockerfile --tag front-app:latest .
           - run:
               name: Run unit tests
@@ -409,12 +434,12 @@ orbs:
           - setup_remote_docker:
               version: 18.06.0-ce
               docker_layer_caching: false
-          - restore_cache:
-              keys: built-web-assets
+          - attach_workspace:
+              at: ~/project
           - run:
               name: Build
               command: |
-                cp -R service-front/web/dist/* service-front/docker/web/web/
+                cp -R ~/project/service-front/web/dist/* service-front/docker/web/web/
                 docker build --file service-front/docker/web/Dockerfile --tag front-web:latest .
           - ecr_login
           - run:
@@ -570,6 +595,8 @@ orbs:
                 else
                   docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
                 fi
+
+
 
       # Code Coverage
 
@@ -889,6 +916,7 @@ jobs:
           color: "#9933ff"
           message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+
   slack_notify_production_release:
     docker:
       - image: circleci/python
@@ -908,3 +936,17 @@ jobs:
           message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+
+  ecr_scan_results:
+    docker:
+      - image: circleci/python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Check ECR Scan Results
+          command: |
+            sudo pip3 install -r pipeline_scripts/check_ecr_scan_results/requirements.txt
+            export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+            python pipeline_scripts/check_ecr_scan_results/aws_ecr_scan_results.py --tag $CIRCLE_BRANCH-$SHORT_HASH
