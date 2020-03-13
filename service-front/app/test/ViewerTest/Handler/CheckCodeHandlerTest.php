@@ -13,11 +13,11 @@ use Psr\Http\Message\StreamInterface;
 use Viewer\Handler\CheckCodeHandler;
 use Psr\Http\Message\ResponseInterface;
 use PHPUnit\Framework\TestCase;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Expressive\Helper\UrlHelper;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Template\TemplateRendererInterface;
+use Mezzio\Helper\UrlHelper;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Expressive\Session\SessionInterface;
+use Mezzio\Session\SessionInterface;
 use Prophecy\Argument;
 use ArrayObject;
 

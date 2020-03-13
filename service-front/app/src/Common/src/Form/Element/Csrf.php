@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Common\Form\Element;
 
 use Common\Validator\CsrfGuardValidator as CsrfValidator;
-use Zend\Form\Element\Csrf as ZendCsrf;
+use Laminas\Form\Element\Csrf as ZendCsrf;
 
 /**
  * Class Csrf
@@ -16,7 +16,7 @@ class Csrf extends ZendCsrf
     /**
      * Overridden function required to implement our custom CsrfValidator
      *
-     * @return \Zend\Validator\Csrf
+     * @return \Laminas\Validator\Csrf
      */
     public function getCsrfValidator()
     {

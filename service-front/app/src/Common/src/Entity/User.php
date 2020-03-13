@@ -7,7 +7,7 @@ namespace Common\Entity;
 use DateTime;
 use DateTimeZone;
 use Exception;
-use Zend\Expressive\Authentication\UserInterface;
+use Mezzio\Authentication\UserInterface;
 
 /**
  * Class User

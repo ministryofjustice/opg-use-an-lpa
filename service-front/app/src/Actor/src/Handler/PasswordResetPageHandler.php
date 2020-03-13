@@ -11,10 +11,10 @@ use Common\Handler\Traits\CsrfGuard;
 use Common\Service\User\UserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Helper\ServerUrlHelper;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Helper\ServerUrlHelper;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
 
 /**
  * Class PasswordResetPageHandler

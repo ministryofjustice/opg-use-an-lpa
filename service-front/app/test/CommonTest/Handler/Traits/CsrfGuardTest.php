@@ -7,8 +7,8 @@ namespace CommonTest\Handler\Traits;
 use Common\Handler\Traits\CsrfGuard;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Expressive\Csrf\CsrfMiddleware;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Mezzio\Csrf\CsrfMiddleware;
 
 class CsrfGuardTest extends TestCase
 {

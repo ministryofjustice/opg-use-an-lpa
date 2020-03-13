@@ -9,16 +9,16 @@ use Common\Form\Fieldset\Date;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use Zend\Form\Element;
-use Zend\Form\ElementInterface;
-use Zend\Form\FieldsetInterface;
+use Laminas\Form\Element;
+use Laminas\Form\ElementInterface;
+use Laminas\Form\FieldsetInterface;
 use Exception;
 
 /**
- * Class GovUKZendFormExtension
+ * Class GovUKLaminasFormExtension
  * @package Common\View\Twig
  */
-class GovUKZendFormExtension extends AbstractExtension
+class GovUKLaminasFormExtension extends AbstractExtension
 {
     /**
      * Map the element types to blocks in the Twig partial template

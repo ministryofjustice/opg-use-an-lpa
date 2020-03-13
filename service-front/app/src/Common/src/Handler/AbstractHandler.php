@@ -8,9 +8,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
-use Zend\Diactoros\Response\RedirectResponse;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
 
 /**
  * Class AbstractHandler

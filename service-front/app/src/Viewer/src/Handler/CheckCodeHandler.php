@@ -14,9 +14,9 @@ use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
 
 /**
  * Class CheckCodeHandler

@@ -2,8 +2,8 @@
 
 namespace Common\Validator;
 
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Validator\Csrf as ZendCsrf;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Validator\Csrf as ZendCsrf;
 use InvalidArgumentException;
 
 /**

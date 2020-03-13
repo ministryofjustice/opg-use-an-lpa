@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Common\Handler\Traits;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Expressive\Csrf\CsrfMiddleware;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Mezzio\Csrf\CsrfMiddleware;
 
 trait CsrfGuard
 {

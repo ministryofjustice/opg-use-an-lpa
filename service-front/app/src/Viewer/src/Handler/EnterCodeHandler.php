@@ -11,7 +11,7 @@ use Common\Handler\Traits\Session as SessionTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\ShareCode;
-use Zend\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\HtmlResponse;
 
 /**
  * Class EnterCodeHandler
