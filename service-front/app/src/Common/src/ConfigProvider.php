@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Common;
 
-use Aws;
-use Http;
-use Psr;
-use Zend;
 
 /**
  * The configuration provider for the Common module
@@ -41,18 +37,18 @@ class ConfigProvider
 
             'aliases' => [
 
-                Psr\Http\Client\ClientInterface::class => Http\Adapter\Guzzle6\Client::class,
-                Mezzio\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookiePersistence::class,
+                \Psr\Http\Client\ClientInterface::class => \Http\Adapter\Guzzle6\Client::class,
+                \Mezzio\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookiePersistence::class,
 
                 // Custom Guard factory to handle multiple forms per page
-                Mezzio\Csrf\CsrfGuardFactoryInterface::class => Service\Csrf\SessionCsrfGuardFactory::class,
+                \Mezzio\Csrf\CsrfGuardFactoryInterface::class => Service\Csrf\SessionCsrfGuardFactory::class,
 
                 // The Session Key Manager to use
                 Service\Session\KeyManager\KeyManagerInterface::class => Service\Session\KeyManager\KmsManager::class,
 
                 // Auth
-                Mezzio\Authentication\UserRepositoryInterface::class => Service\User\UserService::class,
-                Mezzio\Authentication\AuthenticationInterface::class => Mezzio\Authentication\Session\PhpSession::class,
+                \Mezzio\Authentication\UserRepositoryInterface::class => Service\User\UserService::class,
+                \Mezzio\Authentication\AuthenticationInterface::class => \Mezzio\Authentication\Session\PhpSession::class,
 
                 // allows value setting on the container at runtime.
                 Service\Container\ModifiableContainerInterface::class => Service\Container\PhpDiModifiableContainer::class,
@@ -72,21 +68,21 @@ class ConfigProvider
 
                 Service\User\UserService::class => Service\User\UserServiceFactory::class,
 
-                Aws\Sdk::class => Service\Aws\SdkFactory::class,
-                Aws\Kms\KmsClient::class => Service\Aws\KmsFactory::class,
-                Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
+                \Aws\Sdk::class => Service\Aws\SdkFactory::class,
+                \Aws\Kms\KmsClient::class => Service\Aws\KmsFactory::class,
+                \Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
 
-                Mezzio\Session\SessionMiddleware::class => Mezzio\Session\SessionMiddlewareFactory::class,
+                \Mezzio\Session\SessionMiddleware::class => \Mezzio\Session\SessionMiddlewareFactory::class,
 
                 // Auth
-                Mezzio\Authentication\UserInterface::class => Entity\UserFactory::class,
+                \Mezzio\Authentication\UserInterface::class => Entity\UserFactory::class,
 
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
             ],
 
             'delegators' => [
-                Laminas\Stratigility\Middleware\ErrorHandler::class => [
+                \Laminas\Stratigility\Middleware\ErrorHandler::class => [
                     Service\Log\LogStderrListenerDelegatorFactory::class,
                 ],
             ],

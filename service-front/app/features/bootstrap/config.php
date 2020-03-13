@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Laminas\ConfigAggregator\ArrayProvider;
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\ConfigAggregator\PhpFileProvider;
 
