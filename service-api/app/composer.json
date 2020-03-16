@@ -41,7 +41,7 @@
         "psr/http-client-implementation": "^1.0",
         "ramsey/uuid": "^3.8",
         "symfony/console": "^4.3",
-        "wshafer/psr11-monolog": "3.0.0",
+        "wshafer/psr11-monolog": "^3.0",
         "zendframework/zend-component-installer": "^2.1.1",
         "zendframework/zend-config-aggregator": "^1.0",
         "zendframework/zend-diactoros": "^1.7.1 || ^2.0",

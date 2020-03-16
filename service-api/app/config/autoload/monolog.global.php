@@ -5,7 +5,7 @@ return [
         'factories' => [
             // Logger using the default keys.
             \Psr\Log\LoggerInterface::class => \WShafer\PSR11MonoLog\MonologFactory::class,
-        ],
+        ]
     ],
 
     'monolog' => [
@@ -15,11 +15,19 @@ return [
                 'type' => 'stream',
                 'options' => [
                     'stream' => 'php://stdout',
+                    'level' => getenv('LOGGING_LEVEL') ?: \Monolog\Logger::NOTICE
                 ],
+                'formatter' => 'jsonFormatter',
                 'processors' => [
                     'psrLogProcessor',
-                    'requestTracingProcessor',
+                    'requestTracingProcessor'
                 ],
+            ],
+        ],
+        'formatters' => [
+            'jsonFormatter' => [
+                'type' => 'json',
+                'options' => [],
             ],
         ],
         'processors' => [
