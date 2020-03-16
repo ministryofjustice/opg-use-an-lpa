@@ -72,7 +72,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         );
 
         foreach ($shareCodes as $key => $code) {
-          
+
             if (!array_key_exists('Cancelled', $code) || (new DateTime('now') > $code['Expires'])) {
                 $form = new CancelCode($this->getCsrfGuard($request));
                 $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-cancel-code'));
@@ -87,7 +87,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             }
 
             if ($lpa->getDonor()->getId() == $code['ActorId']) {
-                $shareCodes[$key]['CreatedBy'] = $lpa->getDonor()->getFirstname();
+                $shareCodes[$key]['CreatedBy'] = $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname();
             }
 
             foreach ($lpa->getAttorneys() as $attorney) {
