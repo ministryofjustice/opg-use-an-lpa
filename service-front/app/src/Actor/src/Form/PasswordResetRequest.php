@@ -6,6 +6,7 @@ namespace Actor\Form;
 
 use Common\Form\AbstractForm;
 use Common\Validator\EmailAddressValidator;
+use Common\Validator\IdenticalEmailCheck;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Filter\StringToLower;
 use Zend\InputFilter\InputFilterProviderInterface;
@@ -85,7 +86,7 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                         ],
                     ],
                     [
-                        'name'                   => Identical::class,
+                        'name'                   => IdenticalEmailCheck::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'token'    => 'email',

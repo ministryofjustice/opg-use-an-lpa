@@ -14,7 +14,7 @@ class EmailAddressValidator extends ZfEmailAddressValidator
      */
     public function isValid($value)
     {
-        $valid = parent::isValid($value);
+        $valid = parent::isValid(trim($value));
 
         if ($valid === false && count($this->getMessages()) > 0) {
             $this->abstractOptions['messages'] = [
