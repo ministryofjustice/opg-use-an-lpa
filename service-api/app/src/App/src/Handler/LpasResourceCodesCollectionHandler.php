@@ -150,11 +150,11 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         if (!empty($viewerCodes)) {
             $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($viewerCodes);
 
-            $actorId = $this->userLpaActorMap->get($request->getAttribute('user-lpa-actor-token'));
+            $lpa = $this->userLpaActorMap->get($request->getAttribute('user-lpa-actor-token'));
 
             //adds an actorId for each code in the array
             foreach ($viewerCodesAndStatuses as $key => $code){
-                $viewerCodesAndStatuses[$key]['ActorId'] = $actorId['ActorId'];
+                $viewerCodesAndStatuses[$key]['ActorId'] = $lpa['ActorId'];
             }
 
             return new JsonResponse($viewerCodesAndStatuses);

@@ -964,7 +964,7 @@ class AccountContext implements Context
         assertEquals($response[0]['SiriusUid'], $this->lpaUid);
         assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
         assertEquals($response[0]['Added'], '2021-01-05 12:34:56');
-      
+
         //check if the code expiry date is in the past
         assertGreaterThan(strtotime((new DateTime('now'))->format('Y-m-d')), strtotime($response[0]['Expires']));
     }
@@ -1542,17 +1542,15 @@ class AccountContext implements Context
         // ViewerCodeActivity::getStatusesForViewerCodes
         $this->awsFixtures->append(new Result());
 
-        // UserLpaActorMap::getUsersLpas
+        // UserLpaActorMap::get
         $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+            'Item' => $this->marshalAwsResultData([
                     'SiriusUid'        => $this->lpaUid,
                     'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                     'Id'               => $this->userLpaActorToken,
                     'ActorId'          => $this->actorId,
                     'UserId'           => $this->userId
                 ])
-            ]
         ]));
 
         // LpaService::getLpas
