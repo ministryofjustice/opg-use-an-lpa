@@ -2,9 +2,9 @@
 
 namespace Common\Validator;
 
-use Laminas\Validator\EmailAddress as ZfEmailAddressValidator;
+use Laminas\Validator\EmailAddress as LaminasEmailAddressValidator;
 
-class EmailAddressValidator extends ZfEmailAddressValidator
+class EmailAddressValidator extends LaminasEmailAddressValidator
 {
     /**
      * Overridden function to translate error messages

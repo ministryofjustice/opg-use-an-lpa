@@ -3,7 +3,7 @@
 namespace Common\Validator;
 
 use Mezzio\Csrf\CsrfGuardInterface;
-use Laminas\Validator\Csrf as ZendCsrf;
+use Laminas\Validator\Csrf as LaminasCsrf;
 use InvalidArgumentException;
 
 /**
@@ -12,7 +12,7 @@ use InvalidArgumentException;
  *
  * @package Common\Validator
  */
-class CsrfGuardValidator extends ZendCsrf
+class CsrfGuardValidator extends LaminasCsrf
 {
     /**
      * Set to null in order to force the user to manually set it
