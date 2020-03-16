@@ -148,7 +148,7 @@ class CheckAccessCodesHandlerTest extends TestCase
                 'shareCodes' => $shareCodes
             ])
             ->willReturn('');
-        
+
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
@@ -237,7 +237,7 @@ class CheckAccessCodesHandlerTest extends TestCase
 
         foreach ($shareCodes as $key => $code) {
             if ($lpa->getDonor()->getId() == $code['ActorId']) {
-                $this->assertEquals($code['CreatedBy'], $lpa->getDonor()->getFirstname());
+                $this->assertEquals($code['CreatedBy'], $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname());
             }
             if ($attorney->getId() == $code['ActorId']) {
                 $this->assertEquals($code['CreatedBy'], $attorney->getFirstname() . ' ' . $attorney->getSurname());
