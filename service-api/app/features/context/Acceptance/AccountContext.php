@@ -935,17 +935,15 @@ class AccountContext implements Context
         // ViewerCodeActivity::getStatusesForViewerCodes
         $this->awsFixtures->append(new Result());
 
-        // UserLpaActorMap::getUsersLpas
+        // UserLpaActorMap::get
         $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+            'Item' => $this->marshalAwsResultData([
                     'SiriusUid'        => $this->lpaUid,
                     'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                     'Id'               => $this->userLpaActorToken,
                     'ActorId'          => $this->actorId,
                     'UserId'           => $this->userId
                 ])
-            ]
         ]));
 
         // API call to get access codes
@@ -1084,17 +1082,15 @@ class AccountContext implements Context
         // ViewerCodeActivity::getStatusesForViewerCodes
         $this->awsFixtures->append(new Result());
 
-        // UserLpaActorMap::getUsersLpas
+        // UserLpaActorMap::get
         $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+            'Item' => $this->marshalAwsResultData([
                     'SiriusUid'        => $this->lpaUid,
                     'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                     'Id'               => $this->userLpaActorToken,
                     'ActorId'          => $this->actorId,
                     'UserId'           => $this->userId
                 ])
-            ]
         ]));
 
         // API call to get access codes
@@ -1322,17 +1318,15 @@ class AccountContext implements Context
         // ViewerCodeActivity::getStatusesForViewerCodes
         $this->awsFixtures->append(new Result());
 
-        // UserLpaActorMap::getUsersLpas
+        // UserLpaActorMap::get
         $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+            'Item' => $this->marshalAwsResultData([
                     'SiriusUid'        => $this->lpaUid,
                     'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                     'Id'               => $this->userLpaActorToken,
                     'ActorId'          => $this->actorId,
                     'UserId'           => $this->userId
                 ])
-            ]
         ]));
 
         // API call to get access codes
