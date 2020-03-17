@@ -7,10 +7,10 @@ namespace Common\View\Twig;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use Zend\Form\ElementInterface;
-use Zend\Form\FormInterface;
+use Laminas\Form\ElementInterface;
+use Laminas\Form\FormInterface;
 
-class GovUKZendFormErrorsExtension extends AbstractExtension
+class GovUKLaminasFormErrorsExtension extends AbstractExtension
 {
     const THEME_FILE = '@partials/govuk_error.html.twig';
 

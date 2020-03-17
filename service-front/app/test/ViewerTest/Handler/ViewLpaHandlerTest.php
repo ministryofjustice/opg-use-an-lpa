@@ -9,10 +9,10 @@ use Common\Service\Lpa\LpaService;
 use Viewer\Handler\ViewLpaHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Expressive\Session\SessionInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
+use Mezzio\Session\SessionInterface;
 use ArrayObject;
 
 class ViewLpaHandlerTest extends TestCase

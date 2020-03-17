@@ -7,10 +7,10 @@ namespace ActorTest\Handler;
 use Common\Service\User\UserService;
 use Actor\Handler\ActivateAccountHandler;
 use PHPUnit\Framework\TestCase;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\Response\RedirectResponse;
-use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Expressive\Helper\UrlHelper;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Template\TemplateRendererInterface;
+use Mezzio\Helper\UrlHelper;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ActivateAccountHandlerTest extends TestCase

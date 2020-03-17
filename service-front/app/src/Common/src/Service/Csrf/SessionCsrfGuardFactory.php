@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Common\Service\Csrf;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Expressive\Csrf\CsrfGuardFactoryInterface;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Expressive\Csrf\Exception\MissingSessionException;
-use Zend\Expressive\Session\SessionInterface;
-use Zend\Expressive\Session\SessionMiddleware;
+use Mezzio\Csrf\CsrfGuardFactoryInterface;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Mezzio\Csrf\Exception\MissingSessionException;
+use Mezzio\Session\SessionInterface;
+use Mezzio\Session\SessionMiddleware;
 
 class SessionCsrfGuardFactory implements CsrfGuardFactoryInterface
 {

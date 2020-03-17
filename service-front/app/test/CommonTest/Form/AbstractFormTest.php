@@ -6,8 +6,8 @@ namespace CommonTest\Form;
 
 use Common\Form\AbstractForm;
 use PHPUnit\Framework\TestCase;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Form\Element\Text;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Form\Element\Text;
 
 class AbstractFormTest extends TestCase
 {

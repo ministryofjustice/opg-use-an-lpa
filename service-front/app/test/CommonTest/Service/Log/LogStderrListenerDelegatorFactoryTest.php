@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
-use Zend\Stratigility\Middleware\ErrorHandler;
+use Laminas\Stratigility\Middleware\ErrorHandler;
 
 class LogStderrListenerDelegatorFactoryTest extends TestCase
 {

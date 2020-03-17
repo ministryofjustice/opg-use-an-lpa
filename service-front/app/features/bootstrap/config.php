@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Zend\ConfigAggregator\ArrayProvider;
-use Zend\ConfigAggregator\ConfigAggregator;
-use Zend\ConfigAggregator\PhpFileProvider;
+use Laminas\ConfigAggregator\ConfigAggregator;
+use Laminas\ConfigAggregator\PhpFileProvider;
 
 $aggregator = new ConfigAggregator([
     new PhpFileProvider(realpath(__DIR__) . '/../../config/config.php'),
