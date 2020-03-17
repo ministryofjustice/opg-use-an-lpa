@@ -71,6 +71,7 @@ services:
       AWS_ENDPOINT_KMS: http://kms:8080
       AWS_ACCESS_KEY_ID: "-"
       AWS_SECRET_ACCESS_KEY: "-"
+      LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
       ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=viewer-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
@@ -115,6 +116,7 @@ services:
       AWS_ENDPOINT_KMS: http://kms:8080
       AWS_ACCESS_KEY_ID: "-"
       AWS_SECRET_ACCESS_KEY: "-"
+      LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
       ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=actor-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
@@ -174,6 +176,7 @@ services:
       AWS_ACCESS_KEY_ID: "-"
       AWS_ENDPOINT_DYNAMODB: http://localstack:4569
       AWS_SECRET_ACCESS_KEY: "-"
+      LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
       ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=api-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
