@@ -18,6 +18,7 @@ resource "aws_lb" "actor" {
 
   security_groups = [
     aws_security_group.actor_loadbalancer.id,
+    aws_security_group.actor_loadbalancer_route53.id,
   ]
 
   access_logs {
@@ -100,4 +101,21 @@ resource "aws_security_group_rule" "actor_loadbalancer_egress" {
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.actor_loadbalancer.id
+}
+
+resource "aws_security_group" "actor_loadbalancer_route53" {
+  name        = "${local.environment}-actor-loadbalancer-route53"
+  description = "Allow inbound traffic"
+  vpc_id      = data.aws_vpc.default.id
+  tags        = local.default_tags
+}
+
+resource "aws_security_group_rule" "actor_loadbalancer_ingress_route53_healthchecks" {
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = "443"
+  to_port           = "443"
+  cidr_blocks       = data.aws_ip_ranges.route53_healthchecks.cidr_blocks
+  security_group_id = aws_security_group.actor_loadbalancer_route53.id
+  description       = "Loadbalancer ingresss from Route53 healthchecks"
 }

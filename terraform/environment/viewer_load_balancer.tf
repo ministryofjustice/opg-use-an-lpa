@@ -118,8 +118,3 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress_route53_healthch
   security_group_id = aws_security_group.viewer_loadbalancer_route53.id
   description       = "Loadbalancer ingresss from Route53 healthchecks"
 }
-
-data "aws_ip_ranges" "route53_healthchecks" {
-  services = ["route53_healthchecks"]
-  regions  = ["GLOBAL"]
-}
