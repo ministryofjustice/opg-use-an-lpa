@@ -8,7 +8,7 @@ use App\Handler\LpaSearchHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use App\Service\Lpa\LpaService;
-use Zend\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 use RuntimeException;
 
 class LpaSearchHandlerTest extends TestCase

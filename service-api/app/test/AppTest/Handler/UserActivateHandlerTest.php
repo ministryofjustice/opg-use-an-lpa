@@ -9,7 +9,7 @@ use App\Handler\UserActivateHandler;
 use App\Service\User\UserService;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 
 class UserActivateHandlerTest extends TestCase
 {

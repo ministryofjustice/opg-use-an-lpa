@@ -10,25 +10,25 @@
     "extra": {
         "zf": {
             "component-whitelist": [
-                "zendframework/zend-expressive",
-                "zendframework/zend-expressive-helpers",
-                "zendframework/zend-expressive-router",
-                "zendframework/zend-httphandlerrunner",
-                "zendframework/zend-expressive-fastroute"
+                "mezzio/mezzio",
+                "mezzio/mezzio-helpers",
+                "mezzio/mezzio-router",
+                "laminas/laminas-httphandlerrunner",
+                "mezzio/mezzio-fastroute"
             ]
         }
     },
     "support": {
-        "issues": "https://github.com/zendframework/zend-expressive-skeleton/issues",
-        "source": "https://github.com/zendframework/zend-expressive-skeleton",
-        "rss": "https://github.com/zendframework/zend-expressive-skeleton/releases.atom",
+        "issues": "https://github.com/mezzio/mezzio-skeleton/issues",
+        "source": "https://github.com/mezzio/mezzio-skeleton",
+        "rss": "https://github.com/mezzio/mezzio-skeleton/releases.atom",
         "slack": "https://zendframework-slack.herokuapp.com",
         "forum": "https://discourse.zendframework.com/c/questions/expressive"
     },
     "repositories": [
         {
             "type": "vcs",
-            "url":  "git@github.com:ministryofjustice/behat-psr-extension.git"
+            "url": "git@github.com:ministryofjustice/behat-psr-extension.git"
         }
     ],
     "require": {
@@ -42,13 +42,14 @@
         "ramsey/uuid": "^3.8",
         "symfony/console": "^4.3",
         "wshafer/psr11-monolog": "^3.0",
-        "zendframework/zend-component-installer": "^2.1.1",
-        "zendframework/zend-config-aggregator": "^1.0",
-        "zendframework/zend-diactoros": "^1.7.1 || ^2.0",
-        "zendframework/zend-expressive": "^3.0.1",
-        "zendframework/zend-expressive-fastroute": "^3.0",
-        "zendframework/zend-expressive-helpers": "^5.0",
-        "zendframework/zend-stdlib": "^3.1"
+        "laminas/laminas-component-installer": "^2.1.1",
+        "laminas/laminas-config-aggregator": "^1.0",
+        "laminas/laminas-diactoros": "^1.7.1 || ^2.0",
+        "mezzio/mezzio": "^3.0.1",
+        "mezzio/mezzio-fastroute": "^3.0",
+        "mezzio/mezzio-helpers": "^5.0",
+        "laminas/laminas-stdlib": "^3.1",
+        "laminas/laminas-dependency-plugin": "^1.0"
     },
     "require-dev": {
         "behat/behat": "^3.5",
@@ -59,8 +60,8 @@
         "roave/security-advisories": "dev-master",
         "squizlabs/php_codesniffer": "^3.0",
         "vimeo/psalm": "^3.0",
-        "zendframework/zend-expressive-tooling": "^1.0",
-        "zfcampus/zf-development-mode": "^3.1"
+        "mezzio/mezzio-tooling": "^1.0",
+        "laminas/laminas-development-mode": "^3.1"
     },
     "autoload": {
         "psr-4": {
@@ -75,9 +76,9 @@
         }
     },
     "scripts": {
-        "development-disable": "zf-development-mode disable",
-        "development-enable": "zf-development-mode enable",
-        "development-status": "zf-development-mode status",
+        "development-disable": "laminas-development-mode disable",
+        "development-enable": "laminas-development-mode enable",
+        "development-status": "laminas-development-mode status",
         "check": [
             "@cs-check",
             "@unit-test",
