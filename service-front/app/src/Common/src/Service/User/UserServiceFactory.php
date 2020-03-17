@@ -7,7 +7,7 @@ namespace Common\Service\User;
 use Common\Service\ApiClient\Client;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Zend\Expressive\Authentication\UserInterface;
+use Mezzio\Authentication\UserInterface;
 
 class UserServiceFactory
 {

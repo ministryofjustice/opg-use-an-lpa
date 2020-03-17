@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Viewer\Form;
 
 use Common\Form\AbstractForm;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Filter\StringTrim;
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\NotEmpty;
-use Zend\Validator\Regex;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Filter\StringTrim;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Validator\NotEmpty;
+use Laminas\Validator\Regex;
 
 class ShareCode extends AbstractForm implements InputFilterProviderInterface
 {

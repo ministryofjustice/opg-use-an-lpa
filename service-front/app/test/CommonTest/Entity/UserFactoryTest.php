@@ -8,7 +8,7 @@ use Common\Entity\UserFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionFunction;
-use Zend\Expressive\Authentication\UserInterface;
+use Mezzio\Authentication\UserInterface;
 
 class UserFactoryTest extends TestCase
 {

@@ -6,9 +6,9 @@ namespace Common\Form;
 
 use Common\Form\Element\Csrf;
 use Common\Validator\CsrfGuardValidator;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Form\Exception\InvalidArgumentException;
-use Zend\Form\Form;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Form\Exception\InvalidArgumentException;
+use Laminas\Form\Form;
 
 abstract class AbstractForm extends Form
 {

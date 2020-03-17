@@ -7,12 +7,12 @@ namespace Actor\Form;
 use Common\Form\AbstractForm;
 use Common\Validator\EmailAddressValidator;
 use Common\Validator\PasswordValidator;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Filter\StringToLower;
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\Identical;
-use Zend\Validator\NotEmpty;
-use Zend\Validator\StringLength;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Filter\StringToLower;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Validator\Identical;
+use Laminas\Validator\NotEmpty;
+use Laminas\Validator\StringLength;
 
 /**
  * Class CreateAccount

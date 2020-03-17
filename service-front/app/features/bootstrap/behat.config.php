@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zend\ConfigAggregator\ConfigAggregator;
+use Laminas\ConfigAggregator\ConfigAggregator;
 
 return [
     'debug' => true,
@@ -10,9 +10,9 @@ return [
 
     'dependencies' => [
         'factories' => [
-            Http\Adapter\Guzzle6\Client::class => BehatTest\Http\Adapter\Guzzle6\TestClientFactory::class,
+            \Http\Adapter\Guzzle6\Client::class => \BehatTest\Http\Adapter\Guzzle6\TestClientFactory::class,
 
-            Aws\Sdk::class => BehatTest\Common\Service\Aws\SdkFactory::class,
+            \Aws\Sdk::class => \BehatTest\Common\Service\Aws\SdkFactory::class,
         ],
     ],
 
