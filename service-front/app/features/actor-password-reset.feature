@@ -41,4 +41,25 @@ Feature: Password Reset
       | bigch33se | one capital letter |
       | BIGCH33SE | one lower case letter |
 
+  @ui
+  Scenario Outline: A user is allowed to provide email address in caps
+    Given I have forgotten my password
+    When I ask for my password to be reset with below correct <email> and <email_confirmation> details
+    Then I receive unique instructions on how to reset my password to my provided <email>
+
+    Examples:
+      |email          |email_confirmation |
+      |TEST@test.com  |TEST@test.com      |
+
+  @ui
+  Scenario Outline: A user is not allowed to provide improper format email address
+    Given I have forgotten my password
+    When I ask for my password to be reset with below incorrect <email> and <email_confirmation> details
+    Then I should see the <error> message
+
+    Examples:
+      |email           |email_confirmation | error                        |
+      |TEST@ test.com  |TEST@ test.com     | Enter a valid email address  |
+
+
 

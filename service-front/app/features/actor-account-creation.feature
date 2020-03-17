@@ -40,8 +40,8 @@ Feature: Account creation
       | email1          | password1 | password2 | terms | reasons                          |
       |                 | Password1 | Password1 |   1   | Enter your email address         |
       |invalid_email    | Password1 | Password1 |   1   | Enter a valid email address      |
-      |test@example.com | Password1 |           |   1   | Confirm your password            |
-      |test@example.com | Password1 | Password1 |       | You must accept the terms of use |
+      |TEST@example.com | Password1 |           |   1   | Confirm your password            |
+      |test@EXAMPLE.com | Password1 | Password1 |       | You must accept the terms of use |
 
 
   @ui @integration

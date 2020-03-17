@@ -1726,4 +1726,137 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('Which organisation do you want to give access to');
 
     }
+
+    /**
+     * @When /^I enter correct email with (.*) and (.*) below$/
+     */
+    public function iEnterCorrectEmailWithEmailFormatAndPasswordBelow($email_format, $password)
+    {
+        $this->ui->fillField('email', $email_format);
+        $this->ui->fillField('password', $password);
+
+        if ($this->userActive) {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
+                    [
+                        'Id'        => $this->userId,
+                        'Email'     => $email_format,
+                        'LastLogin' => '2020-01-01'
+                    ]
+                )));
+
+            // Dashboard page checks for all LPA's for a user
+            $this->apiFixtures->get('/v1/lpas')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+        } else {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
+        }
+
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I should see relevant (.*) message$/
+     */
+    public function iShouldSeeRelevantErrorMessage($error)
+    {
+        $this->ui->assertPageAddress('/login');
+        $this->ui->assertPageContainsText($error);
+    }
+
+    /**
+     * @When /^I enter incorrect email with (.*) and (.*) below$/
+     */
+    public function iEnterInCorrectEmailWithEmailFormatAndPasswordBelow($emailFormat, $password)
+    {
+        $this->ui->fillField('email', $emailFormat);
+        $this->ui->fillField('password', $password);
+
+        // API call for authentication
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])));
+
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I ask for my password to be reset with below correct (.*) and (.*) details$/
+     */
+    public function iAskForMyPasswordToBeResetWithBelowCorrectEmailAndConfirmationEmailDetails($email,$email_confirmation)
+    {
+        $this->ui->assertPageAddress('/forgot-password');
+
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/request-password-reset')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [], json_encode(
+                    [
+                        'Id'                 => $this->userId,
+                        'PasswordResetToken' => '123456'
+                    ])));
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                    assertArrayHasKey('email_address', $params);
+                    assertArrayHasKey('personalisation', $params);
+
+                    assertInternalType('array', $params['personalisation']);
+                    assertArrayHasKey('password-reset-url', $params['personalisation']);
+                }
+            );
+
+        $this->ui->fillField('email', $email);
+        $this->ui->fillField('email_confirm', $email_confirmation);
+        $this->ui->pressButton('Email me the link');
+    }
+
+    /**
+     * @Then /^I receive unique instructions on how to reset my password to my provided (.*)$/
+     */
+    public function iReceiveUniqueInstructionsOnHowToResetMyPasswordToMyProvidedEmail($email)
+    {
+        $this->ui->assertPageAddress('/forgot-password');
+        $this->ui->assertPageContainsText('emailed a link to ' .strtolower($email));
+    }
+
+    /**
+     * @When /^I ask for my password to be reset with below incorrect (.*) and (.*) details$/
+     */
+    public function iAskForMyPasswordToBeResetWithBelowInCorrectEmailAndConfirmationEmailDetails($email,$email_confirmation)
+    {
+        $this->ui->assertPageAddress('/forgot-password');
+
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/request-password-reset')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_FORBIDDEN,
+                    [], json_encode([])));
+
+        $this->ui->fillField('email', $email);
+        $this->ui->fillField('email_confirm', $email_confirmation);
+        $this->ui->pressButton('Email me the link');
+    }
+
+    /**
+     * @Then /^I should see the (.*) message$/
+     */
+    public function iShouldSeeTheErrorMessage($error)
+    {
+        $this->ui->assertPageAddress('/forgot-password');
+        $this->ui->assertPageContainsText($error);
+    }
+
 }

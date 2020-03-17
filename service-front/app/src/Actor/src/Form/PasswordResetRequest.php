@@ -47,11 +47,11 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
         return [
             'email'            => [
                 'required' => true,
-                'filters'  => [
-                    [
-                        'name' => StringToLower::class,
-                    ],
-                ],
+//                'filters'  => [
+//                    [
+//                        'name' => StringToLower::class,
+//                    ],
+//                ],
                 'validators' => [
                     [
                         'name'                   => NotEmpty::class,
@@ -70,11 +70,11 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
             ],
             'email_confirm'    => [
                 'required' => true,
-                'filters'  => [
-                    [
-                        'name' => StringToLower::class,
-                    ],
-                ],
+//                'filters'  => [
+//                    [
+//                        'name' => StringToLower::class,
+//                    ],
+//                ],
                 'validators' => [
                     [
                         'name'                   => NotEmpty::class,
@@ -86,7 +86,7 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                         ],
                     ],
                     [
-                        'name'                   => IdenticalEmailCheck::class,
+                        'name'                   => Identical::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'token'    => 'email',
