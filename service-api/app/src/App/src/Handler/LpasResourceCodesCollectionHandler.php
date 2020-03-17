@@ -128,6 +128,9 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
     }
 
     /**
+     * Returns a collection of codes (and statuses if codes exist)
+     * for a given LPA via the user lpa token
+     *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      * @throws BadRequestException|NotFoundException
@@ -142,6 +145,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
             throw new BadRequestException("'user-lpa-actor-token' missing.");
         }
 
+        //gets access codes for a given user lpa token
         $viewerCodes = $this->viewerCodeService->getCodes(
             $request->getAttribute('user-lpa-actor-token'),
             $request->getAttribute('actor-id')
@@ -150,9 +154,11 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         if (!empty($viewerCodes)) {
             $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($viewerCodes);
 
+            //gets the LPA in question
             $lpa = $this->userLpaActorMap->get($request->getAttribute('user-lpa-actor-token'));
 
-            //adds an actorId for each code in the array
+            //adds the same actorId for each code in the array
+            //the actorId value is that of the LPA data returned for the given user token
             foreach ($viewerCodesAndStatuses as $key => $code){
                 $viewerCodesAndStatuses[$key]['ActorId'] = $lpa['ActorId'];
             }
