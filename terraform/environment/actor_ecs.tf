@@ -195,6 +195,10 @@ EOF
     {
       "name": "SESSION_EXPIRES",
       "value": "${local.account.session_expires_use}"
+    },
+    {
+      "name": "LOGGING_LEVEL",
+      "value": "${local.account.logging_level}"
     }]
   }
 
