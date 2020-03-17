@@ -2,12 +2,10 @@
 
 namespace App\Service\Lpa;
 
-use Amp\CancelledException;
-use GuzzleHttp\Promise\CancellationException;
-use RuntimeException;
 use App\DataAccess\Repository;
 use App\Exception\GoneException;
 use DateTime;
+use RuntimeException;
 
 /**
  * Class LpaService
@@ -189,22 +187,18 @@ class LpaService
             $this->viewerCodeActivityRepository->recordSuccessfulLookupActivity($viewerCodeData['ViewerCode']);
         }
 
+        $lpaData = [
+            'date'         => $lpa->getLookupTime()->format('c'),
+            'expires'      => $viewerCodeData['Expires']->format('c'),
+            'organisation' => $viewerCodeData['Organisation'],
+            'lpa'          => $lpa->getData(),
+        ];
+
         if (isset($viewerCodeData['Cancelled'])) {
-            return [
-                'date' => $lpa->getLookupTime()->format('c'),
-                'expires' => $viewerCodeData['Expires']->format('c'),
-                'organisation' => $viewerCodeData['Organisation'],
-                'cancelled' => $viewerCodeData['Cancelled']->format('c'),
-                'lpa' => $lpa->getData(),
-            ];
+            $lpaData['cancelled'] = $viewerCodeData['Cancelled']->format('c');
         }
 
-        return [
-            'date' => $lpa->getLookupTime()->format('c'),
-            'expires' => $viewerCodeData['Expires']->format('c'),
-            'organisation' => $viewerCodeData['Organisation'],
-            'lpa' => $lpa->getData(),
-        ];
+        return $lpaData;
     }
 
 
