@@ -1,6 +1,7 @@
 resource "aws_cloudwatch_metric_alarm" "viewer_health_check_alarm" {
   alarm_description   = "${local.environment} viewer health check"
   alarm_name          = "${local.environment}-viewer-healthcheck-alarm"
+  actions_enabled     = false
   comparison_operator = "LessThanThreshold"
   datapoints_to_alarm = 1
   evaluation_periods  = 1
@@ -9,12 +10,13 @@ resource "aws_cloudwatch_metric_alarm" "viewer_health_check_alarm" {
   period              = 60
   statistic           = "Minimum"
   threshold           = 1
-  treat_missing_data  = "missing"
   tags                = local.default_tags
 
   dimensions = {
     HealthCheckId = aws_route53_health_check.viewer_health_check.id
   }
+
+  provider = aws.us-east-1
 }
 
 resource "aws_route53_health_check" "viewer_health_check" {
@@ -32,6 +34,7 @@ resource "aws_route53_health_check" "viewer_health_check" {
 resource "aws_cloudwatch_metric_alarm" "actor_health_check_alarm" {
   alarm_description   = "${local.environment} actor health check"
   alarm_name          = "${local.environment}-actor-healthcheck-alarm"
+  actions_enabled     = false
   comparison_operator = "LessThanThreshold"
   datapoints_to_alarm = 1
   evaluation_periods  = 1
@@ -40,12 +43,13 @@ resource "aws_cloudwatch_metric_alarm" "actor_health_check_alarm" {
   period              = 60
   statistic           = "Minimum"
   threshold           = 1
-  treat_missing_data  = "missing"
   tags                = local.default_tags
 
   dimensions = {
     HealthCheckId = aws_route53_health_check.actor_health_check.id
   }
+
+  provider = aws.us-east-1
 }
 
 resource "aws_route53_health_check" "actor_health_check" {
