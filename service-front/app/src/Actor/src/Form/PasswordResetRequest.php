@@ -9,6 +9,7 @@ use Common\Validator\EmailAddressValidator;
 use Common\Validator\IdenticalEmailCheck;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Filter\StringToLower;
+use Zend\Filter\StringTrim;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Validator\Identical;
 use Zend\Validator\NotEmpty;
@@ -16,6 +17,8 @@ use Zend\Validator\NotEmpty;
 class PasswordResetRequest extends AbstractForm implements InputFilterProviderInterface
 {
     const FORM_NAME = "password-reset-request";
+
+
 
     /**
      * PasswordReset constructor.
@@ -47,11 +50,11 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
         return [
             'email'            => [
                 'required' => true,
-//                'filters'  => [
-//                    [
-//                        'name' => StringToLower::class,
-//                    ],
-//                ],
+                'filters'  => [
+                    [
+                        'name' => StringTrim::class,
+                    ],
+                ],
                 'validators' => [
                     [
                         'name'                   => NotEmpty::class,
@@ -70,11 +73,11 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
             ],
             'email_confirm'    => [
                 'required' => true,
-//                'filters'  => [
-//                    [
-//                        'name' => StringToLower::class,
-//                    ],
-//                ],
+                'filters'  => [
+                    [
+                        'name' => StringTrim::class,
+                    ],
+                ],
                 'validators' => [
                     [
                         'name'                   => NotEmpty::class,

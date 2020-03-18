@@ -10,6 +10,7 @@ use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Filter\StringToLower;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Validator\NotEmpty;
+use Zend\Filter\StringTrim;
 
 class Login extends AbstractForm implements InputFilterProviderInterface
 {
@@ -52,6 +53,11 @@ class Login extends AbstractForm implements InputFilterProviderInterface
                 'filters'    => [
                     [
                         'name' => StringToLower::class,
+
+                    ],
+                    [
+                        'name' => StringTrim::class,
+
                     ],
                 ],
                 'validators' => [
