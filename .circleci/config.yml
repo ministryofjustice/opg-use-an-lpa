@@ -997,3 +997,14 @@ jobs:
             sudo pip3 install -r scripts/pipeline/check_ecr_scan_results/requirements.txt
             export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
             python scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $CIRCLE_BRANCH-$SHORT_HASH
+
+  workspace_cleanup:
+    docker:
+      - image: hashicorp/terraform
+    steps:
+      - checkout
+      - run:
+          name: Cleanup Workspaces
+          command: |
+          cd terraform/environment
+          ../../scripts/workspace_cleanup/get_workspaces_linux
