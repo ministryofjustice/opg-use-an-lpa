@@ -13,6 +13,7 @@ use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\Identical;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\StringLength;
+use Laminas\Filter\StringTrim;
 
 /**
  * Class CreateAccount
@@ -60,6 +61,10 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                 'filters'  => [
                     [
                         'name' => StringToLower::class,
+                    ],
+                    [
+                        'name' => StringTrim::class,
+
                     ],
                 ],
                 'validators' => [
