@@ -2,13 +2,13 @@
 
 namespace Common\Form\Fieldset;
 
-use Zend\Filter\AbstractFilter;
+use Laminas\Filter\AbstractFilter;
 
 class DatePrefixFilter extends AbstractFilter
 {
 
     /**
-     * Defined by Zend\Filter\FilterInterface
+     * Defined by Laminas\Filter\FilterInterface
      *
      * Returns the array $value with zero prefixed at the beginning of the values for day and month
      *

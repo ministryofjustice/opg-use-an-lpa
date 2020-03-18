@@ -9,10 +9,10 @@ use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\{Lpa\LpaService, Lpa\ViewerCodeService};
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
-use Zend\Diactoros\Response\RedirectResponse;
-use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
 
 
 /**

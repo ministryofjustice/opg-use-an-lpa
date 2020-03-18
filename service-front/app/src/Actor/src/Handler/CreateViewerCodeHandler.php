@@ -17,10 +17,10 @@ use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\ViewerCodeService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
 
 class CreateViewerCodeHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {

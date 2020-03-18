@@ -7,14 +7,14 @@ namespace ActorTest\Form;
 use Actor\Form\Login;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use CommonTest\Form\{TestsZendForm, ZendFormTests};
+use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
 use PHPUnit\Framework\TestCase;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Form\Element\{Password, Text};
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Form\Element\{Password, Text};
 
-class LoginTest extends TestCase implements TestsZendForm
+class LoginTest extends TestCase implements TestsLaminasForm
 {
-    use ZendFormTests;
+    use LaminasFormTests;
 
     /** @var Login */
     protected $form;

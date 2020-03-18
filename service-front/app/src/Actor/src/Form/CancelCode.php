@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\InputFilter\InputFilterProviderInterface;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\InputFilter\InputFilterProviderInterface;
 
 /**
  * Class CancelCode

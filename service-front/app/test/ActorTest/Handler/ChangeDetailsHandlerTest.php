@@ -6,11 +6,11 @@ namespace ActorTest\Handler;
 
 use Actor\Handler\ChangeDetailsHandler;
 use PHPUnit\Framework\TestCase;
-use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Expressive\Helper\UrlHelper;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Template\TemplateRendererInterface;
+use Mezzio\Helper\UrlHelper;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\HtmlResponse;
 
 class ChangeDetailsHandlerTest extends TestCase
 {

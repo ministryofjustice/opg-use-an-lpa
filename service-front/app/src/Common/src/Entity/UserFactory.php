@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Common\Entity;
 
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Authentication\UserInterface;
+use Mezzio\Authentication\UserInterface;
 
 /**
  * Produces a callable factory capable of itself producing a UserInterface
  * instance; this approach is used to allow substituting alternative user
  * implementations without requiring extensions to existing repositories.
  *
- * @see \Zend\Expressive\Authentication\DefaultUserFactory
+ * @see \Mezzio\Authentication\DefaultUserFactory
  */
 class UserFactory
 {

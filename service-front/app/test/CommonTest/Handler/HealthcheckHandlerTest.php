@@ -7,7 +7,7 @@ namespace Common\Handler;
 use Common\Service\ApiClient\Client as ApiClient;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 
 class HealthcheckHandlerTest extends TestCase
 {

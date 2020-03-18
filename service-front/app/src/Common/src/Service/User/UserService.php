@@ -9,8 +9,8 @@ use Fig\Http\Message\StatusCodeInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
-use Zend\Expressive\Authentication\UserInterface;
-use Zend\Expressive\Authentication\UserRepositoryInterface;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Authentication\UserRepositoryInterface;
 
 /**
  * Class UserService

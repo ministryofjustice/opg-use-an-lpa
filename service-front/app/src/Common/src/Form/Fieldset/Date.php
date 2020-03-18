@@ -2,7 +2,7 @@
 
 namespace Common\Form\Fieldset;
 
-use Zend\Form\Fieldset;
+use Laminas\Form\Fieldset;
 
 /**
  * Class Date

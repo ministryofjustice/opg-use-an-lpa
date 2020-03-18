@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Common\Handler;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Expressive\Session\SessionInterface;
+use Mezzio\Session\SessionInterface;
 
 interface SessionAware
 {
