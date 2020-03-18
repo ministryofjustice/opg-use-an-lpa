@@ -1006,5 +1006,5 @@ jobs:
       - run:
           name: Cleanup Workspaces
           command: |
-          cd terraform/environment
-          ../../scripts/workspace_cleanup/get_workspaces_linux
+            cd terraform/environment
+            ../../scripts/workspace_cleanup/get_workspaces_linux
