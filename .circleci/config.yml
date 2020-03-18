@@ -872,7 +872,7 @@ orbs:
           - run:
               name: Wait for new tasks in services to be running
               command: |
-                sudo pip3 install boto3 -q
+                sudo pip3 install -r scripts/pipeline/requirements.txt
                 python scripts/pipeline/aws_ecs_task.py /tmp/cluster_config.json
           - run:
               name: Install Behave
@@ -917,7 +917,7 @@ orbs:
           - run:
               name: Wait for new tasks in services to be running
               command: |
-                sudo pip3 install boto3
+                sudo pip3 install -r scripts/pipeline/requirements.txt
                 python scripts/pipeline/aws_ecs_task.py /tmp/cluster_config.json
           - run:
               name: Run test
@@ -994,7 +994,7 @@ jobs:
       - run:
           name: Check ECR Scan Results
           command: |
-            sudo pip3 install -r scripts/pipeline/check_ecr_scan_results/requirements.txt
+            sudo pip3 install -r scripts/pipeline/requirements.txt
             export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
             python scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $CIRCLE_BRANCH-$SHORT_HASH
 
