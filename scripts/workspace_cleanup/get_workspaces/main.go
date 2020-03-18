@@ -1,11 +1,10 @@
-// +build example
+// +build linux darwin
 
 package main
 
 import (
 	"fmt"
 	"os"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"

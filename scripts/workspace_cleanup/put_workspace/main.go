@@ -1,4 +1,4 @@
-// +build example
+// +build linux darwin
 
 package main
 
