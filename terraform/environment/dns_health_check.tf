@@ -29,6 +29,8 @@ resource "aws_route53_health_check" "viewer_health_check" {
   measure_latency   = true
   regions           = ["us-east-1", "us-west-1", "us-west-2", "eu-west-1", "ap-southeast-1", "ap-southeast-2", "ap-northeast-1", "sa-east-1"]
   tags              = local.default_tags
+
+  provider = aws.us-east-1
 }
 
 resource "aws_cloudwatch_metric_alarm" "actor_health_check_alarm" {
@@ -62,4 +64,6 @@ resource "aws_route53_health_check" "actor_health_check" {
   measure_latency   = true
   regions           = ["us-east-1", "us-west-1", "us-west-2", "eu-west-1", "ap-southeast-1", "ap-southeast-2", "ap-northeast-1", "sa-east-1"]
   tags              = local.default_tags
+
+  provider = aws.us-east-1
 }
