@@ -13,6 +13,7 @@ use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Validator\Identical;
 use Zend\Validator\NotEmpty;
 use Zend\Validator\StringLength;
+use Zend\Filter\StringTrim;
 
 /**
  * Class CreateAccount
@@ -60,6 +61,10 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                 'filters'  => [
                     [
                         'name' => StringToLower::class,
+                    ],
+                    [
+                        'name' => StringTrim::class,
+
                     ],
                 ],
                 'validators' => [

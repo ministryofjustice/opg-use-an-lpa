@@ -892,7 +892,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I have not provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
+     * @When /^I have provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
      */
     public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1,$email2,$password1,$password2,$terms)
     {
@@ -1859,4 +1859,31 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText($error);
     }
 
+    /**
+     * @Then /^An account is created using (.*)(.*)(.*)(.*)$/
+     */
+    public function anAccountIsCreatedUsingEmail1Password1Password2Terms($email1,$password1,$password2,$terms)
+    {
+        $this->activationToken = 'activate1234567890';
+
+        $this->ui->assertPageAddress('/create-account');
+
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'              => '123',
+                'Email'           => $email1,
+                'ActivationToken' => $this->activationToken,
+            ])));
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->ui->fillField('email', $email1);
+        $this->ui->fillField('password', $password1);
+        $this->ui->fillField('password_confirm', $password2);
+        $this->ui->fillField('terms', 1);
+        $this->ui->pressButton('Create account');
+    }
 }

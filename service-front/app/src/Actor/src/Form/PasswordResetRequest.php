@@ -52,7 +52,12 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                 'required' => true,
                 'filters'  => [
                     [
+                        'name' => StringToLower::class,
+
+                    ],
+                    [
                         'name' => StringTrim::class,
+
                     ],
                 ],
                 'validators' => [
@@ -76,6 +81,7 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                 'filters'  => [
                     [
                         'name' => StringTrim::class,
+
                     ],
                 ],
                 'validators' => [

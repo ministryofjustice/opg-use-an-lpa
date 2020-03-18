@@ -53,8 +53,9 @@ Feature: A user of the system is able to login
     Then I am signed in
 
     Examples:
-    |email_format   |password|
-    |TEST@test.com  |pa33w0rd|
+    |email_format               |password|
+    |TEST@test.com              |pa33w0rd|
+    |'    TEST@test.com     '   |pa33w0rd|
 
   @ui
   Scenario Outline: A user is not allowed to login with improper email address
