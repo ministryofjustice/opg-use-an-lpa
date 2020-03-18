@@ -69,6 +69,11 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Actor\Handler\YourDetailsHandler::class,
     ], 'your-details');
 
+    $app->route('/change-password', [
+        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\ChangePasswordHandler::class
+    ], ['GET','POST'], 'change-password');
+
     // LPA management
     $app->get('/lpa/dashboard', [
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,

@@ -96,6 +96,7 @@ class AccountContext extends BaseIntegrationContext
     public function iAmCurrentlySignedIn()
     {
         $this->password = 'pa33w0rd';
+        $this->userAccountPassword = 'n3wPassWord';
 
         // ActorUsers::getByEmail
         $this->awsFixtures->append(new Result([
@@ -1480,6 +1481,67 @@ class AccountContext extends BaseIntegrationContext
         $codes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
         assertEmpty($codes);
+    }
+
+    /**
+     * @Given /^I am on the user dashboard page$/
+     */
+    public function iAmOnTheUserDashboardPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I ask to change my password$/
+     */
+    public function iAskToChangeMyPassword()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I provide my current password$/
+     */
+    public function iProvideMyCurrentPassword()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I provide my new password$/
+     */
+    public function iProvideMyNewPassword()
+    {
+        $newPassword = 'Successful-Raid-on-the-Cooki3s!';
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
+        // ActorUsers::resetPassword
+        $this->awsFixtures->append(new Result([]));
+
+        $us = $this->container->get(UserService::class);
+
+        $us->completeChangePassword($this->userAccountId, $this->userAccountPassword, $newPassword);
+
+        $command = $this->awsFixtures->getLastCommand();
+
+        assertEquals('actor-users', $command['TableName']);
+        assertEquals($this->userAccountId, $command['Key']['Id']['S']);
+        assertEquals('UpdateItem', $command->getName());
+    }
+
+    /**
+     * @Then /^I am told my password was changed$/
+     */
+    public function iAmToldMyPasswordWasChanged()
+    {
+        // Not needed for this context
     }
 }
 

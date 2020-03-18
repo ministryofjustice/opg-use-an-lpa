@@ -6,6 +6,7 @@ namespace BehatTest\Context\UI;
 
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
+use Behat\Behat\Tester\Exception\PendingException;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use Fig\Http\Message\StatusCodeInterface;
@@ -1725,5 +1726,57 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
         $this->ui->assertPageContainsText('Which organisation do you want to give access to');
 
+    }
+
+    /**
+     * @When /^I ask to change my password$/
+     */
+    public function iAskToChangeMyPassword()
+    {
+        $session = $this->ui->getSession();
+        $page = $session->getPage();
+
+        $link = $page->find('css', 'a[href="change-password"]');
+        if ($link === null) {
+            throw new \Exception('change password link not found');
+        }
+
+        $link->click();
+
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $this->ui->assertPageAddress('change-password');
+
+        $passwordInput = $page->find('css', 'input[type="password"]');
+
+        if ($passwordInput === null) {
+            throw new \Exception('no password input box found');
+        }
+    }
+
+    /**
+     * @Given /^I provide my current password$/
+     */
+    public function iProvideMyCurrentPassword()
+    {
+        $this->ui->fillField('current_password', $this->userPassword);
+    }
+
+    /**
+     * @Given /^I provide my new password$/
+     */
+    public function iProvideMyNewPassword()
+    {
+        $this->ui->fillField('new_password', $this->userPassword);
+        $this->ui->fillField('new_password_confirm', $this->userPassword);
+
+        $this->ui->pressButton('Save new password');
+    }
+
+    /**
+     * @Then /^I am told my password was changed$/
+     */
+    public function iAmToldMyPasswordWasChanged()
+    {
+        throw new PendingException();
     }
 }
