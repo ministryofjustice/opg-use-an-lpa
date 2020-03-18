@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
-<ruleset name="Expressive Skeleton coding standard">
-    <description>Expressive Skeleton coding standard</description>
+<ruleset name="Mezzio Skeleton coding standard">
+    <description>Mezzio Skeleton coding standard</description>
+
+    <config name="ignore_warnings_on_exit" value="1"/>
 
     <!-- display progress -->
     <arg value="p"/>
@@ -14,7 +16,12 @@
             <property name="ignoreBlankLines" value="false"/>
         </properties>
     </rule>
+    <rule ref="PSR1.Methods.CamelCapsMethodName">
+        <exclude-pattern>*/test/*</exclude-pattern>
+    </rule>
 
     <!-- Paths to check -->
+    <file>config</file>
     <file>src</file>
+    <file>test</file>
 </ruleset>
