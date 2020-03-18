@@ -873,7 +873,7 @@ orbs:
               name: Wait for new tasks in services to be running
               command: |
                 sudo pip3 install -r scripts/pipeline/requirements.txt
-                python scripts/pipeline/aws_ecs_task.py /tmp/cluster_config.json
+                python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
           - run:
               name: Install Behave
               command: sudo pip3 install behave selenium --upgrade
@@ -883,7 +883,7 @@ orbs:
                 export TF_WORKSPACE=$(bash ~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 if [ "${TF_WORKSPACE}" != "production" ]; then
-                  python scripts/pipeline/ci_ingress.py /tmp/cluster_config.json --add
+                  python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json --add
                 fi
 
           - run:
@@ -901,7 +901,7 @@ orbs:
               command: |
                 export TF_WORKSPACE=$(bash ~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                python scripts/pipeline/ci_ingress.py /tmp/cluster_config.json
+                python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json
               when: always
 
       run_healthcheck_test:
@@ -918,7 +918,7 @@ orbs:
               name: Wait for new tasks in services to be running
               command: |
                 sudo pip3 install -r scripts/pipeline/requirements.txt
-                python scripts/pipeline/aws_ecs_task.py /tmp/cluster_config.json
+                python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
           - run:
               name: Run test
               command: |
