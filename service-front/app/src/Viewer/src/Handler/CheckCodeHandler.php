@@ -12,11 +12,11 @@ use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\LpaService;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class CheckCodeHandler
@@ -48,7 +48,7 @@ class CheckCodeHandler extends AbstractHandler
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Http\Client\Exception
+     * @throws \Http\Client\Exception|\Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
