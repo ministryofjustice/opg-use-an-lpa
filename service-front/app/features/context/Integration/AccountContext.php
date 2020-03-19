@@ -588,9 +588,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I have not provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
+     * @When /^I have provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
      */
-    public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1, $email2, $password1, $password2, $terms)
+    public function iHaveProvidedRequiredInformationForAccountCreationSuchAs($email1, $email2, $password1, $password2, $terms)
     {
         // Not needed for this context
     }
