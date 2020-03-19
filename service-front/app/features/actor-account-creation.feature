@@ -69,4 +69,4 @@ Feature: Account creation
       | email1              | password1 | password2 | terms |
       |TEST@example.com     | Password1 | Password1 |   1   |
       |test@EXAMPLE.com     | Password1 | Password1 |   1   |
-      |'TEST@example.com  ' | Password1 | Password1 |   1   |
+      #|'TEST@example.com  ' | Password1 | Password1 |   1   |
