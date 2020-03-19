@@ -1886,4 +1886,57 @@ class AccountContext implements Context
         $this->ui->fillField('terms', 1);
         $this->ui->pressButton('Create account');
     }
+
+    /**
+     * @Given /^I am on the create account page$/
+     */
+    public function iAmOnTheCreateAccountPage()
+    {
+        $this->ui->visit('/create-account');
+        $this->ui->assertPageAddress('/create-account');
+    }
+
+    /**
+     * @When /^I request to see the actor terms of use$/
+     */
+    public function iRequestToSeeTheActorTermsOfUse()
+    {
+        $this->ui->clickLink('terms of use');
+    }
+
+    /**
+     * @Then /^I can see the actor terms of use$/
+     */
+    public function iCanSeeTheActorTermsOfUse()
+    {
+        $this->ui->assertPageAddress('/lpa/terms-of-use');
+        $this->ui->assertPageContainsText('Terms of use');
+        $this->ui->assertPageContainsText('The service is for donors and attorneys on an LPA.');
+    }
+
+    /**
+     * @Given /^I am on the actor terms of use page$/
+     */
+    public function iAmOnTheActorTermsOfUsePage()
+    {
+        $this->ui->visit('/lpa/terms-of-use');
+        $this->ui->assertPageAddress('/lpa/terms-of-use');
+    }
+
+    /**
+     * @When /^I request to go back to the create account page$/
+     */
+    public function iRequestToGoBackToTheCreateAccountPage()
+    {
+        $this->ui->clickLink('Back');
+    }
+
+    /**
+     * @Then /^I am taken back to the create account page$/
+     */
+    public function iAmTakenBackToTheCreateAccountPage()
+    {
+        $this->ui->assertPageAddress('/create-account');
+    }
 }
+
