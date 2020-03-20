@@ -755,7 +755,7 @@ class AccountContext implements Context
     public function iWantToCreateANewAccount()
     {
         $this->ui->iAmOnHomepage();
-        $this->ui->pressButton('Create an account');
+        $this->ui->pressButton('Get started');
     }
 
     /**
@@ -1673,7 +1673,7 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('There are no access codes for this LPA');
         $this->ui->assertPageContainsText('Give an organisation access');
     }
-    
+
     /**
      * @When /^I check my access codes/
      */
@@ -1702,7 +1702,7 @@ class AccountContext implements Context
 
         $this->ui->clickLink('Check access codes');
     }
-    
+
     /**
      * @Then /^I should be able to click a link to go and create the access codes$/
      */

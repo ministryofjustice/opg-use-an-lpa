@@ -7,58 +7,31 @@
     <main class="govuk-main-wrapper">
 
         <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-full">
+
+            <h1 class="govuk-heading-xl">Use a lasting power of attorney</h1>
+
+            </div>
+
             <div class="govuk-grid-column-two-thirds">
 
-                <h1 class="govuk-heading-xl">Use a lasting power of attorney</h1>
-
-                <p class="govuk-body-l">If you are a donor or attorney on a lasting power of attorney (LPA), you can use this service to:</p>
+                <p class="govuk-body">If you are a donor or attorney on a lasting power of attorney (LPA), you can use this service to:</p>
 
                 <ul class="govuk-list govuk-list--bullet">
-                    <li>make an 'access code' to give an organisation access to an online summary of the LPA</li>
-                    <li>check which organisations have been given access</li>
-                    <li>view the summary yourself</li>
+                    <li>give organisations access to the online summary of an LPA by making a secure access code</li>
+                    <li>keep track of which organisations have been given online access to the LPA</li>
+                    <li>view the LPA summary yourself</li>
                 </ul>
 
-                <p class="govuk-body">You should be able to use this service instead of showing the paper LPA to organisations or posting it to them.</p>
-
-                <p class="govuk-body">If you have not used this service before, you'll need to create an account.</p>
-
-                <p class="govuk-body">To add an LPA to your account, you'll need:</p>
-
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>the reference number of the LPA</li>
-                    <li>your activation key</li>
-                </ul>
-
-                <p class="govuk-body">You can find these on the letter that told you the LPA had been registered.</p>
+                <p class="govuk-body">Organisations should accept this online summary, rather than asking you to show or post them the paper LPA.</p>
 
                 <div class="govuk-inset-text">This service is only for LPAs made in England or Wales.</div>
 
-            </div>
-        </div>
-
-        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-
-                <h3 class="govuk-heading-m">I do not have an account</h3>
-
-                <p class="govuk-body">You need to set up an account to use an LPA. You can add multiple LPAs to your account.</p>
+                <p class="govuk-body"><a href="{{ path('login') }}" class="govuk-link">Sign in to your existing account</a></p>
 
                 <a href="{{ path('create-account') }}" role="button" draggable="false" class="govuk-button govuk-button--start">
-                    Create an account
-                </a>
-
-            </div>
-            <div class="govuk-grid-column-one-half">
-
-                <h3 class="govuk-heading-m">I already have an account</h3>
-
-                <p class="govuk-body">Sign into your existing Use an LPA account.</p>
-
-                <a href="{{ path('login') }}" role="button" draggable="false" class="govuk-button govuk-button--start">
-                    Sign in
+                    Get started
                 </a>
 
             </div>
