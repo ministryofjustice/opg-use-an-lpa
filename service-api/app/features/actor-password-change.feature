@@ -17,3 +17,10 @@ Feature: Authenticated Account Password Change
     And I provide my current password
     And I provide my new password
     Then I am told my password was changed
+
+  @integration @acceptance
+  Scenario: The user cannot provide their current password
+    Given I am on the user dashboard page
+    When I ask to change my password
+    And I cannot enter my current password
+    Then The user can request a password reset and get an email

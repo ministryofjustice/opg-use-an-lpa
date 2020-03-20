@@ -9,7 +9,7 @@ Feature: Authenticated Account Password Change
     Given I am a user of the lpa application
     And I am currently signed in
 
-  @ui
+  @ui @integration
   Scenario: The user can submit a new password of their choice
     Given I view my user details
     When I ask to change my password
@@ -17,18 +17,20 @@ Feature: Authenticated Account Password Change
     And I provide my new password
     Then I am told my password was changed
 
+  @ui @integration
   Scenario: The user cannot provide their current password
     Given I view my user details
     When I ask to change my password
     And I cannot enter my current password
     Then The user can request a password reset and get an email
 
+  @ui
   Scenario Outline: The user attempts to set an invalid password
     Given I view my user details
     When I ask to change my password
-    And I can provide my current password
-    And I choose a new invalid password of "<password>"
-    Then I am told that my password is invalid because it needs at least <reason>
+    And I provide my current password
+    And I choose a new password of "<password>"
+    Then I am told that my new password is invalid because it needs at least <reason>
 
     Examples:
       | password | reason |

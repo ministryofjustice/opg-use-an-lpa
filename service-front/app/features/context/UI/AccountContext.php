@@ -1766,10 +1766,12 @@ class AccountContext implements Context
      */
     public function iProvideMyNewPassword()
     {
-        $this->ui->fillField('new_password', $this->userPassword);
-        $this->ui->fillField('new_password_confirm', $this->userPassword);
+        $newPassword = 'S0meS0rt0fPassw0rd';
 
-        $this->ui->pressButton('Save new password');
+        $this->ui->fillField('new_password', $newPassword);
+        $this->ui->fillField('new_password_confirm', $newPassword);
+
+        $this->ui->pressButton('Change password');
     }
 
     /**
@@ -1779,4 +1781,46 @@ class AccountContext implements Context
     {
         throw new PendingException();
     }
+
+    /**
+     * @Given /^I cannot enter my current password$/
+     */
+    public function iCannotEnterMyCurrentPassword()
+    {
+        $this->ui->fillField('current_password', 'NotMyPassword1');
+
+        $this->iProvideMyNewPassword();
+    }
+
+    /**
+     * @Then /^The user can request a password reset and get an email$/
+     */
+    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Given /^I choose a new password of "([^"]*)"$/
+     */
+    public function iChooseANewPasswordOf($password)
+    {
+        $this->ui->assertPageAddress('/change-password');
+
+        $this->ui->fillField('new_password', $password);
+        $this->ui->fillField('new_password_confirm', $password);
+        $this->ui->pressButton('Change password');
+    }
+
+    /**
+     * @Then /^I am told that my new password is invalid because it needs at least (.*)$/
+     */
+    public function iAmToldThatMyNewPasswordIsInvalidBecauseItNeedsAtLeast($reason)
+    {
+        $this->ui->assertPageAddress('/change-password');
+
+        $this->ui->assertPageContainsText('at least ' . $reason);
+    }
+
+
 }

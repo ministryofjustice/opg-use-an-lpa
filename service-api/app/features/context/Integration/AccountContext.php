@@ -1543,5 +1543,43 @@ class AccountContext extends BaseIntegrationContext
     {
         // Not needed for this context
     }
+
+    /**
+     * @Given /^I cannot enter my current password$/
+     */
+    public function iCannotEnterMyCurrentPassword()
+    {
+        $failedPassword = 'S0meS0rt0fPassw0rd';
+        $newPassword = 'Successful-Raid-on-the-Cooki3s!';
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Password' => password_hash($failedPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
+        // ActorUsers::resetPassword
+        $this->awsFixtures->append(new Result([]));
+
+        $us = $this->container->get(UserService::class);
+
+        $us->completeChangePassword($this->userAccountId, $failedPassword, $newPassword);
+
+        $command = $this->awsFixtures->getLastCommand();
+
+        assertEquals('actor-users', $command['TableName']);
+        assertEquals($this->userAccountId, $command['Key']['Id']['S']);
+        assertEquals('UpdateItem', $command->getName());
+    }
+
+    /**
+     * @Then /^The user can request a password reset and get an email$/
+     */
+    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    {
+        // Not needed in this context
+    }
 }
 
