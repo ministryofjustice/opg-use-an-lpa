@@ -98,7 +98,7 @@ class AccountContext implements Context
     {
         $this->ui->visit('/login');
         $this->ui->assertPageAddress('/login');
-        $this->ui->assertElementContainsText('button[type=submit]', 'Continue');
+        $this->ui->assertElementContainsText('button[type=submit]', 'Sign in');
     }
 
     /**
@@ -192,7 +192,7 @@ class AccountContext implements Context
                 ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
         }
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
     }
 
     /**
@@ -218,7 +218,7 @@ class AccountContext implements Context
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])));
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
     }
 
     /**
@@ -233,7 +233,7 @@ class AccountContext implements Context
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_NOT_FOUND, [], json_encode([])));
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
     }
 
     /**
@@ -1137,7 +1137,7 @@ class AccountContext implements Context
                 ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
         }
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
 
         $this->iAmSignedIn();
         $this->iLogoutOfTheApplication();
@@ -1673,7 +1673,7 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('There are no access codes for this LPA');
         $this->ui->assertPageContainsText('Give an organisation access');
     }
-    
+
     /**
      * @When /^I check my access codes/
      */
@@ -1702,7 +1702,7 @@ class AccountContext implements Context
 
         $this->ui->clickLink('Check access codes');
     }
-    
+
     /**
      * @Then /^I should be able to click a link to go and create the access codes$/
      */
