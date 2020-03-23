@@ -99,7 +99,7 @@ class UserService implements UserRepositoryInterface
     {
         try {
             $userData = $this->apiClient->httpPatch('/v1/auth', [
-                'email' => $email,
+                'email' => strtolower(trim($email)),
                 'password' => $password,
             ]);
 
