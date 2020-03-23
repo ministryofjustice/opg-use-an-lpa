@@ -7,14 +7,14 @@ namespace ActorTest\Form;
 use Actor\Form\PasswordChange;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use CommonTest\Form\{TestsZendForm, ZendFormTests};
+use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
 use PHPUnit\Framework\TestCase;
 use Zend\Expressive\Csrf\CsrfGuardInterface;
 use Zend\Form\Element\Password;
 
-class PasswordChangeTest extends TestCase implements TestsZendForm
+class PasswordChangeTest extends TestCase implements TestsLaminasForm
 {
-    use ZendFormTests;
+    use LaminasFormTests;
 
     /** @var PasswordChange */
     protected $form;
