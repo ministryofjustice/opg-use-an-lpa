@@ -5,12 +5,6 @@ Feature: Start page
   So that I know how to use the service correctly for the first time
 
   @ui
-  Scenario: The user is taken to the get started page when they request to from the index page
-    Given I am on the index page
-    When I request to get started with the service
-    Then I am taken to the get started page
-
-  @ui
   Scenario: The user is taken to the create account page when they request to from the get started page
     Given I am on the get started page
     When I request to create an account

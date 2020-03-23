@@ -1807,6 +1807,14 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I select the option to sign in to my existing account$/
+     */
+    public function iSelectTheOptionToSignInToMyExistingAccount()
+    {
+        $this->ui->clickLink('Sign in to your existing account');
+    }
+
+    /**
      * @Given /^I am on the get started page$/
      */
     public function iAmOnTheGetStartedPage()
@@ -1848,4 +1856,5 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/login');
         $this->ui->assertPageContainsText('Sign in to the Use an LPA service');
     }
+
 }
