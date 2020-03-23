@@ -83,6 +83,6 @@ class EmailClientTest extends TestCase
 
         $emailClient = new EmailClient($notifyClientProphecy->reveal());
 
-        $emailClient->sendPasswordChangeEmail($recipient);
+        $emailClient->sendPasswordChangedEmail($recipient);
     }
 }
