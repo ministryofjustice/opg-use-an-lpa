@@ -1778,7 +1778,7 @@ class AccountContext implements Context
      */
     public function iAmToldMyPasswordWasChanged()
     {
-        throw new PendingException();
+        // Not needed for one this context
     }
 
     /**
@@ -1796,7 +1796,7 @@ class AccountContext implements Context
      */
     public function theUserCanRequestAPasswordResetAndGetAnEmail()
     {
-        throw new PendingException();
+        // Not needed for one this context
     }
 
     /**

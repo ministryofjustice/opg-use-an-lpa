@@ -6,11 +6,11 @@ namespace Actor\Form;
 
 use Common\Form\AbstractForm;
 use Common\Validator\PasswordValidator;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\Identical;
-use Zend\Validator\NotEmpty;
-use Zend\Validator\StringLength;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Validator\Identical;
+use Laminas\Validator\NotEmpty;
+use Laminas\Validator\StringLength;
 
 /**
  * Class PasswordChange
