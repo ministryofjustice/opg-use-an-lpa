@@ -20,13 +20,13 @@
 
                     <fieldset class="govuk-fieldset">
 
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                             <h1 class="govuk-fieldset__heading">
-                                Sign in to the Use an LPA service
+                                Sign in to your Use a lasting power of attorney account
                             </h1>
                         </legend>
 
-                        <p class="govuk-body">Sign in or <a href="{{ path('create-account') }}" class="govuk-link">create an account</a> to use an LPA.</p>
+                        <p class="govuk-body">If you made an LPA online, you'll still need to <a href="{{ path('create-account') }}" class="govuk-link">make an account</a> to use this service.</p>
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
@@ -34,7 +34,7 @@
 
                         {{ govuk_form_element(form.get('password'), { 'label': 'Password', 'attr': { 'class': 'govuk-!-width-one-half', 'auto-complete': 'current-password' } }) }}
 
-                        <button data-prevent-double-click="true" type="submit" class="govuk-button">Continue</button>
+                        <button data-prevent-double-click="true" type="submit" class="govuk-button">Sign in</button>
 
                     </fieldset>
 

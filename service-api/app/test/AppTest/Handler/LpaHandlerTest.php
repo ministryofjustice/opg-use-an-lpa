@@ -8,7 +8,7 @@ use App\Handler\LpaHandler;
 use App\Service\Lpa\LpaService;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 use RuntimeException;
 
 class LpaHandlerTest extends TestCase

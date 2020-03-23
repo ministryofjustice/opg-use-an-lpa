@@ -98,7 +98,7 @@ class AccountContext implements Context
     {
         $this->ui->visit('/login');
         $this->ui->assertPageAddress('/login');
-        $this->ui->assertElementContainsText('button[type=submit]', 'Continue');
+        $this->ui->assertElementContainsText('button[type=submit]', 'Sign in');
     }
 
     /**
@@ -192,7 +192,7 @@ class AccountContext implements Context
                 ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
         }
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
     }
 
     /**
@@ -218,7 +218,7 @@ class AccountContext implements Context
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])));
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
     }
 
     /**
@@ -233,7 +233,7 @@ class AccountContext implements Context
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_NOT_FOUND, [], json_encode([])));
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
     }
 
     /**
@@ -1137,7 +1137,7 @@ class AccountContext implements Context
                 ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
         }
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
 
         $this->iAmSignedIn();
         $this->iLogoutOfTheApplication();
@@ -1673,7 +1673,7 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('There are no access codes for this LPA');
         $this->ui->assertPageContainsText('Give an organisation access');
     }
-    
+
     /**
      * @When /^I check my access codes/
      */
@@ -1702,7 +1702,7 @@ class AccountContext implements Context
 
         $this->ui->clickLink('Check access codes');
     }
-    
+
     /**
      * @Then /^I should be able to click a link to go and create the access codes$/
      */
@@ -1725,5 +1725,57 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
         $this->ui->assertPageContainsText('Which organisation do you want to give access to');
 
+    }
+
+    /**
+     * @Given /^I am on the create account page$/
+     */
+    public function iAmOnTheCreateAccountPage()
+    {
+        $this->ui->visit('/create-account');
+        $this->ui->assertPageAddress('/create-account');
+    }
+
+    /**
+     * @When /^I request to see the actor terms of use$/
+     */
+    public function iRequestToSeeTheActorTermsOfUse()
+    {
+        $this->ui->clickLink('terms of use');
+    }
+
+    /**
+     * @Then /^I can see the actor terms of use$/
+     */
+    public function iCanSeeTheActorTermsOfUse()
+    {
+        $this->ui->assertPageAddress('/lpa/terms-of-use');
+        $this->ui->assertPageContainsText('Terms of use');
+        $this->ui->assertPageContainsText('The service is for donors and attorneys on an LPA.');
+    }
+
+    /**
+     * @Given /^I am on the actor terms of use page$/
+     */
+    public function iAmOnTheActorTermsOfUsePage()
+    {
+        $this->ui->visit('/lpa/terms-of-use');
+        $this->ui->assertPageAddress('/lpa/terms-of-use');
+    }
+
+    /**
+     * @When /^I request to go back to the create account page$/
+     */
+    public function iRequestToGoBackToTheCreateAccountPage()
+    {
+        $this->ui->clickLink('Back');
+    }
+
+    /**
+     * @Then /^I am taken back to the create account page$/
+     */
+    public function iAmTakenBackToTheCreateAccountPage()
+    {
+        $this->ui->assertPageAddress('/create-account');
     }
 }

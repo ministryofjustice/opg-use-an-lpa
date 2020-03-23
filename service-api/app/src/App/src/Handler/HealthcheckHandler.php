@@ -8,7 +8,7 @@ use Exception;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\ActorCodesInterface;
 

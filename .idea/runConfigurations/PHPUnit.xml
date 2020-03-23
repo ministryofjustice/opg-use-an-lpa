@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PHPUnit" type="CompoundRunConfigurationType">
+    <toRun name="API" type="PHPUnitRunConfigurationType" />
+    <toRun name="Front" type="PHPUnitRunConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>

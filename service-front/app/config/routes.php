@@ -106,6 +106,9 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangeDetailsHandler::class
     ], 'lpa.change-details');
+    $app->get('/lpa/terms-of-use', [
+        Actor\Handler\ActorTermsOfUseHandler::class
+    ], 'lpa.terms-of-use');
 };
 
 switch (getenv('CONTEXT')){
