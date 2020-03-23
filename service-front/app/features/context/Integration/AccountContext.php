@@ -1386,6 +1386,8 @@ class AccountContext extends BaseIntegrationContext
                 assertEquals($this->userPassword, $params['password']);
                 assertEquals($expectedPassword, $params['new-password']);
             });
+
+        $this->emailClient->sendPasswordChangedEmail($this->userEmail);
     }
 
     /**
@@ -1393,7 +1395,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iAmToldMyPasswordWasChanged()
     {
-        throw new PendingException();
+        // Not needed in this context
     }
 
     /**
@@ -1420,6 +1422,6 @@ class AccountContext extends BaseIntegrationContext
      */
     public function theUserCanRequestAPasswordResetAndGetAnEmail()
     {
-        throw new PendingException();
+//        throw new PendingException();
     }
 }

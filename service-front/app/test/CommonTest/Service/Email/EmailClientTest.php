@@ -66,4 +66,23 @@ class EmailClientTest extends TestCase
 
         $emailClient->sendPasswordResetEmail($recipient, 'http://localhost:9002/password-reset/passwordResetAABBCCDDEE');
     }
+
+    /** @test */
+    public function can_send_password_change_email()
+    {
+        $notifyClientProphecy = $this->prophesize(NotifyClient::class);
+
+        $recipient = 'a@b.com';
+
+        $notifyClientProphecy->sendEmail(
+            $recipient,
+            EmailClient::TEMPLATE_ID_PASSWORD_CHANGE,
+            []
+        )
+            ->shouldBeCalledOnce();
+
+        $emailClient = new EmailClient($notifyClientProphecy->reveal());
+
+        $emailClient->sendPasswordChangeEmail($recipient);
+    }
 }

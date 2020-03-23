@@ -12,6 +12,7 @@ use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\User\UserService;
+use Common\Service\Email\EmailClient;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -35,6 +36,9 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
     /** @var UserService */
     private $userService;
 
+    /** @var EmailClient */
+    private $emailClient;
+
     /** @var ServerUrlHelper */
     private $serverUrlHelper;
 
@@ -53,12 +57,14 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         UserService $userService,
+        EmailClient $emailClient,
         AuthenticationInterface $authenticator,
         ServerUrlHelper $serverUrlHelper
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;
+        $this->emailClient = $emailClient;
         $this->serverUrlHelper = $serverUrlHelper;
 
         $this->setAuthenticator($authenticator);
@@ -83,7 +89,8 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
                 try {
                     $this->userService->changePassword($user->getIdentity(), $data['current_password'], $data['new_password']);
 
-                    //  Redirect to the dashboard screen with success flash message
+                    $this->emailClient->sendPasswordChangedEmail($user->getDetail('email'));
+
                     return $this->redirectToRoute('your-details');
                 } catch (ApiException $e) {
                     if ($e->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
