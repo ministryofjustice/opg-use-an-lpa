@@ -7,6 +7,4 @@ geckodriver.log
 **/cluster_config.json
 features/failed_scenarios_screenshots/*
 
-# When the team is on PHPStorm 2019.3+ remove this
-.idea/
 .python-version
