@@ -10,9 +10,11 @@
 
 {%- block form_element_simple -%}
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
-        <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ element.getName() }}">
-            {{ label | raw }}
-        </label>
+        {% if label is defined and label is not empty %}
+            <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ element.getName() }}">
+                {{ label | raw }}
+            </label>
+        {% endif %}
 
         {{- block('input_hint') -}}
 
