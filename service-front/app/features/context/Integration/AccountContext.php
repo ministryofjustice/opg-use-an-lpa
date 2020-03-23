@@ -1386,8 +1386,6 @@ class AccountContext extends BaseIntegrationContext
                 assertEquals($this->userPassword, $params['password']);
                 assertEquals($expectedPassword, $params['new-password']);
             });
-
-        $this->emailClient->sendPasswordChangedEmail($this->userEmail);
     }
 
     /**
