@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Filter\StringTrim;
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\NotEmpty;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Filter\StringTrim;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Validator\NotEmpty;
 
 class CreateShareCode extends AbstractForm implements InputFilterProviderInterface
 {

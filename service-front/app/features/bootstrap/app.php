@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-/** @var \Zend\Expressive\Application $app */
-$app = $container->get(\Zend\Expressive\Application::class);
-$factory = $container->get(\Zend\Expressive\MiddlewareFactory::class);
+/** @var \Mezzio\Application $app */
+$app = $container->get(\Mezzio\Application::class);
+$factory = $container->get(\Mezzio\MiddlewareFactory::class);
 
 // Execute programmatic/declarative middleware pipeline and routing
 // configuration statements

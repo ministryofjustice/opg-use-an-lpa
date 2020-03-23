@@ -6,7 +6,7 @@ namespace CommonTest\Form;
 
 use Common\Form\Fieldset\Date;
 use PHPUnit\Framework\TestCase;
-use Zend\Form\Element\Text;
+use Laminas\Form\Element\Text;
 
 class DateTest extends TestCase
 {

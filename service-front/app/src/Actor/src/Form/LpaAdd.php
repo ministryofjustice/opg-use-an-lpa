@@ -8,12 +8,12 @@ use Common\Form\AbstractForm;
 use Common\Form\Fieldset\Date;
 use Common\Form\Fieldset\DatePrefixFilter;
 use Common\Validator\DobValidator;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Filter\StringTrim;
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\NotEmpty;
-use Zend\Validator\Regex;
-use Zend\Validator\StringLength;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Filter\StringTrim;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Validator\NotEmpty;
+use Laminas\Validator\Regex;
+use Laminas\Validator\StringLength;
 
 /**
  * Class LpaAdd

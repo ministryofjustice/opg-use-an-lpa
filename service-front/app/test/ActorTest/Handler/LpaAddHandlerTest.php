@@ -10,14 +10,14 @@ use Common\Service\Lpa\LpaService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument\Token\CallbackToken;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\Response\RedirectResponse;
-use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Expressive\Csrf\CsrfMiddleware;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Session\SessionInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Mezzio\Csrf\CsrfMiddleware;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Session\SessionInterface;
+use Mezzio\Template\TemplateRendererInterface;
 
 class LpaAddHandlerTest extends TestCase
 {
