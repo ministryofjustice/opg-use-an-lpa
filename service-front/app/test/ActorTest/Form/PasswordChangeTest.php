@@ -9,8 +9,8 @@ use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
 use PHPUnit\Framework\TestCase;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Form\Element\Password;
+use Laminas\Expressive\Csrf\CsrfGuardInterface;
+use Laminas\Form\Element\Password;
 
 class PasswordChangeTest extends TestCase implements TestsLaminasForm
 {
