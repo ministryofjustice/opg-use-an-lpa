@@ -66,7 +66,7 @@
 
                     {{ govuk_form_fieldset(form.get('dob'), { 'label': 'What is your date of birth?', 'hint': 'For example, 31 03 1980', 'attr': {'class': 'xyz'} }) }}
 
-                    <button type="submit" class="govuk-button govuk-!-margin-right-1">Continue</button>
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">Continue</button>
 
                     <a href="{{ path('lpa.dashboard') }}" draggable="false" class="govuk-button govuk-button--secondary">Cancel</a>
 

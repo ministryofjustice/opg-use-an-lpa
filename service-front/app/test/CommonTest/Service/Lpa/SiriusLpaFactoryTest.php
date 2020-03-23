@@ -29,7 +29,7 @@ class LpaFactoryTest extends TestCase
     {
         $factory = new Sirius();
 
-        $this->expectException(\Zend\Stdlib\Exception\InvalidArgumentException::class);
+        $this->expectException(\Laminas\Stdlib\Exception\InvalidArgumentException::class);
         $lpa = $factory->createLpaFromData([]);
     }
 
@@ -37,7 +37,7 @@ class LpaFactoryTest extends TestCase
     {
         $factory = new Sirius();
 
-        $this->expectException(\Zend\Stdlib\Exception\InvalidArgumentException::class);
+        $this->expectException(\Laminas\Stdlib\Exception\InvalidArgumentException::class);
         $caseActor = $factory->createCaseActorFromData([]);
     }
 
@@ -45,7 +45,7 @@ class LpaFactoryTest extends TestCase
     {
         $factory = new Sirius();
 
-        $this->expectException(\Zend\Stdlib\Exception\InvalidArgumentException::class);
+        $this->expectException(\Laminas\Stdlib\Exception\InvalidArgumentException::class);
         $address = $factory->createAddressFromData([]);
     }
 

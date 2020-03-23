@@ -9,10 +9,10 @@ use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\Lpa\{LpaService, ViewerCodeService};
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
 use DateTime;
 
 class CheckAccessCodesHandler extends AbstractHandler implements UserAware, CsrfGuardAware
@@ -72,7 +72,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         );
 
         foreach ($shareCodes as $key => $code) {
-          
+
             if (!array_key_exists('Cancelled', $code) || (new DateTime('now') > $code['Expires'])) {
                 $form = new CancelCode($this->getCsrfGuard($request));
                 $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-cancel-code'));
@@ -87,7 +87,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             }
 
             if ($lpa->getDonor()->getId() == $code['ActorId']) {
-                $shareCodes[$key]['CreatedBy'] = $lpa->getDonor()->getFirstname();
+                $shareCodes[$key]['CreatedBy'] = $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname();
             }
 
             foreach ($lpa->getAttorneys() as $attorney) {

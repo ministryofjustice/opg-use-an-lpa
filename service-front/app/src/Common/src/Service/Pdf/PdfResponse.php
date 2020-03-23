@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\Pdf;
 
 use Psr\Http\Message\StreamInterface;
-use Zend\Diactoros\Response;
+use Laminas\Diactoros\Response;
 
 class PdfResponse extends Response
 {

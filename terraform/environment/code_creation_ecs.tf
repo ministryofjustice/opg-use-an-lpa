@@ -125,6 +125,10 @@ locals {
     {
       "name": "SIRIUS_API_ENDPOINT",
       "value": "${local.account.api_gateway_endpoint}"
+    },
+    {
+      "name": "LOGGING_LEVEL",
+      "value": "${local.account.logging_level}"
     }]
   }
 

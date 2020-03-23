@@ -72,7 +72,7 @@ class ConfigProvider
             ],
 
             'delegators' => [
-                Zend\Stratigility\Middleware\ErrorHandler::class => [
+                Laminas\Stratigility\Middleware\ErrorHandler::class => [
                     Service\Log\LogStderrListenerDelegatorFactory::class,
                 ],
             ],

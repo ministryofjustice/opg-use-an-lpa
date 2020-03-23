@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use Common\Handler\HealthcheckHandler;
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Application;
-use Zend\Expressive\MiddlewareFactory;
+use Mezzio\Application;
+use Mezzio\MiddlewareFactory;
 
 /**
  * Setup routes with a single request method:
@@ -29,7 +29,7 @@ use Zend\Expressive\MiddlewareFactory;
  * $app->route(
  *     '/contact',
  *     App\Handler\ContactHandler::class,
- *     Zend\Expressive\Router\Route::HTTP_METHOD_ANY,
+ *     Mezzio\Router\Route::HTTP_METHOD_ANY,
  *     'contact'
  * );
  */
@@ -65,7 +65,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     // User details
     $app->get('/your-details', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\YourDetailsHandler::class,
     ], 'your-details');
 
@@ -76,41 +76,44 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     // LPA management
     $app->get('/lpa/dashboard', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaDashboardHandler::class
     ], 'lpa.dashboard');
     $app->route('/lpa/add-details', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaAddHandler::class
     ], ['GET', 'POST'], 'lpa.add');
     $app->route('/lpa/check', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckLpaHandler::class
     ], ['GET', 'POST'], 'lpa.check');
     $app->get('/lpa/view-lpa', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ViewLpaSummaryHandler::class
     ], 'lpa.view');
     $app->route('/lpa/code-make',[
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CreateViewerCodeHandler::class
     ], ['GET', 'POST'], 'lpa.create-code');
     $app->route('/lpa/access-codes',[
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckAccessCodesHandler::class
     ], ['GET', 'POST'], 'lpa.access-codes');
     $app->post('/lpa/confirm-cancel-code', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ConfirmCancelCodeHandler::class
     ],  'lpa.confirm-cancel-code');
     $app->post('/lpa/cancel-code', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CancelCodeHandler::class
     ],'lpa.cancel-code');
     $app->get('/lpa/change-details', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangeDetailsHandler::class
     ], 'lpa.change-details');
+    $app->get('/lpa/terms-of-use', [
+        Actor\Handler\ActorTermsOfUseHandler::class
+    ], 'lpa.terms-of-use');
 };
 
 switch (getenv('CONTEXT')){

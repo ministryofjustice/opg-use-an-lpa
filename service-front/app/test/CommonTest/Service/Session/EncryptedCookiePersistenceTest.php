@@ -1,10 +1,10 @@
 <?php
 /**
  * The majority of the code for EncryptedCookiePersistence comes from:
- * https://github.com/zendframework/zend-expressive-session-cache
+ * https://github.com/mezzio/mezzio-session-cache
  *
  * Thus these tests focus on things not covered in:
- * https://github.com/zendframework/zend-expressive-session-cache/blob/master/test/CacheSessionPersistenceTest.php
+ * https://github.com/mezzio/mezzio-session-cache/blob/master/test/CacheSessionPersistenceTest.php
  *
  * i.e. The specific amends we've made.
  *
@@ -15,7 +15,7 @@
  */
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Session\Cache;
+namespace ZendTest\Mezzio\Session\Cache;
 
 use Common\Service\Session\EncryptedCookiePersistence;
 use Common\Service\Session\KeyManager\Key;
@@ -28,8 +28,8 @@ use Prophecy\Prophecy\ObjectProphecy;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
-use Zend\Crypt\BlockCipher;
-use Zend\Expressive\Session\Session;
+use Laminas\Crypt\BlockCipher;
+use Mezzio\Session\Session;
 
 class EncryptedCookiePersistenceTest extends TestCase
 {

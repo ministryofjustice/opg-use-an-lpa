@@ -12,16 +12,16 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Authentication\UserInterface;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
 use Common\Service\Lpa\ViewerCodeService;
 use ArrayObject;
 use Common\Exception\InvalidRequestException;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Expressive\Csrf\CsrfMiddleware;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Mezzio\Csrf\CsrfMiddleware;
 
 class CheckAccessCodesHandlerTest extends TestCase
 {
@@ -148,7 +148,7 @@ class CheckAccessCodesHandlerTest extends TestCase
                 'shareCodes' => $shareCodes
             ])
             ->willReturn('');
-        
+
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
@@ -237,7 +237,7 @@ class CheckAccessCodesHandlerTest extends TestCase
 
         foreach ($shareCodes as $key => $code) {
             if ($lpa->getDonor()->getId() == $code['ActorId']) {
-                $this->assertEquals($code['CreatedBy'], $lpa->getDonor()->getFirstname());
+                $this->assertEquals($code['CreatedBy'], $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname());
             }
             if ($attorney->getId() == $code['ActorId']) {
                 $this->assertEquals($code['CreatedBy'], $attorney->getFirstname() . ' ' . $attorney->getSurname());

@@ -10,7 +10,7 @@ use Common\Service\User\UserServiceFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Zend\Expressive\Authentication\UserInterface;
+use Mezzio\Authentication\UserInterface;
 
 class UserServiceFactoryTest extends TestCase
 {

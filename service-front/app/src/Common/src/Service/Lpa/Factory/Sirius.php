@@ -9,7 +9,7 @@ use Common\Entity\Lpa;
 use Common\Entity\CaseActor;
 use Common\Entity\Address;
 use Exception;
-use Zend\Stdlib\Exception\InvalidArgumentException;
+use Laminas\Stdlib\Exception\InvalidArgumentException;
 use DateTime;
 
 use function filter_var;

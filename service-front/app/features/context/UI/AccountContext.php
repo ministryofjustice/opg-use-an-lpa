@@ -6,7 +6,6 @@ namespace BehatTest\Context\UI;
 
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use Fig\Http\Message\StatusCodeInterface;
@@ -99,7 +98,7 @@ class AccountContext implements Context
     {
         $this->ui->visit('/login');
         $this->ui->assertPageAddress('/login');
-        $this->ui->assertElementContainsText('button[type=submit]', 'Continue');
+        $this->ui->assertElementContainsText('button[type=submit]', 'Sign in');
     }
 
     /**
@@ -193,7 +192,7 @@ class AccountContext implements Context
                 ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
         }
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
     }
 
     /**
@@ -219,7 +218,7 @@ class AccountContext implements Context
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])));
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
     }
 
     /**
@@ -234,7 +233,7 @@ class AccountContext implements Context
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_NOT_FOUND, [], json_encode([])));
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
     }
 
     /**
@@ -1138,7 +1137,7 @@ class AccountContext implements Context
                 ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
         }
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
 
         $this->iAmSignedIn();
         $this->iLogoutOfTheApplication();
@@ -1823,4 +1822,56 @@ class AccountContext implements Context
     }
 
 
+
+    /**
+     * @Given /^I am on the create account page$/
+     */
+    public function iAmOnTheCreateAccountPage()
+    {
+        $this->ui->visit('/create-account');
+        $this->ui->assertPageAddress('/create-account');
+    }
+
+    /**
+     * @When /^I request to see the actor terms of use$/
+     */
+    public function iRequestToSeeTheActorTermsOfUse()
+    {
+        $this->ui->clickLink('terms of use');
+    }
+
+    /**
+     * @Then /^I can see the actor terms of use$/
+     */
+    public function iCanSeeTheActorTermsOfUse()
+    {
+        $this->ui->assertPageAddress('/lpa/terms-of-use');
+        $this->ui->assertPageContainsText('Terms of use');
+        $this->ui->assertPageContainsText('The service is for donors and attorneys on an LPA.');
+    }
+
+    /**
+     * @Given /^I am on the actor terms of use page$/
+     */
+    public function iAmOnTheActorTermsOfUsePage()
+    {
+        $this->ui->visit('/lpa/terms-of-use');
+        $this->ui->assertPageAddress('/lpa/terms-of-use');
+    }
+
+    /**
+     * @When /^I request to go back to the create account page$/
+     */
+    public function iRequestToGoBackToTheCreateAccountPage()
+    {
+        $this->ui->clickLink('Back');
+    }
+
+    /**
+     * @Then /^I am taken back to the create account page$/
+     */
+    public function iAmTakenBackToTheCreateAccountPage()
+    {
+        $this->ui->assertPageAddress('/create-account');
+    }
 }

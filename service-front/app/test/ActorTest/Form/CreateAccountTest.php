@@ -7,14 +7,14 @@ namespace ActorTest\Form;
 use Actor\Form\CreateAccount;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use CommonTest\Form\{TestsZendForm, ZendFormTests};
+use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
 use PHPUnit\Framework\TestCase;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Form\Element\{Checkbox, Password, Text};
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Form\Element\{Checkbox, Password, Text};
 
-class CreateAccountTest extends TestCase implements TestsZendForm
+class CreateAccountTest extends TestCase implements TestsLaminasForm
 {
-    use ZendFormTests;
+    use LaminasFormTests;
 
     /** @var CreateAccount */
     protected $form;

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * The majority of this class is taken from zend-expressive-session-cache.
+ * The majority of this class is taken from mezzio-session-cache.
  * It's been modified to used the cookie for the encrypted session data, rather than the cache id.
  *
  * Original header:
- * @see       https://github.com/zendframework/zend-expressive-session-cache for the canonical source repository
+ * @see       https://github.com/mezzio/mezzio-session-cache for the canonical source repository
  * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-session-cache/blob/master/LICENSE.md New BSD License
+ * @license   https://github.com/mezzio/mezzio-session-cache/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
@@ -24,10 +24,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Common\Service\Session\KeyManager\KeyNotFoundException;
 use Common\Service\Session\KeyManager\KeyManagerInterface;
 use ParagonIE\ConstantTime\Base64UrlSafe;
-use Zend\Crypt\BlockCipher;
-use Zend\Expressive\Session\Session;
-use Zend\Expressive\Session\SessionInterface;
-use Zend\Expressive\Session\SessionPersistenceInterface;
+use Laminas\Crypt\BlockCipher;
+use Mezzio\Session\Session;
+use Mezzio\Session\SessionInterface;
+use Mezzio\Session\SessionPersistenceInterface;
 
 /**
  * Class EncryptedCookie
@@ -271,7 +271,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
 
     //------------------------------------------------------------------------------------------------------------
-    // Internal methods, predominantly from zend-expressive-session-cache
+    // Internal methods, predominantly from mezzio-session-cache
 
     /**
      * Generate cache http headers for this instance's session cache_limiter and

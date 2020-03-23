@@ -6,7 +6,7 @@ namespace CommonTest\Form;
 
 use Common\Form\AbstractForm;
 
-interface TestsZendForm
+interface TestsLaminasForm
 {
     public function getFormName(): string;
 

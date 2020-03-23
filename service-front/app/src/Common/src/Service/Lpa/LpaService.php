@@ -2,10 +2,12 @@
 
 namespace Common\Service\Lpa;
 
-use Common\Entity\Lpa;
-use Common\Service\ApiClient\Client as ApiClient;
 use ArrayObject;
+use Common\Entity\Lpa;
+use Common\Exception\ApiException;
+use Common\Service\ApiClient\Client as ApiClient;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class LpaService
@@ -27,14 +29,20 @@ class LpaService
     private $lpaFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * LpaService constructor.
      * @param ApiClient $apiClient
      * @param LpaFactory $lpaFactory
      */
-    public function __construct(ApiClient $apiClient, LpaFactory $lpaFactory)
+    public function __construct(ApiClient $apiClient, LpaFactory $lpaFactory, LoggerInterface $logger)
     {
         $this->apiClient = $apiClient;
         $this->lpaFactory = $lpaFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -54,6 +62,14 @@ class LpaService
             $lpaData = $this->parseLpaData($lpaData);
         }
 
+        $this->logger->info(
+            'Account with Id {id} retrieved {count} LPA(s)',
+            [
+                'id'    => $userToken,
+                'count' => count($lpaData)
+            ]
+        );
+
         return $lpaData;
     }
 
@@ -69,7 +85,19 @@ class LpaService
 
         $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
 
-        return isset($lpaData['lpa']) ? $this->lpaFactory->createLpaFromData($lpaData['lpa']) : null;
+        $lpa = isset($lpaData['lpa']) ? $this->lpaFactory->createLpaFromData($lpaData['lpa']) : null;
+
+        if ($lpa !== null) {
+            $this->logger->info(
+                'Account with Id {id} fetched LPA with Id {uId}',
+                [
+                    'id'  => $userToken,
+                    'uId' => $lpa->getUId()
+                ]
+            );
+        }
+
+        return $lpa;
     }
 
     /**
@@ -79,7 +107,7 @@ class LpaService
      * @param string $donorSurname
      * @param bool $response
      * @return ArrayObject|null
-     * @throws Exception
+     * @throws ApiException|Exception
      */
     public function getLpaByCode(string $shareCode, string $donorSurname, bool $response = self::SUMMARY): ?ArrayObject
     {
@@ -94,6 +122,13 @@ class LpaService
             $trackRoute = 'summary';
         }
 
+        $this->logger->debug(
+            'User requested {type} view of LPA by share code',
+            [
+                'type' => $trackRoute
+            ]
+        );
+
         $lpaData = $this->apiClient->httpPost('/v1/viewer-codes/' . $trackRoute, [
             'code' => $shareCode,
             'name' => $donorSurname,
@@ -101,6 +136,14 @@ class LpaService
 
         if (is_array($lpaData)) {
             $lpaData = $this->parseLpaData($lpaData);
+
+            $this->logger->info(
+                'LPA with Id {uId} retrieved by share code',
+                [
+                    // The structures
+                    'uId' => ($lpaData->lpa)->getUId()
+                ]
+            );
         }
 
         return $lpaData;
@@ -131,7 +174,19 @@ class LpaService
         // TODO $lpaData also contains an CaseActor 'actor' that we should probably return
         $lpaData = $this->apiClient->httpPost('/v1/actor-codes/summary', $data);
 
-        return isset($lpaData['lpa']) ? $this->lpaFactory->createLpaFromData($lpaData['lpa']) : null;
+        $lpa = isset($lpaData['lpa']) ? $this->lpaFactory->createLpaFromData($lpaData['lpa']) : null;
+
+        if ($lpa !== null) {
+            $this->logger->info(
+                'Account with Id {id} fetched LPA with Id {uId} by passcode',
+                [
+                    'id'  => $userToken,
+                    'uId' => $lpa->getUId()
+                ]
+            );
+        }
+
+        return $lpa;
     }
 
     /**
@@ -155,7 +210,19 @@ class LpaService
 
         $lpaData = $this->apiClient->httpPost('/v1/actor-codes/confirm', $data);
 
-        return $lpaData['user-lpa-actor-token'] ?? null;
+        if (isset($lpaData['user-lpa-actor-token'])) {
+            $this->logger->info(
+                'Account with Id {id} added LPA with Id {uId} to account by passcode',
+                [
+                    'id'  => $userToken,
+                    'uId' => $referenceNumber
+                ]
+            );
+
+            return $lpaData['user-lpa-actor-token'];
+        }
+
+        return null;
     }
 
     /**

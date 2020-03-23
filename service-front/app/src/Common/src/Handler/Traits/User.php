@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Common\Handler\Traits;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Authentication\UserInterface;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\UserInterface;
 
 trait User
 {

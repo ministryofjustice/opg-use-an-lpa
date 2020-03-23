@@ -867,18 +867,15 @@ class AccountContext extends BaseIntegrationContext
         // ViewerCodeActivity::getStatusesForViewerCodes
         $this->awsFixtures->append(new Result());
 
-        // UserLpaActorMap::getUsersLpas
+        // UserLpaActorMap::get
         $this->awsFixtures->append(new Result([
-            'Items' => $this->marshalAwsResultData(
-                [
-                'SiriusUid' => $this->lpaUid,
-                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                'Expires'   => (new DateTime('2021-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                'UserLpaActor' => $this->userLpaActorToken,
-                'Organisation' => $this->organisation,
-                'ViewerCode'       => $this->accessCode,
-            ]
-            )
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->lpaUid,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorLpaId,
+                'UserId'           => $this->userId
+            ])
         ]));
 
         $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
@@ -1156,7 +1153,7 @@ class AccountContext extends BaseIntegrationContext
                     json_encode($this->lpa)));
 
         $lpaService = $this->container->get(LpaService::class);
-          
+
         $lpaData = $lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string) $this->userId);
 
         assertArrayHasKey('date', $lpaData);
@@ -1167,7 +1164,7 @@ class AccountContext extends BaseIntegrationContext
         assertEquals($this->lpaUid, $lpaData['actor']['details']['uId']);
 
         // Get the share codes
-      
+
         // UserLpaActorMap::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
@@ -1178,7 +1175,7 @@ class AccountContext extends BaseIntegrationContext
                 'UserId'           => $this->userId
             ])
         ]));
-      
+
         // ViewerCodes::getCodesByUserLpaActorId
         $this->awsFixtures->append(new Result([
             'Items' => [
@@ -1403,26 +1400,24 @@ class AccountContext extends BaseIntegrationContext
             }
         }
 
-        // UserLpaActorMap::getUsersLpas
+        // UserLpaActorMap::get
         $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
-                    'SiriusUid'        => $this->lpaUid,
-                    'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                    'Id'               => $this->userLpaActorToken,
-                    'ActorId'          => $this->actorLpaId,
-                    'UserId'           => $this->userId
-                ])
-            ]
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->lpaUid,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorLpaId,
+                'UserId'           => $this->userId
+            ])
         ]));
 
         $userLpaActorMap = $this->container->get(UserLpaActorMap::class);
-        $lpas = $userLpaActorMap->getUsersLpas((string) $this->actorLpaId);
+        $lpa = $userLpaActorMap->get($this->userLpaActorToken);
 
-        assertEquals($lpas[0]['SiriusUid'], $this->lpaUid);
-        assertEquals($lpas[0]['Id'], $this->userLpaActorToken);
-        assertEquals($lpas[0]['ActorId'], $this->actorLpaId);
-        assertEquals($lpas[0]['UserId'], $this->userId);
+        assertEquals($lpa['SiriusUid'], $this->lpaUid);
+        assertEquals($lpa['Id'], $this->userLpaActorToken);
+        assertEquals($lpa['ActorId'], $this->actorLpaId);
+        assertEquals($lpa['UserId'], $this->userId);
     }
 
     /**
@@ -1582,4 +1577,3 @@ class AccountContext extends BaseIntegrationContext
         // Not needed in this context
     }
 }
-

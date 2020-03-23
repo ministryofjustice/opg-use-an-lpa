@@ -54,9 +54,9 @@
 
                                 {{ govuk_form_element(form.get('password_confirm'), { 'label': 'Confirm Password' }) }}
 
-                                {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="#" class="govuk-link">terms of use</a>' }) }}
+                                {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="/lpa/terms-of-use" class="govuk-link">terms of use</a>' }) }}
 
-                                <button type="submit" class="govuk-button">Create account</button>
+                                <button data-prevent-double-click="true" type="submit" class="govuk-button">Create account</button>
 
                             </div>
 

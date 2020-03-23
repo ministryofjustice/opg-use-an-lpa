@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
+use Mezzio\Csrf\CsrfGuardInterface;
 
 class LpaConfirm extends AbstractForm
 {

@@ -8,14 +8,14 @@ use Actor\Form\LpaAdd;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use Common\Form\Fieldset\Date;
-use CommonTest\Form\{TestsZendForm, ZendFormTests};
+use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
 use PHPUnit\Framework\TestCase;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Form\Element\Text;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Form\Element\Text;
 
-class LpaAddTest extends TestCase implements TestsZendForm
+class LpaAddTest extends TestCase implements TestsLaminasForm
 {
-    use ZendFormTests;
+    use LaminasFormTests;
 
     /** @var LpaAdd */
     protected $form;
