@@ -1755,7 +1755,8 @@ class AccountContext implements Context
                 ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
         }
 
-        $this->ui->pressButton('Continue');
+        $this->ui->assertPageContainsText('Sign in');
+        $this->ui->pressButton('Sign in');
     }
 
     /**
@@ -1779,7 +1780,7 @@ class AccountContext implements Context
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])));
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
     }
 
     /**

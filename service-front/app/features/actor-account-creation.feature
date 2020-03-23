@@ -66,7 +66,7 @@ Feature: Account creation
     Then An account is created using <email1> <password1> <password2> <terms>
 
     Examples:
-      | email1              | password1 | password2 | terms |
-      |TEST@example.com     | Password1 | Password1 |   1   |
-      |test@EXAMPLE.com     | Password1 | Password1 |   1   |
-      |TEST@EXAMPLE.COM     | Password1 | Password1 |   1   |
+      | email1               | password1 | password2 | terms |
+      |TEST@example.com      | Password1 | Password1 |   1   |
+      |test@EXAMPLE.com      | Password1 | Password1 |   1   |
+      |'   TEST@EXAMPLE.COM '| Password1 | Password1 |   1   |
