@@ -1,12 +1,10 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace ActorTest\Form;
 
 use Actor\Form\PasswordChange;
-use Actor\Form\PasswordReset;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\{TestsZendForm, ZendFormTests};
@@ -44,6 +42,6 @@ class PasswordChangeTest extends TestCase implements TestsZendForm
     public function setUp()
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new PasswordReset($guardProphecy->reveal());
+        $this->form = new PasswordChange($guardProphecy->reveal());
     }
 }
