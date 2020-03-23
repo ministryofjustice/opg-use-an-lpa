@@ -76,8 +76,7 @@ class EmailClientTest extends TestCase
 
         $notifyClientProphecy->sendEmail(
             $recipient,
-            EmailClient::TEMPLATE_ID_PASSWORD_CHANGE,
-            []
+            EmailClient::TEMPLATE_ID_PASSWORD_CHANGE
         )
             ->shouldBeCalledOnce();
 
