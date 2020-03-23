@@ -1673,7 +1673,7 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('There are no access codes for this LPA');
         $this->ui->assertPageContainsText('Give an organisation access');
     }
-    
+
     /**
      * @When /^I check my access codes/
      */
@@ -1702,7 +1702,7 @@ class AccountContext implements Context
 
         $this->ui->clickLink('Check access codes');
     }
-    
+
     /**
      * @Then /^I should be able to click a link to go and create the access codes$/
      */
@@ -1778,4 +1778,68 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/create-account');
     }
+
+    /**
+     * @Given /^I have added a (.*) LPA$/
+     */
+    public function iHaveAddedALPA($lpaType)
+    {
+        // Dashboard page
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->ui->visit('/lpa/dashboard');
+
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    /**
+     * @When /^I request to give an organisation access for my (.*) LPA$/
+     */
+    public function iRequestToGiveAnOrganisationAccessForMyLPA($lpaType)
+    {
+        $this->lpa->caseSubtype = $lpaType;
+
+        // API call for get LpaById (when give organisation access is clicked)
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        $this->ui->clickLink('Give an organisation access');
+    }
+
+    /**
+     * @Then /^I should see relevant (.*) of organisations$/
+     */
+    public function iShouldSeeRelevantOfOrganisations($orgExamples)
+    {
+        $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
+        $this->ui->assertPageContainsText($orgExamples);
+    }
+
 }
