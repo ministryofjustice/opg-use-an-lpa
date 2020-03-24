@@ -167,7 +167,7 @@ class UserService
 
         try {
             $user = $this->usersRepository->recordPasswordResetRequest($email, $resetToken, $resetExpiry);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logger->notice(
                 'Attempt made to reset password for non-existent account',
                 ['email' => $email]
@@ -242,5 +242,23 @@ class UserService
             'Password reset for account with Id {id} was successful',
             ['id' => $userId]
         );
+    }
+
+    /**
+     *
+     *
+     * @param string $userId
+     * @param string $password
+     * @param string $newPassword
+     */
+    public function completeChangePassword(string $userId, string $password, string $newPassword): void
+    {
+        $user = $this->usersRepository->get($userId);
+
+        if (! password_verify($password, $user['Password'])) {
+            throw new ForbiddenException('Authentication failed for user ID ' . $userId, ['userId' => $userId]);
+        }
+
+        $this->usersRepository->resetPassword($userId, $newPassword);
     }
 }
