@@ -1,23 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PhpIncludePathManager">
-    <include_path>
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/sebastian/code-unit-reverse-lookup" />
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/sebastian/environment" />
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/sebastian/version" />
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/theseer/tokenizer" />
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/phpunit/php-token-stream" />
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/phpunit/php-text-template" />
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/phpunit/php-file-iterator" />
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/composer" />
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/symfony/service-contracts" />
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/psr/container" />
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/symfony/polyfill-mbstring" />
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/symfony/console" />
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/symfony/polyfill-php73" />
-      <path value="$PROJECT_DIR$/../../Personal/php-coverage-path-fixer/vendor/phpunit/php-code-coverage" />
-    </include_path>
-  </component>
   <component name="PhpInterpreters">
     <interpreters>
       <interpreter id="d0145a1b-f903-43c7-8428-a985293fe8b9" name="api-app" home="docker-compose://DATA" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so">
