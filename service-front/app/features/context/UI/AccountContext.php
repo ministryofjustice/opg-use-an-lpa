@@ -2016,7 +2016,9 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/login');
         $this->ui->assertPageContainsText('Sign in to the Use an LPA service');
-=======
+    }
+
+    /**
      * @Given /^I have added a (.*) LPA$/
      */
     public function iHaveAddedALPA($lpaType)
@@ -2080,4 +2082,3 @@ class AccountContext implements Context
     }
 
 }
-
