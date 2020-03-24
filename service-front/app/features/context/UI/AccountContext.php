@@ -1728,6 +1728,102 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I ask to change my password$/
+     */
+    public function iAskToChangeMyPassword()
+    {
+        $session = $this->ui->getSession();
+        $page = $session->getPage();
+
+        $link = $page->find('css', 'a[href="change-password"]');
+        if ($link === null) {
+            throw new \Exception('change password link not found');
+        }
+
+        $link->click();
+
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $this->ui->assertPageAddress('change-password');
+
+        $passwordInput = $page->find('css', 'input[type="password"]');
+
+        if ($passwordInput === null) {
+            throw new \Exception('no password input box found');
+        }
+    }
+
+    /**
+     * @Given /^I provide my current password$/
+     */
+    public function iProvideMyCurrentPassword()
+    {
+        $this->ui->fillField('current_password', $this->userPassword);
+    }
+
+    /**
+     * @Given /^I provide my new password$/
+     */
+    public function iProvideMyNewPassword()
+    {
+        $newPassword = 'S0meS0rt0fPassw0rd';
+
+        $this->ui->fillField('new_password', $newPassword);
+        $this->ui->fillField('new_password_confirm', $newPassword);
+
+        $this->ui->pressButton('Change password');
+    }
+
+    /**
+     * @Then /^I am told my password was changed$/
+     */
+    public function iAmToldMyPasswordWasChanged()
+    {
+        // Not needed for one this context
+    }
+
+    /**
+     * @Given /^I cannot enter my current password$/
+     */
+    public function iCannotEnterMyCurrentPassword()
+    {
+        $this->ui->fillField('current_password', 'NotMyPassword1');
+
+        $this->iProvideMyNewPassword();
+    }
+
+    /**
+     * @Then /^The user can request a password reset and get an email$/
+     */
+    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    {
+        // Not needed for one this context
+    }
+
+    /**
+     * @Given /^I choose a new password of "([^"]*)"$/
+     */
+    public function iChooseANewPasswordOf($password)
+    {
+        $this->ui->assertPageAddress('/change-password');
+
+        $this->ui->fillField('new_password', $password);
+        $this->ui->fillField('new_password_confirm', $password);
+        $this->ui->pressButton('Change password');
+    }
+
+    /**
+     * @Then /^I am told that my new password is invalid because it needs at least (.*)$/
+     */
+    public function iAmToldThatMyNewPasswordIsInvalidBecauseItNeedsAtLeast($reason)
+    {
+        $this->ui->assertPageAddress('/change-password');
+
+        $this->ui->assertPageContainsText('at least ' . $reason);
+    }
+
+
+
+    /**
      * @When /^I enter correct email with (.*) and (.*) below$/
      */
     public function iEnterCorrectEmailWithEmailFormatAndPasswordBelow($email_format, $password)
@@ -2004,4 +2100,3 @@ class AccountContext implements Context
     }
 
 }
-
