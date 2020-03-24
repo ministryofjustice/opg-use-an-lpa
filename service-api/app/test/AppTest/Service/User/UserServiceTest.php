@@ -128,7 +128,7 @@ class UserServiceTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
+            ->willReturn(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'LastLogin' => '2020-01-01']);
         $repoProphecy->recordSuccessfulLogin('1234-1234-1234', Argument::that(function($dateTime) {
             $this->assertIsString($dateTime);
 
@@ -142,7 +142,7 @@ class UserServiceTest extends TestCase
 
         $return = $us->authenticate('a@b.com', self::PASS);
 
-        $this->assertEquals(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH], $return);
+        $this->assertEquals(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'LastLogin' => '2020-01-01'], $return);
     }
 
     /** @test */
@@ -182,7 +182,7 @@ class UserServiceTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'ActivationToken' => 'aToken']);
+            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'ActivationToken' => 'aToken', 'Id' => '1234-1234-1234']);
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
@@ -200,7 +200,8 @@ class UserServiceTest extends TestCase
             ->recordPasswordResetRequest('a@b.com', Argument::type('string'), Argument::type('int'))
             ->willReturn([
                 'Email' => 'a@b.com',
-                'PasswordResetToken' => 'resetTokenAABBCCDDEE'
+                'PasswordResetToken' => 'resetTokenAABBCCDDEE',
+                'Id' => '1234-1234-1234'
             ]);
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
