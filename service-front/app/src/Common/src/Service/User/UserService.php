@@ -95,9 +95,8 @@ class UserService implements UserRepositoryInterface
     public function authenticate(string $email, string $password = null): ?UserInterface
     {
         try {
-            $userData = $this->apiClient->httpPatch('/v1/auth',
-                [
-                'email' => $email,
+            $userData = $this->apiClient->httpPatch('/v1/auth', [
+                'email' => strtolower(trim($email)),
                 'password' => $password,
             ]);
 

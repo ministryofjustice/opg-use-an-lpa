@@ -573,7 +573,7 @@
             "time": "2019-07-01T23:21:34+00:00"
         },
         {
-            "name": "jeremeamia/superclosure",
+            "name": "jeremeamia/SuperClosure",
             "version": "2.4.0",
             "source": {
                 "type": "git",
