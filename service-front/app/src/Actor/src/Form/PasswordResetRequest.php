@@ -11,6 +11,8 @@ use Laminas\Filter\StringToLower;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\Identical;
 use Laminas\Validator\NotEmpty;
+use Laminas\Filter\StringTrim;
+
 
 class PasswordResetRequest extends AbstractForm implements InputFilterProviderInterface
 {
@@ -50,6 +52,10 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                     [
                         'name' => StringToLower::class,
                     ],
+                    [
+                        'name' => StringTrim::class,
+
+                    ],
                 ],
                 'validators' => [
                     [
@@ -71,7 +77,7 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                 'required' => true,
                 'filters'  => [
                     [
-                        'name' => StringToLower::class,
+                        'name' => StringTrim::class,
                     ],
                 ],
                 'validators' => [

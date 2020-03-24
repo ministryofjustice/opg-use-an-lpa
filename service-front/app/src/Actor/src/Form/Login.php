@@ -10,6 +10,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringToLower;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
+use Laminas\Filter\StringTrim;
 
 class Login extends AbstractForm implements InputFilterProviderInterface
 {
@@ -52,6 +53,10 @@ class Login extends AbstractForm implements InputFilterProviderInterface
                 'filters'    => [
                     [
                         'name' => StringToLower::class,
+                    ],
+                    [
+                        'name' => StringTrim::class,
+
                     ],
                 ],
                 'validators' => [

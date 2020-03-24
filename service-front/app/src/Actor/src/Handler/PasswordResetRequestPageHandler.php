@@ -94,7 +94,7 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
                 }
 
                 return new HtmlResponse($this->renderer->render('actor::password-reset-request-done', [
-                    'email' => $data['email']
+                    'email' => strtolower($data['email'])
                 ]));
             }
         }
