@@ -1651,4 +1651,103 @@ class AccountContext implements Context
 
         assertEmpty($response);
     }
+
+    /**
+     * @Given /^I am on the user dashboard page$/
+     */
+    public function iAmOnTheUserDashboardPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I ask to change my password$/
+     */
+    public function iAskToChangeMyPassword()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I provide my current password$/
+     */
+    public function iProvideMyCurrentPassword()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I provide my new password$/
+     */
+    public function iProvideMyNewPassword()
+    {
+        $newPassword = 'Successful-Raid-on-the-Cooki3s!';
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
+        // ActorUsers::resetPassword
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiPatch('/v1/change-password', [
+            'user-id'       => $this->userAccountId,
+            'password'      => $this->userAccountPassword,
+            'new-password'  => $newPassword,
+        ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        assertEmpty($response);
+    }
+
+    /**
+     * @Then /^I am told my password was changed$/
+     */
+    public function iAmToldMyPasswordWasChanged()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I cannot enter my current password$/
+     */
+    public function iCannotEnterMyCurrentPassword()
+    {
+        $failedPassword = 'S0meS0rt0fPassw0rd';
+        $newPassword = 'Successful-Raid-on-the-Cooki3s!';
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
+        // ActorUsers::resetPassword
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiPatch('/v1/change-password', [
+            'user-id'       => $this->userAccountId,
+            'password'      => $failedPassword,
+            'new-password'  => $newPassword,
+        ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_FORBIDDEN);
+    }
+
+    /**
+     * @Then /^The user can request a password reset and get an email$/
+     */
+    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    {
+        // Not needed in this context
+    }
 }
