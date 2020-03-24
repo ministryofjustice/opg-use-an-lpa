@@ -40,7 +40,11 @@
                             </h1>
                         </legend>
 
-                        {{ govuk_form_element(form.get('org_name'), { 'label': 'For example: HSBC, British Gas', 'attr': { 'class': 'govuk-!-width-one-half' } }) }}
+                        {% if lpa.caseSubtype|lower == 'hw' %}
+                            {{ govuk_form_element(form.get('org_name'), { 'hint': 'For example: St Guy\'s Hospital, Sunview Care Home', 'attr' : {'class': 'govuk-!-width-one-half'} }) }}
+                        {% elseif lpa.caseSubtype|lower == 'pfa' %}
+                            {{ govuk_form_element(form.get('org_name'), { 'hint': 'For example: HSBC, British Gas', 'attr' : {'class': 'govuk-!-width-one-half'} }) }}
+                        {% endif %}
 
                         <button data-prevent-double-click="true" type="submit" class="govuk-button">
                             Continue
