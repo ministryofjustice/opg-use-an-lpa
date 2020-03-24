@@ -2015,7 +2015,7 @@ class AccountContext implements Context
     public function iAmTakenToTheLoginPage()
     {
         $this->ui->assertPageAddress('/login');
-        $this->ui->assertPageContainsText('Sign in to the Use an LPA service');
+        $this->ui->assertPageContainsText('Sign in to your Use a lasting power of attorney account');
     }
 
     /**
