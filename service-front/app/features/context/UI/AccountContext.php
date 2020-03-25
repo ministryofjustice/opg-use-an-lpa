@@ -755,7 +755,8 @@ class AccountContext implements Context
     public function iWantToCreateANewAccount()
     {
         $this->ui->iAmOnHomepage();
-        $this->ui->pressButton('Create an account');
+        $this->ui->pressButton('Get started');
+        $this->ui->pressButton('Create account');
     }
 
     /**
@@ -2034,6 +2035,83 @@ class AccountContext implements Context
     public function iAmTakenBackToTheCreateAccountPage()
     {
         $this->ui->assertPageAddress('/create-account');
+    }
+
+    /**
+     * @Given /^I am on the index page$/
+     */
+    public function iAmOnTheIndexPage()
+    {
+        $this->ui->visit('/');
+        $this->ui->assertPageContainsText('Use a lasting power of attorney');
+    }
+
+    /**
+     * @When /^I request to get started with the service$/
+     */
+    public function iRequestToGetStartedWithTheService()
+    {
+        $this->ui->clickLink('Get started');
+    }
+
+    /**
+     * @Then /^I am taken to the get started page$/
+     */
+    public function iAmTakenToTheGetStartedPage()
+    {
+        $this->ui->assertPageAddress('/start');
+        $this->ui->assertPageContainsText('Get started');
+    }
+
+    /**
+     * @When /^I select the option to sign in to my existing account$/
+     */
+    public function iSelectTheOptionToSignInToMyExistingAccount()
+    {
+        $this->ui->clickLink('Sign in to your existing account');
+    }
+
+    /**
+     * @Given /^I am on the get started page$/
+     */
+    public function iAmOnTheGetStartedPage()
+    {
+        $this->ui->visit('/start');
+        $this->ui->assertPageContainsText('Get started');
+    }
+
+    /**
+     * @When /^I request to create an account$/
+     */
+    public function iRequestToCreateAnAccount()
+    {
+        $this->ui->clickLink('Create account');
+    }
+
+    /**
+     * @Then /^I am taken to the create account page$/
+     */
+    public function iAmTakenToTheCreateAccountPage()
+    {
+        $this->ui->assertPageAddress('/create-account');
+        $this->ui->assertPageContainsText('Create an account');
+    }
+
+    /**
+     * @When /^I click the I already have an account link$/
+     */
+    public function iClickTheIAlreadyHaveAnAccountLink()
+    {
+        $this->ui->clickLink('I already have an account');
+    }
+
+    /**
+     * @Then /^I am taken to the login page$/
+     */
+    public function iAmTakenToTheLoginPage()
+    {
+        $this->ui->assertPageAddress('/login');
+        $this->ui->assertPageContainsText('Sign in to your Use a lasting power of attorney account');
     }
 
     /**

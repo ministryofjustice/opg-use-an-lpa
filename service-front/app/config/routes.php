@@ -48,6 +48,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
 {
     $app->get('/', Actor\Handler\HomePageHandler::class, 'home');
+    $app->get('/start', Actor\Handler\StartPageHandler::class, 'start');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
 
     // User creation
