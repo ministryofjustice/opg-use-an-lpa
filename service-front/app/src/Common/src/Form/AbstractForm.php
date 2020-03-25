@@ -35,7 +35,7 @@ abstract class AbstractForm extends Form
                     'csrf_options' => [
                         'guard' => $csrfGuard,
                         'messageTemplates' => [
-                            CsrfGuardValidator::NOT_SAME => "As you have not used this service for over 60 minutes, the page has timed out. We've now refreshed the page - please try to sign in again."
+                            CsrfGuardValidator::NOT_SAME => "As you have not used this service for over 20 minutes, the page has timed out. We've now refreshed the page - please try to sign in again."
                         ],
                     ],
                 ]
