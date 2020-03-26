@@ -26,9 +26,8 @@
             {{ include('@actor/partials/lpa-sub-navigation.html.twig') }}
 
             <div class="govuk-grid-row">
+                {{ govuk_form_open(form) }}
                 <div class="govuk-grid-column-two-thirds">
-
-                    {{ govuk_form_open(form) }}
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
@@ -39,20 +38,21 @@
                                 Which organisation do you want to give access to?
                             </h1>
                         </legend>
-
-                        {% if lpa.caseSubtype|lower == 'hw' %}
-                            {{ govuk_form_element(form.get('org_name'), { 'hint': 'For example: St Guy\'s Hospital, Sunview Care Home', 'attr' : {'class': 'govuk-!-width-one-half'} }) }}
-                        {% elseif lpa.caseSubtype|lower == 'pfa' %}
-                            {{ govuk_form_element(form.get('org_name'), { 'hint': 'For example: HSBC, British Gas', 'attr' : {'class': 'govuk-!-width-one-half'} }) }}
-                        {% endif %}
-
-                        <button data-prevent-double-click="true" type="submit" class="govuk-button">
-                            Continue
-                        </button>
-
-                    {{ govuk_form_close() }}
-
                 </div>
+                <div class="govuk-grid-column-full">
+                    {% if lpa.caseSubtype|lower == 'hw' %}
+                    <p class="govuk-body">The organisation could be a hospital, care home, or other health care provider.</p>
+                    {{ govuk_form_element(form.get('org_name'), { 'hint': 'For example: St Guy\'s Hospital, Sunview Care Home', 'attr' : {'class': 'govuk-!-width-one-half'} }) }}
+                    {% elseif lpa.caseSubtype|lower == 'pfa' %}
+                    <p class="govuk-body">The organisation could be a bank, energy provider, or another business.</p>
+                    {{ govuk_form_element(form.get('org_name'), { 'hint': 'For example: HSBC, British Gas', 'attr' : {'class': 'govuk-!-width-one-half'} }) }}
+                    {% endif %}
+
+                <button data-prevent-double-click="true" type="submit" class="govuk-button">
+                    Continue
+                </button>
+                </div>
+                {{ govuk_form_close() }}
             </div>
         </main>
     </div>

@@ -2169,12 +2169,13 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I should see relevant (.*) of organisations$/
+     * @Then /^I should see relevant (.*) and (.*) of organisations$/
      */
-    public function iShouldSeeRelevantOfOrganisations($orgExamples)
+    public function iShouldSeeRelevantAndOfOrganisations($orgExamples, $orgDescription)
     {
         $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
         $this->ui->assertPageContainsText($orgExamples);
+        $this->ui->assertPageContainsText($orgDescription);
     }
 
 }
