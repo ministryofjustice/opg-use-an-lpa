@@ -96,6 +96,7 @@ class AccountContext extends BaseIntegrationContext
     public function iAmCurrentlySignedIn()
     {
         $this->password = 'pa33w0rd';
+        $this->userAccountPassword = 'n3wPassWord';
 
         // ActorUsers::getByEmail
         $this->awsFixtures->append(new Result([
@@ -866,18 +867,15 @@ class AccountContext extends BaseIntegrationContext
         // ViewerCodeActivity::getStatusesForViewerCodes
         $this->awsFixtures->append(new Result());
 
-        // UserLpaActorMap::getUsersLpas
+        // UserLpaActorMap::get
         $this->awsFixtures->append(new Result([
-            'Items' => $this->marshalAwsResultData(
-                [
-                'SiriusUid' => $this->lpaUid,
-                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                'Expires'   => (new DateTime('2021-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                'UserLpaActor' => $this->userLpaActorToken,
-                'Organisation' => $this->organisation,
-                'ViewerCode'       => $this->accessCode,
-            ]
-            )
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->lpaUid,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorLpaId,
+                'UserId'           => $this->userId
+            ])
         ]));
 
         $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
@@ -1155,7 +1153,7 @@ class AccountContext extends BaseIntegrationContext
                     json_encode($this->lpa)));
 
         $lpaService = $this->container->get(LpaService::class);
-          
+
         $lpaData = $lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string) $this->userId);
 
         assertArrayHasKey('date', $lpaData);
@@ -1166,7 +1164,7 @@ class AccountContext extends BaseIntegrationContext
         assertEquals($this->lpaUid, $lpaData['actor']['details']['uId']);
 
         // Get the share codes
-      
+
         // UserLpaActorMap::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
@@ -1177,7 +1175,7 @@ class AccountContext extends BaseIntegrationContext
                 'UserId'           => $this->userId
             ])
         ]));
-      
+
         // ViewerCodes::getCodesByUserLpaActorId
         $this->awsFixtures->append(new Result([
             'Items' => [
@@ -1402,26 +1400,24 @@ class AccountContext extends BaseIntegrationContext
             }
         }
 
-        // UserLpaActorMap::getUsersLpas
+        // UserLpaActorMap::get
         $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
-                    'SiriusUid'        => $this->lpaUid,
-                    'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                    'Id'               => $this->userLpaActorToken,
-                    'ActorId'          => $this->actorLpaId,
-                    'UserId'           => $this->userId
-                ])
-            ]
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'        => $this->lpaUid,
+                'Added'            => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id'               => $this->userLpaActorToken,
+                'ActorId'          => $this->actorLpaId,
+                'UserId'           => $this->userId
+            ])
         ]));
 
         $userLpaActorMap = $this->container->get(UserLpaActorMap::class);
-        $lpas = $userLpaActorMap->getUsersLpas((string) $this->actorLpaId);
+        $lpa = $userLpaActorMap->get($this->userLpaActorToken);
 
-        assertEquals($lpas[0]['SiriusUid'], $this->lpaUid);
-        assertEquals($lpas[0]['Id'], $this->userLpaActorToken);
-        assertEquals($lpas[0]['ActorId'], $this->actorLpaId);
-        assertEquals($lpas[0]['UserId'], $this->userId);
+        assertEquals($lpa['SiriusUid'], $this->lpaUid);
+        assertEquals($lpa['Id'], $this->userLpaActorToken);
+        assertEquals($lpa['ActorId'], $this->actorLpaId);
+        assertEquals($lpa['UserId'], $this->userId);
     }
 
     /**
@@ -1481,5 +1477,103 @@ class AccountContext extends BaseIntegrationContext
 
         assertEmpty($codes);
     }
-}
 
+    /**
+     * @Given /^I am on the user dashboard page$/
+     */
+    public function iAmOnTheUserDashboardPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I ask to change my password$/
+     */
+    public function iAskToChangeMyPassword()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I provide my current password$/
+     */
+    public function iProvideMyCurrentPassword()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I provide my new password$/
+     */
+    public function iProvideMyNewPassword()
+    {
+        $newPassword = 'Successful-Raid-on-the-Cooki3s!';
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
+        // ActorUsers::resetPassword
+        $this->awsFixtures->append(new Result([]));
+
+        $us = $this->container->get(UserService::class);
+
+        $us->completeChangePassword($this->userAccountId, $this->userAccountPassword, $newPassword);
+
+        $command = $this->awsFixtures->getLastCommand();
+
+        assertEquals('actor-users', $command['TableName']);
+        assertEquals($this->userAccountId, $command['Key']['Id']['S']);
+        assertEquals('UpdateItem', $command->getName());
+    }
+
+    /**
+     * @Then /^I am told my password was changed$/
+     */
+    public function iAmToldMyPasswordWasChanged()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I cannot enter my current password$/
+     */
+    public function iCannotEnterMyCurrentPassword()
+    {
+        $failedPassword = 'S0meS0rt0fPassw0rd';
+        $newPassword = 'Successful-Raid-on-the-Cooki3s!';
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Password' => password_hash($failedPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
+        // ActorUsers::resetPassword
+        $this->awsFixtures->append(new Result([]));
+
+        $us = $this->container->get(UserService::class);
+
+        $us->completeChangePassword($this->userAccountId, $failedPassword, $newPassword);
+
+        $command = $this->awsFixtures->getLastCommand();
+
+        assertEquals('actor-users', $command['TableName']);
+        assertEquals($this->userAccountId, $command['Key']['Id']['S']);
+        assertEquals('UpdateItem', $command->getName());
+    }
+
+    /**
+     * @Then /^The user can request a password reset and get an email$/
+     */
+    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    {
+        // Not needed in this context
+    }
+}

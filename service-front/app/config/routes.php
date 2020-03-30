@@ -48,6 +48,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
 {
     $app->get('/', Actor\Handler\HomePageHandler::class, 'home');
+    $app->get('/start', Actor\Handler\StartPageHandler::class, 'start');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
 
     // User creation
@@ -68,6 +69,11 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\YourDetailsHandler::class,
     ], 'your-details');
+
+    $app->route('/change-password', [
+        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\ChangePasswordHandler::class
+    ], ['GET','POST'], 'change-password');
 
     // LPA management
     $app->get('/lpa/dashboard', [
