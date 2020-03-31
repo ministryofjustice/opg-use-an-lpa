@@ -518,9 +518,7 @@ class AccountContext implements Context
     public function iAmGivenInstructionOnHowToChangeDonorOrAttorneyDetails()
     {
         $this->ui->assertPageAddress('/lpa/change-details');
-
-        $this->ui->assertPageContainsText('Let us know if a donor\'s or attorney\'s details change');
-        $this->ui->assertPageContainsText('Find out more');
+        $this->ui->assertPageContainsText('Let us know if a donor or attorney\'s details change');
     }
 
     /**
@@ -1070,8 +1068,6 @@ class AccountContext implements Context
                         'lpa'                  => $this->lpa,
                         'actor'                => [],
                     ])));
-
-
 
         $this->ui->fillField('org_name', $this->organisation);
         $this->ui->pressButton('Continue');
@@ -2175,5 +2171,33 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
         $this->ui->assertPageContainsText($orgDescription);
+    }
+
+    /**
+     * @Given /^I am on the full lpa page$/
+     */
+    public function iAmOnTheFullLpaPage()
+    {
+        $this->iAmOnTheDashboardPage();
+        $this->iRequestToViewAnLPAWhichStatusIs('Registered');
+        $this->theFullLPAIsDisplayedWithTheCorrect('This LPA is registered');
+    }
+
+    /**
+     * @When /^I click the (.*) to change a donor or attorneys details$/
+     */
+    public function iClickTheToChangeADonorOrAttorneysDetails($link)
+    {
+        $this->ui->assertPageAddress('lpa/view-lpa?lpa=' .$this->userLpaActorToken);
+        $this->ui->clickLink($link);
+    }
+
+    /**
+     * @Then /^I am taken to the change details page$/
+     */
+    public function iAmTakenToTheChangeDetailsPage()
+    {
+        $this->ui->assertPageAddress('lpa/change-details?lpa=' .$this->userLpaActorToken);
+        $this->ui->assertPageContainsText('Let us know if a donor or attorney\'s details change');
     }
 }
