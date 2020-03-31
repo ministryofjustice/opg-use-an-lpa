@@ -178,7 +178,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         $userRole = null;
         $comparableDob = \DateTime::createFromFormat('!Y-m-d', $dob);
 
-        if (!is_null($lpa->getDonor()->getDob()) && $lpa->getDonor()->getDob() === $comparableDob) {
+        if (!is_null($lpa->getDonor()->getDob()) && $lpa->getDonor()->getDob() == $comparableDob) {
             $user = $lpa->getDonor();
             $userRole = 'Donor';
         } elseif (!is_null($lpa->getAttorneys()) && is_iterable($lpa->getAttorneys())) {
