@@ -17,6 +17,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Log\LoggerInterface;
+use Common\Handler\Traits\Logger;
 
 /**
  * Class CheckCodeHandler
@@ -25,6 +27,7 @@ use Mezzio\Template\TemplateRendererInterface;
 class CheckCodeHandler extends AbstractHandler
 {
     use SessionTrait;
+    use Logger;
 
     /** @var LpaService */
     private $lpaService;
@@ -34,13 +37,15 @@ class CheckCodeHandler extends AbstractHandler
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param LpaService $lpaService
+     * @param LoggerInterface $logger
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        LpaService $lpaService
+        LpaService $lpaService,
+        LoggerInterface $logger
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
 
         $this->lpaService = $lpaService;
     }
@@ -64,6 +69,8 @@ class CheckCodeHandler extends AbstractHandler
                     $expires = new DateTime($lpa->expires);
 
                     if (isset($lpa->cancelled)) {
+                        $this->getLogger()->info('The LPA trying to be viewed using entered share code is cancelled');
+
                         return new HtmlResponse($this->renderer->render('viewer::check-code-cancelled'));
                     } else {
                         return new HtmlResponse($this->renderer->render(
@@ -77,10 +84,12 @@ class CheckCodeHandler extends AbstractHandler
                 }
             } catch (ApiException $apiEx) {
                 if ($apiEx->getCode() == StatusCodeInterface::STATUS_GONE) {
+                    $this->getLogger()->info('The LPA trying to be viewed using entered share code is expired');
                     return new HtmlResponse($this->renderer->render('viewer::check-code-expired'));
                 }
             }
 
+            $this->getLogger()->info('The LPA trying to be viewed is not found');
             return new HtmlResponse($this->renderer->render('viewer::check-code-not-found'));
         }
 
