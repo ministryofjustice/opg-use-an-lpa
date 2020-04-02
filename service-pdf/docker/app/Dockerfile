@@ -2,20 +2,33 @@
 #
 # Based upon:
 # https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-in-docker
+# https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md#running-on-alpine 
 
-FROM node:buster-slim
+FROM node:lts-alpine
 
-RUN apt-get update \
-    && apt-get install ca-certificates -y \
-    && apt-get install gnupg2 -y \
-    && apt-get install -y wget --no-install-recommends \
-    && wget -q  https://dl-ssl.google.com/linux/linux_signing_key.pub -O - | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-    && apt-get update \
-    && apt-get install -y google-chrome-unstable --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* \
-    && wget --quiet https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -O /usr/sbin/wait-for-it.sh \
-    && chmod +x /usr/sbin/wait-for-it.sh
+RUN apk add --no-cache \
+      chromium \
+      nss \
+      freetype \
+      freetype-dev \
+      harfbuzz \
+      ca-certificates \
+      ttf-freefont \
+      nodejs \
+      yarn
+
+
+# Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+
+# Puppeteer v1.19.0 works with Chromium 77.
+RUN yarn add puppeteer@1.19.0
+
+# Add user so we don't need --no-sandbox.
+RUN addgroup -S pptruser && adduser -S -g pptruser pptruser \
+    && mkdir -p /home/pptruser/Downloads /app \
+    && chown -R pptruser:pptruser /home/pptruser \
+    && chown -R pptruser:pptruser /app 
 
 WORKDIR /src/app
 COPY service-pdf/app/package.json ./package.json
