@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
-use Actor\Form\ConfirmDeleteAccount as ConfirmDeleteForm;
+use Actor\Form\ConfirmDeleteAccount;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
@@ -29,12 +29,14 @@ class ConfirmDeleteAccountHandler extends AbstractHandler implements CsrfGuardAw
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $accountId = $request->getParsedBody()['account_id'];
+        $email = $request->getParsedBody()['user_email'];
 
-        $form = new ConfirmDeleteForm($this->getCsrfGuard($request));
+        $form = new ConfirmDeleteAccount($this->getCsrfGuard($request));
         $form->setAttribute('action', $this->urlHelper->generate('lpa.delete-account'));
 
         $form->setData([
             'account_id' => $accountId,
+            'user_email' => $email
         ]);
 
         return new HtmlResponse($this->renderer->render('actor::confirm-delete-account', [

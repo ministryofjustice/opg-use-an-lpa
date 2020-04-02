@@ -48,12 +48,14 @@ class YourDetailsHandler extends AbstractHandler implements UserAware, CsrfGuard
     {
         $user = $this->getUser($request);
         $identity = $user->getIdentity();
+        $email = $user->getDetails()['Email'];
 
         $form = new ConfirmDeleteAccount($this->getCsrfGuard($request));
         $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-delete-account'));
 
         $form->setData([
             'account_id' => $identity,
+            'user_email' => $email
         ]);
 
         return new HtmlResponse($this->renderer->render('actor::your-details', [

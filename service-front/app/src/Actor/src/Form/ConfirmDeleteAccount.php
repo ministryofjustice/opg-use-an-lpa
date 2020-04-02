@@ -28,13 +28,21 @@ class ConfirmDeleteAccount extends AbstractForm implements InputFilterProviderIn
             'name' => 'account_id',
             'type' => 'Hidden',
         ]);
+
+        $this->add([
+            'name' => 'user_email',
+            'type' => 'Hidden',
+        ]);
     }
 
     public function getInputFilterSpecification() : array
     {
         return [
             'account_id' => [
-                'required'   => true,
+                'required' => true,
+            ],
+            'user_email' => [
+                'required' => true,
             ]
         ];
     }

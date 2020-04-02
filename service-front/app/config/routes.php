@@ -68,7 +68,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/your-details', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\YourDetailsHandler::class,
-    ], 'your-details');
+    ],'your-details');
 
     $app->route('/change-password', [
         Zend\Expressive\Authentication\AuthenticationMiddleware::class,

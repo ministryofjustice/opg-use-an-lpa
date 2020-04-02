@@ -25,6 +25,7 @@
 
                     {{ govuk_form_element(form.get('__csrf')) }}
                     {{ govuk_form_element(form.get('account_id')) }}
+                    {{ govuk_form_element(form.get('user_email')) }}
 
                     <a href="{{ path('your-details')}}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
                         No, return to my details

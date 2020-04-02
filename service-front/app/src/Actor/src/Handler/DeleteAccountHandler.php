@@ -52,6 +52,7 @@ class DeleteAccountHandler extends AbstractHandler implements CsrfGuardAware
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $accountId = $request->getParsedBody()['account_id'];
+        $email = $request->getParsedBody()['user_email'];
 
         //$this->userService->
     }
