@@ -6,11 +6,13 @@ namespace Actor\Form;
 
 use Common\Form\AbstractForm;
 use Common\Validator\EmailAddressValidator;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Filter\StringToLower;
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\Identical;
-use Zend\Validator\NotEmpty;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Filter\StringToLower;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Validator\Identical;
+use Laminas\Validator\NotEmpty;
+use Laminas\Filter\StringTrim;
+
 
 class PasswordResetRequest extends AbstractForm implements InputFilterProviderInterface
 {
@@ -37,7 +39,7 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
 
     /**
      * Should return an array specification compatible with
-     * {@link Zend\InputFilter\Factory::createInputFilter()}.
+     * {@link Laminas\InputFilter\Factory::createInputFilter()}.
      *
      * @return array
      */
@@ -49,6 +51,10 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                 'filters'  => [
                     [
                         'name' => StringToLower::class,
+                    ],
+                    [
+                        'name' => StringTrim::class,
+
                     ],
                 ],
                 'validators' => [
@@ -71,7 +77,7 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                 'required' => true,
                 'filters'  => [
                     [
-                        'name' => StringToLower::class,
+                        'name' => StringTrim::class,
                     ],
                 ],
                 'validators' => [

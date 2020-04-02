@@ -9,7 +9,7 @@ use App\DataAccess\Repository\ActorCodesInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use App\Handler\HealthcheckHandler;
-use Zend\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 
 class HealthcheckHandlerTest extends TestCase
 {

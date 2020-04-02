@@ -7,14 +7,14 @@ namespace ActorTest\Form;
 use Actor\Form\PasswordReset;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use CommonTest\Form\{TestsZendForm, ZendFormTests};
+use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
 use PHPUnit\Framework\TestCase;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Form\Element\Password;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Form\Element\Password;
 
-class PasswordResetTest extends TestCase implements TestsZendForm
+class PasswordResetTest extends TestCase implements TestsLaminasForm
 {
-    use ZendFormTests;
+    use LaminasFormTests;
 
     /** @var PasswordReset */
     protected $form;

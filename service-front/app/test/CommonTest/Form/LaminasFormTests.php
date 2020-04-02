@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace CommonTest\Form;
 
 use Common\Form\AbstractForm;
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 
-trait ZendFormTests
+trait LaminasFormTests
 {
     /** @test */
     public function it_is_a_form()

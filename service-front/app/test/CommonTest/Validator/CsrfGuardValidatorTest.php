@@ -7,7 +7,7 @@ namespace CommonTest\Validator;
 use Common\Validator\CsrfGuardValidator;
 use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
+use Mezzio\Csrf\CsrfGuardInterface;
 use stdClass;
 
 class CsrfGuardValidatorTest extends TestCase
