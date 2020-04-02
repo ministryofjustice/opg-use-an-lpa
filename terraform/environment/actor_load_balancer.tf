@@ -149,7 +149,7 @@ resource "aws_security_group_rule" "actor_loadbalancer_egress" {
 
 resource "aws_security_group" "actor_loadbalancer_route53" {
   name        = "${local.environment}-actor-loadbalancer-route53"
-  description = "Allow inbound traffic"
+  description = "Allow Route53 healthchecks"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
 }
