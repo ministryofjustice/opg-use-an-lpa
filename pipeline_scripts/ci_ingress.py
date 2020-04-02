@@ -10,8 +10,7 @@ class IngressManager:
     aws_iam_session = ''
     aws_ec2_client = ''
     workspace = os.getenv('TF_WORKSPACE')
-    security_groups = [str(workspace) + "-actor-loadbalancer",
-                       str(workspace) + "-viewer-loadbalancer"]
+    security_groups = []
 
     def __init__(self, config_file):
         self.read_parameters_from_file(config_file)
@@ -27,6 +26,9 @@ class IngressManager:
         with open(config_file) as json_file:
             parameters = json.load(json_file)
             self.aws_account_id = parameters['account_id']
+            self.security_groups = [
+                parameters['viewer_load_balancer_security_group_name'],
+                parameters['actor_load_balancer_security_group_name']]
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
