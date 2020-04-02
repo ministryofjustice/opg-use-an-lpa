@@ -47,9 +47,18 @@
                                 </div>
                             </dl>
 
-                    <a href="delete-confirm" role="button" draggable="false" class="govuk-button govuk-button govuk-button--warning">
-                        Delete account
-                    </a>
+                    {{ govuk_form_open(form) }}
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+                    {{ govuk_form_element(form.get('account_id')) }}
+
+{#                    <a href={{ path('lpa.confirm-delete-account')}} role="button" draggable="false" class="govuk-button govuk-button govuk-button--warning">#}
+{#                        Delete account#}
+{#                    </a>#}
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-button--warning">Delete account</button>
+
+                    {{ govuk_form_close() }}
 
                     <div class="govuk-inset-text">
                         <span>Need to update the online LPA summary?</span><br>

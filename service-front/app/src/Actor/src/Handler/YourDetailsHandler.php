@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Actor\Form\ConfirmDeleteAccount;
 use Common\Handler\AbstractHandler;
-use Common\Handler\Traits\Session as SessionTrait;
+use Common\Handler\CsrfGuardAware;
+use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,9 +23,10 @@ use Common\Handler\UserAware;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class YourDetailsHandler extends AbstractHandler implements UserAware
+class YourDetailsHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
     use User;
+    use CsrfGuard;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -44,9 +47,18 @@ class YourDetailsHandler extends AbstractHandler implements UserAware
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->getUser($request);
+        $identity = $user->getIdentity();
+
+        $form = new ConfirmDeleteAccount($this->getCsrfGuard($request));
+        $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-delete-account'));
+
+        $form->setData([
+            'account_id' => $identity,
+        ]);
 
         return new HtmlResponse($this->renderer->render('actor::your-details', [
             'user' => $user,
+            'form' => $form->prepare()
         ]));
     }
 }

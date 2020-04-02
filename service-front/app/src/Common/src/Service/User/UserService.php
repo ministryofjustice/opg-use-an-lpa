@@ -264,4 +264,10 @@ class UserService implements UserRepositoryInterface
             );
         }
     }
+
+    public function deleteAccount(string $accountId)
+    {
+        // include another ID to compare?
+
+    }
 }
