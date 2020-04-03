@@ -115,10 +115,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/lpa/terms-of-use', [
         Actor\Handler\ActorTermsOfUseHandler::class
     ], 'lpa.terms-of-use');
-    $app->post('/lpa/confirm-delete-account', [
+    $app->get('/lpa/confirm-delete-account', [
         Actor\Handler\ConfirmDeleteAccountHandler::class
     ], 'lpa.confirm-delete-account');
-    $app->post('/lpa/delete-account', [
+    $app->get('/lpa/delete-account', [
         Actor\Handler\DeleteAccountHandler::class
     ], 'lpa.delete-account');
 };

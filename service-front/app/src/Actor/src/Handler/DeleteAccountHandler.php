@@ -5,22 +5,31 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Common\Handler\AbstractHandler;
-use Common\Handler\CsrfGuardAware;
-use Common\Handler\Traits\CsrfGuard;
+use Common\Handler\LoggerAware;
+use Common\Handler\SessionAware;
+use Common\Handler\Traits\Logger;
+use Common\Handler\Traits\Session;
+use Common\Handler\Traits\User;
+use Common\Handler\UserAware;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Common\Service\User\UserService;
 use Psr\Log\LoggerInterface;
+use Exception;
 
 /**
  * Class DeleteAccountHandler
  * @package Actor\Handler
  */
-class DeleteAccountHandler extends AbstractHandler implements CsrfGuardAware
+class DeleteAccountHandler extends AbstractHandler implements SessionAware, UserAware, LoggerAware
 {
-    use CsrfGuard;
+    use Session;
+    use User;
+    use Logger;
 
     /** @var UserService */
     private $userService;
@@ -35,35 +44,38 @@ class DeleteAccountHandler extends AbstractHandler implements CsrfGuardAware
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
+        AuthenticationInterface $authentication,
         UserService $userService,
         LoggerInterface $logger
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->userService = $userService;
+        $this->setAuthenticator($authentication);
     }
 
     /**
-     * Handles a request and produces a response
-     *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $accountId = $request->getParsedBody()['account_id'];
-        $email = $request->getParsedBody()['user_email'];
+        $user = $this->getUser($request);
 
-        $user = $this->userService->getByEmail($email);
+        $this->userService->deleteAccount($user->getIdentity());
 
-        if ($user['Email'] !== $email) {
-            throw new Exception('User email does not match the form email');
-        }
+        $session = $this->getSession($request, 'session');
+        $session->unset(UserInterface::class);
+        $session->regenerate();
 
-        if ($user['Id'] !== $accountId) {
-            throw new Exception('User account Id does not match the form account Id');
-        }
+        $this->getLogger()->info(
+            'Account with Id {id} has been successfully deleted',
+            [
+                'id' => $user->getIdentity()
+            ]
+        );
 
-        $this->userService->deleteAccount($accountId, $email);
+        return $this->redirectToRoute('home');
     }
 }

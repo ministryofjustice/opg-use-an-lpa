@@ -265,13 +265,23 @@ class UserService implements UserRepositoryInterface
         }
     }
 
-    public function deleteAccount(string $accountId)
+    public function deleteAccount(string $accountId) :bool
     {
         try {
             $this->apiClient->httpDelete('/v1/delete-account/' . $accountId);
-        } catch (ApiException $aex) {
-            $test = 1;
+
+            return true;
+
+        } catch (ApiException $ex) {
+            $this->logger->notice(
+                'Failed to delete account for user {userId} with code {code}',
+                [
+                    'userId'    => $accountId,
+                    'code'      => $ex->getCode()
+                ]
+            );
         }
 
+        return false;
     }
 }

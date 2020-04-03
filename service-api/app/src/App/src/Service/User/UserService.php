@@ -262,8 +262,9 @@ class UserService
 
     /**
      * @param string $accountId
+     * @return bool
      */
-    public function deleteUserAccount(string $accountId)
+    public function deleteUserAccount(string $accountId) :bool
     {
         $user = $this->usersRepository->get($accountId);
 
@@ -275,6 +276,6 @@ class UserService
             throw new NotFoundException('User not found for account with Id ' . $accountId);
         }
 
-        $this->usersRepository->deleteAccount($accountId);
+        return $this->usersRepository->delete($accountId);
     }
 }

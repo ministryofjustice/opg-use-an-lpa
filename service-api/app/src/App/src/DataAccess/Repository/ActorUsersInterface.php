@@ -101,10 +101,8 @@ interface ActorUsersInterface
     public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): array;
 
     /**
-     * Deletes a user account by Id
-     *
      * @param string $accountId
-     * @throws NotFoundException
+     * @return bool
      */
-    public function deleteAccount(string $accountId): void;
+    public function delete(string $accountId): bool;
 }

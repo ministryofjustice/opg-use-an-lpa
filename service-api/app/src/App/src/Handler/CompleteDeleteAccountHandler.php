@@ -34,14 +34,14 @@ class CompleteDeleteAccountHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $requestData = $request->getAttribute('account-id');
+        $accountId = $request->getAttribute('account-id');
 
-        if (!isset($requestData['account-id'])) {
+        if (!isset($accountId)) {
             throw new BadRequestException('Account Id must be provided');
         }
 
-        $this->userService->deleteUserAccount($requestData['account-id']);
+        $this->userService->deleteUserAccount($accountId);
 
-//        return new JsonResponse([]);
+        return new JsonResponse([]);
     }
 }

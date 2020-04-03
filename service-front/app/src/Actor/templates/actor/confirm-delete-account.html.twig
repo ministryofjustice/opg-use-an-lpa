@@ -21,19 +21,13 @@
 
                     <p class="govuk-body">OPG can update the paper lasting power of attorney (LPA) and the online LPA summary so they show your new name.</p>
 
-                    {{ govuk_form_open(form) }}
-
-                    {{ govuk_form_element(form.get('__csrf')) }}
-                    {{ govuk_form_element(form.get('account_id')) }}
-                    {{ govuk_form_element(form.get('user_email')) }}
-
                     <a href="{{ path('your-details')}}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
                         No, return to my details
                     </a>
 
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button">Yes, continue deleting my account</button>
-
-                    {{ govuk_form_close() }}
+                    <a href="{{ path('lpa.delete-account') }}" role="button" draggable="false" class="govuk-button">
+                        Yes, continue deleting my account
+                    </a>
 
                 </div>
             </div>
