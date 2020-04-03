@@ -11,6 +11,7 @@ use Common\Handler\Traits\CsrfGuard;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Exception;
 
 /**
  * Class ConfirmDeleteAccountHandler
@@ -21,10 +22,9 @@ class ConfirmDeleteAccountHandler extends AbstractHandler implements CsrfGuardAw
     use CsrfGuard;
 
     /**
-     * Handles a request and produces a response
-     *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

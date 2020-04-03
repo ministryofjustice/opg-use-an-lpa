@@ -267,7 +267,11 @@ class UserService implements UserRepositoryInterface
 
     public function deleteAccount(string $accountId)
     {
-        // include another ID to compare?
+        try {
+            $this->apiClient->httpDelete('/v1/delete-account/' . $accountId);
+        } catch (ApiException $aex) {
+            $test = 1;
+        }
 
     }
 }

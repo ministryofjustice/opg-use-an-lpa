@@ -245,8 +245,6 @@ class UserService
     }
 
     /**
-     *
-     *
      * @param string $userId
      * @param string $password
      * @param string $newPassword
@@ -260,5 +258,23 @@ class UserService
         }
 
         $this->usersRepository->resetPassword($userId, $newPassword);
+    }
+
+    /**
+     * @param string $accountId
+     */
+    public function deleteUserAccount(string $accountId)
+    {
+        $user = $this->usersRepository->get($accountId);
+
+        if (is_null($user)) {
+            $this->logger->notice(
+                'Account not found for user Id {Id}',
+                ['Id' => $accountId]
+            );
+            throw new NotFoundException('User not found for account with Id ' . $accountId);
+        }
+
+        $this->usersRepository->deleteAccount($accountId);
     }
 }

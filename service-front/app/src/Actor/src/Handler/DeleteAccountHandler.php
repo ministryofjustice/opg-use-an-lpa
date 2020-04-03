@@ -54,6 +54,16 @@ class DeleteAccountHandler extends AbstractHandler implements CsrfGuardAware
         $accountId = $request->getParsedBody()['account_id'];
         $email = $request->getParsedBody()['user_email'];
 
-        //$this->userService->
+        $user = $this->userService->getByEmail($email);
+
+        if ($user['Email'] !== $email) {
+            throw new Exception('User email does not match the form email');
+        }
+
+        if ($user['Id'] !== $accountId) {
+            throw new Exception('User account Id does not match the form account Id');
+        }
+
+        $this->userService->deleteAccount($accountId, $email);
     }
 }
