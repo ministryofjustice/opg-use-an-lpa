@@ -20,6 +20,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Mezzio\Session\SessionInterface;
 use Prophecy\Argument;
 use ArrayObject;
+use Psr\Log\LoggerInterface;
 
 class CheckCodeHandlerTest extends TestCase
 {
@@ -51,6 +52,11 @@ class CheckCodeHandlerTest extends TestCase
      */
     private $sessionProphecy;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $loggerProphecy;
+
     public function setUp()
     {
         // Constructor Parameters
@@ -64,6 +70,9 @@ class CheckCodeHandlerTest extends TestCase
         // The Session
         $this->sessionProphecy = $this->prophesize(SessionInterface::class);
         $this->requestProphecy->getAttribute('session', Argument::any())->willreturn($this->sessionProphecy->reveal());
+
+        // logger
+        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
 
     /**
@@ -76,7 +85,8 @@ class CheckCodeHandlerTest extends TestCase
         $handler = new CheckCodeHandler(
             $this->templateRendererProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal()
+            $this->lpaServiceProphecy->reveal(),
+            $this->loggerProphecy->reveal()
         );
 
         //---
@@ -105,7 +115,8 @@ class CheckCodeHandlerTest extends TestCase
         $handler = new CheckCodeHandler(
             $this->templateRendererProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal()
+            $this->lpaServiceProphecy->reveal(),
+            $this->loggerProphecy->reveal()
         );
 
         //---
@@ -134,7 +145,8 @@ class CheckCodeHandlerTest extends TestCase
         $handler = new CheckCodeHandler(
             $this->templateRendererProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal()
+            $this->lpaServiceProphecy->reveal(),
+            $this->loggerProphecy->reveal()
         );
 
         //---
@@ -169,7 +181,8 @@ class CheckCodeHandlerTest extends TestCase
         $handler = new CheckCodeHandler(
             $this->templateRendererProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal()
+            $this->lpaServiceProphecy->reveal(),
+            $this->loggerProphecy->reveal()
         );
 
         $this->sessionProphecy->get('code')->willReturn(null);
