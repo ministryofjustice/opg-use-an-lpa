@@ -8,6 +8,7 @@ use Common\Form\AbstractForm;
 use Common\Form\Fieldset\Date;
 use Common\Form\Fieldset\DatePrefixFilter;
 use Common\Validator\DobValidator;
+use Laminas\Filter\StringToUpper;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -53,6 +54,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
             'passcode' => [
                 'filters'  => [
                     ['name' => StringTrim::class],
+                    ['name' => StringToUpper::class],
                 ],
                 'validators' => [
                     [
