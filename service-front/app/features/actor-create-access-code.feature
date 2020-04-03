@@ -32,11 +32,11 @@ Feature: The user is able to create access codes for organisations
   Scenario Outline: As a user I want to be shown examples of organisations to create codes for based on my LPA type
     Given I have added a <lpaType> LPA
     When I request to give an organisation access for my <lpaType> LPA
-    Then I should see relevant <orgExamples> of organisations
+    Then I should see relevant <orgDescription> of organisations
     Examples:
-      | lpaType | orgExamples                          |
-      | hw      | St Guy's Hospital, Sunview Care Home |
-      | pfa     | HSBC, British Gas                    |
+      | lpaType | orgDescription                                                                 |
+      | hw      | The organisation could be a hospital, care home, or other health care provider.|
+      | pfa     | The organisation could be a bank, energy provider, or another business.        |
 
   @ui @integration
   Scenario: As a user I can generate an access code for an organisation
