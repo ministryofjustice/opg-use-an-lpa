@@ -1,6 +1,6 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}Code expired - {{ parent() }} {% endblock %}
+{% block html_title %}Access code cancelled - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -11,12 +11,12 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">Cancelled code</h1>
+                    <h1 class="govuk-heading-xl">The access code you entered has been cancelled</h1>
 
-                    <p class="govuk-body">The code you entered has been cancelled.</p>
+                    <p class="govuk-body">To see this LPA, ask the donor or attorney you’re dealing with to make a new code.</p>
 
-                    <a href="{{ path('enter-code') }}" role="button" draggable="false" class="govuk-button govuk-button--start">
-                        Try again
+                    <a href="{{ path('enter-code') }}" class="govuk-link">
+                        Enter another code
                     </a>
 
                 </div>

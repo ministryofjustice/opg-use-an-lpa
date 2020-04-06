@@ -1,6 +1,7 @@
 const puppeteer = require("puppeteer");
 const htmlToPdf = async (html, options) => {
   const browser = await puppeteer.launch({
+    executablePath: process.env.CHROMIUM_PATH,
     args: [
       // Required for Docker version of Puppeteer
       "--no-sandbox",

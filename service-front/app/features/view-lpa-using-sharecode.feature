@@ -69,7 +69,7 @@ Feature: View an LPA via sharecode
     Then I am told that the share code is invalid because <reason>
   Examples:
   | reason |
-  | The code that you entered has expired |
+  | The access code you entered has expired |
 
   @ui
   Scenario Outline: The user enters a cancelled sharecode and is shown the reason for not able to see the details of an LPA
@@ -79,7 +79,7 @@ Feature: View an LPA via sharecode
     Then I am told that the share code is invalid because <reason>
     Examples:
       | reason |
-      | The code you entered has been cancelled |
+      | The access code you entered has been cancelled |
 
   @ui
   Scenario Outline: The user enters a non existing surname and share code and is shown the reason for not able to see the details of an LPA
