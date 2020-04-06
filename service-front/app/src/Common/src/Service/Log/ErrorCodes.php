@@ -19,4 +19,9 @@ class ErrorCodes
      */
     public const SHARE_CODE_NOT_FOUND = 'SHRC_N_F';
 
+    /**
+     * An incoming identity hash has unexpectedly changed
+     */
+    public const IDENTITY_HASH_CHANGE = 'IDHSH_C';
+
 }
