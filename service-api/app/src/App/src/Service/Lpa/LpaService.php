@@ -171,7 +171,7 @@ class LpaService
         $viewerCodeData = $this->viewerCodesRepository->get($viewerCode);
 
         if (is_null($viewerCodeData)) {
-            $this->logger->info('The code {code} entered by user to view LPA is not found in the database !!!', ['code' => $viewerCode]);
+            $this->logger->info('The code entered by user to view LPA is not found in the database !!!');
             return null;
         }
 
@@ -200,7 +200,7 @@ class LpaService
         }
 
         if (new DateTime() > $viewerCodeData['Expires']) {
-            $this->logger->info('The code entered by user to view LPA has expired !!!');
+            $this->logger->info('The code {code} entered by user to view LPA has expired !!!', ['code' => $viewerCode]);
             throw new GoneException('Share code expired');
         }
 

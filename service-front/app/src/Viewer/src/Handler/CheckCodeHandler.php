@@ -69,7 +69,7 @@ class CheckCodeHandler extends AbstractHandler
                     $expires = new DateTime($lpa->expires);
 
                     if (isset($lpa->cancelled)) {
-                        $this->getLogger()->info('The share code entered by user to view LPA {uId} is cancelled',
+                        $this->getLogger()->info('The share code {code} entered by user to view LPA {uId} is cancelled', ['code' => $code],
                             ['uId' => ($lpa->lpa)->getUId()]);
 
                         return new HtmlResponse($this->renderer->render('viewer::check-code-cancelled'));
@@ -85,7 +85,7 @@ class CheckCodeHandler extends AbstractHandler
                 }
             } catch (ApiException $apiEx) {
                 if ($apiEx->getCode() == StatusCodeInterface::STATUS_GONE) {
-                    $this->getLogger()->info('The share code entered by user to view LPA has expired');
+                    $this->getLogger()->info('The share code {code} entered by user to view LPA has expired', ['code' => $code]);
                     return new HtmlResponse($this->renderer->render('viewer::check-code-expired'));
                 }
             }
