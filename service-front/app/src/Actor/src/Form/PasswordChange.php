@@ -112,15 +112,6 @@ class PasswordChange extends AbstractForm implements InputFilterProviderInterfac
                     [
                         'name' => PasswordValidator::class,
                     ],
-                    [
-                        'name'    => Identical::class,
-                        'options' => [
-                            'token'    => 'new_password_confirm',
-                            'messages' => [
-                                Identical::NOT_SAME => 'The new passwords did not match',
-                            ],
-                        ],
-                    ],
                 ],
             ],
             'new_password_confirm' => [
