@@ -270,6 +270,10 @@ class UserService implements UserRepositoryInterface
         try {
             $this->apiClient->httpDelete('/v1/delete-account/' . $accountId);
 
+            $this->logger->info(
+                'Successfully deleted account with id {id}', ['id' => $accountId]
+            );
+
             return true;
 
         } catch (ApiException $ex) {

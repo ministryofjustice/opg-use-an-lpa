@@ -264,7 +264,7 @@ class UserService
      * @param string $accountId
      * @return bool
      */
-    public function deleteUserAccount(string $accountId) :bool
+    public function deleteUserAccount(string $accountId) : void
     {
         $user = $this->usersRepository->get($accountId);
 
@@ -276,6 +276,16 @@ class UserService
             throw new NotFoundException('User not found for account with Id ' . $accountId);
         }
 
-        return $this->usersRepository->delete($accountId);
+        if (!$this->usersRepository->delete($accountId)) {
+            $this->logger->notice(
+                'Failed to delete account for account id {id}',
+                ['id' => $accountId]
+            );
+
+            throw new BadRequestException(
+                'Account deletion failure for account {id}',
+                ['id' => $accountId]
+            );
+        }
     }
 }

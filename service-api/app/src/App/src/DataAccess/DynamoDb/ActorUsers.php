@@ -276,6 +276,7 @@ class ActorUsers implements ActorUsersInterface
             ]);
 
             return true;
+
         } catch (DynamoDbException $e) {
             return false;
         }
