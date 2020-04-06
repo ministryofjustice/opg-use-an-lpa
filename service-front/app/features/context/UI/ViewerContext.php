@@ -317,8 +317,8 @@ class ViewerContext implements Context
     public function iWantToMakeAnAttemptToEnterAnotherShareCode()
     {
         $this->ui->assertPageAddress('/check-code');
-        $this->ui->assertPageContainsText("Try again");
-        $this->ui->pressButton('Try again');
+        $this->ui->assertPageContainsText("Enter another code");
+        $this->ui->clickLink('Enter another code');
     }
 
     /**
