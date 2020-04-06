@@ -86,3 +86,7 @@ data "aws_secretsmanager_secret" "notify_api_key" {
   name = "notify-api-key"
 }
 
+data "aws_ip_ranges" "route53_healthchecks" {
+  services = ["route53_healthchecks"]
+  regions  = ["GLOBAL"]
+}

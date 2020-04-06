@@ -120,9 +120,12 @@ class ActorCodeService
             return null;
         }
 
+        $lpaData = $lpa->getData();
+        unset($lpaData['original_attorneys']);
+
         return [
             'actor' => $actor,
-            'lpa' => $lpa->getData(),
+            'lpa' => $lpaData
         ];
     }
 
@@ -145,7 +148,6 @@ class ActorCodeService
      */
     public function confirmDetails(string $code, string $uid, string $dob, string $actorId): ?string
     {
-
         $details = $this->validateDetails($code, $uid, $dob);
 
         // If the details don't validate, stop here.
