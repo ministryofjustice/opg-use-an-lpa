@@ -17,8 +17,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Psr\Log\LoggerInterface;
-use Common\Handler\Traits\Logger;
 
 /**
  * Class CheckCodeHandler
@@ -27,7 +25,6 @@ use Common\Handler\Traits\Logger;
 class CheckCodeHandler extends AbstractHandler
 {
     use SessionTrait;
-    use Logger;
 
     /** @var LpaService */
     private $lpaService;
@@ -37,15 +34,13 @@ class CheckCodeHandler extends AbstractHandler
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param LpaService $lpaService
-     * @param LoggerInterface $logger
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        LpaService $lpaService,
-        LoggerInterface $logger
+        LpaService $lpaService
     ) {
-        parent::__construct($renderer, $urlHelper, $logger);
+        parent::__construct($renderer, $urlHelper);
 
         $this->lpaService = $lpaService;
     }
@@ -69,9 +64,6 @@ class CheckCodeHandler extends AbstractHandler
                     $expires = new DateTime($lpa->expires);
 
                     if (isset($lpa->cancelled)) {
-                        $this->getLogger()->info('The share code {code} entered by user to view LPA {uId} is cancelled', ['code' => $code],
-                            ['uId' => ($lpa->lpa)->getUId()]);
-
                         return new HtmlResponse($this->renderer->render('viewer::check-code-cancelled'));
                     } else {
                         return new HtmlResponse($this->renderer->render(
@@ -85,12 +77,10 @@ class CheckCodeHandler extends AbstractHandler
                 }
             } catch (ApiException $apiEx) {
                 if ($apiEx->getCode() == StatusCodeInterface::STATUS_GONE) {
-                    $this->getLogger()->info('The share code {code} entered by user to view LPA has expired', ['code' => $code]);
                     return new HtmlResponse($this->renderer->render('viewer::check-code-expired'));
                 }
             }
 
-            $this->getLogger()->info('The share code entered by user to view LPA is not found');
             return new HtmlResponse($this->renderer->render('viewer::check-code-not-found'));
         }
 

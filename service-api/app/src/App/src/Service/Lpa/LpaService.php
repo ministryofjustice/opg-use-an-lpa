@@ -171,7 +171,7 @@ class LpaService
         $viewerCodeData = $this->viewerCodesRepository->get($viewerCode);
 
         if (is_null($viewerCodeData)) {
-            $this->logger->info('The code entered by user to view LPA is not found in the database !!!');
+            $this->logger->info('The code entered by user to view LPA is not found in the database.');
             return null;
         }
 
@@ -195,12 +195,12 @@ class LpaService
         // at this point as we only want to acknowledge if a code has expired iff donor surname matched.
 
         if (!isset($viewerCodeData['Expires']) || !($viewerCodeData['Expires'] instanceof DateTime)) {
-            $this->logger->info('The code entered by user to view LPA does not have an expiry date set !!!');
+            $this->logger->info('The code {code} entered by user to view LPA does not have an expiry date set.', ['code' => $viewerCode]);
             throw new RuntimeException("'Expires' field missing or invalid.");
         }
 
         if (new DateTime() > $viewerCodeData['Expires']) {
-            $this->logger->info('The code {code} entered by user to view LPA has expired !!!', ['code' => $viewerCode]);
+            $this->logger->info('The code {code} entered by user to view LPA has expired.', ['code' => $viewerCode]);
             throw new GoneException('Share code expired');
         }
 
