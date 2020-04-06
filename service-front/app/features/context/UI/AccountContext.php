@@ -2200,4 +2200,91 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('lpa/change-details?lpa=' .$this->userLpaActorToken);
         $this->ui->assertPageContainsText('Let us know if a donor or attorney\'s details change');
     }
+
+    /**
+     * @Given /^I am on the your details page$/
+     */
+    public function iAmOnTheYourDetailsPage()
+    {
+        $this->ui->clickLink('Your details');
+    }
+
+    /**
+     * @When /^I request to delete my account$/
+     */
+    public function iRequestToDeleteMyAccount()
+    {
+        $this->ui->assertPageAddress('/your-details');
+        $this->ui->clickLink('Delete account');
+    }
+
+    /**
+     * @Then /^I am asked to confirm whether I am sure if I want to delete my account$/
+     */
+    public function iAmAskedToConfirmWhetherIAmSureIfIWantToDeleteMyAccount()
+    {
+        $this->ui->assertPageAddress('/confirm-delete-account');
+        $this->ui->assertPageContainsText('Are you sure you want to delete your account?');
+    }
+
+    /**
+     * @Given /^I am on the confirm account deletion page$/
+     */
+    public function iAmOnTheConfirmAccountDeletionPage()
+    {
+        $this->iAmOnTheYourDetailsPage();
+        $this->iRequestToDeleteMyAccount();
+    }
+
+    /**
+     * @When /^I request to return to the your details page$/
+     */
+    public function iRequestToReturnToTheYourDetailsPage()
+    {
+        $this->ui->assertPageAddress('/confirm-delete-account');
+        $this->ui->clickLink('No, return to my details');
+    }
+
+    /**
+     * @Then /^I am taken back to the your details page$/
+     */
+    public function iAmTakenBackToTheYourDetailsPage()
+    {
+        $this->ui->assertPageAddress('/your-details');
+        $this->ui->assertPageContainsText('Your details');
+    }
+
+    /**
+     * @Given /^I confirm that I want to delete my account$/
+     */
+    public function iConfirmThatIWantToDeleteMyAccount()
+    {
+        $this->ui->assertPageAddress('/confirm-delete-account');
+
+        $this->apiFixtures->delete('/v1/delete-account/' . $this->userId)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->ui->clickLink('Yes, continue deleting my account');
+    }
+
+    /**
+     * @Then /^My account is deleted$/
+     */
+    public function myAccountIsDeleted()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I am logged out of the service and taken to the index page$/
+     */
+    public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage()
+    {
+        $this->ui->assertPageAddress('/');
+    }
+
 }

@@ -1117,7 +1117,7 @@ class AccountContext extends BaseIntegrationContext
         assertGreaterThan(strtotime($shareCodes[0]['Expires']),strtotime((new DateTime('now'))->format('Y-m-d')));
         assertGreaterThan(strtotime($shareCodes[0]['Added']),strtotime($shareCodes[0]['Expires']));
     }
-  
+
     /**
      * @When /^I click to check my active and inactive codes$/
      */
@@ -1422,4 +1422,55 @@ class AccountContext extends BaseIntegrationContext
     {
 //        throw new PendingException();
     }
+
+    /**
+     * @Given /^I am on the your details page$/
+     */
+    public function iAmOnTheYourDetailsPage()
+    {
+        //Not needed for this context
+    }
+
+    /**
+     * @When /^I request to delete my account$/
+     */
+    public function iRequestToDeleteMyAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I confirm that I want to delete my account$/
+     */
+    public function iConfirmThatIWantToDeleteMyAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^My account is deleted$/
+     */
+    public function myAccountIsDeleted()
+    {
+        // API call for deleting a user account
+        $this->apiFixtures->delete('/v1/delete-account/' . $this->userIdentity)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $deletion = $this->userService->deleteAccount($this->userIdentity);
+
+        assertTrue($deletion);
+    }
+
+    /**
+     * @Given /^I am logged out of the service and taken to the index page$/
+     */
+    public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage()
+    {
+        // Not needed for this context
+    }
+
 }
