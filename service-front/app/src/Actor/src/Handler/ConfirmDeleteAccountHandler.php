@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
-use App\Exception\BadRequestException;
-use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
-use Common\Handler\LoggerAware;
-use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -18,24 +14,21 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Exception;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class ConfirmDeleteAccountHandler
  * @package Actor\Handler
  */
-class ConfirmDeleteAccountHandler extends AbstractHandler implements UserAware, LoggerAware
+class ConfirmDeleteAccountHandler extends AbstractHandler implements UserAware
 {
     use User;
-    use Logger;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authentication,
-        LoggerInterface $logger
+        AuthenticationInterface $authentication
     ) {
-        parent::__construct($renderer, $urlHelper, $logger);
+        parent::__construct($renderer, $urlHelper);
         $this->setAuthenticator($authentication);
     }
 

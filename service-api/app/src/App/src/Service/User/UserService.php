@@ -262,7 +262,6 @@ class UserService
 
     /**
      * @param string $accountId
-     * @return bool
      */
     public function deleteUserAccount(string $accountId) : void
     {
