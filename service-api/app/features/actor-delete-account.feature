@@ -8,7 +8,7 @@ Feature: The user is able to delete their account
     Given I am a user of the lpa application
     And I am currently signed in
 
-  @acceptance
+  @integration @acceptance
   Scenario: As a user I can delete my account
     Given I am on the your details page
     When I request to delete my account

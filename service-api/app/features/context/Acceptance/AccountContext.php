@@ -1780,6 +1780,15 @@ class AccountContext implements Context
      */
     public function myAccountIsDeleted()
     {
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Email'    => $this->userAccountEmail,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
         // ActorUsers::delete
         $this->awsFixtures->append(new Result([]));
 
