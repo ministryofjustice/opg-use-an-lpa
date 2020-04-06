@@ -1,6 +1,6 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}Code expired - {{ parent() }} {% endblock %}
+{% block html_title %}Access code expired - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -11,12 +11,13 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">Expired code</h1>
+                    <h1 class="govuk-heading-xl">The access code you entered has expired</h1>
 
-                    <p class="govuk-body">The code that you entered has expired.</p>
+                    <p class="govuk-body">Access codes expire 30 days after they’re made.</p> <br>
+                    <p class="govuk-body">To see this LPA, ask the donor or attorney you’re dealing with to make a new code.</p>
 
-                    <a href="{{ path('enter-code') }}" role="button" draggable="false" class="govuk-button govuk-button--start">
-                        Try again
+                    <a href="{{ path('enter-code') }}" class="govuk-link">
+                        Enter another code
                     </a>
 
                 </div>
