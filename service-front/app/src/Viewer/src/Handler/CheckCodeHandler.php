@@ -22,7 +22,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class CheckCodeHandler
+ *
  * @package Viewer\Handler
+ *
+ * @codeCoverageIgnore 
  */
 class CheckCodeHandler extends AbstractHandler
 {
