@@ -416,7 +416,7 @@ class LpaServiceTest extends TestCase
         //---
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("'Expires' filed missing or invalid.");
+        $this->expectExceptionMessage("'Expires' field missing or invalid.");
 
         $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, false);
     }
