@@ -2287,4 +2287,41 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/');
     }
 
+    /**
+     * @Given /^I have deleted my account$/
+     */
+    public function iHaveDeletedMyAccount()
+    {
+        $this->iAmOnTheYourDetailsPage();
+        $this->iRequestToDeleteMyAccount();
+        $this->iConfirmThatIWantToDeleteMyAccount();
+    }
+
+    /**
+     * @When /^I request login to my account that was deleted$/
+     */
+    public function iRequestLoginToMyAccountThatWasDeleted()
+    {
+        $this->ui->assertPageAddress('/');
+        $this->ui->clickLink('Sign in to your existing account');
+
+        $this->ui->fillField('email', $this->userEmail);
+        $this->ui->fillField('password', $this->userPassword);
+
+        // API call for authentication
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])));
+
+        $this->ui->pressButton('Sign in');
+    }
+
+    /**
+     * @Then /^My old account is not found$/
+     */
+    public function myOldAccountIsNotFound()
+    {
+        $this->ui->assertPageAddress('/login');
+        $this->ui->assertPageContainsText('Email and password combination not recognised. Please try signing in again below or create an account');
+    }
+
 }

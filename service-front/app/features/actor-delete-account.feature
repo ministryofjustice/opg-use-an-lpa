@@ -27,3 +27,9 @@ Feature: The user is able to delete their account
     And I confirm that I want to delete my account
     Then My account is deleted
     And I am logged out of the service and taken to the index page
+
+  @ui
+  Scenario: As a user I cannot access my account once it has been deleted
+    Given I have deleted my account
+    When I request login to my account that was deleted
+    Then My old account is not found
