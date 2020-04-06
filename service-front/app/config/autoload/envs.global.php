@@ -96,6 +96,24 @@ return [
     'authentication' => [
         'username' => 'email',
         'redirect' => '/login',
+    ],
+
+    'ratelimits' => [
+        'viewer_code_failure' => [
+            'type' => 'keyed',
+            'storage' => [
+                'adapter' => [
+                    'name'    => 'apcu',
+                    'options' => [
+                        'ttl' => 60,
+                    ],
+                ],
+            ],
+            'options' => [
+                'interval' => 60,
+                'requests_per_interval' => 4
+            ]
+        ]
     ]
 
 ];
