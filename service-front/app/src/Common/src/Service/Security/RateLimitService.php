@@ -37,9 +37,9 @@ abstract class RateLimitService implements RateLimiterInterface
         $this->logger = $logger;
     }
 
-    abstract function isLimited(string $identity): bool;
+    abstract public function isLimited(string $identity): bool;
 
-    abstract function limit(string $identity): void;
+    abstract public function limit(string $identity): void;
 
     public function getName(): string
     {
