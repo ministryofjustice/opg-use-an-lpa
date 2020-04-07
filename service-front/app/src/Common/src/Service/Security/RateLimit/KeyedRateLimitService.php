@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Common\Service\Security\RateLimit;
 
 use Common\Exception\RateLimitExceededException;
-
 use Common\Service\Security\RateLimitService;
 
 use function time;
@@ -18,7 +17,7 @@ class KeyedRateLimitService extends RateLimitService
      * Calling this function carries out the moving of the ttl window for the rate limit records
      *
      * @param string $identity A unique identity to track
-     * @param string $key A piece of information to key this limit for
+     * @param string $key An optional piece of information to key this limit for
      * @return bool Is the identity limited for the given key
      */
     function isLimited(string $identity, string $key = ''): bool
@@ -46,9 +45,9 @@ class KeyedRateLimitService extends RateLimitService
      * Writes a rate limit record for the identity and key, throws a RateLimitExceededException if this
      * results in the request exceeding the configured limit for this service.
      *
-     * @param string $identity
-     * @param string $key
-     * @throws RateLimitExceededException
+     * @param string $identity A unique identity to limit
+     * @param string $key An optional piece of information to key this limit for
+     * @throws RateLimitExceededException If a limit check exceeds the configured limit
      */
     public function limit(string $identity, string $key = ''): void
     {
