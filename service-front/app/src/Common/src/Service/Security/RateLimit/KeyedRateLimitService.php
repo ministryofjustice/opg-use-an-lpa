@@ -61,7 +61,7 @@ class KeyedRateLimitService extends RateLimitService
         $this->cacheService->setItem($recordKey, $accessRecords);
 
         // throw exception if rate limit is exceeded
-        if (count($accessRecords) >= $this->requestsPerInterval) {
+        if (count($accessRecords) > $this->requestsPerInterval) {
             throw new RateLimitExceededException($this->getName() . ' rate limit exceeded for identity ' . $identity);
         }
     }
