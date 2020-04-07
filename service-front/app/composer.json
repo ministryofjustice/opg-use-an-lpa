@@ -107,12 +107,12 @@
         ],
         "dc-run": "@dc run actor-app",
         "dc-php": "@dc-run php",
-        "dc-php-debug": "@dc-php -d zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20180731/xdebug.so",
+        "dc-php-debug": "@dc-php -d zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so",
         "psalm": "@dc-php /app/vendor/bin/psalm",
         "cs-check": "@dc-php /app/vendor/bin/phpcs",
         "cs-fix": "@dc-php /app/vendor/bin/phpcbf",
-        "unit-test": "@dc-php-cov /app/vendor/bin/phpunit --colors=always",
-        "acc-test": "@dc-php-cov -dapc.enable_cli=1 /app/vendor/bin/behat -p acceptance --colors",
-        "int-test": "@dc-php-cov /app/vendor/bin/behat -p integration --colors"
+        "unit-test": "@dc-php /app/vendor/bin/phpunit --colors=always",
+        "acc-test": "@dc-php -dapc.enable_cli=1 /app/vendor/bin/behat -p acceptance --colors",
+        "int-test": "@dc-php /app/vendor/bin/behat -p integration --colors"
     }
 }
