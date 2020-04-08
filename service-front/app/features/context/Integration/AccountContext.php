@@ -648,7 +648,7 @@ class AccountContext extends BaseIntegrationContext
                             'user-lpa-actor-token' => $this->actorLpaToken,
                             'date' => 'date',
                             'lpa' => $this->lpa,
-                            'actor' => []
+                            'actor' => $this->lpaData['actor']
                         ]
                     )));
     }
@@ -683,7 +683,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         // API call to make code
@@ -710,7 +710,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
     }
 
@@ -754,7 +754,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         // API call to make code
@@ -871,7 +871,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
@@ -981,7 +981,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
@@ -1077,7 +1077,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         // API call to make code
@@ -1133,7 +1133,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         // API call to make code
@@ -1312,7 +1312,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         // API call to make code

@@ -1043,7 +1043,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         $this->ui->clickLink('View LPA summary');
@@ -1075,7 +1075,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         $this->ui->assertPageAddress('lpa/dashboard');
@@ -1118,7 +1118,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         $this->ui->fillField('org_name', $this->organisation);
@@ -1151,7 +1151,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         $this->ui->fillField('org_name', $organisationname);
@@ -1244,7 +1244,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         // API call to get access codes
@@ -1286,7 +1286,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         // API call to get access codes
@@ -1328,7 +1328,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         // API call to get access codes
@@ -1461,7 +1461,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         // API call for getShareCodes
@@ -1572,7 +1572,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         // API call for getShareCodes
@@ -1738,7 +1738,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         // API call to get access codes
@@ -1767,7 +1767,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         $this->ui->clickLink('Give an organisation access');
@@ -2210,7 +2210,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         $this->ui->clickLink('Give an organisation access');
@@ -2363,7 +2363,7 @@ class AccountContext implements Context
             return;
         }
 
-        throw new AssertionFailedError('Expected not to click link: Give an organisation access');
+        throw new AssertionFailedError('Expected not to click link: Check access codes');
     }
 
     /**
@@ -2443,4 +2443,11 @@ class AccountContext implements Context
         $this->ui->visit('lpa/view-lpa?lpa=' . $this->userLpaActorToken);
     }
 
+    /**
+     * @Then /^I am shown a not found error$/
+     */
+    public function iAmShownANotFoundError()
+    {
+        $this->ui->assertResponseStatus(404);
+    }
 }

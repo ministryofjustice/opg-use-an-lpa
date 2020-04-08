@@ -18,3 +18,20 @@ Feature: The user is able to see correct information on their dashboard
     And I cannot check existing or inactive access codes for the LPA
     And I cannot view the LPA summary
 
+  @ui
+  Scenario:
+    Given I am on the dashboard page
+    When I navigate to give an organisation access
+    Then I am shown a not found error
+
+  @ui
+  Scenario:
+    Given I am on the dashboard page
+    When I navigate to check an access code
+    Then I am shown a not found error
+
+  @ui
+  Scenario:
+    Given I am on the dashboard page
+    When I navigate to view the LPA summary
+    Then I am shown a not found error
