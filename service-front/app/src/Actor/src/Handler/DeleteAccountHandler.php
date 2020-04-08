@@ -40,6 +40,7 @@ class DeleteAccountHandler extends AbstractHandler implements SessionAware, User
      * @param UrlHelper $urlHelper
      * @param UserService $userService
      * @param LoggerInterface $logger
+     *
      */
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -63,18 +64,11 @@ class DeleteAccountHandler extends AbstractHandler implements SessionAware, User
     {
         $user = $this->getUser($request);
 
-        $this->userService->deleteAccount($user->getIdentity());
+        $this->userService->deleteAccount($user->getIdentity(), $user->getDetails()['Email']);
 
         $session = $this->getSession($request, 'session');
         $session->unset(UserInterface::class);
         $session->regenerate();
-
-        $this->getLogger()->info(
-            'Account with Id {id} has been successfully deleted',
-            [
-                'id' => $user->getIdentity()
-            ]
-        );
 
         return $this->redirectToRoute('home');
     }

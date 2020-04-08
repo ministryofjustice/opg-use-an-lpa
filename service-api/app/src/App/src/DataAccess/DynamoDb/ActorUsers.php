@@ -8,7 +8,6 @@ use App\DataAccess\Repository\ActorUsersInterface;
 use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
-use Aws\DynamoDb\Exception\DynamoDbException;
 use Aws\DynamoDb\Marshaler;
 
 class ActorUsers implements ActorUsersInterface
@@ -263,22 +262,21 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function delete(string $accountId) :bool
+    public function delete(string $accountId) :void
     {
-        try {
-            $this->client->deleteItem([
-                'TableName' => $this->actorUsersTable,
-                'Key' => [
-                    'Id' => [
-                        'S' => $accountId,
-                    ],
+        $this->client->deleteItem([
+            'TableName' => $this->actorUsersTable,
+            'Key' => [
+                'Id' => [
+                    'S' => $accountId,
                 ],
-            ]);
-
-            return true;
-
-        } catch (DynamoDbException $e) {
-            return false;
-        }
+            ],
+            'ConditionExpression' => 'Id = :id',
+            'ExpressionAttributeValues' => [
+                ':id' => [
+                    'S' => $accountId
+                ],
+            ]
+        ]);
     }
 }

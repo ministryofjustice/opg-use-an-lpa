@@ -65,8 +65,12 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->route('/forgot-password/{token}', Actor\Handler\PasswordResetPageHandler::class, ['GET', 'POST'], 'password-reset-token');
 
     // User deletion
-    $app->get('/confirm-delete-account', [Actor\Handler\ConfirmDeleteAccountHandler::class], 'confirm-delete-account');
-    $app->get('/delete-account', [Actor\Handler\DeleteAccountHandler::class], 'delete-account');
+    $app->get('/confirm-delete-account', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\ConfirmDeleteAccountHandler::class], 'confirm-delete-account');
+    $app->get('/delete-account', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\DeleteAccountHandler::class], 'delete-account');
 
     // User details
     $app->get('/your-details', [

@@ -275,16 +275,6 @@ class UserService
             throw new NotFoundException('User not found for account with Id ' . $accountId);
         }
 
-        if (!$this->usersRepository->delete($accountId)) {
-            $this->logger->notice(
-                'Failed to delete account for account id {id}',
-                ['id' => $accountId]
-            );
-
-            throw new BadRequestException(
-                'Account deletion failure for account {id}',
-                ['id' => $accountId]
-            );
-        }
+        $this->usersRepository->delete($accountId);
     }
 }

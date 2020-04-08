@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
-use App\Exception\CreationException;
 use App\Exception\NotFoundException;
-use Exception;
 
 /**
  * Interface for Data relating to Users of the Actor System.
@@ -102,7 +100,7 @@ interface ActorUsersInterface
 
     /**
      * @param string $accountId
-     * @return bool
+     * @throws NotFoundException
      */
-    public function delete(string $accountId): bool;
+    public function delete(string $accountId): void;
 }
