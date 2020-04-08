@@ -1794,11 +1794,11 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^The user can request a password reset and get an email$/
+     * @Then /^I am told my current password is incorrect$/
      */
-    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    public function iAmToldMyCurrentPasswordIsIncorrect()
     {
-        // Not needed for one this context
+        $this->ui->assertPageContainsText('The current password you entered is incorrect');
     }
 
     /**

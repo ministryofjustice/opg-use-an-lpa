@@ -1416,10 +1416,10 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^The user can request a password reset and get an email$/
+     * @Then /^I am told my current password is incorrect$/
      */
-    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    public function iAmToldMyCurrentPasswordIsIncorrect()
     {
-//        throw new PendingException();
+        // Not needed in this context
     }
 }

@@ -22,7 +22,7 @@ Feature: Authenticated Account Password Change
     Given I view my user details
     When I ask to change my password
     And I cannot enter my current password
-    Then The user can request a password reset and get an email
+    Then I am told my current password is incorrect
 
   @ui
   Scenario Outline: The user attempts to set an invalid password
