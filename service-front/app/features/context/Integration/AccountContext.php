@@ -378,9 +378,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request to add an LPA with valid details$/
+     * @When /^I request to add an LPA with valid details using (.*)$/
      */
-    public function iRequestToAddAnLPAWithValidDetails()
+    public function iRequestToAddAnLPAWithValidDetailsUsing(string $code)
     {
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
@@ -392,7 +392,7 @@ class AccountContext extends BaseIntegrationContext
                 )
             );
 
-        $lpa = $this->lpaService->getLpaByPasscode($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
+        $lpa = $this->lpaService->getLpaByPasscode($this->userIdentity, $code, $this->referenceNo, $this->userDob);
 
         assertEquals($lpa->getUId(), $this->lpa['uId']);
     }
@@ -618,7 +618,7 @@ class AccountContext extends BaseIntegrationContext
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
         $this->iAmOnTheAddAnLPAPage();
-        $this->iRequestToAddAnLPAWithValidDetails();
+        $this->iRequestToAddAnLPAWithValidDetailsUsing($this->passcode);
         $this->theCorrectLPAIsFoundAndICanConfirmToAddIt();
         $this->theLPAIsSuccessfullyAdded();
     }

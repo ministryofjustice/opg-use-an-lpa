@@ -10,11 +10,11 @@
 
 {%- block form_element_simple -%}
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
-        {% if label is defined and label is not empty %}
-            <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ element.getName() }}">
-                {{ label | raw }}
-            </label>
-        {% endif %}
+
+        <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ element.getName() }}">
+            {{ label | raw }}
+        </label>
+
 
         {{- block('input_hint') -}}
 
@@ -34,6 +34,13 @@
 
         <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
                id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}" />
+
+        {% if element.getName() == 'org_name' %}
+            <button data-prevent-double-click="true" type="submit" class="govuk-button">
+                Continue
+            </button>
+        {% endif %}
+
     </div>
 {%- endblock form_element_simple -%}
 
