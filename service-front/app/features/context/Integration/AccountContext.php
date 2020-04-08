@@ -874,7 +874,7 @@ class AccountContext extends BaseIntegrationContext
                         'actor' => [],
                     ])));
 
-        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+        $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
         // API call for getShareCodes in CheckAccessCodesHandler
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')

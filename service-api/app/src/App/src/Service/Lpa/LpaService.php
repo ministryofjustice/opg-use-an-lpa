@@ -95,19 +95,19 @@ class LpaService
             return null;
         }
 
-        //---
-
         $lpa = $this->getByUid($map['SiriusUid']);
 
         if (is_null($lpa)) {
             return null;
         }
 
-        //---
-
         $lpaData = $lpa->getData();
         $actor = $this->lookupActorInLpa($lpaData, $map['ActorId']);
         unset($lpaData['original_attorneys']);
+
+        if (is_null($actor)) {
+            return null;
+        }
 
         return [
             'user-lpa-actor-token' => $map['Id'],

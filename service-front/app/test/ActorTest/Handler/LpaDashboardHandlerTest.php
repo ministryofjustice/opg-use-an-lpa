@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ActorTest\Handler;
 
 use Actor\Handler\LpaDashboardHandler;
+use Common\Entity\CaseActor;
 use Common\Service\Lpa\LpaService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -99,10 +100,16 @@ class LpaDashboardHandlerTest extends TestCase
             $this->viewerCodeServiceProphecy->reveal()
         );
 
+        $actor = new CaseActor();
+        $actor->setSystemStatus(true);
+
         $lpas = new ArrayObject([
             [
                 'lpa' => [],
-                'user-lpa-actor-token' => self::USER_LPA_ACTOR_TOKEN
+                'user-lpa-actor-token' => self::USER_LPA_ACTOR_TOKEN,
+                'actor' => [
+                    'details' => $actor,
+                ],
             ],
         ], ArrayObject::ARRAY_AS_PROPS);
 

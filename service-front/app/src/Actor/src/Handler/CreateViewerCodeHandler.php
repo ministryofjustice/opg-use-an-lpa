@@ -113,8 +113,6 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
 
     private function fetchLpa(string $userToken, string $actorLpaToken): ?Lpa
     {
-        $lpa = $this->lpaService->getLpaById($userToken, $actorLpaToken);
-
-        return $lpa;
+        return $this->lpaService->getLpaById($userToken, $actorLpaToken);
     }
 }

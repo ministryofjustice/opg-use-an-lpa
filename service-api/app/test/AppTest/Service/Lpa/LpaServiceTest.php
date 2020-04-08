@@ -117,7 +117,15 @@ class LpaServiceTest extends TestCase
         $t->SiriusUid = 'test-sirius-uid';
         $t->ActorId = 1;
         $t->Lpa = new Lpa([
-            'uId' => $t->SiriusUid
+            'uId' => $t->SiriusUid,
+            'attorneys' => [
+                [
+                    'id' => $t->ActorId,
+                    'firstname' => 'Test',
+                    'surname' => 'Test',
+                    'systemStatus' => true
+                ]
+            ]
         ], new DateTime);
 
         $this->userLpaActorMapInterfaceProphecy->get($t->Token)->willReturn([
@@ -149,8 +157,50 @@ class LpaServiceTest extends TestCase
 
         $this->assertEquals($t->Token, $result['user-lpa-actor-token']);
         $this->assertEquals($t->Lpa->getLookupTime()->getTimestamp(), strtotime($result['date']));
-        $this->assertEquals(null, $result['actor']);    // We expexting not actor to have been found
-        $this->assertEquals(['uId' => $t->SiriusUid], $result['lpa']);
+        $this->assertEquals([
+            'type' => 'primary-attorney',
+            'details' => [
+                'id' => $t->ActorId,
+                'firstname' => 'Test',
+                'surname' => 'Test',
+                'systemStatus' => true
+            ]
+        ], $result['actor']);
+        $this->assertEquals([
+            'uId' => $t->SiriusUid,
+            'attorneys' => [
+                [
+                    'id' => $t->ActorId,
+                    'firstname' => 'Test',
+                    'surname' => 'Test',
+                    'systemStatus' => true
+                ]
+            ]
+        ], $result['lpa']);
+    }
+
+    /** @test */
+    public function cannot_get_by_user_token_with_inactive_actor()
+    {
+        $t = $this->init_valid_user_token_test();
+
+        $this->lpasInterfaceProphecy->get($t->SiriusUid)->willReturn([
+            'uId' => $t->SiriusUid,
+            'attorneys' => [
+                [
+                    'id' => $t->ActorId,
+                    'firstname' => 'Test',
+                    'surname' => 'Test',
+                    'systemStatus' => false
+                ]
+            ]
+        ]);
+
+        $service = $this->getLpaService();
+
+        $result = $service->getByUserLpaActorToken($t->Token, 'different-user-id');
+
+        $this->assertNull($result);
     }
 
     /** @test */
