@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-function name_image() {
+function name_tag() {
   branch=$1
   branch=${branch//-}
   branch=${branch//_}
@@ -11,4 +11,4 @@ function name_image() {
   echo "$branch-$short_hash"
 }
 
-echo $(name_image $1 $2)
+echo $(name_tag $1 $2)
