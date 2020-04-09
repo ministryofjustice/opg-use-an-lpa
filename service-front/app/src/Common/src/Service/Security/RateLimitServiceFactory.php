@@ -28,7 +28,7 @@ class RateLimitServiceFactory
      * @param string $limitName
      * @return RateLimitService
      */
-    public function factory(string $limitName): RateLimitService
+    public function factory(string $limitName): RateLimiterInterface
     {
         $config = $this->container->get('config');
 
@@ -52,8 +52,8 @@ class RateLimitServiceFactory
             case 'keyed':
                 return new KeyedRateLimitService(
                     $cacheAdaptor,
-                    $config['ratelimits'][$limitName]['options']['interval'] ?: 300,
-                    $config['ratelimits'][$limitName]['options']['requests_per_interval'] ?: 60,
+                    $config['ratelimits'][$limitName]['options']['interval'] ?? 300,
+                    $config['ratelimits'][$limitName]['options']['requests_per_interval'] ?? 60,
                     $this->container->get(LoggerInterface::class)
                 );
 
