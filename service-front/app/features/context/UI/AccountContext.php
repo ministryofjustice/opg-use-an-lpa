@@ -1817,7 +1817,6 @@ class AccountContext implements Context
         $this->ui->fillField('new_password_confirm', $newPassword);
 
         $this->ui->pressButton('Change password');
-        $this->ui->assertPageAddress('change-password');
     }
 
     /**
