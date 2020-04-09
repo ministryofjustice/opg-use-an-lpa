@@ -17,6 +17,11 @@ use Mezzio\Template\TemplateRendererInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Common\Service\Lpa\ViewerCodeService;
 
+/**
+ * Class LpaDashboardHandler
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class LpaDashboardHandler extends AbstractHandler implements UserAware
 {
     use User;
