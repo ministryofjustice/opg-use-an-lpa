@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "viewer_5xx_errors" {
-  actions_enabled = true
+  actions_enabled = false
   # alarm_actions       = [aws_sns_topic.cloudwatch_topic.arn]
   alarm_description   = "Number of 5XX Errors returned to viewer users for ${local.environment}"
   alarm_name          = "${local.environment}-viewer-5XX-errors"
