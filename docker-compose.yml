@@ -71,6 +71,7 @@ services:
       AWS_ENDPOINT_KMS: http://kms:8080
       AWS_ACCESS_KEY_ID: "-"
       AWS_SECRET_ACCESS_KEY: "-"
+      IDENTIFY_HASH_SALT: "wxrFHlE4Za8rlQ9Q"
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
       ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=viewer-app
@@ -116,6 +117,7 @@ services:
       AWS_ENDPOINT_KMS: http://kms:8080
       AWS_ACCESS_KEY_ID: "-"
       AWS_SECRET_ACCESS_KEY: "-"
+      IDENTIFY_HASH_SALT: "wxrFHlE4Za8rlQ9Q"
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
       ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=actor-app
