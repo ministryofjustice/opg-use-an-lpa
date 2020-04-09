@@ -1730,7 +1730,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I ask to change my password$/
+     * @Given /^I ask to change my password$/
      */
     public function iAskToChangeMyPassword()
     {
@@ -1763,12 +1763,26 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I provide my new password$/
+     * @When /^I provide my new password$/
      */
     public function iProvideMyNewPassword()
     {
-        $newPassword = 'S0meS0rt0fPassw0rd';
+        $newPassword = 'Password123';
 
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/change-password')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->fillField('new_password', $newPassword);
         $this->ui->fillField('new_password_confirm', $newPassword);
 
@@ -1780,7 +1794,30 @@ class AccountContext implements Context
      */
     public function iAmToldMyPasswordWasChanged()
     {
-        // Not needed for one this context
+        $this->ui->assertPageAddress('your-details');
+    }
+
+    /**
+     * @When /^I provided incorrect current password$/
+     */
+    public function iProvidedIncorrectCurrentPassword()
+    {
+        $newPassword = 'Password123';
+
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/change-password')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_FORBIDDEN,
+                    [],
+                    json_encode([])));
+
+        $this->ui->fillField('current_password', 'wrongPassword');
+        $this->ui->fillField('new_password', $newPassword );
+        $this->ui->fillField('new_password_confirm', $newPassword );
+
+        $this->ui->pressButton("Change password");
+        $this->ui->assertPageAddress('change-password');
     }
 
     /**
@@ -1798,18 +1835,28 @@ class AccountContext implements Context
      */
     public function iAmToldMyCurrentPasswordIsIncorrect()
     {
+        $this->ui->assertPageAddress('change-password');
+
         $this->ui->assertPageContainsText('The current password you entered is incorrect');
     }
 
     /**
-     * @Given /^I choose a new password of "([^"]*)"$/
+     * @Given /^I choose a new (.*) from below$/
      */
-    public function iChooseANewPasswordOf($password)
+    public function iChooseANewPasswordFromGiven($password)
     {
-        $this->ui->assertPageAddress('/change-password');
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/change-password')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_FORBIDDEN,
+                    [],
+                    json_encode([])));
 
+        $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->fillField('new_password', $password);
         $this->ui->fillField('new_password_confirm', $password);
+
         $this->ui->pressButton('Change password');
     }
 
@@ -1822,8 +1869,6 @@ class AccountContext implements Context
 
         $this->ui->assertPageContainsText('at least ' . $reason);
     }
-
-
 
     /**
      * @When /^I enter correct email with (.*) and (.*) below$/
@@ -2206,3 +2251,4 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('Let us know if a donor or attorney\'s details change');
     }
 }
+
