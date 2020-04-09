@@ -38,7 +38,7 @@ class KeyedRateLimitService extends RateLimitService
         // update the window
         $this->cacheService->setItem($recordKey, $accessRecords);
 
-        return count($accessRecords) >= $this->requestsPerInterval;
+        return count($accessRecords) > $this->requestsPerInterval;
     }
 
     /**
