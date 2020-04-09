@@ -1813,21 +1813,11 @@ class AccountContext implements Context
                     json_encode([])));
 
         $this->ui->fillField('current_password', 'wrongPassword');
-        $this->ui->fillField('new_password', $newPassword );
-        $this->ui->fillField('new_password_confirm', $newPassword );
+        $this->ui->fillField('new_password', $newPassword);
+        $this->ui->fillField('new_password_confirm', $newPassword);
 
-        $this->ui->pressButton("Change password");
+        $this->ui->pressButton('Change password');
         $this->ui->assertPageAddress('change-password');
-    }
-
-    /**
-     * @Given /^I cannot enter my current password$/
-     */
-    public function iCannotEnterMyCurrentPassword()
-    {
-        $this->ui->fillField('current_password', 'NotMyPassword1');
-
-        $this->iProvideMyNewPassword();
     }
 
     /**
