@@ -7,7 +7,8 @@ Feature: The user is able to see correct information on their dashboard
   Background:
     Given I am a user of the lpa application
     And I am currently signed in
-    And I am inactive against an LPA on my account
+    And I have added an LPA to my account
+    And I am inactive against the LPA on my account
 
   @ui
   Scenario:

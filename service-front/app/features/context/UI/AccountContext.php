@@ -94,48 +94,11 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I am inactive against an LPA on my account$/
+     * @Given /^I am inactive against the LPA on my account$/
      */
-    public function iAmInactiveAgainstAnLpaOnMyAccount()
+    public function iAmInactiveAgainstTheLpaOnMyAccount()
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
-
-        $this->userLpaActorToken = '987654321';
-        $this->actorId = 9;
-
-        $this->lpaData = [
-            'user-lpa-actor-token' => $this->userLpaActorToken,
-            'date' => 'today',
-            'actor' => [
-                'type' => 'primary-attorney',
-                'details' => [
-                    'addresses' => [
-                        [
-                            'addressLine1' => '',
-                            'addressLine2' => '',
-                            'addressLine3' => '',
-                            'country'      => '',
-                            'county'       => '',
-                            'id'           => 0,
-                            'postcode'     => '',
-                            'town'         => '',
-                            'type'         => 'Primary'
-                        ]
-                    ],
-                    'companyName' => null,
-                    'dob' => '1975-10-05',
-                    'email' => 'string',
-                    'firstname' => 'Ian',
-                    'id' => 0,
-                    'middlenames' => null,
-                    'salutation' => 'Mr',
-                    'surname' => 'Deputy',
-                    'systemStatus' => false,
-                    'uId' => '700000000054'
-                ],
-            ],
-            'lpa' => $this->lpa
-        ];
+        $this->lpaData['actor']['details']['systemStatus'] = false;
     }
 
     /**
