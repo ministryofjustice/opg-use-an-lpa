@@ -1397,9 +1397,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I cannot enter my current password$/
+     * @When /^I provided incorrect current password$/
      */
-    public function iCannotEnterMyCurrentPassword()
+    public function iProvidedIncorrectCurrentPassword()
     {
         $expectedPassword = 'S0meS0rt0fPassw0rd';
 
