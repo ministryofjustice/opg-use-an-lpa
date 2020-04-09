@@ -11,6 +11,7 @@ use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Common\Service\Log\Output\Email;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;

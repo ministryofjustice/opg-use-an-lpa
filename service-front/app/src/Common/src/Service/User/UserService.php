@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authentication\UserRepositoryInterface;
-use Common\Service\Log\EmailHash;
+use Common\Service\Log\Output\Email;
 
 /**
  * Class UserService
@@ -275,7 +275,7 @@ class UserService implements UserRepositoryInterface
                 'Successfully deleted account with id {id} and email hash {email}',
                 [
                     'id'    => $accountId,
-                    'email' => (new EmailHash($userEmail))->hash($userEmail)
+                    'email' => new Email($userEmail),
                 ]
             );
 
@@ -284,7 +284,7 @@ class UserService implements UserRepositoryInterface
                 'Failed to delete account for userId {userId} with email hash {email} - status code {code}',
                 [
                     'userId' => $accountId,
-                    'email'  => (new EmailHash($userEmail))->hash($userEmail),
+                    'email'  => new Email($userEmail),
                     'code'   => $ex->getCode()
                 ]
             );

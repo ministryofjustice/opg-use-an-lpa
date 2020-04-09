@@ -1464,7 +1464,7 @@ class AccountContext extends BaseIntegrationContext
             });
 
 
-        $this->userService->deleteAccount($this->userIdentity);
+        $this->userService->deleteAccount($this->userIdentity, $this->userEmail);
     }
 
     /**

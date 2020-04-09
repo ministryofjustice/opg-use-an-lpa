@@ -11,6 +11,7 @@ use BehatTest\Context\BaseUiContextTrait;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
+use Common\Service\Log\Output\Email;
 use DateTime;
 
 /**
