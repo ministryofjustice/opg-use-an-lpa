@@ -33,7 +33,7 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.4",
         "alphagov/notifications-php-client": "^3.0",
         "aws/aws-sdk-php": "^3.91",
         "dflydev/fig-cookies": "^2.0",
