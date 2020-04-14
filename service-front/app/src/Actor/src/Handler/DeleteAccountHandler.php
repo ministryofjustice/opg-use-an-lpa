@@ -25,6 +25,7 @@ use Exception;
 /**
  * Class DeleteAccountHandler
  * @package Actor\Handler
+ * @codCoverageIgnore
  */
 class DeleteAccountHandler extends AbstractHandler implements SessionAware, UserAware, LoggerAware
 {
