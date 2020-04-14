@@ -407,16 +407,23 @@ orbs:
           - run:
               name: Push container
               command: |
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+#                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+
+#                docker tag front-app:latest << parameters.container_repo_url >>:latest
+#                docker tag front-app:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+
+                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export $IMAGE_TAG
 
                 docker tag front-app:latest << parameters.container_repo_url >>:latest
-                docker tag front-app:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag front-app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push << parameters.container_repo_url >>
                 else
-                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+#                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
 
       docker_build_front_web:
@@ -445,16 +452,23 @@ orbs:
           - run:
               name: Push container
               command: |
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+#                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+
+#                docker tag front-web:latest << parameters.container_repo_url >>:latest
+#                docker tag front-web:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+
+                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export $IMAGE_TAG
 
                 docker tag front-web:latest << parameters.container_repo_url >>:latest
-                docker tag front-web:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag front-web:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push << parameters.container_repo_url >>
                 else
-                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+#                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
 
       #----------------------------------------------------
