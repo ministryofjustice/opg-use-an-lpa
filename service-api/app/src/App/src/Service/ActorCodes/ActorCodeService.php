@@ -6,6 +6,7 @@ namespace App\Service\ActorCodes;
 
 use App\DataAccess\Repository;
 use App\Service\Lpa\LpaService;
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
 class ActorCodeService
@@ -26,19 +27,27 @@ class ActorCodeService
     private $lpaService;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * ActorCodeService constructor.
      * @param Repository\ActorCodesInterface $viewerCodesRepository
      * @param Repository\UserLpaActorMapInterface $userLpaActorMapRepository
      * @param LpaService $lpaService
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Repository\ActorCodesInterface $viewerCodesRepository,
         Repository\UserLpaActorMapInterface $userLpaActorMapRepository,
-        LpaService $lpaService
+        LpaService $lpaService,
+        LoggerInterface $logger
     ) {
         $this->lpaService = $lpaService;
         $this->actorCodesRepository = $viewerCodesRepository;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
+        $this->logger = $logger;
     }
 
 
@@ -50,52 +59,73 @@ class ActorCodeService
      */
     public function validateDetails(string $code, string $uid, string $dob): ?array
     {
-        //-----------------------
-        // Lookup the LPA and the Actor's LPA ID.
-
         $details = $this->actorCodesRepository->get($code);
 
         if (is_null($details)) {
+            $this->logger->info('Validating code could not find details for code {code}', ['code' => $code]);
             return null;
         }
-
-        //-----------------------
-        // Ensure the code is active
 
         if ($details['Active'] !== true) {
+            $this->logger->info('Validating code {code} is inactive', ['code' => $code]);
             return null;
         }
-
-        //-----------------------
-        // Lookup the full LPA
 
         $lpa = $this->lpaService->getByUid($details['SiriusUid']);
 
         if (is_null($lpa)) {
+            $this->logger->error('Validating code could not find LPA for SiriusUid {SiriusUid}', ['SiriusUid' => $details['SiriusUid']]);
             return null;
         }
-
-        //----------------------
-        // Find the actor in the LPA
 
         $actor = $this->lpaService->lookupActorInLpa($lpa->getData(), $details['ActorLpaId']);
 
         if (is_null($actor)) {
+            $this->logger->error('Validating code could not find actor {ActorLpaId} in LPA for SiriusUid {SiriusUid}',
+                [
+                   'ActorLpaId' => $details['ActorLpaId'],
+                   'SiriusUid' => $details['SiriusUid'],
+                ]
+            );
             return null;
         }
 
-        //----------------------
-        // Validate the details match
-
-        if ($code !== $details['ActorCode'] || $uid !== $lpa->getData()['uId'] || $dob !== $actor['details']['dob']) {
+        if ($code !== $details['ActorCode'] ) {
+            $this->logger->info('Validating code {code} did not match {expected}',
+                [
+                    'code' => $code,
+                    'expected' => $details['ActorCode'],
+                ]
+            );
             return null;
         }
 
-        //---
+        if ($uid !== $lpa->getData()['uId']) {
+            $this->logger->info('Validating code uid {uid} did not match {expected}',
+                [
+                    'uid' => $uid,
+                    'expected' => $lpa->getData()['uId'],
+                ]
+            );
+            return null;
+        }
+
+        if ($dob !== $actor['details']['dob']) {
+            $this->logger->info('Validating code dob {dob} did not match {expected}',
+                [
+                    'dob' => $dob,
+                    'expected' => $actor['details']['dob'],
+                ]
+            );
+            return null;
+        }
+
+        $lpaData = $lpa->getData();
+        unset($lpaData['original_attorneys']);
 
         return [
             'actor' => $actor,
-            'lpa' => $lpa->getData(),
+            'lpa' => $lpaData
         ];
     }
 
@@ -118,7 +148,6 @@ class ActorCodeService
      */
     public function confirmDetails(string $code, string $uid, string $dob, string $actorId): ?string
     {
-
         $details = $this->validateDetails($code, $uid, $dob);
 
         // If the details don't validate, stop here.

@@ -98,7 +98,7 @@ class AccountContext implements Context
     {
         $this->ui->visit('/login');
         $this->ui->assertPageAddress('/login');
-        $this->ui->assertElementContainsText('button[type=submit]', 'Continue');
+        $this->ui->assertElementContainsText('button[type=submit]', 'Sign in');
     }
 
     /**
@@ -192,7 +192,7 @@ class AccountContext implements Context
                 ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
         }
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
     }
 
     /**
@@ -218,7 +218,7 @@ class AccountContext implements Context
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])));
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
     }
 
     /**
@@ -233,7 +233,7 @@ class AccountContext implements Context
         $this->apiFixtures->patch('/v1/auth')
             ->respondWith(new Response(StatusCodeInterface::STATUS_NOT_FOUND, [], json_encode([])));
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
     }
 
     /**
@@ -518,9 +518,7 @@ class AccountContext implements Context
     public function iAmGivenInstructionOnHowToChangeDonorOrAttorneyDetails()
     {
         $this->ui->assertPageAddress('/lpa/change-details');
-
-        $this->ui->assertPageContainsText('Let us know if a donor\'s or attorney\'s details change');
-        $this->ui->assertPageContainsText('Find out more');
+        $this->ui->assertPageContainsText('Let us know if a donor or attorney\'s details change');
     }
 
     /**
@@ -533,9 +531,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request to add an LPA with valid details$/
+     * @When /^I request to add an LPA with valid details using (.*)$/
      */
-    public function iRequestToAddAnLPAWithValidDetails()
+    public function iRequestToAddAnLPAWithValidDetailsUsing(string $code)
     {
         $this->ui->assertPageAddress('/lpa/add-details');
 
@@ -547,9 +545,14 @@ class AccountContext implements Context
                     [],
                     json_encode(['lpa' => $this->lpa])
                 )
-            );
+            )
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $params = json_decode($request->getBody()->getContents(), true);
 
-        $this->ui->fillField('passcode', 'XYUPHWQRECHV');
+                assertEquals('XYUPHWQRECHV', $params['actor-code']);
+            });
+
+        $this->ui->fillField('passcode', $code);
         $this->ui->fillField('reference_number', '700000000054');
         $this->ui->fillField('dob[day]', '05');
         $this->ui->fillField('dob[month]', '10');
@@ -755,7 +758,8 @@ class AccountContext implements Context
     public function iWantToCreateANewAccount()
     {
         $this->ui->iAmOnHomepage();
-        $this->ui->pressButton('Create an account');
+        $this->ui->pressButton('Get started');
+        $this->ui->pressButton('Create account');
     }
 
     /**
@@ -892,7 +896,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I have not provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
+     * @When /^I have provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
      */
     public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1,$email2,$password1,$password2,$terms)
     {
@@ -1070,8 +1074,6 @@ class AccountContext implements Context
                         'actor'                => [],
                     ])));
 
-
-
         $this->ui->fillField('org_name', $this->organisation);
         $this->ui->pressButton('Continue');
     }
@@ -1137,7 +1139,7 @@ class AccountContext implements Context
                 ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
         }
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Sign in');
 
         $this->iAmSignedIn();
         $this->iLogoutOfTheApplication();
@@ -1673,7 +1675,7 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('There are no access codes for this LPA');
         $this->ui->assertPageContainsText('Give an organisation access');
     }
-    
+
     /**
      * @When /^I check my access codes/
      */
@@ -1702,7 +1704,7 @@ class AccountContext implements Context
 
         $this->ui->clickLink('Check access codes');
     }
-    
+
     /**
      * @Then /^I should be able to click a link to go and create the access codes$/
      */
@@ -1725,5 +1727,482 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
         $this->ui->assertPageContainsText('Which organisation do you want to give access to');
 
+    }
+
+    /**
+     * @When /^I ask to change my password$/
+     */
+    public function iAskToChangeMyPassword()
+    {
+        $session = $this->ui->getSession();
+        $page = $session->getPage();
+
+        $link = $page->find('css', 'a[href="change-password"]');
+        if ($link === null) {
+            throw new \Exception('change password link not found');
+        }
+
+        $link->click();
+
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $this->ui->assertPageAddress('change-password');
+
+        $passwordInput = $page->find('css', 'input[type="password"]');
+
+        if ($passwordInput === null) {
+            throw new \Exception('no password input box found');
+        }
+    }
+
+    /**
+     * @Given /^I provide my current password$/
+     */
+    public function iProvideMyCurrentPassword()
+    {
+        $this->ui->fillField('current_password', $this->userPassword);
+    }
+
+    /**
+     * @Given /^I provide my new password$/
+     */
+    public function iProvideMyNewPassword()
+    {
+        $newPassword = 'S0meS0rt0fPassw0rd';
+
+        $this->ui->fillField('new_password', $newPassword);
+        $this->ui->fillField('new_password_confirm', $newPassword);
+
+        $this->ui->pressButton('Change password');
+    }
+
+    /**
+     * @Then /^I am told my password was changed$/
+     */
+    public function iAmToldMyPasswordWasChanged()
+    {
+        // Not needed for one this context
+    }
+
+    /**
+     * @Given /^I cannot enter my current password$/
+     */
+    public function iCannotEnterMyCurrentPassword()
+    {
+        $this->ui->fillField('current_password', 'NotMyPassword1');
+
+        $this->iProvideMyNewPassword();
+    }
+
+    /**
+     * @Then /^The user can request a password reset and get an email$/
+     */
+    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    {
+        // Not needed for one this context
+    }
+
+    /**
+     * @Given /^I choose a new password of "([^"]*)"$/
+     */
+    public function iChooseANewPasswordOf($password)
+    {
+        $this->ui->assertPageAddress('/change-password');
+
+        $this->ui->fillField('new_password', $password);
+        $this->ui->fillField('new_password_confirm', $password);
+        $this->ui->pressButton('Change password');
+    }
+
+    /**
+     * @Then /^I am told that my new password is invalid because it needs at least (.*)$/
+     */
+    public function iAmToldThatMyNewPasswordIsInvalidBecauseItNeedsAtLeast($reason)
+    {
+        $this->ui->assertPageAddress('/change-password');
+
+        $this->ui->assertPageContainsText('at least ' . $reason);
+    }
+
+
+
+    /**
+     * @When /^I enter correct email with (.*) and (.*) below$/
+     */
+    public function iEnterCorrectEmailWithEmailFormatAndPasswordBelow($email_format, $password)
+    {
+        $this->ui->fillField('email', $email_format);
+        $this->ui->fillField('password', $password);
+
+        if ($this->userActive) {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
+                    [
+                        'Id'        => $this->userId,
+                        'Email'     => $email_format,
+                        'LastLogin' => '2020-01-01'
+                    ]
+                )));
+
+            // Dashboard page checks for all LPA's for a user
+            $this->apiFixtures->get('/v1/lpas')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+        } else {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
+        }
+
+        $this->ui->assertPageContainsText('Sign in');
+        $this->ui->pressButton('Sign in');
+    }
+
+    /**
+     * @Then /^I should see relevant (.*) message$/
+     */
+    public function iShouldSeeRelevantErrorMessage($error)
+    {
+        $this->ui->assertPageAddress('/login');
+        $this->ui->assertPageContainsText($error);
+    }
+
+    /**
+     * @When /^I enter incorrect email with (.*) and (.*) below$/
+     */
+    public function iEnterInCorrectEmailWithEmailFormatAndPasswordBelow($emailFormat, $password)
+    {
+        $this->ui->fillField('email', $emailFormat);
+        $this->ui->fillField('password', $password);
+
+        // API call for authentication
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])));
+
+        $this->ui->pressButton('Sign in');
+    }
+
+    /**
+     * @When /^I ask for my password to be reset with below correct (.*) and (.*) details$/
+     */
+    public function iAskForMyPasswordToBeResetWithBelowCorrectEmailAndConfirmationEmailDetails($email,$email_confirmation)
+    {
+        $this->ui->assertPageAddress('/forgot-password');
+
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/request-password-reset')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [], json_encode(
+                    [
+                        'Id'                 => $this->userId,
+                        'PasswordResetToken' => '123456'
+                    ])));
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                    assertArrayHasKey('email_address', $params);
+                    assertArrayHasKey('personalisation', $params);
+
+                    assertInternalType('array', $params['personalisation']);
+                    assertArrayHasKey('password-reset-url', $params['personalisation']);
+                }
+            );
+
+        $this->ui->fillField('email', $email);
+        $this->ui->fillField('email_confirm', $email_confirmation);
+        $this->ui->pressButton('Email me the link');
+    }
+
+    /**
+     * @Then /^I receive unique instructions on how to reset my password to my provided (.*)$/
+     */
+    public function iReceiveUniqueInstructionsOnHowToResetMyPasswordToMyProvidedEmail($email)
+    {
+        $this->ui->assertPageAddress('/forgot-password');
+        $this->ui->assertPageContainsText('emailed a link to ' .strtolower($email));
+    }
+
+    /**
+     * @When /^I ask for my password to be reset with below incorrect (.*) and (.*) details$/
+     */
+    public function iAskForMyPasswordToBeResetWithBelowInCorrectEmailAndConfirmationEmailDetails($email,$email_confirmation)
+    {
+        $this->ui->assertPageAddress('/forgot-password');
+
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/request-password-reset')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_FORBIDDEN,
+                    [], json_encode([])));
+
+        $this->ui->fillField('email', $email);
+        $this->ui->fillField('email_confirm', $email_confirmation);
+        $this->ui->pressButton('Email me the link');
+    }
+
+    /**
+     * @Then /^I should see the (.*) message$/
+     */
+    public function iShouldSeeTheErrorMessage($error)
+    {
+        $this->ui->assertPageAddress('/forgot-password');
+        $this->ui->assertPageContainsText($error);
+    }
+
+    /**
+     * @Then /^An account is created using (.*)(.*)(.*)(.*)$/
+     */
+    public function anAccountIsCreatedUsingEmail1Password1Password2Terms($email1,$password1,$password2,$terms)
+    {
+        $this->activationToken = 'activate1234567890';
+
+        $this->ui->assertPageAddress('/create-account');
+
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'              => '123',
+                'Email'           => $email1,
+                'ActivationToken' => $this->activationToken,
+            ])));
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->ui->fillField('email', $email1);
+        $this->ui->fillField('password', $password1);
+        $this->ui->fillField('password_confirm', $password2);
+        $this->ui->fillField('terms', 1);
+        $this->ui->pressButton('Create account');
+    }
+
+    /**
+     * @Given /^I am on the create account page$/
+     */
+    public function iAmOnTheCreateAccountPage()
+    {
+        $this->ui->visit('/create-account');
+        $this->ui->assertPageAddress('/create-account');
+    }
+
+    /**
+     * @When /^I request to see the actor terms of use$/
+     */
+    public function iRequestToSeeTheActorTermsOfUse()
+    {
+        $this->ui->clickLink('terms of use');
+    }
+
+    /**
+     * @Then /^I can see the actor terms of use$/
+     */
+    public function iCanSeeTheActorTermsOfUse()
+    {
+        $this->ui->assertPageAddress('/lpa/terms-of-use');
+        $this->ui->assertPageContainsText('Terms of use');
+        $this->ui->assertPageContainsText('The service is for donors and attorneys on an LPA.');
+    }
+
+    /**
+     * @Given /^I am on the actor terms of use page$/
+     */
+    public function iAmOnTheActorTermsOfUsePage()
+    {
+        $this->ui->visit('/lpa/terms-of-use');
+        $this->ui->assertPageAddress('/lpa/terms-of-use');
+    }
+
+    /**
+     * @When /^I request to go back to the create account page$/
+     */
+    public function iRequestToGoBackToTheCreateAccountPage()
+    {
+        $this->ui->clickLink('Back');
+    }
+
+    /**
+     * @Then /^I am taken back to the create account page$/
+     */
+    public function iAmTakenBackToTheCreateAccountPage()
+    {
+        $this->ui->assertPageAddress('/create-account');
+    }
+
+    /**
+     * @Given /^I am on the index page$/
+     */
+    public function iAmOnTheIndexPage()
+    {
+        $this->ui->visit('/');
+        $this->ui->assertPageContainsText('Use a lasting power of attorney');
+    }
+
+    /**
+     * @When /^I request to get started with the service$/
+     */
+    public function iRequestToGetStartedWithTheService()
+    {
+        $this->ui->clickLink('Get started');
+    }
+
+    /**
+     * @Then /^I am taken to the get started page$/
+     */
+    public function iAmTakenToTheGetStartedPage()
+    {
+        $this->ui->assertPageAddress('/start');
+        $this->ui->assertPageContainsText('Get started');
+    }
+
+    /**
+     * @When /^I select the option to sign in to my existing account$/
+     */
+    public function iSelectTheOptionToSignInToMyExistingAccount()
+    {
+        $this->ui->clickLink('Sign in to your existing account');
+    }
+
+    /**
+     * @Given /^I am on the get started page$/
+     */
+    public function iAmOnTheGetStartedPage()
+    {
+        $this->ui->visit('/start');
+        $this->ui->assertPageContainsText('Get started');
+    }
+
+    /**
+     * @When /^I request to create an account$/
+     */
+    public function iRequestToCreateAnAccount()
+    {
+        $this->ui->clickLink('Create account');
+    }
+
+    /**
+     * @Then /^I am taken to the create account page$/
+     */
+    public function iAmTakenToTheCreateAccountPage()
+    {
+        $this->ui->assertPageAddress('/create-account');
+        $this->ui->assertPageContainsText('Create an account');
+    }
+
+    /**
+     * @When /^I click the I already have an account link$/
+     */
+    public function iClickTheIAlreadyHaveAnAccountLink()
+    {
+        $this->ui->clickLink('I already have an account');
+    }
+
+    /**
+     * @Then /^I am taken to the login page$/
+     */
+    public function iAmTakenToTheLoginPage()
+    {
+        $this->ui->assertPageAddress('/login');
+        $this->ui->assertPageContainsText('Sign in to your Use a lasting power of attorney account');
+    }
+
+    /**
+     * @Given /^I have added a (.*) LPA$/
+     */
+    public function iHaveAddedALPA($lpaType)
+    {
+        // Dashboard page
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->ui->visit('/lpa/dashboard');
+
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    /**
+     * @When /^I request to give an organisation access for my (.*) LPA$/
+     */
+    public function iRequestToGiveAnOrganisationAccessForMyLPA($lpaType)
+    {
+        $this->lpa->caseSubtype = $lpaType;
+
+        // API call for get LpaById (when give organisation access is clicked)
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => [],
+                    ])));
+
+        $this->ui->clickLink('Give an organisation access');
+    }
+
+    /**
+     * @Then /^I should see relevant (.*) of organisations$/
+     */
+    public function iShouldSeeRelevantOfOrganisations($orgDescription)
+    {
+        $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
+        $this->ui->assertPageContainsText($orgDescription);
+    }
+
+    /**
+     * @Given /^I am on the full lpa page$/
+     */
+    public function iAmOnTheFullLpaPage()
+    {
+        $this->iAmOnTheDashboardPage();
+        $this->iRequestToViewAnLPAWhichStatusIs('Registered');
+        $this->theFullLPAIsDisplayedWithTheCorrect('This LPA is registered');
+    }
+
+    /**
+     * @When /^I click the (.*) to change a donor or attorneys details$/
+     */
+    public function iClickTheToChangeADonorOrAttorneysDetails($link)
+    {
+        $this->ui->assertPageAddress('lpa/view-lpa?lpa=' .$this->userLpaActorToken);
+        $this->ui->clickLink($link);
+    }
+
+    /**
+     * @Then /^I am taken to the change details page$/
+     */
+    public function iAmTakenToTheChangeDetailsPage()
+    {
+        $this->ui->assertPageAddress('lpa/change-details?lpa=' .$this->userLpaActorToken);
+        $this->ui->assertPageContainsText('Let us know if a donor or attorney\'s details change');
     }
 }

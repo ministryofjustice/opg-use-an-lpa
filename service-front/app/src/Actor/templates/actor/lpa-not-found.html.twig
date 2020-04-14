@@ -1,6 +1,6 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}Code expired - {{ parent() }} {% endblock %}
+{% block html_title %}LPA not found - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -15,9 +15,11 @@
 
                     <h1 class="govuk-heading-l">We could not find that lasting power of attorney</h1>
 
-                    <p class="govuk-body">We could not find a lasting power of attorney with the passcode, reference number and date of birth you entered.</p>
+                    <p class="govuk-body">We could not find a lasting power of attorney with the activation key, LPA reference number and date of birth you entered.</p>
 
-                    <p class="govuk-body">If you're sure you entered the right information, please contact us.</p>
+                    <p class="govuk-body">If you're sure you entered the right information, please contact us on 0300 456 0300.</p>
+                    
+                    <p class="govuk-body">Opening hours are Monday to Friday, 9am to 5pm, except Wednesday 10am to 5pm.</p>
 
                     <a href="{{ path('lpa.add') }}" role="button" draggable="false" class="govuk-button govuk-button--start">
                         Try again

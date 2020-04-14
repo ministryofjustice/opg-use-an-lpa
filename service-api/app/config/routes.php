@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use App\Handler\LpasCollectionHandler;
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Application;
-use Zend\Expressive\MiddlewareFactory;
+use Mezzio\Application;
+use Mezzio\MiddlewareFactory;
 
 /**
  * Setup routes with a single request method:
@@ -29,7 +29,7 @@ use Zend\Expressive\MiddlewareFactory;
  * $app->route(
  *     '/contact',
  *     App\Handler\ContactHandler::class,
- *     Zend\Expressive\Router\Route::HTTP_METHOD_ANY,
+ *     Mezzio\Router\Route::HTTP_METHOD_ANY,
  *     'contact'
  * );
  */
@@ -55,6 +55,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->patch('/v1/request-password-reset', App\Handler\RequestPasswordResetHandler::class, 'user.password-reset');
     $app->get('/v1/can-password-reset', App\Handler\CanPasswordResetHandler::class, 'user.can-password-reset');
     $app->patch('/v1/complete-password-reset', App\Handler\CompletePasswordResetHandler::class, 'user.complete-password-reset');
+
+    $app->patch('/v1/change-password', App\Handler\ChangePasswordHandler::class, 'user.change-password');
 
     $app->patch('/v1/auth', App\Handler\AuthHandler::class, 'user.auth');
 };

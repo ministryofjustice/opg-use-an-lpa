@@ -12,11 +12,11 @@ use Prophecy\Argument;
 use Common\Service\Lpa\LpaService;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Helper\UrlHelper;
-use Zend\Expressive\Authentication\UserInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Template\TemplateRendererInterface;
 
 class ViewLpaSummaryHandlerTest extends TestCase
 {

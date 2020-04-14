@@ -6,10 +6,11 @@ namespace Actor\Form;
 
 use Common\Form\AbstractForm;
 use Common\Validator\EmailAddressValidator;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Filter\StringToLower;
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\NotEmpty;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Filter\StringToLower;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Validator\NotEmpty;
+use Laminas\Filter\StringTrim;
 
 class Login extends AbstractForm implements InputFilterProviderInterface
 {
@@ -52,6 +53,10 @@ class Login extends AbstractForm implements InputFilterProviderInterface
                 'filters'    => [
                     [
                         'name' => StringToLower::class,
+                    ],
+                    [
+                        'name' => StringTrim::class,
+
                     ],
                 ],
                 'validators' => [

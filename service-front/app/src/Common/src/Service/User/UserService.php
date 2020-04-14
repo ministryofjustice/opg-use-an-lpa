@@ -9,8 +9,8 @@ use Fig\Http\Message\StatusCodeInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
-use Zend\Expressive\Authentication\UserInterface;
-use Zend\Expressive\Authentication\UserRepositoryInterface;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Authentication\UserRepositoryInterface;
 
 /**
  * Class UserService
@@ -66,13 +66,10 @@ class UserService implements UserRepositoryInterface
             'password' => $password,
         ]);
 
-        $this->logger->info(
-            'Account with Id {id} created using email {email}',
-            [
+        $this->logger->info('Account with Id {id} created using email {email}', [
                 'id'    => $data['Id'],
                 'email' => $email
-            ]
-        );
+        ]);
 
         return $data;
     }
@@ -99,18 +96,16 @@ class UserService implements UserRepositoryInterface
     {
         try {
             $userData = $this->apiClient->httpPatch('/v1/auth', [
-                'email' => $email,
+                'email' => strtolower(trim($email)),
                 'password' => $password,
             ]);
 
             if (!is_null($userData)) {
-                $this->logger->info(
-                    'Authentication successful for account with Id {id}',
+                $this->logger->info('Authentication successful for account with Id {id}',
                     [
                         'id'         => $userData['Id'],
                         'last-login' => $userData['LastLogin']
-                    ]
-                );
+                ]);
 
                 return ($this->userModelFactory)(
                     $userData['Id'],
@@ -245,5 +240,28 @@ class UserService implements UserRepositoryInterface
                 'token' => $token
             ]
         );
+    }
+
+    public function changePassword(string $id, string $password, string $newPassword): void
+    {
+        try {
+            $this->apiClient->httpPatch('/v1/change-password', [
+                'user-id'       => $id,
+                'password'      => $password,
+                'new-password'  => $newPassword
+            ]);
+
+            $this->logger->info(
+                'Password reset for user ID {userId} has been successful', ['userId' => $id]
+            );
+        } catch (ApiException $ex) {
+            $this->logger->notice(
+                'Failed to change password for user ID {userId} with code {code}',
+                [
+                    'userId'    => $id,
+                    'code'      => $ex->getCode()
+                ]
+            );
+        }
     }
 }

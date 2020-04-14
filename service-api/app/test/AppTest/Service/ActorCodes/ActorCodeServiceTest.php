@@ -9,6 +9,7 @@ use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Lpa\LpaService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 
 class ActorCodeServiceTest extends TestCase
 {
@@ -27,11 +28,17 @@ class ActorCodeServiceTest extends TestCase
      */
     private $userLpaActorMapInterfaceProphecy;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $loggerProphecy;
+
     public function setUp()
     {
         $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
         $this->actorCodesInterfaceProphecy = $this->prophesize(Repository\ActorCodesInterface::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(Repository\UserLpaActorMapInterface::class);
+        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
 
     /** @test */
@@ -368,7 +375,8 @@ class ActorCodeServiceTest extends TestCase
         return new ActorCodeService(
             $this->actorCodesInterfaceProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal()
+            $this->lpaServiceProphecy->reveal(),
+            $this->loggerProphecy->reveal()
         );
     }
 

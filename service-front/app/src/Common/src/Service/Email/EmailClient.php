@@ -18,6 +18,7 @@ class EmailClient
     const TEMPLATE_ID_ACCOUNT_ACTIVATION               = 'd897fe13-a0c3-4c50-aa5b-3f0efacda5dc';
     const TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED = '4af9acf0-f2c1-4ecc-8441-0e2173890463';
     const TEMPLATE_ID_PASSWORD_RESET                   = 'd32af4a6-49ad-4338-a2c2-dcb5801a40fc';
+    const TEMPLATE_ID_PASSWORD_CHANGE                  = '75080a89-7b22-4792-bdf6-6636467a7999';
 
     /**
      * @var NotifyClient
@@ -67,5 +68,15 @@ class EmailClient
         $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_PASSWORD_RESET, [
             'password-reset-url' => $passwordResetUrl,
         ]);
+    }
+
+    /**
+     * Send an email to a user to inform them that their password has changed
+     *
+     * @param string $recipient
+     */
+    public function sendPasswordChangedEmail(string $recipient)
+    {
+        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_PASSWORD_CHANGE);
     }
 }

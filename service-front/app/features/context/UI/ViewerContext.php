@@ -317,8 +317,8 @@ class ViewerContext implements Context
     public function iWantToMakeAnAttemptToEnterAnotherShareCode()
     {
         $this->ui->assertPageAddress('/check-code');
-        $this->ui->assertPageContainsText("Try again");
-        $this->ui->pressButton('Try again');
+        $this->ui->assertPageContainsText("Enter another code");
+        $this->ui->clickLink('Enter another code');
     }
 
     /**
@@ -392,5 +392,34 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/enter-code');
         $this->ui->assertPageContainsText('Enter the LPA access code');
+    }
+
+    /**
+     * @When /^I realise the LPA is incorrect$/
+     */
+    public function iRealiseTheLPAIsCorrect()
+    {
+        $this->ui->assertPageAddress('/check-code');
+        $this->ui->assertPageContainsText('Re-enter the code');
+    }
+
+    /**
+     * @Then /^I want to see an option to re-enter code$/
+     */
+    public function iWantToSeeAnOptionToReEnterCode()
+    {
+        $this->ui->clickLink('Re-enter the code');
+        $this->iGiveAValidLPAShareCode();
+    }
+
+    /**
+     * @Then /^I want to see an option to check another LPA$/
+     */
+    public function iWantToSeeAnOptionToCheckAnotherLPA()
+    {
+        $this->ui->assertPageAddress('/view-lpa');
+        $this->ui->assertPageContainsText('I want to check another LPA');
+        $this->ui->clickLink('I want to check another LPA');
+        $this->iGiveAValidLPAShareCode();
     }
 }

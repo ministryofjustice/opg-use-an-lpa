@@ -6,9 +6,9 @@ namespace Common\Form;
 
 use Common\Form\Element\Csrf;
 use Common\Validator\CsrfGuardValidator;
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Form\Exception\InvalidArgumentException;
-use Zend\Form\Form;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Laminas\Form\Exception\InvalidArgumentException;
+use Laminas\Form\Form;
 
 abstract class AbstractForm extends Form
 {
@@ -35,7 +35,7 @@ abstract class AbstractForm extends Form
                     'csrf_options' => [
                         'guard' => $csrfGuard,
                         'messageTemplates' => [
-                            CsrfGuardValidator::NOT_SAME => "As you have not used this service for over 60 minutes, the page has timed out. We've now refreshed the page - please try to sign in again."
+                            CsrfGuardValidator::NOT_SAME => "As you have not used this service for over 20 minutes, the page has timed out. We've now refreshed the page - please try to sign in again."
                         ],
                     ],
                 ]

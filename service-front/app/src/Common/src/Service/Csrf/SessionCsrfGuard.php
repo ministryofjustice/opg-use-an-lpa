@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Common\Service\Csrf;
 
-use Zend\Expressive\Csrf\CsrfGuardInterface;
-use Zend\Expressive\Session\SessionInterface;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Mezzio\Session\SessionInterface;
 
 use function bin2hex;
 use function random_bytes;

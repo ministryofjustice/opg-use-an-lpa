@@ -26,9 +26,8 @@
             {{ include('@actor/partials/lpa-sub-navigation.html.twig') }}
 
             <div class="govuk-grid-row">
+                {{ govuk_form_open(form) }}
                 <div class="govuk-grid-column-two-thirds">
-
-                    {{ govuk_form_open(form) }}
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
@@ -39,16 +38,18 @@
                                 Which organisation do you want to give access to?
                             </h1>
                         </legend>
+                </div>
+                <div class="govuk-grid-column-full">
+                    {% if lpa.caseSubtype|lower == 'hw' %}
+                        <p class="govuk-body">The organisation could be a hospital, care home, or other health care provider.</p>
+                    {% elseif lpa.caseSubtype|lower == 'pfa' %}
+                        <p class="govuk-body">The organisation could be a bank, energy provider, or another business.</p>
+                    {% endif %}
 
-                        {{ govuk_form_element(form.get('org_name'), { 'label': 'For example: HSBC, British Gas', 'attr': { 'class': 'govuk-!-width-one-half' } }) }}
-
-                        <button data-prevent-double-click="true" type="submit" class="govuk-button">
-                            Continue
-                        </button>
-
-                    {{ govuk_form_close() }}
+                    {{ govuk_form_element(form.get('org_name'), { 'label': 'Organisation name', 'hint': 'This is for your reference only', 'attr' : {'class': 'govuk-!-width-one-half'} }) }}
 
                 </div>
+                {{ govuk_form_close() }}
             </div>
         </main>
     </div>

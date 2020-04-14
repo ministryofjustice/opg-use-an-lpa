@@ -14,23 +14,30 @@ Clone the following two repositories into the same base directory:
 
 All commands assume a working directory of `opg-use-my-lpa`.
 
+In all cases commands are run with a docker-compose command prefix
+
+```bash
+# This should replace all instances of <DOCKER_COMPOSE> in commands given below
+docker-compose -f docker-compose.yml \
+-f ../opg-sirius-api-gateway/docker-compose.yml \
+-f ../opg-sirius-api-gateway/docker-compose-integration.yml
+```
+
 To bring up the local environment
 
 ```bash
-docker-compose -f docker-compose.yml \
--f ../opg-sirius-api-gateway/docker-compose.yml \
--f ../opg-sirius-api-gateway/docker-compose-integration.yml up
-
+<DOCKER_COMPOSE> up
 ```
 
 If you plan on developing the application you should also enable development mode.
 
 ```bash
-docker-compose run front-composer composer development-enable
-docker-compose exec viewer-app rm -f /tmp/config-cache.php
+<DOCKER_COMPOSE> run front-composer composer development-enable
+<DOCKER_COMPOSE> exec viewer-app rm -f /tmp/config-cache.php
+<DOCKER_COMPOSE> exec actor-app rm -f /tmp/config-cache.php
 
-docker-compose run api-composer composer development-enable
-docker-compose exec api-app rm -f /tmp/config-cache.php
+<DOCKER_COMPOSE> run api-composer composer development-enable
+<DOCKER_COMPOSE> exec api-app rm -f /tmp/config-cache.php
 ```
 
 The Viewer service will be available via http://localhost:9001
@@ -44,10 +51,9 @@ The API service will be available via http://localhost:9003
 To run the unit tests (the command for viewer-app and actor-app will run exactly the same suite of unit tests in the front service)
 
 ```bash
-docker-compose run viewer-app /app/vendor/bin/phpunit
-docker-compose run actor-app /app/vendor/bin/phpunit
-
-docker-compose run api-app /app/vendor/bin/phpunit
+<DOCKER_COMPOSE> run viewer-app /app/vendor/bin/phpunit
+<DOCKER_COMPOSE> run actor-app /app/vendor/bin/phpunit
+<DOCKER_COMPOSE> run api-app /app/vendor/bin/phpunit
 ```
 
 ### Functional (Behave) test

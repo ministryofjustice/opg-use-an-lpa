@@ -27,7 +27,7 @@ use DateTime;
  * @property string email
  * @property string resetToken
  * @property string activationToken
- * @property string password
+ * @property string userPassword
  * @property string userEmail
  * @property string userPasswordResetToken
  * @property string lpa
@@ -134,7 +134,7 @@ class AccountContext extends BaseIntegrationContext
     public function iAmCurrentlySignedIn()
     {
         $this->userEmail = 'test@test.com';
-        $this->password = 'pa33w0rd';
+        $this->userPassword = 'pa33w0rd';
         $this->userIdentity = '123';
 
         $this->apiFixtures->patch('/v1/auth')
@@ -144,7 +144,7 @@ class AccountContext extends BaseIntegrationContext
                 'LastLogin' => null
             ])));
 
-        $user = $this->userService->authenticate($this->userEmail, $this->password);
+        $user = $this->userService->authenticate($this->userEmail, $this->userPassword);
 
         assertEquals($user->getIdentity(), $this->userIdentity);
     }
@@ -355,7 +355,7 @@ class AccountContext extends BaseIntegrationContext
     public function iCreateAnAccount()
     {
         $this->activationToken = 'activate1234567890';
-        $this->password = 'n3wPassWord';
+        $this->userPassword = 'n3wPassWord';
 
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
@@ -371,16 +371,16 @@ class AccountContext extends BaseIntegrationContext
                 )
             );
 
-        $userData = $this->userService->create($this->userEmail, $this->password);
+        $userData = $this->userService->create($this->userEmail, $this->userPassword);
 
         assertInternalType('string', $userData['activationToken']);
         assertEquals($this->activationToken, $userData['activationToken']);
     }
 
     /**
-     * @When /^I request to add an LPA with valid details$/
+     * @When /^I request to add an LPA with valid details using (.*)$/
      */
-    public function iRequestToAddAnLPAWithValidDetails()
+    public function iRequestToAddAnLPAWithValidDetailsUsing(string $code)
     {
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
@@ -392,7 +392,7 @@ class AccountContext extends BaseIntegrationContext
                 )
             );
 
-        $lpa = $this->lpaService->getLpaByPasscode($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
+        $lpa = $this->lpaService->getLpaByPasscode($this->userIdentity, $code, $this->referenceNo, $this->userDob);
 
         assertEquals($lpa->getUId(), $this->lpa['uId']);
     }
@@ -588,9 +588,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I have not provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
+     * @When /^I have provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
      */
-    public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1, $email2, $password1, $password2, $terms)
+    public function iHaveProvidedRequiredInformationForAccountCreationSuchAs($email1, $email2, $password1, $password2, $terms)
     {
         // Not needed for this context
     }
@@ -618,7 +618,7 @@ class AccountContext extends BaseIntegrationContext
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
         $this->iAmOnTheAddAnLPAPage();
-        $this->iRequestToAddAnLPAWithValidDetails();
+        $this->iRequestToAddAnLPAWithValidDetailsUsing($this->passcode);
         $this->theCorrectLPAIsFoundAndICanConfirmToAddIt();
         $this->theLPAIsSuccessfullyAdded();
     }
@@ -926,7 +926,7 @@ class AccountContext extends BaseIntegrationContext
                 'LastLogin' => '2020-01-21T15:58:47+00:00'
             ])));
 
-        $user = $this->userService->authenticate($this->userEmail, $this->password);
+        $user = $this->userService->authenticate($this->userEmail, $this->userPassword);
 
         assertEquals($user->getIdentity(), $this->userIdentity);
     }
@@ -1343,5 +1343,83 @@ class AccountContext extends BaseIntegrationContext
     public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes()
     {
         $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
+    }
+
+    /**
+     * @When /^I view my user details$/
+     */
+    public function iViewMyUserDetails()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I ask to change my password$/
+     */
+    public function iAskToChangeMyPassword()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I provide my current password$/
+     */
+    public function iProvideMyCurrentPassword()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I provide my new password$/
+     */
+    public function iProvideMyNewPassword()
+    {
+        $expectedPassword = 'S0meS0rt0fPassw0rd';
+
+        $this->apiFixtures->patch('/v1/change-password')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(function(RequestInterface $request, array $options) use ($expectedPassword) {
+                $params = json_decode($request->getBody()->getContents(), true);
+
+                assertInternalType('array', $params);
+                assertEquals($this->userIdentity, $params['user-id']);
+                assertEquals($this->userPassword, $params['password']);
+                assertEquals($expectedPassword, $params['new-password']);
+            });
+    }
+
+    /**
+     * @Then /^I am told my password was changed$/
+     */
+    public function iAmToldMyPasswordWasChanged()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @Given /^I cannot enter my current password$/
+     */
+    public function iCannotEnterMyCurrentPassword()
+    {
+        $expectedPassword = 'S0meS0rt0fPassw0rd';
+
+        $this->apiFixtures->patch('/v1/change-password')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])))
+            ->inspectRequest(function(RequestInterface $request, array $options) use ($expectedPassword) {
+                $params = json_decode($request->getBody()->getContents(), true);
+
+                assertInternalType('array', $params);
+                assertEquals($this->userIdentity, $params['user-id']);
+                assertNotEquals($this->userPassword, $params['password']);
+                assertEquals($expectedPassword, $params['new-password']);
+            });
+    }
+
+    /**
+     * @Then /^The user can request a password reset and get an email$/
+     */
+    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    {
+//        throw new PendingException();
     }
 }

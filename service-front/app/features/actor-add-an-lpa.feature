@@ -10,11 +10,17 @@ Feature: Add an LPA
     And I have been given access to use an LPA via credentials
 
   @integration @ui
-  Scenario: The user can add an LPA to their account
+  Scenario Outline: The user can add an LPA to their account
     Given I am on the add an LPA page
-    When I request to add an LPA with valid details
+    When I request to add an LPA with valid details using <passcode>
     Then The correct LPA is found and I can confirm to add it
     And The LPA is successfully added
+
+    Examples:
+      | passcode       |
+      | xyuphwqrechv   |
+      | XYUPHWQRECHV   |
+      | XYUP-hwqr-EcHv |
 
   @integration @ui
   Scenario: The user cannot add an LPA to their account as it does not exist

@@ -172,4 +172,28 @@ class ViewerContext implements Context
         assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
         assertEquals('Cancelled', $lpaData['lpa']['status']);
     }
+
+    /**
+     * @When /^I realise the LPA is incorrect$/
+     */
+    public function iRealiseTheLPAIsCorrect()
+    {
+        // Not used in this context
+    }
+
+    /**
+     * @Then /^I want to see an option to re-enter code$/
+     */
+    public function iWantToSeeAnOptionToReEnterCode()
+    {
+        // Not used in this context
+    }
+
+    /**
+     * @Then /^I want to see an option to check another LPA$/
+     */
+    public function iWantToSeeAnOptionToCheckAnotherLPA()
+    {
+        // Not used in this context
+    }
 }

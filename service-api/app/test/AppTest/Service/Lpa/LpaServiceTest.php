@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\Service\Lpa\LpaDataCleanseDecoratorFactory;
+use Laminas\Validator\Date;
 use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use DateTime;
 use App\DataAccess\Repository;
@@ -36,10 +37,9 @@ class LpaServiceTest extends TestCase
     private $userLpaActorMapInterfaceProphecy;
 
     /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
+     * @var LoggerInterface
      */
-    private $lpaFilterFactoryProphecy;
-
+    private $loggerProphecy;
 
     public function setUp()
     {
@@ -47,7 +47,7 @@ class LpaServiceTest extends TestCase
         $this->viewerCodeActivityInterfaceProphecy = $this->prophesize(Repository\ViewerCodeActivityInterface::class);
         $this->lpasInterfaceProphecy = $this->prophesize(Repository\LpasInterface::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(Repository\UserLpaActorMapInterface::class);
-        $this->lpaFilterFactoryProphecy = $this->prophesize(LpaDataCleanseDecoratorFactory::class);
+        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
 
     //-------------------------------------------------------------------------
@@ -60,7 +60,7 @@ class LpaServiceTest extends TestCase
             $this->viewerCodeActivityInterfaceProphecy->reveal(),
             $this->lpasInterfaceProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
-            $this->lpaFilterFactoryProphecy->reveal()
+            $this->loggerProphecy->reveal()
         );
     }
 
@@ -68,21 +68,41 @@ class LpaServiceTest extends TestCase
     public function can_get_by_id()
     {
         $testUid = '700012349874';
-        $mockLpaResponse = $this->prophesize(Repository\Response\LpaInterface::class)->reveal();
+        $lpaResponse = new Lpa([
+            'attorneys' => [
+                ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
+                ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
+                ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
+                ['id' => 5, 'systemStatus' => true],
+            ]
+        ], new DateTime());
+        $expectedLpaResponse = new Lpa([
+            'attorneys' => [
+                ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
+                ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
+            ],
+            'original_attorneys' => [
+                ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
+                ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
+                ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
+                ['id' => 5, 'systemStatus' => true],
+            ],
+        ], $lpaResponse->getLookupTime());
 
         //---
 
         $service = $this->getLpaService();
 
-        $this->lpasInterfaceProphecy->get($testUid)->willReturn($mockLpaResponse);
-        $this->lpaFilterFactoryProphecy->__invoke($mockLpaResponse)->willReturn($mockLpaResponse);
+        $this->lpasInterfaceProphecy->get($testUid)->willReturn($lpaResponse);
 
         $result = $service->getByUid($testUid);
 
         //---
 
-        // We simply expect the $mockLpaResponse to be returned, unchanged.
-        $this->assertEquals($mockLpaResponse, $result);
+        $this->assertEquals($expectedLpaResponse, $result);
     }
 
     //-------------------------------------------------------------------------
@@ -119,8 +139,6 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $this->lpaFilterFactoryProphecy->__invoke($t->Lpa)->willReturn($t->Lpa);
-
         $result = $service->getByUserLpaActorToken($t->Token, $t->SiriusUid);
 
         $this->assertIsArray($result);
@@ -142,8 +160,6 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $this->lpaFilterFactoryProphecy->__invoke($t->Lpa)->willReturn($t->Lpa);
-
         $result = $service->getByUserLpaActorToken($t->Token, 'different-user-id');
 
         $this->assertNull($result);
@@ -158,8 +174,6 @@ class LpaServiceTest extends TestCase
         $this->lpasInterfaceProphecy->get($t->SiriusUid)->willReturn(null);
 
         $service = $this->getLpaService();
-
-        $this->lpaFilterFactoryProphecy->__invoke(null)->willReturn(null);
 
         $result = $service->getByUserLpaActorToken($t->Token, $t->SiriusUid);
 
@@ -290,8 +304,6 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $this->lpaFilterFactoryProphecy->__invoke($t->Lpa)->willReturn($t->Lpa);
-
         //---
 
         // This should NOT be called when logging = false.
@@ -320,8 +332,6 @@ class LpaServiceTest extends TestCase
         $t = $this->init_valid_get_by_viewer_account();
 
         $service = $this->getLpaService();
-
-        $this->lpaFilterFactoryProphecy->__invoke($t->Lpa)->willReturn($t->Lpa);
 
         //---
 
@@ -394,8 +404,6 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $this->lpaFilterFactoryProphecy->__invoke($t->Lpa)->willReturn($t->Lpa);
-
         //---
 
         $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn([
@@ -408,7 +416,7 @@ class LpaServiceTest extends TestCase
         //---
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("'Expires' filed missing or invalid.");
+        $this->expectExceptionMessage("'Expires' field missing or invalid.");
 
         $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, false);
     }
@@ -419,8 +427,6 @@ class LpaServiceTest extends TestCase
         $t = $this->init_valid_get_by_viewer_account();
 
         $service = $this->getLpaService();
-
-        $this->lpaFilterFactoryProphecy->__invoke($t->Lpa)->willReturn($t->Lpa);
 
         //---
 
@@ -468,11 +474,11 @@ class LpaServiceTest extends TestCase
             'donor' => [
                 'id' => 1,
             ],
-            'attorneys' => [
-                ['id' => 1],
-                ['id' => 3],
-                ['id' => 7]
-            ]
+            'original_attorneys' => [
+                ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                ['id' => 3, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                ['id' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]
+            ],
         ];
 
         $service = $this->getLpaService();
@@ -481,8 +487,54 @@ class LpaServiceTest extends TestCase
 
         $this->assertEquals([
             'type' => 'primary-attorney',
-            'details' => ['id' => 3],
+            'details' => ['id' => 3, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
         ], $result);
     }
 
+    /** @test */
+    public function can_not_find_actor_who_is_a_ghost_attorney()
+    {
+        $lpa = [
+            'donor' => [
+                'id' => 1,
+            ],
+            'original_attorneys' => [
+                ['id' => 2, 'systemStatus' => true],
+                ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
+                ['id' => 7, 'surname' => 'B', 'systemStatus' => true]
+            ],
+        ];
+
+        $service = $this->getLpaService();
+
+        $result = $service->lookupActorInLpa($lpa, 2);
+        $this->assertNull($result);
+
+        $result = $service->lookupActorInLpa($lpa, 3);
+        $this->assertNotNull($result);
+
+        $result = $service->lookupActorInLpa($lpa, 7);
+        $this->assertNotNull($result);
+    }
+
+    /** @test */
+    public function can_not_find_actor_who_is_an_inactive_attorney()
+    {
+        $lpa = [
+            'donor' => [
+                'id' => 1,
+            ],
+            'original_attorneys' => [
+                ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                ['id' => 3, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
+                ['id' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]
+            ],
+        ];
+
+        $service = $this->getLpaService();
+
+        $result = $service->lookupActorInLpa($lpa, 3);
+
+        $this->assertNull($result);
+    }
 }

@@ -2,12 +2,11 @@
 
 namespace App\Service\Lpa;
 
-use Amp\CancelledException;
-use GuzzleHttp\Promise\CancellationException;
-use RuntimeException;
 use App\DataAccess\Repository;
 use App\Exception\GoneException;
 use DateTime;
+use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 /**
  * Class LpaService
@@ -36,23 +35,23 @@ class LpaService
     private $userLpaActorMapRepository;
 
     /**
-     * @var LpaDataCleanseDecoratorFactory
+     * @var LoggerInterface
      */
-    private $lpaFilterFactory;
-
+    private $logger;
+    
     public function __construct(
         Repository\ViewerCodesInterface $viewerCodesRepository,
         Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
         Repository\LpasInterface $lpaRepository,
         Repository\UserLpaActorMapInterface $userLpaActorMapRepository,
-        LpaDataCleanseDecoratorFactory $lpaFilterFactory
+        LoggerInterface $logger
     )
     {
         $this->viewerCodesRepository = $viewerCodesRepository;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
         $this->lpaRepository = $lpaRepository;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
-        $this->lpaFilterFactory = $lpaFilterFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -63,7 +62,21 @@ class LpaService
      */
     public function getByUid(string $uid): ?Repository\Response\LpaInterface
     {
-        return ($this->lpaFilterFactory)($this->lpaRepository->get($uid));
+        $lpa = $this->lpaRepository->get($uid);
+        if ($lpa === null) {
+            return null;
+        }
+
+        $lpaData = $lpa->getData();
+
+        if ($lpaData['attorneys'] !== null) {
+            $lpaData['original_attorneys'] = $lpaData['attorneys'];
+            $lpaData['attorneys'] = array_values(array_filter($lpaData['attorneys'], function ($attorney) {
+                return self::attorneyStatus($attorney) === self::ACTIVE_ATTORNEY;
+            }));
+        }
+
+        return new Repository\Response\Lpa($lpaData, $lpa->getLookupTime());
     }
 
     /**
@@ -92,11 +105,15 @@ class LpaService
 
         //---
 
+        $lpaData = $lpa->getData();
+        $actor = $this->lookupActorInLpa($lpaData, $map['ActorId']);
+        unset($lpaData['original_attorneys']);
+
         return [
             'user-lpa-actor-token' => $map['Id'],
             'date' => $lpa->getLookupTime()->format('c'),
-            'actor' => $actor = $this->lookupActorInLpa($lpa->getData(), $map['ActorId']),
-            'lpa' => $lpa->getData(),
+            'actor' => $actor,
+            'lpa' => $lpaData,
         ];
     }
 
@@ -125,12 +142,15 @@ class LpaService
         // Map the results...
         foreach ($lpaActorMaps as $item) {
             $lpa = $lpas[$item['SiriusUid']];
+            $lpaData = $lpa->getData();
+            $actor = $this->lookupActorInLpa($lpaData, $item['ActorId']);
+            unset($lpaData['original_attorneys']);
 
             $result[$item['Id']] = [
                 'user-lpa-actor-token' => $item['Id'],
                 'date' => $lpa->getLookupTime()->format('c'),
-                'actor' => $actor = $this->lookupActorInLpa($lpa->getData(), $item['ActorId']),
-                'lpa' => $lpa->getData(),
+                'actor' => $actor,
+                'lpa' => $lpaData,
             ];
         }
 
@@ -151,6 +171,7 @@ class LpaService
         $viewerCodeData = $this->viewerCodesRepository->get($viewerCode);
 
         if (is_null($viewerCodeData)) {
+            $this->logger->info('The code entered by user to view LPA is not found in the database.');
             return null;
         }
 
@@ -174,10 +195,12 @@ class LpaService
         // at this point as we only want to acknowledge if a code has expired iff donor surname matched.
 
         if (!isset($viewerCodeData['Expires']) || !($viewerCodeData['Expires'] instanceof DateTime)) {
-            throw new RuntimeException("'Expires' filed missing or invalid.");
+            $this->logger->info('The code {code} entered by user to view LPA does not have an expiry date set.', ['code' => $viewerCode]);
+            throw new RuntimeException("'Expires' field missing or invalid.");
         }
 
         if (new DateTime() > $viewerCodeData['Expires']) {
+            $this->logger->info('The code {code} entered by user to view LPA has expired.', ['code' => $viewerCode]);
             throw new GoneException('Share code expired');
         }
 
@@ -189,22 +212,21 @@ class LpaService
             $this->viewerCodeActivityRepository->recordSuccessfulLookupActivity($viewerCodeData['ViewerCode']);
         }
 
+        $lpaData = $lpa->getData();
+        unset($lpaData['original_attorneys']);
+
+        $lpaData = [
+            'date'         => $lpa->getLookupTime()->format('c'),
+            'expires'      => $viewerCodeData['Expires']->format('c'),
+            'organisation' => $viewerCodeData['Organisation'],
+            'lpa'          => $lpaData,
+        ];
+
         if (isset($viewerCodeData['Cancelled'])) {
-            return [
-                'date' => $lpa->getLookupTime()->format('c'),
-                'expires' => $viewerCodeData['Expires']->format('c'),
-                'organisation' => $viewerCodeData['Organisation'],
-                'cancelled' => $viewerCodeData['Cancelled']->format('c'),
-                'lpa' => $lpa->getData(),
-            ];
+            $lpaData['cancelled'] = $viewerCodeData['Cancelled']->format('c');
         }
 
-        return [
-            'date' => $lpa->getLookupTime()->format('c'),
-            'expires' => $viewerCodeData['Expires']->format('c'),
-            'organisation' => $viewerCodeData['Organisation'],
-            'lpa' => $lpa->getData(),
-        ];
+        return $lpaData;
     }
 
 
@@ -223,12 +245,30 @@ class LpaService
         $actorType = null;
 
         // Determine if the actor is a primary attorney
-        if (isset($lpa['attorneys']) && is_array($lpa['attorneys'])) {
+        if (isset($lpa['original_attorneys']) && is_array($lpa['original_attorneys'])) {
+            foreach ($lpa['original_attorneys'] as $attorney) {
+                if ($attorney['id'] == $actorId) {
+                    switch (self::attorneyStatus($attorney)) {
+                    case self::ACTIVE_ATTORNEY:
+                        $actor = $attorney;
+                        $actorType = 'primary-attorney';
+                        break;
+
+                    case self::GHOST_ATTORNEY:
+                        $this->logger->info('Looked up attorney {id} but is a ghost', ['id' => $attorney['id']]);
+                        break;
+
+                    case self::INACTIVE_ATTORNEY:
+                        $this->logger->info('Looked up attorney {id} but is inactive', ['id' => $attorney['id']]);
+                        break;
+                    }
+                }
+            }
+        } elseif (isset($lpa['attorneys']) && is_array($lpa['attorneys'])) {
             foreach ($lpa['attorneys'] as $attorney) {
                 if ($attorney['id'] == $actorId) {
                     $actor = $attorney;
                     $actorType = 'primary-attorney';
-                    break;
                 }
             }
         }
@@ -252,5 +292,21 @@ class LpaService
             'type' => $actorType,
             'details' => $actor,
         ];
+    }
+
+    protected const ACTIVE_ATTORNEY = 0;
+    protected const GHOST_ATTORNEY = 1;
+    protected const INACTIVE_ATTORNEY = 2;
+
+    protected function attorneyStatus(array $attorney): int {
+        if (empty($attorney['firstname']) && empty($attorney['surname'])) {
+            return self::GHOST_ATTORNEY;
+        }
+
+        if (!$attorney['systemStatus']) {
+            return self::INACTIVE_ATTORNEY;
+        }
+
+        return self::ACTIVE_ATTORNEY;
     }
 }
