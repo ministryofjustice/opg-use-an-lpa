@@ -258,4 +258,35 @@ class ViewerCodesTest extends TestCase
 
         $repo->add('test-val', 'test-val', 'test-val', new DateTime, 'test-val');
     }
+
+    /** @test */
+    public function can_cancel_viewer_code()
+    {
+        $testCode    = 'test-code';
+        $currentDate = new DateTime('today');
+
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function(array $data) use (
+            $testCode,
+            $currentDate
+        ) {
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+
+            $this->assertEquals(['S'=>$testCode], $data['Key']['ViewerCode']);
+
+            $this->assertArrayHasKey('UpdateExpression', $data);
+            $this->assertEquals('SET Cancelled=:c', $data['UpdateExpression']);
+
+            $this->assertArrayHasKey(':c', $data['ExpressionAttributeValues']);
+            $this->assertEquals(['S' => $currentDate->format('c')], $data['ExpressionAttributeValues'][':c']);
+
+            return true;
+        }))->shouldBeCalled();
+
+        $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $result = $repo->cancel($testCode, $currentDate);
+
+        $this->assertTrue($result);
+    }
 }
