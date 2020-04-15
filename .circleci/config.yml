@@ -656,10 +656,6 @@ orbs:
             description: Terraform workspace name
             type: string
             default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
-          container_version:
-            description: Container version
-            type: string
-            default: ${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}
         steps:
           - checkout
           - run:
