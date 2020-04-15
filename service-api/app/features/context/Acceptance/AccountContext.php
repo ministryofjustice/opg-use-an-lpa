@@ -62,10 +62,28 @@ class AccountContext implements Context
     {
         $this->userAccountId = '123456789';
         $this->userAccountEmail = 'test@example.com';
+        $this->userAccountPassword = 'pa33w0rd';
+    }
+
+    /**
+     * @Given /^I access the login form$/
+     */
+    public function iAccessTheLoginForm()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @When /^I enter correct credentials$/
+     */
+    public function iEnterCorrectCredentials()
+    {
+        // Not needed in this context
     }
 
     /**
      * @Given I am currently signed in
+     * @Then /^I am signed in$/
      */
     public function iAmCurrentlySignedIn()
     {
@@ -102,6 +120,97 @@ class AccountContext implements Context
 
         $response = $this->getResponseAsJson();
         assertEquals($this->userAccountId, $response['Id']);
+    }
+
+    /**
+     * @When /^I enter incorrect login password$/
+     */
+    public function iEnterIncorrectLoginPassword()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @When /^I enter incorrect login email$/
+     */
+    public function iEnterIncorrectLoginEmail()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @Then /^my account cannot be found$/
+     */
+    public function myAccountCannotBeFound()
+    {
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiPatch('/v1/auth', [
+            'email'    => 'incorrect@email.com',
+            'password' => $this->userAccountPassword
+        ], []);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
+    }
+
+    /**
+     * @Then /^I am told my credentials are incorrect$/
+     */
+    public function iAmToldMyCredentialsAreIncorrect()
+    {
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'       => $this->userAccountId,
+                    'Email'    => $this->userAccountEmail,
+                    'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                    'LastLogin'=> null
+                ])
+            ]
+        ]));
+
+        $this->apiPatch('/v1/auth', [
+            'email'    => $this->userAccountEmail,
+            'password' => '1nc0rr3ctPa33w0rd'
+        ], []);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_FORBIDDEN);
+    }
+
+    /**
+     * @Given /^I have not activated my account$/
+     */
+    public function iHaveNotActivatedMyAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I am told my account has not been activated$/
+     */
+    public function iAmToldMyAccountHasNotBeenActivated()
+    {
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'              => $this->userAccountId,
+                    'Email'           => $this->userAccountEmail,
+                    'Password'        => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                    'LastLogin'       => null,
+                    'ActivationToken' => 'a12b3c4d5e'
+                ])
+            ]
+        ]));
+
+        $this->apiPatch('/v1/auth', [
+            'email'    => $this->userAccountEmail,
+            'password' => $this->userAccountPassword
+        ], []);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_UNAUTHORIZED);
     }
 
     /**
@@ -1750,4 +1859,5 @@ class AccountContext implements Context
     {
         // Not needed in this context
     }
+
 }
