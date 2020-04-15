@@ -107,9 +107,13 @@ return [
             'type' => 'keyed',
             'storage' => [
                 'adapter' => [
-                    'name'    => 'apcu',
+                    'name'    => 'redis',
                     'options' => [
                         'ttl' => 60,
+                        'server' => [
+                            'persistent_id' => 'brute-force-cache',
+                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis'
+                        ]
                     ],
                 ],
             ],

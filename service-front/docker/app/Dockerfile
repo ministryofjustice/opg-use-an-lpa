@@ -9,7 +9,9 @@ FROM php:7-fpm-alpine
 RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
         && pecl install xdebug \
         && pecl install apcu \
+        && pecl install redis \
         && docker-php-ext-enable apcu \
+        && docker-php-ext-enable redis \
         && pecl clear-cache \
         && apk del .build-dependencies
 
