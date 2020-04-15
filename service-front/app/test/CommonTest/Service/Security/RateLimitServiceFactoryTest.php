@@ -145,4 +145,50 @@ class RateLimitServiceFactoryTest extends TestCase
         $this->assertInstanceOf(RateLimiterInterface::class, $rateLimiter);
     }
 
+    /** @test */
+    public function it_creates_multiple_configured_rate_limiters()
+    {
+        $containerProphecy = $this->prophesize(ContainerInterface::class);
+        $containerProphecy
+            ->get('config')
+            ->shouldBeCalled()
+            ->willReturn(
+                [
+                    'ratelimits' => [
+                        'a-rate-limiter' => [
+                            'type' => 'keyed',
+                            'storage' => [
+                                'adapter' => 'memory'
+                            ]
+                        ],
+                        'a-second-limiter' => [
+                            'type' => 'keyed',
+                            'storage' => [
+                                'adapter' => 'memory'
+                            ]
+                        ],
+                        'a-third-limiter' => [
+                            'type' => 'keyed',
+                            'storage' => [
+                                'adapter' => 'memory'
+                            ]
+                        ]
+                    ]
+                ]
+            );
+        $containerProphecy
+            ->get(LoggerInterface::class)
+            ->willReturn($this->prophesize(LoggerInterface::class)->reveal());
+
+        $factory = new RateLimitServiceFactory($containerProphecy->reveal());
+
+        $limiters = $factory->all();
+
+        $this->assertIsArray($limiters);
+        $this->assertCount(3, $limiters);
+        foreach($limiters as $limiter) {
+            $this->assertInstanceOf(RateLimiterInterface::class, $limiter);
+        }
+    }
+
 }
