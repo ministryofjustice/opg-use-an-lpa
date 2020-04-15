@@ -14,6 +14,10 @@ use RuntimeException;
  */
 class LpaService
 {
+    private const ACTIVE_ATTORNEY = 0;
+    private const GHOST_ATTORNEY = 1;
+    private const INACTIVE_ATTORNEY = 2;
+
     /**
      * @var Repository\ViewerCodesInterface
      */
@@ -294,11 +298,7 @@ class LpaService
         ];
     }
 
-    protected const ACTIVE_ATTORNEY = 0;
-    protected const GHOST_ATTORNEY = 1;
-    protected const INACTIVE_ATTORNEY = 2;
-
-    protected function attorneyStatus(array $attorney): int {
+    private function attorneyStatus(array $attorney): int {
         if (empty($attorney['firstname']) && empty($attorney['surname'])) {
             return self::GHOST_ATTORNEY;
         }
