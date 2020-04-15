@@ -52,6 +52,25 @@ resource "aws_security_group_rule" "viewer_ecs_service_egress" {
   security_group_id = aws_security_group.viewer_ecs_service.id
 }
 
+// Brute force Elasticache
+resource "aws_security_group_rule" "viewer_ecs_service_elasticache_egress" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 6379
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.viewer_ecs_service.id
+}
+
+resource "aws_security_group_rule" "viewer_ecs_service_elasticache_ingress" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 6379
+  protocol          = "tcp"
+  security_group_id = data.aws_security_group.brute_force_cache_service.id
+  source_security_group_id = aws_security_group.viewer_ecs_service.id
+}
+
 //--------------------------------------
 // Viewer ECS Service Task level config
 
@@ -198,6 +217,10 @@ EOF
     {
       "name": "LOGGING_LEVEL",
       "value": "${local.account.logging_level}"
+    }
+    {
+      "name": "BRUTE_FORCE_CACHE_URL",
+      "value": "${data.aws_elasticache_cluster.brute_force_cache.cache_nodes.0.address}"
     }]
   }
 
