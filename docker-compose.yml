@@ -77,6 +77,8 @@ services:
       PHP_IDE_CONFIG: serverName=viewer-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
       SESSION_EXPIRES: 20
+    depends_on:
+      - redis
 
   # ---------------------------
   # Actor Front
@@ -209,6 +211,12 @@ services:
       DYNAMODB_TABLE_VIEWER_CODES: "ViewerCodes"
       DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
       AWS_ENDPOINT_DYNAMODB: localstack:4569
+
+  # ---------------------------
+  # Cache service
+
+  redis:
+    image: redis:5
 
   # ---------------------------
   # Local Development
