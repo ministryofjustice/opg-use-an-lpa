@@ -133,7 +133,7 @@ class ActorCodeServiceTest extends TestCase
             new Repository\Response\Lpa($mockLpa, null)
         )->shouldBeCalled();
 
-        $this->lpaServiceProphecy->lookupActorInLpa(Argument::type('array'), Argument::type('int'))
+        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('int'))
             ->willReturn($mockActor)
             ->shouldBeCalled();
 
@@ -170,7 +170,7 @@ class ActorCodeServiceTest extends TestCase
             new Repository\Response\Lpa([], null)
         )->shouldBeCalled();
 
-        $this->lpaServiceProphecy->lookupActorInLpa(Argument::type('array'), Argument::type('int'))
+        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('int'))
             ->willReturn(
                 [
                     'details' => ['dob' => $testDob],
@@ -229,7 +229,7 @@ class ActorCodeServiceTest extends TestCase
             )
         )->shouldBeCalled();
 
-        $this->lpaServiceProphecy->lookupActorInLpa(Argument::type('array'), Argument::type('int'))
+        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('int'))
             ->willReturn(
                 [
                     'details' => ['dob' => 'different-dob'],
@@ -270,7 +270,7 @@ class ActorCodeServiceTest extends TestCase
             )
         )->shouldBeCalled();
 
-        $this->lpaServiceProphecy->lookupActorInLpa(Argument::type('array'), Argument::type('int'))->willReturn(
+        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('int'))->willReturn(
             [
                 'details' => ['dob' => $testDob],
             ]
@@ -308,7 +308,7 @@ class ActorCodeServiceTest extends TestCase
             $mockLpa
         )->shouldBeCalled();
 
-        $this->lpaServiceProphecy->lookupActorInLpa(Argument::type('array'), Argument::type('int'))
+        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('int'))
             ->willReturn(null)
             ->shouldBeCalled();
 
@@ -411,7 +411,7 @@ class ActorCodeServiceTest extends TestCase
             new Repository\Response\Lpa($mockLpa, null)
         )->shouldBeCalled();
 
-        $this->lpaServiceProphecy->lookupActorInLpa(Argument::type('array'), Argument::type('int'))
+        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('int'))
             ->willReturn($mockActor)
             ->shouldBeCalled();
     }
