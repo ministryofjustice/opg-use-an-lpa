@@ -509,7 +509,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->lookupActorInLpa($lpa, 1);
+        $result = $service->lookupActiveActorInLpa($lpa, 1);
 
         $this->assertEquals([
             'type' => 'donor',
@@ -533,7 +533,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->lookupActorInLpa($lpa, 3);
+        $result = $service->lookupActiveActorInLpa($lpa, 3);
 
         $this->assertEquals([
             'type' => 'primary-attorney',
@@ -557,13 +557,13 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->lookupActorInLpa($lpa, 2);
+        $result = $service->lookupActiveActorInLpa($lpa, 2);
         $this->assertNull($result);
 
-        $result = $service->lookupActorInLpa($lpa, 3);
+        $result = $service->lookupActiveActorInLpa($lpa, 3);
         $this->assertNotNull($result);
 
-        $result = $service->lookupActorInLpa($lpa, 7);
+        $result = $service->lookupActiveActorInLpa($lpa, 7);
         $this->assertNotNull($result);
     }
 
@@ -583,7 +583,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->lookupActorInLpa($lpa, 3);
+        $result = $service->lookupActiveActorInLpa($lpa, 3);
 
         $this->assertNull($result);
     }

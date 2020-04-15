@@ -78,7 +78,7 @@ class ActorCodeService
             return null;
         }
 
-        $actor = $this->lpaService->lookupActorInLpa($lpa->getData(), $details['ActorLpaId']);
+        $actor = $this->lpaService->lookupActiveActorInLpa($lpa->getData(), $details['ActorLpaId']);
 
         if (is_null($actor)) {
             $this->logger->error('Validating code could not find actor {ActorLpaId} in LPA for SiriusUid {SiriusUid}',

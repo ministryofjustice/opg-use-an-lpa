@@ -102,7 +102,7 @@ class LpaService
         }
 
         $lpaData = $lpa->getData();
-        $actor = $this->lookupActorInLpa($lpaData, $map['ActorId']);
+        $actor = $this->lookupActiveActorInLpa($lpaData, $map['ActorId']);
         unset($lpaData['original_attorneys']);
 
         if (is_null($actor)) {
@@ -143,7 +143,7 @@ class LpaService
         foreach ($lpaActorMaps as $item) {
             $lpa = $lpas[$item['SiriusUid']];
             $lpaData = $lpa->getData();
-            $actor = $this->lookupActorInLpa($lpaData, $item['ActorId']);
+            $actor = $this->lookupActiveActorInLpa($lpaData, $item['ActorId']);
             unset($lpaData['original_attorneys']);
 
             $result[$item['Id']] = [
@@ -239,7 +239,7 @@ class LpaService
      * @param int $actorId
      * @return array|null
      */
-    public function lookupActorInLpa(array $lpa, int $actorId): ?array
+    public function lookupActiveActorInLpa(array $lpa, int $actorId): ?array
     {
         $actor = null;
         $actorType = null;
