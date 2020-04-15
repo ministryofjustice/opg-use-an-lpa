@@ -47,7 +47,9 @@
                 {% for lpaData in lpas %}
                     {% set lpa = lpaData['lpa'] %}
                     {% set actorToken = lpaData['user-lpa-actor-token'] %}
+                    {% set actorActive = lpaData['actorActive'] %}
                     {% set activeCodeCount = lpaData['activeCodeCount'] %}
+                    {% set caseSubtype = lpa.caseSubtype == 'pfa' ? 'Property and finance' : 'Health and welfare' %}
                     {{ include('@actor/partials/lpa-details.html.twig') }}
                 {% endfor %}
 
