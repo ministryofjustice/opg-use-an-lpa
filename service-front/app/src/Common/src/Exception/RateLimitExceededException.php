@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Common\Exception;
 
 use Exception;
+use Fig\Http\Message\StatusCodeInterface;
 
 class RateLimitExceededException extends Exception
 {
-    const RATE_LIMIT_EXCEEDED_CODE = 429;
-
     /**
      * RateLimitExceededException constructor.
      *
@@ -17,7 +16,7 @@ class RateLimitExceededException extends Exception
      * @param int $code
      * @param Exception|null $previous
      */
-    public function __construct(string $message, int $code = self::RATE_LIMIT_EXCEEDED_CODE, Exception $previous = null)
+    public function __construct(string $message, int $code = StatusCodeInterface::STATUS_TOO_MANY_REQUESTS, Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
