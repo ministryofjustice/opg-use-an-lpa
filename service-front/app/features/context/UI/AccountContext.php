@@ -2288,13 +2288,10 @@ class AccountContext implements Context
 
         $this->ui->assertPageAddress('/lpa/dashboard');
 
-        try {
-            $this->ui->clickLink('Give an organisation access');
-        } catch (ElementNotFoundException $e) {
-            return;
+        $links = $this->ui->getSession()->getPage()->findAll('css', 'a[href^="/lpa/code-make"]');
+        if (count($links) > 0) {
+            throw new AssertionFailedError('Expected not to find link: /lpa/code-make');
         }
-
-        throw new AssertionFailedError('Expected not to click link: Give an organisation access');
     }
 
     /**
@@ -2320,13 +2317,10 @@ class AccountContext implements Context
 
         $this->ui->assertPageAddress('/lpa/dashboard');
 
-        try {
-            $this->ui->clickLink('Check access codes');
-        } catch (ElementNotFoundException $e) {
-            return;
+        $links = $this->ui->getSession()->getPage()->findAll('css', 'a[href^="/lpa/access-codes"]');
+        if (count($links) > 0) {
+            throw new AssertionFailedError('Expected not to find link: /lpa/access-codes');
         }
-
-        throw new AssertionFailedError('Expected not to click link: Check access codes');
     }
 
     /**
@@ -2352,13 +2346,10 @@ class AccountContext implements Context
 
         $this->ui->assertPageAddress('/lpa/dashboard');
 
-        try {
-            $this->ui->clickLink('View LPA summary');
-        } catch (ElementNotFoundException $e) {
-            return;
+        $links = $this->ui->getSession()->getPage()->findAll('css', 'a[href^="/lpa/view-lpa"]');
+        if (count($links) > 0) {
+            throw new AssertionFailedError('Expected not to find link: /lpa/view-lpa');
         }
-
-        throw new AssertionFailedError('Expected not to click link: View LPA summary');
     }
 
     /**
