@@ -68,7 +68,7 @@ return [
             'type' => 'keyed',
             'storage' => [
                 'adapter' => [
-                    'name'    => 'apcu',
+                    'name'    => 'memory',
                     'options' => [
                         'ttl' => 60,
                         'server' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
