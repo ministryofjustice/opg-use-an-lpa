@@ -34,6 +34,8 @@
     ],
     "require": {
         "php": "^7.4",
+        "ext-apcu": "*",
+        "ext-redis": "*",
         "alphagov/notifications-php-client": "^3.0",
         "aws/aws-sdk-php": "^3.91",
         "dflydev/fig-cookies": "^2.0",
