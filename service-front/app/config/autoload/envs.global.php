@@ -113,6 +113,9 @@ return [
                         'server' => [
                             'persistent_id' => 'brute-force-cache',
                             'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis'
+                        ],
+                        'lib_options' => [
+                            \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP
                         ]
                     ],
                 ],

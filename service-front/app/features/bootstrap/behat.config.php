@@ -62,4 +62,24 @@ return [
             'alias' => 'alias/viewer-sessions-cmk-alias',
         ],
     ],
+
+    'ratelimits' => [
+        'viewer_code_failure' => [
+            'type' => 'keyed',
+            'storage' => [
+                'adapter' => [
+                    'name'    => 'apcu',
+                    'options' => [
+                        'ttl' => 60,
+                        'server' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
+                        'lib_options' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey()
+                    ],
+                ],
+            ],
+            'options' => [
+                'interval' => 60,
+                'requests_per_interval' => 4
+            ]
+        ]
+    ]
 ];
