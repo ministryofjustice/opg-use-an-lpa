@@ -407,7 +407,7 @@ orbs:
           - run:
               name: Push container
               command: |
-                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 export $IMAGE_TAG
 
                 docker tag front-app:latest << parameters.container_repo_url >>:latest
