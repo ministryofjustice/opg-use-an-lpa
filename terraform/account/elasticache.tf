@@ -1,17 +1,10 @@
 resource "aws_elasticache_subnet_group" "brute_force_cache_subnet" {
   name       = "brute-force-cache-subnet"
-  subnet_ids = [aws_subnet.private[0].id]
-
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "private"
-    },
-  )
+  subnet_ids = aws_subnet.private[*].id
 }
 
 resource "aws_elasticache_cluster" "brute_force_cache" {
-  cluster_id           = "brute_force_cache"
+  cluster_id           = "brute-force-cache"
   engine               = "redis"
   node_type            = "cache.t2.micro"
   num_cache_nodes      = 1
