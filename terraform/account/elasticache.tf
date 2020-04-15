@@ -1,3 +1,17 @@
+resource "aws_security_group" "brute_force_cache_service" {
+  name_prefix = "brute-force-cache-service"
+  vpc_id      = aws_default_vpc.default.id
+  tags        = local.default_tags
+}
+
+resource "aws_security_group_rule" "brute_force_cache_service_ingress" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 6379
+  protocol          = "tcp"
+  security_group_id = aws_security_group.brute_force_cache_service.id
+}
+
 resource "aws_elasticache_subnet_group" "private_subnets" {
   name       = "private-subnets"
   subnet_ids = aws_subnet.private[*].id
@@ -12,6 +26,7 @@ resource "aws_elasticache_cluster" "brute_force_cache" {
   engine_version       = "5.0.6"
 
   subnet_group_name = aws_elasticache_subnet_group.private_subnets.name
+  security_group_ids = [aws_security_group.brute_force_cache_service.id]
 
   tags = local.default_tags
 }
