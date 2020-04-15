@@ -14,6 +14,4 @@ workspace_name=$(name_workspace $1)
           exit 1
     else
           echo $workspace_name
-    fi
-
-echo $(name_workspace $1)
+  fi
