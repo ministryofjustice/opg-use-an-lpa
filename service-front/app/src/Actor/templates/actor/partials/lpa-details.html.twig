@@ -6,17 +6,31 @@
 
     <div class="govuk-summary-list__row govuk-!-margin-bottom-0 govuk-!-margin-top-4">
         <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-width-one-third">
-            <span class="govuk-heading-m govuk-!-margin-bottom-0">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' : 'Health and welfare' }}</span>
+            {% if actorActive %}
+                <span class="govuk-heading-m govuk-!-margin-bottom-0">{{ caseSubtype }}</span>
+            {% else %}
+                <span class="govuk-heading-m govuk-!-margin-bottom-0 lpa-secondary-text-colour">{{ caseSubtype }}</span>
+            {% endif %}
         </dt>
         <dd class="govuk-summary-list__value govuk-!-padding-top-4 govuk-!-padding-bottom-4 govuk-!-margin-bottom-0">
-            <p class="govuk-!-margin-top-0">
-                <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">Give an organisation access</a><br>
-                <a href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}">Check access codes</a><br>
-                <a href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">View LPA summary</a>
-            </p>
+            {% if actorActive %}
+                <p class="govuk-!-margin-top-0">
+                    <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">Give an organisation access</a><br>
+                    <a href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}">Check access codes</a><br>
+                    <a href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">View LPA summary</a>
+                </p>
+            {% else %}
+                <p class="govuk-!-margin-top-0 lpa-secondary-text-colour">
+                    Give an organisation access<br>
+                    Check access codes<br>
+                    View LPA summary
+                </p>
+            {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions govuk-!-width-one-third">
-            {% if activeCodeCount >= 1 %}
+            {% if actorActive == false %}
+                <span class="moj-badge moj-badge--red">Access revoked</span>
+            {% elseif activeCodeCount >= 1 %}
                 <span class="moj-badge moj-badge--green">
                     {% if activeCodeCount == 1 %}
                         {{ activeCodeCount }} active code
