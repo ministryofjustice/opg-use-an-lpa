@@ -1,5 +1,5 @@
-resource "aws_elasticache_subnet_group" "brute_force_cache_subnet" {
-  name       = "brute-force-cache-subnet"
+resource "aws_elasticache_subnet_group" "private_subnets" {
+  name       = "private-subnets"
   subnet_ids = aws_subnet.private[*].id
 }
 
@@ -11,7 +11,7 @@ resource "aws_elasticache_cluster" "brute_force_cache" {
   parameter_group_name = "default.redis5.0"
   engine_version       = "5.0.6"
 
-  subnet_group_name = aws_elasticache_subnet_group.brute_force_cache_subnet.name
+  subnet_group_name = aws_elasticache_subnet_group.private_subnets.name
 
   tags = local.default_tags
 }
