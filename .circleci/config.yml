@@ -407,8 +407,8 @@ orbs:
           - run:
               name: Push container
               command: |
-                export IMAGE_TAG=$(~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-                export $IMAGE_TAG
+                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
 
                 docker tag front-app:latest << parameters.container_repo_url >>:latest
                 docker tag front-app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
@@ -447,7 +447,7 @@ orbs:
               name: Push container
               command: |
                 export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-                export $IMAGE_TAG
+                echo $IMAGE_TAG
 
                 docker tag front-web:latest << parameters.container_repo_url >>:latest
                 docker tag front-web:latest << parameters.container_repo_url >>:${IMAGE_TAG}
@@ -678,7 +678,9 @@ orbs:
                 terraform init -lock-timeout=300s
                 export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                terraform validate -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
+                export IMAGE_TAG=$(~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
+                terraform validate -var container_version=${IMAGE_TAG}
 
       apply_shared_terraform:
         #
@@ -718,12 +720,12 @@ orbs:
           - run:
               name: Apply Environment Terraform
               command: |
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                echo $SHORT_HASH
                 cd ~/project/terraform/environment
                 terraform init -lock-timeout=300s
                 export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
+                export IMAGE_TAG=$(~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
                 terraform apply -lock-timeout=300s --auto-approve -var container_version=${IMAGE_TAG}
                 mv cluster_config.json /tmp/
           - persist_to_workspace:
