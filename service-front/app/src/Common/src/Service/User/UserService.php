@@ -266,16 +266,16 @@ class UserService implements UserRepositoryInterface
         }
     }
 
-    public function deleteAccount(string $accountId, string $userEmail) : void
+    public function deleteAccount(string $accountId) : void
     {
         try {
-            $this->apiClient->httpDelete('/v1/delete-account/' . $accountId);
+            $user = $this->apiClient->httpDelete('/v1/delete-account/' . $accountId);
 
             $this->logger->info(
                 'Successfully deleted account with id {id} and email hash {email}',
                 [
                     'id'    => $accountId,
-                    'email' => new Email($userEmail),
+                    'email' => new Email($user['Email']),
                 ]
             );
 
@@ -284,7 +284,7 @@ class UserService implements UserRepositoryInterface
                 'Failed to delete account for userId {userId} with email hash {email} - status code {code}',
                 [
                     'userId' => $accountId,
-                    'email'  => new Email($userEmail),
+                    'email'  => new Email($user['Email']),
                     'code'   => $ex->getCode()
                 ]
             );

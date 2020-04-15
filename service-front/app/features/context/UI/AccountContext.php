@@ -2282,11 +2282,16 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([
+                        'Id'        => $this->userId,
+                        'Email'     => $this->userEmail,
+                        'Password'  => $this->userPassword,
+                        'LastLogin' => null
+                    ])));
 
         $this->ui->clickLink('Yes, continue deleting my account');
     }
-  
+
     /**
      * @Then /^My account is deleted$/
      */
@@ -2339,7 +2344,7 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/login');
         $this->ui->assertPageContainsText('Email and password combination not recognised. Please try signing in again below or create an account');
     }
-  
+
     /**
      * @Given /^an attorney can be removed from acting on a particular LPA$/
      */

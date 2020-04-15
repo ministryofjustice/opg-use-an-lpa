@@ -1616,17 +1616,21 @@ class AccountContext extends BaseIntegrationContext
         ]));
 
         // ActorUsers::delete
-        $this->awsFixtures->append(new Result([]));
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Email'    => $this->userAccountEmail,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                'LastLogin'=> null
+            ])
+        ]));
 
         $userService = $this->container->get(UserService::class);
 
-        $userService->deleteUserAccount($this->userAccountId);
+        $deletedUser = $userService->deleteUserAccount($this->userAccountId);
 
-        $cmd = $this->awsFixtures->getLastCommand();
-
-        assertEquals('actor-users', $cmd['TableName']);
-        assertEquals($this->userAccountId, $cmd['Key']['Id']['S']);
-        assertEquals('DeleteItem', $cmd->getName());
+        assertEquals($this->userAccountId, $deletedUser['Id']);
+        assertEquals($this->userAccountEmail, $deletedUser['Email']);
     }
 
     /**

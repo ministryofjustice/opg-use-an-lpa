@@ -1456,15 +1456,20 @@ class AccountContext extends BaseIntegrationContext
 
         // API call for deleting a user account
         $this->apiFixtures->delete('/v1/delete-account/' . $this->userIdentity)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'        => $this->userIdentity,
+                'Email'     => $this->userEmail,
+                'Password'  => $this->userPassword,
+                'LastLogin' => null
+            ])))
             ->inspectRequest(function(RequestInterface $request) use ($userId) {
                 $uri = $request->getUri()->getPath();
 
                 assertEquals($uri, '/v1/delete-account/123');
             });
 
-
-        $this->userService->deleteAccount($this->userIdentity, $this->userEmail);
+        $delete = $this->userService->deleteAccount($this->userIdentity);
+        assertNull($delete);
     }
 
     /**

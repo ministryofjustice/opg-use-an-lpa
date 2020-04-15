@@ -41,8 +41,8 @@ class CompleteDeleteAccountHandler implements RequestHandlerInterface
             throw new BadRequestException('Account Id must be provided for account deletion');
         }
 
-        $this->userService->deleteUserAccount($accountId);
+        $user = $this->userService->deleteUserAccount($accountId);
 
-        return new JsonResponse([]);
+        return new JsonResponse($user);
     }
 }

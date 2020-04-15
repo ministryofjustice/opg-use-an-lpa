@@ -66,7 +66,7 @@ class DeleteAccountHandler extends AbstractHandler implements SessionAware, User
     {
         $user = $this->getUser($request);
 
-        $this->userService->deleteAccount($user->getIdentity(), $user->getDetails()['Email']);
+        $this->userService->deleteAccount($user->getIdentity());
 
         $session = $this->getSession($request, 'session');
         $session->unset(UserInterface::class);

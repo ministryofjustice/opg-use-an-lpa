@@ -262,9 +262,9 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function delete(string $accountId) :void
+    public function delete(string $accountId) :array
     {
-        $this->client->deleteItem([
+        $user = $this->client->deleteItem([
             'TableName' => $this->actorUsersTable,
             'Key' => [
                 'Id' => [
@@ -276,7 +276,10 @@ class ActorUsers implements ActorUsersInterface
                 ':id' => [
                     'S' => $accountId
                 ],
-            ]
+            ],
+            'ReturnValues' => 'ALL_OLD'
         ]);
+
+        return $this->getData($user);
     }
 }

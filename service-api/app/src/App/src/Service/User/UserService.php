@@ -262,8 +262,9 @@ class UserService
 
     /**
      * @param string $accountId
+     * @return array
      */
-    public function deleteUserAccount(string $accountId) : void
+    public function deleteUserAccount(string $accountId) : array
     {
         $user = $this->usersRepository->get($accountId);
 
@@ -275,6 +276,6 @@ class UserService
             throw new NotFoundException('User not found for account with Id ' . $accountId);
         }
 
-        $this->usersRepository->delete($accountId);
+        return $this->usersRepository->delete($accountId);
     }
 }

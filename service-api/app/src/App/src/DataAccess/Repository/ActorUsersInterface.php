@@ -103,6 +103,7 @@ interface ActorUsersInterface
      *
      * @param string $accountId
      * @throws NotFoundException
+     * @return array The deleted user details
      */
-    public function delete(string $accountId): void;
+    public function delete(string $accountId): array;
 }
