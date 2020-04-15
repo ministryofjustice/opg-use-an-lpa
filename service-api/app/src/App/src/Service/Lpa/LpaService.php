@@ -109,6 +109,7 @@ class LpaService
         $actor = $this->lookupActiveActorInLpa($lpaData, $map['ActorId']);
         unset($lpaData['original_attorneys']);
 
+        // If an active attorney is not found then we should not return an lpa
         if (is_null($actor)) {
             return null;
         }
