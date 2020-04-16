@@ -388,7 +388,12 @@ class UserServiceTest extends TestCase
 
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpDelete('/v1/delete-account/' . $id)
-            ->willReturn([]);
+            ->willReturn([
+                'Id'       => $id,
+                'Email'    => $email,
+                'Password' => password_hash('pa33w0rd123', PASSWORD_DEFAULT),
+                'LastLogin'=> null
+            ]);
 
         $userFactoryCallable = function($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
@@ -398,7 +403,7 @@ class UserServiceTest extends TestCase
         $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         // deleteAccount is a void method, so if successful, $result should be null
-        $result = $service->deleteAccount($id, $email);
+        $result = $service->deleteAccount($id);
 
         $this->assertNull($result);
     }
@@ -425,6 +430,6 @@ class UserServiceTest extends TestCase
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $this->expectException(RuntimeException::class);
 
-        $service->deleteAccount($id, $email);
+        $service->deleteAccount($id);
     }
 }
