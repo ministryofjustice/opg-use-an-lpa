@@ -263,6 +263,8 @@ class UserService implements UserRepositoryInterface
                     'code'      => $ex->getCode()
                 ]
             );
+
+            throw $ex;
         }
     }
 
