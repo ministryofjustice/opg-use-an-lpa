@@ -98,10 +98,6 @@ return [
         'redirect' => '/login',
     ],
 
-    'security' => [
-        'uid_hash_salt' => getenv('IDENTIFY_HASH_SALT') ?: null,
-    ],
-
     'ratelimits' => [
         'viewer_code_failure' => [
             'type' => 'keyed',

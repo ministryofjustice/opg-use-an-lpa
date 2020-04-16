@@ -21,11 +21,11 @@ class UserIdentificationServiceTest extends TestCase
     {
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
-        $service = new UserIdentificationService('unique-salt');
+        $service = new UserIdentificationService();
 
         $id = $service->id($requestProphecy->reveal());
 
-        $this->assertEquals('a84da0c3de11c7c328e54575bc78de9947ead0a1e1b6154c1043bc24b715c5b6', $id);
+        $this->assertEquals('da97c8ccc40114128dcaeff8be27d9481c116eb01cbf9007c0e1a02d2590a197', $id);
     }
     
     /**
@@ -42,7 +42,7 @@ class UserIdentificationServiceTest extends TestCase
             $requestProphecy->getHeader($header)->willReturn('header-value');
         }
 
-        $service = new UserIdentificationService('unique-salt');
+        $service = new UserIdentificationService();
 
         $id = $service->id($requestProphecy->reveal());
 
@@ -54,7 +54,7 @@ class UserIdentificationServiceTest extends TestCase
         return [
             [ # the realistic bare minimum unique thing to track
                 ['x-forwarded-for'],
-                'd483dd46a77a4af929768603fbe558fe2551355accbc23fcad00ca9459ff1f2e'
+                'f9bcf7fa2cc63932adedba2696f4c8b6c86404c420ea201310dcd13b73710bde'
             ],
             [ # the complete set
                 [
@@ -64,7 +64,7 @@ class UserIdentificationServiceTest extends TestCase
                     'user-agent',
                     'x-forwarded-for'
                 ],
-                '7602cb507e99785a96b6028c8426603d4052f19f5c19de8d081dad5495a9a206'
+                'a3b74c076c52c08495a7c37135db24becdeff0bcd88a3b40e0b3279d7349ef66'
             ],
             [ # not a complete set
                 [
@@ -72,7 +72,7 @@ class UserIdentificationServiceTest extends TestCase
                     'user-agent',
                     'x-forwarded-for'
                 ],
-                'fa73c09e905dfdd94c5fbe955f60dec7f2ce156686d6b5ee9ebbb7d5c2ca45eb'
+                'be4e45e3a7274376b3e1f9fdc9e96c7af8eb9cbcfd397a30266ac0ab0ec9fa54'
             ],
             [ # only use specified headers
                 [
@@ -81,23 +81,8 @@ class UserIdentificationServiceTest extends TestCase
                     'not-a-real-header',
                     'x-forwarded-for'
                 ],
-                'fa73c09e905dfdd94c5fbe955f60dec7f2ce156686d6b5ee9ebbb7d5c2ca45eb'
+                'be4e45e3a7274376b3e1f9fdc9e96c7af8eb9cbcfd397a30266ac0ab0ec9fa54'
             ],
         ];
-    }
-
-    /** @test */
-    public function the_hashing_salt_is_used_in_the_hash()
-    {
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-
-        $serviceOne = new UserIdentificationService('unique-salt');
-        $idOne = $serviceOne->id($requestProphecy->reveal());
-
-        $serviceTwo = new UserIdentificationService('second-unique-salt');
-        $idTwo = $serviceTwo->id($requestProphecy->reveal());
-
-        $this->assertEquals('a84da0c3de11c7c328e54575bc78de9947ead0a1e1b6154c1043bc24b715c5b6', $idOne);
-        $this->assertNotEquals($idOne, $idTwo);
     }
 }

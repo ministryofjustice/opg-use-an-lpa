@@ -9,21 +9,6 @@ use function hash;
 class UserIdentificationService
 {
     /**
-     * @var string
-     */
-    private $hashSalt;
-
-    /**
-     * UserIdentificationService constructor.
-     *
-     * @param string $hashSalt A salt to add to the components that make up the hash
-     */
-    public function __construct(string $hashSalt)
-    {
-        $this->hashSalt = $hashSalt;
-    }
-
-    /**
      * Builds a unique userId that can be used to identify users for security tracking.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
@@ -47,6 +32,6 @@ class UserIdentificationService
                     : $header;
         }
 
-        return hash('sha256', $this->hashSalt . implode('', $headersToHash));
+        return hash('sha256', implode('', $headersToHash));
     }
 }

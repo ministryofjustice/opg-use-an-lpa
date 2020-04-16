@@ -63,7 +63,6 @@ class ConfigProvider
                 Service\Pdf\PdfService::class => Service\Pdf\PdfServiceFactory::class,
                 Service\Session\EncryptedCookiePersistence::class => Service\Session\EncryptedCookiePersistenceFactory::class,
                 Service\Session\KeyManager\KmsManager::class => Service\Session\KeyManager\KmsManagerFactory::class,
-                Service\Security\UserIdentificationService::class => Service\Security\UserIdentificationServiceFactory::class,
 
                 Service\Email\EmailClient::class => Service\Email\EmailClientFactory::class,
 
