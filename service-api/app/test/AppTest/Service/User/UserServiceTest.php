@@ -359,29 +359,31 @@ class UserServiceTest extends TestCase
     public function will_delete_a_user_account()
     {
         $id = '12345-1234-1234-1234-12345';
-        $email = 'a@b.com';
+
+        $userData = [
+            'Id'        => $id,
+            'Email'     => 'a@b.com',
+            'LastLogin' => null,
+            'Password'  => self::PASS_HASH
+        ];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy
             ->get($id)
-            ->willReturn([
-                'Id'        => $id,
-                'Email'     => $email,
-                'LastLogin' => null,
-                'Password'  => self::PASS_HASH
-            ])
+            ->willReturn($userData)
             ->shouldBeCalled();
 
         $repoProphecy
             ->delete($id)
+            ->willReturn($userData)
             ->shouldBeCalled();
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $result = $us->deleteUserAccount($id);
 
-        $this->assertNull($result);
+        $this->assertEquals($userData, $result);
     }
 }

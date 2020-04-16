@@ -703,6 +703,8 @@ class ActorUsersTest extends TestCase
     public function will_delete_a_users_account()
     {
         $id = '12345-1234-1234-1234-12345';
+        $email = 'a@b.com';
+        $password = 'H@shedP@55word';
 
         $this->dynamoDbClientProphecy->deleteItem(Argument::that(function(array $data) use ($id) {
             $this->assertIsArray($data);
@@ -711,11 +713,30 @@ class ActorUsersTest extends TestCase
             $this->assertStringContainsString($id, serialize($data));
 
             return true;
-        }))->shouldBeCalled();
+        }))->willReturn($this->createAWSResult([
+            'Item' => [
+                'Id' => [
+                    'S' => $id,
+                ],
+                'Email' => [
+                    'S' => $email,
+                ],
+                'Password' => [
+                    'S' => $password,
+                ],
+                'LastLogin' => [
+                    'S' => null
+                ],
+            ]
+        ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
 
-        $actorRepo->delete($id);
+        $deletedUser = $actorRepo->delete($id);
+
+        $this->assertEquals($id, $deletedUser['Id']);
+        $this->assertEquals($email, $deletedUser['Email']);
+        $this->assertEquals($password, $deletedUser['Password']);
     }
 
     /** @test */
@@ -736,6 +757,6 @@ class ActorUsersTest extends TestCase
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
 
         $this->expectException(NotFoundException::class);
-        $result = $actorRepo->delete($id);
+        $actorRepo->delete($id);
     }
 }

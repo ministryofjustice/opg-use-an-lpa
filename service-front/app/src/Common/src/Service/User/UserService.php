@@ -280,12 +280,10 @@ class UserService implements UserRepositoryInterface
             );
 
         } catch (ApiException $ex) {
-
             $this->logger->notice(
-                'Failed to delete account for userId {userId} with email hash {email} - status code {code}',
+                'Failed to delete account for userId {userId} - status code {code}',
                 [
                     'userId' => $accountId,
-                    'email'  => new Email($user['Email']),
                     'code'   => $ex->getCode()
                 ]
             );
