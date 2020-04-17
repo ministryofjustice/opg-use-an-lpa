@@ -648,7 +648,7 @@ class AccountContext extends BaseIntegrationContext
                             'user-lpa-actor-token' => $this->actorLpaToken,
                             'date' => 'date',
                             'lpa' => $this->lpa,
-                            'actor' => []
+                            'actor' => $this->lpaData['actor']
                         ]
                     )));
     }
@@ -683,7 +683,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         // API call to make code
@@ -710,7 +710,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
     }
 
@@ -754,7 +754,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         // API call to make code
@@ -871,10 +871,10 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
-        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+        $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
         // API call for getShareCodes in CheckAccessCodesHandler
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
@@ -981,7 +981,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
@@ -1077,7 +1077,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         // API call to make code
@@ -1133,7 +1133,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         // API call to make code
@@ -1312,7 +1312,7 @@ class AccountContext extends BaseIntegrationContext
                         'user-lpa-actor-token' => $this->actorLpaToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         // API call to make code
@@ -1397,9 +1397,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I cannot enter my current password$/
+     * @When /^I provided incorrect current password$/
      */
-    public function iCannotEnterMyCurrentPassword()
+    public function iProvidedIncorrectCurrentPassword()
     {
         $expectedPassword = 'S0meS0rt0fPassw0rd';
 
@@ -1416,10 +1416,10 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^The user can request a password reset and get an email$/
+     * @Then /^I am told my current password is incorrect$/
      */
-    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    public function iAmToldMyCurrentPasswordIsIncorrect()
     {
-//        throw new PendingException();
+        // Not needed in this context
     }
 }

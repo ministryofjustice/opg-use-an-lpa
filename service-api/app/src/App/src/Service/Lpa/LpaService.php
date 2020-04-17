@@ -14,6 +14,10 @@ use RuntimeException;
  */
 class LpaService
 {
+    private const ACTIVE_ATTORNEY = 0;
+    private const GHOST_ATTORNEY = 1;
+    private const INACTIVE_ATTORNEY = 2;
+
     /**
      * @var Repository\ViewerCodesInterface
      */
@@ -95,19 +99,20 @@ class LpaService
             return null;
         }
 
-        //---
-
         $lpa = $this->getByUid($map['SiriusUid']);
 
         if (is_null($lpa)) {
             return null;
         }
 
-        //---
-
         $lpaData = $lpa->getData();
-        $actor = $this->lookupActorInLpa($lpaData, $map['ActorId']);
+        $actor = $this->lookupActiveActorInLpa($lpaData, $map['ActorId']);
         unset($lpaData['original_attorneys']);
+
+        // If an active attorney is not found then we should not return an lpa
+        if (is_null($actor)) {
+            return null;
+        }
 
         return [
             'user-lpa-actor-token' => $map['Id'],
@@ -143,7 +148,7 @@ class LpaService
         foreach ($lpaActorMaps as $item) {
             $lpa = $lpas[$item['SiriusUid']];
             $lpaData = $lpa->getData();
-            $actor = $this->lookupActorInLpa($lpaData, $item['ActorId']);
+            $actor = $this->lookupActiveActorInLpa($lpaData, $item['ActorId']);
             unset($lpaData['original_attorneys']);
 
             $result[$item['Id']] = [
@@ -239,7 +244,7 @@ class LpaService
      * @param int $actorId
      * @return array|null
      */
-    public function lookupActorInLpa(array $lpa, int $actorId): ?array
+    public function lookupActiveActorInLpa(array $lpa, int $actorId): ?array
     {
         $actor = null;
         $actorType = null;
@@ -294,11 +299,7 @@ class LpaService
         ];
     }
 
-    protected const ACTIVE_ATTORNEY = 0;
-    protected const GHOST_ATTORNEY = 1;
-    protected const INACTIVE_ATTORNEY = 2;
-
-    protected function attorneyStatus(array $attorney): int {
+    private function attorneyStatus(array $attorney): int {
         if (empty($attorney['firstname']) && empty($attorney['surname'])) {
             return self::GHOST_ATTORNEY;
         }

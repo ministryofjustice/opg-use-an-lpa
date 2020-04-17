@@ -1832,7 +1832,6 @@ class AccountContext implements Context
         $failedPassword = 'S0meS0rt0fPassw0rd';
         $newPassword = 'Successful-Raid-on-the-Cooki3s!';
 
-        // ActorUsers::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->userAccountId,
@@ -1840,7 +1839,6 @@ class AccountContext implements Context
             ])
         ]));
 
-        // ActorUsers::resetPassword
         $this->awsFixtures->append(new Result([]));
 
         $this->apiPatch('/v1/change-password', [
@@ -1853,9 +1851,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^The user can request a password reset and get an email$/
+     * @Then /^I am told my current password is incorrect$/
      */
-    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    public function iAmToldMyCurrentPasswordIsIncorrect()
     {
         // Not needed in this context
     }
