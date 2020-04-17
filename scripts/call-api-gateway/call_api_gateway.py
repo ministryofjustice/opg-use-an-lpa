@@ -13,9 +13,8 @@ class APIGatewayCaller:
     aws_iam_session = ''
     aws_auth = ''
 
-    def __init__(self):
-        self.aws_account_id = os.getenv('AWS_ACCOUNT_ID')
-        self.api_gateway_url = os.getenv('API_GATEWAY_URL')
+    def __init__(self, target_production):
+        self.choose_target_gateway(target_production)
         self.aws_iam_role = os.getenv('AWS_IAM_ROLE')
         self.set_iam_role_session()
         self.aws_auth = AWS4Auth(
@@ -25,19 +24,20 @@ class APIGatewayCaller:
             'execute-api',
             session_token=self.aws_iam_session['Credentials']['SessionToken'])
 
-    def iterate_over_files(self):
-      # TODO take in path instead of using an explicit file name
-        with open("uid_list") as file:
-            for line in file:
-                uid = line.rstrip()
-                self.call_api_gateway(uid)
+    def choose_target_gateway(self, target_production):
+        if target_production:
+            self.aws_account_id = '690083044361'
+            self.api_gateway_url = 'https://api.sirius.opg.digital/v1/use-an-lpa/lpas/'
+        else:
+            self.aws_account_id = '367815980639'
+            self.api_gateway_url = 'https://api.dev.sirius.opg.digital/v1/use-an-lpa/lpas/'
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
             role_arn = 'arn:aws:iam::{}:role/ci'.format(self.aws_account_id)
         else:
-            role_arn = 'arn:aws:iam::{0}:role/{1}'.format(
-                self.aws_account_id, self.aws_iam_role)
+            role_arn = 'arn:aws:iam::{0}:role/operator'.format(
+                self.aws_account_id)
 
         sts = boto3.client(
             'sts',
@@ -66,12 +66,12 @@ def main():
 
     parser.add_argument("lpa_id", type=str,
                         help="LPA ID to look up in API Gateway")
+    parser.add_argument('--production', dest='target_production', action='store_const',
+                        const=True, default=False,
+                        help='target the production sirius api gateway')
 
     args = parser.parse_args()
-    work = APIGatewayCaller()
-    # TODO: Add flag for processing file of lpa ids, and another for the path to the file
-    # TODO: Set if statement for flag to get either a single item or a list from a file for
-    # work.iterate_over_files(args.path_to_list_file)
+    work = APIGatewayCaller(args.target_production)
     work.call_api_gateway(args.lpa_id)
 
 
