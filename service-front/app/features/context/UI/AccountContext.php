@@ -95,6 +95,15 @@ class AccountContext implements Context
     }
 
     /**
+     * @Given /^I am the donor$/
+     */
+    public function iAmTheDonor()
+    {
+        $this->lpaData['actor']['type'] = 'donor';
+        unset($this->lpaData['actor']['details']['systemStatus']);
+    }
+
+    /**
      * @Given /^I am inactive against the LPA on my account$/
      */
     public function iAmInactiveAgainstTheLpaOnMyAccount()
