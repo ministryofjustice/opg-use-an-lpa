@@ -71,7 +71,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     ], 'your-details');
 
     $app->route('/change-password', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangePasswordHandler::class
     ], ['GET','POST'], 'change-password');
 
@@ -115,6 +115,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/lpa/terms-of-use', [
         Actor\Handler\ActorTermsOfUseHandler::class
     ], 'lpa.terms-of-use');
+    $app->get('/lpa/removed', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\LpaRemovedHandler::class
+        ], 'lpa.removed');
 };
 
 switch (getenv('CONTEXT')){
