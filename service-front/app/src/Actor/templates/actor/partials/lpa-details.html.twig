@@ -45,7 +45,7 @@
 {%  if not actorActive %}
     <div class="lpa-inactive-notice" >
         <p class="govuk-body govuk-!-padding-2 govuk-!-margin-left-2 govuk-!-margin-bottom-0">You no longer have access to this LPA.
-            <!-- <a class="govuk-!-margin-left-3" href="#"> Why is this?</a>  added after -->
+            <a class="govuk-!-margin-left-3" href="{{ path('lpa.removed') }}"> Why is this?</a>
         </p>
     </div>
 {%  endif %}
