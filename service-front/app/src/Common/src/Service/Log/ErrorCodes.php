@@ -17,11 +17,11 @@ class ErrorCodes
     /**
      * A share code has been attempted and not found
      */
-    public const SHARE_CODE_NOT_FOUND = 'SHRC_N_F';
+    public const SHARE_CODE_NOT_FOUND = 'SHARE_CODE_NOT_FOUND';
 
     /**
      * An incoming identity hash has unexpectedly changed
      */
-    public const IDENTITY_HASH_CHANGE = 'IDHSH_C';
+    public const IDENTITY_HASH_CHANGE = 'IDENTITY_HASH_CHANGE';
 
 }
