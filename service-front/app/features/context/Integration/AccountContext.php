@@ -1117,7 +1117,7 @@ class AccountContext extends BaseIntegrationContext
         assertGreaterThan(strtotime($shareCodes[0]['Expires']),strtotime((new DateTime('now'))->format('Y-m-d')));
         assertGreaterThan(strtotime($shareCodes[0]['Added']),strtotime($shareCodes[0]['Expires']));
     }
-  
+
     /**
      * @When /^I click to check my active and inactive codes$/
      */
@@ -1422,4 +1422,62 @@ class AccountContext extends BaseIntegrationContext
     {
         // Not needed in this context
     }
+
+    /**
+     * @Given /^I am on the your details page$/
+     */
+    public function iAmOnTheYourDetailsPage()
+    {
+        //Not needed for this context
+    }
+
+    /**
+     * @When /^I request to delete my account$/
+     */
+    public function iRequestToDeleteMyAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I confirm that I want to delete my account$/
+     */
+    public function iConfirmThatIWantToDeleteMyAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^My account is deleted$/
+     */
+    public function myAccountIsDeleted()
+    {
+        $userId = $this->userIdentity;
+
+        // API call for deleting a user account
+        $this->apiFixtures->delete('/v1/delete-account/' . $this->userIdentity)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'        => $this->userIdentity,
+                'Email'     => $this->userEmail,
+                'Password'  => $this->userPassword,
+                'LastLogin' => null
+            ])))
+            ->inspectRequest(function(RequestInterface $request) use ($userId) {
+                $uri = $request->getUri()->getPath();
+
+                assertEquals($uri, '/v1/delete-account/123');
+            });
+
+        $delete = $this->userService->deleteAccount($this->userIdentity);
+        assertNull($delete);
+    }
+
+    /**
+     * @Given /^I am logged out of the service and taken to the index page$/
+     */
+    public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage()
+    {
+        // Not needed for this context
+    }
+
 }
