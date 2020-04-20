@@ -2,10 +2,12 @@
   <configuration default="false" name="opg-use-an-lpa" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
     <deployment type="docker-compose.yml">
       <settings>
+        <option name="commandLineOptions" value="--build" />
         <option name="secondarySourceFiles">
           <list>
             <option value="../opg-sirius-api-gateway/docker-compose.yml" />
             <option value="../opg-sirius-api-gateway/docker-compose-integration.yml" />
+            <option value="docker-compose.override.yml" />
           </list>
         </option>
         <option name="sourceFilePath" value="docker-compose.yml" />
