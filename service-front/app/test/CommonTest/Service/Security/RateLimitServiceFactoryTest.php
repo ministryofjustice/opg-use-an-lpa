@@ -186,9 +186,20 @@ class RateLimitServiceFactoryTest extends TestCase
 
         $this->assertIsArray($limiters);
         $this->assertCount(3, $limiters);
-        foreach($limiters as $limiter) {
+        foreach ($limiters as $limiter) {
             $this->assertInstanceOf(RateLimiterInterface::class, $limiter);
         }
+    }
+
+    /** @test */
+    public function it_requires_multiple_ratelimits_configuration()
+    {
+        $containerProphecy = $this->prophesize(ContainerInterface::class);
+
+        $factory = new RateLimitServiceFactory($containerProphecy->reveal());
+
+        $this->expectException(RuntimeException::class);
+        $rateLimiter = $factory->all();
     }
 
 }
