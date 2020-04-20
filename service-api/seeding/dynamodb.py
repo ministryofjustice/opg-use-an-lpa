@@ -1,7 +1,6 @@
 import os
 import boto3
 import json
-import passlib
 from passlib.hash import sha256_crypt
 import datetime
 
@@ -124,7 +123,7 @@ actorUsersTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_ACTOR_USERS'])
 actorUsers = [
     {
         'Id': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
-        'Email': 'test.user@digital.justice.gov.uk',
+        'Email': 'opg-use-an-lpa+test-user@digital.justice.gov.uk',
         'LastLogin': datetime.datetime.now().isoformat(),
         'Password': sha256_crypt.hash('umlTest1')
     }
