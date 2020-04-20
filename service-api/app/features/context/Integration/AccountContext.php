@@ -181,6 +181,7 @@ class AccountContext extends BaseIntegrationContext
         } catch (ForbiddenException $fe){
             assertEquals('Authentication failed for email ' . $this->userAccountEmail, $fe->getMessage());
             assertEquals(403, $fe->getCode());
+            exit();
         }
     }
 
@@ -207,6 +208,7 @@ class AccountContext extends BaseIntegrationContext
         } catch (NotFoundException $ex) {
             assertEquals('User not found for email', $ex->getMessage());
             assertEquals(404, $ex->getCode());
+            exit();
         }
     }
 
@@ -243,6 +245,7 @@ class AccountContext extends BaseIntegrationContext
         } catch (UnauthorizedException $ex) {
             assertEquals('Authentication attempted against inactive account with Id ' . $this->userAccountId, $ex->getMessage());
             assertEquals(401, $ex->getCode());
+            exit();
         }
     }
 
