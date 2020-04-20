@@ -114,6 +114,16 @@ trait BaseAcceptanceContextTrait
         );
     }
 
+    protected function apiDelete(string $url, ?array $headers = null): void
+    {
+        $this->ui->getSession()->getDriver()->getClient()->request(
+            'DELETE',
+            $url,
+            [],
+            $this->createServerParams($headers)
+        );
+    }
+
     private function createServerParams(?array $headers = []): array
     {
         // this headerThief madness allows access to the private 'serverParameters' property of the BrowserKitDriver

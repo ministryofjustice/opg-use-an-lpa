@@ -258,4 +258,28 @@ class ActorUsers implements ActorUsersInterface
 
         return $this->getData($user);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function delete(string $accountId) :array
+    {
+        $user = $this->client->deleteItem([
+            'TableName' => $this->actorUsersTable,
+            'Key' => [
+                'Id' => [
+                    'S' => $accountId,
+                ],
+            ],
+            'ConditionExpression' => 'Id = :id',
+            'ExpressionAttributeValues' => [
+                ':id' => [
+                    'S' => $accountId
+                ],
+            ],
+            'ReturnValues' => 'ALL_OLD'
+        ]);
+
+        return $this->getData($user);
+    }
 }
