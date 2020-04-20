@@ -1,6 +1,3 @@
-variable "pagerduty_token" {
-}
-
 variable "account_mapping" {
   type = map(string)
 }
