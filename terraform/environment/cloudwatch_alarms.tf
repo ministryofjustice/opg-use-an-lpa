@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "viewer_5xx_errors" {
-  actions_enabled     = false
+  actions_enabled     = true
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   alarm_description   = "Number of 5XX Errors returned to viewer users for ${local.environment}"
   alarm_name          = "${local.environment}-viewer-5XX-errors"
@@ -21,7 +21,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_5xx_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
-  actions_enabled     = false
+  actions_enabled     = true
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   alarm_description   = "Number of 5XX Errors returned to actor users for ${local.environment}"
   alarm_name          = "${local.environment}-actor-5XX-errors"
