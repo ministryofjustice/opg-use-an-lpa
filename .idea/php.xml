@@ -132,7 +132,26 @@
       </interpreter>
     </phpInfoCache>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />
+  <component name="PhpProjectServersManager">
+    <servers>
+      <server host="localhost" id="c307712d-c4b8-4458-8493-93abc2a23cb5" name="actor-app" port="9002" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$/service-front/app" remote-root="/app" />
+        </path_mappings>
+      </server>
+      <server host="localhost" id="23b43f44-7abd-4ec6-a395-7c884cf2d37e" name="viewer-app" port="9001" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$/service-front/app" remote-root="/app" />
+        </path_mappings>
+      </server>
+      <server host="localhost" id="9e412190-8a4b-4241-a698-07dd49293f4f" name="api-app" port="9003" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$/service-api/app" remote-root="/app" />
+        </path_mappings>
+      </server>
+    </servers>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />
   <component name="PhpRuntimeConfiguration">
     <extensions>
       <extension name="Ev" enabled="false" />

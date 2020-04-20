@@ -461,4 +461,59 @@ class UserServiceTest extends TestCase
         $this->expectException(ApiException::class);
         $return = $service->changePassword('01234567-9999-9999-9999-012345678901', 'BadPassw0rd', 'FinalF0rm');
     }
+
+    /** @test */
+    public function can_delete_a_users_account()
+    {
+        $id = '01234567-0123-0123-0123-012345678901';
+        $email = 'a@b.com';
+
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpDelete('/v1/delete-account/' . $id)
+            ->willReturn([
+                'Id'       => $id,
+                'Email'    => $email,
+                'Password' => password_hash('pa33w0rd123', PASSWORD_DEFAULT),
+                'LastLogin'=> null
+            ]);
+
+        $userFactoryCallable = function($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        // deleteAccount is a void method, so if successful, $result should be null
+        $result = $service->deleteAccount($id);
+
+        $this->assertNull($result);
+    }
+
+    /** @test */
+    public function exception_thrown_when_api_gives_invalid_response_to_delete_account_request()
+    {
+        $id = '01234567-0123-0123-0123-012345678901';
+        $email = 'a@b.com';
+
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpDelete('/v1/delete-account/' . $id)
+            ->willThrow(new ApiException('HTTP: 500 - Unexpected API response', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR));
+
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $this->expectException(RuntimeException::class);
+
+        $userFactoryCallable = function($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $service->deleteAccount($id);
+    }
 }
