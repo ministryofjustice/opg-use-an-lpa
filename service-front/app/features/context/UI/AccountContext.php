@@ -13,6 +13,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\RequestInterface;
+use Common\Service\Log\Output\Email;
 use DateTime;
 
 /**
@@ -91,6 +92,15 @@ class AccountContext implements Context
             ],
             'lpa' => $this->lpa
         ];
+    }
+
+    /**
+     * @Given /^I am the donor$/
+     */
+    public function iAmTheDonor()
+    {
+        $this->lpaData['actor']['type'] = 'donor';
+        unset($this->lpaData['actor']['details']['systemStatus']);
     }
 
     /**
@@ -2251,10 +2261,139 @@ class AccountContext implements Context
     }
 
     /**
+     * @Given /^I am on the your details page$/
+     */
+    public function iAmOnTheYourDetailsPage()
+    {
+        $this->ui->clickLink('Your details');
+    }
+
+    /**
+     * @When /^I request to delete my account$/
+     */
+    public function iRequestToDeleteMyAccount()
+    {
+        $this->ui->assertPageAddress('/your-details');
+        $this->ui->clickLink('Delete account');
+    }
+
+    /**
+     * @Then /^I am asked to confirm whether I am sure if I want to delete my account$/
+     */
+    public function iAmAskedToConfirmWhetherIAmSureIfIWantToDeleteMyAccount()
+    {
+        $this->ui->assertPageAddress('/confirm-delete-account');
+        $this->ui->assertPageContainsText('Are you sure you want to delete your account?');
+    }
+
+    /**
+     * @Given /^I am on the confirm account deletion page$/
+     */
+    public function iAmOnTheConfirmAccountDeletionPage()
+    {
+        $this->iAmOnTheYourDetailsPage();
+        $this->iRequestToDeleteMyAccount();
+    }
+
+    /**
+     * @When /^I request to return to the your details page$/
+     */
+    public function iRequestToReturnToTheYourDetailsPage()
+    {
+        $this->ui->assertPageAddress('/confirm-delete-account');
+        $this->ui->clickLink('No, return to my details');
+    }
+
+    /**
+     * @Then /^I am taken back to the your details page$/
+     */
+    public function iAmTakenBackToTheYourDetailsPage()
+    {
+        $this->ui->assertPageAddress('/your-details');
+        $this->ui->assertPageContainsText('Your details');
+    }
+
+    /**
+     * @Given /^I confirm that I want to delete my account$/
+     */
+    public function iConfirmThatIWantToDeleteMyAccount()
+    {
+        $this->ui->assertPageAddress('/confirm-delete-account');
+
+        $this->apiFixtures->delete('/v1/delete-account/' . $this->userId)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'Id'        => $this->userId,
+                        'Email'     => $this->userEmail,
+                        'Password'  => $this->userPassword,
+                        'LastLogin' => null
+                    ])));
+
+        $this->ui->clickLink('Yes, continue deleting my account');
+    }
+
+    /**
+     * @Then /^My account is deleted$/
+     */
+    public function myAccountIsDeleted()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I am logged out of the service and taken to the index page$/
+     */
+    public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage()
+    {
+        $this->ui->assertPageAddress('/');
+    }
+
+    /**
+     * @Given /^I have deleted my account$/
+     */
+    public function iHaveDeletedMyAccount()
+    {
+        $this->iAmOnTheYourDetailsPage();
+        $this->iRequestToDeleteMyAccount();
+        $this->iConfirmThatIWantToDeleteMyAccount();
+    }
+
+    /**
+     * @When /^I request login to my account that was deleted$/
+     */
+    public function iRequestLoginToMyAccountThatWasDeleted()
+    {
+        $this->ui->assertPageAddress('/');
+        $this->ui->clickLink('Sign in to your existing account');
+
+        $this->ui->fillField('email', $this->userEmail);
+        $this->ui->fillField('password', $this->userPassword);
+
+        // API call for authentication
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])));
+
+        $this->ui->pressButton('Sign in');
+    }
+
+    /**
+     * @Then /^My old account is not found$/
+     */
+    public function myOldAccountIsNotFound()
+    {
+        $this->ui->assertPageAddress('/login');
+        $this->ui->assertPageContainsText('Email and password combination not recognised. Please try signing in again below or create an account');
+    }
+
+    /**
      * @Given /^an attorney can be removed from acting on a particular LPA$/
      */
     public function anAttorneyCanBeRemovedFromActingOnAParticularLpa()
     {
+      // Not needed for this context
     }
 
     /**

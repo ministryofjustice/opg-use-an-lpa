@@ -6,46 +6,45 @@ namespace Actor\Handler;
 
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Common\Handler\UserAware;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Common\Handler\UserAware;
+use Exception;
 
 /**
- * Class YourDetailsHandler
- *
+ * Class ConfirmDeleteAccountHandler
  * @package Actor\Handler
- * @codeCoverageIgnore
+ * @codCoverageIgnore
  */
-class YourDetailsHandler extends AbstractHandler implements UserAware
+class ConfirmDeleteAccountHandler extends AbstractHandler implements UserAware
 {
     use User;
 
     public function __construct(
         TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper
+        UrlHelper $urlHelper,
+        AuthenticationInterface $authentication
     ) {
         parent::__construct($renderer, $urlHelper);
-
-        $this->setAuthenticator($authenticator);
+        $this->setAuthenticator($authentication);
     }
 
     /**
-     * Handles a request and produces a response
-     *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->getUser($request);
 
-        return new HtmlResponse($this->renderer->render('actor::your-details', [
+        return new HtmlResponse($this->renderer->render('actor::confirm-delete-account', [
             'user' => $user
         ]));
     }
+
 }
