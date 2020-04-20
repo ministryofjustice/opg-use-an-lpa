@@ -10,6 +10,7 @@ locals {
 
     actor_lpa_codes_table = aws_dynamodb_table.actor_codes_table.name
     viewer_codes_table    = aws_dynamodb_table.viewer_codes_table.name
+    actor_users_table     = aws_dynamodb_table.actor_users_table.name
 
     actor_fqdn  = aws_route53_record.actor-use-my-lpa.fqdn
     viewer_fqdn = aws_route53_record.viewer-use-my-lpa.fqdn
