@@ -1,6 +1,6 @@
 FROM python:alpine
 
-RUN pip install awscli boto3
+RUN pip install awscli boto3 passlib
 
 ENV WAITFORIT_VERSION="v2.4.1"
 RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64 \
