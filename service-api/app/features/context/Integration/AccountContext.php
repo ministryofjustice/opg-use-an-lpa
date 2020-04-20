@@ -25,6 +25,7 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
+use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Class AccountContext
@@ -181,8 +182,10 @@ class AccountContext extends BaseIntegrationContext
         } catch (ForbiddenException $fe){
             assertEquals('Authentication failed for email ' . $this->userAccountEmail, $fe->getMessage());
             assertEquals(403, $fe->getCode());
-            exit();
+            return;
         }
+
+        throw new ExpectationFailedException('Expected forbidden exception was not thrown');
     }
 
     /**
@@ -208,8 +211,10 @@ class AccountContext extends BaseIntegrationContext
         } catch (NotFoundException $ex) {
             assertEquals('User not found for email', $ex->getMessage());
             assertEquals(404, $ex->getCode());
-            exit();
+            return;
         }
+
+        throw new ExpectationFailedException('Expected not found exception was not thrown');
     }
 
     /**
@@ -245,8 +250,10 @@ class AccountContext extends BaseIntegrationContext
         } catch (UnauthorizedException $ex) {
             assertEquals('Authentication attempted against inactive account with Id ' . $this->userAccountId, $ex->getMessage());
             assertEquals(401, $ex->getCode());
-            exit();
+            return;
         }
+
+        throw new ExpectationFailedException('Expected unauthorized exception was not thrown');
     }
 
     /**
