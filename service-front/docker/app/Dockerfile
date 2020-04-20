@@ -2,7 +2,7 @@ FROM composer AS composer
 
 COPY service-front/app /app
 
-RUN composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+RUN composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
 
 FROM php:7-fpm-alpine
 
