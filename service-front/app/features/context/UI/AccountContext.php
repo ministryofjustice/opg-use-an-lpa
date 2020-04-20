@@ -2534,11 +2534,6 @@ class AccountContext implements Context
         $this->ui->clickLink('Why is this?');
         $this->ui->assertPageAddress('/lpa/removed');
         $this->ui->assertPageContainsText('We\'ve removed an LPA from your account');
-        $this->ui->assertPageContainsText('We\'ve removed an LPA from your account because either:');
-        $this->ui->assertPageContainsText('you can no longer act as an attorney on the LPA');
-        $this->ui->assertPageContainsText('you\'ve told us you no longer want to be an attorney');
-        $this->ui->assertPageContainsText('the donor has removed you as an attorney');
-
     }
 
     /**
