@@ -49,7 +49,7 @@ class UserIdentificationMiddlewareTest extends TestCase
 
         $response = $uim->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
-    
+
     /** @test */
     public function it_uniquely_identifies_a_user_with_a_session_first_visit()
     {
@@ -132,7 +132,7 @@ class UserIdentificationMiddlewareTest extends TestCase
             ->notice(
                 Argument::type('string'),
                 Argument::that(
-                    function($parameter): bool {
+                    function ($parameter): bool {
                         $this->assertIsArray($parameter);
                         $this->assertArrayHasKey('error_code', $parameter);
                         $this->assertEquals(ErrorCodes::IDENTITY_HASH_CHANGE, $parameter['error_code']);
