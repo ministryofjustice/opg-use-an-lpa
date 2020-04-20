@@ -108,7 +108,7 @@ actorLpaCodes = [
         'ActorLpaId': 164,
         'SiriusUid': "700000000344",
         'Active': True,
-         'Expires': "2018-09-25T00:00:00Z",
+        'Expires': "2018-09-25T00:00:00Z",
     },
 ]
 
