@@ -1,6 +1,7 @@
 import os
 import boto3
 import json
+import passlib
 from passlib.hash import sha256_crypt
 import datetime
 
