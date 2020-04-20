@@ -76,11 +76,8 @@ class RateLimitServiceFactory
             throw new RuntimeException('Missing rate limits configuration');
         }
 
-        $limits = [];
-        foreach($config['ratelimits'] as $limitName => $limitConfiguration) {
-            $limits[] = $this->factory($limitName);
-        }
-
-        return $limits;
+        return array_map(function (string $limitName) {
+            return $this->factory($limitName);
+        }, array_keys($config['ratelimits']));
     }
 }
