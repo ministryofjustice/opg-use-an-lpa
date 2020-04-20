@@ -64,16 +64,30 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->route('/forgot-password', Actor\Handler\PasswordResetRequestPageHandler::class, ['GET', 'POST'], 'password-reset');
     $app->route('/forgot-password/{token}', Actor\Handler\PasswordResetPageHandler::class, ['GET', 'POST'], 'password-reset-token');
 
+    // User deletion
+    $app->get('/confirm-delete-account', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\ConfirmDeleteAccountHandler::class], 'confirm-delete-account');
+    $app->get('/delete-account', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\DeleteAccountHandler::class], 'delete-account');
+
     // User details
     $app->get('/your-details', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\YourDetailsHandler::class,
-    ], 'your-details');
-
+    ],'your-details');
+    $app->get('/lpa/terms-of-use', [
+        Actor\Handler\ActorTermsOfUseHandler::class
+    ], 'lpa.terms-of-use');
     $app->route('/change-password', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangePasswordHandler::class
     ], ['GET','POST'], 'change-password');
+    $app->get('/lpa/change-details', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\ChangeDetailsHandler::class
+    ], 'lpa.change-details');
 
     // LPA management
     $app->get('/lpa/dashboard', [
@@ -108,13 +122,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CancelCodeHandler::class
     ],'lpa.cancel-code');
-    $app->get('/lpa/change-details', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
-        Actor\Handler\ChangeDetailsHandler::class
-    ], 'lpa.change-details');
-    $app->get('/lpa/terms-of-use', [
-        Actor\Handler\ActorTermsOfUseHandler::class
-    ], 'lpa.terms-of-use');
 };
 
 switch (getenv('CONTEXT')){

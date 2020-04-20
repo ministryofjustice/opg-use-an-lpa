@@ -698,4 +698,65 @@ class ActorUsersTest extends TestCase
         $this->expectException(\Exception::class);
         $result = $actorRepo->resetPassword($id, 'passwordToHash');
     }
+
+    /** @test */
+    public function will_delete_a_users_account()
+    {
+        $id = '12345-1234-1234-1234-12345';
+        $email = 'a@b.com';
+        $password = 'H@shedP@55word';
+
+        $this->dynamoDbClientProphecy->deleteItem(Argument::that(function(array $data) use ($id) {
+            $this->assertIsArray($data);
+
+            $this->assertStringContainsString('users-table', serialize($data));
+            $this->assertStringContainsString($id, serialize($data));
+
+            return true;
+        }))->willReturn($this->createAWSResult([
+            'Item' => [
+                'Id' => [
+                    'S' => $id,
+                ],
+                'Email' => [
+                    'S' => $email,
+                ],
+                'Password' => [
+                    'S' => $password,
+                ],
+                'LastLogin' => [
+                    'S' => null
+                ],
+            ]
+        ]));
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
+
+        $deletedUser = $actorRepo->delete($id);
+
+        $this->assertEquals($id, $deletedUser['Id']);
+        $this->assertEquals($email, $deletedUser['Email']);
+        $this->assertEquals($password, $deletedUser['Password']);
+    }
+
+    /** @test */
+    public function will_throw_error_if_account_id_to_delete_doesnt_exist()
+    {
+        $id = 'd0E2nT-ex12t';
+
+        $this->dynamoDbClientProphecy->deleteItem(Argument::that(function(array $data) use ($id) {
+            $this->assertIsArray($data);
+
+            $this->assertStringContainsString('users-table', serialize($data));
+            $this->assertStringContainsString($id, serialize($data));
+
+            return true;
+        }))
+            ->willThrow(new NotFoundException());
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
+
+        $this->expectException(NotFoundException::class);
+        $actorRepo->delete($id);
+    }
 }
