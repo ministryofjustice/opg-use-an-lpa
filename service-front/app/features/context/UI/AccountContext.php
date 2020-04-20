@@ -2306,6 +2306,7 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/lpa/dashboard');
 
         $this->ui->assertPageContainsText('Access revoked');
+        $this->ui->assertPageContainsText('You no longer have access to this LPA.');
     }
 
     /**
@@ -2393,6 +2394,31 @@ class AccountContext implements Context
         if (count($links) > 0) {
             throw new AssertionFailedError('Expected not to find link: /lpa/view-lpa');
         }
+    }
+
+    /**
+     * @Then /^I can find out why this LPA has been removed from the account$/
+     */
+    public function iCanFindOutWhyThisLPAHasBeenRemovedFromTheAccount()
+    {
+        $this->ui->clickLink('Why is this?');
+        $this->ui->assertPageAddress('/lpa/removed');
+        $this->ui->assertPageContainsText('We\'ve removed an LPA from your account');
+        $this->ui->assertPageContainsText('We\'ve removed an LPA from your account because either:');
+        $this->ui->assertPageContainsText('you can no longer act as an attorney on the LPA');
+        $this->ui->assertPageContainsText('you\'ve told us you no longer want to be an attorney');
+        $this->ui->assertPageContainsText('the donor has removed you as an attorney');
+
+    }
+
+    /**
+     * @Then /^I can go back to the dashboard page$/
+     */
+    public function iCanGoBackToTheDashboardPage()
+    {
+        $this->ui->assertPageAddress('/lpa/removed');
+        $this->ui->clickLink('Back');
+        $this->ui->assertPageAddress('lpa/dashboard');
     }
 
     /**

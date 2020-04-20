@@ -18,6 +18,8 @@ Feature: The user is able to see correct information on their dashboard
     And I cannot make access codes for the LPA
     And I cannot check existing or inactive access codes for the LPA
     And I cannot view the LPA summary
+    And I can find out why this LPA has been removed from the account
+    And I can go back to the dashboard page
 
   @ui
   Scenario:
