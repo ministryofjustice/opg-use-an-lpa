@@ -89,6 +89,8 @@
                 </h1>
             </legend>
 
+            {{- block('input_hint') -}}
+
             {{ govuk_error(fieldset) }}
 
             <div class="govuk-date-input" id="{{ fieldset.getName() }}">
@@ -155,7 +157,7 @@
 {%- block input_hint -%}
     {% if hint is defined %}
         <span id="{{ element.getName() }}-hint" class="govuk-hint">
-            {{ hint }}
+            {{ hint | raw }}
         </span>
     {% endif %}
 {%- endblock input_hint -%}

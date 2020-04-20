@@ -1,6 +1,4 @@
 {% block content %}
-    <div class="govuk-width-container">
-        <main class="govuk-main-wrapper">
             <div class="govuk-grid-row">
             {{ govuk_form_open(code.form) }}
                 <div class="govuk-grid-column-two-thirds">
@@ -9,10 +7,11 @@
                         {{ govuk_form_element(code.form.get('lpa_token')) }}
                         {{ govuk_form_element(code.form.get('viewer_code')) }}
                         {{ govuk_form_element(code.form.get('organisation')) }}
+
+                        <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-button--warning">Cancel organisation's access</button>
+
                 </div>
-                <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-button--warning">Cancel organisation's access</button>
             {{ govuk_form_close() }}
             </div>
-        </main>
-    </div>
+
 {% endblock %}
