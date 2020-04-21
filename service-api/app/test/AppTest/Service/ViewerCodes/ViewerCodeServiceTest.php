@@ -263,6 +263,9 @@ class ViewerCodeServiceTest extends TestCase
     public function it_wont_cancel_a_code_if_the_user_does_not_match()
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
+        $viewerCodeRepoProphecy
+            ->cancel('123412341234', Argument::type(\DateTime::class))
+            ->shouldNotBeCalled();
 
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $userActorLpaRepoProphecy
@@ -295,6 +298,9 @@ class ViewerCodeServiceTest extends TestCase
             ->get('123412341234')
             ->shouldBeCalled()
             ->willReturn(null);
+        $viewerCodeRepoProphecy
+            ->cancel('123412341234', Argument::type(\DateTime::class))
+            ->shouldNotBeCalled();
 
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $userActorLpaRepoProphecy
