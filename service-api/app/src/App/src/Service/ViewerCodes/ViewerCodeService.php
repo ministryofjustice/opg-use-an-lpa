@@ -4,37 +4,31 @@ declare(strict_types=1);
 
 namespace App\Service\ViewerCodes;
 
-use App\DataAccess\Repository;
+use App\DataAccess\Repository\{KeyCollisionException, UserLpaActorMapInterface, ViewerCodesInterface};
 use App\Service\Lpa\LpaService;
 use DateTime;
 use DateTimeZone;
 
 class ViewerCodeService
 {
-    /**
-     * @var Repository\ViewerCodesInterface
-     */
-    private $viewerCodesRepository;
+    private ViewerCodesInterface $viewerCodesRepository;
 
-    /**
-     * @var Repository\UserLpaActorMapInterface
-     */
-    private $userLpaActorMapRepository;
+    private UserLpaActorMapInterface $userLpaActorMapRepository;
 
     /**
      * @var LpaService
      */
-    private $lpaService;
+    private LpaService $lpaService;
 
     /**
      * ViewerCodeService constructor.
-     * @param Repository\ViewerCodesInterface $viewerCodesRepository
-     * @param Repository\UserLpaActorMapInterface $userLpaActorMapRepository
+     * @param ViewerCodesInterface $viewerCodesRepository
+     * @param UserLpaActorMapInterface $userLpaActorMapRepository
      * @param LpaService $lpaService
      */
     public function __construct(
-        Repository\ViewerCodesInterface $viewerCodesRepository,
-        Repository\UserLpaActorMapInterface $userLpaActorMapRepository,
+        ViewerCodesInterface $viewerCodesRepository,
+        UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaService $lpaService
     ) {
         $this->lpaService = $lpaService;
@@ -54,7 +48,7 @@ class ViewerCodeService
         //---
 
         $expires = new DateTime(
-            '23:59:59 +30 days',                    // Set to the last moment of the day, x days from now.
+            '23:59:59 +30 days',                   // Set to the last moment of the day, x days from now.
             new DateTimeZone('Europe/London')   // Ensures we compensate for GMT vs BST.
         );
 
@@ -77,7 +71,7 @@ class ViewerCodeService
                 );
 
                 $added = true;
-            } catch (Repository\KeyCollisionException $e) {
+            } catch (KeyCollisionException $e) {
                 // Allows the loop to repeat with a new code.
             }
         } while (!$added);
@@ -89,7 +83,7 @@ class ViewerCodeService
         ];
     }
 
-    public function getCodes(string $token, string $userId)
+    public function getCodes(string $token, string $userId): ?array
     {
         $map = $this->userLpaActorMapRepository->get($token);
 
@@ -100,9 +94,7 @@ class ViewerCodeService
 
         $siriusUid = $map['SiriusUid'];
 
-        $accessCodes = $this->viewerCodesRepository->getCodesByUserLpaActorId($siriusUid, $token); //need to pass in sirius uid
-
-        return $accessCodes;
+        return $this->viewerCodesRepository->getCodesByUserLpaActorId($siriusUid, $token);
     }
 
     /**
@@ -111,7 +103,6 @@ class ViewerCodeService
      * @param string $userLpaActorToken
      * @param string $userId
      * @param string $code
-     * @throws Exception
      */
     public function cancelCode(string $userLpaActorToken, string $userId, string $code): void
     {
@@ -122,9 +113,7 @@ class ViewerCodeService
             return;
         }
 
-        $shareCode = $this->viewerCodesRepository->get($code);
-
-        if($shareCode === null){
+        if ($this->viewerCodesRepository->get($code) === null) {
             return;
         }
 
@@ -132,6 +121,5 @@ class ViewerCodeService
             $code,
             new DateTime()
         );
-
     }
 }
