@@ -52,16 +52,6 @@ resource "aws_security_group_rule" "viewer_ecs_service_egress" {
   security_group_id = aws_security_group.viewer_ecs_service.id
 }
 
-// Brute force Elasticache
-resource "aws_security_group_rule" "viewer_ecs_service_elasticache_egress" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 6379
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.viewer_ecs_service.id
-}
-
 resource "aws_security_group_rule" "viewer_ecs_service_elasticache_ingress" {
   type              = "ingress"
   from_port         = 0
