@@ -122,6 +122,11 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CancelCodeHandler::class
     ],'lpa.cancel-code');
+    $app->get('/lpa/removed', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\LpaRemovedHandler::class
+    ], 'lpa.removed');
+
 };
 
 switch (getenv('CONTEXT')){

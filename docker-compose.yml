@@ -205,6 +205,7 @@ services:
       AWS_SECRET_ACCESS_KEY: "-"
       DYNAMODB_TABLE_ACTOR_CODES: "ActorCodes"
       DYNAMODB_TABLE_VIEWER_CODES: "ViewerCodes"
+      DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
       AWS_ENDPOINT_DYNAMODB: localstack:4569
 
   # ---------------------------
@@ -234,7 +235,7 @@ services:
   zap:
     build:
       context: zap
-      
+
 #  feature-tests:
 #    build:
 #      context: features/
