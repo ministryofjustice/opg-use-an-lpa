@@ -14,7 +14,7 @@ vi ~/.aws/config
 
 Add the following block
 
-```config
+```ini
 ## Use an LPA
 [profile ual-dev]
 region=eu-west-1
