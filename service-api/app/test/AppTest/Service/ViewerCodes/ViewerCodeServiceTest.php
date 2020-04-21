@@ -167,7 +167,7 @@ class ViewerCodeServiceTest extends TestCase
         $viewerCodeRepoProphecy
             ->getCodesByUserLpaActorId('700000000047', 'user_actor_lpa_token')
             ->shouldBeCalled()
-            ->willReturn([]);
+            ->willReturn(['some_lpa_code_data']);
 
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $userActorLpaRepoProphecy
@@ -191,7 +191,7 @@ class ViewerCodeServiceTest extends TestCase
 
         $codes = $service->getCodes('user_actor_lpa_token', 'user_id');
 
-        $this->assertIsArray($codes);
+        $this->assertEquals(['some_lpa_code_data'], $codes);
     }
 
     /** @test */
