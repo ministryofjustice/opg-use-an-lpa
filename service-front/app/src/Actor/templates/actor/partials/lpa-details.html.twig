@@ -1,9 +1,7 @@
 <span class="govuk-heading-l govuk-!-margin-top-3 govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</span>
 
 <hr class="govuk-section-break govuk-section-break--s govuk-section-break--visible">
-
-<dl class="govuk-summary-list">
-
+<dl class="govuk-summary-list govuk-!-margin-bottom-0">
     <div class="govuk-summary-list__row govuk-!-margin-bottom-0 govuk-!-margin-top-4">
         <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-width-one-third">
             {% if actorActive %}
@@ -44,3 +42,11 @@
         </dd>
     </div>
 </dl>
+{%  if not actorActive %}
+    <div class="lpa-inactive-notice" >
+        <p class="govuk-body govuk-!-padding-2 govuk-!-margin-left-2 govuk-!-margin-bottom-0">You no longer have access to this LPA.
+            <a class="govuk-!-margin-left-3" href="{{ path('lpa.removed') }}"> Why is this?</a>
+        </p>
+    </div>
+{%  endif %}
+

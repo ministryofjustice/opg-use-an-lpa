@@ -105,6 +105,13 @@ actorLpaCodes = [
         'Active': True,
         'Expires': "2018-09-25T00:00:00Z",
     },
+    {
+        'ActorCode': "MDCKNUA9UMLC",
+        'ActorLpaId': 164,
+        'SiriusUid': "700000000344",
+        'Active': True,
+        'Expires': "2018-09-25T00:00:00Z",
+    },
 ]
 
 for i in actorLpaCodes:
@@ -114,6 +121,7 @@ for i in actorLpaCodes:
     response = actorLpaCodesTable.get_item(
         Key={'ActorCode': i['ActorCode']}
     )
+    print(response)
     #print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
 
 # test user details
