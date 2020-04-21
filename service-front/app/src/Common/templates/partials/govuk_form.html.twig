@@ -84,12 +84,11 @@
         <fieldset name="{{ fieldset.getName() }}" class="govuk-fieldset" aria-describedby="{{ fieldset.getName() }}-hint" role="group">
 
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                <h1 class="govuk-fieldset__heading">
+                <label class="govuk-label" for="{{ fieldset.getName() }}">
                     {{ label | raw }}
-                </h1>
+                </label>
             </legend>
-
-            {{- block('input_hint') -}}
+            <span class="govuk-hint">{{ hint | raw }}</span>
 
             {{ govuk_error(fieldset) }}
 
