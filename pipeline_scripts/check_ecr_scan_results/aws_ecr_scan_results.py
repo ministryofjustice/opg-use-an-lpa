@@ -115,17 +115,17 @@ class ECRScanChecker:
         return response
 
     def post_to_slack(self, slack_webhook):
-        if os.getenv('CI'):
+        if self.report is not None:
             ci_footer = "*Github Branch:* {0}\n\n*CircleCI Job Link:* {1}\n\n".format(
-                os.getenv('CIRCLE_BRANCH'),
-                os.getenv('CIRCLE_BUILD_URL'))
+                os.getenv('CIRCLE_BRANCH', ""),
+                os.getenv('CIRCLE_BUILD_URL', ""))
             self.report += ci_footer
 
-        post_data = json.dumps({"text": self.report})
-        response = requests.post(
-            slack_webhook, data=post_data,
-            headers={'Content-Type': 'application/json'}
-        )
+            post_data = json.dumps({"text": self.report})
+            response = requests.post(
+                slack_webhook, data=post_data,
+                headers={'Content-Type': 'application/json'}
+            )
         if response.status_code != 200:
             raise ValueError(
                 'Request to slack returned an error %s, the response is:\n%s'
@@ -156,6 +156,7 @@ def main():
     work = ECRScanChecker(args.result_limit, args.search)
     work.recursive_wait(args.tag)
     work.recursive_check_make_report(args.tag)
+    print(work.report)
     if args.slack_webhook is None:
         print("No slack webhook provided, skipping post of results to slack")
     if args.post_to_slack == True and args.slack_webhook is not None:
