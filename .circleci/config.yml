@@ -18,7 +18,7 @@ workflows:
           environment: demo
           requires: [redeploy_demo]
 
-  path_to_live:
+  pr_build:
     jobs:
       # Common tasks
       - use-my-lpa/lint_terraform:
@@ -54,7 +54,7 @@ workflows:
           requires:
             [app_front_build, app_api_build, test_web, test_pdf]
 
-            # Provision and test development
+          # Provision and test development
       - use-my-lpa/apply_shared_terraform:
           name: dev_apply_shared_terraform
           filters: { branches: { ignore: [master] } }
@@ -71,7 +71,7 @@ workflows:
               web_api_build,
               app_api_build,
               pdf_build,
-              ]
+            ]
 
       - ecr_scan_results:
           name: ecr_scan_results_development
@@ -111,6 +111,38 @@ workflows:
           name: dev_destroy_environment
           filters: { branches: { ignore: [master] } }
           requires: [hold_env_for_destruction]
+
+  path_to_live:
+    jobs:
+      # Common tasks
+      - use-my-lpa/node_test_web:
+          name: test_web
+      - use-my-lpa/node_build_web:
+          name: build_web
+          requires: [test_web]
+      - use-my-lpa/node_test_service_pdf:
+          name: test_pdf
+
+      - use-my-lpa/docker_build_front_app:
+          name: app_front_build
+          requires: [build_web]
+      - use-my-lpa/docker_build_front_web:
+          name: web_front_build
+          requires: [build_web]
+
+      - use-my-lpa/docker_build_api_app:
+          name: app_api_build
+      - use-my-lpa/docker_build_api_web:
+          name: web_api_build
+
+      - use-my-lpa/docker_build_pdf:
+          name: pdf_build
+          requires: [test_pdf]
+
+      - use-my-lpa/coveralls_upload:
+          name: coveralls_upload
+          requires:
+            [app_front_build, app_api_build, test_web, test_pdf]
 
       # Provision and test preproduction
       - use-my-lpa/apply_shared_terraform:
