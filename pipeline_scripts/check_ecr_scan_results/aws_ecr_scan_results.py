@@ -67,7 +67,6 @@ class ECRScanChecker:
                 imageId={
                     'imageTag': tag
                 },
-                # maxResults=1,
                 WaiterConfig={
                     'Delay': 5,
                     'MaxAttempts': 60
@@ -156,7 +155,6 @@ def main():
     work = ECRScanChecker(args.result_limit, args.search)
     work.recursive_wait(args.tag)
     work.recursive_check_make_report(args.tag)
-    print(work.report)
     if args.slack_webhook is None:
         print("No slack webhook provided, skipping post of results to slack")
     if args.post_to_slack == True and args.slack_webhook is not None:
