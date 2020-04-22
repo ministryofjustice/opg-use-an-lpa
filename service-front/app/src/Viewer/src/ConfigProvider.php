@@ -36,6 +36,7 @@ class ConfigProvider
             'factories'  => [
                 // Handlers
                 \Common\Handler\HealthcheckHandler::class => \Common\Handler\Factory\HealthcheckHandlerFactory::class,
+                \Viewer\Handler\CheckCodeHandler::class => \Viewer\Handler\Factory\CheckCodeHandlerFactory::class
             ],
         ];
     }
