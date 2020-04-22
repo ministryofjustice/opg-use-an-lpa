@@ -53,16 +53,16 @@ class PdfService
         TemplateRendererInterface $renderer,
         ClientInterface $httpClient,
         StylesService $styles,
-        LoggerInterface $logger,
         string $apiBaseUri,
-        string $traceId
+        string $traceId,
+        LoggerInterface $logger
     ) {
         $this->renderer = $renderer;
         $this->httpClient = $httpClient;
         $this->styles = $styles;
-        $this->logger = $logger;
         $this->apiBaseUri = $apiBaseUri;
         $this->traceId = $traceId;
+        $this->logger = $logger;
     }
 
     /**
