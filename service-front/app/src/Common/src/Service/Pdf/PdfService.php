@@ -50,17 +50,17 @@ class PdfService
     private $traceId;
 
     public function __construct(
-        LoggerInterface $logger,
         TemplateRendererInterface $renderer,
         ClientInterface $httpClient,
         StylesService $styles,
+        LoggerInterface $logger,
         string $apiBaseUri,
         string $traceId
     ) {
-        $this->logger = $logger;
         $this->renderer = $renderer;
         $this->httpClient = $httpClient;
         $this->styles = $styles;
+        $this->logger = $logger;
         $this->apiBaseUri = $apiBaseUri;
         $this->traceId = $traceId;
     }
@@ -124,7 +124,7 @@ class PdfService
         } catch (ClientExceptionInterface $ex) {
             $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
 
-            $this->logger->debug(
+            $this->logger->error(
                 'Failed to generate PDF from service {code} {response}',
                 [
                     'code'      => $ex->getCode(),
