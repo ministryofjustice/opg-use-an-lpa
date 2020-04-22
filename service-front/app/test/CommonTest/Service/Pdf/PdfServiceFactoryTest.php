@@ -39,10 +39,11 @@ class PdfServiceFactoryTest extends TestCase
         $stylesProphecy = $this->prophesize(StylesService::class);
         $containerProphecy->get(StylesService::class)->willReturn($stylesProphecy->reveal());
 
-        $loggerProphecy = $this->prohesize(LoggerInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
         $containerProphecy->get(LoggerInterface::class)->willReturn($loggerProphecy->reveal());
 
         $containerProphecy->get(RequestTracing::TRACE_PARAMETER_NAME)->willReturn('Root=1-1-11');
+
 
         $factory = new PdfServiceFactory();
         $pdfService = $factory(
