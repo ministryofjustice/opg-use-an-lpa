@@ -15,9 +15,15 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\StreamInterface;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Log\LoggerInterface;
 
 class PdfService
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     /**
      * @var string
      */
@@ -44,12 +50,14 @@ class PdfService
     private $traceId;
 
     public function __construct(
+        LoggerInterface $logger,
         TemplateRendererInterface $renderer,
         ClientInterface $httpClient,
         StylesService $styles,
         string $apiBaseUri,
         string $traceId
     ) {
+        $this->logger = $logger;
         $this->renderer = $renderer;
         $this->httpClient = $httpClient;
         $this->styles = $styles;
@@ -104,12 +112,24 @@ class PdfService
 
             switch ($response->getStatusCode()) {
                 case StatusCodeInterface::STATUS_OK:
+                    $this->logger->info('Successfully generated PDF and presented for download {code}',
+                    [
+                        'code' => $response->getStatusCode()
+                    ]);
+
                     return $response->getBody();
                 default:
                     throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
             $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
+
+            $this->logger->debug(
+                'Failed to generate PDF from service {code} {response}',
+                [
+                    'code'      => $ex->getCode(),
+                    'response'  => $response
+                ]);
 
             throw ApiException::create('Error whilst making http POST request', $response, $ex);
         }

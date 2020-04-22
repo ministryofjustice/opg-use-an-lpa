@@ -8,6 +8,7 @@ use Common\Service\Log\RequestTracing;
 use DI\Factory\RequestedEntry;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Mezzio\Template\TemplateRendererInterface;
 
@@ -31,6 +32,7 @@ class PdfServiceFactory
         }
 
         return new PdfService(
+            $container->get(LoggerInterface::class),
             $container->get(TemplateRendererInterface::class),
             $container->get(ClientInterface::class),
             $container->get(StylesService::class),
