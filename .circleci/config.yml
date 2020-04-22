@@ -67,16 +67,16 @@ workflows:
 
             # Provision and test development
         - use-my-lpa/apply_shared_terraform:
-            name: dev_apply_shared_terraform_pr_build
+            name: dev_apply_shared_terraform
             filters: { branches: { ignore: [master] } }
             requires: [lint_terraform_pr_build]
 
         - use-my-lpa/apply_environment_terraform:
-            name: dev_apply_environment_terraform_pr_build
+            name: dev_apply_environment_terraform
             filters: { branches: { ignore: [master] } }
             requires:
               [
-                dev_apply_shared_terraform_pr_build,
+                dev_apply_shared_terraform
                 app_front_build_pr_build,
                 web_front_build_pr_build,
                 web_api_build_pr_build,
@@ -85,7 +85,7 @@ workflows:
               ]
 
         - ecr_scan_results:
-            name: ecr_scan_results_development_pr_build
+            name: ecr_scan_results_development
             filters: { branches: { ignore: [master] } }
             requires:
               [
@@ -94,34 +94,34 @@ workflows:
                 web_api_build_pr_build,
                 app_api_build_pr_build,
                 pdf_build_pr_build,
-                dev_apply_environment_terraform_pr_build,
+                dev_apply_environment_terraform,
               ]
 
         - use-my-lpa/seed_database:
-            name: dev_seed_database_pr_build
+            name: dev_seed_database
             filters: { branches: { ignore: [master] } }
-            requires: [dev_apply_environment_terraform_pr_build]
+            requires: [dev_apply_environment_terraform]
 
         - use-my-lpa/run_behave_suite:
-            name: dev_run_behave_tests_pr_build
+            name: dev_run_behave_tests
             filters: { branches: { ignore: [master] } }
-            requires: [dev_seed_database_pr_build]
+            requires: [dev_seed_database]
 
         - slack_notify_domain:
-            name: post_environment_domains_pr_build
+            name: post_environment_domains
             filters: { branches: { ignore: [master] } }
-            requires: [dev_run_behave_tests_pr_build]
+            requires: [dev_run_behave_tests]
 
         - hold-for-destruction:
-            name: hold_env_for_destruction_pr_build
+            name: hold_env_for_destruction
             filters: { branches: { ignore: [master] } }
             type: approval
-            requires: [dev_run_behave_tests_pr_build]
+            requires: [dev_run_behave_tests]
 
         - use-my-lpa/destroy_dev_environment:
-            name: dev_destroy_environment_pr_build
+            name: dev_destroy_environment
             filters: { branches: { ignore: [master] } }
-            requires: [hold_env_for_destruction_pr_build]
+            requires: [hold_env_for_destruction]
 
 
   path_to_live:
@@ -182,6 +182,7 @@ workflows:
                 web_front_build_path_to_live,
                 web_api_build_path_to_live,
                 app_api_build_path_to_live,
+                pdf_build_path_to_live,
               ]
         - ecr_scan_results:
             name: ecr_scan_results_master_path_to_live
@@ -210,32 +211,33 @@ workflows:
 
         # Provision and test production
         - use-my-lpa/apply_shared_terraform:
-            name: production_apply_shared_terraform_path_to_live
+            name: production_apply_shared_terraform
             workspace: production
             filters: { branches: { only: [master] } }
             requires: [preprod_run_behave_tests_path_to_live]
         - use-my-lpa/apply_environment_terraform:
-            name: production_apply_environment_terraform_path_to_live
+            name: production_apply_environment_terraform
             workspace: production
             filters: { branches: { only: [master] } }
             requires:
               [
-                production_apply_shared_terraform_path_to_live,
+                production_apply_shared_terraform,
                 app_front_build_path_to_live,
                 web_front_build_path_to_live,
                 web_api_build_path_to_live,
                 app_api_build_path_to_live,
+                pdf_build_path_to_live,
               ]
 
         - use-my-lpa/run_healthcheck_test:
-            name: prod_run_healthcheck_test_path_to_live
+            name: prod_run_healthcheck_test
             filters: { branches: { only: [master] } }
-            requires: [production_apply_environment_terraform_path_to_live]
+            requires: [production_apply_environment_terraform]
 
         - slack_notify_production_release:
-            name: post_production_release_message_path_to_live
+            name: post_production_release_message
             filters: { branches: { only: [master] } }
-            requires: [prod_run_healthcheck_test_path_to_live]
+            requires: [prod_run_healthcheck_test]
 
 
 orbs:
