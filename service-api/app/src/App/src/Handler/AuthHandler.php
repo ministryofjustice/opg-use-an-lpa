@@ -11,6 +11,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 
+/**
+ * Class AuthHandler
+ * @package App\Handler
+ * @codeCoverageIgnore
+ */
 class AuthHandler implements RequestHandlerInterface
 {
     /**
