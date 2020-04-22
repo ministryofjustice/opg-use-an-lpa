@@ -114,7 +114,7 @@ class ECRScanChecker:
         return response
 
     def post_to_slack(self, slack_webhook):
-        if self.report is not None:
+        if self.report != "":
             ci_footer = "*Github Branch:* {0}\n\n*CircleCI Job Link:* {1}\n\n".format(
                 os.getenv('CIRCLE_BRANCH', ""),
                 os.getenv('CIRCLE_BUILD_URL', ""))
