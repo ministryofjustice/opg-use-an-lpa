@@ -129,6 +129,7 @@ workflows:
               web_front_build,
               web_api_build,
               app_api_build,
+              pdf_build,
             ]
       - ecr_scan_results:
           name: ecr_scan_results_master
@@ -172,6 +173,7 @@ workflows:
               web_front_build,
               web_api_build,
               app_api_build,
+              pdf_build,
             ]
 
       - use-my-lpa/run_healthcheck_test:
