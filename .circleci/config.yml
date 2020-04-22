@@ -76,7 +76,7 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires:
               [
-                dev_apply_shared_terraform
+                dev_apply_shared_terraform,
                 app_front_build_pr_build,
                 web_front_build_pr_build,
                 web_api_build_pr_build,
@@ -167,17 +167,17 @@ workflows:
 
         # Provision and test preproduction
         - use-my-lpa/apply_shared_terraform:
-            name: preprod_apply_shared_terraform_path_to_live
+            name: preprod_apply_shared_terraform
             workspace: preproduction
             filters: { branches: { only: [master] } }
 
         - use-my-lpa/apply_environment_terraform:
-            name: preprod_apply_environment_terraform_path_to_live
+            name: preprod_apply_environment_terraform
             workspace: preproduction
             filters: { branches: { only: [master] } }
             requires:
               [
-                preprod_apply_shared_terraform_path_to_live,
+                preprod_apply_shared_terraform,
                 app_front_build_path_to_live,
                 web_front_build_path_to_live,
                 web_api_build_path_to_live,
@@ -185,7 +185,7 @@ workflows:
                 pdf_build_path_to_live,
               ]
         - ecr_scan_results:
-            name: ecr_scan_results_master_path_to_live
+            name: ecr_scan_results_master
             filters: { branches: { only: [master] } }
             requires:
               [
@@ -194,27 +194,27 @@ workflows:
                 web_api_build_path_to_live,
                 app_api_build_path_to_live,
                 pdf_build_path_to_live,
-                preprod_apply_environment_terraform_path_to_live,
+                preprod_apply_environment_terraform,
               ]
 
         - use-my-lpa/seed_database:
-            name: preprod_seed_database_path_to_live
+            name: preprod_seed_database
             #workspace: preproduction   # Not needed as the target account is within the config file.
             filters: { branches: { only: [master] } }
-            requires: [preprod_apply_environment_terraform_path_to_live]
+            requires: [preprod_apply_environment_terraform]
 
         - use-my-lpa/run_behave_suite:
-            name: preprod_run_behave_tests_path_to_live
+            name: preprod_run_behave_tests
             workspace: preproduction
             filters: { branches: { only: [master] } }
-            requires: [preprod_seed_database_path_to_live]
+            requires: [preprod_seed_database]
 
         # Provision and test production
         - use-my-lpa/apply_shared_terraform:
             name: production_apply_shared_terraform
             workspace: production
             filters: { branches: { only: [master] } }
-            requires: [preprod_run_behave_tests_path_to_live]
+            requires: [preprod_run_behave_tests]
         - use-my-lpa/apply_environment_terraform:
             name: production_apply_environment_terraform
             workspace: production
