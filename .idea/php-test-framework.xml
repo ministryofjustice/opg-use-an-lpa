@@ -27,8 +27,8 @@
         <cache>
           <versions>
             <info id="Local" version="7.5.20" />
-            <info id="interpreter-d0145a1b-f903-43c7-8428-a985293fe8b9" version="7.5.17" />
-            <info id="interpreter-f727a88f-8a28-4df0-87a2-12a139ed8d31" version="7.5.17" />
+            <info id="interpreter-d0145a1b-f903-43c7-8428-a985293fe8b9" version="7.5.20" />
+            <info id="interpreter-f727a88f-8a28-4df0-87a2-12a139ed8d31" version="7.5.20" />
           </versions>
         </cache>
       </tool>

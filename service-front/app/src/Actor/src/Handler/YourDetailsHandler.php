@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Common\Handler\AbstractHandler;
-use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,7 +45,7 @@ class YourDetailsHandler extends AbstractHandler implements UserAware
         $user = $this->getUser($request);
 
         return new HtmlResponse($this->renderer->render('actor::your-details', [
-            'user' => $user,
+            'user' => $user
         ]));
     }
 }

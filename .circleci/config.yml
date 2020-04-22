@@ -18,171 +18,226 @@ workflows:
           environment: demo
           requires: [redeploy_demo]
 
-  path_to_live:
-    jobs:
-      # Common tasks
-      - use-my-lpa/lint_terraform:
-          name: lint_terraform
-          filters: { branches: { ignore: [master] } }
 
-      - use-my-lpa/node_test_web:
-          name: test_web
-      - use-my-lpa/node_build_web:
-          name: build_web
-          requires: [test_web]
-      - use-my-lpa/node_test_service_pdf:
-          name: test_pdf
+  pr_build:
+      jobs:
+        # Common tasks
+        - use-my-lpa/lint_terraform:
+            name: lint_terraform_pr_build
+            filters: { branches: { ignore: [master] } }
 
-      - use-my-lpa/docker_build_front_app:
-          name: app_front_build
-          requires: [build_web]
-      - use-my-lpa/docker_build_front_web:
-          name: web_front_build
-          requires: [build_web]
+        - use-my-lpa/node_test_web:
+            name: test_web_pr_build
+            filters: { branches: { ignore: [master] } }
+        - use-my-lpa/node_build_web:
+            name: build_web_pr_build
+            filters: { branches: { ignore: [master] } }
+            requires: [test_web_pr_build]
+        - use-my-lpa/node_test_service_pdf:
+            name: test_pdf_pr_build
+            filters: { branches: { ignore: [master] } }
 
-      - use-my-lpa/docker_build_api_app:
-          name: app_api_build
-      - use-my-lpa/docker_build_api_web:
-          name: web_api_build
+        - use-my-lpa/docker_build_front_app:
+            name: app_front_build_pr_build
+            filters: { branches: { ignore: [master] } }
+            requires: [build_web_pr_build]
 
-      - use-my-lpa/docker_build_pdf:
-          name: pdf_build
-          requires: [test_pdf]
+        - use-my-lpa/docker_build_front_web:
+            name: web_front_build_pr_build
+            filters: { branches: { ignore: [master] } }
+            requires: [build_web_pr_build]
 
-      - use-my-lpa/coveralls_upload:
-          name: coveralls_upload
-          requires:
-            [app_front_build, app_api_build, test_web, test_pdf]
+        - use-my-lpa/docker_build_api_app:
+            name: app_api_build_pr_build
+            filters: { branches: { ignore: [master] } }
+        - use-my-lpa/docker_build_api_web:
+            name: web_api_build_pr_build
+            filters: { branches: { ignore: [master] } }
+
+        - use-my-lpa/docker_build_pdf:
+            name: pdf_build_pr_build
+            filters: { branches: { ignore: [master] } }
+            requires: [test_pdf_pr_build]
+
+        - use-my-lpa/coveralls_upload:
+            name: coveralls_upload_pr_build
+            filters: { branches: { ignore: [master] } }
+            requires:
+              [app_front_build_pr_build, app_api_build_pr_build, test_web_pr_build, test_pdf_pr_build]
 
             # Provision and test development
-      - use-my-lpa/apply_shared_terraform:
-          name: dev_apply_shared_terraform
-          filters: { branches: { ignore: [master] } }
-          requires: [lint_terraform]
+        - use-my-lpa/apply_shared_terraform:
+            name: dev_apply_shared_terraform
+            filters: { branches: { ignore: [master] } }
+            requires: [lint_terraform_pr_build]
 
-      - use-my-lpa/apply_environment_terraform:
-          name: dev_apply_environment_terraform
-          filters: { branches: { ignore: [master] } }
-          requires:
-            [
-              dev_apply_shared_terraform,
-              app_front_build,
-              web_front_build,
-              web_api_build,
-              app_api_build,
-              pdf_build,
+        - use-my-lpa/apply_environment_terraform:
+            name: dev_apply_environment_terraform
+            filters: { branches: { ignore: [master] } }
+            requires:
+              [
+                dev_apply_shared_terraform,
+                app_front_build_pr_build,
+                web_front_build_pr_build,
+                web_api_build_pr_build,
+                app_api_build_pr_build,
+                pdf_build_pr_build,
               ]
 
-      - ecr_scan_results:
-          name: ecr_scan_results_development
-          filters: { branches: { ignore: [master] } }
-          requires:
-            [
-              app_front_build,
-              web_front_build,
-              web_api_build,
-              app_api_build,
-              pdf_build,
-              dev_apply_environment_terraform,
-            ]
+        - ecr_scan_results:
+            name: ecr_scan_results_development
+            filters: { branches: { ignore: [master] } }
+            requires:
+              [
+                app_front_build_pr_build,
+                web_front_build_pr_build,
+                web_api_build_pr_build,
+                app_api_build_pr_build,
+                pdf_build_pr_build,
+                dev_apply_environment_terraform,
+              ]
 
-      - use-my-lpa/seed_database:
-          name: dev_seed_database
-          filters: { branches: { ignore: [master] } }
-          requires: [dev_apply_environment_terraform]
+        - use-my-lpa/seed_database:
+            name: dev_seed_database
+            filters: { branches: { ignore: [master] } }
+            requires: [dev_apply_environment_terraform]
 
-      - use-my-lpa/run_behave_suite:
-          name: dev_run_behave_tests
-          filters: { branches: { ignore: [master] } }
-          requires: [dev_seed_database]
+        - use-my-lpa/run_behave_suite:
+            name: dev_run_behave_tests
+            filters: { branches: { ignore: [master] } }
+            requires: [dev_seed_database]
 
-      - slack_notify_domain:
-          name: post_environment_domains
-          filters: { branches: { ignore: [master] } }
-          requires: [dev_run_behave_tests]
+        - slack_notify_domain:
+            name: post_environment_domains
+            filters: { branches: { ignore: [master] } }
+            requires: [dev_run_behave_tests]
 
-      - hold-for-destruction:
-          name: hold_env_for_destruction
-          type: approval
-          filters: { branches: { ignore: [master] } }
-          requires: [dev_run_behave_tests]
+        - hold-for-destruction:
+            name: hold_env_for_destruction
+            filters: { branches: { ignore: [master] } }
+            type: approval
+            requires: [dev_run_behave_tests]
 
-      - use-my-lpa/destroy_dev_environment:
-          name: dev_destroy_environment
-          filters: { branches: { ignore: [master] } }
-          requires: [hold_env_for_destruction]
+        - use-my-lpa/destroy_dev_environment:
+            name: dev_destroy_environment
+            filters: { branches: { ignore: [master] } }
+            requires: [hold_env_for_destruction]
 
-      # Provision and test preproduction
-      - use-my-lpa/apply_shared_terraform:
-          name: preprod_apply_shared_terraform
-          workspace: preproduction
-          filters: { branches: { only: [master] } }
 
-      - use-my-lpa/apply_environment_terraform:
-          name: preprod_apply_environment_terraform
-          workspace: preproduction
-          filters: { branches: { only: [master] } }
-          requires:
-            [
-              preprod_apply_shared_terraform,
-              app_front_build,
-              web_front_build,
-              web_api_build,
-              app_api_build,
-            ]
-      - ecr_scan_results:
-          name: ecr_scan_results_master
-          filters: { branches: { only: [master] } }
-          requires:
-            [
-              app_front_build,
-              web_front_build,
-              web_api_build,
-              app_api_build,
-              pdf_build,
-              preprod_apply_environment_terraform,
-            ]
+  path_to_live:
+      jobs:
+        # Common tasks
+        - use-my-lpa/node_test_web:
+            name: test_web_path_to_live
+            filters: { branches: { only: [master] } }
+        - use-my-lpa/node_build_web:
+            name: build_web_path_to_live
+            filters: { branches: { only: [master] } }
+            requires: [test_web_path_to_live]
+        - use-my-lpa/node_test_service_pdf:
+            name: test_pdf_path_to_live
+            filters: { branches: { only: [master] } }
 
-      - use-my-lpa/seed_database:
-          name: preprod_seed_database
-          #workspace: preproduction   # Not needed as the target account is within the config file.
-          filters: { branches: { only: [master] } }
-          requires: [preprod_apply_environment_terraform]
+        - use-my-lpa/docker_build_front_app:
+            name: app_front_build_path_to_live
+            filters: { branches: { only: [master] } }
+            requires: [build_web_path_to_live]
+        - use-my-lpa/docker_build_front_web:
+            name: web_front_build_path_to_live
+            filters: { branches: { only: [master] } }
+            requires: [build_web_path_to_live]
 
-      - use-my-lpa/run_behave_suite:
-          name: preprod_run_behave_tests
-          workspace: preproduction
-          filters: { branches: { only: [master] } }
-          requires: [preprod_seed_database]
+        - use-my-lpa/docker_build_api_app:
+            name: app_api_build_path_to_live
+            filters: { branches: { only: [master] } }
+        - use-my-lpa/docker_build_api_web:
+            name: web_api_build_path_to_live
+            filters: { branches: { only: [master] } }
 
-      # Provision and test production
-      - use-my-lpa/apply_shared_terraform:
-          name: production_apply_shared_terraform
-          workspace: production
-          filters: { branches: { only: [master] } }
-          requires: [preprod_run_behave_tests]
-      - use-my-lpa/apply_environment_terraform:
-          name: production_apply_environment_terraform
-          workspace: production
-          filters: { branches: { only: [master] } }
-          requires:
-            [
-              production_apply_shared_terraform,
-              app_front_build,
-              web_front_build,
-              web_api_build,
-              app_api_build,
-            ]
+        - use-my-lpa/docker_build_pdf:
+            name: pdf_build_path_to_live
+            filters: { branches: { only: [master] } }
+            requires: [test_pdf_path_to_live]
 
-      - use-my-lpa/run_healthcheck_test:
-          name: prod_run_healthcheck_test
-          filters: { branches: { only: [master] } }
-          requires: [production_apply_environment_terraform]
+        - use-my-lpa/coveralls_upload:
+            name: coveralls_upload_path_to_live
+            filters: { branches: { only: [master] } }
+            requires:
+              [app_front_build_path_to_live, app_api_build_path_to_live, test_web_path_to_live, test_pdf_path_to_live]
 
-      - slack_notify_production_release:
-          name: post_production_release_message
-          filters: { branches: { only: [master] } }
-          requires: [prod_run_healthcheck_test]
+        # Provision and test preproduction
+        - use-my-lpa/apply_shared_terraform:
+            name: preprod_apply_shared_terraform
+            workspace: preproduction
+            filters: { branches: { only: [master] } }
+
+        - use-my-lpa/apply_environment_terraform:
+            name: preprod_apply_environment_terraform
+            workspace: preproduction
+            filters: { branches: { only: [master] } }
+            requires:
+              [
+                preprod_apply_shared_terraform,
+                app_front_build_path_to_live,
+                web_front_build_path_to_live,
+                web_api_build_path_to_live,
+                app_api_build_path_to_live,
+                pdf_build_path_to_live,
+              ]
+        - ecr_scan_results:
+            name: ecr_scan_results_master
+            filters: { branches: { only: [master] } }
+            requires:
+              [
+                app_front_build_path_to_live,
+                web_front_build_path_to_live,
+                web_api_build_path_to_live,
+                app_api_build_path_to_live,
+                pdf_build_path_to_live,
+                preprod_apply_environment_terraform,
+              ]
+
+        - use-my-lpa/seed_database:
+            name: preprod_seed_database
+            #workspace: preproduction   # Not needed as the target account is within the config file.
+            filters: { branches: { only: [master] } }
+            requires: [preprod_apply_environment_terraform]
+
+        - use-my-lpa/run_behave_suite:
+            name: preprod_run_behave_tests
+            workspace: preproduction
+            filters: { branches: { only: [master] } }
+            requires: [preprod_seed_database]
+
+        # Provision and test production
+        - use-my-lpa/apply_shared_terraform:
+            name: production_apply_shared_terraform
+            workspace: production
+            filters: { branches: { only: [master] } }
+            requires: [preprod_run_behave_tests]
+        - use-my-lpa/apply_environment_terraform:
+            name: production_apply_environment_terraform
+            workspace: production
+            filters: { branches: { only: [master] } }
+            requires:
+              [
+                production_apply_shared_terraform,
+                app_front_build_path_to_live,
+                web_front_build_path_to_live,
+                web_api_build_path_to_live,
+                app_api_build_path_to_live,
+                pdf_build_path_to_live,
+              ]
+
+        - use-my-lpa/run_healthcheck_test:
+            name: prod_run_healthcheck_test
+            filters: { branches: { only: [master] } }
+            requires: [production_apply_environment_terraform]
+
+        - slack_notify_production_release:
+            name: post_production_release_message
+            filters: { branches: { only: [master] } }
+            requires: [prod_run_healthcheck_test]
 
 
 orbs:
@@ -212,7 +267,7 @@ orbs:
                 export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
-                eval $(aws ecr get-login --no-include-email --region=eu-west-1)
+                aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 311462405659.dkr.ecr.eu-west-1.amazonaws.com
 
 
     executors:
@@ -407,16 +462,17 @@ orbs:
           - run:
               name: Push container
               command: |
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
 
                 docker tag front-app:latest << parameters.container_repo_url >>:latest
-                docker tag front-app:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag front-app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push << parameters.container_repo_url >>
                 else
-                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
 
       docker_build_front_web:
@@ -445,16 +501,17 @@ orbs:
           - run:
               name: Push container
               command: |
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
 
                 docker tag front-web:latest << parameters.container_repo_url >>:latest
-                docker tag front-web:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag front-web:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push << parameters.container_repo_url >>
                 else
-                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
 
       #----------------------------------------------------
@@ -513,16 +570,17 @@ orbs:
           - run:
               name: Push container
               command: |
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
 
                 docker tag api-app:latest << parameters.container_repo_url >>:latest
-                docker tag api-app:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag api-app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push << parameters.container_repo_url >>
                 else
-                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
 
       docker_build_api_web:
@@ -548,16 +606,17 @@ orbs:
           - run:
               name: Push container
               command: |
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
 
                 docker tag api-web:latest << parameters.container_repo_url >>:latest
-                docker tag api-web:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag api-web:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push << parameters.container_repo_url >>
                 else
-                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
 
       docker_build_pdf:
@@ -584,16 +643,17 @@ orbs:
           - run:
               name: Push container
               command: |
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
 
                 docker tag pdf:latest << parameters.container_repo_url >>:latest
-                docker tag pdf:latest << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                docker tag pdf:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push << parameters.container_repo_url >>
                 else
-                  docker push << parameters.container_repo_url >>:$CIRCLE_BRANCH-$SHORT_HASH
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
 
 
@@ -650,11 +710,7 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
-          container_version:
-            description: Container version
-            type: string
-            default: ${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
         steps:
           - checkout
           - run:
@@ -663,20 +719,19 @@ orbs:
                 terraform --version
                 cd ~/project/terraform/account
                 terraform init -lock-timeout=300s
-                export TF_WORKSPACE=development >> $BASH_ENV
+                export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 terraform validate
           - run:
               name: Lint Environment Terraform
               command: |
-                ENV_NAME=<<parameters.workspace>>
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                echo $SHORT_HASH
                 cd ~/project/terraform/environment
                 terraform init -lock-timeout=300s
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                terraform validate -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
+                export IMAGE_TAG=$(~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
+                terraform validate -var container_version=${IMAGE_TAG}
 
       apply_shared_terraform:
         #
@@ -710,20 +765,19 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
         steps:
           - checkout
           - run:
               name: Apply Environment Terraform
               command: |
-                ENV_NAME=<<parameters.workspace>>
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                echo $SHORT_HASH
                 cd ~/project/terraform/environment
                 terraform init -lock-timeout=300s
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                terraform apply -lock-timeout=300s --auto-approve -var container_version=$CIRCLE_BRANCH-$SHORT_HASH
+                export IMAGE_TAG=$(~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
+                terraform apply -lock-timeout=300s --auto-approve -var container_version=${IMAGE_TAG}
                 mv cluster_config.json /tmp/
           - persist_to_workspace:
               root: /tmp
@@ -739,19 +793,16 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
         steps:
           - checkout
           - run:
               name: Destroy Development Environment
               command: |
-                ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
-                echo $TF_WORKSPACE
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   cd ~/project/terraform/environment
                   terraform init -lock-timeout=300s
-                  export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                  export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                   echo $TF_WORKSPACE
                   terraform destroy -lock-timeout=300s -auto-approve
                 fi
@@ -793,10 +844,11 @@ orbs:
           - run:
               name: Seed DynamoDB
               command: |
-                sudo pip3 install boto3
+                sudo pip3 install -r service-api/seeding/requirements.txt
                 export AWS_ACCOUNT_ID=$(cat /tmp/cluster_config.json | jq .account_id | xargs)
                 export DYNAMODB_TABLE_ACTOR_CODES=$(cat /tmp/cluster_config.json | jq .actor_lpa_codes_table | xargs)
                 export DYNAMODB_TABLE_VIEWER_CODES=$(cat /tmp/cluster_config.json | jq .viewer_codes_table | xargs)
+                export DYNAMODB_TABLE_ACTOR_USERS=$(cat /tmp/cluster_config.json | jq .actor_users_table | xargs)
                 python service-api/seeding/dynamodb.py
 
       #----------------------------------------------------
@@ -811,7 +863,7 @@ orbs:
           workspace:
             description: Terraform workspace name
             type: string
-            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
         steps:
           - checkout
           - install_webdriver
@@ -828,8 +880,7 @@ orbs:
           - run:
               name: Allow CircleCI ingress to environment
               command: |
-                ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                export TF_WORKSPACE=$(bash ~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 if [ "${TF_WORKSPACE}" != "production" ]; then
                   python pipeline_scripts/ci_ingress.py /tmp/cluster_config.json --add
@@ -838,19 +889,17 @@ orbs:
           - run:
               name: Run suite
               command: |
-                ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                export TF_WORKSPACE=$(bash ~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-                echo $SHORT_HASH
+                export IMAGE_TAG=$(~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
                 behave -v --logging-level DEBUG
           - store_artifacts:
               path: features/failed_scenarios_screenshots
           - run:
               name: Remove CircleCI ingress to environment
               command: |
-                ENV_NAME=<<parameters.workspace>>
-                export TF_WORKSPACE=${ENV_NAME:0:13} >> $BASH_ENV
+                export TF_WORKSPACE=$(bash ~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 python pipeline_scripts/ci_ingress.py /tmp/cluster_config.json
               when: always
@@ -948,5 +997,6 @@ jobs:
           name: Check ECR Scan Results
           command: |
             sudo pip3 install -r pipeline_scripts/check_ecr_scan_results/requirements.txt
-            export SHORT_HASH=${CIRCLE_SHA1:0:7} >> $BASH_ENV
-            python pipeline_scripts/check_ecr_scan_results/aws_ecr_scan_results.py --tag $CIRCLE_BRANCH-$SHORT_HASH
+            export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+            echo $IMAGE_TAG
+            python pipeline_scripts/check_ecr_scan_results/aws_ecr_scan_results.py --tag $IMAGE_TAG

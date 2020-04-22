@@ -1,0 +1,34 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}LPA Removed {{ parent() }} {% endblock %}
+
+{% block content %}
+
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back</a>
+
+        <main class="govuk-main-wrapper">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+
+                    <h1 class="govuk-heading-xl">We've removed an LPA from your account</h1>
+
+                    <p class="govuk-body">We've removed an LPA from your account because either:</p>
+
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>you can no longer act as an attorney on the LPA</li>
+                        <li>you've told us you no longer want to be an attorney</li>
+                        <li>the donor has removed you as an attorney</li>
+                    </ul>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+{% endblock %}
