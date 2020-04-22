@@ -12,6 +12,7 @@ use Common\Service\Pdf\PdfService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class DownloadLpaHandler
@@ -22,6 +23,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 class DownloadLpaHandler implements RequestHandlerInterface
 {
     use SessionTrait;
+    use Logger;
+
+    /**
+     * @var LoggerInterface;
+     */
+    private $logger;
 
     /**
      * @var LpaService
@@ -38,13 +45,16 @@ class DownloadLpaHandler implements RequestHandlerInterface
      *
      * @param LpaService        $lpaService
      * @param PdfService        $pdfService
+     * @param LoggerInterface   $logger
      */
     public function __construct(
         LpaService $lpaService,
-        PdfService $pdfService
+        PdfService $pdfService,
+        LoggerInterface $logger
     ) {
         $this->lpaService = $lpaService;
         $this->pdfService = $pdfService;
+        $this->logger = $logger;
     }
 
     /**
@@ -58,6 +68,8 @@ class DownloadLpaHandler implements RequestHandlerInterface
         $surname = $this->getSession($request, 'session')->get('surname');
 
         if (!isset($code)) {
+            $this->getLogger()->error("Session timed out unable to generated PDF");
+
             throw new SessionTimeoutException();
         }
 

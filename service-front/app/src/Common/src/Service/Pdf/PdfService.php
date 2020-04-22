@@ -112,10 +112,12 @@ class PdfService
 
             switch ($response->getStatusCode()) {
                 case StatusCodeInterface::STATUS_OK:
-                    $this->logger->info('Successfully generated PDF and presented for download {code}',
-                    [
-                        'code' => $response->getStatusCode()
-                    ]);
+                    $this->logger->info(
+                        'Successfully generated PDF and presented for download {code}',
+                        [
+                            'code' => $response->getStatusCode()
+                        ]
+                    );
 
                     return $response->getBody();
                 default:
@@ -129,7 +131,8 @@ class PdfService
                 [
                     'code'      => $ex->getCode(),
                     'response'  => $response
-                ]);
+                ]
+            );
 
             throw ApiException::create('Error whilst making http POST request', $response, $ex);
         }
