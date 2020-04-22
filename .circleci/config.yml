@@ -991,8 +991,6 @@ jobs:
       - image: circleci/python
     steps:
       - checkout
-      - attach_workspace:
-          at: /tmp
       - run:
           name: Check ECR Scan Results
           command: |
