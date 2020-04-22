@@ -90,3 +90,11 @@ data "aws_ip_ranges" "route53_healthchecks" {
   services = ["route53_healthchecks"]
   regions  = ["GLOBAL"]
 }
+
+data "aws_security_group" "brute_force_cache_service" {
+  name = "brute-force-cache-service"
+}
+
+data "aws_elasticache_cluster" "brute_force_cache" {
+  cluster_id = "brute-force-cache"
+}
