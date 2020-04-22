@@ -23,219 +23,219 @@ workflows:
       jobs:
         # Common tasks
         - use-my-lpa/lint_terraform:
-            name: lint_terraform
+            name: lint_terraform_pr_build
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/node_test_web:
-            name: test_web
+            name: test_web_pr_build
             filters: { branches: { ignore: [master] } }
         - use-my-lpa/node_build_web:
-            name: build_web
+            name: build_web_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [test_web]
+            requires: [test_web_pr_build]
         - use-my-lpa/node_test_service_pdf:
-            name: test_pdf
+            name: test_pdf_pr_build
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/docker_build_front_app:
-            name: app_front_build
+            name: app_front_build_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [build_web]
+            requires: [build_web_pr_build]
 
         - use-my-lpa/docker_build_front_web:
-            name: web_front_build
+            name: web_front_build_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [build_web]
+            requires: [build_web_pr_build]
 
         - use-my-lpa/docker_build_api_app:
-            name: app_api_build
+            name: app_api_build_pr_build
             filters: { branches: { ignore: [master] } }
         - use-my-lpa/docker_build_api_web:
-            name: web_api_build
+            name: web_api_build_pr_build
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/docker_build_pdf:
-            name: pdf_build
+            name: pdf_build_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [test_pdf]
+            requires: [test_pdf_pr_build]
 
         - use-my-lpa/coveralls_upload:
-            name: coveralls_upload
+            name: coveralls_upload_pr_build
             filters: { branches: { ignore: [master] } }
             requires:
-              [app_front_build, app_api_build, test_web, test_pdf]
+              [app_front_build_pr_build, app_api_build_pr_build, test_web_pr_build, test_pdf_pr_build]
 
             # Provision and test development
         - use-my-lpa/apply_shared_terraform:
-            name: dev_apply_shared_terraform
+            name: dev_apply_shared_terraform_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [lint_terraform]
+            requires: [lint_terraform_pr_build]
 
         - use-my-lpa/apply_environment_terraform:
-            name: dev_apply_environment_terraform
+            name: dev_apply_environment_terraform_pr_build
             filters: { branches: { ignore: [master] } }
             requires:
               [
-                dev_apply_shared_terraform,
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
-                pdf_build,
+                dev_apply_shared_terraform_pr_build,
+                app_front_build_pr_build,
+                web_front_build_pr_build,
+                web_api_build_pr_build,
+                app_api_build_pr_build,
+                pdf_build_pr_build,
               ]
 
         - ecr_scan_results:
-            name: ecr_scan_results_development
+            name: ecr_scan_results_development_pr_build
             filters: { branches: { ignore: [master] } }
             requires:
               [
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
-                pdf_build,
-                dev_apply_environment_terraform,
+                app_front_build_pr_build,
+                web_front_build_pr_build,
+                web_api_build_pr_build,
+                app_api_build_pr_build,
+                pdf_build_pr_build,
+                dev_apply_environment_terraform_pr_build,
               ]
 
         - use-my-lpa/seed_database:
-            name: dev_seed_database
+            name: dev_seed_database_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [dev_apply_environment_terraform]
+            requires: [dev_apply_environment_terraform_pr_build]
 
         - use-my-lpa/run_behave_suite:
-            name: dev_run_behave_tests
+            name: dev_run_behave_tests_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [dev_seed_database]
+            requires: [dev_seed_database_pr_build]
 
         - slack_notify_domain:
-            name: post_environment_domains
+            name: post_environment_domains_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [dev_run_behave_tests]
+            requires: [dev_run_behave_tests_pr_build]
 
         - hold-for-destruction:
-            name: hold_env_for_destruction
+            name: hold_env_for_destruction_pr_build
             filters: { branches: { ignore: [master] } }
             type: approval
-            requires: [dev_run_behave_tests]
+            requires: [dev_run_behave_tests_pr_build]
 
         - use-my-lpa/destroy_dev_environment:
-            name: dev_destroy_environment
+            name: dev_destroy_environment_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [hold_env_for_destruction]
+            requires: [hold_env_for_destruction_pr_build]
 
 
   path_to_live:
       jobs:
         # Common tasks
         - use-my-lpa/node_test_web:
-            name: test_web
+            name: test_web_path_to_live
             filters: { branches: { only: [master] } }
         - use-my-lpa/node_build_web:
-            name: build_web
+            name: build_web_path_to_live
             filters: { branches: { only: [master] } }
-            requires: [test_web]
+            requires: [test_web_path_to_live]
         - use-my-lpa/node_test_service_pdf:
-            name: test_pdf
+            name: test_pdf_path_to_live
             filters: { branches: { only: [master] } }
 
         - use-my-lpa/docker_build_front_app:
-            name: app_front_build
+            name: app_front_build_path_to_live
             filters: { branches: { only: [master] } }
-            requires: [build_web]
+            requires: [build_web_path_to_live]
         - use-my-lpa/docker_build_front_web:
-            name: web_front_build
+            name: web_front_build_path_to_live
             filters: { branches: { only: [master] } }
-            requires: [build_web]
+            requires: [build_web_path_to_live]
 
         - use-my-lpa/docker_build_api_app:
-            name: app_api_build
+            name: app_api_build_path_to_live
             filters: { branches: { only: [master] } }
         - use-my-lpa/docker_build_api_web:
-            name: web_api_build
+            name: web_api_build_path_to_live
             filters: { branches: { only: [master] } }
 
         - use-my-lpa/docker_build_pdf:
-            name: pdf_build
+            name: pdf_build_path_to_live
             filters: { branches: { only: [master] } }
-            requires: [test_pdf]
+            requires: [test_pdf_path_to_live]
 
         - use-my-lpa/coveralls_upload:
-            name: coveralls_upload
+            name: coveralls_upload_path_to_live
             filters: { branches: { only: [master] } }
             requires:
-              [app_front_build, app_api_build, test_web, test_pdf]
+              [app_front_build_path_to_live, app_api_build_path_to_live, test_web_path_to_live, test_pdf_path_to_live]
 
         # Provision and test preproduction
         - use-my-lpa/apply_shared_terraform:
-            name: preprod_apply_shared_terraform
+            name: preprod_apply_shared_terraform_path_to_live
             workspace: preproduction
             filters: { branches: { only: [master] } }
 
         - use-my-lpa/apply_environment_terraform:
-            name: preprod_apply_environment_terraform
+            name: preprod_apply_environment_terraform_path_to_live
             workspace: preproduction
             filters: { branches: { only: [master] } }
             requires:
               [
-                preprod_apply_shared_terraform,
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
+                preprod_apply_shared_terraform_path_to_live,
+                app_front_build_path_to_live,
+                web_front_build_path_to_live,
+                web_api_build_path_to_live,
+                app_api_build_path_to_live,
               ]
         - ecr_scan_results:
-            name: ecr_scan_results_master
+            name: ecr_scan_results_master_path_to_live
             filters: { branches: { only: [master] } }
             requires:
               [
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
-                pdf_build,
-                preprod_apply_environment_terraform,
+                app_front_build_path_to_live,
+                web_front_build_path_to_live,
+                web_api_build_path_to_live,
+                app_api_build_path_to_live,
+                pdf_build_path_to_live,
+                preprod_apply_environment_terraform_path_to_live,
               ]
 
         - use-my-lpa/seed_database:
-            name: preprod_seed_database
+            name: preprod_seed_database_path_to_live
             #workspace: preproduction   # Not needed as the target account is within the config file.
             filters: { branches: { only: [master] } }
-            requires: [preprod_apply_environment_terraform]
+            requires: [preprod_apply_environment_terraform_path_to_live]
 
         - use-my-lpa/run_behave_suite:
-            name: preprod_run_behave_tests
+            name: preprod_run_behave_tests_path_to_live
             workspace: preproduction
             filters: { branches: { only: [master] } }
-            requires: [preprod_seed_database]
+            requires: [preprod_seed_database_path_to_live]
 
         # Provision and test production
         - use-my-lpa/apply_shared_terraform:
-            name: production_apply_shared_terraform
+            name: production_apply_shared_terraform_path_to_live
             workspace: production
             filters: { branches: { only: [master] } }
-            requires: [preprod_run_behave_tests]
+            requires: [preprod_run_behave_tests_path_to_live]
         - use-my-lpa/apply_environment_terraform:
-            name: production_apply_environment_terraform
+            name: production_apply_environment_terraform_path_to_live
             workspace: production
             filters: { branches: { only: [master] } }
             requires:
               [
-                production_apply_shared_terraform,
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
+                production_apply_shared_terraform_path_to_live,
+                app_front_build_path_to_live,
+                web_front_build_path_to_live,
+                web_api_build_path_to_live,
+                app_api_build_path_to_live,
               ]
 
         - use-my-lpa/run_healthcheck_test:
-            name: prod_run_healthcheck_test
+            name: prod_run_healthcheck_test_path_to_live
             filters: { branches: { only: [master] } }
-            requires: [production_apply_environment_terraform]
+            requires: [production_apply_environment_terraform_path_to_live]
 
         - slack_notify_production_release:
-            name: post_production_release_message
+            name: post_production_release_message_path_to_live
             filters: { branches: { only: [master] } }
-            requires: [prod_run_healthcheck_test]
+            requires: [prod_run_healthcheck_test_path_to_live]
 
 
 orbs:
