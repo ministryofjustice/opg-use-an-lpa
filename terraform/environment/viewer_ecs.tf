@@ -211,6 +211,10 @@ EOF
     {
       "name": "BRUTE_FORCE_CACHE_URL",
       "value": "${data.aws_elasticache_cluster.brute_force_cache.cache_nodes.0.address}"
+    },
+    {
+      "name": "COOKIE_SECURE",
+      "value": "${local.account.session_cookie_secure}"
     }]
   }
 
