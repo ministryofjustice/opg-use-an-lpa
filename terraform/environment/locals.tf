@@ -21,7 +21,6 @@ variable "accounts" {
       session_expires_use    = number
       logging_level          = number
       pagerduty_service_name = string
-      session_cookie_secure  = bool
     })
   )
 }
