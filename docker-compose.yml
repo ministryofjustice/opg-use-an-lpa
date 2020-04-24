@@ -138,6 +138,7 @@ services:
       - --no-interaction
       - --no-scripts
       - --optimize-autoloader
+      - --ignore-platform-reqs
 
   # ---------------------------
   # API
