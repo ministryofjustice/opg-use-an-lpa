@@ -134,7 +134,7 @@ class PdfService
                 ]
             );
 
-            throw ApiException::create('Error whilst making http POST request', $response, $ex);
+            throw ApiException::create('Error whilst making http POST request to PDF Service', $response, $ex);
         }
     }
 
