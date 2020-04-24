@@ -23,7 +23,6 @@ use Psr\Log\LoggerInterface;
 class DownloadLpaHandler implements RequestHandlerInterface
 {
     use SessionTrait;
-    use Logger;
 
     /**
      * @var LoggerInterface;
@@ -68,7 +67,7 @@ class DownloadLpaHandler implements RequestHandlerInterface
         $surname = $this->getSession($request, 'session')->get('surname');
 
         if (!isset($code)) {
-            $this->getLogger()->error("Session timed out unable to generated PDF");
+            $this->logger->error("Session timed out unable to generated PDF");
 
             throw new SessionTimeoutException();
         }
