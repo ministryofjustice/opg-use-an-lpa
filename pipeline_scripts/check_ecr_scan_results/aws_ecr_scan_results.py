@@ -1,29 +1,22 @@
 import boto3
 import argparse
+import requests
 import json
 import os
-import sys
-import requests
 
 
 class ECRScanChecker:
     aws_account_id = ''
     aws_iam_session = ''
     aws_ecr_client = ''
-    aws_ecr_repository_path = ''
     images_to_check = []
+    tag = ''
     report = ''
+    report_limit = ''
 
-    def __init__(self, config_file):
-        self.images_to_check = [
-            "api_app",
-            "api_web",
-            "front_app",
-            "front_web",
-            "pdf"
-        ]
-        self.aws_ecr_repository_path = 'use_an_lpa/'
-        self.read_parameters_from_file(config_file)
+    def __init__(self, report_limit, search_term):
+        self.report_limit = int(report_limit)
+        self.aws_account_id = 311462405659  # management account id
         self.set_iam_role_session()
         self.aws_ecr_client = boto3.client(
             'ecr',
@@ -31,11 +24,7 @@ class ECRScanChecker:
             aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
             aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
             aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
-
-    def read_parameters_from_file(self, config_file):
-        with open(config_file) as json_file:
-            parameters = json.load(json_file)
-            self.aws_account_id = 311462405659
+        self.images_to_check = self.get_repositories(search_term)
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
@@ -56,6 +45,14 @@ class ECRScanChecker:
         )
         self.aws_iam_session = session
 
+    def get_repositories(self, search_term):
+        images_to_check = []
+        response = self.aws_ecr_client.describe_repositories()
+        for repository in response["repositories"]:
+            if search_term in repository["repositoryName"]:
+                images_to_check.append(repository["repositoryName"])
+        return images_to_check
+
     def recursive_wait(self, tag):
         print("Waiting for ECR scans to complete...")
         for image in self.images_to_check:
@@ -64,85 +61,91 @@ class ECRScanChecker:
 
     def wait_for_scan_completion(self, image, tag):
         try:
-            repository_name = self.aws_ecr_repository_path+image
             waiter = self.aws_ecr_client.get_waiter('image_scan_complete')
             waiter.wait(
-                repositoryName=repository_name,
+                repositoryName=image,
                 imageId={
                     'imageTag': tag
                 },
-                maxResults=1,
                 WaiterConfig={
                     'Delay': 5,
                     'MaxAttempts': 60
                 }
             )
         except:
-            print("Unable to return ECR image scan results for", tag)
-            exit(1)
+            print("No ECR image scan results for image {0}, tag {1}".format(
+                image, tag))
 
     def recursive_check_make_report(self, tag):
         print("Checking ECR scan results...")
         for image in self.images_to_check:
-            if self.get_ecr_scan_findings(image, tag)[
-                    "imageScanFindings"]["findings"] != []:
-                cve = self.get_ecr_scan_findings(image, tag)[
-                    "imageScanFindings"]["findings"][0]["name"]
-                description = self.get_ecr_scan_findings(image, tag)[
-                    "imageScanFindings"]["findings"][0]["description"]
-                severity = self.get_ecr_scan_findings(image, tag)[
-                    "imageScanFindings"]["findings"][0]["severity"]
-                link = self.get_ecr_scan_findings(image, tag)[
-                    "imageScanFindings"]["findings"][0]["uri"]
-                title = "\n\n:warning: *AWS ECR Scan found results for {}:* \n\n".format(
-                    self.aws_ecr_repository_path+image)
-                result = "*Image:* {0} \n*Severity:* {1} \n*CVE:* {2} \n*Description:* {3} \n*Link:* {4}\n\n".format(
-                    self.aws_ecr_repository_path+image, severity, cve, description, link)
-                self.report += title + result
-                print(self.report)
+            try:
+                findings = self.get_ecr_scan_findings(image, tag)[
+                    "imageScanFindings"]
+                if findings["findings"] != []:
+
+                    counts = findings["findingSeverityCounts"]
+                    title = "\n\n:warning: *AWS ECR Scan found results for {}:* \n".format(
+                        image)
+                    severity_counts = "Severity finding counts:\n{}\nDisplaying the first {} in order of severity\n\n".format(
+                        counts, self.report_limit)
+                    self.report = title + severity_counts
+
+                    for finding in findings["findings"]:
+                        cve = finding["name"]
+                        description = finding["description"]
+                        severity = finding["severity"]
+                        link = finding["uri"]
+                        result = "*Image:* {0} \n**Tag:* {1} \n*Severity:* {2} \n*CVE:* {3} \n*Description:* {4} \n*Link:* {5}\n\n".format(
+                            image, tag, severity, cve, description, link)
+                        self.report += result
+                    print(self.report)
+            except:
+                print("Unable to get ECR image scan results for image {0}, tag {1}".format(
+                    image, tag))
 
     def get_ecr_scan_findings(self, image, tag):
-        repository_name = self.aws_ecr_repository_path+image
         response = self.aws_ecr_client.describe_image_scan_findings(
-            repositoryName=repository_name,
+            repositoryName=image,
             imageId={
                 'imageTag': tag
             },
-            maxResults=1
+            maxResults=self.report_limit
         )
         return response
 
     def post_to_slack(self, slack_webhook):
-        if os.getenv('CI'):
-            ci_footer = "*Github Branch:* {0}\n\n*CircleCI Job Link:* {1}\n\n".format(
-                os.getenv('CIRCLE_BRANCH'),
-                os.getenv('CIRCLE_BUILD_URL'))
-            self.report += ci_footer
+        if self.report != "":
+            branch_info = "*Github Branch:* {0}\n*CircleCI Job Link:* {1}\n\n".format(
+                os.getenv('CIRCLE_BRANCH', ""),
+                os.getenv('CIRCLE_BUILD_URL', ""))
+            self.report += branch_info
+            print(self.report)
 
-        post_data = json.dumps({"text": self.report})
-        response = requests.post(
-            slack_webhook, data=post_data,
-            headers={'Content-Type': 'application/json'}
-        )
-        if response.status_code != 200:
-            raise ValueError(
-                'Request to slack returned an error %s, the response is:\n%s'
-                % (response.status_code, response.text)
+            post_data = json.dumps({"text": self.report})
+            response = requests.post(
+                slack_webhook, data=post_data,
+                headers={'Content-Type': 'application/json'}
             )
+            if response.status_code != 200:
+                raise ValueError(
+                    'Request to slack returned an error %s, the response is:\n%s'
+                    % (response.status_code, response.text)
+                )
 
 
 def main():
     parser = argparse.ArgumentParser(
         description="Check ECR Scan results for all service container images.")
-
-    parser.add_argument("--config_file_path",
-                        nargs='?',
-                        default="/tmp/cluster_config.json",
-                        type=str,
-                        help="Path to config file produced by terraform")
+    parser.add_argument("--search",
+                        default="",
+                        help="The root part oof the ECR repositry path, for example online-lpa")
     parser.add_argument("--tag",
                         default="latest",
                         help="Image tag to check scan results for.")
+    parser.add_argument("--result_limit",
+                        default=5,
+                        help="How many results for each image to return. Defaults to 5")
     parser.add_argument("--slack_webhook",
                         default=os.getenv('SLACK_WEBHOOK'),
                         help="Webhook to use, determines what channel to post to")
@@ -151,7 +154,7 @@ def main():
                         help="Optionally turn off posting messages to slack")
 
     args = parser.parse_args()
-    work = ECRScanChecker(args.config_file_path)
+    work = ECRScanChecker(args.result_limit, args.search)
     work.recursive_wait(args.tag)
     work.recursive_check_make_report(args.tag)
     if args.slack_webhook is None:
