@@ -4,7 +4,6 @@ import argparse
 import json
 import os
 import pprint
-pp = pprint.PrettyPrinter(indent=4)
 
 
 class IngressManager:
@@ -97,44 +96,6 @@ class IngressManager:
                         except Exception as e:
                             print(e)
                             exit(1)
-
-    def clear_all_ci_ingress_rules_from_sg_old(self):
-        for sg_name in self.security_groups:
-            print(sg_name)
-            sg_rules = self.get_security_group(sg_name)[
-                'SecurityGroups'][0]['IpPermissions'][0]['IpRanges']
-            pp.pprint(self.get_security_group(sg_name))
-            for sg_rule in sg_rules:
-                pp.pprint(sg_rule)
-                if 'Description' in sg_rule and sg_rule['Description'] == "ci ingress":
-                    cidr_range_to_remove = sg_rule['CidrIp']
-                    print("found ci ingress rule in " + sg_name)
-                    try:
-                        print("Removing security group ingress rule " + str(sg_rule) + " from " +
-                              sg_name)
-                        self.aws_ec2_client.revoke_security_group_ingress(
-                            GroupName=sg_name,
-                            IpPermissions=[
-                                {
-                                    'FromPort': 443,
-                                    'IpProtocol': 'tcp',
-                                    'IpRanges': [
-                                        {
-                                            'CidrIp': cidr_range_to_remove,
-                                            'Description': 'ci ingress'
-                                        },
-                                    ],
-                                    'ToPort': 443,
-                                },
-                            ],
-                        )
-                        if self.verify_ingress_rule(sg_name):
-                            print(
-                                "Verify: Found security group rule that should have been removed from " + str(sg_name))
-                            exit(1)
-                    except Exception as e:
-                        print(e)
-                        exit(1)
 
     def verify_ingress_rule(self, sg_name):
         sg_rules = self.get_security_group(sg_name)[
