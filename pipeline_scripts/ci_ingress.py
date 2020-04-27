@@ -10,7 +10,6 @@ class IngressManager:
     aws_account_id = ''
     aws_iam_session = ''
     aws_ec2_client = ''
-    workspace = os.getenv('TF_WORKSPACE')
     security_groups = []
 
     def __init__(self, config_file):
