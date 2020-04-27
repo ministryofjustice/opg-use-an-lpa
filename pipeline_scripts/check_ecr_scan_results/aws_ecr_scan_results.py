@@ -83,15 +83,13 @@ class ECRScanChecker:
                 findings = self.get_ecr_scan_findings(image, tag)[
                     "imageScanFindings"]
                 if findings["findings"] != []:
-                    branch_info = "*Github Branch:* {0}\n\n*CircleCI Job Link:* {1}\n\n".format(
-                        os.getenv('CIRCLE_BRANCH', ""),
-                        os.getenv('CIRCLE_BUILD_URL', ""))
+
                     counts = findings["findingSeverityCounts"]
                     title = "\n\n:warning: *AWS ECR Scan found results for {}:* \n".format(
                         image)
                     severity_counts = "Severity finding counts:\n{}\nDisplaying the first {} in order of severity\n\n".format(
                         counts, self.report_limit)
-                    self.report = title + branch_info + severity_counts
+                    self.report = title + severity_counts
 
                     for finding in findings["findings"]:
                         cve = finding["name"]
@@ -118,6 +116,12 @@ class ECRScanChecker:
 
     def post_to_slack(self, slack_webhook):
         if self.report != "":
+            branch_info = "*Github Branch:* {0}\n*CircleCI Job Link:* {1}\n\n".format(
+                os.getenv('CIRCLE_BRANCH', ""),
+                os.getenv('CIRCLE_BUILD_URL', ""))
+            self.report += branch_info
+            print(self.report)
+
             post_data = json.dumps({"text": self.report})
             response = requests.post(
                 slack_webhook, data=post_data,
