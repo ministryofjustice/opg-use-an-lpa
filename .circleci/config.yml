@@ -991,12 +991,10 @@ jobs:
       - image: circleci/python
     steps:
       - checkout
-      - attach_workspace:
-          at: /tmp
       - run:
           name: Check ECR Scan Results
           command: |
             sudo pip3 install -r pipeline_scripts/check_ecr_scan_results/requirements.txt
             export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
             echo $IMAGE_TAG
-            python pipeline_scripts/check_ecr_scan_results/aws_ecr_scan_results.py --tag $IMAGE_TAG
+            python pipeline_scripts/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
