@@ -5,6 +5,12 @@ Feature: Index page
   So that I can navigate through the service from the start
 
   @ui
+  Scenario: Check cookie-secure set and http-only is set
+    Given I want to use my lasting power of attorney
+    When I access the use a lasting power of attorney web page
+    Then I want to ensure cookie attributes are set
+
+  @ui
   Scenario: The user is taken to the get started page when they request to get started from the index page
     Given I am on the index page
     When I request to get started with the service

@@ -2598,5 +2598,42 @@ class AccountContext implements Context
     {
         $this->ui->assertResponseStatus(404);
     }
-}
 
+    /**
+     * @Given /^I want to use my lasting power of attorney$/
+     */
+    public function iWantToUseMyLastingPowerOfAttorney()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I access the use a lasting power of attorney web page$/
+     */
+    public function iAccessTheUseALastingPowerOfAttorneyWebPage()
+    {
+        $this->ui->visit('https://use.lastingpowerofattorney.opg.service.justice.gov.uk/');
+        $this->ui->assertPageContainsText('Use a lasting power of attorney');
+    }
+
+    /**
+     * @Then /^I want to ensure cookie attributes are set$/
+     */
+    public function iWantToEnsureCookieAttributesAreSet()
+    {
+        $session = $this->ui->getSession();
+        var_dump($session->getCurrentUrl());
+        var_dump($session->getStatusCode());
+
+        // retrieving response headers:
+        print_r($session->getResponseHeaders('session'));
+
+        var_dump("----------------------");
+        var_dump($session->getCookie('session'));
+
+
+
+       // var_dump($driver->getWebDriverSession()->getAllCookies());
+        die;
+    }
+}
