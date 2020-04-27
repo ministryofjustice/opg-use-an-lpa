@@ -15,9 +15,15 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\StreamInterface;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Log\LoggerInterface;
 
 class PdfService
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     /**
      * @var string
      */
@@ -47,12 +53,14 @@ class PdfService
         TemplateRendererInterface $renderer,
         ClientInterface $httpClient,
         StylesService $styles,
+        LoggerInterface $logger,
         string $apiBaseUri,
         string $traceId
     ) {
         $this->renderer = $renderer;
         $this->httpClient = $httpClient;
         $this->styles = $styles;
+        $this->logger = $logger;
         $this->apiBaseUri = $apiBaseUri;
         $this->traceId = $traceId;
     }
@@ -104,6 +112,13 @@ class PdfService
 
             switch ($response->getStatusCode()) {
                 case StatusCodeInterface::STATUS_OK:
+                    $this->logger->info(
+                        'Successfully generated PDF and presented for download {code}',
+                        [
+                            'code' => $response->getStatusCode()
+                        ]
+                    );
+
                     return $response->getBody();
                 default:
                     throw ApiException::create(null, $response);
@@ -111,7 +126,15 @@ class PdfService
         } catch (ClientExceptionInterface $ex) {
             $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
 
-            throw ApiException::create('Error whilst making http POST request', $response, $ex);
+            $this->logger->error(
+                'Failed to generate PDF from service {code} {response}',
+                [
+                    'code'      => $ex->getCode(),
+                    'response'  => $response
+                ]
+            );
+
+            throw ApiException::create('Error whilst making http POST request to PDF Service', $response, $ex);
         }
     }
 

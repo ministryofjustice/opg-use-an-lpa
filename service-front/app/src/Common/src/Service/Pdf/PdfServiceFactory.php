@@ -8,6 +8,7 @@ use Common\Service\Log\RequestTracing;
 use DI\Factory\RequestedEntry;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Mezzio\Template\TemplateRendererInterface;
 
@@ -34,6 +35,7 @@ class PdfServiceFactory
             $container->get(TemplateRendererInterface::class),
             $container->get(ClientInterface::class),
             $container->get(StylesService::class),
+            $container->get(LoggerInterface::class),
             $config['pdf']['uri'],
             $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );

@@ -17,6 +17,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Log\LoggerInterface;
 
 class PdfServiceTest extends TestCase
 {
@@ -57,7 +58,7 @@ class PdfServiceTest extends TestCase
         )->willReturn('<html></html>');
 
         $clientProphecy = $this->prophesize(ClientInterface::class);
-        $clientProphecy->sendRequest(Argument::that(function(RequestInterface $request) {
+        $clientProphecy->sendRequest(Argument::that(function (RequestInterface $request) {
             $this->assertCount(1, $request->getHeader('Content-Type'));
             $this->assertEquals('text/html', $request->getHeader('Content-Type')[0]);
 
@@ -71,10 +72,13 @@ class PdfServiceTest extends TestCase
         $stylesProphecy = $this->prophesize(StylesService::class);
         $stylesProphecy->__invoke()->willReturn('');
 
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $service = new PdfService(
             $rendererProphecy->reveal(),
             $clientProphecy->reveal(),
             $stylesProphecy->reveal(),
+            $loggerProphecy->reveal(),
             'http://pdf-service:8080',
             'Root=1-1-11'
         );
@@ -105,10 +109,13 @@ class PdfServiceTest extends TestCase
         $stylesProphecy = $this->prophesize(StylesService::class);
         $stylesProphecy->__invoke()->willReturn('');
 
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $service = new PdfService(
             $rendererProphecy->reveal(),
             $clientProphecy->reveal(),
             $stylesProphecy->reveal(),
+            $loggerProphecy->reveal(),
             'http://pdf-service:8080',
             'Root=1-1-11'
         );
@@ -139,10 +146,13 @@ class PdfServiceTest extends TestCase
         $stylesProphecy = $this->prophesize(StylesService::class);
         $stylesProphecy->__invoke()->willReturn('');
 
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $service = new PdfService(
             $rendererProphecy->reveal(),
             $clientProphecy->reveal(),
             $stylesProphecy->reveal(),
+            $loggerProphecy->reveal(),
             'http://pdf-service:8080',
             'Root=1-1-11'
         );
@@ -178,10 +188,13 @@ class PdfServiceTest extends TestCase
         $stylesProphecy = $this->prophesize(StylesService::class);
         $stylesProphecy->__invoke()->willReturn('');
 
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
         $service = new PdfService(
             $rendererProphecy->reveal(),
             $clientProphecy->reveal(),
             $stylesProphecy->reveal(),
+            $loggerProphecy->reveal(),
             'http://pdf-service:8080',
             'Root=1-1-11'
         );
