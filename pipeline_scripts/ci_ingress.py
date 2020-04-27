@@ -28,7 +28,7 @@ class IngressManager:
             parameters = json.load(json_file)
             self.aws_account_id = parameters['account_id']
             self.security_groups = [
-                # parameters['viewer_load_balancer_security_group_name'],
+                parameters['viewer_load_balancer_security_group_name'],
                 parameters['actor_load_balancer_security_group_name']]
 
     def set_iam_role_session(self):
