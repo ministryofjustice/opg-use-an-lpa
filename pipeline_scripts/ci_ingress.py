@@ -3,6 +3,8 @@ import boto3
 import argparse
 import json
 import os
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 
 class IngressManager:
@@ -27,7 +29,7 @@ class IngressManager:
             parameters = json.load(json_file)
             self.aws_account_id = parameters['account_id']
             self.security_groups = [
-                parameters['viewer_load_balancer_security_group_name'],
+                # parameters['viewer_load_balancer_security_group_name'],
                 parameters['actor_load_balancer_security_group_name']]
 
     def set_iam_role_session(self):
@@ -63,9 +65,47 @@ class IngressManager:
 
     def clear_all_ci_ingress_rules_from_sg(self):
         for sg_name in self.security_groups:
+            for ip_permissions in self.get_security_group(sg_name)[
+                    'SecurityGroups'][0]['IpPermissions']:
+                for rule in ip_permissions['IpRanges']:
+                    if 'Description' in rule and rule['Description'] == "ci ingress":
+                        cidr_range_to_remove = rule['CidrIp']
+                        print("found ci ingress rule in " + sg_name)
+                        try:
+                            print("Removing security group ingress rule " + str(rule) + " from " +
+                                  sg_name)
+                            self.aws_ec2_client.revoke_security_group_ingress(
+                                GroupName=sg_name,
+                                IpPermissions=[
+                                    {
+                                        'FromPort': 443,
+                                        'IpProtocol': 'tcp',
+                                        'IpRanges': [
+                                            {
+                                                'CidrIp': cidr_range_to_remove,
+                                                'Description': 'ci ingress'
+                                            },
+                                        ],
+                                        'ToPort': 443,
+                                    },
+                                ],
+                            )
+                            if self.verify_ingress_rule(sg_name):
+                                print(
+                                    "Verify: Found security group rule that should have been removed from " + str(sg_name))
+                                exit(1)
+                        except Exception as e:
+                            print(e)
+                            exit(1)
+
+    def clear_all_ci_ingress_rules_from_sg_old(self):
+        for sg_name in self.security_groups:
+            print(sg_name)
             sg_rules = self.get_security_group(sg_name)[
                 'SecurityGroups'][0]['IpPermissions'][0]['IpRanges']
+            pp.pprint(self.get_security_group(sg_name))
             for sg_rule in sg_rules:
+                pp.pprint(sg_rule)
                 if 'Description' in sg_rule and sg_rule['Description'] == "ci ingress":
                     cidr_range_to_remove = sg_rule['CidrIp']
                     print("found ci ingress rule in " + sg_name)
