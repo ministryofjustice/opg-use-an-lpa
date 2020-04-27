@@ -7,15 +7,16 @@ namespace Common\Exception;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 
-class InvalidRequestException extends Exception
+class RateLimitExceededException extends Exception
 {
     /**
-     * InvalidRequestException constructor.
+     * RateLimitExceededException constructor.
+     *
      * @param string $message
      * @param int $code
      * @param Exception|null $previous
      */
-    public function __construct(string $message, int $code = StatusCodeInterface::STATUS_BAD_REQUEST, Exception $previous = null)
+    public function __construct(string $message, int $code = StatusCodeInterface::STATUS_TOO_MANY_REQUESTS, Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
