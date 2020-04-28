@@ -22,7 +22,7 @@
             <nav class="moj-sub-navigation" aria-label="Sub navigation">
                 <ul class="moj-sub-navigation__list">
                     <li class="moj-sub-navigation__item">
-                        <a class="moj-sub-navigation__link moj-sub-navigation__link--underline" href="{{ path('download-lpa') }}">Download a copy of this page</a>
+                        <a class="govuk-link moj-sub-navigation__link moj-sub-navigation__link--underline" href="{{ path('download-lpa') }}">Download this LPA summary</a>
                     </li>
                 </ul>
             </nav>
@@ -229,23 +229,27 @@
                     </div>
 
                 </dl>
+
             </div>
 
-            {% if not forDownload %}
-                <dl class="govuk-summary-list govuk-summary-list--no-border">
-
-                    {{ include('@partials/section-break.html.twig') }}
-
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-full">
-                            <p class="govuk-body">
-                                <a href="{{ path('enter-code') }}">I want to check another LPA</a>
-                            </p>
-                        </div>
-                    </div>
-                </dl>
-            {% endif %}
         </div>
+
+        {% if not forDownload %}
+
+        {{ include('@partials/section-break.html.twig') }}
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+            <p class="govuk-body">
+                <a class="govuk-link" href="{{ path('enter-code') }}">I want to check another LPA</a>
+            </p>
+
+            </div>
+        </div>
+
+        {% endif %}
+
     </main>
 
 </div>
