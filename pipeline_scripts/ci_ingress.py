@@ -3,7 +3,6 @@ import boto3
 import argparse
 import json
 import os
-import pprint
 
 
 class IngressManager:
@@ -67,7 +66,6 @@ class IngressManager:
                     'SecurityGroups'][0]['IpPermissions']:
                 for rule in ip_permissions['IpRanges']:
                     if 'Description' in rule and rule['Description'] == "ci ingress":
-                        cidr_range_to_remove = rule['CidrIp']
                         print("found ci ingress rule in " + sg_name)
                         try:
                             print("Removing security group ingress rule " + str(rule) + " from " +
@@ -76,15 +74,10 @@ class IngressManager:
                                 GroupName=sg_name,
                                 IpPermissions=[
                                     {
-                                        'FromPort': 443,
-                                        'IpProtocol': 'tcp',
-                                        'IpRanges': [
-                                            {
-                                                'CidrIp': cidr_range_to_remove,
-                                                'Description': 'ci ingress'
-                                            },
-                                        ],
-                                        'ToPort': 443,
+                                        'FromPort': ip_permissions['FromPort'],
+                                        'IpProtocol': ip_permissions['IpProtocol'],
+                                        'IpRanges': [rule],
+                                        'ToPort': ip_permissions['ToPort'],
                                     },
                                 ],
                             )
