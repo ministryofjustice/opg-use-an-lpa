@@ -13,9 +13,9 @@
         <dd class="govuk-summary-list__value govuk-!-padding-top-4 govuk-!-padding-bottom-4 govuk-!-margin-bottom-0">
             {% if actorActive %}
                 <p class="govuk-!-margin-top-0">
-                    <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">Give an organisation access</a><br>
-                    <a href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}">Check access codes</a><br>
-                    <a href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">View LPA summary</a>
+                    <a class="govuk-link" href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">Give an organisation access</a><br>
+                    <a class="govuk-link" href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}">Check access codes</a><br>
+                    <a class="govuk-link" href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">View LPA summary</a>
                 </p>
             {% else %}
                 <p class="govuk-!-margin-top-0 lpa-secondary-text-colour">
@@ -45,7 +45,7 @@
 {%  if not actorActive %}
     <div class="lpa-inactive-notice" >
         <p class="govuk-body govuk-!-padding-2 govuk-!-margin-left-2 govuk-!-margin-bottom-0">You no longer have access to this LPA.
-            <a class="govuk-!-margin-left-3" href="{{ path('lpa.removed') }}"> Why is this?</a>
+            <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.removed') }}"> Why is this?</a>
         </p>
     </div>
 {%  endif %}
