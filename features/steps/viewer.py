@@ -1,8 +1,7 @@
 from behave import *
 from selenium.webdriver.common.keys import Keys
 import json
-from modules import get_frontend_url
-
+from modules import *
 
 # GIVENS
 @given('I go to the viewer service homepage without using https')
@@ -89,11 +88,16 @@ def step_impl(context):
     cookieList = []
     cookieList = context.browser.get_cookies()
 
+    workspace = os.getenv('TF_WORKSPACE', 'localhost')
+
     items = [element for element in cookieList if element['name'] == 'session']
     for item in items:
         for key in item:
             if key == "secure":
-                assert item[key] == True
+                if workspace == "localhost":
+                    assert item[key] == False
+                else:
+                    assert item[key] == True
             if key == "httpOnly":
                 assert item[key] == True
 
