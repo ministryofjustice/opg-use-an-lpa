@@ -8,14 +8,14 @@
 
         {{ include('@partials/account-bar.html.twig') }}
 
-        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back</a>
+        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back to your LPAs</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
                 <span class="govuk-caption-l">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' : 'Health and welfare' }}</span>
-                    <h1 class="govuk-heading-l">{{ actor_name(lpa.donor, false) }}</h1>
+                    <h1 class="govuk-heading-l govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</h1>
                 </div>
             </div>
 
@@ -39,7 +39,8 @@
 
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-two-thirds">
-                        <p class="govuk-body">Ask {{ organisation }} how they want you to give them the code. This code expires in 30 days, on {{ expires | date ('j F Y') }}.</p>
+                        <p class="govuk-body-l">Ask {{ organisation }} how they want you to give them the code.</p>
+                        <p class="govuk-body">This code expires in 30 days, on {{ expires | date ('j F Y') }}.</p>
 
                         <div class="govuk-inset-text">
                             <p class="govuk-body-s">

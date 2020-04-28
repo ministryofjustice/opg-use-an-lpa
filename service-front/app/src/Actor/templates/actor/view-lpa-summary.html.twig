@@ -9,7 +9,7 @@
 
     {{ include('@partials/account-bar.html.twig') }}
 
-    <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back</a>
+    <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back to your LPAs</a>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -22,7 +22,7 @@
                         Health and welfare
                     {% endif %}
                 </span>
-                <h1 class="govuk-heading-l">{{ actor_name(lpa.donor, false) }}</h1>
+                <h1 class="govuk-heading-l govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</h1>
             </div>
         </div>
 
@@ -87,7 +87,7 @@
                     </div>
                 </dl>
                 <p class="govuk-body">
-                    <a href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">Need to change the donor's details?</a>
+                    <a class="govuk-link" href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">Need to change the donor's details?</a>
                 </p>
             </div>
         </div>
@@ -135,7 +135,7 @@
 
                 {% endfor %}
                 <p class="govuk-body">
-                    <a href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">Need to change an attorney's details?</a>
+                    <a class="govuk-link" href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">Need to change an attorney's details?</a>
                 </p>
             </div>
         </div>

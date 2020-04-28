@@ -12,7 +12,7 @@
 
         <div class="govuk-grid-row">
 
-            <div class="govuk-grid-column-full">
+            <div class="govuk-grid-column-two-thirds">
 
                 {{ govuk_error_summary(form) }}
 
@@ -20,39 +20,33 @@
 
                     <fieldset class="govuk-fieldset">
 
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                             <h1 class="govuk-fieldset__heading">
                                 Create an account
                             </h1>
                         </legend>
 
-                        <p class="govuk-body-l">You need to create an account to use this service.</p>
-
-                        <p class="govuk-body">If you already have an account, please <a href="{{ path('login') }}" class="govuk-link">sign in</a>.</p>
+                        <p class="govuk-body-l">If you already have an account, please <a href="{{ path('login') }}" class="govuk-link">sign in</a>.</p>
 
                         <div class="govuk-grid-row">
 
-                            <div class="govuk-grid-column-one-half">
+                            <div class="govuk-grid-column-two-thirds">
 
                                 {{ govuk_form_element(form.get('__csrf')) }}
 
                                 {{ govuk_form_element(form.get('email'), { 'label': 'Enter your email address' }) }}
 
-                                <p class="govuk-body govuk-!-font-weight-bold">Password</p>
+                                {{ govuk_form_element(form.get('password'), { 'label': 'Create a password', 'hint': 'Your password needs to have: <ul class="govuk-list--bullet"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>' }) }}
 
-                                <p class="govuk-body">Your password needs to have:</p>
+                                {{ govuk_form_element(form.get('password_confirm'), { 'label': 'Confirm your password' }) }}
 
-                                <ul class="govuk-list govuk-list--bullet">
-                                    <li>at least 8 characters</li>
-                                    <li>at least one lower-case and one capital letter</li>
-                                    <li>at least one number</li>
-                                </ul>
-
-                                <p class="govuk-body">Never share your password with anyone.</p>
-
-                                {{ govuk_form_element(form.get('password'), { 'label': 'Password' }) }}
-
-                                {{ govuk_form_element(form.get('password_confirm'), { 'label': 'Confirm Password' }) }}
+                                <div class="govuk-warning-text">
+                                  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                                  <strong class="govuk-warning-text__text">
+                                    <span class="govuk-warning-text__assistive">Warning</span>
+                                    Never share your password with anyone.
+                                  </strong>
+                                </div>
 
                                 {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="/lpa/terms-of-use" class="govuk-link">terms of use</a>' }) }}
 
