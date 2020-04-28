@@ -1,6 +1,6 @@
 <?php
 
-namespace AppTest\Handler;
+namespace AppTest\Middleware;
 
 use App\Exception\UnauthorizedException;
 use App\Middleware\UserIdentificationMiddleware;
@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface as DelegateInterface;
 use Psr\Http\Message\ResponseInterface;
-
 
 class UserIdentificationMiddlewareTest extends TestCase
 {
