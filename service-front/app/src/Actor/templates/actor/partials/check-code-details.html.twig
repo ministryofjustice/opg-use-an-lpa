@@ -7,7 +7,7 @@
         </h2>
     </div>
     <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
-        <dl class="govuk-summary-list govuk-summary-list--no-border">
+        <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
 
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Access code</dt>
@@ -39,13 +39,6 @@
                     <dd class="govuk-summary-list__value">{{ code_date(code.Expires) }}</dd>
                 {% endif %}
             </div>
-            <div>
-                {% if not check_if_code_has_expired(code.Expires) %}
-                    {% if not check_if_code_is_cancelled(code) %}
-                        {{ include('@actor/partials/cancel-code-option.html.twig') }}
-                    {% endif %}
-                {% endif %}
-            </div>
 
             {% if check_if_code_has_expired(code.Expires) %}
                 <div class="govuk-summary-list__row">
@@ -66,5 +59,12 @@
             {% endif %}
 
         </dl>
+
+        {% if not check_if_code_has_expired(code.Expires) %}
+            {% if not check_if_code_is_cancelled(code) %}
+                {{ include('@actor/partials/cancel-code-option.html.twig') }}
+            {% endif %}
+        {% endif %}
+
     </div>
 </div>
