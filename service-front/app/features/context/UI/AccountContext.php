@@ -2622,18 +2622,12 @@ class AccountContext implements Context
     public function iWantToEnsureCookieAttributesAreSet()
     {
         $session = $this->ui->getSession();
-        var_dump($session->getCurrentUrl());
-        var_dump($session->getStatusCode());
 
         // retrieving response headers:
-        print_r($session->getResponseHeaders('session'));
-
-        var_dump("----------------------");
-        var_dump($session->getCookie('session'));
-
-
-
-       // var_dump($driver->getWebDriverSession()->getAllCookies());
-        die;
+        $cookies = $session->getResponseHeaders()['set-cookie'];
+        foreach ($cookies as $value) {
+            assertContains('secure', $value);
+            assertContains('httponly', $value);
+        }
     }
 }
