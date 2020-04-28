@@ -1,7 +1,7 @@
 from behave import *
 from selenium.webdriver.common.keys import Keys
 import json
-from modules import *
+from modules import get_frontend_url
 
 # GIVENS
 @given('I go to the viewer service homepage without using https')
