@@ -183,7 +183,7 @@ class ViewerContext implements Context
                 assertStringStartsWith('<!DOCTYPE html>', $request->getBody()->getContents());
             });
 
-        $this->ui->clickLink('Download a copy of this page');
+        $this->ui->clickLink('Download this LPA summary');
     }
 
     /**

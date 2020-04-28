@@ -8,7 +8,7 @@
 
         {{ include('@partials/account-bar.html.twig') }}
 
-        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back</a>
+        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back to your LPAs</a>
 
         <main class="govuk-main-wrapper">
 
@@ -18,7 +18,7 @@
 
                 <div class="govuk-grid-column-two-thirds">
                     <span class="govuk-caption-l govuk-!-margin-top-0">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' : 'Health and welfare' }}</span>
-                    <h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ actor_name(lpa.donor, false) }}</h1>
+                    <h1 class="govuk-heading-l govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</h1>
                 </div>
 
             </div>
