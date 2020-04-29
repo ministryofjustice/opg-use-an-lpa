@@ -9,9 +9,9 @@
 
         {{ include('@partials/account-bar.html.twig') }}
 
-        <a href="{{ path('lpa.dashboard', {}, {'lpa': actorToken}) }}" class="govuk-back-link">Back</a>
+        <a href="{{ path('lpa.dashboard', {}, {'lpa': actorToken}) }}" class="govuk-back-link">Back to your LPAs</a>
 
-        <main class="govuk-main-wrapper">
+        <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
@@ -22,7 +22,7 @@
                         Health and welfare
                     {% endif %}
                 </span>
-                    <h1 class="govuk-heading-l">{{ actor_name(lpa.donor, false) }}</h1>
+                    <h1 class="govuk-heading-l govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</h1>
                 </div>
             </div>
 

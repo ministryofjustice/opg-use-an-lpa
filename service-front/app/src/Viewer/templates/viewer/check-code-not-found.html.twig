@@ -6,7 +6,7 @@
     <div class="govuk-width-container">
         {{ include('@partials/new-service.html.twig') }}
 
-        <main class="govuk-main-wrapper">
+        <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
@@ -15,7 +15,7 @@
 
                     <p class="govuk-body">Please check the code and the spelling of the donor's surname</p>
 
-                    <a href="{{ path('enter-code') }}" role="button" draggable="false" class="govuk-button govuk-button--start">
+                    <a href="{{ path('enter-code') }}" role="button" draggable="false" class="govuk-button">
                         Try again
                     </a>
 

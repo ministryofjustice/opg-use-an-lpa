@@ -9,9 +9,9 @@
 
     {{ include('@partials/account-bar.html.twig') }}
 
-    <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back</a>
+    <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back to your LPAs</a>
 
-    <main class="govuk-main-wrapper">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
@@ -22,7 +22,7 @@
                         Health and welfare
                     {% endif %}
                 </span>
-                <h1 class="govuk-heading-l">{{ actor_name(lpa.donor, false) }}</h1>
+                <h1 class="govuk-heading-l govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</h1>
             </div>
         </div>
 
@@ -87,7 +87,7 @@
                     </div>
                 </dl>
                 <p class="govuk-body">
-                    <a href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">Need to change the donor's details?</a>
+                    <a class="govuk-link" href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">Need to change the donor's details?</a>
                 </p>
             </div>
         </div>
@@ -135,7 +135,7 @@
 
                 {% endfor %}
                 <p class="govuk-body">
-                    <a href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">Need to change an attorney's details?</a>
+                    <a class="govuk-link" href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">Need to change an attorney's details?</a>
                 </p>
             </div>
         </div>
@@ -218,15 +218,17 @@
                 </dl>
             </div>
 
-            {{ include('@partials/section-break.html.twig') }}
 
-            <div class="govuk-warning-text">
-                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                <strong class="govuk-warning-text__text">
-                    <span class="govuk-warning-text__assistive">Warning</span>
-                    You cannot use a download or print out of this LPA summary in place of the original paper LPA or instead of giving someone an access code.
-                </strong>
-            </div>
+        </div>
+
+        {{ include('@partials/section-break.html.twig') }}
+
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">Warning</span>
+                You cannot use a download or print out of this LPA summary in place of the original paper LPA or instead of giving someone an access code.
+            </strong>
         </div>
 
     </main>
