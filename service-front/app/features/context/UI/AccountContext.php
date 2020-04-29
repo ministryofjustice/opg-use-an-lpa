@@ -2612,7 +2612,7 @@ class AccountContext implements Context
      */
     public function iAccessTheUseALastingPowerOfAttorneyWebPage()
     {
-        $this->ui->visit('https://use.lastingpowerofattorney.opg.service.justice.gov.uk/');
+        $this->ui->visit('/');
         $this->ui->assertPageContainsText('Use a lasting power of attorney');
     }
 
