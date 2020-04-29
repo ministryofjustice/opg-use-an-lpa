@@ -9,6 +9,7 @@ use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ElementNotFoundException;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\AssertionFailedError;
@@ -2626,8 +2627,12 @@ class AccountContext implements Context
         // retrieving response headers:
         $cookies = $session->getResponseHeaders()['set-cookie'];
         foreach ($cookies as $value) {
-            assertContains('secure', $value);
-            assertContains('httponly', $value);
+            if (strstr($value,'session')) {
+                assertContains('secure', $value);
+                assertContains('httponly', $value);
+            } else {
+                throw new Exception('session not found');
+            }
         }
     }
 }
