@@ -9,6 +9,7 @@ use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ElementNotFoundException;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\AssertionFailedError;
@@ -2598,5 +2599,40 @@ class AccountContext implements Context
     {
         $this->ui->assertResponseStatus(404);
     }
-}
 
+    /**
+     * @Given /^I want to use my lasting power of attorney$/
+     */
+    public function iWantToUseMyLastingPowerOfAttorney()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I access the use a lasting power of attorney web page$/
+     */
+    public function iAccessTheUseALastingPowerOfAttorneyWebPage()
+    {
+        $this->ui->visit('/');
+        $this->ui->assertPageContainsText('Use a lasting power of attorney');
+    }
+
+    /**
+     * @Then /^I want to ensure cookie attributes are set$/
+     */
+    public function iWantToEnsureCookieAttributesAreSet()
+    {
+        $session = $this->ui->getSession();
+
+        // retrieving response headers:
+        $cookies = $session->getResponseHeaders()['set-cookie'];
+        foreach ($cookies as $value) {
+            if (strstr($value,'session')) {
+                assertContains('secure', $value);
+                assertContains('httponly', $value);
+            } else {
+                throw new Exception('Cookie named session not found in the response header');
+            }
+        }
+    }
+}
