@@ -61,6 +61,7 @@ return [
             // KMS alias to use for data key generation.
             'alias' => 'alias/viewer-sessions-cmk-alias',
         ],
+        'cookie_secure' => true
     ],
 
     'ratelimits' => [

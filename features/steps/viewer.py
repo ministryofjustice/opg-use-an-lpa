@@ -1,8 +1,7 @@
 from behave import *
 from selenium.webdriver.common.keys import Keys
 import json
-from modules import get_frontend_url
-
+from modules import *
 
 # GIVENS
 @given('I go to the viewer service homepage without using https')
@@ -82,6 +81,25 @@ def step_impl(context, error_message, input_label):
         '//label[contains(text(), "' + input_label + '")]/../span[contains(concat(" ", @class, " "), " govuk-error-message ")]')
     assert error_message in error_message_element.text
 
+# This test would fail locally since secure is set to False on local.
+# To Do: Check the environment the test is run and set the session secure based on environment being run
+@then('the appropriate session cookie attributes are set')
+def step_impl(context):
+    cookieList = []
+    cookieList = context.browser.get_cookies()
+
+    workspace = os.getenv('TF_WORKSPACE', 'localhost')
+
+    items = [element for element in cookieList if element['name'] == 'session']
+    for item in items:
+        for key in item:
+            if key == "secure":
+                if workspace == "localhost":
+                    assert item[key] == False
+                else:
+                    assert item[key] == True
+            if key == "httpOnly":
+                assert item[key] == True
 
 # STEPS
 @step('the "{help_link}" help section is {visibility}')
