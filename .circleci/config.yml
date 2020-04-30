@@ -199,7 +199,6 @@ workflows:
 
         - use-my-lpa/seed_database:
             name: preprod_seed_database
-            #workspace: preproduction   # Not needed as the target account is within the config file.
             filters: { branches: { only: [master] } }
             requires: [preprod_apply_environment_terraform]
 
@@ -462,7 +461,7 @@ orbs:
           - run:
               name: Push container
               command: |
-                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
 
                 docker tag front-app:latest << parameters.container_repo_url >>:latest
@@ -501,7 +500,7 @@ orbs:
           - run:
               name: Push container
               command: |
-                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
 
                 docker tag front-web:latest << parameters.container_repo_url >>:latest
@@ -570,7 +569,7 @@ orbs:
           - run:
               name: Push container
               command: |
-                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
 
                 docker tag api-app:latest << parameters.container_repo_url >>:latest
@@ -606,7 +605,7 @@ orbs:
           - run:
               name: Push container
               command: |
-                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
 
                 docker tag api-web:latest << parameters.container_repo_url >>:latest
@@ -643,7 +642,7 @@ orbs:
           - run:
               name: Push container
               command: |
-                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
 
                 docker tag pdf:latest << parameters.container_repo_url >>:latest
@@ -719,7 +718,7 @@ orbs:
                 terraform --version
                 cd ~/project/terraform/account
                 terraform init -lock-timeout=300s
-                export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 terraform validate
           - run:
@@ -727,9 +726,9 @@ orbs:
               command: |
                 cd ~/project/terraform/environment
                 terraform init -lock-timeout=300s
-                export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                export IMAGE_TAG=$(~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
                 terraform validate -var container_version=${IMAGE_TAG}
 
@@ -773,9 +772,9 @@ orbs:
               command: |
                 cd ~/project/terraform/environment
                 terraform init -lock-timeout=300s
-                export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                export IMAGE_TAG=$(~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
                 terraform apply -lock-timeout=300s --auto-approve -var container_version=${IMAGE_TAG}
                 mv cluster_config.json /tmp/
@@ -802,7 +801,7 @@ orbs:
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   cd ~/project/terraform/environment
                   terraform init -lock-timeout=300s
-                  export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                  export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                   echo $TF_WORKSPACE
                   terraform destroy -lock-timeout=300s -auto-approve
                 fi
@@ -820,7 +819,7 @@ orbs:
           - run:
               name: Redeploy Services
               command: |
-                export ACCOUNT_ID=$(~/project/pipeline_scripts/identify_account_id.sh <<parameters.environment>>)
+                export ACCOUNT_ID=$(~/project/scripts/pipeline/identify_account_id.sh <<parameters.environment>>)
                 temp_role=$(aws sts assume-role --role-arn arn:aws:iam::$ACCOUNT_ID:role/opg-use-an-lpa-ci --role-session-name ci)
                 export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
@@ -873,25 +872,25 @@ orbs:
               name: Wait for new tasks in services to be running
               command: |
                 sudo pip3 install boto3 -q
-                python pipeline_scripts/aws_ecs_task.py /tmp/cluster_config.json
+                python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
           - run:
               name: Install Behave
               command: sudo pip3 install behave selenium --upgrade
           - run:
               name: Allow CircleCI ingress to environment
               command: |
-                export TF_WORKSPACE=$(bash ~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                export TF_WORKSPACE=$(bash ~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 if [ "${TF_WORKSPACE}" != "production" ]; then
-                  python pipeline_scripts/ci_ingress.py /tmp/cluster_config.json --add
+                  python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json --add
                 fi
 
           - run:
               name: Run suite
               command: |
-                export TF_WORKSPACE=$(bash ~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                export TF_WORKSPACE=$(bash ~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                export IMAGE_TAG=$(~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
                 behave -v --logging-level DEBUG
           - store_artifacts:
@@ -899,9 +898,9 @@ orbs:
           - run:
               name: Remove CircleCI ingress to environment
               command: |
-                export TF_WORKSPACE=$(bash ~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                export TF_WORKSPACE=$(bash ~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                python pipeline_scripts/ci_ingress.py /tmp/cluster_config.json
+                python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json
               when: always
 
       run_healthcheck_test:
@@ -918,7 +917,7 @@ orbs:
               name: Wait for new tasks in services to be running
               command: |
                 sudo pip3 install boto3
-                python pipeline_scripts/aws_ecs_task.py /tmp/cluster_config.json
+                python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
           - run:
               name: Run test
               command: |
@@ -994,10 +993,10 @@ jobs:
       - run:
           name: Check ECR Scan Results
           command: |
-            sudo pip3 install -r pipeline_scripts/check_ecr_scan_results/requirements.txt
-            export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+            sudo pip3 install -r scripts/pipeline/requirements.txt
+            export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
             echo $IMAGE_TAG
-            python pipeline_scripts/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
+            python scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
 
   workspace_cleanup:
     docker:
