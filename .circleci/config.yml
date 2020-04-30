@@ -29,6 +29,7 @@ workflows:
         - workspace_cleanup:
             name: workspace_cleanup
             filters: { branches: { ignore: [master] } }
+            requires: [workspace_cleanup]
 
         - use-my-lpa/lint_terraform:
             name: lint_terraform_pr_build
