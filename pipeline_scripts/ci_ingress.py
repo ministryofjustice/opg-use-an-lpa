@@ -9,9 +9,7 @@ class IngressManager:
     aws_account_id = ''
     aws_iam_session = ''
     aws_ec2_client = ''
-    workspace = os.getenv('TF_WORKSPACE')
-    security_groups = [str(workspace) + "-actor-loadbalancer",
-                       str(workspace) + "-viewer-loadbalancer"]
+    security_groups = []
 
     def __init__(self, config_file):
         self.read_parameters_from_file(config_file)
@@ -27,6 +25,9 @@ class IngressManager:
         with open(config_file) as json_file:
             parameters = json.load(json_file)
             self.aws_account_id = parameters['account_id']
+            self.security_groups = [
+                parameters['viewer_load_balancer_security_group_name'],
+                parameters['actor_load_balancer_security_group_name']]
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
@@ -61,38 +62,32 @@ class IngressManager:
 
     def clear_all_ci_ingress_rules_from_sg(self):
         for sg_name in self.security_groups:
-            sg_rules = self.get_security_group(sg_name)[
-                'SecurityGroups'][0]['IpPermissions'][0]['IpRanges']
-            for sg_rule in sg_rules:
-                if 'Description' in sg_rule and sg_rule['Description'] == "ci ingress":
-                    cidr_range_to_remove = sg_rule['CidrIp']
-                    print("found ci ingress rule in " + sg_name)
-                    try:
-                        print("Removing security group ingress rule " + str(sg_rule) + " from " +
-                              sg_name)
-                        self.aws_ec2_client.revoke_security_group_ingress(
-                            GroupName=sg_name,
-                            IpPermissions=[
-                                {
-                                    'FromPort': 443,
-                                    'IpProtocol': 'tcp',
-                                    'IpRanges': [
-                                        {
-                                            'CidrIp': cidr_range_to_remove,
-                                            'Description': 'ci ingress'
-                                        },
-                                    ],
-                                    'ToPort': 443,
-                                },
-                            ],
-                        )
-                        if self.verify_ingress_rule(sg_name):
-                            print(
-                                "Verify: Found security group rule that should have been removed from " + str(sg_name))
+            for ip_permissions in self.get_security_group(sg_name)[
+                    'SecurityGroups'][0]['IpPermissions']:
+                for rule in ip_permissions['IpRanges']:
+                    if 'Description' in rule and rule['Description'] == "ci ingress":
+                        print("found ci ingress rule in " + sg_name)
+                        try:
+                            print("Removing security group ingress rule " + str(rule) + " from " +
+                                  sg_name)
+                            self.aws_ec2_client.revoke_security_group_ingress(
+                                GroupName=sg_name,
+                                IpPermissions=[
+                                    {
+                                        'FromPort': ip_permissions['FromPort'],
+                                        'IpProtocol': ip_permissions['IpProtocol'],
+                                        'IpRanges': [rule],
+                                        'ToPort': ip_permissions['ToPort'],
+                                    },
+                                ],
+                            )
+                            if self.verify_ingress_rule(sg_name):
+                                print(
+                                    "Verify: Found security group rule that should have been removed from " + str(sg_name))
+                                exit(1)
+                        except Exception as e:
+                            print(e)
                             exit(1)
-                    except Exception as e:
-                        print(e)
-                        exit(1)
 
     def verify_ingress_rule(self, sg_name):
         sg_rules = self.get_security_group(sg_name)[
