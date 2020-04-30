@@ -1035,4 +1035,5 @@ jobs:
             export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
             echo $TF_WORKSPACE
             cd terraform/environment
-            ../../scripts/workspace_cleanup/workspace_cleanup.sh $(../../scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE)
+            export WORKSPACES=$(../../scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE) >> $BASH_ENV
+            ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $WORKSPACES
