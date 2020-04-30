@@ -23,7 +23,7 @@ workflows:
       jobs:
         # Common tasks
         - mark_workspace_for_cleanup:
-            name: workspace_cleanup
+            name: mark_workspace_for_cleanup
             filters: { branches: { ignore: [master] } }
 
         - workspace_cleanup:
@@ -1035,4 +1035,4 @@ jobs:
             export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
             echo $TF_WORKSPACE
             cd terraform/environment
-            ../../scripts/pipeline/workspace_cleanup/put_workspace_linux $TF_WORKSPACE
+            ../../scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE
