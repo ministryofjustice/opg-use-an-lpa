@@ -1,4 +1,4 @@
-version: "2.1"
+version: "2.4"
 
 volumes:
   webpack_dist:
@@ -249,8 +249,13 @@ services:
     build:
       context: zap
 
-#  feature-tests:
-#    build:
-#      context: features/
-#    volumes:
-#      - ./features:/tests/features
+  feature-tests:
+    build:
+      context: .
+      dockerfile: tests/smoke/Dockerfile
+    volumes:
+      - ./tests/smoke:/test
+      - ./tests/features:/test/features
+    environment:
+      BEHAT_VIEWER_URL: http://viewer-web
+      BEHAT_ACTOR_URL: http://actor-web
