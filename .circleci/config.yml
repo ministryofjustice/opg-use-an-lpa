@@ -22,11 +22,11 @@ workflows:
   pr_build:
       jobs:
         # Common tasks
-        - workspace_cleanup:
+        - mark_workspace_for_cleanup:
             name: workspace_cleanup
             filters: { branches: { ignore: [master] } }
 
-        - mark_workspace_for_cleanup:
+        - workspace_cleanup:
             name: workspace_cleanup
             filters: { branches: { ignore: [master] } }
 
