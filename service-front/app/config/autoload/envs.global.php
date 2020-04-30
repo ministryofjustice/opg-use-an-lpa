@@ -58,7 +58,7 @@ return [
         // Indicates that the cookie should only be transmitted over a
         // secure HTTPS connection from the client. When set to TRUE, the
         // cookie will only be set if a secure connection exists.
-        'cookie_secure' => false,
+        'cookie_secure' => getenv('COOKIE_SECURE') === 'false' ? false : true,
 
         // When TRUE the cookie will be made accessible only through the
         // HTTP protocol. This means that the cookie won't be accessible

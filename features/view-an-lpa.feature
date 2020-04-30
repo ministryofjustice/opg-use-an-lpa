@@ -8,6 +8,11 @@ Feature: View a lasting power of attorney
     Given I go to the viewer service homepage without using https
     Then the "View a lasting power of attorney" page is displayed
 
+  @test
+  Scenario: Check cookie-secure set and http-only is set to True
+    Given I go to the viewer service homepage
+    Then the appropriate session cookie attributes are set
+
   Scenario: Go to the service homepage
     Given I go to the viewer service homepage
     Then the "View a lasting power of attorney" page is displayed
