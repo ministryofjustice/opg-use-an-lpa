@@ -10,27 +10,18 @@ if [ "$1" == "-h" ]; then
   exit 0
 fi
 
-declare -a workspaces_to_delete=("$@")
-
-declare -a protected_workspaces=("production"
-                      "preproduction"
-                      "development"
-                      "demo"
-                      "ithc"
-                      )
-
-for workspace in "${workspaces_to_delete[@]}"
+for workspace in "$@"
 do
+  case "$workspace" in
+      "production"|"preproduction"|"development"|"demo"|"ithc")
+          echo "$workspace is a protected workspace"
+          ;;
+      *)
+          echo "cleaning up workspace $workspace"
+          terraform workspace select $workspace
+          terraform destroy -auto-approve
+          terraform workspace select default
+          terraform workspace delete $workspace
+  esac
 
-  if [[ ! " ${protected_workspaces[@]} " =~ " $workspace " ]]; then
-    echo "$workspace"
-    echo "terraform workspace select $workspace"
-    echo "terraform destroy -auto-approve"
-    echo "terraform workspace select default"
-    echo "terraform workspace delete $workspace"
-    # terraform workspace select "$workspace"
-    # terraform destroy -auto-approve
-    # terraform workspace select default
-    # terraform workspace delete "$workspace"
-  fi
 done
