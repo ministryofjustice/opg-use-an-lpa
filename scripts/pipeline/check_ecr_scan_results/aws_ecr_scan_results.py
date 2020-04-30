@@ -67,7 +67,6 @@ class ECRScanChecker:
                 imageId={
                     'imageTag': tag
                 },
-                # maxResults=1,
                 WaiterConfig={
                     'Delay': 5,
                     'MaxAttempts': 60
@@ -84,6 +83,7 @@ class ECRScanChecker:
                 findings = self.get_ecr_scan_findings(image, tag)[
                     "imageScanFindings"]
                 if findings["findings"] != []:
+
                     counts = findings["findingSeverityCounts"]
                     title = "\n\n:warning: *AWS ECR Scan found results for {}:* \n".format(
                         image)
