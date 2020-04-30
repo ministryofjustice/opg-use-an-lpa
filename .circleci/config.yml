@@ -1016,7 +1016,8 @@ jobs:
           name: Cleanup Workspaces
           command: |
             cd terraform/environment
-            ../../scripts/pipeline/workspace_cleanup/get_workspaces_linux
+            export WORKSPACES=$(../../scripts/pipeline/workspace_cleanup/get_workspaces_linux) >> $BASH_ENV
+            ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $WORKSPACES
 
   mark_workspace_for_cleanup:
     docker:
@@ -1035,5 +1036,4 @@ jobs:
             export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
             echo $TF_WORKSPACE
             cd terraform/environment
-            export WORKSPACES=$(../../scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE) >> $BASH_ENV
-            ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $WORKSPACES
+            ../../scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE
