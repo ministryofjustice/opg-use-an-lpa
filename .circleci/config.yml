@@ -22,6 +22,14 @@ workflows:
   pr_build:
       jobs:
         # Common tasks
+        - workspace_cleanup:
+            name: workspace_cleanup
+            filters: { branches: { ignore: [master] } }
+
+        - mark_workspace_for_cleanup:
+            name: workspace_cleanup
+            filters: { branches: { ignore: [master] } }
+
         - use-my-lpa/lint_terraform:
             name: lint_terraform_pr_build
             filters: { branches: { ignore: [master] } }
@@ -1008,3 +1016,22 @@ jobs:
           command: |
             cd terraform/environment
             ../../scripts/workspace_cleanup/get_workspaces_linux
+
+  mark_workspace_for_cleanup:
+    docker:
+      - image: hashicorp/terraform
+    parameters:
+      workspace:
+        description: Terraform workspace name
+        type: string
+        default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
+    steps:
+      - checkout
+
+      - run:
+          name: Cleanup Workspaces
+          command: |
+            export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+            echo $TF_WORKSPACE
+            cd terraform/environment
+            ../../scripts/workspace_cleanup/put_workspace_linux
