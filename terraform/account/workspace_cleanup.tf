@@ -9,12 +9,6 @@
 #     type = "S"
 #   }
 
-#   ttl {
-#     attribute_name = "ExpiresTTL"
-#     enabled        = true
-
-#   }
-
 #   tags = local.default_tags
 
 #   lifecycle {
