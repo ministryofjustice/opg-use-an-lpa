@@ -13,6 +13,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"log"
+	"strconv"
+	"time"
 )
 
 func exitWithError(err error) {
@@ -49,10 +51,12 @@ func main() {
 
 	type Workspace struct {
 		WorkspaceName string
+		ExpiresTTL    int64
 	}
 
 	item := Workspace{
 		WorkspaceName: workspace_name,
+		ExpiresTTL:    time.Now().AddDate(0, 0, 1).Unix(),
 	}
 
 	workspace_to_put, err := dynamodbattribute.MarshalMap(item)
@@ -74,6 +78,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println("Successfully added '" + item.WorkspaceName + " for workspace cleanup")
+	fmt.Println("Successfully added '" + item.WorkspaceName + "' with TTL " + strconv.FormatInt(item.ExpiresTTL, 10) + " for workspace cleanup")
 
 }
