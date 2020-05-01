@@ -17,7 +17,7 @@ Feature: View an LPA via sharecode
     Given I have been given access to a cancelled LPA via share code
     And I access the viewer service
     And I give a valid LPA share code
-    When I confirm the LPA is correct
+    When I confirm the LPA is correct but cancelled
     Then I can see the full details of a cancelled LPA
 
   @ui @integration

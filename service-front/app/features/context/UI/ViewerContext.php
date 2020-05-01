@@ -36,6 +36,7 @@ class ViewerContext implements Context
             'uId' => '7000-0000-0000',
             'receiptDate' => '2014-09-26',
             'registrationDate' => '2014-10-26',
+            //'status' => 'Registered',
             'donor' => [
                 'id' => 1,
                 'uId' => '7000-0000-0288',
@@ -83,6 +84,8 @@ class ViewerContext implements Context
      * @When /^I give a valid LPA share code$/
      */
     public function iGiveAValidLPAShareCode() {
+        $this->lpaData['status'] = 'Registered';
+
         $this->ui->assertPageAddress('/enter-code');
 
         // API call for lpa summary check
@@ -108,6 +111,8 @@ class ViewerContext implements Context
      * @When /^I confirm the LPA is correct$/
      */
     public function iConfirmTheLPAIsCorrect() {
+        $this->lpaData['status'] = 'Registered';
+
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText(
             $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
@@ -129,6 +134,35 @@ class ViewerContext implements Context
 
         $this->ui->clickLink('Continue');
     }
+
+    /**
+     * @When /^I confirm the LPA is correct but cancelled$/
+     */
+    public function iConfirmTheLPAIsCorrectButCancelled() {
+        $this->lpaData['status'] = 'Cancelled';
+
+        $this->ui->assertPageAddress('/check-code');
+        $this->ui->assertPageContainsText(
+            $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
+        );
+
+        // API call for lpa full fetch
+        $this->apiFixtures->post('/v1/viewer-codes/full')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'lpa'     => $this->lpaData,
+                'expires' => (new \DateTime('+30 days'))->format('c')
+            ])))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $params = json_decode($request->getBody()->getContents(), true);
+
+                assertInternalType('array', $params);
+                assertEquals($params['name'], $this->lpaSurname);
+                assertEquals($params['code'], str_replace('-', '', $this->lpaShareCode));
+            });
+
+        $this->ui->clickLink('Continue');
+    }
+
 
     /**
      * @Given /^I am viewing a valid LPA$/

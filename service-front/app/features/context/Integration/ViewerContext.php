@@ -105,6 +105,13 @@ class ViewerContext extends BaseIntegrationContext
     }
 
     /**
+     * @When /^I confirm the LPA is correct but cancelled$/
+     */
+    public function iConfirmTheLPAIsCorrectButCancelled() {
+        // not used in this context
+    }
+
+    /**
      * @When /^I give a share code that's been cancelled$/
      */
     public function iGiveAShareCodeThatsBeenCancelled() {
