@@ -36,7 +36,6 @@ class ViewerContext implements Context
             'uId' => '7000-0000-0000',
             'receiptDate' => '2014-09-26',
             'registrationDate' => '2014-10-26',
-            //'status' => 'Registered',
             'donor' => [
                 'id' => 1,
                 'uId' => '7000-0000-0288',
