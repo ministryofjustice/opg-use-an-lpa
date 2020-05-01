@@ -1,7 +1,7 @@
 [
   {
     "id": 2,
-    "uId": "7000-0000-0047",
+    "uId": "700000000047",
     "receiptDate": "2014-09-26",
     "registrationDate": null,
     "rejectedDate": null,
@@ -31,7 +31,7 @@
     },
     "applicationType": "Classic",
     "caseSubtype": "pfa",
-    "status": "Pending",
+    "status": "Registered",
     "caseAttorneySingular": false,
     "caseAttorneyJointlyAndSeverally": true,
     "caseAttorneyJointly": false,
@@ -125,7 +125,7 @@
   },
   {
     "id": 5,
-    "uId": "7000-0000-0138",
+    "uId": "700000000138",
     "receiptDate": "2014-09-26",
     "registrationDate": null,
     "rejectedDate": null,
