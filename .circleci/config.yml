@@ -36,6 +36,9 @@ workflows:
         - mark_workspace_for_cleanup:
             name: mark_workspace_for_cleanup
             filters: { branches: { ignore: [master] } }
+        - workspace_cleanup:
+            name: workspace_cleanup
+            filters: { branches: { ignore: [master] } }
 
 
 
