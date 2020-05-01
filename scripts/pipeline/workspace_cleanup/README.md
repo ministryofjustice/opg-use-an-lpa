@@ -31,7 +31,8 @@ Iterates through a list of workspaces separated by a space. For each workspace, 
 This script will not act on protected environments.
 
 ``` bash
-aws-vault exec identity -- ../../scripts/workspace_cleanup/workspace_cleanup.sh testing_one_workspace_seventeen
+cd terraform/environment
+aws-vault exec identity -- ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh testing_one_workspace_seventeen
 ```
 
 ## Putting it together
@@ -40,5 +41,5 @@ Combining the get and cleanup scripts will run through all environments on the t
 
 ``` bash
 cd terraform/environment
-aws-vault exec identity -- ../../scripts/workspace_cleanup/workspace_cleanup.sh $(aws-vault exec identity -- ../../scripts/workspace_cleanup/get_workspaces_mac)
+aws-vault exec identity -- ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(aws-vault exec identity -- ../../scripts/workspace_cleanup/get_workspaces_mac)
 ```
