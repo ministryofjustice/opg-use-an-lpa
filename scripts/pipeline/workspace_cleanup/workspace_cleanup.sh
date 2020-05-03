@@ -15,27 +15,22 @@ function getWorkspaces {
 }
 
 in_use_workspaces="$@"
+protected_workspaces="default production preproduction development demo ithc $@"
 
 all_workspaces=$(terraform workspace list|sed 's/*//g')
 
 for workspace in $all_workspaces
 do
-  case "$workspace" in
-      default|production|preproduction|development|demo|ithc)
-          echo "$workspace is a protected workspace"
-          ;;
-      *)
-          if [[ "$in_use_workspaces" == *$workspace* ]];
-            then
-              echo "$workspace is being used"
-          else
-            echo "cleaning up workspace $workspace"
-            # terraform workspace select $workspace
-            # terraform destroy -auto-approve
-            # terraform workspace select default
-            # terraform workspace delete $workspace
-          fi
-          ;;
+  case "$protected_workspaces" in
+    *$workspace*)
+      echo "$workspace is a protected workspace"
+      ;;
+    *)
+      echo "cleaning up workspace $workspace"
+      # terraform workspace select $workspace
+      # terraform destroy -auto-approve
+      # terraform workspace select default
+      # terraform workspace delete $workspace
+      ;;
   esac
-
 done
