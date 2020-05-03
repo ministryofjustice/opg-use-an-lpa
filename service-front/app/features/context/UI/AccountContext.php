@@ -556,6 +556,8 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithValidDetailsUsing(string $code)
     {
+        $this->lpa->status = "Registered";
+        
         $this->ui->assertPageAddress('/lpa/add-details');
 
         // API call for checking LPA
@@ -618,8 +620,6 @@ class AccountContext implements Context
      */
     public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
     {
-        $this->lpa->status = "Registered";
-
         // API call for adding an LPA
         $this->apiFixtures->post('/v1/actor-codes/confirm')
             ->respondWith(
