@@ -15,9 +15,9 @@ function getWorkspaces {
 }
 
 in_use_workspaces="$@"
-reserved_workspaces="default production preproduction development demo ithc $@"
-protected_workspaces="$in_use_workspaces $reserved_workspaces"
+reserved_workspaces="default production preproduction development demo ithc"
 
+protected_workspaces="$in_use_workspaces $reserved_workspaces"
 all_workspaces=$(terraform workspace list|sed 's/*//g')
 
 for workspace in $all_workspaces
