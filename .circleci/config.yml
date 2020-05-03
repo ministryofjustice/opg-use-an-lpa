@@ -21,14 +21,14 @@ workflows:
   # workspace_cleanup:
   #   triggers:
   #     - schedule:
-  #         cron: "0 */2 * * *"
+  #         cron: "0 * * * *" # hourly
   #         filters:
   #           branches:
   #             only:
   #               - master
   #   jobs:
   #     - workspace_cleanup:
-  #       name: workspace_cleanup
+  #         name: workspace_cleanup
 
   pr_build:
       jobs:
