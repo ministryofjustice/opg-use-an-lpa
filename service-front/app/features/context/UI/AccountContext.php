@@ -618,6 +618,8 @@ class AccountContext implements Context
      */
     public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
     {
+        $this->lpa->status = "Registered";
+
         // API call for adding an LPA
         $this->apiFixtures->post('/v1/actor-codes/confirm')
             ->respondWith(
