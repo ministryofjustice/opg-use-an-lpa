@@ -33,14 +33,13 @@ workflows:
   pr_build:
       jobs:
         # Common tasks
-        - mark_workspace_for_cleanup:
-            name: mark_workspace_for_cleanup
+        - mark_workspace_as_protected:
+            name: mark_workspace_as_protected
             filters: { branches: { ignore: [master] } }
         - workspace_cleanup:
             name: workspace_cleanup
             filters: { branches: { ignore: [master] } }
-
-
+            requires: [mark_workspace_as_protected]
 
   #       - use-my-lpa/lint_terraform:
   #           name: lint_terraform_pr_build
@@ -83,7 +82,12 @@ workflows:
   #           name: coveralls_upload_pr_build
   #           filters: { branches: { ignore: [master] } }
   #           requires:
-  #             [app_front_build_pr_build, app_api_build_pr_build, test_web_pr_build, test_pdf_pr_build]
+  #             [
+  #               app_front_build_pr_build,
+  #               app_api_build_pr_build,
+  #               test_web_pr_build,
+  #               test_pdf_pr_build,
+  #             ]
 
   #           # Provision and test development
   #       - use-my-lpa/apply_shared_terraform:
@@ -126,6 +130,11 @@ workflows:
   #           name: dev_run_behave_tests
   #           filters: { branches: { ignore: [master] } }
   #           requires: [dev_seed_database]
+
+  #       - mark_workspace_as_protected:
+  #           name: mark_workspace_as_protected
+  #           filters: { branches: { ignore: [master] } }
+  #           requires: [dev_run_behave_tests]
 
   #       - slack_notify_domain:
   #           name: post_environment_domains
@@ -183,7 +192,12 @@ workflows:
   #           name: coveralls_upload_path_to_live
   #           filters: { branches: { only: [master] } }
   #           requires:
-  #             [app_front_build_path_to_live, app_api_build_path_to_live, test_web_path_to_live, test_pdf_path_to_live]
+  #             [
+  #               app_front_build_path_to_live,
+  #               app_api_build_path_to_live,
+  #               test_web_path_to_live,
+  #               test_pdf_path_to_live,
+  #             ]
 
   #       # Provision and test preproduction
   #       - use-my-lpa/apply_shared_terraform:
@@ -1031,7 +1045,7 @@ jobs:
             ../../scripts/pipeline/workspace_cleanup/get_workspaces_linux
             ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(../../scripts/pipeline/workspace_cleanup/get_workspaces_linux)
 
-  mark_workspace_for_cleanup:
+  mark_workspace_as_protected:
     docker:
       - image: hashicorp/terraform
     parameters:
