@@ -40,21 +40,21 @@ Feature: Add an LPA
   Scenario: The user cannot add an LPA with a missing actor code
     Given I am on the add an LPA page
     When I request to add an LPA with a missing actor code
-    Then The LPA is not found
+    Then The LPA is not found and I am told it was a bad request
     And I request to go back and try again
 
   @integration @acceptance
   Scenario: The user cannot add an LPA with a missing user id
     Given I am on the add an LPA page
     When I request to add an LPA with a missing user id
-    Then The LPA is not found
+    Then The LPA is not found and I am told it was a bad request
     And I request to go back and try again
 
   @integration @acceptance
   Scenario: The user cannot add an LPA with a missing date of birth
     Given I am on the add an LPA page
     When I request to add an LPA with a missing date of birth
-    Then The LPA is not found
+    Then The LPA is not found and I am told it was a bad request
     And I request to go back and try again
 
   @integration @acceptance

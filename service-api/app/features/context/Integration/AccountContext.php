@@ -1816,4 +1816,12 @@ class AccountContext extends BaseIntegrationContext
                 )
             );
     }
+
+    /**
+     * @Then /^The LPA is not found and I am told it was a bad request$/
+     */
+    public function theLPAIsNotFoundAndIAmToldItWasABadRequest()
+    {
+        // Not needed in this context
+    }
 }

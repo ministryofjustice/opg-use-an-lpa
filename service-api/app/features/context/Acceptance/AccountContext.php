@@ -602,8 +602,8 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^The LPA is not found$/
-     */
+ * @Then /^The LPA is not found$/
+ */
     public function theLPAIsNotFound()
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -1928,7 +1928,7 @@ class AccountContext implements Context
             );
 
         $this->apiPost('/v1/actor-codes/summary', [
-            'actor-code' => '',
+            'actor-code' => null,
             'uid'        => $this->lpaUid,
             'dob'        => $this->userDob
         ], [
@@ -1953,7 +1953,7 @@ class AccountContext implements Context
 
         $this->apiPost('/v1/actor-codes/summary', [
             'actor-code' => $this->oneTimeCode,
-            'uid'        => '',
+            'uid'        => null,
             'dob'        => $this->userDob
         ], [
             'user-token' => $this->userLpaActorToken
@@ -1978,7 +1978,7 @@ class AccountContext implements Context
         $this->apiPost('/v1/actor-codes/summary', [
             'actor-code' => $this->oneTimeCode,
             'uid'        => $this->lpaUid,
-            'dob'        => ''
+            'dob'        => null
         ], [
             'user-token' => $this->userLpaActorToken
         ]);
@@ -2132,5 +2132,17 @@ class AccountContext implements Context
 
         $response = $this->getResponseAsJson();
         assertNull($response['user-lpa-actor-token']);
+    }
+
+    /**
+     * @Then /^The LPA is not found and I am told it was a bad request$/
+     */
+    public function theLPAIsNotFoundAndIAmToldItWasABadRequest()
+    {
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+
+        $response = $this->getResponseAsJson();
+
+        assertEmpty($response['data']);
     }
 }
