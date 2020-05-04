@@ -905,7 +905,6 @@ orbs:
           - run:
               name: Install and configure dependencies
               command: |
-                sudo docker-php-ext-disable xdebug
                 ln -sf tests/features tests/smoke/features
                 cd tests/smoke
                 composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
