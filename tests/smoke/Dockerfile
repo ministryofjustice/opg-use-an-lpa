@@ -6,6 +6,8 @@ COPY tests/smoke/ /test
 COPY tests/features /test/features
 WORKDIR /test
 
+RUN docker-php-ext-disable xdebug
+
 RUN composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
 
-ENTRYPOINT ["/test/docker-entrypoint.sh"]
+ENTRYPOINT []
