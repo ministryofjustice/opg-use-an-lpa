@@ -1824,4 +1824,40 @@ class AccountContext extends BaseIntegrationContext
     {
         // Not needed in this context
     }
+
+    /**
+     * @Given /^A malformed confirm request is sent which is missing date of birth$/
+     */
+    public function aMalformedConfirmRequestIsSentWhichIsMissingDateOfBirth()
+    {
+        $actorCodeService = $this->container->get(ActorCodeService::class);
+
+        $validatedLpa = $actorCodeService->validateDetails($this->passcode, $this->lpaUid, null);
+
+        assertNull($validatedLpa);
+    }
+
+    /**
+     * @Given /^A malformed confirm request is sent which is missing actor code$/
+     */
+    public function aMalformedConfirmRequestIsSentWhichIsMissingActorCode()
+    {
+        $actorCodeService = $this->container->get(ActorCodeService::class);
+
+        $validatedLpa = $actorCodeService->validateDetails(null, $this->lpaUid, $this->userDob);
+
+        assertNull($validatedLpa);
+    }
+
+    /**
+     * @Given /^A malformed confirm request is sent which is missing user id$/
+     */
+    public function aMalformedConfirmRequestIsSentWhichIsMissingUserId()
+    {
+        $actorCodeService = $this->container->get(ActorCodeService::class);
+
+        $validatedLpa = $actorCodeService->validateDetails($this->passcode, null, $this->userDob);
+
+        assertNull($validatedLpa);
+    }
 }
