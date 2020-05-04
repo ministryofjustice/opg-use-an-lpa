@@ -130,13 +130,13 @@ workflows:
         - slack_notify_domain:
             name: post_environment_domains
             filters: { branches: { ignore: [master] } }
-            requires: [dev_run_behave_tests]
+            requires: [dev_run_behat_tests]
 
         - hold-for-destruction:
             name: hold_env_for_destruction
             filters: { branches: { ignore: [master] } }
             type: approval
-            requires: [dev_run_behave_tests]
+            requires: [dev_run_behat_tests]
 
         - use-my-lpa/destroy_dev_environment:
             name: dev_destroy_environment
@@ -238,7 +238,7 @@ workflows:
             name: production_apply_shared_terraform
             workspace: production
             filters: { branches: { only: [master] } }
-            requires: [preprod_run_behave_tests]
+            requires: [preprod_run_behat_tests]
         - use-my-lpa/apply_environment_terraform:
             name: production_apply_environment_terraform
             workspace: production
