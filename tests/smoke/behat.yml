@@ -4,6 +4,7 @@ default:
       tags: '~@wip'
 
   extensions:
+    Smoke\SmokeExtension: ~
     DMore\ChromeExtension\Behat\ServiceContainer\ChromeExtension: ~
     Behat\MinkExtension:
       browser_name: chrome
