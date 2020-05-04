@@ -1832,7 +1832,7 @@ class AccountContext extends BaseIntegrationContext
     {
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
-        $validatedLpa = $actorCodeService->validateDetails($this->passcode, $this->lpaUid, null);
+        $validatedLpa = $actorCodeService->validateDetails($this->passcode, $this->lpaUid, '');
 
         assertNull($validatedLpa);
     }
@@ -1844,7 +1844,7 @@ class AccountContext extends BaseIntegrationContext
     {
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
-        $validatedLpa = $actorCodeService->validateDetails(null, $this->lpaUid, $this->userDob);
+        $validatedLpa = $actorCodeService->validateDetails('', $this->lpaUid, $this->userDob);
 
         assertNull($validatedLpa);
     }
@@ -1856,7 +1856,7 @@ class AccountContext extends BaseIntegrationContext
     {
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
-        $validatedLpa = $actorCodeService->validateDetails($this->passcode, null, $this->userDob);
+        $validatedLpa = $actorCodeService->validateDetails($this->passcode, '', $this->userDob);
 
         assertNull($validatedLpa);
     }
