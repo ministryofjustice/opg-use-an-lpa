@@ -115,7 +115,7 @@ workflows:
                 app_api_build_pr_build,
                 pdf_build_pr_build,
                 dev_apply_environment_terraform,
-                ]
+              ]
 
         - use-my-lpa/seed_database:
             name: dev_seed_database
@@ -126,7 +126,6 @@ workflows:
             name: dev_run_behave_tests
             filters: { branches: { ignore: [master] } }
             requires: [dev_seed_database]
-
 
         - slack_notify_domain:
             name: post_environment_domains
@@ -300,12 +299,12 @@ orbs:
         docker: [image: buildkite/puppeteer]
       php:
         docker: [image: circleci/php:7-cli]
+      php-browsers:
+        docker: [image: circleci/php:7-cli-browsers]
       node:
         docker: [image: circleci/node:8.0]
       python:
         docker: [image: circleci/python]
-      python-browsers:
-        docker: [image: circleci/python:3.6-stretch-browsers]
       terraform:
         docker: [image: hashicorp/terraform]
 
@@ -879,11 +878,8 @@ orbs:
       #----------------------------------------------------
       # Tests
 
-      run_behave_suite:
-        #
-        # Run the full set of functional tests
-        #
-        executor: python-browsers
+      run_behat_suite:
+        executor: php-browsers
         parameters:
           workspace:
             description: Terraform workspace name
@@ -891,7 +887,6 @@ orbs:
             default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
         steps:
           - checkout
-          - install_webdriver
           - attach_workspace:
               at: /tmp
           - run:
@@ -900,8 +895,12 @@ orbs:
                 sudo pip3 install boto3 -q
                 python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
           - run:
-              name: Install Behave
-              command: sudo pip3 install behave selenium --upgrade
+              name: Install and configure dependencies
+              command: |
+                sudo docker-php-ext-disable xdebug
+                ln -sf tests/features tests/smoke/features
+                cd tests/smoke
+                composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
           - run:
               name: Allow CircleCI ingress to environment
               command: |
@@ -910,17 +909,16 @@ orbs:
                 if [ "${TF_WORKSPACE}" != "production" ]; then
                   python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json --add
                 fi
-
           - run:
               name: Run suite
               command: |
-                export TF_WORKSPACE=$(bash ~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
-                echo $TF_WORKSPACE
-                export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-                echo $IMAGE_TAG
-                behave -v --logging-level DEBUG
+                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
+                actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
+
+                cd tests/smoke
+                BEHAT_VIEWER_URL=https://$viewer_fqdn BEHAT_ACTOR_URL=https://$actor_fqdn vendor/bin/behat
           - store_artifacts:
-              path: features/failed_scenarios_screenshots
+              path: tests/smoke/failed_step_screenshots
           - run:
               name: Remove CircleCI ingress to environment
               command: |
