@@ -28,8 +28,8 @@ func main() {
 		flag.PrintDefaults()
 	}
 
-	var workspace_name string
-	flag.StringVar(&workspace_name, "workspace", "", "name of workspace to mark for clean up")
+	var WorkspaceName string
+	flag.StringVar(&WorkspaceName, "workspace", "", "name of workspace to mark for clean up")
 	flag.Parse()
 
 
@@ -55,11 +55,11 @@ func main() {
 	}
 
 	item := Workspace{
-		WorkspaceName: workspace_name,
+		WorkspaceName: WorkspaceName,
 		ExpiresTTL:    time.Now().AddDate(0, 0, 1).Unix(),
 	}
 
-	workspace_to_put, err := dynamodbattribute.MarshalMap(item)
+	WorkspaceToPut, err := dynamodbattribute.MarshalMap(item)
 	if err != nil {
 		fmt.Println("Got error marshalling Workspace item:")
 		fmt.Println(err.Error())
@@ -67,7 +67,7 @@ func main() {
 	}
 
 	input := &dynamodb.PutItemInput{
-		Item:      workspace_to_put,
+		Item:      WorkspaceToPut,
 		TableName: aws.String("WorkspaceCleanup"),
 	}
 
