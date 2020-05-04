@@ -99,6 +99,11 @@ workflows:
                 pdf_build_pr_build,
               ]
 
+        - mark_workspace_as_protected:
+            name: mark_workspace_as_protected
+            filters: { branches: { ignore: [master] } }
+            requires: [dev_apply_environment_terraform]
+
         - ecr_scan_results:
             name: ecr_scan_results_development
             filters: { branches: { ignore: [master] } }
@@ -110,7 +115,7 @@ workflows:
                 app_api_build_pr_build,
                 pdf_build_pr_build,
                 dev_apply_environment_terraform,
-              ]
+                ]
 
         - use-my-lpa/seed_database:
             name: dev_seed_database
@@ -122,10 +127,6 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires: [dev_seed_database]
 
-        - mark_workspace_as_protected:
-            name: mark_workspace_as_protected
-            filters: { branches: { ignore: [master] } }
-            requires: [dev_run_behave_tests]
 
         - slack_notify_domain:
             name: post_environment_domains
