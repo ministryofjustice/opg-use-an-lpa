@@ -5,7 +5,7 @@ It contains useful queries for finding specific log data, in order to quickly an
 
 To begin searching log data, go to CloudWatch --> Logs --> Insights
 
-At the top of the page, select the log group that you want to perform queries
+At the top of the page, select the log group that you want to perform queries on
 
 Enter the queries below and click "Run query"
 
@@ -27,7 +27,7 @@ Having parsed the data, we can now filter the logs by those categories, such as 
 ```
 | filter responsecode like /(?i)(4\d\d)/
 ```
-Displaying that fields that you want to see:
+Displaying the fields that you want to see:
 ```
 | DISPLAY datetime, responsecode, logmessage
 ```
