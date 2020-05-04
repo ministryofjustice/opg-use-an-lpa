@@ -1912,4 +1912,225 @@ class AccountContext implements Context
         // Not needed in this context
     }
 
+    /**
+     * @When /^I request to add an LPA with a missing actor code$/
+     */
+    public function iRequestToAddAnLPAWithAMissingActorCode()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST
+                )
+            );
+
+        $this->apiPost('/v1/actor-codes/summary', [
+            'actor-code' => '',
+            'uid'        => $this->lpaUid,
+            'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+    }
+
+    /**
+     * @When /^I request to add an LPA with a missing user id$/
+     */
+    public function iRequestToAddAnLPAWithAMissingUserId()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST
+                )
+            );
+
+        $this->apiPost('/v1/actor-codes/summary', [
+            'actor-code' => $this->oneTimeCode,
+            'uid'        => '',
+            'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+    }
+
+    /**
+     * @When /^I request to add an LPA with a missing date of birth$/
+     */
+    public function iRequestToAddAnLPAWithAMissingDateOfBirth()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST
+                )
+            );
+
+        $this->apiPost('/v1/actor-codes/summary', [
+            'actor-code' => $this->oneTimeCode,
+            'uid'        => $this->lpaUid,
+            'dob'        => ''
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+    }
+
+    /**
+     * @Given /^A malformed confirm request is sent which is missing date of birth$/
+     */
+    public function aMalformedConfirmRequestIsSentWhichIsMissingDateOfBirth()
+    {
+        $this->userLpaActorToken = '13579';
+        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'  => $this->lpaUid,
+                'Active'     => true,
+                'Expires'    => '2021-09-25T00:00:00Z',
+                'ActorCode'  => $this->oneTimeCode,
+                'ActorLpaId' => $this->actorId,
+            ])
+        ]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // UserLpaActorMap::create
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'        => $this->userLpaActorToken,
+                'UserId'    => $this->userAccountId,
+                'SiriusUid' => $this->lpaUid,
+                'ActorId'   => $this->actorId,
+                'Added'     => $now,
+            ])
+        ]));
+
+        // ActorCodes::flagCodeAsUsed
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiPost('/v1/actor-codes/confirm', [
+            'actor-code' => $this->oneTimeCode,
+            'uid'        => $this->lpaUid,
+            'dob'        => null
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+
+        $response = $this->getResponseAsJson();
+        assertNull($response['user-lpa-actor-token']);
+    }
+
+    /**
+     * @Given /^A malformed confirm request is sent which is missing actor code$/
+     */
+    public function aMalformedConfirmRequestIsSentWhichIsMissingActorCode()
+    {
+        $this->userLpaActorToken = '13579';
+        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'  => $this->lpaUid,
+                'Active'     => true,
+                'Expires'    => '2021-09-25T00:00:00Z',
+                'ActorCode'  => $this->oneTimeCode,
+                'ActorLpaId' => $this->actorId,
+            ])
+        ]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // UserLpaActorMap::create
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'        => $this->userLpaActorToken,
+                'UserId'    => $this->userAccountId,
+                'SiriusUid' => $this->lpaUid,
+                'ActorId'   => $this->actorId,
+                'Added'     => $now,
+            ])
+        ]));
+
+        // ActorCodes::flagCodeAsUsed
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiPost('/v1/actor-codes/confirm', [
+            'actor-code' => null,
+            'uid'        => $this->lpaUid,
+            'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+
+        $response = $this->getResponseAsJson();
+        assertNull($response['user-lpa-actor-token']);
+    }
+
+    /**
+     * @Given /^A malformed confirm request is sent which is missing user id$/
+     */
+    public function aMalformedConfirmRequestIsSentWhichIsMissingUserId()
+    {
+        $this->userLpaActorToken = '13579';
+        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'  => $this->lpaUid,
+                'Active'     => true,
+                'Expires'    => '2021-09-25T00:00:00Z',
+                'ActorCode'  => $this->oneTimeCode,
+                'ActorLpaId' => $this->actorId,
+            ])
+        ]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_BAD_REQUEST, [], json_encode($this->lpa)));
+
+        // UserLpaActorMap::create
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'        => $this->userLpaActorToken,
+                'UserId'    => $this->userAccountId,
+                'SiriusUid' => $this->lpaUid,
+                'ActorId'   => $this->actorId,
+                'Added'     => $now,
+            ])
+        ]));
+
+        // ActorCodes::flagCodeAsUsed
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiPost('/v1/actor-codes/confirm', [
+            'actor-code' => $this->oneTimeCode,
+            'uid'        => null,
+            'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+
+        $response = $this->getResponseAsJson();
+        assertNull($response['user-lpa-actor-token']);
+    }
 }

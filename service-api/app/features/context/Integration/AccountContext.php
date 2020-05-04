@@ -1746,10 +1746,10 @@ class AccountContext extends BaseIntegrationContext
         // ActorUsers::delete
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'Id'       => $this->userAccountId,
-                'Email'    => $this->userAccountEmail,
-                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
-                'LastLogin'=> null
+                'Id'        => $this->userAccountId,
+                'Email'     => $this->userAccountEmail,
+                'Password'  => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                'LastLogin' => null
             ])
         ]));
 
@@ -1767,5 +1767,53 @@ class AccountContext extends BaseIntegrationContext
     public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage()
     {
         // Not needed in this context
+    }
+
+    /**
+     * @When /^I request to add an LPA with a missing actor code$/
+     */
+    public function iRequestToAddAnLPAWithAMissingActorCode()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST
+                )
+            );
+    }
+
+    /**
+     * @When /^I request to add an LPA with a missing user id$/
+     */
+    public function iRequestToAddAnLPAWithAMissingUserId()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST
+                )
+            );
+    }
+
+    /**
+     * @When /^I request to add an LPA with a missing date of birth$/
+     */
+    public function iRequestToAddAnLPAWithAMissingDateOfBirth()
+    {
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST
+                )
+            );
     }
 }
