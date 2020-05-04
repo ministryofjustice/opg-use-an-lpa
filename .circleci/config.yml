@@ -282,6 +282,11 @@ orbs:
                 sudo sh -c 'tar -x geckodriver -zf geckodriver-v0.23.0-linux64.tar.gz -O > /usr/bin/geckodriver'
                 sudo chmod +x /usr/bin/geckodriver
                 rm geckodriver-v0.23.0-linux64.tar.gz
+      install_python:
+        steps:
+          - run:
+              name: Install Python
+              command: sudo apt install python3 python3-pip
       ecr_login:
         steps:
           - run:
@@ -887,6 +892,7 @@ orbs:
             default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
         steps:
           - checkout
+          - install_python
           - attach_workspace:
               at: /tmp
           - run:
