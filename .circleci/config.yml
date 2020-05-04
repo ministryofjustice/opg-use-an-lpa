@@ -905,7 +905,6 @@ orbs:
           - run:
               name: Install and configure dependencies
               command: |
-                ln -sf tests/features tests/smoke/features
                 cd tests/smoke
                 composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
           - run:
@@ -921,6 +920,8 @@ orbs:
               command: |
                 viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
                 actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
+
+                ln -sf ../features tests/smoke/features
 
                 cd tests/smoke
                 BEHAT_VIEWER_URL=https://$viewer_fqdn BEHAT_ACTOR_URL=https://$actor_fqdn vendor/bin/behat
