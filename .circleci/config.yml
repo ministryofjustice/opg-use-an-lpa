@@ -122,8 +122,8 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires: [dev_apply_environment_terraform]
 
-        - use-my-lpa/run_behave_suite:
-            name: dev_run_behave_tests
+        - use-my-lpa/run_behat_suite:
+            name: dev_run_behat_tests
             filters: { branches: { ignore: [master] } }
             requires: [dev_seed_database]
 
@@ -227,8 +227,8 @@ workflows:
             filters: { branches: { only: [master] } }
             requires: [preprod_apply_environment_terraform]
 
-        - use-my-lpa/run_behave_suite:
-            name: preprod_run_behave_tests
+        - use-my-lpa/run_behat_suite:
+            name: preprod_run_behat_tests
             workspace: preproduction
             filters: { branches: { only: [master] } }
             requires: [preprod_seed_database]
