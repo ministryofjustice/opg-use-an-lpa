@@ -146,9 +146,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     ]));
                 } else {
                     $this->getLogger()->debug(
-                        'Account with Id {id} has found an LPA with Id {uId} and LPA status is {status} and hence cannot be added',
+                        'LPA with Id {uId} has {status} status and hence cannot be added',
                         [
-                            'id'   => $identity,
                             'uId' => $referenceNumber,
                             'status' => $lpa->getStatus()
                         ]
