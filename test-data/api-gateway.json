@@ -155,7 +155,7 @@
     },
     "applicationType": "Classic",
     "caseSubtype": "pfa",
-    "status": "Pending",
+    "status": "Registered",
     "caseAttorneySingular": false,
     "caseAttorneyJointlyAndSeverally": true,
     "caseAttorneyJointly": false,
