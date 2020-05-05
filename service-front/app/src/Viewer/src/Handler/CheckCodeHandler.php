@@ -78,7 +78,7 @@ class CheckCodeHandler extends AbstractHandler
                     $expires = new DateTime($lpa->expires);
                     if (isset($lpa->cancelled)) {
                         return new HtmlResponse($this->renderer->render('viewer::check-code-cancelled'));
-                    } elseif (strtolower(($lpa->lpa)->getStatus()) == 'registered') {
+                    } else {
                         return new HtmlResponse($this->renderer->render(
                             'viewer::check-code-found',
                             [
@@ -86,8 +86,6 @@ class CheckCodeHandler extends AbstractHandler
                                 'expires' => $expires->format('Y-m-d')
                             ]
                         ));
-                    } else {
-                        return new HtmlResponse($this->renderer->render('viewer::check-code-not-found'));
                     }
                 }
             } catch (ApiException $apiEx) {
