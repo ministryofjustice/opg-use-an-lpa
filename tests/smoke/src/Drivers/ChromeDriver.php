@@ -52,8 +52,10 @@ class ChromeDriver implements Driver
         $this->process->start();
 
         $this->process->waitUntil(function ($type, $output) {
-            echo $output;
-            return stristr($output, 'DevTools listening on ws://0.0.0.0:9222/devtools/browser/');
+            if (! ($running = stristr($output, 'DevTools listening on ws://0.0.0.0:9222/devtools/browser/'))) {
+                echo $output;
+            }
+            return $running;
         });
     }
 
