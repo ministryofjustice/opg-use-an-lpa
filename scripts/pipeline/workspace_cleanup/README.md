@@ -4,6 +4,14 @@ Scripts for cleaning up development account workspaces.
 
 The scripts rely on a DynamoDB table in the development account.
 
+## Go build
+
+To build or rebuild the compiled applications, run
+
+``` bash
+./go_build_workspace_tools.sh
+```
+
 ## Put workspaces
 
 Adds a single workspace name for scheduled clean up.
