@@ -4,6 +4,11 @@ Feature: View an LPA via share code
   I can enter that code and see the details of an LPA
   So that I can carry out business functions
 
+  @smoke
+  Scenario: Service is only accessible over secure https
+    Given I access the viewer service insecurely
+    Then the viewer service homepage should be shown securely
+
   @integration @acceptance @smoke
   Scenario: View an LPA
     Given I have been given access to an LPA via share code
