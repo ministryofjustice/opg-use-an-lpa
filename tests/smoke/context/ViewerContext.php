@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Test\Context;
 
 use Behat\Behat\Context\Context;
+use Fig\Http\Message\StatusCodeInterface;
 
 /**
  * Class ViewerContext
@@ -17,6 +18,17 @@ use Behat\Behat\Context\Context;
 class ViewerContext implements Context
 {
     use BaseContextTrait;
+
+    /**
+     * @Given I access the viewer service insecurely
+     */
+    public function iAccessTheViewerServiceInsecurely()
+    {
+        $baseUrlHost = parse_url($this->ui->getMinkParameter('base_url'), PHP_URL_HOST);
+        $insecureUrl = sprintf('http://%s/', $baseUrlHost);
+
+        $this->ui->visit($insecureUrl);
+    }
 
     /**
      * @Given I have been given access to an LPA via share code
@@ -62,6 +74,21 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('Rachel Sanderson');
 
         $this->ui->clickLink('Continue');
+    }
+
+    /**
+     * @Then the viewer service homepage should be shown securely
+     */
+    public function theViewerServiceHomepageShouldBeShownSecurely()
+    {
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+
+        $baseUrlHost = parse_url($this->ui->getMinkParameter('base_url'), PHP_URL_HOST);
+        $secureUrl = sprintf('https://%s/', $baseUrlHost);
+
+        $actualUrl = $this->ui->getSession()->getDriver()->getCurrentUrl();
+
+        $this->assertExactUrl($secureUrl, $actualUrl);
     }
 
     /**
