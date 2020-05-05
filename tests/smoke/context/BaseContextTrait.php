@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Test\Context;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
 
 /**
@@ -34,9 +35,9 @@ trait BaseContextTrait
      *
      * @param $name
      * @param $value
-     * @throws \Behat\Mink\Exception\ExpectationException
+     * @throws ExpectationException
      */
-    public function assertResponseHeader($name, $value): void
+    public function assertResponseHeader(string $name, string $value): void
     {
         $this->ui->assertSession()->responseHeaderEquals($name, $value);
     }
