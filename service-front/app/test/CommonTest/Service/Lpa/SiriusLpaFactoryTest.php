@@ -8,10 +8,10 @@ use Common\Entity\Address;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Service\Lpa\Factory\Sirius;
-use PHPUnit\Framework\TestCase;
 use DateTime;
+use PHPUnit\Framework\TestCase;
 
-class LpaFactoryTest extends TestCase
+class SiriusLpaFactoryTest extends TestCase
 {
     /** @var array */
     protected $fullExampleFixtureData;

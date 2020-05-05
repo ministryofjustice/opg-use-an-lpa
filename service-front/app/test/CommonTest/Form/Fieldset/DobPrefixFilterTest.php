@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CommonTest\Form;
+namespace CommonTest\Form\Fieldset;
 
 use Common\Form\Fieldset\DatePrefixFilter;
 use PHPUnit\Framework\TestCase;

@@ -8,6 +8,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
+use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Testwork\Suite\Exception\SuiteConfigurationException;
 use DMore\ChromeDriver\ChromeDriver;
 
@@ -45,8 +46,9 @@ class BaseContext implements Context
 
         $environment = $scope->getEnvironment();
 
+        // we need to set this on *all* contexts
         foreach ($environment->getContexts() as $context) {
-            if ($context instanceof \Behat\MinkExtension\Context\RawMinkContext) {
+            if ($context instanceof RawMinkContext) {
                 $context->setMinkParameter('base_url', $this->baseUrl);
             }
         }
