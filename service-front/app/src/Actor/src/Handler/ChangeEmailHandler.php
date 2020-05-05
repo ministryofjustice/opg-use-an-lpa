@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Actor\Form\ChangeEmail;
+use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
@@ -66,6 +68,26 @@ class ChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, User
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new HtmlResponse($this->renderer->render('actor::change-email'));
+        $form = new ChangeEmail($this->getCsrfGuard($request));
+
+        $user = $this->getUser($request);
+
+        if ($request->getMethod() === 'POST') {
+
+            $form->setData($request->getParsedBody());
+
+            if ($form->isValid()) {
+                $formData = $form->getData();
+
+                $newEmail = $formData['new_email_address'];
+                $currentPassword = $formData['current_password'];
+            }
+
+        }
+
+        return new HtmlResponse($this->renderer->render('actor::change-email', [
+            'form' => $form->prepare(),
+            'user' => $user
+        ]));
     }
 }

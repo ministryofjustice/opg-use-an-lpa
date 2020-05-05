@@ -6,7 +6,9 @@
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
 
-        <a href="/" class="govuk-back-link">Back</a>
+        {{ include('@partials/account-bar.html.twig') }}
+
+        <a href="{{ path('your-details') }}" class="govuk-back-link">Back</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -14,9 +16,9 @@
 
                 <div class="govuk-grid-column-full">
 
-{#                    {{ govuk_error_summary(form) }}#}
+                    {{ govuk_error_summary(form) }}
 
-{#                    {{ govuk_form_open(form) }}#}
+                    {{ govuk_form_open(form) }}
 
                     <fieldset class="govuk-fieldset">
 
@@ -24,39 +26,27 @@
                             <h1 class="govuk-fieldset__heading">
                                 Change your email address
                             </h1>
-                        </legend>
+                        </legend><br><br>
 
-{#                        <div class="govuk-grid-row">#}
+                        <div class="govuk-grid-row">
 
-{#                            <div class="govuk-grid-column-one-half">#}
+                            <div class="govuk-grid-column-one-half">
 
-{#                                {{ govuk_form_element(form.get('__csrf')) }}#}
+                                {{ govuk_form_element(form.get('__csrf')) }}
 
-{#                                <p class="govuk-body">Your password needs to have:</p>#}
+                                {{ govuk_form_element(form.get('new_email_address'), { 'label': 'New email address' }) }}
 
-{#                                <ul class="govuk-list govuk-list--bullet">#}
-{#                                    <li>at least 8 characters</li>#}
-{#                                    <li>at least one lower-case and one capital letter</li>#}
-{#                                    <li>at least one number</li>#}
-{#                                </ul>#}
+                                {{ govuk_form_element(form.get('current_password'), { 'label': 'Confirm your password' }) }}
 
-{#                                <p class="govuk-body">Never share your password with anyone.</p>#}
+                                <button data-prevent-double-click="true" type="submit" class="govuk-button">Save new email address</button>
 
-{#                                {{ govuk_form_element(form.get('current_password'), { 'label': 'Current password' }) }}#}
+                            </div>
 
-{#                                {{ govuk_form_element(form.get('new_password'), { 'label': 'New password' }) }}#}
-
-{#                                {{ govuk_form_element(form.get('new_password_confirm'), { 'label': 'Confirm new password' }) }}#}
-
-{#                                <button type="submit" class="govuk-button">Change password</button>#}
-
-{#                            </div>#}
-
-{#                        </div>#}
+                        </div>
 
                     </fieldset>
 
-{#                    {{ govuk_form_close() }}#}
+                    {{ govuk_form_close() }}
 
                 </div>
 
