@@ -1,0 +1,67 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Change your account email address - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        <a href="/" class="govuk-back-link">Back</a>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <div class="govuk-grid-row">
+
+                <div class="govuk-grid-column-full">
+
+{#                    {{ govuk_error_summary(form) }}#}
+
+{#                    {{ govuk_form_open(form) }}#}
+
+                    <fieldset class="govuk-fieldset">
+
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                            <h1 class="govuk-fieldset__heading">
+                                Change your email address
+                            </h1>
+                        </legend>
+
+{#                        <div class="govuk-grid-row">#}
+
+{#                            <div class="govuk-grid-column-one-half">#}
+
+{#                                {{ govuk_form_element(form.get('__csrf')) }}#}
+
+{#                                <p class="govuk-body">Your password needs to have:</p>#}
+
+{#                                <ul class="govuk-list govuk-list--bullet">#}
+{#                                    <li>at least 8 characters</li>#}
+{#                                    <li>at least one lower-case and one capital letter</li>#}
+{#                                    <li>at least one number</li>#}
+{#                                </ul>#}
+
+{#                                <p class="govuk-body">Never share your password with anyone.</p>#}
+
+{#                                {{ govuk_form_element(form.get('current_password'), { 'label': 'Current password' }) }}#}
+
+{#                                {{ govuk_form_element(form.get('new_password'), { 'label': 'New password' }) }}#}
+
+{#                                {{ govuk_form_element(form.get('new_password_confirm'), { 'label': 'Confirm new password' }) }}#}
+
+{#                                <button type="submit" class="govuk-button">Change password</button>#}
+
+{#                            </div>#}
+
+{#                        </div>#}
+
+                    </fieldset>
+
+{#                    {{ govuk_form_close() }}#}
+
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+{% endblock %}
