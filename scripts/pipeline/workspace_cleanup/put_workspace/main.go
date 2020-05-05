@@ -24,7 +24,7 @@ func exitWithError(err error) {
 
 func main() {
 	flag.Usage = func() {
-		fmt.Println("Usage: stabilizer")
+		fmt.Println("Usage: Put Workspace")
 		flag.PrintDefaults()
 	}
 
