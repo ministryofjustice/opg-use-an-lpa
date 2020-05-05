@@ -41,4 +41,21 @@ trait BaseContextTrait
     {
         $this->ui->assertSession()->responseHeaderEquals($name, $value);
     }
+
+    /**
+     * Checks for an exact url match (including scheme, domain, path, fragments and queries)
+     *
+     * @param string $expected
+     * @param string $actual
+     * @throws ExpectationException
+     */
+    public function assertExactUrl(string $expected, string $actual)
+    {
+        if ($expected !== $actual) {
+            throw new ExpectationException(
+                sprintf('Current page is "%s", but "%s" expected.', $actual, $expected),
+                $this->ui->getSession()->getDriver()
+            );
+        }
+    }
 }
