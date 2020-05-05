@@ -37,14 +37,14 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	role_arn := ""
+	RoleArn := ""
 	if len(os.Getenv("CI")) > 0 {
-		role_arn = "arn:aws:iam::367815980639:role/opg-use-an-lpa-ci"
+		RoleArn = "arn:aws:iam::367815980639:role/opg-use-an-lpa-ci"
 	} else {
-		role_arn = "arn:aws:iam::367815980639:role/operator"
+		RoleArn = "arn:aws:iam::367815980639:role/operator"
 	}
 
-	creds := stscreds.NewCredentials(sess, role_arn)
+	creds := stscreds.NewCredentials(sess, RoleArn)
 	awsConfig := aws.Config{Credentials: creds, Region: aws.String("eu-west-1")}
 
 	svc := dynamodb.New(sess, &awsConfig)
