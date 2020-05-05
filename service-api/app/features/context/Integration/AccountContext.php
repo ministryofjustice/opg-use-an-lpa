@@ -1830,11 +1830,54 @@ class AccountContext extends BaseIntegrationContext
      */
     public function aMalformedConfirmRequestIsSentWhichIsMissingDateOfBirth()
     {
+        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+        $this->userLpaActorToken = '13579';
+
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'  => $this->lpaUid,
+                'Active'     => true,
+                'Expires'    => '2021-09-25T00:00:00Z',
+                'ActorCode'  => $this->passcode,
+                'ActorLpaId' => $this->actorLpaId,
+            ])
+        ]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // UserLpaActorMap::create
+        $this->awsFixtures->append(new Result([
+            'Item' => [
+                $this->marshalAwsResultData([
+                    'Id'        => $this->userLpaActorToken,
+                    'UserId'    => $this->userId,
+                    'SiriusUid' => $this->lpaUid,
+                    'ActorId'   => $this->actorLpaId,
+                    'Added'     => $now,
+                ])
+            ]
+        ]));
+
+        // ActorCodes::flagCodeAsUsed
+        $this->awsFixtures->append(new Result([]));
+
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
-        $validatedLpa = $actorCodeService->validateDetails($this->passcode, $this->lpaUid, '');
+        try {
+            $response = $actorCodeService->confirmDetails($this->passcode, $this->lpaUid, '', (string) $this->actorLpaId);
+        } catch (Exception $ex) {
+            throw new Exception('Lpa confirmation unsuccessful');
+        }
 
-        assertNull($validatedLpa);
+        assertNull($response);
     }
 
     /**
@@ -1842,11 +1885,54 @@ class AccountContext extends BaseIntegrationContext
      */
     public function aMalformedConfirmRequestIsSentWhichIsMissingActorCode()
     {
+        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+        $this->userLpaActorToken = '13579';
+
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'  => $this->lpaUid,
+                'Active'     => true,
+                'Expires'    => '2021-09-25T00:00:00Z',
+                'ActorCode'  => $this->passcode,
+                'ActorLpaId' => $this->actorLpaId,
+            ])
+        ]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // UserLpaActorMap::create
+        $this->awsFixtures->append(new Result([
+            'Item' => [
+                $this->marshalAwsResultData([
+                    'Id'        => $this->userLpaActorToken,
+                    'UserId'    => $this->userId,
+                    'SiriusUid' => $this->lpaUid,
+                    'ActorId'   => $this->actorLpaId,
+                    'Added'     => $now,
+                ])
+            ]
+        ]));
+
+        // ActorCodes::flagCodeAsUsed
+        $this->awsFixtures->append(new Result([]));
+
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
-        $validatedLpa = $actorCodeService->validateDetails('', $this->lpaUid, $this->userDob);
+        try {
+            $response = $actorCodeService->confirmDetails('', $this->lpaUid, $this->userDob, (string) $this->actorLpaId);
+        } catch (Exception $ex) {
+            throw new Exception('Lpa confirmation unsuccessful');
+        }
 
-        assertNull($validatedLpa);
+        assertNull($response);
     }
 
     /**
@@ -1854,10 +1940,53 @@ class AccountContext extends BaseIntegrationContext
      */
     public function aMalformedConfirmRequestIsSentWhichIsMissingUserId()
     {
+        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+        $this->userLpaActorToken = '13579';
+
+        // ActorCodes::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'SiriusUid'  => $this->lpaUid,
+                'Active'     => true,
+                'Expires'    => '2021-09-25T00:00:00Z',
+                'ActorCode'  => $this->passcode,
+                'ActorLpaId' => $this->actorLpaId,
+            ])
+        ]));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // UserLpaActorMap::create
+        $this->awsFixtures->append(new Result([
+            'Item' => [
+                $this->marshalAwsResultData([
+                    'Id'        => $this->userLpaActorToken,
+                    'UserId'    => $this->userId,
+                    'SiriusUid' => $this->lpaUid,
+                    'ActorId'   => $this->actorLpaId,
+                    'Added'     => $now,
+                ])
+            ]
+        ]));
+
+        // ActorCodes::flagCodeAsUsed
+        $this->awsFixtures->append(new Result([]));
+
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
-        $validatedLpa = $actorCodeService->validateDetails($this->passcode, '', $this->userDob);
+        try {
+            $response = $actorCodeService->confirmDetails($this->passcode, '', $this->userDob, (string) $this->actorLpaId);
+        } catch (Exception $ex) {
+            throw new Exception('Lpa confirmation unsuccessful');
+        }
 
-        assertNull($validatedLpa);
+        assertNull($response);
     }
 }
