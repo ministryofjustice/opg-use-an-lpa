@@ -243,6 +243,19 @@ class UserService implements UserRepositoryInterface
         );
     }
 
+    public function changeEmail(string $userId, string $newEmail, string $password): void
+    {
+        try {
+            $this->apiClient->httpPatch('/v1/change-email', [
+                'user-id'       => $userId,
+                'new-email'     => $newEmail,
+                'password'      => $password
+            ]);
+        } catch (ApiException $ex) {
+
+        }
+    }
+
     public function changePassword(string $id, string $password, string $newPassword): void
     {
         try {
