@@ -46,16 +46,42 @@ trait BaseContextTrait
      * Checks for an exact url match (including scheme, domain, path, fragments and queries)
      *
      * @param string $expected
-     * @param string $actual
      * @throws ExpectationException
      */
-    public function assertExactUrl(string $expected, string $actual)
+    public function assertExactUrl(string $expected): void
     {
+        $actual = $this->ui->getSession()->getDriver()->getCurrentUrl();
+
         if ($expected !== $actual) {
             throw new ExpectationException(
                 sprintf('Current page is "%s", but "%s" expected.', $actual, $expected),
                 $this->ui->getSession()->getDriver()
             );
         }
+    }
+
+    /**
+     * Asserts that the response is JSON.
+     *
+     * @param string $mimeType An optional Mime type for the json.
+     * @return array The parsed JSON response as an associative array.
+     * @throws ExpectationException
+     */
+    public function assertJsonResponse(string $mimeType = 'application/json'): array
+    {
+        $this->assertResponseHeader('Content-Type', $mimeType);
+
+        $body = $this->ui->getSession()->getPage()->getText();
+
+        $json = json_decode($body, true);
+
+        if ($json === null) {
+            throw new ExpectationException(
+                'Expected valid JSON but did not find it',
+                $this->ui->getSession()->getDriver()
+            );
+        }
+
+        return $json;
     }
 }
