@@ -5,8 +5,9 @@ variable "account_mapping" {
 variable "accounts" {
   type = map(
     object({
-      account_id    = string
-      is_production = bool
+      account_id        = string
+      is_production     = bool
+      retention_in_days = number
     })
   )
 }
