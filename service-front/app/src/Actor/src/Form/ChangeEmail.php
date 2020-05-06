@@ -20,6 +20,12 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
      * Error codes
      * @const string
      */
+    public const INVALID_EMAIL = 'invalidEmail';
+
+    /**
+     * Error codes
+     * @const string
+     */
     public const INVALID_PASSWORD = 'invalidPassword';
 
     /**
@@ -28,6 +34,7 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
      */
     protected $messageTemplates = [
         self::INVALID_PASSWORD => 'Your password is incorrect',
+        self::INVALID_EMAIL => 'Your new email address must be different to your current email address'
     ];
 
     /**
