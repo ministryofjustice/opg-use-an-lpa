@@ -11,6 +11,7 @@ use BehatTest\Context\SetupEnv;
 use Common\Exception\ApiException;
 use DateTime;
 use DateInterval;
+use DateTimeZone;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 
@@ -954,7 +955,7 @@ class AccountContext implements Context
         $response = $this->getResponseAsJson();
 
         $codeExpiry = (new DateTime($response['expires']))->format('Y-m-d');
-        $in30Days = ((new DateTime('now'))->add(new DateInterval('P30D'))->format('Y-m-d'));
+        $in30Days = (new DateTime('23:59:59 +30 days', new DateTimeZone('Europe/London')))->format('Y-m-d');
 
         assertArrayHasKey('code', $response);
         assertNotNull($response['code']);
