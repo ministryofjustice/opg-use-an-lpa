@@ -205,6 +205,10 @@ EOF
       "value": "${local.account.session_expires_view}"
     },
     {
+      "name": "COOKIE_EXPIRES",
+      "value": "${local.account.cookie_expires_view}"
+    },
+    {
       "name": "LOGGING_LEVEL",
       "value": "${local.account.logging_level}"
     },
