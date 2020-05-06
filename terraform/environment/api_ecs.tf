@@ -180,7 +180,7 @@ locals {
         "options": {
             "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
             "awslogs-region": "eu-west-1",
-            "awslogs-stream-prefix": "api-web.use-an-lpa"
+            "awslogs-stream-prefix": "${local.environment}.api-web.use-an-lpa"
         }
     },
     "environment": [
@@ -225,7 +225,7 @@ EOF
         "options": {
             "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
             "awslogs-region": "eu-west-1",
-            "awslogs-stream-prefix": "api-app.use-an-lpa"
+            "awslogs-stream-prefix": "${local.environment}.api-app.use-an-lpa"
         }
     },
     "environment": [
