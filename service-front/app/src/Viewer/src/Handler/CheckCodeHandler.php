@@ -79,7 +79,7 @@ class CheckCodeHandler extends AbstractHandler
                     if (isset($lpa->cancelled)) {
                         return new HtmlResponse($this->renderer->render('viewer::check-code-cancelled'));
                     }
-                    if (strtolower(($lpa->lpa)->getStatus()) == 'registered') {
+                    if (strtolower(($lpa->lpa)->getStatus()) === 'registered') {
                         return new HtmlResponse($this->renderer->render(
                             'viewer::check-code-found',
                             [
