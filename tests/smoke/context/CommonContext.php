@@ -87,4 +87,32 @@ class CommonContext implements Context
         }
     }
 
+    /**
+     * @Then the session cookie is marked secure and httponly
+     */
+    public function theSessionCookiesIsMarkedSecureAndHttponly(): void
+    {
+        $this->ui->assertSession()->cookieExists('session');
+
+        // could be moved to an assertion function in BaseContext but this is the *only* place this code will be used.
+        /** @var ChromeDriver $driver */
+        $driver = $this->ui->getSession()->getDriver();
+        $cookies = $driver->getCookies();
+
+        array_walk($cookies, function (array $cookie) {
+            if ($cookie['name'] === 'session' && !$cookie['httpOnly']) {
+                throw new ExpectationException(
+                    sprintf('Unable to verify that the session cookie is "httpOnly"'),
+                    $this->ui->getSession()
+                );
+            }
+
+            if ($cookie['name'] === 'session' && !$cookie['secure']) {
+                throw new ExpectationException(
+                    sprintf('Unable to verify that the session cookie is "secure"'),
+                    $this->ui->getSession()
+                );
+            }
+        });
+    }
 }
