@@ -1917,16 +1917,6 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithAMissingActorCode()
     {
-        // ActorCodes::get
-        $this->awsFixtures->append(new Result([]));
-
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST
-                )
-            );
-
         $this->apiPost('/v1/actor-codes/summary', [
             'actor-code' => null,
             'uid'        => $this->lpaUid,
@@ -1941,16 +1931,6 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithAMissingUserId()
     {
-        // ActorCodes::get
-        $this->awsFixtures->append(new Result([]));
-
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST
-                )
-            );
-
         $this->apiPost('/v1/actor-codes/summary', [
             'actor-code' => $this->oneTimeCode,
             'uid'        => null,
@@ -1965,16 +1945,6 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithAMissingDateOfBirth()
     {
-        // ActorCodes::get
-        $this->awsFixtures->append(new Result([]));
-
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST
-                )
-            );
-
         $this->apiPost('/v1/actor-codes/summary', [
             'actor-code' => $this->oneTimeCode,
             'uid'        => $this->lpaUid,
