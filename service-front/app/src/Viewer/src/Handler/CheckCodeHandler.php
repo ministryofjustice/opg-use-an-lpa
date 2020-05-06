@@ -72,13 +72,14 @@ class CheckCodeHandler extends AbstractHandler
         if (isset($code)) {
             try {
                 $lpa = $this->lpaService->getLpaByCode($code, $surname, LpaService::SUMMARY);
-
                 if ($lpa instanceof ArrayObject) {
                     // Then we found a LPA for the given code
                     $expires = new DateTime($lpa->expires);
+
                     if (isset($lpa->cancelled)) {
                         return new HtmlResponse($this->renderer->render('viewer::check-code-cancelled'));
-                    } else {
+                    }
+                    if (strtolower(($lpa->lpa)->getStatus()) == 'registered') {
                         return new HtmlResponse($this->renderer->render(
                             'viewer::check-code-found',
                             [

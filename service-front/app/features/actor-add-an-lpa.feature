@@ -10,14 +10,10 @@ Feature: Add an LPA
     And I have been given access to use an LPA via credentials
 
   @ui
-  Scenario Outline: The user cannot add an LPA to their account when status is pending
+  Scenario: The user cannot add an LPA to their account when status is pending
     Given I am on the add an LPA page
-    When I request to add an LPA whose status is <status> using <passcode>
+    When I request to add an LPA whose status is pending using xyuphwqrechv
     Then The LPA is not found
-
-    Examples:
-      | status          | passcode      |
-      | Pending         | xyuphwqrechv  |
 
 
   @integration @ui

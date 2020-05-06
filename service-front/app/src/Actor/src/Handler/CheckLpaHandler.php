@@ -127,7 +127,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     ]
                 );
 
-                if (!is_null($lpa) && (strtolower($lpa->getStatus()) == 'registered')) {
+                if (!is_null($lpa) && (strtolower($lpa->getStatus()) === 'registered')) {
                     [$user, $userRole] = $this->resolveLpaData($lpa, $dob);
 
                     $this->getLogger()->debug(
