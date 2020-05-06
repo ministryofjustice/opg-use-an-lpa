@@ -36,42 +36,42 @@ Feature: Add an LPA
     When I attempt to add the same LPA again
     Then The LPA should not be found
 
-  @integration @acceptance
+  @acceptance
   Scenario: The user cannot add an LPA with a missing actor code
     Given I am on the add an LPA page
     When I request to add an LPA with a missing actor code
     Then The LPA is not found and I am told it was a bad request
     And I request to go back and try again
 
-  @integration @acceptance
+  @acceptance
   Scenario: The user cannot add an LPA with a missing user id
     Given I am on the add an LPA page
     When I request to add an LPA with a missing user id
     Then The LPA is not found and I am told it was a bad request
     And I request to go back and try again
 
-  @integration @acceptance
+  @acceptance
   Scenario: The user cannot add an LPA with a missing date of birth
     Given I am on the add an LPA page
     When I request to add an LPA with a missing date of birth
     Then The LPA is not found and I am told it was a bad request
     And I request to go back and try again
 
-  @integration @acceptance
+  @acceptance
   Scenario: The user cannot add an LPA to their account due to missing date of birth in confirmation
     Given I am on the add an LPA page
     When I request to add an LPA with valid details
     Then The correct LPA is found and I can confirm to add it
     And A malformed confirm request is sent which is missing date of birth
 
-  @integration @acceptance
+  @acceptance
   Scenario: The user cannot add an LPA to their account due to missing actor code in confirmation
     Given I am on the add an LPA page
     When I request to add an LPA with valid details
     Then The correct LPA is found and I can confirm to add it
     And A malformed confirm request is sent which is missing actor code
 
-  @integration @acceptance
+  @acceptance
   Scenario: The user cannot add an LPA to their account due to missing user id in confirmation
     Given I am on the add an LPA page
     When I request to add an LPA with valid details
