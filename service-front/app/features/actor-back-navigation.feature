@@ -40,19 +40,16 @@ Feature: Back navigation
     Then I should be taken to the <dashboard> page
 
   @ui
-  Scenario Outline: Check back function on check LPA page
+  Scenario: Check back function on check LPA page
     Given I am a user of the lpa application
     And I am currently signed in
     And I have been given access to use an LPA via credentials
     And I am on the add an LPA page
-    When I request to add an LPA with valid details using <passcode>
+    When I request to add an LPA with valid details using xyuphwqrechv
     And I am on the check LPA page
     When I click back link on the page
     Then I should be taken to the <add a lpa> page
 
-    Examples:
-      | passcode       |
-      | xyuphwqrechv   |
 
 
 
