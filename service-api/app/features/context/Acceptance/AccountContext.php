@@ -1975,8 +1975,6 @@ class AccountContext implements Context
         ], [
             'user-token' => $this->userLpaActorToken
         ]);
-
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
 
     /**
@@ -1993,8 +1991,6 @@ class AccountContext implements Context
         ], [
             'user-token' => $this->userLpaActorToken
         ]);
-
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
 
     /**
@@ -2011,8 +2007,6 @@ class AccountContext implements Context
         ], [
             'user-token' => $this->userLpaActorToken
         ]);
-
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
 
     /**
