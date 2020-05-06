@@ -2026,4 +2026,12 @@ class AccountContext implements Context
 
         assertEmpty($response['data']);
     }
+
+    /**
+     * @When /^I confirmed to add an LPA to my account$/
+     */
+    public function iConfirmedToAddAnLPAToMyAccount()
+    {
+        $this->iRequestToAddAnLPAWithValidDetails();
+    }
 }

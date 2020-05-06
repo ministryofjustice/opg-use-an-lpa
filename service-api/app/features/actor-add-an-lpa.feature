@@ -60,20 +60,17 @@ Feature: Add an LPA
   @acceptance
   Scenario: The user cannot add an LPA to their account due to missing date of birth in confirmation
     Given I am on the add an LPA page
-    When I request to add an LPA with valid details
-    Then The correct LPA is found and I can confirm to add it
+    When I confirmed to add an LPA to my account
     And A malformed confirm request is sent which is missing date of birth
 
   @acceptance
   Scenario: The user cannot add an LPA to their account due to missing actor code in confirmation
     Given I am on the add an LPA page
-    When I request to add an LPA with valid details
-    Then The correct LPA is found and I can confirm to add it
+    When I confirmed to add an LPA to my account
     And A malformed confirm request is sent which is missing actor code
 
   @acceptance
   Scenario: The user cannot add an LPA to their account due to missing user id in confirmation
     Given I am on the add an LPA page
-    When I request to add an LPA with valid details
-    Then The correct LPA is found and I can confirm to add it
+    When I confirmed to add an LPA to my account
     And A malformed confirm request is sent which is missing user id
