@@ -14,6 +14,7 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\ServerUrlHelper;
@@ -89,7 +90,9 @@ class ChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, User
                 try {
                     $this->userService->changeEmail($user->getIdentity(), $newEmail, $password);
                 } catch (ApiException $ex)  {
-
+                    if ($ex->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
+                        $form->addErrorMessage(ChangeEmail::INVALID_PASSWORD, 'current_password');
+                    }
                 }
             }
         }

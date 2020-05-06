@@ -252,7 +252,7 @@ class UserService implements UserRepositoryInterface
                 'password'      => $password
             ]);
         } catch (ApiException $ex) {
-
+            throw $ex;
         }
     }
 
