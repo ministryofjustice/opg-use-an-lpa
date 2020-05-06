@@ -84,11 +84,9 @@ class ViewerContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
 
         $baseUrlHost = parse_url($this->ui->getMinkParameter('base_url'), PHP_URL_HOST);
-        $secureUrl = sprintf('https://%s/', $baseUrlHost);
+        $expectedUrl = sprintf('https://%s/', $baseUrlHost);
 
-        $actualUrl = $this->ui->getSession()->getDriver()->getCurrentUrl();
-
-        $this->assertExactUrl($secureUrl, $actualUrl);
+        $this->assertExactUrl($expectedUrl);
     }
 
     /**
