@@ -20,6 +20,7 @@ use Aws\Result;
 use BehatTest\Context\SetupEnv;
 use Common\Service\Lpa\ViewerCodeService;
 use DateInterval;
+use DateTimeZone;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
@@ -910,7 +911,7 @@ class AccountContext extends BaseIntegrationContext
         $codeData = $viewerCodeService->addCode($this->userLpaActorToken, $this->userId, $this->organisation);
 
         $codeExpiry = (new DateTime($codeData['expires']))->format('Y-m-d');
-        $in30Days = ((new DateTime('now'))->add(new DateInterval('P30D'))->format('Y-m-d'));
+        $in30Days = (new DateTime('23:59:59 +30 days', new DateTimeZone('Europe/London')))->format('Y-m-d');
 
         assertArrayHasKey('code', $codeData);
         assertNotNull($codeData['code']);
