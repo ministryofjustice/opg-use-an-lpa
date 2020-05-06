@@ -79,6 +79,7 @@ class BaseContext implements Context
             }
 
             $filename = str_replace(' ', '_', $scope->getStep()->getText()) . '.png';
+            $filename = preg_replace('/[^a-zA-Z0-9\-\._]/', '', $filename);
             $this->ui->saveScreenshot($filename, realpath(__DIR__ . '/../failed_step_screenshots'));
         }
     }
