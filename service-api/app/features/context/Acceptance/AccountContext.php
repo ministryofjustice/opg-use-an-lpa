@@ -1924,6 +1924,8 @@ class AccountContext implements Context
         ], [
             'user-token' => $this->userLpaActorToken
         ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
 
     /**
@@ -1938,6 +1940,8 @@ class AccountContext implements Context
         ], [
             'user-token' => $this->userLpaActorToken
         ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
 
     /**
@@ -1952,6 +1956,8 @@ class AccountContext implements Context
         ], [
             'user-token' => $this->userLpaActorToken
         ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
 
     /**
@@ -1960,35 +1966,6 @@ class AccountContext implements Context
     public function aMalformedConfirmRequestIsSentWhichIsMissingDateOfBirth()
     {
         $this->userLpaActorToken = '13579';
-        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
-
-        // ActorCodes::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'SiriusUid'  => $this->lpaUid,
-                'Active'     => true,
-                'Expires'    => '2021-09-25T00:00:00Z',
-                'ActorCode'  => $this->oneTimeCode,
-                'ActorLpaId' => $this->actorId,
-            ])
-        ]));
-
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        // UserLpaActorMap::create
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'        => $this->userLpaActorToken,
-                'UserId'    => $this->userAccountId,
-                'SiriusUid' => $this->lpaUid,
-                'ActorId'   => $this->actorId,
-                'Added'     => $now,
-            ])
-        ]));
-
-        // ActorCodes::flagCodeAsUsed
-        $this->awsFixtures->append(new Result([]));
 
         $this->apiPost('/v1/actor-codes/confirm', [
             'actor-code' => $this->oneTimeCode,
@@ -1999,9 +1976,6 @@ class AccountContext implements Context
         ]);
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-
-        $response = $this->getResponseAsJson();
-        assertNull($response['user-lpa-actor-token']);
     }
 
     /**
@@ -2010,35 +1984,6 @@ class AccountContext implements Context
     public function aMalformedConfirmRequestIsSentWhichIsMissingActorCode()
     {
         $this->userLpaActorToken = '13579';
-        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
-
-        // ActorCodes::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'SiriusUid'  => $this->lpaUid,
-                'Active'     => true,
-                'Expires'    => '2021-09-25T00:00:00Z',
-                'ActorCode'  => $this->oneTimeCode,
-                'ActorLpaId' => $this->actorId,
-            ])
-        ]));
-
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        // UserLpaActorMap::create
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'        => $this->userLpaActorToken,
-                'UserId'    => $this->userAccountId,
-                'SiriusUid' => $this->lpaUid,
-                'ActorId'   => $this->actorId,
-                'Added'     => $now,
-            ])
-        ]));
-
-        // ActorCodes::flagCodeAsUsed
-        $this->awsFixtures->append(new Result([]));
 
         $this->apiPost('/v1/actor-codes/confirm', [
             'actor-code' => null,
@@ -2049,9 +1994,6 @@ class AccountContext implements Context
         ]);
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-
-        $response = $this->getResponseAsJson();
-        assertNull($response['user-lpa-actor-token']);
     }
 
     /**
@@ -2060,35 +2002,6 @@ class AccountContext implements Context
     public function aMalformedConfirmRequestIsSentWhichIsMissingUserId()
     {
         $this->userLpaActorToken = '13579';
-        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
-
-        // ActorCodes::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'SiriusUid'  => $this->lpaUid,
-                'Active'     => true,
-                'Expires'    => '2021-09-25T00:00:00Z',
-                'ActorCode'  => $this->oneTimeCode,
-                'ActorLpaId' => $this->actorId,
-            ])
-        ]));
-
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_BAD_REQUEST, [], json_encode($this->lpa)));
-
-        // UserLpaActorMap::create
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'        => $this->userLpaActorToken,
-                'UserId'    => $this->userAccountId,
-                'SiriusUid' => $this->lpaUid,
-                'ActorId'   => $this->actorId,
-                'Added'     => $now,
-            ])
-        ]));
-
-        // ActorCodes::flagCodeAsUsed
-        $this->awsFixtures->append(new Result([]));
 
         $this->apiPost('/v1/actor-codes/confirm', [
             'actor-code' => $this->oneTimeCode,
@@ -2099,9 +2012,6 @@ class AccountContext implements Context
         ]);
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-
-        $response = $this->getResponseAsJson();
-        assertNull($response['user-lpa-actor-token']);
     }
 
     /**
