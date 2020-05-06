@@ -126,11 +126,11 @@ locals {
         "options": {
             "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
             "awslogs-region": "eu-west-1",
-            "awslogs-stream-prefix": "pdf-app.use-an-lpa"
+            "awslogs-stream-prefix": "${local.environment}.pdf-app.use-an-lpa"
         }
     }
   }
-  
+
 EOF
 
 }
@@ -138,4 +138,3 @@ EOF
 output "pdf_app_deployed_version" {
   value = "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}:${var.container_version}"
 }
-
