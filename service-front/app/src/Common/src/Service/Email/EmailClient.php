@@ -86,19 +86,25 @@ class EmailClient
      * Send an email to a user's current email informing them on how to complete their email reset
      *
      * @param string $recipient
+     * @param string $newEmailAddress
      */
-    public function sendRequestChangeEmailToCurrentEmail(string $recipient)
+    public function sendRequestChangeEmailToCurrentEmail(string $recipient, string $newEmailAddress)
     {
-        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL);
+        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL, [
+            'new-email-address' => $newEmailAddress,
+        ]);
     }
 
     /**
      * Send an email to the new email address the user selected to reset their email to
      *
      * @param string $recipient
+     * @param string $completeEmailChangeUrl
      */
-    public function sendRequestChangeEmailToNewEmail(string $recipient)
+    public function sendRequestChangeEmailToNewEmail(string $recipient, string $completeEmailChangeUrl)
     {
-        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL);
+        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL, [
+            'verify-new-email-url' => $completeEmailChangeUrl,
+        ]);
     }
 }

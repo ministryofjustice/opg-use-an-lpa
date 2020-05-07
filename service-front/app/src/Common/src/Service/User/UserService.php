@@ -102,11 +102,13 @@ class UserService implements UserRepositoryInterface
             ]);
 
             if (!is_null($userData)) {
-                $this->logger->info('Authentication successful for account with Id {id}',
+                $this->logger->info(
+                    'Authentication successful for account with Id {id}',
                     [
                         'id'         => $userData['Id'],
                         'last-login' => $userData['LastLogin']
-                ]);
+                    ]
+                );
 
                 return ($this->userModelFactory)(
                     $userData['Id'],
@@ -243,14 +245,16 @@ class UserService implements UserRepositoryInterface
         );
     }
 
-    public function changeEmail(string $userId, string $newEmail, string $password): void
+    public function changeEmail(string $userId, string $newEmail, string $password): array
     {
         try {
-            $this->apiClient->httpPatch('/v1/change-email', [
+            $data = $this->apiClient->httpPatch('/v1/change-email', [
                 'user-id'       => $userId,
                 'new-email'     => $newEmail,
                 'password'      => $password
             ]);
+
+            return $data;
         } catch (ApiException $ex) {
             throw $ex;
         }
@@ -266,7 +270,8 @@ class UserService implements UserRepositoryInterface
             ]);
 
             $this->logger->info(
-                'Password reset for user ID {userId} has been successful', ['userId' => $id]
+                'Password reset for user ID {userId} has been successful',
+                ['userId' => $id]
             );
         } catch (ApiException $ex) {
             $this->logger->notice(
@@ -281,7 +286,7 @@ class UserService implements UserRepositoryInterface
         }
     }
 
-    public function deleteAccount(string $accountId) : void
+    public function deleteAccount(string $accountId): void
     {
         try {
             $user = $this->apiClient->httpDelete('/v1/delete-account/' . $accountId);
@@ -293,7 +298,6 @@ class UserService implements UserRepositoryInterface
                     'email' => new Email($user['Email']),
                 ]
             );
-
         } catch (ApiException $ex) {
             $this->logger->notice(
                 'Failed to delete account for userId {userId} - status code {code}',

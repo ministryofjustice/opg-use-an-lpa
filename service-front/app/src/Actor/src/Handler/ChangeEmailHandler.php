@@ -93,7 +93,12 @@ class ChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, User
                 }
 
                 try {
-                    $this->userService->changeEmail($user->getIdentity(), $newEmail, $password);
+                    $data = $this->userService->changeEmail($user->getIdentity(), $newEmail, $password);
+
+                    $this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email']);
+
+                    $this->emailClient->sendRequestChangeEmailToNewEmail($data['NewEmail']);
+
                 } catch (ApiException $ex)  {
                     if ($ex->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
                         $form->addErrorMessage(ChangeEmail::INVALID_PASSWORD, 'current_password');

@@ -288,12 +288,15 @@ class UserService
         }
 
         if ($this->usersRepository->exists($newEmail)) {
-            throw new ConflictException(
-                'User already exists with email address ' . $newEmail,
-                ['email' => $newEmail]
-            );
+            throw new ConflictException('User already exists with email address ' . $newEmail, ['email' => $newEmail]);
         }
 
-        return $this->usersRepository->recordChangeEmailRequest($userId, $newEmail);
+        $resetToken = Base64UrlSafe::encode(random_bytes(32));
+        $resetExpiry = time() + (60 * 60 * 48);
+
+
+        $userData = $this->usersRepository->recordChangeEmailRequest($userId, $newEmail, $resetToken, $resetExpiry);
+
+        return $userData;
     }
 }

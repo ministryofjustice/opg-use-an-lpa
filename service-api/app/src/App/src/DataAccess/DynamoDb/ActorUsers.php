@@ -259,6 +259,36 @@ class ActorUsers implements ActorUsersInterface
         return $this->getData($user);
     }
 
+    public function recordChangeEmailRequest(string $id, string $newEmail, string $resetToken, int $resetExpiry): array
+    {
+        // TODO: check if another user has requested to change their email the same email too eg search NewEmail field
+
+        $user = $this->client->updateItem([
+            'TableName' => $this->actorUsersTable,
+            'Key' => [
+                'Id' => [
+                    'S' => $id,
+                ],
+            ],
+            'UpdateExpression' =>
+                'SET EmailResetToken=:rt, EmailResetExpiry=:re, NewEmail=:ne',
+            'ExpressionAttributeValues' => [
+                ':rt' => [
+                    'S' => $resetToken
+                ],
+                ':re' => [
+                    'N' => (string) $resetExpiry
+                ],
+                ':ne' => [
+                    'S' => $newEmail
+                ]
+            ],
+            'ReturnValues' => 'ALL_NEW'
+        ]);
+
+        return $this->getData($user);
+    }
+
     /**
      * @inheritDoc
      */
@@ -282,4 +312,5 @@ class ActorUsers implements ActorUsersInterface
 
         return $this->getData($user);
     }
+
 }

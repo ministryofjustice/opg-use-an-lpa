@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
+use App\Exception\ConflictException;
+use App\Exception\ForbiddenException;
 use App\Service\User\UserService;
+use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -48,6 +51,12 @@ class ChangeEmailHandler implements RequestHandlerInterface
             throw new BadRequestException('Current password must be provided');
         }
 
-        $this->userService->requestChangeEmail($requestData['user-id'], $requestData['new-email'], $requestData['password']);
+        $user = $this->userService->requestChangeEmail(
+            $requestData['user-id'],
+            $requestData['new-email'],
+            $requestData['password']
+        );
+
+        return new JsonResponse($user);
     }
 }
