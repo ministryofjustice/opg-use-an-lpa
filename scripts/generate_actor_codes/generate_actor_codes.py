@@ -22,6 +22,12 @@ class CodeGeneration:
 
     def __init__(self, environment):
         self.environment = environment
+
+        if (self.environment == "production"):
+            self.aws_account_id = "690083044361"
+        else:
+            self.aws_account_id = "367815980639"
+
         self.aws_ecs_cluster = os.environ.get('AWS_ECS_CLUSTER')
 
         if (self.aws_ecs_cluster == None):
@@ -68,8 +74,6 @@ class CodeGeneration:
         )['taskDefinitionArns'][0]
 
     def set_iam_role_session(self):
-        self.aws_account_id = os.environ.get('AWS_ACCOUNT_ID')
-
         role_arn = 'arn:aws:iam::{}:role/operator'.format(
             self.aws_account_id)
 
