@@ -2665,7 +2665,7 @@ class AccountContext implements Context
      */
     public function iAmOnTheCheckLPAPage()
     {
-        $this->ui->visit('/lpa/check');
+       // $this->ui->visit('/lpa/check');
         $this->ui->assertPageAddress('/lpa/check');
     }
 
