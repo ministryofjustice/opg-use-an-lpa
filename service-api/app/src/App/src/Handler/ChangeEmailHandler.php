@@ -48,6 +48,6 @@ class ChangeEmailHandler implements RequestHandlerInterface
             throw new BadRequestException('Current password must be provided');
         }
 
-        $this->userService->
+        $this->userService->requestChangeEmail($requestData['user-id'], $requestData['new-email'], $requestData['password']);
     }
 }

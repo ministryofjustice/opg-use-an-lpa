@@ -278,4 +278,22 @@ class UserService
 
         return $this->usersRepository->delete($accountId);
     }
+
+    public function requestChangeEmail(string $userId, string $newEmail, string $password)
+    {
+        $user = $this->usersRepository->get($userId);
+
+        if (! password_verify($password, $user['Password'])) {
+            throw new ForbiddenException('Authentication failed for user ID ' . $userId, ['userId' => $userId]);
+        }
+
+        if ($this->usersRepository->exists($newEmail)) {
+            throw new ConflictException(
+                'User already exists with email address ' . $newEmail,
+                ['email' => $newEmail]
+            );
+        }
+
+        return $this->usersRepository->recordChangeEmailRequest($userId, $newEmail);
+    }
 }
