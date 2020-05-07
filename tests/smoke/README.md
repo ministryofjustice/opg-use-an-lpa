@@ -8,6 +8,10 @@ Behat Smoke Test Suite
 # run tests when wanted
 $ composer behat
 
-# create feature step definitions 
+# create feature step definitions (output to CLI)
 $ composer behat -- --snippets-for
+
+# create feature step definitions (append to specified context class)
+# please note that the class namespaces must be escaped with double '\\'
+$ composer behat -- --snippets-for Test\\Context\\AccountContext --append-snippets
 ```
