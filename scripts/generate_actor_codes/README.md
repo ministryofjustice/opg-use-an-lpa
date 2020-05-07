@@ -10,21 +10,6 @@
 
 This script starts an ECS task to generate Actor participant codes.
 
-The script reads account id from environment variables.
-You will need to change the `.envrc` file to the appropriate account id for prod / pre-prod or development environments.
-
-You can set these using direnv
-
-``` shell
-direnv allow
-```
-
- or by sourcing the `.envrc` file
-
-``` shell
-source .envrc
-```
-
 Install python dependencies with pip / pip3 (if you have python 3)
 
 ``` shell
@@ -48,7 +33,7 @@ The environment is the first part of the url e.g. demo or ULM222xyz for example.
 - Password encrypted zip file, and password sent on a separate communication method.
 
 ``` shell
-aws-vault exec identity -- python ./generate_actor_codes.py  <environment> <comma separated lpa uids, no spaces>
+aws-vault exec identity -- python ./generate_actor_codes.py <environment> <comma separated lpa uids, no spaces>
 ```
 
 output will look like this
