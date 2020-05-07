@@ -273,15 +273,6 @@ orbs:
           - run:
               name: Install AWS CLI
               command: sudo pip3 install awscli --upgrade
-      install_webdriver:
-        steps:
-          - run:
-              name: Install WebDriver
-              command: |
-                wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
-                sudo sh -c 'tar -x geckodriver -zf geckodriver-v0.23.0-linux64.tar.gz -O > /usr/bin/geckodriver'
-                sudo chmod +x /usr/bin/geckodriver
-                rm geckodriver-v0.23.0-linux64.tar.gz
       install_python:
         steps:
           - run:
@@ -947,7 +938,6 @@ orbs:
         executor: python
         steps:
           - checkout
-          - install_webdriver
           - attach_workspace:
               at: /tmp
           - run:
@@ -963,7 +953,8 @@ orbs:
                 [[ $viewer_response == 200 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
 
                 actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
-                # TODO Add for actor when endpoint exists.
+                actor_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$actor_fqdn/healthcheck)
+                [[ $actor_response == 200 ]] || (echo "Error with actor health check. HTTP status: ${actor_response}" && exit 1)
 
 jobs:
   slack_environment_redeploy:
