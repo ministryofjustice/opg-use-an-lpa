@@ -10,6 +10,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/**
+ * Class ChangeEmailHandler
+ * @package App\Handler
+ * @codeCoverageIgnore
+ */
 class ChangeEmailHandler implements RequestHandlerInterface
 {
     /**
@@ -43,6 +48,6 @@ class ChangeEmailHandler implements RequestHandlerInterface
             throw new BadRequestException('Current password must be provided');
         }
 
-
+        $this->userService->
     }
 }

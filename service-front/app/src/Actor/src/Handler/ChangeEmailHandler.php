@@ -23,6 +23,11 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Class ChangeEmailHandler
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class ChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, UserAware
 {
     use CsrfGuard;
