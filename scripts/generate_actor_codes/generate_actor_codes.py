@@ -6,6 +6,7 @@ import sys
 
 
 class CodeGeneration:
+    aws_account_ids = {}
     aws_account_id = ''
     aws_iam_session = ''
     aws_ecs_client = ''
@@ -21,12 +22,15 @@ class CodeGeneration:
     logStreamName = ''
 
     def __init__(self, environment):
+        self.aws_account_ids = {
+            'production': "690083044361",
+            'preproduction': "888228022356",
+            'development': "367815980639",
+        }
         self.environment = environment
 
-        if (self.environment == "production"):
-            self.aws_account_id = "690083044361"
-        else:
-            self.aws_account_id = "367815980639"
+        self.aws_account_id = self.aws_account_ids.get(
+            self.environment, "367815980639")
 
         self.aws_ecs_cluster = os.environ.get('AWS_ECS_CLUSTER')
 
