@@ -36,117 +36,117 @@ workflows:
             name: redeploy_demo
             environment: demo
             filters: { branches: { ignore: [master] } }
-        - use-my-lpa/lint_terraform:
-            name: lint_terraform_pr_build
-            filters: { branches: { ignore: [master] } }
+        # - use-my-lpa/lint_terraform:
+        #     name: lint_terraform_pr_build
+        #     filters: { branches: { ignore: [master] } }
 
-        - use-my-lpa/node_test_web:
-            name: test_web_pr_build
-            filters: { branches: { ignore: [master] } }
-        - use-my-lpa/node_build_web:
-            name: build_web_pr_build
-            filters: { branches: { ignore: [master] } }
-            requires: [test_web_pr_build]
-        - use-my-lpa/node_test_service_pdf:
-            name: test_pdf_pr_build
-            filters: { branches: { ignore: [master] } }
+        # - use-my-lpa/node_test_web:
+        #     name: test_web_pr_build
+        #     filters: { branches: { ignore: [master] } }
+        # - use-my-lpa/node_build_web:
+        #     name: build_web_pr_build
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [test_web_pr_build]
+        # - use-my-lpa/node_test_service_pdf:
+        #     name: test_pdf_pr_build
+        #     filters: { branches: { ignore: [master] } }
 
-        - use-my-lpa/docker_build_front_app:
-            name: app_front_build_pr_build
-            filters: { branches: { ignore: [master] } }
-            requires: [build_web_pr_build]
+        # - use-my-lpa/docker_build_front_app:
+        #     name: app_front_build_pr_build
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [build_web_pr_build]
 
-        - use-my-lpa/docker_build_front_web:
-            name: web_front_build_pr_build
-            filters: { branches: { ignore: [master] } }
-            requires: [build_web_pr_build]
+        # - use-my-lpa/docker_build_front_web:
+        #     name: web_front_build_pr_build
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [build_web_pr_build]
 
-        - use-my-lpa/docker_build_api_app:
-            name: app_api_build_pr_build
-            filters: { branches: { ignore: [master] } }
-        - use-my-lpa/docker_build_api_web:
-            name: web_api_build_pr_build
-            filters: { branches: { ignore: [master] } }
+        # - use-my-lpa/docker_build_api_app:
+        #     name: app_api_build_pr_build
+        #     filters: { branches: { ignore: [master] } }
+        # - use-my-lpa/docker_build_api_web:
+        #     name: web_api_build_pr_build
+        #     filters: { branches: { ignore: [master] } }
 
-        - use-my-lpa/docker_build_pdf:
-            name: pdf_build_pr_build
-            filters: { branches: { ignore: [master] } }
-            requires: [test_pdf_pr_build]
+        # - use-my-lpa/docker_build_pdf:
+        #     name: pdf_build_pr_build
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [test_pdf_pr_build]
 
-        - use-my-lpa/coveralls_upload:
-            name: coveralls_upload_pr_build
-            filters: { branches: { ignore: [master] } }
-            requires:
-              [
-                app_front_build_pr_build,
-                app_api_build_pr_build,
-                test_web_pr_build,
-                test_pdf_pr_build,
-              ]
+        # - use-my-lpa/coveralls_upload:
+        #     name: coveralls_upload_pr_build
+        #     filters: { branches: { ignore: [master] } }
+        #     requires:
+        #       [
+        #         app_front_build_pr_build,
+        #         app_api_build_pr_build,
+        #         test_web_pr_build,
+        #         test_pdf_pr_build,
+        #       ]
 
-            # Provision and test development
-        - use-my-lpa/apply_shared_terraform:
-            name: dev_apply_shared_terraform
-            filters: { branches: { ignore: [master] } }
-            requires: [lint_terraform_pr_build]
+        #     # Provision and test development
+        # - use-my-lpa/apply_shared_terraform:
+        #     name: dev_apply_shared_terraform
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [lint_terraform_pr_build]
 
-        - use-my-lpa/apply_environment_terraform:
-            name: dev_apply_environment_terraform
-            filters: { branches: { ignore: [master] } }
-            requires:
-              [
-                dev_apply_shared_terraform,
-                app_front_build_pr_build,
-                web_front_build_pr_build,
-                web_api_build_pr_build,
-                app_api_build_pr_build,
-                pdf_build_pr_build,
-              ]
+        # - use-my-lpa/apply_environment_terraform:
+        #     name: dev_apply_environment_terraform
+        #     filters: { branches: { ignore: [master] } }
+        #     requires:
+        #       [
+        #         dev_apply_shared_terraform,
+        #         app_front_build_pr_build,
+        #         web_front_build_pr_build,
+        #         web_api_build_pr_build,
+        #         app_api_build_pr_build,
+        #         pdf_build_pr_build,
+        #       ]
 
-        - mark_workspace_as_protected:
-            name: mark_workspace_as_protected
-            filters: { branches: { ignore: [master] } }
-            requires: [dev_apply_environment_terraform]
+        # - mark_workspace_as_protected:
+        #     name: mark_workspace_as_protected
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [dev_apply_environment_terraform]
 
-        - ecr_scan_results:
-            name: ecr_scan_results_development
-            filters: { branches: { ignore: [master] } }
-            requires:
-              [
-                app_front_build_pr_build,
-                web_front_build_pr_build,
-                web_api_build_pr_build,
-                app_api_build_pr_build,
-                pdf_build_pr_build,
-                dev_apply_environment_terraform,
-                ]
+        # - ecr_scan_results:
+        #     name: ecr_scan_results_development
+        #     filters: { branches: { ignore: [master] } }
+        #     requires:
+        #       [
+        #         app_front_build_pr_build,
+        #         web_front_build_pr_build,
+        #         web_api_build_pr_build,
+        #         app_api_build_pr_build,
+        #         pdf_build_pr_build,
+        #         dev_apply_environment_terraform,
+        #         ]
 
-        - use-my-lpa/seed_database:
-            name: dev_seed_database
-            filters: { branches: { ignore: [master] } }
-            requires: [dev_apply_environment_terraform]
+        # - use-my-lpa/seed_database:
+        #     name: dev_seed_database
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [dev_apply_environment_terraform]
 
-        - use-my-lpa/run_behave_suite:
-            name: dev_run_behave_tests
-            filters: { branches: { ignore: [master] } }
-            requires: [dev_seed_database]
+        # - use-my-lpa/run_behave_suite:
+        #     name: dev_run_behave_tests
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [dev_seed_database]
 
 
-        - slack_notify_domain:
-            name: post_environment_domains
-            filters: { branches: { ignore: [master] } }
-            requires: [dev_run_behave_tests]
+        # - slack_notify_domain:
+        #     name: post_environment_domains
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [dev_run_behave_tests]
 
-        - hold-for-destruction:
-            name: hold_env_for_destruction
-            filters: { branches: { ignore: [master] } }
-            type: approval
-            requires: [dev_run_behave_tests]
+        # - hold-for-destruction:
+        #     name: hold_env_for_destruction
+        #     filters: { branches: { ignore: [master] } }
+        #     type: approval
+        #     requires: [dev_run_behave_tests]
 
-        - use-my-lpa/destroy_dev_environment:
-            name: dev_destroy_environment
-            filters: { branches: { ignore: [master] } }
-            requires: [hold_env_for_destruction]
+        # - use-my-lpa/destroy_dev_environment:
+        #     name: dev_destroy_environment
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [hold_env_for_destruction]
 
 
   path_to_live:
