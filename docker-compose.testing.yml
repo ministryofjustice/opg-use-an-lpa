@@ -1,0 +1,21 @@
+version: "2.1"
+
+volumes:
+  webpack_dist:
+
+services:
+
+  zap:
+    build:
+      context: zap
+
+  smoke-tests:
+    build:
+      context: .
+      dockerfile: tests/smoke/Dockerfile
+    volumes:
+      - ./tests/smoke:/home/circleci/project
+      - ./tests/features:/home/circleci/project/features
+    environment:
+      BEHAT_VIEWER_URL: http://viewer-web
+      BEHAT_ACTOR_URL: http://actor-web
