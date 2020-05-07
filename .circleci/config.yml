@@ -281,10 +281,9 @@ orbs:
                 sudo apt install python3 python3-pip
                 sudo pip3 install --no-cache pipenv poetry
                 cd /usr/local/bin
-                sudo ln -sf idle3 idle
-                sudo ln -sf pydoc3 pydoc
-                sudo ln -sf python3 python
-                sudo ln -sf python3-config python-config
+                sudo ln -sf /usr/bin/pydoc3 pydoc
+                sudo ln -sf /usr/bin/python3 python
+                sudo ln -sf /usr/bin/python3-config python-config
       ecr_login:
         steps:
           - run:
