@@ -2618,6 +2618,60 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I am not signed in to the use a lasting power of attorney service at this point$/
+     */
+    public function iAmNotSignedInToTheUseALastingPowerOfAttorneyServiceAtThisPoint()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I click back link on the page$/
+     */
+    public function iClickBackLinkOnThePage()
+    {
+        $this->ui->assertPageContainsText('Back');
+        $this->ui->clickLink('Back');
+    }
+
+    /**
+    * @When /^I should be taken to the (.*) page$/
+    */
+    public function iShouldBeTakenToThePreviousPage($page)
+    {
+        if ($page == 'start') {
+            $this->ui->assertPageAddress('/');
+        } elseif ($page == 'login') {
+            $this->ui->assertPageAddress('/login');
+        } elseif ($page == 'dashboard') {
+            $this->ui->assertPageAddress('/lpa/dashboard');
+        } elseif ($page == 'your details') {
+            $this->ui->assertPageAddress('/your-details');
+        } elseif ($page == 'add a lpa') {
+            $this->ui->assertPageAddress('/lpa/add-details');
+        }
+    }
+
+    /**
+     * @When /^I am on the password reset page$/
+     */
+    public function iAmOnThePasswordResetPage()
+    {
+        $this->ui->assertPageContainsText('Reset your password');
+    }
+
+    /**
+     * @Given /^I am on the check LPA page$/
+     */
+    public function iAmOnTheCheckLPAPage()
+    {
+        $this->ui->visit('/lpa/check');
+        $this->ui->assertPageAddress('/lpa/check');
+    }
+
+
+
+    /**
      * @Then /^I want to ensure cookie attributes are set$/
      */
     public function iWantToEnsureCookieAttributesAreSet()
