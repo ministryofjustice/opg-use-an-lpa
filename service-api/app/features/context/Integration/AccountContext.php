@@ -1747,10 +1747,10 @@ class AccountContext extends BaseIntegrationContext
         // ActorUsers::delete
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'Id'       => $this->userAccountId,
-                'Email'    => $this->userAccountEmail,
-                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
-                'LastLogin'=> null
+                'Id'        => $this->userAccountId,
+                'Email'     => $this->userAccountEmail,
+                'Password'  => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                'LastLogin' => null
             ])
         ]));
 
