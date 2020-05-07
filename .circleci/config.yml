@@ -32,6 +32,10 @@ workflows:
 
   pr_build:
       jobs:
+        - use-my-lpa/redeploy_latest:
+            name: redeploy_demo
+            environment: demo
+            filters: { branches: { ignore: [master] } }
         - use-my-lpa/lint_terraform:
             name: lint_terraform_pr_build
             filters: { branches: { ignore: [master] } }
