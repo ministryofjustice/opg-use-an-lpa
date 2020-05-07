@@ -70,7 +70,12 @@ mkdir -p /tmp/$FILENAME
 echo '<json_output>' | jq > /tmp/$FILENAME/$FILENAME.txt
 ```
 
-Then create an encrypted disk image, copy the file into it and clean up
+The preference for the recipient is that the json in the text file is formatted slightly differently than as returned by the code generator.
+
+- All Sirius case numbers should be split with hyphen into 3 groups of 4. e.g `7xxx-xxxx-xxxx`
+- All actor codes should be split with a space into 3 groups of 4. e.g `ABC1 D2E3 FG4H`
+
+Then create an encrypted disk image, copy the file into it and clean up. The script will prompt for a password to create and to open the disk image.
 
 ``` shell
 ./make_encrypted_image.sh $FILENAME
