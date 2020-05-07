@@ -131,7 +131,7 @@ locals {
         "options": {
             "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
             "awslogs-region": "eu-west-1",
-            "awslogs-stream-prefix": "actor-web.use-an-lpa"
+            "awslogs-stream-prefix": "${local.environment}.actor-web.use-an-lpa"
         }
     },
     "environment": [
@@ -176,7 +176,7 @@ EOF
         "options": {
             "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
             "awslogs-region": "eu-west-1",
-            "awslogs-stream-prefix": "actor-app.use-an-lpa"
+            "awslogs-stream-prefix": "${local.environment}.actor-app.use-an-lpa"
         }
     },
     "secrets" : [
