@@ -21,7 +21,7 @@ class AbstractFormTest extends TestCase
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
 
         $this->form = new class('testConcreteForm', $guardProphecy->reveal()) extends AbstractForm {
-            protected $messageTemplates = ['testKey' => 'testErrorMessage'];
+            protected array $messageTemplates = ['testKey' => 'testErrorMessage'];
 
             public function __construct(string $formName, CsrfGuardInterface $csrfGuard)
             {
@@ -36,7 +36,7 @@ class AbstractFormTest extends TestCase
             }
         };
     }
-    
+
     /** @test */
     public function you_can_add_error_messages_to_the_form()
     {
