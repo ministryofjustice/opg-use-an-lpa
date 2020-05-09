@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\ChangeEmail;
+use App\Exception\ConflictException;
 use App\Exception\ForbiddenException;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
@@ -88,20 +89,23 @@ class ChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, User
                 $newEmail = $formData['new_email_address'];
                 $password = $formData['current_password'];
 
-                if ($user->getDetails()['Email'] === $newEmail) {
-                    $form->addErrorMessage(ChangeEmail::INVALID_EMAIL, 'new_email_address');
-                }
-
                 try {
                     $data = $this->userService->changeEmail($user->getIdentity(), $newEmail, $password);
 
-                    $this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email']);
+                    //$this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email']);
 
                     $this->emailClient->sendRequestChangeEmailToNewEmail($data['NewEmail']);
+                } catch (ApiException $ex) {
+                    //TODO: Use switch case if more cases to handle
 
-                } catch (ApiException $ex)  {
                     if ($ex->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
                         $form->addErrorMessage(ChangeEmail::INVALID_PASSWORD, 'current_password');
+                    } elseif ($ex->getCode() === StatusCodeInterface::STATUS_CONFLICT) {
+                        if ($user->getDetails()['Email'] === $newEmail) {
+                            $form->addErrorMessage(ChangeEmail::NEW_EMAIL_NOT_DIFFERENT, 'new_email_address');
+                        } else {
+                            $form->addErrorMessage(ChangeEmail::NEW_EMAIL_CONFLICT, 'new_email_address');
+                        }
                     }
                 }
             }

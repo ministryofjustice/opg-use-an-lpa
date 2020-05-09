@@ -16,16 +16,8 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = "change-email";
 
-    /**
-     * Error codes
-     * @const string
-     */
-    public const INVALID_EMAIL = 'invalidEmail';
-
-    /**
-     * Error codes
-     * @const string
-     */
+    public const NEW_EMAIL_CONFLICT = 'NewEmailConflict';
+    public const NEW_EMAIL_NOT_DIFFERENT = 'NewEmailNotDifferent';
     public const INVALID_PASSWORD = 'invalidPassword';
 
     /**
@@ -34,7 +26,8 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
      */
     protected $messageTemplates = [
         self::INVALID_PASSWORD => 'Your password is incorrect',
-        self::INVALID_EMAIL => 'Your new email address must be different to your current email address'
+        self::NEW_EMAIL_NOT_DIFFERENT => 'Your new email address must be different to your current email address',
+        self::NEW_EMAIL_CONFLICT => 'This email is already taken by another user'
     ];
 
     /**
