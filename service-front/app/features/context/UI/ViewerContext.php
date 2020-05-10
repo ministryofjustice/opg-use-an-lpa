@@ -294,7 +294,7 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/enter-code');
 
         $this->apiFixtures->post('/v1/viewer-codes/summary')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+            ->respondWith(new Response(StatusCodeInterface::STATUS_BAD_REQUEST, [], json_encode([
                 'lpa'     => $this->lpaData,
                 'expires' => (new \DateTime('+30 days'))->format('c'),
                 'cancelled' => (new \DateTime('-2 days'))->format('c')

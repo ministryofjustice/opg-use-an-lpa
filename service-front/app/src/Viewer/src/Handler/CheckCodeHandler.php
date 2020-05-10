@@ -75,10 +75,6 @@ class CheckCodeHandler extends AbstractHandler
                 if ($lpa instanceof ArrayObject) {
                     // Then we found a LPA for the given code
                     $expires = new DateTime($lpa->expires);
-
-                    if (isset($lpa->cancelled)) {
-                        return new HtmlResponse($this->renderer->render('viewer::check-code-cancelled'));
-                    }
                     if (strtolower(($lpa->lpa)->getStatus()) === 'registered') {
                         return new HtmlResponse($this->renderer->render(
                             'viewer::check-code-found',
@@ -92,6 +88,9 @@ class CheckCodeHandler extends AbstractHandler
             } catch (ApiException $apiEx) {
                 if ($apiEx->getCode() == StatusCodeInterface::STATUS_GONE) {
                     return new HtmlResponse($this->renderer->render('viewer::check-code-expired'));
+                }
+                if ($apiEx->getCode() == StatusCodeInterface::STATUS_BAD_REQUEST) {
+                    return new HtmlResponse($this->renderer->render('viewer::check-code-cancelled'));
                 }
             }
 

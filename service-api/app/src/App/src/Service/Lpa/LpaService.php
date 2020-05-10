@@ -3,6 +3,7 @@
 namespace App\Service\Lpa;
 
 use App\DataAccess\Repository;
+use App\Exception\BadRequestException;
 use App\Exception\GoneException;
 use DateTime;
 use Psr\Log\LoggerInterface;
@@ -207,6 +208,11 @@ class LpaService
         if (new DateTime() > $viewerCodeData['Expires']) {
             $this->logger->info('The code {code} entered by user to view LPA has expired.', ['code' => $viewerCode]);
             throw new GoneException('Share code expired');
+        }
+
+        if (isset($viewerCodeData['Cancelled'])) {
+            $this->logger->info('The code {code} entered by user is cancelled.', ['code' => $viewerCode]);
+            throw new BadRequestException('Access code cancelled');
         }
 
         //---
