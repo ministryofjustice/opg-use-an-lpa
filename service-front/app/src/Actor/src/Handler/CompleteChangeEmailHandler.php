@@ -49,7 +49,6 @@ class CompleteChangeEmailHandler extends AbstractHandler
             return new HtmlResponse($this->renderer->render('actor::activate-account-not-found'));
         }
 
-        //TODO: Create email changed page
-        return new HtmlResponse($this->renderer->render('actor::activate-account'));
+        return new HtmlResponse($this->renderer->render('actor::login'));
     }
 }
