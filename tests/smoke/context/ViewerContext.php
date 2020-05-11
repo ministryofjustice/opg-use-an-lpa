@@ -24,7 +24,7 @@ class ViewerContext implements Context
     public function iHaveBeenGivenAccessToAnLpaViaShareCode(): void
     {
         $this->shareCode = 'P9H8A6MLD3AM';
-        $this->donorSurname = 'Sanderson';
+        $this->donorSurname = 'Gilson';
     }
 
     /**
@@ -51,7 +51,7 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/check-code');
 
         $this->ui->assertPageContainsText('Is this the LPA you want to view?');
-        $this->ui->assertPageContainsText('Rachel Sanderson');
+        $this->ui->assertPageContainsText('Babara Gilson');
 
         $this->ui->clickLink('Continue');
     }
@@ -63,7 +63,7 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/view-lpa');
 
-        $this->ui->assertPageContainsText('Rachel Sanderson');
+        $this->ui->assertPageContainsText('Babara Gilson');
         $this->ui->assertPageContainsText('This LPA is valid');
     }
 }
