@@ -34,8 +34,7 @@ use Mezzio\MiddlewareFactory;
  * );
  */
 
-$viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
-{
+$viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/', Viewer\Handler\HomePageHandler::class, 'home');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->route('/enter-code', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'enter-code');
@@ -45,8 +44,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/terms-of-use', Viewer\Handler\ViewerTermsOfUseHandler::class, 'viewer-terms-of-use');
 };
 
-$actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
-{
+$actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/', Actor\Handler\HomePageHandler::class, 'home');
     $app->get('/start', Actor\Handler\StartPageHandler::class, 'start');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
@@ -76,7 +74,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/your-details', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\YourDetailsHandler::class,
-    ],'your-details');
+    ], 'your-details');
     $app->get('/lpa/terms-of-use', [
         Actor\Handler\ActorTermsOfUseHandler::class
     ], 'lpa.terms-of-use');
@@ -92,6 +90,9 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangeDetailsHandler::class
     ], 'lpa.change-details');
+    $app->get('/verify-new-email/{token}',
+        Actor\Handler\VerifyNewEmailHandler::class,
+        'verify-new-email');
 
     // LPA management
     $app->get('/lpa/dashboard', [
@@ -110,30 +111,29 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ViewLpaSummaryHandler::class
     ], 'lpa.view');
-    $app->route('/lpa/code-make',[
+    $app->route('/lpa/code-make', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CreateViewerCodeHandler::class
     ], ['GET', 'POST'], 'lpa.create-code');
-    $app->route('/lpa/access-codes',[
+    $app->route('/lpa/access-codes', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckAccessCodesHandler::class
     ], ['GET', 'POST'], 'lpa.access-codes');
     $app->post('/lpa/confirm-cancel-code', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ConfirmCancelCodeHandler::class
-    ],  'lpa.confirm-cancel-code');
+    ], 'lpa.confirm-cancel-code');
     $app->post('/lpa/cancel-code', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CancelCodeHandler::class
-    ],'lpa.cancel-code');
+    ], 'lpa.cancel-code');
     $app->get('/lpa/removed', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaRemovedHandler::class
     ], 'lpa.removed');
-
 };
 
-switch (getenv('CONTEXT')){
+switch (getenv('CONTEXT')) {
     case 'viewer':
         return $viewerRoutes;
     case 'actor':
