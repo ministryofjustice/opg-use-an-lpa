@@ -27,7 +27,8 @@ resource "aws_s3_bucket" "access_log" {
   acl    = "private"
   tags   = local.default_tags
   versioning {
-    enabled = true
+    enabled    = true
+    mfa_delete = true
   }
 
   server_side_encryption_configuration {
