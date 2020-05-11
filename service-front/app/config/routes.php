@@ -51,6 +51,9 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
 
+//  UML-695
+    $app->route('/cookies', Actor\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
+
     // User creation
     $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');
     $app->get('/create-account-success', Actor\Handler\CreateAccountSuccessHandler::class, 'create-account-success');
