@@ -245,10 +245,10 @@ class UserService implements UserRepositoryInterface
         );
     }
 
-    public function changeEmail(string $userId, string $newEmail, string $password): array
+    public function requestChangeEmail(string $userId, string $newEmail, string $password): array
     {
         try {
-            $data = $this->apiClient->httpPatch('/v1/change-email', [
+            $data = $this->apiClient->httpPatch('/v1/request-change-email', [
                 'user-id'       => $userId,
                 'new-email'     => $newEmail,
                 'password'      => $password
@@ -258,6 +258,23 @@ class UserService implements UserRepositoryInterface
         } catch (ApiException $ex) {
             throw $ex;
         }
+    }
+
+    public function completeChangeEmail(string $verificationToken): bool
+    {
+        try {
+            $userData = $this->apiClient->httpPatch('/v1/complete-change-email', [
+                'verification_token' => $verificationToken,
+            ]);
+
+            return true;
+        } catch (ApiException $ex) {
+            if ($ex->getCode() !== StatusCodeInterface::STATUS_NOT_FOUND) {
+                throw $ex;
+            }
+        }
+
+        return false;
     }
 
     public function changePassword(string $id, string $password, string $newPassword): void
