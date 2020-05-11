@@ -36,6 +36,8 @@ class CompleteChangeEmailHandler implements RequestHandlerInterface
             throw new BadRequestException('Email verification token must be provided');
         }
 
+        // get user by email token
+
 
         return new JsonResponse([]);
     }

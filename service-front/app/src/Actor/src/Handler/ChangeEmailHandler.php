@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\ChangeEmail;
+use Actor\Form\Login;
 use App\Exception\ConflictException;
 use App\Exception\ForbiddenException;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
+use Common\Handler\SessionAware;
 use Common\Handler\Traits\CsrfGuard;
+use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Email\EmailClient;
@@ -18,6 +21,7 @@ use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -29,10 +33,11 @@ use Psr\Http\Message\ResponseInterface;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class ChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, UserAware
+class ChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, UserAware, SessionAware
 {
     use CsrfGuard;
     use User;
+    use Session;
 
     /** @var UserService */
     private $userService;
@@ -98,11 +103,16 @@ class ChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, User
 
                     $verifyNewEmailUrl = $this->serverUrlHelper->generate($verifyNewEmailPath);
 
-                    //$this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email'], $data['NewEmail']);
+                    $this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email'], $data['NewEmail']);
 
                     $this->emailClient->sendRequestChangeEmailToNewEmail($data['NewEmail'], $verifyNewEmailUrl);
 
-                    $this->redirectToRoute('login');
+                    // log the user out before redirecting them to the login page
+                    $session = $this->getSession($request, 'session');
+                    $session->unset(UserInterface::class);
+                    $session->regenerate();
+
+                    return $this->redirectToRoute('login');
                 } catch (ApiException $ex) {
                     //TODO: Use switch case if more cases to handle
 
