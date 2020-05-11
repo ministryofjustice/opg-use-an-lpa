@@ -12,13 +12,13 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class VerifyNewEmailHandler extends AbstractHandler
+class CompleteChangeEmailHandler extends AbstractHandler
 {
     /** @var UserService */
     private $userService;
 
     /**
-     * VerifyNewEmailHandler constructor.
+     * CompleteChangeEmailHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param UserService $userService

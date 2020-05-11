@@ -14,11 +14,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class ChangeEmailHandler
+ * Class RequestChangeEmailHandler
  * @package App\Handler
  * @codeCoverageIgnore
  */
-class ChangeEmailHandler implements RequestHandlerInterface
+class RequestChangeEmailHandler implements RequestHandlerInterface
 {
     /**
      * @var UserService

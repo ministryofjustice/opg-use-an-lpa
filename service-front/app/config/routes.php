@@ -91,7 +91,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Actor\Handler\ChangeDetailsHandler::class
     ], 'lpa.change-details');
     $app->get('/verify-new-email/{token}',
-        Actor\Handler\VerifyNewEmailHandler::class,
+        Actor\Handler\CompleteChangeEmailHandler::class,
         'verify-new-email');
 
     // LPA management

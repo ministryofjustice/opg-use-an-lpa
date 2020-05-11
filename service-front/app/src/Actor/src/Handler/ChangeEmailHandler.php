@@ -25,7 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class ChangeEmailHandler
+ * Class RequestChangeEmailHandler
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
@@ -44,7 +44,7 @@ class ChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, User
     private $serverUrlHelper;
 
     /**
-     * ChangeEmailHandler constructor.
+     * RequestChangeEmailHandler constructor.
      *
      * @codeCoverageIgnore
      *
@@ -90,7 +90,7 @@ class ChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, User
                 $password = $formData['current_password'];
 
                 try {
-                    $data = $this->userService->changeEmail($user->getIdentity(), $newEmail, $password);
+                    $data = $this->userService->requestChangeEmail($user->getIdentity(), $newEmail, $password);
 
                     $verifyNewEmailPath = $this->urlHelper->generate('verify-new-email', [
                         'token' => $data['EmailResetToken'],

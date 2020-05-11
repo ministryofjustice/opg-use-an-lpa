@@ -264,7 +264,7 @@ class UserService
      * @param string $accountId
      * @return array
      */
-    public function deleteUserAccount(string $accountId) : array
+    public function deleteUserAccount(string $accountId): array
     {
         $user = $this->usersRepository->get($accountId);
 
@@ -279,6 +279,13 @@ class UserService
         return $this->usersRepository->delete($accountId);
     }
 
+    /**
+     * @param string $userId
+     * @param string $newEmail
+     * @param string $password
+     * @return array
+     * @throws Exception
+     */
     public function requestChangeEmail(string $userId, string $newEmail, string $password)
     {
         $user = $this->usersRepository->get($userId);
