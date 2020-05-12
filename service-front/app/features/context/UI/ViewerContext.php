@@ -177,9 +177,9 @@ class ViewerContext implements Context
     }
 
     /**
-     * @Then /^I can see the full details of a cancelled LPA$/
+     * @Then /^I see a message that LPA has been cancelled$/
      */
-    public function iCanSeeTheFullDetailsOfACancelledLPA()
+    public function iSeeAMessageThatLPAHasBeenCancelled()
     {
         $this->ui->assertPageAddress('/view-lpa');
         $this->ui->assertPageContainsText(

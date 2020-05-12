@@ -18,7 +18,8 @@ Feature: View an LPA via sharecode
     And I access the viewer service
     And I give a valid LPA share code
     When I confirm the LPA is correct but cancelled
-    Then I can see the full details of a cancelled LPA
+    Then I see a message that LPA has been cancelled
+    #Then I can see the full details of a cancelled LPA
 
   @ui @integration
   Scenario: The user can see an option to re enter code if the displayed LPA is incorrect

@@ -157,9 +157,9 @@ class ViewerContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then I can see the full details of a cancelled LPA
+     * @Then /^I see a message that LPA has been cancelled$/
      */
-    public function iCanSeeTheFullDetailsOfACancelledLPA()
+    public function iSeeAMessageThatLPAHasBeenCancelled()
     {
         // Not used in this context
     }

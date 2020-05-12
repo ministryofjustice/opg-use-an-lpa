@@ -121,7 +121,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Given /^I am viewing a valid LPA$/
      * @Then /^I can see the full details of the valid LPA$/
-     * @Then /^I can see the full details of a cancelled LPA$/
+     * @Then /^I see a message that LPA has been cancelled$/
      */
     public function iAmViewingAValidLPA()
     {
