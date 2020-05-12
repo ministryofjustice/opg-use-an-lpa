@@ -4,36 +4,33 @@ declare(strict_types=1);
 
 namespace Actor\Form;
 
-use Laminas\Form\Element;
-use Laminas\InputFilter\Input;
-use Laminas\InputFilter\InputFilter;
+use Application\Form\AbstractCsrfForm;
 
-/**
- * Class CookieConsent
- * @package Actor\Form
- */
-class CookieConsent extends AbstractForm
+class CookieConsent extends AbstractCsrfForm
 {
-    public function __construct($options = [])
+    public function init()
     {
-        parent::__construct(self::class, $options);
+        $this->setName('cookieConsent');
 
-        $inputFilter = new InputFilter();
-        $this->setInputFilter($inputFilter);
-
-        //------------------------
-
-        $field = new Element\Radio('usage-cookies');
-        $input = new Input($field->getName());
-
-        $input->getValidatorChain()->attach();
-
-        $field->setValueOptions([
-            'no' => 'no',
-            'yes' => 'yes',
+        $this->add([
+            'name'       => 'usageCookies',
+            'type'       => 'Radio',
+            'attributes' => ['div-attributes' => ['class' => 'multiple-choice']],
+            'required'   => true,
+            'options'    => [
+                'value_options' => [
+                    'yes' => [
+                        'label' => 'Yes, allow usage cookies',
+                        'value' => 'yes',
+                    ],
+                    'no' => [
+                        'label' => 'No, do not allow usage cookies ',
+                        'value' => 'no',
+                    ],
+                ],
+            ]
         ]);
 
-        $this->add($field);
-        $inputFilter->add($input);
+        parent::init();
     }
 }
