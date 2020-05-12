@@ -4,7 +4,9 @@ import json
 import os
 import sys
 
+
 class CodeGeneration:
+    aws_account_ids = {}
     aws_account_id = ''
     aws_iam_session = ''
     aws_ecs_client = ''
@@ -20,15 +22,24 @@ class CodeGeneration:
     logStreamName = ''
 
     def __init__(self, environment):
-        self.environment=environment
-        self.aws_ecs_cluster=os.environ.get('AWS_ECS_CLUSTER')
+        self.aws_account_ids = {
+            'production': "690083044361",
+            'preproduction': "888228022356",
+            'development': "367815980639",
+        }
+        self.environment = environment
+
+        self.aws_account_id = self.aws_account_ids.get(
+            self.environment, "367815980639")
+
+        self.aws_ecs_cluster = os.environ.get('AWS_ECS_CLUSTER')
 
         if (self.aws_ecs_cluster == None):
-            self.aws_ecs_cluster='{}-use-an-lpa'.format(self.environment)
+            self.aws_ecs_cluster = '{}-use-an-lpa'.format(self.environment)
 
         self.set_iam_role_session()
 
-        self.aws_ecs_client=boto3.client(
+        self.aws_ecs_client = boto3.client(
             'ecs',
             region_name='eu-west-1',
             aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
@@ -67,8 +78,6 @@ class CodeGeneration:
         )['taskDefinitionArns'][0]
 
     def set_iam_role_session(self):
-        self.aws_account_id=os.environ.get('AWS_ACCOUNT_ID')
-
         role_arn = 'arn:aws:iam::{}:role/operator'.format(
             self.aws_account_id)
 
@@ -198,8 +207,8 @@ class CodeGeneration:
       # get logs while task is running
       # after task finishes, print remaining logs
 
-        self.logStreamName = 'code-creation-app.use-an-lpa/app/{}'.format(
-            self.code_creation_task.rsplit('/', 1)[-1])
+        self.logStreamName = '{}.code-creation-app.use-an-lpa/app/{}'.format(
+            self.environment, self.code_creation_task.rsplit('/', 1)[-1])
         print("Streaming logs for logstream: ".format(self.logStreamName))
 
         self.nextForwardToken = 'f/0'
@@ -221,6 +230,7 @@ def main(argv):
     work.run_creation_task(argv[1])
     work.wait_for_task_to_start()
     work.print_task_logs()
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
