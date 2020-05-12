@@ -26,6 +26,9 @@ resource "aws_s3_bucket" "access_log" {
   bucket = "opg-ual-${local.environment}-lb-access-logs"
   acl    = "private"
   tags   = local.default_tags
+  versioning {
+    enabled = true
+  }
 
   server_side_encryption_configuration {
     rule {
@@ -39,4 +42,13 @@ resource "aws_s3_bucket" "access_log" {
 resource "aws_s3_bucket_policy" "access_log" {
   bucket = aws_s3_bucket.access_log.id
   policy = data.aws_iam_policy_document.viewer_loadbalancer.json
+}
+
+resource "aws_s3_bucket_public_access_block" "access_log" {
+  bucket = aws_s3_bucket.access_log.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
