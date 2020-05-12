@@ -162,3 +162,14 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress_route53_healthch
   security_group_id = aws_security_group.viewer_loadbalancer_route53.id
   description       = "Loadbalancer ingresss from Route53 healthchecks"
 }
+
+resource "aws_security_group_rule" "viewer_loadbalancer_ingress_preproduction_ithc" {
+  count             = local.environment == "preproduction" ? 1 : 0
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["54.37.241.156/30", "167.71.136.237/32", ]
+  ipv6_cidr_blocks  = ["2001:41d0:800:715::/64"]
+  security_group_id = aws_security_group.viewer_loadbalancer.id
+}
