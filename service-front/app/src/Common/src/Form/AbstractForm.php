@@ -24,6 +24,8 @@ abstract class AbstractForm extends Form
      */
     protected $errorMessages = [];
 
+    protected $messages = [];
+
     public function __construct(string $formName, CsrfGuardInterface $csrfGuard)
     {
         parent::__construct($formName);
@@ -81,8 +83,29 @@ abstract class AbstractForm extends Form
         if ($elementName) {
             $messages = parent::getMessages($elementName);
         } else {
-            $messages = array_merge($this->getErrorMessages(), parent::getMessages($elementName));
+            $messages = $this->getErrorMessages();
         }
         return $messages;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getNotices($elementName = null): array
+    {
+        return parent::getMessages($elementName);
+    }
+
+    public function addNotice(string $messageKey, string $elementName = ""): void
+    {
+        if (! isset($this->messageTemplates[$messageKey])) {
+            throw new InvalidArgumentException("No message template exists for key '$messageKey'");
+        }
+
+        if ($elementName !== "" && ! $this->has($elementName)) {
+            throw new InvalidArgumentException("No form element named '$elementName' found");
+        }
+
+        $this->messages[$elementName] = [$this->messageTemplates[$messageKey]];
     }
 }

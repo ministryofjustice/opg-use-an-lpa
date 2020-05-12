@@ -58,7 +58,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             $form->setData($request->getParsedBody());
 
             if ($form->isValid()) {
-               try {
+                try {
                     $user = $this->getUser($request);
 
                     if (! is_null($user)) {
@@ -71,19 +71,19 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                     // adding an element name allows the form to link the error message to a field. In this case we'll
                     // link to the email field to allow the user to correct their mistake.
                     $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
-                } catch (ApiException $e){
-                   //401 denotes in this case that we hve not activated,
-                   // redirect to correct success page with correct data
-                   if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
-                       $formValues = $form->getData();
-                       $emailAddress = $formValues['email'];
+                } catch (ApiException $e) {
+                    //401 denotes in this case that we hve not activated,
+                    // redirect to correct success page with correct data
+                    if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
+                        $formValues = $form->getData();
+                        $emailAddress = $formValues['email'];
 
-                       return $this->redirectToRoute('create-account-success', [], [
+                        return $this->redirectToRoute('create-account-success', [], [
                            'email' => $emailAddress,
                            'accountExists' => 'true'
-                       ]);
-                   }
-               }
+                        ]);
+                    }
+                }
             }
         }
 
@@ -91,6 +91,13 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         // the auth middleware functions
         if ($this->getUser($request) !== null) {
             return $this->redirectToRoute('lpa.dashboard');
+        }
+
+        $referer = $request->getHeader('referer')[0];
+        if (!is_null($referer)) {
+            if (strpos($referer, '/change-email') !== false) {
+                $form->addNotice(Login::EMAIL_CHANGE, 'email');
+            }
         }
 
         return new HtmlResponse($this->renderer->render('actor::login', [

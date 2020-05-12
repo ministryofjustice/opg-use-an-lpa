@@ -103,9 +103,9 @@ class ChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, User
 
                     $verifyNewEmailUrl = $this->serverUrlHelper->generate($verifyNewEmailPath);
 
-                    $this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email'], $data['NewEmail']);
+                    //$this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email'], $data['NewEmail']);
 
-                    $this->emailClient->sendRequestChangeEmailToNewEmail($data['NewEmail'], $verifyNewEmailUrl);
+                    //$this->emailClient->sendRequestChangeEmailToNewEmail($data['NewEmail'], $verifyNewEmailUrl);
 
                     // log the user out before redirecting them to the login page
                     $session = $this->getSession($request, 'session');

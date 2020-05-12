@@ -13,6 +13,7 @@ use Laminas\Form\FormInterface;
 class GovUKLaminasFormErrorsExtension extends AbstractExtension
 {
     const THEME_FILE = '@partials/govuk_error.html.twig';
+    const MESSAGE_TEMPLATE = '@partials/govuk_notice.html.twig';
 
     /**
      * @return array
@@ -22,6 +23,7 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
         return [
             new TwigFunction('govuk_error', [$this, 'errorMessage'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('govuk_error_summary', [$this, 'errorSummary'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('govuk_notice_message', [$this, 'noticeMessage'], ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
     }
 
@@ -68,6 +70,26 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
 
         return $template->renderBlock('error_summary', [
             'errors' => $errors,
+        ]);
+    }
+
+    /**
+     * @param Environment $twigEnv
+     * @param FormInterface $form
+     * @return string
+     * @throws \Throwable
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function noticeMessage(Environment $twigEnv, FormInterface $form): string
+    {
+        $template = $twigEnv->load(self::MESSAGE_TEMPLATE);
+
+        $notices = $form->getNotices();
+
+        return $template->renderBlock('notice_messages', [
+            'notices' => $notices,
         ]);
     }
 
