@@ -54,6 +54,15 @@ interface ActorUsersInterface
     public function getIdByPasswordResetToken(string $resetToken): string;
 
     /**
+     * Gets an actor user when queried for by a email reset token
+     *
+     * @param string $resetToken
+     * @return string
+     * @throws NotFoundException
+     */
+    public function getIdByEmailResetToken(string $resetToken): string;
+
+    /**
      * Activate the user account in the database using the token value
      *
      * @param string $activationToken

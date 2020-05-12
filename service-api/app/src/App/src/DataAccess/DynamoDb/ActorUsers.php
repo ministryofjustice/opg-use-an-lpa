@@ -122,7 +122,29 @@ class ActorUsers implements ActorUsersInterface
         $usersData = $this->getDataCollection($result);
 
         if (empty($usersData)) {
-            throw new NotFoundException('User not found for reset token');
+            throw new NotFoundException('User not found for password reset token');
+        }
+
+        return (array_pop($usersData))['Id'];
+    }
+
+    public function getIdByEmailResetToken(string $resetToken): string
+    {
+        $marshaler = new Marshaler();
+
+        $result = $this->client->query([
+            'TableName' => $this->actorUsersTable,
+            'IndexName' => 'EmailResetTokenIndex',
+            'KeyConditionExpression' => 'EmailResetToken = :rt',
+            'ExpressionAttributeValues' => $marshaler->marshalItem([
+                ':rt' => $resetToken,
+            ]),
+        ]);
+
+        $usersData = $this->getDataCollection($result);
+
+        if (empty($usersData)) {
+            throw new NotFoundException('User not found for email reset token');
         }
 
         return (array_pop($usersData))['Id'];

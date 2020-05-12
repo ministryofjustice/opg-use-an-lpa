@@ -306,4 +306,21 @@ class UserService
 
         return $userData;
     }
+
+    public function completeChangeEmail(string $resetToken)
+    {
+        $userId = $this->usersRepository->getIdByPasswordResetToken($resetToken);
+
+        $user = $this->usersRepository->get($userId);
+
+        if (new DateTime('@' . $user['EmailResetExpiry']) < new DateTime('now')) {
+            throw new BadRequestException(
+                'Email reset token has expired for account with Id ' . $userId,
+                ['id' => $userId]
+            );
+        }
+
+        // todo: call user repo to reset email here
+
+    }
 }

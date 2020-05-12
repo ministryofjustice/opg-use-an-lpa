@@ -260,11 +260,11 @@ class UserService implements UserRepositoryInterface
         }
     }
 
-    public function completeChangeEmail(string $verificationToken): bool
+    public function completeChangeEmail(string $resetToken): bool
     {
         try {
             $userData = $this->apiClient->httpPatch('/v1/complete-change-email', [
-                'verification_token' => $verificationToken,
+                'reset_token' => $resetToken,
             ]);
 
             return true;

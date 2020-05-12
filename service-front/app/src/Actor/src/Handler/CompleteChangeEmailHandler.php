@@ -40,11 +40,11 @@ class CompleteChangeEmailHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $verificationToken = $request->getAttribute('token');
+        $resetToken = $request->getAttribute('token');
 
-        $verified = $this->userService->completeChangeEmail($verificationToken);
+        $reset = $this->userService->completeChangeEmail($resetToken);
 
-        if (!$verified) {
+        if (!$reset) {
             //TODO: Create token not found page
             return new HtmlResponse($this->renderer->render('actor::activate-account-not-found'));
         }

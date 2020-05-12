@@ -93,6 +93,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             return $this->redirectToRoute('lpa.dashboard');
         }
 
+        // display the notice message if the user has been redirected from the change email page
         $referer = $request->getHeader('referer')[0];
         if (!is_null($referer)) {
             if (strpos($referer, '/change-email') !== false) {

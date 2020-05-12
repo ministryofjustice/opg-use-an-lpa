@@ -32,11 +32,12 @@ class CompleteChangeEmailHandler implements RequestHandlerInterface
     {
         $requestData = $request->getParsedBody();
 
-        if (!isset($requestData['verification_token'])) {
-            throw new BadRequestException('Email verification token must be provided');
+        if (!isset($requestData['reset_token'])) {
+            throw new BadRequestException('Email reset token must be provided');
         }
 
         // get user by email token
+        $this->userService->completeChangeEmail($requestData['reset_token']);
 
 
         return new JsonResponse([]);
