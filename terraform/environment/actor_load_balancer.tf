@@ -166,6 +166,7 @@ resource "aws_security_group_rule" "actor_loadbalancer_ingress_route53_healthche
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress_preproduction_ithc" {
   count             = local.environment == "preproduction" ? 1 : 0
+  description       = "ingress rules for ithc"
   type              = "ingress"
   from_port         = 443
   to_port           = 443
