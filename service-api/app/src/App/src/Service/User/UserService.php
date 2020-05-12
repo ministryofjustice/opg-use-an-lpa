@@ -204,12 +204,12 @@ class UserService
             }
         } catch (NotFoundException $ex) {
             $this->logger->notice(
-                'Account not found for reset token {token}',
+                'Account not found for password reset token {token}',
                 ['token' => $resetToken]
             );
         }
 
-        throw new GoneException('Reset token not found');
+        throw new GoneException('Password reset token not found');
     }
 
     /**
@@ -307,8 +307,36 @@ class UserService
         return $userData;
     }
 
+    /**
+     * Checks to see if an email token exists against a user record and it has not expired
+     *
+     * @param string $resetToken
+     * @return string
+     * @throws Exception
+     */
+    public function canResetEmail(string $resetToken)
+    {
+        try {
+            $userId = $this->usersRepository->getIdByEmailResetToken($resetToken);
+
+            $user = $this->usersRepository->get($userId);
+
+            if (new DateTime('@' . $user['EmailResetExpiry']) >= new DateTime('now')) {
+                return $userId;
+            }
+        } catch (NotFoundException $ex) {
+            $this->logger->notice(
+                'Account not found for reset email token {token}',
+                ['token' => $resetToken]
+            );
+        }
+
+        throw new GoneException('Email reset token not found');
+    }
+
     public function completeChangeEmail(string $resetToken)
     {
+
         $userId = $this->usersRepository->getIdByPasswordResetToken($resetToken);
 
         $user = $this->usersRepository->get($userId);
@@ -321,6 +349,5 @@ class UserService
         }
 
         // todo: call user repo to reset email here
-
     }
 }

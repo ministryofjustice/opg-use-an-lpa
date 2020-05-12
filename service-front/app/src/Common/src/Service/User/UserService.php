@@ -260,6 +260,39 @@ class UserService implements UserRepositoryInterface
         }
     }
 
+    public function canResetEmail(string $token): bool
+    {
+        try {
+            $data = $this->apiClient->httpGet('/v1/can-reset-email', [
+                'token' => $token,
+            ]);
+
+            if (!is_null($data) && isset($data['Id'])) {
+                $this->logger->info(
+                    'Email reset token for account with Id {id} was used successfully',
+                    [
+                        'id' => $data['Id']
+                    ]
+                );
+
+                return true;
+            }
+        } catch (ApiException $ex) {
+            if ($ex->getCode() !== StatusCodeInterface::STATUS_GONE) {
+                throw $ex;
+            }
+        }
+
+        $this->logger->notice(
+            'Email reset token {token} is invalid',
+            [
+                'token' => $token
+            ]
+        );
+
+        return false;
+    }
+
     public function completeChangeEmail(string $resetToken): bool
     {
         try {

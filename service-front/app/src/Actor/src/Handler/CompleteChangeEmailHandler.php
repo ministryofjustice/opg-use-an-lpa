@@ -42,6 +42,8 @@ class CompleteChangeEmailHandler extends AbstractHandler
     {
         $resetToken = $request->getAttribute('token');
 
+        $tokenValid = $this->userService->canResetEmail($resetToken);
+
         $reset = $this->userService->completeChangeEmail($resetToken);
 
         if (!$reset) {
