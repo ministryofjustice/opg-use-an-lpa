@@ -29,7 +29,7 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --endpoint $DYNAMODN_ENDPOINT
 
     aws dynamodb create-table \
-    --attribute-definitions AttributeName=Id,AttributeType=S AttributeName=Email,AttributeType=S AttributeName=ActivationToken,AttributeType=S AttributeName=PasswordResetToken,AttributeType=S \
+    --attribute-definitions AttributeName=Id,AttributeType=S AttributeName=Email,AttributeType=S AttributeName=ActivationToken,AttributeType=S AttributeName=PasswordResetToken,AttributeType=S AttributeName=EmailResetToken,AttributeType=S \
     --table-name ActorUsers \
     --key-schema AttributeName=Id,KeyType=HASH \
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
