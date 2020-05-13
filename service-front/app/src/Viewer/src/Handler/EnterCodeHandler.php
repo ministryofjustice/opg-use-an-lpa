@@ -39,9 +39,7 @@ class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
                 $lpaCode = $form->getData()['lpa_code'];
 
                 // Remove V from start of the code if present
-                $lpaCode = (preg_match('/^[vV]?/', $lpaCode)) ?
-                    preg_replace('/^[vV]?/', '', $lpaCode)
-                    : $lpaCode;
+                $lpaCode = preg_replace('/^[vV]?/', '', $lpaCode);
 
                 $lpaCode = str_replace('-', '', $lpaCode);
                 $lpaCode = str_replace(' ', '', $lpaCode);

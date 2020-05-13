@@ -72,9 +72,7 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
                 $postData = $form->getData();
 
                 // Remove C from start of the code if present
-                $postData['passcode'] = (preg_match('/^[cC]?/', $postData['passcode'])) ?
-                    preg_replace('/^[cC]?/', '', $postData['passcode'])
-                    : $postData['passcode'];
+                $postData['passcode'] = preg_replace('/^[cC]?/', '', $postData['passcode']);
 
                 //  Filter out dashes and whitespace
                 $postData = str_replace('-', '', $postData);
