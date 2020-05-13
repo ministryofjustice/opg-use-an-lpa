@@ -44,6 +44,10 @@ class CompleteChangeEmailHandler extends AbstractHandler
 
         $tokenValid = $this->userService->canResetEmail($resetToken);
 
+        if (!$tokenValid) {
+            return new HtmlResponse($this->renderer->render('actor::email-reset-not-found'));
+        }
+
         $reset = $this->userService->completeChangeEmail($resetToken);
 
         if (!$reset) {

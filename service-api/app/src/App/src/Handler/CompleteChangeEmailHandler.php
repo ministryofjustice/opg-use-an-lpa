@@ -39,7 +39,6 @@ class CompleteChangeEmailHandler implements RequestHandlerInterface
         // get user by email token
         $this->userService->completeChangeEmail($requestData['reset_token']);
 
-
         return new JsonResponse([]);
     }
 }
