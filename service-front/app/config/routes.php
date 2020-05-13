@@ -84,7 +84,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     ], ['GET','POST'], 'change-password');
     $app->route('/change-email', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
-        Actor\Handler\ChangeEmailHandler::class
+        Actor\Handler\RequestChangeEmailHandler::class
     ], ['GET','POST'], 'change-email');
     $app->get('/lpa/change-details', [
         Mezzio\Authentication\AuthenticationMiddleware::class,

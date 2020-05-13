@@ -33,7 +33,7 @@ use Psr\Http\Message\ResponseInterface;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class ChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, UserAware, SessionAware
+class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, UserAware, SessionAware
 {
     use CsrfGuard;
     use User;
