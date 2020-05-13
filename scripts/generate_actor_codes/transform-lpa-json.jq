@@ -1,16 +1,14 @@
 to_entries
-| map_values(
-    {LPAId :.key
-    | sub( "(?<a>7[0-9]{3})(?<b>[0-9]{4})(?<c>[0-9]{4})";"\(.a)-\(.b)-\(.c)"
-    )
-    }
+| map_values({
+  ActorLPAId :.key
+  | sub( "(?<a>7\\d{3})(?<b>\\d{4})(?<c>\\d{4})";"\(.a)-\(.b)-\(.c)")}
   + {
-    	Codes: .value
+    	availableCodes: .value
     	| map_values(
       	{
           id,
           uId : .uId
-			| sub( "(?<a>7[0-9]{3})(?<b>[0-9]{4})(?<c>[0-9]{4})";"\(.a)-\(.b)-\(.c)"),
+			| sub( "(?<a>7\\d{3})(?<b>\\d{4})(?<c>\\d{4})";"\(.a)-\(.b)-\(.c))"),
       	  firstname,
           middlenames,
           surname,
@@ -18,4 +16,5 @@ to_entries
            | sub( "(?<a>[A-Z0-9]{4})(?<b>[A-Z0-9]{4})(?<c>[A-Z0-9]{4})";"\(.a) \(.b) \(.c)"),
       	  expiry
     	})
-	})
+	}
+)
