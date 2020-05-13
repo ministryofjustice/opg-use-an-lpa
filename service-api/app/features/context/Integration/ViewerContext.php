@@ -112,6 +112,40 @@ class ViewerContext extends BaseIntegrationContext
     }
 
     /**
+     * @When I give a share code that's been cancelled
+     */
+    public function iGiveAShareCodeThatHasBeenCancelled()
+    {
+        $lpaExpiry = (new \DateTime('+20 days'))->format('c');
+        $this->lpaData['status'] = 'Cancelled';
+
+        // ViewerCodes::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'ViewerCode' => $this->viewerCode,
+                            'SiriusUid'  => $this->lpa['uId'],
+                            'Added'      => (new \DateTime('now'))->format('c'),
+                            'Expires'    => $lpaExpiry,
+                            'Cancelled'  => (new \DateTime('now'))->format('c'),
+                        ]
+                    )
+                ]
+            )
+        );
+
+        // Lpas::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa['uId'])
+            ->respondWith(new Response(StatusCodeInterface::STATUS_GONE, [], json_encode($this->lpa)));
+
+        // logActivity parameter is false when doing a summary check
+        $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, false);
+        assertEquals(null, $lpaData);
+    }
+
+    /**
      * @When I confirm the LPA is correct
      */
     public function iConfirmTheLPAIsCorrect()
@@ -157,7 +191,7 @@ class ViewerContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I see a message that LPA has been cancelled$/
+     * @Then /^I can see a message the LPA has been cancelled$/
      */
     public function iSeeAMessageThatLPAHasBeenCancelled()
     {
