@@ -8,7 +8,7 @@ to_entries
       	{
           id,
           uId : .uId
-			| sub( "(?<a>7\\d{3})(?<b>\\d{4})(?<c>\\d{4})";"\(.a)-\(.b)-\(.c))"),
+			| sub( "(?<a>7\\d{3})(?<b>\\d{4})(?<c>\\d{4})";"\(.a)-\(.b)-\(.c)"),
       	  firstname,
           middlenames,
           surname,
