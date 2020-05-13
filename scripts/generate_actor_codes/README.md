@@ -5,6 +5,7 @@
 - homebrew
 - python
 - direnv
+- jq: https://stedolan.github.io/jq/
 - aws-vault, with your credentials set up : <https://github.com/99designs/aws-vault>
 - you may need to refer to the onboarding instructions for AWS if you do not have an aws identity set up: <https://ministryofjustice.github.io/opg-new-starter/amazon.html>
 
@@ -26,11 +27,6 @@ The script uses your IAM user credentials to assume the appropriate role.
 
 You can provide the script credentials using aws-vault.
 The environment is the first part of the url e.g. demo or ULM222xyz for example.
-
-**IMPORTANT** when generating actor codes, they need to be sent to the requesting person securely, either using:
-
-- Keybase
-- Password encrypted zip file, and password sent on a separate communication method.
 
 ``` shell
 aws-vault exec identity -- python ./generate_actor_codes.py <environment> <comma separated lpa uids, no spaces>
