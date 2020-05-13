@@ -108,6 +108,8 @@ interface ActorUsersInterface
     public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): array;
 
     /**
+     * Records a email reset token and new email for a user account
+     *
      * @param string $id
      * @param string $newEmail
      * @param string $resetToken
@@ -115,6 +117,17 @@ interface ActorUsersInterface
      * @return array The actor user record for the request
      */
     public function recordChangeEmailRequest(string $id, string $newEmail, string $resetToken, int $resetExpiry): array;
+
+    /**
+     * Changes the email address for an account to the NewEmail chosen by the user
+     * Also removes the email reset token, expiry and NewEmail attribute
+     *
+     * @param string $id
+     * @param string $token
+     * @param string $newEmail
+     * @return bool
+     */
+    public function changeEmail(string $id, string $token, string $newEmail): bool;
 
     /**
      * Deletes a user's account by account id

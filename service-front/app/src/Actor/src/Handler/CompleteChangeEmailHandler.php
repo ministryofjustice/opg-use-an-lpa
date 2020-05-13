@@ -48,13 +48,8 @@ class CompleteChangeEmailHandler extends AbstractHandler
             return new HtmlResponse($this->renderer->render('actor::email-reset-not-found'));
         }
 
-        $reset = $this->userService->completeChangeEmail($resetToken);
+        $this->userService->completeChangeEmail($resetToken);
 
-        if (!$reset) {
-            //TODO: Create token not found page
-            return new HtmlResponse($this->renderer->render('actor::activate-account-not-found'));
-        }
-
-        return new HtmlResponse($this->renderer->render('actor::login'));
+        return $this->redirectToRoute('login');
     }
 }

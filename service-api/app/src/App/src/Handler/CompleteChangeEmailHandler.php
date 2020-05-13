@@ -36,7 +36,7 @@ class CompleteChangeEmailHandler implements RequestHandlerInterface
             throw new BadRequestException('Email reset token must be provided');
         }
 
-        // get user by email token
+        // also removes expiry token and new email field
         $this->userService->completeChangeEmail($requestData['reset_token']);
 
         return new JsonResponse([]);

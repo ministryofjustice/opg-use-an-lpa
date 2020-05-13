@@ -331,12 +331,15 @@ class UserService
         throw new GoneException('Email reset token not found');
     }
 
+    /**
+     * @param string $resetToken
+     */
     public function completeChangeEmail(string $resetToken)
     {
-        $userId = $this->usersRepository->getIdByPasswordResetToken($resetToken);
+        $userId = $this->usersRepository->getIdByEmailResetToken($resetToken);
 
         $user = $this->usersRepository->get($userId);
 
-        // todo: call user repo to reset email here
+        $this->usersRepository->changeEmail($userId, $resetToken, $user['NewEmail']);
     }
 }

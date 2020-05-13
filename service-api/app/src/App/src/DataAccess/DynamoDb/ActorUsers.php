@@ -311,6 +311,27 @@ class ActorUsers implements ActorUsersInterface
         return $this->getData($user);
     }
 
+    public function changeEmail(string $id, string $token, string $newEmail): bool
+    {
+        //  Update the item by setting the new email and removing the reset token/expiry
+        $this->client->updateItem([
+            'TableName' => $this->actorUsersTable,
+            'Key' => [
+                'Id' => [
+                    'S' => $id,
+                ],
+            ],
+            'UpdateExpression' => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
+            'ExpressionAttributeValues' => [
+                ':p' => [
+                    'S' => $newEmail
+                ]
+            ]
+        ]);
+
+        return true;
+    }
+
     /**
      * @inheritDoc
      */

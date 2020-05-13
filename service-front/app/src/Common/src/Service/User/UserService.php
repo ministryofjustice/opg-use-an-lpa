@@ -293,21 +293,18 @@ class UserService implements UserRepositoryInterface
         return false;
     }
 
-    public function completeChangeEmail(string $resetToken): bool
+    public function completeChangeEmail(string $resetToken): void
     {
-        try {
-            $userData = $this->apiClient->httpPatch('/v1/complete-change-email', [
-                'reset_token' => $resetToken,
-            ]);
+        $this->apiClient->httpPatch('/v1/complete-change-email', [
+            'reset_token' => $resetToken,
+        ]);
 
-            return true;
-        } catch (ApiException $ex) {
-            if ($ex->getCode() !== StatusCodeInterface::STATUS_NOT_FOUND) {
-                throw $ex;
-            }
-        }
-
-        return false;
+        $this->logger->info(
+            'Email reset using token {token} has been successful',
+            [
+                'token' => $resetToken
+            ]
+        );
     }
 
     public function changePassword(string $id, string $password, string $newPassword): void
