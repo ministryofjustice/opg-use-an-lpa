@@ -36,7 +36,17 @@ class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
             $form->setData($request->getParsedBody());
 
             if ($form->isValid()) {
-                $session->set('code', $form->getData()['lpa_code']);
+                $lpaCode = $form->getData()['lpa_code'];
+
+                // Remove V from start of the code if present
+                $lpaCode = (preg_match('/^[vV]?/', $lpaCode)) ?
+                    preg_replace('/^[vV]?/', '', $lpaCode)
+                    : $lpaCode;
+
+                $lpaCode = str_replace('-', '', $lpaCode);
+                $lpaCode = str_replace(' ', '', $lpaCode);
+
+                $session->set('code', $lpaCode);
                 $session->set('surname', $form->getData()['donor_surname']);
 
                 return $this->redirectToRoute('check-code');
