@@ -45,7 +45,7 @@ Feature: View an LPA via sharecode
 
     Examples:
       | accessCode | reason |
-      | T3ST ACE2-C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
+      | V-T3ST_ACE2-C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
       | T3STP*22C0!? | LPA access codes are 13 numbers and letters long and start with a V |
       | T3ST - PA22 - C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
       | T3STPA22C0D | LPA access codes are 13 numbers and letters long and start with a V |
@@ -88,8 +88,8 @@ Feature: View an LPA via sharecode
     When I give an invalid <sharecode> and <surname>
     Then I am told that the share code is invalid because <reason>
     Examples:
-      |surname  |sharecode       | reason |
-      | Billson |1110-1111-0111  | We could not find an LPA matching those details |
+      |surname  | sharecode       | reason |
+      | Billson | V-1110-1111-0111  | We could not find an LPA matching those details |
 
   @ui
   Scenario: The user is allowed to re-enter code after an invalid one entered
