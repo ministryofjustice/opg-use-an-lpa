@@ -90,6 +90,8 @@ Feature: View an LPA via sharecode
     Examples:
       |surname  | sharecode       | reason |
       | Billson | V-1110-1111-0111  | We could not find an LPA matching those details |
+      | Billson | V - 1110 - 1111 - 0111  | We could not find an LPA matching those details |
+      | Billson | 1110-1111-0111  | We could not find an LPA matching those details |
 
   @ui
   Scenario: The user is allowed to re-enter code after an invalid one entered
