@@ -10,21 +10,6 @@
 
 This script starts an ECS task to generate Actor participant codes.
 
-The script reads account id from environment variables.
-You will need to change the `.envrc` file to the appropriate account id for prod / pre-prod or development environments.
-
-You can set these using direnv
-
-``` shell
-direnv allow
-```
-
- or by sourcing the `.envrc` file
-
-``` shell
-source .envrc
-```
-
 Install python dependencies with pip / pip3 (if you have python 3)
 
 ``` shell
@@ -48,7 +33,7 @@ The environment is the first part of the url e.g. demo or ULM222xyz for example.
 - Password encrypted zip file, and password sent on a separate communication method.
 
 ``` shell
-aws-vault exec identity -- python ./generate_actor_codes.py  <environment> <comma separated lpa uids, no spaces>
+aws-vault exec identity -- python ./generate_actor_codes.py <environment> <comma separated lpa uids, no spaces>
 ```
 
 output will look like this
@@ -65,15 +50,20 @@ timestamp: 1588688690503: message:<json_output>
 Copy the json_output from the code generator logs output and push it into a file
 
 ``` shell
-echo '<json_output>' | jq > /tmp/activation_codes_$(date +%Y%m%d).txt
-cat /tmp/activation_codes_$(date +%Y%m%d).txt
+FILENAME=activation_codes_$(date +%Y%m%d)
+mkdir -p /tmp/$FILENAME
+echo '<json_output>' | jq > /tmp/$FILENAME/$FILENAME.txt
 ```
 
-Make an encrypted zip and delete the txt file. You will be prompted for a password when creating the encrypted zip file.
+The preference for the recipient is that the json in the text file is formatted slightly differently than as returned by the code generator.
+
+- All Sirius case numbers should be split with hyphen into 3 groups of 4. e.g `7xxx-xxxx-xxxx`
+- All actor codes should be split with a space into 3 groups of 4. e.g `ABC1 D2E3 FG4H`
+
+Then create an encrypted disk image, copy the file into it and clean up. The script will prompt for a password to create and to open the disk image.
 
 ``` shell
-zip -er ~/Documents/activation_codes_$(date +%Y%m%d).zip /tmp/activation_codes_$(date +%Y%m%d).txt
-rm /tmp/activation_codes_$(date +%Y%m%d).txt
+./make_encrypted_image.sh $FILENAME
 ```
 
-Send the encrypted zip to the recipient by email and separately let them know what the password is.
+Send the encrypted image to the recipient by email and separately let them know what the password is.
