@@ -18,17 +18,17 @@ workflows:
           environment: demo
           requires: [redeploy_demo]
 
-  # workspace_cleanup:
-  #   triggers:
-  #     - schedule:
-  #         cron: "0 0,2,4,6,8,10,12,14,16,18,20,22 * * 0-6" # every 2 hours from midnight
-  #         filters:
-  #           branches:
-  #             only:
-  #               - master
-  #   jobs:
-  #     - workspace_cleanup:
-  #         name: workspace_cleanup
+  workspace_cleanup:
+    triggers:
+      - schedule:
+          cron: "0 0,2,4,6,8,10,12,14,16,18,20,22 * * 0-6" # every 2 hours from midnight
+          filters:
+            branches:
+              ignore:
+                - master
+    jobs:
+      - workspace_cleanup:
+          name: workspace_cleanup
 
   pr_build:
       jobs:
