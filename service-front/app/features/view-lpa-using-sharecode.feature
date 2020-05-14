@@ -47,7 +47,8 @@ Feature: View an LPA via sharecode
       | accessCode | reason |
       | V-T3ST_ACE2-C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
       | T3STP*22C0!? | LPA access codes are 13 numbers and letters long and start with a V |
-      | T3ST - PA22 - C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
+      | T3ST _ PA22 - C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
+      | V - T3ST _ PA22 - C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
       | T3STPA22C0D | LPA access codes are 13 numbers and letters long and start with a V |
       |  | Enter the LPA access code |
 
