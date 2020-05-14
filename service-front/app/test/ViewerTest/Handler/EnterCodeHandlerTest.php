@@ -20,7 +20,7 @@ use Mezzio\Template\TemplateRendererInterface;
 class EnterCodeHandlerTest extends TestCase
 {
     const CSRF_CODE = "1234";
-    const TEST_LPA_CODE = '1234-5678-9012';
+    const TEST_LPA_CODE = '123456789012';
     const TEST_SURNAME = 'test_surname';
 
     /**
