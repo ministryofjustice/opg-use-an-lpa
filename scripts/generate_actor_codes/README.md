@@ -5,6 +5,7 @@
 - homebrew
 - python
 - direnv
+- jq: https://stedolan.github.io/jq/
 - aws-vault, with your credentials set up : <https://github.com/99designs/aws-vault>
 - you may need to refer to the onboarding instructions for AWS if you do not have an aws identity set up: <https://ministryofjustice.github.io/opg-new-starter/amazon.html>
 
@@ -27,11 +28,6 @@ The script uses your IAM user credentials to assume the appropriate role.
 You can provide the script credentials using aws-vault.
 The environment is the first part of the url e.g. demo or ULM222xyz for example.
 
-**IMPORTANT** when generating actor codes, they need to be sent to the requesting person securely, either using:
-
-- Keybase
-- Password encrypted zip file, and password sent on a separate communication method.
-
 ``` shell
 aws-vault exec identity -- python ./generate_actor_codes.py <environment> <comma separated lpa uids, no spaces>
 ```
@@ -47,23 +43,22 @@ Streaming logs for logstream:
 timestamp: 1588688690503: message:<json_output>
 ```
 
-Copy the json_output from the code generator logs output and push it into a file
+Copy the `<json_output>` from the code generator logs output and push it into a file
 
 ``` shell
 FILENAME=activation_codes_$(date +%Y%m%d)
 mkdir -p /tmp/$FILENAME
-echo '<json_output>' | jq > /tmp/$FILENAME/$FILENAME.txt
+echo '<json_output>' | jq -f transform-lpa-json.jq > /tmp/$FILENAME/$FILENAME.txt
 ```
 
-The preference for the recipient is that the json in the text file is formatted slightly differently than as returned by the code generator.
-
+Please check the resulting  file in `/tmp/$FILENAME/$FILENAME.txt` has the following:
 - All Sirius case numbers should be split with hyphen into 3 groups of 4. e.g `7xxx-xxxx-xxxx`
 - All actor codes should be split with a space into 3 groups of 4. e.g `ABC1 D2E3 FG4H`
 
-Then create an encrypted disk image, copy the file into it and clean up. The script will prompt for a password to create and to open the disk image.
+Then create an encrypted disk image using the script below. The script will prompt for a password to create and to open the disk image.
 
 ``` shell
 ./make_encrypted_image.sh $FILENAME
 ```
 
-Send the encrypted image to the recipient by email and separately let them know what the password is.
+Send the encrypted image to the recipient by slack or keybase and separately let them know what the password is, e.g. via email.
