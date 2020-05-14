@@ -334,6 +334,8 @@ class UserService
                 // then the current user should not be able to request that email change
                 return false;
             }
+            // TODO: call the cleanup in here using the ID of the  other use whos request ahs expired
+            $this->usersRepository->removeExpiredEmailResetRequests($newEmailExists[0]['Id']);
         }
         return true;
     }
