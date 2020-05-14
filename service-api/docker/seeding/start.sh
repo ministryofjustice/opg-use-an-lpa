@@ -37,7 +37,7 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --endpoint $DYNAMODN_ENDPOINT \
     --global-secondary-indexes \
       IndexName=EmailIndex,KeySchema=["{AttributeName=Email,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}" \
-      IndexName=NewEmailIndex,KeySchema=["{AttributeName=NewEmail,KeyType=HASH}"],Projection="{ProjectionType=KEYS_ONLY}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}" \
+      IndexName=NewEmailIndex,KeySchema=["{AttributeName=NewEmail,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}" \
       IndexName=ActivationTokenIndex,KeySchema=["{AttributeName=ActivationToken,KeyType=HASH}"],Projection="{ProjectionType=KEYS_ONLY}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}" \
       IndexName=PasswordResetTokenIndex,KeySchema=["{AttributeName=PasswordResetToken,KeyType=HASH}"],Projection="{ProjectionType=KEYS_ONLY}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"\
       IndexName=EmailResetTokenIndex,KeySchema=["{AttributeName=EmailResetToken,KeyType=HASH}"],Projection="{ProjectionType=KEYS_ONLY}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"

@@ -63,6 +63,14 @@ interface ActorUsersInterface
     public function getIdByEmailResetToken(string $resetToken): string;
 
     /**
+     * Queries the NewEmail field to see if a user has requested to change their email to that same email
+     *
+     * @param string $newEmail
+     * @return array
+     */
+    public function checkIfEmailResetRequested(string $newEmail): array;
+
+    /**
      * Activate the user account in the database using the token value
      *
      * @param string $activationToken

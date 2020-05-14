@@ -57,7 +57,7 @@ resource "aws_dynamodb_table" "actor_users_table" {
   global_secondary_index {
     name            = "NewEmailIndex"
     hash_key        = "NewEmail"
-    projection_type = "KEYS_ONLY"
+    projection_type = "ALL"
   }
   global_secondary_index {
     name            = "ActivationTokenIndex"

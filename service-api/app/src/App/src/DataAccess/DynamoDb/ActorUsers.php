@@ -106,6 +106,27 @@ class ActorUsers implements ActorUsersInterface
         return array_pop($usersData);
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function checkIfEmailResetRequested(string $newEmail): array
+    {
+        $marshaler = new Marshaler();
+
+        $result = $this->client->query([
+            'TableName' => $this->actorUsersTable,
+            'IndexName' => 'NewEmailIndex',
+            'KeyConditionExpression' => 'NewEmail = :newEmail',
+            'ExpressionAttributeValues' => $marshaler->marshalItem([
+                ':newEmail' => $newEmail,
+            ]),
+        ]);
+
+        $usersData = $this->getDataCollection($result);
+
+        return $usersData;
+    }
+
     public function getIdByPasswordResetToken(string $resetToken): string
     {
         $marshaler = new Marshaler();

@@ -301,7 +301,41 @@ class UserService
         $resetToken = Base64UrlSafe::encode(random_bytes(32));
         $resetExpiry = time() + (60 * 60 * 48);
 
-        return $this->usersRepository->recordChangeEmailRequest($userId, $newEmail, $resetToken, $resetExpiry);
+        if ($this->canRequestChangeEmail($userId, $newEmail)) {
+            return $this->usersRepository->recordChangeEmailRequest($userId, $newEmail, $resetToken, $resetExpiry);
+        }
+
+        throw new ConflictException(
+            'Another user has already requested to change their email address to ' . $newEmail,
+            ['email' => $newEmail]
+        );
+    }
+
+    /**
+     * Checks if the new email chosen has already been requested for reset
+     *
+     * @param string $userId
+     * @param $newEmail
+     * @return bool
+     * @throws Exception
+     */
+    public function canRequestChangeEmail(string $userId, $newEmail)
+    {
+        $newEmailExists = $this->usersRepository->checkIfEmailResetRequested($newEmail);
+
+        //checks if the new email chosen has already been requested for reset
+        if (!empty($newEmailExists)) {
+            if ($userId === $newEmailExists[0]['Id']) {
+                // if it is the current user who requested that new email
+                // then it can be overridden with the email chosen for this reset
+                return true;
+            } elseif (new DateTime('@' . $newEmailExists[0]['EmailResetExpiry']) >= new DateTime('now')) {
+                // if the reset request has not expired for that other user,
+                // then the current user should not be able to request that email change
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
