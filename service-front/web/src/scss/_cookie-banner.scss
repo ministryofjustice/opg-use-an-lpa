@@ -1,9 +1,9 @@
+.global-cookie-message__show {
+  display: block !important;
+}
+
 .global-cookie-message {
   display: none;
-
-  > .global-cookie-message__show {
-    display: block;
-  }
 
   .global-cookie-message__text {
     font-size: 19px;
@@ -16,7 +16,6 @@
   }
 
   .global-cookie-message__button {
-    @include button($button-colour);
     margin-right: 15px;
   }
 }

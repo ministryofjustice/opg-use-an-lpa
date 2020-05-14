@@ -7,11 +7,10 @@ import disableButtonOnClick from './javascript/disableButtonOnClick';
 import copyAccessCode from './javascript/copyAccessCode';
 import cookieConsent from './javascript/cookieConsent';
 
-require('../')
-
 initAll();
 
 jsEnabled(document.body);
 disableButtonOnClick(document.getElementsByTagName('form'));
+new cookieConsent(document.getElementsByClassName('cookie-banner')[0]);
 copyAccessCode(document.getElementById("copybutton"));
-cookieConsent(document.getElementsByClassName('.global-cookie-message')[0]);
+
