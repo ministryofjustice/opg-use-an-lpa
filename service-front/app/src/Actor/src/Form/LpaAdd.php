@@ -65,15 +65,6 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         ],
                     ],
                     [
-                        'name'    => StringLength::class,
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min'      => 12,
-                            'max'      => 22,
-                            'message'  => 'Your activation key must be 12 numbers and letters long',
-                        ],
-                    ],
-                    [
                         'name'    => Regex::class,
                         'options' => [
                             'pattern' => "/(^[cC]?|^)(?'dash' |-|){0,6}[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}$/",
