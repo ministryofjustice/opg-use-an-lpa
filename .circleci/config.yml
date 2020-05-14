@@ -24,7 +24,7 @@ workflows:
           cron: "0 0,2,4,6,8,10,12,14,16,18,20,22 * * 0-6" # every 2 hours from midnight
           filters:
             branches:
-              ignore:
+              only:
                 - master
     jobs:
       - workspace_cleanup:
