@@ -422,4 +422,23 @@ class ViewerContext implements Context
         $this->ui->clickLink('I want to check another LPA');
         $this->iGiveAValidLPAShareCode();
     }
+
+    /**
+     * @Given /^I waited too long to enter the share code$/
+     */
+    public function iWaitedTooLongToEnterTheShareCode()
+    {
+        $this->ui->getSession()->setCookie('session', null);
+    }
+
+    /**
+     * @Then /^I have an error message informing me to try again\.$/
+     */
+    public function iHaveAnErrorMessageInformingMeToTryAgain()
+    {
+        $this->iAmTakenBackToTheEnterCodePage();
+        $this->ui->assertPageContainsText("Do you want to continue?" .
+    " You have not used this service for 30 minutes." .
+    " Click continue to use any details you entered");
+    }
 }
