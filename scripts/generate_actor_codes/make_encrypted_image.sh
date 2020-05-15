@@ -10,7 +10,7 @@ function make_encrypted_image() {
 
   hdiutil create -fs HFS+ -encryption AES-256 -srcfolder ${folder} -volname codes-${date} ${2}/codes-${date}.dmg
 
-  rm -R /tmp/codes-${date}
+  rm -R $folder
 }
 
 read JSON
