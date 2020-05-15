@@ -43,22 +43,20 @@ Streaming logs for logstream:
 timestamp: 1588688690503: message:<json_output>
 ```
 
-Copy the `<json_output>` from the code generator logs output and push it into a file
+Copy the `<json_output>` from the code generator logs output and create the encrypted file
 
 ``` shell
-FILENAME=activation_codes_$(date +%Y%m%d)
-mkdir -p /tmp/$FILENAME
-echo '<json_output>' | jq -f transform-lpa-json.jq > /tmp/$FILENAME/$FILENAME.txt
+echo "<json_output>" | ./make_encrypted_image.sh <optional_path_to_write_dmg:default $HOME/Desktop>
 ```
 
-Please check the resulting  file in `/tmp/$FILENAME/$FILENAME.txt` has the following:
+You'll be prompted for a password to set
+
+## Optional
+
+Please mount the image (double click and enter password) and verify the `codes.txt` file has the following:
 - All Sirius case numbers should be split with hyphen into 3 groups of 4. e.g `7xxx-xxxx-xxxx`
 - All actor codes should be split with a space into 3 groups of 4. e.g `ABC1 D2E3 FG4H`
 
-Then create an encrypted disk image using the script below. The script will prompt for a password to create and to open the disk image.
-
-``` shell
-./make_encrypted_image.sh $FILENAME
-```
+## Finally
 
 Send the encrypted image to the recipient by slack or keybase and separately let them know what the password is, e.g. via email.

@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
+set -euxo pipefail
 
 function make_encrypted_image() {
+  date=$(date '+%Y%m%d')
+  folder=/tmp/codes-${date}
 
-  hdiutil create -size 1024k -fs HFS+ -encryption AES-256 -volname $FILENAME /tmp/$FILENAME/
-  hdiutil mount /tmp/$FILENAME.dmg
-  ditto -rsrcFork /tmp/$FILENAME/$FILENAME.txt /Volumes/$FILENAME
-  hdiutil unmount /Volumes/$FILENAME
-  mv /tmp/$FILENAME.dmg ~/Documents/$FILENAME.dmg
-  rm -r /tmp/$FILENAME
+  mkdir -p $folder
+  echo $1 > ${folder}/codes.txt
+
+  hdiutil create -fs HFS+ -encryption AES-256 -srcfolder ${folder} -volname codes-${date} ${2}/codes-${date}.dmg
+
+  rm -R /tmp/codes-${date}
 }
 
-function filecheck() {
-  if [ ! -f "/tmp/$FILENAME/$FILENAME.txt" ]; then
-    echo "file to encrypt is not present, please recreate file"
-    exit 1
-  fi
-}
+read JSON
+DEFAULTOUT="${HOME}/Desktop"
+OUT=${1:-$DEFAULTOUT}
 
-FILENAME=${1:?}
-filecheck
-make_encrypted_image ${1:?}
+make_encrypted_image "$JSON" $OUT
