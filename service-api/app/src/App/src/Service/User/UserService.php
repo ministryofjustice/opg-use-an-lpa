@@ -302,8 +302,21 @@ class UserService
         $resetExpiry = time() + (60 * 60 * 48);
 
         if ($this->canRequestChangeEmail($userId, $newEmail)) {
-            return $this->usersRepository->recordChangeEmailRequest($userId, $newEmail, $resetToken, $resetExpiry);
+            $data = $this->usersRepository->recordChangeEmailRequest($userId, $newEmail, $resetToken, $resetExpiry);
+
+            $this->logger->info(
+                'Change email request for account with Id {id} was successful',
+                ['id' => $userId]
+            );
+
+            return $data;
         }
+
+        $this->logger->notice(
+            'Could not request email change for account with Id {id}
+            as another user has already requested to change their email that email address',
+            ['id' => $userId]
+        );
 
         throw new ConflictException(
             'Another user has already requested to change their email address to ' . $newEmail,
@@ -337,6 +350,15 @@ class UserService
             // since the other user's token has expired, the current user can request the new email change
             // and the other user will have their email reset data removed
             $this->usersRepository->removeExpiredEmailResetRequests($newEmailExists[0]['Id']);
+
+            $this->logger->info(
+                'Change email token for account Id {id1} has expired and been removed
+                 as another account id {id2} has requested the same email change',
+                [
+                    'id1' => $newEmailExists[0]['Id'],
+                    'id2' => $userId,
+                ]
+            );
         }
         return true;
     }

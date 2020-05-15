@@ -254,10 +254,29 @@ class UserService implements UserRepositoryInterface
                 'password'      => $password
             ]);
 
-            return $data;
+            if (!is_null($data) && isset($data['EmailResetToken'])) {
+                $this->logger->info(
+                    'Account with Id {id} has requested a email reset',
+                    [
+                        'id' => $data['Id']
+                    ]
+                );
+
+                return $data;
+            }
         } catch (ApiException $ex) {
+            $this->logger->notice(
+                'Failed to request email change for account with Id {id} with code {code}',
+                [
+                    'id'    => $userId,
+                    'code'  => $ex->getCode()
+                ]
+            );
+
             throw $ex;
         }
+
+        throw new RuntimeException('Error whilst requesting email reset token', 500);
     }
 
     public function canResetEmail(string $token): bool
