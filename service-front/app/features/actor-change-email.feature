@@ -10,10 +10,6 @@ Feature: Change email
     And I am on the change email page
 
   @ui
-  Scenario Outline: The user cannot change their email address because their password is incorrect
-    Given I request to change my email with invalid credentials of <email> <password>
-    Then I should be told that I could not change my email because <reason>
-
-    Examples:
-    | email          | password   | reason                           |
-    | test@test.com  | inCorr3ct  | Your password is incorrect       |
+  Scenario: The user cannot change their email address because their password is incorrect
+    Given I request to change my email with an incorrect password
+    Then I should be told that I could not change my email because my password is incorrect

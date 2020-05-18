@@ -2784,9 +2784,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I request to change my email with invalid credentials of (.*) (.*)$/
+     * @Given /^I request to change my email with an incorrect password$/
      */
-    public function iRequestToChangeMyEmailWithInvalidCredentialsOf($email, $password)
+    public function iRequestToChangeMyEmailWithAnIncorrectPassword()
     {
         $this->ui->assertPageAddress('/change-email');
 
@@ -2804,16 +2804,18 @@ class AccountContext implements Context
                 }
             );
 
-        $this->ui->fillField('new_email_address', $email);
-        $this->ui->fillField('current_password', $password);
+        $this->ui->fillField('new_email_address', 'test@test.com');
+        $this->ui->fillField('current_password', 'inC0rr3ct');
         $this->ui->pressButton('Save new email address');
     }
 
     /**
-     * @Then /^I should be told that I could not change my email because (.*)$/
+     * @Then /^I should be told that I could not change my email because my password is incorrect$/
      */
-    public function iShouldBeToldThatICouldNotChangeMyEmailBecause($reason)
+    public function iShouldBeToldThatICouldNotChangeMyEmailBecauseMyPasswordIsIncorrect()
     {
-        $this->ui->assertPageContainsText($reason);
+        $this->ui->assertPageContainsText('Your password is incorrect');
     }
+
+
 }
