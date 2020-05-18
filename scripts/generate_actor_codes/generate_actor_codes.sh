@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-set -eo pipefail
+set -euo pipefail
 if [[ "$#" -lt 2 ]]
 then
     echo 'requires arguments: generate_actor_codes.sh <environment-name> <comma-separated-lpa-ids>';
