@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-
+set -euo pipefail
 function make_encrypted_image() {
 
-  hdiutil create -srcfolder /tmp/$FILENAME/ -fs HFS+ -encryption AES-256 -volname $FILENAME  /tmp/$FILENAME/
-  hdiutil mount /tmp/$FILENAME.dmg
-  ditto -rsrcFork /tmp/$FILENAME/$FILENAME.txt /Volumes/$FILENAME
-  hdiutil unmount /Volumes/$FILENAME
-  mv /tmp/$FILENAME.dmg ~/Documents/$FILENAME.dmg
+  hdiutil create -srcfolder /tmp/$FILENAME/ -fs HFS+ -encryption AES-256 -volname $FILENAME  ~/Documents/$FILENAME.dmg
   rm -r /tmp/$FILENAME
 }
 
