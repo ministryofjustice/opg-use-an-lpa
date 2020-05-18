@@ -2784,7 +2784,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I request to change my email with an incorrect password$/
+     * @When /^I request to change my email with an incorrect password$/
      */
     public function iRequestToChangeMyEmailWithAnIncorrectPassword()
     {
@@ -2801,7 +2801,7 @@ class AccountContext implements Context
                 }
             );
 
-        $this->ui->fillField('new_email_address', 'test@test.com');
+        $this->ui->fillField('new_email_address', 'newEmail@test.com');
         $this->ui->fillField('current_password', 'inC0rr3ct');
         $this->ui->pressButton('Save new email address');
     }
@@ -2815,7 +2815,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I request to change my email to an invalid email$/
+     * @When /^I request to change my email to an invalid email$/
      */
     public function iRequestToChangeMyEmailToAnInvalidEmail()
     {
@@ -2832,5 +2832,35 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('Enter a valid email address');
     }
 
+    /**
+     * @When /^I request to change my email to the same email of my account currently$/
+     */
+    public function iRequestToChangeMyEmailToTheSameEmailOfMyAccountCurrently()
+    {
+        $this->apiFixtures->patch('/v1/request-change-email')
+            ->respondWith(
+                new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([]))
+            ) ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('user-id', $params);
+                    assertArrayHasKey('new-email', $params);
+                    assertArrayHasKey('password', $params);
+                }
+            );
+
+        $this->ui->fillField('new_email_address', 'test@test.com');
+        $this->ui->fillField('current_password', 'pa33w0rd');
+        $this->ui->pressButton('Save new email address');
+    }
+
+    /**
+     * @Then /^I should be told that I could not change my email because the email is the same as my current email$/
+     */
+    public function iShouldBeToldThatICouldNotChangeMyEmailBecauseTheEmailIsTheSameAsMyCurrentEmail()
+    {
+        $this->ui->assertPageContainsText('Your new email address must be different to your current email address');
+    }
 
 }

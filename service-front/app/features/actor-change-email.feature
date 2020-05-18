@@ -7,14 +7,21 @@ Feature: Change email
   Background:
     Given I am a user of the lpa application
     And I am currently signed in
-    And I am on the change email page
 
   @ui
   Scenario: The user cannot change their email address because their password is incorrect
-    Given I request to change my email with an incorrect password
+    Given I am on the change email page
+    When I request to change my email with an incorrect password
     Then I should be told that I could not change my email because my password is incorrect
 
   @ui
   Scenario: The user cannot change their email address because the email is invalid
-    Given I request to change my email to an invalid email
+    Given I am on the change email page
+    When I request to change my email to an invalid email
     Then I should be told that I could not change my email because the email is invalid
+
+  @ui
+  Scenario: The user cannot change their email address to the same email they have currently
+    Given I am on the change email page
+    When I request to change my email to the same email of my account currently
+    Then I should be told that I could not change my email because the email is the same as my current email
