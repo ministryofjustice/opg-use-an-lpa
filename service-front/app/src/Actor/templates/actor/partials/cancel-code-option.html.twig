@@ -7,6 +7,9 @@
                         {{ govuk_form_element(code.form.get('lpa_token')) }}
                         {{ govuk_form_element(code.form.get('viewer_code')) }}
                         {{ govuk_form_element(code.form.get('organisation')) }}
+
+                        <button data-prevent-double-click="true" type="submit" class="org-cancel govuk-body lpa-account-delete">Cancel organisation's access</button>
+
                 </div>
             {{ govuk_form_close() }}
             </div>
