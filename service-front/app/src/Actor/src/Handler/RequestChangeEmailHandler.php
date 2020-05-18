@@ -94,34 +94,34 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                 $newEmail = $formData['new_email_address'];
                 $password = $formData['current_password'];
 
-                try {
-                    $data = $this->userService->requestChangeEmail($user->getIdentity(), $newEmail, $password);
+                if ($newEmail === $user->getDetails()['Email']) {
+                    $form->addErrorMessage(ChangeEmail::NEW_EMAIL_NOT_DIFFERENT, 'new_email_address');
+                } else {
+                    try {
+                        $data = $this->userService->requestChangeEmail($user->getIdentity(), $newEmail, $password);
 
-                    $verifyNewEmailPath = $this->urlHelper->generate('verify-new-email', [
-                        'token' => $data['EmailResetToken'],
-                    ]);
+                        $verifyNewEmailPath = $this->urlHelper->generate('verify-new-email', [
+                            'token' => $data['EmailResetToken'],
+                        ]);
 
-                    $verifyNewEmailUrl = $this->serverUrlHelper->generate($verifyNewEmailPath);
+                        $verifyNewEmailUrl = $this->serverUrlHelper->generate($verifyNewEmailPath);
 
-                    //$this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email'], $data['NewEmail']);
+                        //$this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email'], $data['NewEmail']);
 
-                    //$this->emailClient->sendRequestChangeEmailToNewEmail($data['NewEmail'], $verifyNewEmailUrl);
+                        //$this->emailClient->sendRequestChangeEmailToNewEmail($data['NewEmail'], $verifyNewEmailUrl);
 
-                    // log the user out before redirecting them to the login page
-                    $session = $this->getSession($request, 'session');
-                    $session->unset(UserInterface::class);
-                    $session->regenerate();
+                        // log the user out before redirecting them to the login page
+                        $session = $this->getSession($request, 'session');
+                        $session->unset(UserInterface::class);
+                        $session->regenerate();
 
-                    return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
-                        'newEmail' => $newEmail
-                    ]));
-                } catch (ApiException $ex) {
-                    if ($ex->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
-                        $form->addErrorMessage(ChangeEmail::INVALID_PASSWORD, 'current_password');
-                    } elseif ($ex->getCode() === StatusCodeInterface::STATUS_CONFLICT) {
-                        if ($user->getDetails()['Email'] === $newEmail) {
-                            $form->addErrorMessage(ChangeEmail::NEW_EMAIL_NOT_DIFFERENT, 'new_email_address');
-                        } else {
+                        return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
+                            'newEmail' => $newEmail
+                        ]));
+                    } catch (ApiException $ex) {
+                        if ($ex->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
+                            $form->addErrorMessage(ChangeEmail::INVALID_PASSWORD, 'current_password');
+                        } elseif ($ex->getCode() === StatusCodeInterface::STATUS_CONFLICT) {
                             $form->addErrorMessage(ChangeEmail::NEW_EMAIL_CONFLICT, 'new_email_address');
                         }
                     }

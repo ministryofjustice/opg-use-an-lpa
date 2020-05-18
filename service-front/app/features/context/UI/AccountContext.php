@@ -2837,19 +2837,6 @@ class AccountContext implements Context
      */
     public function iRequestToChangeMyEmailToTheSameEmailOfMyAccountCurrently()
     {
-        $this->apiFixtures->patch('/v1/request-change-email')
-            ->respondWith(
-                new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([]))
-            ) ->inspectRequest(
-                function (RequestInterface $request, array $options) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('user-id', $params);
-                    assertArrayHasKey('new-email', $params);
-                    assertArrayHasKey('password', $params);
-                }
-            );
-
         $this->ui->fillField('new_email_address', 'test@test.com');
         $this->ui->fillField('current_password', 'pa33w0rd');
         $this->ui->pressButton('Save new email address');
@@ -2865,7 +2852,7 @@ class AccountContext implements Context
 
     /**
      * @When /^I request to change my email to an email address that is taken by another user on the service$/
-     * @When /^I request to change my email to an email address that another user has requested to change their email to this and token has not expired$/
+     * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has not expired$/
      */
     public function iRequestToChangeMyEmailToAnEmailAddressThatIsTakenByAnotherUserOnTheService()
     {
@@ -2893,5 +2880,50 @@ class AccountContext implements Context
     public function iShouldBeToldThatICouldNotChangeMyEmailAsTheirWasAProblemWithTheRequest()
     {
         $this->ui->assertPageContainsText('Sorry, there was a problem with that request. Please try a different email');
+    }
+
+    /**
+     * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has expired$/
+     * @When /^I request to change my email to a unique email address$/
+     */
+    public function iRequestToChangeMyEmailToAnEmailAddressThatAnotherUserHasRequestedToChangeTheirEmailToButTheirTokenHasExpired()
+    {
+        $this->apiFixtures->patch('/v1/request-change-email')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        "EmailResetExpiry" => 1589983070,
+                        "Email"            => $this->userEmail,
+                        "LastLogin"        => null,
+                        "Id"               => $this->userId,
+                        "NewEmail"         => 'newEmail@test.com',
+                        "EmailResetToken"  => "re3eTt0k3N",
+                        "Password"         => $this->userPassword,
+                    ])
+                )
+            );
+
+        $this->ui->fillField('new_email_address', 'newEmail@test.com');
+        $this->ui->fillField('current_password', 'pa33w0rd');
+        $this->ui->pressButton('Save new email address');
+    }
+
+    /**
+     * @Then /^I should be logged out$/
+     */
+    public function iShouldBeLoggedOut()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I should be told that my request was successful$/
+     */
+    public function iShouldBeToldThatMyRequestWasSuccessful()
+    {
+        $this->ui->assertPageContainsText('Change email request successful');
+        $this->ui->assertPageContainsText('We\'ve emailed a link to newEmail@test.com');
     }
 }

@@ -16,6 +16,7 @@ use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
+use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Http\Message\RequestInterface;
 use DateTime;
 
@@ -182,7 +183,8 @@ class AccountContext extends BaseIntegrationContext
                         [
                             'Id'                 => '123',
                             'PasswordResetToken' => $this->userPasswordResetToken
-                        ])
+                        ]
+                    )
                 )
             );
 
@@ -204,7 +206,7 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(function (RequestInterface $request, array $options)
-            use ($expectedUrl, $expectedTemplateId) {
+ use ($expectedUrl, $expectedTemplateId) {
                 $requestBody = $request->getBody()->getContents();
 
                 assertContains($this->userPasswordResetToken, $requestBody);
@@ -367,7 +369,8 @@ class AccountContext extends BaseIntegrationContext
                         [
                             'Id'              => '123',
                             'activationToken' => $this->activationToken
-                        ])
+                        ]
+                    )
                 )
             );
 
@@ -512,7 +515,7 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(function (RequestInterface $request, array $options)
-            use ($expectedUrl, $expectedTemplateId) {
+ use ($expectedUrl, $expectedTemplateId) {
                 $requestBody = $request->getBody()->getContents();
 
                 assertContains($this->activationToken, $requestBody);
@@ -541,10 +544,14 @@ class AccountContext extends BaseIntegrationContext
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
-                    [], json_encode(
+                    [],
+                    json_encode(
                         [
                             'activation_token' => $this->activationToken
-                        ])))
+                        ]
+                    )
+                )
+            )
 
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $query = $request->getUri()->getQuery();
@@ -649,8 +656,9 @@ class AccountContext extends BaseIntegrationContext
                             'date' => 'date',
                             'lpa' => $this->lpa,
                             'actor' => $this->lpaData['actor']
-                        ]
-                    )));
+                        ])
+                )
+            );
     }
 
     /**
@@ -684,7 +692,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to make code
         $this->apiFixtures->post('/v1/lpas/' . $this->actorLpaToken . '/codes')
@@ -696,9 +706,9 @@ class AccountContext extends BaseIntegrationContext
                             'code' => $this->accessCode,
                             'expires' => '2021-03-07T23:59:59+00:00',
                             'organisation' => $this->organisation
-                        ]
-                    )
-                ));
+                        ])
+                )
+            );
 
         // API call for get LpaById
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
@@ -711,7 +721,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
     }
 
     /**
@@ -755,7 +767,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to make code
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
@@ -774,9 +788,9 @@ class AccountContext extends BaseIntegrationContext
                                 'Viewed' => false,
                                 'ActorId' => $this->actorId
                             ]
-                        ]
-                    )
-                ));
+                        ])
+                )
+            );
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
@@ -853,7 +867,9 @@ class AccountContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $this->viewerCodeService->cancelShareCode(
             $this->userIdentity,
@@ -872,7 +888,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
@@ -894,7 +912,9 @@ class AccountContext extends BaseIntegrationContext
                             'Viewed' => false,
                             'ActorId' => $this->actorId
                         ]
-                    ])));
+                    ])
+                )
+            );
 
         $shareCodes = $this->viewerCodeService->getShareCodes(
             $this->userIdentity,
@@ -982,7 +1002,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
@@ -1005,7 +1027,9 @@ class AccountContext extends BaseIntegrationContext
                             'Viewed' => false,
                             'ActorId' => $this->actorId
                         ]
-                    ])));
+                    ])
+                )
+            );
 
         $shareCodes = $this->viewerCodeService->getShareCodes(
             $this->userIdentity,
@@ -1027,7 +1051,7 @@ class AccountContext extends BaseIntegrationContext
     /**
      * @Then /^I should be shown the details of the expired viewer code with expired status $/
      */
-    public function iShouldBeShownTheDetailsOfTheExpiredViewerCodeWithExpiredStatus ()
+    public function iShouldBeShownTheDetailsOfTheExpiredViewerCodeWithExpiredStatus()
     {
         // Not needed for this context
     }
@@ -1078,7 +1102,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to make code
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
@@ -1097,9 +1123,9 @@ class AccountContext extends BaseIntegrationContext
                                 'Viewed' => false,
                                 'ActorId' => $this->actorId
                             ]
-                        ]
-                    )
-                ));
+                        ])
+                )
+            );
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
@@ -1114,8 +1140,8 @@ class AccountContext extends BaseIntegrationContext
         assertEquals($this->actorLpaToken, $shareCodes[0]['UserLpaActor']);
         assertEquals(false, $shareCodes[0]['Viewed']);
         //check if the code expiry date is in the past
-        assertGreaterThan(strtotime($shareCodes[0]['Expires']),strtotime((new DateTime('now'))->format('Y-m-d')));
-        assertGreaterThan(strtotime($shareCodes[0]['Added']),strtotime($shareCodes[0]['Expires']));
+        assertGreaterThan(strtotime($shareCodes[0]['Expires']), strtotime((new DateTime('now'))->format('Y-m-d')));
+        assertGreaterThan(strtotime($shareCodes[0]['Added']), strtotime($shareCodes[0]['Expires']));
     }
 
     /**
@@ -1134,7 +1160,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to make code
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
@@ -1163,9 +1191,9 @@ class AccountContext extends BaseIntegrationContext
                                 'Viewed'       => false,
                                 'ActorId'      => $this->actorId
                             ]
-                        ]
-                    )
-                ));
+                        ])
+                )
+            );
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
@@ -1181,7 +1209,6 @@ class AccountContext extends BaseIntegrationContext
         assertEquals(false, $shareCodes[0]['Viewed']);
 
         assertEquals("ABC321ABCXYZ", $shareCodes[1]['ViewerCode']);
-
     }
 
     /**
@@ -1241,7 +1268,9 @@ class AccountContext extends BaseIntegrationContext
                     json_encode([
                         0 => $code1,
                         1 => $code2
-                    ])));
+                    ])
+                )
+            );
 
         $lpa = $this->lpaService->getLpas($this->userIdentity);
 
@@ -1276,7 +1305,9 @@ class AccountContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $lpa = $this->lpaService->getLpas($this->userIdentity);
 
@@ -1313,7 +1344,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to make code
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
@@ -1322,7 +1355,8 @@ class AccountContext extends BaseIntegrationContext
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode([])
-                ));
+                )
+            );
 
         $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
 
@@ -1378,7 +1412,7 @@ class AccountContext extends BaseIntegrationContext
 
         $this->apiFixtures->patch('/v1/change-password')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(function(RequestInterface $request, array $options) use ($expectedPassword) {
+            ->inspectRequest(function (RequestInterface $request, array $options) use ($expectedPassword) {
                 $params = json_decode($request->getBody()->getContents(), true);
 
                 assertInternalType('array', $params);
@@ -1405,7 +1439,7 @@ class AccountContext extends BaseIntegrationContext
 
         $this->apiFixtures->patch('/v1/change-password')
             ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])))
-            ->inspectRequest(function(RequestInterface $request, array $options) use ($expectedPassword) {
+            ->inspectRequest(function (RequestInterface $request, array $options) use ($expectedPassword) {
                 $params = json_decode($request->getBody()->getContents(), true);
 
                 assertInternalType('array', $params);
@@ -1462,7 +1496,7 @@ class AccountContext extends BaseIntegrationContext
                 'Password'  => $this->userPassword,
                 'LastLogin' => null
             ])))
-            ->inspectRequest(function(RequestInterface $request) use ($userId) {
+            ->inspectRequest(function (RequestInterface $request) use ($userId) {
                 $uri = $request->getUri()->getPath();
 
                 assertEquals($uri, '/v1/delete-account/123');
@@ -1480,4 +1514,49 @@ class AccountContext extends BaseIntegrationContext
         // Not needed for this context
     }
 
+    /**
+     * @Given /^I am on the change email page$/
+     */
+    public function iAmOnTheChangeEmailPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to change my email with an incorrect password$/
+     */
+    public function iRequestToChangeMyEmailWithAnIncorrectPassword()
+    {
+        $newEmail = 'newEmail@test.com';
+
+        $this->apiFixtures->patch('/v1/request-change-email')
+            ->respondWith(
+                new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([]))
+            ) ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('user-id', $params);
+                    assertArrayHasKey('new-email', $params);
+                    assertArrayHasKey('password', $params);
+                }
+            );
+
+        try {
+            $this->userService->requestChangeEmail($this->userIdentity, $newEmail, $this->userPassword);
+        } catch (ApiException $aex) {
+            assertEquals(403, $aex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('Forbidden exception was not thrown for incorrect password');
+    }
+
+    /**
+     * @Then /^I should be told that I could not change my email because my password is incorrect$/
+     */
+    public function iShouldBeToldThatICouldNotChangeMyEmailBecauseMyPasswordIsIncorrect()
+    {
+        // Not needed for this context
+    }
 }
