@@ -1,8 +1,10 @@
 #!/usr/bin/env sh
+set -euxo pipefail
 if [[ "$#" -lt 2 ]]
 then
     echo 'requires arguments: generate_actor_codes.sh <environment-name> <comma-separated-lpa-ids>';
 else
+
     LPAENV=$1
     shift
 
@@ -42,8 +44,9 @@ else
         echo "/tmp/${FILENAME}/${FILENAME}.txt generated."
         echo "Contents for checking:"
         cat /tmp/${FILENAME}/${FILENAME}.txt
+        echo "removing intermediate file..."
+        rm /tmp/${FILENAME}/${FILENAME}.log
     else
          echo "generate actor codes script aborted."
     fi
-
 fi
