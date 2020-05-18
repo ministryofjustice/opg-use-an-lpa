@@ -25,3 +25,9 @@ Feature: Change email
     Given I am on the change email page
     When I request to change my email to the same email of my account currently
     Then I should be told that I could not change my email because the email is the same as my current email
+
+  @ui
+  Scenario: The user cannot change their email address because the email chosen belongs to another user on the service
+    Given I am on the change email page
+    When I request to change my email to an email address that is taken by another user on the service
+    Then I should be told that I could not change my email as their was a problem with the request

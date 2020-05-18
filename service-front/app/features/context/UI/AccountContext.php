@@ -2863,4 +2863,36 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('Your new email address must be different to your current email address');
     }
 
+    /**
+     * @When /^I request to change my email to an email address that is taken by another user on the service$/
+     */
+    public function iRequestToChangeMyEmailToAnEmailAddressThatIsTakenByAnotherUserOnTheService()
+    {
+        $this->apiFixtures->patch('/v1/request-change-email')
+            ->respondWith(
+                new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([]))
+            ) ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('user-id', $params);
+                    assertArrayHasKey('new-email', $params);
+                    assertArrayHasKey('password', $params);
+                }
+            );
+
+        $this->ui->fillField('new_email_address', 'newEmail@test.com');
+        $this->ui->fillField('current_password', 'pa33w0rd');
+        $this->ui->pressButton('Save new email address');
+    }
+
+    /**
+     * @Then /^I should be told that I could not change my email as their was a problem with the request$/
+     */
+    public function iShouldBeToldThatICouldNotChangeMyEmailAsTheirWasAProblemWithTheRequest()
+    {
+        $this->ui->assertPageContainsText('Sorry, there was a problem with that request. Please try a different email');
+    }
+
+
 }
