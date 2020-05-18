@@ -61,7 +61,10 @@ removing intermediate file...
 
 note `${FILENAME}` is in the format `activation_codes_YYYYMMDD`.
 
-The script will then prompt for a password to create and to open the disk image.
+The script will then prompt for and renter a password to create the disk image.
 This is copied to your`Documents` folder in a disk image named `${FILENAME}.dmg`.
-Send the encrypted image to the recipient by Slack or Keybase
-Separately, let them know what the password is, e.g. via email.
+
+Then:
+
+- Send the encrypted image to the recipient by Slack or Keybase.
+- Separately, let them know what the password is, e.g. via email.
