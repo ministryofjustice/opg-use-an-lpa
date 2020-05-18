@@ -112,7 +112,9 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                     $session->unset(UserInterface::class);
                     $session->regenerate();
 
-                    return $this->redirectToRoute('login');
+                    return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
+                        'newEmail' => $newEmail
+                    ]));
                 } catch (ApiException $ex) {
                     if ($ex->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
                         $form->addErrorMessage(ChangeEmail::INVALID_PASSWORD, 'current_password');

@@ -2865,6 +2865,7 @@ class AccountContext implements Context
 
     /**
      * @When /^I request to change my email to an email address that is taken by another user on the service$/
+     * @When /^I request to change my email to an email address that another user has requested to change their email to this and token has not expired$/
      */
     public function iRequestToChangeMyEmailToAnEmailAddressThatIsTakenByAnotherUserOnTheService()
     {
@@ -2893,6 +2894,4 @@ class AccountContext implements Context
     {
         $this->ui->assertPageContainsText('Sorry, there was a problem with that request. Please try a different email');
     }
-
-
 }

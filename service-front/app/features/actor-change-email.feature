@@ -31,3 +31,16 @@ Feature: Change email
     Given I am on the change email page
     When I request to change my email to an email address that is taken by another user on the service
     Then I should be told that I could not change my email as their was a problem with the request
+
+  @ui
+  Scenario: The user cannot change their email address because another user has requested to change their email to this and token has not expired
+    Given I am on the change email page
+    When I request to change my email to an email address that another user has requested to change their email to this and token has not expired
+    Then I should be told that I could not change my email as their was a problem with the request
+
+  @ui
+  Scenario: The user cannot change their email address because another user has requested to change their email to this but token has expired
+    Given I am on the change email page
+    When I request to change my email to an email address that another user has requested to change their email to this but token has expired
+    Then I should be logged out
+    And I should be told that an email has been sent to my new email address

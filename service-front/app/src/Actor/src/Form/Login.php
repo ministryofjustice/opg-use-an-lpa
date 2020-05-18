@@ -23,18 +23,11 @@ class Login extends AbstractForm implements InputFilterProviderInterface
     const INVALID_LOGIN = 'invalidLogin';
 
     /**
-     * Error codes
-     * @const string
-     */
-    const EMAIL_CHANGE = 'emailChangeRequested';
-
-    /**
      * Error messages
      * @var array
      */
     protected $messageTemplates = [
-        self::INVALID_LOGIN => 'Email and password combination not recognised. Please try signing in again below or create an account',
-        self::EMAIL_CHANGE => 'We have sent an email to the new email you requested. Please follow the instructions to verify and complete the change'
+        self::INVALID_LOGIN => 'Email and password combination not recognised. Please try signing in again below or create an account'
     ];
 
     public function __construct(CsrfGuardInterface $csrfGuard)
