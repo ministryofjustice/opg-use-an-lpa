@@ -14,26 +14,27 @@ declare(strict_types=1);
 
 namespace Common\Service\Session;
 
+use Common\Service\Session\KeyManager\KeyManagerInterface;
+use Common\Service\Session\KeyManager\KeyNotFoundException;
 use DateInterval;
 use DateTimeImmutable;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Common\Service\Session\KeyManager\KeyNotFoundException;
-use Common\Service\Session\KeyManager\KeyManagerInterface;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 use Laminas\Crypt\BlockCipher;
 use Mezzio\Session\Session;
+use Mezzio\Session\SessionCookiePersistenceInterface;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionPersistenceInterface;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class EncryptedCookie
  * @package Common\Service\Session
  */
-class EncryptedCookiePersistence implements SessionPersistenceInterface
+class EncryptedCookiePersistence implements SessionPersistenceInterface, SessionCookiePersistenceInterface
 {
     /**
      * This unusual past date value is taken from the php-engine source code and
@@ -47,6 +48,11 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
      * Key used within the session for the current time
      */
     public const SESSION_TIME_KEY = '__TIME__';
+
+    /**
+     * Key used within the session to flag that it has been reused after expiry
+     */
+    public const SESSION_RECYCLED_KEY = '__RECYCLED__';
 
     /** @var array */
     private const SUPPORTED_CACHE_LIMITERS = [
@@ -80,8 +86,8 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
     /** @var false|string */
     private $lastModified;
 
-    /** @var bool */
-    private $persistent;
+    /** @var int|null */
+    private $cookieTtl;
 
     /**
      * @var KeyManagerInterface
@@ -96,36 +102,27 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
      * @param string $cacheLimiter
      * @param int $sessionExpire
      * @param int|null $lastModified
-     * @param bool $persistent
+     * @param ttl|null $cookie_ttl
      * @param string|null $cookieDomain
      * @param bool $cookieSecure
      * @param bool $cookieHttpOnly
      */
-    public function __construct(KeyManagerInterface $keyManager, string $cookieName, string $cookiePath, string $cacheLimiter, int $sessionExpire, ?int $lastModified, bool $persistent, ?string $cookieDomain, bool $cookieSecure, bool $cookieHttpOnly)
+    public function __construct(KeyManagerInterface $keyManager, string $cookieName, string $cookiePath, string $cacheLimiter, int $sessionExpire, ?int $lastModified, ?int $cookieTtl, ?string $cookieDomain, bool $cookieSecure, bool $cookieHttpOnly)
     {
         $this->keyManager = $keyManager;
-
         $this->cookieName = $cookieName;
-
-        $this->cookieDomain = $cookieDomain;
-
         $this->cookiePath = $cookiePath;
-
-        $this->cookieSecure = $cookieSecure;
-
-        $this->cookieHttpOnly = $cookieHttpOnly;
-
         $this->cacheLimiter = in_array($cacheLimiter, self::SUPPORTED_CACHE_LIMITERS, true)
             ? $cacheLimiter
             : 'nocache';
-
         $this->sessionExpire = $sessionExpire;
-
         $this->lastModified = $lastModified
             ? gmdate(self::HTTP_DATE_FORMAT, $lastModified)
             : $this->determineLastModifiedValue();
-
-        $this->persistent = $persistent;
+        $this->cookieTtl = $cookieTtl;
+        $this->cookieDomain = $cookieDomain;
+        $this->cookieSecure = $cookieSecure;
+        $this->cookieHttpOnly = $cookieHttpOnly;
     }
 
 
@@ -185,7 +182,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         }
 
         // Separate out the key ID and the data
-        list($keyId, $payload) = explode('.', $data, 2);
+        [$keyId, $payload] = explode('.', $data, 2);
 
         try {
             $key = $this->keyManager->getDecryptionKey($keyId);
@@ -215,6 +212,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
         $data = $this->decodeCookieValue($sessionData);
 
+        // responsible the for expiry of a users session
         if (isset($data[self::SESSION_TIME_KEY])) {
             $expiresAt = $data[self::SESSION_TIME_KEY] + $this->sessionExpire;
             if ($expiresAt >= time()) {
@@ -222,8 +220,16 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
             }
         }
 
-        // Fail to an empty session
-        return new Session([]);
+        $newSession = [];
+
+        // if we have values in the session but are here then we have fallen into the gap where the session has expired
+        // but we're still within the cookieTtl amount of time. by setting a recycled flag we'll be able to prompt with
+        // messages such as "You've been logged out due to inactivity".
+        if (count($data) > 0) {
+            $newSession[self::SESSION_RECYCLED_KEY] = true;
+        }
+
+        return new Session($newSession);
     }
 
     public function persistSession(SessionInterface $session, ResponseInterface $response): ResponseInterface
@@ -360,7 +366,28 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         );
     }
 
+    /**
+     * @return int Number of seconds that the cookie should be persisted for
+     */
     private function getPersistenceDuration(): int
+    {
+        return $this->cookieTtl;
+    }
+
+    /**
+     * Allow the setting (after instantiation) of the cookie lifetime
+     *
+     * @param int $duration Number of seconds that the cookie should be persisted for
+     */
+    public function persistSessionFor(int $duration): void
+    {
+        $this->cookieTtl = $duration;
+    }
+
+    /**
+     * @return int Number of seconds that the session lasts for
+     */
+    public function getSessionLifetime(): int
     {
         return $this->sessionExpire;
     }
