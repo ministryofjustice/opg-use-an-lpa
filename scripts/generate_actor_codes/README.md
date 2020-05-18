@@ -59,10 +59,10 @@ Contents for checking:
 removing intermediate file...
 ```
 
-note `${FILENAME}` is in the format `activation_codes_YYYYMMDD`.
+Note: `${FILENAME}` is in the format `activation_codes_YYYYMMDD`.
 
 The script will then prompt for and renter a password to create the disk image.
-This is copied to your`Documents` folder in a disk image named `${FILENAME}.dmg`.
+This is copied to your `Documents` folder in a disk image named `${FILENAME}.dmg`.
 
 Then:
 
