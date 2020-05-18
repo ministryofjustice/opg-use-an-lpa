@@ -279,11 +279,15 @@ class AccountContext implements Context
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
-                    [], json_encode(
+                    [],
+                    json_encode(
                         [
                             'Id'                 => $this->userId,
                             'PasswordResetToken' => '123456'
-                        ])));
+                        ]
+                    )
+                )
+            );
 
         // API call for Notify
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
@@ -350,7 +354,10 @@ class AccountContext implements Context
                     json_encode(
                         [
                             'Id' => '123456'
-                        ])));
+                        ]
+                    )
+                )
+            );
     }
 
     /**
@@ -612,7 +619,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $this->ui->assertPageAddress('/lpa/check');
 
@@ -851,7 +860,10 @@ class AccountContext implements Context
                         [
                             'Id'               => '123',
                             'activation_token' => $this->activationToken,
-                        ])));
+                        ]
+                    )
+                )
+            );
 
         $this->ui->visit('/activate-account/' . $this->activationToken);
     }
@@ -883,7 +895,7 @@ class AccountContext implements Context
     public function iAmToldMyUniqueInstructionsToActivateMyAccountHaveExpired()
     {
         $this->activationToken = 'activate1234567890';
-        $this->ui->assertPageAddress('/activate-account/'. $this->activationToken);
+        $this->ui->assertPageAddress('/activate-account/' . $this->activationToken);
         $this->ui->assertPageContainsText('You created the account more than 24 hours ago');
     }
 
@@ -919,7 +931,7 @@ class AccountContext implements Context
     /**
      * @When /^I have provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
      */
-    public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1,$email2,$password1,$password2,$terms)
+    public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1, $email2, $password1, $password2, $terms)
     {
         $this->ui->assertPageAddress('/create-account');
 
@@ -964,7 +976,7 @@ class AccountContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $value1);
-        $this->ui->fillField('password',  $value1);
+        $this->ui->fillField('password', $value1);
         $this->ui->fillField('password_confirm', $value2);
 
         $this->ui->pressButton('Create account');
@@ -991,7 +1003,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $this->ui->visit('/lpa/dashboard');
 
@@ -1018,7 +1032,9 @@ class AccountContext implements Context
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
                         'actor'                => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         $this->ui->clickLink('View LPA summary');
     }
@@ -1050,11 +1066,13 @@ class AccountContext implements Context
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
                         'actor'                => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         $this->ui->assertPageAddress('lpa/dashboard');
         $this->ui->clickLink('Give an organisation access');
-        $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
+        $this->ui->assertPageAddress('lpa/code-make?lpa=' . $this->userLpaActorToken);
     }
 
     /**
@@ -1077,10 +1095,10 @@ class AccountContext implements Context
                     json_encode([
                             'code' => $this->accessCode,
                             'expires' => '2021-03-07T23:59:59+00:00',
-                            'organisation'=> $this->organisation
-                        ]
-                    )
-                ));
+                            'organisation' => $this->organisation
+                        ])
+                )
+            );
 
         // API call for get LpaById
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
@@ -1093,7 +1111,9 @@ class AccountContext implements Context
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
                         'actor'                => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         $this->ui->fillField('org_name', $this->organisation);
         $this->ui->pressButton('Continue');
@@ -1113,7 +1133,8 @@ class AccountContext implements Context
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode([])
-                ));
+                )
+            );
 
         // API call for get LpaById
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
@@ -1126,7 +1147,9 @@ class AccountContext implements Context
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         $this->ui->fillField('org_name', $organisationname);
         $this->ui->pressButton('Continue');
@@ -1153,7 +1176,6 @@ class AccountContext implements Context
                         'LastLogin' => null,
                     ]
                 )));
-
         } else {
             // API call for authentication
             $this->apiFixtures->patch('/v1/auth')
@@ -1219,7 +1241,9 @@ class AccountContext implements Context
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
                         'actor'                => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to get access codes
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
@@ -1238,9 +1262,9 @@ class AccountContext implements Context
                                 'Viewed'       => false,
                                 'ActorId'      => $this->actorId
                             ]
-                        ]
-                    )
-                ));
+                        ])
+                )
+            );
 
         $this->ui->clickLink('Check access codes');
     }
@@ -1261,7 +1285,9 @@ class AccountContext implements Context
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
                         'actor'                => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to get access codes
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
@@ -1280,9 +1306,9 @@ class AccountContext implements Context
                                 'Viewed'       => false,
                                 'ActorId'      => $this->actorId
                             ]
-                        ]
-                    )
-                ));
+                        ])
+                )
+            );
 
         $this->ui->clickLink('Check access codes');
     }
@@ -1303,7 +1329,9 @@ class AccountContext implements Context
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
                         'actor'                => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to get access codes
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
@@ -1332,9 +1360,9 @@ class AccountContext implements Context
                                 'Viewed'       => false,
                                 'ActorId'      => $this->actorId
                             ]
-                        ]
-                    )
-                ));
+                        ])
+                )
+            );
 
         $this->ui->clickLink('Check access codes');
     }
@@ -1383,7 +1411,7 @@ class AccountContext implements Context
      */
     public function iWantToSeeTheOptionToCancelTheCode()
     {
-        $this->ui->assertPageAddress('/lpa/access-codes?lpa=' .$this->userLpaActorToken);
+        $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
         $this->ui->assertPageContainsText("Cancel organisation's access");
     }
 
@@ -1392,7 +1420,7 @@ class AccountContext implements Context
      */
     public function iCancelTheOrganisationAccessCode()
     {
-        $this->ui->assertPageAddress('/lpa/access-codes?lpa=' .$this->userLpaActorToken);
+        $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
 
         $this->ui->pressButton("Cancel organisation's access");
 
@@ -1423,7 +1451,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         // API call for get LpaById
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
@@ -1436,7 +1466,9 @@ class AccountContext implements Context
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
                         'actor'                => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call for getShareCodes
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
@@ -1456,7 +1488,9 @@ class AccountContext implements Context
                             'Viewed'       => false,
                             'ActorId'      => $this->actorId
                         ]
-                    ])));
+                    ])
+                )
+            );
 
         $this->ui->pressButton("Yes, cancel code");
     }
@@ -1471,21 +1505,20 @@ class AccountContext implements Context
         $session = $this->ui->getSession();
         $page = $session->getPage();
 
-        $codeDetails=[];
+        $codeDetails = [];
 
         $codeSummary = $page->findAll('css', '.govuk-summary-list__row');
-        foreach ($codeSummary as $codeItem)
-        {
+        foreach ($codeSummary as $codeItem) {
             $codeDetails[] = ($codeItem->find('css', 'dd'))->getText();
         }
 
-        assertEquals($codeDetails[0] ,'V - XYZ3 - 21AB - C987');
-        assertEquals($codeDetails[1],'Ian Deputy');
-        assertEquals($codeDetails[2],'Not Viewed');
+        assertEquals($codeDetails[0], 'V - XYZ3 - 21AB - C987');
+        assertEquals($codeDetails[1], 'Ian Deputy');
+        assertEquals($codeDetails[2], 'Not Viewed');
         assertEquals($codeDetails[4], $status);
 
         if ($codeDetails === null) {
-            throw new \Exception( 'Code details not found');
+            throw new \Exception('Code details not found');
         }
     }
 
@@ -1547,7 +1580,9 @@ class AccountContext implements Context
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
                         'actor'                => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call for getShareCodes
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
@@ -1566,10 +1601,11 @@ class AccountContext implements Context
                             'Viewed'       => false,
                             'ActorId'      => $this->actorId,
                         ]
-                    ])));
+                    ])
+                )
+            );
 
         $this->ui->pressButton("No, return to access codes");
-
     }
 
     /**
@@ -1648,7 +1684,9 @@ class AccountContext implements Context
                     json_encode([
                         0 => $code1,
                         1 => $code2
-                    ])));
+                    ])
+                )
+            );
 
         $this->ui->visit('/lpa/dashboard');
 
@@ -1679,7 +1717,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $this->ui->visit('/lpa/dashboard');
 
@@ -1713,7 +1753,9 @@ class AccountContext implements Context
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
                         'actor'                => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to get access codes
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
@@ -1721,7 +1763,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $this->ui->clickLink('Check access codes');
     }
@@ -1742,12 +1786,13 @@ class AccountContext implements Context
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
                         'actor'                => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         $this->ui->clickLink('Give an organisation access');
-        $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
+        $this->ui->assertPageAddress('lpa/code-make?lpa=' . $this->userLpaActorToken);
         $this->ui->assertPageContainsText('Which organisation do you want to give access to');
-
     }
 
     /**
@@ -1796,7 +1841,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
 
         // API call for Notify
@@ -1831,7 +1878,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_FORBIDDEN,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $this->ui->fillField('current_password', 'wrongPassword');
         $this->ui->fillField('new_password', $newPassword);
@@ -1861,7 +1910,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_FORBIDDEN,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->fillField('new_password', $password);
@@ -1939,7 +1990,7 @@ class AccountContext implements Context
     /**
      * @When /^I ask for my password to be reset with below correct (.*) and (.*) details$/
      */
-    public function iAskForMyPasswordToBeResetWithBelowCorrectEmailAndConfirmationEmailDetails($email,$email_confirmation)
+    public function iAskForMyPasswordToBeResetWithBelowCorrectEmailAndConfirmationEmailDetails($email, $email_confirmation)
     {
         $this->ui->assertPageAddress('/forgot-password');
 
@@ -1948,11 +1999,15 @@ class AccountContext implements Context
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
-                    [], json_encode(
-                    [
+                    [],
+                    json_encode(
+                        [
                         'Id'                 => $this->userId,
                         'PasswordResetToken' => '123456'
-                    ])));
+                        ]
+                    )
+                )
+            );
 
         // API call for Notify
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
@@ -1982,13 +2037,13 @@ class AccountContext implements Context
     public function iReceiveUniqueInstructionsOnHowToResetMyPasswordToMyProvidedEmail($email)
     {
         $this->ui->assertPageAddress('/forgot-password');
-        $this->ui->assertPageContainsText('emailed a link to ' .strtolower($email));
+        $this->ui->assertPageContainsText('emailed a link to ' . strtolower($email));
     }
 
     /**
      * @When /^I ask for my password to be reset with below incorrect (.*) and (.*) details$/
      */
-    public function iAskForMyPasswordToBeResetWithBelowInCorrectEmailAndConfirmationEmailDetails($email,$email_confirmation)
+    public function iAskForMyPasswordToBeResetWithBelowInCorrectEmailAndConfirmationEmailDetails($email, $email_confirmation)
     {
         $this->ui->assertPageAddress('/forgot-password');
 
@@ -1997,7 +2052,10 @@ class AccountContext implements Context
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_FORBIDDEN,
-                    [], json_encode([])));
+                    [],
+                    json_encode([])
+                )
+            );
 
         $this->ui->fillField('email', $email);
         $this->ui->fillField('email_confirm', $email_confirmation);
@@ -2016,7 +2074,7 @@ class AccountContext implements Context
     /**
      * @Then /^An account is created using (.*)(.*)(.*)(.*)$/
      */
-    public function anAccountIsCreatedUsingEmail1Password1Password2Terms($email1,$password1,$password2,$terms)
+    public function anAccountIsCreatedUsingEmail1Password1Password2Terms($email1, $password1, $password2, $terms)
     {
         $this->activationToken = 'activate1234567890';
 
@@ -2193,7 +2251,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $this->ui->visit('/lpa/dashboard');
 
@@ -2219,7 +2279,9 @@ class AccountContext implements Context
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
                         'actor'                => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         $this->ui->clickLink('Give an organisation access');
     }
@@ -2229,7 +2291,7 @@ class AccountContext implements Context
      */
     public function iShouldSeeRelevantOfOrganisations($orgDescription)
     {
-        $this->ui->assertPageAddress('lpa/code-make?lpa=' .$this->userLpaActorToken);
+        $this->ui->assertPageAddress('lpa/code-make?lpa=' . $this->userLpaActorToken);
         $this->ui->assertPageContainsText($orgDescription);
     }
 
@@ -2248,7 +2310,7 @@ class AccountContext implements Context
      */
     public function iClickTheToChangeADonorOrAttorneysDetails($link)
     {
-        $this->ui->assertPageAddress('lpa/view-lpa?lpa=' .$this->userLpaActorToken);
+        $this->ui->assertPageAddress('lpa/view-lpa?lpa=' . $this->userLpaActorToken);
         $this->ui->clickLink($link);
     }
 
@@ -2257,7 +2319,7 @@ class AccountContext implements Context
      */
     public function iAmTakenToTheChangeDetailsPage()
     {
-        $this->ui->assertPageAddress('lpa/change-details?lpa=' .$this->userLpaActorToken);
+        $this->ui->assertPageAddress('lpa/change-details?lpa=' . $this->userLpaActorToken);
         $this->ui->assertPageContainsText('Let us know if a donor or attorney\'s details change');
     }
 
@@ -2331,7 +2393,9 @@ class AccountContext implements Context
                         'Email'     => $this->userEmail,
                         'Password'  => $this->userPassword,
                         'LastLogin' => null
-                    ])));
+                    ])
+                )
+            );
 
         $this->ui->clickLink('Yes, continue deleting my account');
     }
@@ -2429,7 +2493,8 @@ class AccountContext implements Context
         //API call for getting each LPAs share codes
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
             ->respondWith(
-                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([0 => $code])));
+                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([0 => $code]))
+            );
 
         $this->ui->visit('/lpa/dashboard');
 
@@ -2456,7 +2521,8 @@ class AccountContext implements Context
 
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
             ->respondWith(
-                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([]))
+            );
 
         $this->ui->visit('/lpa/dashboard');
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -2485,7 +2551,8 @@ class AccountContext implements Context
 
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
             ->respondWith(
-                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([]))
+            );
 
         $this->ui->visit('/lpa/dashboard');
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -2514,7 +2581,8 @@ class AccountContext implements Context
 
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
             ->respondWith(
-                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([]))
+            );
 
         $this->ui->visit('/lpa/dashboard');
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -2557,7 +2625,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_NOT_FOUND,
                     [],
-                    json_encode([ ])));
+                    json_encode([ ])
+                )
+            );
 
         $this->ui->visit('lpa/code-make?lpa=' . $this->userLpaActorToken);
     }
@@ -2572,7 +2642,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_NOT_FOUND,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $this->ui->visit('lpa/access-codes?lpa=' . $this->userLpaActorToken);
     }
@@ -2587,7 +2659,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_NOT_FOUND,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $this->ui->visit('lpa/view-lpa?lpa=' . $this->userLpaActorToken);
     }
@@ -2669,8 +2743,6 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/lpa/check');
     }
 
-
-
     /**
      * @Then /^I want to ensure cookie attributes are set$/
      */
@@ -2681,12 +2753,67 @@ class AccountContext implements Context
         // retrieving response headers:
         $cookies = $session->getResponseHeaders()['set-cookie'];
         foreach ($cookies as $value) {
-            if (strstr($value,'session')) {
+            if (strstr($value, 'session')) {
                 assertContains('secure', $value);
                 assertContains('httponly', $value);
             } else {
                 throw new Exception('Cookie named session not found in the response header');
             }
         }
+    }
+
+    /**
+     * @Given /^I am on the change email page$/
+     */
+    public function iAmOnTheChangeEmailPage()
+    {
+        $this->ui->visit('/your-details');
+
+        $session = $this->ui->getSession();
+        $page = $session->getPage();
+
+        $link = $page->find('css', 'a[href="/change-email"]');
+        if ($link === null) {
+            throw new \Exception('Change email link not found');
+        }
+
+        $link->click();
+
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $this->ui->assertPageAddress('/change-email');
+    }
+
+    /**
+     * @Given /^I request to change my email with invalid credentials of (.*) (.*)$/
+     */
+    public function iRequestToChangeMyEmailWithInvalidCredentialsOf($email, $password)
+    {
+        $this->ui->assertPageAddress('/change-email');
+
+        $this->apiFixtures->patch('/v1/request-change-email')
+            ->respondWith(
+                new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([]))
+            ) ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('user-id', $params);
+                    assertArrayHasKey('new-email', $params);
+                    assertArrayHasKey('password', $params);
+                }
+            );
+
+        $this->ui->fillField('new_email_address', $email);
+        $this->ui->fillField('current_password', $password);
+        $this->ui->pressButton('Save new email address');
+    }
+
+    /**
+     * @Then /^I should be told that I could not change my email because (.*)$/
+     */
+    public function iShouldBeToldThatICouldNotChangeMyEmailBecause($reason)
+    {
+        $this->ui->assertPageContainsText($reason);
     }
 }
