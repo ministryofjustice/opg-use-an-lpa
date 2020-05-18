@@ -59,15 +59,9 @@ Contents for checking:
 removing intermediate file...
 ```
 
-note `${FILENAME}` is activation_codes_(current date).
+note `${FILENAME}` is in the format `activation_codes_YYYYMMDD`.
 
-Then create an encrypted disk image using the script below.
-The script will prompt for a password to create and to open the disk image.
-
-``` shell
-FILENAME=activation_codes_$(date +%Y%m%d)
-./make_encrypted_image.sh ${FILENAME}
-```
-
-this is copied to your`Documents` folder.
-Send the encrypted image to the recipient by slack or keybase and separately let them know what the password is, e.g. via email.
+The script will then prompt for a password to create and to open the disk image.
+This is copied to your`Documents` folder in a disk image named `${FILENAME}.dmg`.
+Send the encrypted image to the recipient by Slack or Keybase
+Separately, let them know what the password is, e.g. via email.
