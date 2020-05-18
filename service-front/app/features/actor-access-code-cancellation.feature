@@ -9,7 +9,7 @@ Feature: Actor able to cancel access code
     And I am currently signed in
     And I have added an LPA to my account
     And I am on the dashboard page
-    
+
   @ui @integration
   Scenario: As a user be able to see option for cancelling the access code for an organisation
     Given I have generated an access code for an organisation and can see the details
@@ -38,4 +38,3 @@ Feature: Actor able to cancel access code
     When I cancel the organisation access code
     And I do not confirm cancellation of the chosen viewer code
     Then I should be taken back to the access code summary page
-
