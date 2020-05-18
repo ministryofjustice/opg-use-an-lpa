@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-set -euxo pipefail
+set -eo pipefail
 if [[ "$#" -lt 2 ]]
 then
     echo 'requires arguments: generate_actor_codes.sh <environment-name> <comma-separated-lpa-ids>';
@@ -47,6 +47,10 @@ else
         cat /tmp/${FILENAME}/${FILENAME}.txt
         echo "removing intermediate file..."
         rm /tmp/${FILENAME}/${FILENAME}.log
+
+        echo "creating encrypted disk image...."
+
+        ./make_encrypted_image.sh ${FILENAME}
     else
          echo "generate actor codes script aborted."
     fi

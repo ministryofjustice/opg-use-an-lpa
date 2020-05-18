@@ -2,12 +2,12 @@
 
 function make_encrypted_image() {
 
-  hdiutil create -size 1024k -fs HFS+ -encryption AES-256 -volname $FILENAME /tmp/$FILENAME/
+  hdiutil create -srcfolder /tmp/$FILENAME/ -fs HFS+ -encryption AES-256 -volname $FILENAME  /tmp/$FILENAME/
   hdiutil mount /tmp/$FILENAME.dmg
   ditto -rsrcFork /tmp/$FILENAME/$FILENAME.txt /Volumes/$FILENAME
   hdiutil unmount /Volumes/$FILENAME
   mv /tmp/$FILENAME.dmg ~/Documents/$FILENAME.dmg
-  rm -r /tmp/$FILENAME
+ #rm -r /tmp/$FILENAME
 }
 
 function filecheck() {
