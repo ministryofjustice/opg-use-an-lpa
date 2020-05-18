@@ -7,7 +7,7 @@ function make_encrypted_image() {
   ditto -rsrcFork /tmp/$FILENAME/$FILENAME.txt /Volumes/$FILENAME
   hdiutil unmount /Volumes/$FILENAME
   mv /tmp/$FILENAME.dmg ~/Documents/$FILENAME.dmg
- #rm -r /tmp/$FILENAME
+  rm -r /tmp/$FILENAME
 }
 
 function filecheck() {
