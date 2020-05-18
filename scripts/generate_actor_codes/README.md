@@ -32,10 +32,14 @@ The environment is the first part of the url e.g. demo or ULM222xyz for example.
 ```
 
 You will be given the chance to review the input, and cancel if needed.
+Note: `${FILENAME}` prefix is in the date based format `activation_codes_YYYYMMDD`.
 
 ``` log
 environment name=<environment>
-LPA Ids=<comma separated lpa uids, no spaces>
+LPA Id's=<comma separated lpa uids, no spaces>
+environment name=357automateac
+A new ${FILENAME}.txt will be generated.
+This will be stored securely in disk image ${FILENAME}.dmg and copied to your Documents folder.
 Are the above details correct? [y/n]:
 ```
 
@@ -58,8 +62,6 @@ Contents for checking:
 <json_output_reformatted>
 removing intermediate file...
 ```
-
-Note: `${FILENAME}` is in the format `activation_codes_YYYYMMDD`.
 
 The script will then prompt for and renter a password to create the disk image.
 This is copied to your `Documents` folder in a disk image named `${FILENAME}.dmg`.
