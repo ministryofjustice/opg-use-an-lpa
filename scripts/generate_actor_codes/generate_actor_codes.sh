@@ -41,6 +41,7 @@ else
         echo 'Sanity check the final output...'
         [[ ! -f /tmp/${FILENAME}/${FILENAME}.txt ]] && { echo 'parsed file $FILENAME.txt not found.'; exit 2;}
         [[ ! -s /tmp/${FILENAME}/${FILENAME}.txt ]] && { echo 'parsed file $FILENAME.txt empty.'; exit 2;}
+
         echo "/tmp/${FILENAME}/${FILENAME}.txt generated."
         echo "Contents for checking:"
         cat /tmp/${FILENAME}/${FILENAME}.txt

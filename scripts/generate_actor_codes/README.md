@@ -5,7 +5,8 @@
 - homebrew
 - python
 - direnv
-- jq: https://stedolan.github.io/jq/
+- awk
+- jq: <https://stedolan.github.io/jq/>
 - aws-vault, with your credentials set up : <https://github.com/99designs/aws-vault>
 - you may need to refer to the onboarding instructions for AWS if you do not have an aws identity set up: <https://ministryofjustice.github.io/opg-new-starter/amazon.html>
 
@@ -23,42 +24,50 @@ or
 pip3 install -r requirements.txt
 ```
 
-The script uses your IAM user credentials to assume the appropriate role.
-
-You can provide the script credentials using aws-vault.
+run the following shell script.
 The environment is the first part of the url e.g. demo or ULM222xyz for example.
 
 ``` shell
-aws-vault exec identity -- python ./generate_actor_codes.py <environment> <comma separated lpa uids, no spaces>
+./generate_actor_codes.sh <environment> <comma separated lpa uids>
 ```
 
-output will look like this
+You will be given the chance to review the input, and cancel if needed.
 
 ``` log
-starting creation task...
-arn:aws:ecs:eu-west-1:690083044361:task-definition/production-code-creation:140
-arn:aws:ecs:eu-west-1:690083044361:task/5ad44f92-b3d5-449c-aeab-40d9a2ffb4fc
-waiting for generation task to start...
-Streaming logs for logstream:
-timestamp: 1588688690503: message:<json_output>
+environment name=<environment>
+LPA Ids=<comma separated lpa uids, no spaces>
+Are the above details correct? [y/n]:
 ```
 
-Copy the `<json_output>` from the code generator logs output and push it into a file
+hitting `y` will start the process off. You will see a log similar to below:
+
+``` log
+generating actor codes...
+starting creation task...
+arn:aws:ecs:eu-west-1:000000000000:task-definition/<environment>-code-creation:1
+arn:aws:ecs:eu-west-1:000000000000:task/5ad44f92-b3d5-449c-aeab-40d9a2ffb4fc
+waiting for generation task to start...
+Streaming logs for logstream:
+timestamp: 0000000000000: message:<json_output>
+task completed.
+Sanity check the logs...
+extracting and formatting LPA codes...
+Sanity check the final output...
+/tmp/${FILENAME}/${FILENAME}.txt generated.
+Contents for checking:
+<json_output_reformatted>
+removing intermediate file...
+```
+
+note `${FILENAME}` is activation_codes_(current date).
+
+Then create an encrypted disk image using the script below.
+The script will prompt for a password to create and to open the disk image.
 
 ``` shell
 FILENAME=activation_codes_$(date +%Y%m%d)
-mkdir -p /tmp/$FILENAME
-echo '<json_output>' | jq -f transform-lpa-json.jq > /tmp/$FILENAME/$FILENAME.txt
+./make_encrypted_image.sh ${FILENAME}
 ```
 
-Please check the resulting  file in `/tmp/$FILENAME/$FILENAME.txt` has the following:
-- All Sirius case numbers should be split with hyphen into 3 groups of 4. e.g `7xxx-xxxx-xxxx`
-- All actor codes should be split with a space into 3 groups of 4. e.g `ABC1 D2E3 FG4H`
-
-Then create an encrypted disk image using the script below. The script will prompt for a password to create and to open the disk image.
-
-``` shell
-./make_encrypted_image.sh $FILENAME
-```
-
+this is copied to your`Documents` folder.
 Send the encrypted image to the recipient by slack or keybase and separately let them know what the password is, e.g. via email.
