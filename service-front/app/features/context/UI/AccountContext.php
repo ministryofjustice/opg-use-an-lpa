@@ -2788,15 +2788,12 @@ class AccountContext implements Context
      */
     public function iRequestToChangeMyEmailWithAnIncorrectPassword()
     {
-        $this->ui->assertPageAddress('/change-email');
-
         $this->apiFixtures->patch('/v1/request-change-email')
             ->respondWith(
                 new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([]))
             ) ->inspectRequest(
                 function (RequestInterface $request, array $options) {
                     $params = json_decode($request->getBody()->getContents(), true);
-
                     assertInternalType('array', $params);
                     assertArrayHasKey('user-id', $params);
                     assertArrayHasKey('new-email', $params);
@@ -2815,6 +2812,24 @@ class AccountContext implements Context
     public function iShouldBeToldThatICouldNotChangeMyEmailBecauseMyPasswordIsIncorrect()
     {
         $this->ui->assertPageContainsText('Your password is incorrect');
+    }
+
+    /**
+     * @Given /^I request to change my email to an invalid email$/
+     */
+    public function iRequestToChangeMyEmailToAnInvalidEmail()
+    {
+        $this->ui->fillField('new_email_address', 'invalidEmail.com');
+        $this->ui->fillField('current_password', 'pa33w0rd');
+        $this->ui->pressButton('Save new email address');
+    }
+
+    /**
+     * @Then /^I should be told that I could not change my email because the email is invalid$/
+     */
+    public function iShouldBeToldThatICouldNotChangeMyEmailBecauseTheEmailIsInvalid()
+    {
+        $this->ui->assertPageContainsText('Enter a valid email address');
     }
 
 
