@@ -105,7 +105,7 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
 
                     //$this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email'], $data['NewEmail']);
 
-                    $this->emailClient->sendRequestChangeEmailToNewEmail($data['NewEmail'], $verifyNewEmailUrl);
+                    //$this->emailClient->sendRequestChangeEmailToNewEmail($data['NewEmail'], $verifyNewEmailUrl);
 
                     // log the user out before redirecting them to the login page
                     $session = $this->getSession($request, 'session');
@@ -114,8 +114,6 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
 
                     return $this->redirectToRoute('login');
                 } catch (ApiException $ex) {
-                    //TODO: Use switch case if more cases to handle
-
                     if ($ex->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
                         $form->addErrorMessage(ChangeEmail::INVALID_PASSWORD, 'current_password');
                     } elseif ($ex->getCode() === StatusCodeInterface::STATUS_CONFLICT) {

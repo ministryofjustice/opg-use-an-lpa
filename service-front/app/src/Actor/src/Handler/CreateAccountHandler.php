@@ -81,7 +81,6 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
                 $password = $formData['password'];
 
                 try {
-                    //TODO: check another user hasnt requested email reset on the email chosen
                     $userData = $this->userService->create($emailAddress, $password);
 
                     //  Send account activation email to user
