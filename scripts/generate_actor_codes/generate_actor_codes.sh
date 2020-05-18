@@ -70,11 +70,11 @@ else
 
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
-        #echo "generating actor codes..."
-        #generate_actor_codes
+        echo "generating actor codes..."
+        generate_actor_codes
 
-        #echo "processing actor codes..."
-        #process_actor_codes
+        echo "processing actor codes..."
+        process_actor_codes
 
         echo "creating encrypted disk image...."
         make_encrypted_image
