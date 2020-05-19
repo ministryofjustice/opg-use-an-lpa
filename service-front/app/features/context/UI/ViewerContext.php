@@ -140,7 +140,7 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText(
             $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
         );
-        $this->ui->assertPageContainsText('This LPA is valid');
+        $this->ui->assertPageContainsText('LPA is valid');
     }
 
     /**
@@ -152,7 +152,7 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText(
             $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
         );
-        $this->ui->assertPageContainsText('This LPA has been cancelled');
+        $this->ui->assertPageContainsText('LPA has been cancelled');
     }
 
     /**
