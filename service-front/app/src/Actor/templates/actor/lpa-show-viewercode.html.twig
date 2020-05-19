@@ -24,23 +24,27 @@
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full">
 
-                        <div class="govuk-panel govuk-panel--confirmation push-bottom">
-                            <h1 class="govuk-panel__title">
-                               {{ add_hyphen_to_viewer_code(code) }}
-                            </h1>
+                    <div class="moj-banner moj-banner--success">
+                      <div class="moj-banner__message govuk-panel govuk-!-padding-1">
 
-                            <div class="govuk-panel__body">
-                                Give this access code to {{ organisation }}
-                            </div>
+                        <div class="govuk-panel__body govuk-!-margin-bottom-3">
+                          Give this access code to {{ organisation }}
                         </div>
+                        <h1 class="govuk-panel__title govuk-!-margin-bottom-2">
+                          {{ add_hyphen_to_viewer_code(code) }}
+                        </h1>
+
+                        <p class="govuk-body govuk-!-margin-bottom-0">This code expires in 30 days, on {{ expires | date ('j F Y') }}.</p>
+
+                      </div>
                     </div>
 
+                    </div>
                 </div>
 
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-two-thirds">
                         <p class="govuk-body-l">Ask {{ organisation }} how they want you to give them the code.</p>
-                        <p class="govuk-body">This code expires in 30 days, on {{ expires | date ('j F Y') }}.</p>
 
                         <div class="govuk-inset-text">
                             <p class="govuk-body-s">
