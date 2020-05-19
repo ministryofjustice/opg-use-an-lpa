@@ -31,7 +31,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class EncryptedCookie
+ * Class EncryptedCookiePersistence
+ *
+ * Utilises Amazon KMS to encrypt the session cookie sent to users
+ *
  * @package Common\Service\Session
  */
 class EncryptedCookiePersistence implements SessionPersistenceInterface, SessionCookiePersistenceInterface
@@ -62,37 +65,25 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface, Session
         'private_no_expire',
     ];
 
-    /** @var int */
-    private $sessionExpire;
+    private KeyManagerInterface $keyManager;
 
-    /** @var string */
-    private $cacheLimiter;
+    private string $cookieName;
 
-    /** @var string */
-    private $cookieName;
+    private string $cookiePath;
 
-    /** @var string|null */
-    private $cookieDomain;
+    private string $cacheLimiter;
 
-    /** @var string */
-    private $cookiePath;
+    private int $sessionExpire;
 
-    /** @var bool */
-    private $cookieSecure;
+    private ?string $lastModified;
 
-    /** @var bool */
-    private $cookieHttpOnly;
+    private ?int $cookieTtl;
 
-    /** @var false|string */
-    private $lastModified;
+    private ?string $cookieDomain;
 
-    /** @var int|null */
-    private $cookieTtl;
+    private bool $cookieSecure;
 
-    /**
-     * @var KeyManagerInterface
-     */
-    private $keyManager;
+    private bool $cookieHttpOnly;
 
     /**
      * EncryptedCookiePersistence constructor.
@@ -102,13 +93,23 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface, Session
      * @param string $cacheLimiter
      * @param int $sessionExpire
      * @param int|null $lastModified
-     * @param ttl|null $cookie_ttl
+     * @param int|null $cookieTtl
      * @param string|null $cookieDomain
      * @param bool $cookieSecure
      * @param bool $cookieHttpOnly
      */
-    public function __construct(KeyManagerInterface $keyManager, string $cookieName, string $cookiePath, string $cacheLimiter, int $sessionExpire, ?int $lastModified, ?int $cookieTtl, ?string $cookieDomain, bool $cookieSecure, bool $cookieHttpOnly)
-    {
+    public function __construct(
+        KeyManagerInterface $keyManager,
+        string $cookieName,
+        string $cookiePath,
+        string $cacheLimiter,
+        int $sessionExpire,
+        ?int $lastModified,
+        ?int $cookieTtl,
+        ?string $cookieDomain,
+        bool $cookieSecure,
+        bool $cookieHttpOnly
+    ) {
         $this->keyManager = $keyManager;
         $this->cookieName = $cookieName;
         $this->cookiePath = $cookiePath;
