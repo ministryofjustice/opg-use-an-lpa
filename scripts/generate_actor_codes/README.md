@@ -32,7 +32,8 @@ The environment is the first part of the url e.g. demo or ULM222xyz for example.
 ```
 
 You will be given the chance to review the input, and cancel if needed.
-Note: `${FILENAME}` prefix is in the date based format `activation_codes_YYYYMMDD`.
+
+Note: `${FILENAME}` prefix is in the `bash` date based format `<environment>_activation_codes_$(date +%Y%m%d%H%M)`.
 
 ``` log
 environment name=<environment>
@@ -63,7 +64,8 @@ Contents for checking:
 removing intermediate file...
 ```
 
-The script will then prompt for and renter a password to create the disk image.
+The script will then prompt for and re-enter a password to create the disk image.
+
 This is copied to your `Documents` folder in a disk image named `${FILENAME}.dmg`.
 
 Then:

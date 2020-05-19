@@ -9,7 +9,7 @@ function extract_parameters_and_vars(){
         shift
     done
     LPATRIMMED=${LPATRIMMED} | tr -d "[ \t]"
-    FILENAME=activation_codes_$(date +%Y%m%d)
+    FILENAME=${LPAENV}_activation_codes_$(date +%Y%m%d%H%M)
 }
 
 function check_file_sanity()
@@ -47,8 +47,8 @@ function process_actor_codes(){
 }
 
 function make_encrypted_image() {
-    hdiutil create -srcfolder /tmp/$FILENAME/ -fs HFS+ -encryption AES-256 -volname $FILENAME  ~/Documents/$FILENAME.dmg
-    rm -r /tmp/$FILENAME
+    hdiutil create -srcfolder /tmp/${FILENAME}/ -fs HFS+ -encryption AES-256 -volname ${FILENAME}  ~/Documents/${FILENAME}.dmg
+    rm -r /tmp/${FILENAME}
 }
 
 set -euo pipefail
@@ -62,7 +62,7 @@ else
 
     echo "environment name=${LPAENV}"
     echo "LPA Id's=${LPATRIMMED}"
-    echo "A new ${FILENAME}.txt will be generated."
+    echo "A new ${FILENAME}.txt file will be generated."
     echo "This will be stored securely in disk image ${FILENAME}.dmg and copied to your Documents folder."
 
     read -p "Are the above details correct? [y/n]: " -n 1 -r
