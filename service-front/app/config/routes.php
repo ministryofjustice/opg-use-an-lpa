@@ -90,9 +90,9 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangeDetailsHandler::class
     ], 'lpa.change-details');
-    $app->get('/verify-new-email/{token}',
+    $app->get('/verify-new-email/{token}', [
         Actor\Handler\CompleteChangeEmailHandler::class,
-        'verify-new-email');
+    ], 'verify-new-email');
 
     // LPA management
     $app->get('/lpa/dashboard', [

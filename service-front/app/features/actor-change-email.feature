@@ -15,39 +15,59 @@ Feature: Change email
     Then I should be told that I could not change my email because my password is incorrect
 
   @ui
-  Scenario: The user cannot change their email address because the email is invalid
+  Scenario: The user cannot request to change their email address because the email is invalid
     Given I am on the change email page
     When I request to change my email to an invalid email
     Then I should be told that I could not change my email because the email is invalid
 
   @ui
-  Scenario: The user cannot change their email address to the same email they have currently
+  Scenario: The user cannot request to change their email address to the same email they have currently
     Given I am on the change email page
     When I request to change my email to the same email of my account currently
     Then I should be told that I could not change my email because the email is the same as my current email
 
   @ui @integration
-  Scenario: The user cannot change their email address because the email chosen belongs to another user on the service
+  Scenario: The user cannot request to change their email address because the email chosen belongs to another user on the service
     Given I am on the change email page
     When I request to change my email to an email address that is taken by another user on the service
     Then I should be told that I could not change my email as their was a problem with the request
 
   @ui @integration
-  Scenario: The user cannot change their email address because another user has requested to change their email to this and token has not expired
+  Scenario: The user cannot request to change their email address because another user has requested to change their email to this and token has not expired
     Given I am on the change email page
     When I request to change my email to an email address that another user has requested to change their email to but their token has not expired
     Then I should be told that I could not change my email as their was a problem with the request
 
   @ui @integration
-  Scenario: The user can change their email address that another user has requested to change their email to this but their token has expired
+  Scenario: The user can request to change their email address that another user has requested to change their email to this but their token has expired
     Given I am on the change email page
     When I request to change my email to an email address that another user has requested to change their email to but their token has expired
     Then I should be sent an email to both my current and new email
     And I should be logged out and told that my request was successful
 
   @ui @integration
-  Scenario: The user can change their email address
+  Scenario: The user can request to change their email address
     Given I am on the change email page
     When I request to change my email to a unique email address
     Then I should be sent an email to both my current and new email
     And I should be logged out and told that my request was successful
+
+  @ui @integration
+  Scenario: The user can change their email address with a valid email token
+    Given I have requested to change my email address
+    And My email reset token is still valid
+    When I click the link to verify my new email address
+    Then My account email address should be reset
+    And I should be able to login with my new email address
+
+  @ui @integration
+  Scenario: The user cannot change their email address with an expired email token
+    Given I have requested to change my email address
+    When I click the link to verify my new email address after my token has expired
+    Then I should be told that my email could not be changed
+
+  @ui @integration
+  Scenario: The user cannot change their email address with an email token that doesnt exist
+    Given I have requested to change my email address
+    When I click an old link to verify my new email address containing a token that no longer exists
+    Then I should be told that my email could not be changed

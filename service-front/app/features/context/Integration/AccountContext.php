@@ -207,7 +207,7 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(function (RequestInterface $request, array $options)
-                use ($expectedUrl, $expectedTemplateId) {
+ use ($expectedUrl, $expectedTemplateId) {
                 $requestBody = $request->getBody()->getContents();
 
                 assertContains($this->userPasswordResetToken, $requestBody);
@@ -1628,7 +1628,7 @@ class AccountContext extends BaseIntegrationContext
      * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has expired$/
      * @When /^I request to change my email to a unique email address$/
      */
-    public function iRequestToChangeMyEmailToAnEmailAddressThatAnotherUserHasRequestedToChangeTheirEmailToButTheirTokenHasExpired()
+    public function iRequestToChangeMyEmailToAUniqueEmailAddress()
     {
         $this->apiFixtures->patch('/v1/request-change-email')
             ->respondWith(
@@ -1679,7 +1679,7 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(function (RequestInterface $request, array $options)
-            use ($currentEmailTemplateId) {
+ use ($currentEmailTemplateId) {
                 $requestBody = $request->getBody()->getContents();
                 assertContains($currentEmailTemplateId, $requestBody);
             });
@@ -1690,7 +1690,7 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(function (RequestInterface $request, array $options)
-            use ($expectedUrl, $newEmailTemplateId) {
+ use ($expectedUrl, $newEmailTemplateId) {
                 $requestBody = $request->getBody()->getContents();
 
                 assertContains($this->userEmailResetToken, $requestBody);
@@ -1705,6 +1705,106 @@ class AccountContext extends BaseIntegrationContext
      * @Given /^I should be logged out and told that my request was successful$/
      */
     public function iShouldBeLoggedOutAndToldThatMyRequestWasSuccessful()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I have requested to change my email address$/
+     */
+    public function iHaveRequestedToChangeMyEmailAddress()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^My email reset token is still valid$/
+     */
+    public function myEmailResetTokenIsStillValid()
+    {
+        $this->userEmailResetToken = '12345abcde';
+    }
+
+    /**
+     * @When /^I click the link to verify my new email address$/
+     */
+    public function iClickTheLinkToVerifyMyNewEmailAddress()
+    {
+        // API fixture for email reset token check
+        $this->apiFixtures->get('/v1/can-reset-email')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Id' => $this->userIdentity,
+                        ]
+                    )
+                )
+            );
+
+        $canReset = $this->userService->canResetEmail($this->userEmailResetToken);
+        assertTrue($canReset);
+    }
+
+    /**
+     * @Then /^My account email address should be reset$/
+     */
+    public function myAccountEmailAddressShouldBeReset()
+    {
+        // API fixture to complete email change
+        $this->apiFixtures->patch('/v1/complete-change-email')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $reset = $this->userService->completeChangeEmail($this->userEmailResetToken);
+
+        assertNull($reset);
+    }
+
+    /**
+     * @Given /^I should be able to login with my new email address$/
+     */
+    public function iShouldBeAbleToLoginWithMyNewEmailAddress()
+    {
+        $this->newUserEmail = 'newEmail@test.com';
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'        => $this->userIdentity,
+                'Email'     => $this->newUserEmail,
+                'LastLogin' => '2020-01-21T15:58:47+00:00'
+            ])));
+
+        $user = $this->userService->authenticate($this->newUserEmail, $this->userPassword);
+
+        assertEquals($user->getIdentity(), $this->userIdentity);
+    }
+
+    /**
+     * @When /^I click the link to verify my new email address after my token has expired$/
+     * @When /^I click an old link to verify my new email address containing a token that no longer exists$/
+     */
+    public function iClickTheLinkToVerifyMyNewEmailAddressAfterMyTokenHasExpired()
+    {
+        $this->userEmailResetToken = '12354abcde';
+        // API fixture for email reset token check
+        $this->apiFixtures->get('/v1/can-reset-email')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_GONE,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $tokenValid = $this->userService->canResetEmail($this->userEmailResetToken);
+        assertFalse($tokenValid);
+    }
+
+    /**
+     * @Then /^I should be told that my email could not be changed$/
+     */
+    public function iShouldBeToldThatMyEmailCouldNotBeChanged()
     {
         // Not needed for this context
     }

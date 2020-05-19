@@ -32,6 +32,8 @@ use DateTime;
  * @property $actorId
  * @property $accessCode
  * @property $organisation
+ * @property $newUserEmail
+ * @property $userEmailResetToken
  */
 class AccountContext implements Context
 {
@@ -2767,6 +2769,9 @@ class AccountContext implements Context
      */
     public function iAmOnTheChangeEmailPage()
     {
+        $this->newUserEmail = 'newEmail@test.com';
+        $this->userEmailResetToken = '12345abcde';
+
         $this->ui->visit('/your-details');
 
         $session = $this->ui->getSession();
@@ -2801,7 +2806,7 @@ class AccountContext implements Context
                 }
             );
 
-        $this->ui->fillField('new_email_address', 'newEmail@test.com');
+        $this->ui->fillField('new_email_address', $this->newUserEmail);
         $this->ui->fillField('current_password', 'inC0rr3ct');
         $this->ui->pressButton('Save new email address');
     }
@@ -2820,7 +2825,7 @@ class AccountContext implements Context
     public function iRequestToChangeMyEmailToAnInvalidEmail()
     {
         $this->ui->fillField('new_email_address', 'invalidEmail.com');
-        $this->ui->fillField('current_password', 'pa33w0rd');
+        $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->pressButton('Save new email address');
     }
 
@@ -2837,8 +2842,8 @@ class AccountContext implements Context
      */
     public function iRequestToChangeMyEmailToTheSameEmailOfMyAccountCurrently()
     {
-        $this->ui->fillField('new_email_address', 'test@test.com');
-        $this->ui->fillField('current_password', 'pa33w0rd');
+        $this->ui->fillField('new_email_address', $this->userEmail);
+        $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->pressButton('Save new email address');
     }
 
@@ -2869,8 +2874,8 @@ class AccountContext implements Context
                 }
             );
 
-        $this->ui->fillField('new_email_address', 'newEmail@test.com');
-        $this->ui->fillField('current_password', 'pa33w0rd');
+        $this->ui->fillField('new_email_address', $this->newUserEmail);
+        $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->pressButton('Save new email address');
     }
 
@@ -2886,7 +2891,7 @@ class AccountContext implements Context
      * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has expired$/
      * @When /^I request to change my email to a unique email address$/
      */
-    public function iRequestToChangeMyEmailToAnEmailAddressThatAnotherUserHasRequestedToChangeTheirEmailToButTheirTokenHasExpired()
+    public function iRequestToChangeMyEmailToAUniqueEmailAddress()
     {
         $this->apiFixtures->patch('/v1/request-change-email')
             ->respondWith(
@@ -2898,8 +2903,8 @@ class AccountContext implements Context
                         "Email"            => $this->userEmail,
                         "LastLogin"        => null,
                         "Id"               => $this->userId,
-                        "NewEmail"         => 'newEmail@test.com',
-                        "EmailResetToken"  => "re3eTt0k3N",
+                        "NewEmail"         => $this->newUserEmail,
+                        "EmailResetToken"  => $this->userEmailResetToken,
                         "Password"         => $this->userPassword,
                     ])
                 )
@@ -2939,8 +2944,8 @@ class AccountContext implements Context
                 }
             );
 
-        $this->ui->fillField('new_email_address', 'newEmail@test.com');
-        $this->ui->fillField('current_password', 'pa33w0rd');
+        $this->ui->fillField('new_email_address', $this->newUserEmail);
+        $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->pressButton('Save new email address');
     }
 
@@ -2958,6 +2963,115 @@ class AccountContext implements Context
     public function iShouldBeLoggedOutAndToldThatMyRequestWasSuccessful()
     {
         $this->ui->assertPageContainsText('Change email request successful');
-        $this->ui->assertPageContainsText('We\'ve emailed a link to newEmail@test.com');
+        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->newUserEmail);
+    }
+
+    /**
+     * @Given /^I have requested to change my email address$/
+     */
+    public function iHaveRequestedToChangeMyEmailAddress()
+    {
+        // these steps are needed to log the user out
+        $this->iAmOnTheChangeEmailPage();
+        $this->iRequestToChangeMyEmailToAUniqueEmailAddress();
+        $this->iShouldBeSentAnEmailToBothMyCurrentAndNewEmail();
+        $this->iShouldBeLoggedOutAndToldThatMyRequestWasSuccessful();
+    }
+
+    /**
+     * @Given /^My email reset token is still valid$/
+     */
+    public function myEmailResetTokenIsStillValid()
+    {
+        $this->userEmailResetToken = '12345abcde';
+    }
+
+    /**
+     * @When /^I click the link to verify my new email address$/
+     */
+    public function iClickTheLinkToVerifyMyNewEmailAddress()
+    {
+        // API fixture for email reset token check
+        $this->apiFixtures->get('/v1/can-reset-email')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Id' => $this->userId,
+                        ]
+                    )
+                )
+            );
+
+        // API fixture to complete email change
+        $this->apiFixtures->patch('/v1/complete-change-email')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->ui->visit('/verify-new-email/' . $this->userEmailResetToken);
+    }
+
+    /**
+     * @Then /^My account email address should be reset$/
+     */
+    public function myAccountEmailAddressShouldBeReset()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I should be able to login with my new email address$/
+     */
+    public function iShouldBeAbleToLoginWithMyNewEmailAddress()
+    {
+        $this->ui->assertPageAddress('/login');
+
+        // API call for authentication
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
+                [
+                    'Id'        => $this->userId,
+                    'Email'     => $this->newUserEmail,
+                    'LastLogin' => '2020-01-01'
+                ]
+            )));
+
+        // Dashboard page checks for all LPA's for a user
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->ui->fillField('email', $this->newUserEmail);
+        $this->ui->fillField('password', $this->userPassword);
+        $this->ui->pressButton('Sign in');
+
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    /**
+     * @When /^I click the link to verify my new email address after my token has expired$/
+     * @When /^I click an old link to verify my new email address containing a token that no longer exists$/
+     */
+    public function iClickTheLinkToVerifyMyNewEmailAddressAfterMyTokenHasExpired()
+    {
+        // API fixture for email reset token check
+        $this->apiFixtures->get('/v1/can-reset-email')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_GONE,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $this->ui->visit('/verify-new-email/' . $this->userEmailResetToken);
+    }
+
+    /**
+     * @Then /^I should be told that my email could not be changed$/
+     */
+    public function iShouldBeToldThatMyEmailCouldNotBeChanged()
+    {
+        $this->ui->assertPageContainsText("Unable to change email address");
     }
 }
