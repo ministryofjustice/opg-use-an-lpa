@@ -234,12 +234,6 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface, Session
 
     public function persistSession(SessionInterface $session, ResponseInterface $response): ResponseInterface
     {
-        // No data? Nothing to do.
-        // TODO if a session has been cleared ($session->clear) then it doesn't get persisted?
-        if ([] === $session->toArray()) {
-            return $response;
-        }
-
         // Record the current time.
         $session->set(self::SESSION_TIME_KEY, time());
 
