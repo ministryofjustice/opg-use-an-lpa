@@ -5,30 +5,54 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\CookieConsent;
+use Common\Handler\AbstractHandler;
+use Common\Handler\CsrfGuardAware;
+use Common\Handler\Traits\CsrfGuard;
+use Common\Handler\Traits\User;
+use Common\Handler\UserAware;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Template\TemplateRendererInterface;
+use Mezzio\Helper\UrlHelper;
 
 /**
  * Class CookiesPageHandler
  * @package Actor\Handler
  */
-class CookiesPageHandler extends AbstractHandler
+class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
+    use User;
+    use CsrfGuard;
+
     const COOKIE_POLICY_NAME = 'cookie_policy';
     const SEEN_COOKIE_NAME   = 'seen_cookie_message';
 
+    /**
+     * CreateAccountHandler constructor.
+     * @param TemplateRendererInterface $renderer
+     * @param UrlHelper $urlHelper
+     */
+    public function __construct(
+        TemplateRendererInterface $renderer,
+        UrlHelper $urlHelper
+    )
+    {
+        parent::__construct($renderer, $urlHelper);
+    }
+
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $form = new CookieConsent($this->getCsrfGuard($request));
+
         if ($request->getMethod() == 'POST') {
             return $this->handlePost($request);
         }
 
-        $form = new CookieConsent();
+       // $form = new CookieConsent();
         $cookies = $request->getCookieParams();
 
         $usageCookies = 'no';
@@ -36,23 +60,23 @@ class CookiesPageHandler extends AbstractHandler
             $cookiePolicy = json_decode($cookies[self::COOKIE_POLICY_NAME], true);
             $usageCookies = $cookiePolicy['usage'] === true ? 'yes' : 'no';
         }
-        $form->get('usage-cookies')->setValue($usageCookies);
+        $form->get('usageCookies')->setValue($usageCookies);
 
-        $response =  new HtmlResponse($this->getTemplateRenderer()->render('app::cookies-page', [
+
+        return new HtmlResponse($this->renderer->render('actor::cookies', [
             'form' => $form
         ]));
-
-        return $response;
     }
 
     public function handlePost(ServerRequestInterface $request) : ResponseInterface
     {
-        $form = new CookieConsent();
+        //$form = new CookieConsent();
+        $form = new CookieConsent($this->getCsrfGuard($request));
         $cookies = $request->getCookieParams();
 
         $data = $request->getParsedBody();
         $form->setData($data);
-
+        
         // it's assumed that you'll be going to the start after setting cookies settings
         $response = new RedirectResponse($this->getUrlHelper()->generate('start'));
 
@@ -64,7 +88,7 @@ class CookiesPageHandler extends AbstractHandler
                 return $response;
             }
 
-            $cookiePolicy['usage'] = $form->get('usage-cookies')->getValue() === 'yes' ? true : false;
+            $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes' ? true : false;
 
             $response = FigResponseCookies::set($response,
                 SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))

@@ -1,4 +1,4 @@
-{% extends '@viewer/layout.html.twig' %}
+{% extends '@actor/layout.html.twig' %}
 
 {% block html_title %}Cookies{% endblock %}
 
@@ -9,30 +9,24 @@
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
+                    <h1 class="govuk-heading-xl">Cookies</h1>
                     <p class="govuk-body">Cookies are files saved on your phone, tablet or computer when you visit a website.</p>
-
                     <p class="govuk-body">We use cookies to store information about how you use the Make a lasting power of attorney service, such as the
                         pages you visit.</p>
 
-{#                    #}{# begin form #}
-{#                    {{ form.prepare() ? '' }}#}
-{#                    {{ form().openTag( form )|raw }}#}
-{#                    {{ formElement(form.getCsrf) }}#}
-
-{#                    {{ govuk_form_open(form) }}#}
+                    {{ govuk_form_open(form) }}
+                    {{ govuk_form_element(form.get('__csrf')) }}
 
                     <h2 class="govuk-heading-xl">Cookie settings</h2>
-
                     <p class="govuk-body">We use two types of cookie. One type is strictly necessary and the other type of cookie is optional.</p>
 
                     <h3 class="govuk-heading-m">Cookies that measure website use</h3>
-
                     <p class="govuk-body">
                         OPG and Government Digital Services use Google Analytics to measure how you use the service so we can improve it
                         based on user needs. Google Analytics sets cookies that store anonymised information about:
                     </p>
 
-                    <ul class="list list-bullet">
+                    <ul class="govuk-list govuk-list--bullet">
                         <li>what pages you visit and how long you spend on each</li>
                         <li>what you click on while you're visiting the site</li>
                     </ul>
@@ -40,27 +34,26 @@
                     <p class="govuk-body">
                         We do not allow Google to use or share the data about how you use this site.
                     </p>
-
-                    <div class="form-group">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl" id="id-usage-cookies">
-                            <span class="visually-hidden question-text">Allow use of non-essential Cookies?</span>
+                    <div class=form-group">
+                        <legend id="id-usage-cookies">
+                            <span class="govuk-visually-hidden question-text">Allow use of non-essential Cookies?</span>
                         </legend>
-                        <fieldset class="govuk-fieldset">
-{#                            {{ govuk_form_element(form.get('__csrf')) }}#}
-{#                            {{ govuk_form_element(form.get('email'), { 'label': 'Email address', 'attr': { 'class': 'govuk-!-width-one-half', 'auto-complete': 'username' } }) }}#}
-
-{#                            {{ formRadio(usageCookies) }}#}
-                        </fieldset>
+                    <fieldset>
+                        <div class="multiple-choice">
+                            <input type="radio" name="usageCookies" value="yes" id="usageCookies-yes">
+                            <label for="usageCookies-yes">Yes, allow usage cookies</label>
+                        </div>
+                        <div class="multiple-choice">
+                            <input type="radio" name="usageCookies" value="no" id="usageCookies-no">
+                            <label for="usageCookies-no">No, do not allow usage cookies </label>
+                        </div>
+                    </fieldset>
                     </div>
-
                     <h3 class="govuk-heading-m">Strictly necessary cookies</h3>
                     <p class="govuk-body">These essential cookies allow you to log in to the service. They always need to be on.</p>
 
-                    <div class="form-group">
-                        <input class="button" type="submit" value="Save changes">
-                    </div>
-
-                    {{ form().closeTag|raw }}
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">Save changes</button>
+            {{ govuk_form_close() }}
         </main>
 
     </div>
