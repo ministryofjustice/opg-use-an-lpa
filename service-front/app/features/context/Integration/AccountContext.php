@@ -25,7 +25,6 @@ use DateTime;
  *
  * Account creation, login, password reset etc.
  *
- * @property string email
  * @property string resetToken
  * @property string activationToken
  * @property string userPassword
@@ -42,6 +41,8 @@ use DateTime;
  * @property int actorId
  * @property string $organisation
  * @property string $accessCode
+ * @property string newUserEmail
+ * @property string userEmailResetToken
  */
 class AccountContext extends BaseIntegrationContext
 {
@@ -206,7 +207,7 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(function (RequestInterface $request, array $options)
- use ($expectedUrl, $expectedTemplateId) {
+                use ($expectedUrl, $expectedTemplateId) {
                 $requestBody = $request->getBody()->getContents();
 
                 assertContains($this->userPasswordResetToken, $requestBody);
@@ -1519,7 +1520,8 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iAmOnTheChangeEmailPage()
     {
-        // Not needed for this context
+        $this->newUserEmail = 'newEmail@test.com';
+        $this->userEmailResetToken = '12354abcde';
     }
 
     /**
@@ -1527,8 +1529,6 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iRequestToChangeMyEmailWithAnIncorrectPassword()
     {
-        $newEmail = 'newEmail@test.com';
-
         $this->apiFixtures->patch('/v1/request-change-email')
             ->respondWith(
                 new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([]))
@@ -1543,7 +1543,7 @@ class AccountContext extends BaseIntegrationContext
             );
 
         try {
-            $this->userService->requestChangeEmail($this->userIdentity, $newEmail, $this->userPassword);
+            $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, $this->userPassword);
         } catch (ApiException $aex) {
             assertEquals(403, $aex->getCode());
             return;
@@ -1556,6 +1556,155 @@ class AccountContext extends BaseIntegrationContext
      * @Then /^I should be told that I could not change my email because my password is incorrect$/
      */
     public function iShouldBeToldThatICouldNotChangeMyEmailBecauseMyPasswordIsIncorrect()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to change my email to an email address that is taken by another user on the service$/
+     */
+    public function iRequestToChangeMyEmailToAnEmailAddressThatIsTakenByAnotherUserOnTheService()
+    {
+        $this->apiFixtures->patch('/v1/request-change-email')
+            ->respondWith(
+                new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([]))
+            ) ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('user-id', $params);
+                    assertArrayHasKey('new-email', $params);
+                    assertArrayHasKey('password', $params);
+                }
+            );
+
+        try {
+            $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, $this->userPassword);
+        } catch (ApiException $aex) {
+            assertEquals(409, $aex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('Conflict exception was not thrown');
+    }
+
+    /**
+     * @Then /^I should be told that I could not change my email as their was a problem with the request$/
+     */
+    public function iShouldBeToldThatICouldNotChangeMyEmailAsTheirWasAProblemWithTheRequest()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has not expired$/
+     */
+    public function iRequestToChangeMyEmailToAnEmailAddressThatAnotherUserHasRequestedToChangeTheirEmailToButTheirTokenHasNotExpired()
+    {
+        $this->apiFixtures->patch('/v1/request-change-email')
+            ->respondWith(
+                new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([]))
+            ) ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('user-id', $params);
+                    assertArrayHasKey('new-email', $params);
+                    assertArrayHasKey('password', $params);
+                }
+            );
+
+        try {
+            $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, $this->userPassword);
+        } catch (ApiException $aex) {
+            assertEquals(409, $aex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('Conflict exception was not thrown');
+    }
+
+    /**
+     * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has expired$/
+     * @When /^I request to change my email to a unique email address$/
+     */
+    public function iRequestToChangeMyEmailToAnEmailAddressThatAnotherUserHasRequestedToChangeTheirEmailToButTheirTokenHasExpired()
+    {
+        $this->apiFixtures->patch('/v1/request-change-email')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        "EmailResetExpiry" => 1589983070,
+                        "Email"            => $this->userEmail,
+                        "LastLogin"        => null,
+                        "Id"               => $this->userIdentity,
+                        "NewEmail"         => $this->newUserEmail,
+                        "EmailResetToken"  => "re3eTt0k3N",
+                        "Password"         => $this->userPassword,
+                    ])
+                )
+            ) ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('user-id', $params);
+                    assertArrayHasKey('new-email', $params);
+                    assertArrayHasKey('password', $params);
+                }
+            );
+
+        $data = $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, $this->userPassword);
+
+        assertNotEmpty($data);
+        assertEquals($this->userEmail, $data['Email']);
+        assertEquals($this->newUserEmail, $data['NewEmail']);
+        assertEquals($this->userIdentity, $data['Id']);
+        assertEquals($this->userPassword, $data['Password']);
+        assertArrayHasKey('EmailResetToken', $data);
+        assertArrayHasKey('EmailResetExpiry', $data);
+    }
+
+    /**
+     * @Then /^I should be sent an email to both my current and new email$/
+     */
+    public function iShouldBeSentAnEmailToBothMyCurrentAndNewEmail()
+    {
+        $currentEmailTemplateId = '19051f55-d60d-4bbc-ab49-cf85580d3102';
+        $expectedUrl = 'http://localhost/verify-new-email/' . $this->userEmailResetToken;
+        $newEmailTemplateId = 'bcf7e3f7-7f76-4e0a-87ee-b6722bdc223a';
+
+        // API call for Notify sent to current email
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(function (RequestInterface $request, array $options)
+            use ($currentEmailTemplateId) {
+                $requestBody = $request->getBody()->getContents();
+                assertContains($currentEmailTemplateId, $requestBody);
+            });
+
+        $this->emailClient->sendRequestChangeEmailToCurrentEmail($this->userEmail, $this->newUserEmail);
+
+        // API call for Notify sent to new email
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(function (RequestInterface $request, array $options)
+            use ($expectedUrl, $newEmailTemplateId) {
+                $requestBody = $request->getBody()->getContents();
+
+                assertContains($this->userEmailResetToken, $requestBody);
+                assertContains(json_encode($expectedUrl), $requestBody);
+                assertContains($newEmailTemplateId, $requestBody);
+            });
+
+        $this->emailClient->sendRequestChangeEmailToNewEmail($this->newUserEmail, $expectedUrl);
+    }
+
+    /**
+     * @Given /^I should be logged out and told that my request was successful$/
+     */
+    public function iShouldBeLoggedOutAndToldThatMyRequestWasSuccessful()
     {
         // Not needed for this context
     }

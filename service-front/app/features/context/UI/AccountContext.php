@@ -2905,23 +2905,57 @@ class AccountContext implements Context
                 )
             );
 
+        // API call for Notify to current email
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                    assertArrayHasKey('email_address', $params);
+                    assertArrayHasKey('personalisation', $params);
+
+                    assertInternalType('array', $params['personalisation']);
+                    assertArrayHasKey('new-email-address', $params['personalisation']);
+                }
+            );
+
+        // API call for Notify to new email
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                    assertArrayHasKey('email_address', $params);
+                    assertArrayHasKey('personalisation', $params);
+
+                    assertInternalType('array', $params['personalisation']);
+                    assertArrayHasKey('verify-new-email-url', $params['personalisation']);
+                }
+            );
+
         $this->ui->fillField('new_email_address', 'newEmail@test.com');
         $this->ui->fillField('current_password', 'pa33w0rd');
         $this->ui->pressButton('Save new email address');
     }
 
     /**
-     * @Then /^I should be logged out$/
+     * @Then /^I should be sent an email to both my current and new email$/
      */
-    public function iShouldBeLoggedOut()
+    public function iShouldBeSentAnEmailToBothMyCurrentAndNewEmail()
     {
         // Not needed for this context
     }
 
     /**
-     * @Given /^I should be told that my request was successful$/
+     * @Given /^I should be logged out and told that my request was successful$/
      */
-    public function iShouldBeToldThatMyRequestWasSuccessful()
+    public function iShouldBeLoggedOutAndToldThatMyRequestWasSuccessful()
     {
         $this->ui->assertPageContainsText('Change email request successful');
         $this->ui->assertPageContainsText('We\'ve emailed a link to newEmail@test.com');

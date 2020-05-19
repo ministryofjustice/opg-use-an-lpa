@@ -26,28 +26,28 @@ Feature: Change email
     When I request to change my email to the same email of my account currently
     Then I should be told that I could not change my email because the email is the same as my current email
 
-  @ui
+  @ui @integration
   Scenario: The user cannot change their email address because the email chosen belongs to another user on the service
     Given I am on the change email page
     When I request to change my email to an email address that is taken by another user on the service
     Then I should be told that I could not change my email as their was a problem with the request
 
-  @ui
+  @ui @integration
   Scenario: The user cannot change their email address because another user has requested to change their email to this and token has not expired
     Given I am on the change email page
     When I request to change my email to an email address that another user has requested to change their email to but their token has not expired
     Then I should be told that I could not change my email as their was a problem with the request
 
-  @ui
+  @ui @integration
   Scenario: The user can change their email address that another user has requested to change their email to this but their token has expired
     Given I am on the change email page
     When I request to change my email to an email address that another user has requested to change their email to but their token has expired
-    Then I should be logged out
-    And I should be told that my request was successful
+    Then I should be sent an email to both my current and new email
+    And I should be logged out and told that my request was successful
 
-  @ui
+  @ui @integration
   Scenario: The user can change their email address
     Given I am on the change email page
     When I request to change my email to a unique email address
-    Then I should be logged out
-    And I should be told that my request was successful
+    Then I should be sent an email to both my current and new email
+    And I should be logged out and told that my request was successful
