@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Psr\Container\ContainerInterface;
+use Laminas\Stratigility\Middleware\ErrorHandler;
 use Mezzio\Application;
 use Mezzio\Handler\NotFoundHandler;
 use Mezzio\Helper\ServerUrlMiddleware;
@@ -13,7 +13,7 @@ use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
 use Mezzio\Router\Middleware\ImplicitOptionsMiddleware;
 use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
-use Laminas\Stratigility\Middleware\ErrorHandler;
+use Psr\Container\ContainerInterface;
 
 /**
  * Setup middleware pipeline:
@@ -48,6 +48,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->pipe(\Common\Middleware\Logging\RequestTracingMiddleware::class);
     $app->pipe(\Common\Middleware\Security\UserIdentificationMiddleware::class);
     $app->pipe(\Common\Middleware\Security\RateLimitMiddleware::class);
+    $app->pipe(\Common\Middleware\Session\SessionExpiredAttributeWhitelistMiddleware::class);
 
     // Register the routing middleware in the middleware pipeline.
     // This middleware registers the Mezzio\Router\RouteResult request attribute.
