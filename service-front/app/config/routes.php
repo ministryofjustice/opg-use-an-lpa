@@ -43,6 +43,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
     $app->get('/download-lpa', Viewer\Handler\DownloadLpaHandler::class, 'download-lpa');
     $app->get('/terms-of-use', Viewer\Handler\ViewerTermsOfUseHandler::class, 'viewer-terms-of-use');
+    $app->get('/stats', Viewer\Handler\StatsPageHandler::class, 'viewer-stats');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
@@ -126,6 +127,11 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaRemovedHandler::class
     ], 'lpa.removed');
+
+    // Admin pages
+    $app->get('/stats', [
+        Actor\Handler\StatsPageHandler::class
+    ], 'actor-stats');
 
 };
 
