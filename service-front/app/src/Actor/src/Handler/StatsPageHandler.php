@@ -15,7 +15,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class PasswordResetPageHandler extends AbstractHandler
+class StatsPageHandler extends AbstractHandler
 {
     /**
      * @param ServerRequestInterface $request
