@@ -64,6 +64,6 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/view-lpa');
 
         $this->ui->assertPageContainsText('Rachel Sanderson');
-        $this->ui->assertPageContainsText('LPA is valid');
+        $this->ui->assertPageContainsText('This LPA is valid');
     }
 }

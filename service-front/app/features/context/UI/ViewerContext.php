@@ -140,7 +140,7 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText(
             $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
         );
-        $this->ui->assertPageContainsText('LPA is valid');
+        $this->ui->assertPageContainsText('This LPA is valid');
     }
 
     /**
@@ -152,7 +152,7 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText(
             $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
         );
-        $this->ui->assertPageContainsText('LPA has been cancelled');
+        $this->ui->assertPageContainsText('This LPA has been cancelled');
     }
 
     /**
@@ -421,5 +421,24 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('I want to check another LPA');
         $this->ui->clickLink('I want to check another LPA');
         $this->iGiveAValidLPAShareCode();
+    }
+
+    /**
+     * @Given /^I waited too long to enter the share code$/
+     */
+    public function iWaitedTooLongToEnterTheShareCode()
+    {
+        $this->ui->getSession()->setCookie('session', null);
+    }
+
+    /**
+     * @Then /^I have an error message informing me to try again\.$/
+     */
+    public function iHaveAnErrorMessageInformingMeToTryAgain()
+    {
+        $this->iAmTakenBackToTheEnterCodePage();
+        $this->ui->assertPageContainsText("Do you want to continue?" .
+    " You have not used this service for 30 minutes." .
+    " Click continue to use any details you entered");
     }
 }
