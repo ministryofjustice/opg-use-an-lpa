@@ -8,10 +8,11 @@
     "test": "CI=true jest --coverage",
     "test:watch": "jest --watch",
     "build:pdf": "webpack -p --progress --config webpack.pdf.development.js",
-    "build:pdf_production": "webpack -p --progress --config webpack.pdf.production.js",
-    "build": "webpack -p --progress --config webpack.production.js",
+    "build:pdf_production": "npm run build-scss && webpack -p --progress --config webpack.pdf.production.js",
+    "build": "npm run build-scss && webpack -p --progress --config webpack.production.js",
     "watch": "webpack -p --progress --watch --config webpack.development.js",
-    "accessibility-check": "node ./pa11y.js"
+    "accessibility-check": "node ./pa11y.js",
+    "build-scss": "node-sass --omit-source-map-url src/gds.scss dist/stylesheets/gds.css"
   },
   "author": "John Nolan <john.nolan@digital.justice.gov.uk>",
   "license": "MIT",
@@ -35,10 +36,12 @@
     "jest-junit": "^9.0.0",
     "mini-css-extract-plugin": "^0.8.2",
     "node-sass": "^4.14.1",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
     "prettier": "^1.19.1",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "webpack": "^4.43.0",
+    "terser-webpack-plugin": "^3.0.1",
     "webpack-cli": "^3.3.11",
     "webpack-merge": "^4.2.2"
   },
