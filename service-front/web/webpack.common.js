@@ -58,13 +58,16 @@ module.exports = {
       filename: 'stylesheets/[name].css',
       chunkFilename: 'stylesheets/[id].css',
     }),
-    new CopyWebpackPlugin([
-      { from: 'src/robots.txt', to: 'robots.txt' },
-      { from: 'node_modules/govuk-frontend/govuk/assets', to: 'assets' },
-      {
-        from: 'node_modules/@ministryofjustice/frontend/moj/assets',
-        to: 'assets',
-      },
-    ]),
+    new CopyWebpackPlugin({
+        patterns: [
+          { from: 'src/robots.txt', to: 'robots.txt' },
+          { from: 'node_modules/govuk-frontend/govuk/assets', to: 'assets' },
+          {
+            from: 'node_modules/@ministryofjustice/frontend/moj/assets',
+            to: 'assets',
+          },
+        ]
+      }
+    ),
   ],
 };
