@@ -64,27 +64,17 @@ class UserService
         }
 
         $emailResetExists = $this->usersRepository->checkIfEmailResetRequested($data['email']);
-        // check if a current user has requested to change their password to same email
-        if (!empty($emailResetExists)) {
-            if (new DateTime('@' . $emailResetExists[0]['EmailResetExpiry']) >= new DateTime('now')) {
-                // if the email reset token has not expired, the user cannot make an account with this email
-                throw new Exception(
-                    'Another user has requested to change their email to ' . $data['email'],
-                    ['email' => $data['email']]
-                );
-            } else {
-                // since the other user's token has expired, the current user can request the new email change
-                // the other user will have their email reset data removed
-                $this->usersRepository->removeExpiredEmailResetRequests($emailResetExists[0]['Id']);
 
-                $this->logger->info(
-                    'Change email token for account Id {id1} has expired and been removed
-                    as an account has been created for the same email of {email}',
-                    [
-                        'id1'   => $emailResetExists[0]['Id'],
-                        'email' => ($data['email']),
-                    ]
-                );
+        //checks if the new email chosen has already been requested for reset
+        if (!empty($emailResetExists)) {
+            foreach ($emailResetExists as $otherUser) {
+                if (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now')) {
+                    // if the other users email reset token has not expired, the user cannot make an account with this email
+                    throw new Exception(
+                        'Another user has requested to change their email to ' . $data['email'],
+                        ['email' => $data['email']]
+                    );
+                }
             }
         }
 
