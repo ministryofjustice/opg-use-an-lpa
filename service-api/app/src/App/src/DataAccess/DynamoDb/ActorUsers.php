@@ -302,19 +302,6 @@ class ActorUsers implements ActorUsersInterface
         return $this->getData($user);
     }
 
-    public function removeExpiredEmailResetRequests(string $userId): void
-    {
-        $this->client->updateItem([
-            'TableName' => $this->actorUsersTable,
-            'Key' => [
-                'Id' => [
-                    'S' => $userId,
-                ],
-            ],
-            'UpdateExpression' => 'REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
-        ]);
-    }
-
     public function recordChangeEmailRequest(string $id, string $newEmail, string $resetToken, int $resetExpiry): array
     {
         $user = $this->client->updateItem([

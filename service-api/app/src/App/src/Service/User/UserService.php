@@ -361,31 +361,18 @@ class UserService
     {
         $newEmailExists = $this->usersRepository->checkIfEmailResetRequested($newEmail);
 
+        $canRequest = true;
+
         //checks if the new email chosen has already been requested for reset
         if (!empty($newEmailExists)) {
-            if ($userId === $newEmailExists[0]['Id']) {
-                // if it is the current user who requested that new email
-                // then it can be overridden with the email chosen for this reset
-                return true;
-            } elseif (new DateTime('@' . $newEmailExists[0]['EmailResetExpiry']) >= new DateTime('now')) {
-                // if the reset request has not expired for that other user,
-                // then the current user should not be able to request that email change
-                return false;
+            foreach ($newEmailExists as $otherUser) {
+                // if the other user's reset request has not expired and that other use is not the current user
+                if (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now') && ($userId !== $otherUser['Id'])) {
+                    $canRequest = false;
+                }
             }
-            // since the other user's token has expired, the current user can request the new email change
-            // and the other user will have their email reset data removed
-            $this->usersRepository->removeExpiredEmailResetRequests($newEmailExists[0]['Id']);
-
-            $this->logger->info(
-                'Change email token for account Id {id1} has expired and been removed
-                 as another account id {id2} has requested the same email change',
-                [
-                    'id1' => $newEmailExists[0]['Id'],
-                    'id2' => $userId,
-                ]
-            );
         }
-        return true;
+        return $canRequest;
     }
 
     /**

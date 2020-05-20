@@ -71,13 +71,6 @@ interface ActorUsersInterface
     public function checkIfEmailResetRequested(string $newEmail): array;
 
     /**
-     * Removes expired email reset data for a particular users account
-     *
-     * @param string $userId
-     */
-    public function removeExpiredEmailResetRequests(string $userId): void;
-
-    /**
      * Activate the user account in the database using the token value
      *
      * @param string $activationToken
