@@ -1,37 +1,33 @@
-.global-cookie-message__show {
-  display: block !important;
-}
-
-.global-cookie-message {
+.cookie-banner {
   display: none;
+  @include govuk-font(16);
 
-  .global-cookie-message__text {
-    font-size: 19px;
-    line-height: 1.315;
+  box-sizing: border-box;
+
+  padding-top: govuk-spacing(3);
+  padding-bottom: govuk-spacing(3);
+  left: govuk-spacing(3);
+  padding-right: govuk-spacing(3);
+  background-color: lighten(desaturate(govuk-colour('light-blue'), 8.46), 42.55);
+
+  &--show {
+    display: block !important;
   }
 
-  .global-cookie-message__buttons {
-    max-width: 960px;
-    margin: 15px 15px;
+  &__message {
+    margin: 0;
+    @include govuk-width-container;
   }
 
-  .global-cookie-message__button {
-    margin-right: 15px;
-  }
-}
-
-@media (min-width: 641px) {
-  .global-cookie-message {
-    .global-cookie-message__buttons {
-      margin: 15px 30px;
+  &__button .govuk-button {
+    @include govuk-media-query($from: tablet) {
+      width: 90%;
     }
   }
 }
 
-@media (min-width: 1020px) {
-  .global-cookie-message {
-    .global-cookie-message__buttons {
-      margin: 15px auto;
-    }
+@include govuk-media-query($media-type: print) {
+  .cookie-banner {
+    display: none !important;
   }
 }

@@ -26,15 +26,22 @@
 <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
 {#UML-695#}
-<div class="global-cookie-message" role="region" aria-label="cookie banner">
-    <p class="global-cookie-message__text">
-        GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us
-        improve government digital services. Any data collected is anonymised.
-    </p>
-    <div class="global-cookie-message__buttons">
-        <div>
-            <button class="global-cookie-message__button global-cookie-message__button_accept" type="submit">Accept all cookies</button>
-            <a class="global-cookie-message__button-link global-cookie-message__button-link_settings" role="button" href="/cookies">Cookie settings</a>
+<div class="cookie-banner govuk-width-container cookie-banner--visible" role="region" aria-label="cookie banner">
+    <div class="govuk-grid-row">
+        <div class=" govuk-grid-column-two-thirds">
+            <div class="cookie-banner__message">
+                <h2 class="govuk-heading-m">Tell us whether you accept cookies</h2>
+                <p class="govuk-body">GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us
+                    improve government digital services. Any data collected is anonymised.</p>
+            </div>
+            <div class="cookie-banner__buttons">
+                <div class="cookie-banner__button cookie-banner__button-accept govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0">
+                    <button class="govuk-button button--inline" type="submit" role="button">Accept all cookies</button>
+                </div>
+                <div class="cookie-banner__button govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0">
+                    <a href="/cookies" class="govuk-button govuk-button--secondary button--inline" role="button">Set cookie preferences</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

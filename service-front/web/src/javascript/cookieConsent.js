@@ -14,7 +14,7 @@ const CookieConsent = element => {
 };
 
 const toggleCookieMessage = (element, show) => {
-  element.classList.toggle('global-cookie-message__show', show);
+  element.classList.toggle('cookie-banner--show', show);
 }
 
 const loadAnalytics = () => {

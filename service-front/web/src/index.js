@@ -13,4 +13,3 @@ jsEnabled(document.body);
 disableButtonOnClick(document.getElementsByTagName('form'));
 new cookieConsent(document.getElementsByClassName('cookie-banner')[0]);
 copyAccessCode(document.getElementById("copybutton"));
-

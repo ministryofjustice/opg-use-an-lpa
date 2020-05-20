@@ -3,17 +3,24 @@ import '@testing-library/jest-dom'
 import { getCookie } from './cookieHelper';
 
 const cookieBannerHtml = `
-<div class="global-cookie-message" role="region" aria-label="cookie banner">
-  <p class="global-cookie-message__text">
-      GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us
-      improve government digital services. Any data collected is anonymised.
-  </p>
-  <div class="global-cookie-message__buttons">
-      <div>
-          <button class="global-cookie-message__button global-cookie-message__button_accept" type="submit">Accept all cookies</button>
-          <a class="global-cookie-message__button-link global-cookie-message__button-link_settings" role="button" href="/cookies">Cookie settings</a>
-      </div>
-  </div>
+<div class="cookie-banner govuk-width-container cookie-banner--visible" role="region" aria-label="cookie banner">
+    <div class="govuk-grid-row">
+        <div class=" govuk-grid-column-two-thirds">
+            <div class="cookie-banner__message">
+                <h2 class="govuk-heading-m">Tell us whether you accept cookies</h2>
+                <p class="govuk-body">GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us
+                    improve government digital services. Any data collected is anonymised.</p>
+            </div>
+            <div class="cookie-banner__buttons">
+                <div class="cookie-banner__button cookie-banner__button-accept govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0">
+                    <button class="govuk-button button--inline" type="submit" role="button">Accept all cookies</button>
+                </div>
+                <div class="cookie-banner__button govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0">
+                    <a href="/cookies" class="govuk-button govuk-button--secondary button--inline" role="button">Set cookie preferences</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 `;
 
@@ -26,9 +33,9 @@ describe('When the cookie banner is initiated', () => {
     getCookie.mockReturnValueOnce(null)
     test('it should show the banner', () => {
       document.body.innerHTML = cookieBannerHtml;
-      cookieConsent(document.querySelector('.global-cookie-message'));
-      const cookieBanner = document.querySelector('.global-cookie-message');
-      expect(cookieBanner).toHaveClass('global-cookie-message__show');
+      cookieConsent(document.querySelector('.cookie-banner'));
+      const cookieBanner = document.querySelector('.cookie-banner');
+      expect(cookieBanner).toHaveClass('cookie-banner--show');
     });
   });
 
@@ -36,9 +43,9 @@ describe('When the cookie banner is initiated', () => {
     getCookie.mockReturnValueOnce(true)
     test('it should not show the banner', () => {
       document.body.innerHTML = cookieBannerHtml;
-      cookieConsent(document.getElementsByClassName('global-cookie-message')[0]);
-      const cookieBanner = document.querySelector('.global-cookie-message');
-      expect(cookieBanner).not.toHaveClass('global-cookie-message__show');
+      cookieConsent(document.getElementsByClassName('cookie-banner')[0]);
+      const cookieBanner = document.querySelector('.cookie-banner');
+      expect(cookieBanner).not.toHaveClass('cookie-banner--show');
     });
   });
   afterEach(() => {

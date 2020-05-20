@@ -16,7 +16,7 @@ services:
     entrypoint: >
       sh -c "npm i && npm run build:pdf && npm run watch"
     volumes:
-      - ./service-front/web:/web
+      - ./service-front/web:/web:rw,delegated
       - webpack_dist:/dist
 
   # ---------------------------
