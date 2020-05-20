@@ -4,8 +4,6 @@
 
 - homebrew
 - python
-- direnv
-- awk
 - jq: <https://stedolan.github.io/jq/>
 - aws-vault, with your credentials set up : <https://github.com/99designs/aws-vault>
 - you may need to refer to the onboarding instructions for AWS if you do not have an aws identity set up: <https://ministryofjustice.github.io/opg-new-starter/amazon.html>
@@ -24,12 +22,41 @@ or
 pip3 install -r requirements.txt
 ```
 
-run the following shell script.
-The environment is the first part of the url e.g. demo or ULM222xyz for example.
+you now have 2 options. you can do:
+
+- **CSV file code generation**: for larger batches.
+- **Inline code generation**: useful for a quick generation of a small number of codes.
+
+for both options, the `<environment>` is the first part of the url e.g. demo or ULM222xyz for example.
+
+**Running from a CSV file**: This option allows you to take a CSV file with an LPA code on each line similar to this:
+
+``` text
+700000000000
+700000000001
+..etc
+```
+
+We do some sanitising of the file to remove unexpected characters, dashes etc,
+However, it is worth checking the file before running.
+
+Command:
 
 ``` shell
-./generate_actor_codes.sh <environment> <comma separated lpa uids>
+./generate_actor_codes.sh -e <environment> -f </path/to/lpacodes.csv>
 ```
+
+**Running inline**: This option is simply to allow inline running of the codes.
+
+command:
+
+``` shell
+./generate_actor_codes.sh -e <environment> -i "<comma separated lpa uids>"
+```
+
+**Note:** The list of `comma separated lpa uids` must be surrounded by double quotes.
+
+Both options have the `-v` option to switch on debug mode.
 
 You will be given the chance to review the input, and cancel if needed.
 
