@@ -104,3 +104,10 @@ Feature: View an LPA via sharecode
     Then I want to see page to enter another share code
 
 
+  @ui
+  Scenario: The user gets a session timeout if the cookie is not present.
+    Given I have been given access to an LPA via share code
+    And I access the viewer service
+    And I waited too long to enter the share code
+    And I give a valid LPA share code
+    Then I have an error message informing me to try again.

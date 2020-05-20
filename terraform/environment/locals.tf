@@ -19,6 +19,8 @@ variable "accounts" {
       api_gateway_endpoint   = string
       session_expires_view   = number
       session_expires_use    = number
+      cookie_expires_view    = number
+      cookie_expires_use     = number
       logging_level          = number
       pagerduty_service_name = string
     })

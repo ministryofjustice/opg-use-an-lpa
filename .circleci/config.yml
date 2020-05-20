@@ -18,10 +18,20 @@ workflows:
           environment: demo
           requires: [redeploy_demo]
 
+  workspace_cleanup:
+    triggers:
+      - schedule:
+          cron: "0 0,2,4,6,8,10,12,14,16,18,20,22 * * 0-6" # every 2 hours from midnight
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - workspace_cleanup:
+          name: workspace_cleanup
 
   pr_build:
       jobs:
-        # Common tasks
         - use-my-lpa/lint_terraform:
             name: lint_terraform_pr_build
             filters: { branches: { ignore: [master] } }
@@ -63,7 +73,12 @@ workflows:
             name: coveralls_upload_pr_build
             filters: { branches: { ignore: [master] } }
             requires:
-              [app_front_build_pr_build, app_api_build_pr_build, test_web_pr_build, test_pdf_pr_build]
+              [
+                app_front_build_pr_build,
+                app_api_build_pr_build,
+                test_web_pr_build,
+                test_pdf_pr_build,
+              ]
 
             # Provision and test development
         - use-my-lpa/apply_shared_terraform:
@@ -84,6 +99,11 @@ workflows:
                 pdf_build_pr_build,
               ]
 
+        - mark_workspace_as_protected:
+            name: mark_workspace_as_protected
+            filters: { branches: { ignore: [master] } }
+            requires: [dev_apply_environment_terraform]
+
         - ecr_scan_results:
             name: ecr_scan_results_development
             filters: { branches: { ignore: [master] } }
@@ -102,21 +122,21 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires: [dev_apply_environment_terraform]
 
-        - use-my-lpa/run_behave_suite:
-            name: dev_run_behave_tests
+        - use-my-lpa/run_behat_suite:
+            name: dev_run_behat_tests
             filters: { branches: { ignore: [master] } }
             requires: [dev_seed_database]
 
         - slack_notify_domain:
             name: post_environment_domains
             filters: { branches: { ignore: [master] } }
-            requires: [dev_run_behave_tests]
+            requires: [dev_run_behat_tests]
 
         - hold-for-destruction:
             name: hold_env_for_destruction
             filters: { branches: { ignore: [master] } }
             type: approval
-            requires: [dev_run_behave_tests]
+            requires: [dev_run_behat_tests]
 
         - use-my-lpa/destroy_dev_environment:
             name: dev_destroy_environment
@@ -163,7 +183,12 @@ workflows:
             name: coveralls_upload_path_to_live
             filters: { branches: { only: [master] } }
             requires:
-              [app_front_build_path_to_live, app_api_build_path_to_live, test_web_path_to_live, test_pdf_path_to_live]
+              [
+                app_front_build_path_to_live,
+                app_api_build_path_to_live,
+                test_web_path_to_live,
+                test_pdf_path_to_live,
+              ]
 
         # Provision and test preproduction
         - use-my-lpa/apply_shared_terraform:
@@ -199,12 +224,11 @@ workflows:
 
         - use-my-lpa/seed_database:
             name: preprod_seed_database
-            #workspace: preproduction   # Not needed as the target account is within the config file.
             filters: { branches: { only: [master] } }
             requires: [preprod_apply_environment_terraform]
 
-        - use-my-lpa/run_behave_suite:
-            name: preprod_run_behave_tests
+        - use-my-lpa/run_behat_suite:
+            name: preprod_run_behat_tests
             workspace: preproduction
             filters: { branches: { only: [master] } }
             requires: [preprod_seed_database]
@@ -214,7 +238,7 @@ workflows:
             name: production_apply_shared_terraform
             workspace: production
             filters: { branches: { only: [master] } }
-            requires: [preprod_run_behave_tests]
+            requires: [preprod_run_behat_tests]
         - use-my-lpa/apply_environment_terraform:
             name: production_apply_environment_terraform
             workspace: production
@@ -249,15 +273,17 @@ orbs:
           - run:
               name: Install AWS CLI
               command: sudo pip3 install awscli --upgrade
-      install_webdriver:
+      install_python:
         steps:
           - run:
-              name: Install WebDriver
+              name: Install Python (for non-python executors)
               command: |
-                wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
-                sudo sh -c 'tar -x geckodriver -zf geckodriver-v0.23.0-linux64.tar.gz -O > /usr/bin/geckodriver'
-                sudo chmod +x /usr/bin/geckodriver
-                rm geckodriver-v0.23.0-linux64.tar.gz
+                sudo apt install python3 python3-pip
+                sudo pip3 install --no-cache pipenv poetry
+                cd /usr/local/bin
+                sudo ln -sf /usr/bin/pydoc3 pydoc
+                sudo ln -sf /usr/bin/python3 python
+                sudo ln -sf /usr/bin/python3-config python-config
       ecr_login:
         steps:
           - run:
@@ -275,12 +301,12 @@ orbs:
         docker: [image: buildkite/puppeteer]
       php:
         docker: [image: circleci/php:7-cli]
+      php-browsers:
+        docker: [image: circleci/php:7-cli-browsers]
       node:
         docker: [image: circleci/node:8.0]
       python:
         docker: [image: circleci/python]
-      python-browsers:
-        docker: [image: circleci/python:3.6-stretch-browsers]
       terraform:
         docker: [image: hashicorp/terraform]
 
@@ -462,7 +488,7 @@ orbs:
           - run:
               name: Push container
               command: |
-                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
 
                 docker tag front-app:latest << parameters.container_repo_url >>:latest
@@ -501,7 +527,7 @@ orbs:
           - run:
               name: Push container
               command: |
-                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
 
                 docker tag front-web:latest << parameters.container_repo_url >>:latest
@@ -570,7 +596,7 @@ orbs:
           - run:
               name: Push container
               command: |
-                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
 
                 docker tag api-app:latest << parameters.container_repo_url >>:latest
@@ -606,7 +632,7 @@ orbs:
           - run:
               name: Push container
               command: |
-                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
 
                 docker tag api-web:latest << parameters.container_repo_url >>:latest
@@ -643,7 +669,7 @@ orbs:
           - run:
               name: Push container
               command: |
-                export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
 
                 docker tag pdf:latest << parameters.container_repo_url >>:latest
@@ -719,7 +745,7 @@ orbs:
                 terraform --version
                 cd ~/project/terraform/account
                 terraform init -lock-timeout=300s
-                export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 terraform validate
           - run:
@@ -727,9 +753,9 @@ orbs:
               command: |
                 cd ~/project/terraform/environment
                 terraform init -lock-timeout=300s
-                export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                export IMAGE_TAG=$(~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
                 terraform validate -var container_version=${IMAGE_TAG}
 
@@ -773,9 +799,9 @@ orbs:
               command: |
                 cd ~/project/terraform/environment
                 terraform init -lock-timeout=300s
-                export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                export IMAGE_TAG=$(~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
                 terraform apply -lock-timeout=300s --auto-approve -var container_version=${IMAGE_TAG}
                 mv cluster_config.json /tmp/
@@ -802,7 +828,7 @@ orbs:
                 if [ "${CIRCLE_BRANCH}" != "master" ]; then
                   cd ~/project/terraform/environment
                   terraform init -lock-timeout=300s
-                  export TF_WORKSPACE=$(~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                  export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                   echo $TF_WORKSPACE
                   terraform destroy -lock-timeout=300s -auto-approve
                 fi
@@ -820,7 +846,7 @@ orbs:
           - run:
               name: Redeploy Services
               command: |
-                export ACCOUNT_ID=$(~/project/pipeline_scripts/identify_account_id.sh <<parameters.environment>>)
+                export ACCOUNT_ID=$(~/project/scripts/pipeline/identify_account_id.sh <<parameters.environment>>)
                 temp_role=$(aws sts assume-role --role-arn arn:aws:iam::$ACCOUNT_ID:role/opg-use-an-lpa-ci --role-session-name ci)
                 export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
@@ -854,11 +880,8 @@ orbs:
       #----------------------------------------------------
       # Tests
 
-      run_behave_suite:
-        #
-        # Run the full set of functional tests
-        #
-        executor: python-browsers
+      run_behat_suite:
+        executor: php-browsers
         parameters:
           workspace:
             description: Terraform workspace name
@@ -866,42 +889,45 @@ orbs:
             default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
         steps:
           - checkout
-          - install_webdriver
+          - install_python
           - attach_workspace:
               at: /tmp
           - run:
               name: Wait for new tasks in services to be running
               command: |
                 sudo pip3 install boto3 -q
-                python pipeline_scripts/aws_ecs_task.py /tmp/cluster_config.json
+                python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
           - run:
-              name: Install Behave
-              command: sudo pip3 install behave selenium --upgrade
+              name: Install and configure dependencies
+              command: |
+                cd tests/smoke
+                composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
           - run:
               name: Allow CircleCI ingress to environment
               command: |
-                export TF_WORKSPACE=$(bash ~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                export TF_WORKSPACE=$(bash ~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 if [ "${TF_WORKSPACE}" != "production" ]; then
-                  python pipeline_scripts/ci_ingress.py /tmp/cluster_config.json --add
+                  python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json --add
                 fi
-
           - run:
               name: Run suite
               command: |
-                export TF_WORKSPACE=$(bash ~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
-                echo $TF_WORKSPACE
-                export IMAGE_TAG=$(~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-                echo $IMAGE_TAG
-                behave -v --logging-level DEBUG
+                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
+                actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
+
+                ln -sf ../features tests/smoke/features
+
+                cd tests/smoke
+                BEHAT_VIEWER_URL=https://$viewer_fqdn BEHAT_ACTOR_URL=https://$actor_fqdn vendor/bin/behat
           - store_artifacts:
-              path: features/failed_scenarios_screenshots
+              path: tests/smoke/failed_step_screenshots
           - run:
               name: Remove CircleCI ingress to environment
               command: |
-                export TF_WORKSPACE=$(bash ~/project/pipeline_scripts/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                export TF_WORKSPACE=$(bash ~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                python pipeline_scripts/ci_ingress.py /tmp/cluster_config.json
+                python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json
               when: always
 
       run_healthcheck_test:
@@ -911,14 +937,13 @@ orbs:
         executor: python
         steps:
           - checkout
-          - install_webdriver
           - attach_workspace:
               at: /tmp
           - run:
               name: Wait for new tasks in services to be running
               command: |
                 sudo pip3 install boto3
-                python pipeline_scripts/aws_ecs_task.py /tmp/cluster_config.json
+                python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
           - run:
               name: Run test
               command: |
@@ -927,7 +952,8 @@ orbs:
                 [[ $viewer_response == 200 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
 
                 actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
-                # TODO Add for actor when endpoint exists.
+                actor_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$actor_fqdn/healthcheck)
+                [[ $actor_response == 200 ]] || (echo "Error with actor health check. HTTP status: ${actor_response}" && exit 1)
 
 jobs:
   slack_environment_redeploy:
@@ -994,7 +1020,36 @@ jobs:
       - run:
           name: Check ECR Scan Results
           command: |
-            sudo pip3 install -r pipeline_scripts/check_ecr_scan_results/requirements.txt
-            export IMAGE_TAG=$(bash ~/project/pipeline_scripts/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+            sudo pip3 install -r scripts/pipeline/requirements.txt
+            export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
             echo $IMAGE_TAG
-            python pipeline_scripts/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
+            python scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
+
+  workspace_cleanup:
+    docker:
+      - image: hashicorp/terraform
+    steps:
+      - checkout
+      - run:
+          name: Cleanup Workspaces
+          command: |
+            cd terraform/environment
+            terraform init -lock-timeout=300s
+            ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(../../scripts/pipeline/workspace_cleanup/get_workspaces_linux)
+
+  mark_workspace_as_protected:
+    docker:
+      - image: hashicorp/terraform
+    parameters:
+      workspace:
+        description: Terraform workspace name
+        type: string
+        default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
+    steps:
+      - checkout
+
+      - run:
+          name: Mark Workspace for Cleanup
+          command: |
+            export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+            ~/project/scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE
