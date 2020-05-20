@@ -1,0 +1,147 @@
+{% extends '@viewer/layout.html.twig' %}
+
+{% block html_title %}View an LPA stats{% endblock %}
+
+{% block content %}
+
+    <main class="govuk-main-wrapper">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+
+                <h1 class="govuk-heading-xl">LPA Statistics</h1>
+
+                <p class="govuk-body-s">
+                    Data last updated:
+                    <b>12 March 2020 at 09:00</b>
+                </p>
+                <div class="govuk-tabs" data-module="govuk-tabs">
+
+                    <h2 class="govuk-tabs__title">Contents</h2>
+
+                    <div class="govuk-tabs__panel" id="use">
+                        <table class="govuk-table">
+                            <caption class="govuk-table__caption">
+                                <h2 class="govuk-heading-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">
+                                    Number of LPA codes viewed
+                                </h2>
+                            </caption>
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-third"></th>
+                                <th scope="col" class="govuk-table__header">All time</th>
+                                <th scope="col" class="govuk-table__header">This month</th>
+                                <th scope="col" class="govuk-table__header">Last month</th>
+                                <th scope="col" class="govuk-table__header">2 months ago</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body ">
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Property & finance</th>
+                                <td class="govuk-table__cell">232</td>
+                                <td class="govuk-table__cell">239</td>
+                                <td class="govuk-table__cell">221</td>
+                                <td class="govuk-table__cell">124</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Health & welfare</th>
+                                <td class="govuk-table__cell">487</td>
+                                <td class="govuk-table__cell">119</td>
+                                <td class="govuk-table__cell">341</td>
+                                <td class="govuk-table__cell">112</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">TOTAL</th>
+                                <td class="govuk-table__cell">709</td>
+                                <td class="govuk-table__cell">351</td>
+                                <td class="govuk-table__cell">598</td>
+                                <td class="govuk-table__cell">236</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="govuk-table">
+                            <caption class="govuk-table__caption">
+                                <h2 class="govuk-heading-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">
+                                    Number of LPA summary downloads
+                                </h2>
+                            </caption>
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-third"></th>
+                                <th scope="col" class="govuk-table__header">All time</th>
+                                <th scope="col" class="govuk-table__header">This month</th>
+                                <th scope="col" class="govuk-table__header">Last month</th>
+                                <th scope="col" class="govuk-table__header">2 months ago</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body ">
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Property & finance</th>
+                                <td class="govuk-table__cell">232</td>
+                                <td class="govuk-table__cell">239</td>
+                                <td class="govuk-table__cell">221</td>
+                                <td class="govuk-table__cell">124</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Health & welfare</th>
+                                <td class="govuk-table__cell">487</td>
+                                <td class="govuk-table__cell">119</td>
+                                <td class="govuk-table__cell">341</td>
+                                <td class="govuk-table__cell">112</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">TOTAL</th>
+                                <td class="govuk-table__cell">709</td>
+                                <td class="govuk-table__cell">351</td>
+                                <td class="govuk-table__cell">598</td>
+                                <td class="govuk-table__cell">236</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="govuk-table">
+                            <caption class="govuk-table__caption">
+                                <h2 class="govuk-heading-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">
+                                    Number of expired codes attempted
+                                </h2>
+                            </caption>
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-third"></th>
+                                <th scope="col" class="govuk-table__header">All time</th>
+                                <th scope="col" class="govuk-table__header">This month</th>
+                                <th scope="col" class="govuk-table__header">Last month</th>
+                                <th scope="col" class="govuk-table__header">2 months ago</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body ">
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Property & finance</th>
+                                <td class="govuk-table__cell">232</td>
+                                <td class="govuk-table__cell">239</td>
+                                <td class="govuk-table__cell">221</td>
+                                <td class="govuk-table__cell">124</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Health & welfare</th>
+                                <td class="govuk-table__cell">487</td>
+                                <td class="govuk-table__cell">119</td>
+                                <td class="govuk-table__cell">341</td>
+                                <td class="govuk-table__cell">112</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">TOTAL</th>
+                                <td class="govuk-table__cell">709</td>
+                                <td class="govuk-table__cell">351</td>
+                                <td class="govuk-table__cell">598</td>
+                                <td class="govuk-table__cell">236</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
