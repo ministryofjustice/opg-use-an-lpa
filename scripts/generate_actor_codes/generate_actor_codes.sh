@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-
 function get_lpa_inputcount(){
     LPA_COUNT=$( echo "${LPATRIMMED}" | awk  -v FS="," "{ print NF }" );
 }
@@ -11,13 +10,11 @@ function load_csv(){
         awk 'BEGIN{RS="\n"; ORS=","; FS=","}{print $1}' |   # convert lines to csv taking making sure only first field is used.
         sed -e 's/[^0-9,]*//g' |                            # remove anything that's not a number or a comma
         sed 's/,$//')                                       # fix comma at end of file if present.
-
 }
 
 function parse_interactive(){
     LPATRIMMED=$(  echo "$@" | tr -d '[:space:]')   # strip spaces out
     LPATRIMMED=${LPATRIMMED//[!0-9,]/}              # remove all other non required characters.
-
 }
 
 function check_file_sanity(){
