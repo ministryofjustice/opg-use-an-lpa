@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+
+function get_lpa_inputcount(){
+    LPA_COUNT=$( echo "${LPATRIMMED}" | awk  -v FS="," "{ print NF }" );
+}
+
 function load_csv(){
-    LPATRIMMED=$(tr -d '\r' < $1 |                  # trim Windows line-feeds to make easier
-        awk 'BEGIN{RS="\n"; ORS=","}{print $1}' |   # convert lines to csv
-        sed -e 's/[^0-9,]*//g' |                    # remove anything that's not a number or a comma
-        sed 's/,$//')                               # fix comma at end of file if present.
+    LPATRIMMED=$(tr -d '\r' < $1 |                          # trim Windows line-feeds to make easier
+        awk 'BEGIN{RS="\n"; ORS=","; FS=","}{print $1}' |   # convert lines to csv taking making sure only first field is used.
+        sed -e 's/[^0-9,]*//g' |                            # remove anything that's not a number or a comma
+        sed 's/,$//')                                       # fix comma at end of file if present.
+
 }
 
 function parse_interactive(){
@@ -100,8 +106,11 @@ else
     usage;
 fi
 
+get_lpa_inputcount
+
 echo "environment name=${LPAENV}"
 echo "LPA Id's=${LPATRIMMED}"
+echo "Total LPAs entered: ${LPA_COUNT}"
 echo "A new ${FILENAME}.txt file will be generated."
 echo "This will be stored securely in disk image ${FILENAME}.dmg and copied to your Documents folder."
 
