@@ -32,3 +32,18 @@ Feature: Change email
     When I request to change my email to an email address that another user has requested to change their email to but their token has expired
     Then I should be sent an email to both my current and new email
     And I should be logged out and told that my request was successful
+
+  @acceptance @integration
+  Scenario: The user can request to change their email address
+    Given I am on the change email page
+    When I request to change my email to a unique email address
+    Then I should be sent an email to both my current and new email
+    And I should be logged out and told that my request was successful
+
+  @acceptance @integration
+  Scenario: The user can change their email address with a valid email token
+    Given I have requested to change my email address
+    And My email reset token is still valid
+    When I click the link to verify my new email address
+    Then My account email address should be reset
+    And I should be able to login with my new email address
