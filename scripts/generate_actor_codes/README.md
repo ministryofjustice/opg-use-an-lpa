@@ -65,6 +65,7 @@ Note: `${FILENAME}` prefix is in the `bash` date based format `<environment>_act
 ``` log
 environment name=<environment>
 LPA Id's=<comma separated lpa uids, no spaces>
+Total LPAs entered: <no of LPA uids - corresponding to the list count above>
 environment name=357automateac
 A new ${FILENAME}.txt will be generated.
 This will be stored securely in disk image ${FILENAME}.dmg and copied to your Documents folder.
