@@ -2019,7 +2019,8 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iHaveRequestedToChangeMyEmailAddress()
     {
-        // Not needed for this context
+        $this->userEmailResetToken = '12345abcde';
+        $this->newEmail = 'newEmail@test.com';
     }
 
     /**
@@ -2027,8 +2028,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function myEmailResetTokenIsStillValid()
     {
-        $this->userEmailResetToken = '12345abcde';
-        $this->newEmail = 'newEmail@test.com';
+        // Not needed for this context
     }
 
     /**
@@ -2118,5 +2118,75 @@ class AccountContext extends BaseIntegrationContext
     public function iShouldBeAbleToLoginWithMyNewEmailAddress()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @When /^I click the link to verify my new email address after my token has expired$/
+     */
+    public function iClickTheLinkToVerifyMyNewEmailAddressAfterMyTokenHasExpired()
+    {
+        // ActorUsers::getIdByEmailResetToken
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'EmailResetToken'  => $this->userEmailResetToken
+                ]),
+                $this->marshalAwsResultData([
+                    'Id' => $this->userAccountId
+                ])
+            ]
+        ]));
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'               => $this->userAccountId,
+                'Email'            => $this->userAccountEmail,
+                'Password'         => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                'EmailResetExpiry' => (time() - (60 * 60)),
+                'LastLogin'        => null,
+                'NewEmail'         => $this->newEmail,
+                'EmailResetToken'  => $this->userEmailResetToken
+            ])
+        ]));
+
+        $userService = $this->container->get(UserService::class);
+
+        try {
+            $userService->canResetEmail($this->userEmailResetToken);
+        } catch (GoneException $ex) {
+            assertEquals(410, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException();
+    }
+
+    /**
+     * @Then /^I should be told that my email could not be changed$/
+     */
+    public function iShouldBeToldThatMyEmailCouldNotBeChanged()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I click an old link to verify my new email address containing a token that no longer exists$/
+     */
+    public function iClickAnOldLinkToVerifyMyNewEmailAddressContainingATokenThatNoLongerExists()
+    {
+        // ActorUsers::getIdByEmailResetToken
+        $this->awsFixtures->append(new Result([]));
+
+        $userService = $this->container->get(UserService::class);
+
+        try {
+            $userService->canResetEmail($this->userEmailResetToken);
+        } catch (GoneException $ex) {
+            assertEquals(410, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException();
     }
 }

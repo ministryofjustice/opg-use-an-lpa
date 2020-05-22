@@ -389,7 +389,7 @@ class UserService
             );
         }
 
-        throw new GoneException('Email reset token not found');
+        throw new GoneException('Email reset token has expired');
     }
 
     /**

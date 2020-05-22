@@ -47,3 +47,15 @@ Feature: Change email
     When I click the link to verify my new email address
     Then My account email address should be reset
     And I should be able to login with my new email address
+
+  @acceptance @integration
+  Scenario: The user cannot change their email address with an expired email token
+    Given I have requested to change my email address
+    When I click the link to verify my new email address after my token has expired
+    Then I should be told that my email could not be changed
+
+  @acceptance @integration
+  Scenario: The user cannot change their email address with an email token that doesnt exist
+    Given I have requested to change my email address
+    When I click an old link to verify my new email address containing a token that no longer exists
+    Then I should be told that my email could not be changed

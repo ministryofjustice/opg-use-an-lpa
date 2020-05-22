@@ -3049,9 +3049,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I click the link to verify my new email address after my token has expired$/
-     * @When /^I click an old link to verify my new email address containing a token that no longer exists$/
-     */
+    * @When /^I click the link to verify my new email address after my token has expired$/
+    * @When /^I click an old link to verify my new email address containing a token that no longer exists$/
+    */
     public function iClickTheLinkToVerifyMyNewEmailAddressAfterMyTokenHasExpired()
     {
         // API fixture for email reset token check
