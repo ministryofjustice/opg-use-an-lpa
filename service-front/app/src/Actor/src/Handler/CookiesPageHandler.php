@@ -54,6 +54,9 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         $cookies = $request->getCookieParams();
 
         $usageCookies = 'no';
+        var_dump($form->get('usageCookies'));
+        die;
+
         if (array_key_exists(self::COOKIE_POLICY_NAME, $cookies)) {
             $cookiePolicy = json_decode($cookies[self::COOKIE_POLICY_NAME], true);
             $usageCookies = $cookiePolicy['usage'] === true ? 'yes' : 'no';
@@ -76,6 +79,7 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
 
         // it's assumed that you'll be going to the start after setting cookies settings
         $response = new RedirectResponse($this->urlHelper->generate('home'));
+
         if (array_key_exists(self::COOKIE_POLICY_NAME, $cookies)) {
             try {
                 $cookiePolicy = json_decode($cookies[self::COOKIE_POLICY_NAME], true);
@@ -84,11 +88,18 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
             }
 
             $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes' ? true : false;
-
             $response = FigResponseCookies::set($response,
                 SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))
                     ->withHttpOnly(false)
                     ->withExpires(new \DateTime('+365 days'))
+                    ->withSecure(true)
+                    ->withPath('/')
+            );
+
+            $response = FigResponseCookies::set($response,
+                SetCookie::create(self::SEEN_COOKIE_NAME, "true")
+                    ->withHttpOnly(false)
+                    ->withExpires(new \DateTime('+30 days'))
                     ->withSecure(true)
                     ->withPath('/')
             );

@@ -1,24 +1,49 @@
-import { getCookie } from './cookieHelper';
+import {getCookie, setCookie, setDefaultConsentCookie, approveAllCookieTypes} from './cookieHelper';
 
-const CookieConsent = element => {
-  const cookiePolicy = getCookie('cookie_policy');
+export default class CookieConsent {
+    constructor(bannerElement)
+    {
+        this.bannerElement = bannerElement
+        const cookiePolicy = getCookie('cookie_policy')
+        const seenCookieMessage = getCookie('seen_cookie_message')
+        if (seenCookieMessage !== "true") {
+            if (!this._isInCookiesPage()) {
+                this._toggleCookieMessage(true)
+            }
+            cookiePolicy || setDefaultConsentCookie()
+        }
 
-  if (cookiePolicy === null) {
-    toggleCookieMessage(element, true);
-  } else {
-    toggleCookieMessage(element, false);
-    if (cookiePolicy === true) {
-      loadAnalytics();
+        const acceptButton = bannerElement.querySelector('.cookie-banner__button-accept > button')
+        this._bindEnableAllButton(acceptButton)
     }
-  }
-};
 
-const toggleCookieMessage = (element, show) => {
-  element.classList.toggle('cookie-banner--show', show);
+    _bindEnableAllButton(element)
+    {
+        this._enableAllCookies = this._enableAllCookies.bind(this);
+        element.addEventListener('click', this._enableAllCookies)
+    }
+
+    _enableAllCookies(event)
+    {
+        approveAllCookieTypes()
+        setCookie('seen_cookie_message', 'true')
+        console.log(event);
+
+        this._toggleCookieMessage(false)
+
+         // TO DO - enable analytics and fire off a pageview
+         //window.GOVUK.analyticsSetup(window)
+    }
+
+    _toggleCookieMessage(show)
+    {
+        this.bannerElement.classList.toggle('cookie-banner--show', show)
+    }
+
+    _isInCookiesPage()
+    {
+        return '/cookies' === window.location.pathname
+    }
 }
 
-const loadAnalytics = () => {
-  return true;
-}
 
-export default CookieConsent;
