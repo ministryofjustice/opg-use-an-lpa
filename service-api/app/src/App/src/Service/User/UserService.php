@@ -70,7 +70,7 @@ class UserService
             foreach ($emailResetExists as $otherUser) {
                 if (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now')) {
                     // if the other users email reset token has not expired, the user cannot make an account with this email
-                    throw new Exception(
+                    throw new ConflictException(
                         'Another user has requested to change their email to ' . $data['email'],
                         ['email' => $data['email']]
                     );

@@ -93,7 +93,14 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
                     $this->emailClient->sendAccountActivationEmail($emailAddress, $activateAccountUrl);
                 } catch (ApiException $ex) {
                     if ($ex->getCode() == StatusCodeInterface::STATUS_CONFLICT) {
-                        $this->emailClient->sendAlreadyRegisteredEmail($emailAddress);
+                        if ($ex->getMessage() === 'Another user has requested to change their email to ' . $emailAddress){
+                            $form->addErrorMessage(CreateAccount::NEW_EMAIL_CONFLICT);
+                            return new HtmlResponse($this->renderer->render('actor::create-account', [
+                                'form' => $form,
+                            ]));
+                        } else {
+                            $this->emailClient->sendAlreadyRegisteredEmail($emailAddress);
+                        }
                     } else {
                         throw $ex;
                     }

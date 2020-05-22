@@ -3074,4 +3074,31 @@ class AccountContext implements Context
     {
         $this->ui->assertPageContainsText("Unable to change email address");
     }
+
+    /**
+     * @When /^I create an account using with an email address that has been requested for reset$/
+     */
+    public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset()
+    {
+        $this->ui->assertPageAddress('/create-account');
+
+        // API call for password reset request
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, , [], json_encode([])));
+
+        $this->ui->fillField('email', $this->userEmail);
+        $this->ui->fillField('password', $this->userPassword);
+        $this->ui->fillField('password_confirm', $this->userPassword);
+        $this->ui->fillField('terms', 1);
+        $this->ui->pressButton('Create account');
+    }
+
+    /**
+     * @Then /^I am informed that there was a problem with that email address$/
+     */
+    public function iAmInformedThatThereWasAProblemWithThatEmailAddress()
+    {
+        $this->ui->assertPageAddress('/create-account');
+        $this->ui->assertPageContainsText("Sorry, there was a problem with that email address. Please try a different one");
+    }
 }

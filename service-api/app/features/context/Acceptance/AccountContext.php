@@ -2326,4 +2326,51 @@ class AccountContext implements Context
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_GONE);
     }
+
+    /**
+     * @When /^I create an account using with an email address that has been requested for reset$/
+     */
+    public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset()
+    {
+        $this->userAccountCreateData = [
+            'Id'                  => 1,
+            'ActivationToken'     => 'activate1234567890',
+            'Email'               => 'test@test.com',
+            'Password'            => 'Pa33w0rd'
+        ];
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => []
+        ]));
+
+        // ActorUsers::checkIfEmailResetRequested
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'               => $this->userAccountId,
+                    'Email'            => 'other@user.co.uk',
+                    'Password'         => password_hash('passW0rd', PASSWORD_DEFAULT),
+                    'EmailResetExpiry' => (time() + (60 * 60)),
+                    'LastLogin'        => null,
+                    'NewEmail'         => 'test@test.com',
+                    'EmailResetToken'  => 'abc1234567890'
+                ])]
+        ]));
+
+        $this->apiPost('/v1/user', [
+            'email' => $this->userAccountCreateData['Email'],
+            'password' => $this->userAccountCreateData['Password']
+        ], []);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_CONFLICT);
+    }
+
+    /**
+     * @Then /^I am informed that there was a problem with that email address$/
+     */
+    public function iAmInformedThatThereWasAProblemWithThatEmailAddress()
+    {
+        // Not needed for this context
+    }
 }
