@@ -14,7 +14,7 @@ class CodeGenerator
     /**
      * The characters allowed to appear in the code.
      */
-    const ALLOWED_CHARACTERS = '2346789QWERTYUPADFGHJKLZXCVBNM';
+    const ALLOWED_CHARACTERS = '346789QWERTYUPADFGHJKLXCVBNM';
 
     /**
      * Generates a random code of length CODE_LENGTH, using only the characters in ALLOWED_CHARACTERS.
