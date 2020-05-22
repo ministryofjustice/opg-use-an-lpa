@@ -12,8 +12,7 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Template\TemplateRendererInterface;
@@ -52,7 +51,6 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
             return $this->handlePost($request);
         }
 
-       // $form = new CookieConsent();
         $cookies = $request->getCookieParams();
 
         $usageCookies = 'no';
@@ -68,20 +66,17 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         ]));
     }
 
-    public function handlePost(ServerRequestInterface $request) : ResponseInterface
+    public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
-        //$form = new CookieConsent();
         $form = new CookieConsent($this->getCsrfGuard($request));
         $cookies = $request->getCookieParams();
 
         $data = $request->getParsedBody();
         $form->setData($data);
-        
+
         // it's assumed that you'll be going to the start after setting cookies settings
-        $response = new RedirectResponse($this->getUrlHelper()->generate('start'));
-
+        $response = new RedirectResponse($this->urlHelper->generate('home'));
         if (array_key_exists(self::COOKIE_POLICY_NAME, $cookies)) {
-
             try {
                 $cookiePolicy = json_decode($cookies[self::COOKIE_POLICY_NAME], true);
             } catch (\Exception $e) {
@@ -97,16 +92,7 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
                     ->withSecure(true)
                     ->withPath('/')
             );
-
-            $response = FigResponseCookies::set($response,
-                SetCookie::create(self::SEEN_COOKIE_NAME, "true")
-                    ->withHttpOnly(false)
-                    ->withExpires(new \DateTime('+30 days'))
-                    ->withSecure(true)
-                    ->withPath('/')
-            );
         }
-
         return $response;
     }
 }

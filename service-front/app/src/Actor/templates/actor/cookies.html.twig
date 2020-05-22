@@ -34,20 +34,28 @@
                     <p class="govuk-body">
                         We do not allow Google to use or share the data about how you use this site.
                     </p>
-                    <div class=form-group">
-                        <legend id="id-usage-cookies">
-                            <span class="govuk-visually-hidden question-text">Allow use of non-essential Cookies?</span>
-                        </legend>
-                    <fieldset>
-                        <div class="multiple-choice">
-                            <input type="radio" name="usageCookies" value="yes" id="usageCookies-yes">
-                            <label for="usageCookies-yes">Yes, allow usage cookies</label>
-                        </div>
-                        <div class="multiple-choice">
-                            <input type="radio" name="usageCookies" value="no" id="usageCookies-no">
-                            <label for="usageCookies-no">No, do not allow usage cookies </label>
-                        </div>
-                    </fieldset>
+
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset" aria-describedby="changed-name-hint">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <span class="govuk-visually-hidden question-text">Allow use of non-essential Cookies?</span>
+                            </legend>
+
+                            {{ govuk_form_element(form.get('usageCookies'),{
+                                    'value_options':
+                                    [
+                                        {
+                                            'label': 'Use cookies that measure my website use',
+                                            'value': 'yes'
+                                        },
+                                        {
+                                            'label': 'Do not use cookies that measure my website use',
+                                            'value': 'no'
+                                        }
+                                    ]
+                                }
+                            )}}
+                        </fieldset>
                     </div>
                     <h3 class="govuk-heading-m">Strictly necessary cookies</h3>
                     <p class="govuk-body">These essential cookies allow you to log in to the service. They always need to be on.</p>

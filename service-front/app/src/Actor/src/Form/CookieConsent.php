@@ -26,19 +26,6 @@ class CookieConsent extends AbstractForm implements InputFilterProviderInterface
         $this->add([
             'name'       => 'usageCookies',
             'type'       => 'Radio',
-            'attributes' => ['div-attributes' => ['class' => 'multiple-choice']],
-            'options'    => [
-                'value_options' => [
-                    'yes' => [
-                        'label' => 'Use cookies that measure my website use',
-                        'value' => 'yes',
-                    ],
-                    'no' => [
-                        'label' => 'Do not use cookies that measure my website use',
-                        'value' => 'no',
-                    ],
-                ],
-            ]
         ]);
     }
 
