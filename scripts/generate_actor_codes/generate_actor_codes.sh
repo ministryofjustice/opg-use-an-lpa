@@ -6,10 +6,13 @@ function get_lpa_inputcount(){
 }
 
 function load_csv(){
-    LPATRIMMED=$(tr -d '\r' < $1 |                          # trim Windows line-feeds to make easier
-        awk 'BEGIN{RS="\n"; ORS=","; FS=","}{print $1}' |   # convert lines to csv taking making sure only first field is used.
-        sed -e 's/[^0-9,]*//g' |                            # remove anything that's not a number or a comma
-        sed 's/,$//')                                       # fix comma at end of file if present.
+    LPATRIMMED=$(LC_ALL=C  tr -d '\r' < $1  |   # fix line endingsto unix
+    LC_ALL=C tr '\n' ',' |                      # make each row a record (this may have multiples)
+    LC_ALL=C tr -cd '[:print:]' |               # cleanse non printable characters
+    tr -d '[:space:]' |                         # remove spaces
+    tr -d '"' |                                 # remove double quotes
+    sed 's/,$//' |                              # remove trailing comma after processing.
+     tr -s ',')                                 # squash empty comma separated values.
 }
 
 function parse_interactive(){
