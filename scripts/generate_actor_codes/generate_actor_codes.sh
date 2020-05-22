@@ -6,13 +6,14 @@ function get_lpa_inputcount(){
 }
 
 function load_csv(){
-    LPATRIMMED=$(LC_ALL=C  tr -d '\r' < $1  |   # fix line endingsto unix
-    LC_ALL=C tr '\n' ',' |                      # make each row a record (this may have multiples)
-    LC_ALL=C tr -cd '[:print:]' |               # cleanse non printable characters
-    tr -d '[:space:]' |                         # remove spaces
-    tr -d '"' |                                 # remove double quotes
-    sed 's/,$//' |                              # remove trailing comma after processing.
-     tr -s ',')                                 # squash empty comma separated values.
+    export LC_ALL=C
+    LPATRIMMED=$( tr -d '\r' < $1  |   # fix line endingsto unix
+    tr '\n' ',' |                      # make each row a record (this may have multiples)
+    tr -cd '[:print:]' |               # cleanse non printable characters
+    tr -d '[:space:]' |                # remove spaces
+    tr -d '"' |                        # remove double quotes
+    sed 's/,$//' |                     # remove trailing comma after processing.
+     tr -s ',')                        # squash empty comma separated values.
 }
 
 function parse_interactive(){
