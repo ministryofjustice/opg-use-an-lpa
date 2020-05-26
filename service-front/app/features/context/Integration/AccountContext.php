@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BehatTest\Context\Integration;
 
 use Alphagov\Notifications\Client;
+use App\Exception\ConflictException;
 use Common\Exception\ApiException;
 use BehatTest\Context\ActorContextTrait;
 use Common\Service\Email\EmailClient;
@@ -1702,9 +1703,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I should be logged out and told that my request was successful$/
+     * @Given /^I should be told that my request was successful$/
      */
-    public function iShouldBeLoggedOutAndToldThatMyRequestWasSuccessful()
+    public function iShouldBeToldThatMyRequestWasSuccessful()
     {
         // Not needed for this context
     }
@@ -1805,6 +1806,36 @@ class AccountContext extends BaseIntegrationContext
      * @Then /^I should be told that my email could not be changed$/
      */
     public function iShouldBeToldThatMyEmailCouldNotBeChanged()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I create an account using with an email address that has been requested for reset$/
+     */
+    public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset()
+    {
+        $this->userEmail = 'test@test.com';
+        $this->userPassword = 'pa33W0rd!123';
+
+        // API call for creating an account
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([])));
+
+        try {
+            $this->userService->create($this->userEmail, $this->userPassword);
+        } catch (ApiException $ex) {
+            assertEquals(409, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('Conflict exception was not thrown');
+    }
+
+    /**
+     * @Then /^I am informed that there was a problem with that email address$/
+     */
+    public function iAmInformedThatThereWasAProblemWithThatEmailAddress()
     {
         // Not needed for this context
     }

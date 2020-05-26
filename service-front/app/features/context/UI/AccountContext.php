@@ -2958,9 +2958,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I should be logged out and told that my request was successful$/
+     * @Given /^I should be told that my request was successful$/
      */
-    public function iShouldBeLoggedOutAndToldThatMyRequestWasSuccessful()
+    public function iShouldBeToldThatMyRequestWasSuccessful()
     {
         $this->ui->assertPageContainsText('Change email request successful');
         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->newUserEmail);
@@ -2975,7 +2975,7 @@ class AccountContext implements Context
         $this->iAmOnTheChangeEmailPage();
         $this->iRequestToChangeMyEmailToAUniqueEmailAddress();
         $this->iShouldBeSentAnEmailToBothMyCurrentAndNewEmail();
-        $this->iShouldBeLoggedOutAndToldThatMyRequestWasSuccessful();
+        $this->iShouldBeToldThatMyRequestWasSuccessful();
     }
 
     /**
