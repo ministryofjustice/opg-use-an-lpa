@@ -132,18 +132,6 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires: [dev_run_behat_tests]
 
-        - hold-for-destruction:
-            name: hold_env_for_destruction
-            filters: { branches: { ignore: [master] } }
-            type: approval
-            requires: [dev_run_behat_tests]
-
-        - use-my-lpa/destroy_dev_environment:
-            name: dev_destroy_environment
-            filters: { branches: { ignore: [master] } }
-            requires: [hold_env_for_destruction]
-
-
   path_to_live:
       jobs:
         # Common tasks
