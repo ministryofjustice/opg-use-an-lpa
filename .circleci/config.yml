@@ -798,28 +798,6 @@ orbs:
               paths:
                 - cluster_config.json
 
-      destroy_dev_environment:
-        #
-        # Destroys a development environment after testing and approval
-        #
-        executor: terraform
-        parameters:
-          workspace:
-            description: Terraform workspace name
-            type: string
-            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
-        steps:
-          - checkout
-          - run:
-              name: Destroy Development Environment
-              command: |
-                if [ "${CIRCLE_BRANCH}" != "master" ]; then
-                  cd ~/project/terraform/environment
-                  terraform init -lock-timeout=300s
-                  export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
-                  echo $TF_WORKSPACE
-                  terraform destroy -lock-timeout=300s -auto-approve
-                fi
       redeploy_latest:
         #
         # Redeploy ECS services on an environment
