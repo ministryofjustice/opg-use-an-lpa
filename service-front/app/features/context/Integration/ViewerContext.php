@@ -84,6 +84,15 @@ class ViewerContext extends BaseIntegrationContext
     }
 
     /**
+     * @Given /^I have been given access to an expired LPA via share code$/
+     */
+    public function iHaveBeenGivenAccessToAnExpiredLPAViaShareCode() {
+        $this->iHaveBeenGivenAccessToAnExpiredLPAViaShareCode();
+
+        $this->lpaData['status'] = 'Expired';
+    }
+
+    /**
      * @Given /^I access the viewer service$/
      */
     public function iAccessTheViewerService() {
@@ -114,7 +123,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Given /^I am viewing a valid LPA$/
      * @Then /^I can see the full details of the valid LPA$/
-     * @Then /^I can see the full details of a cancelled LPA$/
+     * @Then /^I see a message that LPA has been cancelled$/
      */
     public function iAmViewingAValidLPA()
     {

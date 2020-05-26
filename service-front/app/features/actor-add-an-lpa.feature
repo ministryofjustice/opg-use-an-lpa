@@ -9,6 +9,13 @@ Feature: Add an LPA
     And I am currently signed in
     And I have been given access to use an LPA via credentials
 
+  @ui
+  Scenario: The user cannot add an LPA to their account when status is pending
+    Given I am on the add an LPA page
+    When I request to add an LPA whose status is pending using xyuphwqrechv
+    Then The LPA is not found
+
+
   @integration @ui
   Scenario Outline: The user can add an LPA to their account
     Given I am on the add an LPA page

@@ -127,23 +127,34 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     ]
                 );
 
-                if (!is_null($lpa)) {
+                if (!is_null($lpa) && (strtolower($lpa->getStatus()) === 'registered')) {
                     [$user, $userRole] = $this->resolveLpaData($lpa, $dob);
 
                     $this->getLogger()->debug(
                         'Account with Id {id} identified as Role {role} on LPA with Id {uId}',
                         [
-                            'id'   => $identity,
+                            'id' => $identity,
                             'role' => $userRole,
-                            'uId'  => $referenceNumber
+                            'uId' => $referenceNumber
                         ]
                     );
-
                     return new HtmlResponse($this->renderer->render('actor::check-lpa', [
-                        'form'     => $form,
-                        'lpa'      => $lpa,
-                        'user'     => $user,
+                        'form' => $form,
+                        'lpa' => $lpa,
+                        'user' => $user,
                         'userRole' => $userRole,
+                    ]));
+                } else {
+                    $this->getLogger()->debug(
+                        'LPA with Id {uId} has {status} status and hence cannot be added',
+                        [
+                            'uId' => $referenceNumber,
+                            'status' => $lpa->getStatus()
+                        ]
+                    );
+                    //  Show LPA not found page
+                    return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
+                        'user' => $this->getUser($request)
                     ]));
                 }
             } catch (ApiException $aex) {
