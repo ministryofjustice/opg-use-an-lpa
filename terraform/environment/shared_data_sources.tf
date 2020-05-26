@@ -26,14 +26,6 @@ data "aws_cloudwatch_log_group" "use-an-lpa" {
   name = "use-an-lpa"
 }
 
-data "aws_acm_certificate" "certificate_viewer" {
-  domain = "${local.dev_wildcard}viewer.${local.dns_namespace_acc}use-an-lpa.opg.service.justice.gov.uk"
-}
-
-data "aws_acm_certificate" "certificate_actor" {
-  domain = "${local.dev_wildcard}actor.${local.dns_namespace_acc}use-an-lpa.opg.service.justice.gov.uk"
-}
-
 data "aws_acm_certificate" "certificate_view" {
   domain = "${local.dev_wildcard}view.lastingpowerofattorney.opg.service.justice.gov.uk"
 }
