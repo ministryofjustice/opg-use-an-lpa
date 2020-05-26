@@ -33,6 +33,24 @@ Feature: Change email
     Then I should be sent an email to both my current and new email
     And I should be logged out and told that my request was successful
 
+  @acceptance
+  Scenario: The user cannot request to change their email address without their id
+    Given I am on the change email page
+    When I request to change my email to an email address without my id
+    Then I should be told that a bad request was made
+
+  @acceptance
+  Scenario: The user cannot request to change their email address without their new email address
+    Given I am on the change email page
+    When I request to change my email to an email address without my new email
+    Then I should be told that a bad request was made
+
+  @acceptance
+  Scenario: The user cannot request to change their email address without their password
+    Given I am on the change email page
+    When I request to change my email to an email address without my password
+    Then I should be told that a bad request was made
+
   @acceptance @integration
   Scenario: The user can request to change their email address
     Given I am on the change email page

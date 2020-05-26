@@ -429,7 +429,7 @@ class UserServiceTest extends TestCase
         $repoProphecy
             ->recordChangeEmailRequest($id, $newEmail, $resetToken, $resetExpiry)
             ->willReturn([
-                'EmailResetExpiry' => $resetExpiry,
+                'EmailResetExpiry' => (string) $resetExpiry,
                 'Email'            => $email,
                 'LastLogin'        => null,
                 'Id'               => $id,

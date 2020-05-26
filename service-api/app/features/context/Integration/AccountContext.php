@@ -1884,7 +1884,7 @@ class AccountContext extends BaseIntegrationContext
         $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
-                    'EmailResetExpiry' => 1590156718,
+                    'EmailResetExpiry' => time() + (60 * 60),
                     'Email'            => 'another@user.com',
                     'LastLogin'        => null,
                     'Id'               => 'aaaaaa1111111',
@@ -1945,7 +1945,7 @@ class AccountContext extends BaseIntegrationContext
         // ActorUsers::recordChangeEmailRequest
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'EmailResetExpiry' => 1589965609,
+                'EmailResetExpiry' => time() + (60 * 60 * 48),
                 'Email'            => $this->userAccountEmail,
                 'LastLogin'        => null,
                 'Id'               => $this->userAccountId,
@@ -2003,7 +2003,7 @@ class AccountContext extends BaseIntegrationContext
         // ActorUsers::recordChangeEmailRequest
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'EmailResetExpiry' => 1589965609,
+                'EmailResetExpiry' => time() + (60 * 60 * 48),
                 'Email'            => $this->userAccountEmail,
                 'LastLogin'        => null,
                 'Id'               => $this->userAccountId,
@@ -2056,7 +2056,7 @@ class AccountContext extends BaseIntegrationContext
                 'Id'               => $this->userAccountId,
                 'Email'            => $this->userAccountEmail,
                 'Password'         => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
-                'EmailResetExpiry' => (time() + (60 * 60)),
+                'EmailResetExpiry' => time() + (60 * 60),
                 'LastLogin'        => null,
                 'NewEmail'         => $this->newEmail,
                 'EmailResetToken'  => $this->userEmailResetToken

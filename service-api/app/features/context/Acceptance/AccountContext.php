@@ -2019,7 +2019,7 @@ class AccountContext implements Context
         $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
-                    'EmailResetExpiry' => 1590156718,
+                    'EmailResetExpiry' => time() + (60 * 60),
                     'Email'            => 'another@user.com',
                     'LastLogin'        => null,
                     'Id'               => 'aaaaaa1111111',
@@ -2075,7 +2075,7 @@ class AccountContext implements Context
         // ActorUsers::recordChangeEmailRequest
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'EmailResetExpiry' => 1589965609,
+                'EmailResetExpiry' => time() + (60 * 60 * 48),
                 'Email'            => $this->userAccountEmail,
                 'LastLogin'        => null,
                 'Id'               => $this->userAccountId,
@@ -2140,7 +2140,7 @@ class AccountContext implements Context
         // ActorUsers::recordChangeEmailRequest
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'EmailResetExpiry' => 1589965609,
+                'EmailResetExpiry' => time() + (60 * 60 * 48),
                 'Email'            => $this->userAccountEmail,
                 'LastLogin'        => null,
                 'Id'               => $this->userAccountId,
@@ -2372,5 +2372,49 @@ class AccountContext implements Context
     public function iAmInformedThatThereWasAProblemWithThatEmailAddress()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to change my email to an email address without my id$/
+     */
+    public function iRequestToChangeMyEmailToAnEmailAddressWithoutMyId()
+    {
+        $this->apiPatch('/v1/request-change-email', [
+            'user-id'       => '',
+            'new-email'     => $this->newEmail,
+            'password'      => $this->userAccountPassword
+        ]);
+    }
+
+    /**
+     * @When /^I request to change my email to an email address without my new email$/
+     */
+    public function iRequestToChangeMyEmailToAnEmailAddressWithoutMyNewEmail()
+    {
+        $this->apiPatch('/v1/request-change-email', [
+            'user-id'       => $this->userAccountId,
+            'new-email'     => '',
+            'password'      => $this->userAccountPassword
+        ]);
+    }
+
+    /**
+     * @When /^I request to change my email to an email address without my password$/
+     */
+    public function iRequestToChangeMyEmailToAnEmailAddressWithoutMyPassword()
+    {
+        $this->apiPatch('/v1/request-change-email', [
+            'user-id'       => $this->userAccountId,
+            'new-email'     => $this->newEmail,
+            'password'      => ''
+        ]);
+    }
+
+    /**
+     * @Then /^I should be told that a bad request was made$/
+     */
+    public function iShouldBeToldThatABadRequestWasMade()
+    {
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
     }
 }
