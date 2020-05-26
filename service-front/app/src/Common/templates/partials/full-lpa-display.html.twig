@@ -38,7 +38,8 @@
 
                     <div class="govuk-panel govuk-panel--failed">
 
-                        <h1 class="govuk-panel__title">This LPA has been cancelled</h1>
+                        <h1 class="govuk-panel__title">
+                            This {% if lpa.caseSubtype == "pfa" %}property and finance{% else %}health and welfare{% endif %} LPA has been cancelled</h1>
 
                         <div class="govuk-panel__body govuk-!-font-size-24">
                             <strong>The information on this LPA summary was correct on {{ lpa_date("today") }}</strong>
@@ -50,7 +51,8 @@
 
                     <div class="govuk-panel govuk-panel--confirmation">
 
-                        <h1 class="govuk-panel__title">This LPA is valid</h1>
+                        <h1 class="govuk-panel__title">
+                            This {% if lpa.caseSubtype == "pfa" %}property and finance{% else %}health and welfare{% endif %} LPA is valid</h1>
 
                         <div class="govuk-panel__body">
                             <p class="govuk-!-font-size-24">
