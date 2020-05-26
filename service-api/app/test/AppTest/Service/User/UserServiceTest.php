@@ -397,33 +397,23 @@ class UserServiceTest extends TestCase
     public function can_request_email_reset()
     {
         $id = '12345-1234-1234-1234-12345';
+        $email = 'a@b.com';
         $newEmail = 'new@email.com';
         $resetToken = 'abcde12345';
         $resetExpiry = time() + (60 * 60 * 48);
-
-        $userData = [
-            'Id'        => $id,
-            'Email'     => 'a@b.com',
-            'LastLogin' => null,
-            'Password'  => self::PASS_HASH
-        ];
-
-        $responseData = [
-            'EmailResetExpiry' => $resetExpiry,
-            'Email'            => 'a@b.com',
-            'LastLogin'        => null,
-            'Id'               => $id,
-            'NewEmail'         => $newEmail,
-            'EmailResetToken'  => $resetToken,
-            'Password'         => self::PASS_HASH,
-        ];
+        $password = self::PASS;
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy
             ->get($id)
-            ->willReturn($userData)
+            ->willReturn([
+                'Id'        => $id,
+                'Email'     => $email,
+                'LastLogin' => null,
+                'Password'  => self::PASS_HASH
+            ])
             ->shouldBeCalled();
 
         $repoProphecy
@@ -440,7 +430,7 @@ class UserServiceTest extends TestCase
             ->recordChangeEmailRequest($id, $newEmail, $resetToken, $resetExpiry)
             ->willReturn([
                 'EmailResetExpiry' => $resetExpiry,
-                'Email'            => 'a@b.com',
+                'Email'            => $email,
                 'LastLogin'        => null,
                 'Id'               => $id,
                 'NewEmail'         => $newEmail,
@@ -450,9 +440,14 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $result = $us->requestChangeEmail($id, $newEmail,self::PASS);
+        $reset = $us->requestChangeEmail($id, $newEmail,self::PASS);
 
-        $this->assertEquals($responseData, $result);
+        $this->assertEquals($id, $reset['Id']);
+        $this->assertEquals($email, $reset['Email']);
+        $this->assertEquals($password, $reset['Password']);
+        $this->assertEquals($newEmail, $reset['NewEmail']);
+        $this->assertEquals($resetToken, $reset['EmailResetToken']);
+        $this->assertArrayHasKey('EmailResetExpiry', $reset);
     }
 
     /** @test */

@@ -810,5 +810,86 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($id, $reset['Id']);
         $this->assertEquals($email, $reset['Email']);
         $this->assertEquals($password, $reset['Password']);
+        $this->assertEquals($newEmail, $reset['NewEmail']);
+        $this->assertEquals($resetToken, $reset['EmailResetToken']);
+        $this->assertArrayHasKey('EmailResetExpiry', $reset);
+    }
+
+    /** @test */
+    public function can_get_id_by_email_reset_token()
+    {
+        $id = '12345-1234-1234-1234-12345';
+        $resetToken = 'abcde12345';
+
+        $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($resetToken) {
+                $this->assertIsArray($data);
+
+                $this->assertStringContainsString('users-table', serialize($data));
+                $this->assertStringContainsString($resetToken, serialize($data));
+
+                return true;
+            }))->willReturn($this->createAWSResult([
+                'Items' => [
+                    [
+                        'Id' => [
+                            'S' => $id,
+                        ],
+                        'EmailResetToken' => [
+                            'S' => $resetToken
+                        ],
+                    ],
+                ],
+            ]));
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
+
+        $responseId = $actorRepo->getIdByPasswordResetToken($resetToken);
+
+        $this->assertEquals($id, $responseId);
+    }
+
+    /** @test */
+    public function will_throw_not_found_exception_if_email_reset_token_not_found()
+    {
+        $resetToken = 'abcde12345';
+
+        $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($resetToken) {
+            $this->assertIsArray($data);
+
+            $this->assertStringContainsString('users-table', serialize($data));
+            $this->assertStringContainsString($resetToken, serialize($data));
+
+            return true;
+        }))->willReturn($this->createAWSResult([
+            'Items' => [],
+        ]));
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
+
+        $this->expectException(NotFoundException::class);
+        $actorRepo->getIdByPasswordResetToken($resetToken);
+    }
+
+    /** @test */
+    public function can_complete_change_email()
+    {
+        $id = '12345-1234-1234-1234-12345';
+        $newEmail = 'new@email.com';
+        $resetToken = 'abcde12345';
+
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function(array $data) use ($id) {
+            $this->assertIsArray($data);
+
+            $this->assertStringContainsString('users-table', serialize($data));
+            $this->assertStringContainsString($id, serialize($data));
+
+            return true;
+        }))->willReturn([]);
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
+
+        $reset = $actorRepo->changeEmail($id, $resetToken, $newEmail);
+
+        $this->assertTrue($reset);
     }
 }
