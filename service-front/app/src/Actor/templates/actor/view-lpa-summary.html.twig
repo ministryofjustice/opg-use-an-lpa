@@ -46,7 +46,7 @@
 
             <div class="govuk-grid-row lpa-valid-border">
                 <div class="govuk-grid-column-full column-full-alt-1">
-                    <h2 class="govuk-heading-m heading-m-alt-1">This LPA is registered</h2>
+                    <h2 class="govuk-heading-m heading-m-alt-1">This LPA is {{ lpa.status|lower }}</h2>
                     <p class="govuk-body body-alt-1">
                         {% if lpa.caseSubtype == "pfa" %}
                             {% if lpa.attorneyActDecisions == 'When Registered' %}

@@ -31,7 +31,7 @@
     },
     "applicationType": "Classic",
     "caseSubtype": "pfa",
-    "status": "Pending",
+    "status": "Registered",
     "caseAttorneySingular": false,
     "caseAttorneyJointlyAndSeverally": true,
     "caseAttorneyJointly": false,
@@ -155,7 +155,7 @@
     },
     "applicationType": "Classic",
     "caseSubtype": "pfa",
-    "status": "Pending",
+    "status": "Registered",
     "caseAttorneySingular": false,
     "caseAttorneyJointlyAndSeverally": true,
     "caseAttorneyJointly": false,
@@ -185,7 +185,7 @@
           }
         ],
         "companyName": null,
-        "systemStatus": false
+        "systemStatus": true
       }
     ],
     "replacementAttorneys": [],
