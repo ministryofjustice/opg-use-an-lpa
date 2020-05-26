@@ -1,0 +1,27 @@
+{
+    "name": "ministryofjustice/opg-use-my-lpa",
+    "description": "Smoke test suite for Use My Lpa",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "behat/behat": "^3.6",
+        "dmore/behat-chrome-extension": "^1.3",
+        "dmore/chrome-mink-driver": "^2.7",
+        "symfony/process": "^5.0",
+        "fig/http-message-util": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Smoke\\": "src/",
+            "Test\\Context\\": "context/"
+        }
+    },
+    "scripts": {
+        "dc": [
+            "Composer\\Config::disableProcessTimeout",
+            "docker-compose -f ../../docker-compose.yml -f ../../docker-compose.testing.yml -f ../../../opg-sirius-api-gateway/docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose-integration.yml"
+        ],
+        "dc-run": "@dc run --rm smoke-tests",
+        "behat": "@dc-run vendor/bin/behat -vvv"
+    }
+}

@@ -3,6 +3,7 @@
 namespace App\Service\Lpa;
 
 use App\DataAccess\Repository;
+use App\Exception\BadRequestException;
 use App\Exception\GoneException;
 use DateTime;
 use Psr\Log\LoggerInterface;
@@ -195,11 +196,11 @@ class LpaService
         }
 
         //---
-
         // Whilst the checks in this section could be done before we lookup the LPA, they are done
         // at this point as we only want to acknowledge if a code has expired iff donor surname matched.
 
         if (!isset($viewerCodeData['Expires']) || !($viewerCodeData['Expires'] instanceof DateTime)) {
+
             $this->logger->info('The code {code} entered by user to view LPA does not have an expiry date set.', ['code' => $viewerCode]);
             throw new RuntimeException("'Expires' field missing or invalid.");
         }
@@ -209,6 +210,10 @@ class LpaService
             throw new GoneException('Share code expired');
         }
 
+        if (isset($viewerCodeData['Cancelled'])) {
+            $this->logger->info('The code {code} entered by user is cancelled.', ['code' => $viewerCode]);
+            throw new GoneException('Share code cancelled');
+        }
         //---
 
         if ($logActivity) {

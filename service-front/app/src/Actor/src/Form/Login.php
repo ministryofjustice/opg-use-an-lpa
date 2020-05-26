@@ -26,8 +26,8 @@ class Login extends AbstractForm implements InputFilterProviderInterface
      * Error messages
      * @var array
      */
-    protected $messageTemplates = [
-        self::INVALID_LOGIN => 'Email and password combination not recognised. Please try signing in again below or create an account'
+    protected array $messageTemplates = [
+        self::INVALID_LOGIN => 'Email and password combination not recognised. Please try signing in again below or create an account',
     ];
 
     public function __construct(CsrfGuardInterface $csrfGuard)
