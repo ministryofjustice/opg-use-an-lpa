@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CommonTest\Form;
+namespace CommonTest\Form\Fieldset;
 
 use Common\Form\Fieldset\Date;
-use PHPUnit\Framework\TestCase;
 use Laminas\Form\Element\Text;
+use PHPUnit\Framework\TestCase;
 
 class DateTest extends TestCase
 {

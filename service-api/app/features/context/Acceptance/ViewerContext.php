@@ -56,6 +56,53 @@ class ViewerContext implements Context
     }
 
     /**
+     * @When I give a share code that's been cancelled
+     */
+    public function iGiveAShareCodeThatHasBeenCancelled()
+    {
+        $lpaExpiry = (new \DateTime('+20 days'))->format('c');
+        // ViewerCodes::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'ViewerCode' => $this->viewerCode,
+                            'SiriusUid'  => $this->lpa['uId'],
+                            'Added'      => (new \DateTime('now'))->format('c'),
+                            'Expires'    => $lpaExpiry,
+                            'Cancelled'  => (new \DateTime('now'))->format('c'),
+                        ]
+                    )
+                ]
+            )
+        );
+
+        // Lpas::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa['uId'])
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        $this->apiPost(
+            '/v1/viewer-codes/summary',
+            [
+                'code' => $this->viewerCode,
+                'name' => $this->donorSurname
+            ]
+        );
+    }
+
+    /**
+     * @Then I can see a message the LPA has been cancelled
+     */
+    public function iCanSeeAMessageTheLPAHasBeenCancelled()
+    {
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_GONE);
+        $lpaData = $this->getResponseAsJson();
+        assertEquals($lpaData['title'], 'Gone');
+        assertEquals($lpaData['details'], 'Share code cancelled');
+    }
+
+    /**
      * @When I give a valid LPA share code
      */
     public function iGiveAValidLPAShareCode()
@@ -157,9 +204,9 @@ class ViewerContext implements Context
     }
 
     /**
-     * @Then I can see the full details of a cancelled LPA
+     * @Then /^I see a message that LPA has been cancelled$/
      */
-    public function iCanSeeTheFullDetailsOfACancelledLPA()
+    public function iSeeAMessageThatLPAHasBeenCancelled()
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $lpaData = $this->getResponseAsJson();

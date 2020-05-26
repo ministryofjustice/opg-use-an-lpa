@@ -611,8 +611,8 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^The LPA is not found$/
-     */
+ * @Then /^The LPA is not found$/
+ */
     public function theLPAIsNotFound()
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -2372,5 +2372,121 @@ class AccountContext implements Context
     public function iAmInformedThatThereWasAProblemWithThatEmailAddress()
     {
         // Not needed for this context
+    }
+      
+    /**
+     * @When /^I request to add an LPA with a missing actor code$/
+     */
+    public function iRequestToAddAnLPAWithAMissingActorCode()
+    {
+        $this->apiPost('/v1/actor-codes/summary', [
+            'actor-code' => null,
+            'uid'        => $this->lpaUid,
+            'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @When /^I request to add an LPA with a missing user id$/
+     */
+    public function iRequestToAddAnLPAWithAMissingUserId()
+    {
+        $this->apiPost('/v1/actor-codes/summary', [
+            'actor-code' => $this->oneTimeCode,
+            'uid'        => null,
+            'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @When /^I request to add an LPA with a missing date of birth$/
+     */
+    public function iRequestToAddAnLPAWithAMissingDateOfBirth()
+    {
+        $this->apiPost('/v1/actor-codes/summary', [
+            'actor-code' => $this->oneTimeCode,
+            'uid'        => $this->lpaUid,
+            'dob'        => null
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @Given /^A malformed confirm request is sent which is missing date of birth$/
+     */
+    public function aMalformedConfirmRequestIsSentWhichIsMissingDateOfBirth()
+    {
+        $this->userLpaActorToken = '13579';
+
+        $this->apiPost('/v1/actor-codes/confirm', [
+            'actor-code' => $this->oneTimeCode,
+            'uid'        => $this->lpaUid,
+            'dob'        => null
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+    }
+
+    /**
+     * @Given /^A malformed confirm request is sent which is missing actor code$/
+     */
+    public function aMalformedConfirmRequestIsSentWhichIsMissingActorCode()
+    {
+        $this->userLpaActorToken = '13579';
+
+        $this->apiPost('/v1/actor-codes/confirm', [
+            'actor-code' => null,
+            'uid'        => $this->lpaUid,
+            'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+    }
+
+    /**
+     * @Given /^A malformed confirm request is sent which is missing user id$/
+     */
+    public function aMalformedConfirmRequestIsSentWhichIsMissingUserId()
+    {
+        $this->userLpaActorToken = '13579';
+
+        $this->apiPost('/v1/actor-codes/confirm', [
+            'actor-code' => $this->oneTimeCode,
+            'uid'        => null,
+            'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+    }
+
+    /**
+     * @Then /^The LPA is not found and I am told it was a bad request$/
+     */
+    public function theLPAIsNotFoundAndIAmToldItWasABadRequest()
+    {
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+
+        $response = $this->getResponseAsJson();
+
+        assertEmpty($response['data']);
+    }
+
+    /**
+     * @When /^I confirmed to add an LPA to my account$/
+     */
+    public function iConfirmedToAddAnLPAToMyAccount()
+    {
+        $this->iRequestToAddAnLPAWithValidDetails();
     }
 }
