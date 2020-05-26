@@ -49,6 +49,12 @@ class UserServiceTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->exists($email)->willReturn(false);
+
+        $repoProphecy
+            ->checkIfEmailResetRequested($email)
+            ->willReturn([])
+            ->shouldBeCalled();
+
         $repoProphecy
             ->add(
                 Argument::that(function(string $data) {
@@ -385,5 +391,173 @@ class UserServiceTest extends TestCase
         $result = $us->deleteUserAccount($id);
 
         $this->assertEquals($userData, $result);
+    }
+
+    /** @test */
+    public function can_request_email_reset()
+    {
+        $id = '12345-1234-1234-1234-12345';
+        $newEmail = 'new@email.com';
+        $resetToken = 'abcde12345';
+        $resetExpiry = time() + (60 * 60 * 48);
+
+        $userData = [
+            'Id'        => $id,
+            'Email'     => 'a@b.com',
+            'LastLogin' => null,
+            'Password'  => self::PASS_HASH
+        ];
+
+        $responseData = [
+            'EmailResetExpiry' => $resetExpiry,
+            'Email'            => 'a@b.com',
+            'LastLogin'        => null,
+            'Id'               => $id,
+            'NewEmail'         => $newEmail,
+            'EmailResetToken'  => $resetToken,
+            'Password'         => self::PASS_HASH,
+        ];
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $repoProphecy
+            ->get($id)
+            ->willReturn($userData)
+            ->shouldBeCalled();
+
+        $repoProphecy
+            ->exists($newEmail)
+            ->willReturn(false)
+            ->shouldBeCalled();
+
+        $repoProphecy
+            ->checkIfEmailResetRequested($newEmail)
+            ->willReturn([])
+            ->shouldBeCalled();
+
+        $repoProphecy
+            ->recordChangeEmailRequest($id, $newEmail, $resetToken, $resetExpiry)
+            ->willReturn([
+                'EmailResetExpiry' => $resetExpiry,
+                'Email'            => 'a@b.com',
+                'LastLogin'        => null,
+                'Id'               => $id,
+                'NewEmail'         => $newEmail,
+                'EmailResetToken'  => $resetToken,
+                'Password'         => self::PASS_HASH
+            ])->shouldBeCalled();
+
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+
+        $result = $us->requestChangeEmail($id, $newEmail,self::PASS);
+
+        $this->assertEquals($responseData, $result);
+    }
+
+    /** @test */
+    public function will_throw_exception_for_incorrect_password_in_request_email_reset()
+    {
+        $id = '12345-1234-1234-1234-12345';
+        $newEmail = 'new@email.com';
+
+        $userData = [
+            'Id'        => $id,
+            'Email'     => 'a@b.com',
+            'LastLogin' => null,
+            'Password'  => self::PASS_HASH
+        ];
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $repoProphecy
+            ->get($id)
+            ->willReturn($userData)
+            ->shouldBeCalled();
+
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+
+        $this->expectException(ForbiddenException::class);
+        $us->requestChangeEmail($id, $newEmail, 'inc0rr3ct');
+    }
+
+    /** @test */
+    public function will_throw_exception_if_new_email_is_taken_by_another_user()
+    {
+        $id = '12345-1234-1234-1234-12345';
+        $newEmail = 'new@email.com';
+
+        $userData = [
+            'Id'        => $id,
+            'Email'     => 'a@b.com',
+            'LastLogin' => null,
+            'Password'  => self::PASS_HASH
+        ];
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $repoProphecy
+            ->get($id)
+            ->willReturn($userData)
+            ->shouldBeCalled();
+
+        $repoProphecy
+            ->exists($newEmail)
+            ->willReturn(true)
+            ->shouldBeCalled();
+
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+
+        $this->expectException(ConflictException::class);
+        $us->requestChangeEmail($id, $newEmail, self::PASS);
+    }
+
+    /** @test */
+    public function will_throw_exception_if_new_email_has_been_requested_for_reset_by_another_user()
+    {
+        $id = '12345-1234-1234-1234-12345';
+        $newEmail = 'new@email.com';
+
+        $userData = [
+            'Id'        => $id,
+            'Email'     => 'a@b.com',
+            'LastLogin' => null,
+            'Password'  => self::PASS_HASH
+        ];
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $repoProphecy
+            ->get($id)
+            ->willReturn($userData)
+            ->shouldBeCalled();
+
+        $repoProphecy
+            ->exists($newEmail)
+            ->willReturn(false)
+            ->shouldBeCalled();
+
+        $repoProphecy
+            ->checkIfEmailResetRequested($newEmail)
+            ->willReturn([
+                0 => [
+                'EmailResetExpiry' => time() + (60 * 60 * 36),
+                'Email'            => 'other@user.com',
+                'LastLogin'        => null,
+                'Id'               => '43210',
+                'NewEmail'         => $newEmail,
+                'EmailResetToken'  => 're3eT0ken',
+                'Password'         => 'otherPa33w0rd',
+                ]
+            ])
+            ->shouldBeCalled();
+
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+
+        $this->expectException(ConflictException::class);
+        $us->requestChangeEmail($id, $newEmail, self::PASS);
     }
 }

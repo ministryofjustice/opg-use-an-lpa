@@ -49,9 +49,7 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
     private $serverUrlHelper;
 
     /**
-     * RequestChangeEmailHandler constructor.
-     *
-     * @codeCoverageIgnore
+     * RequestChangeEmailHandler constructor
      *
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper

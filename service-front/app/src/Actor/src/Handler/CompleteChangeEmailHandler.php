@@ -12,6 +12,11 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Class CompleteChangeEmailHandler
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class CompleteChangeEmailHandler extends AbstractHandler
 {
     /** @var UserService */

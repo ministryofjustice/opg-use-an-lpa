@@ -3080,11 +3080,14 @@ class AccountContext implements Context
      */
     public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset()
     {
+        $this->userEmail = 'test@test.com';
+        $this->userPassword = 'pa33W0rd!123';
+
         $this->ui->assertPageAddress('/create-account');
 
-        // API call for password reset request
+        // API call for creating an account
         $this->apiFixtures->post('/v1/user')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, , [], json_encode([])));
+            ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([])));
 
         $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('password', $this->userPassword);
