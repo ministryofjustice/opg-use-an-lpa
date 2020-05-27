@@ -2734,14 +2734,7 @@ class AccountContext implements Context
      */
     public function iCanSeeUserAccountsTable()
     {
+        $this->ui->assertPageAddress('/stats');
         $this->ui->assertPageContainsText('Number of user accounts created and deleted');
-    }
-
-    /**
-     * @Then /^I can see user LPA codes table$/
-     */
-    public function iCanSeeUserLPACodesTable()
-    {
-        $this->ui->assertPageContainsText('Number of LPA codes viewed');
     }
 }

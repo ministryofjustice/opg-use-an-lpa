@@ -23,6 +23,6 @@ class StatsPageHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new HtmlResponse($this->renderer->render('actor::stats-page'));
+        return new HtmlResponse($this->renderer->render('viewer::stats-page'));
     }
 }
