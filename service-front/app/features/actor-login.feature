@@ -54,13 +54,39 @@ Feature: A user of the system is able to login
     Examples:
       |email_format               |password|
       |TEST@test.com              |pa33w0rd|
-      |'   TEST@TEST.COM    '     |pa33w0rd|
+      |TEST@TEST.COM              |pa33w0rd|
 
   @ui
-  Scenario Outline: A user is not allowed to login with improper email address
+  Scenario Outline: A user is not allowed to login with improper email address, blank email or password
     Given I access the login form
-    When I enter incorrect email with <email_format> and <password> below
+    When I enter incorrect login details with <email_format> and <password> below
     Then I should see relevant <error> message
     Examples:
       |email_format     |password|error                       |
       |TEST@ test. com  |pa33w0rd|Enter a valid email address |
+      |                 |pa33w0rd|Enter your email address    |
+      |test@test.com    |        |enter your password         |
+
+  @ui @security
+  Scenario: A hacker attempts to forge the full CSRF value
+    Given I access the login form
+    When I hack the CSRF value with 'ipwnedthissiterequest'
+    Then I should see relevant Security validation failed. Please try again. message
+
+  @ui @security
+  Scenario: A hacker attempts to forge the request id from CSRF value
+    Given I access the login form
+    When I hack the request id of the CSRF value
+    Then I should see relevant Security validation failed. Please try again. message
+
+  @ui @security
+  Scenario: A hacker attempts to forge the token from CSRF value
+    Given I access the login form
+    When I hack the token of the CSRF value
+    Then I should see relevant Security validation failed. Please try again. message
+
+  @ui @security
+  Scenario: A hacker cannot access the site with an empty CSRF value
+    Given I access the login form
+    When I hack the CSRF value with ''
+    Then I should see relevant Value is required and can't be empty message
