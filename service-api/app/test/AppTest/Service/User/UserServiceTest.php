@@ -401,7 +401,6 @@ class UserServiceTest extends TestCase
         $newEmail = 'new@email.com';
         $resetToken = 'abcde12345';
         $resetExpiry = time() + (60 * 60 * 48);
-        $password = self::PASS;
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -422,21 +421,22 @@ class UserServiceTest extends TestCase
             ->shouldBeCalled();
 
         $repoProphecy
-            ->checkIfEmailResetRequested($newEmail)
-            ->willReturn([])
-            ->shouldBeCalled();
+        ->checkIfEmailResetRequested($newEmail)
+        ->willReturn([])
+        ->shouldBeCalled();
 
         $repoProphecy
             ->recordChangeEmailRequest($id, $newEmail, $resetToken, $resetExpiry)
             ->willReturn([
-                'EmailResetExpiry' => (string) $resetExpiry,
+                'Id'               => $id,
+                'EmailResetExpiry' => $resetExpiry,
                 'Email'            => $email,
                 'LastLogin'        => null,
-                'Id'               => $id,
                 'NewEmail'         => $newEmail,
                 'EmailResetToken'  => $resetToken,
                 'Password'         => self::PASS_HASH
-            ])->shouldBeCalled();
+            ])
+            ->shouldBeCalled();
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
@@ -444,7 +444,7 @@ class UserServiceTest extends TestCase
 
         $this->assertEquals($id, $reset['Id']);
         $this->assertEquals($email, $reset['Email']);
-        $this->assertEquals($password, $reset['Password']);
+        $this->assertEquals(self::PASS, $reset['Password']);
         $this->assertEquals($newEmail, $reset['NewEmail']);
         $this->assertEquals($resetToken, $reset['EmailResetToken']);
         $this->assertArrayHasKey('EmailResetExpiry', $reset);
@@ -554,5 +554,63 @@ class UserServiceTest extends TestCase
 
         $this->expectException(ConflictException::class);
         $us->requestChangeEmail($id, $newEmail, self::PASS);
+    }
+
+    /** @test */
+    public function can_reset_email_function_throws_gone_exception_if_token_not_found_or_expired()
+    {
+        $token = 't0k3n12345';
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $repoProphecy
+            ->getIdByEmailResetToken($token)
+            ->willThrow(new NotFoundException())
+            ->shouldBeCalled();
+
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+
+        $this->expectException(GoneException::class);
+        $us->canResetEmail($token);
+    }
+
+    /** @test */
+    public function complete_change_email_function_returns_nothing_when_successful()
+    {
+        $id = '12345-1234-1234-1234-12345';
+        $token = 're3eT0ken';
+        $newEmail = 'new@email.com';
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $repoProphecy
+            ->getIdByEmailResetToken($token)
+            ->willReturn($id)
+            ->shouldBeCalled();
+
+        $repoProphecy
+            ->get($id)
+            ->willReturn([
+                'EmailResetExpiry' => time() + (60 * 60 * 36),
+                'Email'            => 'current@email.com',
+                'LastLogin'        => null,
+                'Id'               => $id,
+                'NewEmail'         => $newEmail,
+                'EmailResetToken'  => $token,
+                'Password'         => self::PASS_HASH,
+            ])
+            ->shouldBeCalled();
+
+        $repoProphecy
+            ->changeEmail($id, $token, $newEmail)
+            ->willReturn(true)
+            ->shouldBeCalled();
+
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+
+        $response = $us->completeChangeEmail($token);
+        $this->assertNull($response);
     }
 }

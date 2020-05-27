@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Common\Handler\AbstractHandler;
+use Common\Handler\SessionAware;
+use Common\Handler\Traits\Session;
+use Common\Handler\Traits\User;
+use Common\Handler\UserAware;
 use Common\Service\User\UserService;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -17,8 +22,11 @@ use Psr\Http\Message\ServerRequestInterface;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class CompleteChangeEmailHandler extends AbstractHandler
+class CompleteChangeEmailHandler extends AbstractHandler implements UserAware, SessionAware
 {
+    use User;
+    use Session;
+
     /** @var UserService */
     private $userService;
 
@@ -54,6 +62,10 @@ class CompleteChangeEmailHandler extends AbstractHandler
         }
 
         $this->userService->completeChangeEmail($resetToken);
+
+        $session = $this->getSession($request, 'session');
+        $session->unset(UserInterface::class);
+        $session->regenerate();
 
         return $this->redirectToRoute('login');
     }

@@ -108,12 +108,8 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
 
                         $this->emailClient->sendRequestChangeEmailToNewEmail($data['NewEmail'], $verifyNewEmailUrl);
 
-                        // log the user out before redirecting them to the login page
-                        $session = $this->getSession($request, 'session');
-                        $session->unset(UserInterface::class);
-                        $session->regenerate();
-
                         return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
+                            'user'     => $user,
                             'newEmail' => $newEmail
                         ]));
                     } catch (ApiException $ex) {

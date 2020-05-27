@@ -303,20 +303,10 @@ class UserService
      */
     public function requestChangeEmail(string $userId, string $newEmail, string $password)
     {
-        $user = $this->usersRepository->get($userId);
-
-        if (! password_verify($password, $user['Password'])) {
-            throw new ForbiddenException('Authentication failed for user ID ' . $userId, ['userId' => $userId]);
-        }
-
-        if ($this->usersRepository->exists($newEmail)) {
-            throw new ConflictException('User already exists with email address ' . $newEmail, ['email' => $newEmail]);
-        }
-
         $resetToken = Base64UrlSafe::encode(random_bytes(32));
         $resetExpiry = time() + (60 * 60 * 48);
 
-        if ($this->canRequestChangeEmail($userId, $newEmail)) {
+        if ($this->canRequestChangeEmail($userId, $newEmail, $password)) {
             $data = $this->usersRepository->recordChangeEmailRequest($userId, $newEmail, $resetToken, $resetExpiry);
 
             $this->logger->info(
@@ -340,15 +330,26 @@ class UserService
     }
 
     /**
-     * Checks if the new email chosen has already been requested for reset
+     * Runs a series of checks on the new email and password
      *
      * @param string $userId
-     * @param $newEmail
+     * @param string $newEmail
+     * @param string $password
      * @return bool
      * @throws Exception
      */
-    public function canRequestChangeEmail(string $userId, $newEmail)
+    public function canRequestChangeEmail(string $userId, string $newEmail, string $password)
     {
+        $user = $this->usersRepository->get($userId);
+
+        if (! password_verify($password, $user['Password'])) {
+            throw new ForbiddenException('Authentication failed for user ID ' . $userId, ['userId' => $userId]);
+        }
+
+        if ($this->usersRepository->exists($newEmail)) {
+            throw new ConflictException('User already exists with email address ' . $newEmail, ['email' => $newEmail]);
+        }
+
         $newEmailExists = $this->usersRepository->checkIfEmailResetRequested($newEmail);
 
         $canRequest = true;

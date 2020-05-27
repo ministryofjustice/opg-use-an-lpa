@@ -29,7 +29,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
      * Error messages
      * @var array
      */
-    protected $messageTemplates = [
+    protected array $messageTemplates = [
         self::NEW_EMAIL_CONFLICT => 'Sorry, there was a problem with that email address. Please try a different one'
     ];
 

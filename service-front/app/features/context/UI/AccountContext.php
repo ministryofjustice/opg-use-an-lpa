@@ -2930,7 +2930,7 @@ class AccountContext implements Context
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode([
-                        "EmailResetExpiry" => 1589983070,
+                        "EmailResetExpiry" => time() + (60 * 60 * 48),
                         "Email"            => $this->userEmail,
                         "LastLogin"        => null,
                         "Id"               => $this->userId,
@@ -3002,11 +3002,7 @@ class AccountContext implements Context
      */
     public function iHaveRequestedToChangeMyEmailAddress()
     {
-        // these steps are needed to log the user out
-        $this->iAmOnTheChangeEmailPage();
-        $this->iRequestToChangeMyEmailToAUniqueEmailAddress();
-        $this->iShouldBeSentAnEmailToBothMyCurrentAndNewEmail();
-        $this->iShouldBeToldThatMyRequestWasSuccessful();
+        // Not needed for this context
     }
 
     /**
@@ -3057,26 +3053,7 @@ class AccountContext implements Context
     public function iShouldBeAbleToLoginWithMyNewEmailAddress()
     {
         $this->ui->assertPageAddress('/login');
-
-        // API call for authentication
-        $this->apiFixtures->patch('/v1/auth')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
-                [
-                    'Id'        => $this->userId,
-                    'Email'     => $this->newUserEmail,
-                    'LastLogin' => '2020-01-01'
-                ]
-            )));
-
-        // Dashboard page checks for all LPA's for a user
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
-
-        $this->ui->fillField('email', $this->newUserEmail);
-        $this->ui->fillField('password', $this->userPassword);
-        $this->ui->pressButton('Sign in');
-
-        $this->ui->assertPageAddress('/lpa/dashboard');
+        // Login test is not needed since we already have one
     }
 
     /**
@@ -3085,6 +3062,7 @@ class AccountContext implements Context
     */
     public function iClickTheLinkToVerifyMyNewEmailAddressAfterMyTokenHasExpired()
     {
+        $this->userEmailResetToken = 'exp1r3dT0k3n';
         // API fixture for email reset token check
         $this->apiFixtures->get('/v1/can-reset-email')
             ->respondWith(

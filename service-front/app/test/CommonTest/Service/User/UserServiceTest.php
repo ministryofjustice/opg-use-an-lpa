@@ -6,12 +6,15 @@ namespace CommonTest\Service\User;
 
 use App\Exception\BadRequestException;
 use App\Exception\ForbiddenException;
+use App\Exception\GoneException;
 use Common\Entity\User;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
 use Common\Service\User\UserService;
 use DateTime;
+use DI\NotFoundException;
 use Fig\Http\Message\StatusCodeInterface;
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -548,7 +551,7 @@ class UserServiceTest extends TestCase
                 'password'      => 'pa33W0rd',
             ]
         )->willReturn([
-                'EmailResetExpiry' => 1590156718,
+                'EmailResetExpiry' => time() + (60 * 60 * 48),
                 'Email'            => 'old@email.com',
                 'LastLogin'        => null,
                 'Id'               => '12345',
@@ -656,5 +659,108 @@ class UserServiceTest extends TestCase
         $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $service->requestChangeEmail('12345', 'new@email.com', '');
+    }
+
+    /** @test */
+    public function can_reset_email_function_returns_true_when_successful()
+    {
+        $resetToken = 't0ken12345';
+        $userId = '12345';
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpGet(
+            '/v1/can-reset-email',
+            [
+                'token' => $resetToken,
+            ]
+        )->willReturn(['Id' => $userId]);
+
+        $userFactoryCallable = function ($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $canReset = $service->canResetEmail($resetToken);
+
+        $this->assertTrue($canReset);
+    }
+
+    /** @test */
+    public function can_reset_email_function_returns_false_when_token_expired_or_not_found()
+    {
+        $resetToken = 't0ken12345';
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpGet(
+            '/v1/can-reset-email',
+            [
+                'token' => $resetToken,
+            ]
+        )->willThrow(new ApiException('Email reset token has expired', StatusCodeInterface::STATUS_GONE));
+
+        $userFactoryCallable = function ($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $result = $service->canResetEmail($resetToken);
+        $this->assertFalse($result);
+    }
+
+    /** @test */
+    public function can_reset_email_function_throws_anything_other_than_a_gone_exception()
+    {
+        $resetToken = 't0ken12345';
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpGet(
+            '/v1/can-reset-email',
+            [
+                'token' => $resetToken,
+            ]
+        )->willThrow(new ApiException('Email reset token has expired', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR));
+
+        $userFactoryCallable = function ($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $this->expectException(ApiException::class);
+        $service->canResetEmail($resetToken);
+    }
+
+    /** @test */
+    public function complete_change_email_returns_nothing_when_successful()
+    {
+        $resetToken = 't0ken12345';
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpPatch(
+            '/v1/complete-change-email',
+            [
+                'reset_token' => $resetToken,
+            ]
+        )->willReturn([]);
+
+        $userFactoryCallable = function ($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $result = $service->completeChangeEmail($resetToken);
+        $this->assertNull($result);
     }
 }
