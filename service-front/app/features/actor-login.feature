@@ -65,7 +65,7 @@ Feature: A user of the system is able to login
       |email_format     |password|error                       |
       |TEST@ test. com  |pa33w0rd|Enter a valid email address |
       |                 |pa33w0rd|Enter your email address    |
-      |test@test.com    |        |enter your password         |
+      |test@test.com    |        |Enter your password         |
 
   @ui @security
   Scenario: A hacker attempts to forge the full CSRF value
