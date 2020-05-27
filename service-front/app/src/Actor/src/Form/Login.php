@@ -23,16 +23,24 @@ class Login extends AbstractForm implements InputFilterProviderInterface
     const INVALID_LOGIN = 'invalidLogin';
 
     /**
+     * Invalid CSRF
+     * @const string
+     */
+    const INVALID_CSRF = 'Login attempt failed. Please try signing in again below or create an account';
+
+    /**
      * Error messages
      * @var array
      */
     protected array $messageTemplates = [
-        self::INVALID_LOGIN => 'Email and password combination not recognised. Please try signing in again below or create an account',
+        self::INVALID_LOGIN => 'Email and password combination not recognised. Please try signing in again below or create an account'
     ];
+
+
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
-        parent::__construct(self::FORM_NAME, $csrfGuard);
+        parent::__construct(self::FORM_NAME, $csrfGuard,self::INVALID_CSRF);
 
         $this->add([
             'name' => 'email',

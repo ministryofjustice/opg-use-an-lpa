@@ -51,8 +51,9 @@ class SessionCsrfGuard implements CsrfGuardInterface
         $storedTokens = $this->session->get($csrfKey, []);
 
         $tokenParts = $this->splitHash($token);
-
-        return array_key_exists($tokenParts['token'], $storedTokens);
+        $tokenId= $tokenParts['token'];
+        $requestId = $tokenParts['requestId'];
+        return array_key_exists($tokenId, $storedTokens)  && $storedTokens[$tokenId]=== $requestId;
     }
 
     protected function cleanupTokens(array $tokens): array {
