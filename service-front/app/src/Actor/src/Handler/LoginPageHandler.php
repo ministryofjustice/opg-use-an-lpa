@@ -39,6 +39,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param AuthenticationInterface $authenticator
+     * @param LoggerInterface $logger
      */
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -63,13 +64,12 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             $form->setData($request->getParsedBody());
 
             if (!$form->isValid()) {
+                $errors = $form->getMessages();
+                $this->getLogger()-> notice('Login form validation failed.',$errors);
 
-                $this->getLogger()-> info('Invalid login attempt, invalid data sent: {data}' , [ 'data' => $request->getParsedBody()] );
                 return new HtmlResponse($this->renderer->render('actor::login', [
                     'form' => $form
                 ]));
-
-
             }
            try {
                 $user = $this->getUser($request);

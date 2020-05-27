@@ -26,7 +26,7 @@ class Login extends AbstractForm implements InputFilterProviderInterface
      * Invalid CSRF
      * @const string
      */
-    const INVALID_CSRF = 'Login attempt failed. Please try signing in again below or create an account';
+    const INVALID_CSRF = 'Security validation failed. Please try again.';
 
     /**
      * Error messages
