@@ -3113,4 +3113,21 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/create-account');
         $this->ui->assertPageContainsText("Sorry, there was a problem with that email address. Please try a different one");
     }
+  
+    /**   
+     * @Given /^I am on the stats page$/
+     */
+    public function iAmOnTheStatsPage()
+    {
+        $this->ui->visit('/stats');
+    }
+
+    /**
+     * @Then /^I can see user accounts table$/
+     */
+    public function iCanSeeUserAccountsTable()
+    {
+        $this->ui->assertPageAddress('/stats');
+        $this->ui->assertPageContainsText('Number of user accounts created and deleted');
+    }
 }
