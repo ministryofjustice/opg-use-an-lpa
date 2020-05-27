@@ -132,18 +132,6 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires: [dev_run_behat_tests]
 
-        - hold-for-destruction:
-            name: hold_env_for_destruction
-            filters: { branches: { ignore: [master] } }
-            type: approval
-            requires: [dev_run_behat_tests]
-
-        - use-my-lpa/destroy_dev_environment:
-            name: dev_destroy_environment
-            filters: { branches: { ignore: [master] } }
-            requires: [hold_env_for_destruction]
-
-
   path_to_live:
       jobs:
         # Common tasks
@@ -810,28 +798,6 @@ orbs:
               paths:
                 - cluster_config.json
 
-      destroy_dev_environment:
-        #
-        # Destroys a development environment after testing and approval
-        #
-        executor: terraform
-        parameters:
-          workspace:
-            description: Terraform workspace name
-            type: string
-            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
-        steps:
-          - checkout
-          - run:
-              name: Destroy Development Environment
-              command: |
-                if [ "${CIRCLE_BRANCH}" != "master" ]; then
-                  cd ~/project/terraform/environment
-                  terraform init -lock-timeout=300s
-                  export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
-                  echo $TF_WORKSPACE
-                  terraform destroy -lock-timeout=300s -auto-approve
-                fi
       redeploy_latest:
         #
         # Redeploy ECS services on an environment
