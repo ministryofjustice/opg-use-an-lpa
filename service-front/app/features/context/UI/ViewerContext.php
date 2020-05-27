@@ -466,4 +466,21 @@ class ViewerContext implements Context
     " You have not used this service for 30 minutes." .
     " Click continue to use any details you entered");
     }
+
+    /**
+     * @Given /^I am on the stats page$/
+     */
+    public function iAmOnTheStatsPage()
+    {
+        $this->ui->visit('/stats');
+    }
+
+    /**
+     * @Then /^I can see user LPA codes table$/
+     */
+    public function iCanSeeUserLPACodesTable()
+    {
+        $this->ui->assertPageAddress('/stats');
+        $this->ui->assertPageContainsText('Number of LPA codes viewed');
+    }
 }
