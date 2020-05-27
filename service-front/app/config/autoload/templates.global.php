@@ -14,5 +14,10 @@ return [
         'optimizations' => -1,
         'autoescape' => 'html',
         'auto_reload' => true,
+        'debug' => true,
+        'extensions' => [
+            // extension service names or instances
+            Twig\Extension\DebugExtension::class,
+        ],
     ],
 ];

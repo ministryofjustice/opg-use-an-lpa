@@ -92,8 +92,8 @@
     <div class="govuk-radios govuk-radios--conditional">
         {%  for option in value_options %}
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="{{ element.getName() }}" name="{{ element.getName() }}" type="radio" value="{{ element.getCheckedValue() }}" {% if element.getValue() == element.getCheckedValue() %}checked="checked"{% endif %} >
-                <label class="govuk-label govuk-radios__label" for="{{ element.getName() }}">
+                <input class="govuk-radios__input" id="{{ element.getName() }}-{{ loop.index }}" name="{{ element.getName() }}" type="radio" value="{{ option.value }}" {% if option.value == element.getValue() %}checked="checked"{% endif %} >
+                <label class="govuk-label govuk-radios__label" for="{{ element.getName() }}-{{ loop.index }}">
                     {{ option.label }}
                 </label>
             </div>

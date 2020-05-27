@@ -54,9 +54,6 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         $cookies = $request->getCookieParams();
 
         $usageCookies = 'no';
-        var_dump($form->get('usageCookies'));
-        die;
-
         if (array_key_exists(self::COOKIE_POLICY_NAME, $cookies)) {
             $cookiePolicy = json_decode($cookies[self::COOKIE_POLICY_NAME], true);
             $usageCookies = $cookiePolicy['usage'] === true ? 'yes' : 'no';
@@ -92,7 +89,6 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
                 SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))
                     ->withHttpOnly(false)
                     ->withExpires(new \DateTime('+365 days'))
-                    ->withSecure(true)
                     ->withPath('/')
             );
 
@@ -100,7 +96,6 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
                 SetCookie::create(self::SEEN_COOKIE_NAME, "true")
                     ->withHttpOnly(false)
                     ->withExpires(new \DateTime('+30 days'))
-                    ->withSecure(true)
                     ->withPath('/')
             );
         }

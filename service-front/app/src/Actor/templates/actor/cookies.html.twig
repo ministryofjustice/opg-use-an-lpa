@@ -41,19 +41,17 @@
                                 <span class="govuk-visually-hidden question-text">Allow use of non-essential Cookies?</span>
                             </legend>
 
-                            {{ govuk_form_element(form.get('usageCookies'),{
-                                    'value_options':
-                                    [
-                                        {
-                                            'label': 'Use cookies that measure my website use',
-                                            'value': 'yes'
-                                        },
-                                        {
-                                            'label': 'Do not use cookies that measure my website use',
-                                            'value': 'no'
-                                        }
-                                    ]
-                                }
+                            {{ govuk_form_element(form.get('usageCookies'), {'value_options':
+                                [
+                                    {
+                                        'label': 'Use cookies that measure my website use',
+                                        'value': 'yes'
+                                    },
+                                    {
+                                        'label': 'Do not use cookies that measure my website use',
+                                        'value': 'no'
+                                    }
+                                ]}
                             )}}
                         </fieldset>
                     </div>
