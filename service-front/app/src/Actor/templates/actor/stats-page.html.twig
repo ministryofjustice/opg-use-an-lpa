@@ -1,0 +1,147 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Use a LPA stats{% endblock %}
+
+{% block content %}
+
+    <main class="govuk-main-wrapper">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+
+                <h1 class="govuk-heading-xl">LPA Statistics</h1>
+
+                <p class="govuk-body-s">
+                    Data last updated:
+                    <b>12 March 2020 at 09:00</b>
+                </p>
+                <div class="govuk-tabs" data-module="govuk-tabs">
+
+                    <h2 class="govuk-tabs__title">Contents</h2>
+
+                    <div class="govuk-tabs__panel" id="use">
+                        <table class="govuk-table">
+                            <caption class="govuk-table__caption">
+                                <h2 class="govuk-heading-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">
+                                    Number of user accounts created and deleted
+                                </h2>
+                            </caption>
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-third"></th>
+                                <th scope="col" class="govuk-table__header">All time</th>
+                                <th scope="col" class="govuk-table__header">This month</th>
+                                <th scope="col" class="govuk-table__header">Last month</th>
+                                <th scope="col" class="govuk-table__header">2 months ago</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body ">
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Accounts created</th>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Accounts deleted</th>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="govuk-table">
+                            <caption class="govuk-table__caption">
+                                <h2 class="govuk-heading-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">
+                                    Number of access codes created
+                                </h2>
+                            </caption>
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-third"></th>
+                                <th scope="col" class="govuk-table__header">All time</th>
+                                <th scope="col" class="govuk-table__header">This month</th>
+                                <th scope="col" class="govuk-table__header">Last month</th>
+                                <th scope="col" class="govuk-table__header">2 months ago</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body ">
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Created by donor</th>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Created by attorney</th>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Expired without being viewed</th>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Cancelled before being viewed</th>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="govuk-table">
+                            <caption class="govuk-table__caption">
+                                <h2 class="govuk-heading-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">
+                                    Number of activation keys used
+                                </h2>
+                            </caption>
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-third"></th>
+                                <th scope="col" class="govuk-table__header">All time</th>
+                                <th scope="col" class="govuk-table__header">This month</th>
+                                <th scope="col" class="govuk-table__header">Last month</th>
+                                <th scope="col" class="govuk-table__header">2 months ago</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body ">
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Used by donor</th>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Used by attorney</th>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Attempted to be used</th>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                                <td class="govuk-table__cell">-</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
