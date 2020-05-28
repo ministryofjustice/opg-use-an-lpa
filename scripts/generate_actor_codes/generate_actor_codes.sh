@@ -2,18 +2,20 @@
 set -euo pipefail
 
 function get_lpa_inputcount(){
-    LPA_COUNT=$( echo "${LPATRIMMED}" | awk  -v FS="," "{ print NF }" );
+    LPA_UNIQUE_COUNT=$( echo "${LPATRIMMED}" | awk  -v FS="," "{ print NF }" );
 }
 
 function load_csv(){
     export LC_ALL=C
-    LPATRIMMED=$( tr -d '\r' < $1  |   # fix line endingsto unix
-    tr '\n' ',' |                      # make each row a record (this may have multiples)
-    tr -cd '[:print:]' |               # cleanse non printable characters
-    tr -d '[:space:]' |                # remove spaces
-    tr -d '"' |                        # remove double quotes
-    sed 's/,$//' |                     # remove trailing comma after processing.
-     tr -s ',')                        # squash empty comma separated values.
+
+    LPATRIMMED=$( tr -d '\r' < $1  |        # fix line endings to unix
+    tr '\n' ',' |                           # make each row a record (this may have multiples)
+    tr -cd '[:print:]' |                    # cleanse non printable characters
+    tr -d '[:space:]' |                     # remove spaces
+    tr -d '"' |                             # remove double quotes
+    awk -v RS="," -v ORS="," '!_[$0]++' |   # remove duplicates
+    sed 's/,$//' |                          # remove trailing comma after processing.
+    tr -s ',' )                             # squash commas
 }
 
 function parse_interactive(){
@@ -111,7 +113,7 @@ get_lpa_inputcount
 
 echo "environment name=${LPAENV}"
 echo "LPA Id's=${LPATRIMMED}"
-echo "Total LPAs entered: ${LPA_COUNT}"
+echo "Total unique LPA's: ${LPA_UNIQUE_COUNT}"
 echo "A new ${FILENAME}.txt file will be generated."
 echo "This will be stored securely in disk image ${FILENAME}.dmg and copied to your Documents folder."
 
