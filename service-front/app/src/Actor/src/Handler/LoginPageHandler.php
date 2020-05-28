@@ -66,7 +66,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             if (!$form->isValid()) {
                 $errors = $form->getMessages();
 
-                $this->getLogger()-> notice('Login form validation failed.',$errors);
+                $this->getLogger()->notice('Login form validation failed.',$errors);
 
                 return new HtmlResponse($this->renderer->render('actor::login', [
                     'form' => $form
