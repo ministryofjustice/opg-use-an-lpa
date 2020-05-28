@@ -163,15 +163,3 @@ resource "aws_security_group_rule" "actor_loadbalancer_ingress_route53_healthche
   security_group_id = aws_security_group.actor_loadbalancer_route53.id
   description       = "Loadbalancer ingresss from Route53 healthchecks"
 }
-
-resource "aws_security_group_rule" "actor_loadbalancer_ingress_preproduction_ithc" {
-  count             = local.environment == "preproduction" ? 1 : 0
-  description       = "ingress rules for ithc"
-  type              = "ingress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  cidr_blocks       = ["54.37.241.156/30", "167.71.136.237/32", ]
-  ipv6_cidr_blocks  = ["2001:41d0:800:715::/64"]
-  security_group_id = aws_security_group.actor_loadbalancer.id
-}

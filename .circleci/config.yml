@@ -99,11 +99,6 @@ workflows:
                 pdf_build_pr_build,
               ]
 
-        - mark_workspace_as_protected:
-            name: mark_workspace_as_protected
-            filters: { branches: { ignore: [master] } }
-            requires: [dev_apply_environment_terraform]
-
         - ecr_scan_results:
             name: ecr_scan_results_development
             filters: { branches: { ignore: [master] } }
@@ -131,18 +126,6 @@ workflows:
             name: post_environment_domains
             filters: { branches: { ignore: [master] } }
             requires: [dev_run_behat_tests]
-
-        - hold-for-destruction:
-            name: hold_env_for_destruction
-            filters: { branches: { ignore: [master] } }
-            type: approval
-            requires: [dev_run_behat_tests]
-
-        - use-my-lpa/destroy_dev_environment:
-            name: dev_destroy_environment
-            filters: { branches: { ignore: [master] } }
-            requires: [hold_env_for_destruction]
-
 
   path_to_live:
       jobs:
@@ -801,6 +784,7 @@ orbs:
                 terraform init -lock-timeout=300s
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
+                ~/project/scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE
                 export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
                 terraform apply -lock-timeout=300s --auto-approve -var container_version=${IMAGE_TAG}
@@ -810,28 +794,6 @@ orbs:
               paths:
                 - cluster_config.json
 
-      destroy_dev_environment:
-        #
-        # Destroys a development environment after testing and approval
-        #
-        executor: terraform
-        parameters:
-          workspace:
-            description: Terraform workspace name
-            type: string
-            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
-        steps:
-          - checkout
-          - run:
-              name: Destroy Development Environment
-              command: |
-                if [ "${CIRCLE_BRANCH}" != "master" ]; then
-                  cd ~/project/terraform/environment
-                  terraform init -lock-timeout=300s
-                  export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
-                  echo $TF_WORKSPACE
-                  terraform destroy -lock-timeout=300s -auto-approve
-                fi
       redeploy_latest:
         #
         # Redeploy ECS services on an environment
@@ -1036,20 +998,3 @@ jobs:
             cd terraform/environment
             terraform init -lock-timeout=300s
             ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(../../scripts/pipeline/workspace_cleanup/get_workspaces_linux)
-
-  mark_workspace_as_protected:
-    docker:
-      - image: hashicorp/terraform
-    parameters:
-      workspace:
-        description: Terraform workspace name
-        type: string
-        default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
-    steps:
-      - checkout
-
-      - run:
-          name: Mark Workspace for Cleanup
-          command: |
-            export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
-            ~/project/scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE
