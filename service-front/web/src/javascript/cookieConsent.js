@@ -45,5 +45,3 @@ export default class CookieConsent {
         return '/cookies' === window.location.pathname
     }
 }
-
-

@@ -50,6 +50,3 @@ Feature: Cookie consent
     Given I have seen the cookie banner
     And I set my cookie preferences
     Then I want to ensure <seen_cookie_message> is set
-
-
-

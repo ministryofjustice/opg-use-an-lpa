@@ -651,6 +651,4 @@ class ViewerContext implements Context
         $this->ui->visit('/');
         $this->ui->assertPageContainsText('View a lasting power of attorney');
     }
-
-
 }
