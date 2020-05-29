@@ -45,7 +45,6 @@ Feature: Cookie consent
     |Use cookies that measure my website use        |
     |Do not use cookies that measure my website use |
 
-
   @ui
   Scenario: Check cookie-seen-policy set
     Given I have seen the cookie banner
