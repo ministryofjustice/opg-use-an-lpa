@@ -255,7 +255,7 @@ orbs:
         steps:
           - run:
               name: Install AWS CLI
-              command: sudo pip3 install awscli --upgrade
+              command: sudo pip install awscli --upgrade
       install_python:
         steps:
           - run:
@@ -832,7 +832,7 @@ orbs:
           - run:
               name: Seed DynamoDB
               command: |
-                sudo pip3 install -r service-api/seeding/requirements.txt
+                sudo pip install -r service-api/seeding/requirements.txt
                 export AWS_ACCOUNT_ID=$(cat /tmp/cluster_config.json | jq .account_id | xargs)
                 export DYNAMODB_TABLE_ACTOR_CODES=$(cat /tmp/cluster_config.json | jq .actor_lpa_codes_table | xargs)
                 export DYNAMODB_TABLE_VIEWER_CODES=$(cat /tmp/cluster_config.json | jq .viewer_codes_table | xargs)
@@ -904,7 +904,7 @@ orbs:
           - run:
               name: Wait for new tasks in services to be running
               command: |
-                sudo pip3 install boto3
+                sudo pip install boto3
                 python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
           - run:
               name: Run test
@@ -920,7 +920,7 @@ orbs:
 jobs:
   slack_environment_redeploy:
     docker:
-      - image: circleci/python
+      - image: cimg/python:3.7
     parameters:
       environment:
         type: string
@@ -937,7 +937,7 @@ jobs:
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
   slack_notify_domain:
     docker:
-      - image: circleci/python
+      - image: cimg/python:3.7
     steps:
       - checkout
       - attach_workspace:
@@ -956,7 +956,7 @@ jobs:
 
   slack_notify_production_release:
     docker:
-      - image: circleci/python
+      - image: cimg/python:3.7
     steps:
       - checkout
       - attach_workspace:
@@ -976,7 +976,7 @@ jobs:
 
   ecr_scan_results:
     docker:
-      - image: circleci/python
+      - image: cimg/python:3.7
     steps:
       - checkout
       - run:
