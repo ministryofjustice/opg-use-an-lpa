@@ -116,6 +116,7 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                         if ($ex->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
                             $form->addErrorMessage(ChangeEmail::INVALID_PASSWORD, 'current_password');
                         } elseif ($ex->getCode() === StatusCodeInterface::STATUS_CONFLICT) {
+                            // send email to user saying someone tries to use their email
                             $form->addErrorMessage(ChangeEmail::NEW_EMAIL_CONFLICT, 'new_email_address');
                         }
                     }

@@ -421,12 +421,12 @@ class UserServiceTest extends TestCase
             ->shouldBeCalled();
 
         $repoProphecy
-        ->checkIfEmailResetRequested($newEmail)
-        ->willReturn([])
-        ->shouldBeCalled();
+            ->checkIfEmailResetRequested($newEmail)
+            ->willReturn([])
+            ->shouldBeCalled();
 
         $repoProphecy
-            ->recordChangeEmailRequest($id, $newEmail, $resetToken, $resetExpiry)
+            ->recordChangeEmailRequest($id, $newEmail, Argument::type('string'), Argument::type('int'))
             ->willReturn([
                 'Id'               => $id,
                 'EmailResetExpiry' => $resetExpiry,
@@ -435,8 +435,7 @@ class UserServiceTest extends TestCase
                 'NewEmail'         => $newEmail,
                 'EmailResetToken'  => $resetToken,
                 'Password'         => self::PASS_HASH
-            ])
-            ->shouldBeCalled();
+            ])->shouldBeCalled();
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
@@ -444,7 +443,7 @@ class UserServiceTest extends TestCase
 
         $this->assertEquals($id, $reset['Id']);
         $this->assertEquals($email, $reset['Email']);
-        $this->assertEquals(self::PASS, $reset['Password']);
+        $this->assertEquals(self::PASS_HASH, $reset['Password']);
         $this->assertEquals($newEmail, $reset['NewEmail']);
         $this->assertEquals($resetToken, $reset['EmailResetToken']);
         $this->assertArrayHasKey('EmailResetExpiry', $reset);

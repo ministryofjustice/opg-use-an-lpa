@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace BehatTest\Context\UI;
 
 use Alphagov\Notifications\Client;
+use App\Exception\ApiException;
+use Common\Exception\ApiException as CommonApiException;
 use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ElementNotFoundException;
 use BehatTest\Context\ActorContextTrait as ActorContext;
@@ -2883,7 +2885,7 @@ class AccountContext implements Context
      */
     public function iShouldBeToldThatICouldNotChangeMyEmailBecauseTheEmailIsTheSameAsMyCurrentEmail()
     {
-        $this->ui->assertPageContainsText('Your new email address must be different to your current email address');
+        $this->ui->assertPageContainsText('The new email address you entered is the same as your current email address. They must be different.');
     }
 
     /**
@@ -2993,7 +2995,7 @@ class AccountContext implements Context
      */
     public function iShouldBeToldThatMyRequestWasSuccessful()
     {
-        $this->ui->assertPageContainsText('Change email request successful');
+        $this->ui->assertPageContainsText('Updating your email address');
         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->newUserEmail);
     }
 
@@ -3081,7 +3083,7 @@ class AccountContext implements Context
      */
     public function iShouldBeToldThatMyEmailCouldNotBeChanged()
     {
-        $this->ui->assertPageContainsText("Unable to change email address");
+        $this->ui->assertPageContainsText("We cannot change your email address");
     }
 
     /**
@@ -3096,7 +3098,11 @@ class AccountContext implements Context
 
         // API call for creating an account
         $this->apiFixtures->post('/v1/user')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([])));
+            ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([
+                'title' => 'Conflict',
+                'details' => 'Another user has requested to change their email to ' . $this->userEmail,
+                'data' => []
+            ])));
 
         $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('password', $this->userPassword);

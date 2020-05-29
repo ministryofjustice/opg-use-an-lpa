@@ -162,7 +162,7 @@ class ViewerContext implements Context
     public function iSeeAMessageThatLPAHasBeenCancelled()
     {
         $this->ui->assertPageAddress('/check-code');
-        $this->ui->assertPageContainsText('The access code you entered has expired');
+        $this->ui->assertPageContainsText('The access code you entered has been cancelled');
     }
 
     /**

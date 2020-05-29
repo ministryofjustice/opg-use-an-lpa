@@ -95,6 +95,7 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
                     if ($ex->getCode() == StatusCodeInterface::STATUS_CONFLICT) {
                         if ($ex->getMessage() === 'Another user has requested to change their email to ' . $emailAddress){
                             $form->addErrorMessage(CreateAccount::NEW_EMAIL_CONFLICT);
+                            // send user the email saying someone tried to use their email
                             return new HtmlResponse($this->renderer->render('actor::create-account', [
                                 'form' => $form,
                             ]));

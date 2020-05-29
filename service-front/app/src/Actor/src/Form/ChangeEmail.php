@@ -26,7 +26,7 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
      */
     protected array $messageTemplates = [
         self::INVALID_PASSWORD => 'Your password is incorrect',
-        self::NEW_EMAIL_NOT_DIFFERENT => 'Your new email address must be different to your current email address',
+        self::NEW_EMAIL_NOT_DIFFERENT => 'The new email address you entered is the same as your current email address. They must be different.',
         self::NEW_EMAIL_CONFLICT => 'Sorry, there was a problem with that request. Please try a different email',
     ];
 

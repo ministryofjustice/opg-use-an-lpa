@@ -16,13 +16,17 @@
 
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-l">Change email request successful</h1>
+                    <h1 class="govuk-heading-l">Updating your email address</h1>
 
-                    <p class="govuk-body">We've emailed a link to {{ newEmail }}. Click on the link to verify this change. The link will work for the next 48 hours.</p>
+                    <p class="govuk-body">You’ve asked us to change your email address.</p>
 
-                    <p class="govuk-body">The email should arrive in a few minutes. If it's not in your inbox, check your spam or junk folder.</p>
+                    <p class="govuk-body">We've emailed a link to {{ newEmail }} – please follow the link in the email to confirm the change.</p>
 
-                    <p class="govuk-body">If you've already verified your new email address, you can <a href="{{ path('login') }}" class="govuk-link">sign in</a> with it now.</p>
+                    <p class="govuk-body">The email should arrive in a few minutes, check your spam, bulk and junk folders.</p>
+
+                    <p class="govuk-body">The link will work for 48 hours.</p>
+
+                    <p class="govuk-body">If you’ve already confirmed the change, you can use your new email address to <a href="{{ path('login') }}" class="govuk-link">sign in</a> now.</p>
 
                 </div>
 
