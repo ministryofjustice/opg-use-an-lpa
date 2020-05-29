@@ -146,6 +146,7 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
+    sid    = "lpacollectionsaccess"
     effect = "Allow"
 
     actions = [
@@ -153,6 +154,19 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
 
     resources = ["arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/GET/use-an-lpa/*"]
+  }
+
+  statement {
+    sid    = "lpacodesaccess"
+    effect = "Allow"
+    actions = [
+      "execute-api:Invoke",
+    ]
+    resources = [
+      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/GET/healthcheck",
+      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/POST/revoke",
+      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/POST/validate",
+    ]
   }
 }
 
