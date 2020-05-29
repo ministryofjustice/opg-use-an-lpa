@@ -16,11 +16,11 @@ Feature: Cookie consent
     When I access the view a lasting power of attorney web page
     Then I see Accept all cookies and Set cookie preferences button
 
-#  @ui
-#  Scenario: Cookie banner disappears  when I accept all cookies
-#    Given I have seen the cookie banner
-#    When I click on Accept all cookies button
-#    Then I should not see a cookie banner
+  @ui
+  Scenario: Cookie banner disappears  when I accept all cookies
+    Given I have seen the cookie banner
+    When I click on Accept all cookies button
+    Then I should not see a cookie banner
 
   @ui
   Scenario: Navigates to cookie preference page when I click on Set cookie preferences
