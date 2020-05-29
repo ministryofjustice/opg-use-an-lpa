@@ -9,6 +9,13 @@ Feature: Add an LPA
     And I am currently signed in
     And I have been given access to use an LPA via credentials
 
+  @ui
+  Scenario: The user cannot add an LPA to their account when status is pending
+    Given I am on the add an LPA page
+    When I request to add an LPA whose status is pending using xyuphwqrechv
+    Then The LPA is not found
+
+
   @integration @ui
   Scenario Outline: The user can add an LPA to their account
     Given I am on the add an LPA page
@@ -21,6 +28,7 @@ Feature: Add an LPA
       | xyuphwqrechv   |
       | XYUPHWQRECHV   |
       | XYUP-hwqr-EcHv |
+      | C - XYUP - hwqr - Echv |
 
   @integration @ui
   Scenario: The user cannot add an LPA to their account as it does not exist
@@ -44,10 +52,9 @@ Feature: Add an LPA
 
     Examples:
       | passcode | reason |
-      | T3ST PA22C0D3 | Your activation key must only include letters, numbers and dashes |
-      | T3ST PA22-C0D3 | Your activation key must only include letters, numbers and dashes |
+      | T3ST$PA22-C0D3 | Your activation key must only include letters, numbers and dashes |
       | T3STP*22C0!? | Your activation key must only include letters, numbers and dashes |
-      | T3ST - PA22 - C0D3 | Your activation key must be 12 numbers and letters long |
+      | C - T3S* - PA22 - C0D3 | Your activation key must only include letters, numbers and dashes |
       | T3STPA22C0D | Your activation key must be 12 numbers and letters long |
       |  | Enter your activation key |
 

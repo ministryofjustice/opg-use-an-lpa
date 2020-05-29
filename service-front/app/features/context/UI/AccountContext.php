@@ -582,6 +582,38 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I request to add an LPA whose status is (.*) using (.*)$/
+     */
+    public function iRequestToAddAnLPAWhoseStatusIs(string $status, string $code)
+    {
+        $this->lpa->status = $status;
+
+        $this->ui->assertPageAddress('/lpa/add-details');
+
+        // API call for checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(['lpa' => $this->lpa])
+                )
+            )
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $params = json_decode($request->getBody()->getContents(), true);
+
+                assertEquals('XYUPHWQRECHV', $params['actor-code']);
+            });
+
+        $this->ui->fillField('passcode', $code);
+        $this->ui->fillField('reference_number', '700000000054');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
      * @Then /^The correct LPA is found and I can confirm to add it$/
      */
     public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
@@ -2687,5 +2719,22 @@ class AccountContext implements Context
                 throw new Exception('Cookie named session not found in the response header');
             }
         }
+    }
+
+    /**
+     * @Given /^I am on the stats page$/
+     */
+    public function iAmOnTheStatsPage()
+    {
+        $this->ui->visit('/stats');
+    }
+
+    /**
+     * @Then /^I can see user accounts table$/
+     */
+    public function iCanSeeUserAccountsTable()
+    {
+        $this->ui->assertPageAddress('/stats');
+        $this->ui->assertPageContainsText('Number of user accounts created and deleted');
     }
 }

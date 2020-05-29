@@ -71,6 +71,9 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
                 //  Attempt to retrieve an LPA using the form data
                 $postData = $form->getData();
 
+                // Remove C from start of the code if present
+                $postData['passcode'] = preg_replace('/^[c]?/i', '', $postData['passcode']);
+
                 //  Filter out dashes and whitespace
                 $postData = str_replace('-', '', $postData);
                 $postData = str_replace(' ', '', $postData);
