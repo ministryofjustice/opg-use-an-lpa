@@ -287,9 +287,9 @@ orbs:
       php-browsers:
         docker: [image: circleci/php:7-cli-browsers]
       node:
-        docker: [image: circleci/node:14.0]
+        docker: [image: cimg/node:14.0]
       python:
-        docker: [image: circleci/python]
+        docker: [image: cimg/python:3.7]
       terraform:
         docker: [image: hashicorp/terraform]
 
