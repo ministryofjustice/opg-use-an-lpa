@@ -6,7 +6,6 @@ namespace BehatTest\Context\UI;
 
 use Alphagov\Notifications\Client;
 use App\Exception\ApiException;
-use Common\Exception\ApiException as CommonApiException;
 use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ElementNotFoundException;
 use BehatTest\Context\ActorContextTrait as ActorContext;
@@ -3099,9 +3098,7 @@ class AccountContext implements Context
         // API call for creating an account
         $this->apiFixtures->post('/v1/user')
             ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([
-                'title' => 'Conflict',
-                'details' => 'Another user has requested to change their email to ' . $this->userEmail,
-                'data' => []
+                'message' => 'Another user has requested to change their email to ' . $this->userEmail
             ])));
 
         $this->ui->fillField('email', $this->userEmail);

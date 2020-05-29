@@ -1,4 +1,4 @@
-@actor @accountcreation
+@actor @accountcreation @runMe
 Feature: Account creation
   As a new user
   I want to create an account
