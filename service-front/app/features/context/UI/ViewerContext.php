@@ -90,7 +90,7 @@ class ViewerContext implements Context
     public function iAccessTheViewerService()
     {
         $this->ui->iAmOnHomepage();
-        $this->ui->assertElementContainsText('a[role=button]', 'Start');
+        $this->ui->assertElementContainsText('a[name=viewer-start]', 'Start');
         $this->ui->clickLink('Start');
     }
 
@@ -502,4 +502,155 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/stats');
         $this->ui->assertPageContainsText('Number of LPA codes viewed');
     }
+
+    /**
+     * @Then /^I see a cookie consent banner$/
+     */
+    public function iCanSeeACookieConsentBanner()
+    {
+        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageContainsText('Tell us whether you accept cookies');
+    }
+
+    /**
+     * @Then /^I see (.*) and (.*) button$/
+     */
+    public function iSeeAcceptAllCookiesAndSetCookiePreferencesButton($button1, $button2)
+    {
+        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageContainsText($button1);
+        $this->ui->assertPageContainsText($button2);
+        $this->ui->assertElementContainsText('button[name=accept-all-cookies]', 'Accept all cookies');
+        $this->ui->assertElementContainsText('a[name=set-cookie-preferences]', 'Set cookie preferences');
+    }
+
+    /**
+     * @Then /^I click on (.*) button$/
+     */
+    public function iClickOnButton($button)
+    {
+        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageContainsText($button);
+        if ($button === 'Set cookie preferences') {
+            $this->ui->clickLink($button);
+        } else {
+            $this->ui->pressButton($button);
+        }
+    }
+
+    /**
+     * @Then /^I am on the cookie preferences page$/
+     */
+    public function iAmOnTheCookiePreferencesPage()
+    {
+        $this->ui->assertPageAddress('/cookies');
+        $this->ui->assertPageContainsText("Cookie settings");
+    }
+
+    /**
+     * @Given /^I have seen the cookie banner$/
+     */
+    public function iHaveSeenTheCookieBanner()
+    {
+        $this->iWantToViewALastingPowerOfAttorney();
+        $this->iAccessTheViewALastingPowerOfAttorneyWebPage();
+        $this->iCanSeeACookieConsentBanner();
+    }
+
+    /**
+     * @Then /^I see options to (.*) and (.*)$/
+     */
+    public function iSeeOptionsToSetAndUnsetCookiesThatMeasureMyWebsiteUse($option1, $option2)
+    {
+        $this->ui->assertPageContainsText("Cookies that measure website use");
+        $this->ui->assertPageContainsText("Use cookies that measure my website use");
+        $this->ui->assertPageContainsText("Do not use cookies that measure my website use");
+        $this->ui->assertElementContains('input[id=usageCookies-1]', '');
+        $this->ui->assertElementContains('input[id=usageCookies-2]', '');
+    }
+
+    /**
+     * @Then /^I set either of (.*) below and save changes$/
+     */
+    public function iSetEitherOfOptionAndSaveChanges($options)
+    {
+        if ($options === 'Use cookies that measure my website use') {
+            $this->ui->fillField('usageCookies', 'yes');
+        } else {
+            $this->ui->fillField('usageCookies', 'no');
+        }
+        $this->ui->pressButton('Save changes');
+    }
+
+    /**
+     * @Then /^I should be on the home page of the service$/
+     */
+    public function iShouldBeOnTheHomePageOfTheService()
+    {
+        $this->ui->assertPageAddress('/');
+    }
+
+    /**
+     * @Then /^I should not see a cookie banner$/
+     */
+    public function iShouldNotSeeACookieBanner()
+    {
+        $this->ui->assertPageAddress('/');
+        $cookieBannerDisplay = $this->ui->getSession()->getPage()->find('css', '.cookie-banner--show');
+        if ($cookieBannerDisplay === null) {
+            $this->ui->assertResponseNotContains('cookie-banner--show');
+        }
+    }
+
+    /**
+     * @Given /^I set my cookie preferences$/
+     */
+    public function iSetMyCookiePreferences()
+    {
+        $this->iClickOnButton('Set cookie preferences');
+        $this->iSeeOptionsToSetAndUnsetCookiesThatMeasureMyWebsiteUse('Use cookies that measure my website use', 'Do not use cookies that measure my website use');
+        $this->iSetEitherOfOptionAndSaveChanges('Use cookies that measure my website use');
+    }
+
+    /**
+     * @Then /^I want to ensure (.*) is set$/
+     */
+    public function iWantToEnsureSeenCookieMessageIsSet()
+    {
+        $this->ui->assertPageAddress('/');
+
+        $session = $this->ui->getSession();
+
+        // retrieving response headers:
+        $cookies = $session->getResponseHeaders()['Set-Cookie'];
+
+        if (!$cookies === null) {
+            foreach ($cookies as $value) {
+                if (strstr($value, 'seen-cookie-message')) {
+                    assertContains('true', $value);
+                } else {
+                    throw new Exception('Cookie named seen-cookie-message not found in the response header');
+                }
+            }
+        }
+    }
+
+    /**
+     * @Given /^I want to view a lasting power of attorney$/
+     */
+    public function iWantToViewALastingPowerOfAttorney()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I access the view a lasting power of attorney web page$/
+     */
+    public function iAccessTheViewALastingPowerOfAttorneyWebPage()
+    {
+        $this->ui->visit('/');
+        $this->ui->assertPageContainsText('View a lasting power of attorney');
+    }
+
+
 }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler;
+namespace Viewer\Handler;
 
-use Actor\Form\CookieConsent;
+use Viewer\Form\CookieConsent;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
@@ -20,7 +20,7 @@ use Mezzio\Helper\UrlHelper;
 
 /**
  * Class CookiesPageHandler
- * @package Actor\Handler
+ * @package Viewer\Handler
  */
 class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
@@ -61,7 +61,7 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         $form->get('usageCookies')->setValue($usageCookies);
 
 
-        return new HtmlResponse($this->renderer->render('actor::cookies', [
+        return new HtmlResponse($this->renderer->render('viewer::cookies', [
             'form' => $form
         ]));
     }
@@ -78,14 +78,13 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         $response = new RedirectResponse($this->urlHelper->generate('home'));
 
         if (array_key_exists(self::COOKIE_POLICY_NAME, $cookies)) {
-
             try {
                 $cookiePolicy = json_decode($cookies[self::COOKIE_POLICY_NAME], true);
             } catch (\Exception $e) {
                 return $response;
             }
-            $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes' ? true : false;
 
+            $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes' ? true : false;
             $response = FigResponseCookies::set($response,
                 SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))
                     ->withHttpOnly(false)

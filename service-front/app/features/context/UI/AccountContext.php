@@ -121,7 +121,7 @@ class AccountContext implements Context
     {
         $this->ui->visit('/login');
         $this->ui->assertPageAddress('/login');
-        $this->ui->assertElementContainsText('button[type=submit]', 'Sign in');
+        $this->ui->assertElementContainsText('button[name=sign-in]', 'Sign in');
     }
 
     /**
@@ -136,7 +136,7 @@ class AccountContext implements Context
 
         $this->ui->iAmOnHomepage();
 
-        $this->ui->clickLink('Sign in');
+        $this->ui->clickLink('Sign in to your existing account');
     }
 
     /**
