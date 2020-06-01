@@ -269,7 +269,7 @@ EOF
     },
     {
       "name": "SIRIUS_API_ENDPOINT",
-      "value": "${local.account.api_gateway_endpoint}"
+      "value": "${local.account.lpas_collection_endpoint}"
     },
     {
       "name": "USE_LEGACY_CODES_SERVICE",
