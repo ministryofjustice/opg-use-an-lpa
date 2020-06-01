@@ -27,7 +27,6 @@ export default class CookieConsent {
     {
         approveAllCookieTypes()
         setCookie('seen_cookie_message', 'true')
-        console.log(event);
 
         this._toggleCookieMessage(false)
 
