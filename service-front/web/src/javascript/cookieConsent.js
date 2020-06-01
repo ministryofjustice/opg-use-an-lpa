@@ -10,7 +10,7 @@ export default class CookieConsent {
             if (!this._isInCookiesPage()) {
                 this._toggleCookieMessage(true)
             }
-            // cookiePolicy || setDefaultConsentCookie()
+            cookiePolicy || setDefaultConsentCookie()
         }
 
         const acceptButton = bannerElement.querySelector('.cookie-banner__button-accept > button')
