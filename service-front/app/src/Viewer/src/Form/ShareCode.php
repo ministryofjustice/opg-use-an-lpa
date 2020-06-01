@@ -50,7 +50,7 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                         ],
                     ],
                     new Regex([
-                        'pattern' => '/^[[:alnum:]]{4,4}(?\'dash\' |-)?[[:alnum:]]{4,4}(\g{dash})?[[:alnum:]]{4,4}$/',
+                        'pattern' => "/(^[vV]?|^)(?'dash' |-|){0,6}[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}/",
                         'message' => [
                             Regex::NOT_MATCH => 'LPA access codes are 13 numbers and letters long and start with a V'
                         ]

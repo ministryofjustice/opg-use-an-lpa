@@ -29,9 +29,9 @@ do
     *)
       echo "cleaning up workspace $workspace..."
       terraform workspace select $workspace
-      # terraform destroy -auto-approve
+      terraform destroy -auto-approve
       terraform workspace select default
-      # terraform workspace delete $workspace
+      terraform workspace delete $workspace
       ;;
   esac
 done

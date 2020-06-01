@@ -16,9 +16,8 @@ Feature: View an LPA via sharecode
   Scenario: View a cancelled LPA
     Given I have been given access to a cancelled LPA via share code
     And I access the viewer service
-    And I give a valid LPA share code
-    When I confirm the LPA is correct
-    Then I can see the full details of a cancelled LPA
+    When I give a share code that's been cancelled
+    Then I see a message that LPA has been cancelled
 
   @ui @integration
   Scenario: The user can see an option to re enter code if the displayed LPA is incorrect
@@ -45,9 +44,10 @@ Feature: View an LPA via sharecode
 
     Examples:
       | accessCode | reason |
-      | T3ST ACE2-C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
+      | V-T3ST_ACE2-C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
       | T3STP*22C0!? | LPA access codes are 13 numbers and letters long and start with a V |
-      | T3ST - PA22 - C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
+      | T3ST _ PA22 - C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
+      | V - T3ST _ PA22 - C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
       | T3STPA22C0D | LPA access codes are 13 numbers and letters long and start with a V |
       |  | Enter the LPA access code |
 
@@ -62,24 +62,11 @@ Feature: View an LPA via sharecode
       |  | Enter the donor's surname |
 
   @ui
-  Scenario Outline: The user enters an expired sharecode and is shown the reason for not able to see the details of an LPA
+  Scenario: The user enters an expired sharecode and is shown the reason for not able to see the details of an LPA
     Given I have been given access to an LPA via share code
     And I access the viewer service
     When I give a share code that has got expired
-    Then I am told that the share code is invalid because <reason>
-  Examples:
-  | reason |
-  | The access code you entered has expired |
-
-  @ui
-  Scenario Outline: The user enters a cancelled sharecode and is shown the reason for not able to see the details of an LPA
-    Given I have been given access to an LPA via share code
-    And I access the viewer service
-    When I give a share code that's been cancelled
-    Then I am told that the share code is invalid because <reason>
-    Examples:
-      | reason |
-      | The access code you entered has been cancelled |
+    Then I see a message that LPA has been expired
 
   @ui
   Scenario Outline: The user enters a non existing surname and share code and is shown the reason for not able to see the details of an LPA
@@ -88,8 +75,10 @@ Feature: View an LPA via sharecode
     When I give an invalid <sharecode> and <surname>
     Then I am told that the share code is invalid because <reason>
     Examples:
-      |surname  |sharecode       | reason |
-      | Billson |1110-1111-0111  | We could not find an LPA matching those details |
+      |surname  | sharecode       | reason |
+      | Billson | V-1110-1111-0111  | We could not find an LPA matching those details |
+      | Billson | V - 1110 - 1111 - 0111  | We could not find an LPA matching those details |
+      | Billson | 1110-1111-0111  | We could not find an LPA matching those details |
 
   @ui
   Scenario: The user is allowed to re-enter code after an invalid one entered
