@@ -32,14 +32,20 @@ class SessionExpiredAttributeWhitelistMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /** @var SessionInterface $session */
-        if (null !== $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE)) {
-            foreach ($session->toArray() as $key => $value) {
-                if (! in_array($key, self::WHITELIST)) {
-                    $session->unset($key);
-                }
-            }
+        $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
+        if ($session !== null && $session->get(EncryptedCookiePersistence::SESSION_EXPIRED_KEY) !== null) {
+            $this->stripSession($session);
         }
 
         return $handler->handle($request);
+    }
+
+    private function stripSession(SessionInterface $session)
+    {
+        foreach ($session->toArray() as $key => $value) {
+            if (! in_array($key, self::WHITELIST)) {
+                $session->unset($key);
+            }
+        }
     }
 }
