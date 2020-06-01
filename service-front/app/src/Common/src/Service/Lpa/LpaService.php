@@ -256,6 +256,30 @@ class LpaService
         return null;
     }
 
+    public function sortLpasByDonorSurname(ArrayObject $lpas): ArrayObject
+    {
+        $names = [];
+        foreach ($lpas as $lpaKey => $lpaData) {
+            $surname = $lpaData['lpa']->getDonor()->getSurname();
+            array_push($names, $surname);
+        }
+
+        sort($names);
+        $orderedLpas = [];
+
+        foreach ($names as $key => $name) {
+            foreach ($lpas as $lpaKey => $lpaData) {
+                $surname = $lpaData['lpa']->getDonor()->getSurname();
+                if ($name === $surname) {
+                    $orderedLpas[$lpaKey] = $lpaData;
+                    unset($lpas[$lpaKey]);
+                }
+            }
+        }
+
+        return new ArrayObject($orderedLpas, ArrayObject::ARRAY_AS_PROPS);
+    }
+
     /**
      * Attempts to convert the data arrays received via the various endpoints into an ArrayObject containing
      * scalar and object values.
