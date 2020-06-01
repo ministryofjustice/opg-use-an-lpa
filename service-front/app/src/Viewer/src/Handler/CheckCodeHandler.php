@@ -96,7 +96,7 @@ class CheckCodeHandler extends AbstractHandler
                 }
             }
 
-           // $this->failureRateLimiter->limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
+            $this->failureRateLimiter->limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
             return new HtmlResponse($this->renderer->render('viewer::check-code-not-found'));
         }
 
