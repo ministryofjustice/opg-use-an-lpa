@@ -71,6 +71,7 @@ return [
                 'adapter' => [
                     'name'    => 'memory',
                     'options' => [
+                        'memory_limit' => '96M',
                         'ttl' => 60,
                         'server' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
                         'lib_options' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey()
