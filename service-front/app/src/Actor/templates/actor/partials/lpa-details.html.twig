@@ -18,7 +18,7 @@
                     <a class="govuk-link" href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">View LPA summary</a>
                 </p>
                 <p>
-                {% if lpa.applicationHasRestrictions == true or lpa.applicationHasGuidance == true %}
+                {% if lpa.applicationHasRestrictions or lpa.applicationHasGuidance %}
                     <span class="govuk-grid-column-full govuk-grid-column-full govuk-template"><strong>Important: </strong>This lpa has instructions or preferences. <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}">Read more</a></span>
                 {% endif %}
                 </p>

@@ -44,16 +44,9 @@ class InstructionsPreferencesHandler extends AbstractHandler implements UserAwar
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $actorLpaToken = "null";
-        $array = $request->getQueryParams();
-
-        if (!empty($array)) {
-            $actorLpaToken = $request->getQueryParams()['lpa'];
-        }
         $user = $this->getUser($request);
 
         return new HtmlResponse($this->renderer->render('actor::instructions-preferences', [
-            'actorToken' => $actorLpaToken,
             'user' => $user,
         ]));
     }

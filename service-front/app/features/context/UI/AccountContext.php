@@ -2767,7 +2767,7 @@ class AccountContext implements Context
         $this->ui->visit('/lpa/dashboard');
 
         $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->assertPageContainsText('Important: This lpa has instructions or preferences');
+        $this->ui->assertPageContainsText($message);
     }
 
     //I can see <Read more> link along with the instructions or preference message
@@ -2816,8 +2816,5 @@ class AccountContext implements Context
         $this->iAmOnTheDashboardPage();
         $this->iClickTheReadMoreLinkInTheInstructionsOrPreferenceMessage('Read more');
         $this->iAmNavigatedToTheInstructionsAndPreferencesPage();
-
-
-
     }
 }
