@@ -22,21 +22,17 @@ class CodeGeneration:
     logStreamName = ''
 
     def __init__(self, environment):
+
         self.aws_account_ids = {
             'production': "690083044361",
             'preproduction': "888228022356",
             'development': "367815980639",
         }
         self.environment = environment
-
         self.aws_account_id = self.aws_account_ids.get(
             self.environment, "367815980639")
-
-        self.aws_ecs_cluster = os.environ.get('AWS_ECS_CLUSTER')
-
-        if (self.aws_ecs_cluster == None):
-            self.aws_ecs_cluster = '{}-use-an-lpa'.format(self.environment)
-
+        self.aws_ecs_cluster = '{}-use-an-lpa'.format(self.environment)
+        print(self.aws_ecs_cluster)
         self.set_iam_role_session()
 
         self.aws_ecs_client = boto3.client(
@@ -209,7 +205,7 @@ class CodeGeneration:
 
         self.logStreamName = '{}.code-creation-app.use-an-lpa/app/{}'.format(
             self.environment, self.code_creation_task.rsplit('/', 1)[-1])
-        print("Streaming logs for logstream: ".format(self.logStreamName))
+        print( "Streaming logs for logstream:{} ".format(self.logStreamName))
 
         self.nextForwardToken = 'f/0'
 
