@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\LpaConfirm;
+use App\Service\User\UserService;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
@@ -45,6 +46,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     /** @var LpaService */
     private $lpaService;
 
+    /** @var UserService */
+    private $user;
+
     /**
      * LpaAddHandler constructor.
      * @param TemplateRendererInterface $renderer
@@ -77,8 +81,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
         $form = new LpaConfirm($this->getCsrfGuard($request));
 
-        $user = $this->getUser($request);
-        $identity = (!is_null($user)) ? $user->getIdentity() : null;
+        $this->user = $this->getUser($request);
+        $identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
 
         $passcode = $session->get('passcode');
         $referenceNumber = $session->get('reference_number');
@@ -154,7 +158,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     );
                     //  Show LPA not found page
                     return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                        'user' => $this->getUser($request)
+                        'user' => $this->user
                     ]));
                 }
             } catch (ApiException $aex) {
@@ -168,7 +172,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
                     //  Show LPA not found page
                     return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                        'user' => $this->getUser($request)
+                        'user' => $this->user
                     ]));
                 }
 
@@ -195,7 +199,12 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         } elseif (!is_null($lpa->getAttorneys()) && is_iterable($lpa->getAttorneys())) {
             /** @var CaseActor $attorney */
             foreach ($lpa->getAttorneys() as $attorney) {
-                if (!is_null($attorney->getDob()) && $attorney->getDob() == $comparableDob) {
+                if (
+                    !is_null($attorney->getDob())
+                    && !is_null($attorney->getEmail())
+                    && $attorney->getDob() == $comparableDob
+                    && $attorney->getEmail() === $this->user->getDetail('email')
+                ) {
                     $user = $attorney;
                     $userRole = 'Attorney';
                 }

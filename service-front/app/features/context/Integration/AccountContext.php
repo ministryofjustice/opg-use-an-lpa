@@ -114,7 +114,7 @@ class AccountContext extends BaseIntegrationContext
                     ],
                     'companyName' => null,
                     'dob' => '1975-10-05',
-                    'email' => 'string',
+                    'email' => 'test@test.com',
                     'firstname' => 'Ian',
                     'id' => 0,
                     'middlenames' => null,
