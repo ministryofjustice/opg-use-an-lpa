@@ -210,13 +210,12 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
     public function initializeSessionFromRequest(ServerRequestInterface $request): SessionInterface
     {
         $sessionData = $this->getCookieFromRequest($request);
-
         $data = $this->decodeCookieValue($sessionData);
 
         // responsible the for expiry of a users session
         if (isset($data[self::SESSION_TIME_KEY])) {
             $expiresAt = $data[self::SESSION_TIME_KEY] + $this->sessionExpire;
-            if ($expiresAt >= time()) {
+            if ($expiresAt > time()) {
                 return new Session($data);
             }
         }
@@ -224,7 +223,9 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         // if we have values in the session but are here then we have fallen into the gap where the session has expired
         // but we're still within the cookieTtl amount of time. by setting an expired flag we'll be able to prompt with
         // messages such as "You've been logged out due to inactivity" or allow access to PDF downloads
-        $data[self::SESSION_EXPIRED_KEY] = true;
+        if ($sessionData != '') {
+            $data[self::SESSION_EXPIRED_KEY] = true;
+        }
 
         return new Session($data);
     }
