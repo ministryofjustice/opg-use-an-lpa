@@ -12,6 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Upon detection of an Expiration value in the session will remove all
@@ -29,12 +30,26 @@ class SessionExpiredAttributeWhitelistMiddleware implements MiddlewareInterface
         EncryptedCookiePersistence::SESSION_TIME_KEY,
     ];
 
+    private LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /** @var SessionInterface $session */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
         if ($session !== null && $session->get(EncryptedCookiePersistence::SESSION_EXPIRED_KEY) !== null) {
             $this->stripSession($session);
+
+            $this->logger->info(
+                'User session expired approx {seconds} seconds ago',
+                [
+                    'seconds' => time() - $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY)
+                ]
+            );
         }
 
         return $handler->handle($request);
