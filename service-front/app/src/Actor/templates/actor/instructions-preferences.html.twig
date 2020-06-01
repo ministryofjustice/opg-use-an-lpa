@@ -1,0 +1,28 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Instructions and preferences {{ parent() }} {% endblock %}
+
+{% block title %}Instructions and preferences{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        <a href="{{ path('lpa.dashboard', {}, {'lpa': actorToken}) }}" class="govuk-back-link">Back to your LPAs</a>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+
+                <h1 class="govuk-heading-xl">
+                    Instructions and preferences
+                </h1>
+                <div class="govuk-grid-column-two-thirds">
+
+                        <p class="govuk-body">If an LPA has instructions or preferences we cannot show these online. Organisations might ask to see the paper LPA so that they can read the instructions and preferences.</p>
+                        <p class="govuk-body">In some older LPA's, instructions and preferences are called 'restrictions and conditions'.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+{% endblock %}

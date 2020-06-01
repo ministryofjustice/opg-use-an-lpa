@@ -17,6 +17,11 @@
                     <a class="govuk-link" href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}">Check access codes</a><br>
                     <a class="govuk-link" href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">View LPA summary</a>
                 </p>
+                <p>
+                {% if lpa.applicationHasRestrictions == true or lpa.applicationHasGuidance == true %}
+                    <span class="govuk-grid-column-full govuk-grid-column-full govuk-template"><strong>Important: </strong>This lpa has instructions or preferences. <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}">Read more</a></span>
+                {% endif %}
+                </p>
             {% else %}
                 <p class="govuk-!-margin-top-0 lpa-secondary-text-colour">
                     Give an organisation access<br>
