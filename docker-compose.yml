@@ -179,6 +179,7 @@ services:
 
       SIRIUS_API_ENDPOINT: "http://gateway:5000"
       USE_LEGACY_CODES_SERVICE: "true"
+      LPA_CODES_API_ENDPOINT: ""
 
       # Local only
       AWS_ACCESS_KEY_ID: "-"
