@@ -14,6 +14,7 @@ use Prophecy\Argument;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 
 class SessionExpiredAttributeWhitelistMiddlewareTest extends TestCase
 {
@@ -32,7 +33,9 @@ class SessionExpiredAttributeWhitelistMiddlewareTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
-        $sem = new SessionExpiredAttributeWhitelistMiddleware();
+        $sem = new SessionExpiredAttributeWhitelistMiddleware(
+            $this->prophesize(LoggerInterface::class)->reveal()
+        );
 
         $sem->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
@@ -58,7 +61,9 @@ class SessionExpiredAttributeWhitelistMiddlewareTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
-        $sem = new SessionExpiredAttributeWhitelistMiddleware();
+        $sem = new SessionExpiredAttributeWhitelistMiddleware(
+            $this->prophesize(LoggerInterface::class)->reveal()
+        );
 
         $sem->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
@@ -99,7 +104,9 @@ class SessionExpiredAttributeWhitelistMiddlewareTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
-        $sem = new SessionExpiredAttributeWhitelistMiddleware();
+        $sem = new SessionExpiredAttributeWhitelistMiddleware(
+            $this->prophesize(LoggerInterface::class)->reveal()
+        );
 
         $sem->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
