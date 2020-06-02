@@ -75,7 +75,7 @@ class SessionExpiredAttributeWhitelistMiddlewareTest extends TestCase
             'string' => 'one',
             'bool' => true,
             'DateTime' => new DateTime(),
-            EncryptedCookiePersistence::SESSION_TIME_KEY => time(),
+            EncryptedCookiePersistence::SESSION_TIME_KEY => time() - 300, // session expired 5 minutes ago
             EncryptedCookiePersistence::SESSION_EXPIRED_KEY => true
         ];
 
@@ -84,6 +84,10 @@ class SessionExpiredAttributeWhitelistMiddlewareTest extends TestCase
             ->get(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
             ->shouldBeCalled()
             ->willReturn(true);
+        $sessionProphecy
+            ->get(EncryptedCookiePersistence::SESSION_TIME_KEY)
+            ->shouldBeCalled()
+            ->willReturn($sessionData[EncryptedCookiePersistence::SESSION_TIME_KEY]);
         $sessionProphecy
             ->toArray()
             ->shouldBeCalled()
