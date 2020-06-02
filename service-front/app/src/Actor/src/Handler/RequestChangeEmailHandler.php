@@ -116,8 +116,12 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                         if ($ex->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
                             $form->addErrorMessage(ChangeEmail::INVALID_PASSWORD, 'current_password');
                         } elseif ($ex->getCode() === StatusCodeInterface::STATUS_CONFLICT) {
-                            // send email to user saying someone tries to use their email
-                            $form->addErrorMessage(ChangeEmail::NEW_EMAIL_CONFLICT, 'new_email_address');
+                            // send email to the other user who has not completed their reset saying someone has tried to use their email
+                            $this->emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($newEmail);
+                            return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
+                                'user'     => $user,
+                                'newEmail' => $newEmail
+                            ]));
                         }
                     }
                 }

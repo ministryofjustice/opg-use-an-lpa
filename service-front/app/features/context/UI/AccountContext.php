@@ -864,7 +864,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/create-account-success');
 
-        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->email);
+        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->userEmail);
 
         assertInternalType('string', $this->activationToken);
         assertEquals(true, $this->apiFixtures->isEmpty());
@@ -2906,17 +2906,30 @@ class AccountContext implements Context
                 }
             );
 
+        // API call for Notify to new email requested
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                }
+            );
+
         $this->ui->fillField('new_email_address', $this->newUserEmail);
         $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->pressButton('Save new email address');
     }
 
     /**
-     * @Then /^I should be told that I could not change my email as their was a problem with the request$/
+     * @Then /^I should be told my request was successful and an email is sent to the chosen email address to warn the user$/
      */
-    public function iShouldBeToldThatICouldNotChangeMyEmailAsTheirWasAProblemWithTheRequest()
+    public function iShouldBeToldMyRequestWasSuccessfulAndAnEmailIsSentToTheChosenEmailAddressToWarnTheUser()
     {
-        $this->ui->assertPageContainsText('Sorry, there was a problem with that request. Please try a different email');
+        $this->ui->assertPageContainsText('Updating your email address');
+        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->newUserEmail);
     }
 
     /**
@@ -3101,6 +3114,18 @@ class AccountContext implements Context
                 'message' => 'Another user has requested to change their email to ' . $this->userEmail
             ])));
 
+        // API call for Notify to warn user their email an attempt to use their email has been made
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                }
+            );
+
         $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('password', $this->userPassword);
         $this->ui->fillField('password_confirm', $this->userPassword);
@@ -3113,7 +3138,7 @@ class AccountContext implements Context
      */
     public function iAmInformedThatThereWasAProblemWithThatEmailAddress()
     {
-        $this->ui->assertPageAddress('/create-account');
-        $this->ui->assertPageContainsText("Sorry, there was a problem with that email address. Please try a different one");
+        $this->ui->assertPageAddress('/create-account-success');
+        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->userEmail);
     }
 }

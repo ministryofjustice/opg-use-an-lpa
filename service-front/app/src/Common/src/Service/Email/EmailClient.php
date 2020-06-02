@@ -15,12 +15,14 @@ class EmailClient
     /**
      * Template IDs for the notify client
      */
-    const TEMPLATE_ID_ACCOUNT_ACTIVATION                   = 'd897fe13-a0c3-4c50-aa5b-3f0efacda5dc';
-    const TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED     = '4af9acf0-f2c1-4ecc-8441-0e2173890463';
-    const TEMPLATE_ID_PASSWORD_RESET                       = 'd32af4a6-49ad-4338-a2c2-dcb5801a40fc';
-    const TEMPLATE_ID_PASSWORD_CHANGE                      = '75080a89-7b22-4792-bdf6-6636467a7999';
-    const TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL   = '19051f55-d60d-4bbc-ab49-cf85580d3102';
-    const TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL       = 'bcf7e3f7-7f76-4e0a-87ee-b6722bdc223a';
+    const TEMPLATE_ID_ACCOUNT_ACTIVATION                      = 'd897fe13-a0c3-4c50-aa5b-3f0efacda5dc';
+    const TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED        = '4af9acf0-f2c1-4ecc-8441-0e2173890463';
+    const TEMPLATE_ID_PASSWORD_RESET                          = 'd32af4a6-49ad-4338-a2c2-dcb5801a40fc';
+    const TEMPLATE_ID_PASSWORD_CHANGE                         = '75080a89-7b22-4792-bdf6-6636467a7999';
+    const TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL      = '19051f55-d60d-4bbc-ab49-cf85580d3102';
+    const TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL          = 'bcf7e3f7-7f76-4e0a-87ee-b6722bdc223a';
+    const TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE  = '5a74677a-4840-49cf-a92b-f1de2b31cebb';
+    CONST TEMPLATE_ID_ACCOUNT_CREATION_EMAIL_CHANGE_REQUESTED = '4af9acf0-f2c1-4ecc-8441-0e2173890463';
 
     /**
      * @var NotifyClient
@@ -106,5 +108,25 @@ class EmailClient
         $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL, [
             'verify-new-email-url' => $completeEmailChangeUrl,
         ]);
+    }
+
+    /**
+     * Send an email to the new email address telling the user that someone has tried to use their email on the service
+     *
+     * @param string $recipient
+     */
+    public function sendSomeoneTriedToUseYourEmailInEmailResetRequest(string $recipient)
+    {
+        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE);
+    }
+
+    /**
+     * Send an email to the new email address telling the user that someone has tried to use their email to create an account
+     *
+     * @param string $recipient
+     */
+    public function sendSomeoneTriedToUseYourEmailInEmailAccountCreation(string $recipient)
+    {
+        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_ACCOUNT_CREATION_EMAIL_CHANGE_REQUESTED);
     }
 }
