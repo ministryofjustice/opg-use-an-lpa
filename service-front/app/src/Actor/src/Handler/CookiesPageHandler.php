@@ -47,7 +47,7 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
     {
         $form = new CookieConsent($this->getCsrfGuard($request));
 
-        if ($request->getMethod() == 'POST') {
+        if ($request->getMethod() === 'POST') {
             return $this->handlePost($request);
         }
 
