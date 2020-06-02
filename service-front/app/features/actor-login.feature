@@ -47,14 +47,15 @@ Feature: A user of the system is able to login
     Then I am taken to the dashboard page
 
   @ui
-  Scenario Outline: A user is allowed to login with case insensitive email address
+  Scenario Outline: A user is allowed to login with case insensitive email address and spaces are trimmed
     Given I access the login form
     When I enter correct email with <email_format> and <password> below
     Then I am signed in
     Examples:
-      |email_format               |password|
-      |TEST@test.com              |pa33w0rd|
-      |'   TEST@TEST.COM    '     |pa33w0rd|
+      |email_format                 |password|
+      |'lowercase@test.com'         |pa33w0rd|
+      |'UPPERCASE@TEST.COM'         |pa33w0rd|
+      |'    UNTRIMMED@test.com     '|pa33w0rd|
 
   @ui
   Scenario Outline: A user is not allowed to login with improper email address, blank email or password
@@ -62,10 +63,10 @@ Feature: A user of the system is able to login
     When I enter incorrect login details with <email_format> and <password> below
     Then I should see relevant <error> message
     Examples:
-      |email_format     |password|error                       |
-      |TEST@ test. com  |pa33w0rd|Enter a valid email address |
-      |                 |pa33w0rd|Enter your email address    |
-      |test@test.com    |        |Enter your password         |
+      |email_format           |password|error                       |
+      |GAP TEST@ test. com    |pa33w0rd|Enter a valid email address |
+      |                       |pa33w0rd|Enter your email address    |
+      |nopassword@test.com    |        |Enter your password         |
 
   @ui @security
   Scenario: A hacker attempts to forge the full CSRF value

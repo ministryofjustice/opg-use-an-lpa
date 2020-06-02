@@ -1913,7 +1913,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I enter correct email with (.*) and (.*) below$/
+     * @When /^I enter correct email with '(.*)' and (.*) below$/
      */
     public function iEnterCorrectEmailWithEmailFormatAndPasswordBelow($email_format, $password)
     {
