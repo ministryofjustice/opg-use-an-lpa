@@ -1967,7 +1967,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I enter correct email with (.*) and (.*) below$/
+     * @When /^I enter correct email with '(.*)' and (.*) below$/
      */
     public function iEnterCorrectEmailWithEmailFormatAndPasswordBelow($email_format, $password)
     {
@@ -1999,6 +1999,47 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I hack the request id of the CSRF value$/
+     */
+    public function iHackTheRequestIdOfTheCSRFValue()
+    {
+
+        $value = $this->ui->getSession()->getPage()->find('css', '#__csrf')->getValue();
+        $separated = explode('-',$value);
+        $separated[1] = 'youhazbeenhaaxed'; //this is the requestid.
+        $hackedValue = implode('-',$separated);
+        $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
+    }
+
+    /**
+     * @When /^I hack the token of the CSRF value$/
+     */
+    public function iHackTheTokenOfTheCSRFValue()
+    {
+        $value = $this->ui->getSession()->getPage()->find('css', '#__csrf')->getValue();
+
+        $separated = explode('-',$value);
+        $separated[0] = 'youhazbeenhaaxed'; //this is the token part.
+        $hackedValue = implode("-",$separated);
+
+        $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
+    }
+
+
+
+    /**
+     * @When /^I hack the CSRF value with '(.*)'$/
+     */
+    public function iEnterDetailsButHackTheCSRFTokenWith($csrfToken)
+    {
+
+        $this->ui->getSession()->getPage()->find('css', '#__csrf')->setValue($csrfToken);
+
+        $this->ui->assertPageContainsText('Sign in');
+        $this->ui->pressButton('Sign in');
+    }
+
+    /**
      * @Then /^I should see relevant (.*) message$/
      */
     public function iShouldSeeRelevantErrorMessage($error)
@@ -2008,9 +2049,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I enter incorrect email with (.*) and (.*) below$/
+     * @When /^I enter incorrect login details with (.*) and (.*) below$/
      */
-    public function iEnterInCorrectEmailWithEmailFormatAndPasswordBelow($emailFormat, $password)
+    public function iEnterInCorrectLoginDetailsWithEmailFormatAndPasswordBelow($emailFormat, $password)
     {
         $this->ui->fillField('email', $emailFormat);
         $this->ui->fillField('password', $password);
