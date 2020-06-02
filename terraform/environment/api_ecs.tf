@@ -272,6 +272,10 @@ EOF
       "value": "${local.account.api_gateway_endpoint}"
     },
     {
+      "name": "USE_LEGACY_CODES_SERVICE",
+      "value": "${local.account.use_legacy_codes_service}"
+    },
+    {
       "name": "LOGGING_LEVEL",
       "value": "${local.account.logging_level}"
     }]
