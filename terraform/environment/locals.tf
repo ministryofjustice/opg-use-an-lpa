@@ -13,16 +13,17 @@ variable "container_version" {
 variable "accounts" {
   type = map(
     object({
-      account_id             = string
-      is_production          = bool
-      sirius_account_id      = string
-      api_gateway_endpoint   = string
-      session_expires_view   = number
-      session_expires_use    = number
-      cookie_expires_view    = number
-      cookie_expires_use     = number
-      logging_level          = number
-      pagerduty_service_name = string
+      account_id               = string
+      is_production            = bool
+      sirius_account_id        = string
+      api_gateway_endpoint     = string
+      session_expires_view     = number
+      session_expires_use      = number
+      cookie_expires_view      = number
+      cookie_expires_use       = number
+      logging_level            = number
+      pagerduty_service_name   = string
+      use_legacy_codes_service = bool
     })
   )
 }
