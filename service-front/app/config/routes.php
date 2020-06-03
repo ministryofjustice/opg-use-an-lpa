@@ -44,7 +44,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/terms-of-use', Viewer\Handler\ViewerTermsOfUseHandler::class, 'viewer-terms-of-use');
     $app->get('/stats', Viewer\Handler\StatsPageHandler::class, 'viewer-stats');
 
-    $app->route('/cookies', Actor\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
+    $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
@@ -53,7 +53,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
 
-    $app->route('/cookies', Actor\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
+    $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
 
     // User creation
     $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');

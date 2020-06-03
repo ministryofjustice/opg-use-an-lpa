@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Form;
+namespace Common\Form;
 
 use Application\Form\AbstractCsrfForm;
 use Common\Form\AbstractForm;
