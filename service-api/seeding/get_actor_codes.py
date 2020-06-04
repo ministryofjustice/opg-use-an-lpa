@@ -143,7 +143,7 @@ class CodesExporter:
                 actor_code["ActorLpaId"]
             )
             expiry_epoch = self.convert_date_to_epoch(actor_code["Expires"])
-
+            # Some loops on demo are not returning actor data. Why?
             if sirius_data is not None:
                 output_dict = {
                     "code": actor_code["ActorCode"],
