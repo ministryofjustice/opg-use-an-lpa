@@ -8,7 +8,9 @@ import datetime
 class LpaCodesSeeder:
     input_json_path = ''
     aws_account_id = ''
+    environment = ''
     aws_iam_session = ''
+    lpa_codes_table = ''
     dynamodb = ''
 
     def __init__(self, input_json, environment, docker_mode):
@@ -25,13 +27,13 @@ class LpaCodesSeeder:
             'lpa-codes-{}'.format(self.environment))
 
     def set_account_id(self):
-        self.aws_account_ids = {
+        aws_account_ids = {
             'production': "649098267436",
             'preproduction': "492687888235",
             'development': "288342028542",
         }
 
-        self.aws_account_id = self.aws_account_ids.get(
+        self.aws_account_id = aws_account_ids.get(
             self.environment, "367815980639")
 
     def set_iam_role_session(self):
@@ -92,9 +94,9 @@ def main():
     parser.add_argument("-e", type=str, default="local",
                         help="The environment to push actor codes to.")
     parser.add_argument("-f", nargs='?', default="./seeding_lpa_codes.json", type=str,
-                        help="Path to config file produced by terraform")
+                        help="Path to the json file of data to put.")
     parser.add_argument("-d", action='store_true', default=False,
-                        help="Set to true if running inside a Docker container")
+                        help="Set to true if running inside a Docker container.")
     args = parser.parse_args()
 
     work = LpaCodesSeeder(args.f, args.e, args.d)

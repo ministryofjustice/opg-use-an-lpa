@@ -1,16 +1,12 @@
 import boto3
 import argparse
-import pprint
 from boto3.dynamodb.conditions import Key
 import dateutil.parser
 from datetime import datetime
 from datetime import date
-from decimal import Decimal
 import json
 from requests_aws4auth import AWS4Auth
 import requests
-import os
-pp = pprint.PrettyPrinter(indent=4)
 
 
 class CodesExporter:
@@ -19,6 +15,8 @@ class CodesExporter:
     aws_iam_session = ''
     environment = ''
     dynamodb = ''
+    today = ''
+    count = 0
     actor_codes_table = ''
     json_output = ''
 
@@ -28,13 +26,7 @@ class CodesExporter:
         self.set_lpas_collection_url()
         self.today = date.today().isoformat()
         self.json_output = json.loads('[]')
-        self.count = 0
-
-        if self.environment == "local":
-            self.create_dynamodb_resources_for_local()
-        else:
-            self.create_dynamodb_resources()
-
+        self.set_dynamodb_table()
         self.set_aws_auth()
 
     def set_aws_auth(self):
@@ -76,27 +68,27 @@ class CodesExporter:
             DurationSeconds=900
         )
 
-    def create_dynamodb_resources(self):
-        dynamodb = boto3.resource(
-            'dynamodb',
-            region_name='eu-west-1',
-            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
-            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
-            aws_session_token=self.aws_iam_session['Credentials']['SessionToken']
-        )
-        self.actor_codes_table = dynamodb.Table(
-            '{}-ActorCodes'.format(self.environment))
-
-    def create_dynamodb_resources_for_local(self):
-        dynamodb = boto3.resource(
-            "dynamodb",
-            region_name="eu-west-1",
-            aws_access_key_id="",
-            aws_secret_access_key="",
-            aws_session_token="",
-            endpoint_url="http://localhost:4569"
-        )
-        self.actor_codes_table = dynamodb.Table('ActorCodes')
+    def set_dynamodb_table(self):
+        if self.environment == "local":
+            dynamodb = boto3.resource(
+                "dynamodb",
+                region_name="eu-west-1",
+                aws_access_key_id="",
+                aws_secret_access_key="",
+                aws_session_token="",
+                endpoint_url="http://localhost:4569"
+            )
+            self.actor_codes_table = dynamodb.Table('ActorCodes')
+        else:
+            dynamodb = boto3.resource(
+                'dynamodb',
+                region_name='eu-west-1',
+                aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
+                aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
+                aws_session_token=self.aws_iam_session['Credentials']['SessionToken']
+            )
+            self.actor_codes_table = dynamodb.Table(
+                '{}-ActorCodes'.format(self.environment))
 
     def scan_table(self):
         scan_kwargs = {
