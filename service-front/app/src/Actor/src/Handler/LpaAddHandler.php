@@ -72,10 +72,10 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
                 $postData = $form->getData();
 
                 //TODO: refactor into custom form filter - Ticket raised: UML-831
-                //filter out whitespace first
+                //Remove C- from start of the code if present
+                $postData['passcode'] = preg_replace('/^(c(-| ))?/i', '', $postData['passcode']);
+                //filter out whitespace
                 $postData = str_replace(' ', '', $postData);
-                // Remove C- from start of the code if present
-                $postData['passcode'] = preg_replace('/^(c-)?/i', '', $postData['passcode']);
                 //  Filter out dashes
                 $postData = str_replace('-', '', $postData);
 

@@ -19,12 +19,14 @@ Feature: Add an LPA
   @integration @ui
   Scenario Outline: The user can add an LPA to their account
     Given I am on the add an LPA page
-    When I request to add an LPA with valid details using <passcode> which matches <stored_code>
+    When I request to add an LPA with valid details using <passcode> which matches <storedCode>
     Then The correct LPA is found and I can confirm to add it
     And The LPA is successfully added
 
     Examples:
-      | passcode               | stored_code  |
+      | passcode               | storedCode   |
+      | C cyUP HWqr ecHV       | CYUPHWQRECHV |
+      | c XYup HWqr EChv       | XYUPHWQRECHV |
       | cYuPhWqReChV           | CYUPHWQRECHV |
       | XyUpHwQrEcHV           | XYUPHWQRECHV |
       | CyUp-hWqR-EcHv         | CYUPHWQRECHV |
@@ -35,8 +37,6 @@ Feature: Add an LPA
       | c - xyup - hwqr - echv | XYUPHWQRECHV |
       | c-CYUP HWQR ECHV       | CYUPHWQRECHV |
       | C-xyup hwqr echv       | XYUPHWQRECHV |
-      | C cyUP HWqr ecHV       | CYUPHWQRECHV |
-      | c XYup HWqr EChv       | XYUPHWQRECHV |
 
   @integration @ui
   Scenario: The user cannot add an LPA to their account as it does not exist
