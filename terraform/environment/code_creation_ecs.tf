@@ -124,7 +124,7 @@ locals {
     },
     {
       "name": "SIRIUS_API_ENDPOINT",
-      "value": "${local.account.api_gateway_endpoint}"
+      "value": "${local.account.lpas_collection_endpoint}"
     },
     {
       "name": "LOGGING_LEVEL",

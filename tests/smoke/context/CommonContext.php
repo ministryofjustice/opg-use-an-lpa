@@ -12,7 +12,7 @@ use Fig\Http\Message\StatusCodeInterface;
 /**
  * Class CommonContext
  *
- * @package BehatTest\Context
+ * @package Test\Context
  *
  * @property array responseJson The json returned from a previous step
  */

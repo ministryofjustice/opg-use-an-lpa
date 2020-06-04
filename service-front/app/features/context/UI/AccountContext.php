@@ -6,7 +6,6 @@ namespace BehatTest\Context\UI;
 
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
-use Behat\Mink\Exception\ElementNotFoundException;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use Exception;
@@ -14,8 +13,6 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\RequestInterface;
-use Common\Service\Log\Output\Email;
-use DateTime;
 
 /**
  * Class AccountContext
@@ -417,7 +414,6 @@ class AccountContext implements Context
         $this->setLastRequest($request);
 
         $this->ui->visit('/lpa/dashboard');
-        $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
     /**

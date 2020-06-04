@@ -107,7 +107,7 @@
             "Composer\\Config::disableProcessTimeout",
             "docker-compose -f ../../docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose-integration.yml"
         ],
-        "dc-run": "@dc run actor-app",
+        "dc-run": "@dc run --rm actor-app",
         "dc-php": "@dc-run php",
         "dc-php-debug": "@dc-php -d zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so",
         "psalm": "@dc-php /app/vendor/bin/psalm",
