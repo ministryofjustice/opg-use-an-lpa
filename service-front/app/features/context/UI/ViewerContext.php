@@ -19,6 +19,7 @@ use Psr\Http\Message\RequestInterface;
  * @property $lpaSurname
  * @property $lpaShareCode
  * @property $lpaData
+ * @property $lpaStoredCode
  */
 class ViewerContext implements Context
 {
@@ -32,6 +33,7 @@ class ViewerContext implements Context
     {
         $this->lpaSurname = 'Testerson';
         $this->lpaShareCode = '1111-1111-1111';
+        $this->lpaStoredCode = '111111111111';
         $this->lpaData = [
             'id' => 1,
             'uId' => '7000-0000-0000',
@@ -93,16 +95,12 @@ class ViewerContext implements Context
     }
 
     /**
-     * @When /^I give a valid LPA share code of (.*)$/
+     * @When /^I give a valid LPA share code of (.*) which matches (.*)$/
      */
-    public function iGiveAValidLPAShareCodeOf($code)
+    public function iGiveAValidLPAShareCodeOf(string $code, string $storedCode)
     {
-        $lpaCode = str_replace(' ', '', $code);
-        // Remove V from start of the code if present
-        $lpaCode = preg_replace('/^(V(?\'dash\'-| - ))?/i', '', $lpaCode);
-
-        $lpaCode = str_replace('-', '', $lpaCode);
-        $this->lpaShareCode =  strtoupper($lpaCode);
+        $this->lpaShareCode =  $code;
+        $this->lpaStoredCode = $storedCode;
         $this->iGiveAValidLPAShareCode();
     }
     /**
@@ -125,7 +123,7 @@ class ViewerContext implements Context
 
                 assertInternalType('array', $params);
                 assertEquals($params['name'], $this->lpaSurname);
-                assertEquals($params['code'], str_replace('-', '', $this->lpaShareCode));
+                assertEquals($params['code'], $this->lpaStoredCode);
             });
 
         $this->ui->fillField('donor_surname', $this->lpaSurname);
@@ -156,7 +154,7 @@ class ViewerContext implements Context
 
                 assertInternalType('array', $params);
                 assertEquals($params['name'], $this->lpaSurname);
-                assertEquals($params['code'], str_replace('-', '', $this->lpaShareCode));
+                assertEquals($params['code'], $this->lpaStoredCode);
             });
 
         $this->ui->clickLink('Continue');

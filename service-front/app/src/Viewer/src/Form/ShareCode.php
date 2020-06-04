@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Viewer\Form;
 
 use Common\Form\AbstractForm;
+use Laminas\Filter\File\UpperCase;
+use Laminas\Filter\StringToUpper;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -44,6 +46,7 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                 'required' => true,
                 'filters'  => [
                     ['name' => StringTrim::class],
+                    ['name' => StringToUpper::class]
                 ],
                 'validators' => [
                     [
@@ -54,7 +57,7 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                         ],
                     ],
                     new Regex([
-                        'pattern' => "/^(V(?'dash'-| - ))?[[:alnum:]]{4}(\g'dash')?[[:alnum:]]{4}(\g'dash')?[[:alnum:]]{4}$/i",
+                        'pattern' => "/^(V(?'dash'-| ){1,6})?[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}$/i",
                         'message' => [
                             Regex::NOT_MATCH => 'LPA access codes are 13 numbers and letters long and start with a V'
                         ]
