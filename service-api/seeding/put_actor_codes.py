@@ -89,11 +89,11 @@ def main():
         description="Put actor codes into the lpa-codes API service.")
     parser.add_argument("-e", type=str, default="local",
                         help="The environment to push actor codes to.")
-    parser.add_argument("input_json", nargs='?', default="./seeding_lpa_codes.json", type=str,
+    parser.add_argument("-f", nargs='?', default="./seeding_lpa_codes.json", type=str,
                         help="Path to config file produced by terraform")
     args = parser.parse_args()
 
-    work = LpaCodesSeeder(args.input_json, args.e)
+    work = LpaCodesSeeder(args.f, args.e)
     work.put_actor_codes()
     work.scan_table()
 
