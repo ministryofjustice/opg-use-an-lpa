@@ -26,3 +26,29 @@ Feature: The user is able to see correct information on their dashboard
     Given I have added an LPA to my account
     When I am on the dashboard page
     Then I can see that no organisations have access to my LPA
+
+  @ui
+  Scenario: As a user I can see the message on instructions and preferences
+    Given I have added an LPA to my account
+    When I am on the dashboard page
+    Then I can see the message Important: This lpa has instructions or preferences
+
+  @ui
+  Scenario: As a user I can see the read more link in the message on instructions and preferences
+    Given I have added an LPA to my account
+    When I am on the dashboard page
+    Then I can see Read more link along with the instructions or preference message
+
+  @ui
+  Scenario: As a user I am navigated to the instructions and preferences page
+    Given I have added an LPA to my account
+    When I am on the dashboard page
+    And I click the Read more link in the instructions or preference message
+    Then I am navigated to the instructions and preferences page
+
+  @ui
+  Scenario: Check back function on instructions and preferences page
+    Given I have added an LPA to my account
+    When I am on the instructions and preferences page
+    And I click Back to your LPAs link on the page
+    Then I should be taken to the <dashboard> page

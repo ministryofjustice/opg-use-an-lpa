@@ -14,13 +14,13 @@ use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Fig\Http\Message\StatusCodeInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class CreateAccountHandler
@@ -65,13 +65,14 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
             if (!$form->isValid()) {
                 $errors = $form->getMessages();
-              
-                $this->getLogger()->notice('Login form validation failed.',$errors);
+
+                $this->getLogger()->notice('Login form validation failed.', $errors);
 
                 return new HtmlResponse($this->renderer->render('actor::login', [
                     'form' => $form
                 ]));
             }
+
             try {
                 $user = $this->getUser($request);
 
@@ -85,7 +86,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                 // adding an element name allows the form to link the error message to a field. In this case we'll
                 // link to the email field to allow the user to correct their mistake.
                 $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
-            } catch (ApiException $e){
+            } catch (ApiException $e) {
                //401 denotes in this case that we hve not activated,
                // redirect to correct success page with correct data
                if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {

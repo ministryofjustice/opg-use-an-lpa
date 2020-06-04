@@ -7,7 +7,6 @@ namespace BehatTest\Context\UI;
 use Alphagov\Notifications\Client;
 use App\Exception\ApiException;
 use Behat\Behat\Context\Context;
-use Behat\Mink\Exception\ElementNotFoundException;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use Exception;
@@ -15,8 +14,6 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\RequestInterface;
-use Common\Service\Log\Output\Email;
-use DateTime;
 
 /**
  * Class AccountContext
@@ -94,6 +91,8 @@ class AccountContext implements Context
                     'uId' => '700000000054'
                 ],
             ],
+            'applicationHasRestrictions' => true,
+            'applicationHasGuidance' => false,
             'lpa' => $this->lpa
         ];
     }
@@ -425,7 +424,6 @@ class AccountContext implements Context
         $this->setLastRequest($request);
 
         $this->ui->visit('/lpa/dashboard');
-        $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
     /**
@@ -2776,12 +2774,12 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I click back link on the page$/
+     * @When /^I click (.*) link on the page$/
      */
-    public function iClickBackLinkOnThePage()
+    public function iClickBackLinkOnThePage($backLink)
     {
-        $this->ui->assertPageContainsText('Back');
-        $this->ui->clickLink('Back');
+        $this->ui->assertPageContainsText($backLink);
+        $this->ui->clickLink($backLink);
     }
 
     /**
@@ -3198,5 +3196,83 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/stats');
         $this->ui->assertPageContainsText('Number of user accounts created and deleted');
+    }
+
+    /**
+     * @Then /^I can see the message (.*)$/
+     * <Important: This lpa has instructions or preferences>
+     */
+    public function iCanSeeTheMessage($message)
+    {
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->ui->visit('/lpa/dashboard');
+
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageContainsText($message);
+    }
+
+    //I can see <Read more> link along with the instructions or preference message
+
+    /**
+     * @Then /^I can see (.*) link along with the instructions or preference message$/
+     */
+    public function iCanSeeReadMoreLink($readMoreLink)
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+
+        $this->ui->assertPageContainsText('Important: This lpa has instructions or preferences');
+
+        $session = $this->ui->getSession();
+        $page = $session->getPage();
+
+        $readMoreLink = $page->findLink($readMoreLink);
+        if ($readMoreLink === null) {
+            throw new \Exception($readMoreLink . ' link not found');
+        }
+    }
+
+    /**
+     * @When /^I click the (.*) link in the instructions or preference message$/
+     */
+    public function iClickTheReadMoreLinkInTheInstructionsOrPreferenceMessage($readMoreLink)
+    {
+        $this->iCanSeeReadMoreLink($readMoreLink);
+        $this->ui->clickLink($readMoreLink);
+    }
+
+    /**
+     * @Then /^I am navigated to the instructions and preferences page$/
+     */
+    public function iAmNavigatedToTheInstructionsAndPreferencesPage()
+    {
+        $this->ui->assertPageAddress('/lpa/instructions-preferences');
+        $this->ui->assertPageContainsText('Instructions and preferences');
+    }
+
+    /**
+     * @When /^I am on the instructions and preferences page$/
+     */
+    public function iAmOnTheInstructionsAndPreferencesPage()
+    {
+        $this->iAmOnTheDashboardPage();
+        $this->iClickTheReadMoreLinkInTheInstructionsOrPreferenceMessage('Read more');
+        $this->iAmNavigatedToTheInstructionsAndPreferencesPage();
     }
 }

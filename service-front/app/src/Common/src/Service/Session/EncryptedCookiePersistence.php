@@ -14,23 +14,27 @@ declare(strict_types=1);
 
 namespace Common\Service\Session;
 
+use Common\Service\Session\KeyManager\KeyManagerInterface;
+use Common\Service\Session\KeyManager\KeyNotFoundException;
 use DateInterval;
 use DateTimeImmutable;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Common\Service\Session\KeyManager\KeyNotFoundException;
-use Common\Service\Session\KeyManager\KeyManagerInterface;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 use Laminas\Crypt\BlockCipher;
 use Mezzio\Session\Session;
+use Mezzio\Session\SessionCookiePersistenceInterface;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionPersistenceInterface;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class EncryptedCookie
+ * Class EncryptedCookiePersistence
+ *
+ * Utilises Amazon KMS to encrypt the session cookie sent to users
+ *
  * @package Common\Service\Session
  */
 class EncryptedCookiePersistence implements SessionPersistenceInterface
@@ -48,6 +52,11 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
      */
     public const SESSION_TIME_KEY = '__TIME__';
 
+    /**
+     * Key used within the session to flag that the session has been expired
+     */
+    public const SESSION_EXPIRED_KEY = '__EXPIRED__';
+
     /** @var array */
     private const SUPPORTED_CACHE_LIMITERS = [
         'nocache',
@@ -56,37 +65,25 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         'private_no_expire',
     ];
 
-    /** @var int */
-    private $sessionExpire;
+    private KeyManagerInterface $keyManager;
 
-    /** @var string */
-    private $cacheLimiter;
+    private string $cookieName;
 
-    /** @var string */
-    private $cookieName;
+    private string $cookiePath;
 
-    /** @var string|null */
-    private $cookieDomain;
+    private string $cacheLimiter;
 
-    /** @var string */
-    private $cookiePath;
+    private int $sessionExpire;
 
-    /** @var bool */
-    private $cookieSecure;
+    private ?string $lastModified;
 
-    /** @var bool */
-    private $cookieHttpOnly;
+    private ?int $cookieTtl;
 
-    /** @var false|string */
-    private $lastModified;
+    private ?string $cookieDomain;
 
-    /** @var bool */
-    private $persistent;
+    private bool $cookieSecure;
 
-    /**
-     * @var KeyManagerInterface
-     */
-    private $keyManager;
+    private bool $cookieHttpOnly;
 
     /**
      * EncryptedCookiePersistence constructor.
@@ -96,36 +93,37 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
      * @param string $cacheLimiter
      * @param int $sessionExpire
      * @param int|null $lastModified
-     * @param bool $persistent
+     * @param int|null $cookieTtl
      * @param string|null $cookieDomain
      * @param bool $cookieSecure
      * @param bool $cookieHttpOnly
      */
-    public function __construct(KeyManagerInterface $keyManager, string $cookieName, string $cookiePath, string $cacheLimiter, int $sessionExpire, ?int $lastModified, bool $persistent, ?string $cookieDomain, bool $cookieSecure, bool $cookieHttpOnly)
-    {
+    public function __construct(
+        KeyManagerInterface $keyManager,
+        string $cookieName,
+        string $cookiePath,
+        string $cacheLimiter,
+        int $sessionExpire,
+        ?int $lastModified,
+        ?int $cookieTtl,
+        ?string $cookieDomain,
+        bool $cookieSecure,
+        bool $cookieHttpOnly
+    ) {
         $this->keyManager = $keyManager;
-
         $this->cookieName = $cookieName;
-
-        $this->cookieDomain = $cookieDomain;
-
         $this->cookiePath = $cookiePath;
-
-        $this->cookieSecure = $cookieSecure;
-
-        $this->cookieHttpOnly = $cookieHttpOnly;
-
         $this->cacheLimiter = in_array($cacheLimiter, self::SUPPORTED_CACHE_LIMITERS, true)
             ? $cacheLimiter
             : 'nocache';
-
         $this->sessionExpire = $sessionExpire;
-
         $this->lastModified = $lastModified
             ? gmdate(self::HTTP_DATE_FORMAT, $lastModified)
-            : $this->determineLastModifiedValue();
-
-        $this->persistent = $persistent;
+            : $this->getLastModified();
+        $this->cookieTtl = $cookieTtl;
+        $this->cookieDomain = $cookieDomain;
+        $this->cookieSecure = $cookieSecure;
+        $this->cookieHttpOnly = $cookieHttpOnly;
     }
 
 
@@ -185,7 +183,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         }
 
         // Separate out the key ID and the data
-        list($keyId, $payload) = explode('.', $data, 2);
+        [$keyId, $payload] = explode('.', $data, 2);
 
         try {
             $key = $this->keyManager->getDecryptionKey($keyId);
@@ -212,28 +210,28 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
     public function initializeSessionFromRequest(ServerRequestInterface $request): SessionInterface
     {
         $sessionData = $this->getCookieFromRequest($request);
-
         $data = $this->decodeCookieValue($sessionData);
 
+        // responsible the for expiry of a users session
         if (isset($data[self::SESSION_TIME_KEY])) {
             $expiresAt = $data[self::SESSION_TIME_KEY] + $this->sessionExpire;
-            if ($expiresAt >= time()) {
+            if ($expiresAt > time()) {
                 return new Session($data);
             }
         }
 
-        // Fail to an empty session
-        return new Session([]);
+        // if we have values in the session but are here then we have fallen into the gap where the session has expired
+        // but we're still within the cookieTtl amount of time. by setting an expired flag we'll be able to prompt with
+        // messages such as "You've been logged out due to inactivity" or allow access to PDF downloads
+        if ($sessionData != '') {
+            $data[self::SESSION_EXPIRED_KEY] = true;
+        }
+
+        return new Session($data);
     }
 
     public function persistSession(SessionInterface $session, ResponseInterface $response): ResponseInterface
     {
-        // No data? Nothing to do.
-        // TODO if a session has been cleared ($session->clear) then it doesn't get persisted?
-        if ([] === $session->toArray()) {
-            return $response;
-        }
-
         // Record the current time.
         $session->set(self::SESSION_TIME_KEY, time());
 
@@ -247,7 +245,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
             ->withSecure($this->cookieSecure)
             ->withHttpOnly($this->cookieHttpOnly);
 
-        $persistenceDuration = $this->getPersistenceDuration();
+        $persistenceDuration = $this->getCookieLifetime($session);
         if ($persistenceDuration) {
             $sessionCookie = $sessionCookie->withExpires(
                 (new DateTimeImmutable())->add(new DateInterval(sprintf('PT%dS', $persistenceDuration)))
@@ -269,10 +267,6 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         return $response;
     }
 
-
-    //------------------------------------------------------------------------------------------------------------
-    // Internal methods, predominantly from mezzio-session-cache
-
     /**
      * Generate cache http headers for this instance's session cache_limiter and
      * cache_expire values
@@ -289,7 +283,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         }
 
         // cache_limiter: 'public'
-        if ('public' === $this->cacheLimiter) {
+        if ($this->cacheLimiter === 'public') {
             return [
                 'Expires'       => gmdate(self::HTTP_DATE_FORMAT, time() + $this->sessionExpire),
                 'Cache-Control' => sprintf('public, max-age=%d', $this->sessionExpire),
@@ -298,7 +292,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         }
 
         // cache_limiter: 'private'
-        if ('private' === $this->cacheLimiter) {
+        if ($this->cacheLimiter === 'private') {
             return [
                 'Expires'       => self::CACHE_PAST_DATE,
                 'Cache-Control' => sprintf('private, max-age=%d', $this->sessionExpire),
@@ -314,25 +308,16 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
     }
 
     /**
-     * Return the Last-Modified header line based on the request's script file
-     * modified time. If no script file could be derived from the request we use
-     * the file modification time of the current working directory as a fallback.
+     * Return the Last-Modified header line based on main script of execution
+     * modified time. If unable to get a valid timestamp we use this class file
+     * modification time as fallback.
      *
-     * @return string
+     * @return string|false
      */
-    private function determineLastModifiedValue(): string
+    private function getLastModified()
     {
-        $cwd = getcwd();
-        foreach (['public/index.php', 'index.php'] as $filename) {
-            $path = sprintf('%s/%s', $cwd, $filename);
-            if (! file_exists($path)) {
-                continue;
-            }
-
-            return gmdate(self::HTTP_DATE_FORMAT, filemtime($path));
-        }
-
-        return gmdate(self::HTTP_DATE_FORMAT, filemtime($cwd));
+        $lastmod = getlastmod() ?: filemtime(__FILE__);
+        return $lastmod ? gmdate(self::HTTP_DATE_FORMAT, $lastmod) : false;
     }
 
     /**
@@ -349,6 +334,9 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
     /**
      * Check if the response already carries cache headers
+     *
+     * @param ResponseInterface $response
+     * @return bool
      */
     private function responseAlreadyHasCacheHeaders(ResponseInterface $response): bool
     {
@@ -360,8 +348,16 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         );
     }
 
-    private function getPersistenceDuration(): int
+    private function getCookieLifetime(SessionInterface $session): int
     {
-        return $this->sessionExpire;
+        $lifetime = $this->cookieTtl;
+        if (
+            $session instanceof SessionCookiePersistenceInterface
+            && $session->has(SessionCookiePersistenceInterface::SESSION_LIFETIME_KEY)
+        ) {
+            $lifetime = $session->getSessionLifetime();
+        }
+
+        return $lifetime > 0 ? $lifetime : 0;
     }
 }
