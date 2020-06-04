@@ -24,11 +24,23 @@ Feature: Add an LPA
     And The LPA is successfully added
 
     Examples:
-      | passcode       |
-      | xyuphwqrechv   |
-      | XYUPHWQRECHV   |
-      | XYUP-hwqr-EcHv |
-      | C - XYUP - hwqr - Echv |
+      | passcode               |
+      | xyuphwqrechv           |
+      | cyuphwqrechv           |
+      | XYUPHWQRECHV           |
+      | CYUPHWQRECHV           |
+      | XYUP-HWQR-ECHV         |
+      | CYUP-HWQR-ECHV         |
+      | xyup-hwqr-echv         |
+      | cyup-hwqr-echv         |
+      | C-XYUP-HWQR-ECHV       |
+      | C-CYUP-HWQR-ECHV       |
+      | c-xyup-hwqr-echv       |
+      | c-cyup-hwqr-echv       |
+      | C - XYUP - HWQR - ECHV |
+      | C - CYUP - HWQR - ECHV |
+      | c - xyup - hwqr - echv |
+      | c - cyup - hwqr - echv |
 
   @integration @ui
   Scenario: The user cannot add an LPA to their account as it does not exist

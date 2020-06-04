@@ -28,7 +28,8 @@ class ViewerContext implements Context
     /**
      * @Given /^I have been given access to an LPA via share code$/
      */
-    public function iHaveBeenGivenAccessToAnLPAViaShareCode() {
+    public function iHaveBeenGivenAccessToAnLPAViaShareCode()
+    {
         $this->lpaSurname = 'Testerson';
         $this->lpaShareCode = '1111-1111-1111';
         $this->lpaData = [
@@ -42,7 +43,7 @@ class ViewerContext implements Context
                 'dob' => '1948-11-01',
                 'salutation' => 'Mr',
                 'firstname' => 'Test',
-                'middlenames' =>'Testable',
+                'middlenames' => 'Testable',
                 'surname' => 'Testerson',
                 'addresses' => [
                     0 => [
@@ -64,7 +65,8 @@ class ViewerContext implements Context
     /**
      * @Given /^I have been given access to a cancelled LPA via share code$/
      */
-    public function iHaveBeenGivenAccessToACancelledLPAViaShareCode() {
+    public function iHaveBeenGivenAccessToACancelledLPAViaShareCode()
+    {
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
 
         $this->lpaData['status'] = 'Cancelled';
@@ -73,7 +75,8 @@ class ViewerContext implements Context
     /**
      * @Given /^I have been given access to an expired LPA via share code$/
      */
-    public function iHaveBeenGivenAccessToAnExpiredLPAViaShareCode() {
+    public function iHaveBeenGivenAccessToAnExpiredLPAViaShareCode()
+    {
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
 
         $this->lpaData['status'] = 'Expired';
@@ -82,16 +85,31 @@ class ViewerContext implements Context
     /**
      * @Given /^I access the viewer service$/
      */
-    public function iAccessTheViewerService() {
+    public function iAccessTheViewerService()
+    {
         $this->ui->iAmOnHomepage();
         $this->ui->assertElementContainsText('a[role=button]', 'Start');
         $this->ui->clickLink('Start');
     }
 
     /**
+     * @When /^I give a valid LPA share code of (.*)$/
+     */
+    public function iGiveAValidLPAShareCodeOf($code)
+    {
+        $lpaCode = str_replace(' ', '', $code);
+        // Remove V from start of the code if present
+        $lpaCode = preg_replace('/^(V(?\'dash\'-| - ))?/i', '', $lpaCode);
+
+        $lpaCode = str_replace('-', '', $lpaCode);
+        $this->lpaShareCode =  strtoupper($lpaCode);
+        $this->iGiveAValidLPAShareCode();
+    }
+    /**
      * @When /^I give a valid LPA share code$/
      */
-    public function iGiveAValidLPAShareCode() {
+    public function iGiveAValidLPAShareCode()
+    {
         $this->lpaData['status'] = 'Registered';
 
         $this->ui->assertPageAddress('/enter-code');
@@ -118,7 +136,8 @@ class ViewerContext implements Context
     /**
      * @When /^I confirm the LPA is correct$/
      */
-    public function iConfirmTheLPAIsCorrect() {
+    public function iConfirmTheLPAIsCorrect()
+    {
         $this->lpaData['status'] = 'Registered';
 
         $this->ui->assertPageAddress('/check-code');
@@ -262,7 +281,8 @@ class ViewerContext implements Context
     /**
      * @When /^I give a share code that has got expired$/
      */
-    public function iGiveAShareCodeThatHasGotExpired() {
+    public function iGiveAShareCodeThatHasGotExpired()
+    {
         $this->lpaData['status'] = 'Expired';
         $this->ui->assertPageAddress('/enter-code');
 
@@ -281,7 +301,8 @@ class ViewerContext implements Context
     /**
      * @When /^I give a share code that's been cancelled$/
      */
-    public function iGiveAShareCodeThatsBeenCancelled() {
+    public function iGiveAShareCodeThatsBeenCancelled()
+    {
         $this->lpaData['status'] = 'Cancelled';
         $this->ui->assertPageAddress('/enter-code');
 
@@ -300,7 +321,7 @@ class ViewerContext implements Context
     /**
      * @When /^I give an invalid (.*) and (.*)$/
      */
-    public function iGiveAnInvalidShareCodeAndSurname($shareCode,$surname)
+    public function iGiveAnInvalidShareCodeAndSurname($shareCode, $surname)
     {
         $this->ui->assertPageAddress('/enter-code');
 
@@ -463,8 +484,8 @@ class ViewerContext implements Context
     {
         $this->iAmTakenBackToTheEnterCodePage();
         $this->ui->assertPageContainsText("Do you want to continue?" .
-    " You have not used this service for 30 minutes." .
-    " Click continue to use any details you entered");
+        " You have not used this service for 30 minutes." .
+        " Click continue to use any details you entered");
     }
 
     /**

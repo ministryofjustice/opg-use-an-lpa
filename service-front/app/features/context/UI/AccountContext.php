@@ -556,6 +556,14 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithValidDetailsUsing(string $code)
     {
+
+        // this is to give what is the expected match.
+        $lpaCode = str_replace(' ', '', $code);
+        // Remove C from start of the code if present
+        $lpaCode = preg_replace('/^(C(?\'dash\'-| - ))?/i', '', $lpaCode);
+        $lpaCode = str_replace('-', '', $lpaCode);
+        $lpaCode =  strtoupper($lpaCode);
+
         $this->ui->assertPageAddress('/lpa/add-details');
 
         // API call for checking LPA
@@ -567,10 +575,10 @@ class AccountContext implements Context
                     json_encode(['lpa' => $this->lpa])
                 )
             )
-            ->inspectRequest(function (RequestInterface $request, array $options) {
+            ->inspectRequest(function (RequestInterface $request, array $options) use ($lpaCode) {
                 $params = json_decode($request->getBody()->getContents(), true);
 
-                assertEquals('XYUPHWQRECHV', $params['actor-code']);
+                assertEquals($lpaCode, $params['actor-code']);
             });
 
         $this->ui->fillField('passcode', $code);
@@ -601,8 +609,7 @@ class AccountContext implements Context
             )
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $params = json_decode($request->getBody()->getContents(), true);
-
-                assertEquals('XYUPHWQRECHV', $params['actor-code']);
+                assertRegExp('/^(C|X)YUPHWQRECHV/', $params['actor-code']);
             });
 
         $this->ui->fillField('passcode', $code);

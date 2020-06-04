@@ -37,6 +37,39 @@ Feature: View an LPA via sharecode
     And I want to see an option to check another LPA
 
   @ui
+  Scenario Outline: The user is able to enter a valid LPA code
+    Given I have been given access to an LPA via share code
+    And I access the viewer service
+    When I give a valid LPA share code of <accessCode>
+    And I confirm the LPA is correct
+    Then I can see the full details of the valid LPA
+    Examples:
+    |accessCode             |
+    |V-VWXW-ABDC-3476       |
+    |V-AWXW-ABDC-3476       |
+    |V-VWXWABDC3476         |
+    |V-AWXWABDC3476         |
+    |V - VWXW - ADBC - 3476 |
+    |V - AWXW - ADBC - 3476 |
+    |VWXWABDC3476           |
+    |AWXWABDC3476           |
+    |VWXW-ABDC-3476         |
+    |AWXW-ABDC-3476         |
+    |VWXW - ADBC - 3476     |
+    |AWXW - ADBC - 3476     |
+    |v-vwxw-abdc-3476       |
+    |v-awxw-abdc-3476       |
+    |v-vwxwabdc3476         |
+    |v-awxwabdc3476         |
+    |v - vwxw - adbc - 3476 |
+    |v - awxw - adbc - 3476 |
+    |vwxwabdc3476           |
+    |awxwabdc3476           |
+    |vwxw-abdc-3476         |
+    |awxw-abdc-3476         |
+    |vwxw - adbc - 3476     |
+    |awxw - adbc - 3476     |
+  @ui
   Scenario Outline: The user is shown the correct error messages when entering invalid details
     Given I am on the enter code page
     When I request to view an LPA with an invalid access code of "<accessCode>"
