@@ -24,8 +24,6 @@ class LpaCodesSeeder:
         self.lpa_codes_table = self.dynamodb.Table(
             'lpa-codes-{}'.format(self.environment))
 
-        # self.scan_table()
-
     def set_account_id(self):
         self.aws_account_ids = {
             'production': "690083044361",
@@ -46,7 +44,7 @@ class LpaCodesSeeder:
         )
         self.aws_iam_session = sts.assume_role(
             RoleArn=role_arn,
-            RoleSessionName='exporting_actor_codes',
+            RoleSessionName='importing_actor_codes',
             DurationSeconds=900
         )
 
@@ -65,9 +63,6 @@ class LpaCodesSeeder:
             region_name="eu-west-1",
             endpoint_url="http://localhost:8000"
         )
-
-    def scan_table(self):
-        print(self.lpa_codes_table.scan())
 
     def put_actor_codes(self):
         with open(self.input_json_path) as f:
@@ -95,7 +90,6 @@ def main():
 
     work = LpaCodesSeeder(args.f, args.e)
     work.put_actor_codes()
-    work.scan_table()
 
 
 if __name__ == "__main__":
