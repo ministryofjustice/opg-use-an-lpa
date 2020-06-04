@@ -1,10 +1,6 @@
 # Seeding Scripts
 
-## Get Actor Codes
-
-This script can pull actor codes from the legacy code generation tables of an environment. It formats the data to match the lpa-codes api format, and suppliments with data from the lpas-collection api.
-
-The output is a json file that can be used with put_actor_codes.py.
+## Prerequisites
 
 Install python dependencies with pip / pip3 (if you have python 3)
 
@@ -12,9 +8,13 @@ Install python dependencies with pip / pip3 (if you have python 3)
 pip install -r requirements.txt
 ```
 
-By default, the script will connect to a local environment. Use `-e` to name an AWS environment to export actor codes from.
-
 You will need to provide AWS credentials if you target an AWS environment. You can provide the script credentials using [aws-vault](https://github.com/99designs/aws-vault).
+
+## Get Actor Codes
+
+This script can pull actor codes from the legacy code generation tables of an environment. It formats the data to match the lpa-codes api format, and suppliments with data from the lpas-collection api.
+
+The output is a json file in `/tmp` that can be used with put_actor_codes.py.
 
 ```bash
 aws-vault exec identity -- python get_actor_codes.py -e demo
@@ -26,17 +26,9 @@ This script can put actor codes into an lpa-codes api service database. It takes
 
 The output is a json file that can be used with put_actor_codes.py.
 
-Install python dependencies with pip / pip3 (if you have python 3)
-
-``` shell
-pip install -r requirements.txt
-```
-
 By default the script will use the actor codes in `./seeding_lpa_codes.json`, and put data into a local running lpa-codes api.
 
 Use `-e` to name an AWS instance of lpa-codes to put data into.
-
-You will need to provide AWS credentials if you target an AWS environment. You can provide the script credentials using [aws-vault](https://github.com/99designs/aws-vault).
 
 Use `-f` to specify a different json file.
 
