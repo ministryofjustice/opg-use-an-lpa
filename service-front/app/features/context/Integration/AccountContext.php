@@ -618,7 +618,7 @@ class AccountContext extends BaseIntegrationContext
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
         $this->iAmOnTheAddAnLPAPage();
-        $this->iRequestToAddAnLPAWithValidDetailsUsing($this->passcode);
+        $this->iRequestToAddAnLPAWithValidDetailsUsing($this->passcode, $this->passcode);
         $this->theCorrectLPAIsFoundAndICanConfirmToAddIt();
         $this->theLPAIsSuccessfullyAdded();
     }
