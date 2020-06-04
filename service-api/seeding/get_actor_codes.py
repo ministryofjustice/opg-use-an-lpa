@@ -5,6 +5,7 @@ from boto3.dynamodb.conditions import Key
 import dateutil.parser
 from datetime import datetime
 from datetime import date
+from decimal import Decimal
 import json
 from requests_aws4auth import AWS4Auth
 import requests
@@ -19,11 +20,15 @@ class CodesExporter:
     environment = ''
     dynamodb = ''
     actor_codes_table = ''
+    json_output = ''
 
     def __init__(self, environment):
         self.set_account_ids(environment)
         self.set_iam_role_session()
         self.set_lpas_collection_url()
+        self.today = date.today().isoformat()
+        self.json_output = json.loads('[]')
+        self.count = 0
 
         if self.environment == "local":
             self.create_dynamodb_resources_for_local()
@@ -136,7 +141,6 @@ class CodesExporter:
         return response_json
 
     def process_actor_codes(self, actor_codes):
-        today = date.today().isoformat()
         for actor_code in actor_codes:
             sirius_data = self.update_with_sirius_data(
                 actor_code["SiriusUid"],
@@ -149,24 +153,34 @@ class CodesExporter:
                     "code": actor_code["ActorCode"],
                     "active": actor_code["Active"],
                     "actor": sirius_data["ActorUid"],
-                    "last_updated_date": today,
+                    "last_updated_date": self.today,
                     "lpa": actor_code["SiriusUid"],
                     "dob": sirius_data["ActorDob"],
-                    "expiry_date": expiry_epoch,
-                    "generated_date": today,
+                    "expiry_date": int(expiry_epoch),
+                    "generated_date": self.today,
                     "status_details": "Imported"
                 }
                 print(output_dict)
+                self.json_output.append(output_dict)
+                self.count = self.count + 1
+
+    def write_json_file(self):
+        json_file_name = "/tmp/lpa_codes_{}_{}.json".format(
+            self.environment, self.today)
+        with open(json_file_name, 'w') as json_file:
+            json.dump(self.json_output, json_file, indent=2)
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Add or remove your host's IP address to the viewer and actor loadbalancer ingress rules.")
+        description="Export Actor Codes from the legacy codes service and produce a json file.")
     parser.add_argument("-e", type=str, default="local",
                         help="The environment to get actor codes for.")
     args = parser.parse_args()
     work = CodesExporter(args.e)
     work.scan_table()
+    work.write_json_file()
+    print("exported {} actor codes".format(work.count))
 
 
 if __name__ == "__main__":
