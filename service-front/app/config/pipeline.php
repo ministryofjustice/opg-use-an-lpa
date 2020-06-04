@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Psr\Container\ContainerInterface;
+use Laminas\Stratigility\Middleware\ErrorHandler;
 use Mezzio\Application;
 use Mezzio\Handler\NotFoundHandler;
 use Mezzio\Helper\ServerUrlMiddleware;
@@ -13,7 +13,7 @@ use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
 use Mezzio\Router\Middleware\ImplicitOptionsMiddleware;
 use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
-use Laminas\Stratigility\Middleware\ErrorHandler;
+use Psr\Container\ContainerInterface;
 
 /**
  * Setup middleware pipeline:
@@ -43,11 +43,18 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - $app->pipe('/docs', $apiDocMiddleware);
     // - $app->pipe('/files', $filesMiddleware);
 
-    $app->pipe(\Mezzio\Session\SessionMiddleware::class);
-    $app->pipe(\Mezzio\Csrf\CsrfMiddleware::class);
     $app->pipe(\Common\Middleware\Logging\RequestTracingMiddleware::class);
+
+    // Load session from request and save it on the return
+    $app->pipe(\Mezzio\Session\SessionMiddleware::class);
+
     $app->pipe(\Common\Middleware\Security\UserIdentificationMiddleware::class);
     $app->pipe(\Common\Middleware\Security\RateLimitMiddleware::class);
+
+    // Clean out the session if expired
+    $app->pipe(\Common\Middleware\Session\SessionExpiredAttributeWhitelistMiddleware::class);
+
+    $app->pipe(\Mezzio\Csrf\CsrfMiddleware::class);
 
     // Register the routing middleware in the middleware pipeline.
     // This middleware registers the Mezzio\Router\RouteResult request attribute.
