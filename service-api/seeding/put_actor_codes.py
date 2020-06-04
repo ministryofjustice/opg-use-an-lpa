@@ -11,11 +11,11 @@ class LpaCodesSeeder:
     aws_iam_session = ''
     dynamodb = ''
 
-    def __init__(self, input_json, environment):
+    def __init__(self, input_json, environment, docker_mode):
         self.input_json_path = input_json
         self.environment = environment
         if self.environment == 'local':
-            self.create_dynamodb_resources_for_local()
+            self.create_dynamodb_resources_for_local(docker_mode)
         else:
             self.set_account_id()
             self.set_iam_role_session()
@@ -57,14 +57,18 @@ class LpaCodesSeeder:
             aws_session_token=self.aws_iam_session['Credentials']['SessionToken']
         )
 
-    def create_dynamodb_resources_for_local(self):
+    def create_dynamodb_resources_for_local(self, docker_mode):
+        if docker_mode:
+            url = "host.docker.internal"
+        else:
+            url = "localhost"
         self.dynamodb = boto3.resource(
             "dynamodb",
             region_name="eu-west-1",
             aws_access_key_id="",
             aws_secret_access_key="",
             aws_session_token="",
-            endpoint_url="http://localhost:8000"
+            endpoint_url="http://{}:8000".format(url)
         )
 
     def put_actor_codes(self):
@@ -89,9 +93,11 @@ def main():
                         help="The environment to push actor codes to.")
     parser.add_argument("-f", nargs='?', default="./seeding_lpa_codes.json", type=str,
                         help="Path to config file produced by terraform")
+    parser.add_argument("-d", action='store_true', default=False,
+                        help="Set to true if running inside a Docker container")
     args = parser.parse_args()
 
-    work = LpaCodesSeeder(args.f, args.e)
+    work = LpaCodesSeeder(args.f, args.e, args.d)
     work.put_actor_codes()
 
 
