@@ -40,7 +40,7 @@ class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
                 //TODO: refactor this to a custom filter on the form. Ticket UML-831
                 $lpaCode = str_replace(' ', '', $lpaCode);
                 // Remove V from start of the code if present
-                $lpaCode = preg_replace('/^(V(?\'dash\'-| - ))?/i', '', $lpaCode);
+                $lpaCode = preg_replace('/^(V-)?/i', '', $lpaCode);
 
                 $lpaCode = str_replace('-', '', $lpaCode);
 
