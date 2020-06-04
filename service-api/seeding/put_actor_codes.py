@@ -26,9 +26,9 @@ class LpaCodesSeeder:
 
     def set_account_id(self):
         self.aws_account_ids = {
-            'production': "690083044361",
-            'preproduction': "888228022356",
-            'development': "367815980639",
+            'production': "649098267436",
+            'preproduction': "492687888235",
+            'development': "288342028542",
         }
 
         self.aws_account_id = self.aws_account_ids.get(
