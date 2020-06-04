@@ -16,7 +16,8 @@ class CodesExporter:
     environment = ''
     dynamodb = ''
     today = ''
-    count = 0
+    to_export_count = 0
+    exported_count = 0
     actor_codes_table = ''
     json_output = ''
 
@@ -134,6 +135,7 @@ class CodesExporter:
 
     def process_actor_codes(self, actor_codes):
         for actor_code in actor_codes:
+            self.to_export_count = self.to_export_count + 1
             sirius_data = self.update_with_sirius_data(
                 actor_code["SiriusUid"],
                 actor_code["ActorLpaId"]
@@ -154,7 +156,7 @@ class CodesExporter:
                 }
                 print(output_dict)
                 self.json_output.append(output_dict)
-                self.count = self.count + 1
+                self.exported_count = self.exported_count + 1
 
     def write_json_file(self):
         json_file_name = "/tmp/lpa_codes_{}_{}.json".format(
@@ -172,7 +174,8 @@ def main():
     work = CodesExporter(args.e)
     work.scan_table()
     work.write_json_file()
-    print("exported {} actor codes".format(work.count))
+    print("{} actor codes found to export. {} actor codes exported".format(
+        work.to_export_count, work.exported_count))
 
 
 if __name__ == "__main__":
