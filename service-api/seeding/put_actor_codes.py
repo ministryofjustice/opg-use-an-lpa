@@ -78,7 +78,6 @@ class LpaCodesSeeder:
             actorLpaCodes = json.load(f)
 
         for actorLpaCode in actorLpaCodes:
-            print(actorLpaCode)
             self.lpa_codes_table.put_item(
                 Item=actorLpaCode,
             )
