@@ -118,7 +118,7 @@
       }
     ],
     "attorneyActDecisions": null,
-    "applicationHasRestrictions": false,
+    "applicationHasRestrictions": true,
     "applicationHasGuidance": false,
     "lpaDonorSignatureDate": "2019-09-30",
     "lifeSustainingTreatment": null
