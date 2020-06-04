@@ -609,7 +609,7 @@ class AccountContext implements Context
             )
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $params = json_decode($request->getBody()->getContents(), true);
-                assertRegExp('/^(C|X)YUPHWQRECHV/', $params['actor-code']);
+                assertEquals('XYUPHWQRECHV', $params['actor-code']);
             });
 
         $this->ui->fillField('passcode', $code);
