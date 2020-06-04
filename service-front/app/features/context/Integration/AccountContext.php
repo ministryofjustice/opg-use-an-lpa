@@ -378,7 +378,7 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request to add an LPA with valid details using (.*) which matches (*.)$/
+     * @When /^I request to add an LPA with valid details using (.*) which matches (.*)$/
      */
     public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode)
     {
@@ -392,7 +392,7 @@ class AccountContext extends BaseIntegrationContext
                 )
             );
 
-        $lpa = $this->lpaService->getLpaByPasscode($this->userIdentity, $code, $this->referenceNo, $this->userDob);
+        $lpa = $this->lpaService->getLpaByPasscode($this->userIdentity, $storedCode, $this->referenceNo, $this->userDob);
 
         assertEquals($lpa->getUId(), $this->lpa['uId']);
     }
