@@ -60,7 +60,6 @@ class UserIdentificationMiddleware implements MiddlewareInterface
         /** @var SessionInterface $session */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
         if ($session !== null) {
-
             // if the identity in the session does not match the identity we just calculated something about this
             // request is probably nefarious, log it.
             $sessionIdentity = $session->get(self::IDENTIFY_ATTRIBUTE);

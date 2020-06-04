@@ -128,6 +128,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaRemovedHandler::class
     ], 'lpa.removed');
+    $app->get('/lpa/instructions-preferences', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\InstructionsPreferencesHandler::class
+    ], 'lpa.instructions-preferences');
 
 };
 
