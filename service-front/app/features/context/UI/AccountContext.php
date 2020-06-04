@@ -2747,14 +2747,7 @@ class AccountContext implements Context
         $this->ui->assertResponseStatus(404);
     }
 
-    /**
-     * @Given /^I want to use my lasting power of attorney$/
-     */
-    public function iWantToUseMyLastingPowerOfAttorney()
-    {
-        // Not needed for this context
-    }
-
+//    REMOVE
     /**
      * @When /^I access the use a lasting power of attorney web page$/
      */

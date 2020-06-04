@@ -61,7 +61,7 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         $form->get('usageCookies')->setValue($usageCookies);
 
 
-        return new HtmlResponse($this->renderer->render('viewer::cookies', [
+        return new HtmlResponse($this->renderer->render('partials::cookies', [
             'form' => $form
         ]));
     }
@@ -75,6 +75,10 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         $form->setData($data);
 
         // it's assumed that you'll be going to the start after setting cookies settings
+        $test = $request->getQueryParams();
+        var_dump($test);
+        die;
+
         $response = new RedirectResponse($this->urlHelper->generate('home'));
 
         if (array_key_exists(self::COOKIE_POLICY_NAME, $cookies)) {

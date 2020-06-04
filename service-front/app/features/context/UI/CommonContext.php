@@ -10,15 +10,9 @@ use BehatTest\Context\BaseUiContextTrait;
 use Common\Service\ApiClient\Client;
 use Common\Service\ApiClient\ClientFactory;
 use Common\Service\Lpa\LpaService;
-use Common\Service\Session\EncryptedCookiePersistence;
-use Common\Service\Session\EncryptedCookiePersistenceFactory;
 use DI\Container;
 use DI\Definition\AutowireDefinition;
 use DI\Definition\Helper\FactoryDefinitionHelper;
-use DI\Definition\Reference;
-use Mezzio\Session\SessionMiddleware;
-use Mezzio\Session\SessionMiddlewareFactory;
-use Mezzio\Session\SessionPersistenceInterface;
 
 /**
  * Class CommonContext
@@ -32,23 +26,7 @@ class CommonContext implements Context
     use BaseUiContextTrait;
 
     /**
-     * @Given I access the service homepage
-     */
-    public function iAccessTheServiceHomepage(): void
-    {
-        $this->ui->iAmOnHomepage();
-    }
-
-    /**
-     * @Then I am given a session cookie
-     */
-    public function iAmGivenASessionCookie()
-    {
-        $this->ui->assertSession()->cookieExists('session');
-    }
-
-    /**
-     * @Given I attach a tracing header to my requests
+     * @Given /^I attach a tracing header to my requests$/
      */
     public function iAttachATracingHeaderToMyRequests()
     {
@@ -69,7 +47,7 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then my outbound requests have attached tracing headers
+     * @Then /^my outbound requests have attached tracing headers$/
      *
      * Relies on a previous context steps having set the last request value using
      * {@link BaseUiContextTrait::setLastRequest()}
@@ -79,35 +57,62 @@ class CommonContext implements Context
         $request = $this->getLastRequest();
         $request->getRequest()->assertHasHeader(strtolower('X-Amzn-Trace-Id'));
     }
+    /**
+     * @Given I access the service homepage
+     */
+    public function iAccessTheServiceHomepage(): void
+    {
+        $this->ui->iAmOnHomepage();
+    }
 
     /**
-     * @When my session expires
+     * @Then /^I see a cookie consent banner$/
      */
-    public function mySessionExpires()
+    public function iCanSeeACookieConsentBanner()
     {
-        /** @var Container $container */
-        $container = $this->base->container;
+        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageContainsText('Tell us whether you accept cookies');
+    }
 
-        // change the session expiry to 1 (i.e. we wait at the end to ensure expiry)
-        $config = $container->get('config');
-        $config['session']['expires'] = 1;
-        $container->set('config', $config);
+    /**
+     * @Then /^I click on (.*) button$/
+     */
+    public function iClickOnButton($button)
+    {
+        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageContainsText($button);
+        if ($button === 'Set cookie preferences') {
+            $this->ui->clickLink($button);
+        } else {
+            $this->ui->pressButton($button);
+        }
+    }
 
-        // reset the dependency chain so the new config value is respected
-        $container->set(
-            SessionPersistenceInterface::class,
-            new Reference(EncryptedCookiePersistence::class)
-        );
-        $container->set(
-            EncryptedCookiePersistence::class,
-            new FactoryDefinitionHelper($container->get(EncryptedCookiePersistenceFactory::class))
-        );
-        $container->set(
-            SessionMiddleware::class,
-            new FactoryDefinitionHelper($container->get(SessionMiddlewareFactory::class))
-        );
+    /**
+     * @Then /^I see options to (.*) and (.*)$/
+     */
+    public function iSeeOptionsToSetAndUnsetCookiesThatMeasureMyWebsiteUse($option1, $option2)
+    {
+        $this->ui->assertPageContainsText("Cookies that measure website use");
+        $this->ui->assertElementContains('input[id=usageCookies-1]', '');
+        $this->ui->assertElementContains('input[id=usageCookies-2]', '');
+    }
 
-        // wait 1 to ensure we expire
-        sleep(1);
+    /**
+     * @Given /^I have seen the cookie banner$/
+     */
+    public function iHaveSeenTheCookieBanner()
+    {
+        $this->iWantToViewALastingPowerOfAttorney();
+        $this->iAccessTheServiceHomepage();
+        $this->iCanSeeACookieConsentBanner();
+    }
+
+    /**
+     * @Given /^I want to view a lasting power of attorney$/
+     */
+    public function iWantToViewALastingPowerOfAttorney()
+    {
+        // Not needed for this context
     }
 }
