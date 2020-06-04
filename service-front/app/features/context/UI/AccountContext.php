@@ -552,17 +552,12 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request to add an LPA with valid details using (.*)$/
+     * @When /^I request to add an LPA with valid details using (.*) which matches (.*)$/
      */
-    public function iRequestToAddAnLPAWithValidDetailsUsing(string $code)
+    public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode)
     {
 
-        // this is to give what is the expected match.
-        $lpaCode = str_replace(' ', '', $code);
-        // Remove C from start of the code if present
-        $lpaCode = preg_replace('/^(C(?\'dash\'-| - ))?/i', '', $lpaCode);
-        $lpaCode = str_replace('-', '', $lpaCode);
-        $lpaCode =  strtoupper($lpaCode);
+
 
         $this->ui->assertPageAddress('/lpa/add-details');
 
@@ -575,10 +570,10 @@ class AccountContext implements Context
                     json_encode(['lpa' => $this->lpa])
                 )
             )
-            ->inspectRequest(function (RequestInterface $request, array $options) use ($lpaCode) {
+            ->inspectRequest(function (RequestInterface $request, array $options) use ($storedCode) {
                 $params = json_decode($request->getBody()->getContents(), true);
 
-                assertEquals($lpaCode, $params['actor-code']);
+                assertEquals($storedCode, $params['actor-code']);
             });
 
         $this->ui->fillField('passcode', $code);

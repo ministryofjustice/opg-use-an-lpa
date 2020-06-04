@@ -378,9 +378,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request to add an LPA with valid details using (.*)$/
+     * @When /^I request to add an LPA with valid details using (.*) which matches (*.)$/
      */
-    public function iRequestToAddAnLPAWithValidDetailsUsing(string $code)
+    public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode)
     {
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
