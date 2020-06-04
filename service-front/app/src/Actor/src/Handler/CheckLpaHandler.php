@@ -201,9 +201,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             foreach ($lpa->getAttorneys() as $attorney) {
                 if (
                     !is_null($attorney->getDob())
-                    && !is_null($attorney->getEmail())
                     && $attorney->getDob() == $comparableDob
-                    && $attorney->getEmail() === $this->user->getDetail('email')
                 ) {
                     $user = $attorney;
                     $userRole = 'Attorney';
