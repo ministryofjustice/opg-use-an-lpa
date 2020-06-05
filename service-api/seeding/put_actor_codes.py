@@ -13,14 +13,14 @@ class LpaCodesSeeder:
     lpa_codes_table = ''
     dynamodb = ''
 
-    def __init__(self, input_json, environment, docker_mode):
+    def __init__(self, input_json, environment, docker_mode, iam_role_name):
         self.input_json_path = input_json
         self.environment = environment
         if self.environment == 'local':
             self.create_dynamodb_resources_for_local(docker_mode)
         else:
             self.set_account_id()
-            self.set_iam_role_session()
+            self.set_iam_role_session(iam_role_name)
             self.create_dynamodb_resources()
 
         self.lpa_codes_table = self.dynamodb.Table(
@@ -34,11 +34,11 @@ class LpaCodesSeeder:
         }
 
         self.aws_account_id = aws_account_ids.get(
-            self.environment, "367815980639")
+            self.environment, "288342028542")
 
-    def set_iam_role_session(self):
-        role_arn = 'arn:aws:iam::{0}:role/operator'.format(
-            self.aws_account_id)
+    def set_iam_role_session(self, iam_role_name):
+        role_arn = 'arn:aws:iam::{0}:role/{1}'.format(
+            self.aws_account_id, iam_role_name)
 
         sts = boto3.client(
             'sts',
@@ -94,11 +94,13 @@ def main():
                         help="The environment to push actor codes to.")
     parser.add_argument("-f", nargs='?', default="./seeding_lpa_codes.json", type=str,
                         help="Path to the json file of data to put.")
+    parser.add_argument("-r", nargs='?', default="operator", type=str,
+                        help="IAM role to assume when pushing actor codes.")
     parser.add_argument("-d", action='store_true', default=False,
                         help="Set to true if running inside a Docker container.")
     args = parser.parse_args()
 
-    work = LpaCodesSeeder(args.f, args.e, args.d)
+    work = LpaCodesSeeder(args.f, args.e, args.d, args.r)
     work.put_actor_codes()
 
 

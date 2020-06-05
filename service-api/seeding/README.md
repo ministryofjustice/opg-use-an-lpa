@@ -32,7 +32,9 @@ Use `-e` to name an AWS instance of lpa-codes to put data into.
 
 Use `-f` to specify a different json file.
 
-Use `-d` is the script will be run inside a docker container. This will set the DynamoDB endpoint url to `http://host.docker.internal:8000`.
+Use `-d` if the script will be run inside a docker container. This will set the DynamoDB endpoint url to `http://host.docker.internal:8000`.
+
+Use `-r` to set an IAM role name to assume when pushing actor codes to an AWS environment. This will default to `operator`.
 
 ```bash
 aws-vault exec identity -- python put_actor_codes.py -e int -f /tmp/lpa_codes_demo_2020-06-04.json -d
