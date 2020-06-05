@@ -178,6 +178,8 @@ services:
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
 
       SIRIUS_API_ENDPOINT: "http://gateway:5000"
+      USE_LEGACY_CODES_SERVICE: "true"
+      LPA_CODES_API_ENDPOINT: "http://localhost:4343"
 
       # Local only
       AWS_ACCESS_KEY_ID: "-"
