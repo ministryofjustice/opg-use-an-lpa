@@ -4,8 +4,7 @@
 
 - homebrew
 - python
-- direnv
-- jq: https://stedolan.github.io/jq/
+- jq: <https://stedolan.github.io/jq/>
 - aws-vault, with your credentials set up : <https://github.com/99designs/aws-vault>
 - you may need to refer to the onboarding instructions for AWS if you do not have an aws identity set up: <https://ministryofjustice.github.io/opg-new-starter/amazon.html>
 
@@ -23,42 +22,83 @@ or
 pip3 install -r requirements.txt
 ```
 
-The script uses your IAM user credentials to assume the appropriate role.
+you now have 2 options. you can do:
 
-You can provide the script credentials using aws-vault.
-The environment is the first part of the url e.g. demo or ULM222xyz for example.
+- **CSV file code generation**: for larger batches.
+- **Inline code generation**: useful for a quick generation of a small number of codes.
 
-``` shell
-aws-vault exec identity -- python ./generate_actor_codes.py <environment> <comma separated lpa uids, no spaces>
+for both options, the `<environment>` is the first part of the url e.g. demo or ULM222xyz for example.
+
+**Running from a CSV file**: This option allows you to take a CSV file with an LPA code on each line similar to this:
+
+``` text
+700000000000
+700000000001
+..etc
 ```
 
-output will look like this
+We do some sanitising of the file to remove unexpected characters, dashes etc,
+However, it is worth checking the file before running.
+
+Command:
+
+``` shell
+./generate_actor_codes.sh -e <environment> -f </path/to/lpacodes.csv>
+```
+
+**Running inline**: This option is simply to allow inline running of the codes.
+
+command:
+
+``` shell
+./generate_actor_codes.sh -e <environment> -i "<comma separated lpa uids>"
+```
+
+**Note:** The list of `comma separated lpa uids` must be surrounded by double quotes.
+
+Both options have:
+
+- `-v` option to switch on debug mode.
+- `-n` option to keep the output files after disk generation, useful for inspection of the files
+
+You will be given the chance to review the input, and cancel if needed.
+
+Note: `${FILENAME}` prefix is in the `bash` date based format `<environment>_activation_codes_$(date +%Y%m%d%H%M)`.
 
 ``` log
+environment name=<environment>
+LPA Id's=<comma separated lpa uids, no spaces>
+Total LPAs entered: <no of LPA uids - corresponding to the list count above>
+environment name=357automateac
+A new ${FILENAME}.txt will be generated.
+This will be stored securely in disk image ${FILENAME}.dmg and copied to your Documents folder.
+Are the above details correct? [y/n]:
+```
+
+hitting `y` will start the process off. You will see a log similar to below:
+
+``` log
+generating actor codes...
 starting creation task...
-arn:aws:ecs:eu-west-1:690083044361:task-definition/production-code-creation:140
-arn:aws:ecs:eu-west-1:690083044361:task/5ad44f92-b3d5-449c-aeab-40d9a2ffb4fc
+arn:aws:ecs:eu-west-1:000000000000:task-definition/<environment>-code-creation:1
+arn:aws:ecs:eu-west-1:000000000000:task/5ad44f92-b3d5-449c-aeab-40d9a2ffb4fc
 waiting for generation task to start...
-Streaming logs for logstream:
-timestamp: 1588688690503: message:<json_output>
+Streaming logs for logstream: xxxxxxx
+timestamp: 0000000000000: message:<json_output>
+task completed.
+Sanity check the logs...
+extracting and formatting LPA codes...
+Sanity check the final output...
+/tmp/${FILENAME}/${FILENAME}.txt generated.
+Contents for checking:
+<json_output_reformatted>
 ```
 
-Copy the `<json_output>` from the code generator logs output and push it into a file
+The script will then prompt for and re-enter a password to create the disk image.
 
-``` shell
-FILENAME=activation_codes_$(date +%Y%m%d)
-mkdir -p /tmp/$FILENAME
-echo '<json_output>' | jq -f transform-lpa-json.jq > /tmp/$FILENAME/$FILENAME.txt
-```
+This is copied to your `Documents` folder in a disk image named `${FILENAME}.dmg`.
 
-Please check the resulting  file in `/tmp/$FILENAME/$FILENAME.txt` has the following:
-- All Sirius case numbers should be split with hyphen into 3 groups of 4. e.g `7xxx-xxxx-xxxx`
-- All actor codes should be split with a space into 3 groups of 4. e.g `ABC1 D2E3 FG4H`
+Then:
 
-Then create an encrypted disk image using the script below. The script will prompt for a password to create and to open the disk image.
-
-``` shell
-./make_encrypted_image.sh $FILENAME
-```
-
-Send the encrypted image to the recipient by slack or keybase and separately let them know what the password is, e.g. via email.
+- Send the encrypted image to the recipient by Slack or Keybase.
+- Separately, let them know what the password is, e.g. via email.

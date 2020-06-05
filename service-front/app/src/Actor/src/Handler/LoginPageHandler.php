@@ -8,16 +8,19 @@ use Actor\Form\Login;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
+use Common\Handler\LoggerAware;
 use Common\Handler\Traits\CsrfGuard;
+use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Fig\Http\Message\StatusCodeInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class CreateAccountHandler
@@ -25,23 +28,26 @@ use Mezzio\Template\TemplateRendererInterface;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAware
+class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAware, LoggerAware
 {
     use User;
     use CsrfGuard;
+    use Logger;
 
     /**
      * CreateAccountHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param AuthenticationInterface $authenticator
+     * @param LoggerInterface $logger
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authenticator
+        AuthenticationInterface $authenticator,
+        LoggerInterface $logger
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
     }
@@ -57,34 +63,42 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         if ($request->getMethod() === 'POST') {
             $form->setData($request->getParsedBody());
 
-            if ($form->isValid()) {
-               try {
-                    $user = $this->getUser($request);
+            if (!$form->isValid()) {
+                $errors = $form->getMessages();
 
-                    if (! is_null($user)) {
-                        if (empty($user->getDetail('LastLogin'))) {
-                            return $this->redirectToRoute('lpa.add');
-                        } else {
-                            return $this->redirectToRoute('lpa.dashboard');
-                        }
-                    }
-                    // adding an element name allows the form to link the error message to a field. In this case we'll
-                    // link to the email field to allow the user to correct their mistake.
-                    $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
-                } catch (ApiException $e){
-                   //401 denotes in this case that we hve not activated,
-                   // redirect to correct success page with correct data
-                   if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
-                       $formValues = $form->getData();
-                       $emailAddress = $formValues['email'];
+                $this->getLogger()->notice('Login form validation failed.', $errors);
 
-                       return $this->redirectToRoute('create-account-success', [], [
-                           'email' => $emailAddress,
-                           'accountExists' => 'true'
-                       ]);
-                   }
-               }
+                return new HtmlResponse($this->renderer->render('actor::login', [
+                    'form' => $form
+                ]));
             }
+
+            try {
+                $user = $this->getUser($request);
+
+                if (! is_null($user)) {
+                    if (empty($user->getDetail('LastLogin'))) {
+                        return $this->redirectToRoute('lpa.add');
+                    } else {
+                        return $this->redirectToRoute('lpa.dashboard');
+                    }
+                }
+                // adding an element name allows the form to link the error message to a field. In this case we'll
+                // link to the email field to allow the user to correct their mistake.
+                $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
+            } catch (ApiException $e) {
+               //401 denotes in this case that we hve not activated,
+               // redirect to correct success page with correct data
+               if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
+                   $formValues = $form->getData();
+                   $emailAddress = $formValues['email'];
+
+                   return $this->redirectToRoute('create-account-success', [], [
+                       'email' => $emailAddress,
+                       'accountExists' => 'true'
+                   ]);
+               }
+           }
         }
 
         // user is already logged in. check done *after* POST method above due to the way

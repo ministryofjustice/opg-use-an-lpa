@@ -49,3 +49,11 @@
         </p>
     </div>
 {%  endif %}
+{% if actorActive and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
+    <div class="lpa-inactive-notice" >
+    <p class="govuk-body govuk-!-padding-2 govuk-!-margin-left-2 govuk-!-margin-bottom-0"><strong>Important: </strong>This lpa has instructions or preferences.
+        <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.instructions-preferences') }}"> Read more</a>
+    </p>
+    </div>
+{% endif %}
+
