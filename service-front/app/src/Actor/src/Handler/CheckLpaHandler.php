@@ -6,6 +6,7 @@ namespace Actor\Handler;
 
 use Actor\Form\LpaConfirm;
 use App\Service\User\UserService;
+use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
@@ -46,9 +47,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     /** @var LpaService */
     private $lpaService;
 
-    /** @var UserService */
-    private $user;
-
     /**
      * LpaAddHandler constructor.
      * @param TemplateRendererInterface $renderer
@@ -81,8 +79,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
         $form = new LpaConfirm($this->getCsrfGuard($request));
 
-        $this->user = $this->getUser($request);
-        $identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
+        $user = $this->getUser($request);
+        $identity = (!is_null($user)) ? $user->getIdentity() : null;
 
         $passcode = $session->get('passcode');
         $referenceNumber = $session->get('reference_number');
@@ -116,7 +114,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 }
 
                 // is a GET or failed POST
-                $lpa = $this->lpaService->getLpaByPasscode(
+                $lpaData = $this->lpaService->getLpaByPasscode(
                     $identity,
                     $passcode,
                     $referenceNumber,
@@ -131,8 +129,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     ]
                 );
 
-                if (!is_null($lpa) && (strtolower($lpa->getStatus()) === 'registered')) {
-                    [$user, $userRole] = $this->resolveLpaData($lpa, $dob);
+                if (!is_null($lpaData['lpa']) && (strtolower($lpaData['lpa']->getStatus()) === 'registered')) {
+                    [$user, $userRole] = $this->resolveLpaData($lpaData, $dob);
+//                    $userRole = $this->resolveLpaData($lpaData['lpa'], $dob);
 
                     $this->getLogger()->debug(
                         'Account with Id {id} identified as Role {role} on LPA with Id {uId}',
@@ -144,7 +143,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     );
                     return new HtmlResponse($this->renderer->render('actor::check-lpa', [
                         'form' => $form,
-                        'lpa' => $lpa,
+                        'lpa' => $lpaData['lpa'],
                         'user' => $user,
                         'userRole' => $userRole,
                     ]));
@@ -153,12 +152,12 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         'LPA with Id {uId} has {status} status and hence cannot be added',
                         [
                             'uId' => $referenceNumber,
-                            'status' => $lpa->getStatus()
+                            'status' => $lpaData['lpa']->getStatus()
                         ]
                     );
                     //  Show LPA not found page
                     return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                        'user' => $this->user
+                        'user' => $user
                     ]));
                 }
             } catch (ApiException $aex) {
@@ -172,7 +171,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
                     //  Show LPA not found page
                     return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                        'user' => $this->user
+                        'user' => $user
                     ]));
                 }
 
@@ -186,26 +185,22 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         throw new SessionTimeoutException();
     }
 
-    protected function resolveLpaData(Lpa $lpa, string $dob): array
+    protected function resolveLpaData(ArrayObject $lpaData, string $dob): array
     {
         //  Check the logged in user role for this LPA
         $user = null;
         $userRole = null;
+        $lpa = $lpaData['lpa'];
+        $actor = $lpaData['actor'];
         $comparableDob = \DateTime::createFromFormat('!Y-m-d', $dob);
 
-        if (!is_null($lpa->getDonor()->getDob()) && $lpa->getDonor()->getDob() == $comparableDob) {
-            $user = $lpa->getDonor();
-            $userRole = 'Donor';
-        } elseif (!is_null($lpa->getAttorneys()) && is_iterable($lpa->getAttorneys())) {
-            /** @var CaseActor $attorney */
-            foreach ($lpa->getAttorneys() as $attorney) {
-                if (
-                    !is_null($attorney->getDob())
-                    && $attorney->getDob() == $comparableDob
-                ) {
-                    $user = $attorney;
-                    $userRole = 'Attorney';
-                }
+        if ($lpa instanceof Lpa && $actor['details'] instanceof CaseActor) {
+            if (!is_null($lpa->getDonor()->getDob()) && $lpa->getDonor()->getDob() == $comparableDob) {
+                $user = $lpa->getDonor();
+                $userRole = 'Donor';
+            } else {
+                $user = $lpaData['actor']['details'];
+                $userRole = 'Attorney';
             }
         }
 

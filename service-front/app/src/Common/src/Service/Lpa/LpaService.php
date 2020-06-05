@@ -192,7 +192,7 @@ class LpaService
      * @return Lpa|null
      * @throws Exception
      */
-    public function getLpaByPasscode(string $userToken, string $passcode, string $referenceNumber, string $dob): ?Lpa
+    public function getLpaByPasscode(string $userToken, string $passcode, string $referenceNumber, string $dob): ?ArrayObject
     {
         $data = [
             'actor-code' => $passcode,
@@ -201,23 +201,21 @@ class LpaService
         ];
 
         $this->apiClient->setUserTokenHeader($userToken);
-
-        // TODO $lpaData also contains an CaseActor 'actor' that we should probably return
         $lpaData = $this->apiClient->httpPost('/v1/actor-codes/summary', $data);
 
-        $lpa = isset($lpaData['lpa']) ? $this->lpaFactory->createLpaFromData($lpaData['lpa']) : null;
+        if (is_array($lpaData)) {
+            $lpaData = $this->parseLpaData($lpaData);
 
-        if ($lpa !== null) {
             $this->logger->info(
                 'Account with Id {id} fetched LPA with Id {uId} by passcode',
                 [
                     'id'  => $userToken,
-                    'uId' => $lpa->getUId()
+                    'uId' => ($lpaData->lpa)->getUId()
                 ]
             );
+            return $lpaData;
         }
-
-        return $lpa;
+        return null;
     }
 
     /**
