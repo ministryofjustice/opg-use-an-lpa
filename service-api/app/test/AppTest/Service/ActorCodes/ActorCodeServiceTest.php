@@ -6,6 +6,7 @@ namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository;
 use App\DataAccess\Repository\ActorCodesInterface;
+use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
@@ -44,7 +45,7 @@ class ActorCodeServiceTest extends TestCase
      */
     private $loggerProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->codeValidatorProphecy = $this->prophesize(CodeValidationStrategyInterface::class);
         $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
@@ -54,7 +55,7 @@ class ActorCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function confirmation_with_invalid_details()
+    public function confirmation_fails_with_invalid_details(): void
     {
         $this->codeValidatorProphecy->validateCode('test-code', 'test-uid', 'test-dob')
             ->shouldBeCalled()
@@ -68,13 +69,25 @@ class ActorCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function confirmation_with_valid_details()
+    public function confirmation_succeeds_with_valid_details(): void
     {
         $this->initValidParameterSet();
 
         $this->codeValidatorProphecy->flagCodeAsUsed('test-code')
             ->willReturn('id-of-db-row')
             ->shouldBeCalled();
+
+        $this->userLpaActorMapInterfaceProphecy->create(
+            Argument::that(
+                function (string $id) {
+                    $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
+                    return true;
+                }
+            ),
+            Argument::exact('test-user'),
+            Argument::exact('test-uid'),
+            Argument::exact(1)
+        )->shouldBeCalled();
 
         $service = $this->getActorCodeService();
 
@@ -85,7 +98,7 @@ class ActorCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function confirmation_with_valid_details_fails_flag_as_used()
+    public function confirmation_with_valid_details_fails_flag_as_used(): void
     {
         $this->initValidParameterSet();
 
@@ -121,7 +134,45 @@ class ActorCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function successful_validation()
+    public function confirmation_with_vaild_details_has_key_collision(): void
+    {
+        $this->initValidParameterSet();
+
+        $this->codeValidatorProphecy->flagCodeAsUsed('test-code')
+            ->willReturn('id-of-db-row')
+            ->shouldBeCalled();
+
+        // We call the create function multiple times till it works.
+        $createCalls = 0;
+        $this->userLpaActorMapInterfaceProphecy->create(
+            Argument::that(
+                function (string $id) {
+                    $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
+                    return true;
+                }
+            ),
+            Argument::exact('test-user'),
+            Argument::exact('test-uid'),
+            Argument::exact(1)
+        )->will(function () use (&$createCalls) {
+            if ($createCalls > 0) {
+                return;
+            }
+
+            $createCalls++;
+            throw new KeyCollisionException();
+        });
+
+        $service = $this->getActorCodeService();
+
+        $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
+
+        // We expect a uuid4 back.
+        $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $result);
+    }
+
+    /** @test */
+    public function successful_validation(): void
     {
         [
             $testCode,
@@ -145,7 +196,7 @@ class ActorCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function validation_fails()
+    public function validation_fails(): void
     {
         $testCode     = 'test-code';
         $testUid      = 'test-uid';
