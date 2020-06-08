@@ -37,12 +37,13 @@ class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
 
             if ($form->isValid()) {
                 $lpaCode = $form->getData()['lpa_code'];
-
-                // Remove V from start of the code if present
-                $lpaCode = preg_replace('/^[v]?/i', '', $lpaCode);
-
-                $lpaCode = str_replace('-', '', $lpaCode);
+                //TODO: refactor this to a custom filter on the form. Ticket UML-831
+                //Remove V from start of the code if present
+                $lpaCode = preg_replace('/^(V(-| ))?/i', '', $lpaCode);
+                //remove dashes and spaces
                 $lpaCode = str_replace(' ', '', $lpaCode);
+                $lpaCode = str_replace('-', '', $lpaCode);
+
 
                 $session->set('code', $lpaCode);
                 $session->set('surname', $form->getData()['donor_surname']);
