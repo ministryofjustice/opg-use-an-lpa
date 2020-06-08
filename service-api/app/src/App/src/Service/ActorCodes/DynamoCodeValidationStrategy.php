@@ -46,6 +46,17 @@ class DynamoCodeValidationStrategy implements CodeValidationStrategyInterface
             throw new ActorCodeValidationException('Code already used');
         }
 
+        if ($uid !== $details['SiriusUid']) {
+            $this->logger->info(
+                'Uid {uid} did not match {expected} when validating actor code',
+                [
+                    'uid' => $uid,
+                    'expected' => $details['SiriusUid'],
+                ]
+            );
+            throw new ActorCodeValidationException('Bad LPA uId');
+        }
+
         $lpa = $this->lpaService->getByUid($details['SiriusUid']);
 
         if (is_null($lpa)) {
@@ -69,17 +80,6 @@ class DynamoCodeValidationStrategy implements CodeValidationStrategyInterface
                 ]
             );
             throw new ActorCodeValidationException('Actor not in LPA');
-        }
-
-        if ($uid !== $lpa->getData()['uId']) {
-            $this->logger->info(
-                'Uid {uid} did not match {expected} when validating actor code',
-                [
-                    'uid' => $uid,
-                    'expected' => $lpa->getData()['uId'],
-                ]
-            );
-            throw new ActorCodeValidationException('Bad LPA uId');
         }
 
         if ($dob !== $actor['details']['dob']) {
