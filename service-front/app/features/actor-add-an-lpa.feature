@@ -24,10 +24,10 @@ Feature: Add an LPA
     And The LPA is successfully added
 
     Examples:
-      | passcode       |
-      | xyuphwqrechv   |
-      | XYUPHWQRECHV   |
-      | XYUP-hwqr-EcHv |
+      | passcode               |
+      | xyuphwqrechv           |
+      | XYUPHWQRECHV           |
+      | XYUP-hwqr-EcHv         |
       | C - XYUP - hwqr - Echv |
 
   @integration @ui
@@ -91,3 +91,15 @@ Feature: Add an LPA
     Given I have added an LPA to my account
     When I attempt to add the same LPA again
     Then The LPA should not be found
+
+  @ui
+  Scenario Outline: The user can add an LPA to their account when they have the same DOB as others on the LPA
+    Given I am on the add an LPA page
+    When I request to add an LPA with the code "<passcode>" that is for "<firstName>" "<secondName>" and I will have an Id of <id>
+    Then The correct LPA is found and I can see the correct name which will have a role of "<role>"
+    And The LPA is successfully added
+
+    Examples:
+      | id  | passcode     | firstName | secondName | role     |
+      | 164 | TYUPHWQRECHV | Harold    | Stallman   | Attorney |
+      | 64  | AYUPHWQRECHV | Simon     | Matthews   | Attorney |

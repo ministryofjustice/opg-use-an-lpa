@@ -130,8 +130,12 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 );
 
                 if (!is_null($lpaData['lpa']) && (strtolower($lpaData['lpa']->getStatus()) === 'registered')) {
-                    [$user, $userRole] = $this->resolveLpaData($lpaData, $dob);
-//                    $userRole = $this->resolveLpaData($lpaData['lpa'], $dob);
+                    $user = $lpaData['actor']['details'];
+
+                    // Are we displaying Donor or Attorney user role
+                    $userRole = ($lpaData['lpa']->getDonor()->getId() === ($lpaData['actor']['details'])->getId()) ?
+                        'Donor' :
+                        'Attorney';
 
                     $this->getLogger()->debug(
                         'Account with Id {id} identified as Role {role} on LPA with Id {uId}',
@@ -183,27 +187,5 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         // TODO this can be reached if the session is still perfectly valid but the lpa search/response
         //      failed in some way. Make this better.
         throw new SessionTimeoutException();
-    }
-
-    protected function resolveLpaData(ArrayObject $lpaData, string $dob): array
-    {
-        //  Check the logged in user role for this LPA
-        $user = null;
-        $userRole = null;
-        $lpa = $lpaData['lpa'];
-        $actor = $lpaData['actor'];
-        $comparableDob = \DateTime::createFromFormat('!Y-m-d', $dob);
-
-        if ($lpa instanceof Lpa && $actor['details'] instanceof CaseActor) {
-            if (!is_null($lpa->getDonor()->getDob()) && $lpa->getDonor()->getDob() == $comparableDob) {
-                $user = $lpa->getDonor();
-                $userRole = 'Donor';
-            } else {
-                $user = $lpaData['actor']['details'];
-                $userRole = 'Attorney';
-            }
-        }
-
-        return [$user, $userRole];
     }
 }

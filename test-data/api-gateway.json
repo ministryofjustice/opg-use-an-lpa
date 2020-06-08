@@ -379,7 +379,7 @@
     "donor": {
       "id": 59,
       "uId": "7000-0000-1391",
-      "dob": "1948-11-01",
+      "dob": "1975-10-05",
       "email": "linkedpersonone@opgtest.com",
       "salutation": "Mr",
       "firstname": "Linked",
@@ -402,7 +402,7 @@
     },
     "applicationType": "Classic",
     "caseSubtype": "pfa",
-    "status": "Pending",
+    "status": "Registered",
     "caseAttorneySingular": false,
     "caseAttorneyJointlyAndSeverally": true,
     "caseAttorneyJointly": false,
@@ -437,7 +437,7 @@
       {
         "id": 164,
         "uId": "7000-0000-1442",
-        "dob": "1975-10-06",
+        "dob": "1975-10-05",
         "email": "SimonMatthews2@opgtest.com",
         "salutation": "Mr",
         "firstname": "Simon2",
@@ -491,7 +491,7 @@
     "attorneyActDecisions": null,
     "applicationHasRestrictions": false,
     "applicationHasGuidance": false,
-    "lpaDonorSignatureDate": "2019-10-06",
+    "lpaDonorSignatureDate": "2020-04-06",
     "lifeSustainingTreatment": null
   },
   {
