@@ -75,7 +75,7 @@ class LpaService
         if ($lpaData['attorneys'] !== null) {
             $lpaData['original_attorneys'] = $lpaData['attorneys'];
             $lpaData['attorneys'] = array_values(array_filter($lpaData['attorneys'], function ($attorney) {
-                return self::attorneyStatus($attorney) === self::ACTIVE_ATTORNEY;
+                return $this->attorneyStatus($attorney) === self::ACTIVE_ATTORNEY;
             }));
         }
 

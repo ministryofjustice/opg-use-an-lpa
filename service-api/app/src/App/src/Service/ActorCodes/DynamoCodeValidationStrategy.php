@@ -99,7 +99,7 @@ class DynamoCodeValidationStrategy implements CodeValidationStrategyInterface
     /**
      * @inheritDoc
      */
-    public function flagCodeAsUsed(string $code): string
+    public function flagCodeAsUsed(string $code)
     {
         try {
             $this->actorCodesRepository->flagCodeAsUsed($code);

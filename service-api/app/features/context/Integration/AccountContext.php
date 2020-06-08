@@ -18,10 +18,8 @@ use Aws\DynamoDb\Marshaler;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use BehatTest\Context\SetupEnv;
-use Common\Service\Lpa\ViewerCodeService;
-use DateInterval;
-use DateTimeZone;
 use DateTime;
+use DateTimeZone;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -660,14 +658,24 @@ class AccountContext extends BaseIntegrationContext
         // ActorCodes::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                    'SiriusUid' => $this->lpaUid,
-                    'Active'    => true,
-                    'Expires'   => '2021-09-25T00:00:00Z',
-                    'ActorCode' => $this->passcode,
-                    'ActorLpaId'=> $this->actorLpaId,
+                    'SiriusUid'  => $this->lpaUid,
+                    'Active'     => true,
+                    'Expires'    => '2021-09-25T00:00:00Z',
+                    'ActorCode'  => $this->passcode,
+                    'ActorLpaId' => $this->actorLpaId,
                 ])
         ]));
 
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // this is now called twice
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
                 new Response(
@@ -682,7 +690,6 @@ class AccountContext extends BaseIntegrationContext
         $validatedLpa = $actorCodeService->validateDetails($this->passcode, $this->lpaUid, $this->userDob);
 
         assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
-
     }
 
     /**
@@ -712,6 +719,16 @@ class AccountContext extends BaseIntegrationContext
             ])
         ]));
 
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // this is now called twice
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
                 new Response(

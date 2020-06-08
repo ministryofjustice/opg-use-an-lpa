@@ -25,8 +25,7 @@ interface CodeValidationStrategyInterface
      * Marks a one-time-use actor code as used and returns the id of the UserLpaActorMap linking record.
      *
      * @param string $code
-     * @return string The id of the new UserLpaActorMap record
      * @throws ActorCodeMarkAsUsedException Thrown when the act of marking a code as used fails
      */
-    public function flagCodeAsUsed(string $code): string;
+    public function flagCodeAsUsed(string $code);
 }
