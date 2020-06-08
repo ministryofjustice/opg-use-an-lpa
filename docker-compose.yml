@@ -262,4 +262,4 @@ services:
         - --consumer
         - Use a Lasting Power of Attorney
         - --provider
-        - OPG Data
+        - lpa-codes
