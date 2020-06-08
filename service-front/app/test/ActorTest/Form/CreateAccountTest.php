@@ -33,7 +33,7 @@ class CreateAccountTest extends TestCase implements TestsLaminasForm
     {
         return [
             '__csrf'           => Csrf::class,
-            'email'            => Text::class,
+            'email'            => Email::class,
             'password'         => Password::class,
             'password_confirm' => Password::class,
             'terms'            => Checkbox::class,

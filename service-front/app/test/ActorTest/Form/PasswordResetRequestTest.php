@@ -33,8 +33,8 @@ class PasswordResetRequestTest extends TestCase implements TestsLaminasForm
     {
         return [
             '__csrf'           => Csrf::class,
-            'email'            => Text::class,
-            'email_confirm'    => Text::class,
+            'email'            => Email::class,
+            'email_confirm'    => Email::class,
         ];
     }
 
