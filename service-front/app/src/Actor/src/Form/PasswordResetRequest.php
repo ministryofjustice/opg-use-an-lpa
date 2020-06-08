@@ -28,7 +28,7 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
 
         $this->add([
             'name' => 'email',
-            'type' => 'Text',
+            'type' => 'Email',
         ]);
 
         $this->add([
