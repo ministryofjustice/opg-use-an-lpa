@@ -10,7 +10,7 @@ use Common\Form\Element\Csrf;
 use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
 use PHPUnit\Framework\TestCase;
 use Mezzio\Csrf\CsrfGuardInterface;
-use Laminas\Form\Element\Text;
+use Laminas\Form\Element\Email;
 
 class PasswordResetRequestTest extends TestCase implements TestsLaminasForm
 {
