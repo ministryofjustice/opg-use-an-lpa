@@ -246,3 +246,20 @@ services:
     environment:
       REGION: eu-west-1
       SEED_PATH: /init/kms-seed.yaml
+
+  lpa-codes-pact-mock:
+    image: pactfoundation/pact-cli:latest
+    ports:
+        - 1234:80
+    command:
+        - mock-service
+        - -p
+        - "80"
+        - --host
+        - "0.0.0.0"
+        - --pact-dir
+        - /tmp/pacts
+        - --consumer
+        - Use a Lasting Power of Attorney
+        - --provider
+        - OPG Data
