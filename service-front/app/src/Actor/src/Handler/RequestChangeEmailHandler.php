@@ -104,7 +104,7 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
 
                         $verifyNewEmailUrl = $this->serverUrlHelper->generate($verifyNewEmailPath);
 
-                        //$this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email'], $data['NewEmail']);
+                        $this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email'], $data['NewEmail']);
 
                         $this->emailClient->sendRequestChangeEmailToNewEmail($data['NewEmail'], $verifyNewEmailUrl);
 
