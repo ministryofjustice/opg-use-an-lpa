@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+red=`tput setaf 1`
+green=`tput setaf 2`
+bold=`tput bold`
+reset=`tput sgr0`
+
 function get_lpa_inputcount(){
     LPA_UNIQUE_COUNT=$( echo "${LPATRIMMED}" | awk  -v FS="," "{ print NF }" );
 }
@@ -30,46 +35,51 @@ function check_file_sanity(){
 }
 
 function generate_actor_codes(){
-    mkdir -p /tmp/${FILENAME}
+    mkdir -p ${OUTPUT_FOLDER}/out
     aws-vault exec identity -- python -u ./generate_actor_codes.py ${LPAENV} ${LPATRIMMED} |
-        tee /tmp/${FILENAME}/${FILENAME}.log        # create log file, from output
+        tee ${OUTPUT_STAGING_FILE}        # create log file, from output
 }
 
 function process_actor_codes(){
     echo "Sanity check the logs..."
-    check_file_sanity /tmp/${FILENAME}/${FILENAME}.log
+    check_file_sanity ${OUTPUT_STAGING_FILE}
 
     echo 'extracting and formatting LPA codes...'
-    awk ' $1=="timestamp:" {$1=""; $2="";$3=""; print} ' /tmp/${FILENAME}/${FILENAME}.log | # find extract json
-        jq -f  transform-lpa-json.jq > /tmp/${FILENAME}/${FILENAME}.txt                     # fix up the json output
+    awk ' $1=="timestamp:" {$1=""; $2="";$3=""; print} ' ${OUTPUT_STAGING_FILE} | # find extract json
+        jq -f  transform-lpa-json.jq > ${OUTPUT_TEXT_FILE}                     # fix up the json output
 
     echo 'Sanity check the final output...'
-    check_file_sanity /tmp/${FILENAME}/${FILENAME}.txt
+    check_file_sanity ${OUTPUT_TEXT_FILE}
 
-    echo "/tmp/${FILENAME}/${FILENAME}.txt generated."
+    echo "${OUTPUT_TEXT_FILE} generated."
 
     echo "Contents for checking:"
-    cat /tmp/${FILENAME}/${FILENAME}.txt
-
-    echo "removing intermediate file..."
-    rm /tmp/${FILENAME}/${FILENAME}.log
+    cat ${OUTPUT_TEXT_FILE}
 }
 
 function make_encrypted_image() {
-    hdiutil create -srcfolder /tmp/${FILENAME}/ -fs HFS+ -encryption AES-256 -volname ${FILENAME}  ~/Documents/${FILENAME}.dmg
-    rm -r /tmp/${FILENAME}
+    hdiutil create -srcfolder /tmp/${FILENAME}/out -fs HFS+ -encryption AES-256 -volname ${FILENAME}  ~/Documents/${FILENAME}.dmg
+    echo -e "${green}disk image created!${reset}"
+
+    if [[ -z "${NO_CLEANUP}" ]]
+    then
+        echo  "removing intermediate folder..."
+        rm -r ${OUTPUT_FOLDER}
+    else
+        echo "${OUTPUT_FOLDER} is still on disk."
+    fi
 }
 
 function usage(){
-    echo "Usage: generate_actor_codes.sh -e <environment-name> [-i \"<csv-inline-list-surrounded-by-quotes>\" | -f filename] [-v]" 1>&2
+    echo "Usage: generate_actor_codes.sh -e <environment-name> [-i \"<csv-inline-list-surrounded-by-quotes>\" | -f filename] [-v] [-n]" 1>&2
     exit 1;
 }
 
 INLINE_CSV=
 INPUT_FILE=
 LPAENV=
-
-while getopts "e:i:f:v" opt
+NO_CLEANUP=
+while getopts "e:i:f:vn" opt
 do
   case ${opt} in
     e)  # get the environment
@@ -83,6 +93,10 @@ do
         ;;
     v)  # debug
         set -x
+        ;;
+    n)
+        #no clean up
+        NO_CLEANUP=true
         ;;
     \?)
        usage
@@ -112,13 +126,17 @@ fi
 get_lpa_inputcount
 
 echo "environment name=${LPAENV}"
-echo "LPA Id's=${LPATRIMMED}"
-echo "Total unique LPA's: ${LPA_UNIQUE_COUNT}"
-echo "A new ${FILENAME}.txt file will be generated."
-echo "This will be stored securely in disk image ${FILENAME}.dmg and copied to your Documents folder."
+echo "LPA Id's=${bold}${LPATRIMMED}${reset}"
+echo "Total unique LPA's: ${bold}${LPA_UNIQUE_COUNT}${reset}"
+echo "A new ${bold}${FILENAME}.txt${reset} file will be generated."
+echo "This will be stored securely in disk image ${bold}${FILENAME}.dmg${reset} and copied to your Documents folder."
 
 read -p "Are the above details correct? [y/n]: " -n 1 -r
 echo
+
+OUTPUT_FOLDER=/tmp/${FILENAME}
+OUTPUT_TEXT_FILE=${OUTPUT_FOLDER}/out/${FILENAME}.txt
+OUTPUT_STAGING_FILE=${OUTPUT_FOLDER}/${FILENAME}.log
 
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
@@ -131,5 +149,5 @@ then
     echo "creating encrypted disk image...."
     make_encrypted_image
 else
-    echo "generate actor codes script aborted."
+    echo "${red}generate actor codes script aborted.${reset}"
 fi
