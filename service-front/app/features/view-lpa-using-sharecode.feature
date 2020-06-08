@@ -37,6 +37,32 @@ Feature: View an LPA via sharecode
     And I want to see an option to check another LPA
 
   @ui
+  Scenario Outline: The user is able to enter a valid LPA code
+    Given I have been given access to an LPA via share code
+    And I access the viewer service
+    When I give a valid LPA share code of <accessCode> which matches <storedCode>
+    And I confirm the LPA is correct
+    Then I can see the full details of the valid LPA
+    Examples:
+    |accessCode             | storedCode   |
+    |v-VWXW-adbc-3476       | VWXWADBC3476 |
+    |V-awxw-ADBC-3476       | AWXWADBC3476 |
+    |v-VWXW adBc 3476       | VWXWADBC3476 |
+    |V-aWxw ADBC 3476       | AWXWADBC3476 |
+    |v VWxW adbc 3476       | VWXWADBC3476 |
+    |V awXw ADBC 3476       | AWXWADBC3476 |
+    |v-VWxWaDbC3476         | VWXWADBC3476 |
+    |v-aWxWadBC3476         | AWXWADBC3476 |
+    |v - vwxw - adbc - 3476 | VWXWADBC3476 |
+    |V - AWXW - ADBC - 3476 | AWXWADBC3476 |
+    |vwxwadbc3476           | VWXWADBC3476 |
+    |AWXWADBC3476           | AWXWADBC3476 |
+    |vWXW-ADbc-3476         | VWXWADBC3476 |
+    |AWXw-aDbC-3476         | AWXWADBC3476 |
+    |VWXW - ADBC - 3476     | VWXWADBC3476 |
+    |AWXW - ADBC - 3476     | AWXWADBC3476 |
+
+  @ui
   Scenario Outline: The user is shown the correct error messages when entering invalid details
     Given I am on the enter code page
     When I request to view an LPA with an invalid access code of "<accessCode>"

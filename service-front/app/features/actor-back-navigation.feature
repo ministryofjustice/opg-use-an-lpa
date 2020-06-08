@@ -45,11 +45,7 @@ Feature: Back navigation
     And I am currently signed in
     And I have been given access to use an LPA via credentials
     And I am on the add an LPA page
-    When I request to add an LPA with valid details using xyuphwqrechv
+    When I request to add an LPA with valid details using xyuphwqrechv which matches XYUPHWQRECHV
     And I am on the check LPA page
     When I click Back link on the page
     Then I should be taken to the <add a lpa> page
-
-
-
-
