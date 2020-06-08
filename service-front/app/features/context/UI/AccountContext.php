@@ -554,9 +554,6 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode)
     {
-
-
-
         $this->ui->assertPageAddress('/lpa/add-details');
 
         // API call for checking LPA
