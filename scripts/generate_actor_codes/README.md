@@ -56,7 +56,10 @@ command:
 
 **Note:** The list of `comma separated lpa uids` must be surrounded by double quotes.
 
-Both options have the `-v` option to switch on debug mode.
+Both options have:
+
+- `-v` option to switch on debug mode.
+- `-n` option to keep the output files after disk generation, useful for inspection of the files
 
 You will be given the chance to review the input, and cancel if needed.
 
@@ -89,7 +92,6 @@ Sanity check the final output...
 /tmp/${FILENAME}/${FILENAME}.txt generated.
 Contents for checking:
 <json_output_reformatted>
-removing intermediate file...
 ```
 
 The script will then prompt for and re-enter a password to create the disk image.
