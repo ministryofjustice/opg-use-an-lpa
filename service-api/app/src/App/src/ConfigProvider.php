@@ -53,10 +53,6 @@ class ConfigProvider
                 DataAccess\Repository\ViewerCodesInterface::class => DataAccess\DynamoDb\ViewerCodes::class,
                 DataAccess\Repository\UserLpaActorMapInterface::class => DataAccess\DynamoDb\UserLpaActorMap::class,
                 DataAccess\Repository\LpasInterface::class => DataAccess\ApiGateway\Lpas::class,
-
-                // Validation Strategy
-                Service\ActorCodes\CodeValidationStrategyInterface::class
-                    => Service\ActorCodes\DynamoCodeValidationStrategy::class
             ],
 
             'factories'  => [
@@ -72,6 +68,10 @@ class ConfigProvider
                 DataAccess\DynamoDb\ViewerCodes::class => DataAccess\DynamoDb\ViewerCodesFactory::class,
                 DataAccess\DynamoDb\UserLpaActorMap::class => DataAccess\DynamoDb\UserLpaActorMapFactory::class,
                 DataAccess\ApiGateway\Lpas::class => DataAccess\ApiGateway\LpasFactory::class,
+
+                // Code Validation
+                Service\ActorCodes\CodeValidationStrategyInterface::class
+                    => Service\ActorCodes\CodeValidationStrategyFactory::class,
 
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class
