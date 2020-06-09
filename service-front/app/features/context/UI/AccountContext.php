@@ -599,7 +599,6 @@ class AccountContext implements Context
             )
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $params = json_decode($request->getBody()->getContents(), true);
-
                 assertEquals('XYUPHWQRECHV', $params['actor-code']);
             });
 
