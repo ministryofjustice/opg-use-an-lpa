@@ -30,6 +30,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
         Element\Csrf::class     => 'form_input_hidden',
         Element\Hidden::class   => 'form_input_hidden',
         Element\Password::class => 'form_input_password',
+        Element\Email::class    => 'form_input_email',
         Element\Text::class     => 'form_input_text',
         //  Fieldsets
         Date::class             => 'form_fieldset_date',

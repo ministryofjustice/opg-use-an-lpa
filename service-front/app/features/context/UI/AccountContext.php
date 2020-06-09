@@ -414,7 +414,6 @@ class AccountContext implements Context
         $this->setLastRequest($request);
 
         $this->ui->visit('/lpa/dashboard');
-        $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
     /**
@@ -2856,6 +2855,7 @@ class AccountContext implements Context
         $this->iAmNavigatedToTheInstructionsAndPreferencesPage();
     }
 
+
     /**
      * @When /^I request to add an LPA with the code "([^"]*)" that is for "([^"]*)" "([^"]*)" and I will have an Id of ([^"]*)$/
      */
@@ -2966,15 +2966,4 @@ class AccountContext implements Context
 
         $this->ui->pressButton('Continue');
     }
-
-    /**
-     * @Given /^The Health and Welfare LPA is successfully added$/
-     */
-    public function theHealthAndWelfareLPAIsSuccessfullyAdded()
-    {
-        $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->assertPageContainsText(sprintf('%s %s', $this->userFirstName, $this->userSurname));
-        $this->ui->assertPageContainsText('Health and welfare');
-    }
-
 }

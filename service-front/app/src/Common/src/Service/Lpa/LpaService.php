@@ -255,6 +255,25 @@ class LpaService
     }
 
     /**
+     * Sorts a list of LPA's in alphabetical order by the donor's surname
+     *
+     * @param ArrayObject $lpas
+     * @return ArrayObject
+     */
+    public function sortLpasByDonorSurname(ArrayObject $lpas): ArrayObject
+    {
+        $lpas = $lpas->getArrayCopy();
+
+        uasort($lpas, function ($a, $b) {
+            $surnameA = $a->lpa->getDonor()->getSurname();
+            $surnameB = $b->lpa->getDonor()->getSurname();
+            return strcmp($surnameA, $surnameB);
+        });
+
+        return new ArrayObject($lpas, ArrayObject::ARRAY_AS_PROPS);
+    }
+
+    /**
      * Attempts to convert the data arrays received via the various endpoints into an ArrayObject containing
      * scalar and object values.
      *
