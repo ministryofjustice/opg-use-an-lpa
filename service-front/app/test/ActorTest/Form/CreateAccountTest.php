@@ -10,7 +10,7 @@ use Common\Form\Element\Csrf;
 use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
 use PHPUnit\Framework\TestCase;
 use Mezzio\Csrf\CsrfGuardInterface;
-use Laminas\Form\Element\{Checkbox, Password, Text};
+use Laminas\Form\Element\{Checkbox, Password, Email};
 
 class CreateAccountTest extends TestCase implements TestsLaminasForm
 {
@@ -33,7 +33,7 @@ class CreateAccountTest extends TestCase implements TestsLaminasForm
     {
         return [
             '__csrf'           => Csrf::class,
-            'email'            => Text::class,
+            'email'            => Email::class,
             'password'         => Password::class,
             'password_confirm' => Password::class,
             'terms'            => Checkbox::class,
