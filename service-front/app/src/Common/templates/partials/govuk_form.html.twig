@@ -34,6 +34,7 @@
 
         <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
                 id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}"
+                {% if inputmode is defined %}inputmode="{{ inputmode }}"{% endif %}
                 {% if spellcheck is defined %}spellcheck="{{ spellcheck }}"{% endif %}
                 {% if autocomplete is defined %}autocomplete="{{ autocomplete }}"{% endif %} />
 
@@ -48,6 +49,7 @@
 
 {%- block form_input_email -%}
     {%- set type = type|default('email') -%}
+    {%- set inputmode = 'email' -%}
     {%- set autocomplete = 'email' -%}
     {%- set spellcheck = 'false' -%}
     {%- set value = element.getValue() -%}
