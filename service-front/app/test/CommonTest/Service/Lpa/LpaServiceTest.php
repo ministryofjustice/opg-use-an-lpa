@@ -399,4 +399,101 @@ class LpaServiceTest extends TestCase
 
         $this->assertNull($lpaCode);
     }
+
+    /** @test */
+    public function can_sort_lpas_by_donors_surname()
+    {
+        $token = '01234567-01234-01234-01234-012345678901';
+        $referenceNumber = '123456789012';
+        $dob = '1980-01-01';
+
+        $lpaData1 = [
+            'lpa' => [
+                'uId' => $referenceNumber,
+                'donor' => [
+                    'uId' => $referenceNumber,
+                    'dob' => $dob,
+                    'surname' => 'Williams'
+                ]
+            ]
+        ];
+
+        $lpaData2 = [
+            'lpa' => [
+                'uId' => $referenceNumber,
+                'donor' => [
+                    'uId' => $referenceNumber,
+                    'dob' => $dob,
+                    'surname' => 'Johnson'
+                ]
+            ]
+        ];
+
+        $lpaData3 = [
+            'lpa' => [
+                'uId' => $referenceNumber,
+                'donor' => [
+                    'uId' => $referenceNumber,
+                    'dob' => $dob,
+                    'surname' => 'Taylor'
+                ]
+            ]
+        ];
+
+        $lpa1 = new Lpa();
+        $lpa1->setUId($referenceNumber);
+        $donor1 = new CaseActor();
+        $donor1->setUId($referenceNumber);
+        $donor1->setDob(new \DateTime($dob));
+        $donor1->setSurname('Williams');
+        $lpa1->setDonor($donor1);
+
+        $lpa2 = new Lpa();
+        $lpa2->setUId($referenceNumber);
+        $donor2 = new CaseActor();
+        $donor2->setUId($referenceNumber);
+        $donor2->setDob(new \DateTime($dob));
+        $donor2->setSurname('Johnson');
+        $lpa2->setDonor($donor2);
+
+        $lpa3 = new Lpa();
+        $lpa3->setUId($referenceNumber);
+        $donor3 = new CaseActor();
+        $donor3->setUId($referenceNumber);
+        $donor3->setDob(new \DateTime($dob));
+        $donor3->setSurname('Taylor');
+        $lpa3->setDonor($donor3);
+
+        $this->apiClientProphecy->httpGet('/v1/lpas')
+            ->willReturn([
+                '0123-01-01-01-012345' => $lpaData1, // UserLpaActorMap from DynamoDb
+                '9876-01-01-01-012345' => $lpaData2,
+                '3456-01-01-01-012345' => $lpaData3
+            ]);
+        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
+
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData1['lpa'])->willReturn($lpa1);
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData2['lpa'])->willReturn($lpa2);
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData3['lpa'])->willReturn($lpa3);
+
+        $service = new LpaService(
+            $this->apiClientProphecy->reveal(),
+            $this->lpaFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $lpas = $service->getLpas($token);
+
+        $orderedLpas = $service->sortLpasByDonorSurname($lpas);
+
+        $resultOrder = [];
+        foreach ($orderedLpas as $lpaKey => $lpaData) {
+            $surname = $lpaData['lpa']->getDonor()->getSurname();
+            array_push($resultOrder, $surname);
+        }
+
+        $this->assertEquals('Johnson', $resultOrder[0]);
+        $this->assertEquals('Taylor', $resultOrder[1]);
+        $this->assertEquals('Williams', $resultOrder[2]);
+    }
 }
