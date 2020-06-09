@@ -203,7 +203,7 @@ class LpaService
         $this->apiClient->setUserTokenHeader($userToken);
         $lpaData = $this->apiClient->httpPost('/v1/actor-codes/summary', $data);
 
-        if (is_array($lpaData)) {
+        if (isset($lpaData['lpa'])) {
             $lpaData = $this->parseLpaData($lpaData);
 
             $this->logger->info(
@@ -215,6 +215,7 @@ class LpaService
             );
             return $lpaData;
         }
+
         return null;
     }
 

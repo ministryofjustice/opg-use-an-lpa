@@ -388,13 +388,18 @@ class AccountContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode(['lpa' => $this->lpa])
+                    json_encode($this->lpaData)
                 )
             );
 
-        $lpa = $this->lpaService->getLpaByPasscode($this->userIdentity, $storedCode, $this->referenceNo, $this->userDob);
+        $lpaData = $this->lpaService->getLpaByPasscode(
+            $this->userIdentity,
+            $storedCode,
+            $this->referenceNo,
+            $this->userDob
+        );
 
-        assertEquals($lpa->getUId(), $this->lpa['uId']);
+        assertEquals(($lpaData['lpa'])->getUId(), $this->lpa['uId']);
     }
 
     /**
