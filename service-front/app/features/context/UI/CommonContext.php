@@ -221,9 +221,9 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then /^I want to ensure (.*) cookie is set$/
+     * @Then /I have a cookie named (.*)$/
      */
-    public function iWantToEnsureSeenCookieMessageIsSet()
+    public function iHaveACookieNamedSeenCookieMessage()
     {
         $this->ui->assertPageAddress('/');
 

@@ -49,7 +49,7 @@ Feature: Cookie consent
   Scenario: Check cookie-seen-policy set
     Given I have seen the cookie banner
     And I set my cookie preferences
-    Then I want to ensure seen_cookie_message cookie is set
+    Then I have a cookie named "seen_cookie_message"
 
   @ui
   Scenario: Check user is referred back to the relevant page after setting cookies
