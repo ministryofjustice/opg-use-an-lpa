@@ -5,6 +5,7 @@
 {% block service_name %}Use a lasting power of attorney{% endblock %}
 
 {% set usageCookies = form.get('usageCookies') %}
+{% set referer = form.get('referer') %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -55,6 +56,8 @@
                                     }
                                 ]}
                             )}}
+                          {{ govuk_form_element(form.get('referer')) }}
+
                         </fieldset>
                     </div>
                     <h3 class="govuk-heading-m">Strictly necessary cookies</h3>

@@ -53,13 +53,15 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
 
         $cookies = $request->getCookieParams();
 
+        $cookiesPageReferer = $request->getHeaders()['referer'];
         $usageCookies = 'no';
+
         if (array_key_exists(self::COOKIE_POLICY_NAME, $cookies)) {
             $cookiePolicy = json_decode($cookies[self::COOKIE_POLICY_NAME], true);
             $usageCookies = $cookiePolicy['usage'] === true ? 'yes' : 'no';
         }
         $form->get('usageCookies')->setValue($usageCookies);
-
+        $form->get('referer')->setValue($cookiesPageReferer[0]);
 
         return new HtmlResponse($this->renderer->render('partials::cookies', [
             'form' => $form
@@ -69,14 +71,12 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $form = new CookieConsent($this->getCsrfGuard($request));
+
         $cookies = $request->getCookieParams();
+        $form->setData($request->getParsedBody());
 
-        $data = $request->getParsedBody();
-        $form->setData($data);
-
-        // it's assumed that you'll be going to the start after setting cookies settings
-        $test = $request->getQueryParams();
-        $response = new RedirectResponse($this->urlHelper->generate('home'));
+        // After setting cookies settings user is taken where they were previously
+        $response = new RedirectResponse($form->get('referer')->getValue());
 
         if (array_key_exists(self::COOKIE_POLICY_NAME, $cookies)) {
             try {

@@ -51,5 +51,16 @@ Feature: Cookie consent
     And I set my cookie preferences
     Then I want to ensure <seen_cookie_message> is set
 
+  @ui
+  Scenario: Check user is referred back to the relevant page after setting cookies
+    Given I have seen the cookie banner
+    And I chose to ignore setting cookies and I am on the dashboard page
+    When I set my cookie preferences
+    Then I am taken back to the dashboard page
+
+
+
+
+
 
 

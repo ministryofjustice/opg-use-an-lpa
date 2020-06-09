@@ -33,6 +33,10 @@ class CookieConsent extends AbstractForm implements InputFilterProviderInterface
                 ]
             ]
         ]);
+        $this->add([
+            'name' => 'referer',
+            'type' => 'Hidden',
+        ]);
     }
 
     public function getInputFilterSpecification(): array
@@ -40,7 +44,10 @@ class CookieConsent extends AbstractForm implements InputFilterProviderInterface
         return [
             'usageCookies' => [
                 'required'   => true,
-            ]
+            ],
+            'referer' => [
+                'required'   => true,
+            ],
         ];
     }
 }
