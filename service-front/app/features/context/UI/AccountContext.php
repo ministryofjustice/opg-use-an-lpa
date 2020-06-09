@@ -2902,6 +2902,8 @@ class AccountContext implements Context
                     'email' => 'string'
                 ],
             ],
+            'applicationHasRestrictions' => true,
+            'applicationHasGuidance' => false,
             'lpa' => $this->lpa
         ];
 

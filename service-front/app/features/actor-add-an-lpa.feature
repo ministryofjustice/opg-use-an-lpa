@@ -105,7 +105,7 @@ Feature: Add an LPA
     Given I am on the add an LPA page
     When I request to add an LPA with the code "<passcode>" that is for "<firstName>" "<secondName>" and I will have an Id of <id>
     Then The correct LPA is found and I can see the correct name which will have a role of "<role>"
-    And The Health and Welfare LPA is successfully added
+    And The LPA is successfully added
 
     Examples:
       | id  | passcode     | firstName | secondName | role     |
