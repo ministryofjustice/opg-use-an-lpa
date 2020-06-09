@@ -73,6 +73,10 @@ class ConfigProvider
                 DataAccess\DynamoDb\UserLpaActorMap::class => DataAccess\DynamoDb\UserLpaActorMapFactory::class,
                 DataAccess\ApiGateway\Lpas::class => DataAccess\ApiGateway\LpasFactory::class,
 
+                // Code Validation
+                Service\ActorCodes\CodeValidationStrategyInterface::class
+                    => Service\ActorCodes\CodeValidationStrategyFactory::class,
+
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class
             ],
