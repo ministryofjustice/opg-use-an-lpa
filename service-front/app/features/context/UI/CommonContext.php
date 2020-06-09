@@ -134,6 +134,7 @@ class CommonContext implements Context
         $this->ui->assertElementContainsText('a[name=set-cookie-preferences]', 'Set cookie preferences');
     }
 
+//    TODO:Fix it to be more generic for all links that look like buttons. New ticket created.
     /**
      * @Then /^I click on (.*) button$/
      */
@@ -177,9 +178,9 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then /^I set either of (.*) below and save changes$/
+     * @Then /I choose an (.*) and save my choice$/
      */
-    public function iSetEitherOfOptionAndSaveChanges($options)
+    public function iChooseAnOptionAndSaveMyChoice($options)
     {
         if ($options === 'Use cookies that measure my website use') {
             $this->ui->fillField('usageCookies', 'yes');
@@ -216,11 +217,11 @@ class CommonContext implements Context
     {
         $this->iClickOnButton('Set cookie preferences');
         $this->iSeeOptionsToSetAndUnsetCookiesThatMeasureMyWebsiteUse('Use cookies that measure my website use', 'Do not use cookies that measure my website use');
-        $this->iSetEitherOfOptionAndSaveChanges('Use cookies that measure my website use');
+        $this->iChooseAnOptionAndSaveMyChoice('Use cookies that measure my website use');
     }
 
     /**
-     * @Then /^I want to ensure (.*) is set$/
+     * @Then /^I want to ensure (.*) cookie is set$/
      */
     public function iWantToEnsureSeenCookieMessageIsSet()
     {

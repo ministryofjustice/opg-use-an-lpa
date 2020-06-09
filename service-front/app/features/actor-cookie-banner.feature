@@ -35,13 +35,13 @@ Feature: Cookie consent
     Given I have seen the cookie banner
     And I click on Set cookie preferences button
     When I am on the cookie preferences page
-    Then I see options to <Use cookies that measure my website use> and <Do not use cookies that measure my website use>
-    And I set either of <options> below and save changes
+    Then I see options to Use cookies that measure my website use and Do not use cookies that measure my website use
+    And I choose an <option> and save my choice
     Then I should be on the home page of the service
     And I should not see a cookie banner
 
     Examples:
-    |options|
+    |option|
     |Use cookies that measure my website use        |
     |Do not use cookies that measure my website use |
 
@@ -49,7 +49,7 @@ Feature: Cookie consent
   Scenario: Check cookie-seen-policy set
     Given I have seen the cookie banner
     And I set my cookie preferences
-    Then I want to ensure <seen_cookie_message> is set
+    Then I want to ensure seen_cookie_message cookie is set
 
   @ui
   Scenario: Check user is referred back to the relevant page after setting cookies
