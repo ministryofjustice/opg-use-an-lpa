@@ -121,6 +121,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     $dob
                 );
 
+                $lpa = $lpaData['lpa'];
+                $actor = $lpaData['actor']['details'];
+
                 $this->getLogger()->debug(
                     'Account with Id {id} has found an LPA with Id {uId} using their passcode',
                     [
@@ -129,11 +132,11 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     ]
                 );
 
-                if (!is_null($lpaData['lpa']) && (strtolower($lpaData['lpa']->getStatus()) === 'registered')) {
-                    $user = $lpaData['actor']['details'];
+                if (!is_null($lpa) && (strtolower($lpa->getStatus()) === 'registered')) {
+                    $user = $actor;
 
                     // Are we displaying Donor or Attorney user role
-                    $userRole = ($lpaData['lpa']->getDonor()->getId() === ($lpaData['actor']['details'])->getId()) ?
+                    $userRole = ($lpa->getDonor()->getId() === $user->getId()) ?
                         'Donor' :
                         'Attorney';
 
@@ -147,7 +150,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     );
                     return new HtmlResponse($this->renderer->render('actor::check-lpa', [
                         'form' => $form,
-                        'lpa' => $lpaData['lpa'],
+                        'lpa' => $lpa,
                         'user' => $user,
                         'userRole' => $userRole,
                     ]));

@@ -563,7 +563,7 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode(['lpa' => $this->lpa])
+                    json_encode($this->lpaData)
                 )
             )
             ->inspectRequest(function (RequestInterface $request, array $options) use ($storedCode) {
@@ -595,7 +595,7 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode(['lpa' => $this->lpa])
+                    json_encode($this->lpaData)
                 )
             )
             ->inspectRequest(function (RequestInterface $request, array $options) {
@@ -2896,7 +2896,7 @@ class AccountContext implements Context
                     'dob' => '1975-10-05',
                     'salutation' => 'Mr',
                     'firstname' => $this->userFirstName,
-                    'middlenames' => 'Deputy',
+                    'middlenames' => null,
                     'surname' => $this->userSurname,
                     'systemStatus' => true,
                     'email' => 'string'
@@ -2965,6 +2965,16 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText($role);
 
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^The Health and Welfare LPA is successfully added$/
+     */
+    public function theHealthAndWelfareLPAIsSuccessfullyAdded()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageContainsText(sprintf('%s %s', $this->userFirstName, $this->userSurname));
+        $this->ui->assertPageContainsText('Health and welfare');
     }
 
 }
