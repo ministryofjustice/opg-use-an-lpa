@@ -77,5 +77,6 @@ fi
 # Run the seeding script
 # This is written in Python as managing the variable DynamoDB endpoint isn't easy in a shell script.
 python /app/seeding/dynamodb.py
+python /app/seeding/put_actor_codes.py -f /app/seeding/seeding_lpa_codes.json -d
 
 echo Finished seeding
