@@ -53,6 +53,10 @@ class ConfigProvider
                 DataAccess\Repository\ViewerCodesInterface::class => DataAccess\DynamoDb\ViewerCodes::class,
                 DataAccess\Repository\UserLpaActorMapInterface::class => DataAccess\DynamoDb\UserLpaActorMap::class,
                 DataAccess\Repository\LpasInterface::class => DataAccess\ApiGateway\Lpas::class,
+
+                // Validation Strategy
+                Service\ActorCodes\CodeValidationStrategyInterface::class
+                    => Service\ActorCodes\DynamoCodeValidationStrategy::class
             ],
 
             'factories'  => [
