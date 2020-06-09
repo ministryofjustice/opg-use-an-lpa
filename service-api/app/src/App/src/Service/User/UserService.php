@@ -63,19 +63,11 @@ class UserService
             );
         }
 
-        $emailResetExists = $this->usersRepository->checkIfEmailResetRequested($data['email']);
+        $emailResetExists = $this->usersRepository->getUserByNewEmail($data['email']);
 
         //checks if the new email chosen has already been requested for reset
         if (!empty($emailResetExists)) {
-            foreach ($emailResetExists as $otherUser) {
-                if (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now')) {
-                    // if the other users email reset token has not expired, the user cannot make an account with this email
-                    throw new ConflictException(
-                        'Another user has requested to change their email to ' . $data['email'],
-                        ['email' => $data['email']]
-                    );
-                }
-            }
+            $this->checkIfEmailResetViableForAccountCreation($emailResetExists);
         }
 
         // Generate unique id for user
@@ -96,6 +88,30 @@ class UserService
         );
 
         return $user;
+    }
+
+    /**
+     * @param array $emailResetExists
+     * @throws Exception
+     */
+    public function checkIfEmailResetViableForAccountCreation(array $emailResetExists): void
+    {
+        foreach ($emailResetExists as $otherUser) {
+            if (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now')) {
+                // if the other users email reset token has not expired, this user cannot make an account with this email
+
+                $this->logger->notice(
+                    'Could not create account with email {email}
+                    as another user has already requested to change their email that email address',
+                    ['id' => $otherUser['NewEmail']]
+                );
+
+                throw new ConflictException(
+                    'Account creation email conflict - another user has requested to change their email to ' . $otherUser['NewEmail'],
+                    ['email' => $otherUser['NewEmail']]
+                );
+            }
+        }
     }
 
     /**
@@ -306,27 +322,16 @@ class UserService
         $resetToken = Base64UrlSafe::encode(random_bytes(32));
         $resetExpiry = time() + (60 * 60 * 48);
 
-        if ($this->canRequestChangeEmail($userId, $newEmail, $password)) {
-            $data = $this->usersRepository->recordChangeEmailRequest($userId, $newEmail, $resetToken, $resetExpiry);
+        $this->canRequestChangeEmail($userId, $newEmail, $password);
 
-            $this->logger->info(
-                'Change email request for account with Id {id} was successful',
-                ['id' => $userId]
-            );
+        $data = $this->usersRepository->recordChangeEmailRequest($userId, $newEmail, $resetToken, $resetExpiry);
 
-            return $data;
-        }
-
-        $this->logger->notice(
-            'Could not request email change for account with Id {id}
-            as another user has already requested to change their email that email address',
+        $this->logger->info(
+            'Change email request for account with Id {id} was successful',
             ['id' => $userId]
         );
 
-        throw new ConflictException(
-            'Another user has already requested to change their email address to ' . $newEmail,
-            ['email' => $newEmail]
-        );
+        return $data;
     }
 
     /**
@@ -335,10 +340,10 @@ class UserService
      * @param string $userId
      * @param string $newEmail
      * @param string $password
-     * @return bool
+     * @return void
      * @throws Exception
      */
-    public function canRequestChangeEmail(string $userId, string $newEmail, string $password)
+    public function canRequestChangeEmail(string $userId, string $newEmail, string $password): void
     {
         $user = $this->usersRepository->get($userId);
 
@@ -350,20 +355,37 @@ class UserService
             throw new ConflictException('User already exists with email address ' . $newEmail, ['email' => $newEmail]);
         }
 
-        $newEmailExists = $this->usersRepository->checkIfEmailResetRequested($newEmail);
+        $newEmailExists = $this->usersRepository->getUserByNewEmail($newEmail);
 
-        $canRequest = true;
-
-        //checks if the new email chosen has already been requested for reset
         if (!empty($newEmailExists)) {
-            foreach ($newEmailExists as $otherUser) {
-                // if the other user's reset request has not expired and that other use is not the current user
-                if (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now') && ($userId !== $otherUser['Id'])) {
-                    $canRequest = false;
-                }
+            $this->checkIfEmailResetViable($newEmailExists, $userId);
+        }
+    }
+
+    /**
+     * @param array $emailResetExists
+     * @param string $userId
+     * @throws Exception
+     */
+    public function checkIfEmailResetViable(array $emailResetExists, string $userId): void
+    {
+        //checks if the new email chosen has already been requested for reset
+        foreach ($emailResetExists as $otherUser) {
+
+            if (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now') && ($userId !== $otherUser['Id'])) {
+                // if the other users email reset token has not expired, this user cannot make an account with this email
+                $this->logger->notice(
+                    'Could not request email change for account with Id {id}
+                    as another user has already requested to change their email that email address',
+                    ['id' => $userId]
+                );
+
+                throw new ConflictException(
+                    'Change email conflict - another user has already requested to change their email address to ' . $otherUser['NewEmail'],
+                    ['email' => $otherUser['NewEmail']]
+                );
             }
         }
-        return $canRequest;
     }
 
     /**

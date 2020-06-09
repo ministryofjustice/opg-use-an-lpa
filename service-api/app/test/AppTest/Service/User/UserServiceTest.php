@@ -51,7 +51,7 @@ class UserServiceTest extends TestCase
         $repoProphecy->exists($email)->willReturn(false);
 
         $repoProphecy
-            ->checkIfEmailResetRequested($email)
+            ->getUserByNewEmail($email)
             ->willReturn([])
             ->shouldBeCalled();
 
@@ -421,7 +421,7 @@ class UserServiceTest extends TestCase
             ->shouldBeCalled();
 
         $repoProphecy
-            ->checkIfEmailResetRequested($newEmail)
+            ->getUserByNewEmail($newEmail)
             ->willReturn([])
             ->shouldBeCalled();
 
@@ -535,7 +535,7 @@ class UserServiceTest extends TestCase
             ->shouldBeCalled();
 
         $repoProphecy
-            ->checkIfEmailResetRequested($newEmail)
+            ->getUserByNewEmail($newEmail)
             ->willReturn([
                 0 => [
                 'EmailResetExpiry' => time() + (60 * 60 * 36),

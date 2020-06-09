@@ -109,7 +109,7 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function checkIfEmailResetRequested(string $newEmail): array
+    public function getUserByNewEmail(string $newEmail): array
     {
         $marshaler = new Marshaler();
 

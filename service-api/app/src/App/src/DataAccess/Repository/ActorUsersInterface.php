@@ -68,7 +68,7 @@ interface ActorUsersInterface
      * @param string $newEmail
      * @return array
      */
-    public function checkIfEmailResetRequested(string $newEmail): array;
+    public function getUserByNewEmail(string $newEmail): array;
 
     /**
      * Activate the user account in the database using the token value

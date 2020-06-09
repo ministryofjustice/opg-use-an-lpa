@@ -506,7 +506,7 @@ class AccountContext implements Context
             'Items' => []
         ]));
 
-        // ActorUsers::checkIfEmailResetRequested
+        // ActorUsers::getUserByNewEmail
         $this->awsFixtures->append(new Result([]));
 
         // ActorUsers::add
@@ -2015,7 +2015,7 @@ class AccountContext implements Context
         // ActorUsers::getByEmail (exists)
         $this->awsFixtures->append(new Result([]));
 
-        // ActorUsers::checkIfEmailResetRequested
+        // ActorUsers::getUserByNewEmail
         $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
@@ -2057,7 +2057,7 @@ class AccountContext implements Context
         // Expired
         $otherUsersTokenExpiry = time() - (60);
 
-        // ActorUsers::checkIfEmailResetRequested
+        // ActorUsers::getUserByNewEmail
         $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
@@ -2134,7 +2134,7 @@ class AccountContext implements Context
         // ActorUsers::getByEmail (exists)
         $this->awsFixtures->append(new Result([]));
 
-        // ActorUsers::checkIfEmailResetRequested
+        // ActorUsers::getUserByNewEmail
         $this->awsFixtures->append(new Result([]));
 
         // ActorUsers::recordChangeEmailRequest
@@ -2344,7 +2344,7 @@ class AccountContext implements Context
             'Items' => []
         ]));
 
-        // ActorUsers::checkIfEmailResetRequested
+        // ActorUsers::getUserByNewEmail
         $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([

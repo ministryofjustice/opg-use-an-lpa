@@ -1590,9 +1590,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I should be told that I could not change my email as their was a problem with the request$/
+     * @Then /^I should be told my request was successful and an email is sent to the chosen email address to warn the user$/
      */
-    public function iShouldBeToldThatICouldNotChangeMyEmailAsTheirWasAProblemWithTheRequest()
+    public function iShouldBeToldMyRequestWasSuccessfulAndAnEmailIsSentToTheChosenEmailAddressToWarnTheUser()
     {
         // Not needed for this context
     }
