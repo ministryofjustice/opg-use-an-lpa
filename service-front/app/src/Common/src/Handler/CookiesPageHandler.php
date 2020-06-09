@@ -61,7 +61,14 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
             $usageCookies = $cookiePolicy['usage'] === true ? 'yes' : 'no';
         }
         $form->get('usageCookies')->setValue($usageCookies);
-        $form->get('referer')->setValue($cookiesPageReferer[0]);
+        if (!empty($cookiesPageReferer and $this->isValid($cookiesPageReferer[0]))) {
+            // Apply all appropriate measures to ensures it's a valid value.
+            // i.e. is it a page on our site?
+            // is it a page that we expect them to come from?
+            $form->get('referer')->setValue($cookiesPageReferer[0]);
+        } else {
+            $form->get('referer')->setValue(null);
+        }
 
         return new HtmlResponse($this->renderer->render('partials::cookies', [
             'form' => $form
@@ -76,7 +83,11 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         $form->setData($request->getParsedBody());
 
         // After setting cookies settings user is taken where they were previously
-        $response = new RedirectResponse($form->get('referer')->getValue());
+        if ($form->get('referer')->getValue() !== null) {
+            $response = new RedirectResponse($form->get('referer')->getValue());
+        } else {
+            $response = new RedirectResponse($this->urlHelper->generate('home'));
+        }
 
         if (array_key_exists(self::COOKIE_POLICY_NAME, $cookies)) {
             try {
@@ -101,5 +112,24 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
             );
         }
         return $response;
+    }
+
+    private function isValid(string $referer ): bool
+    {
+        // Remove all illegal characters from a url
+        $url = filter_var($referer, FILTER_SANITIZE_URL);
+
+        // Validate url
+        if (filter_var($referer, FILTER_VALIDATE_URL) !== false) {
+           // var_dump("$url is a valid URL");
+            //die;
+
+            return true;
+        } else {
+           // var_dump("$url is not a valid URL");
+          //  die;
+
+            return false;
+        }
     }
 }
