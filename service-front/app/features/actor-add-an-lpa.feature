@@ -19,7 +19,7 @@ Feature: Add an LPA
   @integration @ui
   Scenario Outline: The user can add an LPA to their account
     Given I am on the add an LPA page
-    When I request to add an LPA with valid details using <passcode>
+    When I request to add an LPA with valid details using <passcode> which matches <storedCode>
     Then The correct LPA is found and I can confirm to add it
     And The LPA is successfully added
 
