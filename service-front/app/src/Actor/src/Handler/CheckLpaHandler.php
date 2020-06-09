@@ -8,6 +8,7 @@ use Actor\Form\LpaConfirm;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
+use Common\Exception\RateLimitExceededException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\LoggerAware;
@@ -16,8 +17,10 @@ use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\LpaService;
+use Common\Service\Security\RateLimitService;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -45,6 +48,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     /** @var LpaService */
     private $lpaService;
 
+    /** @var RateLimitService */
+    private $rateLimitService;
+
     /**
      * LpaAddHandler constructor.
      * @param TemplateRendererInterface $renderer
@@ -52,24 +58,27 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
      * @param AuthenticationInterface $authenticator
      * @param LpaService $lpaService
      * @param LoggerInterface $logger
+     * @param RateLimitService $rateLimitService
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
         LpaService $lpaService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        RateLimitService $rateLimitService
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
         $this->lpaService = $lpaService;
+        $this->rateLimitService = $rateLimitService;
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Http\Client\Exception
+     * @throws \Http\Client\Exception|\Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -100,7 +109,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         $this->getLogger()->info(
                             'Account with Id {id} has added LPA with Id {uId} to their account',
                             [
-                                'id'  => $identity,
+                                'id' => $identity,
                                 'uId' => $referenceNumber
                             ]
                         );
@@ -122,7 +131,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 $this->getLogger()->debug(
                     'Account with Id {id} has found an LPA with Id {uId} using their passcode',
                     [
-                        'id'  => $identity,
+                        'id' => $identity,
                         'uId' => $referenceNumber
                     ]
                 );
@@ -166,6 +175,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         ]
                     );
 
+                    $this->rateLimitService->
+                        limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
                     //  Show LPA not found page
                     return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
                         'user' => $this->getUser($request)
