@@ -29,6 +29,6 @@ class CodeValidationStrategyFactory
         }
 
         // TODO here will go the return of the new codes service. Something like:
-        // return new CodesApiValidationStrategy(...);
+        return new CodesApiValidationStrategy();
     }
 }
