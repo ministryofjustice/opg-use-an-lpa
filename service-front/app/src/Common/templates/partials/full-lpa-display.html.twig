@@ -1,7 +1,7 @@
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
 
-    <main class="govuk-main-wrapper">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
 
             <div class="govuk-grid-column-two-thirds">
@@ -22,7 +22,7 @@
             <nav class="moj-sub-navigation" aria-label="Sub navigation">
                 <ul class="moj-sub-navigation__list">
                     <li class="moj-sub-navigation__item">
-                        <a class="moj-sub-navigation__link moj-sub-navigation__link--underline" href="{{ path('download-lpa') }}">Download a copy of this page</a>
+                        <a class="govuk-link moj-sub-navigation__link moj-sub-navigation__link--underline" href="{{ path('download-lpa') }}">Download this LPA summary</a>
                     </li>
                 </ul>
             </nav>
@@ -38,7 +38,8 @@
 
                     <div class="govuk-panel govuk-panel--failed">
 
-                        <h1 class="govuk-panel__title">This LPA has been cancelled</h1>
+                        <h1 class="govuk-panel__title">
+                            This {% if lpa.caseSubtype == "pfa" %}property and finance{% else %}health and welfare{% endif %} LPA has been cancelled</h1>
 
                         <div class="govuk-panel__body govuk-!-font-size-24">
                             <strong>The information on this LPA summary was correct on {{ lpa_date("today") }}</strong>
@@ -50,7 +51,8 @@
 
                     <div class="govuk-panel govuk-panel--confirmation">
 
-                        <h1 class="govuk-panel__title">This LPA is valid</h1>
+                        <h1 class="govuk-panel__title">
+                            This {% if lpa.caseSubtype == "pfa" %}property and finance{% else %}health and welfare{% endif %} LPA is valid</h1>
 
                         <div class="govuk-panel__body">
                             <p class="govuk-!-font-size-24">
@@ -229,23 +231,27 @@
                     </div>
 
                 </dl>
+
             </div>
 
-            {% if not forDownload %}
-                <dl class="govuk-summary-list govuk-summary-list--no-border">
-
-                    {{ include('@partials/section-break.html.twig') }}
-
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-full">
-                            <p class="govuk-body">
-                                <a href="{{ path('enter-code') }}">I want to check another LPA</a>
-                            </p>
-                        </div>
-                    </div>
-                </dl>
-            {% endif %}
         </div>
+
+        {% if not forDownload %}
+
+        {{ include('@partials/section-break.html.twig') }}
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+            <p class="govuk-body">
+                <a class="govuk-link" href="{{ path('enter-code') }}">I want to check another LPA</a>
+            </p>
+
+            </div>
+        </div>
+
+        {% endif %}
+
     </main>
 
 </div>

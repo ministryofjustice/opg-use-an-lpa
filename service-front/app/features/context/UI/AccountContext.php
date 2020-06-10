@@ -8,10 +8,11 @@ use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\RequestInterface;
-use DateTime;
 
 /**
  * Class AccountContext
@@ -87,8 +88,27 @@ class AccountContext implements Context
                     'uId' => '700000000054'
                 ],
             ],
+            'applicationHasRestrictions' => true,
+            'applicationHasGuidance' => false,
             'lpa' => $this->lpa
         ];
+    }
+
+    /**
+     * @Given /^I am the donor$/
+     */
+    public function iAmTheDonor()
+    {
+        $this->lpaData['actor']['type'] = 'donor';
+        unset($this->lpaData['actor']['details']['systemStatus']);
+    }
+
+    /**
+     * @Given /^I am inactive against the LPA on my account$/
+     */
+    public function iAmInactiveAgainstTheLpaOnMyAccount()
+    {
+        $this->lpaData['actor']['details']['systemStatus'] = false;
     }
 
     /**
@@ -394,7 +414,6 @@ class AccountContext implements Context
         $this->setLastRequest($request);
 
         $this->ui->visit('/lpa/dashboard');
-        $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
     /**
@@ -531,10 +550,42 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request to add an LPA with valid details using (.*)$/
+     * @When /^I request to add an LPA with valid details using (.*) which matches (.*)$/
      */
-    public function iRequestToAddAnLPAWithValidDetailsUsing(string $code)
+    public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode)
     {
+        $this->ui->assertPageAddress('/lpa/add-details');
+
+        // API call for checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(['lpa' => $this->lpa])
+                )
+            )
+            ->inspectRequest(function (RequestInterface $request, array $options) use ($storedCode) {
+                $params = json_decode($request->getBody()->getContents(), true);
+
+                assertEquals($storedCode, $params['actor-code']);
+            });
+
+        $this->ui->fillField('passcode', $code);
+        $this->ui->fillField('reference_number', '700000000054');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I request to add an LPA whose status is (.*) using (.*)$/
+     */
+    public function iRequestToAddAnLPAWhoseStatusIs(string $status, string $code)
+    {
+        $this->lpa->status = $status;
+
         $this->ui->assertPageAddress('/lpa/add-details');
 
         // API call for checking LPA
@@ -548,7 +599,6 @@ class AccountContext implements Context
             )
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $params = json_decode($request->getBody()->getContents(), true);
-
                 assertEquals('XYUPHWQRECHV', $params['actor-code']);
             });
 
@@ -996,7 +1046,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         $this->ui->clickLink('View LPA summary');
@@ -1028,7 +1078,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         $this->ui->assertPageAddress('lpa/dashboard');
@@ -1071,7 +1121,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         $this->ui->fillField('org_name', $this->organisation);
@@ -1104,7 +1154,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date' => 'date',
                         'lpa' => $this->lpa,
-                        'actor' => [],
+                        'actor' => $this->lpaData['actor'],
                     ])));
 
         $this->ui->fillField('org_name', $organisationname);
@@ -1197,7 +1247,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         // API call to get access codes
@@ -1239,7 +1289,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         // API call to get access codes
@@ -1281,7 +1331,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         // API call to get access codes
@@ -1414,7 +1464,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         // API call for getShareCodes
@@ -1525,7 +1575,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         // API call for getShareCodes
@@ -1691,7 +1741,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         // API call to get access codes
@@ -1720,7 +1770,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         $this->ui->clickLink('Give an organisation access');
@@ -1730,7 +1780,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I ask to change my password$/
+     * @Given /^I ask to change my password$/
      */
     public function iAskToChangeMyPassword()
     {
@@ -1763,12 +1813,26 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I provide my new password$/
+     * @When /^I provide my new password$/
      */
     public function iProvideMyNewPassword()
     {
-        $newPassword = 'S0meS0rt0fPassw0rd';
+        $newPassword = 'Password123';
 
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/change-password')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->fillField('new_password', $newPassword);
         $this->ui->fillField('new_password_confirm', $newPassword);
 
@@ -1780,36 +1844,58 @@ class AccountContext implements Context
      */
     public function iAmToldMyPasswordWasChanged()
     {
-        // Not needed for one this context
+        $this->ui->assertPageAddress('your-details');
     }
 
     /**
-     * @Given /^I cannot enter my current password$/
+     * @When /^I provided incorrect current password$/
      */
-    public function iCannotEnterMyCurrentPassword()
+    public function iProvidedIncorrectCurrentPassword()
     {
-        $this->ui->fillField('current_password', 'NotMyPassword1');
+        $newPassword = 'Password123';
 
-        $this->iProvideMyNewPassword();
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/change-password')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_FORBIDDEN,
+                    [],
+                    json_encode([])));
+
+        $this->ui->fillField('current_password', 'wrongPassword');
+        $this->ui->fillField('new_password', $newPassword);
+        $this->ui->fillField('new_password_confirm', $newPassword);
+
+        $this->ui->pressButton('Change password');
     }
 
     /**
-     * @Then /^The user can request a password reset and get an email$/
+     * @Then /^I am told my current password is incorrect$/
      */
-    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    public function iAmToldMyCurrentPasswordIsIncorrect()
     {
-        // Not needed for one this context
+        $this->ui->assertPageAddress('change-password');
+
+        $this->ui->assertPageContainsText('The current password you entered is incorrect');
     }
 
     /**
-     * @Given /^I choose a new password of "([^"]*)"$/
+     * @Given /^I choose a new (.*) from below$/
      */
-    public function iChooseANewPasswordOf($password)
+    public function iChooseANewPasswordFromGiven($password)
     {
-        $this->ui->assertPageAddress('/change-password');
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/change-password')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_FORBIDDEN,
+                    [],
+                    json_encode([])));
 
+        $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->fillField('new_password', $password);
         $this->ui->fillField('new_password_confirm', $password);
+
         $this->ui->pressButton('Change password');
     }
 
@@ -1823,10 +1909,8 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('at least ' . $reason);
     }
 
-
-
     /**
-     * @When /^I enter correct email with (.*) and (.*) below$/
+     * @When /^I enter correct email with '(.*)' and (.*) below$/
      */
     public function iEnterCorrectEmailWithEmailFormatAndPasswordBelow($email_format, $password)
     {
@@ -1858,6 +1942,47 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I hack the request id of the CSRF value$/
+     */
+    public function iHackTheRequestIdOfTheCSRFValue()
+    {
+
+        $value = $this->ui->getSession()->getPage()->find('css', '#__csrf')->getValue();
+        $separated = explode('-',$value);
+        $separated[1] = 'youhazbeenhaaxed'; //this is the requestid.
+        $hackedValue = implode('-',$separated);
+        $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
+    }
+
+    /**
+     * @When /^I hack the token of the CSRF value$/
+     */
+    public function iHackTheTokenOfTheCSRFValue()
+    {
+        $value = $this->ui->getSession()->getPage()->find('css', '#__csrf')->getValue();
+
+        $separated = explode('-',$value);
+        $separated[0] = 'youhazbeenhaaxed'; //this is the token part.
+        $hackedValue = implode("-",$separated);
+
+        $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
+    }
+
+
+
+    /**
+     * @When /^I hack the CSRF value with '(.*)'$/
+     */
+    public function iEnterDetailsButHackTheCSRFTokenWith($csrfToken)
+    {
+
+        $this->ui->getSession()->getPage()->find('css', '#__csrf')->setValue($csrfToken);
+
+        $this->ui->assertPageContainsText('Sign in');
+        $this->ui->pressButton('Sign in');
+    }
+
+    /**
      * @Then /^I should see relevant (.*) message$/
      */
     public function iShouldSeeRelevantErrorMessage($error)
@@ -1867,9 +1992,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I enter incorrect email with (.*) and (.*) below$/
+     * @When /^I enter incorrect login details with (.*) and (.*) below$/
      */
-    public function iEnterInCorrectEmailWithEmailFormatAndPasswordBelow($emailFormat, $password)
+    public function iEnterInCorrectLoginDetailsWithEmailFormatAndPasswordBelow($emailFormat, $password)
     {
         $this->ui->fillField('email', $emailFormat);
         $this->ui->fillField('password', $password);
@@ -2163,7 +2288,7 @@ class AccountContext implements Context
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
                         'lpa'                  => $this->lpa,
-                        'actor'                => [],
+                        'actor'                => $this->lpaData['actor'],
                     ])));
 
         $this->ui->clickLink('Give an organisation access');
@@ -2204,5 +2329,528 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('lpa/change-details?lpa=' .$this->userLpaActorToken);
         $this->ui->assertPageContainsText('Let us know if a donor or attorney\'s details change');
+    }
+
+    /**
+     * @Given /^I am on the your details page$/
+     */
+    public function iAmOnTheYourDetailsPage()
+    {
+        $this->ui->clickLink('Your details');
+    }
+
+    /**
+     * @When /^I request to delete my account$/
+     */
+    public function iRequestToDeleteMyAccount()
+    {
+        $this->ui->assertPageAddress('/your-details');
+        $this->ui->clickLink('Delete account');
+    }
+
+    /**
+     * @Then /^I am asked to confirm whether I am sure if I want to delete my account$/
+     */
+    public function iAmAskedToConfirmWhetherIAmSureIfIWantToDeleteMyAccount()
+    {
+        $this->ui->assertPageAddress('/confirm-delete-account');
+        $this->ui->assertPageContainsText('Are you sure you want to delete your account?');
+    }
+
+    /**
+     * @Given /^I am on the confirm account deletion page$/
+     */
+    public function iAmOnTheConfirmAccountDeletionPage()
+    {
+        $this->iAmOnTheYourDetailsPage();
+        $this->iRequestToDeleteMyAccount();
+    }
+
+    /**
+     * @When /^I request to return to the your details page$/
+     */
+    public function iRequestToReturnToTheYourDetailsPage()
+    {
+        $this->ui->assertPageAddress('/confirm-delete-account');
+        $this->ui->clickLink('No, return to my details');
+    }
+
+    /**
+     * @Then /^I am taken back to the your details page$/
+     */
+    public function iAmTakenBackToTheYourDetailsPage()
+    {
+        $this->ui->assertPageAddress('/your-details');
+        $this->ui->assertPageContainsText('Your details');
+    }
+
+    /**
+     * @Given /^I confirm that I want to delete my account$/
+     */
+    public function iConfirmThatIWantToDeleteMyAccount()
+    {
+        $this->ui->assertPageAddress('/confirm-delete-account');
+
+        $this->apiFixtures->delete('/v1/delete-account/' . $this->userId)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'Id'        => $this->userId,
+                        'Email'     => $this->userEmail,
+                        'Password'  => $this->userPassword,
+                        'LastLogin' => null
+                    ])));
+
+        $this->ui->clickLink('Yes, continue deleting my account');
+    }
+
+    /**
+     * @Then /^My account is deleted$/
+     */
+    public function myAccountIsDeleted()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I am logged out of the service and taken to the index page$/
+     */
+    public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage()
+    {
+        $this->ui->assertPageAddress('/');
+    }
+
+    /**
+     * @Given /^I have deleted my account$/
+     */
+    public function iHaveDeletedMyAccount()
+    {
+        $this->iAmOnTheYourDetailsPage();
+        $this->iRequestToDeleteMyAccount();
+        $this->iConfirmThatIWantToDeleteMyAccount();
+    }
+
+    /**
+     * @When /^I request login to my account that was deleted$/
+     */
+    public function iRequestLoginToMyAccountThatWasDeleted()
+    {
+        $this->ui->assertPageAddress('/');
+        $this->ui->clickLink('Sign in to your existing account');
+
+        $this->ui->fillField('email', $this->userEmail);
+        $this->ui->fillField('password', $this->userPassword);
+
+        // API call for authentication
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])));
+
+        $this->ui->pressButton('Sign in');
+    }
+
+    /**
+     * @Then /^My old account is not found$/
+     */
+    public function myOldAccountIsNotFound()
+    {
+        $this->ui->assertPageAddress('/login');
+        $this->ui->assertPageContainsText('Email and password combination not recognised. Please try signing in again below or create an account');
+    }
+
+    /**
+     * @Given /^an attorney can be removed from acting on a particular LPA$/
+     */
+    public function anAttorneyCanBeRemovedFromActingOnAParticularLpa()
+    {
+      // Not needed for this context
+    }
+
+    /**
+     * @Then /^I can see authority to use the LPA is revoked$/
+     */
+    public function iCanSeeAuthorityToUseTheLpaIsRevoked()
+    {
+        $this->organisation = "TestOrg";
+        $this->accessCode = "XYZ321ABC987";
+
+        $code = [
+            'SiriusUid'    => $this->lpa->uId,
+            'Added'        => '2020-01-01T23:59:59+00:00',
+            'Organisation' => $this->organisation,
+            'UserLpaActor' => $this->userLpaActorToken,
+            'ViewerCode'   => $this->accessCode,
+            'Expires'      => '2024-01-01T23:59:59+00:00',
+            'Viewed'       => false,
+            'ActorId'      => $this->actorId,
+        ];
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([0 => $code])));
+
+        $this->ui->visit('/lpa/dashboard');
+
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $this->ui->assertPageAddress('/lpa/dashboard');
+
+        $this->ui->assertPageContainsText('Access revoked');
+        $this->ui->assertPageContainsText('You no longer have access to this LPA.');
+    }
+
+    /**
+     * @Then /^I cannot make access codes for the LPA$/
+     */
+    public function iCannotMakeAccessCodesForTheLpa()
+    {
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->ui->visit('/lpa/dashboard');
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+
+        $this->ui->assertPageAddress('/lpa/dashboard');
+
+        $links = $this->ui->getSession()->getPage()->findAll('css', 'a[href^="/lpa/code-make"]');
+        if (count($links) > 0) {
+            throw new AssertionFailedError('Expected not to find link: /lpa/code-make');
+        }
+    }
+
+    /**
+     * @Then /^I cannot check existing or inactive access codes for the LPA$/
+     */
+    public function iCannotCheckExistingOrInactiveAccessCodesForTheLpa()
+    {
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->ui->visit('/lpa/dashboard');
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+
+        $this->ui->assertPageAddress('/lpa/dashboard');
+
+        $links = $this->ui->getSession()->getPage()->findAll('css', 'a[href^="/lpa/access-codes"]');
+        if (count($links) > 0) {
+            throw new AssertionFailedError('Expected not to find link: /lpa/access-codes');
+        }
+    }
+
+    /**
+     * @Then /^I cannot view the LPA summary$/
+     */
+    public function iCannotViewTheLpaSummary()
+    {
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->ui->visit('/lpa/dashboard');
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+
+        $this->ui->assertPageAddress('/lpa/dashboard');
+
+        $links = $this->ui->getSession()->getPage()->findAll('css', 'a[href^="/lpa/view-lpa"]');
+        if (count($links) > 0) {
+            throw new AssertionFailedError('Expected not to find link: /lpa/view-lpa');
+        }
+    }
+
+    /**
+     * @Then /^I can find out why this LPA has been removed from the account$/
+     */
+    public function iCanFindOutWhyThisLPAHasBeenRemovedFromTheAccount()
+    {
+        $this->ui->clickLink('Why is this?');
+        $this->ui->assertPageAddress('/lpa/removed');
+        $this->ui->assertPageContainsText('We\'ve removed an LPA from your account');
+    }
+
+    /**
+     * @Then /^I can go back to the dashboard page$/
+     */
+    public function iCanGoBackToTheDashboardPage()
+    {
+        $this->ui->assertPageAddress('/lpa/removed');
+        $this->ui->clickLink('Back');
+        $this->ui->assertPageAddress('lpa/dashboard');
+    }
+
+    /**
+     * @When /^I navigate to give an organisation access$/
+     */
+    public function iNavigateToGiveAnOrganisationAccess()
+    {
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode([ ])));
+
+        $this->ui->visit('lpa/code-make?lpa=' . $this->userLpaActorToken);
+    }
+
+    /**
+     * @When /^I navigate to check an access code$/
+     */
+    public function iNavigateToCheckAnAccessCode()
+    {
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode([])));
+
+        $this->ui->visit('lpa/access-codes?lpa=' . $this->userLpaActorToken);
+    }
+
+    /**
+     * @When /^I navigate to view the LPA summary$/
+     */
+    public function iNavigateToViewTheLpaSummary()
+    {
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode([])));
+
+        $this->ui->visit('lpa/view-lpa?lpa=' . $this->userLpaActorToken);
+    }
+
+    /**
+     * @Then /^I am shown a not found error$/
+     */
+    public function iAmShownANotFoundError()
+    {
+        $this->ui->assertResponseStatus(404);
+    }
+
+    /**
+     * @Given /^I want to use my lasting power of attorney$/
+     */
+    public function iWantToUseMyLastingPowerOfAttorney()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I access the use a lasting power of attorney web page$/
+     */
+    public function iAccessTheUseALastingPowerOfAttorneyWebPage()
+    {
+        $this->ui->visit('/');
+        $this->ui->assertPageContainsText('Use a lasting power of attorney');
+    }
+
+    /**
+     * @When /^I am not signed in to the use a lasting power of attorney service at this point$/
+     */
+    public function iAmNotSignedInToTheUseALastingPowerOfAttorneyServiceAtThisPoint()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I click (.*) link on the page$/
+     */
+    public function iClickBackLinkOnThePage($backLink)
+    {
+        $this->ui->assertPageContainsText($backLink);
+        $this->ui->clickLink($backLink);
+    }
+
+    /**
+    * @When /^I should be taken to the (.*) page$/
+    */
+    public function iShouldBeTakenToThePreviousPage($page)
+    {
+        if ($page == 'start') {
+            $this->ui->assertPageAddress('/');
+        } elseif ($page == 'login') {
+            $this->ui->assertPageAddress('/login');
+        } elseif ($page == 'dashboard') {
+            $this->ui->assertPageAddress('/lpa/dashboard');
+        } elseif ($page == 'your details') {
+            $this->ui->assertPageAddress('/your-details');
+        } elseif ($page == 'add a lpa') {
+            $this->ui->assertPageAddress('/lpa/add-details');
+        }
+    }
+
+    /**
+     * @When /^I am on the password reset page$/
+     */
+    public function iAmOnThePasswordResetPage()
+    {
+        $this->ui->assertPageContainsText('Reset your password');
+    }
+
+    /**
+     * @Given /^I am on the check LPA page$/
+     */
+    public function iAmOnTheCheckLPAPage()
+    {
+        $this->ui->assertPageAddress('/lpa/check');
+    }
+
+
+
+    /**
+     * @Then /^I want to ensure cookie attributes are set$/
+     */
+    public function iWantToEnsureCookieAttributesAreSet()
+    {
+        $session = $this->ui->getSession();
+
+        // retrieving response headers:
+        $cookies = $session->getResponseHeaders()['set-cookie'];
+        foreach ($cookies as $value) {
+            if (strstr($value,'session')) {
+                assertContains('secure', $value);
+                assertContains('httponly', $value);
+            } else {
+                throw new Exception('Cookie named session not found in the response header');
+            }
+        }
+    }
+
+    /**
+     * @Given /^I am on the stats page$/
+     */
+    public function iAmOnTheStatsPage()
+    {
+        $this->ui->visit('/stats');
+    }
+
+    /**
+     * @Then /^I can see user accounts table$/
+     */
+    public function iCanSeeUserAccountsTable()
+    {
+        $this->ui->assertPageAddress('/stats');
+        $this->ui->assertPageContainsText('Number of user accounts created and deleted');
+    }
+
+    /**
+     * @Then /^I can see the message (.*)$/
+     * <Important: This lpa has instructions or preferences>
+     */
+    public function iCanSeeTheMessage($message)
+    {
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])));
+
+        $this->ui->visit('/lpa/dashboard');
+
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageContainsText($message);
+    }
+
+    //I can see <Read more> link along with the instructions or preference message
+
+    /**
+     * @Then /^I can see (.*) link along with the instructions or preference message$/
+     */
+    public function iCanSeeReadMoreLink($readMoreLink)
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+
+        $this->ui->assertPageContainsText('Important: This lpa has instructions or preferences');
+
+        $session = $this->ui->getSession();
+        $page = $session->getPage();
+
+        $readMoreLink = $page->findLink($readMoreLink);
+        if ($readMoreLink === null) {
+            throw new \Exception($readMoreLink . ' link not found');
+        }
+    }
+
+    /**
+     * @When /^I click the (.*) link in the instructions or preference message$/
+     */
+    public function iClickTheReadMoreLinkInTheInstructionsOrPreferenceMessage($readMoreLink)
+    {
+        $this->iCanSeeReadMoreLink($readMoreLink);
+        $this->ui->clickLink($readMoreLink);
+    }
+
+    /**
+     * @Then /^I am navigated to the instructions and preferences page$/
+     */
+    public function iAmNavigatedToTheInstructionsAndPreferencesPage()
+    {
+        $this->ui->assertPageAddress('/lpa/instructions-preferences');
+        $this->ui->assertPageContainsText('Instructions and preferences');
+    }
+
+    /**
+     * @When /^I am on the instructions and preferences page$/
+     */
+    public function iAmOnTheInstructionsAndPreferencesPage()
+    {
+        $this->iAmOnTheDashboardPage();
+        $this->iClickTheReadMoreLinkInTheInstructionsOrPreferenceMessage('Read more');
+        $this->iAmNavigatedToTheInstructionsAndPreferencesPage();
     }
 }

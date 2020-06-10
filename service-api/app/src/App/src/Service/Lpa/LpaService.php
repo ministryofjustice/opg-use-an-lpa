@@ -14,6 +14,10 @@ use RuntimeException;
  */
 class LpaService
 {
+    private const ACTIVE_ATTORNEY = 0;
+    private const GHOST_ATTORNEY = 1;
+    private const INACTIVE_ATTORNEY = 2;
+
     /**
      * @var Repository\ViewerCodesInterface
      */
@@ -38,15 +42,14 @@ class LpaService
      * @var LoggerInterface
      */
     private $logger;
-    
+
     public function __construct(
         Repository\ViewerCodesInterface $viewerCodesRepository,
         Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
         Repository\LpasInterface $lpaRepository,
         Repository\UserLpaActorMapInterface $userLpaActorMapRepository,
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->viewerCodesRepository = $viewerCodesRepository;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
         $this->lpaRepository = $lpaRepository;
@@ -72,7 +75,7 @@ class LpaService
         if ($lpaData['attorneys'] !== null) {
             $lpaData['original_attorneys'] = $lpaData['attorneys'];
             $lpaData['attorneys'] = array_values(array_filter($lpaData['attorneys'], function ($attorney) {
-                return self::attorneyStatus($attorney) === self::ACTIVE_ATTORNEY;
+                return $this->attorneyStatus($attorney) === self::ACTIVE_ATTORNEY;
             }));
         }
 
@@ -95,19 +98,20 @@ class LpaService
             return null;
         }
 
-        //---
-
         $lpa = $this->getByUid($map['SiriusUid']);
 
         if (is_null($lpa)) {
             return null;
         }
 
-        //---
-
         $lpaData = $lpa->getData();
-        $actor = $this->lookupActorInLpa($lpaData, $map['ActorId']);
+        $actor = $this->lookupActiveActorInLpa($lpaData, $map['ActorId']);
         unset($lpaData['original_attorneys']);
+
+        // If an active attorney is not found then we should not return an lpa
+        if (is_null($actor)) {
+            return null;
+        }
 
         return [
             'user-lpa-actor-token' => $map['Id'],
@@ -143,7 +147,7 @@ class LpaService
         foreach ($lpaActorMaps as $item) {
             $lpa = $lpas[$item['SiriusUid']];
             $lpaData = $lpa->getData();
-            $actor = $this->lookupActorInLpa($lpaData, $item['ActorId']);
+            $actor = $this->lookupActiveActorInLpa($lpaData, $item['ActorId']);
             unset($lpaData['original_attorneys']);
 
             $result[$item['Id']] = [
@@ -190,7 +194,6 @@ class LpaService
         }
 
         //---
-
         // Whilst the checks in this section could be done before we lookup the LPA, they are done
         // at this point as we only want to acknowledge if a code has expired iff donor surname matched.
 
@@ -204,7 +207,10 @@ class LpaService
             throw new GoneException('Share code expired');
         }
 
-        //---
+        if (isset($viewerCodeData['Cancelled'])) {
+            $this->logger->info('The code {code} entered by user is cancelled.', ['code' => $viewerCode]);
+            throw new GoneException('Share code cancelled');
+        }
 
         if ($logActivity) {
             // Record the lookup in the activity table
@@ -234,12 +240,13 @@ class LpaService
      * Given an LPA and an Actor ID, this returns the actor's details, and what type of actor they are.
      *
      * TODO: Confirm if we need to look in Trust Corporations, or if an active Trust Corporation would appear in `attorneys`.
+     * TODO: Remove dual checks for id/uId when code validation API goes live
      *
      * @param array $lpa
-     * @param int $actorId
+     * @param string $actorId
      * @return array|null
      */
-    public function lookupActorInLpa(array $lpa, int $actorId): ?array
+    public function lookupActiveActorInLpa(array $lpa, string $actorId): ?array
     {
         $actor = null;
         $actorType = null;
@@ -247,38 +254,37 @@ class LpaService
         // Determine if the actor is a primary attorney
         if (isset($lpa['original_attorneys']) && is_array($lpa['original_attorneys'])) {
             foreach ($lpa['original_attorneys'] as $attorney) {
-                if ($attorney['id'] == $actorId) {
-                    switch (self::attorneyStatus($attorney)) {
-                    case self::ACTIVE_ATTORNEY:
-                        $actor = $attorney;
-                        $actorType = 'primary-attorney';
-                        break;
+                if ((string)$attorney['id'] === $actorId || $attorney['uId'] === $actorId) {
+                    switch ($this->attorneyStatus($attorney)) {
+                        case self::ACTIVE_ATTORNEY:
+                            $actor = $attorney;
+                            $actorType = 'primary-attorney';
+                            break;
 
-                    case self::GHOST_ATTORNEY:
-                        $this->logger->info('Looked up attorney {id} but is a ghost', ['id' => $attorney['id']]);
-                        break;
+                        case self::GHOST_ATTORNEY:
+                            $this->logger->info('Looked up attorney {id} but is a ghost', ['id' => $attorney['id']]);
+                            break;
 
-                    case self::INACTIVE_ATTORNEY:
-                        $this->logger->info('Looked up attorney {id} but is inactive', ['id' => $attorney['id']]);
-                        break;
+                        case self::INACTIVE_ATTORNEY:
+                            $this->logger->info('Looked up attorney {id} but is inactive', ['id' => $attorney['id']]);
+                            break;
                     }
                 }
             }
         } elseif (isset($lpa['attorneys']) && is_array($lpa['attorneys'])) {
             foreach ($lpa['attorneys'] as $attorney) {
-                if ($attorney['id'] == $actorId) {
+                if ((string)$attorney['id'] === $actorId || $attorney['uId'] === $actorId) {
                     $actor = $attorney;
                     $actorType = 'primary-attorney';
                 }
             }
         }
 
-        // If no an attorney, check if they're the donor.
+        // If not an attorney, check if they're the donor.
         if (
             is_null($actor) &&
-            isset($lpa['donor']) &&
-            is_array($lpa['donor']) &&
-            $lpa['donor']['id'] == $actorId
+            isset($lpa['donor']) && is_array($lpa['donor']) &&
+            ((string)$lpa['donor']['id'] === $actorId || $lpa['donor']['uId'] === $actorId)
         ) {
             $actor = $lpa['donor'];
             $actorType = 'donor';
@@ -294,11 +300,8 @@ class LpaService
         ];
     }
 
-    protected const ACTIVE_ATTORNEY = 0;
-    protected const GHOST_ATTORNEY = 1;
-    protected const INACTIVE_ATTORNEY = 2;
-
-    protected function attorneyStatus(array $attorney): int {
+    private function attorneyStatus(array $attorney): int
+    {
         if (empty($attorney['firstname']) && empty($attorney['surname'])) {
             return self::GHOST_ATTORNEY;
         }

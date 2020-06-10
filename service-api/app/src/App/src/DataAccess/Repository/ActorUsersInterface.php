@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
-use App\Exception\CreationException;
 use App\Exception\NotFoundException;
-use Exception;
 
 /**
  * Interface for Data relating to Users of the Actor System.
@@ -99,4 +97,13 @@ interface ActorUsersInterface
      * @throws NotFoundException
      */
     public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): array;
+
+    /**
+     * Deletes a user's account by account id
+     *
+     * @param string $accountId
+     * @throws NotFoundException
+     * @return array The deleted user details
+     */
+    public function delete(string $accountId): array;
 }

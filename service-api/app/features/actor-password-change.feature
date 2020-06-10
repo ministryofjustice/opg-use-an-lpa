@@ -23,4 +23,4 @@ Feature: Authenticated Account Password Change
     Given I am on the user dashboard page
     When I ask to change my password
     And I cannot enter my current password
-    Then The user can request a password reset and get an email
+    Then I am told my current password is incorrect

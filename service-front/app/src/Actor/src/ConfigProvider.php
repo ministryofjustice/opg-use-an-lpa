@@ -33,6 +33,7 @@ class ConfigProvider
     {
         return [
             'factories'  => [
+                \Actor\Handler\CheckLpaHandler::class => \Actor\Handler\Factory\CheckLpaHandlerFactory::class
             ],
         ];
     }

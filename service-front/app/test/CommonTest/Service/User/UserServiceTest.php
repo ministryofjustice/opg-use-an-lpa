@@ -377,4 +377,143 @@ class UserServiceTest extends TestCase
         $this->expectException(RuntimeException::class);
         $token = $service->requestPasswordReset('test@example.com');
     }
+
+    /** @test */
+    public function can_change_password_for_authenticated_user()
+    {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpPatch(
+            '/v1/change-password',
+            [
+                'user-id'       => '01234567-0123-0123-0123-012345678901',
+                'password'      => 'CurrentPassw0rd',
+                'new-password'  => 'FinalF0rm'
+            ])
+            ->willReturn([]);
+
+        $userFactoryCallable = function($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+        $return = $service->changePassword('01234567-0123-0123-0123-012345678901', 'CurrentPassw0rd', 'FinalF0rm');
+
+        $this->assertEmpty($return);
+    }
+
+    /** @test */
+    public function exception_thrown_when_bad_password_provided_for_change_password_for_authenticated_user()
+    {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpPatch(
+            '/v1/change-password',
+            [
+                'user-id'       => '01234567-0123-0123-0123-012345678901',
+                'password'      => 'BadPassw0rd',
+                'new-password'  => 'FinalF0rm'
+            ])
+            ->willThrow(new ApiException(
+                'Authentication failed for user ID 01234567-0123-0123-0123-012345678901',
+                StatusCodeInterface::STATUS_FORBIDDEN
+            ));
+
+        $userFactoryCallable = function($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_FORBIDDEN);
+        $this->expectException(ApiException::class);
+        $return = $service->changePassword('01234567-0123-0123-0123-012345678901', 'BadPassw0rd', 'FinalF0rm');
+
+    }
+
+    /** @test */
+    public function exception_thrown_when_user_not_found_for_change_password_for_authenticated_user()
+    {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpPatch(
+            '/v1/change-password',
+            [
+                'user-id'       => '01234567-9999-9999-9999-012345678901',
+                'password'      => 'BadPassw0rd',
+                'new-password'  => 'FinalF0rm'
+            ])
+            ->willThrow(new ApiException('User not found', StatusCodeInterface::STATUS_NOT_FOUND));
+
+        $userFactoryCallable = function($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+        $this->expectException(ApiException::class);
+        $return = $service->changePassword('01234567-9999-9999-9999-012345678901', 'BadPassw0rd', 'FinalF0rm');
+    }
+
+    /** @test */
+    public function can_delete_a_users_account()
+    {
+        $id = '01234567-0123-0123-0123-012345678901';
+        $email = 'a@b.com';
+
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpDelete('/v1/delete-account/' . $id)
+            ->willReturn([
+                'Id'       => $id,
+                'Email'    => $email,
+                'Password' => password_hash('pa33w0rd123', PASSWORD_DEFAULT),
+                'LastLogin'=> null
+            ]);
+
+        $userFactoryCallable = function($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        // deleteAccount is a void method, so if successful, $result should be null
+        $result = $service->deleteAccount($id);
+
+        $this->assertNull($result);
+    }
+
+    /** @test */
+    public function exception_thrown_when_api_gives_invalid_response_to_delete_account_request()
+    {
+        $id = '01234567-0123-0123-0123-012345678901';
+        $email = 'a@b.com';
+
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpDelete('/v1/delete-account/' . $id)
+            ->willThrow(new ApiException('HTTP: 500 - Unexpected API response', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR));
+
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $this->expectException(RuntimeException::class);
+
+        $userFactoryCallable = function($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $service->deleteAccount($id);
+    }
 }

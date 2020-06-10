@@ -6,9 +6,9 @@
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
 
-        <a href="/" class="govuk-back-link">Back</a>
+        <a href="{{ path('lpa.add') }}" class="govuk-back-link">Back</a>
 
-        <main class="govuk-main-wrapper">
+        <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <h1 class="govuk-heading-xl">Is this the LPA you want to add?</h1>
 

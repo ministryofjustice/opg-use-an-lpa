@@ -15,6 +15,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 /**
  * Class ActorCodePreviewHandler
  * @package App\Handler
+ * @codeCoverageIgnore
  */
 class ActorCodeConfirmHandler implements RequestHandlerInterface
 {

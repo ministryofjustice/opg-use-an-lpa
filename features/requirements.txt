@@ -1,3 +1,0 @@
-behave
-requests
-selenium

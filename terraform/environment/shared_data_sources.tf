@@ -26,14 +26,6 @@ data "aws_cloudwatch_log_group" "use-an-lpa" {
   name = "use-an-lpa"
 }
 
-data "aws_acm_certificate" "certificate_viewer" {
-  domain = "${local.dev_wildcard}viewer.${local.dns_namespace_acc}use-an-lpa.opg.service.justice.gov.uk"
-}
-
-data "aws_acm_certificate" "certificate_actor" {
-  domain = "${local.dev_wildcard}actor.${local.dns_namespace_acc}use-an-lpa.opg.service.justice.gov.uk"
-}
-
 data "aws_acm_certificate" "certificate_view" {
   domain = "${local.dev_wildcard}view.lastingpowerofattorney.opg.service.justice.gov.uk"
 }
@@ -89,4 +81,12 @@ data "aws_secretsmanager_secret" "notify_api_key" {
 data "aws_ip_ranges" "route53_healthchecks" {
   services = ["route53_healthchecks"]
   regions  = ["GLOBAL"]
+}
+
+data "aws_security_group" "brute_force_cache_service" {
+  name = "brute-force-cache-service"
+}
+
+data "aws_elasticache_cluster" "brute_force_cache" {
+  cluster_id = "brute-force-cache"
 }

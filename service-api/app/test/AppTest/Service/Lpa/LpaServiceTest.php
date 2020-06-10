@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use Laminas\Validator\Date;
+use App\DataAccess\Repository;
+use App\DataAccess\Repository\Response\Lpa;
+use App\Service\Lpa\LpaService;
+use DateTime;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
-use DateTime;
-use App\DataAccess\Repository;
-use App\Service\Lpa\LpaService;
-use PHPUnit\Framework\TestCase;
-use App\DataAccess\Repository\Response\Lpa;
 
 class LpaServiceTest extends TestCase
 {
@@ -117,7 +116,15 @@ class LpaServiceTest extends TestCase
         $t->SiriusUid = 'test-sirius-uid';
         $t->ActorId = 1;
         $t->Lpa = new Lpa([
-            'uId' => $t->SiriusUid
+            'uId' => $t->SiriusUid,
+            'attorneys' => [
+                [
+                    'id' => $t->ActorId,
+                    'firstname' => 'Test',
+                    'surname' => 'Test',
+                    'systemStatus' => true
+                ]
+            ]
         ], new DateTime);
 
         $this->userLpaActorMapInterfaceProphecy->get($t->Token)->willReturn([
@@ -149,8 +156,50 @@ class LpaServiceTest extends TestCase
 
         $this->assertEquals($t->Token, $result['user-lpa-actor-token']);
         $this->assertEquals($t->Lpa->getLookupTime()->getTimestamp(), strtotime($result['date']));
-        $this->assertEquals(null, $result['actor']);    // We expexting not actor to have been found
-        $this->assertEquals(['uId' => $t->SiriusUid], $result['lpa']);
+        $this->assertEquals([
+            'type' => 'primary-attorney',
+            'details' => [
+                'id' => $t->ActorId,
+                'firstname' => 'Test',
+                'surname' => 'Test',
+                'systemStatus' => true
+            ]
+        ], $result['actor']);
+        $this->assertEquals([
+            'uId' => $t->SiriusUid,
+            'attorneys' => [
+                [
+                    'id' => $t->ActorId,
+                    'firstname' => 'Test',
+                    'surname' => 'Test',
+                    'systemStatus' => true
+                ]
+            ]
+        ], $result['lpa']);
+    }
+
+    /** @test */
+    public function cannot_get_by_user_token_with_inactive_actor()
+    {
+        $t = $this->init_valid_user_token_test();
+
+        $this->lpasInterfaceProphecy->get($t->SiriusUid)->willReturn([
+            'uId' => $t->SiriusUid,
+            'attorneys' => [
+                [
+                    'id' => $t->ActorId,
+                    'firstname' => 'Test',
+                    'surname' => 'Test',
+                    'systemStatus' => false
+                ]
+            ]
+        ]);
+
+        $service = $this->getLpaService();
+
+        $result = $service->getByUserLpaActorToken($t->Token, 'different-user-id');
+
+        $this->assertNull($result);
     }
 
     /** @test */
@@ -453,18 +502,32 @@ class LpaServiceTest extends TestCase
     {
         $lpa = [
             'donor' => [
-                'id' => 1,
+                'id'  => 1,
+                'uId' => '123456789012'
             ]
         ];
 
         $service = $this->getLpaService();
 
-        $result = $service->lookupActorInLpa($lpa, 1);
+        $result = $service->lookupActiveActorInLpa($lpa, '1');
 
-        $this->assertEquals([
-            'type' => 'donor',
-            'details' => $lpa['donor'],
-        ], $result);
+        $this->assertEquals(
+            [
+                'type' => 'donor',
+                'details' => $lpa['donor'],
+            ],
+            $result
+        );
+
+        $result = $service->lookupActiveActorInLpa($lpa, '123456789012');
+
+        $this->assertEquals(
+            [
+                'type' => 'donor',
+                'details' => $lpa['donor'],
+            ],
+            $result
+        );
     }
 
     /** @test */
@@ -475,20 +538,45 @@ class LpaServiceTest extends TestCase
                 'id' => 1,
             ],
             'original_attorneys' => [
-                ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                ['id' => 3, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                ['id' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]
+                ['id' => 1, 'uId' => '123456789012', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                ['id' => 3, 'uId' => '234567890123', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                ['id' => 7, 'uId' => '345678901234', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]
             ],
         ];
 
         $service = $this->getLpaService();
 
-        $result = $service->lookupActorInLpa($lpa, 3);
+        $result = $service->lookupActiveActorInLpa($lpa, '3');
 
-        $this->assertEquals([
-            'type' => 'primary-attorney',
-            'details' => ['id' => 3, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-        ], $result);
+        $this->assertEquals(
+            [
+                'type' => 'primary-attorney',
+                'details' => [
+                    'id' => 3,
+                    'uId' => '234567890123',
+                    'firstname' => 'A',
+                    'surname' => 'B',
+                    'systemStatus' => true
+                ],
+            ],
+            $result
+        );
+
+        $result = $service->lookupActiveActorInLpa($lpa, '234567890123');
+
+        $this->assertEquals(
+            [
+                'type' => 'primary-attorney',
+                'details' => [
+                    'id' => 3,
+                    'uId' => '234567890123',
+                    'firstname' => 'A',
+                    'surname' => 'B',
+                    'systemStatus' => true
+                ],
+            ],
+            $result
+        );
     }
 
     /** @test */
@@ -499,21 +587,30 @@ class LpaServiceTest extends TestCase
                 'id' => 1,
             ],
             'original_attorneys' => [
-                ['id' => 2, 'systemStatus' => true],
-                ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
-                ['id' => 7, 'surname' => 'B', 'systemStatus' => true]
+                ['id' => 2, 'uId' => '123456789012', 'systemStatus' => true],
+                ['id' => 3, 'uId' => '234567890123', 'firstname' => 'A', 'systemStatus' => true],
+                ['id' => 7, 'uId' => '345678901234', 'surname' => 'B', 'systemStatus' => true]
             ],
         ];
 
         $service = $this->getLpaService();
 
-        $result = $service->lookupActorInLpa($lpa, 2);
+        $result = $service->lookupActiveActorInLpa($lpa, '2');
         $this->assertNull($result);
 
-        $result = $service->lookupActorInLpa($lpa, 3);
+        $result = $service->lookupActiveActorInLpa($lpa, '123456789012');
+        $this->assertNull($result);
+
+        $result = $service->lookupActiveActorInLpa($lpa, '3');
         $this->assertNotNull($result);
 
-        $result = $service->lookupActorInLpa($lpa, 7);
+        $result = $service->lookupActiveActorInLpa($lpa, '234567890123');
+        $this->assertNotNull($result);
+
+        $result = $service->lookupActiveActorInLpa($lpa, '7');
+        $this->assertNotNull($result);
+
+        $result = $service->lookupActiveActorInLpa($lpa, '345678901234');
         $this->assertNotNull($result);
     }
 
@@ -525,16 +622,18 @@ class LpaServiceTest extends TestCase
                 'id' => 1,
             ],
             'original_attorneys' => [
-                ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                ['id' => 3, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
-                ['id' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]
+                ['id' => 1, 'uId' => '123456789012', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                ['id' => 3, 'uId' => '234567890123', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
+                ['id' => 7, 'uId' => '345678901234', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]
             ],
         ];
 
         $service = $this->getLpaService();
 
-        $result = $service->lookupActorInLpa($lpa, 3);
+        $result = $service->lookupActiveActorInLpa($lpa, '3');
+        $this->assertNull($result);
 
+        $result = $service->lookupActiveActorInLpa($lpa, '234567890123');
         $this->assertNull($result);
     }
 }

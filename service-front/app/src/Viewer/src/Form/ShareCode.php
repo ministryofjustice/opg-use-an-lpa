@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Viewer\Form;
 
 use Common\Form\AbstractForm;
+use Laminas\Filter\File\UpperCase;
+use Laminas\Filter\StringToUpper;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -13,7 +15,14 @@ use Laminas\Validator\Regex;
 
 class ShareCode extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'share_code';
+    public const FORM_NAME = 'share_code';
+
+
+    protected array $messageTemplates = [
+        self::NOT_SAME => "Do you want to continue?" .
+            " You have not used this service for 30 minutes." .
+            " Click continue to use any details you entered"
+    ];
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
@@ -37,6 +46,7 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                 'required' => true,
                 'filters'  => [
                     ['name' => StringTrim::class],
+                    ['name' => StringToUpper::class]
                 ],
                 'validators' => [
                     [
@@ -47,7 +57,7 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                         ],
                     ],
                     new Regex([
-                        'pattern' => '/^[[:alnum:]]{4,4}(?\'dash\' |-)?[[:alnum:]]{4,4}(\g{dash})?[[:alnum:]]{4,4}$/',
+                        'pattern' => "/^(V(?'dash'-| ){1,6})?[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}$/i",
                         'message' => [
                             Regex::NOT_MATCH => 'LPA access codes are 13 numbers and letters long and start with a V'
                         ]

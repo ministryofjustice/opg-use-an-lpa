@@ -1,0 +1,57 @@
+[
+  {
+    "code": "G6QRQ8KLZGUB",
+    "active": true,
+    "actor": "700000135918",
+    "last_updated_date": "2020-06-03",
+    "lpa": "700000048798",
+    "dob": "1968-08-23",
+    "expiry_date": 1616716799,
+    "generated_date": "2020-06-03",
+    "status_details": "Imported"
+  },
+  {
+    "code": "DXEGF78VWUCD",
+    "active": true,
+    "actor": "700000125141",
+    "last_updated_date": "2020-06-03",
+    "lpa": "700000002233",
+    "dob": "1975-07-15",
+    "expiry_date": 1618703999,
+    "generated_date": "2020-06-03",
+    "status_details": "Imported"
+  },
+  {
+    "code": "AQK446VTAHWB",
+    "active": true,
+    "actor": "700000135827",
+    "last_updated_date": "2020-06-03",
+    "lpa": "700000048798",
+    "dob": "1967-09-18",
+    "expiry_date": 1616716799,
+    "generated_date": "2020-06-03",
+    "status_details": "Imported"
+  },
+  {
+    "code": "684MXXHWDVPP",
+    "active": true,
+    "actor": "700000001987",
+    "last_updated_date": "2020-06-03",
+    "lpa": "700000000617",
+    "dob": "1975-10-05",
+    "expiry_date": 1620172799,
+    "generated_date": "2020-06-03",
+    "status_details": "Imported"
+  },
+  {
+    "code": "J2FTV27LEE22",
+    "active": true,
+    "actor": "700000125208",
+    "last_updated_date": "2020-06-03",
+    "lpa": "700000002175",
+    "dob": "1966-05-07",
+    "expiry_date": 1618703999,
+    "generated_date": "2020-06-03",
+    "status_details": "Imported"
+  }
+]

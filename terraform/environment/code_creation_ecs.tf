@@ -94,7 +94,7 @@ locals {
         "options": {
             "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
             "awslogs-region": "eu-west-1",
-            "awslogs-stream-prefix": "code-creation-app.use-an-lpa"
+            "awslogs-stream-prefix": "${local.environment}.code-creation-app.use-an-lpa"
         }
     },
     "environment": [
@@ -124,7 +124,7 @@ locals {
     },
     {
       "name": "SIRIUS_API_ENDPOINT",
-      "value": "${local.account.api_gateway_endpoint}"
+      "value": "${local.account.lpas_collection_endpoint}"
     },
     {
       "name": "LOGGING_LEVEL",

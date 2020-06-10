@@ -33,7 +33,10 @@
         {% endif %}
 
         <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
-               id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}" />
+                id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}"
+                {% if inputmode is defined %}inputmode="{{ inputmode }}"{% endif %}
+                {% if spellcheck is defined %}spellcheck="{{ spellcheck }}"{% endif %}
+                {% if autocomplete is defined %}autocomplete="{{ autocomplete }}"{% endif %} />
 
         {% if element.getName() == 'org_name' %}
             <button data-prevent-double-click="true" type="submit" class="govuk-button">
@@ -44,6 +47,14 @@
     </div>
 {%- endblock form_element_simple -%}
 
+{%- block form_input_email -%}
+    {%- set type = type|default('email') -%}
+    {%- set inputmode = 'email' -%}
+    {%- set autocomplete = 'email' -%}
+    {%- set spellcheck = 'false' -%}
+    {%- set value = element.getValue() -%}
+    {{ block('form_element_simple') }}
+{%- endblock form_input_email -%}
 
 {%- block form_input_text -%}
     {%- set type = type|default('text') -%}
@@ -82,12 +93,15 @@
     <div class="govuk-form-group {% if fieldset.getMessages() is not empty %}govuk-form-group--error{% endif %}">
 
         <fieldset name="{{ fieldset.getName() }}" class="govuk-fieldset" aria-describedby="{{ fieldset.getName() }}-hint" role="group">
-
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                <h1 class="govuk-fieldset__heading">
+                <label class="govuk-label" for="{{ fieldset.getName() }}">
                     {{ label | raw }}
-                </h1>
+                </label>
             </legend>
+
+            {% with { element: fieldset } %}
+                {{- block('input_hint') -}}
+            {% endwith %}
 
             {{ govuk_error(fieldset) }}
 
@@ -155,7 +169,7 @@
 {%- block input_hint -%}
     {% if hint is defined %}
         <span id="{{ element.getName() }}-hint" class="govuk-hint">
-            {{ hint }}
+            {{ hint | raw }}
         </span>
     {% endif %}
 {%- endblock input_hint -%}

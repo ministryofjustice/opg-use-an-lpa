@@ -12,19 +12,28 @@ use Laminas\Form\Form;
 
 abstract class AbstractForm extends Form
 {
+
+
+    public const NOT_SAME = CSRFGuardValidator::NOT_SAME;
     /**
      * Error messages
      * @var array
      */
-    protected $messageTemplates = [];
+    protected array $messageTemplates = [
+        self::NOT_SAME=> "As you have not used this service for over 20 minutes," .
+            "the page has timed out. We've now refreshed the page - please try to sign in again."
+    ];
 
     /**
      * @var array This, and its associated functions below allow form level error messages not attached to
      *            any individual form elements. Something that Zend form does not provide OOTB.
      */
-    protected $errorMessages = [];
+    protected array $errorMessages = [];
 
-    public function __construct(string $formName, CsrfGuardInterface $csrfGuard)
+    public function __construct(
+        string $formName, CsrfGuardInterface
+        $csrfGuard
+    )
     {
         parent::__construct($formName);
 
@@ -35,7 +44,7 @@ abstract class AbstractForm extends Form
                     'csrf_options' => [
                         'guard' => $csrfGuard,
                         'messageTemplates' => [
-                            CsrfGuardValidator::NOT_SAME => "As you have not used this service for over 20 minutes, the page has timed out. We've now refreshed the page - please try to sign in again."
+                            CsrfGuardValidator::NOT_SAME => $this->messageTemplates[self::NOT_SAME]
                         ],
                     ],
                 ]

@@ -61,5 +61,45 @@ return [
             // KMS alias to use for data key generation.
             'alias' => 'alias/viewer-sessions-cmk-alias',
         ],
+        'cookie_secure' => true
     ],
+
+    'ratelimits' => [
+        'viewer_code_failure' => [
+            'type' => 'keyed',
+            'storage' => [
+                'adapter' => [
+                    'name'    => 'memory',
+                    'options' => [
+                        'memory_limit' => '96M',
+                        'ttl' => 60,
+                        'server' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
+                        'lib_options' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey()
+                    ],
+                ],
+            ],
+            'options' => [
+                'interval' => 60,
+                'requests_per_interval' => 4
+            ]
+        ],
+        'actor_code_failure' => [
+            'type' => 'keyed',
+            'storage' => [
+                'adapter' => [
+                    'name'    => 'memory',
+                    'options' => [
+                        'memory_limit' => '96M',
+                        'ttl' => 60,
+                        'server' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
+                        'lib_options' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey()
+                    ],
+                ],
+            ],
+            'options' => [
+                'interval' => 60,
+                'requests_per_interval' => 4
+            ]
+        ]
+    ]
 ];

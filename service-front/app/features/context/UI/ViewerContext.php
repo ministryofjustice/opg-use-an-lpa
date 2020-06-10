@@ -19,6 +19,7 @@ use Psr\Http\Message\RequestInterface;
  * @property $lpaSurname
  * @property $lpaShareCode
  * @property $lpaData
+ * @property $lpaStoredCode
  */
 class ViewerContext implements Context
 {
@@ -28,9 +29,11 @@ class ViewerContext implements Context
     /**
      * @Given /^I have been given access to an LPA via share code$/
      */
-    public function iHaveBeenGivenAccessToAnLPAViaShareCode() {
+    public function iHaveBeenGivenAccessToAnLPAViaShareCode()
+    {
         $this->lpaSurname = 'Testerson';
         $this->lpaShareCode = '1111-1111-1111';
+        $this->lpaStoredCode = '111111111111';
         $this->lpaData = [
             'id' => 1,
             'uId' => '7000-0000-0000',
@@ -42,7 +45,7 @@ class ViewerContext implements Context
                 'dob' => '1948-11-01',
                 'salutation' => 'Mr',
                 'firstname' => 'Test',
-                'middlenames' =>'Testable',
+                'middlenames' => 'Testable',
                 'surname' => 'Testerson',
                 'addresses' => [
                     0 => [
@@ -64,25 +67,49 @@ class ViewerContext implements Context
     /**
      * @Given /^I have been given access to a cancelled LPA via share code$/
      */
-    public function iHaveBeenGivenAccessToACancelledLPAViaShareCode() {
+    public function iHaveBeenGivenAccessToACancelledLPAViaShareCode()
+    {
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
 
         $this->lpaData['status'] = 'Cancelled';
     }
 
     /**
+     * @Given /^I have been given access to an expired LPA via share code$/
+     */
+    public function iHaveBeenGivenAccessToAnExpiredLPAViaShareCode()
+    {
+        $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
+
+        $this->lpaData['status'] = 'Expired';
+    }
+
+    /**
      * @Given /^I access the viewer service$/
      */
-    public function iAccessTheViewerService() {
+    public function iAccessTheViewerService()
+    {
         $this->ui->iAmOnHomepage();
         $this->ui->assertElementContainsText('a[role=button]', 'Start');
         $this->ui->clickLink('Start');
     }
 
     /**
+     * @When /^I give a valid LPA share code of (.*) which matches (.*)$/
+     */
+    public function iGiveAValidLPAShareCodeOf(string $code, string $storedCode)
+    {
+        $this->lpaShareCode =  $code;
+        $this->lpaStoredCode = $storedCode;
+        $this->iGiveAValidLPAShareCode();
+    }
+    /**
      * @When /^I give a valid LPA share code$/
      */
-    public function iGiveAValidLPAShareCode() {
+    public function iGiveAValidLPAShareCode()
+    {
+        $this->lpaData['status'] = 'Registered';
+
         $this->ui->assertPageAddress('/enter-code');
 
         // API call for lpa summary check
@@ -96,7 +123,7 @@ class ViewerContext implements Context
 
                 assertInternalType('array', $params);
                 assertEquals($params['name'], $this->lpaSurname);
-                assertEquals($params['code'], str_replace('-', '', $this->lpaShareCode));
+                assertEquals($params['code'], $this->lpaStoredCode);
             });
 
         $this->ui->fillField('donor_surname', $this->lpaSurname);
@@ -107,7 +134,10 @@ class ViewerContext implements Context
     /**
      * @When /^I confirm the LPA is correct$/
      */
-    public function iConfirmTheLPAIsCorrect() {
+    public function iConfirmTheLPAIsCorrect()
+    {
+        $this->lpaData['status'] = 'Registered';
+
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText(
             $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
@@ -124,7 +154,7 @@ class ViewerContext implements Context
 
                 assertInternalType('array', $params);
                 assertEquals($params['name'], $this->lpaSurname);
-                assertEquals($params['code'], str_replace('-', '', $this->lpaShareCode));
+                assertEquals($params['code'], $this->lpaStoredCode);
             });
 
         $this->ui->clickLink('Continue');
@@ -140,19 +170,25 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText(
             $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
         );
-        $this->ui->assertPageContainsText('This LPA is valid');
+        $this->ui->assertPageContainsText('LPA is valid');
     }
 
     /**
-     * @Then /^I can see the full details of a cancelled LPA$/
+     * @Then /^I see a message that LPA has been cancelled$/
      */
-    public function iCanSeeTheFullDetailsOfACancelledLPA()
+    public function iSeeAMessageThatLPAHasBeenCancelled()
     {
-        $this->ui->assertPageAddress('/view-lpa');
-        $this->ui->assertPageContainsText(
-            $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
-        );
-        $this->ui->assertPageContainsText('This LPA has been cancelled');
+        $this->ui->assertPageAddress('/check-code');
+        $this->ui->assertPageContainsText('The access code you entered has expired');
+    }
+
+    /**
+     * @Then /^I see a message that LPA has been expired$/
+     */
+    public function iSeeAMessageThatLPAHasBeenExpired()
+    {
+        $this->ui->assertPageAddress('/check-code');
+        $this->ui->assertPageContainsText('The access code you entered has expired');
     }
 
     /**
@@ -183,7 +219,7 @@ class ViewerContext implements Context
                 assertStringStartsWith('<!DOCTYPE html>', $request->getBody()->getContents());
             });
 
-        $this->ui->clickLink('Download a copy of this page');
+        $this->ui->clickLink('Download this LPA summary');
     }
 
     /**
@@ -243,11 +279,17 @@ class ViewerContext implements Context
     /**
      * @When /^I give a share code that has got expired$/
      */
-    public function iGiveAShareCodeThatHasGotExpired() {
+    public function iGiveAShareCodeThatHasGotExpired()
+    {
+        $this->lpaData['status'] = 'Expired';
         $this->ui->assertPageAddress('/enter-code');
 
         $this->apiFixtures->post('/v1/viewer-codes/summary')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_GONE, [], json_encode([])));
+            ->respondWith(new Response(StatusCodeInterface::STATUS_GONE, [], json_encode([
+                'title' => 'Gone',
+                'details' => 'Share code expired',
+                'data' => [],
+            ])));
 
         $this->ui->fillField('donor_surname', $this->lpaSurname);
         $this->ui->fillField('lpa_code', $this->lpaShareCode);
@@ -257,14 +299,16 @@ class ViewerContext implements Context
     /**
      * @When /^I give a share code that's been cancelled$/
      */
-    public function iGiveAShareCodeThatsBeenCancelled() {
+    public function iGiveAShareCodeThatsBeenCancelled()
+    {
+        $this->lpaData['status'] = 'Cancelled';
         $this->ui->assertPageAddress('/enter-code');
 
         $this->apiFixtures->post('/v1/viewer-codes/summary')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'lpa'     => $this->lpaData,
-                'expires' => (new \DateTime('+30 days'))->format('c'),
-                'cancelled' => (new \DateTime('-2 days'))->format('c')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_GONE, [], json_encode([
+                'title' => 'Gone',
+                'details' => 'Share code cancelled',
+                'data' => [],
             ])));
 
         $this->ui->fillField('donor_surname', $this->lpaSurname);
@@ -275,7 +319,7 @@ class ViewerContext implements Context
     /**
      * @When /^I give an invalid (.*) and (.*)$/
      */
-    public function iGiveAnInvalidShareCodeAndSurname($shareCode,$surname)
+    public function iGiveAnInvalidShareCodeAndSurname($shareCode, $surname)
     {
         $this->ui->assertPageAddress('/enter-code');
 
@@ -421,5 +465,41 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('I want to check another LPA');
         $this->ui->clickLink('I want to check another LPA');
         $this->iGiveAValidLPAShareCode();
+    }
+
+    /**
+     * @Given /^I waited too long to enter the share code$/
+     */
+    public function iWaitedTooLongToEnterTheShareCode()
+    {
+        $this->ui->getSession()->setCookie('session', null);
+    }
+
+    /**
+     * @Then /^I have an error message informing me to try again\.$/
+     */
+    public function iHaveAnErrorMessageInformingMeToTryAgain()
+    {
+        $this->iAmTakenBackToTheEnterCodePage();
+        $this->ui->assertPageContainsText("Do you want to continue?" .
+        " You have not used this service for 30 minutes." .
+        " Click continue to use any details you entered");
+    }
+
+    /**
+     * @Given /^I am on the stats page$/
+     */
+    public function iAmOnTheStatsPage()
+    {
+        $this->ui->visit('/stats');
+    }
+
+    /**
+     * @Then /^I can see user LPA codes table$/
+     */
+    public function iCanSeeUserLPACodesTable()
+    {
+        $this->ui->assertPageAddress('/stats');
+        $this->ui->assertPageContainsText('Number of LPA codes viewed');
     }
 }

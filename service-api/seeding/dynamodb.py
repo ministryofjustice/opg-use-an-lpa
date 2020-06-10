@@ -1,6 +1,8 @@
 import os
 import boto3
 import json
+from passlib.hash import sha256_crypt
+import datetime
 
 if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
     # For local development
@@ -41,21 +43,21 @@ viewerCodesTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_VIEWER_CODES'])
 viewerCodes = [
     {
         'ViewerCode': "P9H8A6MLD3AM",
-        'SiriusUid': "700000000047",
+        'SiriusUid': "700000000138",
         'Expires': "2021-09-12 12:34:56",
         'Added': "2019-01-01 12:34:56",
         'Organisation': "Test Organisation",
     },
     {
         'ViewerCode': "JLUPAHNXNKFP",
-        'SiriusUid': "700000000047",
+        'SiriusUid': "700000000138",
         'Expires': "2021-01-01 12:34:56",
         'Added': "2019-01-01 12:34:56",
         'Organisation': "Test Organisation",
     },
     {
         'ViewerCode': "N4KBEBEZMNJF",
-        'SiriusUid': "700000000047",
+        'SiriusUid': "700000000138",
         'Expires': "2020-01-01 12:34:56",
         'Added': "2019-01-01 12:34:56",
         'Organisation': "Test Organisation",
@@ -103,6 +105,13 @@ actorLpaCodes = [
         'Active': True,
         'Expires': "2018-09-25T00:00:00Z",
     },
+    {
+        'ActorCode': "MDCKNUA9UMLC",
+        'ActorLpaId': 164,
+        'SiriusUid': "700000000344",
+        'Active': True,
+        'Expires': "2018-09-25T00:00:00Z",
+    },
 ]
 
 for i in actorLpaCodes:
@@ -112,4 +121,27 @@ for i in actorLpaCodes:
     response = actorLpaCodesTable.get_item(
         Key={'ActorCode': i['ActorCode']}
     )
+    print(response)
     #print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
+
+# test user details
+
+actorUsersTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_ACTOR_USERS'])
+
+actorUsers = [
+    {
+        'Id': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+        'Email': 'opg-use-an-lpa+test-user@digital.justice.gov.uk',
+        'LastLogin': datetime.datetime.now().isoformat(),
+        'Password': sha256_crypt.hash('umlTest1')
+    }
+]
+
+for i in actorUsers:
+    actorUsersTable.put_item(
+        Item=i,
+    )
+    response = actorUsersTable.get_item(
+        Key={'Id': i['Id']}
+    )
+    print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))

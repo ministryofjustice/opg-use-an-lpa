@@ -8,9 +8,9 @@
 
         {{ include('@partials/account-bar.html.twig') }}
 
-        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back</a>
+        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back to your LPAs</a>
 
-        <main class="govuk-main-wrapper">
+        <main class="govuk-main-wrapper" id="main-content" role="main">
 
             {{ govuk_error_summary(form) }}
 
@@ -18,7 +18,7 @@
 
                 <div class="govuk-grid-column-two-thirds">
                     <span class="govuk-caption-l govuk-!-margin-top-0">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' : 'Health and welfare' }}</span>
-                    <h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ actor_name(lpa.donor, false) }}</h1>
+                    <h1 class="govuk-heading-l govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</h1>
                 </div>
 
             </div>
@@ -39,12 +39,14 @@
                             </h1>
                         </legend>
                 </div>
-                <div class="govuk-grid-column-full">
+                <div class="govuk-grid-column-two-thirds">
                     {% if lpa.caseSubtype|lower == 'hw' %}
                         <p class="govuk-body">The organisation could be a hospital, care home, or other health care provider.</p>
                     {% elseif lpa.caseSubtype|lower == 'pfa' %}
                         <p class="govuk-body">The organisation could be a bank, energy provider, or another business.</p>
                     {% endif %}
+
+                    <p class="govuk-body">Email <a href="mailto:lpa.research@digital.justice.gov.uk">lpa.research@digital.justice.gov.uk</a> to find out if the organisation is taking part in the trial and how to give them the access code. If you need to show the LPA to more than one organisation, list the organisations in one email.</p>
 
                     {{ govuk_form_element(form.get('org_name'), { 'label': 'Organisation name', 'hint': 'This is for your reference only', 'attr' : {'class': 'govuk-!-width-one-half'} }) }}
 

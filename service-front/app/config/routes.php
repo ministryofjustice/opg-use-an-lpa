@@ -43,6 +43,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
     $app->get('/download-lpa', Viewer\Handler\DownloadLpaHandler::class, 'download-lpa');
     $app->get('/terms-of-use', Viewer\Handler\ViewerTermsOfUseHandler::class, 'viewer-terms-of-use');
+    $app->get('/stats', Viewer\Handler\StatsPageHandler::class, 'viewer-stats');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void
@@ -50,6 +51,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/', Actor\Handler\HomePageHandler::class, 'home');
     $app->get('/start', Actor\Handler\StartPageHandler::class, 'start');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
+    $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
 
     // User creation
     $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');
@@ -64,16 +66,30 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->route('/forgot-password', Actor\Handler\PasswordResetRequestPageHandler::class, ['GET', 'POST'], 'password-reset');
     $app->route('/forgot-password/{token}', Actor\Handler\PasswordResetPageHandler::class, ['GET', 'POST'], 'password-reset-token');
 
+    // User deletion
+    $app->get('/confirm-delete-account', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\ConfirmDeleteAccountHandler::class], 'confirm-delete-account');
+    $app->get('/delete-account', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\DeleteAccountHandler::class], 'delete-account');
+
     // User details
     $app->get('/your-details', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\YourDetailsHandler::class,
-    ], 'your-details');
-
+    ],'your-details');
+    $app->get('/lpa/terms-of-use', [
+        Actor\Handler\ActorTermsOfUseHandler::class
+    ], 'lpa.terms-of-use');
     $app->route('/change-password', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+        Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangePasswordHandler::class
     ], ['GET','POST'], 'change-password');
+    $app->get('/lpa/change-details', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\ChangeDetailsHandler::class
+    ], 'lpa.change-details');
 
     // LPA management
     $app->get('/lpa/dashboard', [
@@ -108,13 +124,15 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CancelCodeHandler::class
     ],'lpa.cancel-code');
-    $app->get('/lpa/change-details', [
+    $app->get('/lpa/removed', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
-        Actor\Handler\ChangeDetailsHandler::class
-    ], 'lpa.change-details');
-    $app->get('/lpa/terms-of-use', [
-        Actor\Handler\ActorTermsOfUseHandler::class
-    ], 'lpa.terms-of-use');
+        Actor\Handler\LpaRemovedHandler::class
+    ], 'lpa.removed');
+    $app->get('/lpa/instructions-preferences', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\InstructionsPreferencesHandler::class
+    ], 'lpa.instructions-preferences');
+
 };
 
 switch (getenv('CONTEXT')){

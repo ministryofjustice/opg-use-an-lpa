@@ -6,7 +6,10 @@ namespace BehatTest\Context\Integration;
 
 use App\DataAccess\DynamoDb\UserLpaActorMap;
 use App\DataAccess\DynamoDb\ViewerCodeActivity;
+use App\Exception\ForbiddenException;
 use App\Exception\GoneException;
+use App\Exception\NotFoundException;
+use App\Exception\UnauthorizedException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\LpaService;
@@ -15,13 +18,13 @@ use Aws\DynamoDb\Marshaler;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use BehatTest\Context\SetupEnv;
-use Common\Service\Lpa\ViewerCodeService;
-use DateInterval;
 use DateTime;
+use DateTimeZone;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
+use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Class AccountContext
@@ -88,10 +91,28 @@ class AccountContext extends BaseIntegrationContext
     {
         $this->userAccountId = '123456789';
         $this->userAccountEmail = 'test@example.com';
+        $this->userAccountPassword = 'pa33w0rd';
+    }
+
+    /**
+     * @Given /^I access the login form$/
+     */
+    public function iAccessTheLoginForm()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @When /^I enter correct credentials$/
+     */
+    public function iEnterCorrectCredentials()
+    {
+        // Not needed in this context
     }
 
     /**
      * @Given I am currently signed in
+     * @Then /^I am signed in$/
      */
     public function iAmCurrentlySignedIn()
     {
@@ -125,6 +146,113 @@ class AccountContext extends BaseIntegrationContext
         $user = $us->authenticate($this->userAccountEmail, $this->password);
 
         assertEquals($this->userAccountId, $user['Id']);
+        assertEquals($this->userAccountEmail, $user['Email']);
+    }
+
+    /**
+     * @When /^I enter incorrect login password$/
+     */
+    public function iEnterIncorrectLoginPassword()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @Then /^I am told my credentials are incorrect$/
+     */
+    public function iAmToldMyCredentialsAreIncorrect()
+    {
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'       => $this->userAccountId,
+                    'Email'    => $this->userAccountEmail,
+                    'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                    'LastLogin'=> null
+                ])
+            ]
+        ]));
+
+        $us = $this->container->get(UserService::class);
+
+        try {
+            $us->authenticate($this->userAccountEmail, '1nc0rr3ctPa33w0rd');
+        } catch (ForbiddenException $fe){
+            assertEquals('Authentication failed for email ' . $this->userAccountEmail, $fe->getMessage());
+            assertEquals(403, $fe->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('Expected forbidden exception was not thrown');
+    }
+
+    /**
+     * @When /^I enter incorrect login email$/
+     */
+    public function iEnterIncorrectLoginEmail()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @Then /^my account cannot be found$/
+     */
+    public function myAccountCannotBeFound()
+    {
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([]));
+
+        $us = $this->container->get(UserService::class);
+
+        try {
+            $us->authenticate('incorrect@email.com', $this->userAccountPassword);
+        } catch (NotFoundException $ex) {
+            assertEquals('User not found for email', $ex->getMessage());
+            assertEquals(404, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('Expected not found exception was not thrown');
+    }
+
+    /**
+     * @Given /^I have not activated my account$/
+     */
+    public function iHaveNotActivatedMyAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I am told my account has not been activated$/
+     */
+    public function iAmToldMyAccountHasNotBeenActivated()
+    {
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'              => $this->userAccountId,
+                    'Email'           => $this->userAccountEmail,
+                    'Password'        => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                    'LastLogin'       => null,
+                    'ActivationToken' => 'a12b3c4d5e'
+                ])
+            ]
+        ]));
+
+        $us = $this->container->get(UserService::class);
+
+        try {
+            $us->authenticate($this->userAccountEmail, $this->userAccountPassword);
+        } catch (UnauthorizedException $ex) {
+            assertEquals('Authentication attempted against inactive account with Id ' . $this->userAccountId, $ex->getMessage());
+            assertEquals(401, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('Expected unauthorized exception was not thrown');
     }
 
     /**
@@ -171,7 +299,6 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iCreateAnAccount()
     {
-
         $this->userAccountEmail = 'hello@test.com';
         $this->userAccountPassword = 'n3wPassWord';
 
@@ -531,14 +658,24 @@ class AccountContext extends BaseIntegrationContext
         // ActorCodes::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                    'SiriusUid' => $this->lpaUid,
-                    'Active'    => true,
-                    'Expires'   => '2021-09-25T00:00:00Z',
-                    'ActorCode' => $this->passcode,
-                    'ActorLpaId'=> $this->actorLpaId,
+                    'SiriusUid'  => $this->lpaUid,
+                    'Active'     => true,
+                    'Expires'    => '2021-09-25T00:00:00Z',
+                    'ActorCode'  => $this->passcode,
+                    'ActorLpaId' => $this->actorLpaId,
                 ])
         ]));
 
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // this is now called twice
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
                 new Response(
@@ -553,7 +690,6 @@ class AccountContext extends BaseIntegrationContext
         $validatedLpa = $actorCodeService->validateDetails($this->passcode, $this->lpaUid, $this->userDob);
 
         assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
-
     }
 
     /**
@@ -583,6 +719,16 @@ class AccountContext extends BaseIntegrationContext
             ])
         ]));
 
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // this is now called twice
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
                 new Response(
@@ -782,7 +928,7 @@ class AccountContext extends BaseIntegrationContext
         $codeData = $viewerCodeService->addCode($this->userLpaActorToken, $this->userId, $this->organisation);
 
         $codeExpiry = (new DateTime($codeData['expires']))->format('Y-m-d');
-        $in30Days = ((new DateTime('now'))->add(new DateInterval('P30D'))->format('Y-m-d'));
+        $in30Days = (new DateTime('23:59:59 +30 days', new DateTimeZone('Europe/London')))->format('Y-m-d');
 
         assertArrayHasKey('code', $codeData);
         assertNotNull($codeData['code']);
@@ -1570,9 +1716,73 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^The user can request a password reset and get an email$/
+     * @Then /^I am told my current password is incorrect$/
      */
-    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    public function iAmToldMyCurrentPasswordIsIncorrect()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @Given /^I am on the your details page$/
+     */
+    public function iAmOnTheYourDetailsPage()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @When /^I request to delete my account$/
+     */
+    public function iRequestToDeleteMyAccount()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @Given /^I confirm that I want to delete my account$/
+     */
+    public function iConfirmThatIWantToDeleteMyAccount()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @Then /^My account is deleted$/
+     */
+    public function myAccountIsDeleted()
+    {
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Email'    => $this->userAccountEmail,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
+        // ActorUsers::delete
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'        => $this->userAccountId,
+                'Email'     => $this->userAccountEmail,
+                'Password'  => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                'LastLogin' => null
+            ])
+        ]));
+
+        $userService = $this->container->get(UserService::class);
+
+        $deletedUser = $userService->deleteUserAccount($this->userAccountId);
+
+        assertEquals($this->userAccountId, $deletedUser['Id']);
+        assertEquals($this->userAccountEmail, $deletedUser['Email']);
+    }
+
+    /**
+     * @Given /^I am logged out of the service and taken to the index page$/
+     */
+    public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage()
     {
         // Not needed in this context
     }

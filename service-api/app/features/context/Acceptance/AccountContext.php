@@ -8,9 +8,8 @@ use Aws\Result;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
-use Common\Exception\ApiException;
 use DateTime;
-use DateInterval;
+use DateTimeZone;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 
@@ -62,10 +61,28 @@ class AccountContext implements Context
     {
         $this->userAccountId = '123456789';
         $this->userAccountEmail = 'test@example.com';
+        $this->userAccountPassword = 'pa33w0rd';
+    }
+
+    /**
+     * @Given /^I access the login form$/
+     */
+    public function iAccessTheLoginForm()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @When /^I enter correct credentials$/
+     */
+    public function iEnterCorrectCredentials()
+    {
+        // Not needed in this context
     }
 
     /**
      * @Given I am currently signed in
+     * @Then /^I am signed in$/
      */
     public function iAmCurrentlySignedIn()
     {
@@ -102,6 +119,97 @@ class AccountContext implements Context
 
         $response = $this->getResponseAsJson();
         assertEquals($this->userAccountId, $response['Id']);
+    }
+
+    /**
+     * @When /^I enter incorrect login password$/
+     */
+    public function iEnterIncorrectLoginPassword()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @When /^I enter incorrect login email$/
+     */
+    public function iEnterIncorrectLoginEmail()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @Then /^my account cannot be found$/
+     */
+    public function myAccountCannotBeFound()
+    {
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiPatch('/v1/auth', [
+            'email'    => 'incorrect@email.com',
+            'password' => $this->userAccountPassword
+        ], []);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
+    }
+
+    /**
+     * @Then /^I am told my credentials are incorrect$/
+     */
+    public function iAmToldMyCredentialsAreIncorrect()
+    {
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'       => $this->userAccountId,
+                    'Email'    => $this->userAccountEmail,
+                    'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                    'LastLogin'=> null
+                ])
+            ]
+        ]));
+
+        $this->apiPatch('/v1/auth', [
+            'email'    => $this->userAccountEmail,
+            'password' => '1nc0rr3ctPa33w0rd'
+        ], []);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_FORBIDDEN);
+    }
+
+    /**
+     * @Given /^I have not activated my account$/
+     */
+    public function iHaveNotActivatedMyAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I am told my account has not been activated$/
+     */
+    public function iAmToldMyAccountHasNotBeenActivated()
+    {
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'              => $this->userAccountId,
+                    'Email'           => $this->userAccountEmail,
+                    'Password'        => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                    'LastLogin'       => null,
+                    'ActivationToken' => 'a12b3c4d5e'
+                ])
+            ]
+        ]));
+
+        $this->apiPatch('/v1/auth', [
+            'email'    => $this->userAccountEmail,
+            'password' => $this->userAccountPassword
+        ], []);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_UNAUTHORIZED);
     }
 
     /**
@@ -345,6 +453,10 @@ class AccountContext implements Context
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
+        // called twice
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
         $this->apiPost('/v1/actor-codes/summary', [
             'actor-code' => $this->oneTimeCode,
             'uid' => $this->lpaUid,
@@ -440,6 +552,10 @@ class AccountContext implements Context
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
+        // called twice
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
         // UserLpaActorMap::create
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
@@ -493,8 +609,8 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^The LPA is not found$/
-     */
+ * @Then /^The LPA is not found$/
+ */
     public function theLPAIsNotFound()
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -845,7 +961,7 @@ class AccountContext implements Context
         $response = $this->getResponseAsJson();
 
         $codeExpiry = (new DateTime($response['expires']))->format('Y-m-d');
-        $in30Days = ((new DateTime('now'))->add(new DateInterval('P30D'))->format('Y-m-d'));
+        $in30Days = (new DateTime('23:59:59 +30 days', new DateTimeZone('Europe/London')))->format('Y-m-d');
 
         assertArrayHasKey('code', $response);
         assertNotNull($response['code']);
@@ -1723,7 +1839,6 @@ class AccountContext implements Context
         $failedPassword = 'S0meS0rt0fPassw0rd';
         $newPassword = 'Successful-Raid-on-the-Cooki3s!';
 
-        // ActorUsers::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->userAccountId,
@@ -1731,7 +1846,6 @@ class AccountContext implements Context
             ])
         ]));
 
-        // ActorUsers::resetPassword
         $this->awsFixtures->append(new Result([]));
 
         $this->apiPatch('/v1/change-password', [
@@ -1744,10 +1858,180 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^The user can request a password reset and get an email$/
+     * @Then /^I am told my current password is incorrect$/
      */
-    public function theUserCanRequestAPasswordResetAndGetAnEmail()
+    public function iAmToldMyCurrentPasswordIsIncorrect()
     {
         // Not needed in this context
+    }
+
+    /**
+     * @Given /^I am on the your details page$/
+     */
+    public function iAmOnTheYourDetailsPage()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @When /^I request to delete my account$/
+     */
+    public function iRequestToDeleteMyAccount()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @Given /^I confirm that I want to delete my account$/
+     */
+    public function iConfirmThatIWantToDeleteMyAccount()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @Then /^My account is deleted$/
+     */
+    public function myAccountIsDeleted()
+    {
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Email'    => $this->userAccountEmail,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
+        // ActorUsers::delete
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiDelete('/v1/delete-account/' . $this->userAccountId);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+    }
+
+    /**
+     * @Given /^I am logged out of the service and taken to the index page$/
+     */
+    public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage()
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @When /^I request to add an LPA with a missing actor code$/
+     */
+    public function iRequestToAddAnLPAWithAMissingActorCode()
+    {
+        $this->apiPost('/v1/actor-codes/summary', [
+            'actor-code' => null,
+            'uid'        => $this->lpaUid,
+            'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @When /^I request to add an LPA with a missing user id$/
+     */
+    public function iRequestToAddAnLPAWithAMissingUserId()
+    {
+        $this->apiPost('/v1/actor-codes/summary', [
+            'actor-code' => $this->oneTimeCode,
+            'uid'        => null,
+            'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @When /^I request to add an LPA with a missing date of birth$/
+     */
+    public function iRequestToAddAnLPAWithAMissingDateOfBirth()
+    {
+        $this->apiPost('/v1/actor-codes/summary', [
+            'actor-code' => $this->oneTimeCode,
+            'uid'        => $this->lpaUid,
+            'dob'        => null
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @Given /^A malformed confirm request is sent which is missing date of birth$/
+     */
+    public function aMalformedConfirmRequestIsSentWhichIsMissingDateOfBirth()
+    {
+        $this->userLpaActorToken = '13579';
+
+        $this->apiPost('/v1/actor-codes/confirm', [
+            'actor-code' => $this->oneTimeCode,
+            'uid'        => $this->lpaUid,
+            'dob'        => null
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+    }
+
+    /**
+     * @Given /^A malformed confirm request is sent which is missing actor code$/
+     */
+    public function aMalformedConfirmRequestIsSentWhichIsMissingActorCode()
+    {
+        $this->userLpaActorToken = '13579';
+
+        $this->apiPost('/v1/actor-codes/confirm', [
+            'actor-code' => null,
+            'uid'        => $this->lpaUid,
+            'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+    }
+
+    /**
+     * @Given /^A malformed confirm request is sent which is missing user id$/
+     */
+    public function aMalformedConfirmRequestIsSentWhichIsMissingUserId()
+    {
+        $this->userLpaActorToken = '13579';
+
+        $this->apiPost('/v1/actor-codes/confirm', [
+            'actor-code' => $this->oneTimeCode,
+            'uid'        => null,
+            'dob'        => $this->userDob
+        ], [
+            'user-token' => $this->userLpaActorToken
+        ]);
+    }
+
+    /**
+     * @Then /^The LPA is not found and I am told it was a bad request$/
+     */
+    public function theLPAIsNotFoundAndIAmToldItWasABadRequest()
+    {
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+
+        $response = $this->getResponseAsJson();
+
+        assertEmpty($response['data']);
+    }
+
+    /**
+     * @When /^I confirmed to add an LPA to my account$/
+     */
+    public function iConfirmedToAddAnLPAToMyAccount()
+    {
+        $this->iRequestToAddAnLPAWithValidDetails();
     }
 }

@@ -71,12 +71,22 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
                 //  Attempt to retrieve an LPA using the form data
                 $postData = $form->getData();
 
-                //  Filter out dashes and whitespace
-                $postData = str_replace('-', '', $postData);
+                //TODO: refactor into custom form filter - Ticket raised: UML-831
+                //Remove C- from start of the code if present
+                $postData['passcode'] = preg_replace('/^(c(-| ))?/i', '', $postData['passcode']);
+                //filter out whitespace
                 $postData = str_replace(' ', '', $postData);
+                //  Filter out dashes
+                $postData = str_replace('-', '', $postData);
 
                 //  Convert the date of birth
-                $dobString = sprintf('%s-%s-%s', $postData['dob']['year'], $postData['dob']['month'], $postData['dob']['day']);
+                /** @var TYPE_NAME $dobString */
+                $dobString = sprintf(
+                    '%s-%s-%s',
+                    $postData['dob']['year'],
+                    $postData['dob']['month'],
+                    $postData['dob']['day']
+                );
 
                 //  Set the data in the session and pass to the check handler
                 $session->set('passcode', $postData['passcode']);

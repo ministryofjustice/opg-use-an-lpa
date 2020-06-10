@@ -12,6 +12,7 @@ use DI\Factory\RequestedEntry;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Mezzio\Template\TemplateRendererInterface;
 
@@ -31,11 +32,18 @@ class PdfServiceFactoryTest extends TestCase
 
         $templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);
         $containerProphecy->get(TemplateRendererInterface::class)->willReturn($templateRendererProphecy->reveal());
+
         $clientProphecy = $this->prophesize(ClientInterface::class);
         $containerProphecy->get(ClientInterface::class)->willReturn($clientProphecy->reveal());
+
         $stylesProphecy = $this->prophesize(StylesService::class);
         $containerProphecy->get(StylesService::class)->willReturn($stylesProphecy->reveal());
+
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $containerProphecy->get(LoggerInterface::class)->willReturn($loggerProphecy->reveal());
+
         $containerProphecy->get(RequestTracing::TRACE_PARAMETER_NAME)->willReturn('Root=1-1-11');
+
 
         $factory = new PdfServiceFactory();
         $pdfService = $factory(

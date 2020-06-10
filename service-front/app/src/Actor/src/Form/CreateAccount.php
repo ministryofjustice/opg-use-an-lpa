@@ -33,7 +33,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
 
         $this->add([
             'name' => 'email',
-            'type' => 'Text',
+            'type' => 'Email',
         ]);
 
         $this->add([

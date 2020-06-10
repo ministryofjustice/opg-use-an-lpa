@@ -6,8 +6,8 @@ namespace App;
 
 use Aws;
 use Http;
+use Laminas;
 use Psr;
-use Zend;
 
 /**
  * The configuration provider for the App module
@@ -42,15 +42,21 @@ class ConfigProvider
                 Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
 
                 // allows value setting on the container at runtime.
-                Service\Container\ModifiableContainerInterface::class => Service\Container\PhpDiModifiableContainer::class,
+                Service\Container\ModifiableContainerInterface::class
+                    => Service\Container\PhpDiModifiableContainer::class,
 
                 // Data Access
                 DataAccess\Repository\ActorCodesInterface::class => DataAccess\DynamoDb\ActorCodes::class,
                 DataAccess\Repository\ActorUsersInterface::class => DataAccess\DynamoDb\ActorUsers::class,
-                DataAccess\Repository\ViewerCodeActivityInterface::class => DataAccess\DynamoDb\ViewerCodeActivity::class,
+                DataAccess\Repository\ViewerCodeActivityInterface::class
+                    => DataAccess\DynamoDb\ViewerCodeActivity::class,
                 DataAccess\Repository\ViewerCodesInterface::class => DataAccess\DynamoDb\ViewerCodes::class,
                 DataAccess\Repository\UserLpaActorMapInterface::class => DataAccess\DynamoDb\UserLpaActorMap::class,
                 DataAccess\Repository\LpasInterface::class => DataAccess\ApiGateway\Lpas::class,
+
+                // Validation Strategy
+                Service\ActorCodes\CodeValidationStrategyInterface::class
+                    => Service\ActorCodes\DynamoCodeValidationStrategy::class
             ],
 
             'factories'  => [
@@ -66,6 +72,10 @@ class ConfigProvider
                 DataAccess\DynamoDb\ViewerCodes::class => DataAccess\DynamoDb\ViewerCodesFactory::class,
                 DataAccess\DynamoDb\UserLpaActorMap::class => DataAccess\DynamoDb\UserLpaActorMapFactory::class,
                 DataAccess\ApiGateway\Lpas::class => DataAccess\ApiGateway\LpasFactory::class,
+
+                // Code Validation
+                Service\ActorCodes\CodeValidationStrategyInterface::class
+                    => Service\ActorCodes\CodeValidationStrategyFactory::class,
 
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class

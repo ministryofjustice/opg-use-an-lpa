@@ -6,7 +6,9 @@ use ArrayObject;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Log\ErrorCodes;
 use Exception;
+use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -129,10 +131,40 @@ class LpaService
             ]
         );
 
-        $lpaData = $this->apiClient->httpPost('/v1/viewer-codes/' . $trackRoute, [
-            'code' => $shareCode,
-            'name' => $donorSurname,
-        ]);
+        try {
+            $lpaData = $this->apiClient->httpPost(
+                '/v1/viewer-codes/' . $trackRoute,
+                [
+                    'code' => $shareCode,
+                    'name' => $donorSurname,
+                ]
+            );
+        } catch (ApiException $apiEx) {
+            switch($apiEx->getCode()) {
+                case StatusCodeInterface::STATUS_GONE:
+                    $this->logger->notice(
+                        'Share code {code} expired when attempting to fetch {type}',
+                        [
+                            'code' => $shareCode,
+                            'type' => $trackRoute
+                        ]
+                    );
+                    break;
+
+                case StatusCodeInterface::STATUS_NOT_FOUND:
+                    $this->logger->notice(
+                        'Share code not found when attempting to fetch {type}',
+                        [
+                            // attach an code for brute force checking
+                            'error_code' => ErrorCodes::SHARE_CODE_NOT_FOUND,
+                            'type' => $trackRoute
+                        ]
+                    );
+            }
+
+            // still throw the exception up to the caller since handling of the issue will be done there
+            throw $apiEx;
+        }
 
         if (is_array($lpaData)) {
             $lpaData = $this->parseLpaData($lpaData);
@@ -140,7 +172,6 @@ class LpaService
             $this->logger->info(
                 'LPA with Id {uId} retrieved by share code',
                 [
-                    // The structures
                     'uId' => ($lpaData->lpa)->getUId()
                 ]
             );
@@ -223,6 +254,25 @@ class LpaService
         }
 
         return null;
+    }
+
+    /**
+     * Sorts a list of LPA's in alphabetical order by the donor's surname
+     *
+     * @param ArrayObject $lpas
+     * @return ArrayObject
+     */
+    public function sortLpasByDonorSurname(ArrayObject $lpas): ArrayObject
+    {
+        $lpas = $lpas->getArrayCopy();
+
+        uasort($lpas, function ($a, $b) {
+            $surnameA = $a->lpa->getDonor()->getSurname();
+            $surnameB = $b->lpa->getDonor()->getSurname();
+            return strcmp($surnameA, $surnameB);
+        });
+
+        return new ArrayObject($lpas, ArrayObject::ARRAY_AS_PROPS);
     }
 
     /**

@@ -17,6 +17,11 @@ use Mezzio\Template\TemplateRendererInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Common\Service\Lpa\ViewerCodeService;
 
+/**
+ * Class LpaDashboardHandler
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class LpaDashboardHandler extends AbstractHandler implements UserAware
 {
     use User;
@@ -75,7 +80,10 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
             );
 
             $lpas[$lpaKey]['activeCodeCount'] = $shareCodes['activeCodeCount'];
+            $lpas[$lpaKey]['actorActive'] = $lpaData['actor']['type'] === 'donor' || $lpaData['actor']['details']->getSystemStatus();
         }
+
+        $lpas = $this->lpaService->sortLpasByDonorSurname($lpas);
 
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
             'user' => $user,

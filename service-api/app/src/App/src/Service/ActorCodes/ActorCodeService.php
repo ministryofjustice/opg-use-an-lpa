@@ -4,48 +4,45 @@ declare(strict_types=1);
 
 namespace App\Service\ActorCodes;
 
-use App\DataAccess\Repository;
+use App\DataAccess\{Repository\ActorCodesInterface,
+    Repository\KeyCollisionException,
+    Repository\UserLpaActorMapInterface};
+use App\Exception\{ActorCodeMarkAsUsedException, ActorCodeValidationException};
 use App\Service\Lpa\LpaService;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
 class ActorCodeService
 {
-    /**
-     * @var Repository\ActorCodesInterface
-     */
-    private $actorCodesRepository;
+    private CodeValidationStrategyInterface $codeValidator;
 
-    /**
-     * @var Repository\UserLpaActorMapInterface
-     */
-    private $userLpaActorMapRepository;
+    private ActorCodesInterface $actorCodesRepository;
 
-    /**
-     * @var LpaService
-     */
-    private $lpaService;
+    private UserLpaActorMapInterface $userLpaActorMapRepository;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LpaService $lpaService;
+
+    private LoggerInterface $logger;
 
     /**
      * ActorCodeService constructor.
-     * @param Repository\ActorCodesInterface $viewerCodesRepository
-     * @param Repository\UserLpaActorMapInterface $userLpaActorMapRepository
+     *
+     * @param CodeValidationStrategyInterface $codeValidator
+     * @param ActorCodesInterface $actorCodesRepository
+     * @param UserLpaActorMapInterface $userLpaActorMapRepository
      * @param LpaService $lpaService
      * @param LoggerInterface $logger
      */
     public function __construct(
-        Repository\ActorCodesInterface $viewerCodesRepository,
-        Repository\UserLpaActorMapInterface $userLpaActorMapRepository,
+        CodeValidationStrategyInterface $codeValidator,
+        ActorCodesInterface $actorCodesRepository,
+        UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaService $lpaService,
         LoggerInterface $logger
     ) {
+        $this->codeValidator = $codeValidator;
         $this->lpaService = $lpaService;
-        $this->actorCodesRepository = $viewerCodesRepository;
+        $this->actorCodesRepository = $actorCodesRepository;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
         $this->logger = $logger;
     }
@@ -59,74 +56,23 @@ class ActorCodeService
      */
     public function validateDetails(string $code, string $uid, string $dob): ?array
     {
-        $details = $this->actorCodesRepository->get($code);
+        try {
+            $actorUid = $this->codeValidator->validateCode($code, $uid, $dob);
 
-        if (is_null($details)) {
-            $this->logger->info('Validating code could not find details for code {code}', ['code' => $code]);
+            $lpa = $this->lpaService->getByUid($uid);
+
+            $actor = $this->lpaService->lookupActiveActorInLpa($lpa->getData(), $actorUid);
+
+            $lpaData = $lpa->getData();
+            unset($lpaData['original_attorneys']);
+
+            return [
+                'actor' => $actor,
+                'lpa' => $lpaData
+            ];
+        } catch (ActorCodeValidationException $acve) {
             return null;
         }
-
-        if ($details['Active'] !== true) {
-            $this->logger->info('Validating code {code} is inactive', ['code' => $code]);
-            return null;
-        }
-
-        $lpa = $this->lpaService->getByUid($details['SiriusUid']);
-
-        if (is_null($lpa)) {
-            $this->logger->error('Validating code could not find LPA for SiriusUid {SiriusUid}', ['SiriusUid' => $details['SiriusUid']]);
-            return null;
-        }
-
-        $actor = $this->lpaService->lookupActorInLpa($lpa->getData(), $details['ActorLpaId']);
-
-        if (is_null($actor)) {
-            $this->logger->error('Validating code could not find actor {ActorLpaId} in LPA for SiriusUid {SiriusUid}',
-                [
-                   'ActorLpaId' => $details['ActorLpaId'],
-                   'SiriusUid' => $details['SiriusUid'],
-                ]
-            );
-            return null;
-        }
-
-        if ($code !== $details['ActorCode'] ) {
-            $this->logger->info('Validating code {code} did not match {expected}',
-                [
-                    'code' => $code,
-                    'expected' => $details['ActorCode'],
-                ]
-            );
-            return null;
-        }
-
-        if ($uid !== $lpa->getData()['uId']) {
-            $this->logger->info('Validating code uid {uid} did not match {expected}',
-                [
-                    'uid' => $uid,
-                    'expected' => $lpa->getData()['uId'],
-                ]
-            );
-            return null;
-        }
-
-        if ($dob !== $actor['details']['dob']) {
-            $this->logger->info('Validating code dob {dob} did not match {expected}',
-                [
-                    'dob' => $dob,
-                    'expected' => $actor['details']['dob'],
-                ]
-            );
-            return null;
-        }
-
-        $lpaData = $lpa->getData();
-        unset($lpaData['original_attorneys']);
-
-        return [
-            'actor' => $actor,
-            'lpa' => $lpaData
-        ];
     }
 
 
@@ -173,7 +119,7 @@ class ActorCodeService
                 );
 
                 $added = true;
-            } catch (Repository\KeyCollisionException $e) {
+            } catch (KeyCollisionException $e) {
                 // Allows the loop to repeat with a new ID.
             }
         } while (!$added);
@@ -181,8 +127,8 @@ class ActorCodeService
         //----
 
         try {
-            $this->actorCodesRepository->flagCodeAsUsed($code);
-        } catch (\Exception $e) {
+            $this->codeValidator->flagCodeAsUsed($code);
+        } catch (ActorCodeMarkAsUsedException $e) {
             $this->userLpaActorMapRepository->delete($id);
         }
 

@@ -7,7 +7,7 @@
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
 
-        <main class="govuk-main-wrapper">
+        <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
@@ -20,10 +20,10 @@
 
                     <p class="govuk-body-l">If you’re using this service for the first time you'll need to:</p>
 
-                    <h3 class="govuk-heading-m">1. Create an account</h3>
+                    <h2 class="govuk-heading-m">1. Create an account</h2>
                     <p class="govuk-body">To create an account you'll need to provide your email address and create a password.</p>
 
-                    <h3 class="govuk-heading-m">2. Add a lasting power of attorney</h3>
+                    <h2 class="govuk-heading-m">2. Add a lasting power of attorney</h2>
                     <p class="govuk-body">To add an LPA, you'll need:</p>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>your activation key for the LPA</li>
@@ -38,7 +38,7 @@
                         Create account
                     </a>
 
-                    <p class="govuk-body"><a href="{{ path('login') }}">I already have an account</a></p>
+                    <p class="govuk-body"><a class="govuk-link" href="{{ path('login') }}">I already have an account</a></p>
                 </div>
             </div>
 

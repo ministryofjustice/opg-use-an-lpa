@@ -32,7 +32,9 @@ return [
     'session' => [
 
         // Time in seconds after which a session will expire.
-        'expires' => 60 * getenv('SESSION_EXPIRES') ?: 1200,    // default to 20 minutes
+        'expires' => 60 * getenv('SESSION_EXPIRES') ?: 1200,             // default to 20 minutes
+
+        'cookie_ttl' => 60 * getenv('SESSION_COOKIE_LIFETIME') ?: 86400, // default to one day
 
         'key' => [
             // KMS alias to use for data key generation.
@@ -58,7 +60,7 @@ return [
         // Indicates that the cookie should only be transmitted over a
         // secure HTTPS connection from the client. When set to TRUE, the
         // cookie will only be set if a secure connection exists.
-        'cookie_secure' => false,
+        'cookie_secure' => getenv('COOKIE_SECURE') === 'false' ? false : true,
 
         // When TRUE the cookie will be made accessible only through the
         // HTTP protocol. This means that the cookie won't be accessible
@@ -96,6 +98,53 @@ return [
     'authentication' => [
         'username' => 'email',
         'redirect' => '/login',
+    ],
+
+    'ratelimits' => [
+        'viewer_code_failure' => [
+            'type' => 'keyed',
+            'storage' => [
+                'adapter' => [
+                    'name'    => 'redis',
+                    'options' => [
+                        'ttl' => 60,
+                        'server' => [
+                            'persistent_id' => 'brute-force-cache',
+                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis'
+                        ],
+                        'lib_options' => [
+                            \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP
+                        ]
+                    ],
+                ],
+            ],
+            'options' => [
+                'interval' => 60,
+                'requests_per_interval' => 4
+            ]
+        ],
+        'actor_code_failure' => [
+            'type' => 'keyed',
+            'storage' => [
+                'adapter' => [
+                    'name'    => 'redis',
+                    'options' => [
+                        'ttl' => 60,
+                        'server' => [
+                            'persistent_id' => 'brute-force-cache',
+                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis'
+                        ],
+                        'lib_options' => [
+                            \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP
+                        ]
+                    ],
+                ],
+            ],
+            'options' => [
+                'interval' => 60,
+                'requests_per_interval' => 4
+            ]
+        ]
     ]
 
 ];

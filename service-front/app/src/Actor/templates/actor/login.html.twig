@@ -6,9 +6,9 @@
 <div class="govuk-width-container">
     {{ include('@actor/partials/new-use-service.html.twig') }}
 
-    <a href="{{ path('login') }}" class="govuk-back-link">Back</a>
+    <a href="{{ path('home') }}" class="govuk-back-link">Back</a>
 
-    <main class="govuk-main-wrapper">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <div class="govuk-grid-row">
 
@@ -30,7 +30,7 @@
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
-                        {{ govuk_form_element(form.get('email'), { 'label': 'Email address', 'attr': { 'class': 'govuk-!-width-one-half', 'auto-complete': 'username' } }) }}
+                        {{ govuk_form_element(form.get('email'), { 'label': 'Email address', 'attr': { 'class': 'govuk-!-width-one-half' } }) }}
 
                         {{ govuk_form_element(form.get('password'), { 'label': 'Password', 'attr': { 'class': 'govuk-!-width-one-half', 'auto-complete': 'current-password' } }) }}
 

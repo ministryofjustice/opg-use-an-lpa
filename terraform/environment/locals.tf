@@ -1,3 +1,6 @@
+variable "pagerduty_token" {
+}
+
 variable "account_mapping" {
   type = map
 }
@@ -10,13 +13,18 @@ variable "container_version" {
 variable "accounts" {
   type = map(
     object({
-      account_id           = string
-      is_production        = bool
-      sirius_account_id    = string
-      api_gateway_endpoint = string
-      session_expires_view = number
-      session_expires_use  = number
-      logging_level        = number
+      account_id               = string
+      is_production            = bool
+      sirius_account_id        = string
+      lpas_collection_endpoint = string
+      lpa_codes_endpoint       = string
+      session_expires_view     = number
+      session_expires_use      = number
+      cookie_expires_view      = number
+      cookie_expires_use       = number
+      logging_level            = number
+      pagerduty_service_name   = string
+      use_legacy_codes_service = bool
     })
   )
 }
@@ -25,11 +33,6 @@ locals {
   account_name = lookup(var.account_mapping, terraform.workspace, "development")
   account      = var.accounts[local.account_name]
   environment  = lower(terraform.workspace)
-
-  account_id           = local.account.account_id
-  sirius_account_id    = local.account.sirius_account_id
-  api_gateway_endpoint = local.account.api_gateway_endpoint
-
 
   dns_namespace_acc = local.environment == "production" ? "" : "${local.account_name}."
   dns_namespace_env = local.account_name == "production" ? "" : "${local.environment}."

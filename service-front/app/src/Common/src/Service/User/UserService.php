@@ -11,6 +11,7 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authentication\UserRepositoryInterface;
+use Common\Service\Log\Output\Email;
 
 /**
  * Class UserService
@@ -262,6 +263,34 @@ class UserService implements UserRepositoryInterface
                     'code'      => $ex->getCode()
                 ]
             );
+
+            throw $ex;
+        }
+    }
+
+    public function deleteAccount(string $accountId) : void
+    {
+        try {
+            $user = $this->apiClient->httpDelete('/v1/delete-account/' . $accountId);
+
+            $this->logger->info(
+                'Successfully deleted account with id {id} and email hash {email}',
+                [
+                    'id'    => $accountId,
+                    'email' => new Email($user['Email']),
+                ]
+            );
+
+        } catch (ApiException $ex) {
+            $this->logger->notice(
+                'Failed to delete account for userId {userId} - status code {code}',
+                [
+                    'userId' => $accountId,
+                    'code'   => $ex->getCode()
+                ]
+            );
+
+            throw $ex;
         }
     }
 }

@@ -11,7 +11,7 @@
 
         {#<a href="{{ path('lpa.view') }}" class="govuk-back-link">Back</a>#}
 
-        <main class="govuk-main-wrapper">
+        <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
@@ -47,16 +47,15 @@
                                 </div>
                             </dl>
 
-                    <a href="delete-confirm" role="button" draggable="false" class="govuk-button govuk-button govuk-button--warning">
-                        Delete account
-                    </a>
-
                     <div class="govuk-inset-text">
                         <span>Need to update the online LPA summary?</span><br>
                         <span>
-                             <a href="{{ path('lpa.change-details') }}">Change a donor or attorney's details</a>
+                             <a class="govuk-link" href="{{ path('lpa.change-details') }}">Change a donor or attorney's details</a>
                         </span>
                     </div>
+
+                    <a href="{{ path('confirm-delete-account') }}" class="govuk-body lpa-account-delete">Delete account</a>
+
                 </div>
             </div>
 
