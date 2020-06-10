@@ -1,6 +1,10 @@
 #!/bin/sh
 
-echo Starting seeding
+echo Starting seeding...
+
+# -----
+# DynamoDB setup and seeding for UaLPA
+# -----
 
 if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     # If we're not running against AWS' endpoint
@@ -65,12 +69,14 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --region eu-west-1 \
     --endpoint $DYNAMODN_ENDPOINT \
     --global-secondary-indexes IndexName=UserIndex,KeySchema=["{AttributeName=UserId,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
-
 fi
 
 # Seed UaLPA database
 python /app/seeding/dynamodb.py
 
+# -----
+# DynamoDB setup and seeding for codes service
+# -----
 
 if ! [[ -z "${CODES_ENDPOINT}" ]]; then
   # Setup the local codes service
