@@ -21,6 +21,9 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Common\Exception\RateLimitExceededException;
+use Common\Middleware\Security\UserIdentificationMiddleware;
+use Common\Service\Security\RateLimitService;
 
 /**
  * Class CreateAccountHandler
@@ -34,27 +37,34 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     use CsrfGuard;
     use Logger;
 
+    /** @var RateLimitService */
+    private $rateLimitService;
+
     /**
      * CreateAccountHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param AuthenticationInterface $authenticator
      * @param LoggerInterface $logger
+     * @param RateLimitService $rateLimitService
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        RateLimitService $rateLimitService
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
+        $this->rateLimitService = $rateLimitService;
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Http\Client\Exception|\Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -106,6 +116,9 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         if ($this->getUser($request) !== null) {
             return $this->redirectToRoute('lpa.dashboard');
         }
+
+        $this->rateLimitService->
+        limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
 
         return new HtmlResponse($this->renderer->render('actor::login', [
             'form' => $form
