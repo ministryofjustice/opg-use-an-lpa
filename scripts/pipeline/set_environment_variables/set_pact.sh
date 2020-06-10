@@ -9,7 +9,7 @@ PACT_API_VERSION="v1"
 if [ $(aws --version 2>&1 | grep -c "aws-cli") -ne 0 ]
 then
   export SECRET_STRING=$(aws sts assume-role \
-  --role-arn "arn:aws:iam::${PACT_BROKER_ACCOUNT}:role/get-pact-secret-production" \
+  --role-arn "arn:aws:iam::${PACT_BROKER_ACCOUNT}:role/get-pact-secret-development" \
   --role-session-name AWSCLI-Session | \
   jq -r '.Credentials.SessionToken + " " + .Credentials.SecretAccessKey + " " + .Credentials.AccessKeyId' 2>/dev/null)
 
