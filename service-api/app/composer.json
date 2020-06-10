@@ -81,16 +81,26 @@
         "development-status": "laminas-development-mode status",
         "check": [
             "@cs-check",
+            "@psalm"
+        ],
+        "test": [
             "@unit-test",
             "@acc-test",
             "@int-test"
         ],
         "clear-config-cache": "php bin/clear-config-cache.php",
-        "psalm": "docker-compose -f ../../docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose-integration.yml run api-app /app/vendor/bin/psalm",
-        "cs-check": "docker-compose -f ../../docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose-integration.yml run api-app /app/vendor/bin/phpcs",
-        "cs-fix": "docker-compose -f ../../docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose-integration.yml run api-app /app/vendor/bin/phpcbf",
-        "unit-test": "docker-compose -f ../../docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose-integration.yml run api-app /app/vendor/bin/phpunit --colors=always",
-        "acc-test": "docker-compose -f ../../docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose-integration.yml run api-app /app/vendor/bin/behat -p acceptance",
-        "int-test": "docker-compose -f ../../docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose.yml -f ../../../opg-sirius-api-gateway/docker-compose-integration.yml run api-app /app/vendor/bin/behat -p integration"
+        "dc": [
+            "Composer\\Config::disableProcessTimeout",
+            "docker-compose -f ../../docker-compose.yml -f ../../docker-compose.dependencies.yml"
+        ],
+        "dc-run": "@dc run --rm api-app",
+        "dc-php": "@dc-run php",
+        "dc-php-debug": "@dc-php -d zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so",
+        "psalm": "@dc-php /app/vendor/bin/psalm",
+        "cs-check": "@dc-php /app/vendor/bin/phpcs",
+        "cs-fix": "@dc-php /app/vendor/bin/phpcbf",
+        "unit-test": "@dc-php /app/vendor/bin/phpunit --colors=always",
+        "acc-test": "@dc-php -dapc.enable_cli=1 /app/vendor/bin/behat -p acceptance --colors",
+        "int-test": "@dc-php /app/vendor/bin/behat -p integration --colors"
     }
 }

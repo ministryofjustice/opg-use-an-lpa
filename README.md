@@ -19,9 +19,7 @@ In all cases commands are run with a docker-compose command prefix
 
 ```shell
 # This should replace all instances of <DOCKER_COMPOSE> in commands given below
-docker-compose -f docker-compose.yml \
--f ../opg-sirius-api-gateway/docker-compose.yml \
--f ../opg-sirius-api-gateway/docker-compose-integration.yml
+docker-compose -f docker-compose.yml -f docker-compose-dependencies.yml
 ```
 
 Build docker-compose files with no cache option.
@@ -70,18 +68,13 @@ To run the unit tests (the command for viewer-app and actor-app will run exactly
 <DOCKER_COMPOSE> run api-app /app/vendor/bin/phpunit
 ```
 
-### Functional (Behave) test
+### Functional (Behat) test
 
-To run the Behave functional tests
-
-```shell
-docker-compose run feature-tests
-```
-
-To run a tagged subset of tests
+To run the Behat smoke tests
 
 ```shell
-docker-compose run feature-tests behave --tags=<TAG_NAME>
+<DOCKER_COMPOSE> \
+  -f docker-compose.testing.yml run smoke-tests composer behat
 ```
 
 ### Updating composer dependencies
@@ -91,23 +84,23 @@ Composer install is run when the app container is built, and on a standard `dock
 It can also be run independently with:
 
 ```shell
-docker-compose run api-composer
+<DOCKER_COMPOSE> run api-composer
 
-docker-compose run front-composer
+<DOCKER_COMPOSE> run front-composer
 ```
 
 New packages can be added with:
 
 ```shell
-docker-compose run api-composer composer require author/package
+<DOCKER_COMPOSE> run api-composer composer require author/package
 
-docker-compose run front-composer composer require author/package
+<DOCKER_COMPOSE> run front-composer composer require author/package
 ```
 
 Packages can be removed with:
 
 ```shell
-docker-compose run api-composer composer remove author/package
+<DOCKER_COMPOSE> run api-composer composer remove author/package
 
-docker-compose run front-composer composer remove author/package
+<DOCKER_COMPOSE> run front-composer composer remove author/package
 ```
