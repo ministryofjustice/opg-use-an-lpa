@@ -2927,7 +2927,7 @@ class AccountContext implements Context
 
     /**
      * @When /^I request to change my email to an email address that is taken by another user on the service$/
-     * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has not expired$/
+     * @When /^I request to change my email to one that another user has requested$/
      */
     public function iRequestToChangeMyEmailToAnEmailAddressThatIsTakenByAnotherUserOnTheService()
     {
@@ -2971,7 +2971,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has expired$/
+     * @When /^I request to change my email to one that another user has an expired request for$/
      * @When /^I request to change my email to a unique email address$/
      */
     public function iRequestToChangeMyEmailToAUniqueEmailAddress()
@@ -3179,8 +3179,8 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/create-account-success');
         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->userEmail);
     }
-  
-    /**   
+
+    /**
      * @Given /^I am on the stats page$/
      */
     public function iAmOnTheStatsPage()

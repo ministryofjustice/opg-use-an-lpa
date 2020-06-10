@@ -1598,9 +1598,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has not expired$/
+     * @When /^I request to change my email to one that another user has requested$/
      */
-    public function iRequestToChangeMyEmailToAnEmailAddressThatAnotherUserHasRequestedToChangeTheirEmailToButTheirTokenHasNotExpired()
+    public function iRequestToChangeMyEmailToOneThatAnotherUserHasRequested()
     {
         $this->apiFixtures->patch('/v1/request-change-email')
             ->respondWith(
@@ -1626,7 +1626,7 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has expired$/
+     * @When /^I request to change my email to one that another user has an expired request for$/
      * @When /^I request to change my email to a unique email address$/
      */
     public function iRequestToChangeMyEmailToAUniqueEmailAddress()
@@ -1680,7 +1680,7 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(function (RequestInterface $request, array $options)
- use ($currentEmailTemplateId) {
+                use ($currentEmailTemplateId) {
                 $requestBody = $request->getBody()->getContents();
                 assertContains($currentEmailTemplateId, $requestBody);
             });
@@ -1691,7 +1691,7 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(function (RequestInterface $request, array $options)
- use ($expectedUrl, $newEmailTemplateId) {
+                use ($expectedUrl, $newEmailTemplateId) {
                 $requestBody = $request->getBody()->getContents();
 
                 assertContains($this->userEmailResetToken, $requestBody);

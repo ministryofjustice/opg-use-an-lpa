@@ -94,7 +94,7 @@ class UserService
      * @param array $emailResetExists
      * @throws Exception
      */
-    public function checkIfEmailResetViableForAccountCreation(array $emailResetExists): void
+    private function checkIfEmailResetViableForAccountCreation(array $emailResetExists): void
     {
         foreach ($emailResetExists as $otherUser) {
             if (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now')) {
@@ -367,7 +367,7 @@ class UserService
      * @param string $userId
      * @throws Exception
      */
-    public function checkIfEmailResetViable(array $emailResetExists, string $userId): void
+    private function checkIfEmailResetViable(array $emailResetExists, string $userId): void
     {
         //checks if the new email chosen has already been requested for reset
         foreach ($emailResetExists as $otherUser) {

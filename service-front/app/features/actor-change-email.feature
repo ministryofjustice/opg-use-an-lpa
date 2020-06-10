@@ -35,13 +35,13 @@ Feature: Change email
   @ui @integration
   Scenario: The user cannot request to change their email address because another user has requested to change their email to this and token has not expired
     Given I am on the change email page
-    When I request to change my email to an email address that another user has requested to change their email to but their token has not expired
+    When I request to change my email to one that another user has requested
     Then I should be told my request was successful and an email is sent to the chosen email address to warn the user
 
   @ui @integration
   Scenario: The user can request to change their email address that another user has requested to change their email to this but their token has expired
     Given I am on the change email page
-    When I request to change my email to an email address that another user has requested to change their email to but their token has expired
+    When I request to change my email to one that another user has an expired request for
     Then I should be sent an email to both my current and new email
     And I should be told that my request was successful
 
