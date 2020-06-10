@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 #account is shared-prod as all env use prod.
-PACT_BROKER_ACCOUNT="997462338508"
+PACT_BROKER_ACCOUNT="679638075911"
 PACT_BROKER_HTTP_AUTH_USER="admin"
 PACT_BROKER_BASE_URL="pact-broker.api.opg.service.justice.gov.uk"
 PACT_API_VERSION="v1"
