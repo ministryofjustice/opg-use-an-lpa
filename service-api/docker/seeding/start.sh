@@ -3,7 +3,6 @@
 echo Starting seeding
 
 if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
-
     # If we're not running against AWS' endpoint
 
     DYNAMODN_ENDPOINT=http://${AWS_ENDPOINT_DYNAMODB}
@@ -69,15 +68,17 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
 
 fi
 
+# Seed UaLPA database
+python /app/seeding/dynamodb.py
+
+
 if ! [[ -z "${CODES_ENDPOINT}" ]]; then
   # Setup the local codes service
   /usr/local/bin/waitforit -address=tcp://${CODES_ENDPOINT}:4343 -timeout 60 -retry 6000 -debug
   curl -X POST -H 'Authorization: asdf1234567890' http://${CODES_ENDPOINT}/setup/dynamodb/create/table
 fi
 
-# Run the seeding script
-# This is written in Python as managing the variable DynamoDB endpoint isn't easy in a shell script.
-python /app/seeding/dynamodb.py
+# Seed code service database
 python /app/seeding/put_actor_codes.py -f /app/seeding/seeding_lpa_codes.json -d
 
 echo Finished seeding
