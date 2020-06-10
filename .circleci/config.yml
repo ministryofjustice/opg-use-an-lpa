@@ -69,8 +69,8 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires: [test_pdf_pr_build]
 
-      - use-my-lpa/codecov_upload:
-          name: codecov_upload
+        - use-my-lpa/coveralls_upload:
+            name: coveralls_upload_pr_build
             filters: { branches: { ignore: [master] } }
             requires:
               [
@@ -250,8 +250,6 @@ workflows:
 orbs:
   slack: circleci/slack@3.3.0
   use-my-lpa:
-    orbs:
-      coveralls: coveralls/coveralls@1.0.4
     commands:
       install_aws_cli:
         steps:
@@ -279,18 +277,13 @@ orbs:
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
                 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 311462405659.dkr.ecr.eu-west-1.amazonaws.com
-      notify_coveralls_finished:
-        steps:
-          - run:
-              name: run parallel finished webhook
-              command : |
-                curl -k https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN -d "payload[build_num]=$CIRCLE_BUILD_NUM&payload[status]=done"
+
+
     executors:
       puppeteer:
         docker: [image: buildkite/puppeteer]
       php:
         docker: [image: circleci/php:7-cli]
-
       php-browsers:
         docker: [image: circleci/php:7-cli-browsers]
       node:
@@ -302,12 +295,12 @@ orbs:
 
     jobs:
       node_test_service_pdf:
-        executor: node-browsers
+        executor: puppeteer
         steps:
           - checkout
           - restore_cache:
               name: Restore node modules cache
-              key: 'node_modules-{{ checksum "service-pdf/app/package-lock.json" }}-{{ arch }}'
+              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
           - run:
               name: Install dependencies
               command: |
@@ -324,10 +317,9 @@ orbs:
           - run:
               name: Run coverage with Jest
               command: |
-                mkdir -p /home/circleci/project/build/service-pdf
-                cd service-pdf/app/
-                ./node_modules/.bin/jest --ci --runInBand --coverage
-                cp -a ./coverage /home/circleci/project/build/service-pdf
+                mkdir -p /root/project/build/service-pdf
+                cd service-pdf/app/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
+                cp -a ./coverage /root/project/build/service-pdf
           - store_test_results:
               path: build/service-pdf/
           - store_artifacts:
@@ -339,7 +331,7 @@ orbs:
               when: always
           - save_cache:
               name: Save node modules cache
-              key: 'node_modules-{{ checksum "service-pdf/app/package-lock.json" }}-{{ arch }}'
+              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
               paths:
                 - service-pdf/app/node_modules
 
@@ -353,7 +345,7 @@ orbs:
           - checkout
           - restore_cache:
               name: Restore node modules cache
-              key: 'node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}'
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
           - run:
               name: Install dependencies
               command: |
@@ -371,8 +363,7 @@ orbs:
               name: Run coverage with Jest
               command: |
                 mkdir -p /home/circleci/project/build/web-js
-                cd service-front/web/
-                ./node_modules/.bin/jest --ci --runInBand --coverage
+                cd service-front/web/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
                 cp -a ./coverage /home/circleci/project/build/web-js
           - store_test_results:
               path: build/web-js/
@@ -385,7 +376,7 @@ orbs:
               when: always
           - save_cache:
               name: Save node modules cache
-              key: 'node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}'
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
               paths:
                 - service-front/web/node_modules
 
@@ -678,7 +669,7 @@ orbs:
 
       # Code Coverage
 
-      codecov_upload:
+      codecov_php-unit_upload:
         #
         # Upload all php-unit test results
         #   to Codecov.
@@ -690,15 +681,10 @@ orbs:
               at: build
           - run:
               name: Upload to Codecov
-              command: |
-                cd build/
-                bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN -f service-api/phpunit/coverage.xml || echo 'Codecov api php coverage upload failed'
-                bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN -f service-front/phpunit/coverage.xml || echo 'Codecov front php coverage upload failed'
-                bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN -f web-js/coverage/lcov.info  || echo 'Codecov web front coverage upload failed'
-                bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN -f service-pdf/coverage/lcov.info  || echo 'Codecov service pdf coverage upload failed'
+              command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN || echo 'Codecov upload failed'
 
       coveralls_upload:
-        executor: php-node
+        executor: php
         steps:
           - checkout
           - attach_workspace:
@@ -714,23 +700,13 @@ orbs:
                 sed 's_/app/src/_/home/circleci/project/service-api/app/src/_' <build/service-api/phpunit/coverage.xml > build/service-api/phpunit/coverage-fixed.xml
                 sed 's_/app/src/_/home/circleci/project/service-front/app/src/_' <build/service-front/phpunit/coverage.xml > build/service-front/phpunit/coverage-fixed.xml
           - run:
-              name: Upload reports
+              name: Upload report
               command: |
-                export COVERALLS_SERVICE_NAME=circleci
-                export COVERALLS_GIT_BRANCH=$CIRCLE_BRANCH
-                export COVERALLS_PARALLEL=true
                 ./php-coveralls.phar -v \
-                --json_path build/coveralls-upload.json \
-                --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
-                --coverage_clover build/service-front/phpunit/coverage-fixed.xml
-                cd /home/circleci/project/service-front/web/ && npm install
-                cd /home/circleci/project/service-pdf/app/ && npm install
-                cd /home/circleci/project/
-                cat /home/circleci/project/build/web-js/coverage/lcov.info \
-                | ./service-front/web/node_modules/.bin/coveralls --verbose
-                cat /home/circleci/project/build/service-pdf/coverage/lcov.info \
-                | ./service-pdf/app/node_modules/.bin/coveralls --verbose
-                curl -k https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN -d "payload[build_num]=$CIRCLE_BUILD_NUM&payload[status]=done"
+                  --json_path build/coveralls-upload.json \
+                  --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
+                  --coverage_clover build/service-front/phpunit/coverage-fixed.xml
+
       #----------------------------------------------------
       # Terraform
 
@@ -997,6 +973,7 @@ jobs:
           message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+
   ecr_scan_results:
     docker:
       - image: circleci/python
