@@ -584,6 +584,18 @@ orbs:
                 docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 \
                   /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
           - run:
+              name: Run pact tests
+              command: |
+                ~/project/scripts/pipeline/set_environment_variables/set_pact.sh >> $BASH_ENV
+                docker-compose up -d lpa-codes-pact-mock
+                sleep 3
+                # run some tests
+                docker-compose exec lpa-codes-pact-mock cat /tmp/pacts/use_a_lasting_power_of_attorney-lpa-codes.json > pact.json
+                docker-compose stop lpa-codes-pact-mock
+          - store_artifacts:
+              path: pact.json
+              destination: Pact file
+          - run:
               name: Fetch test results
               command: |
                 mkdir -p build/service-api
