@@ -587,11 +587,11 @@ orbs:
               name: Run pact tests
               command: |
                 ~/project/scripts/pipeline/set_environment_variables/set_pact.sh >> $BASH_ENV
-                docker-compose up -d lpa-codes-pact-mock
+                docker-compose -f ~/project/docker-compose.testing.yml up -d lpa-codes-pact-mock
                 sleep 3
                 # run some tests
-                docker-compose exec lpa-codes-pact-mock cat /tmp/pacts/use_a_lasting_power_of_attorney-lpa-codes.json > pact.json
-                docker-compose stop lpa-codes-pact-mock
+                docker-compose -f ~/project/docker-compose.testing.yml exec lpa-codes-pact-mock cat /tmp/pacts/use_a_lasting_power_of_attorney-lpa-codes.json > pact.json
+                docker-compose -f ~/project/docker-compose.testing.yml stop lpa-codes-pact-mock
           - store_artifacts:
               path: pact.json
               destination: Pact file
