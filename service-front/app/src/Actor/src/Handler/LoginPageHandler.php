@@ -117,8 +117,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             return $this->redirectToRoute('lpa.dashboard');
         }
 
-        $this->rateLimitService->
-        limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
+        $this->rateLimitService->limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
 
         return new HtmlResponse($this->renderer->render('actor::login', [
             'form' => $form

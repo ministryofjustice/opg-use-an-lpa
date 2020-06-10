@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Actor\Handler\Factory;
 
-use Actor\Handler\CheckLpaHandler;
-use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitServiceFactory;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Actor\Handler\LoginPageHandler;
 
 class LoginPageHandlerFactory
 {
