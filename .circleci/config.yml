@@ -505,7 +505,7 @@ orbs:
                   # We want all of the tags pushed
                   docker push << parameters.container_repo_url >>
                 else
-                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
 
       docker_build_front_web:
@@ -625,7 +625,7 @@ orbs:
                   # We want all of the tags pushed
                   docker push << parameters.container_repo_url >>
                 else
-                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
 
       docker_build_api_web:
