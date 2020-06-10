@@ -310,6 +310,8 @@ orbs:
         docker: [image: circleci/php:7-cli-browsers]
       node:
         docker: [image: circleci/node:14.0]
+      node-browsers:
+        docker: [image: circleci/node:14.0-browsers]
       python:
         docker: [image: circleci/python]
       terraform:
@@ -317,12 +319,12 @@ orbs:
 
     jobs:
       node_test_service_pdf:
-        executor: puppeteer
+        executor: node-browsers
         steps:
           - checkout
           - restore_cache:
               name: Restore node modules cache
-              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
+              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}-{{ arch }}
           - run:
               name: Install dependencies
               command: |
@@ -339,9 +341,10 @@ orbs:
           - run:
               name: Run coverage with Jest
               command: |
-                mkdir -p /root/project/build/service-pdf
-                cd service-pdf/app/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
-                cp -a ./coverage /root/project/build/service-pdf
+                mkdir -p /home/circleci/project/build/service-pdf
+                cd service-pdf/app/
+                ./node_modules/.bin/jest --ci --runInBand --coverage
+                cp -a ./coverage /home/circleci/project/build/service-pdf
           - store_test_results:
               path: build/service-pdf/
           - store_artifacts:
@@ -353,7 +356,7 @@ orbs:
               when: always
           - save_cache:
               name: Save node modules cache
-              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}
+              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}-{{ arch }}
               paths:
                 - service-pdf/app/node_modules
 
@@ -367,7 +370,7 @@ orbs:
           - checkout
           - restore_cache:
               name: Restore node modules cache
-              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
           - run:
               name: Install dependencies
               command: |
@@ -385,7 +388,8 @@ orbs:
               name: Run coverage with Jest
               command: |
                 mkdir -p /home/circleci/project/build/web-js
-                cd service-front/web/ && ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true
+                cd service-front/web/
+                ./node_modules/.bin/jest --ci --runInBand --coverage
                 cp -a ./coverage /home/circleci/project/build/web-js
           - store_test_results:
               path: build/web-js/
@@ -398,7 +402,7 @@ orbs:
               when: always
           - save_cache:
               name: Save node modules cache
-              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
               paths:
                 - service-front/web/node_modules
 
