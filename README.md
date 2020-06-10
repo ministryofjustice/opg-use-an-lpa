@@ -11,6 +11,7 @@ Clone the following two repositories into the same base directory:
 
 - https://github.com/ministryofjustice/opg-use-an-lpa
 - https://github.com/ministryofjustice/opg-sirius-api-gateway
+- https://github.com/ministryofjustice/opg-data-lpa-codes
 
 All commands assume a working directory of `opg-use-my-lpa`.
 
@@ -23,8 +24,8 @@ docker-compose -f docker-compose.yml \
 -f ../opg-sirius-api-gateway/docker-compose-integration.yml
 ```
 
-Build docker-compose files with no cache option.  
-Run this regularly to keep base docker images up to date, 
+Build docker-compose files with no cache option.
+Run this regularly to keep base docker images up to date,
 as these include potential security fixes.
 
 ```shell
@@ -32,9 +33,9 @@ as these include potential security fixes.
 ```
 
 You can also use the `--no-cache` option on other docker-compose commands,
-to clear out previously cached images.  
+to clear out previously cached images.
 
-***Note:*** this can take several minutes to run.  
+***Note:*** this can take several minutes to run.
 
 To bring up the local environment
 

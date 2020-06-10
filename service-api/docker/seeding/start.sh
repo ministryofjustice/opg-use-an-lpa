@@ -9,11 +9,6 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     DYNAMODN_ENDPOINT=http://${AWS_ENDPOINT_DYNAMODB}
 
     echo Using local DynamoDB
-
-    export WAITFORIT_VERSION="v2.4.1"
-    wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64
-    chmod +x /usr/local/bin/waitforit
-
     /usr/local/bin/waitforit -address=tcp://${AWS_ENDPOINT_DYNAMODB} -timeout 60 -retry 6000 -debug
 
     # ----------------------------------------------------------
@@ -72,6 +67,12 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --endpoint $DYNAMODN_ENDPOINT \
     --global-secondary-indexes IndexName=UserIndex,KeySchema=["{AttributeName=UserId,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
 
+fi
+
+if ! [[ -z "${CODES_ENDPOINT}" ]]; then
+  # Setup the local codes service
+  /usr/local/bin/waitforit -address=tcp://${CODES_ENDPOINT}:4343 -timeout 60 -retry 6000 -debug
+  curl -X POST -H 'Authorization: asdf1234567890' http://${CODES_ENDPOINT}/setup/dynamodb/create/table
 fi
 
 # Run the seeding script

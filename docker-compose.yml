@@ -1,4 +1,4 @@
-version: "2.1"
+version: "3"
 
 volumes:
   webpack_dist:
@@ -177,9 +177,9 @@ services:
       DYNAMODB_TABLE_VIEWER_ACTIVITY: "ViewerActivity"
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
 
-      SIRIUS_API_ENDPOINT: "http://gateway:5000"
+      SIRIUS_API_ENDPOINT: "http://lpa-gateway:5000"
       USE_LEGACY_CODES_SERVICE: "true"
-      LPA_CODES_API_ENDPOINT: "http://localhost:4343"
+      LPA_CODES_API_ENDPOINT: "http://codes-gateway:4343"
 
       # Local only
       AWS_ACCESS_KEY_ID: "-"
@@ -215,34 +215,5 @@ services:
       DYNAMODB_TABLE_ACTOR_CODES: "ActorCodes"
       DYNAMODB_TABLE_VIEWER_CODES: "ViewerCodes"
       DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
-      AWS_ENDPOINT_DYNAMODB: localstack:4569
-
-  # ---------------------------
-  # Cache service
-
-  redis:
-    image: redis:5
-
-  # ---------------------------
-  # Local Development
-
-  gateway:
-    environment:
-      LAMBDAS_JSON_PROVIDER_PATH: ${PWD}/test-data/api-gateway.json
-
-  localstack:
-    image: localstack/localstack
-    ports:
-      - 4569:4569
-    environment:
-      - SERVICES=dynamodb:4569
-      - DEFAULT_REGION=eu-west-1
-      - HOSTNAME=localstack
-
-  kms:
-    image: nsmithuk/local-kms:2
-    volumes:
-      - ./local-config:/init
-    environment:
-      REGION: eu-west-1
-      SEED_PATH: /init/kms-seed.yaml
+      AWS_ENDPOINT_DYNAMODB: localstack:14569
+      CODES_ENDPOINT: codes-gateway:4343
