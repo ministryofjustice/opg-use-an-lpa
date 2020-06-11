@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+
+  localstack:
+    image: localstack/localstack
+    ports:
+      - 4569:14569
+      - 8000:14569
+    environment:
+      - SERVICES=dynamodb:14569
+      - DEFAULT_REGION=eu-west-1
+      - HOSTNAME=gateway-localstack
+    networks:
+      default:
+        aliases:
+          - gateway-localstack
+
+  # -----
+  # API Gateway local development environment
+  # -----
+
+  lpa-gateway-setup:
+    build:
+      context: ../opg-sirius-api-gateway/
+    volumes:
+      - ../opg-sirius-api-gateway/localstack-config:/config
+    depends_on:
+      - localstack
+
+  lpa-gateway:
+    build:
+      context: ../opg-sirius-api-gateway/
+    volumes:
+      - ../opg-sirius-api-gateway/docker:/srv/docker:cached
+      - ../opg-sirius-api-gateway/lambdas:/srv/lambdas:cached
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - lpa-gateway-setup
+    ports:
+      - 5000:5000
+    environment:
+      LAMBDAS_PATH: ${PWD}/lambdas
+      PASSTHROUGH_DYNAMODB_DATA_CACHE_TABLE_NAME: opg-gateway-cache-data
+      PASSTHROUGH_DYNAMODB_AUTH_CACHE_TABLE_NAME: opg-gateway-cache-auth
+      PASSTHROUGH_AWS_ENDPOINT_DYNAMODB: http://gateway-localstack:4569
+      PASSTHROUGH_URL_MEMBRANE: https://membrane
+      PASSTHROUGH_CREDENTIALS: '{"email": "publicapi@opgtest.com","password": "Password1"}' # Non-secret credentials, deliberately committed.
+      PASSTHROUGH_ENABLE_DEBUG: 'false'
+      PASSTHROUGH_DATA_PROVIDER: json
+
+  # -----
+  # Code Generation API development environment
+  # -----
+
+  codes-gateway:
+    build:
+      context: ../opg-data-lpa-codes/lambda_functions/v1
+    ports:
+      - 4343:4343
+    volumes:
+      - ../opg-data-lpa-codes/lambda_functions/v1/:/var/www/lambda_functions/v1/
+    depends_on:
+      - localstack
+    environment:
+      LOCAL_URL: host.docker.internal #rather than host name as the port is hardcoded to 8000
+      ENVIRONMENT: local
+      AWS_ACCESS_KEY_ID: testing
+      AWS_SECRET_ACCESS_KEY: testing
+      AWS_SECURITY_TOKEN: testing
+      AWS_SESSION_TOKEN: testing
+      AWS_DEFAULT_REGION: eu-west-1
+
+  # ---------------------------
+  # Cache service
+
+  redis:
+    image: redis:5
+
+  # ---------------------------
+  # AWS KMS mock service
+
+  kms:
+    image: nsmithuk/local-kms:2
+    volumes:
+      - ./local-config:/init
+    environment:
+      REGION: eu-west-1
+      SEED_PATH: /init/kms-seed.yaml
