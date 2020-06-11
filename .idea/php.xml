@@ -12,8 +12,7 @@
           <type_data command="RUN" />
           <dockerComposeConfigurationPaths>
             <item value="$PROJECT_DIR$/docker-compose.yml" />
-            <item value="$PROJECT_DIR$/../opg-sirius-api-gateway/docker-compose.yml" />
-            <item value="$PROJECT_DIR$/../opg-sirius-api-gateway/docker-compose-integration.yml" />
+            <item value="$PROJECT_DIR$/docker-compose.dependencies.yml" />
           </dockerComposeConfigurationPaths>
           <envs />
         </remote_data>
@@ -23,8 +22,7 @@
           <type_data command="RUN" />
           <dockerComposeConfigurationPaths>
             <item value="$PROJECT_DIR$/docker-compose.yml" />
-            <item value="$PROJECT_DIR$/../opg-sirius-api-gateway/docker-compose.yml" />
-            <item value="$PROJECT_DIR$/../opg-sirius-api-gateway/docker-compose-integration.yml" />
+            <item value="$PROJECT_DIR$/docker-compose.dependencies.yml" />
           </dockerComposeConfigurationPaths>
           <envs />
         </remote_data>
@@ -34,8 +32,7 @@
           <type_data command="RUN" />
           <dockerComposeConfigurationPaths>
             <item value="$PROJECT_DIR$/docker-compose.yml" />
-            <item value="$PROJECT_DIR$/../opg-sirius-api-gateway/docker-compose.yml" />
-            <item value="$PROJECT_DIR$/../opg-sirius-api-gateway/docker-compose-integration.yml" />
+            <item value="$PROJECT_DIR$/docker-compose.dependencies.yml" />
             <item value="$PROJECT_DIR$/docker-compose.testing.yml" />
           </dockerComposeConfigurationPaths>
           <envs />
