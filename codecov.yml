@@ -4,3 +4,8 @@ codecov:
     layout: "reach, diff, flags, files"
     behavior: default
     require_changes: false  # if true: only post the comment if coverage changes
+  status:
+    project:
+      default:
+        target: 80%    # the required coverage value
+        threshold: 5%  # the leniency in hitting the target setting to 5% now.
