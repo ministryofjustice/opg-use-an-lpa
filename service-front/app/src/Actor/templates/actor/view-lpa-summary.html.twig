@@ -49,11 +49,11 @@
                     <p class="govuk-body body-alt-1">
                         {% if lpa.caseSubtype == "pfa" %}
                             {% if lpa.attorneyActDecisions == 'When Registered' %}
-                                While the donor has mental capacity, this LPA should only be used with the donor’s permission
+                                While the donor has mental capacity, this <abbr title="lasting power of attorney">LPA</abbr> should only be used with the donor’s permission
                             {% elseif lpa.attorneyActDecisions == 'Loss of capacity' %}
-                                This LPA can only be used when the donor has lost capacity
+                                This <abbr title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity
                             {% elseif lpa.attorneyActDecisions == null %}
-                                This LPA can be used as soon as it's registered unless instructions say otherwise.
+                                This <abbr title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.
                             {% endif %}
                         {% else %}
                             {% if lpa.lifeSustainingTreatment|lower == 'option a' %}
@@ -107,7 +107,7 @@
                             {% elseif lpa.caseAttorneyJointlyAndSeverally %}
                                 Attorneys can make decisions jointly (together) and severally (separately)
                             {% elseif lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
-                                Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper LPA to find out what decisions must be made jointly.
+                                Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper <abbr title="lasting power of attorney">LPA</abbr> to find out what decisions must be made jointly.
                             {% endif %}
                         </dd>
                     </div>
@@ -153,7 +153,7 @@
                         <dt class="govuk-summary-list__key">Preferences</dt>
                         <dd class="govuk-summary-list__value">
                             {% if lpa.applicationHasGuidance %}
-                                Yes, the donor made preferences on their LPA.<br>To view these, ask to see the paper LPA
+                                Yes, the donor made preferences on their <abbr title="lasting power of attorney">LPA</abbr>.<br>To view these, ask to see the paper <abbr title="lasting power of attorney">LPA</abbr>
                             {% else %}
                                 No
                             {% endif %}
@@ -164,7 +164,7 @@
                         <dt class="govuk-summary-list__key">Instructions</dt>
                         <dd class="govuk-summary-list__value">
                             {% if lpa.applicationHasRestrictions %}
-                                Yes, the donor set instructions on their LPA.<br>To view these, ask to see the paper LPA
+                                Yes, the donor set instructions on their <abbr title="lasting power of attorney">LPA</abbr>.<br>To view these, ask to see the paper <abbr title="lasting power of attorney">LPA</abbr>
                             {% else %}
                                 No
                             {% endif %}
@@ -176,11 +176,11 @@
                             <dt class="govuk-summary-list__key">When can the LPA be used?</dt>
                             <dd class="govuk-summary-list__value">
                                 {% if lpa.attorneyActDecisions == 'When Registered' %}
-                                    While the donor has mental capacity, this LPA should only be used with the donor’s permission
+                                    While the donor has mental capacity, this <abbr title="lasting power of attorney">LPA</abbr> should only be used with the donor’s permission
                                 {% elseif lpa.attorneyActDecisions == 'Loss of capacity' %}
-                                    This LPA can only be used when the donor has lost capacity
+                                    This <abbr title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity
                                 {% elseif lpa.attorneyActDecisions == null %}
-                                    This LPA can be used as soon as it's registered unless instructions say otherwise.
+                                    This <abbr title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.
                                 {% endif %}
                             </dd>
                         </div>
@@ -193,7 +193,7 @@
                                 {% elseif lpa.lifeSustainingTreatment|lower == 'option b' %}
                                     The attorneys do not have the authority to make decisions about life-sustaining treatment
                                 {% else %}
-                                    To view this, ask to see the paper LPA
+                                    To view this, ask to see the paper <abbr title="lasting power of attorney">LPA</abbr>
                                 {% endif %}
                             </dd>
                         </div>
@@ -226,7 +226,7 @@
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
             <strong class="govuk-warning-text__text">
                 <span class="govuk-warning-text__assistive">Warning</span>
-                You cannot use a download or print out of this LPA summary in place of the original paper LPA or instead of giving someone an access code.
+                You cannot use a download or print out of this <abbr title="lasting power of attorney">LPA</abbr> summary in place of the original paper <abbr title="lasting power of attorney">LPA</abbr> or instead of giving someone an access code.
             </strong>
         </div>
 

@@ -18,3 +18,9 @@ button.org-cancel {
   text-decoration: underline;
   cursor: pointer;
 }
+
+abbr,
+abbr[title] {
+    cursor: help;
+    text-decoration: none;
+}
