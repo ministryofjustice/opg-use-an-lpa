@@ -144,6 +144,28 @@ return [
                 'interval' => 60,
                 'requests_per_interval' => 4
             ]
+        ],
+        'actor_login_failure' => [
+            'type' => 'keyed',
+            'storage' => [
+                'adapter' => [
+                    'name'    => 'redis',
+                    'options' => [
+                        'ttl' => 60,
+                        'server' => [
+                            'persistent_id' => 'brute-force-cache',
+                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis'
+                        ],
+                        'lib_options' => [
+                            \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP
+                        ]
+                    ],
+                ],
+            ],
+            'options' => [
+                'interval' => 60,
+                'requests_per_interval' => 4
+            ]
         ]
     ]
 
