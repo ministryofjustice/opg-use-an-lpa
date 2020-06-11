@@ -44,7 +44,7 @@
 </dl>
 {%  if not actorActive %}
     <div class="lpa-inactive-notice" >
-        <p class="govuk-body govuk-!-padding-2 govuk-!-margin-left-2 govuk-!-margin-bottom-0">You no longer have access to this LPA.
+        <p class="govuk-body govuk-!-padding-2 govuk-!-margin-left-2 govuk-!-margin-bottom-0">You no longer have access to this <abbr title="lasting power of attorney">LPA</abbr>.
             <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.removed') }}"> Why is this?</a>
         </p>
     </div>
@@ -56,4 +56,3 @@
     </p>
     </div>
 {% endif %}
-
