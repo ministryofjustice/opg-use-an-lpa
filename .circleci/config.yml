@@ -308,8 +308,6 @@ orbs:
         docker: [image: circleci/php:7-cli]
       php-browsers:
         docker: [image: circleci/php:7-cli-browsers]
-      node:
-        docker: [image: circleci/node:14.0]
       node-browsers:
         docker: [image: circleci/node:14.0-browsers]
       python:
@@ -365,7 +363,7 @@ orbs:
         # Build Docker container for Front App
         #   and runs the Unit Tests.
         #
-        executor: node
+        executor: node-browsers
         steps:
           - checkout
           - restore_cache:
@@ -410,7 +408,7 @@ orbs:
         #
         # Build frontend assets (css, js, images)
         #
-        executor: node
+        executor: node-browsers
         steps:
           - checkout
           - restore_cache:
