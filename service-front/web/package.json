@@ -25,6 +25,7 @@
     "babel-loader": "^8.1.0",
     "base64-inline-loader": "^1.1.1",
     "copy-webpack-plugin": "^5.1.1",
+    "coveralls": "^3.0.9",
     "css-loader": "^2.1.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
