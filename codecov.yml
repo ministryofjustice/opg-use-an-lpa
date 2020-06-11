@@ -1,5 +1,5 @@
 codecov:
-  bot: cooperaj
+  bot: opg-use-an-lpa
   comment:
     layout: "reach, diff, flags, files"
     behavior: default
