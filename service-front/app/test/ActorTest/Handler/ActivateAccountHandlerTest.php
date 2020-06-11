@@ -16,7 +16,6 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Class ActivateAccountHandlerTest
  * @package ActorTest\Handler
- * @codeCoverageIgnore
  */
 class ActivateAccountHandlerTest extends TestCase
 {
