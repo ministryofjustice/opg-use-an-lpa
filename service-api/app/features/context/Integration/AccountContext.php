@@ -1856,9 +1856,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I should be told that I could not change my email as their was a problem with the request$/
+     * @Then /^I should be told my request was successful and an email is sent to the chosen email address to warn the user$/
      */
-    public function iShouldBeToldThatICouldNotChangeMyEmailAsTheirWasAProblemWithTheRequest()
+    public function iShouldBeToldMyRequestWasSuccessfulAndAnEmailIsSentToTheChosenEmailAddressToWarnTheUser()
     {
         // Not needed for this context
     }
@@ -1965,9 +1965,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I should be logged out and told that my request was successful$/
+     * @Given /^I should be told that my request was successful$/
      */
-    public function iShouldBeLoggedOutAndToldThatMyRequestWasSuccessful()
+    public function iShouldBeToldThatMyRequestWasSuccessful()
     {
         $userService = $this->container->get(UserService::class);
         $response = $userService->requestChangeEmail($this->userAccountId, $this->newEmail, $this->userAccountPassword);

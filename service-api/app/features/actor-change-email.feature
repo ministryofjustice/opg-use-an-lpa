@@ -18,20 +18,20 @@ Feature: Change email
   Scenario: The user cannot request to change their email address because the email chosen belongs to another user on the service
     Given I am on the change email page
     When I request to change my email to an email address that is taken by another user on the service
-    Then I should be told that I could not change my email as their was a problem with the request
+    Then I should be told my request was successful and an email is sent to the chosen email address to warn the user
 
   @acceptance @integration
   Scenario: The user cannot request to change their email address because another user has requested to change their email to this and token has not expired
     Given I am on the change email page
     When I request to change my email to an email address that another user has requested to change their email to but their token has not expired
-    Then I should be told that I could not change my email as their was a problem with the request
+    Then I should be told my request was successful and an email is sent to the chosen email address to warn the user
 
   @acceptance @integration
   Scenario: The user can request to change their email address that another user has requested to change their email to this but their token has expired
     Given I am on the change email page
     When I request to change my email to an email address that another user has requested to change their email to but their token has expired
     Then I should be sent an email to both my current and new email
-    And I should be logged out and told that my request was successful
+    And I should be told that my request was successful
 
   @acceptance
   Scenario: The user cannot request to change their email address without their id
@@ -56,7 +56,7 @@ Feature: Change email
     Given I am on the change email page
     When I request to change my email to a unique email address
     Then I should be sent an email to both my current and new email
-    And I should be logged out and told that my request was successful
+    And I should be told that my request was successful
 
   @acceptance @integration
   Scenario: The user can change their email address with a valid email token
