@@ -67,7 +67,7 @@ class SGIngressRulesRevoker:
                         'Values': ['default']
                     },
                 ],
-                MaxResults=1
+                MaxResults=5
             )
             ingress_permissions = security_group['SecurityGroups'][0]['IpPermissions']
             pp.pprint(security_group['SecurityGroups'][0])

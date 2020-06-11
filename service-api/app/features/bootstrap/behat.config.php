@@ -61,4 +61,8 @@ return [
     'sirius_api' => [
         'endpoint' => 'https://sirius',
     ],
+
+    'feature_flags' => [
+        'use_legacy_codes_service' => 'true',
+    ]
 ];

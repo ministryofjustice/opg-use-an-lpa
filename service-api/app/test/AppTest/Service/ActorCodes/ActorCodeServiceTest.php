@@ -5,45 +5,62 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository;
+use App\DataAccess\Repository\ActorCodesInterface;
+use App\DataAccess\Repository\KeyCollisionException;
+use App\DataAccess\Repository\UserLpaActorMapInterface;
+use App\Exception\ActorCodeMarkAsUsedException;
+use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\ActorCodeService;
+use App\Service\ActorCodes\CodeValidationStrategyInterface;
 use App\Service\Lpa\LpaService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class ActorCodeServiceTest extends TestCase
 {
     /**
-     * @var Repository\ActorCodesInterface
+     * @var ActorCodesInterface|ObjectProphecy
      */
     private $actorCodesInterfaceProphecy;
 
     /**
-     * @var LpaService
+     * @var CodeValidationStrategyInterface|ObjectProphecy
+     */
+    private $codeValidatorProphecy;
+
+    /**
+     * @var LpaService|ObjectProphecy
      */
     private $lpaServiceProphecy;
 
     /**
-     * @var Repository\UserLpaActorMapInterface
+     * @var UserLpaActorMapInterface|ObjectProphecy
      */
     private $userLpaActorMapInterfaceProphecy;
 
     /**
-     * @var LoggerInterface
+     * @var LoggerInterface|ObjectProphecy
      */
     private $loggerProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
+        $this->codeValidatorProphecy = $this->prophesize(CodeValidationStrategyInterface::class);
         $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
-        $this->actorCodesInterfaceProphecy = $this->prophesize(Repository\ActorCodesInterface::class);
-        $this->userLpaActorMapInterfaceProphecy = $this->prophesize(Repository\UserLpaActorMapInterface::class);
+        $this->actorCodesInterfaceProphecy = $this->prophesize(ActorCodesInterface::class);
+        $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
 
     /** @test */
-    public function confirmation_with_invalid_details()
+    public function confirmation_fails_with_invalid_details(): void
     {
+        $this->codeValidatorProphecy->validateCode('test-code', 'test-uid', 'test-dob')
+            ->shouldBeCalled()
+            ->willThrow(new ActorCodeValidationException());
+
         $service = $this->getActorCodeService();
 
         $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
@@ -52,14 +69,25 @@ class ActorCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function confirmation_with_valid_details()
+    public function confirmation_succeeds_with_valid_details(): void
     {
         $this->initValidParameterSet();
 
-        $this->actorCodesInterfaceProphecy->flagCodeAsUsed('test-code')
+        $this->codeValidatorProphecy->flagCodeAsUsed('test-code')
+            ->willReturn('id-of-db-row')
             ->shouldBeCalled();
 
-        //---
+        $this->userLpaActorMapInterfaceProphecy->create(
+            Argument::that(
+                function (string $id) {
+                    $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
+                    return true;
+                }
+            ),
+            Argument::exact('test-user'),
+            Argument::exact('test-uid'),
+            Argument::exact(1)
+        )->shouldBeCalled();
 
         $service = $this->getActorCodeService();
 
@@ -70,12 +98,12 @@ class ActorCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function confirmation_with_valid_details_fails_flag_as_used()
+    public function confirmation_with_valid_details_fails_flag_as_used(): void
     {
         $this->initValidParameterSet();
 
-        $this->actorCodesInterfaceProphecy->flagCodeAsUsed('test-code')
-            ->willThrow(new \Exception());
+        $this->codeValidatorProphecy->flagCodeAsUsed('test-code')
+            ->willThrow(new ActorCodeMarkAsUsedException());
 
         $this->userLpaActorMapInterfaceProphecy->create(
             Argument::that(
@@ -106,38 +134,55 @@ class ActorCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function successful_validation()
+    public function confirmation_with_vaild_details_has_key_collision(): void
     {
-        $testCode = 'test-code';
-        $testUid = 'test-uid';
-        $testDob = 'test-dob';
+        $this->initValidParameterSet();
 
-        $mockLpa = [
-            'uId' => $testUid,
-        ];
-
-        $mockActor = [
-            'details' => ['dob' => $testDob],
-        ];
-
-        $this->actorCodesInterfaceProphecy->get($testCode)->willReturn(
-            [
-                'Active' => true,
-                'SiriusUid' => $testUid,
-                'ActorLpaId' => 1,
-                'ActorCode' => $testCode,
-            ]
-        )->shouldBeCalled();
-
-        $this->lpaServiceProphecy->getByUid($testUid)->willReturn(
-            new Repository\Response\Lpa($mockLpa, null)
-        )->shouldBeCalled();
-
-        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('int'))
-            ->willReturn($mockActor)
+        $this->codeValidatorProphecy->flagCodeAsUsed('test-code')
+            ->willReturn('id-of-db-row')
             ->shouldBeCalled();
 
-        //---
+        // We call the create function multiple times till it works.
+        $createCalls = 0;
+        $this->userLpaActorMapInterfaceProphecy->create(
+            Argument::that(
+                function (string $id) {
+                    $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
+                    return true;
+                }
+            ),
+            Argument::exact('test-user'),
+            Argument::exact('test-uid'),
+            Argument::exact(1)
+        )->will(function () use (&$createCalls) {
+            if ($createCalls > 0) {
+                return;
+            }
+
+            $createCalls++;
+            throw new KeyCollisionException();
+        });
+
+        $service = $this->getActorCodeService();
+
+        $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
+
+        // We expect a uuid4 back.
+        $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $result);
+    }
+
+    /** @test */
+    public function successful_validation(): void
+    {
+        [
+            $testCode,
+            $testUid,
+            $testDob,
+            $testActorId,
+            $testActorUid,
+            $mockLpa,
+            $mockActor,
+        ] = $this->initValidParameterSet();
 
         $service = $this->getActorCodeService();
 
@@ -151,217 +196,15 @@ class ActorCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function validation_with_invalid_actor()
+    public function validation_fails(): void
     {
-        $testCode = 'test-code';
-        $testUid = 'test-uid';
-        $testDob = 'test-dob';
+        $testCode     = 'test-code';
+        $testUid      = 'test-uid';
+        $testDob      = 'test-dob';
 
-        $this->actorCodesInterfaceProphecy->get($testCode)->willReturn(
-            [
-                'Active' => true,
-                'SiriusUid' => $testUid,
-                'ActorLpaId' => 1,
-                'ActorCode' => 'different-actor-code',
-            ]
-        )->shouldBeCalled();
-
-        $this->lpaServiceProphecy->getByUid($testUid)->willReturn(
-            new Repository\Response\Lpa([], null)
-        )->shouldBeCalled();
-
-        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('int'))
-            ->willReturn(
-                [
-                    'details' => ['dob' => $testDob],
-                ]
-            )->shouldBeCalled();
-
-        //---
-
-        $service = $this->getActorCodeService();
-
-        $result = $service->validateDetails($testCode, $testUid, $testDob);
-
-        $this->assertNull($result);
-    }
-
-    /** @test */
-    public function validation_with_invalid_actor_code()
-    {
-        $testCode = 'test-code';
-        $testUid = 'test-uid';
-        $testDob = 'test-dob';
-
-        $this->actorCodesInterfaceProphecy->get($testCode)->willReturn(null)->shouldBeCalled();
-
-        //---
-
-        $service = $this->getActorCodeService();
-
-        $result = $service->validateDetails($testCode, $testUid, $testDob);
-
-        $this->assertNull($result);
-    }
-
-    /** @test */
-    public function validation_with_invalid_dob()
-    {
-        $testCode = 'test-code';
-        $testUid = 'test-uid';
-        $testDob = 'test-dob';
-
-        $this->actorCodesInterfaceProphecy->get($testCode)->willReturn(
-            [
-                'Active' => true,
-                'SiriusUid' => $testUid,
-                'ActorLpaId' => 1,
-                'ActorCode' => $testCode,
-            ]
-        )->shouldBeCalled();
-
-        $this->lpaServiceProphecy->getByUid($testUid)->willReturn(
-            new Repository\Response\Lpa(
-                [
-                    'uId' => $testUid,
-                ],
-                null
-            )
-        )->shouldBeCalled();
-
-        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('int'))
-            ->willReturn(
-                [
-                    'details' => ['dob' => 'different-dob'],
-                ]
-            )->shouldBeCalled();
-
-        //---
-
-        $service = $this->getActorCodeService();
-
-        $result = $service->validateDetails($testCode, $testUid, $testDob);
-
-        $this->assertNull($result);
-    }
-
-    /** @test */
-    public function validation_with_invalid_uid()
-    {
-        $testCode = 'test-code';
-        $testUid = 'test-uid';
-        $testDob = 'test-dob';
-
-        $this->actorCodesInterfaceProphecy->get($testCode)->willReturn(
-            [
-                'Active' => true,
-                'SiriusUid' => $testDob,
-                'ActorLpaId' => 1,
-                'ActorCode' => $testCode,
-            ]
-        )->shouldBeCalled();
-
-        $this->lpaServiceProphecy->getByUid($testDob)->willReturn(
-            new Repository\Response\Lpa(
-                [
-                    'uId' => 'different-uid',
-                ],
-                null
-            )
-        )->shouldBeCalled();
-
-        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('int'))->willReturn(
-            [
-                'details' => ['dob' => $testDob],
-            ]
-        )->shouldBeCalled();
-
-        //---
-
-        $service = $this->getActorCodeService();
-
-        $result = $service->validateDetails($testCode, $testUid, $testDob);
-
-        $this->assertNull($result);
-    }
-
-    /** @test */
-    public function validation_with_missing_actor()
-    {
-        $testCode = 'test-code';
-        $testUid = 'test-uid';
-        $testDob = 'test-dob';
-
-        $mockSiriusId = 'mock-id';
-
-        $mockLpa = new Repository\Response\Lpa([], null);
-
-        $this->actorCodesInterfaceProphecy->get($testCode)->willReturn(
-            [
-                'Active' => true,
-                'SiriusUid' => $mockSiriusId,
-                'ActorLpaId' => 1,
-            ]
-        )->shouldBeCalled();
-
-        $this->lpaServiceProphecy->getByUid($mockSiriusId)->willReturn(
-            $mockLpa
-        )->shouldBeCalled();
-
-        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('int'))
-            ->willReturn(null)
+        $this->codeValidatorProphecy->validateCode($testCode, $testUid, $testDob)
+            ->willThrow(new ActorCodeValidationException())
             ->shouldBeCalled();
-
-        //---
-
-        $service = $this->getActorCodeService();
-
-        $result = $service->validateDetails($testCode, $testUid, $testDob);
-
-        $this->assertNull($result);
-    }
-
-    //-------------------------------------
-
-    /** @test */
-    public function validation_with_missing_lpa()
-    {
-        $testCode = 'test-code';
-        $testUid = 'test-uid';
-        $testDob = 'test-dob';
-
-        $mockSiriusId = 'mock-id';
-
-        $this->actorCodesInterfaceProphecy->get($testCode)->willReturn(
-            [
-                'Active' => true,
-                'SiriusUid' => $mockSiriusId,
-            ]
-        )->shouldBeCalled();
-
-        $this->lpaServiceProphecy->getByUid($mockSiriusId)->willReturn(null)->shouldBeCalled();
-
-        //---
-
-        $service = $this->getActorCodeService();
-
-        $result = $service->validateDetails($testCode, $testUid, $testDob);
-
-        $this->assertNull($result);
-    }
-
-    /** @test */
-    public function validation_with_valid_actor_code_that_is_inactive()
-    {
-        $testCode = 'test-code';
-        $testUid = 'test-uid';
-        $testDob = 'test-dob';
-
-        $this->actorCodesInterfaceProphecy->get($testCode)->willReturn(
-            [
-                'Active' => false,
-            ]
-        )->shouldBeCalled();
 
         $service = $this->getActorCodeService();
 
@@ -373,6 +216,7 @@ class ActorCodeServiceTest extends TestCase
     private function getActorCodeService(): ActorCodeService
     {
         return new ActorCodeService(
+            $this->codeValidatorProphecy->reveal(),
             $this->actorCodesInterfaceProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
@@ -380,12 +224,13 @@ class ActorCodeServiceTest extends TestCase
         );
     }
 
-    private function initValidParameterSet()
+    private function initValidParameterSet(): array
     {
         $testCode = 'test-code';
         $testUid = 'test-uid';
         $testDob = 'test-dob';
         $testActorId = 1;
+        $testActorUid = '123456789012';
 
         $mockLpa = [
             'uId' => $testUid,
@@ -394,26 +239,31 @@ class ActorCodeServiceTest extends TestCase
         $mockActor = [
             'details' => [
                 'dob' => $testDob,
-                'id' => $testActorId,
+                'id'  => $testActorId,
+                'uId' => $testActorUid,
             ],
         ];
 
-        $this->actorCodesInterfaceProphecy->get($testCode)->willReturn(
-            [
-                'Active' => true,
-                'SiriusUid' => $testUid,
-                'ActorLpaId' => $testActorId,
-                'ActorCode' => $testCode,
-            ]
-        )->shouldBeCalled();
+        $this->codeValidatorProphecy->validateCode($testCode, $testUid, $testDob)
+            ->willReturn($testActorUid)
+            ->shouldBeCalled();
 
         $this->lpaServiceProphecy->getByUid($testUid)->willReturn(
             new Repository\Response\Lpa($mockLpa, null)
         )->shouldBeCalled();
 
-        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('int'))
+        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('string'))
             ->willReturn($mockActor)
             ->shouldBeCalled();
-    }
 
+        return [
+            $testCode,
+            $testUid,
+            $testDob,
+            $testActorId,
+            $testActorUid,
+            $mockLpa,
+            $mockActor,
+        ];
+    }
 }
