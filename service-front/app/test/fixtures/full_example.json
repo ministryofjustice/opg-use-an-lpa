@@ -20,7 +20,7 @@
   "donor": {
     "id": 0,
     "uId": "700000000054",
-    "email": "test@test.com",
+    "email": "string˚",
     "dob": "1980-10-10",
     "salutation": "Mrs",
     "firstname": "Ian",
@@ -45,7 +45,7 @@
     {
       "id": 9,
       "uId": "700000000054",
-      "email": "test@test.com",
+      "email": "string˚",
       "dob": "1975-10-05",
       "salutation": "Mrs",
       "firstname": "Ian",
@@ -122,7 +122,7 @@
     {
       "id": 8,
       "uId": "700000000054",
-      "email": "test@test.com",
+      "email": "string˚",
       "dob": "1980-10-10",
       "salutation": "Mrs",
       "firstname": "Ian",
@@ -148,7 +148,7 @@
     {
       "id": 7,
       "uId": "700000000054",
-      "email": "test@test.com",
+      "email": "string˚",
       "dob": "1980-10-10",
       "salutation": "Mrs",
       "firstname": "Ian",
@@ -174,7 +174,7 @@
     {
       "id": 6,
       "uId": "700000000054",
-      "email": "test@test.com",
+      "email": "string˚",
       "dob": "1980-10-10",
       "salutation": "Mrs",
       "firstname": "Ian",
