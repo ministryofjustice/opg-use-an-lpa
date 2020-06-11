@@ -100,6 +100,24 @@ return [
                 'interval' => 60,
                 'requests_per_interval' => 4
             ]
+        ],
+        'actor_login_failure' => [
+            'type' => 'keyed',
+            'storage' => [
+                'adapter' => [
+                    'name'    => 'memory',
+                    'options' => [
+                        'memory_limit' => '96M',
+                        'ttl' => 60,
+                        'server' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
+                        'lib_options' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey()
+                    ],
+                ],
+            ],
+            'options' => [
+                'interval' => 60,
+                'requests_per_interval' => 4
+            ]
         ]
     ]
 ];
