@@ -7,5 +7,5 @@ codecov:
   status:
     project:
       default:
-        target: 80%    # the required coverage value
-        threshold: 5%  # the leniency in hitting the target setting to 5% now.
+        target: 80%    # our target PR coverage to be successful
+        threshold: 1%  # if PR drops coverage by less than % percent, but is still above the target, then successful.
