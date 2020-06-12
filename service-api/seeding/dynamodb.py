@@ -110,7 +110,14 @@ actorLpaCodes = [
         'ActorLpaId': 164,
         'SiriusUid': "700000000344",
         'Active': True,
-        'Expires': "2018-09-25T00:00:00Z",
+        'Expires': "2021-09-25T00:00:00Z",
+    },
+    {
+        'ActorCode': "MDCKNUA9UDEC",
+        'ActorLpaId': 59,
+        'SiriusUid': "700000000344",
+        'Active': True,
+        'Expires': "2021-09-25T00:00:00Z",
     },
 ]
 

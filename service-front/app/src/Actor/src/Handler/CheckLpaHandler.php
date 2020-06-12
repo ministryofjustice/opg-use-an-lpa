@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\LpaConfirm;
+use App\Service\User\UserService;
+use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
@@ -121,12 +123,15 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 }
 
                 // is a GET or failed POST
-                $lpa = $this->lpaService->getLpaByPasscode(
+                $lpaData = $this->lpaService->getLpaByPasscode(
                     $identity,
                     $passcode,
                     $referenceNumber,
                     $dob
                 );
+
+                $lpa = $lpaData['lpa'];
+                $actor = $lpaData['actor']['details'];
 
                 $this->getLogger()->debug(
                     'Account with Id {id} has found an LPA with Id {uId} using their passcode',
@@ -137,33 +142,36 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 );
 
                 if (!is_null($lpa) && (strtolower($lpa->getStatus()) === 'registered')) {
-                    [$user, $userRole] = $this->resolveLpaData($lpa, $dob);
+                    // Are we displaying Donor or Attorney user role
+                    $actorRole = ($lpa->getDonor()->getId() === $actor->getId()) ?
+                        'Donor' :
+                        'Attorney';
 
                     $this->getLogger()->debug(
                         'Account with Id {id} identified as Role {role} on LPA with Id {uId}',
                         [
                             'id' => $identity,
-                            'role' => $userRole,
+                            'role' => $actorRole,
                             'uId' => $referenceNumber
                         ]
                     );
                     return new HtmlResponse($this->renderer->render('actor::check-lpa', [
                         'form' => $form,
                         'lpa' => $lpa,
-                        'user' => $user,
-                        'userRole' => $userRole,
+                        'user' => $actor,
+                        'userRole' => $actorRole,
                     ]));
                 } else {
                     $this->getLogger()->debug(
                         'LPA with Id {uId} has {status} status and hence cannot be added',
                         [
                             'uId' => $referenceNumber,
-                            'status' => $lpa->getStatus()
+                            'status' => $lpaData['lpa']->getStatus()
                         ]
                     );
                     //  Show LPA not found page
                     return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                        'user' => $this->getUser($request)
+                        'user' => $user
                     ]));
                 }
             } catch (ApiException $aex) {
@@ -179,7 +187,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
                     //  Show LPA not found page
                     return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                        'user' => $this->getUser($request)
+                        'user' => $user
                     ]));
                 }
 
@@ -191,28 +199,5 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         // TODO this can be reached if the session is still perfectly valid but the lpa search/response
         //      failed in some way. Make this better.
         throw new SessionTimeoutException();
-    }
-
-    protected function resolveLpaData(Lpa $lpa, string $dob): array
-    {
-        //  Check the logged in user role for this LPA
-        $user = null;
-        $userRole = null;
-        $comparableDob = \DateTime::createFromFormat('!Y-m-d', $dob);
-
-        if (!is_null($lpa->getDonor()->getDob()) && $lpa->getDonor()->getDob() == $comparableDob) {
-            $user = $lpa->getDonor();
-            $userRole = 'Donor';
-        } elseif (!is_null($lpa->getAttorneys()) && is_iterable($lpa->getAttorneys())) {
-            /** @var CaseActor $attorney */
-            foreach ($lpa->getAttorneys() as $attorney) {
-                if (!is_null($attorney->getDob()) && $attorney->getDob() == $comparableDob) {
-                    $user = $attorney;
-                    $userRole = 'Attorney';
-                }
-            }
-        }
-
-        return [$user, $userRole];
     }
 }

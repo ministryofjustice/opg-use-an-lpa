@@ -562,7 +562,7 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode(['lpa' => $this->lpa])
+                    json_encode($this->lpaData)
                 )
             )
             ->inspectRequest(function (RequestInterface $request, array $options) use ($storedCode) {
@@ -594,7 +594,7 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode(['lpa' => $this->lpa])
+                    json_encode($this->lpaData)
                 )
             )
             ->inspectRequest(function (RequestInterface $request, array $options) {
@@ -2852,5 +2852,119 @@ class AccountContext implements Context
         $this->iAmOnTheDashboardPage();
         $this->iClickTheReadMoreLinkInTheInstructionsOrPreferenceMessage('Read more');
         $this->iAmNavigatedToTheInstructionsAndPreferencesPage();
+    }
+
+
+    /**
+     * @When /^I request to add an LPA with the code "([^"]*)" that is for "([^"]*)" "([^"]*)" and I will have an Id of ([^"]*)$/
+     */
+    public function iRequestToAddAnLPAWithTheCodeThatIsForAndIWillHaveAnIdOf(
+        $passcode,
+        $firstName,
+        $secondName,
+        $id
+    ) {
+        $this->userId = $this->actorId = (int)$id;
+
+        $this->userFirstName = $firstName;
+        $this->userSurname = $secondName;
+
+        // API Response for LPA data request, configured with our specified details
+        $this->lpaData = [
+            'user-lpa-actor-token' => $this->userLpaActorToken,
+            'date' => 'today',
+            'actor' => [
+                'type' => 'primary-attorney',
+                'details' => [
+                    'addresses' => [
+                        [
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                            'country'      => '',
+                            'county'       => '',
+                            'id'           => 0,
+                            'postcode'     => '',
+                            'town'         => '',
+                            'type'         => 'Primary'
+                        ]
+                    ],
+                    'companyName' => null,
+                    'id' => $this->actorId,
+                    'uId' => '700000000054',
+                    'dob' => '1975-10-05',
+                    'salutation' => 'Mr',
+                    'firstname' => $this->userFirstName,
+                    'middlenames' => null,
+                    'surname' => $this->userSurname,
+                    'systemStatus' => true,
+                    'email' => 'string'
+                ],
+            ],
+            'applicationHasRestrictions' => true,
+            'applicationHasGuidance' => false,
+            'lpa' => $this->lpa
+        ];
+
+        // API call for checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpaData)
+                )
+            );
+
+        $this->ui->fillField('passcode', $passcode);
+        $this->ui->fillField('reference_number', '700000000054');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^The correct LPA is found and I can see the correct name which will have a role of "([^"]*)"$/
+     */
+    public function theCorrectLPAIsFoundAndICanSeeTheCorrectNameWhichWillHaveARoleOf($role)
+    {
+        // API call for adding an LPA
+        $this->apiFixtures->post('/v1/actor-codes/confirm')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_CREATED,
+                    [],
+                    json_encode(['user-lpa-actor-token' => $this->userLpaActorToken])
+                )
+            );
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $this->ui->assertPageAddress('/lpa/check');
+
+        $this->ui->assertPageContainsText('Is this the LPA you want to add?');
+        $this->ui->assertPageContainsText(sprintf('Mr %s %s', $this->userFirstName, $this->userSurname));
+        $this->ui->assertPageContainsText($role);
+
+        $this->ui->pressButton('Continue');
     }
 }
