@@ -16,14 +16,14 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Upon detection of an Expiration value in the session will remove all
- * session values apart from those whitelisted here
+ * session values apart from those listed here
  *
  * Used to log a user out, or remove the expired key after other middle wares have had the chance to work
  * on it.
  *
  * @package Common\Middleware\Session
  */
-class SessionExpiredAttributeWhitelistMiddleware implements MiddlewareInterface
+class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
 {
     protected const WHITELIST = [
         UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE,
