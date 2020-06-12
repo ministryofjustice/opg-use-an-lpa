@@ -849,6 +849,40 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
+    public function can_get_user_by_new_email()
+    {
+        $id = '12345-1234-1234-1234-12345';
+        $newEmail = 'new@email.com';
+
+        $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($newEmail) {
+            $this->assertIsArray($data);
+
+            $this->assertStringContainsString('users-table', serialize($data));
+            $this->assertStringContainsString($newEmail, serialize($data));
+
+            return true;
+        }))->willReturn($this->createAWSResult([
+            'Items' => [
+                [
+                    'Id' => [
+                        'S' => $id,
+                    ],
+                    'NewEmail' => [
+                        'S' => $newEmail
+                    ],
+                ],
+            ],
+        ]));
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
+
+        $users = $actorRepo->getUserByNewEmail($newEmail);
+
+        $this->assertEquals($id, $users[0]['Id']);
+        $this->assertEquals($newEmail, $users[0]['NewEmail']);
+    }
+
+    /** @test */
     public function will_throw_not_found_exception_if_email_reset_token_not_found()
     {
         $resetToken = 'abcde12345';
