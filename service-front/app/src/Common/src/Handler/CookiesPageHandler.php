@@ -12,11 +12,15 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
+use Mezzio\Router\Route;
+use Mezzio\Router\RouteCollector;
+use Mezzio\Router\RouteResult;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Template\TemplateRendererInterface;
 use Mezzio\Helper\UrlHelper;
+use Common\Service\Url\UrlValidityCheckService;
 
 /**
  * Class CookiesPageHandler
@@ -26,6 +30,11 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
 {
     use User;
     use CsrfGuard;
+
+    /**
+     * @var UrlValidityCheckService
+     */
+    private $urlValidityCheckService;
 
     const COOKIE_POLICY_NAME = 'cookie_policy';
     const SEEN_COOKIE_NAME   = 'seen_cookie_message';
@@ -37,10 +46,12 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
      */
     public function __construct(
         TemplateRendererInterface $renderer,
-        UrlHelper $urlHelper
+        UrlHelper $urlHelper,
+        UrlValidityCheckService $urlValidityCheckService
     )
     {
         parent::__construct($renderer, $urlHelper);
+        $this->urlValidityCheckService = $urlValidityCheckService;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -61,10 +72,10 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
             $usageCookies = $cookiePolicy['usage'] === true ? 'yes' : 'no';
         }
         $form->get('usageCookies')->setValue($usageCookies);
-        if (!empty($cookiesPageReferer and $this->isValid($cookiesPageReferer[0]))) {
-            // Apply all appropriate measures to ensures it's a valid value.
-            // i.e. is it a page on our site?
-            // is it a page that we expect them to come from?
+
+        $validUrl = $this->urlValidityCheckService->isValid($cookiesPageReferer[0]);
+
+        if (!empty($cookiesPageReferer and $validUrl)) {
             $form->get('referer')->setValue($cookiesPageReferer[0]);
         } else {
             $form->get('referer')->setValue(null);
@@ -82,9 +93,11 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         $cookies = $request->getCookieParams();
         $form->setData($request->getParsedBody());
 
-        // After setting cookies settings user is taken where they were previously
-        if ($form->get('referer')->getValue() !== null) {
-            $response = new RedirectResponse($form->get('referer')->getValue());
+        $isValidRefererRoute = $this->urlValidityCheckService->checkRefererRouteValid($refererRoute = $form->get('referer')->getValue());
+
+        // After setting cookies settings user is taken where they were previously after validating the referer route
+        if ($isValidRefererRoute) {
+            $response = new RedirectResponse($refererRoute);
         } else {
             $response = new RedirectResponse($this->urlHelper->generate('home'));
         }
@@ -112,24 +125,5 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
             );
         }
         return $response;
-    }
-
-    private function isValid(string $referer ): bool
-    {
-        // Remove all illegal characters from a url
-        $url = filter_var($referer, FILTER_SANITIZE_URL);
-
-        // Validate url
-        if (filter_var($referer, FILTER_VALIDATE_URL) !== false) {
-           // var_dump("$url is a valid URL");
-            //die;
-
-            return true;
-        } else {
-           // var_dump("$url is not a valid URL");
-          //  die;
-
-            return false;
-        }
     }
 }
