@@ -1,0 +1,26 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Change email verification unsuccessful - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">We cannot change your email address</h1>
+
+                    <p class="govuk-body">The link we sent you to confirm your email address has expired.</p>
+
+                    <p class="govuk-body">To change your email address, sign back into your account and ask us to change it again.</p>
+
+                    <p class="govuk-body">You have 48 hours to confirm your email address by using the link we send you.</p>
+
+                    <a href="{{ path('login') }}" class="govuk-body govuk-link">Sign in</a><br>
+                </div>
+
+            </div>
+        </main>
+    </div>
+{% endblock %}

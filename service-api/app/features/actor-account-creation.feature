@@ -29,3 +29,10 @@ Feature: Account creation
     And I have asked to create a new account
     When I create an account using duplicate details
     Then I am informed about an existing account
+
+  @integration @acceptance
+  Scenario: The user account cannot create an account with an email address that has been requested for reset
+    Given I am not a user of the lpa application
+    And I have asked to create a new account
+    When I create an account using with an email address that has been requested for reset
+    Then I am informed that there was a problem with that email address

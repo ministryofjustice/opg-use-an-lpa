@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\User;
 
+use App\Exception\BadRequestException;
+use App\Exception\ForbiddenException;
+use App\Exception\GoneException;
 use Common\Entity\User;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
 use Common\Service\User\UserService;
 use DateTime;
+use DI\NotFoundException;
 use Fig\Http\Message\StatusCodeInterface;
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -27,14 +32,15 @@ class UserServiceTest extends TestCase
             [
                 'email' => 'test@example.com',
                 'password' => 'test'
-            ])
+            ]
+        )
             ->willReturn([
                 'Id'              => '12345',
                 'Email'           => 'a@b.com',
                 'ActivationToken' => 'activate1234567890',
             ]);
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -58,12 +64,13 @@ class UserServiceTest extends TestCase
             '/v1/user',
             [
                 'email' => 'test@example.com',
-            ])
+            ]
+        )
             ->willReturn([
                 'Email' => 'a@b.com',
             ]);
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -86,10 +93,11 @@ class UserServiceTest extends TestCase
             '/v1/user',
             [
                 'email' => 'test@example.com',
-            ])
+            ]
+        )
             ->willThrow(new ApiException('User not found', StatusCodeInterface::STATUS_NOT_FOUND));
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -112,14 +120,15 @@ class UserServiceTest extends TestCase
             [
                 'email' => 'test@example.com',
                 'password' => 'test'
-            ])
+            ]
+        )
             ->willReturn([
                 'Id'        => '01234567-0123-0123-0123-012345678901',
                 'Email'     => 'test@example.com',
                 'LastLogin' => '2019-07-10T09:00:00'
             ]);
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             $this->assertEquals('01234567-0123-0123-0123-012345678901', $identity);
             $this->assertIsArray($roles);
             $this->assertIsArray($details);
@@ -150,10 +159,11 @@ class UserServiceTest extends TestCase
             [
                 'email' => 'test@example.com',
                 'password' => 'badpass'
-            ])
+            ]
+        )
             ->willThrow(ApiException::create('test'));
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -176,14 +186,15 @@ class UserServiceTest extends TestCase
             [
                 'email' => 'test@example.com',
                 'password' => 'test'
-            ])
+            ]
+        )
             ->willReturn([
                 'Id'        => '01234567-0123-0123-0123-012345678901',
                 'Email'     => 'test@example.com',
                 'LastLogin' => '2019-07-10T09:00:00'
             ]);
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -204,13 +215,14 @@ class UserServiceTest extends TestCase
             '/v1/user-activation',
             [
                 'activation_token' => 'activate1234567890',
-            ])
+            ]
+        )
             ->willReturn([
                 'Id'    => '12345',
                 'Email' => 'test@example.com'
             ]);
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -232,10 +244,11 @@ class UserServiceTest extends TestCase
             '/v1/user-activation',
             [
                 'activation_token' => 'activate1234567890',
-            ])
+            ]
+        )
             ->willReturn([]);
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -257,10 +270,11 @@ class UserServiceTest extends TestCase
             '/v1/user-activation',
             [
                 'activation_token' => 'activate1234567890',
-            ])
+            ]
+        )
             ->willThrow(new ApiException('User not found', StatusCodeInterface::STATUS_NOT_FOUND));
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -282,10 +296,11 @@ class UserServiceTest extends TestCase
             '/v1/user-activation',
             [
                 'activation_token' => 'activate1234567890',
-            ])
+            ]
+        )
             ->willThrow(new ApiException('Activation exception', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR));
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -307,14 +322,15 @@ class UserServiceTest extends TestCase
             '/v1/request-password-reset',
             [
                 'email' => 'test@example.com'
-            ])
+            ]
+        )
             ->willReturn([
                 'Id'                 => '12345',
                 'Email'              => 'test@example.com',
                 'PasswordResetToken' => 'resettokenAABBCCDDEE'
             ]);
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -336,10 +352,11 @@ class UserServiceTest extends TestCase
             '/v1/request-password-reset',
             [
                 'email' => 'test@example.com'
-            ])
+            ]
+        )
             ->willThrow(new ApiException('User not found', StatusCodeInterface::STATUS_NOT_FOUND));
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -361,12 +378,13 @@ class UserServiceTest extends TestCase
             '/v1/request-password-reset',
             [
                 'email' => 'test@example.com'
-            ])
+            ]
+        )
             ->willReturn([
                 'InvalidResponse' => 'YouWereExpectingSomethingElse'
             ]);
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -390,10 +408,11 @@ class UserServiceTest extends TestCase
                 'user-id'       => '01234567-0123-0123-0123-012345678901',
                 'password'      => 'CurrentPassw0rd',
                 'new-password'  => 'FinalF0rm'
-            ])
+            ]
+        )
             ->willReturn([]);
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -416,13 +435,14 @@ class UserServiceTest extends TestCase
                 'user-id'       => '01234567-0123-0123-0123-012345678901',
                 'password'      => 'BadPassw0rd',
                 'new-password'  => 'FinalF0rm'
-            ])
+            ]
+        )
             ->willThrow(new ApiException(
                 'Authentication failed for user ID 01234567-0123-0123-0123-012345678901',
                 StatusCodeInterface::STATUS_FORBIDDEN
             ));
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -432,7 +452,6 @@ class UserServiceTest extends TestCase
         $this->expectExceptionCode(StatusCodeInterface::STATUS_FORBIDDEN);
         $this->expectException(ApiException::class);
         $return = $service->changePassword('01234567-0123-0123-0123-012345678901', 'BadPassw0rd', 'FinalF0rm');
-
     }
 
     /** @test */
@@ -447,10 +466,11 @@ class UserServiceTest extends TestCase
                 'user-id'       => '01234567-9999-9999-9999-012345678901',
                 'password'      => 'BadPassw0rd',
                 'new-password'  => 'FinalF0rm'
-            ])
+            ]
+        )
             ->willThrow(new ApiException('User not found', StatusCodeInterface::STATUS_NOT_FOUND));
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -476,10 +496,10 @@ class UserServiceTest extends TestCase
                 'Id'       => $id,
                 'Email'    => $email,
                 'Password' => password_hash('pa33w0rd123', PASSWORD_DEFAULT),
-                'LastLogin'=> null
+                'LastLogin' => null
             ]);
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -507,7 +527,7 @@ class UserServiceTest extends TestCase
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $this->expectException(RuntimeException::class);
 
-        $userFactoryCallable = function($identity, $roles, $details) {
+        $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
             $this->fail('User should not be created');
         };
@@ -515,5 +535,232 @@ class UserServiceTest extends TestCase
         $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
         $service->deleteAccount($id);
+    }
+
+    /** @test */
+    public function can_request_email_reset()
+    {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpPatch(
+            '/v1/request-change-email',
+            [
+                'user-id'       => '12345',
+                'new-email'     => 'new@email.com',
+                'password'      => 'pa33W0rd',
+            ]
+        )->willReturn([
+                'EmailResetExpiry' => time() + (60 * 60 * 48),
+                'Email'            => 'old@email.com',
+                'LastLogin'        => null,
+                'Id'               => '12345',
+                'NewEmail'         => 'new@email.com',
+                'EmailResetToken'  => 't0ken12345',
+                'Password'         => 'pa33W0rd',
+            ]);
+
+        $userFactoryCallable = function ($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $data = $service->requestChangeEmail('12345', 'new@email.com', 'pa33W0rd');
+
+        $this->assertEquals('12345', $data['Id']);
+        $this->assertEquals('old@email.com', $data['Email']);
+        $this->assertEquals('new@email.com', $data['NewEmail']);
+        $this->assertEquals('pa33W0rd', $data['Password']);
+        $this->assertEquals('t0ken12345', $data['EmailResetToken']);
+        $this->assertArrayHasKey('EmailResetExpiry', $data);
+    }
+
+    /** @test */
+    public function exception_thrown_when_user_id_not_provided_in_request_email_change()
+    {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpPatch(
+            '/v1/request-change-email',
+            [
+                'user-id'       => '',
+                'new-email'     => 'new@email.com',
+                'password'      => 'pa33W0rd',
+            ]
+        )->willThrow(new ApiException('User Id must be provided', StatusCodeInterface::STATUS_BAD_REQUEST));
+
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->expectException(ApiException::class);
+
+        $userFactoryCallable = function ($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $service->requestChangeEmail('', 'new@email.com', 'pa33W0rd');
+    }
+
+    /** @test */
+    public function exception_thrown_when_new_email_not_provided_in_request_email_change()
+    {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpPatch(
+            '/v1/request-change-email',
+            [
+                'user-id'       => '12345',
+                'new-email'     => '',
+                'password'      => 'pa33W0rd',
+            ]
+        )->willThrow(new ApiException('New email address must be provided', StatusCodeInterface::STATUS_BAD_REQUEST));
+
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->expectException(ApiException::class);
+
+        $userFactoryCallable = function ($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $service->requestChangeEmail('12345', '', 'pa33W0rd');
+    }
+
+    /** @test */
+    public function exception_thrown_when_password_not_provided_in_request_email_change()
+    {
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpPatch(
+            '/v1/request-change-email',
+            [
+                'user-id'       => '12345',
+                'new-email'     => 'new@email.com',
+                'password'      => '',
+            ]
+        )->willThrow(new ApiException('Current password must be provided', StatusCodeInterface::STATUS_BAD_REQUEST));
+
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->expectException(ApiException::class);
+
+        $userFactoryCallable = function ($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $service->requestChangeEmail('12345', 'new@email.com', '');
+    }
+
+    /** @test */
+    public function can_reset_email_function_returns_true_when_successful()
+    {
+        $resetToken = 't0ken12345';
+        $userId = '12345';
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpGet(
+            '/v1/can-reset-email',
+            [
+                'token' => $resetToken,
+            ]
+        )->willReturn(['Id' => $userId]);
+
+        $userFactoryCallable = function ($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $canReset = $service->canResetEmail($resetToken);
+
+        $this->assertTrue($canReset);
+    }
+
+    /** @test */
+    public function can_reset_email_function_returns_false_when_token_expired_or_not_found()
+    {
+        $resetToken = 't0ken12345';
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpGet(
+            '/v1/can-reset-email',
+            [
+                'token' => $resetToken,
+            ]
+        )->willThrow(new ApiException('Email reset token has expired', StatusCodeInterface::STATUS_GONE));
+
+        $userFactoryCallable = function ($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $result = $service->canResetEmail($resetToken);
+        $this->assertFalse($result);
+    }
+
+    /** @test */
+    public function can_reset_email_function_throws_anything_other_than_a_gone_exception()
+    {
+        $resetToken = 't0ken12345';
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpGet(
+            '/v1/can-reset-email',
+            [
+                'token' => $resetToken,
+            ]
+        )->willThrow(new ApiException('Email reset token has expired', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR));
+
+        $userFactoryCallable = function ($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $this->expectException(ApiException::class);
+        $service->canResetEmail($resetToken);
+    }
+
+    /** @test */
+    public function complete_change_email_returns_nothing_when_successful()
+    {
+        $resetToken = 't0ken12345';
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $apiClientProphecy = $this->prophesize(Client::class);
+        $apiClientProphecy->httpPatch(
+            '/v1/complete-change-email',
+            [
+                'reset_token' => $resetToken,
+            ]
+        )->willReturn([]);
+
+        $userFactoryCallable = function ($identity, $roles, $details) {
+            // Not returning a user here since it shouldn't be called.
+            $this->fail('User should not be created');
+        };
+
+        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
+
+        $result = $service->completeChangeEmail($resetToken);
+        $this->assertNull($result);
     }
 }

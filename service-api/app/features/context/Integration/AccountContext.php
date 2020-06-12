@@ -6,6 +6,7 @@ namespace BehatTest\Context\Integration;
 
 use App\DataAccess\DynamoDb\UserLpaActorMap;
 use App\DataAccess\DynamoDb\ViewerCodeActivity;
+use App\Exception\ConflictException;
 use App\Exception\ForbiddenException;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
@@ -47,6 +48,8 @@ use PHPUnit\Framework\ExpectationFailedException;
  * @property $actorAccountCreateData
  * @property $organisation
  * @property $accessCode
+ * @property $newEmail
+ * @property $userEmailResetToken
  */
 class AccountContext extends BaseIntegrationContext
 {
@@ -306,6 +309,9 @@ class AccountContext extends BaseIntegrationContext
         $this->awsFixtures->append(new Result([
             'Items' => []
         ]));
+
+        // ActorUsers::getUserByNewEmail
+        $this->awsFixtures->append(new Result([]));
 
         // ActorUsers::add
         $this->awsFixtures->append(new Result());
@@ -1785,5 +1791,470 @@ class AccountContext extends BaseIntegrationContext
     public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage()
     {
         // Not needed in this context
+    }
+
+    /**
+     * @Given /^I am on the change email page$/
+     */
+    public function iAmOnTheChangeEmailPage()
+    {
+        $this->newEmail = 'newEmail@test.com';
+        $this->userEmailResetToken = '12345abcde';
+    }
+
+    /**
+     * @When /^I request to change my email with an incorrect password$/
+     */
+    public function iRequestToChangeMyEmailWithAnIncorrectPassword()
+    {
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Email'    => $this->userAccountEmail,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
+        $userService = $this->container->get(UserService::class);
+
+        try {
+            $userService->requestChangeEmail($this->userAccountId, $this->newEmail, 'inc0rr3cT');
+        } catch (ForbiddenException $ex) {
+            assertEquals(403, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException("Forbidden exception was not thrown for incorrect password");
+    }
+
+    /**
+     * @Then /^I should be told that I could not change my email because my password is incorrect$/
+     */
+    public function iShouldBeToldThatICouldNotChangeMyEmailBecauseMyPasswordIsIncorrect()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to change my email to an email address that is taken by another user on the service$/
+     */
+    public function iRequestToChangeMyEmailToAnEmailAddressThatIsTakenByAnotherUserOnTheService()
+    {
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Email'    => $this->userAccountEmail,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
+        // ActorUsers::getByEmail (exists)
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Email' => $this->userAccountEmail,
+                    'Password' => $this->userAccountPassword
+                ])
+            ]
+        ]));
+
+        $userService = $this->container->get(UserService::class);
+
+        try {
+            $userService->requestChangeEmail($this->userAccountId, $this->newEmail, $this->userAccountPassword);
+        } catch (ConflictException $ex) {
+            assertEquals(409, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException("Conflict exception was not thrown");
+    }
+
+    /**
+     * @Then /^I should be told my request was successful and an email is sent to the chosen email address to warn the user$/
+     */
+    public function iShouldBeToldMyRequestWasSuccessfulAndAnEmailIsSentToTheChosenEmailAddressToWarnTheUser()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has not expired$/
+     */
+    public function iRequestToChangeMyEmailToAnEmailAddressThatAnotherUserHasRequestedToChangeTheirEmailToButTheirTokenHasNotExpired()
+    {
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Email'    => $this->userAccountEmail,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
+        // ActorUsers::getByEmail (exists)
+        $this->awsFixtures->append(new Result([]));
+
+        // ActorUsers::getUserByNewEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'EmailResetExpiry' => time() + (60 * 60),
+                    'Email'            => 'another@user.com',
+                    'LastLogin'        => null,
+                    'Id'               => 'aaaaaa1111111',
+                    'NewEmail'         => $this->newEmail,
+                    'EmailResetToken'  => 't0ken12345',
+                    'Password'         => 'otherU53rsPa55w0rd'
+                ])
+            ]
+        ]));
+
+        $userService = $this->container->get(UserService::class);
+
+        try {
+            $userService->requestChangeEmail($this->userAccountId, $this->newEmail, $this->userAccountPassword);
+        } catch (ConflictException $ex) {
+            assertEquals(409, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException("Conflict exception was not thrown");
+    }
+
+    /**
+     * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has expired$/
+     */
+    public function iRequestToChangeMyEmailToAnEmailAddressThatAnotherUserHasRequestedToChangeTheirEmailToButTheirTokenHasExpired()
+    {
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Email'    => $this->userAccountEmail,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
+        // ActorUsers::getByEmail (exists)
+        $this->awsFixtures->append(new Result([]));
+
+        // Expired
+        $otherUsersTokenExpiry = time() - (60);
+
+        // ActorUsers::getUserByNewEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'EmailResetExpiry' => $otherUsersTokenExpiry,
+                    'Email'            => 'another@user.com',
+                    'LastLogin'        => null,
+                    'Id'               => 'aaaaaa1111111',
+                    'NewEmail'         => $this->newEmail,
+                    'EmailResetToken'  => 't0ken12345',
+                    'Password'         => 'otherU53rsPa55w0rd'
+                ])
+            ]
+        ]));
+
+        // ActorUsers::recordChangeEmailRequest
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'EmailResetExpiry' => time() + (60 * 60 * 48),
+                'Email'            => $this->userAccountEmail,
+                'LastLogin'        => null,
+                'Id'               => $this->userAccountId,
+                'NewEmail'         => $this->newEmail,
+                'EmailResetToken'  => $this->userEmailResetToken,
+                'Password'         => $this->userAccountPassword
+            ])
+        ]));
+    }
+
+    /**
+     * @Then /^I should be sent an email to both my current and new email$/
+     */
+    public function iShouldBeSentAnEmailToBothMyCurrentAndNewEmail()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I should be told that my request was successful$/
+     */
+    public function iShouldBeToldThatMyRequestWasSuccessful()
+    {
+        $userService = $this->container->get(UserService::class);
+        $response = $userService->requestChangeEmail($this->userAccountId, $this->newEmail, $this->userAccountPassword);
+
+        assertEquals($this->userAccountId, $response['Id']);
+        assertEquals($this->userAccountEmail, $response['Email']);
+        assertEquals($this->newEmail, $response['NewEmail']);
+        assertEquals($this->userAccountPassword, $response['Password']);
+        assertEquals($this->userEmailResetToken, $response['EmailResetToken']);
+        assertArrayHasKey('EmailResetExpiry', $response);
+    }
+
+    /**
+     * @When /^I request to change my email to a unique email address$/
+     */
+    public function iRequestToChangeMyEmailToAUniqueEmailAddress()
+    {
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Email'    => $this->userAccountEmail,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT)
+            ])
+        ]));
+
+        // ActorUsers::getByEmail (exists)
+        $this->awsFixtures->append(new Result([]));
+
+        // ActorUsers::getUserByNewEmail
+        $this->awsFixtures->append(new Result([]));
+
+        // ActorUsers::recordChangeEmailRequest
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'EmailResetExpiry' => time() + (60 * 60 * 48),
+                'Email'            => $this->userAccountEmail,
+                'LastLogin'        => null,
+                'Id'               => $this->userAccountId,
+                'NewEmail'         => $this->newEmail,
+                'EmailResetToken'  => $this->userEmailResetToken,
+                'Password'         => $this->userAccountPassword
+            ])
+        ]));
+    }
+
+    /**
+     * @Given /^I have requested to change my email address$/
+     */
+    public function iHaveRequestedToChangeMyEmailAddress()
+    {
+        $this->userEmailResetToken = '12345abcde';
+        $this->newEmail = 'newEmail@test.com';
+    }
+
+    /**
+     * @Given /^My email reset token is still valid$/
+     */
+    public function myEmailResetTokenIsStillValid()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I click the link to verify my new email address$/
+     */
+    public function iClickTheLinkToVerifyMyNewEmailAddress()
+    {
+        // canResetEmail
+
+        // ActorUsers::getIdByEmailResetToken
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'EmailResetToken'  => $this->userEmailResetToken
+                ]),
+                $this->marshalAwsResultData([
+                    'Id' => $this->userAccountId
+                ])
+            ]
+        ]));
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'               => $this->userAccountId,
+                'Email'            => $this->userAccountEmail,
+                'Password'         => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                'EmailResetExpiry' => time() + (60 * 60),
+                'LastLogin'        => null,
+                'NewEmail'         => $this->newEmail,
+                'EmailResetToken'  => $this->userEmailResetToken
+            ])
+        ]));
+
+        $userService = $this->container->get(UserService::class);
+
+        $userId = $userService->canResetEmail($this->userEmailResetToken);
+
+        assertEquals($this->userAccountId, $userId);
+
+        //completeChangeEmail
+
+        // ActorUsers::getIdByEmailResetToken
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'EmailResetToken'  => $this->userEmailResetToken
+                ]),
+                $this->marshalAwsResultData([
+                    'Id' => $this->userAccountId
+                ])
+            ]
+        ]));
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->userAccountId,
+                'Email'    => $this->userAccountEmail,
+                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                'EmailResetExpiry' => (time() + (60 * 60)),
+                'LastLogin'        => null,
+                'NewEmail'         => $this->newEmail,
+                'EmailResetToken'  => $this->userEmailResetToken
+            ])
+        ]));
+
+        // ActorUsers::changeEmail
+        $this->awsFixtures->append(new Result([]));
+
+        $reset = $userService->completeChangeEmail($this->userEmailResetToken);
+
+        assertNull($reset);
+    }
+
+    /**
+     * @Then /^My account email address should be reset$/
+     */
+    public function myAccountEmailAddressShouldBeReset()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I should be able to login with my new email address$/
+     */
+    public function iShouldBeAbleToLoginWithMyNewEmailAddress()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I click the link to verify my new email address after my token has expired$/
+     */
+    public function iClickTheLinkToVerifyMyNewEmailAddressAfterMyTokenHasExpired()
+    {
+        // ActorUsers::getIdByEmailResetToken
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'EmailResetToken'  => $this->userEmailResetToken
+                ]),
+                $this->marshalAwsResultData([
+                    'Id' => $this->userAccountId
+                ])
+            ]
+        ]));
+
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'               => $this->userAccountId,
+                'Email'            => $this->userAccountEmail,
+                'Password'         => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                'EmailResetExpiry' => (time() - (60 * 60)),
+                'LastLogin'        => null,
+                'NewEmail'         => $this->newEmail,
+                'EmailResetToken'  => $this->userEmailResetToken
+            ])
+        ]));
+
+        $userService = $this->container->get(UserService::class);
+
+        try {
+            $userService->canResetEmail($this->userEmailResetToken);
+        } catch (GoneException $ex) {
+            assertEquals(410, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException();
+    }
+
+    /**
+     * @Then /^I should be told that my email could not be changed$/
+     */
+    public function iShouldBeToldThatMyEmailCouldNotBeChanged()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I click an old link to verify my new email address containing a token that no longer exists$/
+     */
+    public function iClickAnOldLinkToVerifyMyNewEmailAddressContainingATokenThatNoLongerExists()
+    {
+        // ActorUsers::getIdByEmailResetToken
+        $this->awsFixtures->append(new Result([]));
+
+        $userService = $this->container->get(UserService::class);
+
+        try {
+            $userService->canResetEmail($this->userEmailResetToken);
+        } catch (GoneException $ex) {
+            assertEquals(410, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException();
+    }
+
+    /**
+     * @When /^I create an account using with an email address that has been requested for reset$/
+     */
+    public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset()
+    {
+        $userAccountCreateData = [
+            'Id'                  => 1,
+            'ActivationToken'     => 'activate1234567890',
+            'Email'               => 'test@test.com',
+            'Password'            => 'Pa33w0rd'
+        ];
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => []
+        ]));
+
+        // ActorUsers::getUserByNewEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Id'               => $this->userAccountId,
+                    'Email'            => 'other@user.co.uk',
+                    'Password'         => password_hash('passW0rd', PASSWORD_DEFAULT),
+                    'EmailResetExpiry' => (time() + (60 * 60)),
+                    'LastLogin'        => null,
+                    'NewEmail'         => 'test@test.com',
+                    'EmailResetToken'  => 'abc1234567890'
+                ])]
+        ]));
+
+        $us = $this->container->get(UserService::class);
+
+        try {
+            $us->add(['email' => $userAccountCreateData['Email'], 'password' => $userAccountCreateData['Password']]);
+        } catch (ConflictException $ex) {
+            assertEquals(409, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException();
+    }
+
+    /**
+     * @Then /^I am informed that there was a problem with that email address$/
+     */
+    public function iAmInformedThatThereWasAProblemWithThatEmailAddress()
+    {
+        // Not needed for this context
     }
 }

@@ -1,0 +1,37 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Change email request successful - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        <a href="{{ path('change-email') }}" class="govuk-back-link">Back</a>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <div class="govuk-grid-row">
+
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-l">Updating your email address</h1>
+
+                    <p class="govuk-body">You’ve asked us to change your email address.</p>
+
+                    <p class="govuk-body">We've emailed a link to {{ newEmail }} – please follow the link in the email to confirm the change.</p>
+
+                    <p class="govuk-body">The email should arrive in a few minutes, check your spam, bulk and junk folders.</p>
+
+                    <p class="govuk-body">The link will work for 48 hours.</p>
+
+                    <p class="govuk-body">If you’ve already confirmed the change, you can use your new email address to <a href="{{ path('login') }}" class="govuk-link">sign in</a> now.</p>
+
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+{% endblock %}

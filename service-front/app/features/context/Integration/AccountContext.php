@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BehatTest\Context\Integration;
 
 use Alphagov\Notifications\Client;
+use App\Exception\ConflictException;
 use Common\Exception\ApiException;
 use BehatTest\Context\ActorContextTrait;
 use Common\Service\Email\EmailClient;
@@ -16,6 +17,7 @@ use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
+use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Http\Message\RequestInterface;
 use DateTime;
 
@@ -24,7 +26,6 @@ use DateTime;
  *
  * Account creation, login, password reset etc.
  *
- * @property string email
  * @property string resetToken
  * @property string activationToken
  * @property string userPassword
@@ -41,6 +42,8 @@ use DateTime;
  * @property int actorId
  * @property string $organisation
  * @property string $accessCode
+ * @property string newUserEmail
+ * @property string userEmailResetToken
  */
 class AccountContext extends BaseIntegrationContext
 {
@@ -182,7 +185,8 @@ class AccountContext extends BaseIntegrationContext
                         [
                             'Id'                 => '123',
                             'PasswordResetToken' => $this->userPasswordResetToken
-                        ])
+                        ]
+                    )
                 )
             );
 
@@ -204,7 +208,7 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(function (RequestInterface $request, array $options)
-            use ($expectedUrl, $expectedTemplateId) {
+ use ($expectedUrl, $expectedTemplateId) {
                 $requestBody = $request->getBody()->getContents();
 
                 assertContains($this->userPasswordResetToken, $requestBody);
@@ -367,7 +371,8 @@ class AccountContext extends BaseIntegrationContext
                         [
                             'Id'              => '123',
                             'activationToken' => $this->activationToken
-                        ])
+                        ]
+                    )
                 )
             );
 
@@ -517,7 +522,7 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(function (RequestInterface $request, array $options)
-            use ($expectedUrl, $expectedTemplateId) {
+ use ($expectedUrl, $expectedTemplateId) {
                 $requestBody = $request->getBody()->getContents();
 
                 assertContains($this->activationToken, $requestBody);
@@ -546,10 +551,14 @@ class AccountContext extends BaseIntegrationContext
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
-                    [], json_encode(
+                    [],
+                    json_encode(
                         [
                             'activation_token' => $this->activationToken
-                        ])))
+                        ]
+                    )
+                )
+            )
 
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $query = $request->getUri()->getQuery();
@@ -654,8 +663,9 @@ class AccountContext extends BaseIntegrationContext
                             'date' => 'date',
                             'lpa' => $this->lpa,
                             'actor' => $this->lpaData['actor']
-                        ]
-                    )));
+                        ])
+                )
+            );
     }
 
     /**
@@ -689,7 +699,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to make code
         $this->apiFixtures->post('/v1/lpas/' . $this->actorLpaToken . '/codes')
@@ -701,9 +713,9 @@ class AccountContext extends BaseIntegrationContext
                             'code' => $this->accessCode,
                             'expires' => '2021-03-07T23:59:59+00:00',
                             'organisation' => $this->organisation
-                        ]
-                    )
-                ));
+                        ])
+                )
+            );
 
         // API call for get LpaById
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
@@ -716,7 +728,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
     }
 
     /**
@@ -760,7 +774,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to make code
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
@@ -779,9 +795,9 @@ class AccountContext extends BaseIntegrationContext
                                 'Viewed' => false,
                                 'ActorId' => $this->actorId
                             ]
-                        ]
-                    )
-                ));
+                        ])
+                )
+            );
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
@@ -858,7 +874,9 @@ class AccountContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $this->viewerCodeService->cancelShareCode(
             $this->userIdentity,
@@ -877,7 +895,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
@@ -899,7 +919,9 @@ class AccountContext extends BaseIntegrationContext
                             'Viewed' => false,
                             'ActorId' => $this->actorId
                         ]
-                    ])));
+                    ])
+                )
+            );
 
         $shareCodes = $this->viewerCodeService->getShareCodes(
             $this->userIdentity,
@@ -987,7 +1009,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
@@ -1010,7 +1034,9 @@ class AccountContext extends BaseIntegrationContext
                             'Viewed' => false,
                             'ActorId' => $this->actorId
                         ]
-                    ])));
+                    ])
+                )
+            );
 
         $shareCodes = $this->viewerCodeService->getShareCodes(
             $this->userIdentity,
@@ -1032,7 +1058,7 @@ class AccountContext extends BaseIntegrationContext
     /**
      * @Then /^I should be shown the details of the expired viewer code with expired status $/
      */
-    public function iShouldBeShownTheDetailsOfTheExpiredViewerCodeWithExpiredStatus ()
+    public function iShouldBeShownTheDetailsOfTheExpiredViewerCodeWithExpiredStatus()
     {
         // Not needed for this context
     }
@@ -1083,7 +1109,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to make code
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
@@ -1102,9 +1130,9 @@ class AccountContext extends BaseIntegrationContext
                                 'Viewed' => false,
                                 'ActorId' => $this->actorId
                             ]
-                        ]
-                    )
-                ));
+                        ])
+                )
+            );
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
@@ -1119,8 +1147,8 @@ class AccountContext extends BaseIntegrationContext
         assertEquals($this->actorLpaToken, $shareCodes[0]['UserLpaActor']);
         assertEquals(false, $shareCodes[0]['Viewed']);
         //check if the code expiry date is in the past
-        assertGreaterThan(strtotime($shareCodes[0]['Expires']),strtotime((new DateTime('now'))->format('Y-m-d')));
-        assertGreaterThan(strtotime($shareCodes[0]['Added']),strtotime($shareCodes[0]['Expires']));
+        assertGreaterThan(strtotime($shareCodes[0]['Expires']), strtotime((new DateTime('now'))->format('Y-m-d')));
+        assertGreaterThan(strtotime($shareCodes[0]['Added']), strtotime($shareCodes[0]['Expires']));
     }
 
     /**
@@ -1139,7 +1167,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to make code
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
@@ -1168,9 +1198,9 @@ class AccountContext extends BaseIntegrationContext
                                 'Viewed'       => false,
                                 'ActorId'      => $this->actorId
                             ]
-                        ]
-                    )
-                ));
+                        ])
+                )
+            );
 
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
@@ -1186,7 +1216,6 @@ class AccountContext extends BaseIntegrationContext
         assertEquals(false, $shareCodes[0]['Viewed']);
 
         assertEquals("ABC321ABCXYZ", $shareCodes[1]['ViewerCode']);
-
     }
 
     /**
@@ -1246,7 +1275,9 @@ class AccountContext extends BaseIntegrationContext
                     json_encode([
                         0 => $code1,
                         1 => $code2
-                    ])));
+                    ])
+                )
+            );
 
         $lpa = $this->lpaService->getLpas($this->userIdentity);
 
@@ -1281,7 +1312,9 @@ class AccountContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $lpa = $this->lpaService->getLpas($this->userIdentity);
 
@@ -1318,7 +1351,9 @@ class AccountContext extends BaseIntegrationContext
                         'date' => 'date',
                         'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
-                    ])));
+                    ])
+                )
+            );
 
         // API call to make code
         $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
@@ -1327,7 +1362,8 @@ class AccountContext extends BaseIntegrationContext
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode([])
-                ));
+                )
+            );
 
         $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
 
@@ -1383,7 +1419,7 @@ class AccountContext extends BaseIntegrationContext
 
         $this->apiFixtures->patch('/v1/change-password')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(function(RequestInterface $request, array $options) use ($expectedPassword) {
+            ->inspectRequest(function (RequestInterface $request, array $options) use ($expectedPassword) {
                 $params = json_decode($request->getBody()->getContents(), true);
 
                 assertInternalType('array', $params);
@@ -1410,7 +1446,7 @@ class AccountContext extends BaseIntegrationContext
 
         $this->apiFixtures->patch('/v1/change-password')
             ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])))
-            ->inspectRequest(function(RequestInterface $request, array $options) use ($expectedPassword) {
+            ->inspectRequest(function (RequestInterface $request, array $options) use ($expectedPassword) {
                 $params = json_decode($request->getBody()->getContents(), true);
 
                 assertInternalType('array', $params);
@@ -1467,7 +1503,7 @@ class AccountContext extends BaseIntegrationContext
                 'Password'  => $this->userPassword,
                 'LastLogin' => null
             ])))
-            ->inspectRequest(function(RequestInterface $request) use ($userId) {
+            ->inspectRequest(function (RequestInterface $request) use ($userId) {
                 $uri = $request->getUri()->getPath();
 
                 assertEquals($uri, '/v1/delete-account/123');
@@ -1485,4 +1521,327 @@ class AccountContext extends BaseIntegrationContext
         // Not needed for this context
     }
 
+    /**
+     * @Given /^I am on the change email page$/
+     */
+    public function iAmOnTheChangeEmailPage()
+    {
+        $this->newUserEmail = 'newEmail@test.com';
+        $this->userEmailResetToken = '12354abcde';
+    }
+
+    /**
+     * @When /^I request to change my email with an incorrect password$/
+     */
+    public function iRequestToChangeMyEmailWithAnIncorrectPassword()
+    {
+        $this->apiFixtures->patch('/v1/request-change-email')
+            ->respondWith(
+                new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([]))
+            ) ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('user-id', $params);
+                    assertArrayHasKey('new-email', $params);
+                    assertArrayHasKey('password', $params);
+                }
+            );
+
+        try {
+            $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, $this->userPassword);
+        } catch (ApiException $aex) {
+            assertEquals(403, $aex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('Forbidden exception was not thrown for incorrect password');
+    }
+
+    /**
+     * @Then /^I should be told that I could not change my email because my password is incorrect$/
+     */
+    public function iShouldBeToldThatICouldNotChangeMyEmailBecauseMyPasswordIsIncorrect()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to change my email to an email address that is taken by another user on the service$/
+     */
+    public function iRequestToChangeMyEmailToAnEmailAddressThatIsTakenByAnotherUserOnTheService()
+    {
+        $this->apiFixtures->patch('/v1/request-change-email')
+            ->respondWith(
+                new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([]))
+            ) ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('user-id', $params);
+                    assertArrayHasKey('new-email', $params);
+                    assertArrayHasKey('password', $params);
+                }
+            );
+
+        try {
+            $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, $this->userPassword);
+        } catch (ApiException $aex) {
+            assertEquals(409, $aex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('Conflict exception was not thrown');
+    }
+
+    /**
+     * @Then /^I should be told my request was successful and an email is sent to the chosen email address to warn the user$/
+     */
+    public function iShouldBeToldMyRequestWasSuccessfulAndAnEmailIsSentToTheChosenEmailAddressToWarnTheUser()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to change my email to one that another user has requested$/
+     */
+    public function iRequestToChangeMyEmailToOneThatAnotherUserHasRequested()
+    {
+        $this->apiFixtures->patch('/v1/request-change-email')
+            ->respondWith(
+                new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([]))
+            ) ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('user-id', $params);
+                    assertArrayHasKey('new-email', $params);
+                    assertArrayHasKey('password', $params);
+                }
+            );
+
+        try {
+            $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, $this->userPassword);
+        } catch (ApiException $aex) {
+            assertEquals(409, $aex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('Conflict exception was not thrown');
+    }
+
+    /**
+     * @When /^I request to change my email to one that another user has an expired request for$/
+     * @When /^I request to change my email to a unique email address$/
+     */
+    public function iRequestToChangeMyEmailToAUniqueEmailAddress()
+    {
+        $this->apiFixtures->patch('/v1/request-change-email')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        "EmailResetExpiry" => 1589983070,
+                        "Email"            => $this->userEmail,
+                        "LastLogin"        => null,
+                        "Id"               => $this->userIdentity,
+                        "NewEmail"         => $this->newUserEmail,
+                        "EmailResetToken"  => "re3eTt0k3N",
+                        "Password"         => $this->userPassword,
+                    ])
+                )
+            ) ->inspectRequest(
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('user-id', $params);
+                    assertArrayHasKey('new-email', $params);
+                    assertArrayHasKey('password', $params);
+                }
+            );
+
+        $data = $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, $this->userPassword);
+
+        assertNotEmpty($data);
+        assertEquals($this->userEmail, $data['Email']);
+        assertEquals($this->newUserEmail, $data['NewEmail']);
+        assertEquals($this->userIdentity, $data['Id']);
+        assertEquals($this->userPassword, $data['Password']);
+        assertArrayHasKey('EmailResetToken', $data);
+        assertArrayHasKey('EmailResetExpiry', $data);
+    }
+
+    /**
+     * @Then /^I should be sent an email to both my current and new email$/
+     */
+    public function iShouldBeSentAnEmailToBothMyCurrentAndNewEmail()
+    {
+        $currentEmailTemplateId = '19051f55-d60d-4bbc-ab49-cf85580d3102';
+        $expectedUrl = 'http://localhost/verify-new-email/' . $this->userEmailResetToken;
+        $newEmailTemplateId = 'bcf7e3f7-7f76-4e0a-87ee-b6722bdc223a';
+
+        // API call for Notify sent to current email
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(function (RequestInterface $request, array $options)
+                use ($currentEmailTemplateId) {
+                $requestBody = $request->getBody()->getContents();
+                assertContains($currentEmailTemplateId, $requestBody);
+            });
+
+        $this->emailClient->sendRequestChangeEmailToCurrentEmail($this->userEmail, $this->newUserEmail);
+
+        // API call for Notify sent to new email
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(function (RequestInterface $request, array $options)
+                use ($expectedUrl, $newEmailTemplateId) {
+                $requestBody = $request->getBody()->getContents();
+
+                assertContains($this->userEmailResetToken, $requestBody);
+                assertContains(json_encode($expectedUrl), $requestBody);
+                assertContains($newEmailTemplateId, $requestBody);
+            });
+
+        $this->emailClient->sendRequestChangeEmailToNewEmail($this->newUserEmail, $expectedUrl);
+    }
+
+    /**
+     * @Given /^I should be told that my request was successful$/
+     */
+    public function iShouldBeToldThatMyRequestWasSuccessful()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I have requested to change my email address$/
+     */
+    public function iHaveRequestedToChangeMyEmailAddress()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^My email reset token is still valid$/
+     */
+    public function myEmailResetTokenIsStillValid()
+    {
+        $this->userEmailResetToken = '12345abcde';
+    }
+
+    /**
+     * @When /^I click the link to verify my new email address$/
+     */
+    public function iClickTheLinkToVerifyMyNewEmailAddress()
+    {
+        // API fixture for email reset token check
+        $this->apiFixtures->get('/v1/can-reset-email')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Id' => $this->userIdentity,
+                        ]
+                    )
+                )
+            );
+
+        $canReset = $this->userService->canResetEmail($this->userEmailResetToken);
+        assertTrue($canReset);
+    }
+
+    /**
+     * @Then /^My account email address should be reset$/
+     */
+    public function myAccountEmailAddressShouldBeReset()
+    {
+        // API fixture to complete email change
+        $this->apiFixtures->patch('/v1/complete-change-email')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $reset = $this->userService->completeChangeEmail($this->userEmailResetToken);
+
+        assertNull($reset);
+    }
+
+    /**
+     * @Given /^I should be able to login with my new email address$/
+     */
+    public function iShouldBeAbleToLoginWithMyNewEmailAddress()
+    {
+        $this->newUserEmail = 'newEmail@test.com';
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id'        => $this->userIdentity,
+                'Email'     => $this->newUserEmail,
+                'LastLogin' => '2020-01-21T15:58:47+00:00'
+            ])));
+
+        $user = $this->userService->authenticate($this->newUserEmail, $this->userPassword);
+
+        assertEquals($user->getIdentity(), $this->userIdentity);
+    }
+
+    /**
+     * @When /^I click the link to verify my new email address after my token has expired$/
+     * @When /^I click an old link to verify my new email address containing a token that no longer exists$/
+     */
+    public function iClickTheLinkToVerifyMyNewEmailAddressAfterMyTokenHasExpired()
+    {
+        $this->userEmailResetToken = '12354abcde';
+        // API fixture for email reset token check
+        $this->apiFixtures->get('/v1/can-reset-email')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_GONE,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $tokenValid = $this->userService->canResetEmail($this->userEmailResetToken);
+        assertFalse($tokenValid);
+    }
+
+    /**
+     * @Then /^I should be told that my email could not be changed$/
+     */
+    public function iShouldBeToldThatMyEmailCouldNotBeChanged()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I create an account using with an email address that has been requested for reset$/
+     */
+    public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset()
+    {
+        $this->userEmail = 'test@test.com';
+        $this->userPassword = 'pa33W0rd!123';
+
+        // API call for creating an account
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([])));
+
+        try {
+            $this->userService->create($this->userEmail, $this->userPassword);
+        } catch (ApiException $ex) {
+            assertEquals(409, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('Conflict exception was not thrown');
+    }
+
+    /**
+     * @Then /^I am informed that there was a problem with that email address$/
+     */
+    public function iAmInformedThatThereWasAProblemWithThatEmailAddress()
+    {
+        // Not needed for this context
+    }
 }

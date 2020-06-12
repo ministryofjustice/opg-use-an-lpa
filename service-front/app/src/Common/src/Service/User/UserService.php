@@ -102,11 +102,13 @@ class UserService implements UserRepositoryInterface
             ]);
 
             if (!is_null($userData)) {
-                $this->logger->info('Authentication successful for account with Id {id}',
+                $this->logger->info(
+                    'Authentication successful for account with Id {id}',
                     [
                         'id'         => $userData['Id'],
                         'last-login' => $userData['LastLogin']
-                ]);
+                    ]
+                );
 
                 return ($this->userModelFactory)(
                     $userData['Id'],
@@ -243,6 +245,87 @@ class UserService implements UserRepositoryInterface
         );
     }
 
+    public function requestChangeEmail(string $userId, string $newEmail, string $password): array
+    {
+        try {
+            $data = $this->apiClient->httpPatch('/v1/request-change-email', [
+                'user-id'       => $userId,
+                'new-email'     => $newEmail,
+                'password'      => $password
+            ]);
+
+            if (!is_null($data) && isset($data['EmailResetToken'])) {
+                $this->logger->info(
+                    'Account with Id {id} has requested a email reset',
+                    [
+                        'id' => $data['Id']
+                    ]
+                );
+
+                return $data;
+            }
+        } catch (ApiException $ex) {
+            $this->logger->notice(
+                'Failed to request email change for account with Id {id} with code {code}',
+                [
+                    'id'    => $userId,
+                    'code'  => $ex->getCode()
+                ]
+            );
+
+            throw $ex;
+        }
+
+        throw new RuntimeException('Error whilst requesting email reset token', 500);
+    }
+
+    public function canResetEmail(string $token): bool
+    {
+        try {
+            $data = $this->apiClient->httpGet('/v1/can-reset-email', [
+                'token' => $token,
+            ]);
+
+            if (!is_null($data) && isset($data['Id'])) {
+                $this->logger->info(
+                    'Email reset token for account with Id {id} was used successfully',
+                    [
+                        'id' => $data['Id']
+                    ]
+                );
+
+                return true;
+            }
+        } catch (ApiException $ex) {
+            if ($ex->getCode() !== StatusCodeInterface::STATUS_GONE) {
+                throw $ex;
+            }
+        }
+
+        $this->logger->notice(
+            'Email reset token {token} is invalid',
+            [
+                'token' => $token
+            ]
+        );
+
+        return false;
+    }
+
+    public function completeChangeEmail(string $resetToken): void
+    {
+        $this->apiClient->httpPatch('/v1/complete-change-email', [
+            'reset_token' => $resetToken,
+        ]);
+
+        $this->logger->info(
+            'Email reset using token {token} has been successful',
+            [
+                'token' => $resetToken
+            ]
+        );
+    }
+
     public function changePassword(string $id, string $password, string $newPassword): void
     {
         try {
@@ -253,7 +336,8 @@ class UserService implements UserRepositoryInterface
             ]);
 
             $this->logger->info(
-                'Password reset for user ID {userId} has been successful', ['userId' => $id]
+                'Password reset for user ID {userId} has been successful',
+                ['userId' => $id]
             );
         } catch (ApiException $ex) {
             $this->logger->notice(
@@ -268,7 +352,7 @@ class UserService implements UserRepositoryInterface
         }
     }
 
-    public function deleteAccount(string $accountId) : void
+    public function deleteAccount(string $accountId): void
     {
         try {
             $user = $this->apiClient->httpDelete('/v1/delete-account/' . $accountId);
@@ -280,7 +364,6 @@ class UserService implements UserRepositoryInterface
                     'email' => new Email($user['Email']),
                 ]
             );
-
         } catch (ApiException $ex) {
             $this->logger->notice(
                 'Failed to delete account for userId {userId} - status code {code}',
