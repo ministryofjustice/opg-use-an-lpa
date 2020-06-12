@@ -303,10 +303,11 @@ class LpaServiceTest extends TestCase
 
         $lpa = $service->getLpaByPasscode($token, $passcode, $referenceNumber, $dob);
 
-        $this->assertInstanceOf(Lpa::class, $lpa);
-        $this->assertEquals(123456789012, $lpa->getUId());
-        $this->assertEquals($donor, $lpa->getDonor());
-        $this->assertEquals($dob, $lpa->getDonor()->getDob()->format('Y-m-d'));
+        $this->assertInstanceOf(ArrayObject::class, $lpa);
+        $this->assertInstanceOf(Lpa::class, $lpa['lpa']);
+        $this->assertEquals(123456789012, ($lpa['lpa'])->getUId());
+        $this->assertEquals($donor, ($lpa['lpa'])->getDonor());
+        $this->assertEquals($dob, ($lpa['lpa'])->getDonor()->getDob()->format('Y-m-d'));
     }
 
     /** @test */
