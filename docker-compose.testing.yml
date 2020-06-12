@@ -19,3 +19,20 @@ services:
     environment:
       BEHAT_VIEWER_URL: http://viewer-web
       BEHAT_ACTOR_URL: http://actor-web
+
+  lpa-codes-pact-mock:
+    image: pactfoundation/pact-cli:latest
+    ports:
+        - 1234:80
+    command:
+        - mock-service
+        - -p
+        - "80"
+        - --host
+        - "0.0.0.0"
+        - --pact-dir
+        - /tmp/pacts
+        - --consumer
+        - use_a_lasting_power_of_attorney
+        - --provider
+        - lpa-codes
