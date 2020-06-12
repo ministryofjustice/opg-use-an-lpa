@@ -363,18 +363,17 @@ class UserService
      */
     private function checkIfEmailResetViable(array $emailResetExists, bool $forAccountCreation, string $userId = null): bool
     {
-        $viable = true;
         //checks if the new email chosen has already been requested for reset
         foreach ($emailResetExists as $otherUser) {
             if ($forAccountCreation && (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now'))) {
                 // if the other users email reset token has not expired, this user cannot make an account with this email
-                $viable = false;
+                return false;
             } elseif (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now') && ($userId !== $otherUser['Id'])) {
                 // if the other users email reset token has not expired, and they not the current user, this user cant request this email
-                $viable = false;
+                return false;
             }
         }
-        return $viable;
+        return true;
     }
 
     /**
