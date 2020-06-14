@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Common\Service\Url;
+
 use Laminas\Diactoros\ServerRequestFactory;
 use Mezzio\Router\RouterInterface;
 
@@ -30,7 +33,7 @@ class UrlValidityCheckService
      * @param string $value
      * @return bool
      */
-    public function isValid($refererUrl): bool
+    public function isValid(string $refererUrl): bool
     {
         // Remove all illegal characters from a url
         $url = filter_var($refererUrl, FILTER_SANITIZE_URL);
