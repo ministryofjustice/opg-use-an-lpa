@@ -4,3 +4,8 @@ codecov:
     layout: "reach, diff, flags, files"
     behavior: default
     require_changes: false  # if true: only post the comment if coverage changes
+  status:
+    project:
+      default:
+        target: 80%    # our target PR coverage to be successful
+        threshold: 1%  # if PR drops coverage by less than % percent, but is still above the target, then successful.
