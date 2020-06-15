@@ -32,7 +32,7 @@ workflows:
 
   pr_build:
       jobs:
-        - cancel_previous_build_and_wait:
+        - auto-cancel-jobs/cancel_previous_build_and_wait:
             name: cancel_previous_jobs
             filters: { branches: { ignore: [master] } }
 
