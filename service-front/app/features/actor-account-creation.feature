@@ -70,3 +70,10 @@ Feature: Account creation
       |TEST@example.com      | Password1 | Password1 |   1   |
       |test@EXAMPLE.com      | Password1 | Password1 |   1   |
       |'   TEST@EXAMPLE.COM '| Password1 | Password1 |   1   |
+
+  @ui @integration
+  Scenario: The user account cannot create an account with an email address that has been requested for reset
+    Given I am not a user of the lpa application
+    And I want to create a new account
+    When I create an account using with an email address that has been requested for reset
+    Then I am informed that there was a problem with that email address

@@ -106,6 +106,27 @@ class ActorUsers implements ActorUsersInterface
         return array_pop($usersData);
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getUserByNewEmail(string $newEmail): array
+    {
+        $marshaler = new Marshaler();
+
+        $result = $this->client->query([
+            'TableName' => $this->actorUsersTable,
+            'IndexName' => 'NewEmailIndex',
+            'KeyConditionExpression' => 'NewEmail = :newEmail',
+            'ExpressionAttributeValues' => $marshaler->marshalItem([
+                ':newEmail' => $newEmail,
+            ]),
+        ]);
+
+        $usersData = $this->getDataCollection($result);
+
+        return $usersData;
+    }
+
     public function getIdByPasswordResetToken(string $resetToken): string
     {
         $marshaler = new Marshaler();
@@ -122,7 +143,29 @@ class ActorUsers implements ActorUsersInterface
         $usersData = $this->getDataCollection($result);
 
         if (empty($usersData)) {
-            throw new NotFoundException('User not found for reset token');
+            throw new NotFoundException('User not found for password reset token');
+        }
+
+        return (array_pop($usersData))['Id'];
+    }
+
+    public function getIdByEmailResetToken(string $resetToken): string
+    {
+        $marshaler = new Marshaler();
+
+        $result = $this->client->query([
+            'TableName' => $this->actorUsersTable,
+            'IndexName' => 'EmailResetTokenIndex',
+            'KeyConditionExpression' => 'EmailResetToken = :rt',
+            'ExpressionAttributeValues' => $marshaler->marshalItem([
+                ':rt' => $resetToken,
+            ]),
+        ]);
+
+        $usersData = $this->getDataCollection($result);
+
+        if (empty($usersData)) {
+            throw new NotFoundException('User not found for email reset token');
         }
 
         return (array_pop($usersData))['Id'];
@@ -259,10 +302,59 @@ class ActorUsers implements ActorUsersInterface
         return $this->getData($user);
     }
 
+    public function recordChangeEmailRequest(string $id, string $newEmail, string $resetToken, int $resetExpiry): array
+    {
+        $user = $this->client->updateItem([
+            'TableName' => $this->actorUsersTable,
+            'Key' => [
+                'Id' => [
+                    'S' => $id,
+                ],
+            ],
+            'UpdateExpression' =>
+                'SET EmailResetToken=:rt, EmailResetExpiry=:re, NewEmail=:ne',
+            'ExpressionAttributeValues' => [
+                ':rt' => [
+                    'S' => $resetToken
+                ],
+                ':re' => [
+                    'N' => (string) $resetExpiry
+                ],
+                ':ne' => [
+                    'S' => $newEmail
+                ]
+            ],
+            'ReturnValues' => 'ALL_NEW'
+        ]);
+
+        return $this->getData($user);
+    }
+
+    public function changeEmail(string $id, string $token, string $newEmail): bool
+    {
+        //  Update the item by setting the new email and removing the reset token/expiry
+        $this->client->updateItem([
+            'TableName' => $this->actorUsersTable,
+            'Key' => [
+                'Id' => [
+                    'S' => $id,
+                ],
+            ],
+            'UpdateExpression' => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
+            'ExpressionAttributeValues' => [
+                ':p' => [
+                    'S' => $newEmail
+                ]
+            ]
+        ]);
+
+        return true;
+    }
+
     /**
      * @inheritDoc
      */
-    public function delete(string $accountId) :array
+    public function delete(string $accountId): array
     {
         $user = $this->client->deleteItem([
             'TableName' => $this->actorUsersTable,

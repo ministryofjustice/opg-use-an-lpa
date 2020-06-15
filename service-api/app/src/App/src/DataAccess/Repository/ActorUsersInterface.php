@@ -54,6 +54,23 @@ interface ActorUsersInterface
     public function getIdByPasswordResetToken(string $resetToken): string;
 
     /**
+     * Gets an actor user when queried for by a email reset token
+     *
+     * @param string $resetToken
+     * @return string
+     * @throws NotFoundException
+     */
+    public function getIdByEmailResetToken(string $resetToken): string;
+
+    /**
+     * Queries the NewEmail field to see if a user has requested to change their email to that same email
+     *
+     * @param string $newEmail
+     * @return array
+     */
+    public function getUserByNewEmail(string $newEmail): array;
+
+    /**
      * Activate the user account in the database using the token value
      *
      * @param string $activationToken
@@ -97,6 +114,28 @@ interface ActorUsersInterface
      * @throws NotFoundException
      */
     public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): array;
+
+    /**
+     * Records a email reset token and new email for a user account
+     *
+     * @param string $id
+     * @param string $newEmail
+     * @param string $resetToken
+     * @param int $resetExpiry
+     * @return array The actor user record for the request
+     */
+    public function recordChangeEmailRequest(string $id, string $newEmail, string $resetToken, int $resetExpiry): array;
+
+    /**
+     * Changes the email address for an account to the NewEmail chosen by the user
+     * Also removes the email reset token, expiry and NewEmail attribute
+     *
+     * @param string $id
+     * @param string $token
+     * @param string $newEmail
+     * @return bool
+     */
+    public function changeEmail(string $id, string $token, string $newEmail): bool;
 
     /**
      * Deletes a user's account by account id

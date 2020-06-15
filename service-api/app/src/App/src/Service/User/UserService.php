@@ -63,6 +63,21 @@ class UserService
             );
         }
 
+        $emailResetExists = $this->usersRepository->getUserByNewEmail($data['email']);
+
+        if (!empty($emailResetExists) && ! $this->checkIfEmailResetViable($emailResetExists, true)) {
+            //checks if the new email chosen has already been requested for reset
+            $this->logger->notice(
+                'Could not create account with email {email} as another user has already requested to change their email that email address',
+                ['email' => $data['email']]
+            );
+
+            throw new ConflictException(
+                'Account creation email conflict - another user has requested to change their email to ' . $data['email'],
+                ['email' => $data['email']]
+            );
+        }
+
         // Generate unique id for user
         $id = Uuid::uuid4()->toString();
 
@@ -204,12 +219,12 @@ class UserService
             }
         } catch (NotFoundException $ex) {
             $this->logger->notice(
-                'Account not found for reset token {token}',
+                'Account not found for password reset token {token}',
                 ['token' => $resetToken]
             );
         }
 
-        throw new GoneException('Reset token not found');
+        throw new GoneException('Password reset token not found');
     }
 
     /**
@@ -264,7 +279,7 @@ class UserService
      * @param string $accountId
      * @return array
      */
-    public function deleteUserAccount(string $accountId) : array
+    public function deleteUserAccount(string $accountId): array
     {
         $user = $this->usersRepository->get($accountId);
 
@@ -277,5 +292,126 @@ class UserService
         }
 
         return $this->usersRepository->delete($accountId);
+    }
+
+    /**
+     * @param string $userId
+     * @param string $newEmail
+     * @param string $password
+     * @return array
+     * @throws Exception
+     */
+    public function requestChangeEmail(string $userId, string $newEmail, string $password)
+    {
+        $resetToken = Base64UrlSafe::encode(random_bytes(32));
+        $resetExpiry = time() + (60 * 60 * 48);
+
+        $this->canRequestChangeEmail($userId, $newEmail, $password);
+
+        $data = $this->usersRepository->recordChangeEmailRequest($userId, $newEmail, $resetToken, $resetExpiry);
+
+        $this->logger->info(
+            'Change email request for account with Id {id} was successful',
+            ['id' => $userId]
+        );
+
+        return $data;
+    }
+
+    /**
+     * Runs a series of checks on the new email and password
+     *
+     * @param string $userId
+     * @param string $newEmail
+     * @param string $password
+     * @return void
+     * @throws Exception
+     */
+    public function canRequestChangeEmail(string $userId, string $newEmail, string $password): void
+    {
+        $user = $this->usersRepository->get($userId);
+
+        if (! password_verify($password, $user['Password'])) {
+            throw new ForbiddenException('Authentication failed for user ID ' . $userId, ['userId' => $userId]);
+        }
+
+        if ($this->usersRepository->exists($newEmail)) {
+            throw new ConflictException('User already exists with email address ' . $newEmail, ['email' => $newEmail]);
+        }
+
+        $newEmailExists = $this->usersRepository->getUserByNewEmail($newEmail);
+
+        if (!empty($newEmailExists) && ! $this->checkIfEmailResetViable($newEmailExists,false, $userId)) {
+            $this->logger->notice(
+                'Could not request email change for account with Id {id}
+                as another user has already requested to change their email that email address',
+                ['id' => $userId]
+            );
+
+            throw new ConflictException(
+                'Change email conflict - another user has already requested to change their email address to ' . $newEmail,
+                ['email' => $newEmail]
+            );
+        }
+    }
+
+    /**
+     * @param array $emailResetExists
+     * @param string $userId
+     * @return bool
+     * @throws Exception
+     */
+    private function checkIfEmailResetViable(array $emailResetExists, bool $forAccountCreation, string $userId = null): bool
+    {
+        //checks if the new email chosen has already been requested for reset
+        foreach ($emailResetExists as $otherUser) {
+            if ($forAccountCreation && (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now'))) {
+                // if the other users email reset token has not expired, this user cannot make an account with this email
+                return false;
+            } elseif (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now') && ($userId !== $otherUser['Id'])) {
+                // if the other users email reset token has not expired, and they not the current user, this user cant request this email
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks to see if an email token exists against a user record and it has not expired
+     *
+     * @param string $resetToken
+     * @return string
+     * @throws Exception
+     */
+    public function canResetEmail(string $resetToken)
+    {
+        try {
+            $userId = $this->usersRepository->getIdByEmailResetToken($resetToken);
+
+            $user = $this->usersRepository->get($userId);
+
+            if (new DateTime('@' . $user['EmailResetExpiry']) >= new DateTime('now')) {
+                return $userId;
+            }
+        } catch (NotFoundException $ex) {
+            $this->logger->notice(
+                'Account not found for reset email token {token}',
+                ['token' => $resetToken]
+            );
+        }
+
+        throw new GoneException('Email reset token has expired');
+    }
+
+    /**
+     * @param string $resetToken
+     */
+    public function completeChangeEmail(string $resetToken)
+    {
+        $userId = $this->usersRepository->getIdByEmailResetToken($resetToken);
+
+        $user = $this->usersRepository->get($userId);
+
+        $this->usersRepository->changeEmail($userId, $resetToken, $user['NewEmail']);
     }
 }

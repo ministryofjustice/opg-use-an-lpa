@@ -33,6 +33,10 @@ resource "aws_dynamodb_table" "actor_users_table" {
     type = "S"
   }
   attribute {
+    name = "NewEmail"
+    type = "S"
+  }
+  attribute {
     name = "ActivationToken"
     type = "S"
   }
@@ -40,10 +44,19 @@ resource "aws_dynamodb_table" "actor_users_table" {
     name = "PasswordResetToken"
     type = "S"
   }
+  attribute {
+    name = "EmailResetToken"
+    type = "S"
+  }
 
   global_secondary_index {
     name            = "EmailIndex"
     hash_key        = "Email"
+    projection_type = "ALL"
+  }
+  global_secondary_index {
+    name            = "NewEmailIndex"
+    hash_key        = "NewEmail"
     projection_type = "ALL"
   }
   global_secondary_index {
@@ -54,6 +67,11 @@ resource "aws_dynamodb_table" "actor_users_table" {
   global_secondary_index {
     name            = "PasswordResetTokenIndex"
     hash_key        = "PasswordResetToken"
+    projection_type = "KEYS_ONLY"
+  }
+  global_secondary_index {
+    name            = "EmailResetTokenIndex"
+    hash_key        = "EmailResetToken"
     projection_type = "KEYS_ONLY"
   }
 

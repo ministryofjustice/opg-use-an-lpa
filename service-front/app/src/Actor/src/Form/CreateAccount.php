@@ -23,6 +23,16 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
 {
     const FORM_NAME = 'create_account';
 
+    public const NEW_EMAIL_CONFLICT = 'NewEmailConflict';
+
+    /**
+     * Error messages
+     * @var array
+     */
+    protected array $messageTemplates = [
+        self::NEW_EMAIL_CONFLICT => 'Sorry, there was a problem with that email address. Please try a different one'
+    ];
+
     /**
      * CreateAccount constructor.
      * @param CsrfGuardInterface $csrfGuard

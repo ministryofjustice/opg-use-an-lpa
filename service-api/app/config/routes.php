@@ -56,6 +56,9 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/v1/can-password-reset', App\Handler\CanPasswordResetHandler::class, 'user.can-password-reset');
     $app->patch('/v1/complete-password-reset', App\Handler\CompletePasswordResetHandler::class, 'user.complete-password-reset');
 
+    $app->patch('/v1/request-change-email', App\Handler\RequestChangeEmailHandler::class, 'user.request-change-email');
+    $app->get('/v1/can-reset-email', App\Handler\CanResetEmailHandler::class, 'user.can-reset-email');
+    $app->patch('/v1/complete-change-email', App\Handler\CompleteChangeEmailHandler::class, 'user.complete-change-email');
     $app->patch('/v1/change-password', App\Handler\ChangePasswordHandler::class, 'user.change-password');
     $app->delete('/v1/delete-account/{account-id:[0-9a-f\-]+}', App\Handler\CompleteDeleteAccountHandler::class, 'user.delete-account');
 
