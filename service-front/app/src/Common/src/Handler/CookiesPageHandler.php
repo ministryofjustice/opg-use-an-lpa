@@ -25,6 +25,7 @@ use Common\Service\Url\UrlValidityCheckService;
 /**
  * Class CookiesPageHandler
  * @package Viewer\Handler
+ * @codeCoverageIgnore
  */
 class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
