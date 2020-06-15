@@ -279,6 +279,72 @@ workflows:
 
 
 orbs:
+  auto-cancel-jobs:
+    description: |
+        Cancels any existing running jobs in the same branch and waits X minutes before starting the build.
+        Needs the CIRCLECI_API_KEY env var to be set.
+        based on https://circleci.com/orbs/registry/orb/thinkful/cancel_previous_build_and_wait
+    executors:
+        default:
+          docker:
+            - image: cimg/base:stable
+    commands:
+      cancel_previous_build_and_wait:
+        description: Cancel previous builds and waits
+        parameters:
+          wait:
+            type: integer
+            default: 300
+            description: "How long to wait before starting the build"
+          circleci-api-key:
+            type: env_var_name
+            default: CIRCLECI_API_KEY
+            description: "In case you use a different Environment Variable Name than CIRCLECI_API_KEY, supply it here."
+          vcs-type:
+            type: string
+            default: "github"
+            description: "Override VCS to 'bitbucket' if needed."
+        steps:
+          - run:
+              name: Cancel previous jobs and wait
+              command: |
+                  VCS_TYPE="<<parameters.vcs-type>>"
+                  WAIT="<<parameters.wait>>"
+                  get_current_running_jobs() {
+                      jobs_api_url="https://circleci.com/api/v1.1/project/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/tree/${CIRCLE_BRANCH}?circle-token=${<< parameters.circleci-api-key >>}&filter=running"
+                      curl -f -s $jobs_api_url |jq ".[] | select(.workflows.workflow_id!=\"${CIRCLE_WORKFLOW_ID}\" and .build_parameters.CIRCLE_JOB!=\"deploy\")| .build_num"
+                  }
+                  cancel_job() {
+                      JOBTOCANCEL=$1
+                      echo "Cancelling build ${JOBTOCANCEL}"
+                      cancel_api_url="https://circleci.com/api/v1.1/project/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${JOBTOCANCEL}/cancel?circle-token=${<< parameters.circleci-api-key >>}"
+                      curl -s -X POST $cancel_api_url> /dev/null
+                  }
+                  JOBS=$(get_current_running_jobs)
+                  echo $JOBS
+
+    jobs:
+      cancel_previous_build_and_wait:
+        parameters:
+          wait:
+            type: integer
+            default: 3
+            description: "How long to wait before starting the build"
+          circleci-api-key:
+            type: env_var_name
+            default: CIRCLECI_API_KEY
+            description: "In case you use a different Environment Variable Name than CIRCLECI_API_KEY, supply it here."
+          vcs-type:
+            type: string
+            default: "github"
+            description: "Override VCS to 'bitbucket' if needed."
+        executor: default
+        steps:
+          - cancel_previous_build_and_wait:
+              wait: <<parameters.wait>>
+              circleci-api-key: <<parameters.circleci-api-key>>
+              vcs-type: <<parameters.vcs-type>>
+
   slack: circleci/slack@3.3.0
   use-my-lpa:
     commands:
