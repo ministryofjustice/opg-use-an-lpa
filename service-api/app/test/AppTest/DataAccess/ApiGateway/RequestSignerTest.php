@@ -13,6 +13,20 @@ use Psr\Http\Message\RequestInterface;
 
 class RequestSignerTest extends TestCase
 {
+    public function setUp()
+    {
+        // Keys from the documentation
+        // https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_environment.html
+        putenv('AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE');
+        putenv('AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY');
+    }
+
+    public function tearDown()
+    {
+        putenv('AWS_ACCESS_KEY_ID=');
+        putenv('AWS_SECRET_ACCESS_KEY=');
+    }
+
     /** @test */
     public function it_signs_request_with_a_supplied_static_token(): void
     {
