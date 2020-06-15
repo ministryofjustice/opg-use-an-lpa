@@ -21,7 +21,7 @@ workflows:
   workspace_cleanup:
     triggers:
       - schedule:
-          cron: "0 0,2,4,6,8,10,12,14,16,18,20,22 * * 0-6" # every 2 hours from midnight
+          cron: "0 6,18 * * 0-6" # every 2 hours from midnight
           filters:
             branches:
               only:
