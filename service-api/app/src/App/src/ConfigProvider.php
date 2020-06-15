@@ -76,6 +76,7 @@ class ConfigProvider
                 // Code Validation
                 Service\ActorCodes\CodeValidationStrategyInterface::class
                     => Service\ActorCodes\CodeValidationStrategyFactory::class,
+                DataAccess\ApiGateway\RequestSigner::class => DataAccess\ApiGateway\RequestSignerFactory::class,
 
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class

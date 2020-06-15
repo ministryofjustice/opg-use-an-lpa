@@ -11,6 +11,11 @@ return [
         'endpoint' => getenv('SIRIUS_API_ENDPOINT') ?: null,
     ],
 
+    'codes_api' => [
+        'endpoint' => getenv('LPA_CODES_API_ENDPOINT') ?: null,
+        'static_auth_token' => getenv('LPA_CODES_STATIC_AUTH_TOKEN') ?: null,
+    ],
+
     'aws' => [
         'region'  => 'eu-west-1',
         'version' => 'latest',
