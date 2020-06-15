@@ -70,14 +70,15 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
             $usageCookies = $cookiePolicy['usage'] === true ? 'yes' : 'no';
         }
         $form->get('usageCookies')->setValue($usageCookies);
+        $form->get('referer')->setValue(null);
 
         $cookiesPageReferer = $request->getHeaders()['referer'];
-        var_dump($cookiesPageReferer);
-        die;
+        
+        if (!empty($cookiesPageReferer)) {
+            $validUrl = $this->urlValidityCheckService->isValid($cookiesPageReferer[0]);
 
-        $validUrl = $this->urlValidityCheckService->isValid($cookiesPageReferer[0]);
-
-        $form->get('referer')->setValue($validUrl ? $cookiesPageReferer[0] : null);
+            $form->get('referer')->setValue($validUrl ? $cookiesPageReferer[0] : null);
+        }
 
         return new HtmlResponse($this->renderer->render('partials::cookies', [
             'form' => $form
