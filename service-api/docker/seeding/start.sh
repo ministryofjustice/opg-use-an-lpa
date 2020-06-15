@@ -83,7 +83,7 @@ python /app/seeding/dynamodb.py
 
 if ! [[ -z "${CODES_ENDPOINT}" ]]; then
   # Setup the local codes service
-  /usr/local/bin/waitforit -address=tcp://${CODES_ENDPOINT}:4343 -timeout 60 -retry 6000 -debug
+  /usr/local/bin/waitforit -address=tcp://${CODES_ENDPOINT} -timeout 60 -retry 6000 -debug
   curl -X POST -H 'Authorization: asdf1234567890' http://${CODES_ENDPOINT}/setup/dynamodb/create/table
 fi
 
