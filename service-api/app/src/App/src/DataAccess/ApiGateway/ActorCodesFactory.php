@@ -10,8 +10,7 @@ use Psr\Container\ContainerInterface;
 
 class ActorCodesFactory
 {
-
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): ActorCodes
     {
         $config = $container->get('config');
 
