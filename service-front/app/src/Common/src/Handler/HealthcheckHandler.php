@@ -43,21 +43,21 @@ class HealthcheckHandler implements RequestHandlerInterface
             "healthy" => $this->isHealthy(),
             "version" => $this->version,
             "dependencies" => [
-                "api" => $this->checkApiEndpoint()
+                "api" => $this->checkDependencyEndpoints()
             ]
         ]);
     }
 
     protected function isHealthy(): bool
     {
-        if ($this->checkApiEndpoint()['healthy']) {
+        if ($this->checkDependencyEndpoints()['healthy']) {
             return true;
         } else {
             return false;
         }
     }
 
-    protected function checkApiEndpoint(): array
+    protected function checkDependencyEndpoints(): array
     {
         $data = [];
 
