@@ -19,7 +19,7 @@ In all cases commands are run with a docker-compose command prefix
 
 ```shell
 # This should replace all instances of <DOCKER_COMPOSE> in commands given below
-docker-compose -f docker-compose.yml -f docker-compose-dependencies.yml
+docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml
 ```
 
 Build docker-compose files with no cache option.
