@@ -11,17 +11,20 @@ use Laminas\Diactoros\Response\JsonResponse;
 
 class HealthcheckHandlerTest extends TestCase
 {
-    /**
-     * @dataProvider responseDataProvider
-     */
-    public function testReturnsExpectedJsonResponse(array $responseJson)
+    public function testReturnsExpectedJsonResponse()
     {
+        $healthyResponse = [
+            'api' => ['healthy' => true],
+            'dynamo' => ['healthy' => true],
+            'lpa_codes_api' => ['healthy' => true],
+            'all_dependencies_healthy' => true
+        ];
+
         $version = 'dev';
         $apiClientProphecy = $this->prophesize(ApiClient::class);
         $apiClientProphecy->httpGet('/healthcheck')
-            ->willReturn($responseJson);
+            ->willReturn($healthyResponse);
 
-        //  Set up the handler
         $handler = new HealthcheckHandler($version, $apiClientProphecy->reveal());
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
@@ -30,35 +33,26 @@ class HealthcheckHandlerTest extends TestCase
         $json = json_decode($response->getBody()->getContents(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertArrayHasKey('healthy', $json);
+        $this->assertArrayHasKey('overall_healthy', $json);
+        $this->assertTrue($json['overall_healthy']);
+
         $this->assertEquals($version, $json['version']);
         $this->assertArrayHasKey('dependencies', $json);
 
         $dependencies = $json['dependencies'];
-        $this->assertArrayHasKey('api', $dependencies);
 
         $api = $dependencies['api'];
         $this->assertArrayHasKey('healthy', $api);
         $this->assertEquals(true, $api['healthy']);
-    }
 
-    /**
-     * @return string[]
-     */
-    public function responseDataProvider() : array
-    {
-        $allHealthyResponse = [
-            'version' => 'dev',
-            'dependencies' => [
-                'api' => [],
-                'dynamo' => [],
-            ],
-            'healthy' => true,
-            'response_time' => 0
-        ];
+        $dynamo = $dependencies['dynamo'];
+        $this->assertArrayHasKey('healthy', $dynamo);
+        $this->assertEquals(true, $dynamo['healthy']);
 
-        return [
-            [$allHealthyResponse]
-        ];
+        $lpaCodesApi = $dependencies['lpa_codes_api'];
+        $this->assertArrayHasKey('healthy', $lpaCodesApi);
+        $this->assertEquals(true, $lpaCodesApi['healthy']);
+
+        $this->assertTrue($dependencies['all_dependencies_healthy']);
     }
 }

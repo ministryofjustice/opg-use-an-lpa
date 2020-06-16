@@ -40,17 +40,15 @@ class HealthcheckHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new JsonResponse([
-            "healthy" => $this->isHealthy(),
+            "overall_healthy" => $this->isHealthy(),
             "version" => $this->version,
-            "dependencies" => [
-                "api" => $this->checkDependencyEndpoints()
-            ]
-        ]);
+            "dependencies" => $this->checkDependencyEndpoints()
+        ], 200, [], JSON_PRETTY_PRINT);
     }
 
     protected function isHealthy(): bool
     {
-        if ($this->checkDependencyEndpoints()['healthy']) {
+        if ($this->checkDependencyEndpoints()['all_dependencies_healthy']) {
             return true;
         } else {
             return false;

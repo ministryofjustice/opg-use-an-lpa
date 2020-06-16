@@ -75,13 +75,10 @@ class HealthcheckHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new JsonResponse([
-            "version" => $this->version,
-            "dependencies" => [
-                "api" => $this->checkApiEndpoint(),
-                "dynamo" => $this->checkDynamoEndpoint(),
-                "lpa_codes_api" => $this->checkLpaCodesApiEndpoint()
-            ],
-            "healthy" => $this->isHealthy()
+            "api" => $this->checkApiEndpoint(),
+            "dynamo" => $this->checkDynamoEndpoint(),
+            "lpa_codes_api" => $this->checkLpaCodesApiEndpoint(),
+            "all_dependencies_healthy" => $this->isHealthy()
         ]);
     }
 
