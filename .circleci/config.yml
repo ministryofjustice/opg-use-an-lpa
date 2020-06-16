@@ -333,6 +333,7 @@ orbs:
             description: "Override VCS to 'bitbucket' if needed."
         executor: default
         steps:
+          - checkout
           - cancel_previous_build_and_wait:
               wait: <<parameters.wait>>
               circleci-api-key: <<parameters.circleci-api-key>>
