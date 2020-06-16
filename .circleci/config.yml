@@ -287,7 +287,8 @@ workflows:
 orbs:
   auto-cancel-jobs:
     description: |
-        Cancels any existing running jobs in the same branch and waits X minutes before starting the build.
+        Cancels any existing running jobs in the same branch if they are not running a terraform job.
+        Waits X minutes before starting the build.
         Needs the CIRCLECI_API_KEY env var to be set.
         based on https://circleci.com/orbs/registry/orb/thinkful/cancel_previous_build_and_wait
     executors:
@@ -313,21 +314,7 @@ orbs:
         steps:
           - run:
               name: Cancel previous jobs and wait
-              command: |
-                  VCS_TYPE="<<parameters.vcs-type>>"
-                  WAIT="<<parameters.wait>>"
-                  get_current_running_jobs() {
-                      jobs_api_url="https://circleci.com/api/v1.1/project/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/tree/${CIRCLE_BRANCH}?circle-token=${<< parameters.circleci-api-key >>}&filter=running"
-                      curl -f -s $jobs_api_url |jq ".[] | select(.workflows.workflow_id!=\"${CIRCLE_WORKFLOW_ID}\" and .build_parameters.CIRCLE_JOB!=\"deploy\")| .build_num"
-                  }
-                  cancel_job() {
-                      JOBTOCANCEL=$1
-                      echo "Cancelling build ${JOBTOCANCEL}"
-                      cancel_api_url="https://circleci.com/api/v1.1/project/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${JOBTOCANCEL}/cancel?circle-token=${<< parameters.circleci-api-key >>}"
-                      curl -s -X POST $cancel_api_url> /dev/null
-                  }
-                  JOBS=$(get_current_running_jobs)
-                  echo $JOBS
+              command: scripts/pipeline/cancel_previous_jobs/cancel_previous_jobs.sh
 
     jobs:
       cancel_previous_build_and_wait:
