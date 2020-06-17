@@ -20,11 +20,6 @@ function get_workflow() {
   ${CURL_COMMAND} "https://circleci.com/api/v2/workflow/${workflow_id}"
 }
 
-function get_workflow() {
-  workflow_id=$1
-  ${CURL_COMMAND} "https://circleci.com/api/v2/workflow/${workflow_id}"
-}
-
 function get_workflow_status() {
   workflow_id=$1
   ${CURL_COMMAND} "https://circleci.com/api/v2/workflow/${workflow_id}" | jq -r '.status'
@@ -45,10 +40,6 @@ function protective_measures() {
     echo "this script should not be run on this branch: ${CIRCLE_BRANCH}"
     exit 1
   fi
-  # if [ ${CIRCLE_BRANCH} == "autocancel-previous-jobs" ]; then
-  #   echo "this script should not be run on this branch: ${CIRCLE_BRANCH}"
-  #   exit 1
-  # fi
 }
 
 protective_measures
