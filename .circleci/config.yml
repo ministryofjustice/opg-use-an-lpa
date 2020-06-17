@@ -338,11 +338,6 @@ orbs:
                   ${CURL_COMMAND} "https://circleci.com/api/v2/workflow/${workflow_id}"
                 }
 
-                get_workflow() {
-                  workflow_id=$1
-                  ${CURL_COMMAND} "https://circleci.com/api/v2/workflow/${workflow_id}"
-                }
-
                 get_workflow_status() {
                   workflow_id=$1
                   ${CURL_COMMAND} "https://circleci.com/api/v2/workflow/${workflow_id}" | jq -r '.status'
