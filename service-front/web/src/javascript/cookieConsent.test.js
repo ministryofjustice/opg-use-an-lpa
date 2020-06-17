@@ -1,8 +1,8 @@
 import cookieConsent from './cookieConsent';
 import '@testing-library/jest-dom'
-import {getCookie, setDefaultConsentCookie} from './cookieHelper';
+import {getCookie, setDefaultConsentCookie, approveAllCookieTypes, setCookie} from './cookieHelper';
 const cookieBannerHtml = `
-<div class="cookie-banner govuk-width-container cookie-banner--visible" role="region" aria-label="cookie banner">
+<div class="cookie-banner govuk-width-container" role="region" aria-label="cookie banner">
     <div class="govuk-grid-row">
         <div class=" govuk-grid-column-two-thirds">
             <div class="cookie-banner__message">
@@ -24,7 +24,9 @@ const cookieBannerHtml = `
 `;
 jest.mock("./cookieHelper", () => ({
   getCookie: jest.fn(),
-  setDefaultConsentCookie: jest.fn()
+  setDefaultConsentCookie: jest.fn(),
+  approveAllCookieTypes: jest.fn(),
+  setCookie: jest.fn()
 }));
 describe('When the cookie banner is initiated', () => {
   describe('and there is no cookie set', () => {
@@ -45,13 +47,26 @@ describe('When the cookie banner is initiated', () => {
       expect(cookieBanner).toHaveClass('cookie-banner--show');
     });
   });
-  describe('and the accept all button has been pressed', () => {
+  describe('and the accept cookies have been set to true', () => {
     getCookie.mockReturnValueOnce('true');
     getCookie.mockReturnValueOnce('true');
     test('it should not show the banner', () => {
       document.body.innerHTML = cookieBannerHtml;
       new cookieConsent(document.getElementsByClassName('cookie-banner')[0]);
       const cookieBanner = document.querySelector('.cookie-banner');
+      expect(cookieBanner).not.toHaveClass('cookie-banner--show');
+    });
+  });
+  describe('and the accept all button has been clicked', () => {
+    getCookie.mockReturnValueOnce(null);
+    getCookie.mockReturnValueOnce(null);
+    test('it should hide the banner', () => {
+      document.body.innerHTML = cookieBannerHtml;
+      new cookieConsent(document.getElementsByClassName('cookie-banner')[0]);
+      const cookieBanner = document.querySelector('.cookie-banner');
+      expect(cookieBanner).toHaveClass('cookie-banner--show');
+      const button = document.querySelector('button');
+      button.click();
       expect(cookieBanner).not.toHaveClass('cookie-banner--show');
     });
   });
