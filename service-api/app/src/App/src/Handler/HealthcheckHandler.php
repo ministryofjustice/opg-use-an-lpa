@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\DataAccess\ApiGateway\RequestSigner;
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Client as HttpClient;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use App\DataAccess\Repository\LpasInterface;
-use App\DataAccess\Repository\ActorCodesInterface;
+use App\DataAccess\Repository\ActorUsersInterface;
 
 /**
  * Class HealthcheckHandler
@@ -24,23 +28,44 @@ class HealthcheckHandler implements RequestHandlerInterface
     protected $version;
 
     /**
-     * @var ActorCodesInterface
+     * @var ActorUsersInterface
      */
-    private $actorCodes;
+    private $actorUsers;
 
     /**
      * @var LpasInterface
      */
     private $lpaInterface;
 
+    /**
+     * @var string
+     */
+    private string $apiBaseUri;
+
+    /**
+     * @var RequestSigner
+     */
+    private RequestSigner $awsSignature;
+
+    /**
+     * @var HttpClient
+     */
+    private HttpClient $httpClient;
+
     public function __construct(
         string $version,
         LpasInterface $lpaInterface,
-        ActorCodesInterface $actorCodes
+        ActorUsersInterface $actorUsers,
+        HttpClient $httpClient,
+        RequestSigner $awsSignature,
+        string $apiUrl
     ) {
         $this->version = $version;
         $this->lpaInterface = $lpaInterface;
-        $this->actorCodes = $actorCodes;
+        $this->actorUsers = $actorUsers;
+        $this->httpClient = $httpClient;
+        $this->awsSignature = $awsSignature;
+        $this->apiBaseUri = $apiUrl;
     }
 
     /**
@@ -51,17 +76,18 @@ class HealthcheckHandler implements RequestHandlerInterface
     {
         return new JsonResponse([
             "version" => $this->version,
-            "dependencies" => [
-                "api" => $this->checkApiEndpoint(),
-                "dynamo" => $this->checkDynamoEndpoint()
-            ],
+            "api" => $this->checkApiEndpoint(),
+            "dynamo" => $this->checkDynamoEndpoint(),
+            "lpa_codes_api" => $this->checkLpaCodesApiEndpoint(),
             "healthy" => $this->isHealthy()
         ]);
     }
 
     protected function isHealthy(): bool
     {
-        return ($this->checkDynamoEndpoint()['healthy'] && $this->checkApiEndpoint()['healthy']);
+        return $this->checkDynamoEndpoint()['healthy']
+        && $this->checkApiEndpoint()['healthy']
+        && $this->checkLpaCodesApiEndpoint()['healthy'];
     }
 
     protected function checkApiEndpoint(): array
@@ -96,20 +122,51 @@ class HealthcheckHandler implements RequestHandlerInterface
         $start = microtime(true);
 
         try {
-            $dbTables = $this->actorCodes->get('XXXXXXXXXXXX');
+            $dbTables = $this->actorUsers->get('XXXXXXXXXXXX');
 
-            if (is_null($dbTables)) {
+            if (is_array($dbTables)) {
                 $data['healthy'] = true;
             } else {
                 $data['healthy'] = false;
             }
         } catch (Exception $e) {
-            $data['healthy'] = false;
-            $data['message'] = $e->getMessage();
+            if ($e->getMessage() === 'User not found') {
+                $data['healthy'] = true;
+            } else {
+                $data['healthy'] = false;
+                $data['message'] = $e->getMessage();
+            }
         }
 
         $data['response_time'] = round(microtime(true) - $start, 3);
 
+        return $data;
+    }
+
+    public function checkLpaCodesApiEndpoint(): array
+    {
+        $data = [];
+
+        $start = microtime(true);
+
+        $url  = sprintf("%s/v1/healthcheck", $this->apiBaseUri);
+
+        $request = new Request('GET', $url);
+        $request = $this->awsSignature->sign($request);
+
+        try {
+            $response = $this->httpClient->send($request);
+
+            if ($response->getStatusCode() === 200) {
+                $data['healthy'] = true;
+            } else {
+                $data['healthy'] = false;
+            }
+        } catch (GuzzleException $ge) {
+            $data['healthy'] = false;
+        }
+
+        $data['response_time'] = round(microtime(true) - $start, 3);
         return $data;
     }
 }
