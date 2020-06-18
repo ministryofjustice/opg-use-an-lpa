@@ -4,19 +4,26 @@ declare(strict_types=1);
 
 namespace App\Handler\Factory;
 
+use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\Repository\ActorUsersInterface;
+use GuzzleHttp\Client as HttpClient;
 use Psr\Container\ContainerInterface;
 use App\Handler\HealthcheckHandler;
 use App\DataAccess\Repository\LpasInterface;
-use App\DataAccess\Repository\ActorCodesInterface;
 
 class HealthcheckHandlerFactory
 {
     public function __invoke(ContainerInterface $container): HealthcheckHandler
     {
+        $config = $container->get('config');
+
         return new HealthcheckHandler(
-            $container->get('config')['version'],
+            $config['version'],
             $container->get(LpasInterface::class),
-            $container->get(ActorCodesInterface::class)
+            $container->get(ActorUsersInterface::class),
+            $container->get(HttpClient::class),
+            $container->get(RequestSigner::class),
+            $config['codes_api']['endpoint']
         );
     }
 }
