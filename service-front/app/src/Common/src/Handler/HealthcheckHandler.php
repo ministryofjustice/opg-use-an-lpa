@@ -48,7 +48,7 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     protected function isHealthy(): bool
     {
-        if ($this->checkDependencyEndpoints()['all_dependencies_healthy']) {
+        if ($this->checkDependencyEndpoints()['healthy']) {
             return true;
         } else {
             return false;

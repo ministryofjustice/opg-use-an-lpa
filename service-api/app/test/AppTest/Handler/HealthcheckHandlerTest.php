@@ -84,7 +84,7 @@ class HealthcheckHandlerTest extends TestCase
         $json = json_decode($response->getBody()->getContents(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertArrayHasKey('all_dependencies_healthy', $json);
+        $this->assertArrayHasKey('healthy', $json);
 
         $this->assertArrayHasKey('api', $json);
         $this->assertArrayHasKey('dynamo', $json);
@@ -93,5 +93,6 @@ class HealthcheckHandlerTest extends TestCase
         $this->assertTrue($json['api']['healthy']);
         $this->assertTrue($json['dynamo']['healthy']);
         $this->assertTrue($json['lpa_codes_api']['healthy']);
+        $this->assertTrue($json['healthy']);
     }
 }

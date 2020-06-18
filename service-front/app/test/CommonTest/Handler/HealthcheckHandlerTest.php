@@ -17,7 +17,7 @@ class HealthcheckHandlerTest extends TestCase
             'api' => ['healthy' => true],
             'dynamo' => ['healthy' => true],
             'lpa_codes_api' => ['healthy' => true],
-            'all_dependencies_healthy' => true
+            'healthy' => true
         ];
 
         $version = 'dev';
@@ -43,16 +43,16 @@ class HealthcheckHandlerTest extends TestCase
 
         $api = $dependencies['api'];
         $this->assertArrayHasKey('healthy', $api);
-        $this->assertEquals(true, $api['healthy']);
+        $this->assertTrue($api['healthy']);
 
         $dynamo = $dependencies['dynamo'];
         $this->assertArrayHasKey('healthy', $dynamo);
-        $this->assertEquals(true, $dynamo['healthy']);
+        $this->assertTrue($dynamo['healthy']);
 
         $lpaCodesApi = $dependencies['lpa_codes_api'];
         $this->assertArrayHasKey('healthy', $lpaCodesApi);
-        $this->assertEquals(true, $lpaCodesApi['healthy']);
+        $this->assertTrue($lpaCodesApi['healthy']);
 
-        $this->assertTrue($dependencies['all_dependencies_healthy']);
+        $this->assertTrue($dependencies['healthy']);
     }
 }
