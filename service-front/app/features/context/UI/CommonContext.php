@@ -19,6 +19,8 @@ use DI\Definition\Reference;
 use Mezzio\Session\SessionMiddleware;
 use Mezzio\Session\SessionMiddlewareFactory;
 use Mezzio\Session\SessionPersistenceInterface;
+use GuzzleHttp\Psr7\Response;
+use Fig\Http\Message\StatusCodeInterface;
 
 /**
  * Class CommonContext
@@ -48,7 +50,7 @@ class CommonContext implements Context
     }
 
     /**
-     * @Given I attach a tracing header to my requests
+     * @Given /^I attach a tracing header to my requests$/
      */
     public function iAttachATracingHeaderToMyRequests()
     {
@@ -69,7 +71,7 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then my outbound requests have attached tracing headers
+     * @Then /^my outbound requests have attached tracing headers$/
      *
      * Relies on a previous context steps having set the last request value using
      * {@link BaseUiContextTrait::setLastRequest()}
@@ -109,5 +111,191 @@ class CommonContext implements Context
 
         // wait 1 to ensure we expire
         sleep(1);
+    }
+
+    /**
+    * @Then /^I see a cookie consent banner$/
+    */
+    public function iCanSeeACookieConsentBanner()
+    {
+        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageContainsText('Tell us whether you accept cookies');
+    }
+
+    /**
+     * @Then /^I see (.*) and (.*) button$/
+     */
+    public function iSeeAcceptAllCookiesAndSetCookiePreferencesButton($button1, $button2)
+    {
+        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageContainsText($button1);
+        $this->ui->assertPageContainsText($button2);
+        $this->ui->assertElementContainsText('button[name=accept-all-cookies]', 'Accept all cookies');
+        $this->ui->assertElementContainsText('a[name=set-cookie-preferences]', 'Set cookie preferences');
+    }
+
+//    TODO:Fix it to be more generic for all links that look like buttons. New ticket created.
+    /**
+     * @Then /^I click on (.*) button$/
+     */
+    public function iClickOnButton($button)
+    {
+        $this->ui->assertPageContainsText($button);
+        if ($button === 'Set cookie preferences') {
+            $this->ui->clickLink($button);
+        } else {
+            $this->ui->pressButton($button);
+        }
+    }
+
+    /**
+     * @Then /^I am on the cookie preferences page$/
+     */
+    public function iAmOnTheCookiePreferencesPage()
+    {
+        $this->ui->assertPageAddress('/cookies');
+        $this->ui->assertPageContainsText("Cookie settings");
+    }
+
+    /**
+     * @Given /^I have seen the cookie banner$/
+     */
+    public function iHaveSeenTheCookieBanner()
+    {
+        $this->iWantToViewALastingPowerOfAttorney();
+        $this->iAccessTheServiceHomepage();
+        $this->iCanSeeACookieConsentBanner();
+    }
+
+    /**
+     * @Then /^I see options to (.*) and (.*)$/
+     */
+    public function iSeeOptionsToSetAndUnsetCookiesThatMeasureMyWebsiteUse($option1, $option2)
+    {
+        $this->ui->assertPageContainsText("Cookies that measure website use");
+        $this->ui->assertElementContains('input[id=usageCookies-1]', '');
+        $this->ui->assertElementContains('input[id=usageCookies-2]', '');
+    }
+
+    /**
+     * @Then /I choose an (.*) and save my choice$/
+     */
+    public function iChooseAnOptionAndSaveMyChoice($options)
+    {
+        if ($options === 'Use cookies that measure my website use') {
+            $this->ui->fillField('usageCookies', 'yes');
+        } else {
+            $this->ui->fillField('usageCookies', 'no');
+        }
+        $this->ui->pressButton('Save changes');
+    }
+
+    /**
+     * @Then /^I should be on the home page of the service$/
+     */
+    public function iShouldBeOnTheHomePageOfTheService()
+    {
+        $this->ui->assertPageAddress('/');
+    }
+
+    /**
+     * @Then /^I should not see a cookie banner$/
+     */
+    public function iShouldNotSeeACookieBanner()
+    {
+        $this->ui->assertPageAddress('/');
+        $cookieBannerDisplay = $this->ui->getSession()->getPage()->find('css', '.cookie-banner--show');
+        if ($cookieBannerDisplay === null) {
+            $this->ui->assertResponseNotContains('cookie-banner--show');
+        }
+    }
+
+    /**
+     * @Given /^I set my cookie preferences$/
+     */
+    public function iSetMyCookiePreferences()
+    {
+        $this->iClickOnButton('Set cookie preferences');
+        $this->iSeeOptionsToSetAndUnsetCookiesThatMeasureMyWebsiteUse('Use cookies that measure my website use', 'Do not use cookies that measure my website use');
+        $this->iChooseAnOptionAndSaveMyChoice('Use cookies that measure my website use');
+    }
+
+    /**
+     * @Then /I have a cookie named (.*)$/
+     */
+    public function iHaveACookieNamedSeenCookieMessage()
+    {
+        $this->ui->assertPageAddress('/');
+
+        $session = $this->ui->getSession();
+
+        // retrieving response headers:
+        $cookies = $session->getResponseHeaders()['Set-Cookie'];
+
+        if (!$cookies === null) {
+            foreach ($cookies as $value) {
+                if (strstr($value, 'seen-cookie-message')) {
+                    assertContains('true', $value);
+                } else {
+                    throw new Exception('Cookie named seen-cookie-message not found in the response header');
+                }
+            }
+        }
+    }
+
+    /**
+     * @Given /^I want to view a lasting power of attorney$/
+     */
+    public function iWantToViewALastingPowerOfAttorney()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I want to use my lasting power of attorney$/
+     */
+    public function iWantToUseMyLastingPowerOfAttorney()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I chose to ignore setting cookies and I am on the dashboard page$/
+     */
+    public function iChoseToIgnoreSettingCookiesAndIAmOnTheDashboardPage()
+    {
+        $this->ui->clickLink("Sign in to your existing account");
+        $this->ui->assertPageAddress('/login');
+
+        $userEmail = 'test@test.com';
+        $password = 'pa33w0rd';
+        $userActive = true;
+        $userId = '123';
+
+        $this->ui->fillField('email', $userEmail);
+        $this->ui->fillField('password', $password);
+
+        if ($userActive) {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
+                    [
+                        'Id' => $userId,
+                        'Email' => $userEmail,
+                        'LastLogin' => '2020-01-01'
+                    ]
+                )));
+
+            // Dashboard page checks for all LPA's for a user
+            $this->apiFixtures->get('/v1/lpas')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+        } else {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
+        }
+
+        $this->ui->pressButton('Sign in');
+        $this->ui->assertPageAddress('/lpa/dashboard');
     }
 }

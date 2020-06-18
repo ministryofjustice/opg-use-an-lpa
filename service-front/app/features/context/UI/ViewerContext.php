@@ -90,7 +90,7 @@ class ViewerContext implements Context
     public function iAccessTheViewerService()
     {
         $this->ui->iAmOnHomepage();
-        $this->ui->assertElementContainsText('a[role=button]', 'Start');
+        $this->ui->assertElementContainsText('a[name=viewer-start]', 'Start');
         $this->ui->clickLink('Start');
     }
 

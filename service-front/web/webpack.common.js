@@ -6,7 +6,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.s[ac]ss$/i,
+        test: /\.scss$/i,
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -17,6 +17,19 @@ module.exports = {
           },
           {
             loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+              implementation: require('node-sass'),
+            },
+          },
+        ],
+      },
+      {
+        test: /\.css$/i,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
             options: {
               sourceMap: true,
             },
@@ -45,13 +58,16 @@ module.exports = {
       filename: 'stylesheets/[name].css',
       chunkFilename: 'stylesheets/[id].css',
     }),
-    new CopyWebpackPlugin([
-      { from: 'src/robots.txt', to: 'robots.txt' },
-      { from: 'node_modules/govuk-frontend/govuk/assets', to: 'assets' },
-      {
-        from: 'node_modules/@ministryofjustice/frontend/moj/assets',
-        to: 'assets',
-      },
-    ]),
+    new CopyWebpackPlugin({
+        patterns: [
+          { from: 'src/robots.txt', to: 'robots.txt' },
+          { from: 'node_modules/govuk-frontend/govuk/assets', to: 'assets' },
+          {
+            from: 'node_modules/@ministryofjustice/frontend/moj/assets',
+            to: 'assets',
+          },
+        ]
+      }
+    ),
   ],
 };

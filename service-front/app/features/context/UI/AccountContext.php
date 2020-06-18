@@ -71,12 +71,12 @@ class AccountContext implements Context
                             'addressLine1' => '',
                             'addressLine2' => '',
                             'addressLine3' => '',
-                            'country'      => '',
-                            'county'       => '',
-                            'id'           => 0,
-                            'postcode'     => '',
-                            'town'         => '',
-                            'type'         => 'Primary'
+                            'country' => '',
+                            'county' => '',
+                            'id' => 0,
+                            'postcode' => '',
+                            'town' => '',
+                            'type' => 'Primary'
                         ]
                     ],
                     'companyName' => null,
@@ -121,7 +121,7 @@ class AccountContext implements Context
     {
         $this->ui->visit('/login');
         $this->ui->assertPageAddress('/login');
-        $this->ui->assertElementContainsText('button[type=submit]', 'Sign in');
+        $this->ui->assertElementContainsText('button[name=sign-in]', 'Sign in');
     }
 
     /**
@@ -136,7 +136,7 @@ class AccountContext implements Context
 
         $this->ui->iAmOnHomepage();
 
-        $this->ui->clickLink('Sign in');
+        $this->ui->clickLink('Sign in to your existing account');
     }
 
     /**
@@ -164,7 +164,7 @@ class AccountContext implements Context
      */
     public function iAmToldMyAccountHasNotBeenActivated()
     {
-         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->userEmail);
+        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->userEmail);
     }
 
     /**
@@ -200,8 +200,8 @@ class AccountContext implements Context
             $this->apiFixtures->patch('/v1/auth')
                 ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
                     [
-                        'Id'        => $this->userId,
-                        'Email'     => $this->userEmail,
+                        'Id' => $this->userId,
+                        'Email' => $this->userEmail,
                         'LastLogin' => '2020-01-01'
                     ]
                 )));
@@ -394,11 +394,11 @@ class AccountContext implements Context
 
         // API fixture for reset token check
         $this->apiFixtures->get('/v1/can-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])));
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Id' => '123456'])));
 
         // API fixture for password reset
         $this->apiFixtures->patch('/v1/complete-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])))
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Id' => '123456'])))
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $params = json_decode($request->getBody()->getContents(), true);
 
@@ -465,7 +465,7 @@ class AccountContext implements Context
 
         // API fixture for reset token check
         $this->apiFixtures->get('/v1/can-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([ 'Id' => '123456' ])));
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Id' => '123456'])));
 
         $this->ui->fillField('password', $password);
         $this->ui->fillField('password_confirm', $password);
@@ -838,8 +838,8 @@ class AccountContext implements Context
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'Id'              => '123',
-                'Email'           => $this->email,
+                'Id' => '123',
+                'Email' => $this->email,
                 'ActivationToken' => $this->activationToken,
             ])));
 
@@ -890,7 +890,7 @@ class AccountContext implements Context
                     [],
                     json_encode(
                         [
-                            'Id'               => '123',
+                            'Id' => '123',
                             'activation_token' => $this->activationToken,
                         ]
                     )
@@ -945,7 +945,7 @@ class AccountContext implements Context
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
             ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([
-                'Email'           => $this->email,
+                'Email' => $this->email,
                 'ActivationToken' => $this->activationToken,
             ])));
 
@@ -1203,8 +1203,8 @@ class AccountContext implements Context
             $this->apiFixtures->patch('/v1/auth')
                 ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
                     [
-                        'Id'        => $this->userId,
-                        'Email'     => $this->userEmail,
+                        'Id' => $this->userId,
+                        'Email' => $this->userEmail,
                         'LastLogin' => null,
                     ]
                 )));
@@ -1285,14 +1285,14 @@ class AccountContext implements Context
                     [],
                     json_encode([
                             0 => [
-                                'SiriusUid'    => $this->lpa->uId,
-                                'Added'        => '2020-01-01T23:59:59+00:00',
-                                'Expires'      => '2021-01-01T23:59:59+00:00',
+                                'SiriusUid' => $this->lpa->uId,
+                                'Added' => '2020-01-01T23:59:59+00:00',
+                                'Expires' => '2021-01-01T23:59:59+00:00',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
-                                'ViewerCode'   => $this->accessCode,
-                                'Viewed'       => false,
-                                'ActorId'      => $this->actorId
+                                'ViewerCode' => $this->accessCode,
+                                'Viewed' => false,
+                                'ActorId' => $this->actorId
                             ]
                         ])
                 )
@@ -1329,14 +1329,14 @@ class AccountContext implements Context
                     [],
                     json_encode([
                             0 => [
-                                'SiriusUid'    => $this->lpa->uId,
-                                'Added'        => '2020-01-01T23:59:59+00:00',
-                                'Expires'      => '2020-02-01T23:59:59+00:00',
+                                'SiriusUid' => $this->lpa->uId,
+                                'Added' => '2020-01-01T23:59:59+00:00',
+                                'Expires' => '2020-02-01T23:59:59+00:00',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
-                                'ViewerCode'   => $this->accessCode,
-                                'Viewed'       => false,
-                                'ActorId'      => $this->actorId
+                                'ViewerCode' => $this->accessCode,
+                                'Viewed' => false,
+                                'ActorId' => $this->actorId
                             ]
                         ])
                 )
@@ -1373,24 +1373,24 @@ class AccountContext implements Context
                     [],
                     json_encode([
                             0 => [
-                                'SiriusUid'    => $this->lpa->uId,
-                                'Added'        => '2020-01-01T23:59:59+00:00',
-                                'Expires'      => '2021-02-01T23:59:59+00:00',
+                                'SiriusUid' => $this->lpa->uId,
+                                'Added' => '2020-01-01T23:59:59+00:00',
+                                'Expires' => '2021-02-01T23:59:59+00:00',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
-                                'ViewerCode'   => $this->accessCode,
-                                'Viewed'       => false,
-                                'ActorId'      => $this->actorId
+                                'ViewerCode' => $this->accessCode,
+                                'Viewed' => false,
+                                'ActorId' => $this->actorId
                             ],
                             1 => [
-                                'SiriusUid'    => $this->lpa->uId,
-                                'Added'        => '2020-01-01T23:59:59+00:00',
-                                'Expires'      => '2020-02-01T23:59:59+00:00',
+                                'SiriusUid' => $this->lpa->uId,
+                                'Added' => '2020-01-01T23:59:59+00:00',
+                                'Expires' => '2020-02-01T23:59:59+00:00',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
-                                'ViewerCode'   => "ABC321ABCXYZ",
-                                'Viewed'       => false,
-                                'ActorId'      => $this->actorId
+                                'ViewerCode' => "ABC321ABCXYZ",
+                                'Viewed' => false,
+                                'ActorId' => $this->actorId
                             ]
                         ])
                 )
@@ -1510,15 +1510,15 @@ class AccountContext implements Context
                     [],
                     json_encode([
                         0 => [
-                            'SiriusUid'    => $this->lpa->uId,
-                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'SiriusUid' => $this->lpa->uId,
+                            'Added' => '2020-01-01T23:59:59+00:00',
                             'Organisation' => $this->organisation,
                             'UserLpaActor' => $this->userLpaActorToken,
-                            'ViewerCode'   => $this->accessCode,
-                            'Cancelled'    => '2021-01-02T23:59:59+00:00',
-                            'Expires'      => '2021-01-02T23:59:59+00:00',
-                            'Viewed'       => false,
-                            'ActorId'      => $this->actorId
+                            'ViewerCode' => $this->accessCode,
+                            'Cancelled' => '2021-01-02T23:59:59+00:00',
+                            'Expires' => '2021-01-02T23:59:59+00:00',
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId
                         ]
                     ])
                 )
@@ -1624,14 +1624,14 @@ class AccountContext implements Context
                     [],
                     json_encode([
                         0 => [
-                            'SiriusUid'    => $this->lpa->uId,
-                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'SiriusUid' => $this->lpa->uId,
+                            'Added' => '2020-01-01T23:59:59+00:00',
                             'Organisation' => $this->organisation,
                             'UserLpaActor' => $this->userLpaActorToken,
-                            'ViewerCode'   => $this->accessCode,
-                            'Expires'      => '2021-01-05T23:59:59+00:00',
-                            'Viewed'       => false,
-                            'ActorId'      => $this->actorId,
+                            'ViewerCode' => $this->accessCode,
+                            'Expires' => '2021-01-05T23:59:59+00:00',
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId,
                         ]
                     ])
                 )
@@ -1676,25 +1676,25 @@ class AccountContext implements Context
         $this->accessCode = "XYZ321ABC987";
 
         $code1 = [
-            'SiriusUid'    => $this->lpa->uId,
-            'Added'        => '2020-01-01T23:59:59+00:00',
+            'SiriusUid' => $this->lpa->uId,
+            'Added' => '2020-01-01T23:59:59+00:00',
             'Organisation' => $this->organisation,
             'UserLpaActor' => $this->userLpaActorToken,
-            'ViewerCode'   => $this->accessCode,
-            'Expires'      => $code1Expiry,
-            'Viewed'       => false,
-            'ActorId'      => $this->actorId,
+            'ViewerCode' => $this->accessCode,
+            'Expires' => $code1Expiry,
+            'Viewed' => false,
+            'ActorId' => $this->actorId,
         ];
 
         $code2 = [
-            'SiriusUid'    => $this->lpa->uId,
-            'Added'        => '2020-01-01T23:59:59+00:00',
+            'SiriusUid' => $this->lpa->uId,
+            'Added' => '2020-01-01T23:59:59+00:00',
             'Organisation' => $this->organisation,
             'UserLpaActor' => $this->userLpaActorToken,
-            'ViewerCode'   => $this->accessCode,
-            'Expires'      => $code2Expiry,
-            'Viewed'       => false,
-            'ActorId'      => $this->actorId,
+            'ViewerCode' => $this->accessCode,
+            'Expires' => $code2Expiry,
+            'Viewed' => false,
+            'ActorId' => $this->actorId,
         ];
 
         //API call for getting all the users added LPAs
@@ -1976,8 +1976,8 @@ class AccountContext implements Context
             $this->apiFixtures->patch('/v1/auth')
                 ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
                     [
-                        'Id'        => $this->userId,
-                        'Email'     => $email_format,
+                        'Id' => $this->userId,
+                        'Email' => $email_format,
                         'LastLogin' => '2020-01-01'
                     ]
                 )));
@@ -2156,8 +2156,8 @@ class AccountContext implements Context
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'Id'              => '123',
-                'Email'           => $email1,
+                'Id' => '123',
+                'Email' => $email1,
                 'ActivationToken' => $this->activationToken,
             ])));
 
@@ -2462,9 +2462,9 @@ class AccountContext implements Context
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode([
-                        'Id'        => $this->userId,
-                        'Email'     => $this->userEmail,
-                        'Password'  => $this->userPassword,
+                        'Id' => $this->userId,
+                        'Email' => $this->userEmail,
+                        'Password' => $this->userPassword,
                         'LastLogin' => null
                     ])
                 )
@@ -2531,7 +2531,7 @@ class AccountContext implements Context
      */
     public function anAttorneyCanBeRemovedFromActingOnAParticularLpa()
     {
-      // Not needed for this context
+        // Not needed for this context
     }
 
     /**
@@ -2543,14 +2543,14 @@ class AccountContext implements Context
         $this->accessCode = "XYZ321ABC987";
 
         $code = [
-            'SiriusUid'    => $this->lpa->uId,
-            'Added'        => '2020-01-01T23:59:59+00:00',
+            'SiriusUid' => $this->lpa->uId,
+            'Added' => '2020-01-01T23:59:59+00:00',
             'Organisation' => $this->organisation,
             'UserLpaActor' => $this->userLpaActorToken,
-            'ViewerCode'   => $this->accessCode,
-            'Expires'      => '2024-01-01T23:59:59+00:00',
-            'Viewed'       => false,
-            'ActorId'      => $this->actorId,
+            'ViewerCode' => $this->accessCode,
+            'Expires' => '2024-01-01T23:59:59+00:00',
+            'Viewed' => false,
+            'ActorId' => $this->actorId,
         ];
 
         //API call for getting all the users added LPAs
@@ -2747,14 +2747,7 @@ class AccountContext implements Context
         $this->ui->assertResponseStatus(404);
     }
 
-    /**
-     * @Given /^I want to use my lasting power of attorney$/
-     */
-    public function iWantToUseMyLastingPowerOfAttorney()
-    {
-        // Not needed for this context
-    }
-
+//    REMOVE
     /**
      * @When /^I access the use a lasting power of attorney web page$/
      */
@@ -2782,8 +2775,8 @@ class AccountContext implements Context
     }
 
     /**
-    * @When /^I should be taken to the (.*) page$/
-    */
+     * @When /^I should be taken to the (.*) page$/
+     */
     public function iShouldBeTakenToThePreviousPage($page)
     {
         if ($page == 'start') {
@@ -3389,3 +3382,4 @@ class AccountContext implements Context
         $this->ui->pressButton('Continue');
     }
 }
+
