@@ -25,7 +25,7 @@ use Psr\Log\LoggerInterface;
  */
 class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
 {
-    protected const WHITELIST = [
+    protected const ALLOWLIST = [
         UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE,
         EncryptedCookiePersistence::SESSION_TIME_KEY,
     ];
@@ -58,7 +58,7 @@ class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
     private function stripSession(SessionInterface $session)
     {
         foreach ($session->toArray() as $key => $value) {
-            if (! in_array($key, self::WHITELIST)) {
+            if (! in_array($key, self::ALLOWLIST)) {
                 $session->unset($key);
             }
         }
