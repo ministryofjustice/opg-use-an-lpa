@@ -85,6 +85,9 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/lpa/terms-of-use', [
         Actor\Handler\ActorTermsOfUseHandler::class
     ], 'lpa.terms-of-use');
+    $app->get('/lpa/privacy-notice', [
+        Actor\Handler\ActorPrivacyNoticeHandler::class
+    ], 'lpa.privacy-notice');
     $app->route('/change-password', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangePasswordHandler::class
