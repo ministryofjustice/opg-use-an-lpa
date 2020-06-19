@@ -1,3 +1,9 @@
+@import "../../node_modules/govuk-frontend/govuk/settings/all";
+@import "../../node_modules/govuk-frontend/govuk/tools/all";
+@import "../../node_modules/govuk-frontend/govuk/helpers/all";
+@import "../../node_modules/govuk-frontend/govuk/core/all";
+@import "../../node_modules/govuk-frontend/govuk/objects/all";
+
 @import 'lpa-signin';
 @import 'lpa-account-menu';
 @import 'govuk-panel';
@@ -7,3 +13,4 @@
 @import "moj-badge--grey";
 @import "lpa-inactive-notice";
 @import "lpa-copyclipboard";
+@import 'cookie-banner';

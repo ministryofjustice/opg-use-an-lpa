@@ -1,0 +1,76 @@
+import cookieConsent from './cookieConsent';
+import '@testing-library/jest-dom'
+import {getCookie, setDefaultConsentCookie, approveAllCookieTypes, setCookie} from './cookieHelper';
+const cookieBannerHtml = `
+<div class="cookie-banner govuk-width-container" role="region" aria-label="cookie banner">
+    <div class="govuk-grid-row">
+        <div class=" govuk-grid-column-two-thirds">
+            <div class="cookie-banner__message">
+                <h2 class="govuk-heading-m">Tell us whether you accept cookies</h2>
+                <p class="govuk-body">GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us
+                    improve government digital services. Any data collected is anonymised.</p>
+            </div>
+            <div class="cookie-banner__buttons">
+                <div class="cookie-banner__button cookie-banner__button-accept govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0">
+                    <button class="govuk-button button--inline" type="submit" role="button">Accept all cookies</button>
+                </div>
+                <div class="cookie-banner__button govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0">
+                    <a href="/cookies" class="govuk-button govuk-button--secondary button--inline" role="button">Set cookie preferences</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+`;
+jest.mock("./cookieHelper", () => ({
+  getCookie: jest.fn(),
+  setDefaultConsentCookie: jest.fn(),
+  approveAllCookieTypes: jest.fn(),
+  setCookie: jest.fn()
+}));
+describe('When the cookie banner is initiated', () => {
+  describe('and there is no cookie set', () => {
+    getCookie.mockReturnValueOnce(null);
+    getCookie.mockReturnValueOnce(null);
+    delete global.window.location;
+    global.window = Object.create(window);
+    global.window.location = {
+      port: '80',
+      protocol: 'https:',
+      hostname: 'localhost',
+      pathname: '/'
+    };
+    test('it should show the banner', () => {
+      document.body.innerHTML = cookieBannerHtml;
+      new cookieConsent(document.querySelector('.cookie-banner'));
+      const cookieBanner = document.querySelector('.cookie-banner');
+      expect(cookieBanner).toHaveClass('cookie-banner--show');
+    });
+  });
+  describe('and the accept cookies have been set to true', () => {
+    getCookie.mockReturnValueOnce('true');
+    getCookie.mockReturnValueOnce('true');
+    test('it should not show the banner', () => {
+      document.body.innerHTML = cookieBannerHtml;
+      new cookieConsent(document.getElementsByClassName('cookie-banner')[0]);
+      const cookieBanner = document.querySelector('.cookie-banner');
+      expect(cookieBanner).not.toHaveClass('cookie-banner--show');
+    });
+  });
+  describe('and the accept all button has been clicked', () => {
+    getCookie.mockReturnValueOnce(null);
+    getCookie.mockReturnValueOnce(null);
+    test('it should hide the banner', () => {
+      document.body.innerHTML = cookieBannerHtml;
+      new cookieConsent(document.getElementsByClassName('cookie-banner')[0]);
+      const cookieBanner = document.querySelector('.cookie-banner');
+      expect(cookieBanner).toHaveClass('cookie-banner--show');
+      const button = document.querySelector('button');
+      button.click();
+      expect(cookieBanner).not.toHaveClass('cookie-banner--show');
+    });
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+});

@@ -1,5 +1,6 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.pdf.common.js');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = merge(common, {
   output: {
@@ -9,5 +10,8 @@ module.exports = merge(common, {
   },
   resolve: {
     modules: [__dirname, 'node_modules'],
+  },
+  optimization: {
+    minimizer: [new OptimizeCSSAssetsPlugin({})],
   },
 });
