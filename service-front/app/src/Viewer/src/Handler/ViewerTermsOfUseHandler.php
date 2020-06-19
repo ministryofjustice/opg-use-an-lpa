@@ -12,6 +12,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
 /**
  * Class ViewerTermsOfUseHandler
  * @package Viewer\Handler
+ * @codeCoverageIgnore
  */
 class ViewerTermsOfUseHandler extends AbstractHandler
 {

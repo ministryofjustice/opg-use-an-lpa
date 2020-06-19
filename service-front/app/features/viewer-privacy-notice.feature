@@ -1,0 +1,18 @@
+@viewer @privacyNotice
+Feature: View privacy notice from terms of use page
+  As an organisation using the service
+  I want to check the privacy notice
+  So that I can be be sure of the way that the data is processed for an LPA
+
+  @ui
+  Scenario: The user can access the privacy notice from the terms of use page
+    Given I am on the enter code page
+    When I request to see the viewer terms of use
+    And I request to see the viewer privacy notice
+    Then I can see the viewer privacy notice
+
+  @ui
+  Scenario: The user can go back to the terms of use page from the privacy notice page
+    Given I am on the privacy notice page
+    When I request to go back to the terms of use page
+    Then I am taken back to the terms of use page

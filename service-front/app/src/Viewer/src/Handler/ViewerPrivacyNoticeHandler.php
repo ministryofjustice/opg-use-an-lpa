@@ -8,6 +8,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 
+/**
+ * Class ViewerPrivacyNoticeHandler
+ * @package Viewer\Handler
+ * @codeCoverageIgnore
+ */
 class ViewerPrivacyNoticeHandler extends AbstractHandler
 {
     /**
@@ -18,7 +23,4 @@ class ViewerPrivacyNoticeHandler extends AbstractHandler
     {
         return new HtmlResponse($this->renderer->render('viewer::viewer-privacy-notice'));
     }
-}
-{
-
 }
