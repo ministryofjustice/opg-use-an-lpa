@@ -2190,6 +2190,14 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I request to see the actor privacy notice$/
+     */
+    public function iRequestToSeeTheActorPrivacyNoticePage()
+    {
+        $this->ui->clickLink('privacy notice');
+    }
+
+    /**
      * @Then /^I can see the actor terms of use$/
      */
     public function iCanSeeTheActorTermsOfUse()
@@ -2198,7 +2206,14 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('Terms of use');
         $this->ui->assertPageContainsText('The service is for donors and attorneys on an LPA.');
     }
-
+    /**
+     * @Then /^I can see the actor privacy notice$/
+     */
+    public function iCanSeeTheActorPrivacyNotice()
+    {
+        $this->ui->assertPageAddress('/lpa/privacy-notice');
+        $this->ui->assertPageContainsText('Privacy notice');
+    }
     /**
      * @Given /^I am on the actor terms of use page$/
      */
@@ -2207,11 +2222,20 @@ class AccountContext implements Context
         $this->ui->visit('/lpa/terms-of-use');
         $this->ui->assertPageAddress('/lpa/terms-of-use');
     }
+    /**
+     * @Given /^I am on the actor privacy notice page$/
+     */
+    public function iAmOnTheActorPrivacyNoticePage()
+    {
+        $this->ui->visit('/lpa/privacy-notice');
+        $this->ui->assertPageAddress('/lpa/privacy-notice');
+    }
 
     /**
      * @When /^I request to go back to the create account page$/
+     * @When /^I request to go back to the terms of use page$/
      */
-    public function iRequestToGoBackToTheCreateAccountPage()
+    public function iRequestToGoBackToTheSpecifiedPage()
     {
         $this->ui->clickLink('Back');
     }
@@ -2222,6 +2246,14 @@ class AccountContext implements Context
     public function iAmTakenBackToTheCreateAccountPage()
     {
         $this->ui->assertPageAddress('/create-account');
+    }
+
+    /**
+     * @Then /^I am taken back to the terms of use page$/
+     */
+    public function iAmTakenBackToTheTermsOfUsePage()
+    {
+        $this->ui->assertPageAddress('/lpa/terms-of-use');
     }
 
     /**
@@ -3382,4 +3414,3 @@ class AccountContext implements Context
         $this->ui->pressButton('Continue');
     }
 }
-
