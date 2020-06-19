@@ -37,9 +37,11 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
             $actorCode = $this->actorCodesApi->validateCode($code, $uid, $dob);
 
             $actorUid = $actorCode->getData()['actor'] ?? null;
-            if ($actorUid !== null) {
+            if ($actorUid !== null && $this->verifyAgainstLpa($uid, $actorUid, $dob)) {
                 return $actorUid;
             }
+        } catch (ActorCodeValidationException $acve) {
+            throw $acve;
         } catch (\Exception $e) {
             $this->logger->error(
                 'Failed to validate actor code when communicating with codes service',
@@ -68,5 +70,56 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
     public function flagCodeAsUsed(string $code)
     {
         $this->actorCodesApi->flagCodeAsUsed($code);
+    }
+
+    /**
+     * Attempts further validation against sirius lpa data so that we can be sure that we're using
+     * the authoritative source.
+     *
+     * @param string $uid
+     * @param string $actorUid
+     * @param string $dob
+     * @return bool
+     * @throws ActorCodeValidationException
+     */
+    private function verifyAgainstLpa(string $uid, string $actorUid, string $dob): bool
+    {
+        $lpa = $this->lpaService->getByUid($uid);
+
+        if ($lpa === null) {
+            $this->logger->error(
+                'Could not find LPA for SiriusUid {SiriusUid} when validating actor code',
+                [
+                    'SiriusUid' => $uid
+                ]
+            );
+            throw new ActorCodeValidationException('LPA not found');
+        }
+
+        $actor = $this->lpaService->lookupActiveActorInLpa($lpa->getData(), $actorUid);
+
+        if ($actor === null) {
+            $this->logger->error(
+                'Could not find actor {ActorLpaId} in LPA for SiriusUid {SiriusUid} when validating actor code',
+                [
+                    'ActorLpaId' => $actorUid,
+                    'SiriusUid' => $uid,
+                ]
+            );
+            throw new ActorCodeValidationException('Actor not in LPA');
+        }
+
+        if ($dob !== $actor['details']['dob']) {
+            $this->logger->error(
+                'Dob {dob} did not match {expected} when validating actor code',
+                [
+                    'dob' => $dob,
+                    'expected' => $actor['details']['dob'],
+                ]
+            );
+            throw new ActorCodeValidationException('Bad date of birth');
+        }
+
+        return true;
     }
 }
