@@ -8,7 +8,7 @@ Feature: Check status of the service
   Scenario: I want to check the service health
     Given I fetch the healthcheck endpoint
     Then I see JSON output
-    And it contains a "healthy" key/value pair
+    And it contains a "overall_healthy" key/value pair
 
   @smoke
   Scenario: I want to discover the service version
