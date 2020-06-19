@@ -9,6 +9,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 
+/**
+ * Class ActorPrivacyNoticeHandler
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class ActorPrivacyNoticeHandler extends AbstractHandler
 {
     /**
