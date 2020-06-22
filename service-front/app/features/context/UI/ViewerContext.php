@@ -404,12 +404,28 @@ class ViewerContext implements Context
     }
 
     /**
+     * @When /^I request to see the viewer privacy notice$/
+     */
+    public function iRequestToSeeTheViewerPrivacyNotice()
+    {
+        $this->ui->clickLink("privacy notice");
+    }
+    /**
      * @Then /^I can see the viewer terms of use$/
      */
     public function iCanSeeTheViewerTermsOfUse()
     {
         $this->ui->assertPageAddress('/terms-of-use');
         $this->ui->assertPageContainsText('Terms of use');
+    }
+
+    /**
+     * @Then /^I can see the viewer privacy notice$/
+     */
+    public function iCanSeeTheViewerPrivacyNotice()
+    {
+        $this->ui->assertPageAddress('/privacy-notice');
+        $this->ui->assertPageContainsText('Privacy notice');
     }
 
     /**
@@ -422,9 +438,19 @@ class ViewerContext implements Context
     }
 
     /**
-     * @When /^I request to go back to the enter code page$/
+     * @Given /^I am on the privacy notice page$/
      */
-    public function iRequestToGoBackToTheEnterCodePage()
+    public function iAmOnThePrivacyNoticePage()
+    {
+        $this->ui->visit('/privacy-notice');
+        $this->ui->assertPageAddress('/privacy-notice');
+    }
+
+    /**
+     * @When /^I request to go back to the enter code page$/
+     * @When /^I request to go back to the terms of use page$/
+     */
+    public function iRequestToGoBackToTheRequiredPage()
     {
         $this->ui->clickLink('Back');
     }
@@ -436,6 +462,14 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/enter-code');
         $this->ui->assertPageContainsText('Enter the LPA access code');
+    }
+
+    /**
+     * @Then /^I am taken back to the terms of use page$/
+     */
+    public function iAmTakenBackToTheTermsOfUsePage()
+    {
+        $this->iAmOnTheTermsOfUsePage();
     }
 
     /**
