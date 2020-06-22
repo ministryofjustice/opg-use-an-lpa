@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Service\ActorCodes\Validation;
 
 use App\DataAccess\ApiGateway\ActorCodes;
+use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\CodeValidationStrategyInterface;
 use App\Service\Lpa\LpaService;
+use ParagonIE\HiddenString\HiddenString;
 use Psr\Log\LoggerInterface;
 
 class CodesApiValidationStrategy implements CodeValidationStrategyInterface
@@ -69,7 +71,23 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
      */
     public function flagCodeAsUsed(string $code)
     {
-        $this->actorCodesApi->flagCodeAsUsed($code);
+        try {
+            $this->actorCodesApi->flagCodeAsUsed($code);
+        } catch (\Exception $e) {
+            $this->logger->error(
+                'Failed to revoke actor code {code} when communicating with codes service',
+                [
+                    'code' => new HiddenString($code)
+                ]
+            );
+
+            // This is a serious error that needs reporting up the call stack
+            throw new ActorCodeMarkAsUsedException(
+                'Code has not been marked as used by the codes service',
+                500,
+                $e
+            );
+        }
     }
 
     /**
