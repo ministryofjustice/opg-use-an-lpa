@@ -81,8 +81,31 @@ class ActorCodes
         );
     }
 
-    public function flagCodeAsUsed(string $code)
+    /**
+     * @param string $code
+     * @throws ApiException
+     */
+    public function flagCodeAsUsed(string $code): void
     {
+        $url  = sprintf("%s/v1/revoke", $this->apiBaseUri);
+        $body = json_encode(
+            [
+                'code' => $code
+            ]
+        );
+
+        $request = new Request('POST', $url, $this->buildHeaders(), $body);
+        $request = $this->awsSignature->sign($request);
+
+        try {
+            $response = $this->httpClient->send($request);
+        } catch (GuzzleException $ge) {
+            throw ApiException::create('Error whilst communicating with actor codes service', null, $ge);
+        }
+
+        if ($response->getStatusCode() !== StatusCodeInterface::STATUS_OK) {
+            throw ApiException::create('Actor codes service returned non-ok response', $response);
+        }
     }
 
     private function buildHeaders(): array
