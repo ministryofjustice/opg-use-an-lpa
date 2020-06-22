@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 namespace Viewer\Handler;
 
@@ -10,11 +9,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 
 /**
- * Class ViewerTermsOfUseHandler
+ * Class ViewerPrivacyNoticeHandler
  * @package Viewer\Handler
  * @codeCoverageIgnore
  */
-class ViewerTermsOfUseHandler extends AbstractHandler
+class ViewerPrivacyNoticeHandler extends AbstractHandler
 {
     /**
      * @param ServerRequestInterface $request
@@ -22,6 +21,6 @@ class ViewerTermsOfUseHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new HtmlResponse($this->renderer->render('viewer::viewer-terms-of-use'));
+        return new HtmlResponse($this->renderer->render('viewer::viewer-privacy-notice'));
     }
 }
