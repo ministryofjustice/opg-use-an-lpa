@@ -11,6 +11,7 @@ use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\Validation\CodesApiValidationStrategy;
 use App\Service\Lpa\LpaService;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
@@ -254,6 +255,32 @@ class CodesApiValidationStrategyTest extends TestCase
         );
 
         $this->expectException(ActorCodeValidationException::class);
+        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
+    }
+
+    /** @test */
+    public function it_will_handle_an_exception_when_validating_a_code(): void
+    {
+        $this->initDependencies();
+
+        $actor = new ActorCode(
+            [
+                'actor' => 'actor-uid',
+            ],
+            new \DateTime('now')
+        );
+
+        $this->actorCodeApiProphecy
+            ->validateCode('actor-code', 'lpa-uid', 'actor-dob')
+            ->willThrow(new Exception('A serious error has occured'));
+
+        $strategy = new CodesApiValidationStrategy(
+            $this->actorCodeApiProphecy->reveal(),
+            $this->lpaServiceProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $this->expectException(Exception::class);
         $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
     }
 
