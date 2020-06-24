@@ -8,10 +8,12 @@ use App\DataAccess\Repository\Response\ActorCode;
 use App\Exception\ApiException;
 use App\Service\Log\RequestTracing;
 use DateTime;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class ActorCodes
@@ -49,31 +51,18 @@ class ActorCodes
      * @param string $uid
      * @param string $dob
      * @return ActorCode
-     * @throws ApiException|\Exception
+     * @throws ApiException|Exception
      */
     public function validateCode(string $code, string $uid, string $dob): ActorCode
     {
-        $url  = sprintf("%s/v1/validate", $this->apiBaseUri);
-        $body = json_encode(
+        $response = $this->makePostRequest(
+            'v1/validate',
             [
                 'lpa'  => $uid,
                 'dob'  => $dob,
                 'code' => $code
             ]
         );
-
-        $request = new Request('POST', $url, $this->buildHeaders(), $body);
-        $request = $this->awsSignature->sign($request);
-
-        try {
-            $response = $this->httpClient->send($request);
-        } catch (GuzzleException $ge) {
-            throw ApiException::create('Error whilst communicating with actor codes service', null, $ge);
-        }
-
-        if ($response->getStatusCode() !== StatusCodeInterface::STATUS_OK) {
-            throw ApiException::create('Actor codes service returned non-ok response', $response);
-        }
 
         return new ActorCode(
             json_decode((string) $response->getBody(), true),
@@ -87,12 +76,19 @@ class ActorCodes
      */
     public function flagCodeAsUsed(string $code): void
     {
-        $url  = sprintf("%s/v1/revoke", $this->apiBaseUri);
-        $body = json_encode(
-            [
-                'code' => $code
-            ]
-        );
+        $this->makePostRequest('v1/revoke', [ 'code' => $code ]);
+    }
+
+    /**
+     * @param string $url
+     * @param array $body
+     * @return ResponseInterface
+     * @throws ApiException
+     */
+    private function makePostRequest(string $url, array $body): ResponseInterface
+    {
+        $url  = sprintf("%s/%s", $this->apiBaseUri, $url);
+        $body = json_encode($body);
 
         $request = new Request('POST', $url, $this->buildHeaders(), $body);
         $request = $this->awsSignature->sign($request);
@@ -106,6 +102,8 @@ class ActorCodes
         if ($response->getStatusCode() !== StatusCodeInterface::STATUS_OK) {
             throw ApiException::create('Actor codes service returned non-ok response', $response);
         }
+
+        return $response;
     }
 
     private function buildHeaders(): array
