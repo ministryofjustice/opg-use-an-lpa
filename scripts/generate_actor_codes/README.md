@@ -60,6 +60,7 @@ Both options have:
 
 - `-v` option to switch on debug mode.
 - `-n` option to keep the output files after disk generation, useful for inspection of the files
+- `-c` option to to just validate the codes only.
 
 You will be given the chance to review the input, and cancel if needed.
 
@@ -68,16 +69,31 @@ Note: `${FILENAME}` prefix is in the `bash` date based format `<environment>_act
 ``` log
 environment name=<environment>
 LPA Id's=<comma separated lpa uids, no spaces>
-Total LPAs entered: <no of LPA uids - corresponding to the list count above>
-environment name=357automateac
+Total unique LPAs: <no of LPA uids - corresponding to the list count above>
 A new ${FILENAME}.txt will be generated.
 This will be stored securely in disk image ${FILENAME}.dmg and copied to your Documents folder.
 Are the above details correct? [y/n]:
 ```
 
-hitting `y` will start the process off. You will see a log similar to below:
+hitting `y` will start the process off.
+You will see a log similar to below, which will validate the lpa list 1 by 1 , which might take a few minutes:
 
 ``` log
+checking LPA validity...
+700000000001 is valid
+700000000002 is valid
+700000000003 is valid
+...
+```
+
+If an LPA ID is not found in the validation step it will report something similar to `700000000000 is invalid. returned {}.`
+if there are errors at the end of the validation step, the script will abort: `aborted, due to the above errors in red.`
+
+- Correct the file as needed
+- rerun the script, then you should see this after the prompt.
+
+``` log
+LPA's all valid!
 generating actor codes...
 starting creation task...
 arn:aws:ecs:eu-west-1:000000000000:task-definition/<environment>-code-creation:1
