@@ -3,6 +3,8 @@ set -euo pipefail
 
 red=`tput setaf 1`
 green=`tput setaf 2`
+yellow=`tput setaf 3`
+blue=`tput setaf 4`
 bold=`tput bold`
 reset=`tput sgr0`
 
@@ -13,14 +15,15 @@ function get_lpa_inputcount(){
 function load_csv(){
     export LC_ALL=C
 
-    LPATRIMMED=$( tr -d '\r' < $1  |        # fix line endings to unix
-    tr '\n' ',' |                           # make each row a record (this may have multiples)
-    tr -cd '[:print:]' |                    # cleanse non printable characters
-    tr -d '[:space:]' |                     # remove spaces
-    tr -d '"' |                             # remove double quotes
-    awk -v RS="," -v ORS="," '!_[$0]++' |   # remove duplicates
-    sed 's/,$//' |                          # remove trailing comma after processing.
-    tr -s ',' )                             # squash commas
+    LPATRIMMED=$( tr -d '\r' < $1  |                                                    # fix line endings to unix
+    awk '/^$/ {nlstack=nlstack "\n";next;} {printf "%s",nlstack; nlstack=""; print;}' | # remove excess line endings at end of file
+    tr '\n' ',' |                                                                       # make each row a record (this may have multiples)
+    tr -cd '[:print:]' |                                                                # cleanse non printable characters
+    tr -d '[:space:]' |                                                                 # remove spaces
+    tr -d '"' |                                                                         # remove double quotes
+    awk -v RS="," -v ORS="," '!_[$0]++' |                                               # remove duplicates
+    sed 's/,$//' |                                                                      # remove trailing comma after processing.
+    tr -s ',' )                                                                         # squash commas
 }
 
 function parse_interactive(){
@@ -70,8 +73,39 @@ function make_encrypted_image() {
     fi
 }
 
+function check_LPA_validity()
+{
+    LPAVALID=
+    RESULT=''
+    for LPAID in $(echo ${LPATRIMMED} | sed "s/,/ /g")
+    do
+
+        if [[ "$LPAENV" == "production" ]]
+        then
+            RESULT=$(aws-vault exec identity -- python ../call-api-gateway/call_api_gateway.py ${LPAID} --production)
+        else
+            RESULT=$(aws-vault exec identity -- python ../call-api-gateway/call_api_gateway.py ${LPAID})
+        fi
+
+
+        if [[ "${RESULT}" == *"${LPAID}"* ]]
+        then
+            echo "${green}${LPAID} is valid${reset}"
+        else
+            echo "${red}${LPAID} is invalid. returned ${RESULT}. ${reset}"
+            LPAVALID="false"
+        fi
+    done
+    if [[ -n "${LPAVALID}" ]]
+    then
+        echo "${red}aborted, due to the above errors in red.${reset}"
+        exit 3;
+    else echo "${green}LPA's all valid!${reset}"
+    fi
+}
+
 function usage(){
-    echo "Usage: generate_actor_codes.sh -e <environment-name> [-i \"<csv-inline-list-surrounded-by-quotes>\" | -f filename] [-v] [-n]" 1>&2
+    echo "Usage: generate_actor_codes.sh -e <environment-name> [-i \"<csv-inline-list-surrounded-by-quotes>\" | -f filename] [-v] [-n] [-c]" 1>&2
     exit 1;
 }
 
@@ -79,7 +113,8 @@ INLINE_CSV=
 INPUT_FILE=
 LPAENV=
 NO_CLEANUP=
-while getopts "e:i:f:vn" opt
+VALIDATE_ONLY=
+while getopts "e:i:f:vnc" opt
 do
   case ${opt} in
     e)  # get the environment
@@ -97,6 +132,10 @@ do
     n)
         #no clean up
         NO_CLEANUP=true
+        ;;
+    c)
+        #validate only.
+        VALIDATE_ONLY=true
         ;;
     \?)
        usage
@@ -125,6 +164,7 @@ fi
 
 get_lpa_inputcount
 
+[[ -n "${VALIDATE_ONLY}" ]] && echo "${blue}${bold}Validate only mode.${reset}"
 echo "environment name=${LPAENV}"
 echo "LPA Id's=${bold}${LPATRIMMED}${reset}"
 echo "Total unique LPA's: ${bold}${LPA_UNIQUE_COUNT}${reset}"
@@ -140,14 +180,21 @@ OUTPUT_STAGING_FILE=${OUTPUT_FOLDER}/${FILENAME}.log
 
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-    echo "generating actor codes..."
-    generate_actor_codes
 
-    echo "processing actor codes..."
-    process_actor_codes
+    echo "${yellow}checking LPA validity...${reset}"
+    check_LPA_validity
 
-    echo "creating encrypted disk image...."
-    make_encrypted_image
+    if [[ -z "${VALIDATE_ONLY}" ]]
+    then
+        echo "generating actor codes..."
+        generate_actor_codes
+
+        echo "processing actor codes..."
+        process_actor_codes
+
+        echo "creating encrypted disk image...."
+        make_encrypted_image
+    fi
 else
     echo "${red}generate actor codes script aborted.${reset}"
 fi
