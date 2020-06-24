@@ -24,3 +24,8 @@ abbr[title] {
     cursor: help;
     text-decoration: none;
 }
+
+.offscreen {
+  position: absolute;
+  left: -999em;
+}
