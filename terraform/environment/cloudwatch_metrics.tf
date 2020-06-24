@@ -4,8 +4,9 @@ resource "aws_cloudwatch_log_metric_filter" "account_creation" {
   log_group_name = data.aws_cloudwatch_log_group.use-an-lpa.name
 
   metric_transformation {
-    name      = "EventCount"
-    namespace = "account_creation"
-    value     = "1"
+    name          = "account_creation_count"
+    namespace     = "account_creation"
+    value         = "1"
+    default_value = "0"
   }
 }
