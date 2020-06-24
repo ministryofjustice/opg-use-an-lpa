@@ -63,6 +63,7 @@ services:
     environment:
       # Always required
       CONTEXT: "viewer"
+      GOOGLE_ANALYTICS_ID: ""
       KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
 
       # Local only
@@ -113,6 +114,7 @@ services:
     environment:
       # Always required
       CONTEXT: "actor"
+      GOOGLE_ANALYTICS_ID: ""
       KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
 
       # Local only
