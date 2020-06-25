@@ -71,7 +71,7 @@ return [
                 'adapter' => [
                     'name'    => 'memory',
                     'options' => [
-                        'memory_limit' => '96M',
+                        'memory_limit' => '64M',
                         'ttl' => 60,
                         'server' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
                         'lib_options' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey()
@@ -89,7 +89,7 @@ return [
                 'adapter' => [
                     'name'    => 'memory',
                     'options' => [
-                        'memory_limit' => '96M',
+                        'memory_limit' => '64M',
                         'ttl' => 60,
                         'server' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
                         'lib_options' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey()
@@ -107,7 +107,7 @@ return [
                 'adapter' => [
                     'name'    => 'memory',
                     'options' => [
-                        'memory_limit' => '96M',
+                        'memory_limit' => '64M',
                         'ttl' => 60,
                         'server' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
                         'lib_options' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey()
