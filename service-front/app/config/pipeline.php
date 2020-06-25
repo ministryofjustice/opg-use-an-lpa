@@ -52,7 +52,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->pipe(\Common\Middleware\Security\RateLimitMiddleware::class);
 
     // Clean out the session if expired
-    $app->pipe(\Common\Middleware\Session\SessionExpiredAttributeWhitelistMiddleware::class);
+    $app->pipe(\Common\Middleware\Session\SessionExpiredAttributeAllowlistMiddleware::class);
 
     $app->pipe(\Mezzio\Csrf\CsrfMiddleware::class);
 

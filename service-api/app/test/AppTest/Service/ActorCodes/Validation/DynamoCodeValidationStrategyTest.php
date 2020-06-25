@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service\ActorCodes;
+namespace AppTest\Service\ActorCodes\Validation;
 
 use App\DataAccess\Repository\ActorCodesInterface;
 use App\DataAccess\Repository\Response\Lpa;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
-use App\Service\ActorCodes\DynamoCodeValidationStrategy;
+use App\Service\ActorCodes\Validation\DynamoCodeValidationStrategy;
 use App\Service\Lpa\LpaService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
