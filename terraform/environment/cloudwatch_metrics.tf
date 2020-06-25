@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_log_metric_filter" "account_creation" {
   name           = "${local.environment}_account_creation_messages"
-  pattern        = "{ $.message = \"Account with Id*created using email*\" }"
+  pattern        = "{ $.context.event_code = \"ACCOUNT_ACTIVATED\" }"
   log_group_name = aws_cloudwatch_log_group.application_logs.name
 
   metric_transformation {
