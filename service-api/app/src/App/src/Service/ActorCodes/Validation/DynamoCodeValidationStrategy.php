@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service\ActorCodes;
+namespace App\Service\ActorCodes\Validation;
 
 use App\DataAccess\Repository\ActorCodesInterface;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
+use App\Service\ActorCodes\CodeValidationStrategyInterface;
 use App\Service\Lpa\LpaService;
 use Psr\Log\LoggerInterface;
 
