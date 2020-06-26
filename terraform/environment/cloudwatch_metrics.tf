@@ -8,7 +8,7 @@ locals {
   ]
 }
 
-resource "aws_cloudwatch_log_metric_filter" "log_metric" {
+resource "aws_cloudwatch_log_metric_filter" "log_event_metrics" {
   for_each       = toset(local.event_codes)
   name           = "${local.environment}_${lower(each.value)}"
   pattern        = "{ $.context.event_code = \"${each.value}\" }"
