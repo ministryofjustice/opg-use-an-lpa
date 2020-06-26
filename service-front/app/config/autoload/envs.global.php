@@ -95,6 +95,10 @@ return [
         'persistent' => false,
     ],
 
+    'analytics' => [
+        'uaid' => getenv('GOOGLE_ANALYTICS_ID') ?: null,
+    ],
+
     'authentication' => [
         'username' => 'email',
         'redirect' => '/login',

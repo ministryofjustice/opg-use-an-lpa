@@ -33,6 +33,10 @@ export default class CookieConsent {
          // TO DO - enable analytics and fire off a pageview
          //window.GOVUK.analyticsSetup(window)
 
+        //new class for ga stuff
+        // check if it is allowed to work? [ref - refunds, global cookie-function]
+
+
         let s = document.createElement('script');
         s.type = 'text/javascript';
         s.src = 'https://www.googletagmanager.com/gtag/js?id=UA-170469426-1';
@@ -41,6 +45,8 @@ export default class CookieConsent {
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'UA-170469426-1');
+
+
 
     }
 
