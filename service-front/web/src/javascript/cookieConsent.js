@@ -1,4 +1,5 @@
 import {getCookie, setCookie, setDefaultConsentCookie, approveAllCookieTypes} from './cookieHelper';
+import googleAnalytics from "./googleAnalytics";
 
 export default class CookieConsent {
     constructor(bannerElement)
@@ -15,6 +16,10 @@ export default class CookieConsent {
 
         const acceptButton = bannerElement.querySelector('.cookie-banner__button-accept > button')
         this._bindEnableAllButton(acceptButton)
+
+        //to remove later
+        window.useAnalytics = new googleAnalytics(window.gaConfig.uaId);
+        window.useAnalytics.trackEvents("actionValue", "categoryValue","labelValue", "value");
     }
 
     _bindEnableAllButton(element)
@@ -28,26 +33,9 @@ export default class CookieConsent {
         approveAllCookieTypes()
         setCookie('seen_cookie_message', 'true')
 
-        this._toggleCookieMessage(false)
+        this._toggleCookieMessage(false);
 
-         // TO DO - enable analytics and fire off a pageview
-         //window.GOVUK.analyticsSetup(window)
-
-        //new class for ga stuff
-        // check if it is allowed to work? [ref - refunds, global cookie-function]
-
-
-        let s = document.createElement('script');
-        s.type = 'text/javascript';
-        s.src = 'https://www.googletagmanager.com/gtag/js?id=UA-170469426-1';
-        document.getElementsByTagName('head')[0].appendChild(s);
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-170469426-1');
-
-
-
+        new googleAnalytics(window.gaConfig.uaId);
     }
 
     _toggleCookieMessage(show)
