@@ -19,7 +19,7 @@ export default class CookieConsent {
 
         //to remove later
         window.useAnalytics = new googleAnalytics(window.gaConfig.uaId);
-        window.useAnalytics.trackEvents("actionValue", "categoryValue","labelValue", "value");
+        window.useAnalytics.trackEvent("actionValue", "categoryValue","labelValue", "value");
     }
 
     _bindEnableAllButton(element)
