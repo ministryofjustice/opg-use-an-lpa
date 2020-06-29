@@ -28,7 +28,11 @@ export default class GoogleAnalytics {
             window.dataLayer.push(arguments);
         }
         window.gtag('js', new Date());
-        window.gtag('config', this.analyticsId);
+        window.gtag('config', this.analyticsId, {
+            'anonymize_ip': true, // https://developers.google.com/analytics/devguides/collection/gtagjs/ip-anonymization
+            'allow_google_signals': false, // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
+            'allow_ad_personalization_signals': false // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
+        });
     }
 
     trackEvent(action, category, label, value)
