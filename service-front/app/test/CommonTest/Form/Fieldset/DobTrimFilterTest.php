@@ -24,7 +24,7 @@ class DobTrimFilterTest extends TestCase
      * @param array $expected
      * @param array $dob
      */
-    public function testIsDobFormattedWithLeadingZeroes(array $expected, array $dob)
+    public function testIsDobTrimmed(array $expected, array $dob)
     {
         $formattedDate = $this->filter->filter($expected);
         $this->assertEquals($formattedDate, $dob);
