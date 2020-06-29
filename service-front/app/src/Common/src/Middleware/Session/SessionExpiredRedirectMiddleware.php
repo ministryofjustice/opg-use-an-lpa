@@ -7,12 +7,10 @@ namespace Common\Middleware\Session;
 use Common\Service\Session\EncryptedCookiePersistence;
 use Laminas\Diactoros\Uri;
 use Mezzio\Helper\ServerUrlHelper;
-use Mezzio\Router\RouterInterface;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 

@@ -94,7 +94,7 @@ class SessionExpiredAttributeAllowlistMiddlewareTest extends TestCase
             ->willReturn($sessionData);
         $sessionProphecy
             ->unset(Argument::type('string'))
-            ->shouldBeCalledTimes(4); // SESSION_TIME_KEY is allowed
+            ->shouldBeCalledTimes(3); // SESSION_TIME_KEY is allowed
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy
