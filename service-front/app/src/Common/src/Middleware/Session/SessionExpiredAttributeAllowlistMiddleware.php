@@ -28,6 +28,7 @@ class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
     protected const ALLOWLIST = [
         UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE,
         EncryptedCookiePersistence::SESSION_TIME_KEY,
+        EncryptedCookiePersistence::SESSION_EXPIRED_KEY
     ];
 
     private LoggerInterface $logger;
