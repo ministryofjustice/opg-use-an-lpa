@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Laminas\Diactoros\Response\RedirectResponse;
 
 class SessionExpiredRedirectMiddleware implements MiddlewareInterface
 {
@@ -34,7 +35,7 @@ class SessionExpiredRedirectMiddleware implements MiddlewareInterface
             $session->unset(EncryptedCookiePersistence::SESSION_EXPIRED_KEY);
             $uri = new Uri($this->helper->generate('/session-expired'));
 
-            return $handler->handle($request->withUri($uri));
+            return new RedirectResponse($uri);
         } else {
             return $handler->handle($request);
         }
