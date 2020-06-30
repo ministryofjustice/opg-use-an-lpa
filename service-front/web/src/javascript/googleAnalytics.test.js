@@ -12,7 +12,7 @@ describe('given Google Analytics is enabled', () => {
         expect(global.dataLayer[1][1]).toBe('UA-12345');
 
         expect(global.dataLayer[1][2].linker).not.toBeUndefined();
-        expect(global.dataLayer[1][2].linker.domains.length).toBe(1);
+        expect(global.dataLayer[1][2].linker.domains.length).toBe(2);
         expect(global.dataLayer[1][2].linker.domains[0]).toBe('www.gov.uk');
 
         expect(global.dataLayer[1][2].anonymize_ip).not.toBeUndefined();
