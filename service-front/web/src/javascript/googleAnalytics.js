@@ -33,6 +33,8 @@ export default class GoogleAnalytics {
             'allow_google_signals': false, // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
             'allow_ad_personalization_signals': false // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
         });
+
+
     }
 
     trackEvent(action, category, label, value)

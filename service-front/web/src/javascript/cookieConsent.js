@@ -5,7 +5,7 @@ export default class CookieConsent {
     constructor(bannerElement)
     {
         this.bannerElement = bannerElement
-        const cookiePolicy = getCookie('cookie_policy')
+        const cookiePolicy = JSON.parse(getCookie('cookie_policy'))
         const seenCookieMessage = getCookie('seen_cookie_message')
         if (seenCookieMessage !== "true") {
             if (!this._isInCookiesPage()) {
@@ -17,9 +17,9 @@ export default class CookieConsent {
         const acceptButton = bannerElement.querySelector('.cookie-banner__button-accept > button')
         this._bindEnableAllButton(acceptButton)
 
-        //to remove later
-        window.useAnalytics = new googleAnalytics(window.gaConfig.uaId);
-        window.useAnalytics.trackEvent("actionValue", "categoryValue","labelValue", "value");
+        if (cookiePolicy && cookiePolicy.usage) {
+            window.useAnalytics = new googleAnalytics(window.gaConfig.uaId);
+        }
     }
 
     _bindEnableAllButton(element)
@@ -34,8 +34,6 @@ export default class CookieConsent {
         setCookie('seen_cookie_message', 'true')
 
         this._toggleCookieMessage(false);
-
-        new googleAnalytics(window.gaConfig.uaId);
     }
 
     _toggleCookieMessage(show)
