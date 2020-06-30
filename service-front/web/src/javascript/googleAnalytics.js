@@ -39,7 +39,6 @@ export default class GoogleAnalytics {
 
     trackEvent(action, category, label, value)
     {
-        console.log({action, category, label, value});
         window.gtag('event', this._sanitiseData(action), {
                     'event_category': this._sanitiseData(category),
                     'event_label': this._sanitiseData(label),
@@ -50,7 +49,7 @@ export default class GoogleAnalytics {
 
     _sanitiseData(data) {
         const sanitisedDataRegex = [
-            /[^\\s=/?&]+(?:@|%40)[^\\s=/?&]+/g, // Email
+            /[^\s=/?&]+(?:@|%40)[^\s=/?&]+/g, // Email
             /[A-PR-UWYZ][A-HJ-Z]?[0-9][0-9A-HJKMNPR-Y]?(?:[\\s+]|%20)*[0-9][ABD-HJLNPQ-Z]{2}/gi, // Postcode
             /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/g, // Date
             /^(((\+44\s?\d{4}|\(?0\d{4}\)?)\s?\d{3}\s?\d{3})|((\+44\s?\d{3}|\(?0\d{3}\)?)\s?\d{3}\s?\d{4})|((\+44\s?\d{2}|\(?0\d{2}\)?)\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$/g, // Telephone
