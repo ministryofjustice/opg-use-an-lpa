@@ -15,4 +15,4 @@ Feature: Session length is independent of cookie lifetime
     And I am currently signed in
     When my session expires
     And I view my dashboard
-    Then I am taken to the login page
+    Then I am taken to the session expired page
