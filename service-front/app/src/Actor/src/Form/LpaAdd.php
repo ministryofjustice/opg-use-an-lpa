@@ -7,6 +7,7 @@ namespace Actor\Form;
 use Common\Form\AbstractForm;
 use Common\Form\Fieldset\Date;
 use Common\Form\Fieldset\DatePrefixFilter;
+use Common\Form\Fieldset\DateTrimFilter;
 use Common\Validator\DobValidator;
 use Laminas\Filter\StringToUpper;
 use Mezzio\Csrf\CsrfGuardInterface;
@@ -114,9 +115,8 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
             ],
             'dob' => [
                 'filters'  => [
-                    [
-                        'name' => DatePrefixFilter::class
-                    ],
+                    ['name' => DateTrimFilter::class],
+                    ['name' => DatePrefixFilter::class],
                 ],
                 'validators' => [
                     [

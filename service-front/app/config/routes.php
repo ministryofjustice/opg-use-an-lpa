@@ -64,6 +64,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     // User auth
     $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
     $app->get('/logout', Actor\Handler\LogoutPageHandler::class, 'logout');
+    $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
 
     // User management
     $app->route('/forgot-password', Actor\Handler\PasswordResetRequestPageHandler::class, ['GET', 'POST'], 'password-reset');

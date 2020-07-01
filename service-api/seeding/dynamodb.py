@@ -78,47 +78,124 @@ actorLpaCodesTable = dynamodb.Table(
 
 actorLpaCodes = [
     {
-        'ActorCode': "RY4KKKVMRVAK",
-        'ActorLpaId': 9,
-        'SiriusUid': "700000000047",
-        'Active': True,
-        'Expires': "2021-09-25T00:00:00Z",
+        "SiriusUid": "700000000526",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "NYGUAMNB46JQ",
+        "ActorLpaId": "97"
     },
     {
-        'ActorCode': "XYUPHWQRECHV",
-        'ActorLpaId': 25,
-        'SiriusUid': "700000000138",
-        'Active': True,
-        'Expires': "2021-09-25T00:00:00Z",
+        "SiriusUid": "700000000138",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "8EFXFEF48WJ4",
+        "ActorLpaId": "23"
     },
     {
-        'ActorCode': "JJGWG6JTRLAY",
-        'ActorLpaId': 45,
-        'SiriusUid': "700000000252",
-        'Active': True,
-        'Expires': "2021-09-25T00:00:00Z",
+        "SiriusUid": "700000000526",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "3JHKF3C6D9W8",
+        "ActorLpaId": "92"
     },
     {
-        'ActorCode': "MDCKNUA9UMLA",
-        'ActorLpaId': 64,
-        'SiriusUid': "700000000344",
-        'Active': True,
-        'Expires': "2018-09-25T00:00:00Z",
+        "SiriusUid": "700000000435",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "CXAY6GPCQ4X3",
+        "ActorLpaId": "76"
     },
     {
-        'ActorCode': "MDCKNUA9UMLC",
-        'ActorLpaId': 164,
-        'SiriusUid': "700000000344",
-        'Active': True,
-        'Expires': "2021-09-25T00:00:00Z",
+        "SiriusUid": "700000000617",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "EEWNGCGW6LWU",
+        "ActorLpaId": "115"
     },
     {
-        'ActorCode': "MDCKNUA9UDEC",
-        'ActorLpaId': 59,
-        'SiriusUid': "700000000344",
-        'Active': True,
-        'Expires': "2021-09-25T00:00:00Z",
+        "SiriusUid": "700000000138",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "QRTXRCFRLK46",
+        "ActorLpaId": "2588"
     },
+    {
+        "SiriusUid": "700000000047",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "E9YRUTPM6RBW",
+        "ActorLpaId": "7"
+    },
+    {
+        "SiriusUid": "700000000047",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "6HFCLATAGLEY",
+        "ActorLpaId": "12"
+    },
+    {
+        "SiriusUid": "700000000617",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "W7D4MT7HAQEH",
+        "ActorLpaId": "110"
+    },
+    {
+        "SiriusUid": "700000000344",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "JU3CJMJK89YG",
+        "ActorLpaId": "64"
+    },
+    {
+        "SiriusUid": "700000000138",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "4UAL33PEQNAY",
+        "ActorLpaId": "25"
+    },
+    {
+        "SiriusUid": "700000000047",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "3YKAJNDD8P3N",
+        "ActorLpaId": "9"
+    },
+    {
+        "SiriusUid": "700000000344",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "6CFKNNFLPCP4",
+        "ActorLpaId": "59"
+    },
+    {
+        "SiriusUid": "700000000252",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "RQ3W8G4EYRQJ",
+        "ActorLpaId": "45"
+    },
+    {
+        "SiriusUid": "700000000435",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "44THDVFJ4P4Y",
+        "ActorLpaId": "78"
+    },
+    {
+        "SiriusUid": "700000000252",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "XW34H3HYFDDL",
+        "ActorLpaId": "43"
+    },
+    {
+        "SiriusUid": "700000000344",
+        "Active": True,
+        "Expires": "2021-06-22T23:59:59+00:00",
+        "ActorCode": "PEYBDGT6AJ7U",
+        "ActorLpaId": "3022"
+    }
 ]
 
 for i in actorLpaCodes:
