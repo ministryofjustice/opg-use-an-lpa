@@ -2,11 +2,12 @@
 // pdf ECS Service level config
 
 resource "aws_ecs_service" "pdf" {
-  name            = "pdf"
-  cluster         = aws_ecs_cluster.use-an-lpa.id
-  task_definition = aws_ecs_task_definition.pdf.arn
-  desired_count   = 2
-  launch_type     = "FARGATE"
+  name             = "pdf"
+  cluster          = aws_ecs_cluster.use-an-lpa.id
+  task_definition  = aws_ecs_task_definition.pdf.arn
+  desired_count    = 2
+  launch_type      = "FARGATE"
+  platform_version = "1.4.0"
 
   network_configuration {
     security_groups  = [aws_security_group.pdf_ecs_service.id]
