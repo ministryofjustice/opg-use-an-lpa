@@ -17,7 +17,6 @@ export default class GoogleAnalytics {
             window.dataLayer.push(arguments);
         }
 
-        window.gtag('js', new Date());
         window.gtag('config', this.analyticsId, {
             'linker': {
                 'domains': ['www.gov.uk', 'www.research.net']
@@ -26,6 +25,7 @@ export default class GoogleAnalytics {
             'allow_google_signals': false, // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
             'allow_ad_personalization_signals': false // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
         });
+        window.gtag('js', new Date());
     }
 
     trackEvent(action, category, label, value)

@@ -96,7 +96,7 @@ return [
     ],
 
     'analytics' => [
-        'uaid' => getenv('GOOGLE_ANALYTICS_ID') ?: null,
+        'uaid' => getenv('GOOGLE_ANALYTICS_ID') ?: "",
     ],
 
     'authentication' => [
