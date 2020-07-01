@@ -185,6 +185,7 @@ services:
       AWS_ENDPOINT_DYNAMODB: http://localstack:14569
       AWS_SECRET_ACCESS_KEY: "-"
       LPA_CODES_STATIC_AUTH_TOKEN: asdf1234567890
+      INSTALL_TEST_DEPENDENCIES: "true"
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
       ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=api-app

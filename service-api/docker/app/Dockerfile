@@ -19,6 +19,3 @@ COPY service-api/docker/app/app-php.ini /usr/local/etc/php/conf.d/
 COPY service-api/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.conf
 
 WORKDIR /app
-
-CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
-    && php-fpm

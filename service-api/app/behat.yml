@@ -10,6 +10,28 @@ default:
     Behat\MinkExtension:
       base_url: 'http://localhost'
       psr: ~
+    SmartGamma\Behat\PactExtension\Extension:
+      common:
+        PACT_CONSUMER_VERSION: 1.0.0
+        PACT_CONSUMER_NAME: use_a_lasting_power_of_attorney
+        PACT_CORS: false
+        PACT_BROKER_URI: "pact-broker.api.opg.service.justice.gov.uk"
+        PACT_BROKER_HTTP_AUTH_USER: "admin"
+        PACT_BROKER_HTTP_AUTH_PASS: "password"
+        PACT_OUTPUT_DIR: /tmp/pacts
+        PACT_MOCK_SERVER_HEALTH_CHECK_TIMEOUT: 20
+      providers:
+        - lpa-codes-pact-mock: lpa-codes-pact-mock:80
+
+
+pact:
+  suites:
+    all:
+      contexts:
+        - SmartGamma\Behat\PactExtension\Context\PactContext
+        - BehatTest\Context\Integration\PactContext
+      filters:
+        tags: "@pact"
 
 integration:
   suites:
