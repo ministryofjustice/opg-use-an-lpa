@@ -4,7 +4,6 @@
 
 .lpa-account-delete {
   color: govuk-colour('red');
-
 }
 
 .lpa-secondary-text-colour {
@@ -21,11 +20,14 @@ button.org-cancel {
 
 abbr,
 abbr[title] {
-    cursor: help;
-    text-decoration: none;
+  cursor: help;
+  text-decoration: none;
 }
 
 .offscreen {
   position: absolute;
   left: -999em;
+}
+.hide {
+  display: none;
 }
