@@ -1,0 +1,22 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Your session has expired - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">We've signed you out</h1>
+
+                    <p class="govuk-body">For your security, we've signed you out of this service because you did not use it for 20 minutes.</p>
+
+                    <a href="{{ path('login') }}" draggable="false" class="govuk-button">Log back in</a>
+                </div>
+
+            </div>
+        </main>
+    </div>
+{% endblock %}
