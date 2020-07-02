@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="API Pact" type="PhpBehatConfigurationType" singleton="false">
-    <BehatRunner configuration_file="$PROJECT_DIR$/service-api/app/behat.yml" scenario="" scope="Yml" options="--profile=pact --tags=pact" use_alternative_configuration_file="true" />
+    <BehatRunner configuration_file="$PROJECT_DIR$/service-api/app/behat.yml" scenario="" scope="Yml" options="--profile=pact --tags=pact&amp;&amp;pact" use_alternative_configuration_file="true" />
     <CommandLine>
       <PhpTestInterpreterSettings>
         <option name="interpreterName" value="test-api-app" />

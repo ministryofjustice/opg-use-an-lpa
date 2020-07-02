@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
-use App\Exception\ApiException;
 use App\Service\Log\RequestTracing;
 use Aws\MockHandler as AwsMockHandler;
 use Behat\Behat\Hook\Scope\ScenarioScope;
 use Behat\Behat\Hook\Scope\StepScope;
-use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Behat\Testwork\Hook\Scope\AfterTestScope;
 use BehatTest\Context\SetupEnv;
-use GuzzleHttp\Client;
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Uri;
 use JSHayes\FakeRequests\MockHandler;
 use SmartGamma\Behat\PactExtension\Context\Authenticator;
 use SmartGamma\Behat\PactExtension\Context\PactContextInterface;
@@ -42,7 +38,7 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
 
     private string $baseUrl;
 
-    private string $uri;
+//    private string $uri;
 
     private string $providerName;
 
@@ -63,9 +59,14 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
     /**
      * @var Pact
      */
-    private $pact;
+    private static $pact;
 
-    private static $pact_static;
+    /**
+     * @var Pact
+     * Required for AfterSuite operations
+     */
+    private static $pactStatic;
+
     /**
      * @var ProviderState
      */
@@ -102,12 +103,14 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
         $this->providerState  = $providerState;
         $this->authenticator  = $authenticator;
         $this->stepName       = __FUNCTION__;
+        // Required for AfterSuite cleanup to finalize results
+        self::$pactStatic = $pact;
 
         $this->httpClient = new HttpClient();
 
         // Defined in Behat.yml
         $this->providerName = 'lpa-codes-pact-mock';
-        $this->baseUrl = 'lpa-codes-pact-mock:80'; // App config..later
+        $this->baseUrl = 'lpa-codes-pact-mock:80'; // TODO App config..later
     }
 
     protected function prepareContext(): void
@@ -121,37 +124,28 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
     }
 
     /**
-     * @BeforeScenario
-     */
-    public function finalizeInteractions(ScenarioScope $scope): void
-    {
-        $this->tags = $scope->getFeature()->getTags();
-        $this->pact->finalize($this->pact->getConsumerVersion());
-    }
-
-    /**
      * @When /^I request the status of the API HealthCheck EndPoint$/
      */
     public function iRequestTheStatusOfTheAPIHealthCheck()
     {
-        $this->uri = '/v1/healthcheck';
+//
+    }
+
+    /**
+     * @Then /^I should receive the status of the API$/
+     */
+    public function iShouldReceiveTheStatusOfTheAPI()
+    {
         $headers = $this->getHeaders($this->providerName);
 
         $this->consumerRequest[$this->providerName] = new InteractionRequestDTO(
             $this->providerName,
             $this->stepName,
-            $this->uri,
+            '/v1/healthcheck',
             'GET',
             $headers
         );
-    }
 
-    /**
-     * @Then /^I should receive the status of the API$/
-     * @throws NoConsumerRequestDefined
-     */
-    public function iShouldReceiveTheStatusOfTheAPI()
-    {
         if (!isset($this->consumerRequest[$this->providerName])) {
             throw new NoConsumerRequestDefined(
                 'No consumer InteractionRequestDTO defined.'
@@ -165,11 +159,102 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
 
         $this->pact->registerInteraction($request, $response, $providerState);
 
-        $this->response = $this->httpClient->get($this->baseUrl . $this->uri, [
+        $this->response = $this->httpClient->post($this->baseUrl . '/v1/healthcheck', [
             'headers' => ['Content-Type' => 'application/json']
         ]);
 
         $body = $this->response->getBody()->getContents();
+    }
+
+    /**
+     * @When /^I request to add an LPA$/
+     */
+    public function iRequestToAddAnLPA()
+    {
+//        $this->uri = '/v1/validate';
+
+    }
+
+    /**
+     * @Then /^I should be told my code is valid$/
+     */
+    public function iShouldBeToldMyCodeIsValid()
+    {
+        $headers = $this->getHeaders($this->providerName);
+
+        $this->consumerRequest[$this->providerName] = new InteractionRequestDTO(
+            $this->providerName,
+            $this->stepName,
+            '/v1/validate',
+            'POST',
+            $headers
+        );
+
+        if (!isset($this->consumerRequest[$this->providerName])) {
+            throw new NoConsumerRequestDefined(
+                'No consumer InteractionRequestDTO defined.'
+            );
+        }
+
+        $parameters = [
+            'actor' => [
+                'value' => 'a95a0543-6e9e-4fd5-9c77-94eb1a8f4da6'
+            ]
+        ];
+
+        // Matcher provided by SmartGamma\Behat\PactExtension\Infrastructure\Interaction\MatcherInterface
+        $response = [
+            'actor' => [
+                'value' => 'a95a0543-6e9e-4fd5-9c77-94eb1a8f4da6',
+                'match' => 'uuid'
+            ]
+        ];
+
+        $request       = $this->consumerRequest[$this->providerName];
+        $providerState = $this->providerState->getStateDescription($this->providerName);
+
+        $response      = new InteractionResponseDTO(200, $parameters, $response);
+        unset($this->consumerRequest[$this->providerName]);
+
+        $this->pact->registerInteraction($request, $response, $providerState);
+
+        $this->response = $this->httpClient->post($this->baseUrl . '/v1/validate', [
+            'json'     => [
+                'lpa'  => 'eed4f597-fd87-4536-99d0-895778824861',
+                'dob'  => '1960-06-05',
+                'code' => 'YSSU4IAZTUXM'
+            ],
+            'headers'  => ['Content-Type' => 'application/json']
+        ]);
+
+        $body = $this->response->getBody()->getContents();
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function setupBehatTags(ScenarioScope $scope): void
+    {
+        $this->tags = $scope->getScenario()->getTags();
+        $this->providerState->clearStates();
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function setupBehatStepName(ScenarioScope $step): void
+    {
+        if ($step->getScenario()->getTitle()) {
+            $this->providerState->setDefaultPlainTextState($step->getScenario()->getTitle());
+        }
+    }
+
+    /**
+     * @BeforeStep
+     */
+    public function setupBehatScenarioName(StepScope $step): void
+    {
+        $this->stepName = $step->getStep()->getText();
     }
 
     /**
@@ -180,6 +265,20 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
         if (\in_array('pact', $this->tags, true)) {
             $this->pact->verifyInteractions();
         }
+    }
+
+    /**
+     * @AfterSuite
+     */
+    public static function teardown(AfterTestScope $scope): bool
+    {
+        if (!$scope->getTestResult()->isPassed()) {
+            echo 'A test has failed. Skipping PACT file upload.';
+
+            return false;
+        }
+
+        return self::$pactStatic->finalize(self::$pactStatic->getConsumerVersion());
     }
 
     private function getHeaders(string $providerName): array
