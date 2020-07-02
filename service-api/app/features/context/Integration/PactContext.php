@@ -108,6 +108,8 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
      */
     public function initialize(Pact $pact, ProviderState $providerState, Authenticator $authenticator): void
     {
+        $config = $this->container->get('config');
+
         $this->pact           = $pact;
         $this->providerState  = $providerState;
         $this->authenticator  = $authenticator;
@@ -118,8 +120,8 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
         $this->httpClient = new HttpClient();
 
         // Defined in behat.config.php
-        $this->providerName = ;
-        $this->baseUrl = ; // TODO Access values via behat.config.php
+        $this->providerName = $config['pact']['providerName'];
+        $this->baseUrl = $config['pact']['baseUrl'];
     }
 
     protected function prepareContext(): void
