@@ -1,11 +1,21 @@
-export default class Dialog {
-    constructor(element)
+import countdownTimer from "./countdownTimer";
+
+export default class SessionDialog {
+    constructor(element, countdownMinutes)
     {
         this.element = element;
+        this.countdownMinutes = countdownMinutes; // Temporary until final solution in place
         this.dialogOverlay = document.getElementById("dialog-overlay");
         this.dialogFocus = document.querySelector(".dialog-focus");
         this._setupEventHandlers();
         this._trapFocus();
+        this.timer = new countdownTimer(this.element.querySelector('#time'), this.countdownMinutes);
+        this.timer.on('tick', (event) => {
+            if (event === 5) {
+                this._isHidden(false);
+            }
+        });
+        this.timer.start()
     }
 
     _setupEventHandlers()
@@ -24,6 +34,7 @@ export default class Dialog {
         for (let i = 0; i < hideTimeoutElements.length; i++) {
             hideTimeoutElements[i].addEventListener("click", function () {
                 _this._isHidden(true);
+                _this.timer.reset(_this.countdownMinutes);
             });
         }
     }

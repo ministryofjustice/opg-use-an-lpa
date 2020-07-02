@@ -1,5 +1,35 @@
-const countdownTimer = element => {
-  element.classList.add('js-enabled');
-};
+const EventEmitter = require('events');
 
-export default countdownTimer;
+export default class CountdownTimer extends EventEmitter {
+    constructor(element, counter)
+    {
+        super();
+        this.element = element;
+        this.counter = counter; // Temporary until final solution in place
+    }
+
+    _countZero()
+    {
+        if (this.counter === 0) {
+           window.location.href = '/timeout';
+        }
+    }
+
+    start()
+    {
+        const _this = this;
+        setInterval(function () {
+            _this.element.innerHTML = _this.counter.toString();
+            _this.emit('tick', _this.counter);
+            if (_this.counter > 0) {
+                _this.counter--;
+            }
+            _this._countZero();
+        }, 60000);
+    }
+
+    reset(countdownMinutes)
+    {
+        this.counter = countdownMinutes;
+    }
+}
