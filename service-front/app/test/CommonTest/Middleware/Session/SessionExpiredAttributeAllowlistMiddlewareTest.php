@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\Session;
 
-use Common\Middleware\Session\SessionExpiredAttributeWhitelistMiddleware;
+use Common\Middleware\Session\SessionExpiredAttributeAllowlistMiddleware;
 use Common\Service\Session\EncryptedCookiePersistence;
 use DateTime;
 use Mezzio\Session\Session;
@@ -16,7 +16,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 
-class SessionExpiredAttributeWhitelistMiddlewareTest extends TestCase
+class SessionExpiredAttributeAllowlistMiddlewareTest extends TestCase
 {
     /** @test */
     public function it_correctly_handles_request_with_no_session(): void
@@ -33,7 +33,7 @@ class SessionExpiredAttributeWhitelistMiddlewareTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
-        $sem = new SessionExpiredAttributeWhitelistMiddleware(
+        $sem = new SessionExpiredAttributeAllowlistMiddleware(
             $this->prophesize(LoggerInterface::class)->reveal()
         );
 
@@ -61,7 +61,7 @@ class SessionExpiredAttributeWhitelistMiddlewareTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
-        $sem = new SessionExpiredAttributeWhitelistMiddleware(
+        $sem = new SessionExpiredAttributeAllowlistMiddleware(
             $this->prophesize(LoggerInterface::class)->reveal()
         );
 
@@ -69,7 +69,7 @@ class SessionExpiredAttributeWhitelistMiddlewareTest extends TestCase
     }
 
     /** @test */
-    public function it_strips_session_values_with_correct_whitelisting(): void
+    public function it_strips_session_values_that_have_not_been_allowed(): void
     {
         $sessionData = [
             'string' => 'one',
@@ -94,7 +94,7 @@ class SessionExpiredAttributeWhitelistMiddlewareTest extends TestCase
             ->willReturn($sessionData);
         $sessionProphecy
             ->unset(Argument::type('string'))
-            ->shouldBeCalledTimes(4); // SESSION_TIME_KEY is whitelisted
+            ->shouldBeCalledTimes(4); // SESSION_TIME_KEY is allowed
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy
@@ -108,7 +108,7 @@ class SessionExpiredAttributeWhitelistMiddlewareTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
-        $sem = new SessionExpiredAttributeWhitelistMiddleware(
+        $sem = new SessionExpiredAttributeAllowlistMiddleware(
             $this->prophesize(LoggerInterface::class)->reveal()
         );
 

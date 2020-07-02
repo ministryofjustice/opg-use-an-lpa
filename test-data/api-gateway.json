@@ -3,7 +3,7 @@
     "id": 2,
     "uId": "7000-0000-0047",
     "receiptDate": "2014-09-26",
-    "registrationDate": null,
+    "registrationDate": "2020-05-14",
     "rejectedDate": null,
     "donor": {
       "id": 7,
@@ -30,48 +30,49 @@
       "companyName": null
     },
     "applicationType": "Classic",
-    "caseSubtype": "pfa",
-    "status": "Registered",
+    "caseSubtype": "hw",
+    "status": "Perfect",
     "caseAttorneySingular": false,
     "caseAttorneyJointlyAndSeverally": true,
     "caseAttorneyJointly": false,
     "caseAttorneyJointlyAndJointlyAndSeverally": false,
-    "onlineLpaId": null,
+    "onlineLpaId": "A33718377316",
+    "cancellationDate": null,
     "attorneys": [
       {
         "id": 9,
         "uId": "7000-0000-0815",
-        "dob": "1975-10-05",
-        "email": "TheresaSimpson@opgtest.com",
-        "salutation": "Mr",
-        "firstname": "Theresa",
-        "middlenames": null,
-        "surname": "Simpson",
+        "dob": "1990-05-04",
+        "email": "",
+        "salutation": "",
+        "firstname": "jean",
+        "middlenames": "",
+        "surname": "sanderson",
         "addresses": [
           {
             "id": 9,
             "town": "",
             "county": "",
-            "postcode": "CW6 1ER",
+            "postcode": "",
             "country": "",
             "type": "Primary",
-            "addressLine1": "48 Harrogate Road",
-            "addressLine2": "RUSHTON",
+            "addressLine1": "9 high street",
+            "addressLine2": "",
             "addressLine3": ""
           }
         ],
-        "companyName": null,
-        "systemStatus": true
+        "systemStatus": true,
+        "companyName": ""
       },
       {
         "id": 12,
         "uId": "7000-0000-0849",
         "dob": "1975-10-05",
         "email": "XXXXX",
-        "salutation": "XXXXX",
-        "firstname": "XXXXX",
-        "middlenames": null,
-        "surname": "XXXXX",
+        "salutation": "Mrs",
+        "firstname": "Ann",
+        "middlenames": "",
+        "surname": "Summers",
         "addresses": [
           {
             "id": 12,
@@ -85,8 +86,8 @@
             "addressLine3": ""
           }
         ],
-        "companyName": null,
-        "systemStatus": true
+        "systemStatus": true,
+        "companyName": ""
       }
     ],
     "replacementAttorneys": [],
@@ -113,21 +114,20 @@
             "addressLine2": "HADFIELD",
             "addressLine3": ""
           }
-        ],
-        "systemStatus": true
+        ]
       }
     ],
     "attorneyActDecisions": null,
-    "applicationHasRestrictions": true,
+    "applicationHasRestrictions": false,
     "applicationHasGuidance": false,
-    "lpaDonorSignatureDate": "2019-09-30",
-    "lifeSustainingTreatment": null
+    "lpaDonorSignatureDate": "2012-12-12",
+    "lifeSustainingTreatment": "Option A"
   },
   {
     "id": 5,
     "uId": "7000-0000-0138",
     "receiptDate": "2014-09-26",
-    "registrationDate": null,
+    "registrationDate": "2020-05-15",
     "rejectedDate": null,
     "donor": {
       "id": 23,
@@ -154,13 +154,14 @@
       "companyName": null
     },
     "applicationType": "Classic",
-    "caseSubtype": "pfa",
+    "caseSubtype": "hw",
     "status": "Registered",
     "caseAttorneySingular": false,
-    "caseAttorneyJointlyAndSeverally": true,
+    "caseAttorneyJointlyAndSeverally": false,
     "caseAttorneyJointly": false,
-    "caseAttorneyJointlyAndJointlyAndSeverally": false,
-    "onlineLpaId": null,
+    "caseAttorneyJointlyAndJointlyAndSeverally": true,
+    "onlineLpaId": "A15527329531",
+    "cancellationDate": "2020-03-17",
     "attorneys": [
       {
         "id": 25,
@@ -169,7 +170,7 @@
         "email": "SimonMatthews@opgtest.com",
         "salutation": "Mr",
         "firstname": "Simon",
-        "middlenames": null,
+        "middlenames": "",
         "surname": "Matthews",
         "addresses": [
           {
@@ -184,8 +185,33 @@
             "addressLine3": ""
           }
         ],
-        "companyName": null,
-        "systemStatus": true
+        "systemStatus": true,
+        "companyName": ""
+      },
+      {
+        "id": 2588,
+        "uId": "7000-0011-6322",
+        "dob": "1990-03-17",
+        "email": "",
+        "salutation": "Miss",
+        "firstname": "Simone",
+        "middlenames": "",
+        "surname": "Matthews",
+        "addresses": [
+          {
+            "id": 2397,
+            "town": "",
+            "county": "",
+            "postcode": "",
+            "country": "",
+            "type": "Primary",
+            "addressLine1": "my house",
+            "addressLine2": "",
+            "addressLine3": ""
+          }
+        ],
+        "systemStatus": true,
+        "companyName": ""
       }
     ],
     "replacementAttorneys": [],
@@ -212,15 +238,14 @@
             "addressLine2": "RIECHIP",
             "addressLine3": ""
           }
-        ],
-        "systemStatus": true
+        ]
       }
     ],
     "attorneyActDecisions": null,
-    "applicationHasRestrictions": false,
-    "applicationHasGuidance": false,
+    "applicationHasRestrictions": true,
+    "applicationHasGuidance": true,
     "lpaDonorSignatureDate": "2019-10-03",
-    "lifeSustainingTreatment": null
+    "lifeSustainingTreatment": "Option B"
   },
   {
     "id": 9,
@@ -254,12 +279,13 @@
     },
     "applicationType": "Classic",
     "caseSubtype": "pfa",
-    "status": "Pending",
+    "status": "Cancelled",
     "caseAttorneySingular": false,
     "caseAttorneyJointlyAndSeverally": true,
     "caseAttorneyJointly": false,
     "caseAttorneyJointlyAndJointlyAndSeverally": false,
-    "onlineLpaId": null,
+    "onlineLpaId": "A48218451245",
+    "cancellationDate": "2020-02-03",
     "attorneys": [
       {
         "id": 45,
@@ -268,7 +294,7 @@
         "email": "TainaRucker@opgtest.com",
         "salutation": "Mr",
         "firstname": "Taina",
-        "middlenames": null,
+        "middlenames": "",
         "surname": "Rucker",
         "addresses": [
           {
@@ -283,57 +309,8 @@
             "addressLine3": ""
           }
         ],
-        "companyName": null,
-        "systemStatus": true
-      },       {
-        "id": 64,
-        "uId": "7000-0000-1441",
-        "dob": "1975-10-05",
-        "email": "SimonMatthews@opgtest.com",
-        "salutation": "Mr",
-        "firstname": "Simon",
-        "middlenames": null,
-        "surname": "Matthews",
-        "addresses": [
-          {
-            "id": 64,
-            "town": "",
-            "county": "",
-            "postcode": "PL24 9DQ",
-            "country": "",
-            "type": "Primary",
-            "addressLine1": "50 Hull Road",
-            "addressLine2": "PAR",
-            "addressLine3": ""
-          }
-        ],
-        "companyName": null,
-        "systemStatus": false
-      },
-      {
-        "id": 9,
-        "uId": "7000-0000-0815",
-        "dob": "1975-10-05",
-        "email": "TheresaSimpson@opgtest.com",
-        "salutation": "Mr",
-        "firstname": "",
-        "middlenames": null,
-        "surname": "",
-        "addresses": [
-          {
-            "id": 9,
-            "town": "",
-            "county": "",
-            "postcode": "CW6 1ER",
-            "country": "",
-            "type": "Primary",
-            "addressLine1": "48 Harrogate Road",
-            "addressLine2": "RUSHTON",
-            "addressLine3": ""
-          }
-        ],
-        "companyName": null,
-        "systemStatus": true
+        "systemStatus": false,
+        "companyName": ""
       }
     ],
     "replacementAttorneys": [],
@@ -360,26 +337,25 @@
             "addressLine2": "GUY'S MARSH",
             "addressLine3": ""
           }
-        ],
-        "systemStatus": true
+        ]
       }
     ],
     "attorneyActDecisions": null,
     "applicationHasRestrictions": false,
-    "applicationHasGuidance": false,
+    "applicationHasGuidance": true,
     "lpaDonorSignatureDate": "2019-10-05",
-    "lifeSustainingTreatment": null
+    "lifeSustainingTreatment": "Option B"
   },
   {
     "id": 12,
     "uId": "7000-0000-0344",
     "receiptDate": "2014-09-26",
-    "registrationDate": null,
+    "registrationDate": "2020-06-10",
     "rejectedDate": null,
     "donor": {
       "id": 59,
       "uId": "7000-0000-1391",
-      "dob": "1975-10-05",
+      "dob": "1948-11-01",
       "email": "linkedpersonone@opgtest.com",
       "salutation": "Mr",
       "firstname": "Linked",
@@ -408,6 +384,7 @@
     "caseAttorneyJointly": false,
     "caseAttorneyJointlyAndJointlyAndSeverally": false,
     "onlineLpaId": null,
+    "cancellationDate": null,
     "attorneys": [
       {
         "id": 64,
@@ -431,33 +408,33 @@
             "addressLine3": ""
           }
         ],
-        "companyName": null,
-        "systemStatus": true
+        "systemStatus": true,
+        "companyName": null
       },
       {
-        "id": 164,
-        "uId": "7000-0000-1442",
+        "id": 3022,
+        "uId": "7000-0013-6098",
         "dob": "1975-10-05",
-        "email": "SimonMatthews2@opgtest.com",
-        "salutation": "Mr",
-        "firstname": "Simon2",
+        "email": null,
+        "salutation": "miss",
+        "firstname": "simone",
         "middlenames": null,
-        "surname": "Matthews2",
+        "surname": "matthews",
         "addresses": [
           {
-            "id": 164,
+            "id": 2808,
             "town": "",
             "county": "",
-            "postcode": "PL24 9DQ",
+            "postcode": "",
             "country": "",
             "type": "Primary",
-            "addressLine1": "52 Hull Road",
-            "addressLine2": "PAR",
+            "addressLine1": "1 Use Lane",
+            "addressLine2": "",
             "addressLine3": ""
           }
         ],
-        "companyName": null,
-        "systemStatus": true
+        "systemStatus": true,
+        "companyName": null
       }
     ],
     "replacementAttorneys": [],
@@ -484,15 +461,14 @@
             "addressLine2": "SHUSTOKE",
             "addressLine3": ""
           }
-        ],
-        "systemStatus": true
+        ]
       }
     ],
     "attorneyActDecisions": null,
     "applicationHasRestrictions": false,
     "applicationHasGuidance": false,
-    "lpaDonorSignatureDate": "2020-04-06",
-    "lifeSustainingTreatment": null
+    "lpaDonorSignatureDate": "2019-10-06",
+    "lifeSustainingTreatment": "Option A"
   },
   {
     "id": 15,
@@ -531,7 +507,8 @@
     "caseAttorneyJointlyAndSeverally": true,
     "caseAttorneyJointly": false,
     "caseAttorneyJointlyAndJointlyAndSeverally": false,
-    "onlineLpaId": null,
+    "onlineLpaId": "A26997335988",
+    "cancellationDate": null,
     "attorneys": [
       {
         "id": 78,
@@ -555,8 +532,8 @@
             "addressLine3": ""
           }
         ],
-        "companyName": null,
-        "systemStatus": true
+        "systemStatus": true,
+        "companyName": null
       }
     ],
     "replacementAttorneys": [],
@@ -583,8 +560,7 @@
             "addressLine2": "LACEBY",
             "addressLine3": ""
           }
-        ],
-        "systemStatus": true
+        ]
       }
     ],
     "attorneyActDecisions": null,
@@ -627,10 +603,11 @@
     "caseSubtype": "pfa",
     "status": "Pending",
     "caseAttorneySingular": false,
-    "caseAttorneyJointlyAndSeverally": true,
+    "caseAttorneyJointlyAndSeverally": false,
     "caseAttorneyJointly": false,
-    "caseAttorneyJointlyAndJointlyAndSeverally": false,
-    "onlineLpaId": null,
+    "caseAttorneyJointlyAndJointlyAndSeverally": true,
+    "onlineLpaId": "A13316443118",
+    "cancellationDate": null,
     "attorneys": [
       {
         "id": 97,
@@ -654,8 +631,8 @@
             "addressLine3": ""
           }
         ],
-        "companyName": null,
-        "systemStatus": true
+        "systemStatus": true,
+        "companyName": null
       }
     ],
     "replacementAttorneys": [],
@@ -682,15 +659,14 @@
             "addressLine2": "SHUSTOKE",
             "addressLine3": ""
           }
-        ],
-        "systemStatus": true
+        ]
       }
     ],
     "attorneyActDecisions": null,
     "applicationHasRestrictions": false,
     "applicationHasGuidance": false,
-    "lpaDonorSignatureDate": "2019-10-04",
-    "lifeSustainingTreatment": null
+    "lpaDonorSignatureDate": "2012-12-12",
+    "lifeSustainingTreatment": "Option A"
   },
   {
     "id": 21,
@@ -730,6 +706,7 @@
     "caseAttorneyJointly": false,
     "caseAttorneyJointlyAndJointlyAndSeverally": false,
     "onlineLpaId": null,
+    "cancellationDate": null,
     "attorneys": [
       {
         "id": 115,
@@ -753,8 +730,8 @@
             "addressLine3": ""
           }
         ],
-        "companyName": null,
-        "systemStatus": true
+        "systemStatus": true,
+        "companyName": null
       }
     ],
     "replacementAttorneys": [],
@@ -781,8 +758,7 @@
             "addressLine2": "SHUSTOKE",
             "addressLine3": ""
           }
-        ],
-        "systemStatus": true
+        ]
       }
     ],
     "attorneyActDecisions": null,

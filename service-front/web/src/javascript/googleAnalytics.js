@@ -1,52 +1,36 @@
 
 export default class GoogleAnalytics {
-    constructor(analyticsId)
-    {
+    constructor(analyticsId) {
         this.analyticsId = analyticsId;
         this._setUpOnLoad();
     }
 
-    _setUpOnLoad()
-    {
-         // TO DO - enable analytics and fire off a pageview
-         //window.GOVUK.analyticsSetup(window)
-
-        //new class for ga stuff - done
-
-        // check if it is allowed to work? [ref - refunds, global cookie-function]
-
-        //write a method that listens to google events
-        // check data presence
-        //sanitise it and send it - Done
+    _setUpOnLoad() {
         let s = document.createElement('script');
         s.type = 'text/javascript';
         s.src = `https://www.googletagmanager.com/gtag/js?id=${this.analyticsId}`;
         document.getElementsByTagName('head')[0].appendChild(s);
         window.dataLayer = window.dataLayer || [];
-        window.gtag = function() {
+        window.gtag = function () {
             window.dataLayer.push(arguments);
         }
-
         window.gtag('js', new Date());
         window.gtag('config', this.analyticsId, {
             'linker': {
-                'domains': ['www.gov.uk']
+                'domains': ['www.gov.uk', 'www.research.net']
             },
             'anonymize_ip': true, // https://developers.google.com/analytics/devguides/collection/gtagjs/ip-anonymization
             'allow_google_signals': false, // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
             'allow_ad_personalization_signals': false // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
         });
-
-
     }
 
-    trackEvent(action, category, label, value)
-    {
+    trackEvent(action, category, label, value) {
         window.gtag('event', this._sanitiseData(action), {
-                    'event_category': this._sanitiseData(category),
-                    'event_label': this._sanitiseData(label),
-                    'value': this._sanitiseData(value)
-            }
+            'event_category': this._sanitiseData(category),
+            'event_label': this._sanitiseData(label),
+            'value': this._sanitiseData(value)
+        }
         );
     }
 
@@ -61,7 +45,7 @@ export default class GoogleAnalytics {
         let dataCleansed = data;
 
         for (let i = 0; i < sanitisedDataRegex.length; i++) {
-            dataCleansed = dataCleansed.replace(sanitisedDataRegex[i], '[sanitised]')
+            dataCleansed = dataCleansed.replace(sanitisedDataRegex[i], '[sanitised]');
         }
 
         return dataCleansed;

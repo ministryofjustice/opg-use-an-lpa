@@ -20,7 +20,8 @@ return [
                 'formatter' => 'jsonFormatter',
                 'processors' => [
                     'psrLogProcessor',
-                    'requestTracingProcessor'
+                    'requestTracingProcessor',
+                    'introspectionProcessor'
                 ],
             ],
         ],
@@ -39,6 +40,9 @@ return [
                 'type' => \App\Service\Log\RequestTracingLogProcessorFactory::class,
                 'options' => [], // No options
             ],
+            'introspectionProcessor' => [
+                'type' => 'introspection'
+            ]
         ],
     ],
 ];

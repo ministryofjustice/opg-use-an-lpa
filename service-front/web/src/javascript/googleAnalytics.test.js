@@ -12,7 +12,7 @@ describe('given Google Analytics is enabled', () => {
         expect(global.dataLayer[1][1]).toBe('UA-12345');
 
         expect(global.dataLayer[1][2].linker).not.toBeUndefined();
-        expect(global.dataLayer[1][2].linker.domains.length).toBe(1);
+        expect(global.dataLayer[1][2].linker.domains.length).toBe(2);
         expect(global.dataLayer[1][2].linker.domains[0]).toBe('www.gov.uk');
 
         expect(global.dataLayer[1][2].anonymize_ip).not.toBeUndefined();
@@ -26,7 +26,7 @@ describe('given Google Analytics is enabled', () => {
     });
 
     test('it should fire events correctly', () => {
-        useAnalytics.trackEvent('event','event_category','event_label','value')
+        useAnalytics.trackEvent('event', 'event_category', 'event_label', 'value')
         expect(global.dataLayer.length).toEqual(3);
         expect(global.dataLayer[2]).not.toBeUndefined();
         expect(global.dataLayer[2][0]).toBe('event');
@@ -43,7 +43,7 @@ describe('given Google Analytics is enabled', () => {
     });
 
     test('it should sanitize the data being sent', () => {
-        useAnalytics.trackEvent('test@test.com','01234567890','NG156WL','28/06/1984')
+        useAnalytics.trackEvent('test@test.com', '01234567890', 'NG156WL', '28/06/1984')
         expect(global.dataLayer.length).toEqual(3);
         expect(global.dataLayer[2]).not.toBeUndefined();
         expect(global.dataLayer[2][0]).toBe('event');
