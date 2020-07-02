@@ -11,6 +11,7 @@ use Behat\Behat\Hook\Scope\StepScope;
 use Behat\Testwork\Hook\Scope\AfterTestScope;
 use BehatTest\Context\SetupEnv;
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Psr7\Response as HttpResponse;
 use JSHayes\FakeRequests\MockHandler;
 use SmartGamma\Behat\PactExtension\Context\Authenticator;
 use SmartGamma\Behat\PactExtension\Context\PactContextInterface;
@@ -36,15 +37,45 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
     /** @var AwsMockHandler */
     private AwsMockHandler $awsFixtures;
 
-    private string $baseUrl;
+    /**
+     * @var Pact
+     */
+    private Pact $pact;
 
-    private string $uri;
+    /**
+     * @var Pact
+     * Required for AfterSuite operations
+     */
+    private static Pact $pactStatic;
 
-    private string $providerName;
+    /**
+     * @var Authenticator
+     */
+    private Authenticator $authenticator;
+
+    /**
+     * @var ProviderState
+     */
+    private ProviderState $providerState;
 
     private $httpClient;
 
     private $response;
+
+    /**
+     * @var string
+     */
+    private string $baseUrl;
+
+    /**
+     * @var string
+     */
+    private string $uri;
+
+    /**
+     * @var string
+     */
+    private string $providerName;
 
     /**
      * @var string
@@ -54,38 +85,17 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
     /**
      * @var array
      */
-    private $tags = [];
-
-    /**
-     * @var Pact
-     */
-    private $pact;
-
-    /**
-     * @var Pact
-     * Required for AfterSuite operations
-     */
-    private static $pactStatic;
-
-    /**
-     * @var ProviderState
-     */
-    private $providerState;
+    private array $tags = [];
 
     /**
      * @var array
      */
-    private $consumerRequest = [];
+    private array $consumerRequest = [];
 
     /**
      * @var array
      */
-    private $headers = [];
-
-    /**
-     * @var Authenticator
-     */
-    private $authenticator;
+    private array $headers = [];
 
     /**
      * @var array
@@ -210,7 +220,6 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
 
         $request       = $this->consumerRequest[$this->providerName];
         $providerState = $this->providerState->getStateDescription($this->providerName);
-
         $response      = new InteractionResponseDTO(200, $parameters, $response);
         unset($this->consumerRequest[$this->providerName]);
 
