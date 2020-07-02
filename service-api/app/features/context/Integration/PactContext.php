@@ -38,7 +38,7 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
 
     private string $baseUrl;
 
-//    private string $uri;
+    private string $uri;
 
     private string $providerName;
 
@@ -128,12 +128,14 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
      */
     public function iRequestTheStatusOfTheAPIHealthCheck()
     {
+        $this->uri = '/v1/healthcheck';
+
         $headers = $this->getHeaders($this->providerName);
 
         $this->consumerRequest[$this->providerName] = new InteractionRequestDTO(
             $this->providerName,
             $this->stepName,
-            '/v1/healthcheck',
+            $this->uri,
             'GET',
             $headers
         );
@@ -157,7 +159,7 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
 
         $this->pact->registerInteraction($request, $response, $providerState);
 
-        $this->response = $this->httpClient->post($this->baseUrl . '/v1/healthcheck', [
+        $this->response = $this->httpClient->get($this->baseUrl . $this->uri, [
             'headers' => ['Content-Type' => 'application/json']
         ]);
 
@@ -169,13 +171,13 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
      */
     public function iRequestToAddAnLPA()
     {
-//        $this->uri = '/v1/validate';
+        $this->uri = '/v1/validate';
         $headers = $this->getHeaders($this->providerName);
 
         $this->consumerRequest[$this->providerName] = new InteractionRequestDTO(
             $this->providerName,
             $this->stepName,
-            '/v1/validate',
+            $this->uri,
             'POST',
             $headers
         );
@@ -214,7 +216,7 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
 
         $this->pact->registerInteraction($request, $response, $providerState);
 
-        $this->response = $this->httpClient->post($this->baseUrl . '/v1/validate', [
+        $this->response = $this->httpClient->post($this->baseUrl . $this->uri, [
             'json'     => [
                 'lpa'  => 'eed4f597-fd87-4536-99d0-895778824861',
                 'dob'  => '1960-06-05',
