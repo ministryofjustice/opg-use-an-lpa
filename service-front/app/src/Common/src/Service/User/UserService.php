@@ -5,13 +5,14 @@ namespace Common\Service\User;
 use Common\Entity\User;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
-use Fig\Http\Message\StatusCodeInterface;
+use Common\Service\Log\EventCodes;
+use Common\Service\Log\Output\Email;
 use Exception;
-use Psr\Log\LoggerInterface;
-use RuntimeException;
+use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authentication\UserRepositoryInterface;
-use Common\Service\Log\Output\Email;
+use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 /**
  * Class UserService
@@ -67,9 +68,10 @@ class UserService implements UserRepositoryInterface
             'password' => $password,
         ]);
 
-        $this->logger->info('Account with Id {id} created using email {email}', [
-                'id'    => $data['Id'],
-                'email' => $email
+        $this->logger->info('Account with Id {id} created using email hash {email}', [
+            'event_code' => EventCodes::ACCOUNT_CREATED,
+            'id'         => $data['Id'],
+            'email'      => new Email($email)
         ]);
 
         return $data;
@@ -152,10 +154,11 @@ class UserService implements UserRepositoryInterface
             ]);
 
             if (is_array($userData) && !empty($userData)) {
-                $this->logger->info(
+                $this->logger->notice(
                     'Account with Id {id} has been activated',
                     [
-                        'id' => $userData['Id']
+                        'event_code' => EventCodes::ACCOUNT_ACTIVATED,
+                        'id'         => $userData['Id']
                     ]
                 );
 
@@ -357,11 +360,12 @@ class UserService implements UserRepositoryInterface
         try {
             $user = $this->apiClient->httpDelete('/v1/delete-account/' . $accountId);
 
-            $this->logger->info(
+            $this->logger->notice(
                 'Successfully deleted account with id {id} and email hash {email}',
                 [
-                    'id'    => $accountId,
-                    'email' => new Email($user['Email']),
+                    'event_code' => EventCodes::ACCOUNT_DELETED,
+                    'id'         => $accountId,
+                    'email'      => new Email($user['Email']),
                 ]
             );
         } catch (ApiException $ex) {

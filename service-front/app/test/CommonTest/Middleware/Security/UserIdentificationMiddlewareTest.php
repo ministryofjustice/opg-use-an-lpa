@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CommonTest\Middleware\Security;
 
 use Common\Middleware\Security\UserIdentificationMiddleware;
-use Common\Service\Log\ErrorCodes;
+use Common\Service\Log\EventCodes;
 use Common\Service\Security\UserIdentificationService;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
@@ -134,8 +134,8 @@ class UserIdentificationMiddlewareTest extends TestCase
                 Argument::that(
                     function ($parameter): bool {
                         $this->assertIsArray($parameter);
-                        $this->assertArrayHasKey('error_code', $parameter);
-                        $this->assertEquals(ErrorCodes::IDENTITY_HASH_CHANGE, $parameter['error_code']);
+                        $this->assertArrayHasKey('event_code', $parameter);
+                        $this->assertEquals(EventCodes::IDENTITY_HASH_CHANGE, $parameter['event_code']);
 
                         return true;
                     }
