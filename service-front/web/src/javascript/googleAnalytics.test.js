@@ -1,22 +1,52 @@
 import googleAnalytics from './googleAnalytics';
 
-describe('given Google Analytics is enabled', () => {
-    let useAnalytics;
-    beforeEach(() => {
-        global.dataLayer = [];
-        useAnalytics = new googleAnalytics('UA-12345');
-    });
+    const linkList = `
+    <div>
+        <a href="/">Relative URL</a>
+        <a href="http://localhost">HTTP URL</a>
+        <a href="https://localhost">HTTPS URL</a>
+    </div>
+    `;
+
+    describe('given Google Analytics is enabled', () => {
+        let useAnalytics;
+        beforeEach(() => {
+            document.body.innerHTML = linkList;
+            global.dataLayer = [];
+            useAnalytics = new googleAnalytics('UA-12345');
+        });
+
+        test('it fires click events on the 2 external links', () => {
+            const linkSelector = document.querySelectorAll('a');
+            for (let i = 0; i < linkSelector.length; i++) {
+                linkSelector[i].click();
+            }
+
+            expect(global.dataLayer[2][0]).toBe('event');
+            expect(global.dataLayer[2][1]).toBe('click');
+            expect(global.dataLayer[2][2].event_category).toBe('outbound');
+            expect(global.dataLayer[2][2].event_label).toBe('http://localhost/');
+            expect(global.dataLayer[3][0]).toBe('event');
+            expect(global.dataLayer[3][1]).toBe('click');
+            expect(global.dataLayer[3][2].event_category).toBe('outbound');
+            expect(global.dataLayer[3][2].event_label).toBe('https://localhost/');
+            expect(global.dataLayer.length).toEqual(4);
+        });
+
     test('it should have the correct config setup', () => {
         expect(global.dataLayer.length).toEqual(2);
         expect(global.dataLayer[1][0]).toBe('config');
         expect(global.dataLayer[1][1]).toBe('UA-12345');
 
         expect(global.dataLayer[1][2].linker).not.toBeUndefined();
-        expect(global.dataLayer[1][2].linker.domains.length).toBe(2);
+        expect(global.dataLayer[1][2].linker.domains.length).toBe(1);
         expect(global.dataLayer[1][2].linker.domains[0]).toBe('www.gov.uk');
 
         expect(global.dataLayer[1][2].anonymize_ip).not.toBeUndefined();
         expect(global.dataLayer[1][2].anonymize_ip).toBe(true);
+
+        expect(global.dataLayer[1][2].transport_type).not.toBeUndefined();
+        expect(global.dataLayer[1][2].transport_type).toBe('beacon');
 
         expect(global.dataLayer[1][2].allow_google_signals).not.toBeUndefined();
         expect(global.dataLayer[1][2].allow_google_signals).toBe(false);

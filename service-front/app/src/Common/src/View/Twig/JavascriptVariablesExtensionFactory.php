@@ -14,7 +14,6 @@ class JavascriptVariablesExtensionFactory
         $config = $container->get('config');
 
         if (!isset($config['analytics']['uaid'])) {
-            //$config['analytics']['uaid'] = null;
             throw new \UnexpectedValueException('Missing google analytics ua id');
         }
 

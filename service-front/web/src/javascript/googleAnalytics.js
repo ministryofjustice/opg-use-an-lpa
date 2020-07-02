@@ -17,15 +17,17 @@ export default class GoogleAnalytics {
         window.gtag('js', new Date());
         window.gtag('config', this.analyticsId, {
             'linker': {
-                'domains': ['www.gov.uk', 'www.research.net']
+                'domains': ['www.gov.uk']
             },
+            'transport_type': 'beacon',
             'anonymize_ip': true, // https://developers.google.com/analytics/devguides/collection/gtagjs/ip-anonymization
             'allow_google_signals': false, // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
             'allow_ad_personalization_signals': false // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
         });
+        this._trackExternalLinks();
     }
 
-    trackEvent(action, category, label, value) {
+    trackEvent(action, category, label, value = "") {
         window.gtag('event', this._sanitiseData(action), {
             'event_category': this._sanitiseData(category),
             'event_label': this._sanitiseData(label),
@@ -49,5 +51,15 @@ export default class GoogleAnalytics {
         }
 
         return dataCleansed;
+    }
+
+    _trackExternalLinks() {
+        const externalLinkSelector = document.querySelectorAll('a[href^="http"]');
+        const _this = this;
+        for (let i = 0; i < externalLinkSelector.length; i++) {
+            externalLinkSelector[i].addEventListener("click", function(e) {
+                _this.trackEvent('click', 'outbound', this.href);
+            });
+        }
     }
 }
