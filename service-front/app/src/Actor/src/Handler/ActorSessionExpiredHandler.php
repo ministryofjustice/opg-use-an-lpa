@@ -9,6 +9,11 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Class ActorSessionExpiredHandler
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class ActorSessionExpiredHandler extends AbstractHandler
 {
     /**
