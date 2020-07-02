@@ -59,7 +59,7 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
     /**
      * @var Pact
      */
-    private static $pact;
+    private $pact;
 
     /**
      * @var Pact
