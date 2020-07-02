@@ -11,7 +11,6 @@ use Behat\Behat\Hook\Scope\StepScope;
 use Behat\Testwork\Hook\Scope\AfterTestScope;
 use BehatTest\Context\SetupEnv;
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Psr7\Response as HttpResponse;
 use JSHayes\FakeRequests\MockHandler;
 use SmartGamma\Behat\PactExtension\Context\Authenticator;
 use SmartGamma\Behat\PactExtension\Context\PactContextInterface;
@@ -118,9 +117,9 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
 
         $this->httpClient = new HttpClient();
 
-        // Defined in Behat.yml
-        $this->providerName = 'lpa-codes-pact-mock';
-        $this->baseUrl = 'lpa-codes-pact-mock:80'; // TODO App config..later
+        // Defined in behat.config.php
+        $this->providerName = ;
+        $this->baseUrl = ; // TODO Access values via behat.config.php
     }
 
     protected function prepareContext(): void
@@ -162,8 +161,8 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
             );
         }
 
-        $request       = $this->consumerRequest[$this->providerName];
         $response      = new InteractionResponseDTO(200);
+        $request       = $this->consumerRequest[$this->providerName];
         $providerState = $this->providerState->getStateDescription($this->providerName);
         unset($this->consumerRequest[$this->providerName]);
 
@@ -182,6 +181,7 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
     public function iRequestToAddAnLPA()
     {
         $this->uri = '/v1/validate';
+
         $headers = $this->getHeaders($this->providerName);
 
         $this->consumerRequest[$this->providerName] = new InteractionRequestDTO(
@@ -218,9 +218,9 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
             ]
         ];
 
+        $response      = new InteractionResponseDTO(200, $parameters, $response);
         $request       = $this->consumerRequest[$this->providerName];
         $providerState = $this->providerState->getStateDescription($this->providerName);
-        $response      = new InteractionResponseDTO(200, $parameters, $response);
         unset($this->consumerRequest[$this->providerName]);
 
         $this->pact->registerInteraction($request, $response, $providerState);
