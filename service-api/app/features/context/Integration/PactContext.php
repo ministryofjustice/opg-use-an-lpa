@@ -128,14 +128,6 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
      */
     public function iRequestTheStatusOfTheAPIHealthCheck()
     {
-//
-    }
-
-    /**
-     * @Then /^I should receive the status of the API$/
-     */
-    public function iShouldReceiveTheStatusOfTheAPI()
-    {
         $headers = $this->getHeaders($this->providerName);
 
         $this->consumerRequest[$this->providerName] = new InteractionRequestDTO(
@@ -145,7 +137,13 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
             'GET',
             $headers
         );
+    }
 
+    /**
+     * @Then /^I should receive the status of the API$/
+     */
+    public function iShouldReceiveTheStatusOfTheAPI()
+    {
         if (!isset($this->consumerRequest[$this->providerName])) {
             throw new NoConsumerRequestDefined(
                 'No consumer InteractionRequestDTO defined.'
@@ -172,14 +170,6 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
     public function iRequestToAddAnLPA()
     {
 //        $this->uri = '/v1/validate';
-
-    }
-
-    /**
-     * @Then /^I should be told my code is valid$/
-     */
-    public function iShouldBeToldMyCodeIsValid()
-    {
         $headers = $this->getHeaders($this->providerName);
 
         $this->consumerRequest[$this->providerName] = new InteractionRequestDTO(
@@ -189,7 +179,13 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
             'POST',
             $headers
         );
+    }
 
+    /**
+     * @Then /^I should be told my code is valid$/
+     */
+    public function iShouldBeToldMyCodeIsValid()
+    {
         if (!isset($this->consumerRequest[$this->providerName])) {
             throw new NoConsumerRequestDefined(
                 'No consumer InteractionRequestDTO defined.'
