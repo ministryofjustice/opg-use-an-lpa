@@ -5,29 +5,29 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.7);
+  background-color: govuk-colour('black');
 }
 
 .dialog {
   z-index: 3;
-  background-color: #fff;
-  padding: 30px;
+  background-color: govuk-colour('white');
+  padding: govuk-spacing(6);
   text-align: left;
   width: 90%;
   max-width: 400px;
   position: fixed;
-  border: 5px solid black;
+  border: 5px solid govuk-colour('black');
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
 }
 
-.dialog-overlay[aria-hidden="true"],
-.dialog[aria-hidden="true"] {
+.dialog-overlay[aria-hidden='true'],
+.dialog[aria-hidden='true'] {
   display: none;
 }
 
-.dialog-overlay:not([aria-hidden="true"]),
-.dialog:not([aria-hidden="true"]) {
+.dialog-overlay:not([aria-hidden='true']),
+.dialog:not([aria-hidden='true']) {
   display: block;
 }
