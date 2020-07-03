@@ -24,7 +24,7 @@ resource "aws_elasticache_cluster" "brute_force_cache" {
   tags = local.default_tags
 }
 
-resource "aws_elasticache_replication_group" "brute_force_cache" {
+resource "aws_elasticache_replication_group" "brute_force_cache_replication_group" {
   automatic_failover_enabled    = true
   replication_group_id          = "brute-force-cache"
   replication_group_description = "brute force redis cache replication group"
