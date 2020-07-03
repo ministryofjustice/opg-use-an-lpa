@@ -14,4 +14,4 @@ jsEnabled(document.body);
 disableButtonOnClick(document.getElementsByTagName('form'));
 new cookieConsent(document.getElementsByClassName('cookie-banner')[0]);
 copyAccessCode(document.getElementById("copybutton"));
-new sessionDialog(document.getElementById("dialog"), 20);
+// new sessionDialog(document.getElementById("dialog"), 20); // TODO: Disabled for now until we know how we are going to trigger it
