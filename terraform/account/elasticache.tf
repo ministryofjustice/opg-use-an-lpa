@@ -26,7 +26,7 @@ resource "aws_elasticache_cluster" "brute_force_cache" {
 
 resource "aws_elasticache_replication_group" "brute_force_cache_replication_group" {
   automatic_failover_enabled    = true
-  replication_group_id          = "brute-force-cache"
+  replication_group_id          = "brute-force-cache-replication-group"
   replication_group_description = "brute force redis cache replication group"
   parameter_group_name          = "default.redis5.0"
   engine_version                = "5.0.6"
