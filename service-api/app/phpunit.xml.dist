@@ -5,8 +5,7 @@
          colors="true">
     <testsuites>
         <testsuite name="App\\Tests">
-            <directory>./test/AppTest</directory>
-            <directory>./test/BehatTest</directory>
+            <directory>./test</directory>
         </testsuite>
     </testsuites>
 

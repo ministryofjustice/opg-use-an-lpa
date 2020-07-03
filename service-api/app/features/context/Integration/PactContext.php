@@ -12,6 +12,7 @@ use Behat\Testwork\Hook\Scope\AfterTestScope;
 use BehatTest\Context\SetupEnv;
 use GuzzleHttp\Client as HttpClient;
 use JSHayes\FakeRequests\MockHandler;
+use Psr\Http\Message\ResponseInterface;
 use SmartGamma\Behat\PactExtension\Context\Authenticator;
 use SmartGamma\Behat\PactExtension\Context\PactContextInterface;
 use SmartGamma\Behat\PactExtension\Exception\NoConsumerRequestDefined;
@@ -57,9 +58,15 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
      */
     private ProviderState $providerState;
 
-    private $httpClient;
+    /**
+     * @var HttpClient
+     */
+    private HttpClient $httpClient;
 
-    private $response;
+    /**
+     * @var ResponseInterface
+     */
+    private ResponseInterface $response;
 
     /**
      * @var string
@@ -99,7 +106,7 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
     /**
      * @var array
      */
-    private $matchingObjectStructures = [];
+    private array $matchingObjectStructures = [];
 
     /**
      * @param Pact          $pact
@@ -108,8 +115,6 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
      */
     public function initialize(Pact $pact, ProviderState $providerState, Authenticator $authenticator): void
     {
-        $config = $this->container->get('config');
-
         $this->pact           = $pact;
         $this->providerState  = $providerState;
         $this->authenticator  = $authenticator;
@@ -118,6 +123,8 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
         self::$pactStatic = $pact;
 
         $this->httpClient = new HttpClient();
+
+        $config = $this->container->get('config');
 
         // Defined in behat.config.php
         $this->providerName = $config['pact']['providerName'];
