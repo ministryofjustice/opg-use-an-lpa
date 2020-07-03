@@ -11,7 +11,6 @@ describe('Countdown Timer', () => {
         eventCounter = 0;
         isCompleted = false;
         timer = new countdownTimer(document.querySelector('#time'), 20);
-
     });
 
     describe('Given a timer is setup to run for 20 minutes but not too completion', () => {

@@ -25,7 +25,7 @@ const html = `
 `
 
 describe('Session Dialog', () => {
-    let seshDialog;
+    let sessionDialogElement;
     let dialog;
     let showButton;
     let hideButton;
@@ -34,7 +34,7 @@ describe('Session Dialog', () => {
 
     beforeEach(() => {
         document.body.innerHTML = html;
-        seshDialog = new sessionDialog(document.getElementById("dialog"), 20);
+        sessionDialogElement = new sessionDialog(document.getElementById("dialog"), 20);
 
         dialog = document.getElementById('dialog');
         showButton = document.getElementById('show-timeout');

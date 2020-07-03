@@ -78,7 +78,6 @@ export default class SessionDialog {
                     }
                 } else /* tab */ {
                     if (document.activeElement === lastFocusableEl) {
-                        console.log('here2')
                         firstFocusableEl.focus();
                         e.preventDefault();
                     }
@@ -88,7 +87,6 @@ export default class SessionDialog {
             if (isEscPressed) {
                 _this._isHidden(true);
             }
-
         });
     }
 };
