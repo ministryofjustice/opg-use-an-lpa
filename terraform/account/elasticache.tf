@@ -33,7 +33,7 @@ resource "aws_elasticache_replication_group" "brute_force_cache_rg" {
   engine_version                = "5.0.6"
   node_type                     = "cache.t2.micro"
   engine                        = "redis"
-  number_cache_clusters         = 1
+  number_cache_clusters         = 2
   transit_encryption_enabled    = true
   at_rest_encryption_enabled    = true
 
