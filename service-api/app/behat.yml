@@ -17,7 +17,7 @@ default:
         PACT_CORS: false
         PACT_BROKER_URI: "pact-broker.api.opg.service.justice.gov.uk"
         PACT_BROKER_HTTP_AUTH_USER: "admin"
-        PACT_BROKER_HTTP_AUTH_PASS: "password"
+        PACT_BROKER_HTTP_AUTH_PASS: ""
         PACT_OUTPUT_DIR: /tmp/pacts
         PACT_MOCK_SERVER_HEALTH_CHECK_TIMEOUT: 20
       providers:
