@@ -11,7 +11,7 @@ export default class CountdownTimer extends EventEmitter {
     _countZero()
     {
         if (this.counter === 0) {
-           window.location.href = '/timeout';
+            this.emit('tickCompleted');
         }
     }
 
@@ -19,12 +19,12 @@ export default class CountdownTimer extends EventEmitter {
     {
         const _this = this;
         setInterval(function () {
-            _this.element.innerHTML = _this.counter.toString();
-            _this.emit('tick', _this.counter);
             if (_this.counter > 0) {
                 _this.counter--;
             }
             _this._countZero();
+            _this.element.innerHTML = _this.counter.toString();
+            _this.emit('tick', _this.counter);
         }, 60000);
     }
 

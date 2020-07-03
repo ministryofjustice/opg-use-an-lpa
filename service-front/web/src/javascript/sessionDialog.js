@@ -15,6 +15,10 @@ export default class SessionDialog {
                 this._isHidden(false);
             }
         });
+        this.timer.on('tickCompleted', () => {
+            window.location.href = '/timeout';
+        });
+
         this.timer.start()
     }
 
