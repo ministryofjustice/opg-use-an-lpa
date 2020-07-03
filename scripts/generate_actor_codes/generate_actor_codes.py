@@ -188,7 +188,7 @@ class CodeGeneration:
       # formats and prints simple log output
 
         log_events = self.aws_logs_client.get_log_events(
-            logGroupName='use-an-lpa',
+            logGroupName='{}_application_logs'.format(self.environment),
             logStreamName=self.logStreamName,
             nextToken=self.nextForwardToken,
             startFromHead=False
