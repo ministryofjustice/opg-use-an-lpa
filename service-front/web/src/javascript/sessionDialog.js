@@ -34,7 +34,7 @@ export default class SessionDialog {
             });
         }
 
-        const hideTimeoutElements = this.element.querySelectorAll('.jsHideTimeout');
+        const hideTimeoutElements = document.querySelectorAll('.jsHideTimeout');
         for (let i = 0; i < hideTimeoutElements.length; i++) {
             hideTimeoutElements[i].addEventListener("click", function () {
                 _this._isHidden(true);
@@ -78,6 +78,7 @@ export default class SessionDialog {
                     }
                 } else /* tab */ {
                     if (document.activeElement === lastFocusableEl) {
+                        console.log('here2')
                         firstFocusableEl.focus();
                         e.preventDefault();
                     }

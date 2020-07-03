@@ -1,6 +1,6 @@
 import countdownTimer from './countdownTimer';
 
-describe('disableButtonOnClick', () => {
+describe('Countdown Timer', () => {
     jest.useFakeTimers();
     let timer;
     let eventCounter;
@@ -14,8 +14,8 @@ describe('disableButtonOnClick', () => {
 
     });
 
-    describe('without the attribute', () => {
-        test('clicking button will not disable it', () => {
+    describe('Given a timer is setup to run for 20 minutes but not too completion', () => {
+        test('it should not complete and tick down correctly', () => {
             timer.on('tick', (event) => {
                 eventCounter = event;
             });
@@ -35,8 +35,8 @@ describe('disableButtonOnClick', () => {
         });
     });
 
-    describe('without the attribute', () => {
-        test('clicking button will not disable it', () => {
+    describe('Given a time should reset and run to the end', () => {
+        test('It should countdown correctly and emit it has completed', () => {
             timer.on('tick', (event) => {
                 eventCounter = event;
             });
