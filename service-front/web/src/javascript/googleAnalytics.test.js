@@ -16,6 +16,18 @@ import googleAnalytics from './googleAnalytics';
             useAnalytics = new googleAnalytics('UA-12345');
         });
 
+        /**
+         * Description of data layer 2 and 3 in gtag
+         * [Arguments] {
+          '0': 'event',
+          '1': 'event',
+          '2': {
+                event_category: 'event_category',
+                event_label: 'event_label',
+                value: 'value'
+             }
+            }
+         */
         test('it fires click events on the 2 external links', () => {
             const linkSelector = document.querySelectorAll('a');
             for (let i = 0; i < linkSelector.length; i++) {
@@ -33,6 +45,19 @@ import googleAnalytics from './googleAnalytics';
             expect(global.dataLayer.length).toEqual(4);
         });
 
+        /**
+         * Description of data layer 1 in gtag
+         *  'config',
+         *  this.analyticsId, {
+                'linker': {
+                    'domains': ['www.gov.uk']
+            },
+            'transport_type': 'beacon',
+            'anonymize_ip': true,
+            'allow_google_signals': false, //display-features
+            'allow_ad_personalization_signals': false //display-features
+         *
+         */
     test('it should have the correct config setup', () => {
         expect(global.dataLayer.length).toEqual(2);
         expect(global.dataLayer[1][0]).toBe('config');
@@ -55,8 +80,22 @@ import googleAnalytics from './googleAnalytics';
         expect(global.dataLayer[1][2].allow_ad_personalization_signals).toBe(false);
     });
 
+        /**
+         * Description of data layer 2 in gtag
+         * [Arguments] {
+          '0': 'event',
+          '1': 'event',
+          '2': {
+                event_category: 'event_category',
+                event_label: 'event_label',
+                value: 'value'
+             }
+            }
+         */
     test('it should fire events correctly', () => {
         useAnalytics.trackEvent('event', 'event_category', 'event_label', 'value')
+
+        console.log(global.dataLayer)
         expect(global.dataLayer.length).toEqual(3);
         expect(global.dataLayer[2]).not.toBeUndefined();
         expect(global.dataLayer[2][0]).toBe('event');
@@ -72,6 +111,18 @@ import googleAnalytics from './googleAnalytics';
         expect(global.dataLayer[2][2].value).toBe('value');
     });
 
+        /**
+         * Description of data layer 2 in gtag
+         * [Arguments] {
+          '0': 'event',
+          '1': 'event',
+          '2': {
+                event_category: 'event_category',
+                event_label: 'event_label',
+                value: 'value'
+             }
+            }
+         */
     test('it should sanitize the data being sent', () => {
         useAnalytics.trackEvent('test@test.com', '01234567890', 'NG156WL', '28/06/1984')
         expect(global.dataLayer.length).toEqual(3);

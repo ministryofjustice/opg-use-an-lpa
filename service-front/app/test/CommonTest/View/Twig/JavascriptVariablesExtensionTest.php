@@ -15,43 +15,23 @@ class JavascriptVariablesExtensionTest extends TestCase
     /**
      * @test
      */
-    public function can_create_an_instance_of_the_variable_extension()
+    public function testGetGlobals()
     {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
+        $analyticsId = 'uaid1234';
+        $extension = new JavascriptVariablesExtension($analyticsId);
 
-        $containerProphecy->get('config')
-            ->willReturn(
-                [
-                    'analytics' => [
-                            'uaid' => 'uaid1234',
-                    ],
-                ]
-            );
+        $analaytics = $extension->getGlobals();
 
-        $httpClientProphecy = $this->prophesize(ClientInterface::class);
+        $this->assertTrue(is_array($analaytics));
+        $this->assertEquals(1,count($analaytics));
 
-        $containerProphecy->get(ClientInterface::class)
-            ->willReturn($httpClientProphecy->reveal());
+        $expectedAnalytics = [
+                'uaId' => 'uaid1234',
+        ];
 
-        $factory = new JavascriptVariablesExtensionFactory();
-
-        $analyticsConfig = $factory($containerProphecy->reveal());
-
-        $this->assertInstanceOf(JavascriptVariablesExtension::class, $analyticsConfig);
-    }
-
-    /**
-     * @test
-     */
-    public function throws_exception_when_missing_configuration()
-    {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-        $containerProphecy->get('config')->willReturn([]);
-
-        $factory = new JavascriptVariablesExtensionFactory();
-
-        $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('Missing google analytics ua id');
-        $analyticsConfig = $factory($containerProphecy->reveal());
+        $this->assertEquals($expectedAnalytics, $analaytics);
+        foreach ($analaytics as $analyticsId) {
+            $this->assertEquals($expectedAnalytics['uaId'], $analyticsId);
+        }
     }
 }
