@@ -1,4 +1,5 @@
 import sessionDialog from './sessionDialog';
+import { fireEvent } from "@testing-library/dom";
 
 const html = `
     <div id="dialog-overlay" class="hide jsHideTimeout" tabindex="-1"></div>
@@ -25,6 +26,7 @@ const html = `
 `
 
 describe('Session Dialog', () => {
+    jest.useFakeTimers();
     let sessionDialogElement;
     let dialog;
     let showButton;
@@ -33,6 +35,7 @@ describe('Session Dialog', () => {
     let dialogFocus;
 
     beforeEach(() => {
+        jest.clearAllTimers();
         document.body.innerHTML = html;
         sessionDialogElement = new sessionDialog(document.getElementById("dialog"), 20);
 
@@ -60,4 +63,30 @@ describe('Session Dialog', () => {
             expect(dialog.classList.contains('dialog')).toBeFalsy();
         });
     });
+    /*describe('Given the timer counts down to 5 minutes', () => {
+        test('it should show the dialog', () => {
+            jest.advanceTimersByTime(12000);
+            expect(dialogOverlay.classList.contains('hide')).toBeFalsy();
+            expect(dialogOverlay.classList.contains('dialog-overlay')).toBeTruthy();
+            expect(dialog.classList.contains('hide')).toBeFalsy();
+            expect(dialog.classList.contains('dialog')).toBeTruthy();
+        });
+    });*/
+    describe('Given the user presses tab or esc in the dialog', () => {
+        test('it should tab through active elements', () => {
+            showButton.click();
+            expect(document.activeElement.getAttribute('class')).toBe("dialog-focus");
+            fireEvent.keyDown(dialog, { key: 'Tab', keyCode: 9 });
+            //expect(document.activeElement.innerHTML).toBe("Stay signed in");
+            expect(document.activeElement.getAttribute('class')).toBe("dialog-focus");
+        });
+        test('it should hide the dialog when ESC is pressed', () => {
+            showButton.click();
+            fireEvent.keyDown(dialog, { key: 'Esc', keyCode: 27 });
+            expect(dialogOverlay.classList.contains('hide')).toBeTruthy();
+            expect(dialogOverlay.classList.contains('dialog-overlay')).toBeFalsy();
+            expect(dialog.classList.contains('hide')).toBeTruthy();
+            expect(dialog.classList.contains('dialog')).toBeFalsy();
+        });
+    })
 });
