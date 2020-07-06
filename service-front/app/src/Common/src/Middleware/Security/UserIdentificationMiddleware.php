@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Middleware\Security;
 
-use Common\Service\Log\ErrorCodes;
+use Common\Service\Log\EventCodes;
 use Common\Service\Security\UserIdentification;
 use Common\Service\Security\UserIdentificationService;
 use Mezzio\Session\SessionInterface;
@@ -67,7 +67,7 @@ class UserIdentificationMiddleware implements MiddlewareInterface
                 $this->logger->notice(
                     'Identity of incoming request is different to session stored identity',
                     [
-                        'error_code' => ErrorCodes::IDENTITY_HASH_CHANGE,
+                        'event_code' => EventCodes::IDENTITY_HASH_CHANGE,
                         'stored_identity' => $sessionIdentity,
                         'calculated_identity' => $id
                     ]
