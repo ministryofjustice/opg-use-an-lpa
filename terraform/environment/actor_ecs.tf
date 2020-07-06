@@ -211,6 +211,10 @@ EOF
       "value": "${local.account.cookie_expires_use}"
     },
     {
+      "name": "GOOGLE_ANALYTICS_ID",
+      "value": "${local.account.google_analytics_id_use}"
+    },
+    {
       "name": "LOGGING_LEVEL",
       "value": "${local.account.logging_level}"
     },

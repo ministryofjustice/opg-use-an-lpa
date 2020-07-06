@@ -79,6 +79,8 @@ class ConfigProvider
 
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
+
+                View\Twig\JavascriptVariablesExtension::class => View\Twig\JavascriptVariablesExtensionFactory::class,
             ],
 
             'delegators' => [
@@ -114,6 +116,7 @@ class ConfigProvider
                 View\Twig\OrdinalNumberExtension::class,
                 View\Twig\GovUKLaminasFormErrorsExtension::class,
                 View\Twig\GovUKLaminasFormExtension::class,
+                View\Twig\JavascriptVariablesExtension::class,
             ]
         ];
     }
