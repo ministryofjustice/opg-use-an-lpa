@@ -44,6 +44,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/terms-of-use', Viewer\Handler\ViewerTermsOfUseHandler::class, 'viewer-terms-of-use');
     $app->get('/privacy-notice',Viewer\Handler\ViewerPrivacyNoticeHandler::class,'viewer-privacy-notice');
     $app->get('/stats', Viewer\Handler\StatsPageHandler::class, 'viewer-stats');
+    $app->get('/session-expired', Viewer\Handler\ViewerSessionExpiredHandler::class, 'session-expired');
 
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
 };
