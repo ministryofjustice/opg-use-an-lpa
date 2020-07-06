@@ -16,3 +16,12 @@ Feature: Session length is independent of cookie lifetime
     When my session expires
     And I view my dashboard
     Then I am taken to the session expired page
+
+  @ui @viewer
+  Scenario: An expired user session will take the user to the enter code page
+    Given I have been given access to an LPA via share code
+    And I access the viewer service
+    And I give a valid LPA share code
+    When my session expires
+    And I confirm the LPA is correct
+    Then I am taken to the session expired page
