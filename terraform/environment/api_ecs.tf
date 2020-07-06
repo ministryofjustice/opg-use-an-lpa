@@ -193,7 +193,7 @@ locals {
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-            "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
+            "awslogs-group": "${aws_cloudwatch_log_group.application_logs.name}",
             "awslogs-region": "eu-west-1",
             "awslogs-stream-prefix": "${local.environment}.api-web.use-an-lpa"
         }
@@ -238,7 +238,7 @@ EOF
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-            "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
+            "awslogs-group": "${aws_cloudwatch_log_group.application_logs.name}",
             "awslogs-region": "eu-west-1",
             "awslogs-stream-prefix": "${local.environment}.api-app.use-an-lpa"
         }

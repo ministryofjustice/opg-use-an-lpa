@@ -6,7 +6,7 @@ use ArrayObject;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
-use Common\Service\Log\ErrorCodes;
+use Common\Service\Log\EventCodes;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
@@ -17,8 +17,8 @@ use Psr\Log\LoggerInterface;
  */
 class LpaService
 {
-    const FULL = true;
-    const SUMMARY = false;
+    public const FULL = true;
+    public const SUMMARY = false;
 
     /**
      * @var ApiClient
@@ -156,7 +156,7 @@ class LpaService
                         'Share code not found when attempting to fetch {type}',
                         [
                             // attach an code for brute force checking
-                            'error_code' => ErrorCodes::SHARE_CODE_NOT_FOUND,
+                            'event_code' => EventCodes::SHARE_CODE_NOT_FOUND,
                             'type' => $trackRoute
                         ]
                     );

@@ -75,7 +75,7 @@ services:
       ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=viewer-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
-      SESSION_EXPIRES: 20 # session expiry length to support timeout message.
+      SESSION_EXPIRES: 30 # session expiry length to support timeout message.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       COOKIE_SECURE: "false"
     depends_on:
