@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler;
+namespace Viewer\Handler;
 
 use Common\Handler\AbstractHandler;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -10,11 +10,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class ActorSessionExpiredHandler
- * @package Actor\Handler
+ * Class ViewerSessionExpiredHandler
+ * @package Viewer\Handler
  * @codeCoverageIgnore
  */
-class ActorSessionExpiredHandler extends AbstractHandler
+class ViewerSessionExpiredHandler extends AbstractHandler
 {
     /**
      * @param ServerRequestInterface $request
@@ -22,6 +22,6 @@ class ActorSessionExpiredHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new HtmlResponse($this->renderer->render('actor::actor-session-expired'));
+        return new HtmlResponse($this->renderer->render('viewer::viewer-session-expired'));
     }
 }
