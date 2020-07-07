@@ -114,7 +114,7 @@ return [
                         'ttl' => 60,
                         'server' => [
                             'persistent_id' => 'brute-force-cache-replication-group',
-                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
+                            'host' => 'tls://' . getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
                             'port' => '6379',
                             'timeout' => '60'
                         ],
@@ -138,7 +138,7 @@ return [
                         'ttl' => 60,
                         'server' => [
                             'persistent_id' => 'brute-force-cache-replication-group',
-                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
+                            'host' => 'tls://' . getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
                             'port' => '6379',
                             'timeout' => '60'
 
@@ -163,7 +163,7 @@ return [
                         'ttl' => 60,
                         'server' => [
                             'persistent_id' => 'brute-force-cache-replication-group',
-                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
+                            'host' => 'tls://' . getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
                             'port' => '6379',
                             'timeout' => '60'
 
