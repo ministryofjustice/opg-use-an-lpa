@@ -22,6 +22,8 @@ variable "accounts" {
       session_expires_use      = number
       cookie_expires_view      = number
       cookie_expires_use       = number
+      google_analytics_id_view = string
+      google_analytics_id_use  = string
       logging_level            = number
       pagerduty_service_name   = string
       use_legacy_codes_service = bool
