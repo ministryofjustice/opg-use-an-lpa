@@ -2,11 +2,12 @@
 // Viewer ECS Service level config
 
 resource "aws_ecs_service" "viewer" {
-  name            = "viewer"
-  cluster         = aws_ecs_cluster.use-an-lpa.id
-  task_definition = aws_ecs_task_definition.viewer.arn
-  desired_count   = 2
-  launch_type     = "FARGATE"
+  name             = "viewer"
+  cluster          = aws_ecs_cluster.use-an-lpa.id
+  task_definition  = aws_ecs_task_definition.viewer.arn
+  desired_count    = 2
+  launch_type      = "FARGATE"
+  platform_version = "1.4.0"
 
   network_configuration {
     security_groups  = [aws_security_group.viewer_ecs_service.id]
@@ -207,6 +208,10 @@ EOF
     {
       "name": "COOKIE_EXPIRES",
       "value": "${local.account.cookie_expires_view}"
+    },
+    {
+      "name": "GOOGLE_ANALYTICS_ID",
+      "value": "${local.account.google_analytics_id_view}"
     },
     {
       "name": "LOGGING_LEVEL",
