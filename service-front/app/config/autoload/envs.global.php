@@ -112,9 +112,9 @@ return [
                     'name'    => 'redis',
                     'options' => [
                         'ttl' => 60,
-                        'persistent_id' => 'brute-force-cache-replication-group',
                         'server' => [
-                             'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis'
+                            'persistent_id' => 'brute-force-cache-replication-group',
+                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis'
                         ],
                         'lib_options' => [
                             \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP
@@ -134,8 +134,8 @@ return [
                     'name'    => 'redis',
                     'options' => [
                         'ttl' => 60,
-                        'persistent_id' => 'brute-force-cache-replication-group',
                         'server' => [
+                            'persistent_id' => 'brute-force-cache-replication-group',
                             'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis'
                         ],
                         'lib_options' => [
@@ -156,9 +156,9 @@ return [
                     'name'    => 'redis',
                     'options' => [
                         'ttl' => 60,
-                        'persistent_id' => 'brute-force-cache-replication-group',
                         'server' => [
-                             'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis'
+                            'persistent_id' => 'brute-force-cache-replication-group',
+                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis'
 
                         ],
                         'lib_options' => [
