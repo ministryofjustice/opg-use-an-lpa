@@ -53,6 +53,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     // Clean out the session if expired
     $app->pipe(\Common\Middleware\Session\SessionExpiredAttributeAllowlistMiddleware::class);
+    $app->pipe(\Common\Middleware\Session\SessionExpiredRedirectMiddleware::class);
 
     $app->pipe(\Mezzio\Csrf\CsrfMiddleware::class);
 

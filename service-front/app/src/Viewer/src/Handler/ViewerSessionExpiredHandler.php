@@ -2,14 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler;
+namespace Viewer\Handler;
 
 use Common\Handler\AbstractHandler;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Laminas\Diactoros\Response\HtmlResponse;
 
-class ActorTermsOfUseHandler extends AbstractHandler
+/**
+ * Class ViewerSessionExpiredHandler
+ * @package Viewer\Handler
+ * @codeCoverageIgnore
+ */
+class ViewerSessionExpiredHandler extends AbstractHandler
 {
     /**
      * @param ServerRequestInterface $request
@@ -17,6 +22,6 @@ class ActorTermsOfUseHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new HtmlResponse($this->renderer->render('actor::actor-terms-of-use'));
+        return new HtmlResponse($this->renderer->render('viewer::viewer-session-expired'));
     }
 }

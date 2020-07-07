@@ -63,6 +63,7 @@ services:
     environment:
       # Always required
       CONTEXT: "viewer"
+      GOOGLE_ANALYTICS_ID: "UA-170469426-2"
       KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
 
       # Local only
@@ -75,7 +76,7 @@ services:
       ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=viewer-app
       XDEBUG_CONFIG: remote_host=host.docker.internal remote_enable=1
-      SESSION_EXPIRES: 20 # session expiry length to support timeout message.
+      SESSION_EXPIRES: 30 # session expiry length to support timeout message.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       COOKIE_SECURE: "false"
     depends_on:
@@ -113,6 +114,7 @@ services:
     environment:
       # Always required
       CONTEXT: "actor"
+      GOOGLE_ANALYTICS_ID: "UA-170469426-1"
       KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
 
       # Local only

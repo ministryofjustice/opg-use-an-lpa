@@ -2,11 +2,12 @@
 // Actor ECS Service level config
 
 resource "aws_ecs_service" "actor" {
-  name            = "actor"
-  cluster         = aws_ecs_cluster.use-an-lpa.id
-  task_definition = aws_ecs_task_definition.actor.arn
-  desired_count   = 2
-  launch_type     = "FARGATE"
+  name             = "actor"
+  cluster          = aws_ecs_cluster.use-an-lpa.id
+  task_definition  = aws_ecs_task_definition.actor.arn
+  desired_count    = 2
+  launch_type      = "FARGATE"
+  platform_version = "1.4.0"
 
   network_configuration {
     security_groups  = [aws_security_group.actor_ecs_service.id]
@@ -129,7 +130,7 @@ locals {
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-            "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
+            "awslogs-group": "${aws_cloudwatch_log_group.application_logs.name}",
             "awslogs-region": "eu-west-1",
             "awslogs-stream-prefix": "${local.environment}.actor-web.use-an-lpa"
         }
@@ -174,7 +175,7 @@ EOF
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-            "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
+            "awslogs-group": "${aws_cloudwatch_log_group.application_logs.name}",
             "awslogs-region": "eu-west-1",
             "awslogs-stream-prefix": "${local.environment}.actor-app.use-an-lpa"
         }
@@ -208,6 +209,10 @@ EOF
     {
       "name": "COOKIE_EXPIRES",
       "value": "${local.account.cookie_expires_use}"
+    },
+    {
+      "name": "GOOGLE_ANALYTICS_ID",
+      "value": "${local.account.google_analytics_id_use}"
     },
     {
       "name": "LOGGING_LEVEL",

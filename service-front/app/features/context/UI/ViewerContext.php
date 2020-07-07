@@ -536,4 +536,13 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/stats');
         $this->ui->assertPageContainsText('Number of LPA codes viewed');
     }
+
+    /**
+     * @Then /^I am taken to the session expired page$/
+     */
+    public function iAmTakenToTheSessionExpiredPage()
+    {
+        $this->ui->assertPageAddress('/session-expired');
+        $this->ui->assertPageContainsText('You\'ll have to start again');
+    }
 }

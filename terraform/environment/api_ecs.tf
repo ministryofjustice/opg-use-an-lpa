@@ -2,11 +2,12 @@
 // Api ECS Service level config
 
 resource "aws_ecs_service" "api" {
-  name            = "api"
-  cluster         = aws_ecs_cluster.use-an-lpa.id
-  task_definition = aws_ecs_task_definition.api.arn
-  desired_count   = 2
-  launch_type     = "FARGATE"
+  name             = "api"
+  cluster          = aws_ecs_cluster.use-an-lpa.id
+  task_definition  = aws_ecs_task_definition.api.arn
+  desired_count    = 2
+  launch_type      = "FARGATE"
+  platform_version = "1.4.0"
 
   network_configuration {
     security_groups  = [aws_security_group.api_ecs_service.id]
@@ -192,7 +193,7 @@ locals {
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-            "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
+            "awslogs-group": "${aws_cloudwatch_log_group.application_logs.name}",
             "awslogs-region": "eu-west-1",
             "awslogs-stream-prefix": "${local.environment}.api-web.use-an-lpa"
         }
@@ -237,7 +238,7 @@ EOF
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-            "awslogs-group": "${data.aws_cloudwatch_log_group.use-an-lpa.name}",
+            "awslogs-group": "${aws_cloudwatch_log_group.application_logs.name}",
             "awslogs-region": "eu-west-1",
             "awslogs-stream-prefix": "${local.environment}.api-app.use-an-lpa"
         }

@@ -44,8 +44,9 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/terms-of-use', Viewer\Handler\ViewerTermsOfUseHandler::class, 'viewer-terms-of-use');
     $app->get('/privacy-notice',Viewer\Handler\ViewerPrivacyNoticeHandler::class,'viewer-privacy-notice');
     $app->get('/stats', Viewer\Handler\StatsPageHandler::class, 'viewer-stats');
+    $app->get('/session-expired', Viewer\Handler\ViewerSessionExpiredHandler::class, 'session-expired');
 
-    $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
+    $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'viewer-cookies');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
@@ -54,7 +55,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
 
-    $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
+    $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'actor-cookies');
 
     // User creation
     $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');
@@ -64,6 +65,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     // User auth
     $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
     $app->get('/logout', Actor\Handler\LogoutPageHandler::class, 'logout');
+    $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
 
     // User management
     $app->route('/forgot-password', Actor\Handler\PasswordResetRequestPageHandler::class, ['GET', 'POST'], 'password-reset');

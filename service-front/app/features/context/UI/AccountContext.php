@@ -2334,6 +2334,15 @@ class AccountContext implements Context
     }
 
     /**
+     * @Then /^I am taken to the session expired page$/
+     */
+    public function iAmTakenToTheSessionExpiredPage()
+    {
+        $this->ui->assertPageAddress('/session-expired');
+        $this->ui->assertPageContainsText('We\'ve signed you out');
+    }
+
+    /**
      * @Given /^I have added a (.*) LPA$/
      */
     public function iHaveAddedALPA($lpaType)
