@@ -589,12 +589,16 @@ orbs:
                 ~/project/scripts/pipeline/set_environment_variables/set_pact.sh >> $BASH_ENV
 
                 # docker-compose -f ~/project/docker-compose.testing.yml up -d lpa-codes-pact-mock
-                docker run -d --name lpa-codes-pact-mock pactfoundation/pact-cli:latest \
-                -p "80" --host "0.0.0.0" --hostname "lpa-codes-pact-mock" --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
 
-                export PACT_MOCK=$(bashdocker inspect -f "{{ .NetworkSettings.IPAddress }}" lpa-codes-pact-mock) >> $BASH_ENV
 
-                docker run -d --name pacttests --add-host lpa-codes-pact-mock:$PACT_MOCK api-app:latest
+                echo 'export DOCKER_REMOTE_PACT_IP="$(docker run -d --name lpa-codes-pact-mock pactfoundation/pact-cli:latest \
+                                                      -p "80" --hostname "lpa-codes-pact-mock" --pact-dir /tmp/pacts \
+                                                      --consumer use_a_lasting_power_of_attorney --provider lpa-codes curl \
+                                                      --silent https://checkip.amazonaws.com/)"' >> $BASH_ENV
+
+#                export PACT_MOCK=$(bashdocker inspect -f "{{ .NetworkSettings.IPAddress }}" lpa-codes-pact-mock) >> $BASH_ENV
+
+                docker run -d --name pacttests --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_PACT_IP api-app:latest
 
                 sleep 3
                 # run some tests
