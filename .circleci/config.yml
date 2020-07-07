@@ -591,7 +591,11 @@ orbs:
                 # docker-compose -f ~/project/docker-compose.testing.yml up -d lpa-codes-pact-mock
                 docker run -d --name lpa-codes-pact-mock pactfoundation/pact-cli:latest \
                 -p "80" --host "0.0.0.0" --hostname "lpa-codes-pact-mock" --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
-                docker run -d --name pacttests api-app:latest
+
+                export PACT_MOCK=docker inspect -f "{{ .NetworkSettings.IPAddress }}" lpa-codes-pact-mock
+
+                docker run -d --name pacttests --add-host lpa-codes-pact-mock:$PACT_MOCK api-app:latest
+
                 sleep 3
                 # run some tests
                 docker exec pacttests /app/vendor/bin/behat -p pact -f progress -o std -f junit -o /app/build/reports/int
