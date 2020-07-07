@@ -39,7 +39,7 @@ function check_file_sanity(){
 
 function generate_actor_codes(){
     mkdir -p ${OUTPUT_FOLDER}/out
-    aws-vault exec identity -- python3 -u ./generate_actor_codes.py ${LPAENV} ${LPATRIMMED} |
+    aws-vault exec identity -- python -u ./generate_actor_codes.py ${LPAENV} ${LPATRIMMED} |
         tee ${OUTPUT_STAGING_FILE}        # create log file, from output
 }
 
@@ -82,9 +82,9 @@ function check_LPA_validity()
 
         if [[ "$LPAENV" == "production" ]]
         then
-            RESULT=$(aws-vault exec identity -- python3 ../call-api-gateway/call_api_gateway.py ${LPAID} --production)
+            RESULT=$(aws-vault exec identity -- python ../call-api-gateway/call_api_gateway.py ${LPAID} --production)
         else
-            RESULT=$(aws-vault exec identity -- python3 ../call-api-gateway/call_api_gateway.py ${LPAID})
+            RESULT=$(aws-vault exec identity -- python ../call-api-gateway/call_api_gateway.py ${LPAID})
         fi
 
 
