@@ -591,7 +591,7 @@ orbs:
                 export DOCKER_REMOTE_PACT_IP="$(docker run -d --name lpa-codes-pact-mock pactfoundation/pact-cli:latest \
                                                  curl --silent https://checkip.amazonaws.com/)" >> $BASH_ENV
 
-                docker run -d --name lpa-codes-pact-mock -p "80" --host "0.0.0.0" --pact-dir /tmp/pacts \
+                docker run -d --name lpa-codes-pact-mock -p "80" --pact-dir /tmp/pacts \
                               --consumer use_a_lasting_power_of_attorney --provider lpa-codes
                 docker run -d --name pacttests --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_PACT_IP api-app:latest
 
