@@ -590,7 +590,7 @@ orbs:
 
                 # docker-compose -f ~/project/docker-compose.testing.yml up -d lpa-codes-pact-mock
                 docker run -d --name lpa-codes-pact-mock pactfoundation/pact-cli:latest \
-                -p "80" --host "0.0.0.0" --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
+                -p "80" --host "0.0.0.0" --hostname "lpa-codes-pact-mock" --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
                 docker run -d --name pacttests api-app:latest
                 sleep 3
                 # run some tests
