@@ -588,12 +588,10 @@ orbs:
               command: |
                 ~/project/scripts/pipeline/set_environment_variables/set_pact.sh >> $BASH_ENV
 
-                export DOCKER_REMOTE_PACT_IP="$(docker run -d --name lpa-codes-pact-mock pactfoundation/pact-cli:latest \
-                                                 curl --silent https://checkip.amazonaws.com/)" >> $BASH_ENV
+                docker run -dit --rm --name lpa-codes-pact-mock -p 1234:80 pactfoundation/pact-cli:latest mock-service \
+                           -p 80 --host 0.0.0.0 --pact-dir /tmp/pacts
 
-                docker run -d --name lpa-codes-pact-mock pactfoundation/pact-cli:latest  -p "80" --pact-dir /tmp/pacts \
-                              --consumer use_a_lasting_power_of_attorney --provider lpa-codes
-                docker run -d --name pacttests --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_PACT_IP api-app:latest
+                docker run -d --name pacttests api-app:latest
 
                 sleep 3
                 # run some tests
