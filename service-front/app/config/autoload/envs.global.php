@@ -113,10 +113,8 @@ return [
                     'options' => [
                         'ttl' => 60,
                         'server' => [
-                            'persistent_id' => 'brute-force-cache-replication-group',
-                            'host' => 'tls://' . getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                            'port' => '6379',
-                            'timeout' => '60'
+                            'persistent_id' => 'brute-force-cache',
+                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis'
                         ],
                         'lib_options' => [
                             \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP
@@ -137,11 +135,8 @@ return [
                     'options' => [
                         'ttl' => 60,
                         'server' => [
-                            'persistent_id' => 'brute-force-cache-replication-group',
-                            'host' => 'tls://' . getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                            'port' => '6379',
-                            'timeout' => '60'
-
+                            'persistent_id' => 'brute-force-cache',
+                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis'
                         ],
                         'lib_options' => [
                             \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP
@@ -162,11 +157,8 @@ return [
                     'options' => [
                         'ttl' => 60,
                         'server' => [
-                            'persistent_id' => 'brute-force-cache-replication-group',
-                            'host' => 'tls://' . getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                            'port' => '6379',
-                            'timeout' => '60'
-
+                            'persistent_id' => 'brute-force-cache',
+                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis'
                         ],
                         'lib_options' => [
                             \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP

@@ -220,7 +220,7 @@ EOF
     },
     {
       "name": "BRUTE_FORCE_CACHE_URL",
-      "value": "${data.aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address}"
+      "value": "tls://${data.aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address}"
     }]
   }
 
