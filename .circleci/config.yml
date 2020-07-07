@@ -591,10 +591,10 @@ orbs:
                 # docker-compose -f ~/project/docker-compose.testing.yml up -d lpa-codes-pact-mock
 
 
-                echo 'export DOCKER_REMOTE_PACT_IP="$(docker run -d --name lpa-codes-pact-mock pactfoundation/pact-cli:latest \
-                                                      -p "80" --hostname "lpa-codes-pact-mock" --pact-dir /tmp/pacts \
-                                                      --consumer use_a_lasting_power_of_attorney --provider lpa-codes curl \
-                                                      --silent https://checkip.amazonaws.com/)"' >> $BASH_ENV
+                export DOCKER_REMOTE_PACT_IP="$(docker run -d --name lpa-codes-pact-mock pactfoundation/pact-cli:latest \
+                                                -p "80" --hostname "lpa-codes-pact-mock" --pact-dir /tmp/pacts \
+                                                --consumer use_a_lasting_power_of_attorney --provider lpa-codes curl \
+                                                --silent https://checkip.amazonaws.com/)" >> $BASH_ENV
 
 #                export PACT_MOCK=$(bashdocker inspect -f "{{ .NetworkSettings.IPAddress }}" lpa-codes-pact-mock) >> $BASH_ENV
 
