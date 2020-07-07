@@ -159,7 +159,7 @@ return [
                     'options' => [
                         'ttl' => 60,
                         'server' => [
-                            'persistent_id' => 'brute-force-cache',
+                            'persistent_id' => 'brute-force-cache-replication-group',
                             'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
                             'port' => '6379'
                         ],
