@@ -1,4 +1,4 @@
-@integration @pact
+@pact
 Feature: Runs a basic check on Healthcheck endpoint on integration middleware
 
   @pact

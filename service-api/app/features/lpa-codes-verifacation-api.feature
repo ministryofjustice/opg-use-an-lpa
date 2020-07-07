@@ -1,4 +1,4 @@
-@integration @pact
+@pact
 Feature: Check LPA Codes API Response
   For code validation
 

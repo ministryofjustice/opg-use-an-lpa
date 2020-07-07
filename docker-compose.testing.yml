@@ -38,5 +38,7 @@ services:
         - lpa-codes
 
   api-app:
+    container_name: api-app
+    image: api-app
     depends_on:
       - lpa-codes-pact-mock
