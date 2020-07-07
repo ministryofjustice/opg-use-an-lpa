@@ -1,20 +1,25 @@
 .govuk-panel {
   &--confirmation {
-    padding: 35px;
-    border: 5px solid transparent;
-    margin-bottom: 30px;
-    background: #28a197
+    padding: govuk-spacing(7);
+    border: govuk-spacing(1) solid transparent;
+    margin-bottom: govuk-spacing(6);
+    background: govuk-colour('green');
   }
 
   &--failed {
-    color: #fff;
-    background: #b10e1e;
-    padding: 35px;
-    border: 5px solid transparent;
-    margin-bottom: 30px;
+    color: govuk-colour('white');
+    background: govuk-colour('red');
+    padding: govuk-spacing(7);
+    border: govuk-spacing(1) solid transparent;
+    margin-bottom: govuk-spacing(6);
+  }
+
+  &--fixButton {
+    position: relative;
+    padding-top: 45px;
   }
 
   &__body {
-    margin-bottom: 20px;
+    margin-bottom: govuk-spacing(4);
   }
 }
