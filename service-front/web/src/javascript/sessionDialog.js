@@ -3,6 +3,7 @@ import countdownTimer from "./countdownTimer";
 export default class SessionDialog {
     constructor(element, countdownMinutes)
     {
+        this.showDialogMinutesBeforeLogout = 5;
         this.element = element;
         this.countdownMinutes = countdownMinutes; // Temporary until final solution in place
         this.dialogOverlay = document.getElementById("dialog-overlay");
@@ -11,7 +12,7 @@ export default class SessionDialog {
         this._trapFocus();
         this.timer = new countdownTimer(this.element.querySelector('#time'), this.countdownMinutes);
         this.timer.on('tick', (event) => {
-            if (event === 5) {
+            if (event === this.showDialogMinutesBeforeLogout) {
                 this._isHidden(false);
             }
         });
@@ -71,6 +72,7 @@ export default class SessionDialog {
             }
 
             if (isTabPressed) {
+                /* istanbul ignore next */
                 if ( e.shiftKey ) { /* shift + tab */
                     if (document.activeElement === firstFocusableEl) {
                         lastFocusableEl.focus();
