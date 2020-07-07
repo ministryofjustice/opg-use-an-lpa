@@ -588,14 +588,11 @@ orbs:
               command: |
                 ~/project/scripts/pipeline/set_environment_variables/set_pact.sh >> $BASH_ENV
 
-                # docker-compose -f ~/project/docker-compose.testing.yml up -d lpa-codes-pact-mock
-
-
                 export DOCKER_REMOTE_PACT_IP="$(docker run -d --name lpa-codes-pact-mock pactfoundation/pact-cli:latest \
-                                                -p "80" --hostname "lpa-codes-pact-mock" --pact-dir /tmp/pacts \
-                                                --consumer use_a_lasting_power_of_attorney --provider lpa-codes curl \
-                                                --silent https://checkip.amazonaws.com/)" >> $BASH_ENV
+                                                 curl --silent https://checkip.amazonaws.com/)" >> $BASH_ENV
 
+                docker run -d --name lpa-codes-pact-mock -p "80" --host "0.0.0.0" --pact-dir /tmp/pacts \
+                              --consumer use_a_lasting_power_of_attorney --provider lpa-codes
                 docker run -d --name pacttests --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_PACT_IP api-app:latest
 
                 sleep 3
@@ -603,7 +600,6 @@ orbs:
                 docker exec pacttests /app/vendor/bin/behat -p pact -f progress -o std -f junit -o /app/build/reports/int
                 docker exec pacttests cat /tmp/pacts/use_a_lasting_power_of_attorney-lpa-codes.json > pact.json
 
-                # docker-compose -f ~/project/docker-compose.testing.yml stop lpa-codes-pact-mock
                 docker stop lpa-codes-pact-mock
           - store_artifacts:
               path: pact.json
