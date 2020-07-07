@@ -1,25 +1,25 @@
 .lpa-valid-border {
-  border:  5px solid #006435;
-  margin: 0px 0px 30px 0px;
+  border:  govuk-spacing(1) solid govuk-colour('green');
+  margin: govuk-spacing(0) govuk-spacing(0) govuk-spacing(6) govuk-spacing(0);
   padding: 10px
 }
 
 .lpa-cancelled-border {
-  border:  5px solid #b10e1e;
-  margin: 0px 0px 30px 0px;
-  padding: 10px
+  border:  govuk-spacing(1) solid govuk-colour('red');
+  margin: govuk-spacing(0) govuk-spacing(0) govuk-spacing(6) govuk-spacing(0);
+  padding: govuk-spacing(2)
 }
 
 .column-full-alt-1 {
-  padding: 0px
+  padding: govuk-spacing(0)
 }
 
 .heading-m-alt-1 {
-  margin-bottom: 10px
+  margin-bottom: govuk-spacing(2)
 }
 
 .body-alt-1 {
-  margin-bottom: 0px
+  margin-bottom: govuk-spacing(0)
 }
 
 
