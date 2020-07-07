@@ -592,7 +592,7 @@ orbs:
                 docker run -d --name lpa-codes-pact-mock pactfoundation/pact-cli:latest \
                 -p "80" --host "0.0.0.0" --hostname "lpa-codes-pact-mock" --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
 
-                export PACT_MOCK=docker inspect -f "{{ .NetworkSettings.IPAddress }}" lpa-codes-pact-mock
+                export PACT_MOCK=$(bashdocker inspect -f "{{ .NetworkSettings.IPAddress }}" lpa-codes-pact-mock) >> $BASH_ENV
 
                 docker run -d --name pacttests --add-host lpa-codes-pact-mock:$PACT_MOCK api-app:latest
 
