@@ -12,6 +12,7 @@ default:
       psr: ~
     SmartGamma\Behat\PactExtension\Extension:
       common:
+        PACT_CONSUMER_VERSION: 1.0
         PACT_CONSUMER_NAME: use_a_lasting_power_of_attorney
         PACT_CORS: false
         PACT_OUTPUT_DIR: /tmp/pacts
