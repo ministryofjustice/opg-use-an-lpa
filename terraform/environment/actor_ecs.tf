@@ -224,7 +224,7 @@ EOF
     },
     {
       "name": "BRUTE_FORCE_CACHE_PORT",
-      "value": "6379"
+      "value": "${data.aws_elasticache_replication_group.brute_force_cache_replication_group.port}"
     },
     {
       "name": "BRUTE_FORCE_CACHE_TIMEOUT",
