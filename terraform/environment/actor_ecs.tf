@@ -221,6 +221,14 @@ EOF
     {
       "name": "BRUTE_FORCE_CACHE_URL",
       "value": "tls://${data.aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address}"
+    },
+    {
+      "name": "BRUTE_FORCE_CACHE_PORT",
+      "value": "6379"
+    },
+    {
+      "name": "BRUTE_FORCE_CACHE_TIMEOUT",
+      "value": "60"
     }]
   }
 

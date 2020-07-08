@@ -115,8 +115,8 @@ return [
                         'server' => [
                             'persistent_id' => 'brute-force-cache-replication-group',
                             'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                            'port' => '6379',
-                            'timeout' => 60
+                            'port' => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
+                            'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60
                         ],
                         'lib_options' => [
                             \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP
@@ -139,8 +139,8 @@ return [
                         'server' => [
                             'persistent_id' => 'brute-force-cache-replication-group',
                             'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                            'port' => '6379',
-                            'timeout' => 60
+                            'port' => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
+                            'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60
                         ],
                         'lib_options' => [
                             \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP
@@ -163,8 +163,8 @@ return [
                         'server' => [
                             'persistent_id' => 'brute-force-cache-replication-group',
                             'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                            'port' => '6379',
-                            'timeout' => 60
+                            'port' => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
+                            'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60
                         ],
                         'lib_options' => [
                             \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP
