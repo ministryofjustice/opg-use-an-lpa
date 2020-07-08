@@ -87,10 +87,6 @@ data "aws_security_group" "brute_force_cache_service" {
   name = "brute-force-cache-service"
 }
 
-data "aws_elasticache_cluster" "brute_force_cache" {
-  cluster_id = "brute-force-cache"
-}
-
 data "aws_elasticache_replication_group" "brute_force_cache_replication_group" {
   replication_group_id = "brute-force-cache-replication-group"
 }

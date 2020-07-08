@@ -219,7 +219,15 @@ EOF
     },
     {
       "name": "BRUTE_FORCE_CACHE_URL",
-      "value": "${data.aws_elasticache_cluster.brute_force_cache.cache_nodes.0.address}"
+      "value": "tls://${data.aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address}"
+    },
+    {
+      "name": "BRUTE_FORCE_CACHE_PORT",
+      "value": "${data.aws_elasticache_replication_group.brute_force_cache_replication_group.port}"
+    },
+    {
+      "name": "BRUTE_FORCE_CACHE_TIMEOUT",
+      "value": "60"
     }]
   }
 
