@@ -2,12 +2,12 @@ import { getCookie, setCookie, setDefaultConsentCookie, approveAllCookieTypes } 
 import googleAnalytics from "./googleAnalytics";
 
 export default class CookieConsent {
-    constructor(bannerElement) {
+    constructor(bannerElement, isInCookiesPath) {
         this.bannerElement = bannerElement;
         const cookiePolicy = JSON.parse(getCookie('cookie_policy'));
         const seenCookieMessage = getCookie('seen_cookie_message');
         if (seenCookieMessage !== "true") {
-            if (!this._isInCookiesPage()) {
+            if (!isInCookiesPath) {
                 this._toggleCookieMessage(true);
             }
             cookiePolicy || setDefaultConsentCookie();
@@ -35,9 +35,5 @@ export default class CookieConsent {
 
     _toggleCookieMessage(show) {
         this.bannerElement.classList.toggle('cookie-banner--show', show);
-    }
-
-    _isInCookiesPage() {
-        return '/cookies' === window.location.pathname;
     }
 }

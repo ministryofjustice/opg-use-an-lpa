@@ -27,7 +27,12 @@ const createCookie = (name, value, options) => {
     let cookieString = `${name}=${encodeURIComponent(value)}; path=/`;
     const date = new Date(Date.now());
     date.setTime(date.getTime() + (options.days * 24 * 60 * 60 * 1000));
-    cookieString = `${cookieString}; expires=${date.toGMTString()}; Secure`;
+    cookieString = `${cookieString}; expires=${date.toGMTString()}`;
+
+    /* istanbul ignore next */
+    if (window.location.protocol === 'https:') {
+        cookieString = `${cookieString}; Secure`;
+    }
 
     return cookieString;
 }

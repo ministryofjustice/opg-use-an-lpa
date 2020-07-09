@@ -1,6 +1,15 @@
 import { getCookie, setCookie, createCookie, approveAllCookieTypes, setDefaultConsentCookie } from './cookieHelper';
 
 describe('When I get a cookie', () => {
+    delete global.window.location;
+    global.window = Object.create(window);
+    global.window.location = {
+        port: '80',
+        protocol: 'https:',
+        hostname: 'localhost',
+        pathname: '/'
+    };
+
     describe('and it exists', () => {
         beforeEach(() => {
             const gettersSetters = {
@@ -114,7 +123,6 @@ describe('When I call approveAllCookieTypes', () => {
     })
     test('it should set a cookie_policy cookie', () => {
         approveAllCookieTypes();
-
         const cookieValue = getCookie('cookie_policy');
         expect(cookieValue).not.toBeNull();
         expect(document.cookie).not.toBeNull();
