@@ -1,3 +1,7 @@
+import {
+    PerformanceAnalytics,
+    ErrorAnalytics,
+} from "@ministryofjustice/opg-performance-analytics";
 
 export default class GoogleAnalytics {
     constructor(analyticsId) {
@@ -25,6 +29,9 @@ export default class GoogleAnalytics {
             'allow_ad_personalization_signals': false // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
         });
         this._trackExternalLinks();
+
+        PerformanceAnalytics();
+        ErrorAnalytics();
     }
 
     trackEvent(action, category, label, value = "") {
