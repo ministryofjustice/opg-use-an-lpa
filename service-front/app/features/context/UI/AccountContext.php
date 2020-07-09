@@ -3378,6 +3378,7 @@ class AccountContext implements Context
     }
 
     /**
+<<<<<<< HEAD
      * @When /^I select the option to sign in to my existing account$/
      */
     public function iSelectTheOptionToSignInToMyExistingAccount()
@@ -3441,6 +3442,23 @@ class AccountContext implements Context
     public function iWantToCreateANewAccount()
     {
          // Not needed for this context
+    }
+
+    /**
+     * @When /^I click the actor cookies policy link$/
+     */
+    public function iClickTheActorCookiesPolicyLink()
+    {
+        $this->ui->clickLink('cookie policy');
+    }
+
+    /**
+     * @Then /^I am taken to the actor cookies page$/
+     */
+    public function iAmTakenToTheActorCookiesPage()
+    {
+        $this->ui->assertPageAddress('/cookies');
+        $this->ui->assertPageContainsText('Use a lasting power of attorney service');
     }
 
 }
