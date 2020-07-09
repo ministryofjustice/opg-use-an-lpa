@@ -1,6 +1,6 @@
 import cookieConsent from './cookieConsent';
 import '@testing-library/jest-dom'
-import {getCookie, setDefaultConsentCookie, approveAllCookieTypes, setCookie} from './cookieHelper';
+import {getCookie} from './cookieHelper';
 const cookieBannerHtml = `
 <div class="cookie-banner govuk-width-container" role="region" aria-label="cookie banner">
     <div class="govuk-grid-row">
