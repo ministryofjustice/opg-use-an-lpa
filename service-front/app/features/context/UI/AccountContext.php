@@ -3422,4 +3422,23 @@ class AccountContext implements Context
 
         $this->ui->pressButton('Continue');
     }
+
+    /**
+     * @When /^I click the actor cookies policy link$/
+     */
+    public function iClickTheActorCookiesPolicyLink()
+    {
+        $this->ui->clickLink('cookie policy');
+    }
+
+    /**
+     * @Then /^I am taken to the actor cookies page$/
+     */
+    public function iAmTakenToTheActorCookiesPage()
+    {
+        $this->ui->assertPageAddress('/cookies');
+        $this->ui->assertPageContainsText('Use a lasting power of attorney service');
+    }
+
+
 }
