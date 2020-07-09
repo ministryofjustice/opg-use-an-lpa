@@ -157,7 +157,7 @@ class ViewerContext implements Context
                 assertEquals($params['code'], $this->lpaStoredCode);
             });
 
-        $this->ui->clickLink('Continue');
+        $this->ui->clickLink('View this LPA');
     }
 
     /**

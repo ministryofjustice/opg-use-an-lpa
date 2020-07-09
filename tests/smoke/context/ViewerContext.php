@@ -53,7 +53,7 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('We’ve found this LPA');
         $this->ui->assertPageContainsText('Babara Gilson');
 
-        $this->ui->clickLink('Continue');
+        $this->ui->clickLink('View this LPA');
     }
 
     /**
