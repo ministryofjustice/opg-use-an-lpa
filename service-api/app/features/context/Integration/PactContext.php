@@ -294,7 +294,7 @@ class PactContext extends BaseIntegrationContext implements PactContextInterface
             return false;
         }
 
-        return self::$pactStatic->finalize(self::$pactStatic->getConsumerVersion());
+        return self::$pactStatic->finalize(self::$pactStatic->getConsumerVersion(), true);
     }
 
     private function getHeaders(string $providerName): array

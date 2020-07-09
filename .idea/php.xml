@@ -5,41 +5,6 @@
       <PhpCSConfiguration beautifier_path="$PROJECT_DIR$/service-front/app/vendor/squizlabs/php_codesniffer/bin/phpcbf" standards="MySource;PEAR;PSR1;PSR12;PSR2;Squiz;Zend" tool_path="$PROJECT_DIR$/service-front/app/vendor/squizlabs/php_codesniffer/bin/phpcs" />
     </phpcs_settings>
   </component>
-  <component name="PhpIncludePathManager">
-    <include_path>
-      <path value="$PROJECT_DIR$/vendor/cash/lrucache" />
-      <path value="$PROJECT_DIR$/vendor/pact-foundation/pact-php" />
-      <path value="$PROJECT_DIR$/vendor/league/uri-parser" />
-      <path value="$PROJECT_DIR$/vendor/league/uri-interfaces" />
-      <path value="$PROJECT_DIR$/vendor/league/uri-schemes" />
-      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
-      <path value="$PROJECT_DIR$/vendor/psr/log" />
-      <path value="$PROJECT_DIR$/vendor/composer" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
-      <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
-      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php72" />
-      <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
-      <path value="$PROJECT_DIR$/vendor/amphp/http" />
-      <path value="$PROJECT_DIR$/vendor/amphp/socket" />
-      <path value="$PROJECT_DIR$/vendor/guzzlehttp/promises" />
-      <path value="$PROJECT_DIR$/vendor/amphp/sync" />
-      <path value="$PROJECT_DIR$/vendor/amphp/hpack" />
-      <path value="$PROJECT_DIR$/vendor/amphp/dns" />
-      <path value="$PROJECT_DIR$/vendor/amphp/uri" />
-      <path value="$PROJECT_DIR$/vendor/amphp/log" />
-      <path value="$PROJECT_DIR$/vendor/amphp/byte-stream" />
-      <path value="$PROJECT_DIR$/vendor/amphp/windows-registry" />
-      <path value="$PROJECT_DIR$/vendor/daverandom/libdns" />
-      <path value="$PROJECT_DIR$/vendor/amphp/amp" />
-      <path value="$PROJECT_DIR$/vendor/amphp/process" />
-      <path value="$PROJECT_DIR$/vendor/amphp/http-server" />
-      <path value="$PROJECT_DIR$/vendor/amphp/cache" />
-      <path value="$PROJECT_DIR$/vendor/amphp/parser" />
-      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
-    </include_path>
-  </component>
   <component name="PhpInterpreters">
     <interpreters>
       <interpreter id="d0145a1b-f903-43c7-8428-a985293fe8b9" name="api-app" home="docker-compose://DATA" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so">
