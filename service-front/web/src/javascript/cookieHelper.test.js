@@ -163,4 +163,3 @@ describe('When I call setDefaultConsentCookie', () => {
         });
     });
 });
-
