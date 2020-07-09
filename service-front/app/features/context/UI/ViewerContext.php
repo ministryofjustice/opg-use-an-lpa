@@ -478,7 +478,7 @@ class ViewerContext implements Context
     public function iRealiseTheLPAIsCorrect()
     {
         $this->ui->assertPageAddress('/check-code');
-        $this->ui->assertPageContainsText('Re-enter the code');
+        $this->ui->assertPageContainsText('Try another access code');
     }
 
     /**
@@ -486,7 +486,7 @@ class ViewerContext implements Context
      */
     public function iWantToSeeAnOptionToReEnterCode()
     {
-        $this->ui->clickLink('Re-enter the code');
+        $this->ui->clickLink('Try another access code');
         $this->iGiveAValidLPAShareCode();
     }
 
