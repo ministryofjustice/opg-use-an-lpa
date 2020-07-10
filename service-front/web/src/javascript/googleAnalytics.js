@@ -4,12 +4,14 @@ import {
 } from "@ministryofjustice/opg-performance-analytics";
 
 export default class GoogleAnalytics {
-    constructor(analyticsId) {
+    constructor(analyticsId)
+    {
         this.analyticsId = analyticsId;
         this._setUpOnLoad();
     }
 
-    _setUpOnLoad() {
+    _setUpOnLoad()
+    {
         let s = document.createElement('script');
         s.type = 'text/javascript';
         s.src = `https://www.googletagmanager.com/gtag/js?id=${this.analyticsId}`;
@@ -34,16 +36,17 @@ export default class GoogleAnalytics {
         ErrorAnalytics();
     }
 
-    trackEvent(action, category, label, value = "") {
+    trackEvent(action, category, label, value = "")
+    {
         window.gtag('event', this._sanitiseData(action), {
             'event_category': this._sanitiseData(category),
             'event_label': this._sanitiseData(label),
             'value': this._sanitiseData(value)
-        }
-        );
+        });
     }
 
-    _sanitiseData(data) {
+    _sanitiseData(data)
+    {
         const sanitisedDataRegex = [
             /[^\s=/?&]+(?:@|%40)[^\s=/?&]+/g, // Email
             /[A-PR-UWYZ][A-HJ-Z]?[0-9][0-9A-HJKMNPR-Y]?(?:[\\s+]|%20)*[0-9][ABD-HJLNPQ-Z]{2}/gi, // Postcode
@@ -60,7 +63,8 @@ export default class GoogleAnalytics {
         return dataCleansed;
     }
 
-    _trackExternalLinks() {
+    _trackExternalLinks()
+    {
         const externalLinkSelector = document.querySelectorAll('a[href^="http"]');
         const _this = this;
         for (let i = 0; i < externalLinkSelector.length; i++) {
