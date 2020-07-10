@@ -64,5 +64,10 @@ return [
 
     'feature_flags' => [
         'use_legacy_codes_service' => 'true',
+    ],
+
+    'pact' => [
+        'baseUrl'      => 'lpa-codes-pact-mock:80',
+        'providerName' => 'lpa-codes-pact-mock'
     ]
 ];
