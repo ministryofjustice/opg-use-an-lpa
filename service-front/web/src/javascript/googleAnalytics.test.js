@@ -8,6 +8,43 @@ import googleAnalytics from './googleAnalytics';
     </div>
     `;
 
+describe('given Google Analytics datalayer is not setup', () => {
+    let useAnalytics;
+    beforeEach(() => {
+        document.body.innerHTML = linkList;
+        useAnalytics = new googleAnalytics('UA-12345');
+    });
+
+    /**
+     * Description of data layer 2 and 3 in gtag
+     * [Arguments] {
+          '0': 'event',
+          '1': 'event',
+          '2': {
+                event_category: 'event_category',
+                event_label: 'event_label',
+                value: 'value'
+             }
+            }
+     */
+    test('it initialised correctly', () => {
+        const linkSelector = document.querySelectorAll('a');
+        for (let i = 0; i < linkSelector.length; i++) {
+            linkSelector[i].click();
+        }
+
+        expect(global.dataLayer[2][0]).toBe('event');
+        expect(global.dataLayer[2][1]).toBe('click');
+        expect(global.dataLayer[2][2].event_category).toBe('outbound');
+        expect(global.dataLayer[2][2].event_label).toBe('http://localhost/');
+        expect(global.dataLayer[3][0]).toBe('event');
+        expect(global.dataLayer[3][1]).toBe('click');
+        expect(global.dataLayer[3][2].event_category).toBe('outbound');
+        expect(global.dataLayer[3][2].event_label).toBe('https://localhost/');
+        expect(global.dataLayer.length).toEqual(4);
+    });
+});
+
     describe('given Google Analytics is enabled', () => {
         let useAnalytics;
         beforeEach(() => {
@@ -95,7 +132,6 @@ import googleAnalytics from './googleAnalytics';
     test('it should fire events correctly', () => {
         useAnalytics.trackEvent('event', 'event_category', 'event_label', 'value')
 
-        console.log(global.dataLayer)
         expect(global.dataLayer.length).toEqual(3);
         expect(global.dataLayer[2]).not.toBeUndefined();
         expect(global.dataLayer[2][0]).toBe('event');
