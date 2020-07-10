@@ -46,7 +46,7 @@ class UrlValidityCheckService
         }
     }
 
-    public function checkRefererRouteValid(string $refererUrl): bool
+    public function checkRefererRouteValid(?string $refererUrl): bool
     {
         if ($refererUrl !== null) {
             $request = $this->serverRequestFactory->createServerRequest('GET', $refererUrl);

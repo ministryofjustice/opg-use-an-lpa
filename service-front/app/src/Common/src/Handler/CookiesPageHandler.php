@@ -12,9 +12,6 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
-use Mezzio\Router\Route;
-use Mezzio\Router\RouteCollector;
-use Mezzio\Router\RouteResult;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
@@ -73,19 +70,27 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         $form->get('usageCookies')->setValue($usageCookies);
         $form->get('referer')->setValue(null);
 
-        $cookiesPageReferer = $request->getHeaders()['referer'];
+        $cookiesPageReferer = $request->getHeaders()['referer'][0];
 
         if (!empty($cookiesPageReferer)) {
             $validUrl = $this->urlValidityCheckService->isValid($cookiesPageReferer[0]);
 
-            $form->get('referer')->setValue($validUrl ? $cookiesPageReferer[0] : null);
+            $isValidRefererRoute = $this->urlValidityCheckService->checkRefererRouteValid($cookiesPageReferer[0]);
+
+            $form->get('referer')->setValue($validUrl && $isValidRefererRoute ? $cookiesPageReferer[0] : $this->urlHelper->generate('home'));
+        }
+
+        // The back button takes the user back to where they were previously, after validating the referer route
+        if (!$isValidRefererRoute) {
+            $cookiesPageReferer = $this->urlHelper->generate('home');
         }
 
         $routeName = $this->urlHelper->getRouteResult()->getMatchedRouteName();
 
         return new HtmlResponse($this->renderer->render('partials::cookies', [
-            'form'      => $form,
-            'routeName' => $routeName
+            'form'         => $form,
+            'routeName'    => $routeName,
+            'routeReferer' => $cookiesPageReferer
         ]));
     }
 
