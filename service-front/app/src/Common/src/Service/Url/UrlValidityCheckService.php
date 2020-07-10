@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\Url;
 
 use Laminas\Diactoros\ServerRequestFactory;
+use Mezzio\Helper\UrlHelper;
 use Mezzio\Router\RouterInterface;
 
 /**
@@ -23,10 +24,19 @@ class UrlValidityCheckService
      */
     protected $router;
 
-    public function __construct(ServerRequestFactory $serverRequestFactory, RouterInterface $router)
-    {
+    /**
+     * @var UrlHelper
+     */
+    private UrlHelper $urlHelper;
+
+    public function __construct(
+        ServerRequestFactory $serverRequestFactory,
+        RouterInterface $router,
+        UrlHelper $urlHelper
+    ) {
         $this->serverRequestFactory = $serverRequestFactory;
-        $this->router = $router;
+        $this->router               = $router;
+        $this->urlHelper            = $urlHelper;
     }
 
     /**
@@ -46,7 +56,7 @@ class UrlValidityCheckService
         }
     }
 
-    public function checkRefererRouteValid(?string $refererUrl): bool
+    public function checkRefererRouteValid(string $refererUrl): bool
     {
         if ($refererUrl !== null) {
             $request = $this->serverRequestFactory->createServerRequest('GET', $refererUrl);
@@ -57,5 +67,18 @@ class UrlValidityCheckService
             }
         }
         return false;
+    }
+
+    public function setValidReferer(string $referer): string
+    {
+        if (!empty($referer)) {
+            $validUrl = $this->isValid($referer);
+
+            $isValidRefererRoute = $this->checkRefererRouteValid($referer);
+
+            return ($validUrl && $isValidRefererRoute ? $referer : $this->urlHelper->generate('home'));
+        }
+
+        return $this->urlHelper->generate('home');
     }
 }

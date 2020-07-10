@@ -68,29 +68,16 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
             $usageCookies = $cookiePolicy['usage'] === true ? 'yes' : 'no';
         }
         $form->get('usageCookies')->setValue($usageCookies);
-        $form->get('referer')->setValue(null);
 
         $cookiesPageReferer = $request->getHeaders()['referer'][0];
 
-        if (!empty($cookiesPageReferer)) {
-            $validUrl = $this->urlValidityCheckService->isValid($cookiesPageReferer[0]);
-
-            $isValidRefererRoute = $this->urlValidityCheckService->checkRefererRouteValid($cookiesPageReferer[0]);
-
-            $form->get('referer')->setValue($validUrl && $isValidRefererRoute ? $cookiesPageReferer[0] : $this->urlHelper->generate('home'));
-        }
-
-        // The back button takes the user back to where they were previously, after validating the referer route
-        if (!$isValidRefererRoute) {
-            $cookiesPageReferer = $this->urlHelper->generate('home');
-        }
+        $form->get('referer')->setValue($this->urlValidityCheckService->setValidReferer($cookiesPageReferer));
 
         $routeName = $this->urlHelper->getRouteResult()->getMatchedRouteName();
 
         return new HtmlResponse($this->renderer->render('partials::cookies', [
             'form'         => $form,
-            'routeName'    => $routeName,
-            'routeReferer' => $cookiesPageReferer
+            'routeName'    => $routeName
         ]));
     }
 
@@ -101,12 +88,7 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         $cookies = $request->getCookieParams();
         $form->setData($request->getParsedBody());
 
-        $isValidRefererRoute = $this->urlValidityCheckService->checkRefererRouteValid($refererRoute = $form->get('referer')->getValue());
-
-        // After setting cookies settings user is taken where they were previously after validating the referer route
-        if ($isValidRefererRoute) {
-            $response = new RedirectResponse($isValidRefererRoute ? $refererRoute : $this->urlHelper->generate('home'));
-        }
+        $response = new RedirectResponse($form->get('referer')->getValue());
 
         if (array_key_exists(self::COOKIE_POLICY_NAME, $cookies)) {
             try {
