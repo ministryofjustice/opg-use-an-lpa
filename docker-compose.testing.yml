@@ -36,3 +36,8 @@ services:
         - use_a_lasting_power_of_attorney
         - --provider
         - lpa-codes
+
+  api-app:
+    image: api-app
+    depends_on:
+      - lpa-codes-pact-mock
