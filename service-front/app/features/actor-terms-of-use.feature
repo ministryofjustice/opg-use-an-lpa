@@ -19,5 +19,5 @@ Feature: View terms of use from create account page
   @ui
   Scenario: Actor can access the actor cookies page from the actor terms of use page
     Given I am on the actor terms of use page
-    When I click the actor cookies policy link
+    When I navigate to the actor cookies page
     Then I am taken to the actor cookies page

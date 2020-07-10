@@ -3379,6 +3379,7 @@ class AccountContext implements Context
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @When /^I select the option to sign in to my existing account$/
      */
     public function iSelectTheOptionToSignInToMyExistingAccount()
@@ -3445,9 +3446,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I click the actor cookies policy link$/
+     * @When /^I navigate to the actor cookies page$/
      */
-    public function iClickTheActorCookiesPolicyLink()
+    public function iNavigateToTheActorCookiesPage()
     {
         $this->ui->clickLink('cookie policy');
     }

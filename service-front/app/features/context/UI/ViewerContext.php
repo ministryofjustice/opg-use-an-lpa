@@ -554,9 +554,9 @@ class ViewerContext implements Context
     }
 
     /**
-     * @When /^I click the viewer cookies policy link$/
+     * @When /^I navigate to the viewer cookies page$/
      */
-    public function iClickTheViewerCookiesPolicyLink()
+    public function iNavigateToTheViewerCookiesPage()
     {
         $this->ui->clickLink('cookie policy');
     }

@@ -19,5 +19,5 @@ Feature: View terms of use from enter code page
   @ui
   Scenario: Viewer can access the cookies page from the terms of use page
     Given I am on the viewer terms of use page
-    When I click the viewer cookies policy link
+    When I navigate to the viewer cookies page
     Then I am taken to the viewer cookies page
