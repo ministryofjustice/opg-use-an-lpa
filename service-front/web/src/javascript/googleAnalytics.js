@@ -57,7 +57,7 @@ export default class GoogleAnalytics {
         const externalLinkSelector = document.querySelectorAll('a[href^="http"]');
         const _this = this;
         for (let i = 0; i < externalLinkSelector.length; i++) {
-            externalLinkSelector[i].addEventListener("click", function(e) {
+            externalLinkSelector[i].addEventListener("click", function (e) {
                 _this.trackEvent('click', 'outbound', this.href);
             });
         }
