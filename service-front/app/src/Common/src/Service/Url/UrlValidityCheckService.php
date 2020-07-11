@@ -69,7 +69,7 @@ class UrlValidityCheckService
         return false;
     }
 
-    public function setValidReferer(string $referer): string
+    public function setValidReferer(?string $referer): string
     {
         if (!empty($referer)) {
             $validUrl = $this->isValid($referer);
