@@ -1,0 +1,53 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block html_title %}{{ block('service_name') }} - Do you have a Use a lasting power of attorney account{% endblock %}
+
+{% block service_name %}Use a lasting power of attorney{% endblock %}
+
+{% set usageCookies = form.get('triageEntry') %}
+
+{% block content %}
+    <div class="govuk-width-container">
+
+        <a href="{{ path('home') }}" class="govuk-back-link">Back</a>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    {{ govuk_error_summary(form) }}
+                    {{ govuk_form_open(form) }}
+
+                    <h1 class="govuk-heading-xl">Do you have a Use a lasting power of attorney account?</h1>
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset" aria-describedby="if-new-account">
+
+                            {{ govuk_form_element(form.get('triageEntry'), {'value_options':
+                            [
+                                {
+                                    'label': 'Yes, I already have an account',
+                                    'value': 'yes',
+                                    'hint' : 'If you made an LPA online, you will still need to make an account to use this service'
+                                },
+                                {
+                                    'label': 'No, this is the first time I’ve used the service',
+                                    'value': 'no'
+                                }
+                            ]}
+                            )}}
+
+                        </fieldset>
+                    </div>
+
+                    <p class="govuk-body">If you're named on more than one LPA, you can add all those LPAs to your account.</p>
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">Continue</button>
+                    {{ govuk_form_close() }}
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}
