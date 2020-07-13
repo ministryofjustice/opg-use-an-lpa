@@ -804,7 +804,7 @@ orbs:
               command: |
                 cd ~/project/terraform/account
                 terraform init -lock-timeout=300s
-                terraform plan -lock-timeout=300s --auto-approve
+                terraform plan -lock-timeout=300s
 
       apply_shared_terraform:
         #
