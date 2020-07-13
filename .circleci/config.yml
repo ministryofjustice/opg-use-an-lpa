@@ -1009,7 +1009,7 @@ jobs:
       - run:
           name: Get URLs
           command: |
-            ~/scripts/pipeline/set_environment_variables/set_slack_message_values.sh >> $BASH_ENV
+          ~/project/scripts/pipeline/set_environment_variables/set_slack_message_values.sh >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Development Environment Ready"
           color: "#9933ff"
@@ -1026,7 +1026,7 @@ jobs:
       - run:
           name: Get URLs
           command: |
-            ~/scripts/pipeline/set_environment_variables/set_slack_message_values.sh >> $BASH_ENV
+          ~/project/scripts/pipeline/set_environment_variables/set_slack_message_values.sh >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Production Release Successful"
           color: "#9933ff"
