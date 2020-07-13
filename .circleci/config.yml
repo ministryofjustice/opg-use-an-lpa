@@ -92,8 +92,8 @@ workflows:
               ]
 
             # Provision and test development
-        - use-my-lpa/apply_shared_terraform:
-            name: dev_apply_shared_terraform
+        - use-my-lpa/plan_shared_terraform:
+            name: dev_plan_shared_terraform
             filters: { branches: { ignore: [master] } }
             requires: [lint_terraform_pr_build]
 
@@ -102,7 +102,7 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires:
               [
-                dev_apply_shared_terraform,
+                dev_plan_shared_terraform,
                 app_front_build_pr_build,
                 web_front_build_pr_build,
                 web_api_build_pr_build,
@@ -197,9 +197,18 @@ workflows:
 
         # Provision and test preproduction
         - use-my-lpa/apply_shared_terraform:
+            name: dev_apply_shared_terraform
+            workspace: development
+            filters: { branches: { only: [master] } }
+
+        - use-my-lpa/apply_shared_terraform:
             name: preprod_apply_shared_terraform
             workspace: preproduction
             filters: { branches: { only: [master] } }
+            requires:
+              [
+                dev_apply_shared_terraform,
+              ]
 
         - use-my-lpa/apply_environment_terraform:
             name: preprod_apply_environment_terraform
@@ -774,6 +783,28 @@ orbs:
                 export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
                 terraform validate -var container_version=${IMAGE_TAG}
+
+      plan_shared_terraform:
+        #
+        # Plan the shared terraform configuration. This:
+        #   - Updates the shared infrastructure;
+        #
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
+        steps:
+          - checkout
+          - run:
+              name: Plan Shared Terraform
+              command: |
+                cd ~/project/terraform/account
+                terraform init -lock-timeout=300s
+                terraform plan -lock-timeout=300s --auto-approve
 
       apply_shared_terraform:
         #
