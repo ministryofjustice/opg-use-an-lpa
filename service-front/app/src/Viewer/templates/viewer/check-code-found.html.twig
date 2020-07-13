@@ -13,7 +13,7 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">Is this the LPA you want to view?</h1>
+                    <h1 class="govuk-heading-xl">We’ve found this LPA</h1>
 
                     <table id="confirmation-table" class="govuk-table">
                         <tbody class="govuk-table__body">
@@ -34,27 +34,6 @@
                 </div>
             </div>
 
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
-
-                    <details class="govuk-details" role="group">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">
-                                If you need to access this <abbr title="lasting power of attorney">LPA</abbr> after {{ lpa_date(expires) }}
-                            </span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <p class="govuk-body">You will be able to view this <abbr title="lasting power of attorney">LPA</abbr> until {{ lpa_date(expires) }}. After this date, the access code will expire.</p>
-
-                            <p class="govuk-body">If your organisation needs more time to process this <abbr title="lasting power of attorney">LPA</abbr>, or if you need to view the <abbr title="lasting power of attorney">LPA</abbr> again at a later date, ask the the donor or attorney to generate a new access code for you. They can do this at <a class="govuk-link" href="https://use.lastingpowerofattorney.opg.service.justice.gov.uk">https://use.lastingpowerofattorney.opg.service.justice.gov.uk</a></p>
-
-                            <p class="govuk-body">Codes expire 30 days after they are generated.</p>
-                        </div>
-                    </details>
-
-                </div>
-            </div>
-
             <div class="govuk-warning-text">
                 <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                 <strong class="govuk-warning-text__text">
@@ -63,12 +42,39 @@
                 </strong>
             </div>
 
+            <div class="govuk-body">
+                <p class="govuk-body">If this is not the right LPA, ask the donor or attorney to check the access code.</p>
+            </div>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <details class="govuk-details" role="group">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                If you need to see this <abbr title="lasting power of attorney">LPA</abbr> after {{ lpa_date(expires) }}
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p class="govuk-body">You can see an online summary of this <abbr title="lasting power of attorney">LPA</abbr> until {{ lpa_date(expires) }}. After this date, the access code will expire.</p>
+                            <p class="govuk-body">Ask the donor or attorney for a new access code if your organisation:
+                                <ul class="list list-bullet">
+                                    <li>needs more time to process this LPA</li>
+                                    <li>need to see this LPA at a later date</li>
+                                </ul>
+                            </p>
+                        </div>
+                    </details>
+
+                </div>
+            </div>
+
             <a href="{{ path('view-lpa') }}" role="button" draggable="false" class="govuk-button">
-                Continue
+                View this LPA
             </a>
 
             <p class="govuk-body">
-                <a class="govuk-link" href="{{ path('enter-code') }}">Re-enter the code</a>
+                <a class="govuk-link" href="{{ path('enter-code') }}">Try another access code</a>
             </p>
 
         </main>
