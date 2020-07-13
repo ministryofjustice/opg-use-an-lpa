@@ -25,7 +25,7 @@ resource "aws_route53_record" "public_facing_view_lasting_power_of_attorney" {
   # view-lasting-power-of-attorney.service.gov.uk
   provider = aws.management
   zone_id  = data.aws_route53_zone.live_service_view_lasting_power_of_attorney.zone_id
-  name     = "${local.dns_namespace_env}"
+  name     = "${local.dns_namespace_env}${data.aws_route53_zone.live_service_view_lasting_power_of_attorney.name}"
   type     = "A"
 
   alias {
@@ -74,7 +74,7 @@ resource "aws_route53_record" "public_facing_use_lasting_power_of_attorney" {
   # use-lasting-power-of-attorney.service.gov.uk
   provider = aws.management
   zone_id  = data.aws_route53_zone.live_service_use_lasting_power_of_attorney.zone_id
-  name     = "${local.dns_namespace_env}"
+  name     = "${local.dns_namespace_env}${data.aws_route53_zone.live_service_use_lasting_power_of_attorney.name}"
   type     = "A"
 
   alias {
