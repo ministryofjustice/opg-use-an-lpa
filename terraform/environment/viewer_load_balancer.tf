@@ -58,6 +58,11 @@ resource "aws_lb_listener" "viewer_loadbalancer" {
   }
 }
 
+resource "aws_lb_listener_certificate" "viewer_loadbalancer_live_service_certificate" {
+  listener_arn    = aws_lb_listener.viewer_loadbalancer.arn
+  certificate_arn = data.aws_acm_certificate.public_facing_certificate_view.arn
+}
+
 # maintenance site switching
 resource "aws_ssm_parameter" "viewer_maintenance_switch" {
   name            = "${local.environment}_viewer_enable_maintenance"
