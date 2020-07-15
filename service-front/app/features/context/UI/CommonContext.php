@@ -259,12 +259,24 @@ class CommonContext implements Context
     }
 
     /**
+     * @Given /^I am able to logine$/
+     */
+    public function iAmAbleToLogin()
+    {
+        $this->ui->assertPageAddress('/home');
+        $this->ui->selectOption('triageEntry', 'yes');
+        $this->ui->fillField('triageEntry', 'yes');
+        $this->ui->pressButton('Continue');
+        $this->ui->assertPageAddress('/login');
+        $this->ui->assertPageContainsText('Sign in to your Use a lasting power of attorney account');
+    }
+
+    /**
      * @Given /^I chose to ignore setting cookies and I am on the dashboard page$/
      */
     public function iChoseToIgnoreSettingCookiesAndIAmOnTheDashboardPage()
     {
-        $this->ui->clickLink("Sign in to your existing account");
-        $this->ui->visit('/login');
+        $this->iAmAbleToLogin();
 
         $userEmail = 'test@test.com';
         $password = 'pa33w0rd';
