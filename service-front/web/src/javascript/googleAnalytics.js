@@ -28,7 +28,9 @@ export default class GoogleAnalytics {
             'transport_type': 'beacon',
             'anonymize_ip': true, // https://developers.google.com/analytics/devguides/collection/gtagjs/ip-anonymization
             'allow_google_signals': false, // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
-            'allow_ad_personalization_signals': false // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
+            'allow_ad_personalization_signals': false, // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
+            'page_title' : document.title,
+            'page_path': `${location.protocol}//${location.host}${location.pathname}`
         });
         this._trackExternalLinks();
 

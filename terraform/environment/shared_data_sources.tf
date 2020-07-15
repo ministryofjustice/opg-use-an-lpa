@@ -34,6 +34,14 @@ data "aws_acm_certificate" "certificate_use" {
   domain = "${local.dev_wildcard}use.lastingpowerofattorney.opg.service.justice.gov.uk"
 }
 
+data "aws_acm_certificate" "public_facing_certificate_view" {
+  domain = "${local.dev_wildcard}view-lasting-power-of-attorney.service.gov.uk"
+}
+
+data "aws_acm_certificate" "public_facing_certificate_use" {
+  domain = "${local.dev_wildcard}use-lasting-power-of-attorney.service.gov.uk"
+}
+
 data "aws_kms_alias" "sessions_viewer" {
   name = "alias/sessions-viewer"
 }
