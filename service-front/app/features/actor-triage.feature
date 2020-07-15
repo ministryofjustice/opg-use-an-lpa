@@ -1,4 +1,4 @@
-@actor @TriageEntry
+@actor @triageEntry
 Feature: Triage
   As a new user
   I want to create an account
@@ -21,13 +21,13 @@ Feature: Triage
   @ui
   Scenario: The user can navigate back to triage page from login page
      Given I access the login form
-     When I click Back link on the page
+     When I click the Back link on the page
      Then I should be taken to the triage page
 
   @ui
   Scenario: The user can navigate back to triage page from account creation page
     Given I access the account creation page
-    When I click Back link on the page
+    When I click the Back link on the page
     Then I should be taken to the triage page
 
   @ui

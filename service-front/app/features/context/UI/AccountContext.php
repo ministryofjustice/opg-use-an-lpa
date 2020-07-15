@@ -2762,9 +2762,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I click (.*) link on the page$/
+     * @When /^I click the (.*) link on the page$/
      */
-    public function iClickBackLinkOnThePage($backLink)
+    public function iClickTheBackLinkOnThePage($backLink)
     {
         $this->ui->assertPageContainsText($backLink);
         $this->ui->clickLink($backLink);

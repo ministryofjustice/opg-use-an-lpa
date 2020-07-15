@@ -14,7 +14,7 @@ Feature: Account creation
 
   @ui
   Scenario: The user can follow their unique instructions to activate new account
-    And I have asked to create a new account
+    Given I have asked to create a new account
     When I follow the instructions on how to activate my account
     Then my account is activated
 
@@ -28,7 +28,7 @@ Feature: Account creation
   Scenario: The user account creates an account which already exists
     Given I am not a user of the lpa application
     And I want to create a new account
-    Given I access the account creation page
+    And I access the account creation page
     When I create an account using duplicate details
     Then I receive unique instructions on how to activate my account
 

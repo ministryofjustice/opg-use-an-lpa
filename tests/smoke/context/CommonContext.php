@@ -38,7 +38,7 @@ class CommonContext implements Context
     public function iAccessTheViewerServiceInsecurely(): void
     {
         $baseUrlHost = parse_url($this->ui->getMinkParameter('base_url'), PHP_URL_HOST);
-        $insecureUrl = sprintf('http://%s/', $baseUrlHost);
+        $insecureUrl = sprintf('http://%s/home', $baseUrlHost);
 
         $this->ui->visit($insecureUrl);
     }

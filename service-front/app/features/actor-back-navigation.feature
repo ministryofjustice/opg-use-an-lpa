@@ -9,7 +9,7 @@ Feature: Back navigation
     Given I access the login form
     And I have forgotten my password
     And I am on the password reset page
-    When I click Back link on the page
+    When I click the Back link on the page
     Then I should be taken to the <login> page
 
   @ui
@@ -18,7 +18,7 @@ Feature: Back navigation
     And I am currently signed in
     And I view my user details
     And I ask to change my password
-    When I click Back link on the page
+    When I click the Back link on the page
     Then I should be taken to the <your details> page
 
   @ui
@@ -27,7 +27,7 @@ Feature: Back navigation
     And I am currently signed in
     And I have been given access to use an LPA via credentials
     And I am on the add an LPA page
-    When I click Back link on the page
+    When I click the Back link on the page
     Then I should be taken to the <dashboard> page
 
   @ui
@@ -38,5 +38,5 @@ Feature: Back navigation
     And I am on the add an LPA page
     When I request to add an LPA with valid details using xyuphwqrechv which matches XYUPHWQRECHV
     And I am on the check LPA page
-    When I click Back link on the page
+    When I click the Back link on the page
     Then I should be taken to the <add a lpa> page
