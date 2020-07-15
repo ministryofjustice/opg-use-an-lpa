@@ -264,7 +264,7 @@ class CommonContext implements Context
     public function iChoseToIgnoreSettingCookiesAndIAmOnTheDashboardPage()
     {
         $this->ui->clickLink("Sign in to your existing account");
-        $this->ui->assertPageAddress('/login');
+        $this->ui->visit('/login');
 
         $userEmail = 'test@test.com';
         $password = 'pa33w0rd';

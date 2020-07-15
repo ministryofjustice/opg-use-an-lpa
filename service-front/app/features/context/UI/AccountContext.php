@@ -3423,8 +3423,8 @@ class AccountContext implements Context
 
         $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText('Use a lasting power of attorney');
-       // $this->ui->selectOption('triageEntry', 'yes');
-      //  $this->ui->fillField('triageEntry', 'yes');
+        $this->ui->selectOption('triageEntry', 'yes');
+        $this->ui->fillField('triageEntry', 'yes');
         $this->ui->pressButton('Continue');
     }
 
