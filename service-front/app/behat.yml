@@ -8,7 +8,7 @@ default:
       application: "%paths.base%/features/bootstrap/app.php"
       container: "%paths.base%/features/bootstrap/container.php"
     Behat\MinkExtension:
-      base_url: 'http://localhost/home'
+      base_url: 'http://localhost'
       psr: ~
 
 integration:
