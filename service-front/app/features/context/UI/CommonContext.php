@@ -38,7 +38,7 @@ class CommonContext implements Context
      */
     public function iAccessTheServiceHomepage(): void
     {
-        $this->ui->iAmOnHomepage();
+        $this->ui->visit('/home');
     }
 
     /**

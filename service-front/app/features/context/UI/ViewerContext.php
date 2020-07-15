@@ -89,7 +89,7 @@ class ViewerContext implements Context
      */
     public function iAccessTheViewerService()
     {
-        $this->ui->iAmOnHomepage();
+        $this->ui->visit('/home');
     }
 
     /**
@@ -542,5 +542,13 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/session-expired');
         $this->ui->assertPageContainsText('You\'ll have to start again');
+    }
+
+    /**
+     * @Given /^I am on the triage page$/
+     */
+    public function iAmOnTheTriagePage()
+    {
+        $this->ui->visit('/home');
     }
 }

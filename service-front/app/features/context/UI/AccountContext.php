@@ -2277,7 +2277,7 @@ class AccountContext implements Context
      */
     public function iAmOnTheTriagePage()
     {
-        $this->ui->iAmOnHomepage();
+        $this->ui->visit('/home');
     }
 
 //    /**
