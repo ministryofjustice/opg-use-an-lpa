@@ -46,8 +46,7 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         UrlValidityCheckService $urlValidityCheckService
-    )
-    {
+    ) {
         parent::__construct($renderer, $urlHelper);
         $this->urlValidityCheckService = $urlValidityCheckService;
     }
@@ -88,7 +87,9 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         $cookies = $request->getCookieParams();
         $form->setData($request->getParsedBody());
 
-        $response = new RedirectResponse($form->get('referer')->getValue());
+        $response = new RedirectResponse(
+            $this->urlValidityCheckService->setValidReferer($form->get('referer')->getValue())
+        );
 
         if (array_key_exists(self::COOKIE_POLICY_NAME, $cookies)) {
             try {
@@ -98,14 +99,16 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
             }
 
             $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes' ? true : false;
-            $response = FigResponseCookies::set($response,
+            $response = FigResponseCookies::set(
+                $response,
                 SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))
                     ->withHttpOnly(false)
                     ->withExpires(new \DateTime('+365 days'))
                     ->withPath('/')
             );
 
-            $response = FigResponseCookies::set($response,
+            $response = FigResponseCookies::set(
+                $response,
                 SetCookie::create(self::SEEN_COOKIE_NAME, "true")
                     ->withHttpOnly(false)
                     ->withExpires(new \DateTime('+30 days'))
