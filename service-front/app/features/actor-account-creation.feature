@@ -8,12 +8,13 @@ Feature: Account creation
   Scenario: As a new user want to create an account
     Given I am not a user of the lpa application
     And I want to create a new account
+    And I access the account creation page
     When I create an account
     Then I receive unique instructions on how to activate my account
 
   @ui
   Scenario: The user can follow their unique instructions to activate new account
-    Given I have asked to create a new account
+    And I have asked to create a new account
     When I follow the instructions on how to activate my account
     Then my account is activated
 
@@ -27,6 +28,7 @@ Feature: Account creation
   Scenario: The user account creates an account which already exists
     Given I am not a user of the lpa application
     And I want to create a new account
+    Given I access the account creation page
     When I create an account using duplicate details
     Then I receive unique instructions on how to activate my account
 
@@ -34,6 +36,7 @@ Feature: Account creation
   Scenario Outline: As a new user I want to be shown the mistakes I make while creating an account
     Given I am not a user of the lpa application
     And I want to create a new account
+    And I access the account creation page
     When I have provided required information for account creation such as <email1> <password1> <password2> <terms>
     Then I should be told my account could not be created due to <reasons>
     Examples:
@@ -49,6 +52,7 @@ Feature: Account creation
   Scenario Outline: As a new user I want to be shown the mistakes I make while creating an account
     Given I am not a user of the lpa application
     And I want to create a new account
+    And I access the account creation page
     When Creating account I provide mismatching <password> <confirm_password>
     Then I should be told my account could not be created due to <reasons>
 
@@ -62,6 +66,7 @@ Feature: Account creation
   Scenario Outline: As a new user I want to be allowed email entry in uppercase format when creating an account
     Given I am not a user of the lpa application
     And I want to create a new account
+    And I access the account creation page
     When I have provided required information for account creation such as <email1> <password1> <password2> <terms>
     Then An account is created using <email1> <password1> <password2> <terms>
 
@@ -75,5 +80,6 @@ Feature: Account creation
   Scenario: The user account cannot create an account with an email address that has been requested for reset
     Given I am not a user of the lpa application
     And I want to create a new account
+    And I access the account creation page
     When I create an account using with an email address that has been requested for reset
     Then I am informed that there was a problem with that email address

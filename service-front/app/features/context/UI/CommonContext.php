@@ -154,7 +154,6 @@ class CommonContext implements Context
     public function iAmOnTheCookiePreferencesPage()
     {
         $this->ui->assertPageAddress('/cookies');
-        $this->ui->assertPageContainsText("Cookie settings");
     }
 
     /**

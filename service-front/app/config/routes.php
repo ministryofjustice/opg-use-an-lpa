@@ -50,10 +50,9 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-    $app->get('/', Actor\Handler\HomePageHandler::class, 'home');
-    //User triage
-    $app->route('/triage', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'actor-triage');
-    $app->get('/start', Actor\Handler\StartPageHandler::class, 'start');
+    //$app->route('/', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'actor-triage');
+    $app->route('/', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home');
+
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
 

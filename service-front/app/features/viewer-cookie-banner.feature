@@ -30,23 +30,23 @@ Feature: Cookie consent
     And I click on Set cookie preferences button
     Then I am on the cookie preferences page
 
-  @ui
-  Scenario Outline: Save changes option in cookie preferences page
-    Given I have seen the cookie banner
-    And I click on Set cookie preferences button
-    When I am on the cookie preferences page
-    Then I see options to Use cookies that measure my website use and Do not use cookies that measure my website use
-    And And I choose an <option> and save my choice
-    Then I should be on the home page of the service
-    And I should not see a cookie banner
+#  @ui
+#  Scenario Outline: Save changes option in cookie preferences page
+#    Given I have seen the cookie banner
+#    And I click on Set cookie preferences button
+#    When I am on the cookie preferences page
+#    Then I see options to Use cookies that measure my website use and Do not use cookies that measure my website use
+#    And And I choose an <option> and save my choice
+#    Then I should be on the home page of the service
+#    And I should not see a cookie banner
+#
+#    Examples:
+#      |option|
+#      |Use cookies that measure my website use        |
+#      |Do not use cookies that measure my website use |
 
-    Examples:
-      |option|
-      |Use cookies that measure my website use        |
-      |Do not use cookies that measure my website use |
-
-  @ui
-  Scenario: Check cookie-seen-policy set
-    Given I have seen the cookie banner
-    And I set my cookie preferences
-    Then I have a cookie named "seen_cookie_message"
+#  @ui
+#  Scenario: Check cookie-seen-policy set
+#    Given I have seen the cookie banner
+#    And I set my cookie preferences
+#    Then I have a cookie named "seen_cookie_message"
