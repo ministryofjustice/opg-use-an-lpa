@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "0.0.18-alpha",
+    "@ministryofjustice/opg-performance-analytics": "^1.1.0",
     "govuk-frontend": "^3.6.0"
   },
   "jest-junit": {
