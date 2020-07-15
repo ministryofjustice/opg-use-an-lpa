@@ -133,10 +133,6 @@ class AccountContext implements Context
         $this->userPassword = 'pa33w0rd';
         $this->userActive = true;
         $this->userId = '123';
-
-       // $this->iAccessTheLoginForm();
-
-       // $this->ui->clickLink('Sign in');
     }
 
     /**
@@ -2013,8 +2009,6 @@ class AccountContext implements Context
         $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
     }
 
-
-
     /**
      * @When /^I hack the CSRF value with '(.*)'$/
      */
@@ -2246,23 +2240,6 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/terms-of-use');
     }
-
-//    /**
-//     * @Given /^I am on the index page$/
-//     */
-//    public function iAmOnTheIndexPage()
-//    {
-//        $this->ui->visit('/');
-//        $this->ui->assertPageContainsText('Use a lasting power of attorney');
-//    }
-
-//    /**
-//     * @When /^I request to get started with the service$/
-//     */
-//    public function iRequestToGetStartedWithTheService()
-//    {
-//        $this->ui->clickLink('Get started');
-//    }
 
     /**
      * @Then /^I am taken to the triage page of the service$/
@@ -2768,16 +2745,12 @@ class AccountContext implements Context
         $this->ui->assertResponseStatus(404);
     }
 
-//    REMOVE
     /**
      * @When /^I access the use a lasting power of attorney web page$/
      */
     public function iAccessTheUseALastingPowerOfAttorneyWebPage()
     {
         $this->iAmOnTheTriagePage();
-//        $this->ui->assertPageContainsText('Use a lasting power of attorney');
-//
-//        $this->ui->clickLink('Get started');
     }
 
     /**
@@ -3243,8 +3216,6 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->assertPageContainsText($message);
     }
-
-    //I can see <Read more> link along with the instructions or preference message
 
     /**
      * @Then /^I can see (.*) link along with the instructions or preference message$/

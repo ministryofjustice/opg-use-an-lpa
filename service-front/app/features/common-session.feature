@@ -4,7 +4,7 @@ Feature: Session length is independent of cookie lifetime
   I should be warned of potential or actual session expiry
   Which requires a session length independent of cookie lifetime
 
-  @ui @viewer
+  @ui @actor @viewer
   Scenario: A user session is created when accessing the application
     When I access the service homepage
     Then I am given a session cookie
