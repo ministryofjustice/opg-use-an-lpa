@@ -58,6 +58,11 @@ resource "aws_lb_listener" "actor_loadbalancer" {
   }
 }
 
+resource "aws_lb_listener_certificate" "actor_loadbalancer_live_service_certificate" {
+  listener_arn    = aws_lb_listener.actor_loadbalancer.arn
+  certificate_arn = data.aws_acm_certificate.public_facing_certificate_use.arn
+}
+
 # maintenance site switching
 resource "aws_ssm_parameter" "actor_maintenance_switch" {
   name            = "${local.environment}_actor_enable_maintenance"

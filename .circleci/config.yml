@@ -92,8 +92,8 @@ workflows:
               ]
 
             # Provision and test development
-        - use-my-lpa/apply_shared_terraform:
-            name: dev_apply_shared_terraform
+        - use-my-lpa/plan_shared_terraform:
+            name: dev_plan_shared_terraform
             filters: { branches: { ignore: [master] } }
             requires: [lint_terraform_pr_build]
 
@@ -102,7 +102,7 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires:
               [
-                dev_apply_shared_terraform,
+                dev_plan_shared_terraform,
                 app_front_build_pr_build,
                 web_front_build_pr_build,
                 web_api_build_pr_build,
@@ -197,9 +197,18 @@ workflows:
 
         # Provision and test preproduction
         - use-my-lpa/apply_shared_terraform:
+            name: dev_apply_shared_terraform
+            workspace: development
+            filters: { branches: { only: [master] } }
+
+        - use-my-lpa/apply_shared_terraform:
             name: preprod_apply_shared_terraform
             workspace: preproduction
             filters: { branches: { only: [master] } }
+            requires:
+              [
+                dev_apply_shared_terraform,
+              ]
 
         - use-my-lpa/apply_environment_terraform:
             name: preprod_apply_environment_terraform
@@ -775,6 +784,28 @@ orbs:
                 echo $IMAGE_TAG
                 terraform validate -var container_version=${IMAGE_TAG}
 
+      plan_shared_terraform:
+        #
+        # Plan the shared terraform configuration. This:
+        #   - Updates the shared infrastructure;
+        #
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
+        steps:
+          - checkout
+          - run:
+              name: Plan Shared Terraform
+              command: |
+                cd ~/project/terraform/account
+                terraform init -lock-timeout=300s
+                terraform plan -lock-timeout=300s
+
       apply_shared_terraform:
         #
         # Apply the shared terraform configuration. This:
@@ -978,13 +1009,11 @@ jobs:
       - run:
           name: Get URLs
           command: |
-            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
-            echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
-            echo 'export COMMIT_MESSAGE="$(git log -1 --pretty=%B)"' >> $BASH_ENV
+            ~/project/scripts/pipeline/set_environment_variables/set_slack_message_values.sh >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Development Environment Ready"
           color: "#9933ff"
-          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
+          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN \npublic facing view url: https://$PUBLIC_FACING_VIEW_DOMAIN \npublic facing use url: https://$PUBLIC_FACING_USE_DOMAIN"
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
 
   slack_notify_production_release:
@@ -997,13 +1026,11 @@ jobs:
       - run:
           name: Get URLs
           command: |
-            echo 'export VIEW_DOMAIN="$(jq -r .viewer_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
-            echo 'export USE_DOMAIN="$(jq -r .actor_fqdn /tmp/cluster_config.json)"' >> $BASH_ENV
-            echo 'export COMMIT_MESSAGE="$(git log -1 --pretty=%B)"' >> $BASH_ENV
+            ~/project/scripts/pipeline/set_environment_variables/set_slack_message_values.sh >> $BASH_ENV
       - slack/notify:
           title: "Use a Lasting Power of Attorney Production Release Successful"
           color: "#9933ff"
-          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN"
+          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN \nuse url: https://$USE_DOMAIN \npublic facing view url: https://$PUBLIC_FACING_VIEW_DOMAIN \npublic facing use url: https://$PUBLIC_FACING_USE_DOMAIN"
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
 
