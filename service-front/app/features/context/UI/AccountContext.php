@@ -2280,15 +2280,6 @@ class AccountContext implements Context
         $this->ui->visit('/home');
     }
 
-//    /**
-//     * @Given /^I am on the get started page$/
-//     */
-//    public function iAmOnTheGetStartedPage()
-//    {
-//        $this->ui->visit('/start');
-//        $this->ui->assertPageContainsText('Get started');
-//    }
-
     /**
      * @When /^I request to create an account$/
      */
@@ -3434,7 +3425,7 @@ class AccountContext implements Context
     public function iSelectTheOptionToCreateNewAccount()
     {
         $this->ui->assertPageAddress('/home');
-        $this->ui->fillField('triageEntry-2', 'no');
+        $this->ui->fillField('triageEntry', 'no');
         $this->ui->pressButton('Continue');
     }
 
@@ -3444,7 +3435,6 @@ class AccountContext implements Context
     public function iDoNotProvideAnyOptionsAndContinue()
     {
         $this->ui->assertPageAddress('/home');
-        $this->ui->fillField('triageEntry', '');
         $this->ui->pressButton('Continue');
     }
 
@@ -3463,7 +3453,7 @@ class AccountContext implements Context
     public function iAmAllowedToCreateAnAccount()
     {
         $this->ui->assertPageAddress('/create-account');
-        $this->ui->assertPageContainsText('Sign in to your Use a lasting power of attorney account');
+        $this->ui->assertPageContainsText('Create an account');
     }
 
     /**
