@@ -194,7 +194,7 @@ class CommonContext implements Context
      */
     public function iShouldBeOnTheHomePageOfTheService()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
     }
 
     /**
@@ -202,7 +202,7 @@ class CommonContext implements Context
      */
     public function iShouldNotSeeACookieBanner()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
         $cookieBannerDisplay = $this->ui->getSession()->getPage()->find('css', '.cookie-banner--show');
         if ($cookieBannerDisplay === null) {
             $this->ui->assertResponseNotContains('cookie-banner--show');
@@ -224,7 +224,7 @@ class CommonContext implements Context
      */
     public function iHaveACookieNamedSeenCookieMessage()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
 
         $session = $this->ui->getSession();
 
