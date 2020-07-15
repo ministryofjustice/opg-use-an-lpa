@@ -96,9 +96,11 @@
                 <label class="govuk-label govuk-radios__label" for="{{ element.getName() }}-{{ loop.index }}">
                     {{ option.label }}
                 </label>
-                <span id="{{ element.getName() }}-{{ loop.index }}" class="govuk-hint govuk-radios__hint">
-                    {{ option.hint }}
-                </span>
+                {% if option.hint is defined %}
+                    <span id="{{ element.getName() }}-{{ loop.index }}" class="govuk-hint govuk-radios__hint">
+                        {{ option.hint }}
+                    </span>
+                {% endif %}
             </div>
         {% endfor %}
     </div>

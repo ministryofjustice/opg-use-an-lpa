@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Actor\Form;
 
-use Application\Form\AbstractCsrfForm;
 use Common\Form\AbstractForm;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -13,12 +12,6 @@ use Laminas\Validator\NotEmpty;
 class Triage extends AbstractForm implements InputFilterProviderInterface
 {
     const FORM_NAME = 'triage';
-
-    /**
-     * Error codes
-     * @const string
-     */
-    const INVALID_LOGIN = 'invalidLogin';
 
     /**
      * LpaAdd constructor.
