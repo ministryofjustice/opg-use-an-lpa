@@ -2269,7 +2269,7 @@ class AccountContext implements Context
      */
     public function iAmTakenToTheTriagePage()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
     }
 
     /**
@@ -2277,7 +2277,7 @@ class AccountContext implements Context
      */
     public function iAmOnTheTriagePage()
     {
-        $this->ui->visit('/');
+        $this->ui->iAmOnHomepage();
     }
 
 //    /**
@@ -2517,7 +2517,7 @@ class AccountContext implements Context
      */
     public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
     }
 
     /**
@@ -2812,7 +2812,7 @@ class AccountContext implements Context
     public function iShouldBeTakenToThePreviousPage($page)
     {
         if ($page == 'triage') {
-            $this->ui->assertPageAddress('/');
+            $this->ui->assertPageAddress('/home');
         } elseif ($page == 'login') {
             $this->ui->assertPageAddress('/login');
         } elseif ($page == 'dashboard') {
@@ -3420,11 +3420,11 @@ class AccountContext implements Context
      */
     public function iSelectTheOptionToSignInToMyExistingAccount()
     {
-        $this->ui->visit('/');
-        $this->ui->assertPageAddress('/');
+
+        $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText('Use a lasting power of attorney');
-        $this->ui->selectOption('triageEntry', 'yes');
-        //$this->ui->fillField('triageEntry', 'yes');
+       // $this->ui->selectOption('triageEntry', 'yes');
+      //  $this->ui->fillField('triageEntry', 'yes');
         $this->ui->pressButton('Continue');
     }
 
@@ -3433,7 +3433,7 @@ class AccountContext implements Context
      */
     public function iSelectTheOptionToCreateNewAccount()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
         $this->ui->fillField('triageEntry-2', 'no');
         $this->ui->pressButton('Continue');
     }
@@ -3443,7 +3443,7 @@ class AccountContext implements Context
      */
     public function iDoNotProvideAnyOptionsAndContinue()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
         $this->ui->fillField('triageEntry', '');
         $this->ui->pressButton('Continue');
     }
@@ -3453,7 +3453,7 @@ class AccountContext implements Context
      */
     public function iAmNotAllowedToProgress()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText('Select yes if you have a Use a lasting power of attorney account');
     }
 
