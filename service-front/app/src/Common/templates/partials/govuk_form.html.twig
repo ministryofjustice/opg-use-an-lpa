@@ -89,7 +89,7 @@
 {%- endblock form_input_checkbox -%}
 
 {%- block form_input_radio -%}
-    <div class="govuk-radios govuk-radios--conditional  {% if fieldset.getMessages() is not empty %}govuk-form-group--error{% endif %}">
+    <div class="govuk-form-group {% if element.getMessages() is not empty %}govuk-form-group--error{% endif %}">
 {#{{- block('form_group_error_class') -}}">#}
         {%  for option in value_options %}
             <div class="govuk-radios__item">
@@ -97,9 +97,11 @@
                 <label class="govuk-label govuk-radios__label" for="{{ element.getName() }}-{{ loop.index }}">
                     {{ option.label }}
                 </label>
-                <span id="{{ element.getName() }}-{{ loop.index }}" class="govuk-hint govuk-radios__hint">
-                    {{ option.hint }}
-                </span>
+                {% if option.hint is defined %}
+                    <span id="{{ element.getName() }}-{{ loop.index }}" class="govuk-hint govuk-radios__hint">
+                        {{ option.hint }}
+                    </span>
+                {% endif %}
             </div>
         {% endfor %}
     </div>
