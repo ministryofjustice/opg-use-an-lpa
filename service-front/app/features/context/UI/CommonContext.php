@@ -118,7 +118,7 @@ class CommonContext implements Context
     */
     public function iCanSeeACookieConsentBanner()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText('Tell us whether you accept cookies');
     }
 
@@ -127,7 +127,7 @@ class CommonContext implements Context
      */
     public function iSeeAcceptAllCookiesAndSetCookiePreferencesButton($button1, $button2)
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText($button1);
         $this->ui->assertPageContainsText($button2);
         $this->ui->assertElementContainsText('button[name=accept-all-cookies]', 'Accept all cookies');
