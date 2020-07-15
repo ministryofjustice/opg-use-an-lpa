@@ -1,14 +1,16 @@
-#@actor @TriageEntry
-Feature: Triage
-  As a new user
-  I want to create an account
-  So that I can login to add my lpas to share
-
-  @ui @actor @TriageEntry
-  Scenario: The user can login directly when they say they have an existing account
-    Given I am on the triage page
-    When I select the option to sign in to my existing account
-    Then I am allowed to login
+##@actor @TriageEntry
+#Feature: Triage
+#  As a new user
+#  I want to create an account
+#  So that I can login to add my lpas to share
+#
+#  @ui @actor @TriageEntry
+#  Scenario: The user can login directly when they say they have an existing account
+#    Given I am a user of the lpa application
+#    And I want to use my lasting power of attorney
+#    And I am on the triage page
+#    When I select the option to sign in to my existing account
+#    Then I am allowed to login
 #
 #  @ui
 #  Scenario: The user can create new account page when they say they do not have an existing account

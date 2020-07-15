@@ -90,7 +90,6 @@
 
 {%- block form_input_radio -%}
     <div class="govuk-form-group {% if element.getMessages() is not empty %}govuk-form-group--error{% endif %}">
-{#{{- block('form_group_error_class') -}}">#}
         {%  for option in value_options %}
             <div class="govuk-radios__item">
                 <input class="govuk-radios__input" id="{{ element.getName() }}-{{ loop.index }}" name="{{ element.getName() }}" type="radio" value="{{ option.value }}" {% if option.value == element.getValue() %}checked="checked"{% endif %} >
