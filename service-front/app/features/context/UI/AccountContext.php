@@ -2202,7 +2202,7 @@ class AccountContext implements Context
      */
     public function iCanSeeTheActorTermsOfUse()
     {
-        $this->ui->assertPageAddress('/lpa/terms-of-use');
+        $this->ui->assertPageAddress('/terms-of-use');
         $this->ui->assertPageContainsText('Terms of use');
         $this->ui->assertPageContainsText('The service is for donors and attorneys on an LPA.');
     }
@@ -2211,7 +2211,7 @@ class AccountContext implements Context
      */
     public function iCanSeeTheActorPrivacyNotice()
     {
-        $this->ui->assertPageAddress('/lpa/privacy-notice');
+        $this->ui->assertPageAddress('/privacy-notice');
         $this->ui->assertPageContainsText('Privacy notice');
     }
     /**
@@ -2219,16 +2219,16 @@ class AccountContext implements Context
      */
     public function iAmOnTheActorTermsOfUsePage()
     {
-        $this->ui->visit('/lpa/terms-of-use');
-        $this->ui->assertPageAddress('/lpa/terms-of-use');
+        $this->ui->visit('/terms-of-use');
+        $this->ui->assertPageAddress('/terms-of-use');
     }
     /**
      * @Given /^I am on the actor privacy notice page$/
      */
     public function iAmOnTheActorPrivacyNoticePage()
     {
-        $this->ui->visit('/lpa/privacy-notice');
-        $this->ui->assertPageAddress('/lpa/privacy-notice');
+        $this->ui->visit('/privacy-notice');
+        $this->ui->assertPageAddress('/privacy-notice');
     }
 
     /**
@@ -2253,7 +2253,7 @@ class AccountContext implements Context
      */
     public function iAmTakenBackToTheTermsOfUsePage()
     {
-        $this->ui->assertPageAddress('/lpa/terms-of-use');
+        $this->ui->assertPageAddress('/terms-of-use');
     }
 
     /**
