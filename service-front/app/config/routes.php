@@ -35,8 +35,10 @@ use Mezzio\MiddlewareFactory;
  */
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
+
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->route('/home', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home');
+    $app->route('/', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home-trial');
     $app->get('/check-code', Viewer\Handler\CheckCodeHandler::class, 'check-code');
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
     $app->get('/download-lpa', Viewer\Handler\DownloadLpaHandler::class, 'download-lpa');
@@ -49,6 +51,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->route('/home', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home');
+    $app->route('/', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home-trial');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'actor-cookies');
