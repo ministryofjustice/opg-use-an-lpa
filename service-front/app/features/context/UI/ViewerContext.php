@@ -89,9 +89,7 @@ class ViewerContext implements Context
      */
     public function iAccessTheViewerService()
     {
-        $this->ui->iAmOnHomepage();
-        $this->ui->assertElementContainsText('a[name=viewer-start]', 'Start');
-        $this->ui->clickLink('Start');
+        $this->ui->visit('/home');
     }
 
     /**
@@ -110,7 +108,7 @@ class ViewerContext implements Context
     {
         $this->lpaData['status'] = 'Registered';
 
-        $this->ui->assertPageAddress('/enter-code');
+        $this->ui->assertPageAddress('/home');
 
         // API call for lpa summary check
         $this->apiFixtures->post('/v1/viewer-codes/summary')
@@ -157,7 +155,7 @@ class ViewerContext implements Context
                 assertEquals($params['code'], $this->lpaStoredCode);
             });
 
-        $this->ui->clickLink('Continue');
+        $this->ui->clickLink('View this LPA');
     }
 
     /**
@@ -243,8 +241,8 @@ class ViewerContext implements Context
      */
     public function iAmOnTheEnterCodePage()
     {
-        $this->ui->visit('/enter-code');
-        $this->ui->assertPageAddress('/enter-code');
+        $this->ui->visit('/home');
+        $this->ui->assertPageAddress('/home');
     }
 
     /**
@@ -272,7 +270,7 @@ class ViewerContext implements Context
      */
     public function iAmToldThatMyInputIsInvalidBecause($reason)
     {
-        $this->ui->assertPageAddress('/enter-code');
+        $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText($reason);
     }
 
@@ -282,7 +280,7 @@ class ViewerContext implements Context
     public function iGiveAShareCodeThatHasGotExpired()
     {
         $this->lpaData['status'] = 'Expired';
-        $this->ui->assertPageAddress('/enter-code');
+        $this->ui->assertPageAddress('/home');
 
         $this->apiFixtures->post('/v1/viewer-codes/summary')
             ->respondWith(new Response(StatusCodeInterface::STATUS_GONE, [], json_encode([
@@ -302,7 +300,7 @@ class ViewerContext implements Context
     public function iGiveAShareCodeThatsBeenCancelled()
     {
         $this->lpaData['status'] = 'Cancelled';
-        $this->ui->assertPageAddress('/enter-code');
+        $this->ui->assertPageAddress('/home');
 
         $this->apiFixtures->post('/v1/viewer-codes/summary')
             ->respondWith(new Response(StatusCodeInterface::STATUS_GONE, [], json_encode([
@@ -321,7 +319,7 @@ class ViewerContext implements Context
      */
     public function iGiveAnInvalidShareCodeAndSurname($shareCode, $surname)
     {
-        $this->ui->assertPageAddress('/enter-code');
+        $this->ui->assertPageAddress('/home');
 
         // API call for lpa summary check
         $data = $this->apiFixtures->post('/v1/viewer-codes/summary')
@@ -370,7 +368,7 @@ class ViewerContext implements Context
      */
     public function iWantToSeePageToEnterAnotherShareCode()
     {
-        $this->ui->assertPageAddress('/enter-code');
+        $this->ui->assertPageAddress('/home');
     }
 
     /**
@@ -460,7 +458,7 @@ class ViewerContext implements Context
      */
     public function iAmTakenBackToTheEnterCodePage()
     {
-        $this->ui->assertPageAddress('/enter-code');
+        $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText('Enter the LPA access code');
     }
 
@@ -478,7 +476,7 @@ class ViewerContext implements Context
     public function iRealiseTheLPAIsCorrect()
     {
         $this->ui->assertPageAddress('/check-code');
-        $this->ui->assertPageContainsText('Re-enter the code');
+        $this->ui->assertPageContainsText('Try another access code');
     }
 
     /**
@@ -486,7 +484,7 @@ class ViewerContext implements Context
      */
     public function iWantToSeeAnOptionToReEnterCode()
     {
-        $this->ui->clickLink('Re-enter the code');
+        $this->ui->clickLink('Try another access code');
         $this->iGiveAValidLPAShareCode();
     }
 
@@ -544,5 +542,13 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/session-expired');
         $this->ui->assertPageContainsText('You\'ll have to start again');
+    }
+
+    /**
+     * @Given /^I am on the triage page$/
+     */
+    public function iAmOnTheTriagePage()
+    {
+        $this->ui->visit('/home');
     }
 }

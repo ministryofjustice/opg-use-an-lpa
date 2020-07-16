@@ -32,10 +32,7 @@ class ViewerContext implements Context
      */
     public function iGiveAValidLpaShareCode(): void
     {
-        $this->ui->assertHomepage();
-
-        $this->ui->clickLink('Start');
-
+        $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText('Enter the LPA access code');
 
         $this->ui->fillField('donor_surname', $this->donorSurname);
@@ -50,10 +47,10 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/check-code');
 
-        $this->ui->assertPageContainsText('Is this the LPA you want to view?');
+        $this->ui->assertPageContainsText('We’ve found this LPA');
         $this->ui->assertPageContainsText('Babara Gilson');
 
-        $this->ui->clickLink('Continue');
+        $this->ui->clickLink('View this LPA');
     }
 
     /**
