@@ -38,7 +38,7 @@ class CommonContext implements Context
      */
     public function iAccessTheServiceHomepage(): void
     {
-        $this->ui->iAmOnHomepage();
+        $this->ui->visit('/home');
     }
 
     /**
@@ -118,7 +118,7 @@ class CommonContext implements Context
     */
     public function iCanSeeACookieConsentBanner()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText('Tell us whether you accept cookies');
     }
 
@@ -127,7 +127,7 @@ class CommonContext implements Context
      */
     public function iSeeAcceptAllCookiesAndSetCookiePreferencesButton($button1, $button2)
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText($button1);
         $this->ui->assertPageContainsText($button2);
         $this->ui->assertElementContainsText('button[name=accept-all-cookies]', 'Accept all cookies');
@@ -154,7 +154,6 @@ class CommonContext implements Context
     public function iAmOnTheCookiePreferencesPage()
     {
         $this->ui->assertPageAddress('/cookies');
-        $this->ui->assertPageContainsText("Cookie settings");
     }
 
     /**
@@ -195,7 +194,7 @@ class CommonContext implements Context
      */
     public function iShouldBeOnTheHomePageOfTheService()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
     }
 
     /**
@@ -203,7 +202,7 @@ class CommonContext implements Context
      */
     public function iShouldNotSeeACookieBanner()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
         $cookieBannerDisplay = $this->ui->getSession()->getPage()->find('css', '.cookie-banner--show');
         if ($cookieBannerDisplay === null) {
             $this->ui->assertResponseNotContains('cookie-banner--show');
@@ -225,7 +224,7 @@ class CommonContext implements Context
      */
     public function iHaveACookieNamedSeenCookieMessage()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
 
         $session = $this->ui->getSession();
 
@@ -260,12 +259,23 @@ class CommonContext implements Context
     }
 
     /**
+     * @Given /^I am able to logine$/
+     */
+    public function iAmAbleToLogin()
+    {
+        $this->ui->assertPageAddress('/home');
+        $this->ui->fillField('triageEntry', 'yes');
+        $this->ui->pressButton('Continue');
+        $this->ui->assertPageAddress('/login');
+        $this->ui->assertPageContainsText('Sign in to your Use a lasting power of attorney account');
+    }
+
+    /**
      * @Given /^I chose to ignore setting cookies and I am on the dashboard page$/
      */
     public function iChoseToIgnoreSettingCookiesAndIAmOnTheDashboardPage()
     {
-        $this->ui->clickLink("Sign in to your existing account");
-        $this->ui->assertPageAddress('/login');
+        $this->iAmAbleToLogin();
 
         $userEmail = 'test@test.com';
         $password = 'pa33w0rd';
