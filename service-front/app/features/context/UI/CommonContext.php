@@ -264,7 +264,6 @@ class CommonContext implements Context
     public function iAmAbleToLogin()
     {
         $this->ui->assertPageAddress('/home');
-        $this->ui->selectOption('triageEntry', 'yes');
         $this->ui->fillField('triageEntry', 'yes');
         $this->ui->pressButton('Continue');
         $this->ui->assertPageAddress('/login');
