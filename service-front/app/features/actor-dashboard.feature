@@ -50,5 +50,5 @@ Feature: The user is able to see correct information on their dashboard
   Scenario: Check back function on instructions and preferences page
     Given I have added an LPA to my account
     When I am on the instructions and preferences page
-    And I click Back to your LPAs link on the page
+    And I click the Back to your LPAs link on the page
     Then I should be taken to the <dashboard> page

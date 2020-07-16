@@ -11,6 +11,7 @@ use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;

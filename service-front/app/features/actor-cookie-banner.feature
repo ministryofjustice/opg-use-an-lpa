@@ -57,10 +57,3 @@ Feature: Cookie consent
     And I chose to ignore setting cookies and I am on the dashboard page
     When I set my cookie preferences
     Then I am taken back to the dashboard page
-
-
-
-
-
-
-
