@@ -84,31 +84,18 @@ workflows:
         #         test_pdf_pr_build,
         #       ]
 
-            # Provision and test development
-        - use-my-lpa/plan_shared_terraform:
-            name: dev_plan_shared_terraform
-            filters: { branches: { ignore: [master] } }
-            requires: [lint_terraform_pr_build]
-
-        - use-my-lpa/apply_environment_terraform:
-            name: dev_apply_environment_terraform
-            filters: { branches: { ignore: [master] } }
-            requires:
-              [
-                dev_plan_shared_terraform,
-                app_front_build_pr_build,
-                web_front_build_pr_build,
-                web_api_build_pr_build,
-                app_api_build_pr_build,
-                pdf_build_pr_build,
-              ]
+        #     # Provision and test development
+        # - use-my-lpa/plan_shared_terraform:
+        #     name: dev_plan_shared_terraform
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [lint_terraform_pr_build]
 
         # - use-my-lpa/apply_environment_terraform:
         #     name: dev_apply_environment_terraform
         #     filters: { branches: { ignore: [master] } }
         #     requires:
         #       [
-        #         dev_apply_shared_terraform,
+        #         dev_plan_shared_terraform,
         #         app_front_build_pr_build,
         #         web_front_build_pr_build,
         #         web_api_build_pr_build,

@@ -10,9 +10,10 @@ function get_workflow_ids() {
   ${CURL_COMMAND} "https://circleci.com/api/v2/pipeline/${pipeline_id}/workflow" | jq -r '.items[].id'
 }
 
-function check_for_terraform_jobs_running() {
+function check_for_jobs_running_with_name_match() {
   workflow_id=$1
-  ${CURL_COMMAND} "https://circleci.com/api/v2/workflow/${workflow_id}/job" | jq -e '.items[] | select((.name | contains("terraform")) and (.["status"] == "running")) | any // empty'
+  job_name_match=$2
+  ${CURL_COMMAND} "https://circleci.com/api/v2/workflow/${workflow_id}/job" | jq -e '.items[] | select((.name | contains("${job_name_match}")) and (.["status"] == "running")) | any // empty'
 }
 
 function get_workflow() {
@@ -60,7 +61,7 @@ for PIPELINE_ID in ${PIPELINE_IDS}
 
     if [ "$WORKFLOW_NAME" == "pr_build" ] && [ "$WORKFLOW_STATUS" == "success" ]; then
       echo "Checking for running terraform jobs on workflow ${WORKFLOW_ID}"
-      if $(check_for_terraform_jobs_running ${WORKFLOW_ID}); then
+      if $(check_for_jobs_running_with_name_match ${WORKFLOW_ID} terraform); then
           echo "terraform jobs are running, waiting instead"
       else
           echo "no terraform jobs are running, cancelling workflow"
