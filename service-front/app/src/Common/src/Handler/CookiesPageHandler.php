@@ -12,9 +12,6 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
-use Mezzio\Router\Route;
-use Mezzio\Router\RouteCollector;
-use Mezzio\Router\RouteResult;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
@@ -49,8 +46,7 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         UrlValidityCheckService $urlValidityCheckService
-    )
-    {
+    ) {
         parent::__construct($renderer, $urlHelper);
         $this->urlValidityCheckService = $urlValidityCheckService;
     }
@@ -71,21 +67,16 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
             $usageCookies = $cookiePolicy['usage'] === true ? 'yes' : 'no';
         }
         $form->get('usageCookies')->setValue($usageCookies);
-        $form->get('referer')->setValue(null);
 
-        $cookiesPageReferer = $request->getHeaders()['referer'];
+        $cookiesPageReferer = $request->getHeaders()['referer'][0];
 
-        if (!empty($cookiesPageReferer)) {
-            $validUrl = $this->urlValidityCheckService->isValid($cookiesPageReferer[0]);
-
-            $form->get('referer')->setValue($validUrl ? $cookiesPageReferer[0] : null);
-        }
+        $form->get('referer')->setValue($this->urlValidityCheckService->setValidReferer($cookiesPageReferer));
 
         $routeName = $this->urlHelper->getRouteResult()->getMatchedRouteName();
 
         return new HtmlResponse($this->renderer->render('partials::cookies', [
-            'form'      => $form,
-            'routeName' => $routeName
+            'form'         => $form,
+            'routeName'    => $routeName
         ]));
     }
 
@@ -96,12 +87,9 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
         $cookies = $request->getCookieParams();
         $form->setData($request->getParsedBody());
 
-        $isValidRefererRoute = $this->urlValidityCheckService->checkRefererRouteValid($refererRoute = $form->get('referer')->getValue());
-
-        // After setting cookies settings user is taken where they were previously after validating the referer route
-        if ($isValidRefererRoute) {
-            $response = new RedirectResponse($isValidRefererRoute ? $refererRoute : $this->urlHelper->generate('home'));
-        }
+        $response = new RedirectResponse(
+            $this->urlValidityCheckService->setValidReferer($form->get('referer')->getValue())
+        );
 
         if (array_key_exists(self::COOKIE_POLICY_NAME, $cookies)) {
             try {
@@ -111,14 +99,16 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
             }
 
             $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes' ? true : false;
-            $response = FigResponseCookies::set($response,
+            $response = FigResponseCookies::set(
+                $response,
                 SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))
                     ->withHttpOnly(false)
                     ->withExpires(new \DateTime('+365 days'))
                     ->withPath('/')
             );
 
-            $response = FigResponseCookies::set($response,
+            $response = FigResponseCookies::set(
+                $response,
                 SetCookie::create(self::SEEN_COOKIE_NAME, "true")
                     ->withHttpOnly(false)
                     ->withExpires(new \DateTime('+30 days'))
