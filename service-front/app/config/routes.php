@@ -35,9 +35,10 @@ use Mezzio\MiddlewareFactory;
  */
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-    $app->get('/', Viewer\Handler\HomePageHandler::class, 'home');
+
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
-    $app->route('/enter-code', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'enter-code');
+    $app->route('/home', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home');
+    $app->route('/', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home-trial');
     $app->get('/check-code', Viewer\Handler\CheckCodeHandler::class, 'check-code');
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
     $app->get('/download-lpa', Viewer\Handler\DownloadLpaHandler::class, 'download-lpa');
@@ -45,16 +46,14 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/privacy-notice',Viewer\Handler\ViewerPrivacyNoticeHandler::class,'viewer-privacy-notice');
     $app->get('/stats', Viewer\Handler\StatsPageHandler::class, 'viewer-stats');
     $app->get('/session-expired', Viewer\Handler\ViewerSessionExpiredHandler::class, 'session-expired');
-
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'viewer-cookies');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-    $app->get('/', Actor\Handler\HomePageHandler::class, 'home');
-    $app->get('/start', Actor\Handler\StartPageHandler::class, 'start');
+    $app->route('/home', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home');
+    $app->route('/', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home-trial');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
-
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'actor-cookies');
 
     // User creation
