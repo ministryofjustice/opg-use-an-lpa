@@ -215,6 +215,37 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I enter correct credentials for the first time$/
+     */
+    public function iEnterCorrectCredentialsForTheFirstTime()
+    {
+        $this->ui->fillField('email', $this->userEmail);
+        $this->ui->fillField('password', $this->userPassword);
+
+        if ($this->userActive) {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
+                    [
+                        'Id' => $this->userId,
+                        'Email' => $this->userEmail,
+                        'LastLogin' => null
+                    ]
+                )));
+
+            // Dashboard page checks for all LPA's for a user
+            $this->apiFixtures->get('/v1/lpas')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+        } else {
+            // API call for authentication
+            $this->apiFixtures->patch('/v1/auth')
+                ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
+        }
+
+        $this->ui->pressButton('Sign in');
+    }
+
+    /**
      * @Given /^I am signed in$/
      */
     public function iAmSignedIn()
@@ -553,9 +584,16 @@ class AccountContext implements Context
     public function iAmOnTheAddAnLPAPage()
     {
         $this->ui->visit('/lpa/add-details');
-        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->$this->iAmTakenToAddAnLPAPage();
     }
 
+    /**
+     * @Then /^I am taken to the add an LPA page$/
+     */
+    public function iAmTakenToAddAnLPAPage()
+    {
+        $this->ui->assertPageAddress('/lpa/add-details');
+    }
     /**
      * @When /^I request to add an LPA with valid details using (.*) which matches (.*)$/
      */
