@@ -59,7 +59,7 @@ for PIPELINE_ID in ${PIPELINE_IDS}
     WORKFLOW_STATUS=$(get_workflow_status ${WORKFLOW_ID})
     WORKFLOW_NAME=$(get_workflow_name ${WORKFLOW_ID})
 
-    if [ "$WORKFLOW_NAME" == "pr_build" ] && [ "$WORKFLOW_STATUS" == "success" ]; then
+    if [ "$WORKFLOW_NAME" == "pr_build" ] && [ "$WORKFLOW_STATUS" == "running" ]; then
       echo "Checking for running terraform jobs on workflow ${WORKFLOW_ID}"
       if $(check_for_jobs_running_with_name_match ${WORKFLOW_ID} terraform); then
           echo "terraform jobs are running, waiting instead"
