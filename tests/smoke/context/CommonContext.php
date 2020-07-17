@@ -80,7 +80,7 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then the service should redirect me to the gov.uk start page
+     * @Then the service should redirect me to :startpage
      */
     public function theServiceShouldRedirectToGovUk(string $startpage): void
     {
