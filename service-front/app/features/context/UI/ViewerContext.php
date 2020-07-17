@@ -537,14 +537,6 @@ class ViewerContext implements Context
     }
 
     /**
-     * @Given /^I am on the triage page$/
-     */
-    public function iAmOnTheTriagePage()
-    {
-        $this->ui->visit('/home');
-    }
-
-    /**
      * @Given /^I am on the viewer terms of use page$/
      */
     public function iAmOnTheViewerTermsOfUsePage()
@@ -568,5 +560,13 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/cookies');
         $this->ui->assertPageContainsText('View a lasting power of attorney service');
+    }
+  
+    /**
+     * @Given /^I am on the triage page$/
+     */
+    public function iAmOnTheTriagePage()
+    {
+        $this->ui->visit('/home');
     }
 }
