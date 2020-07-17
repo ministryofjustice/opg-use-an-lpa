@@ -289,7 +289,11 @@ orbs:
           wait:
             type: integer
             default: 300
-            description: "How long to wait before starting the build"
+            description: "How long to wait before starting the build."
+          job-name-to-match:
+            type: string
+            default: terraform
+            description: "string to look for in CircleCI job name when skipping."
           circleci-api-key:
             type: env_var_name
             default: CIRCLECI_API_KEY
@@ -317,7 +321,7 @@ orbs:
 
                 check_for_terraform_jobs_running() {
                   workflow_id=$1
-                  ${CURL_COMMAND} "https://circleci.com/api/v2/workflow/${workflow_id}/job" | jq -e '.items[] | select((.name | contains("terraform")) and (.["status"] == "running")) | any // empty'
+                  ${CURL_COMMAND} "https://circleci.com/api/v2/workflow/${workflow_id}/job" | jq -e '.items[] | select((.name | contains("<<parameters.job-name-to-match>>")) and (.["status"] == "running")) | any // empty'
                 }
 
                 get_workflow() {
