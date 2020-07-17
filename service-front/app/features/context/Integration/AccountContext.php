@@ -1844,4 +1844,12 @@ class AccountContext extends BaseIntegrationContext
     {
         // Not needed for this context
     }
+
+    /**
+     * @Given /^I access the account creation page$/
+     */
+    public function iAccessTheAccountCreationPage()
+    {
+        // Not needed for this context
+    }
 }
