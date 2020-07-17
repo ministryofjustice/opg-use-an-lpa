@@ -100,6 +100,8 @@ class UrlValidityCheckServiceTest extends TestCase
         $router = $this->prophesize(RouterInterface::class);
         $router->match($requestReturn)->willReturn($routeResult->reveal());
 
+        $routeResult->isSuccess()->willReturn(true);
+
         $service = new UrlValidityCheckService(
             $serverRequestFactory->reveal(),
             $router->reveal(),
@@ -130,6 +132,8 @@ class UrlValidityCheckServiceTest extends TestCase
 
         $this->routerProphecy->match($requestReturn)->willReturn($routeResult->reveal());
 
+        $routeResult->isSuccess()->willReturn(true);
+
         $service = new UrlValidityCheckService(
             $this->serverRequestFactoryProphecy->reveal(),
             $this->routerProphecy->reveal(),
@@ -138,6 +142,40 @@ class UrlValidityCheckServiceTest extends TestCase
 
         $resultReferer = $service->setValidReferer($refererUrl);
         $this->assertEquals($refererUrl, $resultReferer);
+    }
+
+    /** @test */
+    public function it_returns_a_url_for_home_if_referer_is_invalid()
+    {
+        $homeUrl = 'https://localhost:9002/';
+        $refererUrl = 'https://www.invalid/url';
+
+        $routeResult = $this->prophesize(RouteResult::class);
+        $requestReturn =  new ServerRequest(
+            [],
+            [],
+            $refererUrl,
+            "method",
+            'php://temp'
+        );
+
+        $this->serverRequestFactoryProphecy->createServerRequest('GET', $refererUrl)->willReturn($requestReturn);
+
+        $this->routerProphecy->match($requestReturn)->willReturn($routeResult->reveal());
+
+        $routeResult->isSuccess()->willReturn(false);
+
+        $service = new UrlValidityCheckService(
+            $this->serverRequestFactoryProphecy->reveal(),
+            $this->routerProphecy->reveal(),
+            $this->urlHelperProphecy->reveal()
+        );
+
+        $this->urlHelperProphecy->generate('home')->willReturn($homeUrl);
+
+        $resultReferer = $service->setValidReferer($refererUrl);
+
+        $this->assertEquals($homeUrl, $resultReferer);
     }
 
     /** @test */

@@ -62,7 +62,7 @@ class UrlValidityCheckService
             $request = $this->serverRequestFactory->createServerRequest('GET', $refererUrl);
             $result = $this->router->match($request);
 
-            if ($result) {
+            if ($result->isSuccess()) {
                 return true;
             }
         }
