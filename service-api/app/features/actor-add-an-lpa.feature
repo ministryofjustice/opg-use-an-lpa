@@ -9,7 +9,7 @@ Feature: Add an LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @integration @acceptance
+  @integration @acceptance @pact
   Scenario: The user can add an LPA to their account
     Given I am on the add an LPA page
     When I request to add an LPA with valid details

@@ -20,21 +20,13 @@ default:
       providers:
         - lpa-codes-pact-mock: lpa-codes-pact-mock:80
 
-
-pact:
-  suites:
-    all:
-      contexts:
-        - SmartGamma\Behat\PactExtension\Context\PactContext
-        - BehatTest\Context\Integration\PactContext
-      filters:
-        tags: "@pact"
-
 integration:
   suites:
     all:
       contexts:
+        - SmartGamma\Behat\PactExtension\Context\PactContext
         - BehatTest\Context\Integration\AccountContext
+        - BehatTest\Context\Integration\LpaContext
         - BehatTest\Context\Integration\ViewerContext
       filters:
         tags: "@integration"

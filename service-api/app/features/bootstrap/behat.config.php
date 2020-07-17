@@ -64,7 +64,12 @@ return [
         'endpoint' => 'https://sirius',
     ],
 
+    'codes_api' => [
+        'endpoint' => 'lpa-codes-pact-mock',
+        'static_auth_token' => getenv('LPA_CODES_STATIC_AUTH_TOKEN') ?: null,
+    ],
+
     'feature_flags' => [
-        'use_legacy_codes_service' => 'true',
+        'use_legacy_codes_service' => 'false',
     ],
 ];
