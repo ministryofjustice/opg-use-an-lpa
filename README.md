@@ -52,9 +52,9 @@ If you plan on developing the application you should also enable development mod
 <DOCKER_COMPOSE> exec api-app rm -f /tmp/config-cache.php
 ```
 
-The Viewer service will be available via http://localhost:9001
+The Viewer service will be available via http://localhost:9001/home
 
-The Actor service will be available via http://localhost:9002
+The Actor service will be available via http://localhost:9002/home
 
 The API service will be available via http://localhost:9003
 

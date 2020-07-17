@@ -133,10 +133,6 @@ class AccountContext implements Context
         $this->userPassword = 'pa33w0rd';
         $this->userActive = true;
         $this->userId = '123';
-
-        $this->ui->iAmOnHomepage();
-
-        $this->ui->clickLink('Sign in to your existing account');
     }
 
     /**
@@ -264,6 +260,7 @@ class AccountContext implements Context
      */
     public function iHaveForgottenMyPassword()
     {
+        $this->iAccessTheLoginForm();
         $this->ui->assertPageAddress('/login');
 
         $this->ui->clickLink('Forgotten your password?');
@@ -812,16 +809,6 @@ class AccountContext implements Context
     public function iAmNotAUserOfTheLpaApplication()
     {
         // Not needed for this context
-    }
-
-    /**
-     * @Given /^I want to create a new account$/
-     */
-    public function iWantToCreateANewAccount()
-    {
-        $this->ui->iAmOnHomepage();
-        $this->ui->pressButton('Get started');
-        $this->ui->pressButton('Create account');
     }
 
     /**
@@ -2022,8 +2009,6 @@ class AccountContext implements Context
         $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
     }
 
-
-
     /**
      * @When /^I hack the CSRF value with '(.*)'$/
      */
@@ -2257,46 +2242,19 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I am on the index page$/
+     * @Then /^I am taken to the triage page of the service$/
      */
-    public function iAmOnTheIndexPage()
+    public function iAmTakenToTheTriagePage()
     {
-        $this->ui->visit('/');
-        $this->ui->assertPageContainsText('Use a lasting power of attorney');
+        $this->ui->assertPageAddress('/home');
     }
 
     /**
-     * @When /^I request to get started with the service$/
+     * @Given /^I am on the triage page$/
      */
-    public function iRequestToGetStartedWithTheService()
+    public function iAmOnTheTriagePage()
     {
-        $this->ui->clickLink('Get started');
-    }
-
-    /**
-     * @Then /^I am taken to the get started page$/
-     */
-    public function iAmTakenToTheGetStartedPage()
-    {
-        $this->ui->assertPageAddress('/start');
-        $this->ui->assertPageContainsText('Get started');
-    }
-
-    /**
-     * @When /^I select the option to sign in to my existing account$/
-     */
-    public function iSelectTheOptionToSignInToMyExistingAccount()
-    {
-        $this->ui->clickLink('Sign in to your existing account');
-    }
-
-    /**
-     * @Given /^I am on the get started page$/
-     */
-    public function iAmOnTheGetStartedPage()
-    {
-        $this->ui->visit('/start');
-        $this->ui->assertPageContainsText('Get started');
+        $this->ui->visit('/home');
     }
 
     /**
@@ -2325,7 +2283,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I am taken to the login page$/
+     * @Then /^I am allowed to login$/
      */
     public function iAmTakenToTheLoginPage()
     {
@@ -2527,7 +2485,7 @@ class AccountContext implements Context
      */
     public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage()
     {
-        $this->ui->assertPageAddress('/');
+        $this->ui->assertPageAddress('/home');
     }
 
     /**
@@ -2545,8 +2503,7 @@ class AccountContext implements Context
      */
     public function iRequestLoginToMyAccountThatWasDeleted()
     {
-        $this->ui->assertPageAddress('/');
-        $this->ui->clickLink('Sign in to your existing account');
+        $this->ui->visit('/login');
 
         $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('password', $this->userPassword);
@@ -2788,14 +2745,12 @@ class AccountContext implements Context
         $this->ui->assertResponseStatus(404);
     }
 
-//    REMOVE
     /**
      * @When /^I access the use a lasting power of attorney web page$/
      */
     public function iAccessTheUseALastingPowerOfAttorneyWebPage()
     {
-        $this->ui->visit('/');
-        $this->ui->assertPageContainsText('Use a lasting power of attorney');
+        $this->iAmOnTheTriagePage();
     }
 
     /**
@@ -2803,13 +2758,13 @@ class AccountContext implements Context
      */
     public function iAmNotSignedInToTheUseALastingPowerOfAttorneyServiceAtThisPoint()
     {
-        // Not needed for this context
+        $this->ui->assertPageAddress('/login');
     }
 
     /**
-     * @When /^I click (.*) link on the page$/
+     * @When /^I click the (.*) link on the page$/
      */
-    public function iClickBackLinkOnThePage($backLink)
+    public function iClickTheBackLinkOnThePage($backLink)
     {
         $this->ui->assertPageContainsText($backLink);
         $this->ui->clickLink($backLink);
@@ -2820,8 +2775,8 @@ class AccountContext implements Context
      */
     public function iShouldBeTakenToThePreviousPage($page)
     {
-        if ($page == 'start') {
-            $this->ui->assertPageAddress('/');
+        if ($page == 'triage') {
+            $this->ui->assertPageAddress('/home');
         } elseif ($page == 'login') {
             $this->ui->assertPageAddress('/login');
         } elseif ($page == 'dashboard') {
@@ -2858,6 +2813,7 @@ class AccountContext implements Context
 
         // retrieving response headers:
         $cookies = $session->getResponseHeaders()['set-cookie'];
+
         foreach ($cookies as $value) {
             if (strstr($value, 'session')) {
                 assertContains('secure', $value);
@@ -3261,8 +3217,6 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText($message);
     }
 
-    //I can see <Read more> link along with the instructions or preference message
-
     /**
      * @Then /^I can see (.*) link along with the instructions or preference message$/
      */
@@ -3438,6 +3392,72 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/cookies');
         $this->ui->assertPageContainsText('Use a lasting power of attorney service');
+    }
+
+    /**
+     * @When /^I select the option to sign in to my existing account$/
+     */
+    public function iSelectTheOptionToSignInToMyExistingAccount()
+    {
+
+        $this->ui->assertPageAddress('/home');
+        $this->ui->assertPageContainsText('Use a lasting power of attorney');
+        $this->ui->fillField('triageEntry', 'yes');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^I select the option to create a new account$/
+     */
+    public function iSelectTheOptionToCreateNewAccount()
+    {
+        $this->ui->assertPageAddress('/home');
+        $this->ui->fillField('triageEntry', 'no');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^I do not provide any options and continue$/
+     */
+    public function iDoNotProvideAnyOptionsAndContinue()
+    {
+        $this->ui->assertPageAddress('/home');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^I am not allowed to progress$/
+     */
+    public function iAmNotAllowedToProgress()
+    {
+        $this->ui->assertPageAddress('/home');
+        $this->ui->assertPageContainsText('Select yes if you have a Use a lasting power of attorney account');
+    }
+
+    /**
+     * @Then /^I am allowed to create an account$/
+     */
+    public function iAmAllowedToCreateAnAccount()
+    {
+        $this->ui->assertPageAddress('/create-account');
+        $this->ui->assertPageContainsText('Create an account');
+    }
+
+    /**
+     * @Given /^I access the account creation page$/
+     */
+    public function iAccessTheAccountCreationPage()
+    {
+        $this->ui->visit('/create-account');
+        $this->ui->assertPageAddress('/create-account');
+    }
+
+    /**
+     * @Given /^I want to create a new account$/
+     */
+    public function iWantToCreateANewAccount()
+    {
+         // Not needed for this context
     }
 
 }
