@@ -584,7 +584,7 @@ class AccountContext implements Context
     public function iAmOnTheAddAnLPAPage()
     {
         $this->ui->visit('/lpa/add-details');
-        $this->$this->iAmTakenToAddAnLPAPage();
+        $this->iAmTakenToAddAnLPAPage();
     }
 
     /**
