@@ -45,6 +45,7 @@ function protective_measures() {
 
 protective_measures
 
+# Here's a no op change
 JOB_TO_MATCH=$1
 CURL_COMMAND="curl -s -u ${CIRCLECI_API_KEY}:"
 VCS_TYPE=github
