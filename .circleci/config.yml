@@ -313,22 +313,22 @@ orbs:
     executors:
       puppeteer:
         docker: [image: buildkite/puppeteer]
-        resource_class: small
+        resource_class: medium
       php:
         docker: [image: circleci/php:7-cli]
-        resource_class: small
+        resource_class: medium
       php-browsers:
         docker: [image: circleci/php:7-cli-browsers]
-        resource_class: small
+        resource_class: medium
       node-browsers:
         docker: [image: circleci/node:14.0-browsers]
-        resource_class: small
+        resource_class: medium
       python:
         docker: [image: circleci/python]
-        resource_class: small
+        resource_class: medium
       terraform:
         docker: [image: hashicorp/terraform]
-        resource_class: small
+        resource_class: medium
 
     jobs:
       node_test_service_pdf:
