@@ -39,6 +39,7 @@ acceptance:
         - BehatTest\Context\Acceptance\BaseAcceptanceContext
         - BehatTest\Context\Acceptance\AccountContext
         - BehatTest\Context\Acceptance\CommonContext
+        - BehatTest\Context\Acceptance\LpaContext
       filters:
         tags: "@actor&&@acceptance"
     viewer:
@@ -47,5 +48,6 @@ acceptance:
         - BehatTest\Context\Acceptance\BaseAcceptanceContext
         - BehatTest\Context\Acceptance\ViewerContext
         - BehatTest\Context\Acceptance\CommonContext
+        - BehatTest\Context\Acceptance\LpaContext
       filters:
         tags: "@viewer&&@acceptance"
