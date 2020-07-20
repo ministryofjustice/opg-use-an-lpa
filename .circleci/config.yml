@@ -372,7 +372,7 @@ orbs:
                           echo "terraform jobs are running, waiting instead"
                       else
                           echo "no terraform jobs are running, cancelling workflow"
-                          get_workflow_status ${WORKFLOW_ID}
+                          cancel_workflow ${WORKFLOW_ID}
                       fi
                     fi
                   done
