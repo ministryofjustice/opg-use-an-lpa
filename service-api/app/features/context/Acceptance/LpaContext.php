@@ -234,7 +234,7 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid,)
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
@@ -351,8 +351,6 @@ class LpaContext implements Context
      */
     public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA()
     {
-        // LpaService:getLpas
-
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(
             new Result(
@@ -373,7 +371,7 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid,)
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
