@@ -365,6 +365,9 @@ orbs:
                     WORKFLOW_ID=$(get_workflow_ids ${PIPELINE_ID})
                     WORKFLOW_STATUS=$(get_workflow_status ${WORKFLOW_ID})
                     WORKFLOW_NAME=$(get_workflow_name ${WORKFLOW_ID})
+                    ECHO $WORKFLOW_ID
+                    ECHO $WORKFLOW_STATUS
+                    ECHO $WORKFLOW_NAME
 
                     if [ "$WORKFLOW_NAME" == "pr_build" ] && [ "$WORKFLOW_STATUS" == "running" ]; then
                       echo "Checking for running terraform jobs on workflow ${WORKFLOW_ID}"
