@@ -89,21 +89,18 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAttemptToAddTheSameLPAAgain()
     {
-        // ActorCodes::get
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Active' => false,
-                            'Expires' => '2021-09-25T00:00:00Z',
-                            'ActorCode' => $this->passcode,
-                            'ActorLpaId' => $this->actorLpaId,
-                        ]
-                    ),
-                ]
-            )
+        $this->pactPostInteraction(
+            $this->pactProvider,
+            '/v1/validate',
+            [
+                'lpa'  => $this->lpaUid,
+                'dob'  => $this->userDob,
+                'code' => $this->passcode
+            ],
+            StatusCodeInterface::STATUS_OK,
+            [
+                'actor' => ''
+            ],
         );
 
         $actorCodeService = $this->container->get(ActorCodeService::class);
@@ -465,8 +462,7 @@ class LpaContext extends BaseIntegrationContext
         assertArrayHasKey('actor', $lpaData);
         assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
         assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        assertEquals($this->actorLpaId, $lpaData['actor']['details']['id']);
-        assertEquals($this->lpaUid, $lpaData['actor']['details']['uId']);
+        assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
 
         // Get the share codes
 
@@ -561,8 +557,7 @@ class LpaContext extends BaseIntegrationContext
         assertArrayHasKey('actor', $lpaData);
         assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
         assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        assertEquals($this->actorLpaId, $lpaData['actor']['details']['id']);
-        assertEquals($this->lpaUid, $lpaData['actor']['details']['uId']);
+        assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
 
         // Get the share codes
 
@@ -849,8 +844,19 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iRequestToAddAnLPAThatDoesNotExist()
     {
-        // ActorCodes::get
-        $this->awsFixtures->append(new Result([]));
+        $this->pactPostInteraction(
+            $this->pactProvider,
+            '/v1/validate',
+            [
+                'lpa'  => $this->lpaUid,
+                'dob'  => $this->userDob,
+                'code' => $this->passcode
+            ],
+            StatusCodeInterface::STATUS_OK,
+            [
+                'actor' => ''
+            ],
+        );
 
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
