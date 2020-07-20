@@ -103,33 +103,33 @@ workflows:
         #         pdf_build_pr_build,
         #       ]
 
-        - ecr_scan_results:
-            name: ecr_scan_results_development
-            filters: { branches: { ignore: [master] } }
-            requires:
-              [
-                app_front_build_pr_build,
-                web_front_build_pr_build,
-                web_api_build_pr_build,
-                app_api_build_pr_build,
-                pdf_build_pr_build,
-                # dev_apply_environment_terraform,
-              ]
+        # - ecr_scan_results:
+        #     name: ecr_scan_results_development
+        #     filters: { branches: { ignore: [master] } }
+        #     requires:
+        #       [
+        #         app_front_build_pr_build,
+        #         web_front_build_pr_build,
+        #         web_api_build_pr_build,
+        #         app_api_build_pr_build,
+        #         pdf_build_pr_build,
+        #         # dev_apply_environment_terraform,
+        #       ]
 
-        - use-my-lpa/seed_database:
-            name: dev_seed_database
-            filters: { branches: { ignore: [master] } }
-            # requires: [dev_apply_environment_terraform]
+        # - use-my-lpa/seed_database:
+        #     name: dev_seed_database
+        #     filters: { branches: { ignore: [master] } }
+        #     # requires: [dev_apply_environment_terraform]
 
-        - use-my-lpa/run_behat_suite:
-            name: dev_run_behat_tests
-            filters: { branches: { ignore: [master] } }
-            requires: [dev_seed_database]
+        # - use-my-lpa/run_behat_suite:
+        #     name: dev_run_behat_tests
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [dev_seed_database]
 
-        - slack_notify_domain:
-            name: post_environment_domains
-            filters: { branches: { ignore: [master] } }
-            requires: [dev_run_behat_tests]
+        # - slack_notify_domain:
+        #     name: post_environment_domains
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [dev_run_behat_tests]
 
   path_to_live:
       jobs:
