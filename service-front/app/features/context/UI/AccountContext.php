@@ -3416,6 +3416,23 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I navigate to the actor cookies page$/
+     */
+    public function iNavigateToTheActorCookiesPage()
+    {
+        $this->ui->clickLink('cookie policy');
+    }
+
+    /**
+     * @Then /^I am taken to the actor cookies page$/
+     */
+    public function iAmTakenToTheActorCookiesPage()
+    {
+        $this->ui->assertPageAddress('/cookies');
+        $this->ui->assertPageContainsText('Use a lasting power of attorney service');
+    }
+
+    /**
      * @When /^I select the option to sign in to my existing account$/
      */
     public function iSelectTheOptionToSignInToMyExistingAccount()

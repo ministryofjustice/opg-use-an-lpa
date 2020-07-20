@@ -427,20 +427,12 @@ class ViewerContext implements Context
     }
 
     /**
-     * @Given /^I am on the terms of use page$/
+     * @Given /^I am on the viewer privacy notice page$/
      */
-    public function iAmOnTheTermsOfUsePage()
-    {
-        $this->ui->visit('/terms-of-use');
-        $this->ui->assertPageAddress('/terms-of-use');
-    }
-
-    /**
-     * @Given /^I am on the privacy notice page$/
-     */
-    public function iAmOnThePrivacyNoticePage()
+    public function iAmOnTheViewerPrivacyNoticePage()
     {
         $this->ui->visit('/privacy-notice');
+        $this->ui->assertPageContainsText('View a lasting power of attorney');
         $this->ui->assertPageAddress('/privacy-notice');
     }
 
@@ -467,7 +459,7 @@ class ViewerContext implements Context
      */
     public function iAmTakenBackToTheTermsOfUsePage()
     {
-        $this->iAmOnTheTermsOfUsePage();
+        $this->iAmOnTheViewerTermsOfUsePage();
     }
 
     /**
@@ -544,6 +536,32 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('You\'ll have to start again');
     }
 
+    /**
+     * @Given /^I am on the viewer terms of use page$/
+     */
+    public function iAmOnTheViewerTermsOfUsePage()
+    {
+        $this->ui->visit('/terms-of-use');
+        $this->ui->assertPageAddress('/terms-of-use');
+    }
+
+    /**
+     * @When /^I navigate to the viewer cookies page$/
+     */
+    public function iNavigateToTheViewerCookiesPage()
+    {
+        $this->ui->clickLink('cookie policy');
+    }
+
+    /**
+     * @Then /^I am taken to the viewer cookies page$/
+     */
+    public function iAmTakenToTheViewerCookiesPage()
+    {
+        $this->ui->assertPageAddress('/cookies');
+        $this->ui->assertPageContainsText('View a lasting power of attorney service');
+    }
+  
     /**
      * @Given /^I am on the triage page$/
      */

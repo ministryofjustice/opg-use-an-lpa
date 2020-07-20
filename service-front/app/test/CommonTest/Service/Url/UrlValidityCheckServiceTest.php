@@ -12,6 +12,7 @@ use Mezzio\Router\RouterInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Mezzio\Helper\UrlHelper;
 
 class UrlValidityCheckServiceTest extends TestCase
 {
@@ -30,11 +31,17 @@ class UrlValidityCheckServiceTest extends TestCase
      */
     protected $serverRequestInterfaceProphecy;
 
+    /**
+     * @var UrlHelper
+     */
+    private $urlHelperProphecy;
+
     public function setUp()
     {
         $this->serverRequestFactoryProphecy = $this->prophesize(ServerRequestFactory::class);
         $this->routerProphecy = $this->prophesize(RouterInterface::class);
         $this->serverRequestInterfaceProphecy = $this->prophesize(ServerRequestInterface::class);
+        $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);
     }
 
     /** @test */
@@ -44,7 +51,8 @@ class UrlValidityCheckServiceTest extends TestCase
 
         $service = new UrlValidityCheckService(
             $this->serverRequestFactoryProphecy->reveal(),
-            $this->routerProphecy->reveal()
+            $this->routerProphecy->reveal(),
+            $this->urlHelperProphecy->reveal()
         );
 
         $valid = $service->isValid($refererUrl);
@@ -60,7 +68,8 @@ class UrlValidityCheckServiceTest extends TestCase
 
         $service = new UrlValidityCheckService(
             $this->serverRequestFactoryProphecy->reveal(),
-            $this->routerProphecy->reveal()
+            $this->routerProphecy->reveal(),
+            $this->urlHelperProphecy->reveal()
         );
 
         $valid = $service->isValid($refererUrl);
@@ -91,14 +100,99 @@ class UrlValidityCheckServiceTest extends TestCase
         $router = $this->prophesize(RouterInterface::class);
         $router->match($requestReturn)->willReturn($routeResult->reveal());
 
+        $routeResult->isSuccess()->willReturn(true);
+
         $service = new UrlValidityCheckService(
             $serverRequestFactory->reveal(),
-            $router->reveal()
+            $router->reveal(),
+            $this->urlHelperProphecy->reveal()
         );
 
         $valid = $service->checkRefererRouteValid($refererUrl);
 
         $this->assertIsBool($valid);
         $this->assertTrue($valid);
+    }
+
+    /** @test */
+    public function it_returns_a_valid_referer()
+    {
+        $refererUrl = 'https://366uml695cook.use.lastingpowerofattorney.opg.service.justice.gov.uk/lpa/dashboard';
+
+        $routeResult = $this->prophesize(RouteResult::class);
+        $requestReturn =  new ServerRequest(
+            [],
+            [],
+            $refererUrl,
+            "method",
+            'php://temp'
+        );
+
+        $this->serverRequestFactoryProphecy->createServerRequest('GET', $refererUrl)->willReturn($requestReturn);
+
+        $this->routerProphecy->match($requestReturn)->willReturn($routeResult->reveal());
+
+        $routeResult->isSuccess()->willReturn(true);
+
+        $service = new UrlValidityCheckService(
+            $this->serverRequestFactoryProphecy->reveal(),
+            $this->routerProphecy->reveal(),
+            $this->urlHelperProphecy->reveal()
+        );
+
+        $resultReferer = $service->setValidReferer($refererUrl);
+        $this->assertEquals($refererUrl, $resultReferer);
+    }
+
+    /** @test */
+    public function it_returns_a_url_for_home_if_referer_is_invalid()
+    {
+        $homeUrl = 'https://localhost:9002/';
+        $refererUrl = 'https://www.invalid/url';
+
+        $routeResult = $this->prophesize(RouteResult::class);
+        $requestReturn =  new ServerRequest(
+            [],
+            [],
+            $refererUrl,
+            "method",
+            'php://temp'
+        );
+
+        $this->serverRequestFactoryProphecy->createServerRequest('GET', $refererUrl)->willReturn($requestReturn);
+
+        $this->routerProphecy->match($requestReturn)->willReturn($routeResult->reveal());
+
+        $routeResult->isSuccess()->willReturn(false);
+
+        $service = new UrlValidityCheckService(
+            $this->serverRequestFactoryProphecy->reveal(),
+            $this->routerProphecy->reveal(),
+            $this->urlHelperProphecy->reveal()
+        );
+
+        $this->urlHelperProphecy->generate('home')->willReturn($homeUrl);
+
+        $resultReferer = $service->setValidReferer($refererUrl);
+
+        $this->assertEquals($homeUrl, $resultReferer);
+    }
+
+    /** @test */
+    public function it_returns_a_url_for_home_if_referer_is_null()
+    {
+        $homeUrl = 'https://localhost:9002/';
+
+        $service = new UrlValidityCheckService(
+            $this->serverRequestFactoryProphecy->reveal(),
+            $this->routerProphecy->reveal(),
+            $this->urlHelperProphecy->reveal()
+        );
+
+        $this->urlHelperProphecy->generate('home')->willReturn($homeUrl);
+
+        $resultReferer = $service->setValidReferer(null);
+
+        $this->assertEquals($homeUrl, $resultReferer);
     }
 }
