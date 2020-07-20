@@ -45,7 +45,7 @@ function protective_measures() {
 
 protective_measures
 
-JOB_TO_MATCH=$1
+JOB_TO_MATCH=terraform
 CURL_COMMAND="curl -s -u ${CIRCLECI_API_KEY}:"
 VCS_TYPE=github
 PROJECT_SLUG=${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
