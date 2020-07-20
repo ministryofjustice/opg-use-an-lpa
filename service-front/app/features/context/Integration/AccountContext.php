@@ -673,7 +673,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function theFullLPAIsDisplayedWithTheCorrect($message)
     {
-        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+        list($lpa, $actorLpa) = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
         $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
 
@@ -738,7 +738,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iAmGivenAUniqueAccessCode()
     {
-        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+        list($lpa, $actorLpa) = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
         $codeData = $this->viewerCodeService->createShareCode($this->userIdentity, $this->actorLpaToken, $this->organisation);
 
@@ -799,7 +799,7 @@ class AccountContext extends BaseIntegrationContext
                 )
             );
 
-        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+        list($lpa, $actorLpa) = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
         $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
 
@@ -1013,7 +1013,7 @@ class AccountContext extends BaseIntegrationContext
                 )
             );
 
-        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+        list($lpa, $actorLpa) = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
         assertNotNull($lpa);
 
@@ -1134,7 +1134,7 @@ class AccountContext extends BaseIntegrationContext
                 )
             );
 
-        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+        list($lpa, $actorLpa) = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
         $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
 
@@ -1202,7 +1202,7 @@ class AccountContext extends BaseIntegrationContext
                 )
             );
 
-        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+        list($lpa, $actorLpa) = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
         $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
 

@@ -79,6 +79,13 @@ class ViewLpaSummaryHandlerTest extends TestCase
 
     public function test_will_show_lpa_summary_with_valid_lpa_id()
     {
+        $actorLpa = [
+            'type' => 'donor',
+            'details' => [
+                'email' => 'babaragilson@opgtest.com',
+            ]
+        ];
+
         $this->authenticatorProphecy->authenticate(Argument::type(ServerRequestInterface::class))
         ->willReturn($this->userProphecy->reveal());
 
@@ -98,20 +105,20 @@ class ViewLpaSummaryHandlerTest extends TestCase
 
         $this->lpaServiceProphecy
             ->getLpaById(self::IDENTITY_TOKEN, self::LPA_ID)
-            ->willReturn($lpa);
+            ->willReturn([$lpa, $actorLpa]);
 
         $this->templateRendererProphecy
             ->render('actor:view-lpa-summary', [
                 'actorToken' => self::LPA_ID,
                 'user' => self::IDENTITY_TOKEN,
                 'lpa' => $lpa,
+                'actor' => $actorLpa,
             ])
             ->willReturn('');
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
         $this->assertInstanceOf(HtmlResponse::class, $response);
-
     }
 
     public function test_lpa_not_found_will_throw_exception()

@@ -1128,8 +1128,8 @@ class AccountContext implements Context
                     json_encode([
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => $this->lpaData['actor'],
+                        'lpa'  => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
                     ])
                 )
             );

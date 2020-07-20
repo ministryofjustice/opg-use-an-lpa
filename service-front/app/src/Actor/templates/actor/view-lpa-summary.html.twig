@@ -45,11 +45,15 @@
 
             <div class="govuk-grid-row lpa-valid-border">
                 <div class="govuk-grid-column-full column-full-alt-1">
-                    <h2 class="govuk-heading-m heading-m-alt-1">This LPA is {{ lpa.status|lower }}</h2>
+                    <h2 class="govuk-heading-m heading-m-alt-1">This LPA is {{ lpa.status|lower }} and can be used now</h2>
                     <p class="govuk-body body-alt-1">
                         {% if lpa.caseSubtype == "pfa" %}
                             {% if lpa.attorneyActDecisions == 'When Registered' %}
-                                While the donor has mental capacity, this <abbr title="lasting power of attorney">LPA</abbr> should only be used with the donor’s permission
+                                {% if actor.type == 'donor' %}
+                                    While you have mental capacity, your attorneys must get your permission to use this LPA.
+                                {% else %}
+                                    While the donor has mental capacity, you must get their permission to use this LPA
+                                {% endif %}
                             {% elseif lpa.attorneyActDecisions == 'Loss of capacity' %}
                                 This <abbr title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity
                             {% elseif lpa.attorneyActDecisions == null %}
@@ -174,9 +178,14 @@
                     {% if lpa.caseSubtype == "pfa" %}
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">When can the LPA be used?</dt>
+                            {{ actor.actorType }}
                             <dd class="govuk-summary-list__value">
                                 {% if lpa.attorneyActDecisions == 'When Registered' %}
-                                    While the donor has mental capacity, this <abbr title="lasting power of attorney">LPA</abbr> should only be used with the donor’s permission
+                                    {% if actor.type == 'donor' %}
+                                        You have said that this LPA can be used now. While you have mental capacity, your attorneys can only use the LPA if you allow them to.
+                                    {% else %}
+                                        The donor has said that this LPA can be used now. While the donor has mental capacity, you can only use the LPA if the donor allows you to.
+                                    {% endif %}
                                 {% elseif lpa.attorneyActDecisions == 'Loss of capacity' %}
                                     This <abbr title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity
                                 {% elseif lpa.attorneyActDecisions == null %}

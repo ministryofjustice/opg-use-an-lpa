@@ -230,10 +230,9 @@ class LpaServiceTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $lpa = $service->getLpaById($token, $lpaId);
+        list($lpa, $actorLpa) = $service->getLpaById($token, $lpaId);
 
         $this->assertInstanceOf(Lpa::class, $lpa);
-
     }
 
     /** @test */

@@ -78,10 +78,10 @@ class LpaService
     /**
      * @param string $userToken
      * @param string $actorLpaToken
-     * @return Lpa|null
+     * @return array
      * @throws Exception
      */
-    public function getLpaById(string $userToken, string $actorLpaToken): ?Lpa
+    public function getLpaById(string $userToken, string $actorLpaToken): ?array
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
@@ -99,7 +99,7 @@ class LpaService
             );
         }
 
-        return $lpa;
+        return [$lpa, $lpaData['actor']];
     }
 
     /**
