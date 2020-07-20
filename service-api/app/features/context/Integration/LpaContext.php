@@ -28,7 +28,7 @@ use JSHayes\FakeRequests\MockHandler;
  * @package BehatTest\Context\Integration
  *
  * @property mixed lpa
- * @property string passcode
+ * @property string oneTimeCode
  * @property string lpaUid
  * @property string userLpaActorToken
  * @property string userDob
@@ -95,7 +95,7 @@ class LpaContext extends BaseIntegrationContext
             [
                 'lpa'  => $this->lpaUid,
                 'dob'  => $this->userDob,
-                'code' => $this->passcode
+                'code' => $this->oneTimeCode
             ],
             StatusCodeInterface::STATUS_OK,
             [
@@ -105,7 +105,7 @@ class LpaContext extends BaseIntegrationContext
 
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
-        $response = $actorCodeService->validateDetails($this->passcode, $this->lpaUid, $this->userDob);
+        $response = $actorCodeService->validateDetails($this->oneTimeCode, $this->lpaUid, $this->userDob);
 
         assertNull($response);
     }
@@ -163,7 +163,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid,)
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
@@ -812,7 +812,7 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/example_lpa.json'));
 
-        $this->passcode = 'XYUPHWQRECHV';
+        $this->oneTimeCode = 'XYUPHWQRECHV';
         $this->lpaUid = '700000000054';
         $this->userDob = '1975-10-05';
         $this->actorLpaId = '700000000054';
@@ -850,7 +850,7 @@ class LpaContext extends BaseIntegrationContext
             [
                 'lpa'  => $this->lpaUid,
                 'dob'  => $this->userDob,
-                'code' => $this->passcode
+                'code' => $this->oneTimeCode
             ],
             StatusCodeInterface::STATUS_OK,
             [
@@ -879,7 +879,7 @@ class LpaContext extends BaseIntegrationContext
             [
                 'lpa'  => $this->lpaUid,
                 'dob'  => $this->userDob,
-                'code' => $this->passcode
+                'code' => $this->oneTimeCode
             ],
             StatusCodeInterface::STATUS_OK,
             [
@@ -908,7 +908,7 @@ class LpaContext extends BaseIntegrationContext
 
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
-        $validatedLpa = $actorCodeService->validateDetails($this->passcode, $this->lpaUid, $this->userDob);
+        $validatedLpa = $actorCodeService->validateDetails($this->oneTimeCode, $this->lpaUid, $this->userDob);
 
         assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
     }
@@ -1104,7 +1104,7 @@ class LpaContext extends BaseIntegrationContext
     {
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
-        $validatedLpa = $actorCodeService->validateDetails($this->passcode, $this->lpaUid, $this->userDob);
+        $validatedLpa = $actorCodeService->validateDetails($this->oneTimeCode, $this->lpaUid, $this->userDob);
 
         assertNull($validatedLpa);
     }
@@ -1159,7 +1159,7 @@ class LpaContext extends BaseIntegrationContext
             $this->pactProvider,
             '/v1/revoke',
             [
-                'code' => $this->passcode
+                'code' => $this->oneTimeCode
             ],
             StatusCodeInterface::STATUS_OK,
             [],
@@ -1169,7 +1169,7 @@ class LpaContext extends BaseIntegrationContext
 
         try {
             $response = $actorCodeService->confirmDetails(
-                $this->passcode,
+                $this->oneTimeCode,
                 $this->lpaUid,
                 $this->userDob,
                 (string)$this->actorLpaId
