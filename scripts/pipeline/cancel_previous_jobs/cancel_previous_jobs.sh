@@ -45,6 +45,7 @@ function protective_measures() {
 
 protective_measures
 
+JOB_TO_MATCH=$1
 CURL_COMMAND="curl -s -u ${CIRCLECI_API_KEY}:"
 VCS_TYPE=github
 PROJECT_SLUG=${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
@@ -65,7 +66,7 @@ for PIPELINE_ID in ${PIPELINE_IDS}
           echo "terraform jobs are running, waiting instead"
       else
           echo "no terraform jobs are running, cancelling workflow"
-          get_workflow_status ${WORKFLOW_ID}
+          cancel_workflow ${WORKFLOW_ID}
       fi
     fi
   done
