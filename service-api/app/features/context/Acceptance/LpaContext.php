@@ -148,22 +148,9 @@ class LpaContext implements Context
      */
     public function iAttemptToAddTheSameLPAAgain()
     {
-        // ActorCodes::get
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Active' => false,
-                            'Expires' => '2021-09-25T00:00:00Z',
-                            'ActorCode' => $this->oneTimeCode,
-                            'ActorLpaId' => $this->actorId,
-                        ]
-                    ),
-                ]
-            )
-        );
+        // codes api service call
+        $this->apiFixtures->post('lpa-codes-pact-mock/v1/validate')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => ''])));
 
         // LpaService::getLpaById
         $this->apiPost(
@@ -295,7 +282,6 @@ class LpaContext implements Context
         $this->awsFixtures->append(new Result());
 
         // This response is duplicated for the 2nd code
-
         // ViewerCodeActivity::getStatusesForViewerCodes
         $this->awsFixtures->append(new Result());
 
@@ -328,10 +314,10 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertCount($noActiveCodes, $response);
+        assertCount(2, $response);
 
         // Loop for asserting on both the 2 codes returned
-        for ($i = 0; $i < $noActiveCodes; $i++) {
+        for ($i = 0; $i < 2; $i++) {
             assertEquals($response[$i]['SiriusUid'], $this->lpaUid);
             assertEquals($response[$i]['UserLpaActor'], $this->userLpaActorToken);
             assertEquals($response[$i]['Organisation'], $this->organisation);
@@ -566,93 +552,6 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I check my access codes$/
-     */
-    public function iCheckMyAccessCodes()
-    {
-        // Get the LPA
-
-        // UserLpaActorMap::get
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorId,
-                            'UserId' => $this->userId,
-                        ]
-                    ),
-                ]
-            )
-        );
-
-        // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
-
-        // API call to get lpa
-        $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken,
-            [
-                'user-token' => $this->userId,
-            ]
-        );
-
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
-
-        $response = $this->getResponseAsJson();
-
-        assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
-        assertEquals($response['lpa']['uId'], $this->lpa->uId);
-        assertEquals($response['actor']['details']['id'], $this->actorId);
-
-        // Get the share codes
-
-        // UserLpaActorMap::get
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorId,
-                            'UserId' => $this->userId,
-                        ]
-                    ),
-                ]
-            )
-        );
-
-        // ViewerCodes::getCodesByUserLpaActorId
-        $this->awsFixtures->append(new Result([]));
-
-
-        // API call to get access codes
-        $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            [
-                'user-token' => $this->userId,
-            ]
-        );
-
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
-        $response = $this->getResponseAsJson();
-
-        assertEmpty($response);
-    }
-
-    /**
      * @When /^I click to check my access code now expired/
      */
     public function iClickToCheckMyAccessCodeNowExpired()
@@ -702,8 +601,7 @@ class LpaContext implements Context
         assertArrayHasKey('actor', $response);
         assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
         assertEquals($response['lpa']['uId'], $this->lpa->uId);
-        assertEquals($response['actor']['details']['id'], $this->actorId);
-        assertEquals($response['actor']['details']['uId'], $this->lpaUid);
+        assertEquals($response['actor']['details']['uId'], $this->actorId);
 
         // Get the share codes
 
@@ -787,7 +685,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I click to check my access codes$/
+     * @When /^I check my access codes$/
      */
     public function iClickToCheckMyAccessCodes()
     {
@@ -836,8 +734,7 @@ class LpaContext implements Context
         assertArrayHasKey('actor', $response);
         assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
         assertEquals($response['lpa']['uId'], $this->lpa->uId);
-        assertEquals($response['actor']['details']['id'], $this->actorId);
-        assertEquals($response['actor']['details']['uId'], $this->lpaUid);
+        assertEquals($response['actor']['details']['uId'], $this->actorId);
 
         // Get the share codes
 
@@ -1046,8 +943,9 @@ class LpaContext implements Context
      */
     public function iRequestToAddAnLPAThatDoesNotExist()
     {
-        // ActorCodes::get
-        $this->awsFixtures->append(new Result([]));
+        // codes api service call
+        $this->apiFixtures->post('lpa-codes-pact-mock/v1/validate')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => ''])));
 
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
@@ -1135,22 +1033,9 @@ class LpaContext implements Context
      */
     public function iRequestToAddAnLPAWithValidDetails()
     {
-        // ActorCodes::get
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Active' => true,
-                            'Expires' => '2021-09-25T00:00:00Z',
-                            'ActorCode' => $this->oneTimeCode,
-                            'ActorLpaId' => $this->actorId,
-                        ]
-                    ),
-                ]
-            )
-        );
+        // codes api service call
+        $this->apiFixtures->post('lpa-codes-pact-mock/v1/validate')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
 
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
@@ -1430,22 +1315,9 @@ class LpaContext implements Context
         $this->userLpaActorToken = '13579';
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
 
-        // ActorCodes::get
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Active' => true,
-                            'Expires' => '2021-09-25T00:00:00Z',
-                            'ActorCode' => $this->oneTimeCode,
-                            'ActorLpaId' => $this->actorId,
-                        ]
-                    ),
-                ]
-            )
-        );
+        // codes api service call
+        $this->apiFixtures->post('lpa-codes-pact-mock/v1/validate')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
 
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
@@ -1471,8 +1343,9 @@ class LpaContext implements Context
             )
         );
 
-        // ActorCodes::flagCodeAsUsed
-        $this->awsFixtures->append(new Result([]));
+        // codes api service call
+        $this->apiFixtures->post('lpa-codes-pact-mock/v1/revoke')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->apiPost(
             '/v1/actor-codes/confirm',
