@@ -33,28 +33,27 @@ resource "aws_backup_vault" "main" {
   name = "${local.environment}_main_backup_vault"
 }
 
-# resource "aws_iam_role" "example" {
-#   name               = "example"
-#   assume_role_policy = <<POLICY
-# {
-#   "Version": "2012-10-17",
-#   "Statement": [
-#     {
-#       "Action": ["sts:AssumeRole"],
-#       "Effect": "allow",
-#       "Principal": {
-#         "Service": ["backup.amazonaws.com"]
-#       }
-#     }
-#   ]
-# }
-# POLICY
-# }
+resource "aws_iam_role" "aws_backup_role" {
+  name               = "aws_backup_role"
+  assume_role_policy = data.aws_iam_policy_document.aws_backup_assume_policy.json
+}
 
-# resource "aws_iam_role_policy_attachment" "example" {
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
-#   role       = "${aws_iam_role.example.name}"
-# }
+data "aws_iam_policy_document" "aws_backup_assume_policy" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      identifiers = ["backup.amazonaws.com"]
+      type        = "Service"
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "aws_backup_role" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
+  role       = "${aws_iam_role.aws_backup_role.name}"
+}
 
 # resource "aws_backup_selection" "example" {
 #   iam_role_arn = "${aws_iam_role.example.arn}"
