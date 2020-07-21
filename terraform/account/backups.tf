@@ -7,7 +7,7 @@ resource "aws_backup_plan" "main" {
     rule_name           = "DailyBackups"
     schedule            = "cron(0 5 ? * * *)"
     start_window        = 480
-    target_vault_name   = "Default"
+    target_vault_name   = aws_backup_vault.main.name
 
     lifecycle {
       cold_storage_after = 0
@@ -20,7 +20,7 @@ resource "aws_backup_plan" "main" {
     rule_name           = "Monthly"
     schedule            = "cron(0 5 1 * ? *)"
     start_window        = 480
-    target_vault_name   = "Default"
+    target_vault_name   = aws_backup_vault.main.name
 
     lifecycle {
       cold_storage_after = 30
@@ -29,10 +29,10 @@ resource "aws_backup_plan" "main" {
   }
   tags = local.default_tags
 }
-# resource "aws_backup_vault" "main" {
-#   name        = "example_backup_vault"
-#   kms_key_arn = "${aws_kms_key.example.arn}"
-# }
+resource "aws_backup_vault" "main" {
+  name = "${local.environment}_main_backup_vault"
+}
+
 # resource "aws_iam_role" "example" {
 #   name               = "example"
 #   assume_role_policy = <<POLICY
