@@ -6,7 +6,6 @@ default:
   extensions:
     Acpr\Behat\Psr\ServiceContainer\Extension:
       application: "%paths.base%/features/bootstrap/app.php"
-      container: "%paths.base%/features/bootstrap/container.php"
     Behat\MinkExtension:
       base_url: 'http://localhost'
       psr: ~
@@ -21,6 +20,9 @@ default:
         - lpa-codes-pact-mock: lpa-codes-pact-mock:80
 
 integration:
+  extensions:
+    Acpr\Behat\Psr\ServiceContainer\Extension:
+      container: "%paths.base%/features/bootstrap/container.integration.php"
   suites:
     all:
       contexts:
@@ -32,6 +34,9 @@ integration:
         tags: "@integration"
 
 acceptance:
+  extensions:
+    Acpr\Behat\Psr\ServiceContainer\Extension:
+      container: "%paths.base%/features/bootstrap/container.acceptance.php"
   suites:
     actor:
       contexts:
