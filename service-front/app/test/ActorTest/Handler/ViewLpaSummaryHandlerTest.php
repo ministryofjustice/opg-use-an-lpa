@@ -17,6 +17,7 @@ use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Template\TemplateRendererInterface;
+use ArrayObject;
 
 class ViewLpaSummaryHandlerTest extends TestCase
 {
@@ -102,17 +103,18 @@ class ViewLpaSummaryHandlerTest extends TestCase
             ]);
 
         $lpa = new Lpa();
+        $lpaData = new ArrayObject(['actor' => $actorLpa, 'lpa' => $lpa], ArrayObject::ARRAY_AS_PROPS);
 
         $this->lpaServiceProphecy
             ->getLpaById(self::IDENTITY_TOKEN, self::LPA_ID)
-            ->willReturn([$lpa, $actorLpa]);
+            ->willReturn($lpaData);
 
         $this->templateRendererProphecy
             ->render('actor:view-lpa-summary', [
                 'actorToken' => self::LPA_ID,
                 'user' => self::IDENTITY_TOKEN,
-                'lpa' => $lpa,
-                'actor' => $actorLpa,
+                'lpa' => $lpaData->lpa,
+                'actor' => $lpaData->actor,
             ])
             ->willReturn('');
 

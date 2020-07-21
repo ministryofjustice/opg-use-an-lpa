@@ -63,7 +63,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         $user = $this->getUser($request);
         $identity = (!is_null($user)) ? $user->getIdentity() : null;
 
-        list($lpa, $actorLpa) = $this->lpaService->getLpaById($identity, $actorLpaToken);
+        $lpa = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
         $shareCodes = $this->viewerCodeService->getShareCodes(
             $identity,
@@ -86,11 +86,11 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                 $shareCodes[$key]['form'] = $form;
             }
 
-            if ($lpa->getDonor()->getId() == $code['ActorId']) {
-                $shareCodes[$key]['CreatedBy'] = $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname();
+            if ($lpa->lpa->getDonor()->getId() == $code['ActorId']) {
+                $shareCodes[$key]['CreatedBy'] = $lpa->lpa->getDonor()->getFirstname() . ' ' . $lpa->lpa->getDonor()->getSurname();
             }
 
-            foreach ($lpa->getAttorneys() as $attorney) {
+            foreach ($lpa->lpa->getAttorneys() as $attorney) {
                 if ($attorney->getId() == $code['ActorId']) {
                     $shareCodes[$key]['CreatedBy'] = $attorney->getFirstname() . ' ' . $attorney->getSurname();
                 }
@@ -100,7 +100,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         return new HtmlResponse($this->renderer->render('actor::check-access-codes', [
             'actorToken' => $actorLpaToken,
             'user' => $user,
-            'lpa' => $lpa,
+            'lpa' => $lpa->lpa,
             'shareCodes' => $shareCodes,
         ]));
     }
