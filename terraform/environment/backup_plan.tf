@@ -42,7 +42,7 @@ data "aws_iam_role" "aws_backup_role" {
 resource "aws_backup_selection" "main" {
   count        = local.account.have_a_backup_plan == true ? 1 : 0
   iam_role_arn = data.aws_iam_role.aws_backup_role.arn
-  name         = "tf_example_backup_selection"
+  name         = "${local.environment}_main_backup_selection"
   plan_id      = aws_backup_plan.main[0].id
 
   resources = [
