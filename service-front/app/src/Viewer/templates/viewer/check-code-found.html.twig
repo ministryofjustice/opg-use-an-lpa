@@ -6,7 +6,7 @@
     <div class="govuk-width-container">
         {{ include('@partials/new-service.html.twig') }}
 
-        <a href="{{ path('enter-code') }}" class="govuk-back-link">Back</a>
+        <a href="{{ path('home') }}" class="govuk-back-link">Back</a>
 
         <main class="govuk-main-wrapper " id="main-content" role="main">
 
@@ -74,9 +74,8 @@
             </a>
 
             <p class="govuk-body">
-                <a class="govuk-link" href="{{ path('enter-code') }}">Try another access code</a>
+                <a class="govuk-link" href="{{ path('home') }}">Try another access code</a>
             </p>
-
         </main>
     </div>
 {% endblock %}

@@ -28,6 +28,7 @@ variable "accounts" {
       pagerduty_service_name   = string
       use_legacy_codes_service = bool
       log_retention_in_days    = number
+      have_a_backup_plan       = bool
     })
   )
 }

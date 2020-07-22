@@ -6,7 +6,7 @@
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
 
-    <a href="{{ path('enter-code') }}" class="govuk-back-link">Back</a>
+    <a href="{{ path('home') }}" class="govuk-back-link">Back</a>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
@@ -59,7 +59,7 @@
                 <h2 class="govuk-heading-m">Tracking use of the service</h2>
 
                 <p class="govuk-body">We keep a record of when an access code has been used to view an <abbr title="lasting power of attorney">LPA</abbr>. This information is available to the donor and attorneys.</p>
-                <p class="govuk-body">The information will be stored securely and used in line with our <a class="govuk-link" href="{{  path('viewer-privacy-notice') }}">privacy notice</a> and cookie policy.</p>
+                <p class="govuk-body">The information will be stored securely and used in line with our <a class="govuk-link" href="{{  path('viewer-privacy-notice') }}">privacy notice</a> and <a class="govuk-link" href="{{ path('viewer-cookies') }}">cookie policy</a>.</p>
 
                 <h2 class="govuk-heading-m">If you suspect fraud or abuse</h2>
 
