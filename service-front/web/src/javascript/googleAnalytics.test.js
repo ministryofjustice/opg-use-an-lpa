@@ -57,7 +57,7 @@ describe('given Google Analytics is enabled', () => {
             protocol: 'https:',
             host: 'localhost',
             hostname: 'localhost',
-            pathname: '/use-lpa',
+            pathname: '/use-lpa?email=email@test.com',
             search: "?v=email@test.com"
         };
         global.dataLayer = [];
@@ -190,6 +190,6 @@ describe('given Google Analytics is enabled', () => {
     test('it should strip querystrings out of the pageview', () => {
         console.log(global.dataLayer)
         expect(global.dataLayer[1][2].page_title).toBe('Test Page Title');
-        expect(global.dataLayer[1][2].page_path).toBe('https://localhost/use-lpa');
+        expect(global.dataLayer[1][2].page_path).toBe('/use-lpa');
     });
 });

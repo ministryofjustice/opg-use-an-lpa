@@ -27,7 +27,7 @@ class CommonContext implements Context
      */
     public function iAccessTheServiceHomepage(): void
     {
-        $this->ui->iAmOnHomepage();
+        $this->ui->visit('/home');
     }
 
     /**
@@ -38,7 +38,7 @@ class CommonContext implements Context
     public function iAccessTheViewerServiceInsecurely(): void
     {
         $baseUrlHost = parse_url($this->ui->getMinkParameter('base_url'), PHP_URL_HOST);
-        $insecureUrl = sprintf('http://%s/', $baseUrlHost);
+        $insecureUrl = sprintf('http://%s/home', $baseUrlHost);
 
         $this->ui->visit($insecureUrl);
     }
@@ -61,7 +61,7 @@ class CommonContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
 
         $baseUrlHost = parse_url($this->ui->getMinkParameter('base_url'), PHP_URL_HOST);
-        $expectedUrl = sprintf('https://%s/', $baseUrlHost);
+        $expectedUrl = sprintf('https://%s/home', $baseUrlHost);
 
         $this->assertExactUrl($expectedUrl);
     }
@@ -114,5 +114,17 @@ class CommonContext implements Context
                 );
             }
         });
+    }
+
+    /**
+     * @Then /^I receive headers that block external indexing$/
+     */
+    public function iReceiveHeadersThatBlockExternalIndexing()
+    {
+        $session = $this->ui->getSession();
+        $xrobotstag = $session->getResponseHeader("X-Robots-Tag");
+        assertNotNull($xrobotstag);
+        assertContains('nofollow', $xrobotstag);
+        assertContains('noindex', $xrobotstag);
     }
 }
