@@ -1242,25 +1242,11 @@ class AccountContext implements Context
         ]);
     }
 
-
-
     /**
      * @Then /^I should be told that a bad request was made$/
      */
     public function iShouldBeToldThatABadRequestWasMade()
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
-    }
-
-    /**
-     * @Then /^The LPA is not found and I am told it was a bad request$/
-     */
-    public function theLPAIsNotFoundAndIAmToldItWasABadRequest()
-    {
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-
-        $response = $this->getResponseAsJson();
-
-        assertEmpty($response['data']);
     }
 }

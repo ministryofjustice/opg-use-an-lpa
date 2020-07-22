@@ -1308,6 +1308,18 @@ class LpaContext implements Context
     }
 
     /**
+     * @Then /^The LPA is not found and I am told it was a bad request$/
+     */
+    public function theLPAIsNotFoundAndIAmToldItWasABadRequest()
+    {
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+
+        $response = $this->getResponseAsJson();
+
+        assertEmpty($response['data']);
+    }
+
+    /**
      * @Given /^The LPA is successfully added$/
      */
     public function theLPAIsSuccessfullyAdded()
