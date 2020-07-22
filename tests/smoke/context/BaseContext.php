@@ -12,6 +12,8 @@ use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Testwork\Suite\Exception\SuiteConfigurationException;
 use DMore\ChromeDriver\ChromeDriver;
 
+require_once __DIR__ . '/../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
+
 /**
  * Class BaseContext
  *

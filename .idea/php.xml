@@ -108,14 +108,14 @@
         </phpinfo>
       </interpreter>
       <interpreter name="api-app">
-        <phpinfo binary_type="PHP" php_cli="/usr/local/bin/php" path_separator=":" version="7.4.4">
+        <phpinfo binary_type="PHP" php_cli="/usr/local/bin/php" path_separator=":" version="7.4.8">
           <additional_php_ini>/usr/local/etc/php/conf.d/app-php.ini, /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini, /usr/local/etc/php/conf.d/docker-php-ext-sodium.ini</additional_php_ini>
           <configuration_file />
           <configuration_options>
             <configuration_option name="include_path" value=".:/usr/local/lib/php" />
           </configuration_options>
           <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="2.9.4">
+            <debugger_info debugger="xdebug" debugger_version="2.9.6">
               <debug_extensions />
             </debugger_info>
           </debuggers>
@@ -159,14 +159,14 @@
         </phpinfo>
       </interpreter>
       <interpreter name="front-app">
-        <phpinfo binary_type="PHP" php_cli="/usr/local/bin/php" path_separator=":" version="7.4.4">
+        <phpinfo binary_type="PHP" php_cli="/usr/local/bin/php" path_separator=":" version="7.4.8">
           <additional_php_ini>/usr/local/etc/php/conf.d/app-php.ini, /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini, /usr/local/etc/php/conf.d/docker-php-ext-redis.ini, /usr/local/etc/php/conf.d/docker-php-ext-sodium.ini</additional_php_ini>
           <configuration_file />
           <configuration_options>
             <configuration_option name="include_path" value=".:/usr/local/lib/php" />
           </configuration_options>
           <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="2.9.4">
+            <debugger_info debugger="xdebug" debugger_version="2.9.6">
               <debug_extensions />
             </debugger_info>
           </debuggers>
@@ -211,14 +211,14 @@
         </phpinfo>
       </interpreter>
       <interpreter name="smoke">
-        <phpinfo binary_type="PHP" php_cli="/usr/local/bin/php" path_separator=":" version="7.4.4">
-          <additional_php_ini>/usr/local/etc/php/conf.d/app-php.ini, /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini, /usr/local/etc/php/conf.d/docker-php-ext-sodium.ini</additional_php_ini>
+        <phpinfo binary_type="PHP" php_cgi="/usr/local/bin/php-cgi" php_cli="/usr/local/bin/php" path_separator=":" version="7.4.8">
+          <additional_php_ini>/usr/local/etc/php/conf.d/docker-php-ext-intl.ini, /usr/local/etc/php/conf.d/docker-php-ext-sodium.ini, /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini, /usr/local/etc/php/conf.d/docker-php-ext-zip.ini</additional_php_ini>
           <configuration_file />
           <configuration_options>
             <configuration_option name="include_path" value=".:/usr/local/lib/php" />
           </configuration_options>
           <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="2.9.4">
+            <debugger_info debugger="xdebug" debugger_version="2.9.6">
               <debug_extensions />
             </debugger_info>
           </debuggers>
@@ -229,7 +229,6 @@
             <extension name="Reflection" />
             <extension name="SPL" />
             <extension name="SimpleXML" />
-            <extension name="apcu" />
             <extension name="ctype" />
             <extension name="curl" />
             <extension name="date" />
@@ -239,6 +238,7 @@
             <extension name="ftp" />
             <extension name="hash" />
             <extension name="iconv" />
+            <extension name="intl" />
             <extension name="json" />
             <extension name="libxml" />
             <extension name="mbstring" />
@@ -257,6 +257,7 @@
             <extension name="xml" />
             <extension name="xmlreader" />
             <extension name="xmlwriter" />
+            <extension name="zip" />
             <extension name="zlib" />
           </loaded_extensions>
         </phpinfo>
