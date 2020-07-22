@@ -150,10 +150,10 @@ class CheckAccessCodesHandlerTest extends TestCase
 
         $this->templateRendererProphecy
             ->render('actor:check-access-codes', [
-                'actorToken' => self::LPA_ID,
-                'user' => self::IDENTITY_TOKEN,
-                'lpa' => $lpaData->lpa,
-                'shareCodes' => $shareCodes
+                'actorToken'    => self::LPA_ID,
+                'user'          => self::IDENTITY_TOKEN,
+                'lpa'           => $lpaData->lpa,
+                'shareCodes'    => $shareCodes
             ])
             ->willReturn('');
 
