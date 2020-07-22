@@ -431,7 +431,8 @@ class ViewerContext implements Context
      */
     public function iAmOnTheViewerPrivacyNoticePage()
     {
-        $this->ui->visit('/privacy-notice');
+        $this->ui->visit('/terms-of-use');
+        $this->ui->clickLink('privacy notice');
         $this->ui->assertPageContainsText('View a lasting power of attorney');
         $this->ui->assertPageAddress('/privacy-notice');
     }

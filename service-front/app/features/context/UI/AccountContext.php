@@ -2204,7 +2204,8 @@ class AccountContext implements Context
      */
     public function iAmOnTheActorTermsOfUsePage()
     {
-        $this->ui->visit('/terms-of-use');
+        $this->ui->visit('/create-account');
+        $this->ui->clickLink('terms of use');
         $this->ui->assertPageAddress('/terms-of-use');
     }
     /**
