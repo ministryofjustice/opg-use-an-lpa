@@ -63,6 +63,31 @@ resource "aws_lb_listener_certificate" "viewer_loadbalancer_live_service_certifi
   certificate_arn = data.aws_acm_certificate.public_facing_certificate_view.arn
 }
 
+# redirect root to gov.uk
+resource "aws_lb_listener_rule" "redirect_view_root_to_gov" {
+  listener_arn = aws_lb_listener.viewer_loadbalancer.arn
+  priority     = 1
+  action {
+    type = "redirect"
+
+    redirect {
+      host        = "www.gov.uk"
+      path        = "/view-lasting-power-of-attorney"
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+
+  condition {
+    path_pattern {
+      values = [
+        "/",
+      ]
+    }
+  }
+}
+
 # maintenance site switching
 resource "aws_ssm_parameter" "viewer_maintenance_switch" {
   name            = "${local.environment}_viewer_enable_maintenance"
@@ -90,7 +115,7 @@ locals {
 
 resource "aws_lb_listener_rule" "viewer_maintenance" {
   listener_arn = aws_lb_listener.viewer_loadbalancer.arn
-
+  priority     = 2
   action {
     type = "fixed-response"
 
