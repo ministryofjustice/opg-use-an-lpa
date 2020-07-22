@@ -6,7 +6,7 @@
 
             <div class="govuk-grid-column-two-thirds">
                     <span class="govuk-caption-l">
-                        {% if lpa.caseSubtype == "pfa" %}
+                        {% if lpa.caseSubtype|lower == "pfa" %}
                             Property and finance
                         {% else %}
                             Health and welfare
@@ -39,7 +39,7 @@
                     <div class="govuk-panel govuk-panel--failed">
 
                         <h1 class="govuk-panel__title">
-                            This {% if lpa.caseSubtype == "pfa" %}property and finance{% else %}health and welfare{% endif %} LPA has been cancelled</h1>
+                            This {% if lpa.caseSubtype|lower == "pfa" %}property and finance{% else %}health and welfare{% endif %} LPA has been cancelled</h1>
 
                         <div class="govuk-panel__body govuk-!-font-size-24">
                             <strong>The information on this LPA summary was correct on {{ lpa_date("today") }}</strong>
@@ -52,20 +52,20 @@
                     <div class="govuk-panel govuk-panel--confirmation">
 
                         <h1 class="govuk-panel__title">
-                            {% if lpa.caseSubtype == "pfa" and lpa.attorneyActDecisions|lower == 'when registered' %}
+                            {% if lpa.caseSubtype|lower == "pfa" and lpa.attorneyActDecisions|lower == 'when registered' %}
                                 This property and finance LPA is valid and can be used now
                             {% else %}
-                                This {% if lpa.caseSubtype == "pfa" %}property and finance{% else %}health and welfare{% endif %} LPA is valid
+                                This {% if lpa.caseSubtype|lower == "pfa" %}property and finance{% else %}health and welfare{% endif %} LPA is valid
                             {% endif %}
                         </h1>
 
 
                         <div class="govuk-panel__body">
                             <p class="govuk-!-font-size-24">
-                                {% if lpa.caseSubtype == "pfa" %}
-                                    {% if lpa.attorneyActDecisions == 'Loss of capacity' %}
+                                {% if lpa.caseSubtype|lower == "pfa" %}
+                                    {% if lpa.attorneyActDecisions|lower == 'loss of capacity' %}
                                         This LPA can only be used when the donor has lost capacity
-                                    {% elseif lpa.attorneyActDecisions == null %}
+                                    {% elseif lpa.attorneyActDecisions|lower == null %}
                                         This LPA can be used as soon as it's registered unless instructions say otherwise
                                     {% endif %}
                                 {% else %}
@@ -195,9 +195,9 @@
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">When can the LPA be used?</dt>
                             <dd class="govuk-summary-list__value">
-                                {% if lpa.attorneyActDecisions == 'When Registered' %}
+                                {% if lpa.attorneyActDecisions|lower == 'when registered' %}
                                     The donor has said that this LPA can be used now. While the donor has mental capacity, their attorneys can only use the LPA if the donor allows them to.
-                                {% elseif lpa.attorneyActDecisions == 'Loss of capacity' %}
+                                {% elseif lpa.attorneyActDecisions|lower == 'loss of capacity' %}
                                     This LPA can only be used when the donor has lost capacity
                                 {% elseif lpa.attorneyActDecisions == null %}
                                     This LPA can be used as soon as it's registered unless instructions say otherwise.
