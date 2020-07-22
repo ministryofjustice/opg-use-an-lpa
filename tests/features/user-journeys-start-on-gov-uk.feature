@@ -1,4 +1,4 @@
-@viewer @actor
+@smoke
 Feature: User Journeys start on Gov.uk
   As a user of the service,
   I want to have an introduction to the service,
