@@ -52,7 +52,7 @@
                     <div class="govuk-panel govuk-panel--confirmation">
 
                         <h1 class="govuk-panel__title">
-                            {% if lpa.caseSubtype == "pfa" and lpa.attorneyActDecisions == 'When Registered' %}
+                            {% if lpa.caseSubtype == "pfa" and lpa.attorneyActDecisions|lower == 'when registered' %}
                                 This property and finance LPA is valid and can be used now
                             {% else %}
                                 This {% if lpa.caseSubtype == "pfa" %}property and finance{% else %}health and welfare{% endif %} LPA is valid
