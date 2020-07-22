@@ -102,7 +102,7 @@ class CheckAccessCodesHandlerTest extends TestCase
     public function check_access_codes_page_is_displayed()
     {
         $actorLpa = [
-            'type' => 'donor',
+            'type'    => 'donor',
             'details' => [
                 'email' => 'babaragilson@opgtest.com',
             ]
