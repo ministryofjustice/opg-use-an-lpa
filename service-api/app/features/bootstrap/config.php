@@ -2,15 +2,72 @@
 
 declare(strict_types=1);
 
-use Laminas\ConfigAggregator\ArrayProvider;
 use Laminas\ConfigAggregator\ConfigAggregator;
-use Laminas\ConfigAggregator\PhpFileProvider;
 
-$aggregator = new ConfigAggregator([
-    new PhpFileProvider(realpath(__DIR__) . '/../../config/config.php'),
+return [
+    'debug' => true,
+    ConfigAggregator::ENABLE_CACHE => false,
 
-    // Load development config if it exists
-    new PhpFileProvider(realpath(__DIR__) . '/behat.config.php'),
-]);
+    'dependencies' => [
+        'factories' => [
+            Http\Adapter\Guzzle6\Client::class => BehatTest\Http\Adapter\Guzzle6\TestClientFactory::class,
+            GuzzleHttp\Client::class => BehatTest\GuzzleHttp\TestClientFactory::class,
 
-return $aggregator->getMergedConfig();
+            Aws\Sdk::class => BehatTest\Common\Service\Aws\SdkFactory::class,
+        ],
+    ],
+
+    'aws' => [
+        'region' => 'eu-west-1',
+        'version' => 'latest',
+
+        'DynamoDb' => [
+            'endpoint' => 'https://dynamodb',
+        ],
+    ],
+
+    'monolog' => [
+        'handlers' => [
+            'default' => [ // default configuration in normal operation
+                'type' => 'test',
+                'processors' => [
+                    'psrLogProcessor',
+                    'requestTracingProcessor',
+                ],
+            ],
+        ],
+        'processors' => [
+            'psrLogProcessor' => [
+                'type' => 'psrLogMessage',
+                'options' => [], // No options
+            ],
+            'requestTracingProcessor' => [
+                'type' => \App\Service\Log\RequestTracingLogProcessorFactory::class,
+                'options' => [], // No options
+            ],
+        ],
+    ],
+
+    'repositories' => [
+        'dynamodb' => [
+            'actor-codes-table' => 'actor-codes',
+            'actor-users-table' => 'actor-users',
+            'viewer-codes-table' => 'viewer-codes',
+            'viewer-activity-table' => 'viewer-activity',
+            'user-lpa-actor-map' => 'user-actor-lpa-map',
+        ],
+    ],
+
+    'sirius_api' => [
+        'endpoint' => 'https://sirius',
+    ],
+
+    'codes_api' => [
+        'endpoint' => 'lpa-codes-pact-mock',
+        'static_auth_token' => getenv('LPA_CODES_STATIC_AUTH_TOKEN') ?: null,
+    ],
+
+    'feature_flags' => [
+        'use_legacy_codes_service' => 'false',
+    ],
+];

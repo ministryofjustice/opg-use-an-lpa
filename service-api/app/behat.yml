@@ -6,7 +6,6 @@ default:
   extensions:
     Acpr\Behat\Psr\ServiceContainer\Extension:
       application: "%paths.base%/features/bootstrap/app.php"
-      container: "%paths.base%/features/bootstrap/container.php"
     Behat\MinkExtension:
       base_url: 'http://localhost'
       psr: ~
@@ -20,26 +19,24 @@ default:
       providers:
         - lpa-codes-pact-mock: lpa-codes-pact-mock:80
 
-
-pact:
+integration:
+  extensions:
+    Acpr\Behat\Psr\ServiceContainer\Extension:
+      container: "%paths.base%/features/bootstrap/container.integration.php"
   suites:
     all:
       contexts:
         - SmartGamma\Behat\PactExtension\Context\PactContext
-        - BehatTest\Context\Integration\PactContext
-      filters:
-        tags: "@pact"
-
-integration:
-  suites:
-    all:
-      contexts:
         - BehatTest\Context\Integration\AccountContext
+        - BehatTest\Context\Integration\LpaContext
         - BehatTest\Context\Integration\ViewerContext
       filters:
         tags: "@integration"
 
 acceptance:
+  extensions:
+    Acpr\Behat\Psr\ServiceContainer\Extension:
+      container: "%paths.base%/features/bootstrap/container.acceptance.php"
   suites:
     actor:
       contexts:
@@ -47,6 +44,7 @@ acceptance:
         - BehatTest\Context\Acceptance\BaseAcceptanceContext
         - BehatTest\Context\Acceptance\AccountContext
         - BehatTest\Context\Acceptance\CommonContext
+        - BehatTest\Context\Acceptance\LpaContext
       filters:
         tags: "@actor&&@acceptance"
     viewer:
@@ -55,5 +53,6 @@ acceptance:
         - BehatTest\Context\Acceptance\BaseAcceptanceContext
         - BehatTest\Context\Acceptance\ViewerContext
         - BehatTest\Context\Acceptance\CommonContext
+        - BehatTest\Context\Acceptance\LpaContext
       filters:
         tags: "@viewer&&@acceptance"
