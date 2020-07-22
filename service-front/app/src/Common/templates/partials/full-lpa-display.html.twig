@@ -65,7 +65,7 @@
                                 {% if lpa.caseSubtype|lower == "pfa" %}
                                     {% if lpa.attorneyActDecisions|lower == 'loss of capacity' %}
                                         This LPA can only be used when the donor has lost capacity
-                                    {% elseif lpa.attorneyActDecisions|lower == null %}
+                                    {% elseif lpa.attorneyActDecisions == null %}
                                         This LPA can be used as soon as it's registered unless instructions say otherwise
                                     {% endif %}
                                 {% else %}
