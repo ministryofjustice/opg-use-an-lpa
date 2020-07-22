@@ -53,10 +53,12 @@
 
                         <h1 class="govuk-panel__title">
                             {% if lpa.caseSubtype == "pfa" and lpa.attorneyActDecisions == 'When Registered' %}
-                                This property and finance LPA is valid and can be used now</h1>
+                                This property and finance LPA is valid and can be used now
                             {% else %}
-                                This {% if lpa.caseSubtype == "pfa" %}property and finance{% else %}health and welfare{% endif %} LPA is valid</h1>
+                                This {% if lpa.caseSubtype == "pfa" %}property and finance{% else %}health and welfare{% endif %} LPA is valid
                             {% endif %}
+                        </h1>
+
 
                         <div class="govuk-panel__body">
                             <p class="govuk-!-font-size-24">
