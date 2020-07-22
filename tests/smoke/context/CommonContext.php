@@ -115,4 +115,16 @@ class CommonContext implements Context
             }
         });
     }
+
+    /**
+     * @Then /^I receive headers that block external indexing$/
+     */
+    public function iReceiveHeadersThatBlockExternalIndexing()
+    {
+        $session = $this->ui->getSession();
+        $xrobotstag = $session->getResponseHeader("X-Robots-Tag");
+        assertNotNull($xrobotstag);
+        assertContains('nofollow', $xrobotstag);
+        assertContains('noindex', $xrobotstag);
+    }
 }

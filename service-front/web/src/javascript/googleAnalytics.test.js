@@ -57,7 +57,7 @@ describe('given Google Analytics is enabled', () => {
             protocol: 'https:',
             host: 'localhost',
             hostname: 'localhost',
-            pathname: '/use-lpa',
+            pathname: '/use-lpa?email=email@test.com',
             search: "?v=email@test.com"
         };
         global.dataLayer = [];
