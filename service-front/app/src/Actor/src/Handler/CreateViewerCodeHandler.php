@@ -78,7 +78,7 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
                     $validated['org_name']
                 );
 
-                $lpa = $this->lpaService->getLpaById($identity, $validated['lpa_token']);
+                $lpaData = $this->lpaService->getLpaById($identity, $validated['lpa_token']);
 
                 return new HtmlResponse($this->renderer->render('actor::lpa-show-viewercode', [
                     'user'         => $user,
@@ -86,7 +86,7 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
                     'code'         => $codeData['code'],
                     'expires'      => $codeData['expires'],
                     'organisation' => $codeData['organisation'],
-                    'lpa'          => $lpa->lpa
+                    'lpa'          => $lpaData->lpa
                 ]));
             }
         }
@@ -101,11 +101,11 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
-        $lpa = $this->lpaService->getLpaById($identity, $form->get('lpa_token')->getValue());
+        $lpaData = $this->lpaService->getLpaById($identity, $form->get('lpa_token')->getValue());
 
         return new HtmlResponse($this->renderer->render('actor::lpa-create-viewercode', [
             'user'       => $user,
-            'lpa'        => $lpa->lpa,
+            'lpa'        => $lpaData->lpa,
             'actorToken' => $form->get('lpa_token')->getValue(),
             'form'       => $form
         ]));
