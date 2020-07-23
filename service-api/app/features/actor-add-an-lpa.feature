@@ -9,14 +9,14 @@ Feature: Add an LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @integration @acceptance
+  @integration @acceptance @pact
   Scenario: The user can add an LPA to their account
     Given I am on the add an LPA page
     When I request to add an LPA with valid details
     Then The correct LPA is found and I can confirm to add it
     And The LPA is successfully added
 
-  @integration @acceptance
+  @integration @acceptance @pact
   Scenario: The user cannot add an LPA to their account as it does not exist
     Given I am on the add an LPA page
     When I request to add an LPA that does not exist
@@ -30,7 +30,7 @@ Feature: Add an LPA
     Then I am taken back to the dashboard page
     And The LPA has not been added
 
-  @integration @acceptance
+  @integration @acceptance @pact
   Scenario: The user is shown an error message when attempting to add the same LPA twice
     Given I have added an LPA to my account
     When I attempt to add the same LPA again

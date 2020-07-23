@@ -30,7 +30,7 @@ export default class GoogleAnalytics {
             'allow_google_signals': false, // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
             'allow_ad_personalization_signals': false, // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
             'page_title' : document.title,
-            'page_path': `${location.pathname}`
+            'page_path': `${location.pathname.split('?')[0]}`
         });
         this._trackExternalLinks();
 
