@@ -22,30 +22,19 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * @package BehatTest\Context\Acceptanc
  *
  * @property RequestHandler $lastApiRequest
+ *
+ * @property string userAccountId
+ * @property string userAccountEmail
+ * @property string userAccountPassword
  */
 class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareContext
 {
     use RuntimeMinkContext;
 
-    /**
-     * @var ContainerInterface
-     */
-    public $container;
-
-    /**
-     * @var MockHandler
-     */
-    public $apiFixtures;
-
-    /**
-     * @var AwsMockHandler
-     */
-    public $awsFixtures;
-
-    /**
-     * @var MinkContext
-     */
-    public $ui;
+    public ContainerInterface $container;
+    public MockHandler $apiFixtures;
+    public AwsMockHandler $awsFixtures;
+    public MinkContext $ui;
 
     public function setContainer(ContainerInterface $container): void
     {
@@ -62,5 +51,15 @@ class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareCont
     {
         $environment = $scope->getEnvironment();
         $this->ui = $environment->getContext(MinkContext::class);
+    }
+
+    /**
+     * @Given I am a user of the lpa application
+     */
+    public function iAmAUserOfTheLpaApplication()
+    {
+        $this->userAccountId = '123456789';
+        $this->userAccountEmail = 'test@example.com';
+        $this->userAccountPassword = 'pa33w0rd';
     }
 }

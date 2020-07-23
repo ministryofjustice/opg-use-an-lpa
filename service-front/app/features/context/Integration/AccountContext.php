@@ -5,21 +5,20 @@ declare(strict_types=1);
 namespace BehatTest\Context\Integration;
 
 use Alphagov\Notifications\Client;
-use App\Exception\ConflictException;
-use Common\Exception\ApiException;
 use BehatTest\Context\ActorContextTrait;
+use Common\Exception\ApiException;
 use Common\Service\Email\EmailClient;
+use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\ViewerCodeService;
-use Common\Service\Log\RequestTracing;
 use Common\Service\User\UserService;
+use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
 use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Http\Message\RequestInterface;
-use DateTime;
 
 /**
  * A behat context that encapsulates user account steps
@@ -66,8 +65,6 @@ class AccountContext extends BaseIntegrationContext
 
     /** @var ViewerCodeService */
     private $viewerCodeService;
-
-    // public function setContainer(ContainerInterface $container): void
 
     protected function prepareContext(): void
     {

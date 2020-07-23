@@ -17,7 +17,7 @@ final class ActorCode implements ActorCodeInterface
     private $data;
 
     /**
-     * The datetime that the data was looked up in Sirius main database.
+     * The datetime that the data was looked up in api codes service.
      *
      * @var DateTime
      */
