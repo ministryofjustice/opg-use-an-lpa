@@ -87,19 +87,19 @@ class LpaService
 
         $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
 
-        if (isset($lpaData['lpa'])) {
-            $lpaData = $this->parseLpaData($lpaData);
+        $lpaData = isset($lpaData['lpa']) ? $this->parseLpaData($lpaData) : null;
 
+        if ($lpaData['lpa'] !== null) {
             $this->logger->info(
                 'Account with Id {id} fetched LPA with Id {uId}',
                 [
-                    'id' => $userToken,
+                    'id'  => $userToken,
                     'uId' => $lpaData['lpa']->getUId()
                 ]
             );
-            return $lpaData;
         }
-        return null;
+
+        return $lpaData;
     }
 
     /**

@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}LPA Summary {{ parent() }} {% endblock %}
+{% block html_title %}<abbr title="lasting power of attorney">LPA</abbr> Summary {{ parent() }} {% endblock %}
 
 {% block content %}
 
@@ -9,7 +9,7 @@
 
     {{ include('@partials/account-bar.html.twig') }}
 
-    <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back to your LPAs</a>
+    <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back to your <abbr title="lasting power of attorney">LPAs</abbr></a>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -29,7 +29,7 @@
         {{ include('@actor/partials/lpa-sub-navigation.html.twig') }}
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                <h1 class="govuk-heading-xl">LPA summary</h1>
+                <h1 class="govuk-heading-xl"><abbr title="lasting power of attorney">LPA</abbr> summary</h1>
             </div>
         </div>
 
@@ -37,7 +37,7 @@
 
             <div class="govuk-grid-row lpa-cancelled-border">
                 <div class="govuk-grid-column-full column-full-alt-1">
-                    <h2 class="govuk-heading-m heading-m-alt-1">This LPA has been cancelled</h2>
+                    <h2 class="govuk-heading-m heading-m-alt-1">This <abbr title="lasting power of attorney">LPA</abbr> has been cancelled</h2>
                 </div>
             </div>
 
@@ -46,21 +46,21 @@
             <div class="govuk-grid-row lpa-valid-border">
                 <div class="govuk-grid-column-full column-full-alt-1">
                     {% if lpa.caseSubtype == "pfa" and lpa.attorneyActDecisions|lower == 'when registered' %}
-                            <h2 class="govuk-heading-m heading-m-alt-1">This LPA is {{ lpa.status|lower }} and can be used now</h2>
+                            <h2 class="govuk-heading-m heading-m-alt-1">This <abbr title="lasting power of attorney">LPA</abbr> is {{ lpa.status|lower }} and can be used now</h2>
                     {% else %}
-                            <h2 class="govuk-heading-m heading-m-alt-1">This LPA is {{ lpa.status|lower }}</h2>
+                            <h2 class="govuk-heading-m heading-m-alt-1">This <abbr title="lasting power of attorney">LPA</abbr> is {{ lpa.status|lower }}</h2>
                     {% endif %}
 
                     <p class="govuk-body body-alt-1">
                         {% if lpa.caseSubtype == "pfa" %}
                             {% if lpa.attorneyActDecisions|lower == 'when registered' %}
                                 {% if actor.type == 'donor' %}
-                                    While you have mental capacity, your attorneys must get your permission to use this LPA.
+                                    While you have mental capacity, your attorneys must get your permission to use this <abbr title="lasting power of attorney">LPA</abbr>.
                                 {% else %}
-                                    While the donor has mental capacity, you must get their permission to use this LPA
+                                    While the donor has mental capacity, you must get their permission to use this <abbr title="lasting power of attorney">LPA</abbr>.
                                 {% endif %}
                             {% elseif lpa.attorneyActDecisions|lower == 'loss of capacity' %}
-                                This <abbr title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity
+                                This <abbr title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity.
                             {% elseif lpa.attorneyActDecisions == null %}
                                 This <abbr title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.
                             {% endif %}
@@ -155,7 +155,7 @@
 
             <div class="govuk-grid-column-two-thirds">
 
-                <h2 class="govuk-heading-l">LPA details</h2>
+                <h2 class="govuk-heading-l"><abbr title="lasting power of attorney">LPA</abbr> details</h2>
 
                 <dl class="govuk-summary-list govuk-summary-list--no-border">
                     <div class="govuk-summary-list__row">
@@ -182,13 +182,13 @@
 
                     {% if lpa.caseSubtype == "pfa" %}
                         <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">When can the LPA be used?</dt>
+                            <dt class="govuk-summary-list__key">When can the <abbr title="lasting power of attorney">LPA</abbr> be used?</dt>
                             <dd class="govuk-summary-list__value">
                                 {% if lpa.attorneyActDecisions|lower == 'when registered' %}
                                     {% if actor.type == 'donor' %}
-                                        You have said that this LPA can be used now. While you have mental capacity, your attorneys can only use the LPA if you allow them to.
+                                        You have said that this <abbr title="lasting power of attorney">LPA</abbr> can be used now. While you have mental capacity, your attorneys can only use the <abbr title="lasting power of attorney">LPA</abbr> if you allow them to.
                                     {% else %}
-                                        The donor has said that this LPA can be used now. While the donor has mental capacity, you can only use the LPA if the donor allows you to.
+                                        The donor has said that this <abbr title="lasting power of attorney">LPA</abbr> can be used now. While the donor has mental capacity, you can only use the <abbr title="lasting power of attorney">LPA</abbr> if the donor allows you to.
                                     {% endif %}
                                 {% elseif lpa.attorneyActDecisions|lower == 'loss of capacity' %}
                                     This <abbr title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity
@@ -213,7 +213,7 @@
                     {% endif %}
 
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">Date donor signed LPA</dt>
+                        <dt class="govuk-summary-list__key">Date donor signed <abbr title="lasting power of attorney">LPA</abbr></dt>
                         <dd class="govuk-summary-list__value">{{ lpa_date(lpa.lpaDonorSignatureDate) }}</dd>
                     </div>
 
@@ -223,7 +223,7 @@
                     </div>
 
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">LPA reference number</dt>
+                        <dt class="govuk-summary-list__key"><abbr title="lasting power of attorney">LPA</abbr> reference number</dt>
                         <dd class="govuk-summary-list__value">{{ lpa.uId }}</dd>
                     </div>
 
