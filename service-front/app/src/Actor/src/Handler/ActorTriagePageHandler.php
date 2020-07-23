@@ -55,15 +55,10 @@ class ActorTriagePageHandler extends AbstractHandler implements CsrfGuardAware, 
             return $this->handlePost($request);
         }
 
-        $user = $this->getUser($request);
-
-        if (! is_null($user)) {
-            if (empty($user->getDetail('LastLogin'))) {
-                return $this->redirectToRoute('lpa.add');
-            } else {
-                return $this->redirectToRoute('lpa.dashboard');
-            }
+        if (! is_null($this->getUser($request))) {
+            return $this->redirectToRoute('lpa.dashboard');
         }
+
         return new HtmlResponse($this->renderer->render('actor::home-page', [
             'form' => $form->prepare()
         ]));

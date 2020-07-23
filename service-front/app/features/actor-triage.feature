@@ -36,19 +36,8 @@ Feature: Triage
     When I do not provide any options and continue
     Then I am not allowed to progress
 
-  @ui @bugFix-uml-962
-  Scenario: when signed in for the first time, Visiting another page and clicking on banner link will redirect to
-  the add an lpa page
-    Given I am on the triage page
-    And I select the option to sign in to my existing account
-    And I am a user of the lpa application
-    And I enter correct credentials for the first time
-    When I click the Your details link on the page
-    And I click the Use a lasting power of attorney link on the page
-    Then I am taken to the add an LPA page
-
-  @ui @bugFix-uml-962
-  Scenario: when signed in again, visiting another page and clicking on banner link will redirect to the dashboard
+  @ui
+  Scenario: When signed in again, visiting another page and clicking on banner link will redirect to the dashboard
     Given I am on the triage page
     And I select the option to sign in to my existing account
     And I am a user of the lpa application

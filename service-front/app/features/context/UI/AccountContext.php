@@ -215,37 +215,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I enter correct credentials for the first time$/
-     */
-    public function iEnterCorrectCredentialsForTheFirstTime()
-    {
-        $this->ui->fillField('email', $this->userEmail);
-        $this->ui->fillField('password', $this->userPassword);
-
-        if ($this->userActive) {
-            // API call for authentication
-            $this->apiFixtures->patch('/v1/auth')
-                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(
-                    [
-                        'Id' => $this->userId,
-                        'Email' => $this->userEmail,
-                        'LastLogin' => null
-                    ]
-                )));
-
-            // Dashboard page checks for all LPA's for a user
-            $this->apiFixtures->get('/v1/lpas')
-                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
-        } else {
-            // API call for authentication
-            $this->apiFixtures->patch('/v1/auth')
-                ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
-        }
-
-        $this->ui->pressButton('Sign in');
-    }
-
-    /**
      * @Given /^I am signed in$/
      */
     public function iAmSignedIn()
