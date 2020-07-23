@@ -92,7 +92,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message'  => 'Enter an LPA reference number',
+                            'message'  => 'Enter the LPA reference number',
                         ],
                     ],
                     [
@@ -108,7 +108,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         'name'    => Regex::class,
                         'options' => [
                             'pattern' => '/^(\d{4}(?\'dash\' |-|)\d{4}(\g{dash})\d{4})$/',
-                            'message' => 'The LPA reference number must only include numbers',
+                            'message' => 'Enter the 12 numbers of the LPA reference number. Do not include letters or other characters',
                         ],
                     ],
                 ]
