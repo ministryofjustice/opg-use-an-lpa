@@ -74,12 +74,12 @@ Feature: Add an LPA
 
     Examples:
       | referenceNo | reason |
-      | 7000-00000001 | The LPA reference number must only include numbers |
-      | 7000-0000 0001 | The LPA reference number must only include numbers |
-      | 7000-0000-ABC! | The LPA reference number must only include numbers |
+      | 7000-00000001 | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters |
+      | 7000-0000 0001 | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters |
+      | 7000-0000-ABC! | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters |
       | 7000-0000-00011 | The LPA reference number must be 12 numbers long |
       | 70000000000 | The LPA reference number must be 12 numbers long |
-      |  | Enter an LPA reference number |
+      |  | Enter the LPA reference number |
 
   @ui
   Scenario Outline: The user cannot add an LPA with an invalid DOB
@@ -89,9 +89,9 @@ Feature: Add an LPA
 
     Examples:
       | day | month | year | reason |
-      | 32 | 05 | 1975 | Enter a real date of birth |
-      | 10 | 13 | 1975 | Enter a real date of birth |
-      | XZ | 10 | 1975 | Enter a real date of birth |
+      | 32 | 05 | 1975 | Date of birth must be a real date |
+      | 10 | 13 | 1975 | Date of birth must be a real date |
+      | XZ | 10 | 1975 | Date of birth must be a real date |
       | 10 | 05 | 3000 | Your date of birth must be in the past |
 
   @ui
