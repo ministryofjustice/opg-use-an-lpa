@@ -672,9 +672,8 @@ class AccountContext extends BaseIntegrationContext
     {
         $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
 
-        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
-
-        assertEquals($lpa, $lpaObject);
+        assertNotNull($lpa->lpa);
+        assertNotNull($lpa->actor);
     }
 
     /**
@@ -739,9 +738,7 @@ class AccountContext extends BaseIntegrationContext
 
         $codeData = $this->viewerCodeService->createShareCode($this->userIdentity, $this->actorLpaToken, $this->organisation);
 
-        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
-
-        assertEquals($lpa, $lpaObject);
+        assertNotEmpty($lpa);
         assertEquals($this->accessCode, $codeData['code']);
         assertEquals($this->organisation, $codeData['organisation']);
     }
@@ -800,9 +797,7 @@ class AccountContext extends BaseIntegrationContext
 
         $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
 
-        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
-
-        assertEquals($lpa, $lpaObject);
+        assertNotEmpty($lpa['lpa']);
         assertEquals($this->accessCode, $shareCodes[0]['ViewerCode']);
         assertEquals($this->organisation, $shareCodes[0]['Organisation']);
         assertEquals($this->actorId, $shareCodes[0]['ActorId']);
@@ -1135,9 +1130,8 @@ class AccountContext extends BaseIntegrationContext
 
         $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
 
-        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
 
-        assertEquals($lpa, $lpaObject);
+        assertNotEmpty($lpa);
         assertEquals($this->accessCode, $shareCodes[0]['ViewerCode']);
         assertEquals($this->organisation, $shareCodes[0]['Organisation']);
         assertEquals($this->actorId, $shareCodes[0]['ActorId']);
@@ -1203,9 +1197,7 @@ class AccountContext extends BaseIntegrationContext
 
         $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
 
-        $lpaObject = $this->lpaFactory->createLpaFromData($this->lpa);
-
-        assertEquals($lpa, $lpaObject);
+        assertNotEmpty($lpa);
         assertEquals($this->accessCode, $shareCodes[0]['ViewerCode']);
         assertEquals($this->organisation, $shareCodes[0]['Organisation']);
         assertEquals($this->actorId, $shareCodes[0]['ActorId']);

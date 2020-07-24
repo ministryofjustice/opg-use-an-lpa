@@ -101,6 +101,13 @@ class CheckAccessCodesHandlerTest extends TestCase
     /** @test */
     public function check_access_codes_page_is_displayed()
     {
+        $actorLpa = [
+            'type'    => 'donor',
+            'details' => [
+                'email' => 'babaragilson@opgtest.com',
+            ]
+        ];
+
         $this->authenticatorProphecy->authenticate(Argument::type(ServerRequestInterface::class))
             ->willReturn($this->userProphecy->reveal());
 
@@ -118,6 +125,7 @@ class CheckAccessCodesHandlerTest extends TestCase
             ]);
 
         $lpa = new Lpa();
+        $lpaData = new ArrayObject(['actor' => $actorLpa, 'lpa' => $lpa], ArrayObject::ARRAY_AS_PROPS);
 
         $donor = new CaseActor();
         $donor->setId(self::ACTOR_ID);
@@ -131,7 +139,7 @@ class CheckAccessCodesHandlerTest extends TestCase
 
         $this->lpaServiceProphecy
             ->getLpaById(self::IDENTITY_TOKEN, self::LPA_ID)
-            ->willReturn($lpa);
+            ->willReturn($lpaData);
 
         $this->viewerCodeServiceProphecy
             ->getShareCodes(self::IDENTITY_TOKEN, self::LPA_ID, false)
@@ -142,10 +150,10 @@ class CheckAccessCodesHandlerTest extends TestCase
 
         $this->templateRendererProphecy
             ->render('actor:check-access-codes', [
-                'actorToken' => self::LPA_ID,
-                'user' => self::IDENTITY_TOKEN,
-                'lpa' => $lpa,
-                'shareCodes' => $shareCodes
+                'actorToken'    => self::LPA_ID,
+                'user'          => self::IDENTITY_TOKEN,
+                'lpa'           => $lpaData->lpa,
+                'shareCodes'    => $shareCodes
             ])
             ->willReturn('');
 
@@ -182,6 +190,13 @@ class CheckAccessCodesHandlerTest extends TestCase
     //test needed for ensuring that the ‘createdBy’ field is set correctly as both the donor or attorney’s name
     public function test_createdBy_field_set_correctly_as_both_the_donor_or_attorney_name()
     {
+        $actorLpa = [
+            'type' => 'donor',
+            'details' => [
+                'email' => 'babaragilson@opgtest.com',
+            ]
+        ];
+
         $this->authenticatorProphecy->authenticate(Argument::type(ServerRequestInterface::class))
             ->willReturn($this->userProphecy->reveal());
 
@@ -199,6 +214,7 @@ class CheckAccessCodesHandlerTest extends TestCase
             ]);
 
         $lpa = new Lpa();
+        $lpaData = new ArrayObject(['actor' => $actorLpa, 'lpa' => $lpa], ArrayObject::ARRAY_AS_PROPS);
 
         $donor = new CaseActor();
         $donor->setId(self::ACTOR_ID);
@@ -216,7 +232,7 @@ class CheckAccessCodesHandlerTest extends TestCase
 
         $this->lpaServiceProphecy
             ->getLpaById(self::IDENTITY_TOKEN, self::LPA_ID)
-            ->willReturn($lpa);
+            ->willReturn($lpaData);
 
         $this->viewerCodeServiceProphecy
             ->getShareCodes(self::IDENTITY_TOKEN, self::LPA_ID, false)
@@ -228,7 +244,7 @@ class CheckAccessCodesHandlerTest extends TestCase
             ->render('actor:check-access-codes', [
                 'actorToken' => self::LPA_ID,
                 'user' => self::IDENTITY_TOKEN,
-                'lpa' => $lpa,
+                'lpa' => $lpaData->lpa,
                 'shareCodes' => $shareCodes
             ])
             ->willReturn('');
@@ -247,6 +263,13 @@ class CheckAccessCodesHandlerTest extends TestCase
 
     public function test_createdBy_field_set_correctly_as_both_the_donor_or_attorney_name_when_actor_id_same()
     {
+        $actorLpa = [
+            'type' => 'donor',
+            'details' => [
+                'email' => 'babaragilson@opgtest.com',
+            ]
+        ];
+
         $this->authenticatorProphecy->authenticate(Argument::type(ServerRequestInterface::class))
             ->willReturn($this->userProphecy->reveal());
 
@@ -264,6 +287,8 @@ class CheckAccessCodesHandlerTest extends TestCase
             ]);
 
         $lpa = new Lpa();
+        $lpaData = new ArrayObject(['actor' => $actorLpa, 'lpa' => $lpa], ArrayObject::ARRAY_AS_PROPS);
+
 
         $donor = new CaseActor();
         $donor->setId(self::ACTOR_ID);
@@ -281,7 +306,7 @@ class CheckAccessCodesHandlerTest extends TestCase
 
         $this->lpaServiceProphecy
             ->getLpaById(self::IDENTITY_TOKEN, self::LPA_ID)
-            ->willReturn($lpa);
+            ->willReturn($lpaData);
 
         $this->viewerCodeServiceProphecy
             ->getShareCodes(self::IDENTITY_TOKEN, self::LPA_ID, false)
@@ -293,7 +318,7 @@ class CheckAccessCodesHandlerTest extends TestCase
             ->render('actor:check-access-codes', [
                 'actorToken' => self::LPA_ID,
                 'user' => self::IDENTITY_TOKEN,
-                'lpa' => $lpa,
+                'lpa' => $lpaData->lpa,
                 'shareCodes' => $shareCodes
             ])
             ->willReturn('');
@@ -305,6 +330,5 @@ class CheckAccessCodesHandlerTest extends TestCase
                 $this->assertEquals($code['CreatedBy'], $attorney->getFirstname() . ' ' . $attorney->getSurname());
             }
         }
-
     }
 }
