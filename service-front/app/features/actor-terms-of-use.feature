@@ -12,8 +12,9 @@ Feature: View terms of use from create account page
 
   @ui
   Scenario: The user can go back to the create account page from the actor terms of use page
-    Given I am on the actor terms of use page
-    When I request to go back to the create account page
+    Given I am on the create account page
+    When I navigate to the actor terms of use page
+    Then I request to go back to the create account page
     Then I am taken back to the create account page
 
   @ui

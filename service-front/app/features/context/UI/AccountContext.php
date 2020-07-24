@@ -2199,15 +2199,26 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/privacy-notice');
         $this->ui->assertPageContainsText('Privacy notice');
     }
+
+    /**
+     * @Given /^I navigate to the actor terms of use page$/
+     */
+    public function iNavigateToTheActorTermsOfUsePage()
+    {
+        $this->ui->assertPageAddress('/create-account');
+        $this->ui->clickLink('terms of use');
+        $this->ui->assertPageAddress('/terms-of-use');
+    }
+
     /**
      * @Given /^I am on the actor terms of use page$/
      */
     public function iAmOnTheActorTermsOfUsePage()
     {
-        $this->ui->visit('/create-account');
-        $this->ui->clickLink('terms of use');
+        $this->ui->visit('/terms-of-use');
         $this->ui->assertPageAddress('/terms-of-use');
     }
+
     /**
      * @Given /^I am on the actor privacy notice page$/
      */
