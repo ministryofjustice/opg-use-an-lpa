@@ -12,6 +12,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 
+/**
+ * Class ActorTermsOfUseHandler
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class ActorTermsOfUseHandler extends AbstractHandler
 {
     /**
