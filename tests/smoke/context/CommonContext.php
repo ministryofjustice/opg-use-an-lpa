@@ -62,7 +62,7 @@ class CommonContext implements Context
     public function iAccessTheOldServiceUrl(): void
     {
         $oldUrlHost = parse_url($this->ui->getMinkParameter('old_base_url'), PHP_URL_HOST);
-        $rootUrl = sprintf('http://%s/', $oldUrlHost);
+        $rootUrl = sprintf('https://%s/home', $oldUrlHost);
 
         $this->ui->visit($rootUrl);
     }
