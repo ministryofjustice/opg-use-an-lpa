@@ -32,7 +32,7 @@ workflows:
 
   pr_build:
       jobs:
-        - auto-cancel-jobs/cancel_previous_build_and_wait:
+        - cancel_redundant_builds:
             name: cancel_previous_jobs
             filters: { branches: { ignore: [master] } }
 
@@ -1183,3 +1183,18 @@ jobs:
             cd terraform/environment
             terraform init -lock-timeout=300s
             ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(../../scripts/pipeline/workspace_cleanup/get_workspaces_linux)
+
+  cancel_redundant_builds:
+    docker:
+      - image: circleci/python
+    steps:
+      - checkout
+      - run:
+          name: Cleanup Workspaces
+          command: |
+            python scripts/pipeline/cancel_previous_jobs/cancel_redundant_builds.py \
+            --circle_project_username ${CIRCLE_PROJECT_USERNAME} \
+            --circle_project_reponame ${CIRCLE_PROJECT_REPONAME} \
+            --circle_branch ${CIRCLE_BRANCH} \
+            --circle_builds_token ${CIRCLECI_API_KEY} \
+            --terms_to_waitfor dev_plan_shared_terraform, dev_apply_environment_terraform
