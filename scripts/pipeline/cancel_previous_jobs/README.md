@@ -1,6 +1,6 @@
 # Cancel Redundant CircleCI Builds
 
-This script will cancel redundant builds when new ones are started. If jobs matching the "terms_to_waitfor" are running, the script will wait for them to end first, then cancel the build.
+This script will cancel redundant builds when new ones are started. If jobs matching the `terms_to_waitfor` argument are running, the script will wait for them to end first, then cancel the build.
 
 ## Run script
 
@@ -18,5 +18,5 @@ python scripts/pipeline/cancel_previous_jobs/cancel_redundant_builds.py \
 --circle_project_reponame ${CIRCLE_PROJECT_REPONAME} \
 --circle_branch ${CIRCLE_BRANCH} \
 --circle_builds_token ${CIRCLECI_API_KEY} \
---terms_to_waitfor dev_plan_shared_terraform, dev_apply_environment_terraform
+--terms_to_waitfor dev_plan_shared_terraform,dev_apply_environment_terraform
 ```
