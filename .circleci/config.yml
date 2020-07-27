@@ -1110,6 +1110,7 @@ jobs:
   slack_environment_redeploy:
     docker:
       - image: circleci/python
+    resource_class: small
     parameters:
       environment:
         type: string
@@ -1127,6 +1128,7 @@ jobs:
   slack_notify_domain:
     docker:
       - image: circleci/python
+    resource_class: small
     steps:
       - checkout
       - attach_workspace:
@@ -1144,6 +1146,7 @@ jobs:
   slack_notify_production_release:
     docker:
       - image: circleci/python
+    resource_class: small
     steps:
       - checkout
       - attach_workspace:
@@ -1162,6 +1165,7 @@ jobs:
   ecr_scan_results:
     docker:
       - image: circleci/python
+    resource_class: small
     steps:
       - checkout
       - run:
@@ -1175,6 +1179,7 @@ jobs:
   workspace_cleanup:
     docker:
       - image: hashicorp/terraform
+    resource_class: small
     steps:
       - checkout
       - run:
@@ -1187,6 +1192,7 @@ jobs:
   cancel_redundant_builds:
     docker:
       - image: circleci/python
+    resource_class: small
     steps:
       - checkout
       - run:
