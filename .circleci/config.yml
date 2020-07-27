@@ -39,47 +39,43 @@ workflows:
         - use-my-lpa/lint_terraform:
             name: lint_terraform_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs]
 
         - use-my-lpa/node_test_web:
             name: test_web_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs]
 
         - use-my-lpa/node_build_web:
             name: build_web_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs,test_web_pr_build]
+            requires: [test_web_pr_build]
 
         - use-my-lpa/node_test_service_pdf:
             name: test_pdf_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs,cancel_previous_jobs]
+            requires: [cancel_previous_jobs]
 
         - use-my-lpa/docker_build_front_app:
             name: app_front_build_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs,build_web_pr_build]
+            requires: [build_web_pr_build]
 
         - use-my-lpa/docker_build_front_web:
             name: web_front_build_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs,build_web_pr_build]
+            requires: [build_web_pr_build]
 
         - use-my-lpa/docker_build_api_app:
             name: app_api_build_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs]
 
         - use-my-lpa/docker_build_api_web:
             name: web_api_build_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs]
 
         - use-my-lpa/docker_build_pdf:
             name: pdf_build_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs,test_pdf_pr_build]
+            requires: [test_pdf_pr_build]
 
         - use-my-lpa/coveralls_upload:
             name: coveralls_upload_pr_build
@@ -103,6 +99,7 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires:
               [
+                cancel_previous_jobs,
                 dev_plan_shared_terraform,
                 app_front_build_pr_build,
                 web_front_build_pr_build,
