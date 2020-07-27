@@ -940,13 +940,19 @@ orbs:
           - run:
               name: Run suite
               command: |
-                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)
-                actor_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
+                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
+                actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
+                public_facing_view_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)
+                public_facing_use_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
 
                 ln -sf ../features tests/smoke/features
 
                 cd tests/smoke
-                BEHAT_VIEWER_URL=https://$viewer_fqdn BEHAT_ACTOR_URL=https://$actor_fqdn vendor/bin/behat
+                BEHAT_VIEWER_URL=https://$public_facing_view_fqdn \
+                  BEHAT_ACTOR_URL=https://$public_facing_use_fqdn \
+                  BEHAT_OLD_VIEWER_URL=https://$viewer_fqdn \
+                  BEHAT_OLD_ACTOR_URL=https://$actor_fqdn \
+                  vendor/bin/behat
           - store_artifacts:
               path: tests/smoke/failed_step_screenshots
           - run:
