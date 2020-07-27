@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
+use Common\Form\Element\Email;
 use Common\Validator\EmailAddressValidator;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringToLower;
@@ -37,10 +38,7 @@ class Login extends AbstractForm implements InputFilterProviderInterface
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
-            'name' => 'email',
-            'type' => 'Email',
-        ]);
+        $this->add(new Email('email'));
 
         $this->add([
             'name' => 'password',
