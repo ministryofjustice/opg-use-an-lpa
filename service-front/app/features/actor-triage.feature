@@ -35,3 +35,17 @@ Feature: Triage
     Given I am on the triage page
     When I do not provide any options and continue
     Then I am not allowed to progress
+
+  @ui
+  Scenario: The banner will take the user to the triage page unless they are signed in
+    Given I am on the create account page
+    When I click the Use a lasting power of attorney link on the page
+    Then I am taken to the triage page of the service
+
+  @ui
+  Scenario: When signed in, clicking on the banner will redirect to the dashboard
+    Given I am a user of the lpa application
+    And I sign in
+    And I am on the your details page
+    When I click the Use a lasting power of attorney link on the page
+    Then I am taken to the dashboard page
