@@ -77,8 +77,8 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires: [test_pdf_pr_build]
 
-        - use-my-lpa/coveralls_upload:
-            name: coveralls_upload_pr_build
+        - use-my-lpa/codecov_upload:
+            name: codecov_upload_pr_build
             filters: { branches: { ignore: [master] } }
             requires:
               [
