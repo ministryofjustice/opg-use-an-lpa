@@ -57,7 +57,7 @@ class CommonContext implements Context
     }
 
     /**
-     * @I access the service with the old web address
+     * @Given I access the service with the old web address
      */
     public function iAccessTheOldServiceUrl(): void
     {
