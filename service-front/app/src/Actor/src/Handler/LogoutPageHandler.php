@@ -12,6 +12,7 @@ use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\RedirectResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -62,6 +63,6 @@ class LogoutPageHandler extends AbstractHandler implements SessionAware, UserAwa
             ]
         );
 
-        return $this->redirectToRoute('home');
+        return new RedirectResponse('https://www.gov.uk/done/use-lasting-power-of-attorney');
     }
 }
