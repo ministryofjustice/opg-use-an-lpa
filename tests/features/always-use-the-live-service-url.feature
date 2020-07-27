@@ -7,9 +7,9 @@ Feature: User is sent to the live sevice URL
   @smoke @viewer
   Scenario: I start a view journey
     Given I access the service with the old web address
-    Then Then the service homepage should be shown securely
+    Then the service homepage should be shown securely
 
   @smoke @actor
   Scenario: I start a use journey
     Given I access the service with the old web address
-    Then Then the service homepage should be shown securely
+    Then the service homepage should be shown securely
