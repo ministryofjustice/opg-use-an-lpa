@@ -19,6 +19,8 @@ services:
     environment:
       BEHAT_VIEWER_URL: http://viewer-web
       BEHAT_ACTOR_URL: http://actor-web
+      BEHAT_OLD_VIEWER_URL: http://viewer-web
+      BEHAT_OLD_ACTOR_URL: http://actor-web
 
   lpa-codes-pact-mock:
     image: pactfoundation/pact-cli:latest
