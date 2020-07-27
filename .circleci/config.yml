@@ -45,6 +45,7 @@ workflows:
             name: test_web_pr_build
             filters: { branches: { ignore: [master] } }
             requires: [cancel_previous_jobs]
+
         - use-my-lpa/node_build_web:
             name: build_web_pr_build
             filters: { branches: { ignore: [master] } }
@@ -54,10 +55,12 @@ workflows:
             name: test_pdf_pr_build
             filters: { branches: { ignore: [master] } }
             requires: [cancel_previous_jobs,cancel_previous_jobs]
+
         - use-my-lpa/docker_build_front_app:
             name: app_front_build_pr_build
             filters: { branches: { ignore: [master] } }
             requires: [cancel_previous_jobs,build_web_pr_build]
+
         - use-my-lpa/docker_build_front_web:
             name: web_front_build_pr_build
             filters: { branches: { ignore: [master] } }
@@ -67,6 +70,7 @@ workflows:
             name: app_api_build_pr_build
             filters: { branches: { ignore: [master] } }
             requires: [cancel_previous_jobs]
+
         - use-my-lpa/docker_build_api_web:
             name: web_api_build_pr_build
             filters: { branches: { ignore: [master] } }
@@ -141,10 +145,12 @@ workflows:
         - use-my-lpa/node_test_web:
             name: test_web_path_to_live
             filters: { branches: { only: [master] } }
+
         - use-my-lpa/node_build_web:
             name: build_web_path_to_live
             filters: { branches: { only: [master] } }
             requires: [test_web_path_to_live]
+
         - use-my-lpa/node_test_service_pdf:
             name: test_pdf_path_to_live
             filters: { branches: { only: [master] } }
@@ -153,6 +159,7 @@ workflows:
             name: app_front_build_path_to_live
             filters: { branches: { only: [master] } }
             requires: [build_web_path_to_live]
+
         - use-my-lpa/docker_build_front_web:
             name: web_front_build_path_to_live
             filters: { branches: { only: [master] } }
@@ -161,6 +168,7 @@ workflows:
         - use-my-lpa/docker_build_api_app:
             name: app_api_build_path_to_live
             filters: { branches: { only: [master] } }
+
         - use-my-lpa/docker_build_api_web:
             name: web_api_build_path_to_live
             filters: { branches: { only: [master] } }
@@ -180,6 +188,7 @@ workflows:
                 test_web_path_to_live,
                 test_pdf_path_to_live,
               ]
+
         - use-my-lpa/codecov_upload:
             name: codecov_upload_path_to_live
             filters: { branches: { only: [master] } }
@@ -190,7 +199,6 @@ workflows:
                 test_web_path_to_live,
                 test_pdf_path_to_live,
               ]
-
 
         # Provision and test preproduction
         - use-my-lpa/apply_shared_terraform:
@@ -220,6 +228,7 @@ workflows:
                 app_api_build_path_to_live,
                 pdf_build_path_to_live,
               ]
+
         - ecr_scan_results:
             name: ecr_scan_results_master
             filters: { branches: { only: [master] } }
@@ -250,6 +259,7 @@ workflows:
             workspace: production
             filters: { branches: { only: [master] } }
             requires: [preprod_run_behat_tests]
+
         - use-my-lpa/apply_environment_terraform:
             name: production_apply_environment_terraform
             workspace: production
