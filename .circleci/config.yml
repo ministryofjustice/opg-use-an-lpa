@@ -123,7 +123,7 @@ workflows:
         - use-my-lpa/seed_database:
             name: dev_seed_database
             filters: { branches: { ignore: [master] } }
-            # requires: [dev_apply_environment_terraform]
+            requires: [dev_apply_environment_terraform]
 
         - use-my-lpa/run_behat_suite:
             name: dev_run_behat_tests
