@@ -56,6 +56,31 @@ class BaseContext implements Context
         }
     }
 
+    public function setupOldBaseUrl(BeforeScenarioScope $scope): void
+    {
+        switch ($scope->getSuite()->getName()) {
+            case 'viewer':
+                $this->OldBaseUrl = getenv('BEHAT_OLD_VIEWER_URL') ?: 'http://viewer-web';
+                break;
+            case 'actor':
+                $this->OldBaseUrl = getenv('BEHAT_OLD_ACTOR_URL') ?: 'http://actor-web';
+                break;
+            default:
+                throw new SuiteConfigurationException(
+                    sprintf('Suite "%s" does not have a valid url configured', $scope->getSuite()->getName())
+                );
+        }
+
+        $environment = $scope->getEnvironment();
+
+        // we need to set this on *all* contexts
+        foreach ($environment->getContexts() as $context) {
+            if ($context instanceof RawMinkContext) {
+                $context->setMinkParameter('old_base_url', $this->OldBaseUrl);
+            }
+        }
+    }
+
     /**
      * @BeforeScenario
      * @param BeforeScenarioScope $scope
