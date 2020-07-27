@@ -140,7 +140,7 @@ locals {
 
 resource "aws_lb_listener_rule" "actor_maintenance" {
   listener_arn = aws_lb_listener.actor_loadbalancer.arn
-  priority     = 2
+  priority     = 3
   action {
     type = "fixed-response"
 
