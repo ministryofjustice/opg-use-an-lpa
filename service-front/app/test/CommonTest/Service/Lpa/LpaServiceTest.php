@@ -232,8 +232,7 @@ class LpaServiceTest extends TestCase
 
         $lpa = $service->getLpaById($token, $lpaId);
 
-        $this->assertInstanceOf(Lpa::class, $lpa);
-
+        $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
 
     /** @test */
