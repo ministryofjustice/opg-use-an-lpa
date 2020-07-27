@@ -940,8 +940,8 @@ orbs:
           - run:
               name: Run suite
               command: |
-                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
-                actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
+                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)
+                actor_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
 
                 ln -sf ../features tests/smoke/features
 
