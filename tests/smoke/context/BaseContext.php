@@ -55,7 +55,10 @@ class BaseContext implements Context
             }
         }
     }
-
+    /**
+     * @BeforeScenario
+     * @param BeforeScenarioScope $scope
+     */
     public function setupOldBaseUrl(BeforeScenarioScope $scope): void
     {
         switch ($scope->getSuite()->getName()) {
