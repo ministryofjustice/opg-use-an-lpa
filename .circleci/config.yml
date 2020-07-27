@@ -1190,7 +1190,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Cleanup Workspaces
+          name: Cancel Redundant Builds
           command: |
             python scripts/pipeline/cancel_previous_jobs/cancel_redundant_builds.py \
             --circle_project_username ${CIRCLE_PROJECT_USERNAME} \
