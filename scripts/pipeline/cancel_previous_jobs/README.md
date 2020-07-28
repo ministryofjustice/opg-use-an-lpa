@@ -18,5 +18,5 @@ python scripts/pipeline/cancel_previous_jobs/cancel_redundant_builds.py \
 --circle_project_reponame ${CIRCLE_PROJECT_REPONAME} \
 --circle_branch ${CIRCLE_BRANCH} \
 --circle_builds_token ${CIRCLECI_API_KEY} \
---terms_to_waitfor dev_plan_shared_terraform,dev_apply_environment_terraform
+--terms_to_waitfor "dev_plan_shared_terraform,dev_apply_environment_terraform"
 ```

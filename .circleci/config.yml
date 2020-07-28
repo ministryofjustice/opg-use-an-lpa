@@ -52,7 +52,6 @@ workflows:
         - use-my-lpa/node_test_service_pdf:
             name: test_pdf_pr_build
             filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs]
 
         - use-my-lpa/docker_build_front_app:
             name: app_front_build_pr_build
