@@ -85,7 +85,7 @@ Feature: View an LPA via sharecode
 
     Examples:
       | surname | reason |
-      |  | Enter the donor's surname |
+      |  | Enter the donor's last name |
 
   @ui
   Scenario: The user enters an expired sharecode and is shown the reason for not able to see the details of an LPA
