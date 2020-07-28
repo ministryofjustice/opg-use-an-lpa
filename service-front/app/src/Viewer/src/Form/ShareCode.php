@@ -74,7 +74,7 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message'  => 'Enter the donor\'s surname',
+                            'message'  => 'Enter the donor\'s last name',
                         ],
                     ]
                 ]
