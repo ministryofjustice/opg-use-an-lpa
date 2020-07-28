@@ -57,6 +57,17 @@ class CommonContext implements Context
     }
 
     /**
+     * @Given I access the service with the old web address
+     */
+    public function iAccessTheOldServiceUrl(): void
+    {
+        $oldUrlHost = parse_url($this->ui->getMinkParameter('old_base_url'), PHP_URL_HOST);
+        $rootUrl = sprintf('https://%s/home', $oldUrlHost);
+
+        $this->ui->visit($rootUrl);
+    }
+
+    /**
      * @Given I fetch the healthcheck endpoint
      */
     public function iFetchTheHealthcheckEndpoint(): void
