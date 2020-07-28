@@ -11,7 +11,7 @@ get_lpas() {
       | jq '.Items[].SiriusUid.S' | sort | uniq | wc -l
 }
 
-# if less than 2 args supplied, use now and a month ago as todate and fromdate 
+# if less than 2 args supplied, then as a default, use today and a month ago as todate and fromdate 
 if [ $# -lt 2 ]
 then
     todate=$(date +"%Y-%m-%d")
@@ -23,6 +23,7 @@ then
         fromdate=$(date -d "1 month ago" +"%Y-%m-%d")
     fi
 else
+# if 2 args were supplied, we use these as fromdate and todate
     fromdate=$1
     todate=$2
 fi
