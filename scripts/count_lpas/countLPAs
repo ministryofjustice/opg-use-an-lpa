@@ -1,15 +1,31 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# count LPAs added between the specified dates, by doing a DynamoDB scan and reducing this down to unique SiriusUids so that we don't count LPAs twice when 
-# added to more than one account
+# count LPAs added between the specified dates, by doing a DynamoDB scan and reducing this down todate unique SiriusUids so that we don't count LPAs twice when 
+# added todate more than one account
 
 get_lpas() {
-    aws-vault exec ual-dev -- aws dynamodb scan \
+    aws dynamodb scan \
       --table-name demo-UserLpaActorMap \
-      --filter-expression "Added BETWEEN :from AND :to" \
-      --expression-attribute-values "{ \":from\" : { \"S\" : \"$1\" }, \":to\" : { \"S\" : \"$2\" } }" \
+      --filter-expression "Added BETWEEN :fromdate AND :todate" \
+      --expression-attribute-values "{ \":fromdate\" : { \"S\" : \"$fromdate\" }, \":todate\" : { \"S\" : \"$todate\" } }" \
       | jq '.Items[].SiriusUid.S' | sort | uniq | wc -l
 }
 
-get_lpas 2019-01-01 2020-07-07
+# if less than 2 args supplied, use now and a month ago as todate and fromdate 
+if [ $# -lt 2 ]
+then
+    todate=$(date +"%Y-%m-%d")
+# handle different date command on Mac and Linux
+    if [ $(uname) == "Darwin" ] 
+    then
+        fromdate=$(date -v-1m +"%Y-%m-%d")
+    else
+        fromdate=$(date -d "1 month ago" +"%Y-%m-%d")
+    fi
+else
+    fromdate=$1
+    todate=$2
+fi
+echo "LPAs added between $fromdate and $todate:"
+get_lpas 
 
