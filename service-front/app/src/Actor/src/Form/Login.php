@@ -32,8 +32,6 @@ class Login extends AbstractForm implements InputFilterProviderInterface
         self::NOT_SAME => 'Security validation failed. Please try again.'
     ];
 
-
-
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
