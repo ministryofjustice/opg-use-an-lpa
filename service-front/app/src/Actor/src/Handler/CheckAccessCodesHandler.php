@@ -63,7 +63,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         $user = $this->getUser($request);
         $identity = (!is_null($user)) ? $user->getIdentity() : null;
 
-        $lpa = $this->lpaService->getLpaById($identity, $actorLpaToken);
+        $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
         $shareCodes = $this->viewerCodeService->getShareCodes(
             $identity,
@@ -78,19 +78,19 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                 $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-cancel-code'));
 
                 $form->setData([
-                    'lpa_token' => $actorLpaToken,
-                    'viewer_code' => $code['ViewerCode'],
-                    'organisation' => $code['Organisation'],
+                    'lpa_token'     => $actorLpaToken,
+                    'viewer_code'   => $code['ViewerCode'],
+                    'organisation'  => $code['Organisation'],
                 ]);
 
                 $shareCodes[$key]['form'] = $form;
             }
 
-            if ($lpa->getDonor()->getId() == $code['ActorId']) {
-                $shareCodes[$key]['CreatedBy'] = $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname();
+            if ($lpaData->lpa->getDonor()->getId() == $code['ActorId']) {
+                $shareCodes[$key]['CreatedBy'] = $lpaData->lpa->getDonor()->getFirstname() . ' ' . $lpaData->lpa->getDonor()->getSurname();
             }
 
-            foreach ($lpa->getAttorneys() as $attorney) {
+            foreach ($lpaData->lpa->getAttorneys() as $attorney) {
                 if ($attorney->getId() == $code['ActorId']) {
                     $shareCodes[$key]['CreatedBy'] = $attorney->getFirstname() . ' ' . $attorney->getSurname();
                 }
@@ -98,10 +98,10 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         }
 
         return new HtmlResponse($this->renderer->render('actor::check-access-codes', [
-            'actorToken' => $actorLpaToken,
-            'user' => $user,
-            'lpa' => $lpa,
-            'shareCodes' => $shareCodes,
+            'actorToken'    => $actorLpaToken,
+            'user'          => $user,
+            'lpa'           => $lpaData->lpa,
+            'shareCodes'    => $shareCodes,
         ]));
     }
 }

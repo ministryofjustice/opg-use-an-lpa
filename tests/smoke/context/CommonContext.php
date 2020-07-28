@@ -44,6 +44,30 @@ class CommonContext implements Context
     }
 
     /**
+     * @Given I access the service root path
+     * @Given I access the viewer root path
+     * @Given I access the actor root path
+     */
+    public function iAccessTheServiceRoot(): void
+    {
+        $baseUrlHost = parse_url($this->ui->getMinkParameter('base_url'), PHP_URL_HOST);
+        $rootUrl = sprintf('http://%s/', $baseUrlHost);
+
+        $this->ui->visit($rootUrl);
+    }
+
+    /**
+     * @Given I access the service with the old web address
+     */
+    public function iAccessTheOldServiceUrl(): void
+    {
+        $oldUrlHost = parse_url($this->ui->getMinkParameter('old_base_url'), PHP_URL_HOST);
+        $rootUrl = sprintf('https://%s/home', $oldUrlHost);
+
+        $this->ui->visit($rootUrl);
+    }
+
+    /**
      * @Given I fetch the healthcheck endpoint
      */
     public function iFetchTheHealthcheckEndpoint(): void
@@ -64,6 +88,16 @@ class CommonContext implements Context
         $expectedUrl = sprintf('https://%s/home', $baseUrlHost);
 
         $this->assertExactUrl($expectedUrl);
+    }
+
+    /**
+     * @Then the service should redirect me to :startpage
+     */
+    public function theServiceShouldRedirectToGovUk(string $startpage): void
+    {
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+
+        $this->assertExactUrl($startpage);
     }
 
     /**

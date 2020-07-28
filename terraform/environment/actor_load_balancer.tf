@@ -63,6 +63,56 @@ resource "aws_lb_listener_certificate" "actor_loadbalancer_live_service_certific
   certificate_arn = data.aws_acm_certificate.public_facing_certificate_use.arn
 }
 
+# redirect root to gov.uk
+resource "aws_lb_listener_rule" "redirect_use_root_to_gov" {
+  listener_arn = aws_lb_listener.actor_loadbalancer.arn
+  priority     = 1
+  action {
+    type = "redirect"
+
+    redirect {
+      host        = "www.gov.uk"
+      path        = "/use-lasting-power-of-attorney"
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+
+  condition {
+    path_pattern {
+      values = [
+        "/",
+      ]
+    }
+  }
+}
+
+# rewrite to live service url
+resource "aws_lb_listener_rule" "rewrite_use_to_live_service_url" {
+  listener_arn = aws_lb_listener.actor_loadbalancer.arn
+  priority     = 2
+  action {
+    type = "redirect"
+
+    redirect {
+      host        = aws_route53_record.public_facing_use_lasting_power_of_attorney.fqdn
+      path        = "/#{path}"
+      query       = "#{query}"
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+  condition {
+    host_header {
+      values = [
+        aws_route53_record.actor-use-my-lpa.fqdn
+      ]
+    }
+  }
+}
+
 # maintenance site switching
 resource "aws_ssm_parameter" "actor_maintenance_switch" {
   name            = "${local.environment}_actor_enable_maintenance"
@@ -90,7 +140,7 @@ locals {
 
 resource "aws_lb_listener_rule" "actor_maintenance" {
   listener_arn = aws_lb_listener.actor_loadbalancer.arn
-
+  priority     = 3
   action {
     type = "fixed-response"
 

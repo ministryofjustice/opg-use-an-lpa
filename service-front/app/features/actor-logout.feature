@@ -11,4 +11,4 @@ Feature: A user of the system is able to logout
   Scenario: A user can logout
     Given I am currently signed in
     When I logout of the application
-    Then I can no longer access the dashboard page
+    Then I am taken to complete a satisfaction survey

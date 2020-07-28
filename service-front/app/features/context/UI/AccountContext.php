@@ -39,14 +39,11 @@ class AccountContext implements Context
     use BaseUiContextTrait;
 
     /**
-     * @Then /^I can no longer access the dashboard page$/
+     * @Then /^I am taken to complete a satisfaction survey$/
      */
-    public function iCanNoLongerAccessTheDashboardPage()
+    public function iAmTakenToCompleteASatisfactionSurvey()
     {
-        $this->ui->visit('/lpa/dashboard');
-
-        // a non-logged in attempt will end up at the login page
-        $this->ui->assertPageAddress('/login');
+        $this->ui->assertPageAddress('/done/use-lasting-power-of-attorney');
     }
 
     /**
@@ -2199,6 +2196,17 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/privacy-notice');
         $this->ui->assertPageContainsText('Privacy notice');
     }
+
+    /**
+     * @Given /^I navigate to the actor terms of use page$/
+     */
+    public function iNavigateToTheActorTermsOfUsePage()
+    {
+        $this->ui->assertPageAddress('/create-account');
+        $this->ui->clickLink('terms of use');
+        $this->ui->assertPageAddress('/terms-of-use');
+    }
+
     /**
      * @Given /^I am on the actor terms of use page$/
      */
@@ -2207,6 +2215,7 @@ class AccountContext implements Context
         $this->ui->visit('/terms-of-use');
         $this->ui->assertPageAddress('/terms-of-use');
     }
+
     /**
      * @Given /^I am on the actor privacy notice page$/
      */

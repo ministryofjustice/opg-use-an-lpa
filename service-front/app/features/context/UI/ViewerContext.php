@@ -437,6 +437,16 @@ class ViewerContext implements Context
     }
 
     /**
+     * @Given /^I navigate to the viewer privacy notice page$/
+     */
+    public function iNavigateToTheViewerPrivacyNoticePage()
+    {
+        $this->ui->clickLink('privacy notice');
+        $this->ui->assertPageContainsText('View a lasting power of attorney');
+        $this->ui->assertPageAddress('/privacy-notice');
+    }
+
+    /**
      * @When /^I request to go back to the enter code page$/
      * @When /^I request to go back to the terms of use page$/
      */
@@ -561,7 +571,7 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/cookies');
         $this->ui->assertPageContainsText('View a lasting power of attorney service');
     }
-  
+
     /**
      * @Given /^I am on the triage page$/
      */
