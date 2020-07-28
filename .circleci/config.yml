@@ -984,11 +984,11 @@ orbs:
           - run:
               name: Run test
               command: |
-                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
+                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)
                 viewer_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$viewer_fqdn/healthcheck)
                 [[ $viewer_response == 200 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
 
-                actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
+                actor_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
                 actor_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$actor_fqdn/healthcheck)
                 [[ $actor_response == 200 ]] || (echo "Error with actor health check. HTTP status: ${actor_response}" && exit 1)
 
