@@ -32,7 +32,7 @@
 
                             {{ govuk_form_element(form.get('donor_surname'), { 'label': 'Donor last name' }) }}
 
-                            {{ govuk_form_element(form.get('lpa_code'), { 'label': 'LPA access code', 'input_prefix': 'V - ', 'attr' : {'class': 'govuk-input--width-10'}}) }}
+                            {{ govuk_form_element(form.get('lpa_code'), { 'label': 'LPA access code', 'input_prefix': 'V - ', 'hint': 'Access codes are 13 characters long and start with a V<br/>For example, V-AB12-CD34-EF56', 'attr' : {'class': 'govuk-input--width-10'}}) }}
 
                         </div>
 
