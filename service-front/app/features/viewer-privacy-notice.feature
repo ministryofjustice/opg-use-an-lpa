@@ -13,8 +13,9 @@ Feature: View privacy notice from terms of use page
 
   @ui
   Scenario: The user can go back to the terms of use page from the privacy notice page
-    Given I am on the viewer privacy notice page
-    When I request to go back to the terms of use page
+    Given I am on the viewer terms of use page
+    When I navigate to the viewer privacy notice page
+    Then I request to go back to the terms of use page
     Then I am taken back to the terms of use page
 
   @ui

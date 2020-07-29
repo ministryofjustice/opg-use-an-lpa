@@ -54,7 +54,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->route('/', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home-trial');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
+
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'actor-cookies');
+    $app->get('/terms-of-use', [Actor\Handler\ActorTermsOfUseHandler::class], 'actor-terms-of-use');
+    $app->get('/privacy-notice', [Actor\Handler\ActorPrivacyNoticeHandler::class], 'actor-privacy-notice');
 
     // User creation
     $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');
@@ -83,12 +86,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\YourDetailsHandler::class,
     ], 'your-details');
-    $app->get('/terms-of-use', [
-        Actor\Handler\ActorTermsOfUseHandler::class
-    ], 'actor-terms-of-use');
-    $app->get('/privacy-notice', [
-        Actor\Handler\ActorPrivacyNoticeHandler::class
-    ], 'actor-privacy-notice');
     $app->route('/change-password', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangePasswordHandler::class

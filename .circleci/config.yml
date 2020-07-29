@@ -32,6 +32,10 @@ workflows:
 
   pr_build:
       jobs:
+        - cancel_redundant_builds:
+            name: cancel_previous_jobs
+            filters: { branches: { ignore: [master] } }
+
         - use-my-lpa/lint_terraform:
             name: lint_terraform_pr_build
             filters: { branches: { ignore: [master] } }
@@ -39,10 +43,12 @@ workflows:
         - use-my-lpa/node_test_web:
             name: test_web_pr_build
             filters: { branches: { ignore: [master] } }
+
         - use-my-lpa/node_build_web:
             name: build_web_pr_build
             filters: { branches: { ignore: [master] } }
             requires: [test_web_pr_build]
+
         - use-my-lpa/node_test_service_pdf:
             name: test_pdf_pr_build
             filters: { branches: { ignore: [master] } }
@@ -60,6 +66,7 @@ workflows:
         - use-my-lpa/docker_build_api_app:
             name: app_api_build_pr_build
             filters: { branches: { ignore: [master] } }
+
         - use-my-lpa/docker_build_api_web:
             name: web_api_build_pr_build
             filters: { branches: { ignore: [master] } }
@@ -68,17 +75,6 @@ workflows:
             name: pdf_build_pr_build
             filters: { branches: { ignore: [master] } }
             requires: [test_pdf_pr_build]
-
-        - use-my-lpa/coveralls_upload:
-            name: coveralls_upload_pr_build
-            filters: { branches: { ignore: [master] } }
-            requires:
-              [
-                app_front_build_pr_build,
-                app_api_build_pr_build,
-                test_web_pr_build,
-                test_pdf_pr_build,
-              ]
 
         - use-my-lpa/codecov_upload:
             name: codecov_upload_pr_build
@@ -95,13 +91,14 @@ workflows:
         - use-my-lpa/plan_shared_terraform:
             name: dev_plan_shared_terraform
             filters: { branches: { ignore: [master] } }
-            requires: [lint_terraform_pr_build]
+            requires: [cancel_previous_jobs,lint_terraform_pr_build]
 
         - use-my-lpa/apply_environment_terraform:
             name: dev_apply_environment_terraform
             filters: { branches: { ignore: [master] } }
             requires:
               [
+                cancel_previous_jobs,
                 dev_plan_shared_terraform,
                 app_front_build_pr_build,
                 web_front_build_pr_build,
@@ -120,7 +117,7 @@ workflows:
                 web_api_build_pr_build,
                 app_api_build_pr_build,
                 pdf_build_pr_build,
-                dev_apply_environment_terraform,
+                # dev_apply_environment_terraform,
               ]
 
         - use-my-lpa/seed_database:
@@ -144,10 +141,12 @@ workflows:
         - use-my-lpa/node_test_web:
             name: test_web_path_to_live
             filters: { branches: { only: [master] } }
+
         - use-my-lpa/node_build_web:
             name: build_web_path_to_live
             filters: { branches: { only: [master] } }
             requires: [test_web_path_to_live]
+
         - use-my-lpa/node_test_service_pdf:
             name: test_pdf_path_to_live
             filters: { branches: { only: [master] } }
@@ -156,6 +155,7 @@ workflows:
             name: app_front_build_path_to_live
             filters: { branches: { only: [master] } }
             requires: [build_web_path_to_live]
+
         - use-my-lpa/docker_build_front_web:
             name: web_front_build_path_to_live
             filters: { branches: { only: [master] } }
@@ -164,6 +164,7 @@ workflows:
         - use-my-lpa/docker_build_api_app:
             name: app_api_build_path_to_live
             filters: { branches: { only: [master] } }
+
         - use-my-lpa/docker_build_api_web:
             name: web_api_build_path_to_live
             filters: { branches: { only: [master] } }
@@ -183,6 +184,7 @@ workflows:
                 test_web_path_to_live,
                 test_pdf_path_to_live,
               ]
+
         - use-my-lpa/codecov_upload:
             name: codecov_upload_path_to_live
             filters: { branches: { only: [master] } }
@@ -193,7 +195,6 @@ workflows:
                 test_web_path_to_live,
                 test_pdf_path_to_live,
               ]
-
 
         # Provision and test preproduction
         - use-my-lpa/apply_shared_terraform:
@@ -223,6 +224,7 @@ workflows:
                 app_api_build_path_to_live,
                 pdf_build_path_to_live,
               ]
+
         - ecr_scan_results:
             name: ecr_scan_results_master
             filters: { branches: { only: [master] } }
@@ -253,6 +255,7 @@ workflows:
             workspace: production
             filters: { branches: { only: [master] } }
             requires: [preprod_run_behat_tests]
+
         - use-my-lpa/apply_environment_terraform:
             name: production_apply_environment_terraform
             workspace: production
@@ -942,11 +945,17 @@ orbs:
               command: |
                 viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
                 actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
+                public_facing_view_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)
+                public_facing_use_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
 
                 ln -sf ../features tests/smoke/features
 
                 cd tests/smoke
-                BEHAT_VIEWER_URL=https://$viewer_fqdn BEHAT_ACTOR_URL=https://$actor_fqdn vendor/bin/behat
+                BEHAT_VIEWER_URL=https://$public_facing_view_fqdn \
+                  BEHAT_ACTOR_URL=https://$public_facing_use_fqdn \
+                  BEHAT_OLD_VIEWER_URL=https://$viewer_fqdn \
+                  BEHAT_OLD_ACTOR_URL=https://$actor_fqdn \
+                  vendor/bin/behat
           - store_artifacts:
               path: tests/smoke/failed_step_screenshots
           - run:
@@ -974,11 +983,11 @@ orbs:
           - run:
               name: Run test
               command: |
-                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
+                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)
                 viewer_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$viewer_fqdn/healthcheck)
                 [[ $viewer_response == 200 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
 
-                actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
+                actor_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
                 actor_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$actor_fqdn/healthcheck)
                 [[ $actor_response == 200 ]] || (echo "Error with actor health check. HTTP status: ${actor_response}" && exit 1)
 
@@ -986,6 +995,7 @@ jobs:
   slack_environment_redeploy:
     docker:
       - image: circleci/python
+    resource_class: small
     parameters:
       environment:
         type: string
@@ -1003,6 +1013,7 @@ jobs:
   slack_notify_domain:
     docker:
       - image: circleci/python
+    resource_class: small
     steps:
       - checkout
       - attach_workspace:
@@ -1020,6 +1031,7 @@ jobs:
   slack_notify_production_release:
     docker:
       - image: circleci/python
+    resource_class: small
     steps:
       - checkout
       - attach_workspace:
@@ -1038,6 +1050,7 @@ jobs:
   ecr_scan_results:
     docker:
       - image: circleci/python
+    resource_class: small
     steps:
       - checkout
       - run:
@@ -1051,6 +1064,7 @@ jobs:
   workspace_cleanup:
     docker:
       - image: hashicorp/terraform
+    resource_class: small
     steps:
       - checkout
       - run:
@@ -1059,3 +1073,19 @@ jobs:
             cd terraform/environment
             terraform init -lock-timeout=300s
             ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(../../scripts/pipeline/workspace_cleanup/get_workspaces_linux)
+
+  cancel_redundant_builds:
+    docker:
+      - image: circleci/python
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Cancel Redundant Builds
+          command: |
+            python scripts/pipeline/cancel_previous_jobs/cancel_redundant_builds.py \
+            --circle_project_username ${CIRCLE_PROJECT_USERNAME} \
+            --circle_project_reponame ${CIRCLE_PROJECT_REPONAME} \
+            --circle_branch ${CIRCLE_BRANCH} \
+            --circle_builds_token ${CIRCLECI_API_KEY} \
+            --terms_to_waitfor "dev_plan_shared_terraform,dev_apply_environment_terraform"
