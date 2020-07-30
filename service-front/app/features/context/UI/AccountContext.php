@@ -2903,7 +2903,7 @@ class AccountContext implements Context
      */
     public function iShouldBeToldThatICouldNotChangeMyEmailBecauseTheEmailIsInvalid()
     {
-        $this->ui->assertPageContainsText('Enter a valid email address');
+        $this->ui->assertPageContainsText('Enter an email address in the correct format, like name@example.com');
     }
 
     /**

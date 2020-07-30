@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 class EmailAddressValidatorTest extends TestCase
 {
     /** @test */
-    public function correctly_validates_known_good_email() 
+    public function correctly_validates_known_good_email()
     {
         $validator = new EmailAddressValidator();
 
@@ -37,6 +37,6 @@ class EmailAddressValidatorTest extends TestCase
         $valid = $validator->isValid('notan@email');
 
         $this->assertEquals(false, $valid);
-        $this->assertEquals('Enter a valid email address', $validator->getMessages()[0]);
+        $this->assertEquals('Enter an email address in the correct format, like name@example.com', $validator->getMessages()[0]);
     }
 }

@@ -61,4 +61,4 @@ Feature: A user of the system is able to login
   Scenario: A user is not allowed to login with improper email address
     Given I access the login form
     When I enter incorrect email with "TEST@ test. com" and "pa33w0rd" below
-    Then I should see relevant "Enter a valid email address" message
+    Then I should see relevant "Enter an email address in the correct format, like name@example.com" message

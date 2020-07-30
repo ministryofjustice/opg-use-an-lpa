@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
+use Common\Form\Element\Email;
 use Common\Validator\EmailAddressValidator;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringToLower;
@@ -26,15 +27,9 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
     {
         parent::__construct(self::FORM_NAME, $guard);
 
-        $this->add([
-            'name' => 'email',
-            'type' => 'Email',
-        ]);
+        $this->add(new Email('email'));
 
-        $this->add([
-            'name' => 'email_confirm',
-            'type' => 'Email',
-        ]);
+        $this->add(new Email('email_confirm'));
     }
 
     /**
