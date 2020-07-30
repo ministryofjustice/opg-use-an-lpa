@@ -31,7 +31,7 @@ class PasswordChange extends AbstractForm implements InputFilterProviderInterfac
      * @var array
      */
     protected array $messageTemplates = [
-        self::INVALID_PASSWORD => 'The current password you entered is incorrect',
+        self::INVALID_PASSWORD => 'Current password is incorrect',
     ];
 
     /**
@@ -96,7 +96,7 @@ class PasswordChange extends AbstractForm implements InputFilterProviderInterfac
                             'encoding' => 'UTF-8',
                             'min'      => 8,
                             'messages' => [
-                                StringLength::TOO_SHORT => 'Your new password must be at least eight characters long',
+                                StringLength::TOO_SHORT => 'Password must be 8 characters or more',
                             ],
                         ],
                     ],
@@ -122,7 +122,7 @@ class PasswordChange extends AbstractForm implements InputFilterProviderInterfac
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'messages' => [
-                                NotEmpty::IS_EMPTY => 'Confirm your new password',
+                                NotEmpty::IS_EMPTY => 'Enter your password again to confirm it',
                             ],
                         ],
                     ],

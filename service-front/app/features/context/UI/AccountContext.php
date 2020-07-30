@@ -473,7 +473,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/forgot-password/123456');
 
-        $this->ui->assertPageContainsText('at least ' . $reason);
+        $this->ui->assertPageContainsText($reason);
     }
 
     /**
@@ -1912,7 +1912,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('change-password');
 
-        $this->ui->assertPageContainsText('The current password you entered is incorrect');
+        $this->ui->assertPageContainsText('Current password is incorrect');
     }
 
     /**
@@ -1944,7 +1944,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/change-password');
 
-        $this->ui->assertPageContainsText('at least ' . $reason);
+        $this->ui->assertPageContainsText($reason);
     }
 
     /**

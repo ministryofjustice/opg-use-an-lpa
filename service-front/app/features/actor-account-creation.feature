@@ -59,8 +59,8 @@ Feature: Account creation
     Examples:
       | password       | confirm_password  |reasons                     |
       | password       | pass              | Passwords do not match|
-      | password       | password          | Your password must include at least one capital letter (A-Z)|
-      | password       | password          | Your password must include at least one digit (0-9)         |
+      | password       | password          | Password must include a capital letter |
+      | password       | password          | Password must include a number         |
 
   @ui
   Scenario Outline: As a new user I want to be allowed email entry in uppercase format when creating an account

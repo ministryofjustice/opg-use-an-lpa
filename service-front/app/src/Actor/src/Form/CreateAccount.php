@@ -111,7 +111,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                             'encoding' => 'UTF-8',
                             'min'      => 8,
                             'messages' => [
-                                StringLength::TOO_SHORT => 'Your password must be at least eight characters long',
+                                StringLength::TOO_SHORT => 'Password must be 8 characters or more',
                             ],
                         ],
                     ],
