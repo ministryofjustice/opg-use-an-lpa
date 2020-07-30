@@ -64,8 +64,8 @@ Feature: A user of the system is able to login
     Then I should see relevant <error> message
     Examples:
       |email_format           |password|error                       |
-      |GAP TEST@ test. com    |pa33w0rd|Enter a valid email address |
-      |                       |pa33w0rd|Enter your email address    |
+      |GAP TEST@ test. com    |pa33w0rd|Enter an email address in the correct format, like name@example.com |
+      |                       |pa33w0rd|Enter an email address in the correct format, like name@example.com |
       |nopassword@test.com    |        |Enter your password         |
 
   @ui @security

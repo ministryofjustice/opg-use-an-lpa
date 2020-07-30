@@ -59,5 +59,5 @@ Feature: Password Reset
 
     Examples:
       |email           |email_confirmation | error                        |
-      |TEST@ test.com  |TEST@ test.com     | Enter a valid email address  |
+      |TEST@ test.com  |TEST@ test.com     | Enter an email address in the correct format, like name@example.com  |
 

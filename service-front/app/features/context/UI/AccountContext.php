@@ -165,7 +165,7 @@ class AccountContext implements Context
      */
     public function iAmToldMyCredentialsAreIncorrect()
     {
-        $this->ui->assertPageContainsText('Email and password combination not recognised');
+        $this->ui->assertPageContainsText('We cannot find an account with that email address and password');
     }
 
     /**
@@ -2530,7 +2530,7 @@ class AccountContext implements Context
     public function myOldAccountIsNotFound()
     {
         $this->ui->assertPageAddress('/login');
-        $this->ui->assertPageContainsText('Email and password combination not recognised. Please try signing in again below or create an account');
+        $this->ui->assertPageContainsText('We cannot find an account with that email address and password');
     }
 
     /**
@@ -2903,7 +2903,7 @@ class AccountContext implements Context
      */
     public function iShouldBeToldThatICouldNotChangeMyEmailBecauseTheEmailIsInvalid()
     {
-        $this->ui->assertPageContainsText('Enter a valid email address');
+        $this->ui->assertPageContainsText('Enter an email address in the correct format, like name@example.com');
     }
 
     /**

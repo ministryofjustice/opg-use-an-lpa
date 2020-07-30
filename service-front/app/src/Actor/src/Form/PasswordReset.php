@@ -76,7 +76,7 @@ class PasswordReset extends AbstractForm implements InputFilterProviderInterface
                         'options' => [
                             'token'    => 'password_confirm',
                             'messages' => [
-                                Identical::NOT_SAME => 'The passwords did not match',
+                                Identical::NOT_SAME => 'Passwords do not match',
                             ],
                         ],
                     ],

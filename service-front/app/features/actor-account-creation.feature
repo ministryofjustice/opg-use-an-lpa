@@ -41,11 +41,11 @@ Feature: Account creation
     Then I should be told my account could not be created due to <reasons>
     Examples:
       | email1          | password1 | password2 | terms | reasons                          |
-      |                 | Password1 | Password1 |   1   | Enter your email address         |
-      |invalid_email    | Password1 | Password1 |   1   | Enter a valid email address      |
+      |                 | Password1 | Password1 |   1   | Enter an email address in the correct format, like name@example.com        |
+      |invalid_email    | Password1 | Password1 |   1   | Enter an email address in the correct format, like name@example.com     |
       |TEST@example.com | Password1 |           |   1   | Confirm your password            |
-      |test@EXAMPLE.com | Password1 | Password1 |       | You must accept the terms of use |
-      |test@ Example.com| Password1 | Password1 |   1   | Enter a valid email address      |
+      |test@EXAMPLE.com | Password1 | Password1 |       | You must accept the terms of use to create an account |
+      |test@ Example.com| Password1 | Password1 |   1   | Enter an email address in the correct format, like name@example.com      |
 
 
   @ui @integration
@@ -58,7 +58,7 @@ Feature: Account creation
 
     Examples:
       | password       | confirm_password  |reasons                     |
-      | password       | pass              | The passwords did not match|
+      | password       | pass              | Passwords do not match|
       | password       | password          | Your password must include at least one capital letter (A-Z)|
       | password       | password          | Your password must include at least one digit (0-9)         |
 

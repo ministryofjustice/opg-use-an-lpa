@@ -83,7 +83,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'messages'           => [
-                                NotEmpty::IS_EMPTY => 'Enter your email address',
+                                NotEmpty::IS_EMPTY => 'Enter an email address in the correct format, like name@example.com',
                             ],
                         ],
                     ],
@@ -123,7 +123,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                         'options' => [
                             'token'    => 'password_confirm',
                             'messages' => [
-                                Identical::NOT_SAME => 'The passwords did not match',
+                                Identical::NOT_SAME => 'Passwords do not match',
                             ],
                         ],
                     ],
@@ -145,7 +145,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
             ],
             'terms'            => [
                 'required'      => true,
-                'error_message' => 'You must accept the terms of use',
+                'error_message' => 'You must accept the terms of use to create an account',
                 'validators'    => [
                     [
                         'name'    => Identical::class,
@@ -154,7 +154,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                             'token' => '1',
                             'literal' => true,
                             'messages' => [
-                                Identical::NOT_SAME => 'You must accept the terms of use',
+                                Identical::NOT_SAME => 'You must accept the terms of use to create an account',
                             ],
                         ],
                     ],
