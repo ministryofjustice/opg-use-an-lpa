@@ -10,7 +10,7 @@ use Common\Form\Element\Csrf;
 use CommonTest\Form\LaminasFormTests;
 use CommonTest\Form\TestsLaminasForm;
 use Laminas\Form\Element\Password;
-use Laminas\Form\Element\Text;
+use Common\Form\Element\Email;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -35,7 +35,7 @@ class EmailChangeTest extends TestCase implements TestsLaminasForm
     {
         return [
             '__csrf' => Csrf::class,
-            'new_email_address' => Text::class,
+            'new_email_address' => Email::class,
             'current_password' => Password::class,
         ];
     }

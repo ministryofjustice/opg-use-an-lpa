@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\View\Twig;
 
 use Common\Form\AbstractForm;
+use Common\Form\Element\Email as CustomEmail;
 use Common\Form\Fieldset\Date;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
@@ -30,7 +31,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
         Element\Csrf::class     => 'form_input_hidden',
         Element\Hidden::class   => 'form_input_hidden',
         Element\Password::class => 'form_input_password',
-        Element\Email::class    => 'form_input_email',
+        CustomEmail ::class     => 'form_input_email',
         Element\Text::class     => 'form_input_text',
         Element\Radio::class    => 'form_input_radio',
         //  Fieldsets
