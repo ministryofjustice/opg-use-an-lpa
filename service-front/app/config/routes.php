@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-use Common\Handler\HealthcheckHandler;
-use Psr\Container\ContainerInterface;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
+use Psr\Container\ContainerInterface;
 
 /**
  * Setup routes with a single request method:
@@ -35,7 +34,6 @@ use Mezzio\MiddlewareFactory;
  */
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->route('/home', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home');
     $app->route('/', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home-trial');
@@ -43,7 +41,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
     $app->get('/download-lpa', Viewer\Handler\DownloadLpaHandler::class, 'download-lpa');
     $app->get('/terms-of-use', Viewer\Handler\ViewerTermsOfUseHandler::class, 'viewer-terms-of-use');
-    $app->get('/privacy-notice',Viewer\Handler\ViewerPrivacyNoticeHandler::class,'viewer-privacy-notice');
+    $app->get('/privacy-notice', Viewer\Handler\ViewerPrivacyNoticeHandler::class, 'viewer-privacy-notice');
     $app->get('/stats', Viewer\Handler\StatsPageHandler::class, 'viewer-stats');
     $app->get('/session-expired', Viewer\Handler\ViewerSessionExpiredHandler::class, 'session-expired');
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'viewer-cookies');
@@ -70,8 +68,18 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
 
     // User management
-    $app->route('/forgot-password', Actor\Handler\PasswordResetRequestPageHandler::class, ['GET', 'POST'], 'password-reset');
-    $app->route('/forgot-password/{token}', Actor\Handler\PasswordResetPageHandler::class, ['GET', 'POST'], 'password-reset-token');
+    $app->route(
+        '/forgot-password',
+        Actor\Handler\PasswordResetRequestPageHandler::class,
+        ['GET', 'POST'],
+        'password-reset'
+    );
+    $app->route(
+        '/forgot-password/{token}',
+        Actor\Handler\PasswordResetPageHandler::class,
+        ['GET', 'POST'],
+        'password-reset-token'
+    );
 
     // User deletion
     $app->get('/confirm-delete-account', [
