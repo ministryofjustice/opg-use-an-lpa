@@ -41,3 +41,23 @@ resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
   threshold                 = 2
   treat_missing_data        = "notBreaching"
 }
+
+resource "aws_cloudwatch_metric_alarm" "elasticache_high_cpu_utilization" {
+  actions_enabled = true
+  alarm_actions = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_description = "High CPU usage on Elasticache"
+  alarm_name = "High CPU Utilization on ElastiCache"
+  comparison_operator = "GreaterThanThreshold"
+  evaluate_low_sample_count_percentiles = "ignore"
+  datapoints_to_alarm = 2
+  evaluation_periods = 2
+  insufficient_data_actions = []
+  metric_name               = "CPUUtilization"
+  namespace                 = "AWS/ElastiCache"
+  ok_actions                = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  period                    = 60
+  statistic                 = "Sum"
+  tags                      = {}
+  threshold                 = 1
+  treat_missing_data        = "notBreaching"
+}
