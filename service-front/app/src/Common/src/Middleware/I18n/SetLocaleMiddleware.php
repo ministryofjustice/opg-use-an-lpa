@@ -34,7 +34,8 @@ class SetLocaleMiddleware implements MiddlewareInterface
 
         if (! preg_match(self::REGEX_LOCALE, $path, $matches)) {
             Locale::setDefault($this->defaultLocale ?: $this->fallbackLocale);
-            return $handler->handle($request);
+
+            return $handler->handle($request->withAttribute('locale', Locale::getDefault()));
         }
 
         $locale = $matches['locale'];
@@ -43,8 +44,10 @@ class SetLocaleMiddleware implements MiddlewareInterface
 
         $path = substr($path, strlen($locale) + 1);
 
-        return $handler->handle($request->withUri(
-            $uri->withPath($path ?: '/')
-        ));
+        return $handler->handle(
+            $request
+                ->withUri($uri->withPath($path ?: '/'))
+                ->withAttribute('locale', Locale::getDefault())
+        );
     }
 }
