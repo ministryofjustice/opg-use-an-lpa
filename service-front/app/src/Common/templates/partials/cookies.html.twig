@@ -2,7 +2,13 @@
 
 {% block html_title %}{{ block('service_name') }} - Cookies {% endblock %}
 
-{% block service_name %}Use a lasting power of attorney{% endblock %}
+{% block service_name %} 
+{% if routeName == "actor-cookies" %}
+    Use
+{% elseif routeName == "viewer-cookies" %}
+    View
+{% endif %}
+    a lasting power of attorney{% endblock %}
 
 {% set usageCookies = form.get('usageCookies') %}
 {% set referer = form.get('referer') %}
