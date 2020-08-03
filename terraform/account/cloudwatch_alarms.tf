@@ -35,7 +35,7 @@ resource "aws_cloudwatch_metric_alarm" "elasticache_high_swap_utilization" {
   ok_actions                = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   period                    = "60"
   statistic                 = "Sum"
-  threshold                 = 50
+  threshold                 = 50000000
   treat_missing_data        = "notBreaching"
   dimensions = {
     CacheClusterId = each.value
