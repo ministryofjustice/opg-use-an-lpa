@@ -18,7 +18,7 @@ use Psr\Container\ContainerInterface;
  */
 class SetLocaleMiddlewareFactory
 {
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): SetLocaleMiddleware
     {
         $config = $container->has('config') ? $container->get('config') : [];
 

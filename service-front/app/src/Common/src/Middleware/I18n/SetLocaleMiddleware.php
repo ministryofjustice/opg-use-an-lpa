@@ -18,7 +18,7 @@ class SetLocaleMiddleware implements MiddlewareInterface
     private ?string $defaultLocale;
     private string $fallbackLocale = 'en_GB';
 
-    private const REGEX_LOCALE = '#^/(?P<locale>[a-z]{2,3}|[a-z]{2}[-_][a-zA-Z]{2})(?:/|$)#';
+    private const REGEX_LOCALE = '#^/(?P<locale>cy)(?:/|$)#';
 
     public function __construct(UrlHelper $helper, string $defaultLocale = null)
     {
