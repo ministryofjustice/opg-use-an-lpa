@@ -49,10 +49,10 @@ Feature: View an LPA via share code
 
     Examples:
       | accessCode | reason |
-      | T3ST ACE2-C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
-      | T3STP*22C0!? | LPA access codes are 13 numbers and letters long and start with a V |
-      | T3ST - PA22 - C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
-      | T3STPA22C0D | LPA access codes are 13 numbers and letters long and start with a V |
+      | T3ST ACE2-C0D3 | Enter an LPA access code in the correct format |
+      | T3STP*22C0!? | Enter an LPA access code in the correct format |
+      | T3ST - PA22 - C0D3 | Enter an LPA access code in the correct format |
+      | T3STPA22C0D | Enter an LPA access code in the correct format |
       |  | Enter the LPA access code |
 
   @acceptance
