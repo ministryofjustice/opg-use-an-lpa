@@ -63,10 +63,10 @@ Feature: A user of the system is able to login
     When I enter incorrect login details with <email_format> and <password> below
     Then I should see relevant <error> message
     Examples:
-      |email_format           |password|error                       |
-      |GAP TEST@ test. com    |pa33w0rd|Enter a valid email address |
-      |                       |pa33w0rd|Enter your email address    |
-      |nopassword@test.com    |        |Enter your password         |
+      |email_format           |password|error                                                               |
+      |GAP TEST@ test. com    |pa33w0rd|Enter an email address in the correct format, like name@example.com |
+      |                       |pa33w0rd|Enter your email address                                            |
+      |nopassword@test.com    |        |Enter your password                                                 |
 
   @ui @security
   Scenario: A hacker attempts to forge the full CSRF value
