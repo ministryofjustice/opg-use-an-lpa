@@ -1,3 +1,6 @@
+variable "pagerduty_token" {
+}
+
 variable "account_mapping" {
   type = map(string)
 }
@@ -5,9 +8,10 @@ variable "account_mapping" {
 variable "accounts" {
   type = map(
     object({
-      account_id        = string
-      is_production     = bool
-      retention_in_days = number
+      account_id             = string
+      is_production          = bool
+      retention_in_days      = number
+      pagerduty_service_name = string
     })
   )
 }
