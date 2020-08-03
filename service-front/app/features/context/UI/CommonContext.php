@@ -308,4 +308,20 @@ class CommonContext implements Context
         $this->ui->pressButton('Sign in');
         $this->ui->assertPageAddress('/lpa/dashboard');
     }
+
+    /**
+     * @When /^I navigate to the gov uk page$/
+     */
+    public function iNavigateToTheGovUkPage()
+    {
+        $this->ui->clickLink('GOV.UK');
+    }
+
+    /**
+     * @Then /^I expect to be on the Gov uk homepage$/
+     */
+    public function iExpectToBeOnTheGovUkHomepage()
+    {
+        $this->ui->assertPageAddress('https://www.gov.uk');
+    }
 }
