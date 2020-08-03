@@ -80,6 +80,9 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         ['GET', 'POST'],
         'password-reset-token'
     );
+    $app->get('/verify-new-email/{token}', [
+        Actor\Handler\CompleteChangeEmailHandler::class,
+    ], 'verify-new-email');
 
     // User deletion
     $app->get('/confirm-delete-account', [
@@ -106,9 +109,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangeDetailsHandler::class
     ], 'lpa.change-details');
-    $app->get('/verify-new-email/{token}', [
-        Actor\Handler\CompleteChangeEmailHandler::class,
-    ], 'verify-new-email');
 
     // LPA management
     $app->get('/lpa/dashboard', [
@@ -147,7 +147,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaRemovedHandler::class
     ], 'lpa.removed');
-
     $app->get('/lpa/instructions-preferences', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\InstructionsPreferencesHandler::class
