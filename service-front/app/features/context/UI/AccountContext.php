@@ -696,7 +696,7 @@ class AccountContext implements Context
     public function theLPAIsNotFound()
     {
         $this->ui->assertPageAddress('/lpa/check');
-        $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
+        $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
     }
 
     /**
@@ -1640,7 +1640,7 @@ class AccountContext implements Context
      */
     public function theLPAShouldNotBeFound()
     {
-        $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
+        $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
     }
 
     /**
