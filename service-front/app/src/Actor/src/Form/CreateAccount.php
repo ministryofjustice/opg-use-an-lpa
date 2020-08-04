@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
+use Common\Form\Element\Email;
 use Common\Validator\EmailAddressValidator;
 use Common\Validator\PasswordValidator;
 use Mezzio\Csrf\CsrfGuardInterface;
@@ -41,10 +42,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
-            'name' => 'email',
-            'type' => 'Email',
-        ]);
+        $this->add(new Email('email'));
 
         $this->add([
             'name' => 'password',
@@ -83,7 +81,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'messages'           => [
-                                NotEmpty::IS_EMPTY => 'Enter an email address in the correct format, like name@example.com',
+                                NotEmpty::IS_EMPTY => 'Enter your email address',
                             ],
                         ],
                     ],
@@ -111,7 +109,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                             'encoding' => 'UTF-8',
                             'min'      => 8,
                             'messages' => [
-                                StringLength::TOO_SHORT => 'Password must be 8 characters or more',
+                                StringLength::TOO_SHORT => 'Your password must be at least eight characters long',
                             ],
                         ],
                     ],
@@ -123,7 +121,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                         'options' => [
                             'token'    => 'password_confirm',
                             'messages' => [
-                                Identical::NOT_SAME => 'Passwords do not match',
+                                Identical::NOT_SAME => 'The passwords did not match',
                             ],
                         ],
                     ],
@@ -145,7 +143,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
             ],
             'terms'            => [
                 'required'      => true,
-                'error_message' => 'You must accept the terms of use to create an account',
+                'error_message' => 'You must accept the terms of use',
                 'validators'    => [
                     [
                         'name'    => Identical::class,
@@ -154,7 +152,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                             'token' => '1',
                             'literal' => true,
                             'messages' => [
-                                Identical::NOT_SAME => 'You must accept the terms of use to create an account',
+                                Identical::NOT_SAME => 'You must accept the terms of use',
                             ],
                         ],
                     ],
