@@ -78,7 +78,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         'name'    => Regex::class,
                         'options' => [
                             'pattern' => "/^(C(?'dash'-| ){1,6})?[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}$/i",
-                            'message' => 'Your activation key must only include letters, numbers and dashes',
+                            'message' => 'Enter an activation key in the correct format',
                         ],
                     ],
                 ]

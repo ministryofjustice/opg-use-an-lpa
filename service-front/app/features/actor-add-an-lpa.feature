@@ -60,9 +60,9 @@ Feature: Add an LPA
 
     Examples:
       | passcode | reason |
-      | T3ST$PA22-C0D3 | Your activation key must only include letters, numbers and dashes |
-      | T3STP*22C0!? | Your activation key must only include letters, numbers and dashes |
-      | C - T3S* - PA22 - C0D3 | Your activation key must only include letters, numbers and dashes |
+      | T3ST$PA22-C0D3 |  Enter an activation key in the correct format |
+      | T3STP*22C0!? |  Enter an activation key in the correct format |
+      | C - T3S* - PA22 - C0D3 |  Enter an activation key in the correct format |
       | T3STPA22C0D | Your activation key must be 12 numbers and letters long |
       |  | Enter your activation key |
 

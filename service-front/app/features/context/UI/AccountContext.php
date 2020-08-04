@@ -165,7 +165,7 @@ class AccountContext implements Context
      */
     public function iAmToldMyCredentialsAreIncorrect()
     {
-        $this->ui->assertPageContainsText('Email and password combination not recognised');
+        $this->ui->assertPageContainsText('We cannot find an account with that email address and password');
     }
 
     /**
@@ -473,7 +473,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/forgot-password/123456');
 
-        $this->ui->assertPageContainsText('at least ' . $reason);
+        $this->ui->assertPageContainsText($reason);
     }
 
     /**
@@ -1912,7 +1912,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('change-password');
 
-        $this->ui->assertPageContainsText('The current password you entered is incorrect');
+        $this->ui->assertPageContainsText('Current password is incorrect');
     }
 
     /**
@@ -1944,7 +1944,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/change-password');
 
-        $this->ui->assertPageContainsText('at least ' . $reason);
+        $this->ui->assertPageContainsText($reason);
     }
 
     /**
@@ -2530,7 +2530,7 @@ class AccountContext implements Context
     public function myOldAccountIsNotFound()
     {
         $this->ui->assertPageAddress('/login');
-        $this->ui->assertPageContainsText('Email and password combination not recognised. Please try signing in again below or create an account');
+        $this->ui->assertPageContainsText('We cannot find an account with that email address and password');
     }
 
     /**
@@ -2885,7 +2885,7 @@ class AccountContext implements Context
      */
     public function iShouldBeToldThatICouldNotChangeMyEmailBecauseMyPasswordIsIncorrect()
     {
-        $this->ui->assertPageContainsText('Your password is incorrect');
+        $this->ui->assertPageContainsText('The password you entered is incorrect');
     }
 
     /**

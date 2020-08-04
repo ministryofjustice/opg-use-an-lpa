@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
-use Common\Form\Element\Email;
 use Common\Validator\EmailAddressValidator;
 use Laminas\Filter\StringToLower;
 use Laminas\Filter\StringTrim;
@@ -25,7 +24,7 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
      * @var array
      */
     protected array $messageTemplates = [
-        self::INVALID_PASSWORD => 'Your password is incorrect',
+        self::INVALID_PASSWORD => 'The password you entered is incorrect',
         self::NEW_EMAIL_NOT_DIFFERENT => 'The new email address you entered is the same as your current email address. They must be different.',
     ];
 
@@ -37,7 +36,10 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
     {
         parent::__construct(self::FORM_NAME, $guard);
 
-        $this->add(new Email('new_email_address'));
+        $this->add([
+            'name' => 'new_email_address',
+            'type' => 'Text',
+        ]);
 
         $this->add([
             'name' => 'current_password',
@@ -74,6 +76,11 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name'                   => EmailAddressValidator::class,
                         'break_chain_on_failure' => true,
+                        'options'                => [
+                            'messages' => [
+                                EmailAddressValidator::INVALID => 'Enter an email address in the correct format, like name@example.com',
+                            ],
+                        ],
                     ]
                 ],
             ],
