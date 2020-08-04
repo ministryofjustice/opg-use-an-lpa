@@ -77,8 +77,8 @@ Feature: Add an LPA
       | 7000-00000001 | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters |
       | 7000-0000 0001 | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters |
       | 7000-0000-ABC! | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters |
-      | 7000-0000-00011 | The LPA reference number must be 12 numbers long |
-      | 70000000000 | The LPA reference number must be 12 numbers long |
+      | 7000-0000-00011 | The LPA reference number you entered is too long |
+      | 70000000000 | The LPA reference number you entered is too short |
       |  | Enter the LPA reference number |
 
   @ui

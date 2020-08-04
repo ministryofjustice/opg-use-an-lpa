@@ -101,7 +101,10 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                             'encoding' => 'UTF-8',
                             'min'      => 12,
                             'max'      => 14,
-                            'message'  => 'The LPA reference number must be 12 numbers long',
+                            'messages'  => [
+                                StringLength::TOO_LONG => 'The LPA reference number you entered is too long',
+                                StringLength::TOO_SHORT => 'The LPA reference number you entered is too short',
+                            ],
                         ],
                     ],
                     [
