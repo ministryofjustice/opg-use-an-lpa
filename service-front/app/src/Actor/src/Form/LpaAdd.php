@@ -71,7 +71,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                             'encoding' => 'UTF-8',
                             'min'      => 12,
                             'max'      => 31,
-                            'message'  => 'Your activation key must be 12 numbers and letters long',
+                            'message'  => 'Enter an activation key in the correct format',
                         ],
                     ],
                     [

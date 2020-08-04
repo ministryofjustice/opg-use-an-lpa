@@ -63,7 +63,7 @@ Feature: Add an LPA
       | T3ST$PA22-C0D3 |  Enter an activation key in the correct format |
       | T3STP*22C0!? |  Enter an activation key in the correct format |
       | C - T3S* - PA22 - C0D3 |  Enter an activation key in the correct format |
-      | T3STPA22C0D | Your activation key must be 12 numbers and letters long |
+      | T3STPA22C0D | Enter an activation key in the correct format |
       |  | Enter your activation key |
 
   @ui
@@ -92,7 +92,7 @@ Feature: Add an LPA
       | 32 | 05 | 1975 | Date of birth must be a real date |
       | 10 | 13 | 1975 | Date of birth must be a real date |
       | XZ | 10 | 1975 | Date of birth must be a real date |
-      | 10 | 05 | 3000 | Your date of birth must be in the past |
+      | 10 | 05 | 3000 | Date of birth must be in the past |
 
   @ui
   Scenario: The user is shown an error message when attempting to add the same LPA twice
