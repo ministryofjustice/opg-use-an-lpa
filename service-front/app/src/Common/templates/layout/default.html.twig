@@ -100,12 +100,12 @@
                 <h2 class="govuk-visually-hidden">{% trans %}Support links{% endtrans %}</h2>
                 <ul class="govuk-footer__inline-list">
                     <li class="govuk-footer__inline-list-item">
-                        <a class="govuk-footer__link" href="/terms-of-use">
+                        <a class="govuk-footer__link" href="{{ path('terms-of-use') }}">
                             {% trans %}Terms of use{% endtrans %}
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
-                        <a class="govuk-footer__link" href="/cookies">
+                        <a class="govuk-footer__link" href="{{ path('cookies') }}">
                             {% trans %}Cookies{% endtrans %}
                         </a>
                     </li>
