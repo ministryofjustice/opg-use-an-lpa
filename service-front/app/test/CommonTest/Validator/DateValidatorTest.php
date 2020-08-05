@@ -111,7 +111,7 @@ class DateValidatorTest extends TestCase
         ]);
 
         $this->assertEquals([
-            DateValidator::DATE_INCOMPLETE => 'Date must include a day, month and year',
+            DateValidator::DAY_INCOMPLETE => 'Date must include a day, month and year',
         ], $this->validator->getMessages());
 
         $this->assertFalse($isValid);

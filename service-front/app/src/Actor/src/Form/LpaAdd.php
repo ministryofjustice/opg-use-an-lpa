@@ -124,6 +124,14 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                 'validators' => [
                     [
                         'name' => DobValidator::class,
+                        'options' => [
+                            'break_chain_on_failure' => true,
+                            'messages'  => [
+                                DobValidator::DAY_INCOMPLETE => 'Date of birth must include a day',
+                                DobValidator::MONTH_INCOMPLETE => 'Date of birth must include a month',
+                                DobValidator::YEAR_INCOMPLETE => 'Date of birth must include a year'
+                            ],
+                        ],
                     ],
                 ]
             ],

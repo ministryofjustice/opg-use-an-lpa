@@ -17,12 +17,16 @@ class DobValidator extends DateValidator
         //  From parent
         self::DATE_INVALID_FORMAT => 'Date of birth value must be provided in an array',
         self::DATE_EMPTY          => 'Enter your date of birth',
-        self::DATE_INCOMPLETE     => 'Enter your date of birth',
+//        self::DATE_INCOMPLETE     => 'Incomplete = Enter your date of birth',
         self::DATE_INVALID        => 'Date of birth must be a real date',
+        self::DAY_INCOMPLETE      => 'Enter your date of birth',
+        self::MONTH_INCOMPLETE    => 'Enter your date of birth',
+        self::YEAR_INCOMPLETE     => 'Enter your date of birth',
 
         self::AGE_NEGATIVE        => 'Date of birth must be in the past',
         self::AGE_TOO_YOUNG       => 'Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18',
-    ];
+
+        ];
 
     /**
      * @param mixed $value
