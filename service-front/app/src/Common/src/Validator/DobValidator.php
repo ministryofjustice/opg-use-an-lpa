@@ -17,7 +17,6 @@ class DobValidator extends DateValidator
         //  From parent
         self::DATE_INVALID_FORMAT => 'Date of birth value must be provided in an array',
         self::DATE_EMPTY          => 'Enter your date of birth',
-        self::DATE_INCOMPLETE     => 'Enter your date of birth',
         self::DATE_INVALID        => 'Date of birth must be a real date',
         self::DAY_INCOMPLETE      => 'Date of birth must include a day',
         self::MONTH_INCOMPLETE    => 'Date of birth must include a month',
