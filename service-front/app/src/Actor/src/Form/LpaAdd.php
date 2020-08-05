@@ -67,15 +67,17 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                     ],
                     [
                         'name'    => StringLength::class,
+                        'break_chain_on_failure' => true,
                         'options' => [
                             'encoding' => 'UTF-8',
                             'min'      => 12,
-                            'max'      => 31,
+                            'max'      => 23,
                             'message'  => 'Enter an activation key in the correct format',
                         ],
                     ],
                     [
                         'name'    => Regex::class,
+                        'break_chain_on_failure' => true,
                         'options' => [
                             'pattern' => "/^(C(?'dash'-| ){1,6})?[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}$/i",
                             'message' => 'Enter an activation key in the correct format',
@@ -124,11 +126,6 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                 'validators' => [
                     [
                         'name' => DobValidator::class,
-//                       'break_chain_on_failure' => false,
-                        'options' => [
-                            'messages'  => [
-                            ],
-                        ],
                     ],
                 ]
             ],
