@@ -15,14 +15,16 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                <span class="govuk-caption-l">
-                    {% if lpa.caseSubtype == "pfa" %}
-                        Property and finance
-                    {% else %}
-                        Health and welfare
-                    {% endif %}
-                </span>
-                    <h1 class="govuk-heading-l govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</h1>
+                  <span class="govuk-caption-l">
+                      {% if lpa.caseSubtype == "pfa" %}
+                          Property and finance
+                      {% else %}
+                          Health and welfare
+                      {% endif %}
+                  </span>
+                  <span class="govuk-heading-l govuk-!-margin-bottom-3">
+                    {{ actor_name(lpa.donor, false) }}
+                  </span>
                 </div>
             </div>
 
@@ -30,7 +32,7 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h2 class="govuk-heading-xl">Check access codes</h2>
+                    <h1 class="govuk-heading-xl">Check access codes</h1>
 
                     {% if shareCodes is empty  %}
                         <h2 class="govuk-heading-m">There are no access codes for this LPA.</h2>
