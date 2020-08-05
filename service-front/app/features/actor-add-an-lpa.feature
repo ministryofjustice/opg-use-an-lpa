@@ -94,6 +94,10 @@ Feature: Add an LPA
       | XZ | 10 | 1975 | Date of birth must be a real date |
       | 10 | 05 | 3000 | Date of birth must be in the past |
 
+#    Scenario Outline: The user cannot add an LPA with an incomplete DOB
+#      Given I am on the add an LPA page
+#      When I request to add an LPA with an incomplete DOB format of "<day>" "<month>" "<year>"
+
   @ui
   Scenario: The user is shown an error message when attempting to add the same LPA twice
     Given I have added an LPA to my account
