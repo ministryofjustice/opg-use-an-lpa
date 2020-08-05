@@ -48,6 +48,7 @@ Feature: Account creation
       |test@ Example.com| Password1 | Password1 |   1   | Enter an email address in the correct format, like name@example.com      |
 
 
+
   @ui @integration
   Scenario Outline: As a new user I want to be shown the mistakes I make while creating an account
     Given I am not a user of the lpa application

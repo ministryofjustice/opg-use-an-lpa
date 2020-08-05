@@ -366,7 +366,7 @@ class UserService
         //checks if the new email chosen has already been requested for reset
         foreach ($emailResetExists as $otherUser) {
             if ($forAccountCreation && (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now'))) {
-                // if the other users email reset token has not expired, this user cannot make an account with this email
+                // if the other users email reset token has not expired, this user cannot create an account with this email
                 return false;
             } elseif (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now') && ($userId !== $otherUser['Id'])) {
                 // if the other users email reset token has not expired, and they not the current user, this user cant request this email
