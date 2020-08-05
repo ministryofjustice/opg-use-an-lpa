@@ -295,6 +295,7 @@ orbs:
           - run:
               name: Install Python (for non-python executors)
               command: |
+                sudo apt update
                 sudo apt install python3 python3-pip
                 sudo pip3 install --no-cache pipenv poetry
                 cd /usr/local/bin
