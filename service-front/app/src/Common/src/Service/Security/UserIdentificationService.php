@@ -4,10 +4,24 @@ declare(strict_types=1);
 
 namespace Common\Service\Security;
 
+use Psr\Log\LoggerInterface;
+
 use function hash;
 
 class UserIdentificationService
 {
+    private LoggerInterface $logger;
+
+    /**
+     * UserIdentificationService constructor.
+     *
+     * @param LoggerInterface $logger
+     */
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * Builds a unique userId that can be used to identify users for security tracking.
      *
@@ -31,6 +45,8 @@ class UserIdentificationService
                     ? $request->getHeader($header)
                     : $header;
         }
+
+        $this->logger->debug('Identity of incoming request built', $headersToHash);
 
         return hash('sha256', implode('', $headersToHash));
     }

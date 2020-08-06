@@ -45,6 +45,9 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     $app->pipe(\Common\Middleware\Logging\RequestTracingMiddleware::class);
 
+    // Discern the intended locale
+    $app->pipe(\Common\Middleware\I18n\SetLocaleMiddleware::class);
+
     // Load session from request and save it on the return
     $app->pipe(\Mezzio\Session\SessionMiddleware::class);
 
