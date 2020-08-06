@@ -102,7 +102,7 @@ class DateValidatorTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    public function testIsValidIncompleteFormat()
+    public function testIsValidIncompleteDayFormat()
     {
         $isValid = $this->validator->isValid([
             'day' => '',
@@ -111,7 +111,37 @@ class DateValidatorTest extends TestCase
         ]);
 
         $this->assertEquals([
-            DateValidator::DAY_INCOMPLETE => 'Date must include a day, month and year',
+            DateValidator::DAY_INCOMPLETE => 'Date must include a day',
+        ], $this->validator->getMessages());
+
+        $this->assertFalse($isValid);
+    }
+
+    public function testIsValidIncompleteMonthFormat()
+    {
+        $isValid = $this->validator->isValid([
+            'day' => 2,
+            'month' => '',
+            'year' => 1999,
+        ]);
+
+        $this->assertEquals([
+            DateValidator::MONTH_INCOMPLETE => 'Date must include a month',
+        ], $this->validator->getMessages());
+
+        $this->assertFalse($isValid);
+    }
+
+    public function testIsValidIncompleteYearFormat()
+    {
+        $isValid = $this->validator->isValid([
+            'day' => 5,
+            'month' => 2,
+            'year' => '',
+        ]);
+
+        $this->assertEquals([
+            DateValidator::YEAR_INCOMPLETE => 'Date must include a year',
         ], $this->validator->getMessages());
 
         $this->assertFalse($isValid);

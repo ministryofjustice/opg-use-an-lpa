@@ -23,9 +23,9 @@ class DateValidator extends AbstractValidator
         self::DATE_INVALID_FORMAT => 'Date value must be provided in an array',
         self::DATE_EMPTY          => 'Enter a date',
         self::DATE_INVALID        => 'Enter a real date',
-        self::DAY_INCOMPLETE         => 'Date must include a day, month and year',
-        self::MONTH_INCOMPLETE       => 'Date must include a day, month and year',
-        self::YEAR_INCOMPLETE        => 'Date must include a day, month and year',
+        self::DAY_INCOMPLETE         => 'Date must include a day',
+        self::MONTH_INCOMPLETE       => 'Date must include a month',
+        self::YEAR_INCOMPLETE        => 'Date must include a year',
     ];
 
     /**
