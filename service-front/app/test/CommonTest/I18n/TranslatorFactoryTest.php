@@ -45,6 +45,10 @@ class TranslatorFactoryTest extends TestCase
             'Rhowch god',
             $instance->translate('Enter code', 'default', 'cy')
         );
+        $this->assertEquals(
+            'A oes gennych gyfrif pŵer atwrnai parhaol?',
+            $instance->translate('Do you have a Use a lasting power of attorney account?', 'default', 'cy')
+        );
     }
 
     /** @test */

@@ -1,20 +1,35 @@
+msgctxt ""
 msgid "Enter code"
 msgstr ""
 
+msgctxt ""
 msgid "Back"
 msgstr ""
 
+msgctxt ""
 msgid "Enter the LPA access code"
 msgstr ""
 
+msgctxt ""
 msgid "What is an <abbr title=\"lasting power of attorney\">LPA</abbr> access code?"
 msgstr ""
 
+msgctxt ""
 msgid "An <abbr title=\"lasting power of attorney\">LPA</abbr> access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney."
 msgstr ""
 
+msgctxt ""
 msgid "By continuing you agree to our <a href=\"%link%\" class=\"govuk-link\">terms of use</a>."
 msgstr ""
 
+msgctxt ""
 msgid "Continue"
+msgstr ""
+
+msgctxt ""
+msgid "Do you have a Use a lasting power of attorney account?"
+msgstr ""
+
+msgctxt ""
+msgid "If you're named on more than one LPA, you can add all those LPAs to your account."
 msgstr ""
