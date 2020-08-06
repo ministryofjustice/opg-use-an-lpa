@@ -7,13 +7,13 @@ Feature: Cookie consent
   @ui
   Scenario: See cookie consent banner
     Given I want to use my lasting power of attorney
-    When I access the service homepage
+    When I access the service home page
     Then I see a cookie consent banner
 
   @ui
   Scenario: See options to accept or set cookie preference
     Given I want to use my lasting power of attorney
-    When I access the service homepage
+    When I access the service home page
     Then I see Accept all cookies and Set cookie preferences button
 
   @ui
@@ -25,7 +25,7 @@ Feature: Cookie consent
   @ui
   Scenario: Navigates to cookie preference page when I click on Set cookie preferences
     Given I want to use my lasting power of attorney
-    When I access the service homepage
+    When I access the service home page
     Then I see a cookie consent banner
     And I click on Set cookie preferences button
     Then I am on the cookie preferences page
