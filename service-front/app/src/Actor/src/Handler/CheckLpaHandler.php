@@ -171,7 +171,10 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     );
                     //  Show LPA not found page
                     return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                        'user' => $user
+                        'user'              => $user,
+                        'dob'               => $dob,
+                        'referenceNumber'   => $referenceNumber,
+                        'passcode'          => $passcode
                     ]));
                 }
             } catch (ApiException $aex) {
@@ -187,7 +190,10 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
                     //  Show LPA not found page
                     return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                        'user' => $user
+                        'user' => $user,
+                        'dob'               => $dob,
+                        'referenceNumber'   => $referenceNumber,
+                        'passcode'          => $passcode
                     ]));
                 }
 
