@@ -8,26 +8,29 @@ use Common\Service\Security\UserIdentificationService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 class UserIdentificationServiceTest extends TestCase
 {
     /**
-     * Because this request has no headers we're not actually testing that a unique ID is generated per request, 
+     * Because this request has no headers we're not actually testing that a unique ID is generated per request,
      * this test is therefore just a validation of the code not throwing errors.
-     * 
+     *
      * @test
      */
     public function it_can_uniquely_identify_a_request_with_no_headers()
     {
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
-        $service = new UserIdentificationService();
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $service = new UserIdentificationService($loggerProphecy->reveal());
 
         $id = $service->id($requestProphecy->reveal());
 
         $this->assertEquals('da97c8ccc40114128dcaeff8be27d9481c116eb01cbf9007c0e1a02d2590a197', $id);
     }
-    
+
     /**
      * @test
      * @dataProvider headerCombinations
@@ -42,7 +45,9 @@ class UserIdentificationServiceTest extends TestCase
             $requestProphecy->getHeader($header)->willReturn('header-value');
         }
 
-        $service = new UserIdentificationService();
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $service = new UserIdentificationService($loggerProphecy->reveal());
 
         $id = $service->id($requestProphecy->reveal());
 
