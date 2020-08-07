@@ -15,6 +15,13 @@ Feature: Add an LPA
     When I request to add an LPA whose status is pending using xyuphwqrechv
     Then The LPA is not found
 
+  @ui
+  Scenario: The user cannot add an LPA to their account and is shown the answers provided
+    Given I am on the add an LPA page
+    When I request to add an LPA whose status is pending using xyuphwqrechv
+    Then The LPA is not found
+    And I see a page showing me the answers I have entered and content that helps me get it right
+
 
   @integration @ui
   Scenario Outline: The user can add an LPA to their account
