@@ -45,6 +45,14 @@ class TranslatorFactoryTest extends TestCase
             'Rhowch god',
             $instance->translate('Enter code', 'default', 'cy')
         );
+        $this->assertEquals(
+            'A oes gennych gyfrif pŵer atwrnai parhaol?',
+            $instance->translate('Do you have a Use a lasting power of attorney account?', 'default', 'cy')
+        );
+        $this->assertEquals(
+            'Os ydych wedi\'ch enwi ar fwy nag un ACLL, gallwch ychwanegu\'r holl ACLlau hynny at eich cyfrif.',
+            $instance->translate('If you\'re named on more than one LPA, you can add all those LPAs to your account.', 'default', 'cy')
+        );
     }
 
     /** @test */
