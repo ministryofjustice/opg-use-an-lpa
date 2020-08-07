@@ -31,22 +31,27 @@ class UserIdentificationService
     public function id(\Psr\Http\Message\ServerRequestInterface $request): string
     {
         $headersToHash = [
-            'accept',
-            'accept-encoding',
-            'accept-language',
-            'user-agent',
-            'x-forwarded-for'
+            'accept' => '',
+            'accept-encoding' => '',
+            'accept-language' => '',
+            'user-agent' => '',
+            'x-forwarded-for' => ''
         ];
 
         // pull each header value out (if it exists)
-        foreach ($headersToHash as $header) {
+        foreach ($headersToHash as $header => $value) {
             $headersToHash[$header] =
                 $request->hasHeader($header)
-                    ? $request->getHeader($header)
+                    ? $request->getHeader($header)[0]
                     : $header;
         }
 
         $this->logger->debug('Identity of incoming request built', $headersToHash);
+
+        $this->logger->debug(
+            'Identity of incoming request built',
+            ['prehash_id' => implode('', $headersToHash)]
+        );
 
         return hash('sha256', implode('', $headersToHash));
     }
