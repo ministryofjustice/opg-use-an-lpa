@@ -615,6 +615,18 @@ class AccountContext implements Context
     }
 
     /**
+     * @Then /^I see a page showing me the answers I have entered and content that helps me get it right$/
+     */
+    public function iSeeAPageShowingMeTheAnswersIHaveEnteredAndContentThatHelpsMeGetItRight()
+    {
+        $this->ui->assertPageAddress('/lpa/check');
+        $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
+        $this->ui->assertPageContainsText('LPA reference number: 700000000054');
+        $this->ui->assertPageContainsText('Activation key: XYUPHWQRECHV');
+        $this->ui->assertPageContainsText('Date of birth: 1975-10-05');
+    }
+
+    /**
      * @Then /^The correct LPA is found and I can confirm to add it$/
      */
     public function theCorrectLPAIsFoundAndICanConfirmToAddIt()

@@ -15,7 +15,18 @@
 
                     <h1 class="govuk-heading-xl">We could not find that lasting power of attorney</h1>
 
-                    <p class="govuk-body">We could not find a lasting power of attorney with the activation key, <abbr title="lasting power of attorney">LPA</abbr> reference number and date of birth you entered.</p>
+                    <p class="govuk-body">We could not find a lasting power of attorney with the information you entered.</p>
+
+                    <h2 class="govuk-heading-l">Check your answers</h2>
+                    <div class="govuk-details">
+                        <p class="govuk-body"><abbr title="lasting power of attorney">LPA</abbr> reference number: <strong>{{ referenceNumber }}</strong></p>
+                        <p class="govuk-body">Check this is the right reference number for the LPA you want to add. If you’re named on more than one LPA, you may have entered the reference number for a different LPA.</p>
+                        <p class="govuk-body">Activation key: <strong>{{ passcode }}</strong></p>
+                        <p class="govuk-body">Make sure this is the activation key we sent to you. The donor and each of their attorneys have their own activation key. If you’re using someone else’s activation key, we will not find the LPA.</p>
+                        <p class="govuk-body">Date of birth: <strong>{{ dob }}</strong></p>
+                        <p class="govuk-body">The date of birth must be for the person the activation key was sent to. For example, if you’re an attorney, you must enter the activation key we sent to you and use your date of birth.</p>
+                    </div>
+
                     <details class="govuk-details" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
