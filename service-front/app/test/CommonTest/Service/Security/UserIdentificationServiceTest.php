@@ -8,26 +8,29 @@ use Common\Service\Security\UserIdentificationService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 class UserIdentificationServiceTest extends TestCase
 {
     /**
-     * Because this request has no headers we're not actually testing that a unique ID is generated per request, 
+     * Because this request has no headers we're not actually testing that a unique ID is generated per request,
      * this test is therefore just a validation of the code not throwing errors.
-     * 
+     *
      * @test
      */
     public function it_can_uniquely_identify_a_request_with_no_headers()
     {
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
-        $service = new UserIdentificationService();
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $service = new UserIdentificationService($loggerProphecy->reveal());
 
         $id = $service->id($requestProphecy->reveal());
 
-        $this->assertEquals('da97c8ccc40114128dcaeff8be27d9481c116eb01cbf9007c0e1a02d2590a197', $id);
+        $this->assertEquals('224fb6e8b478de4a0d10bbeb92a07ffe095df3f9e1b1b50197d88f4c48192025', $id);
     }
-    
+
     /**
      * @test
      * @dataProvider headerCombinations
@@ -42,7 +45,9 @@ class UserIdentificationServiceTest extends TestCase
             $requestProphecy->getHeader($header)->willReturn('header-value');
         }
 
-        $service = new UserIdentificationService();
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $service = new UserIdentificationService($loggerProphecy->reveal());
 
         $id = $service->id($requestProphecy->reveal());
 
@@ -54,7 +59,7 @@ class UserIdentificationServiceTest extends TestCase
         return [
             [ # the realistic bare minimum unique thing to track
                 ['x-forwarded-for'],
-                'f9bcf7fa2cc63932adedba2696f4c8b6c86404c420ea201310dcd13b73710bde'
+                'c6f41b7d23a875f6b1ba03cea0207c8340563e2df9fc43cb1b331717b999d099'
             ],
             [ # the complete set
                 [
@@ -64,7 +69,7 @@ class UserIdentificationServiceTest extends TestCase
                     'user-agent',
                     'x-forwarded-for'
                 ],
-                'a3b74c076c52c08495a7c37135db24becdeff0bcd88a3b40e0b3279d7349ef66'
+                '3afdc96b35e60a6c3d98fc06ca8647ad5a106c862503cb64f982d260928c7285'
             ],
             [ # not a complete set
                 [
@@ -72,7 +77,7 @@ class UserIdentificationServiceTest extends TestCase
                     'user-agent',
                     'x-forwarded-for'
                 ],
-                'be4e45e3a7274376b3e1f9fdc9e96c7af8eb9cbcfd397a30266ac0ab0ec9fa54'
+                'f2978681b9f61976090c88df4dfce164513606996cf4d5c4203121a14eec13f9'
             ],
             [ # only use specified headers
                 [
@@ -81,7 +86,7 @@ class UserIdentificationServiceTest extends TestCase
                     'not-a-real-header',
                     'x-forwarded-for'
                 ],
-                'be4e45e3a7274376b3e1f9fdc9e96c7af8eb9cbcfd397a30266ac0ab0ec9fa54'
+                'f2978681b9f61976090c88df4dfce164513606996cf4d5c4203121a14eec13f9'
             ],
         ];
     }
