@@ -3488,7 +3488,7 @@ class AccountContext implements Context
         $page = $this->ui->getSession()->getPage();
         $element = $page->find('css', $searchStr);
         $elementHtml = $element->getOuterHtml();
-        return str_contains($elementHtml, ' open>');
+        return str_contains($elementHtml, ' open');
     }
 
     /**

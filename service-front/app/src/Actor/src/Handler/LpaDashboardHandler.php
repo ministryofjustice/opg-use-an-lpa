@@ -89,7 +89,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
             'user' => $user,
             'lpas' => $lpas,
-            'accesscodes' => $totalCodes,
+            'active_access_codes_count' => $totalCodes,
         ]));
     }
 }
