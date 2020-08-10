@@ -64,7 +64,7 @@ class PasswordReset extends AbstractForm implements InputFilterProviderInterface
                             'encoding' => 'UTF-8',
                             'min'      => 8,
                             'messages' => [
-                                StringLength::TOO_SHORT => 'Your password must be at least eight characters long',
+                                StringLength::TOO_SHORT => 'Password must be 8 characters or more',
                             ],
                         ],
                     ],
@@ -76,7 +76,7 @@ class PasswordReset extends AbstractForm implements InputFilterProviderInterface
                         'options' => [
                             'token'    => 'password_confirm',
                             'messages' => [
-                                Identical::NOT_SAME => 'The passwords did not match',
+                                Identical::NOT_SAME => 'New password and confirm new password do not match',
                             ],
                         ],
                     ],
