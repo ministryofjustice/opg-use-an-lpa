@@ -49,17 +49,17 @@ Feature: View an LPA via share code
 
     Examples:
       | accessCode | reason |
-      | T3ST ACE2-C0D3 | Enter an LPA access code in the correct format |
-      | T3STP*22C0!? | Enter an LPA access code in the correct format |
-      | T3ST - PA22 - C0D3 | Enter an LPA access code in the correct format |
-      | T3STPA22C0D | Enter an LPA access code in the correct format |
-      |  | Enter the LPA access code |
+      | T3ST ACE2-C0D3 | Enter LPA access code in the correct format |
+      | T3STP*22C0!? | Enter LPA access code in the correct format |
+      | T3ST - PA22 - C0D3 | Enter LPA access code in the correct format |
+      | T3STPA22C0D | Enter LPA access code in the correct format |
+      |  | Enter your LPA access code |
 
   @acceptance
   Scenario: The user is shown the correct error messages when entering invalid details
     Given I am on the enter code page
     When I request to view an LPA with an invalid donor's surname of ""
-    Then I am told that my input is invalid because "Enter the donor's surname"
+    Then I am told that my input is invalid because "Enter the donor's last name"
 
   @acceptance
   Scenario: The user enters an expired share code and is shown the reason for not able to see the details of an LPA

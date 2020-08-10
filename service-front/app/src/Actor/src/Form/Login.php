@@ -28,7 +28,7 @@ class Login extends AbstractForm implements InputFilterProviderInterface
      * @var array
      */
     protected array $messageTemplates = [
-        self::INVALID_LOGIN => 'Email and password combination not recognised. Please try signing in again below or create an account',
+        self::INVALID_LOGIN => 'We cannot find an account with that email address and password',
         self::NOT_SAME => 'Security validation failed. Please try again.'
     ];
 
@@ -64,7 +64,7 @@ class Login extends AbstractForm implements InputFilterProviderInterface
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'messages'           => [
-                                NotEmpty::IS_EMPTY => 'Enter your email address',
+                                NotEmpty::IS_EMPTY => 'Enter an email address in the correct format, like name@example.com',
                             ],
                         ],
                     ],

@@ -70,12 +70,12 @@ Feature: View an LPA via sharecode
 
     Examples:
       | accessCode | reason |
-      | V-T3ST_ACE2-C0D3 | Enter an LPA access code in the correct format |
-      | T3STP*22C0!? | Enter an LPA access code in the correct format |
-      | T3ST _ PA22 - C0D3 | Enter an LPA access code in the correct format |
-      | V - T3ST _ PA22 - C0D3 | Enter an LPA access code in the correct format |
-      | T3STPA22C0D | Enter an LPA access code in the correct format |
-      |  | Enter the LPA access code |
+      | V-T3ST_ACE2-C0D3 | Enter LPA access code in the correct format |
+      | T3STP*22C0!? | Enter LPA access code in the correct format |
+      | T3ST _ PA22 - C0D3 | Enter LPA access code in the correct format |
+      | V - T3ST _ PA22 - C0D3 | Enter LPA access code in the correct format |
+      | T3STPA22C0D | Enter LPA access code in the correct format |
+      |  | Enter your LPA access code |
 
   @ui
   Scenario Outline: The user is shown the correct error messages when entering invalid details

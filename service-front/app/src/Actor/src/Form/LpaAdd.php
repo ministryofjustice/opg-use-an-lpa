@@ -67,18 +67,20 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                     ],
                     [
                         'name'    => StringLength::class,
+                        'break_chain_on_failure' => true,
                         'options' => [
                             'encoding' => 'UTF-8',
                             'min'      => 12,
-                            'max'      => 31,
-                            'message'  => 'Your activation key must be 12 numbers and letters long',
+                            'max'      => 23,
+                            'message'  => 'Enter an activation key in the correct format',
                         ],
                     ],
                     [
                         'name'    => Regex::class,
+                        'break_chain_on_failure' => true,
                         'options' => [
                             'pattern' => "/^(C(?'dash'-| ){1,6})?[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}$/i",
-                            'message' => 'Your activation key must only include letters, numbers and dashes',
+                            'message' => 'Enter an activation key in the correct format',
                         ],
                     ],
                 ]
@@ -101,7 +103,10 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                             'encoding' => 'UTF-8',
                             'min'      => 12,
                             'max'      => 14,
-                            'message'  => 'The LPA reference number must be 12 numbers long',
+                            'messages'  => [
+                                StringLength::TOO_LONG => 'The LPA reference number you entered is too long',
+                                StringLength::TOO_SHORT => 'The LPA reference number you entered is too short',
+                            ],
                         ],
                     ],
                     [

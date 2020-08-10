@@ -30,9 +30,9 @@ Feature: Authenticated Account Password Change
 
     Examples:
       | password      | reason                |
-      | Dino9         | eight characters      |
-      | TinyTrexArms  | one digit             |
-      | t1nytr3xarms  | one capital letter    |
-      | T1NYTR3XARMS  | one lower case letter |
+      | Dino9         | 8 characters or more  |
+      | TinyTrexArms  | a number              |
+      | t1nytr3xarms  | a capital letter    |
+      | T1NYTR3XARMS  | a lower case letter |
 
 
