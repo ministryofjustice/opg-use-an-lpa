@@ -17,7 +17,7 @@ Feature: The user is able to see correct information on their dashboard
 
     Examples:
       | noActiveCodes                | code1Expiry                | code2Expiry               |
-      | 2 active codes               |  2021-04-01T23:59:59+01:00 | 2021-04-01T23:59:59+01:00 |
+      | 2 active codes               |  2041-04-01T23:59:59+01:00 | 2041-04-01T23:59:59+01:00 |
       | 1 active code                |  2019-01-05T23:59:59+00:00 | 2022-01-05T23:59:59+00:00 |
       | No organisations have access |  2019-01-05T23:59:59+00:00 | 2019-01-05T23:59:59+00:00 |
 
@@ -48,7 +48,7 @@ Feature: The user is able to see correct information on their dashboard
   @ui
   Scenario: As a user who has created access codes What Can I do with my LPAs is closed
     Given I have added an LPA to my account
-    When I can see that my LPA has 2 active codes with expiry dates 2021-04-01T23:59:59+01:00 2021-04-01T23:59:59+01:00
+    When I can see that my LPA has 2 active codes with expiry dates 2041-04-01T23:59:59+01:00 2031-04-01T23:59:59+01:00
     Then I can see that the What I can do link is closed
 
   @ui
