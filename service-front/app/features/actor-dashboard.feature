@@ -45,7 +45,7 @@ Feature: The user is able to see correct information on their dashboard
     When I am on the dashboard page
     Then I can see that the What I can do link is open
 
-  @ui @wip
+  @ui
   Scenario: As a user who has created access codes What Can I do with my LPAs is closed
     Given I have added an LPA to my account
     When I can see that my LPA has 2 active codes with expiry dates 2021-04-01T23:59:59+01:00 2021-04-01T23:59:59+01:00
