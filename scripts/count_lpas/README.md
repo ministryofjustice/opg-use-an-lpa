@@ -41,4 +41,6 @@ Viewer codes created in name-of-env environment between 2020-07-17 and 2020-07-3
      362
 Viewer codes viewed in name-of-env environment between 2020-07-17 and 2020-07-31:
      356
+Actor accounts created in name-of-env environment between 2020-07-17 and 2020-08-11:
+2029
 ```
