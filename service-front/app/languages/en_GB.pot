@@ -18,3 +18,9 @@ msgstr ""
 
 msgid "Continue"
 msgstr ""
+
+msgid "Do you have a Use a lasting power of attorney account?"
+msgstr ""
+
+msgid "If you're named on more than one LPA, you can add all those LPAs to your account."
+msgstr ""
