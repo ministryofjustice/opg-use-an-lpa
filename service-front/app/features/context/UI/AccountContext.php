@@ -620,7 +620,7 @@ class AccountContext implements Context
     public function iSeeAPageShowingMeTheAnswersIHaveEnteredAndContentThatHelpsMeGetItRight()
     {
         $this->ui->assertPageAddress('/lpa/check');
-        $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
+        $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
         $this->ui->assertPageContainsText('LPA reference number: 700000000054');
         $this->ui->assertPageContainsText('Activation key: XYUPHWQRECHV');
         $this->ui->assertPageContainsText('Date of birth: 1975-10-05');
