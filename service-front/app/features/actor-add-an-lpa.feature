@@ -67,10 +67,10 @@ Feature: Add an LPA
 
     Examples:
       | passcode | reason |
-      | T3ST$PA22-C0D3 | Your activation key must only include letters, numbers and dashes |
-      | T3STP*22C0!? | Your activation key must only include letters, numbers and dashes |
-      | C - T3S* - PA22 - C0D3 | Your activation key must only include letters, numbers and dashes |
-      | T3STPA22C0D | Your activation key must be 12 numbers and letters long |
+      | T3ST$PA22-C0D3 |  Enter an activation key in the correct format |
+      | T3STP*22C0!? |  Enter an activation key in the correct format |
+      | C - T3S* - PA22 - C0D3 |  Enter an activation key in the correct format |
+      | T3STPA22C0D | Enter an activation key in the correct format |
       |  | Enter your activation key |
 
   @ui
@@ -84,8 +84,8 @@ Feature: Add an LPA
       | 7000-00000001 | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters |
       | 7000-0000 0001 | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters |
       | 7000-0000-ABC! | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters |
-      | 7000-0000-00011 | The LPA reference number must be 12 numbers long |
-      | 70000000000 | The LPA reference number must be 12 numbers long |
+      | 7000-0000-00011 | The LPA reference number you entered is too long |
+      | 70000000000 | The LPA reference number you entered is too short |
       |  | Enter the LPA reference number |
 
   @ui
@@ -99,7 +99,12 @@ Feature: Add an LPA
       | 32 | 05 | 1975 | Date of birth must be a real date |
       | 10 | 13 | 1975 | Date of birth must be a real date |
       | XZ | 10 | 1975 | Date of birth must be a real date |
-      | 10 | 05 | 3000 | Your date of birth must be in the past |
+      |  | 10 |    | Date of birth must include a day Date of birth must include a year|
+      |  |  | 1975 | Date of birth must include a day Date of birth must include a month |
+      | XZ |  |    | Date of birth must include a month Date of birth must include a year |
+      | 10 | 05 | 3000 | Date of birth must be in the past |
+      |  |  |  | Enter your date of birth |
+
 
   @ui
   Scenario: The user is shown an error message when attempting to add the same LPA twice

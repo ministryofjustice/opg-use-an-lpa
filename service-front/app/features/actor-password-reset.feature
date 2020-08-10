@@ -36,10 +36,10 @@ Feature: Password Reset
 
     Examples:
       | password | reason |
-      | cheese | eight characters |
-      | bigCheese | one digit |
-      | bigch33se | one capital letter |
-      | BIGCH33SE | one lower case letter |
+      | cheese | 8 characters or more |
+      | bigCheese |  a number |
+      | bigch33se | a capital letter |
+      | BIGCH33SE | a lower case letter |
 
   @ui
   Scenario Outline: A user is allowed to provide email address in caps

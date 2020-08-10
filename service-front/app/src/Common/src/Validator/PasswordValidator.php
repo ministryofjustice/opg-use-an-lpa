@@ -12,9 +12,9 @@ class PasswordValidator extends AbstractValidator
     const MUST_INCLUDE_UPPER_CASE = 'mustIncludeUpperCase';
 
     protected $messageTemplates = [
-        self::MUST_INCLUDE_DIGIT      => 'Your password must include at least one digit (0-9)',
-        self::MUST_INCLUDE_LOWER_CASE => 'Your password must include at least one lower case letter (a-z)',
-        self::MUST_INCLUDE_UPPER_CASE => 'Your password must include at least one capital letter (A-Z)',
+        self::MUST_INCLUDE_DIGIT      => 'Password must include a number',
+        self::MUST_INCLUDE_LOWER_CASE => 'Password must include a lower case letter',
+        self::MUST_INCLUDE_UPPER_CASE => 'Password must include a capital letter',
     ];
 
     public function isValid($value)
