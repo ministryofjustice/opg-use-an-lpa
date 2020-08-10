@@ -11,9 +11,9 @@ Feature: Tagging
     And its value must match the "<value>" regex
 
     Examples:
-      | tags             | value              |
-      | business-unit    | "OPG"              |
-      | application      | "use-an-lpa"       |
-      | environment-name | .+                 |
-      | owner            | ^(prod\|uat\|dev)$ |
-      | is-production    | ^(true\|false)$    |
+      | tags             | value                                           |
+      | business-unit    | OPG                                             |
+      | application      | use-an-lpa                                      |
+      | environment-name | .+                                              |
+      | owner            | Katie Gibbs: katie.gibbs@digital.justice.gov.uk |
+      | is-production    | ^(true\|false)$                                 |
