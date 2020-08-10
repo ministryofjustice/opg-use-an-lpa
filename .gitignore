@@ -7,3 +7,7 @@ geckodriver.log
 **/cluster_config.json
 
 .python-version
+
+# terraform-compliance resources
+terraform/*/tests/plan.out*
+terraform/*/tests/state.out*
