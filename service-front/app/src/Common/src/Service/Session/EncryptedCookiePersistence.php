@@ -85,6 +85,10 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
     private bool $cookieHttpOnly;
 
+    private array $originalSessionData;
+
+    private string $requestPath;
+
     /**
      * EncryptedCookiePersistence constructor.
      * @param KeyManagerInterface $keyManager
@@ -212,6 +216,9 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         $sessionData = $this->getCookieFromRequest($request);
         $data = $this->decodeCookieValue($sessionData);
 
+        $this->storeSessionData($data);
+        $this->storeRequestURI($request->getUri()->getPath());
+
         // responsible the for expiry of a users session
         if (isset($data[self::SESSION_TIME_KEY])) {
             $expiresAt = $data[self::SESSION_TIME_KEY] + $this->sessionExpire;
@@ -232,8 +239,15 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
     public function persistSession(SessionInterface $session, ResponseInterface $response): ResponseInterface
     {
-        // Record the current time.
-        $session->set(self::SESSION_TIME_KEY, time());
+        // Set to current time or is the session being checked.
+        $time = isset($this->originalSessionData[self::SESSION_TIME_KEY])
+        && !is_null($this->originalSessionData[self::SESSION_TIME_KEY])
+        && preg_match("/^\/session-check(\/|)$/", $this->requestPath)
+            ? $this->originalSessionData[self::SESSION_TIME_KEY]
+            : time();
+
+        // Record the set time.
+        $session->set(self::SESSION_TIME_KEY, $time);
 
         // Encode to string
         $sessionData = $this->encodeCookieValue($session->toArray());
@@ -359,5 +373,15 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         }
 
         return $lifetime > 0 ? $lifetime : 0;
+    }
+
+    private function storeSessionData(array $originalData): void
+    {
+        $this->originalSessionData = $originalData;
+    }
+
+    private function storeRequestURI(string $requestPath): void
+    {
+        $this->requestPath = $requestPath;
     }
 }
