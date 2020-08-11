@@ -331,7 +331,7 @@ orbs:
         docker: [image: circleci/python]
         resource_class: small
       terraform:
-        docker: [image: hashicorp/terraform]
+        docker: [image: hashicorp/terraform:0.12.29]
         resource_class: small
 
     jobs:
