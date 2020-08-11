@@ -119,6 +119,7 @@ class ConfigProvider
                 View\Twig\GovUKLaminasFormErrorsExtension::class,
                 View\Twig\GovUKLaminasFormExtension::class,
                 View\Twig\JavascriptVariablesExtension::class,
+                View\Twig\TranslationExtension::class
             ]
         ];
     }
