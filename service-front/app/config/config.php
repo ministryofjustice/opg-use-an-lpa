@@ -13,6 +13,7 @@ $cacheConfig = [
 ];
 
 $aggregator = new ConfigAggregator([
+    \Mezzio\Flash\ConfigProvider::class,
     \Laminas\I18n\ConfigProvider::class,
     \Laminas\Cache\ConfigProvider::class,
     \Laminas\Form\ConfigProvider::class,
