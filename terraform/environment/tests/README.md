@@ -15,5 +15,6 @@ docker pull eerkunt/terraform-compliance
 The commands to setup and run terraform-compliance have been set up in a script.
 
 ``` bash
+cd terraform/environment
 aws-vault exec identity -- tests/terraform-compliance.sh
 ```
