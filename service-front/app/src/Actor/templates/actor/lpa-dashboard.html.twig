@@ -18,7 +18,7 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <p class="govuk-body-l">Any lasting power of attorney (LPA) you add to your account will appear on this page.</p>
-                <details class="govuk-details" data-module="govuk-details" {% if active_access_code_count === 0 %} open {% endif %} >
+                <details class="govuk-details" data-module="govuk-details" {% if active_access_codes_count is same as(0) %} open {% endif %} >
                     <summary class="govuk-details__summary">
                         <span class="govuk-details__summary-text">
                           What can I do with my <abbr title="lasting powers of attorney">LPAs</abbr>?

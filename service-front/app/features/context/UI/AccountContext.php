@@ -1037,6 +1037,7 @@ class AccountContext implements Context
 
         $this->ui->visit('/lpa/dashboard');
 
+        $this->ui->printLastResponse();
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $this->ui->assertPageAddress('/lpa/dashboard');
     }
