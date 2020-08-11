@@ -53,13 +53,13 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message'  => 'Enter the LPA access code',
+                            'message'  => 'Enter your LPA access code',
                         ],
                     ],
                     new Regex([
                         'pattern' => "/^(V(?'dash'-| ){1,6})?[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}$/i",
                         'message' => [
-                            Regex::NOT_MATCH => 'Enter an LPA access code in the correct format'
+                            Regex::NOT_MATCH => 'Enter LPA access code in the correct format'
                         ]
                     ])
                 ]

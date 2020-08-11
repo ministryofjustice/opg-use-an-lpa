@@ -17,7 +17,10 @@ class DatePrefixFilter extends AbstractFilter
      */
     public function filter($value): array
     {
-        if ($value != null && ($value['day'] < 9 || $value['month'] < 9)) {
+        if (
+            $value != null && !empty($value['day']) && !empty($value['month'])
+            && ($value['day'] <= 9 || $value['month'] <= 9)
+        ) {
             return $this->formatWithLeadingZero($value);
         }
         return $value;

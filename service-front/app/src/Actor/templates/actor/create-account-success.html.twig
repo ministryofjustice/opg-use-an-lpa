@@ -2,9 +2,9 @@
 
 {% block html_title %}
     {% if accountExists  %}
-        Account not activated - {{ parent() }}
+        Account already exists - {{ parent() }}
     {% else %}
-        Account created - {{ parent() }}
+        Activate your account - {{ parent() }}
     {% endif %}
 {% endblock %}
 
