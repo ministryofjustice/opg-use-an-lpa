@@ -46,6 +46,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/privacy-notice',Viewer\Handler\ViewerPrivacyNoticeHandler::class,'viewer-privacy-notice');
     $app->get('/stats', Viewer\Handler\StatsPageHandler::class, 'viewer-stats');
     $app->get('/session-expired', Viewer\Handler\ViewerSessionExpiredHandler::class, 'session-expired');
+    $app->get('/session-check', Viewer\Handler\ViewerSessionCheckHandler::class, 'session-check');
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'viewer-cookies');
 };
 
@@ -68,6 +69,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
     $app->get('/logout', Actor\Handler\LogoutPageHandler::class, 'logout');
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
+    $app->get('/session-check', Actor\Handler\ActorSessionCheckHandler::class, 'session-check');
 
     // User management
     $app->route('/forgot-password', Actor\Handler\PasswordResetRequestPageHandler::class, ['GET', 'POST'], 'password-reset');
