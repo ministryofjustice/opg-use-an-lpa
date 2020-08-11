@@ -104,6 +104,16 @@ return [
         'redirect' => '/login',
     ],
 
+    'translator' => [
+        'translation_files' => [
+            [
+                'type'     => \Laminas\I18n\Translator\Loader\Gettext::class,
+                'filename' => '/app/languages/cy.mo',
+                'locale'   => 'cy'
+            ]
+        ],
+    ],
+
     'ratelimits' => [
         'viewer_code_failure' => [
             'type' => 'keyed',
