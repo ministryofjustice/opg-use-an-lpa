@@ -1,4 +1,6 @@
 terraform {
+  required_version = ">= 0.13"
+
   backend "s3" {
     bucket         = "opg.terraform.state"
     key            = "opg-use-my-lpa-environment/terraform.tfstate"
@@ -6,6 +8,21 @@ terraform {
     region         = "eu-west-1"
     role_arn       = "arn:aws:iam::311462405659:role/opg-use-an-lpa-ci"
     dynamodb_table = "remote_lock"
+  }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 2.70.0"
+    }
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 1.4.0"
+    }
+    pagerduty = {
+      source  = "terraform-providers/pagerduty"
+      version = "~> 1.7.4"
+    }
   }
 }
 
@@ -18,8 +35,7 @@ variable "management_role" {
 }
 
 provider "aws" {
-  version = "~> 2.70.0"
-  region  = "eu-west-1"
+  region = "eu-west-1"
 
   assume_role {
     role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
@@ -28,9 +44,8 @@ provider "aws" {
 }
 
 provider "aws" {
-  version = "~> 2.70.0"
-  region  = "us-east-1"
-  alias   = "us-east-1"
+  region = "us-east-1"
+  alias  = "us-east-1"
 
   assume_role {
     role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
@@ -39,9 +54,8 @@ provider "aws" {
 }
 
 provider "aws" {
-  version = "~> 2.70.0"
-  region  = "eu-west-1"
-  alias   = "management"
+  region = "eu-west-1"
+  alias  = "management"
 
   assume_role {
     role_arn     = "arn:aws:iam::311462405659:role/${var.management_role}"
@@ -50,6 +64,5 @@ provider "aws" {
 }
 
 provider "pagerduty" {
-  version = "~> 1.7.4"
-  token   = var.pagerduty_token
+  token = var.pagerduty_token
 }
