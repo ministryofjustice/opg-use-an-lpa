@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Symfony package.
+ * This file was originally part of the Symfony package symfony/twig-bridge
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  *

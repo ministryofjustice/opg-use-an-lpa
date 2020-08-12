@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Symfony package.
+ * This file was originally part of the Symfony package symfony/twig-bridge
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
@@ -119,10 +119,10 @@ final class TransNode extends Node
             return [$body, $vars];
         }
 
-        preg_match_all('/(?<!%)%([^%]+)%/', $msg, $matches);
+        preg_match_all('/(?<!{){([^}]+)}/', $msg, $matches);
 
         foreach ($matches[1] as $var) {
-            $key = new ConstantExpression('%' . $var . '%', $body->getTemplateLine());
+            $key = new ConstantExpression('{' . $var . '}', $body->getTemplateLine());
             if (!$vars->hasElement($key)) {
                 if ('count' === $var && $this->hasNode('count')) {
                     $vars->addElement($this->getNode('count'), $key);
@@ -134,6 +134,6 @@ final class TransNode extends Node
             }
         }
 
-        return [new ConstantExpression(str_replace('%%', '%', trim($msg)), $body->getTemplateLine()), $vars];
+        return [new ConstantExpression(trim($msg), $body->getTemplateLine()), $vars];
     }
 }
