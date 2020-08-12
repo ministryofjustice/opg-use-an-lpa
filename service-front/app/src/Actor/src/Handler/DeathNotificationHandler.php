@@ -13,6 +13,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Common\Handler\UserAware;
+
 /**
  * Class DeathNotificationHandler
  *
@@ -21,10 +22,10 @@ use Common\Handler\UserAware;
  */
 
 class DeathNotificationHandler extends AbstractHandler implements UserAware
-
+{
     use User;
 
-        public function __construct(
+    public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper
@@ -41,11 +42,12 @@ class DeathNotificationHandler extends AbstractHandler implements UserAware
        * @return ResponseInterface
        */
 
-      public function handle(ServerRequestInterface $request): ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
         $user = $this->getUser($request);
 
         return new HtmlResponse($this->renderer->render('actor::death-notification', [
-            'user' => $user
+          'user' => $user
         ]));
-
+    }
 }
