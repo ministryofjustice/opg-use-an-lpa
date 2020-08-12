@@ -1,5 +1,8 @@
+msgid "View a lasting power of attorney"
+msgstr ""
+
 msgid ""
-"This is a new service – your <a class=\"govuk-link\" href=\"%link%\" target=\"_blank\">feedback</a> will help us to improve it."
+"This is a new service – your <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">feedback</a> will help us to improve it."
 msgstr ""
 
 msgid "Enter LPA access code"
@@ -11,13 +14,22 @@ msgstr ""
 msgid "Enter the LPA access code"
 msgstr ""
 
+msgid "Donor's last name"
+msgstr ""
+
+msgid "LPA access code"
+msgstr ""
+
+msgid "Access codes are 13 characters long and start with a V<br/>For example, V-AB12-CD34-EF56"
+msgstr ""
+
 msgid "What is an <abbr title=\"lasting power of attorney\">LPA</abbr> access code?"
 msgstr ""
 
 msgid "An <abbr title=\"lasting power of attorney\">LPA</abbr> access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney."
 msgstr ""
 
-msgid "By continuing you agree to our <a href=\"%link%\" class=\"govuk-link\">terms of use</a>."
+msgid "By continuing you agree to our <a href=\"{link}\" class=\"govuk-link\">terms of use</a>."
 msgstr ""
 
 msgid "Continue"
