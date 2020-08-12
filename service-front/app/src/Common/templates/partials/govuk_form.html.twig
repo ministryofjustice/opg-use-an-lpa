@@ -12,9 +12,8 @@
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
 
         <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ element.getName() }}">
-            {{ label | raw }}
+            {{ label | trans | raw }}
         </label>
-
 
         {{- block('input_hint') -}}
 
@@ -40,7 +39,7 @@
 
         {% if element.getName() == 'org_name' %}
             <button data-prevent-double-click="true" type="submit" class="govuk-button">
-                Continue
+                {% trans %}Continue{% endtrans %}
             </button>
         {% endif %}
 
@@ -186,7 +185,7 @@
 {%- block input_hint -%}
     {% if hint is defined %}
         <span id="{{ element.getName() }}-hint" class="govuk-hint">
-            {{ hint | raw }}
+            {{ hint | trans | raw }}
         </span>
     {% endif %}
 {%- endblock input_hint -%}
