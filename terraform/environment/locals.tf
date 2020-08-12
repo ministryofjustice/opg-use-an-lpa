@@ -10,6 +10,10 @@ variable "container_version" {
   default = "latest"
 }
 
+output "container_version" {
+  value = var.container_version
+}
+
 variable "accounts" {
   type = map(
     object({
