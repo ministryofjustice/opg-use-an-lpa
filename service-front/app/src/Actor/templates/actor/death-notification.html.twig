@@ -1,0 +1,19 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}Death Notification - {{ parent() }} {% endblock %}
+
+{% block content %}
+
+<div class="govuk-width-container">
+    {{ include('@actor/partials/new-use-service.html.twig') }}
+
+    {{ include('@partials/account-bar.html.twig') }}
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <ul class="govuk-list govuk-list--bullet">
+            <li>random text</li>
+        </ul>
+    </main>
+</div>
+
+{% endblock %}
