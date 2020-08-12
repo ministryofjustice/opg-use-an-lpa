@@ -37,7 +37,11 @@ workflows:
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/lint_terraform:
-            name: lint_terraform_pr_build
+            name: lint_shared_terraform_pr_build
+            filters: { branches: { ignore: [master] } }
+
+        - use-my-lpa/lint_terraform:
+            name: lint_environment_terraform_pr_build
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/node_test_web:
@@ -91,7 +95,7 @@ workflows:
         - use-my-lpa/plan_shared_terraform:
             name: dev_plan_shared_terraform
             filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs,lint_terraform_pr_build]
+            requires: [cancel_previous_jobs,lint_shared_terraform_pr_build]
 
         - use-my-lpa/apply_environment_terraform:
             name: dev_apply_environment_terraform
@@ -100,6 +104,7 @@ workflows:
               [
                 cancel_previous_jobs,
                 dev_plan_shared_terraform,
+                lint_environment_terraform_pr_build,
                 app_front_build_pr_build,
                 web_front_build_pr_build,
                 web_api_build_pr_build,
