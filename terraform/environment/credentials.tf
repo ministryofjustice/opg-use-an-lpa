@@ -18,6 +18,7 @@ variable "management_role" {
 }
 
 provider "aws" {
+  # source  = "hashicorp/aws"
   version = "~> 2.70.0"
   region  = "eu-west-1"
 
@@ -28,6 +29,7 @@ provider "aws" {
 }
 
 provider "aws" {
+  # source  = "hashicorp/aws"
   version = "~> 2.70.0"
   region  = "us-east-1"
   alias   = "us-east-1"
@@ -39,6 +41,7 @@ provider "aws" {
 }
 
 provider "aws" {
+  # source  = "hashicorp/aws"
   version = "~> 2.70.0"
   region  = "eu-west-1"
   alias   = "management"
@@ -50,5 +53,7 @@ provider "aws" {
 }
 
 provider "pagerduty" {
-  token = var.pagerduty_token
+  # source  = "terraform-providers/pagerduty"
+  version = "~> 1.7.4"
+  token   = var.pagerduty_token
 }
