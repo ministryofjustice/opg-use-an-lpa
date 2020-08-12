@@ -12,7 +12,7 @@
     @ui
     Scenario Outline: A user can view the death notification page
     Given I am on the change details page
-    When I click the <hyperlink> on the page
+    When I click the <hyperlink> link on the change details page
     Then I expect to be on the death notification page
       Examples:
         | hyperlink |
