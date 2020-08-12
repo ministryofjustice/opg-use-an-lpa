@@ -12,11 +12,10 @@
     @ui
     Scenario Outline: A user can view the death notification page
     Given I am on the change details page
-    When I click the <hyperlink> links on the page
+    When I click the <hyperlink> on the page
     Then I expect to be on the death notification page
-
-    Examples:
-    | hyperlink |
-    |'the donor or an attorney dies'|
-    |'the donor dies'|
-    |'the attorney dies'|
+      Examples:
+        | hyperlink |
+      |the donor or an attorney dies|
+      |the donor dies|
+      |the attorney dies|
