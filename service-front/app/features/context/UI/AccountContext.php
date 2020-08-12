@@ -3513,6 +3513,7 @@ class AccountContext implements Context
     public function iAmOnTheChangeDetailsPage()
     {
         $this->ui->visit('/lpa/change-details');
+        $this->ui->assertPageAddress('/lpa/change-details');
     }
 
     /**
