@@ -1,12 +1,12 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}{%trans%}Enter LPA access code{%endtrans%} - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Enter LPA access code{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
 
-    <a href="{{ path('home') }}" class="govuk-back-link">{%trans%}Back{%endtrans%}</a>
+    <a href="{{ path('home') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -22,7 +22,7 @@
 
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-heading-xl">
-                                {%trans%}Enter the LPA access code{%endtrans%}
+                                {% trans %}Enter the LPA access code{% endtrans %}
                             </h1>
                         </legend>
 
@@ -33,14 +33,14 @@
                         {{ govuk_form_element(form.get('lpa_code'), { 'label': 'LPA access code', 'input_prefix': 'V - ', 'hint': 'Access codes are 13 characters long and start with a V<br/>For example, V-AB12-CD34-EF56', 'attr' : {'class': 'govuk-input--width-10'}}) }}
 
                         <div class="govuk-inset-text">
-                            <p class="govuk-!-font-weight-bold">{%trans%}What is an <abbr title="lasting power of attorney">LPA</abbr> access code?{%endtrans%}</p>
+                            <p class="govuk-!-font-weight-bold">{% trans %}What is an <abbr title="lasting power of attorney">LPA</abbr> access code?{% endtrans %}</p>
 
-                            {%trans%}An <abbr title="lasting power of attorney">LPA</abbr> access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney.{%endtrans%}
+                            {% trans %}An <abbr title="lasting power of attorney">LPA</abbr> access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney.{% endtrans %}
                         </div>
 
-                        <p class="govuk-body">{%trans with {'%link%': path('viewer-terms-of-use')}%}By continuing you agree to our <a href="%link%" class="govuk-link">terms of use</a>.{%endtrans%}</p>
+                        <p class="govuk-body">{% trans with {'{link}': path('viewer-terms-of-use')} %}By continuing you agree to our <a href="{link}" class="govuk-link">terms of use</a>.{% endtrans %}</p>
 
-                        <button data-prevent-double-click="true" type="submit" class="govuk-button">{%trans%}Continue{%endtrans%}</button>
+                        <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
 
                     </fieldset>
 
