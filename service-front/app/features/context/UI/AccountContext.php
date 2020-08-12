@@ -3525,11 +3525,11 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I click the (.*) on the page$/
+     * @When /^I click the (.*) link on the change details page$/
      */
-    public function iClickTheOnThePage($hyperlink)
+    public function iClickTheLinkOnTheChangeDetailsPage($hyperlink)
     {
-        $this->ui->clickLink($hyperlink);;
+        $this->ui->clickLink($hyperlink);
     }
 
 
