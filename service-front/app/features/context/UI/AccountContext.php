@@ -3506,4 +3506,31 @@ class AccountContext implements Context
     {
         assertFalse($this->elementisOpen('.govuk-details'));
     }
+
+    /**
+     * @Given /^I am on the change details page$/
+     */
+    public function iAmOnTheChangeDetailsPage()
+    {
+        $this->ui->visit('/lpa/change-details');
+    }
+
+    /**
+     * @When /^I click the (.*) links on the page$/
+     */
+    public function iClickTheLinksOnThePage($hyperlink)
+    {
+        $this->ui->clickLink($hyperlink);
+    }
+
+    /**
+     * @Then /^I expect to be on the death notification page$/
+     */
+    public function iExpectToBeOnTheDeathNotificationPage()
+    {
+        $this->ui->assertPageAddress('/lpa/death-certificate');
+    }
+
+
+
 }
