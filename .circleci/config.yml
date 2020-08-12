@@ -869,7 +869,7 @@ orbs:
         #   - Updates per environment infrastructure; and
         #   - Triggers a deploy of the updated container (if changed)
         #
-        executor: terraform
+        executor: terraform13
         parameters:
           workspace:
             description: Terraform workspace name
