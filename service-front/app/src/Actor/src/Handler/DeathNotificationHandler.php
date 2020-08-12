@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Actor\Handler;
-
 
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
@@ -14,15 +14,15 @@ use Mezzio\Template\TemplateRendererInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Common\Handler\UserAware;
 /**
- * Class LpaRemovedHandler
+ * Class DeathNotificationHandler
  *
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
 
-class DeathNotificationHandler extends AbstractHandler
+class DeathNotificationHandler extends AbstractHandler implements UserAware
 
-    //use User;
+    use User;
 
         public function __construct(
         TemplateRendererInterface $renderer,
@@ -40,11 +40,12 @@ class DeathNotificationHandler extends AbstractHandler
        * @param ServerRequestInterface $request
        * @return ResponseInterface
        */
-    public function handle(ServerRequestInterface $request): ResponseInterface
-{
-    //$user = $this->getUser($request);
 
-    return new HtmlResponse($this->renderer->render('actor::death-notification', [
-        //'user' => $user
-    ]));
+      public function handle(ServerRequestInterface $request): ResponseInterface
+        $user = $this->getUser($request);
+
+        return new HtmlResponse($this->renderer->render('actor::death-notification', [
+            'user' => $user
+        ]));
+
 }
