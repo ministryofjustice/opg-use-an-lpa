@@ -333,6 +333,9 @@ orbs:
       terraform:
         docker: [image: hashicorp/terraform:0.12.29]
         resource_class: small
+      terraform13:
+        docker: [image: hashicorp/terraform:0.13]
+        resource_class: small
 
     jobs:
       node_test_service_pdf:
@@ -1064,7 +1067,7 @@ jobs:
 
   workspace_cleanup:
     docker:
-      - image: hashicorp/terraform:0.12.29
+      - image: hashicorp/terraform:0.13
     resource_class: small
     steps:
       - checkout
