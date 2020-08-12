@@ -3,14 +3,14 @@
         {# ... display the errors for the whole form #}
         <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">
-                There is a problem
+                {% trans %}There is a problem{% endtrans %}
             </h2>
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                     {% for id, messages in errors %}
                         {% for message in messages %}
                             <li>
-                                <a href="#{%- if id >= 0 -%}{{ id }}{%- endif -%}">{{  message|raw }}</a>
+                                <a href="#{%- if id >= 0 -%}{{ id }}{%- endif -%}">{{  message| trans | raw }}</a>
                             </li>
                         {% endfor %}
                     {% endfor %}
@@ -25,7 +25,7 @@
         {# ... display the errors for a single field #}
         {%- for error in errors -%}
             <span id="{{ id }}-error" class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span> {{ error|raw }}
+                <span class="govuk-visually-hidden">Error:</span> {{ error| trans |raw }}
             </span>
         {%- endfor -%}
     {% endif %}

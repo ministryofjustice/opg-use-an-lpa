@@ -40,3 +40,45 @@ msgstr ""
 
 msgid "If you're named on more than one LPA, you can add all those LPAs to your account."
 msgstr ""
+
+msgid "Enter your LPA access code"
+msgstr ""
+
+msgid "Enter the donor's last name"
+msgstr ""
+
+msgid "There is a problem"
+msgstr ""
+
+msgid "If you made an LPA online, you will still need to create an account to use this service"
+msgstr ""
+
+msgid "Yes, I already have an account"
+msgstr ""
+
+msgid "No, this is the first time I’ve used the service"
+msgstr ""
+
+msgid "Email address"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Day"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+msgid "What is your date of birth?"
+msgstr ""
+
+msgid "For example, 31 03 1980"
+msgstr ""
+
+msgid "I agree to the <a href=\"/terms-of-use\" class=\"govuk-link\">terms of use</a>"
+msgstr ""
