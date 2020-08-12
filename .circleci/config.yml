@@ -781,6 +781,29 @@ orbs:
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 terraform validate
+          # - run:
+          #     name: Lint Environment Terraform
+          #     command: |
+          #       cd ~/project/terraform/environment
+          #       terraform init -lock-timeout=300s
+          #       export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+          #       echo $TF_WORKSPACE
+          #       export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+          #       echo $IMAGE_TAG
+          #       terraform validate -var container_version=${IMAGE_TAG}
+
+      lint_environment_terraform:
+        #
+        # Lint the Terraform
+        #
+        executor: terraform13
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
+        steps:
+          - checkout
           - run:
               name: Lint Environment Terraform
               command: |
