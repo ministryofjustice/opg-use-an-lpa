@@ -1030,7 +1030,7 @@ jobs:
       - slack/notify:
           title: "Use a Lasting Power of Attorney Development Environment Ready"
           color: "#9933ff"
-          message: "User: $CIRCLE_USERNAME \npublic facing view url: https://$PUBLIC_FACING_VIEW_DOMAIN/home \npublic facing use url: https://$PUBLIC_FACING_USE_DOMAIN/home"
+          message: "User: $CIRCLE_USERNAME \nview url: https://$PUBLIC_FACING_VIEW_DOMAIN/home \nuse url: https://$PUBLIC_FACING_USE_DOMAIN/home"
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
 
   slack_notify_production_release:
@@ -1048,7 +1048,7 @@ jobs:
       - slack/notify:
           title: "Use a Lasting Power of Attorney Production Release Successful"
           color: "#9933ff"
-          message: "User: $CIRCLE_USERNAME \npublic facing view url: https://$PUBLIC_FACING_VIEW_DOMAIN/home \npublic facing use url: https://$PUBLIC_FACING_USE_DOMAIN/home"
+          message: "User: $CIRCLE_USERNAME \nview url: https://$PUBLIC_FACING_VIEW_DOMAIN/home \nuse url: https://$PUBLIC_FACING_USE_DOMAIN/home"
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
 
