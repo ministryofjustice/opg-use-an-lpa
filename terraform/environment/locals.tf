@@ -14,6 +14,10 @@ output "container_version" {
   value = var.container_version
 }
 
+output "workspace_name" {
+  value = terraform.workspace
+}
+
 variable "accounts" {
   type = map(
     object({
