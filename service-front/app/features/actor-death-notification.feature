@@ -1,4 +1,4 @@
-@actor @deathnotification
+@actor @death_notification
 
   Feature: Death Notification
     As a user
