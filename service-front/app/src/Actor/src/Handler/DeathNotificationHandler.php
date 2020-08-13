@@ -18,7 +18,7 @@ use Common\Handler\UserAware;
  * Class DeathNotificationHandler
  *
  * @package Actor\Handler
- * @codeCoverageIgnore
+ * @codeCoverageIgnore 
  */
 
 class DeathNotificationHandler extends AbstractHandler implements UserAware
