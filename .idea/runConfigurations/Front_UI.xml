@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Front UI" type="PhpBehatConfigurationType" singleton="false">
-    <BehatRunner configuration_file="$PROJECT_DIR$/service-front/app/behat.yml" scenario="" scope="Yml" options="--profile=acceptance --tags=ui&amp;&amp;wip,ui " use_alternative_configuration_file="true" />
+    <BehatRunner configuration_file="$PROJECT_DIR$/service-front/app/behat.yml" scenario="" scope="Yml" options="--profile=acceptance --tags=ui&amp;&amp;wip,ui" use_alternative_configuration_file="true" />
     <CommandLine parameters="-dapc.enable_cli=1">
       <PhpTestInterpreterSettings>
         <option name="interpreterName" value="front-app" />
