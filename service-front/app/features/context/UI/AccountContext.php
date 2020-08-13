@@ -2796,16 +2796,25 @@ class AccountContext implements Context
      */
     public function iShouldBeTakenToThePreviousPage($page)
     {
-        if ($page == 'triage') {
-            $this->ui->assertPageAddress('/home');
-        } elseif ($page == 'login') {
-            $this->ui->assertPageAddress('/login');
-        } elseif ($page == 'dashboard') {
-            $this->ui->assertPageAddress('/lpa/dashboard');
-        } elseif ($page == 'your details') {
-            $this->ui->assertPageAddress('/your-details');
-        } elseif ($page == 'add a lpa') {
-            $this->ui->assertPageAddress('/lpa/add-details');
+        switch ($page) {
+            case 'triage':
+                $this->ui->assertPageAddress('/home');
+                break;
+            case 'login':
+                $this->ui->assertPageAddress('/login');
+                break;
+            case 'dashboard':
+                $this->ui->assertPageAddress('/dashboard');
+                break;
+            case 'your details':
+                $this->ui->assertPageAddress('/your-details');
+                break;
+            case 'add a lpa':
+                $this->ui->assertPageAddress('/lpa/add-details');
+                break;
+            case 'change details':
+                $this->ui->assertPageAddress('/lpa/change-details');
+                break;
         }
     }
 
@@ -3531,6 +3540,17 @@ class AccountContext implements Context
     {
         $this->ui->clickLink($hyperlink);
     }
+
+    /**
+     * @Given /^I am on the death notification page$/
+     */
+    public function iAmOnTheDeathNotificationPage()
+    {
+        $this->ui->visit('/lpa/death-notification');
+        $this->ui->assertPageAddress('/lpa/death-notification');
+    }
+
+
 
 
 
