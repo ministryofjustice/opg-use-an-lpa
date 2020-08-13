@@ -1998,9 +1998,9 @@ class AccountContext implements Context
     {
 
         $value = $this->ui->getSession()->getPage()->find('css', '#__csrf')->getValue();
-        $separated = explode('-',$value);
+        $separated = explode('-', $value);
         $separated[1] = 'youhazbeenhaaxed'; //this is the requestid.
-        $hackedValue = implode('-',$separated);
+        $hackedValue = implode('-', $separated);
         $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
     }
 
@@ -2011,9 +2011,9 @@ class AccountContext implements Context
     {
         $value = $this->ui->getSession()->getPage()->find('css', '#__csrf')->getValue();
 
-        $separated = explode('-',$value);
+        $separated = explode('-', $value);
         $separated[0] = 'youhazbeenhaaxed'; //this is the token part.
-        $hackedValue = implode("-",$separated);
+        $hackedValue = implode("-", $separated);
 
         $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
     }
@@ -3230,7 +3230,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $this->ui->visit('/lpa/dashboard');
 
@@ -3478,7 +3480,30 @@ class AccountContext implements Context
      */
     public function iWantToCreateANewAccount()
     {
-         // Not needed for this context
+        // Not needed for this context
     }
 
+    public function elementisOpen(string $searchStr)
+    {
+        $page = $this->ui->getSession()->getPage();
+        $element = $page->find('css', $searchStr);
+        $elementHtml = $element->getOuterHtml();
+        return str_contains($elementHtml, ' open');
+    }
+
+    /**
+     * @Given /^I can see that the What I can do link is open$/
+     */
+    public function iCanSeeThatTheWhatICanDoLinkIsOpen()
+    {
+        assertTrue($this->elementisOpen('.govuk-details'));
+    }
+
+    /**
+     * @Given /^I can see that the What I can do link is closed$/
+     */
+    public function iCanSeeThatTheWhatICanDoLinkIsClosed()
+    {
+        assertFalse($this->elementisOpen('.govuk-details'));
+    }
 }

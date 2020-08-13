@@ -70,6 +70,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
             ]));
         }
 
+        $totalCodes = 0;
         foreach ($lpas as $lpaKey => $lpaData) {
             $actorToken = $lpaData['user-lpa-actor-token'];
 
@@ -80,14 +81,15 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
             );
 
             $lpas[$lpaKey]['activeCodeCount'] = $shareCodes['activeCodeCount'];
+            $totalCodes += $shareCodes['activeCodeCount'];
             $lpas[$lpaKey]['actorActive'] = $lpaData['actor']['type'] === 'donor' || $lpaData['actor']['details']->getSystemStatus();
         }
-
         $lpas = $this->lpaService->sortLpasByDonorSurname($lpas);
 
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
             'user' => $user,
-            'lpas' => $lpas
+            'lpas' => $lpas,
+            'active_access_codes_count' => $totalCodes,
         ]));
     }
 }
