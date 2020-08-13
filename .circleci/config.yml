@@ -37,11 +37,7 @@ workflows:
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/lint_terraform:
-            name: lint_shared_terraform_pr_build
-            filters: { branches: { ignore: [master] } }
-
-        - use-my-lpa/lint_terraform:
-            name: lint_environment_terraform_pr_build
+            name: lint_terraform_pr_build
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/node_test_web:
@@ -95,7 +91,7 @@ workflows:
         - use-my-lpa/plan_shared_terraform:
             name: dev_plan_shared_terraform
             filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs,lint_shared_terraform_pr_build]
+            requires: [cancel_previous_jobs,lint_terraform_pr_build]
 
         - use-my-lpa/apply_environment_terraform:
             name: dev_apply_environment_terraform
@@ -104,7 +100,6 @@ workflows:
               [
                 cancel_previous_jobs,
                 dev_plan_shared_terraform,
-                lint_environment_terraform_pr_build,
                 app_front_build_pr_build,
                 web_front_build_pr_build,
                 web_api_build_pr_build,
@@ -336,10 +331,7 @@ orbs:
         docker: [image: circleci/python]
         resource_class: small
       terraform:
-        docker: [image: hashicorp/terraform:0.12.29]
-        resource_class: small
-      terraform13:
-        docker: [image: hashicorp/terraform:0.13.0]
+        docker: [image: hashicorp/terraform:latest]
         resource_class: small
 
     jobs:
@@ -786,32 +778,10 @@ orbs:
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 terraform validate
-          # - run:
-          #     name: Lint Environment Terraform
-          #     command: |
-          #       cd ~/project/terraform/environment
-          #       terraform init -lock-timeout=300s
-          #       export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
-          #       echo $TF_WORKSPACE
-          #       export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-          #       echo $IMAGE_TAG
-          #       terraform validate -var container_version=${IMAGE_TAG}
-
-      lint_environment_terraform:
-        #
-        # Lint the Terraform
-        #
-        executor: terraform13
-        parameters:
-          workspace:
-            description: Terraform workspace name
-            type: string
-            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
-        steps:
-          - checkout
           - run:
               name: Lint Environment Terraform
               command: |
+                terraform --version
                 cd ~/project/terraform/environment
                 terraform init -lock-timeout=300s
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
@@ -838,6 +808,7 @@ orbs:
           - run:
               name: Plan Shared Terraform
               command: |
+                terraform --version
                 cd ~/project/terraform/account
                 terraform init -lock-timeout=300s
                 terraform plan -lock-timeout=300s
@@ -860,6 +831,7 @@ orbs:
           - run:
               name: Apply Shared Terraform
               command: |
+                terraform --version
                 cd ~/project/terraform/account
                 terraform init -lock-timeout=300s
                 terraform apply -lock-timeout=300s --auto-approve
@@ -869,7 +841,7 @@ orbs:
         #   - Updates per environment infrastructure; and
         #   - Triggers a deploy of the updated container (if changed)
         #
-        executor: terraform13
+        executor: terraform
         parameters:
           workspace:
             description: Terraform workspace name
@@ -880,6 +852,7 @@ orbs:
           - run:
               name: Apply Environment Terraform
               command: |
+                terraform --version
                 cd ~/project/terraform/environment
                 terraform init -lock-timeout=300s
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
@@ -1057,7 +1030,7 @@ jobs:
       - slack/notify:
           title: "Use a Lasting Power of Attorney Development Environment Ready"
           color: "#9933ff"
-          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN/home \nuse url: https://$USE_DOMAIN/home \npublic facing view url: https://$PUBLIC_FACING_VIEW_DOMAIN/home \npublic facing use url: https://$PUBLIC_FACING_USE_DOMAIN/home"
+          message: "User: $CIRCLE_USERNAME \nview url: https://$PUBLIC_FACING_VIEW_DOMAIN/home \nuse url: https://$PUBLIC_FACING_USE_DOMAIN/home"
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
 
   slack_notify_production_release:
@@ -1075,7 +1048,7 @@ jobs:
       - slack/notify:
           title: "Use a Lasting Power of Attorney Production Release Successful"
           color: "#9933ff"
-          message: "User: $CIRCLE_USERNAME \nview url: https://$VIEW_DOMAIN/home \nuse url: https://$USE_DOMAIN/home \npublic facing view url: https://$PUBLIC_FACING_VIEW_DOMAIN/home \npublic facing use url: https://$PUBLIC_FACING_USE_DOMAIN/home"
+          message: "User: $CIRCLE_USERNAME \nview url: https://$PUBLIC_FACING_VIEW_DOMAIN/home \nuse url: https://$PUBLIC_FACING_USE_DOMAIN/home"
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
 
@@ -1095,7 +1068,7 @@ jobs:
 
   workspace_cleanup:
     docker:
-      - image: hashicorp/terraform:0.13.0
+      - image: hashicorp/terraform:latest
     resource_class: small
     steps:
       - checkout
