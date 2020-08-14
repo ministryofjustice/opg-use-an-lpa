@@ -29,6 +29,7 @@ Feature: Add an LPA
     When I request to add an LPA with valid details using <passcode> which matches <storedCode>
     Then The correct LPA is found and I can confirm to add it
     And The LPA is successfully added
+    And I can see a flash message for the added LPA
 
     Examples:
       | passcode               | storedCode   |
