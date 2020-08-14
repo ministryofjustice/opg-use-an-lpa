@@ -129,7 +129,6 @@ resource "aws_ssm_parameter" "actor_maintenance_switch" {
 resource "aws_lb_listener_rule" "enable_actor_maintenance" {
   count        = aws_ssm_parameter.actor_maintenance_switch.value ? 1 : 0
   listener_arn = aws_lb_listener.actor_loadbalancer.arn
-  priority     = 3
   action {
     type = "fixed-response"
 

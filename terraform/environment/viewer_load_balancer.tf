@@ -130,7 +130,6 @@ resource "aws_ssm_parameter" "viewer_maintenance_switch" {
 resource "aws_lb_listener_rule" "enable_viewer_maintenance" {
   count        = aws_ssm_parameter.viewer_maintenance_switch.value ? 1 : 0
   listener_arn = aws_lb_listener.viewer_loadbalancer.arn
-  priority     = 3
   action {
     type = "fixed-response"
 
