@@ -32,7 +32,11 @@
                         <li>the donor or an attorney has changed their name by marriage or deed poll</li>
                         <li>the donor's or an attorney's name or address is misspelt</li>
                         <li>a date of birth is wrong</li>
-                        <li><a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the donor or an attorney dies</a></li>
+                        {% if actorToken != 'null' %}
+                            <li><a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the donor or an attorney dies</a></li>
+                        {% else %}
+                            <li><a class="govuk-link" href="{{ path('lpa.death-notification') }}">the donor or an attorney dies</a></li>
+                        {% endif %}
                     </ul>
 
                     <p class="govuk-body">We’ll update the online <abbr title="lasting power of attorney">LPA</abbr> summary and our records.</p>
@@ -75,12 +79,13 @@
                     <p class="govuk-body">Find out more about what to do if:</p>
 
                     <ul class="govuk-list">
-                        <li>
-                            <a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the donor dies</a>
-                        </li>
-                        <li>
-                            <a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the attorney dies</a>
-                        </li>
+                        {% if actorToken != 'null' %}
+                            <li><a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the donor dies</a></li>
+                            <li><a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the attorney dies</a></li>
+                        {% else %}
+                            <li><a class="govuk-link" href="{{ path('lpa.death-notification') }}">the donor dies</a></li>
+                            <li><a class="govuk-link" href="{{ path('lpa.death-notification') }}">the attorney dies</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

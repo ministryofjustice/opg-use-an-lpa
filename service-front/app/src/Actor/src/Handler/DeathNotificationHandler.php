@@ -42,10 +42,13 @@ class DeathNotificationHandler extends AbstractHandler implements UserAware
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $actorLpaToken = !empty($request->getQueryParams()) ? $request->getQueryParams()['lpa'] : 'null';
+
         $user = $this->getUser($request);
 
         return new HtmlResponse($this->renderer->render('actor::death-notification', [
-          'user' => $user
+            'actorToken' => $actorLpaToken,
+            'user' => $user
         ]));
     }
 }
