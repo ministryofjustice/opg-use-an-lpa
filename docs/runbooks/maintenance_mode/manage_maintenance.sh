@@ -15,7 +15,6 @@ function set_service_name() {
 function get_alb_rule_arn() {
   MM_ALB_ARN=$(aws elbv2 describe-load-balancers --names  "${ENVIRONMENT}-${SERVICE}" | jq -r .[][]."LoadBalancerArn")
   MM_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn ${MM_ALB_ARN} | jq -r '.[][]  | select(.Protocol == "HTTPS") | .ListenerArn')
-  MM_RULES=$(aws elbv2 describe-rules --listener-arn ${MM_LISTENER_ARN})
   MM_RULE_ARN=$(aws elbv2 describe-rules --listener-arn ${MM_LISTENER_ARN} | jq -r '.[][]  | select(.Priority == "100") | .RuleArn')
 
 }
