@@ -104,14 +104,15 @@ return [
         'redirect' => '/login',
     ],
 
-    'translator' => [
-        'translation_files' => [
-            [
-                'type'     => \Laminas\I18n\Translator\Loader\Gettext::class,
-                'filename' => '/app/languages/cy.mo',
-                'locale'   => 'cy'
+    'i18n' => [
+        'default_locale' => 'en_GB',
+        'languages' => [
+            'welsh' => [
+                'format' => 'mo',
+                'resource' => '/app/languages/cy.mo',
+                'locale' => 'cy'
             ]
-        ],
+        ]
     ],
 
     'ratelimits' => [
