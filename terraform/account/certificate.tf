@@ -74,17 +74,25 @@ resource "aws_acm_certificate" "certificate_public_facing_view" {
 // Use Certificates
 
 resource "aws_route53_record" "certificate_validation_use" {
-  provider = aws.management
-  name     = aws_acm_certificate.certificate_use.domain_validation_options[0].resource_record_name
-  type     = aws_acm_certificate.certificate_use.domain_validation_options[0].resource_record_type
-  zone_id  = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
-  records  = [aws_acm_certificate.certificate_use.domain_validation_options[0].resource_record_value]
-  ttl      = 60
+  for_each = {
+    for dvo in aws_acm_certificate.certificate_use.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
 }
 
-resource "aws_acm_certificate_validation" "certificate_use" {
+resource "aws_acm_certificate_validation" "certificate_validation_use" {
   certificate_arn         = aws_acm_certificate.certificate_use.arn
-  validation_record_fqdns = [aws_route53_record.certificate_validation_use.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.certificate_validation_use : record.fqdn]
 }
 
 resource "aws_acm_certificate" "certificate_use" {
@@ -93,17 +101,25 @@ resource "aws_acm_certificate" "certificate_use" {
 }
 
 resource "aws_route53_record" "certificate_validation_public_facing_use" {
-  provider = aws.management
-  name     = aws_acm_certificate.certificate_public_facing_use.domain_validation_options[0].resource_record_name
-  type     = aws_acm_certificate.certificate_public_facing_use.domain_validation_options[0].resource_record_type
-  zone_id  = data.aws_route53_zone.live_service_use_lasting_power_of_attorney.zone_id
-  records  = [aws_acm_certificate.certificate_public_facing_use.domain_validation_options[0].resource_record_value]
-  ttl      = 60
+  for_each = {
+    for dvo in aws_acm_certificate.certificate_public_facing_use.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = data.aws_route53_zone.live_service_use_lasting_power_of_attorney.zone_id
 }
 
 resource "aws_acm_certificate_validation" "certificate_public_facing_use" {
   certificate_arn         = aws_acm_certificate.certificate_public_facing_use.arn
-  validation_record_fqdns = [aws_route53_record.certificate_validation_public_facing_use.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.certificate_validation_public_facing_use : record.fqdn]
 }
 
 resource "aws_acm_certificate" "certificate_public_facing_use" {
