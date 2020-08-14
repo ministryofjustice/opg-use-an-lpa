@@ -17,6 +17,7 @@ data "aws_route53_zone" "live_service_view_lasting_power_of_attorney" {
 // View Certificates
 
 resource "aws_route53_record" "certificate_validation_view" {
+  provider = aws.management
   for_each = {
     for dvo in aws_acm_certificate.certificate_view.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
@@ -44,6 +45,7 @@ resource "aws_acm_certificate" "certificate_view" {
 }
 
 resource "aws_route53_record" "certificate_validation_public_facing_view" {
+  provider = aws.management
   for_each = {
     for dvo in aws_acm_certificate.certificate_public_facing_view.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
@@ -74,6 +76,7 @@ resource "aws_acm_certificate" "certificate_public_facing_view" {
 // Use Certificates
 
 resource "aws_route53_record" "certificate_validation_use" {
+  provider = aws.management
   for_each = {
     for dvo in aws_acm_certificate.certificate_use.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
@@ -101,6 +104,7 @@ resource "aws_acm_certificate" "certificate_use" {
 }
 
 resource "aws_route53_record" "certificate_validation_public_facing_use" {
+  provider = aws.management
   for_each = {
     for dvo in aws_acm_certificate.certificate_public_facing_use.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
