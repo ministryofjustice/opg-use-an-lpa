@@ -44,16 +44,8 @@ class ChangeDetailsHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $actorLpaToken = "null";
-        $array = $request->getQueryParams();
-
-        if (!empty($array)) {
-            $actorLpaToken = $request->getQueryParams()['lpa'];
-        }
-
-        // TODO - actorLPAToken could be null if coming from Your Details page
-        // TODO - back button navigation logic to be fixed as part of Ticket UML-460
-        // If actor token null passed , back button in view should navigate to Your Details page
+        // coming from the 'your details' page, there will not be an actorLpaToken
+        $actorLpaToken = !empty($request->getQueryParams()) ? $request->getQueryParams()['lpa'] : 'null';
 
         $user = $this->getUser($request);
 
