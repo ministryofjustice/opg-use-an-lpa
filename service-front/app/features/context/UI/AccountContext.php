@@ -3506,4 +3506,12 @@ class AccountContext implements Context
     {
         assertFalse($this->elementisOpen('.govuk-details'));
     }
+
+    /**
+     * @Given /^I can see a flash message for the added LPA$/
+     */
+    public function iCanSeeAFlashMessageForTheAddedLPA()
+    {
+        $this->ui->assertPageContainsText("You've added Ian Deputy's health and welfare LPA");
+    }
 }
