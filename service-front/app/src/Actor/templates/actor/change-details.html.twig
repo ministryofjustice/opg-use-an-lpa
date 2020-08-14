@@ -32,6 +32,7 @@
                         <li>the donor or an attorney has changed their name by marriage or deed poll</li>
                         <li>the donor's or an attorney's name or address is misspelt</li>
                         <li>a date of birth is wrong</li>
+
                         {% if actorToken != 'null' %}
                             <li><a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the donor or an attorney dies</a></li>
                         {% else %}

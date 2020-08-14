@@ -3550,8 +3550,4 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/lpa/death-notification');
     }
 
-
-
-
-
 }
