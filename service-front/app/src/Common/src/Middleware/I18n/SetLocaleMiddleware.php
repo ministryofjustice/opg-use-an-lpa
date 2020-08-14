@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Symfony\Component\Translation\Translator;
 
 class SetLocaleMiddleware implements MiddlewareInterface
 {
@@ -17,13 +18,15 @@ class SetLocaleMiddleware implements MiddlewareInterface
 
     private ?string $defaultLocale;
     private string $fallbackLocale = 'en_GB';
+    private Translator $translator;
 
     private const REGEX_LOCALE = '#^/(?P<locale>cy)(?:/|$)#';
 
-    public function __construct(UrlHelper $helper, string $defaultLocale = null)
+    public function __construct(UrlHelper $helper, Translator $translator, string $defaultLocale = null)
     {
         $this->helper = $helper;
         $this->defaultLocale = $defaultLocale;
+        $this->translator = $translator;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -40,6 +43,7 @@ class SetLocaleMiddleware implements MiddlewareInterface
 
         $locale = $matches['locale'];
         Locale::setDefault(Locale::canonicalize($locale));
+        $this->translator->setLocale(Locale::getDefault());
         $this->helper->setBasePath($locale);
 
         $path = substr($path, strlen($locale) + 1);
