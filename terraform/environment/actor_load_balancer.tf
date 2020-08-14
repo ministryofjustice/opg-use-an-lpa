@@ -126,30 +126,6 @@ resource "aws_ssm_parameter" "actor_maintenance_switch" {
   }
 }
 
-locals {
-  actor_path_pattern = {
-    field  = "path-pattern"
-    values = ["/maintenance"]
-  }
-  actor_host_pattern = {
-    field  = "host-header"
-    values = [aws_route53_record.actor-use-my-lpa.fqdn]
-  }
-
-  actor_path_pattern_condition = {
-    path_pattern = {
-      values = ["/maintenance"]
-    }
-  }
-  actor_host_pattern_condition = {
-    host_header = {
-      values = [aws_route53_record.actor-use-my-lpa.fqdn]
-    }
-  }
-
-  actor_rule_condition = aws_ssm_parameter.actor_maintenance_switch.value ? local.actor_host_pattern_condition : local.actor_path_pattern_condition
-}
-
 resource "aws_lb_listener_rule" "enable_actor_maintenance" {
   count        = aws_ssm_parameter.actor_maintenance_switch.value ? 1 : 0
   listener_arn = aws_lb_listener.actor_loadbalancer.arn
@@ -165,7 +141,10 @@ resource "aws_lb_listener_rule" "enable_actor_maintenance" {
   }
   condition {
     host_header {
-      values = [aws_route53_record.actor-use-my-lpa.fqdn]
+      values = [
+        aws_route53_record.actor-use-my-lpa.fqdn,
+        aws_route53_record.public_facing_use_lasting_power_of_attorney.fqdn,
+      ]
     }
 
   }

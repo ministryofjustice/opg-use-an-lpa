@@ -126,19 +126,9 @@ resource "aws_ssm_parameter" "viewer_maintenance_switch" {
   }
 }
 
-locals {
-  viewer_path_pattern = {
-    field  = "path-pattern"
-    values = ["/maintenance"]
-  }
-  viewer_host_pattern = {
-    field  = "host-header"
-    values = [aws_route53_record.viewer-use-my-lpa.fqdn]
-  }
-  viewer_rule_condition = aws_ssm_parameter.viewer_maintenance_switch.value ? local.viewer_host_pattern : local.viewer_path_pattern
-}
 
-resource "aws_lb_listener_rule" "viewer_maintenance" {
+resource "aws_lb_listener_rule" "enable_viewer_maintenance" {
+  count        = aws_ssm_parameter.viewer_maintenance_switch.value ? 1 : 0
   listener_arn = aws_lb_listener.viewer_loadbalancer.arn
   priority     = 3
   action {
@@ -150,13 +140,35 @@ resource "aws_lb_listener_rule" "viewer_maintenance" {
       status_code  = "503"
     }
   }
-
   condition {
-    field  = local.viewer_rule_condition.field
-    values = local.viewer_rule_condition.values
+    host_header {
+      values = [
+        aws_route53_record.viewer-use-my-lpa.fqdn,
+        aws_route53_record.public_facing_view_lasting_power_of_attorney.fqdn,
+      ]
+    }
+
   }
 }
 
+resource "aws_lb_listener_rule" "viewer_maintenance" {
+  listener_arn = aws_lb_listener.viewer_loadbalancer.arn
+  priority     = 4
+  action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/html"
+      message_body = file("${path.module}/maintenance/viewer_maintenance.html")
+      status_code  = "503"
+    }
+  }
+  condition {
+    path_pattern {
+      values = ["/maintenance"]
+    }
+  }
+}
 resource "aws_security_group" "viewer_loadbalancer" {
   name        = "${local.environment}-viewer-loadbalancer"
   description = "Allow inbound traffic"
