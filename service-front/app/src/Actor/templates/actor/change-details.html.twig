@@ -80,7 +80,6 @@
                     <p class="govuk-body">Find out more about what to do if:</p>
 
                     <ul class="govuk-list">
-<<<<<<< HEAD
                         {% if actorToken != 'null' %}
                             <li><a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the donor dies</a></li>
                             <li><a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the attorney dies</a></li>
@@ -88,14 +87,6 @@
                             <li><a class="govuk-link" href="{{ path('lpa.death-notification') }}">the donor dies</a></li>
                             <li><a class="govuk-link" href="{{ path('lpa.death-notification') }}">the attorney dies</a></li>
                         {% endif %}
-=======
-                        <li>
-                            <a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the donor dies</a>
-                        </li>
-                        <li>
-                            <a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the attorney dies</a>
-                        </li>
->>>>>>> f02ef163a1b4347402423ffbc6918e3bee0c06be
                     </ul>
                 </div>
             </div>
