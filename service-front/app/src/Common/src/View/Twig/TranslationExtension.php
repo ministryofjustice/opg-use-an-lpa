@@ -9,9 +9,10 @@ use Common\View\Twig\TokenParser\TransTokenParser;
 use Laminas\I18n\Translator\Translator;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
 
-class TranslationExtension extends AbstractExtension
+class TranslationExtension extends AbstractExtension implements GlobalsInterface
 {
     private ICUMessageFormatter $formatter;
     private ?TranslatorInterface $translator;
@@ -59,7 +60,24 @@ class TranslationExtension extends AbstractExtension
         if (null !== $count) {
             $arguments['%count%'] = $count;
         }
+        $locale = $this->requiredLocale($locale);
 
+        return $this->formatter->format(
+            $this->getTranslator()->translate($message, $domain, $locale),
+            $locale,
+            $arguments
+        );
+    }
+
+    public function getGlobals(): array
+    {
+        return [
+            'currentLocale' => $this->requiredLocale()
+        ];
+    }
+
+    private function requiredLocale(string $locale = null): ?string
+    {
         // ICU MessageFormatter needs to have the locale
         if ($this->getTranslator() instanceof Translator) {
             $locale ??= $this->getTranslator()->getLocale();
@@ -67,10 +85,6 @@ class TranslationExtension extends AbstractExtension
             $locale ??= \Locale::getDefault();
         }
 
-        return $this->formatter->format(
-            $this->getTranslator()->translate($message, $domain, $locale),
-            $locale,
-            $arguments
-        );
+        return $locale;
     }
 }
