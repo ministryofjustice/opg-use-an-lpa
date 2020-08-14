@@ -135,10 +135,23 @@ locals {
     field  = "host-header"
     values = [aws_route53_record.actor-use-my-lpa.fqdn]
   }
-  actor_rule_condition = aws_ssm_parameter.actor_maintenance_switch.value ? local.actor_host_pattern : local.actor_path_pattern
+
+  actor_path_pattern_condition = {
+    path_pattern = {
+      values = ["/maintenance"]
+    }
+  }
+  actor_host_pattern_condition = {
+    host_header = {
+      values = [aws_route53_record.actor-use-my-lpa.fqdn]
+    }
+  }
+
+  actor_rule_condition = aws_ssm_parameter.actor_maintenance_switch.value ? local.actor_host_pattern_condition : local.actor_path_pattern_condition
 }
 
-resource "aws_lb_listener_rule" "actor_maintenance" {
+resource "aws_lb_listener_rule" "enable_actor_maintenance" {
+  count        = aws_ssm_parameter.actor_maintenance_switch.value ? 1 : 0
   listener_arn = aws_lb_listener.actor_loadbalancer.arn
   priority     = 3
   action {
@@ -150,10 +163,30 @@ resource "aws_lb_listener_rule" "actor_maintenance" {
       status_code  = "503"
     }
   }
-
   condition {
-    field  = local.actor_rule_condition.field
-    values = local.actor_rule_condition.values
+    host_header {
+      values = [aws_route53_record.actor-use-my-lpa.fqdn]
+    }
+
+  }
+}
+
+resource "aws_lb_listener_rule" "actor_maintenance" {
+  listener_arn = aws_lb_listener.actor_loadbalancer.arn
+  priority     = 4
+  action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/html"
+      message_body = file("${path.module}/maintenance/actor_maintenance.html")
+      status_code  = "503"
+    }
+  }
+  condition {
+    path_pattern {
+      values = ["/maintenance"]
+    }
   }
 }
 
