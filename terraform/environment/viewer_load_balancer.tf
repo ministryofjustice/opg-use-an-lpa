@@ -126,33 +126,9 @@ resource "aws_ssm_parameter" "viewer_maintenance_switch" {
   }
 }
 
-
-resource "aws_lb_listener_rule" "enable_viewer_maintenance" {
-  count        = aws_ssm_parameter.viewer_maintenance_switch.value ? 1 : 0
-  listener_arn = aws_lb_listener.viewer_loadbalancer.arn
-  action {
-    type = "fixed-response"
-
-    fixed_response {
-      content_type = "text/html"
-      message_body = file("${path.module}/maintenance/viewer_maintenance.html")
-      status_code  = "503"
-    }
-  }
-  condition {
-    host_header {
-      values = [
-        aws_route53_record.viewer-use-my-lpa.fqdn,
-        aws_route53_record.public_facing_view_lasting_power_of_attorney.fqdn,
-      ]
-    }
-
-  }
-}
-
 resource "aws_lb_listener_rule" "viewer_maintenance" {
   listener_arn = aws_lb_listener.viewer_loadbalancer.arn
-  priority     = 4
+  priority     = 100 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
     type = "fixed-response"
 
@@ -166,6 +142,13 @@ resource "aws_lb_listener_rule" "viewer_maintenance" {
     path_pattern {
       values = ["/maintenance"]
     }
+  }
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to the condition as this is modified by a script
+      # when putting the service into maintenance mode.
+      condition,
+    ]
   }
 }
 resource "aws_security_group" "viewer_loadbalancer" {
