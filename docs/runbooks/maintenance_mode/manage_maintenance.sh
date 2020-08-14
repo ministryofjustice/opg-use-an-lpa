@@ -26,14 +26,14 @@ function enable_maintenance() {
   then
     MM_DNS_PREFIX=""
   fi
-  aws ssm put-parameter --name "${ENVIRONMENT}_${SERVICE}_enable_maintenance" --type "String" --value "true" --overwrite
+  aws ssm put-parameter --name "${ENVIRONMENT}_${SERVICE}_maintenance" --type "String" --value "true" --overwrite
   aws elbv2 modify-rule \
   --rule-arn $MM_RULE_ARN \
-  --conditions Field=host-header,Values="${MM_DNS_PREFIX}${front_end}.lastingpowerofattorney.opg.service.justice.gov.uk"
+  --conditions Field=host-header,Values="${MM_DNS_PREFIX}${front_end}-lasting-power-of-attorney.service.gov.uk"
 }
 
 function disable_maintenance() {
-  aws ssm put-parameter --name "${ENVIRONMENT}_${SERVICE}_enable_maintenance" --type "String" --value "false" --overwrite
+  aws ssm put-parameter --name "${ENVIRONMENT}_${SERVICE}_maintenance" --type "String" --value "false" --overwrite
   aws elbv2 modify-rule \
   --rule-arn $MM_RULE_ARN \
   --conditions Field=path-pattern,Values='/maintenance'
