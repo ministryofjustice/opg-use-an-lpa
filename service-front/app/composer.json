@@ -68,6 +68,7 @@
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^7.0",
         "roave/security-advisories": "dev-master",
+        "symfony/finder": "^5.0",
         "squizlabs/php_codesniffer": "^3.0",
         "vimeo/psalm": "^3.0"
     },
