@@ -3531,4 +3531,12 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/death-notification');
     }
+
+    /**
+     * @Given /^I am on the death notification page$/
+     */
+    public function iAmOnTheDeathNotificationPage()
+    {
+        $this->ui->visit('/lpa/death-notification');
+    }
 }
