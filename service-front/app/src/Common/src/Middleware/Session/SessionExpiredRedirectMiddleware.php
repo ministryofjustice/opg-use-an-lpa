@@ -31,9 +31,24 @@ class SessionExpiredRedirectMiddleware implements MiddlewareInterface
     {
         /** @var SessionInterface $session */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
+
+        $currentDatetime =  time();
+
+        if ($session !== null) {
+            $sessionExpiredDatetime = $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY);
+        }
+        
         if ($session !== null && $session->get(EncryptedCookiePersistence::SESSION_EXPIRED_KEY) !== null) {
+
+            $currentDate = date("Y-m-d", $currentDatetime);
+            $expiredDate = date("Y-m-d", $sessionExpiredDatetime);
+
             $session->unset(EncryptedCookiePersistence::SESSION_EXPIRED_KEY);
-            $uri = new Uri($this->helper->generate('/session-expired'));
+            if ($currentDate > $expiredDate) {
+                $uri = new Uri($this->helper->generate('/home'));
+            } else {
+                $uri = new Uri($this->helper->generate('/session-expired'));
+            }
 
             return new RedirectResponse($uri);
         } else {
