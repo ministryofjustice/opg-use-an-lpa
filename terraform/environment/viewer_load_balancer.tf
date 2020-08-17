@@ -126,21 +126,9 @@ resource "aws_ssm_parameter" "viewer_maintenance_switch" {
   }
 }
 
-locals {
-  viewer_path_pattern = {
-    field  = "path-pattern"
-    values = ["/maintenance"]
-  }
-  viewer_host_pattern = {
-    field  = "host-header"
-    values = [aws_route53_record.viewer-use-my-lpa.fqdn]
-  }
-  viewer_rule_condition = aws_ssm_parameter.viewer_maintenance_switch.value ? local.viewer_host_pattern : local.viewer_path_pattern
-}
-
 resource "aws_lb_listener_rule" "viewer_maintenance" {
   listener_arn = aws_lb_listener.viewer_loadbalancer.arn
-  priority     = 3
+  priority     = 100 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
     type = "fixed-response"
 
@@ -150,13 +138,19 @@ resource "aws_lb_listener_rule" "viewer_maintenance" {
       status_code  = "503"
     }
   }
-
   condition {
-    field  = local.viewer_rule_condition.field
-    values = local.viewer_rule_condition.values
+    path_pattern {
+      values = ["/maintenance"]
+    }
+  }
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to the condition as this is modified by a script
+      # when putting the service into maintenance mode.
+      condition,
+    ]
   }
 }
-
 resource "aws_security_group" "viewer_loadbalancer" {
   name        = "${local.environment}-viewer-loadbalancer"
   description = "Allow inbound traffic"
