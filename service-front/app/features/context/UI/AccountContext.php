@@ -3517,9 +3517,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I select to find out more if a (.*) dies$/
+     * @When /^I select to find out more if (.*)$/
      */
-    public function iSelectToFindOutMoreIfADies($link)
+    public function iSelectToFindOutMoreIf($link)
     {
         $this->ui->clickLink($link);
     }

@@ -13,10 +13,10 @@ Feature: Death Notification
   @ui
   Scenario Outline: A user can view the death notification page
     Given I am on the change details page
-    When I select to find out more if a <donor> dies
+    When I select to find out more if <link>
     Then I expect to be on the death notification page
     Examples:
-      | donor |
+      | link |
       |the donor or an attorney dies|
       |the donor dies|
       |the attorney dies|
