@@ -105,7 +105,7 @@ Packages can be removed with:
 <DOCKER_COMPOSE> run front-composer composer remove author/package
 ```
 
-##Troubleshooting
+## Troubleshooting 
 There are occasions when your local dev environment doesn't quite act as it should.
 _Feel free to add further troubleshooting steps here._
 
