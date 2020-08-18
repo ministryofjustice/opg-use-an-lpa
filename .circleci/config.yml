@@ -277,6 +277,7 @@ workflows:
 
         - use-my-lpa/run_healthcheck_test:
             name: prod_run_healthcheck_test
+            workspace: production
             filters: { branches: { only: [master] } }
             requires: [production_apply_environment_terraform]
 
@@ -981,6 +982,11 @@ orbs:
         # Checks the health check is returning 200
         #
         executor: python
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
         steps:
           - checkout
           - attach_workspace:
@@ -991,6 +997,14 @@ orbs:
                 sudo pip3 install boto3
                 python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
           - run:
+              name: Allow CircleCI ingress to environment
+              command: |
+                export TF_WORKSPACE=$(bash ~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                echo $TF_WORKSPACE
+                if [ "${TF_WORKSPACE}" != "production" ]; then
+                  python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json --add
+                fi
+          - run:
               name: Run test
               command: |
                 viewer_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)
@@ -1000,6 +1014,13 @@ orbs:
                 actor_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
                 actor_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$actor_fqdn/healthcheck)
                 [[ $actor_response == 200 ]] || (echo "Error with actor health check. HTTP status: ${actor_response}" && exit 1)
+          - run:
+              name: Remove CircleCI ingress to environment
+              command: |
+                export TF_WORKSPACE=$(bash ~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                echo $TF_WORKSPACE
+                python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json
+              when: always
 
 jobs:
   slack_environment_redeploy:
