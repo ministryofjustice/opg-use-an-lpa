@@ -111,9 +111,9 @@ _Feel free to add further troubleshooting steps here._
 
 Here are some common problems we've come across:
 
-- I cannot login with the seeded user.
+### I cannot login with the seeded user.
 
-its possible seeding of Use an LPA was not successful.
+Its possible seeding of Use an LPA was not successful.
 make sure all docker compose services are running and have settled first, then try again.
 run the following command:
 ```shell
@@ -121,7 +121,7 @@ run the following command:
 ```
 then try again
 
-- I cannot add  LPA's locally, which are in the seeded data set.
+### I cannot add  LPA's locally, which are in the seeded data set.
 
 This could be because the LPA Gateway (Sirius Gateway) has not been properly initialised.
 make sure all docker compose services are running andhave settled first, then try again.

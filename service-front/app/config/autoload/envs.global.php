@@ -104,6 +104,17 @@ return [
         'redirect' => '/login',
     ],
 
+    'i18n' => [
+        'default_locale' => 'en_GB',
+        'languages' => [
+            'welsh' => [
+                'format' => 'mo',
+                'resource' => '/app/languages/cy.mo',
+                'locale' => 'cy'
+            ]
+        ]
+    ],
+
     'ratelimits' => [
         'viewer_code_failure' => [
             'type' => 'keyed',

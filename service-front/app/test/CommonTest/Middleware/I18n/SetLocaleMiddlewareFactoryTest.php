@@ -9,6 +9,7 @@ use Common\Middleware\I18n\SetLocaleMiddlewareFactory;
 use Mezzio\Helper\UrlHelper;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Translation\Translator;
 
 class SetLocaleMiddlewareFactoryTest extends TestCase
 {
@@ -23,6 +24,8 @@ class SetLocaleMiddlewareFactoryTest extends TestCase
             ->willReturn(['i18n' => ['default_locale' => 'en_GB']]);
         $containerProphecy->get(UrlHelper::class)
             ->willReturn($this->prophesize(UrlHelper::class)->reveal());
+        $containerProphecy->get(Translator::class)
+            ->willReturn($this->prophesize(Translator::class)->reveal());
 
         $factory = new SetLocaleMiddlewareFactory();
         $instance = $factory($containerProphecy->reveal());
