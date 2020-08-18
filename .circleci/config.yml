@@ -125,10 +125,15 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires: [dev_apply_environment_terraform]
 
+        - use-my-lpa/run_healthcheck_test:
+            name: dev_run_healthcheck_test
+            filters: { branches: { ignore: [master] } }
+            requires: [dev_seed_database]
+
         - use-my-lpa/run_behat_suite:
             name: dev_run_behat_tests
             filters: { branches: { ignore: [master] } }
-            requires: [dev_seed_database]
+            requires: [dev_run_healthcheck_test]
 
         - slack_notify_domain:
             name: post_environment_domains
