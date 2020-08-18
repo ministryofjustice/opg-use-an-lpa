@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template ">
+<html lang="{{ currentLocale }}" class="govuk-template ">
 <head>
     <meta charset="utf-8" />
     <title>{% block html_title %}GOV.UK{% endblock %}</title>
@@ -15,6 +15,10 @@
     <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('assets/images/govuk-apple-touch-icon-152x152.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('assets/images/govuk-apple-touch-icon.png') }}">
     <link rel="stylesheet" href="{{ asset('stylesheets/main.css') }}">
+
+    <link rel="alternate" hreflang="en-gb" href="https://use-lasting-power-of-attorney.service.gov.uk/home" />
+    <link rel="alternate" hreflang="cy-gb" href="https://use-lasting-power-of-attorney.service.gov.uk/cy/home" />
+    <link rel="alternate" hreflang="x-default" href="https://use-lasting-power-of-attorney.service.gov.uk/home" />
 
     <script type="application/javascript">
         window.gaConfig = {};
