@@ -6,6 +6,7 @@ namespace Common\Middleware\I18n;
 
 use Mezzio\Helper\UrlHelper;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Configuration for setting a default locale should look like the following:
@@ -24,6 +25,7 @@ class SetLocaleMiddlewareFactory
 
         return new SetLocaleMiddleware(
             $container->get(UrlHelper::class),
+            $container->get(Translator::class),
             $config['i18n']['default_locale'] ?? null
         );
     }

@@ -16,7 +16,7 @@ return [
         'auto_reload' => true,
         'extensions' => [
             // extension service names or instances
-            Twig\Extension\DebugExtension::class,
+            \Twig\Extension\DebugExtension::class,
         ],
     ],
 ];
