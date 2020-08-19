@@ -7,7 +7,7 @@ namespace Common\View\Twig;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
-class LanguageLocaleVariablesExtension extends AbstractExtension implements GlobalsInterface
+class GenericGlobalVariableExtension extends AbstractExtension implements GlobalsInterface
 {
     public function getGlobals(): array
     {

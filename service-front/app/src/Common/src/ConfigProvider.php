@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Common;
 
-use Common\View\Twig\LanguageLocaleVariablesExtension;
+use Common\View\Twig\GenericGlobalVariableExtension;
 
 /**
  * The configuration provider for the Common module
@@ -128,7 +128,7 @@ class ConfigProvider
                 View\Twig\GovUKLaminasFormErrorsExtension::class,
                 View\Twig\GovUKLaminasFormExtension::class,
                 View\Twig\JavascriptVariablesExtension::class,
-                View\Twig\LanguageLocaleVariablesExtension::class,
+                View\Twig\GenericGlobalVariableExtension::class,
                 \Symfony\Bridge\Twig\Extension\TranslationExtension::class,
             ]
         ];

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
-use Common\View\Twig\LanguageLocaleVariablesExtension;
+use Common\View\Twig\GenericGlobalVariableExtension;
 use PHPUnit\Framework\TestCase;
 
 
-class LanguageLocalVariablesExtensionTest extends TestCase
+class GenericGlobalVariableExtensionTest extends TestCase
 {
     /**
      * @test
      */
     public function testGetGlobals()
     {
-        $extension = new LanguageLocaleVariablesExtension();
+        $extension = new GenericGlobalVariableExtension();
         $localLocale = $extension->getGlobals();
         $this->assertTrue(is_array($localLocale));
         $this->assertEquals(1, count($localLocale));
