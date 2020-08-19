@@ -50,6 +50,9 @@ class ConfigProvider
                 \Mezzio\Authentication\AuthenticationInterface::class =>
                     \Mezzio\Authentication\Session\PhpSession::class,
 
+                \Symfony\Contracts\Translation\TranslatorInterface::class =>
+                    \Symfony\Component\Translation\Translator::class,
+
                 // allows value setting on the container at runtime.
                 Service\Container\ModifiableContainerInterface::class
                     => Service\Container\PhpDiModifiableContainer::class,
@@ -81,6 +84,10 @@ class ConfigProvider
 
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
+
+                \Symfony\Component\Translation\Translator::class => I18n\SymfonyTranslatorFactory::class,
+                \Symfony\Bridge\Twig\Extension\TranslationExtension::class =>
+                    View\Twig\SymfonyTranslationExtensionFactory::class,
 
                 View\Twig\JavascriptVariablesExtension::class => View\Twig\JavascriptVariablesExtensionFactory::class,
             ],
@@ -119,6 +126,7 @@ class ConfigProvider
                 View\Twig\GovUKLaminasFormErrorsExtension::class,
                 View\Twig\GovUKLaminasFormExtension::class,
                 View\Twig\JavascriptVariablesExtension::class,
+                \Symfony\Bridge\Twig\Extension\TranslationExtension::class
             ]
         ];
     }
