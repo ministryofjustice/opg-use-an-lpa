@@ -125,6 +125,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                             $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
                             $donor = $session->get('donor_name');
                             $lpaType = $session->get('lpa_type');
+
                             $flash->flash(self::ADD_LPA_FLASH_MSG, "You've added $donor's $lpaType LPA");
 
                             return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
