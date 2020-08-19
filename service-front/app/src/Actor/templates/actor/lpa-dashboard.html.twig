@@ -10,14 +10,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-        {% if flash.getFlash(constant('Actor\\Handler\\CheckLpaHandler::ADD_LPA_FLASH_MSG')) %}
-            <div class="govuk-grid-row lpa-added-flash__box">
-                <svg class="lpa-added-flash__icon" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M25,6.2L8.7,23.2L0,14.1l4-4.2l4.7,4.9L21,2L25,6.2z"></path>
-                </svg>
-                <p class="lpa-added-flash__message govuk-body">{{ flash.getFlash(constant('Actor\\Handler\\CheckLpaHandler::ADD_LPA_FLASH_MSG')) }}</p>
-            </div>
-        {% endif %}
+        {{ include('@actor/partials/flash-message.html.twig', {'flash': flash, 'flash_key':'Actor\\Handler\\CheckLpaHandler::ADD_LPA_FLASH_MSG'}) }}
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
