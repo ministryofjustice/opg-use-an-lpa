@@ -8,7 +8,7 @@ use Common\View\Twig\LanguageLocaleVariablesExtension;
 use PHPUnit\Framework\TestCase;
 
 
-class LocalVariablesExtensionTest extends TestCase
+class LanguageLocalVariablesExtensionTest extends TestCase
 {
     /**
      * @test
