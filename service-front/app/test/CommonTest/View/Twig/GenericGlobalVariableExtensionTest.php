@@ -15,18 +15,20 @@ class GenericGlobalVariableExtensionTest extends TestCase
      */
     public function testGetGlobals()
     {
-        $extension = new GenericGlobalVariableExtension();
-        $localLocale = $extension->getGlobals();
-        $this->assertTrue(is_array($localLocale));
-        $this->assertEquals(1, count($localLocale));
+        $application = 'actor';
 
-        $expectedLocale = [
+        $extension = new GenericGlobalVariableExtension($application);
+        $genericConfig = $extension->getGlobals();
+        $this->assertTrue(is_array($genericConfig));
+        $this->assertEquals(2, count($genericConfig));
+
+        $expectedConfig = [
+            'application' => 'actor',
             'currentLocale' => 'cy',
         ];
 
-        $this->assertEquals($expectedLocale, $localLocale);
-        foreach ($localLocale as $locale) {
-            $this->assertEquals($expectedLocale['currentLocale'], $locale);
-        }
+        $this->assertEquals($expectedConfig, $genericConfig);
+        $this->assertEquals($expectedConfig['application'], $genericConfig['application']);
+        $this->assertEquals($expectedConfig['currentLocale'], $genericConfig['currentLocale']);
     }
 }

@@ -16,9 +16,15 @@
     <link rel="apple-touch-icon" href="{{ asset('assets/images/govuk-apple-touch-icon.png') }}">
     <link rel="stylesheet" href="{{ asset('stylesheets/main.css') }}">
 
-    <link rel="alternate" hreflang="en-gb" href="https://use-lasting-power-of-attorney.service.gov.uk/home" />
-    <link rel="alternate" hreflang="cy-gb" href="https://use-lasting-power-of-attorney.service.gov.uk/cy/home" />
-    <link rel="alternate" hreflang="x-default" href="https://use-lasting-power-of-attorney.service.gov.uk/home" />
+    {% if application == 'actor' %}
+        {% set url = "https://use-lasting-power-of-attorney.service.gov.uk/" %}
+    {% else %}
+        {% set url = "https://view-lasting-power-of-attorney.service.gov.uk/" %}
+    {% endif %}
+
+    <link rel="alternate" hreflang="en-gb" href="{{ url }}home" />
+    <link rel="alternate" hreflang="cy-gb" href="{{ url }}cy/home" />
+    <link rel="alternate" hreflang="x-default" href="{{ url }}home" />
 
     <script type="application/javascript">
         window.gaConfig = {};
