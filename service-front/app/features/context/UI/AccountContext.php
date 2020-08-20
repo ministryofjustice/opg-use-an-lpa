@@ -3517,11 +3517,11 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I select to find out more if (.*)$/
+     * @When /^I select to find out more if the donor or an attorney dies$/
      */
-    public function iSelectToFindOutMoreIf($link)
+    public function iSelectToFindOutMoreIfTheDonorOrAnAttorneyDies()
     {
-        $this->ui->clickLink($link);
+        $this->ui->clickLink('the donor or an attorney dies');
     }
 
     /**

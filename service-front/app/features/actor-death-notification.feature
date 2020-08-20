@@ -11,12 +11,7 @@ Feature: Death Notification
     And I have added an LPA to my account
 
   @ui
-  Scenario Outline: A user can view the death notification page
+  Scenario: A user can view the death notification page
     Given I am on the change details page
-    When I select to find out more if <link>
+    When I select to find out more if the donor or an attorney dies
     Then I expect to be on the death notification page
-    Examples:
-      | link |
-      |the donor or an attorney dies|
-      |the donor dies|
-      |the attorney dies|

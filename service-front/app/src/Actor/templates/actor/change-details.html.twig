@@ -77,17 +77,13 @@
                     <p class="govuk-body">It's important that we hold up-to-date information about donors and attorneys.
                         This is because an LPA will end when the donor dies, and can end if an attorney dies.</p>
 
-                    <p class="govuk-body">Find out more about what to do if:</p>
-
-                    <ul class="govuk-list">
+                    <p class="govuk-body">Find out more about what to do if
                         {% if actorToken != 'null' %}
-                            <li><a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the donor dies</a></li>
-                            <li><a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the attorney dies</a></li>
+                            <a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}"> the donor or an attorney dies</a>
                         {% else %}
-                            <li><a class="govuk-link" href="{{ path('lpa.death-notification') }}">the donor dies</a></li>
-                            <li><a class="govuk-link" href="{{ path('lpa.death-notification') }}">the attorney dies</a></li>
+                            <a class="govuk-link" href="{{ path('lpa.death-notification') }}"> the donor or an attorney dies</a>
                         {% endif %}
-                    </ul>
+                    </p>
 
                 </div>
             </div>
