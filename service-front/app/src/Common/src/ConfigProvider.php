@@ -92,6 +92,7 @@ class ConfigProvider
                     View\Twig\SymfonyTranslationExtensionFactory::class,
 
                 View\Twig\JavascriptVariablesExtension::class => View\Twig\JavascriptVariablesExtensionFactory::class,
+                View\Twig\GenericGlobalVariableExtension::class => View\Twig\GenericGlobalVariableExtensionFactory::class,
             ],
 
             'delegators' => [
