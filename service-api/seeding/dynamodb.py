@@ -229,3 +229,26 @@ for i in actorUsers:
         Key={'Id': i['Id']}
     )
     print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
+
+# added lpas on test user account
+
+userLpaActorMapTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_USER_LPA_ACTOR_MAP'])
+
+userLpaActorMap = [
+    {
+        'Id': '806f3720-5b43-49ce-ac66-c670860bf4ee',
+        'SiriusUid': '700000000138',
+        'ActorId': '23',
+        'Added': '2020-08-19T15:22:32.838097Z',
+        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
+    }
+]
+
+for i in userLpaActorMap:
+    userLpaActorMapTable.put_item(
+        Item=i,
+    )
+    response = userLpaActorMapTable.get_item(
+        Key={'Id': i['Id']}
+    )
+    print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
