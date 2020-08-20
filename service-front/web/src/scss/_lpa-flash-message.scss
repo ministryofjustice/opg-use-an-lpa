@@ -1,0 +1,18 @@
+.lpa-flash__box {
+  border:  govuk-spacing(1) solid govuk-colour('green');
+  padding: 10px;
+  margin-bottom: 30px;
+}
+
+.lpa-flash__message {
+  display: inline-block;
+  vertical-align: top;
+  margin: 0px 0px 0px 0px;
+}
+
+.lpa-flash__icon {
+  fill: govuk-colour("green");
+  height: 25px;
+  width: 25px;
+  margin-right: 10px;
+}

@@ -24,6 +24,8 @@ use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitService;
 use Fig\Http\Message\StatusCodeInterface;
+use Mezzio\Flash\FlashMessageMiddleware;
+use Mezzio\Flash\FlashMessagesInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -46,6 +48,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     use SessionTrait;
     use User;
     use Logger;
+
+    public const ADD_LPA_FLASH_MSG = 'add_lpa_flash_msg';
 
     /** @var LpaService */
     private $lpaService;
@@ -117,6 +121,14 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         );
 
                         if (!is_null($actorCode)) {
+
+                            /** @var FlashMessagesInterface $flash */
+                            $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+                            $donor = $session->get('donor_name');
+                            $lpaType = $session->get('lpa_type');
+
+                            $flash->flash(self::ADD_LPA_FLASH_MSG, "You've added $donor's $lpaType LPA");
+
                             return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
                         }
                     }
@@ -155,6 +167,11 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                             'uId' => $referenceNumber
                         ]
                     );
+
+                    // data to be used in flash message
+                    $session->set('donor_name', $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname());
+                    $session->set('lpa_type', $lpa->getCaseSubtype() === 'hw' ? 'health and welfare' : 'property and finance');
+
                     return new HtmlResponse($this->renderer->render('actor::check-lpa', [
                         'form' => $form,
                         'lpa' => $lpa,
