@@ -218,6 +218,6 @@ services:
       DYNAMODB_TABLE_ACTOR_CODES: "ActorCodes"
       DYNAMODB_TABLE_VIEWER_CODES: "ViewerCodes"
       DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
-      DYNAMODB_TABLE_LPA_ACTOR_MAP: "UserLpaActorMap"
+      DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
       AWS_ENDPOINT_DYNAMODB: localstack:14569
       CODES_ENDPOINT: codes-gateway:4343
