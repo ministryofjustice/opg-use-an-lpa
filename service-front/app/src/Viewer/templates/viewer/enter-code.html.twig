@@ -3,6 +3,22 @@
 {% block html_title %}{% trans %}Enter LPA access code{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
+    {{
+    translate_validation_messages(form,
+        {
+            'lpa_code':
+            {
+                'isEmpty'      : 'Enter your LPA access code' | trans,
+                'regexNotMatch' : 'Enter LPA access code in the correct format' | trans
+            },
+            'donor_surname':
+            {
+                'isEmpty'     : 'Enter the donor\'s last name' | trans
+            }
+        }
+
+    )
+    }}
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
 

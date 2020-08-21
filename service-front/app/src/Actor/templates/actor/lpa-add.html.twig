@@ -3,6 +3,34 @@
 {% block html_title %}Add a lasting power of attorney - {{ parent() }} {% endblock %}
 
 {% block content %}
+    {{
+    translate_validation_messages(form,
+    {
+        'passcode' :
+        {
+            'isEmpty': 'Enter your activation key' | trans,
+            'stringLengthTooShort' : 'Your activation key is too short' | trans
+        },
+        'reference_number' :
+        {
+            'stringLengthTooShort':  'The LPA reference number you entered is too short' | trans,
+            'regexNotMatch' : 'Enter the 12 numbers of the LPA reference number.Do not include letters or other characters' | trans
+
+        },
+        'dob' :
+        {
+            'dateEmpty': 'Enter your date of birth1' | trans,
+            'dateInvalidFormat' : 'Date of birth value must be provided in an array' | trans,
+            'dateEmpty' :'Enter your date of birth' | trans,
+            'dateInvalid' :  'Date of birth must be a real date' | trans,
+            'dayIncomplete':  'Date of birth must include a day' | trans,
+            'monthIncomplete' : 'Date of birth must include a month' |trans,
+            'yearIncomplete' : 'Date of birth must include a year' | trans,
+            'ageNegative': 'Date of birth must be in the past' | trans,
+            'ageTooYoung':'Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18' | trans
+        }
+    })
+    }}
 <div class="govuk-width-container">
     {{ include('@actor/partials/new-use-service.html.twig') }}
 
