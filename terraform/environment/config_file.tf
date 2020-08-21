@@ -10,7 +10,7 @@ locals {
     account_id                               = local.account.account_id
     actor_lpa_codes_table                    = aws_dynamodb_table.actor_codes_table.name
     viewer_codes_table                       = aws_dynamodb_table.viewer_codes_table.name
-    user_lpa_actor_map_table                 = aws_dynamodb_table.user_lpa_actor_map.name
+    lpa_actor_map_table                      = aws_dynamodb_table.user_lpa_actor_map.name
     actor_fqdn                               = aws_route53_record.actor-use-my-lpa.fqdn
     viewer_fqdn                              = aws_route53_record.viewer-use-my-lpa.fqdn
     public_facing_use_fqdn                   = aws_route53_record.public_facing_use_lasting_power_of_attorney.fqdn
