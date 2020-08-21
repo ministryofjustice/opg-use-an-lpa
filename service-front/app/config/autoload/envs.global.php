@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 return [
 
+    'application' => getenv('CONTEXT'),
+
     'version' => getenv('CONTAINER_VERSION') ?: 'dev',
 
     'api' => [

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Common;
 
+use Common\View\Twig\GenericGlobalVariableExtension;
+
 /**
  * The configuration provider for the Common module
  *
@@ -90,6 +92,7 @@ class ConfigProvider
                     View\Twig\SymfonyTranslationExtensionFactory::class,
 
                 View\Twig\JavascriptVariablesExtension::class => View\Twig\JavascriptVariablesExtensionFactory::class,
+                View\Twig\GenericGlobalVariableExtension::class => View\Twig\GenericGlobalVariableExtensionFactory::class,
             ],
 
             'delegators' => [
@@ -126,7 +129,8 @@ class ConfigProvider
                 View\Twig\GovUKLaminasFormErrorsExtension::class,
                 View\Twig\GovUKLaminasFormExtension::class,
                 View\Twig\JavascriptVariablesExtension::class,
-                \Symfony\Bridge\Twig\Extension\TranslationExtension::class
+                View\Twig\GenericGlobalVariableExtension::class,
+                \Symfony\Bridge\Twig\Extension\TranslationExtension::class,
             ]
         ];
     }
