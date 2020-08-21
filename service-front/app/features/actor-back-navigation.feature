@@ -40,3 +40,13 @@ Feature: Back navigation
     And I am on the check LPA page
     When I click the Back link on the page
     Then I should be taken to the <add a lpa> page
+
+  @ui
+  Scenario: Check back function on death notification page goes to your details page with no actorLpaToken
+    Given I am a user of the lpa application
+    And I am currently signed in
+    And I am on the death notification page
+    When I click the Back link on the page
+    Then I should be taken to the <change details> page
+    And I click the Back link on the page
+    Then I am on the your details page
