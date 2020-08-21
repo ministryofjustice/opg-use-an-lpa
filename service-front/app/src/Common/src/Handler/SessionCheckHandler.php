@@ -40,9 +40,17 @@ class SessionCheckHandler implements RequestHandlerInterface
         $config = $this->container->get('config');
 
         $expiresAt = $session->get(self::SESSION_TIME_KEY) + $config['session']['expires'];
-        // Do we have 5min remaining
-        $sessionWarning = ($expiresAt - time()) <= 300;
+        $timeRemaining = $expiresAt - time();
 
-        return new JsonResponse(['session_warning' => $sessionWarning], 201);
+        // Do we have 5min remaining
+        $sessionWarning = $timeRemaining <= 300;
+
+        return new JsonResponse(
+            [
+                'session_warning' => $sessionWarning,
+                'time_remaining'  => $timeRemaining
+            ]
+            , 201
+        );
     }
 }

@@ -45,7 +45,11 @@ class SessionCheckHandlerTest extends TestCase
         $json = json_decode($response->getBody()->getContents(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
+
         $this->assertArrayHasKey('session_warning', $json);
         $this->assertFalse($json['session_warning']);
+
+        $this->assertArrayHasKey('time_remaining', $json);
+        $this->assertIsInt($json['time_remaining']);
     }
 }
