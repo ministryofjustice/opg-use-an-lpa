@@ -45,9 +45,9 @@ class SessionExpiredRedirectMiddleware implements MiddlewareInterface
 
             $session->unset(EncryptedCookiePersistence::SESSION_EXPIRED_KEY);
             if ($currentDate > $expiredDate) {
-                $uri = new Uri($this->helper->generate('/home'));
+                $uri = new Uri($this->helper->generate('home'));
             } else {
-                $uri = new Uri($this->helper->generate('/session-expired'));
+                $uri = new Uri($this->helper->generate('session-expired'));
             }
 
             return new RedirectResponse($uri);
