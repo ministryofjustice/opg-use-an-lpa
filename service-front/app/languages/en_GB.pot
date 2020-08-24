@@ -119,7 +119,7 @@ msgstr ""
 msgid "Create a password"
 msgstr ""
 
-msgid "Your password needs to have:"
+msgid "'Your password needs to have:"
 msgstr ""
 
 msgid "at least 8 characters"
@@ -138,6 +138,33 @@ msgid "Never share your password with anyone."
 msgstr ""
 
 msgid "Create account"
+msgstr ""
+
+msgid "Account already exists"
+msgstr ""
+
+msgid "Activate your account"
+msgstr ""
+
+msgid "We've emailed a link to"
+msgstr ""
+
+msgid "Click on the link to activate your account. The link will work for the next 24 hours."
+msgstr ""
+
+msgid "The email should arrive in a few minutes. If it's not in your inbox, check your spam or junk folder. If you have not received the email, we can"
+msgstr ""
+
+msgid "resend the activation email"
+msgstr ""
+
+msgid "If you still do not receive the email, please contact us on 0300 456 0300."
+msgstr ""
+
+msgid "If you've already activated your account, you can"
+msgstr ""
+
+msgid "sign in</a> now."
 msgstr ""
 
 

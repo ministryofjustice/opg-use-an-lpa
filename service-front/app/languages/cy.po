@@ -165,8 +165,8 @@ msgstr "Rhowch eich cyfeiriad e-bost"
 msgid "Create a password"
 msgstr "Creu cyfrinair"
 
-msgid "Your password needs to have:"
-msgstr "Mae angen i’ch cyfrinair fod â:"
+msgid "'Your password needs to have:"
+msgstr "‘Mae angen i’ch cyfrinair fod â:"
 
 msgid "at least 8 characters"
 msgstr "o leiaf 8 nod"
@@ -185,6 +185,43 @@ msgstr "Peidiwch byth â rhannu eich cyfrinair ag unrhyw un."
 
 msgid "Create account"
 msgstr "Creu cyfrif"
+
+msgid "Account already exists"
+msgstr "Cyfrif yn bodoli eisoes"
+
+msgid "Activate your account"
+msgstr "Gweithredwch eich cyfrif"
+
+msgid "We've emailed a link to"
+msgstr "Rydyn ni wedi e-bostio dolen i"
+
+msgid ""
+"Click on the link to activate your account. The link will work for the next "
+"24 hours."
+msgstr ""
+"Cliciwch ar y ddolen i actifadu eich cyfrif. Bydd y ddolen yn gweithio am y "
+"24 awr nesaf."
+
+msgid ""
+"The email should arrive in a few minutes. If it's not in your inbox, check "
+"your spam or junk folder. If you have not received the email, we can"
+msgstr ""
+"Dylai’r e-bost gyrraedd mewn ychydig funudau. Os nad yw yn eich blwch "
+"derbyn, gwiriwch eich ffolder sbam neu sothach. Os nad ydych wedi derbyn yr "
+"e-bost, gallwn wneud hynny"
+
+msgid "resend the activation email"
+msgstr "ail-anfonwch yr e-bost actifadu"
+
+msgid ""
+"If you still do not receive the email, please contact us on 0300 456 0300."
+msgstr "Os na dderbyniwch yr e-bost o hyd, cysylltwch â ni ar 0300 456 0300."
+
+msgid "If you've already activated your account, you can"
+msgstr "Os ydych chi eisoes wedi actifadu’ch cyfrif, gallwch chi"
+
+msgid "sign in</a> now."
+msgstr "mewngofnodi </a> nawr."
 
 #~ msgid " LPA "
 #~ msgstr " ACLL "
