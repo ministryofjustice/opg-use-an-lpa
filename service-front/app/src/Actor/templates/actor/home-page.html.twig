@@ -14,7 +14,7 @@
                     {{ govuk_error_summary(form) }}
                     {{ govuk_form_open(form) }}
 
-                    <h1 class="govuk-heading-xl">Do you have a Use a lasting power of attorney account?</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}Do you have a Use a lasting power of attorney account?{% endtrans %}</h1>
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
@@ -38,9 +38,9 @@
                         </fieldset>
                     </div>
 
-                    <p class="govuk-body">If you're named on more than one LPA, you can add all those LPAs to your account.</p>
+                    <p class="govuk-body">{% trans %}If you're named on more than one LPA, you can add all those LPAs to your account.{% endtrans %}</p>
 
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button">Continue</button>
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
                     {{ govuk_form_close() }}
                 </div>
             </div>
