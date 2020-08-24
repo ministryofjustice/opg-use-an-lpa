@@ -118,7 +118,7 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
             ->shouldBeCalled();
 
         $helperProphecy
-            ->generate('/session-expired')
+            ->generate('session-expired')
             ->willReturn($uri);
 
         $request = new SessionExpiredRedirectMiddleware(
@@ -169,7 +169,7 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
             ->shouldBeCalled();
 
         $helperProphecy
-            ->generate('/home')
+            ->generate('home')
             ->willReturn($uri);
 
         $request = new SessionExpiredRedirectMiddleware(
