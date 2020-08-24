@@ -542,7 +542,7 @@ class ViewerContext implements Context
      */
     public function iAmTakenToTheSessionExpiredPage()
     {
-        $this->ui->assertPageAddress('session-expired');
+        $this->ui->assertPageAddress('/session-expired');
         $this->ui->assertPageContainsText('You\'ll have to start again');
     }
 
