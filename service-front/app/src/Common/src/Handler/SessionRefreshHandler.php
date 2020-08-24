@@ -14,6 +14,6 @@ class SessionRefreshHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         // Simply by accessing this handler the session is refreshed further up in the pipeline
-        return new JsonResponse(['session_refreshed' => true],201);
+        return new JsonResponse(['session_refreshed' => true], 201);
     }
 }
