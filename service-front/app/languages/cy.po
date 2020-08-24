@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? "
 "3 : n==6 ? 4 : 5);\n"
 
@@ -128,3 +128,92 @@ msgid ""
 msgstr ""
 "Cytunaf i'r <a href=\"/cy/terms-of-use\" class=\"govuk-link\">telerau "
 "defnyddio</a>"
+
+msgid "Error:"
+msgstr ""
+
+msgid "Cookies"
+msgstr "Cwcis"
+
+msgid "Use a lasting power of attorney"
+msgstr "Defnyddio atwrneiaeth arhosol"
+
+msgid ""
+"Cookies are files saved on your phone, tablet or computer when you visit a "
+"website."
+msgstr ""
+"Ffeiliau a arbedir ar eich ffôn, eich tabled neu eich cyfrifiadur pan "
+"fyddwch yn ymweld â gwefan yw cwcis."
+
+msgid ""
+"We use cookies to store information about how you use the Use a lasting "
+"power of attorney service, such as the pages you visit."
+msgstr ""
+"Rydym yn defnyddio cwcis i storio gwybodaeth am sut yr ydych yn defnyddio’r "
+"gwasanaeth Defnyddio atwrneiaeth arhosol, er enghraifft y tudalennau y "
+"byddwch yn ymweld â hwy."
+
+msgid ""
+"We use cookies to store information about how you use the View a lasting "
+"power of attorney service, such as the pages you visit."
+msgstr ""
+"Rydym yn defnyddio cwcis i storio gwybodaeth am sut yr ydych yn defnyddio’r "
+"gwasanaeth Gweld atwrneiaeth arhosol, er enghraifft y tudalennau y byddwch "
+"yn ymweld â hwy."
+
+msgid "Cookie settings"
+msgstr "Gosodiadau cwcis"
+
+msgid ""
+"We use two types of cookie. One type is strictly necessary and the other "
+"type of cookie is optional."
+msgstr ""
+"Rydym yn defnyddio dau fath o gwcis. Mae un math yn wir angenrheidiol a’r "
+"math arall o gwci yn ddewisol."
+
+msgid ""
+"OPG and Government Digital Services use Google Analytics to measure how you "
+"use the service so we can improve it based on user needs. Google Analytics "
+"sets cookies that store anonymised information about:"
+msgstr ""
+"Mae Swyddfa’r Gwarcheidwad Cyhoeddus a Gwasanaethau Digidol y Llywodraeth yn "
+"defnyddio Google Analytics i fesur sut yr ydych yn defnyddio’r gwasanaeth er "
+"mwyn inni ei wella yn seiliedig ar anghenion y defnyddwyr. Mae Google "
+"Analytics yn gosod cwcis sy’n storio data anhysbys am:"
+
+msgid "Cookies that measure website use"
+msgstr "Cwcis sy’n mesur y defnydd a wneir o’r wefan"
+
+msgid "what pages you visit and how long you spend on each"
+msgstr "y tudalennau y byddwch yn ymweld â hwy a’r amser a dreulir arnynt"
+
+msgid "what you click on while you're visiting the site"
+msgstr "beth fyddwch chi’n glicio arno pan fyddwch yn ymweld â’r safle"
+
+msgid ""
+"We do not allow Google to use or share the data about how you use this site."
+msgstr ""
+"Nid ydym yn caniatáu i Google ddefnyddio na rhannu’r data am sut y byddwch "
+"yn defnyddio’r safle."
+
+msgid "Allow use of non-essential Cookies?"
+msgstr "Caniatáu defnyddio cwcis nad ydynt yn hanfodol?"
+
+msgid "Use cookies that measure my website use"
+msgstr "Defnyddio cwcis sy’n mesur y defnydd a wnaf o’r wefan"
+
+msgid "Do not use cookies that measure my website use"
+msgstr "Peidio á defnyddio cwcis sy’n mesur y defnydd a wnaf o’r wefan"
+
+msgid "Strictly necessary cookies"
+msgstr "Cwcis sy’n wir angenrheidiol"
+
+msgid ""
+"These essential cookies allow you to log in to the service. They always need "
+"to be on."
+msgstr ""
+"Mae’r cwcis hanfodol hyn yn caniatáu ichi fewngofnodi i’r gwasanaeth. Mae "
+"gofyn iddynt fod yn weithredol drwy’r amser."
+
+msgid "Save changes"
+msgstr "Arbed newidiadau"

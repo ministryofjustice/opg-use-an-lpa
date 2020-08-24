@@ -85,3 +85,57 @@ msgstr ""
 
 msgid "Error:"
 msgstr ""
+
+msgid "Cookies"
+msgstr ""
+
+msgid "Use a lasting power of attorney"
+msgstr ""
+
+msgid "Cookies are files saved on your phone, tablet or computer when you visit a website."
+msgstr ""
+
+msgid "We use cookies to store information about how you use the Use a lasting power of attorney service, such as the pages you visit."
+msgstr ""
+
+msgid "We use cookies to store information about how you use the View a lasting power of attorney service, such as the pages you visit."
+msgstr ""
+
+msgid "Cookie settings"
+msgstr ""
+
+msgid "We use two types of cookie. One type is strictly necessary and the other type of cookie is optional."
+msgstr ""
+
+msgid "OPG and Government Digital Services use Google Analytics to measure how you use the service so we can improve it based on user needs. Google Analytics sets cookies that store anonymised information about:"
+msgstr ""
+
+msgid "Cookies that measure website use"
+msgstr ""
+
+msgid "what pages you visit and how long you spend on each"
+msgstr ""
+
+msgid "what you click on while you're visiting the site"
+msgstr ""
+
+msgid "We do not allow Google to use or share the data about how you use this site."
+msgstr ""
+
+msgid "Allow use of non-essential Cookies?"
+msgstr ""
+
+msgid "Use cookies that measure my website use"
+msgstr ""
+
+msgid "Do not use cookies that measure my website use"
+msgstr ""
+
+msgid "Strictly necessary cookies"
+msgstr ""
+
+msgid "These essential cookies allow you to log in to the service. They always need to be on."
+msgstr ""
+
+msgid "Save changes"
+msgstr ""
