@@ -242,7 +242,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         // Checking session or setting current time
         $time = isset($this->originalSessionData[self::SESSION_TIME_KEY])
         && !is_null($this->originalSessionData[self::SESSION_TIME_KEY])
-        && preg_match("/^\/session-check(\/|)$/", $this->requestPath)
+        && preg_match("/^\/session-check(\/|)$/i", $this->requestPath)
             ? $this->originalSessionData[self::SESSION_TIME_KEY]
             : time();
 
