@@ -113,6 +113,27 @@ msgstr ""
 msgid "sign in"
 msgstr ""
 
+msgid "Enter your email address"
+msgstr ""
+
+msgid "Create a password"
+msgstr ""
+
+msgid "Your password needs to have:"
+msgstr ""
+
+msgid "at least 8 characters"
+msgstr ""
+
+msgid "at least one lower-case and one capital letter"
+msgstr ""
+
+msgid "at least one number"
+msgstr ""
+
+msgid "Confirm your password"
+msgstr ""
+
 msgid "Never share your password with anyone."
 msgstr ""
 

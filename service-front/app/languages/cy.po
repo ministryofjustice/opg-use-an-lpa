@@ -159,6 +159,27 @@ msgstr "Os oes gennych gyfrif eisoes, os gwelwch yn dda"
 msgid "sign in"
 msgstr "mewngofnodi"
 
+msgid "Enter your email address"
+msgstr "Rhowch eich cyfeiriad e-bost"
+
+msgid "Create a password"
+msgstr "Creu cyfrinair"
+
+msgid "Your password needs to have:"
+msgstr "Mae angen i’ch cyfrinair fod â:"
+
+msgid "at least 8 characters"
+msgstr "o leiaf 8 nod"
+
+msgid "at least one lower-case and one capital letter"
+msgstr "o leiaf un llythyren fach ac un priflythyren"
+
+msgid "at least one number"
+msgstr "o leiaf un rhif"
+
+msgid "Confirm your password"
+msgstr "Cadarnhewch eich cyfrinair"
+
 msgid "Never share your password with anyone."
 msgstr "Peidiwch byth â rhannu eich cyfrinair ag unrhyw un."
 
