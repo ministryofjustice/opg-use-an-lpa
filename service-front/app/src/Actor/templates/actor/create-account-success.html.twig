@@ -26,7 +26,7 @@
 
                 <p class="govuk-body">{% trans with {'%link%': path('create-account-success', {}, {'email': emailAddress, 'resend': 'true'})} %}The email should arrive in a few minutes. If it's not in your inbox, check your spam or junk folder. If you have not received the email, we can <a href="%link%" class="govuk-link">resend the activation email</a>.{% endtrans %}</p>
 
-                <p class="govuk-body">{% trans %}If you still do not receive the email, please contact us on 0300 456 0300.{% endtrans %}</p>
+                <p class="govuk-body">{% trans with {'%number%': '0300 456 0300'} %}If you still do not receive the email, please contact us on %number%.{% endtrans %}</p>
 
                 <p class="govuk-body">{% trans with {'%link%': path('login') } %}If you've already activated your account, you can <a href="%link%" class="govuk-link">sign in</a> now.{% endtrans %}</p>
 
