@@ -86,4 +86,25 @@ msgstr ""
 msgid "Error:"
 msgstr ""
 
+msgid "Sign in to your Use a lasting power of attorney account"
+msgstr ""
+
+msgid "If you made an"
+msgstr ""
+
+msgid "LPA </abbr> online, you'll still need to"
+msgstr ""
+
+msgid "create an account</a> to use this service."
+msgstr ""
+
+msgid "Sign in"
+msgstr ""
+
+msgid "Forgotten your password?"
+msgstr ""
+
+msgid ""
+msgstr ""
+
 

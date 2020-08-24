@@ -128,3 +128,39 @@ msgid ""
 msgstr ""
 "Cytunaf i'r <a href=\"/cy/terms-of-use\" class=\"govuk-link\">telerau "
 "defnyddio</a>"
+
+msgid "Error:"
+msgstr "Gwall:"
+
+msgid "Sign in to your Use a lasting power of attorney account"
+msgstr "Mewngofnodi i’ch cyfrif Defnyddiwch atwrneiaeth barhaol"
+
+msgid "If you made an"
+msgstr "Os gwnaethoch chi"
+
+msgid "LPA </abbr> online, you'll still need to"
+msgstr "ACLL </abbr> ar-lein, bydd angen i chi wneud hynny o hyd"
+
+msgid "create an account</a> to use this service."
+msgstr "creu cyfrif </a> i ddefnyddio’r gwasanaeth hwn."
+
+msgid "Sign in"
+msgstr "Mewngofnodi"
+
+msgid "Forgotten your password?"
+msgstr "Wedi anghofio’ch cyfrinair?"
+
+#~ msgid " LPA "
+#~ msgstr " ACLL "
+
+#~ msgid "create an account"
+#~ msgstr "creu cyfrif"
+
+#~ msgid ""
+#~ "If you made an <abbr title=\"lasting power of attorney\">LPA</abbr> "
+#~ "online, you'll still need to <a href=\"{{ path('create-account') }}\" "
+#~ "class=\"govuk-link\">create an account</a> to use this service."
+#~ msgstr ""
+#~ "Os gwnaethoch chi <abbr title = “pŵer atwrnai parhaol”> LPA </abbr> ar-"
+#~ "lein, bydd angen i chi <a href = “{{path (‘create-account’)}}” class = "
+#~ "“govuk o hyd -link “> creu cyfrif </a> i ddefnyddio’r gwasanaeth hwn"
