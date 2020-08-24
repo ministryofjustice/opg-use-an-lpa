@@ -16,6 +16,9 @@ msgstr ""
 msgid "View a lasting power of attorney"
 msgstr "A oes gennych gyfrif pŵer atwrnai parhaol"
 
+msgid "Use a lasting power of attorney"
+msgstr "Defnyddiwch bŵer atwrnai parhaol"
+
 msgid ""
 "This is a new service – your <a class=\"govuk-link\" href=\"{link}\" target="
 "\"_blank\">feedback</a> will help us to improve it."
