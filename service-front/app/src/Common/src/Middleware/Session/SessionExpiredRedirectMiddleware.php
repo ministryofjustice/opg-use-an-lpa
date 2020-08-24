@@ -6,7 +6,7 @@ namespace Common\Middleware\Session;
 
 use Common\Service\Session\EncryptedCookiePersistence;
 use Laminas\Diactoros\Uri;
-use Mezzio\Helper\ServerUrlHelper;
+use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
 use Psr\Http\Message\ResponseInterface;
@@ -18,13 +18,13 @@ use Laminas\Diactoros\Response\RedirectResponse;
 class SessionExpiredRedirectMiddleware implements MiddlewareInterface
 {
     /**
-     * @var ServerUrlHelper
+     * @var UrlHelper
      */
     private $helper;
 
-    public function __construct(ServerUrlHelper $helper)
+    public function __construct(UrlHelper $urlHelper)
     {
-        $this->helper = $helper;
+        $this->helper = $urlHelper;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
