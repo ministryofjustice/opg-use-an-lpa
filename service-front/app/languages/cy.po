@@ -162,9 +162,6 @@ msgstr "mewngofnodi"
 msgid "Enter your email address"
 msgstr "Rhowch eich cyfeiriad e-bost"
 
-msgid "Your password needs to have:"
-msgstr "Mae angen i’ch cyfrinair fod â:"
-
 msgid ""
 "Your password needs to have: <ul class=\"govuk-list--bullet\"><li>at least 8 "
 "characters</li><li>at least one lower-case and one capital letter</li><li>at "
@@ -173,13 +170,6 @@ msgstr ""
 "Mae angen i’ch cyfrinair fod â: <ul class = “govuk-list - bullet”> <li> o "
 "leiaf 8 nod </li> <li> o leiaf un llythrennau bach ac un priflythyren </li> "
 "<li> o leiaf un rhif </li> </ul>"
-
-msgid ""
-"<li>at least 8 characters</li><li>at least one lower-case and one capital "
-"letter</li><li>at least one number</li></ul>'"
-msgstr ""
-"<li> o leiaf 8 nod </li> <li> o leiaf un llythrennau bach ac un briflythyren "
-"</li> <li> o leiaf un rhif </li> </ul>"
 
 msgid "Create a password"
 msgstr "Creu cyfrinair"
@@ -241,6 +231,16 @@ msgstr "Os ydych chi eisoes wedi actifadu’ch cyfrif, gallwch chi"
 
 msgid "sign in</a> now."
 msgstr "mewngofnodi </a> nawr."
+
+#~ msgid "Your password needs to have:"
+#~ msgstr "Mae angen i’ch cyfrinair fod â:"
+
+#~ msgid ""
+#~ "<li>at least 8 characters</li><li>at least one lower-case and one capital "
+#~ "letter</li><li>at least one number</li></ul>'"
+#~ msgstr ""
+#~ "<li> o leiaf 8 nod </li> <li> o leiaf un llythrennau bach ac un "
+#~ "briflythyren </li> <li> o leiaf un rhif </li> </ul>"
 
 #~ msgid " LPA "
 #~ msgstr " ACLL "

@@ -22,13 +22,13 @@
 
                 <h1 class="govuk-heading-l">{% trans %}Activate your account{% endtrans %}</h1>
 
-                <p class="govuk-body">{% trans %}We have emailed a link to{% endtrans %} {{ emailAddress }}. {% trans %}Click on the link to activate your account. The link will work for the next 24 hours.{% endtrans %}</p>
+                <p class="govuk-body">{% trans %}We've emailed a link to{% endtrans %} {{ emailAddress }}. {% trans %}Click on the link to activate your account. The link will work for the next 24 hours.{% endtrans %}</p>
 
                 <p class="govuk-body">{% trans %}The email should arrive in a few minutes. If it's not in your inbox, check your spam or junk folder. If you have not received the email, we can{% endtrans %} <a href="{{ path('create-account-success', {}, {'email': emailAddress, 'resend': 'true'}) }}" class="govuk-link">{% trans %}resend the activation email{% endtrans %}</a>.</p>
 
                 <p class="govuk-body">{% trans %}If you still do not receive the email, please contact us on 0300 456 0300.{% endtrans %}</p>
 
-                <p class="govuk-body">{% trans %}If you've already activated your account, you can {% endtrans %}<a href="{{ path('login') }}" class="govuk-link">{% trans %}sign in</a> now.{% endtrans %}</p>
+                <p class="govuk-body">{% trans %}If you've already activated your account, you can{% endtrans %} <a href="{{ path('login') }}" class="govuk-link">{% trans %}sign in</a> now.{% endtrans %}</p>
 
             </div>
 
