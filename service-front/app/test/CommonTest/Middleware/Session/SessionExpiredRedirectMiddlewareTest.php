@@ -6,7 +6,7 @@ use Common\Middleware\Session\SessionExpiredRedirectMiddleware;
 use Common\Service\Session\EncryptedCookiePersistence;
 use DateTime;
 use Laminas\Diactoros\Response\RedirectResponse;
-use Mezzio\Helper\ServerUrlHelper;
+use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\Session;
 use Mezzio\Session\SessionMiddleware;
 use PHPUnit\Framework\TestCase;
@@ -32,7 +32,7 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
         $request = new SessionExpiredRedirectMiddleware(
-            $this->prophesize(ServerUrlHelper::class)->reveal()
+            $this->prophesize(UrlHelper::class)->reveal()
         );
 
         $request->process($requestProphecy->reveal(), $delegateProphecy->reveal());
@@ -73,7 +73,7 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
         $request = new SessionExpiredRedirectMiddleware(
-            $this->prophesize(ServerUrlHelper::class)->reveal()
+            $this->prophesize(UrlHelper::class)->reveal()
         );
 
         $result = $request->process($requestProphecy->reveal(), $delegateProphecy->reveal());
@@ -94,7 +94,7 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
         $uri = 'https://localhost:9002/session-expired';
 
         $sessionProphecy = $this->prophesize(Session::class);
-        $helperProphecy = $this->prophesize(ServerUrlHelper::class);
+        $helperProphecy = $this->prophesize(UrlHelper::class);
         $delegateProphecy = $this->prophesize(RequestHandlerInterface::class);
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
@@ -145,7 +145,7 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
         $uri = 'https://localhost:9002/home';
 
         $sessionProphecy = $this->prophesize(Session::class);
-        $helperProphecy = $this->prophesize(ServerUrlHelper::class);
+        $helperProphecy = $this->prophesize(UrlHelper::class);
         $delegateProphecy = $this->prophesize(RequestHandlerInterface::class);
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
