@@ -13,7 +13,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 2.70.0"
+      version = "~> 3.0"
     }
     local = {
       source  = "hashicorp/local"
@@ -35,8 +35,7 @@ variable "management_role" {
 }
 
 provider "aws" {
-  version = "~> 2.70.0"
-  region  = "eu-west-1"
+  region = "eu-west-1"
 
   assume_role {
     role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
@@ -45,9 +44,8 @@ provider "aws" {
 }
 
 provider "aws" {
-  version = "~> 2.70.0"
-  region  = "us-east-1"
-  alias   = "us-east-1"
+  region = "us-east-1"
+  alias  = "us-east-1"
 
   assume_role {
     role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
@@ -56,9 +54,8 @@ provider "aws" {
 }
 
 provider "aws" {
-  version = "~> 2.70.0"
-  region  = "eu-west-1"
-  alias   = "management"
+  region = "eu-west-1"
+  alias  = "management"
 
   assume_role {
     role_arn     = "arn:aws:iam::311462405659:role/${var.management_role}"
@@ -67,6 +64,5 @@ provider "aws" {
 }
 
 provider "pagerduty" {
-  version = "~> 1.7.4"
-  token   = var.pagerduty_token
+  token = var.pagerduty_token
 }

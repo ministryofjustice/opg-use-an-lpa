@@ -11,6 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Symfony\Component\Translation\Translator;
 
 class SetLocaleMiddlewareTest extends TestCase
 {
@@ -18,6 +19,8 @@ class SetLocaleMiddlewareTest extends TestCase
     public function it_sets_a_default_locale_of_en_GB_if_none_provided(): void
     {
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
+
+        $translatorProphecy = $this->prophesize(Translator::class);
 
         $uriInterfaceProphecy = $this->prophesize(UriInterface::class);
         $uriInterfaceProphecy
@@ -39,7 +42,7 @@ class SetLocaleMiddlewareTest extends TestCase
 
         // --
 
-        $middleware = new SetLocaleMiddleware($urlHelperProphecy->reveal());
+        $middleware = new SetLocaleMiddleware($urlHelperProphecy->reveal(), $translatorProphecy->reveal());
 
         $response = $middleware->process($requestProphecy->reveal(), $handlerProphecy->reveal());
 
@@ -53,6 +56,8 @@ class SetLocaleMiddlewareTest extends TestCase
         $urlHelperProphecy
             ->setBasePath('cy')
             ->shouldBeCalled();
+
+        $translatorProphecy = $this->prophesize(Translator::class);
 
         $uriInterfaceProphecy = $this->prophesize(UriInterface::class);
         $uriInterfaceProphecy
@@ -80,7 +85,7 @@ class SetLocaleMiddlewareTest extends TestCase
 
         // --
 
-        $middleware = new SetLocaleMiddleware($urlHelperProphecy->reveal());
+        $middleware = new SetLocaleMiddleware($urlHelperProphecy->reveal(), $translatorProphecy->reveal());
 
         $response = $middleware->process($requestProphecy->reveal(), $handlerProphecy->reveal());
 
