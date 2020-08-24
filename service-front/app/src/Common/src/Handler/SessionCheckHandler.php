@@ -49,8 +49,8 @@ class SessionCheckHandler implements RequestHandlerInterface
             [
                 'session_warning' => $sessionWarning,
                 'time_remaining'  => $timeRemaining
-            ]
-            , 201
+            ],
+            201
         );
     }
 }
