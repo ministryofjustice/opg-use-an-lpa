@@ -27,7 +27,7 @@
                         </tr>
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="row">{% trans %}Code expires{% endtrans %}</th>
-                            <td class="govuk-table__cell">{% trans %}in{% endtrans %} {{ days_remaining_to_expiry(expires) | trans | raw }} {% trans %}days{% endtrans %}, {% trans %}on{% endtrans %} {{ lpa_date(expires) | trans | raw }}</td>
+                            <td class="govuk-table__cell">{% trans count days_remaining_to_expiry(expires) with {'% date %': lpa_date(expires)} %}in %count% day, on %date%|in %count% days, on %date%{% endtrans %}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -52,11 +52,13 @@
                     <details class="govuk-details" role="group">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
-                                {% trans %}If you need to see this {% endtrans %}<abbr title='lasting power of attorney'>{% trans %} LPA {% endtrans %}</abbr> {% trans %}after{% endtrans %} {{ lpa_date(expires) | trans | raw  }}
+                                {% trans with {'%date%': lpa_date(expires)} %}If you need to see this <abbr title="lasting power of attorney">LPA</abbr> after %date%{% endtrans %}
                             </span>
                         </summary>
                         <div class="govuk-details__text">
-                            <p class="govuk-body">{% trans %}You can see an online summary of this {% endtrans %} <abbr title='lasting power of attorney'>{% trans %} LPA {% endtrans %}</abbr> {% trans %}until{% endtrans %} {{ lpa_date(expires) | trans | raw  }}. {% trans %}After this date, the access code will expire.{% endtrans %}</p>
+                            <p class="govuk-body">
+                                {% trans with {'%date%': lpa_date(expires)} %}You can see an online summary of this <abbr title='lasting power of attorney'> LPA </abbr>until %date%. After this date, the access code will expire.{% endtrans %}
+                            </p>
                             <p class="govuk-body">{% trans %}Ask the donor or attorney for a new access code if your organisation:{% endtrans %}
                                 <ul class="list list-bullet">
                                     <li>{% trans %}needs more time to process this LPA{% endtrans %}</li>

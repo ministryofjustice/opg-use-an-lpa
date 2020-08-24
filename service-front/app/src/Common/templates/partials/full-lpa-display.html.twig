@@ -42,7 +42,7 @@
                             This {% if lpa.caseSubtype|lower == "pfa" %}{% trans %}property and finance{% endtrans %}{% else %}{% trans %}health and welfare{% endtrans %}{% endif %} {% trans %}LPA has been cancelled{% endtrans %}</h1>
 
                         <div class="govuk-panel__body govuk-!-font-size-24">
-                            <strong>{% trans %}The information on this LPA summary was correct on{% endtrans %} {{ lpa_date("today")| trans | raw }}</strong>
+                            <strong>{% trans with {'%date%': lpa_date("today")} %}The information on this LPA summary was correct on %date%{% endtrans %}</strong>
                         </div>
 
                     </div>
@@ -78,7 +78,7 @@
                             </p>
 
                             <p class="govuk-!-font-size-24 govuk-!-font-weight-bold">
-                                {% trans %}This LPA summary was correct on{% endtrans %} {{ lpa_date("today")| trans | raw }}
+                                {% trans with {'%date%': lpa_date("today")} %}This LPA summary was correct on '%date%'{% endtrans %}
                             </p>
                         </div>
 
@@ -101,7 +101,7 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">{% trans %}Date of birth{% endtrans %}</dt>
-                        <dd class="govuk-summary-list__value">{{ lpa_date(lpa.donor.dob)| trans | raw }}</dd>
+                        <dd class="govuk-summary-list__value">{% trans with {'%date%': lpa_date(lpa.donor.dob)} %}%date%{% endtrans %}</dd>
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">{% trans %}Address{% endtrans %}</dt>
@@ -148,7 +148,8 @@
                         </div>
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">{% trans %}Date of birth{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">{{ lpa_date(attorney.dob) }}</dd>
+                            <dd class="govuk-summary-list__value">{% trans with {'%date%': lpa_date(attorney.dob)} %}%date%{% endtrans %}</dd>
+                                {{ lpa_date(attorney.dob) }}</dd>
                         </div>
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">{% trans %}Address{% endtrans %}</dt>
@@ -221,12 +222,12 @@
 
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">{% trans %}Date donor signed LPA{% endtrans %}</dt>
-                        <dd class="govuk-summary-list__value">{{ lpa_date(lpa.lpaDonorSignatureDate)| trans | raw }}</dd>
+                        <dd class="govuk-summary-list__value">{% trans with {'%date%': lpa_date(lpa.lpaDonorSignatureDate)}%date%{% endtrans %}</dd>
                     </div>
 
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">{% trans %}Registration date{% endtrans %}</dt>
-                        <dd class="govuk-summary-list__value">{{ lpa_date(lpa.registrationDate)| trans | raw }}</dd>
+                        <dd class="govuk-summary-list__value">{% trans with {'%date%': lpa_date(lpa.registrationDate)} %}%date%{% endtrans %}</dd>
                     </div>
 
                     <div class="govuk-summary-list__row">
