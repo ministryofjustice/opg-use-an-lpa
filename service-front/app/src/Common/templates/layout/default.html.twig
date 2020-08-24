@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template ">
+<html lang="{{ currentLocale }}" class="govuk-template ">
 <head>
     <meta charset="utf-8" />
-    <title>{% block html_title %}GOV.UK - The best place to find government services and information{% endblock %}</title>
+    <title>{% block html_title %}GOV.UK{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0b0c0c" />
 
@@ -15,6 +15,16 @@
     <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('assets/images/govuk-apple-touch-icon-152x152.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('assets/images/govuk-apple-touch-icon.png') }}">
     <link rel="stylesheet" href="{{ asset('stylesheets/main.css') }}">
+
+    {% if application == 'actor' %}
+        {% set url = 'https://use-lasting-power-of-attorney.service.gov.uk/' %}
+    {% else %}
+        {% set url = 'https://view-lasting-power-of-attorney.service.gov.uk/' %}
+    {% endif %}
+
+    <link rel="alternate" hreflang="en-gb" href="{{ url }}home" />
+    <link rel="alternate" hreflang="cy-gb" href="{{ url }}cy/home" />
+    <link rel="alternate" hreflang="x-default" href="{{ url }}home" />
 
     <script type="application/javascript">
         window.gaConfig = {};
@@ -91,7 +101,7 @@
                 <ul class="govuk-footer__inline-list">
                     <li class="govuk-footer__inline-list-item">
                         <a class="govuk-footer__link" href="/terms-of-use">
-                            Terms &amp; conditions
+                            Terms of use
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">

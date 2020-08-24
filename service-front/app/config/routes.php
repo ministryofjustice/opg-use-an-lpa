@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-use Common\Handler\HealthcheckHandler;
-use Psr\Container\ContainerInterface;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
+use Psr\Container\ContainerInterface;
 
 /**
  * Setup routes with a single request method:
@@ -35,7 +34,6 @@ use Mezzio\MiddlewareFactory;
  */
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->route('/home', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home');
     $app->route('/', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home-trial');
@@ -43,7 +41,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
     $app->get('/download-lpa', Viewer\Handler\DownloadLpaHandler::class, 'download-lpa');
     $app->get('/terms-of-use', Viewer\Handler\ViewerTermsOfUseHandler::class, 'viewer-terms-of-use');
-    $app->get('/privacy-notice',Viewer\Handler\ViewerPrivacyNoticeHandler::class,'viewer-privacy-notice');
+    $app->get('/privacy-notice', Viewer\Handler\ViewerPrivacyNoticeHandler::class, 'viewer-privacy-notice');
     $app->get('/stats', Viewer\Handler\StatsPageHandler::class, 'viewer-stats');
     $app->get('/session-expired', Viewer\Handler\ViewerSessionExpiredHandler::class, 'session-expired');
     $app->get('/session-check', Common\Handler\SessionCheckHandler::class, 'session-check');
@@ -74,8 +72,21 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
 
     // User management
-    $app->route('/forgot-password', Actor\Handler\PasswordResetRequestPageHandler::class, ['GET', 'POST'], 'password-reset');
-    $app->route('/forgot-password/{token}', Actor\Handler\PasswordResetPageHandler::class, ['GET', 'POST'], 'password-reset-token');
+    $app->route(
+        '/forgot-password',
+        Actor\Handler\PasswordResetRequestPageHandler::class,
+        ['GET', 'POST'],
+        'password-reset'
+    );
+    $app->route(
+        '/forgot-password/{token}',
+        Actor\Handler\PasswordResetPageHandler::class,
+        ['GET', 'POST'],
+        'password-reset-token'
+    );
+    $app->get('/verify-new-email/{token}', [
+        Actor\Handler\CompleteChangeEmailHandler::class,
+    ], 'verify-new-email');
 
     // User deletion
     $app->get('/confirm-delete-account', [
@@ -102,9 +113,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangeDetailsHandler::class
     ], 'lpa.change-details');
-    $app->get('/verify-new-email/{token}', [
-        Actor\Handler\CompleteChangeEmailHandler::class,
-    ], 'verify-new-email');
 
     // LPA management
     $app->get('/lpa/dashboard', [
@@ -143,11 +151,14 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaRemovedHandler::class
     ], 'lpa.removed');
-
     $app->get('/lpa/instructions-preferences', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\InstructionsPreferencesHandler::class
     ], 'lpa.instructions-preferences');
+    $app->get('/lpa/death-notification', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\DeathNotificationHandler::class
+    ], 'lpa.death-notification');
 };
 
 switch (getenv('CONTEXT')) {

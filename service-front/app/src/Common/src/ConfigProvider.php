@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common;
 
+use Common\View\Twig\GenericGlobalVariableExtension;
 
 /**
  * The configuration provider for the Common module
@@ -48,10 +49,15 @@ class ConfigProvider
 
                 // Auth
                 \Mezzio\Authentication\UserRepositoryInterface::class => Service\User\UserService::class,
-                \Mezzio\Authentication\AuthenticationInterface::class => \Mezzio\Authentication\Session\PhpSession::class,
+                \Mezzio\Authentication\AuthenticationInterface::class =>
+                    \Mezzio\Authentication\Session\PhpSession::class,
+
+                \Symfony\Contracts\Translation\TranslatorInterface::class =>
+                    \Symfony\Component\Translation\Translator::class,
 
                 // allows value setting on the container at runtime.
-                Service\Container\ModifiableContainerInterface::class => Service\Container\PhpDiModifiableContainer::class,
+                Service\Container\ModifiableContainerInterface::class
+                    => Service\Container\PhpDiModifiableContainer::class,
 
                 Service\Lpa\LpaFactory::class => Service\Lpa\Factory\Sirius::class
             ],
@@ -61,18 +67,19 @@ class ConfigProvider
                 // Services
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
                 Service\Pdf\PdfService::class => Service\Pdf\PdfServiceFactory::class,
-                Service\Session\EncryptedCookiePersistence::class => Service\Session\EncryptedCookiePersistenceFactory::class,
+                Service\Session\EncryptedCookiePersistence::class =>
+                    Service\Session\EncryptedCookiePersistenceFactory::class,
                 Service\Session\KeyManager\KmsManager::class => Service\Session\KeyManager\KmsManagerFactory::class,
-
                 Service\Email\EmailClient::class => Service\Email\EmailClientFactory::class,
-
                 Service\User\UserService::class => Service\User\UserServiceFactory::class,
 
                 \Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 \Aws\Kms\KmsClient::class => Service\Aws\KmsFactory::class,
                 \Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
 
+                // Middleware
                 \Mezzio\Session\SessionMiddleware::class => \Mezzio\Session\SessionMiddlewareFactory::class,
+                Middleware\I18n\SetLocaleMiddleware::class => Middleware\I18n\SetLocaleMiddlewareFactory::class,
 
                 // Auth
                 \Mezzio\Authentication\UserInterface::class => Entity\UserFactory::class,
@@ -80,7 +87,12 @@ class ConfigProvider
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
 
+                \Symfony\Component\Translation\Translator::class => I18n\SymfonyTranslatorFactory::class,
+                \Symfony\Bridge\Twig\Extension\TranslationExtension::class =>
+                    View\Twig\SymfonyTranslationExtensionFactory::class,
+
                 View\Twig\JavascriptVariablesExtension::class => View\Twig\JavascriptVariablesExtensionFactory::class,
+                View\Twig\GenericGlobalVariableExtension::class => View\Twig\GenericGlobalVariableExtensionFactory::class,
             ],
 
             'delegators' => [
@@ -117,6 +129,8 @@ class ConfigProvider
                 View\Twig\GovUKLaminasFormErrorsExtension::class,
                 View\Twig\GovUKLaminasFormExtension::class,
                 View\Twig\JavascriptVariablesExtension::class,
+                View\Twig\GenericGlobalVariableExtension::class,
+                \Symfony\Bridge\Twig\Extension\TranslationExtension::class,
             ]
         ];
     }

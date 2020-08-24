@@ -1,0 +1,87 @@
+msgid "View a lasting power of attorney"
+msgstr ""
+
+msgid ""
+"This is a new service – your <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">feedback</a> will help us to improve it."
+msgstr ""
+
+msgid "Enter LPA access code"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Enter the LPA access code"
+msgstr ""
+
+msgid "Donor's last name"
+msgstr ""
+
+msgid "LPA access code"
+msgstr ""
+
+msgid "Access codes are 13 characters long and start with a V<br/>For example, V-AB12-CD34-EF56"
+msgstr ""
+
+msgid "What is an <abbr title=\"lasting power of attorney\">LPA</abbr> access code?"
+msgstr ""
+
+msgid "An <abbr title=\"lasting power of attorney\">LPA</abbr> access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney."
+msgstr ""
+
+msgid "By continuing you agree to our <a href=\"{link}\" class=\"govuk-link\">terms of use</a>."
+msgstr ""
+
+msgid "Continue"
+msgstr ""
+
+msgid "Do you have a Use a lasting power of attorney account?"
+msgstr ""
+
+msgid "If you're named on more than one LPA, you can add all those LPAs to your account."
+msgstr ""
+
+msgid "Enter your LPA access code"
+msgstr ""
+
+msgid "Enter the donor's last name"
+msgstr ""
+
+msgid "There is a problem"
+msgstr ""
+
+msgid "If you made an LPA online, you will still need to create an account to use this service"
+msgstr ""
+
+msgid "Yes, I already have an account"
+msgstr ""
+
+msgid "No, this is the first time I’ve used the service"
+msgstr ""
+
+msgid "Email address"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Day"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+msgid "What is your date of birth?"
+msgstr ""
+
+msgid "For example, 31 03 1980"
+msgstr ""
+
+msgid "I agree to the <a href=\"/terms-of-use\" class=\"govuk-link\">terms of use</a>"
+msgstr ""
+
+msgid "Error:"
+msgstr ""

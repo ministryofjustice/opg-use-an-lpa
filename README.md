@@ -104,3 +104,29 @@ Packages can be removed with:
 
 <DOCKER_COMPOSE> run front-composer composer remove author/package
 ```
+
+## Troubleshooting 
+There are occasions when your local dev environment doesn't quite act as it should.
+_Feel free to add further troubleshooting steps here._
+
+Here are some common problems we've come across:
+
+### I cannot login with the seeded user.
+
+Its possible seeding of Use an LPA was not successful.
+make sure all docker compose services are running and have settled first, then try again.
+run the following command:
+```shell
+<DOCKER_COMPOSE> run api-seeding
+```
+then try again
+
+### I cannot add  LPA's locally, which are in the seeded data set.
+
+This could be because the LPA Gateway (Sirius Gateway) has not been properly initialised.
+make sure all docker compose services are running andhave settled first, then try again.
+If still not working,run the following command:
+```shell
+<DOCKER_COMPOSE> run lpa-gateway-setup
+```
+if that doesn't work try running the api-seeding step, mentioned with the login failure error.

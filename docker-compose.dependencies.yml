@@ -46,11 +46,16 @@ services:
 
       PASSTHROUGH_DYNAMODB_DATA_CACHE_TABLE_NAME: opg-gateway-cache-data
       PASSTHROUGH_DYNAMODB_AUTH_CACHE_TABLE_NAME: opg-gateway-cache-auth
-      PASSTHROUGH_AWS_ENDPOINT_DYNAMODB: http://localstack:14569
+      PASSTHROUGH_AWS_ENDPOINT_DYNAMODB : http://localstack:14569
       PASSTHROUGH_URL_MEMBRANE: https://membrane
       PASSTHROUGH_CREDENTIALS: '{"email": "publicapi@opgtest.com","password": "Password1"}' # Non-secret credentials, deliberately committed.
       PASSTHROUGH_ENABLE_DEBUG: 'false'
       PASSTHROUGH_DATA_PROVIDER: json
+      PASSTHROUGH_AWS_ACCESS_KEY_ID: testing
+      PASSTHROUGH_AWS_SECRET_ACCESS_KEY: testing
+      PASSTHROUGH_AWS_SECURITY_TOKEN: testing
+      PASSTHROUGH_AWS_SESSION_TOKEN: testing
+      PASSTHROUGH_AWS_DEFAULT_REGION: eu-west-1
 
   # -----
   # Code Generation API development environment

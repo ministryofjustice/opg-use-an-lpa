@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{{ block('service_name') }} - Do you have a Use a lasting power of attorney account{% endblock %}
+{% block html_title %}Sign in or create an account - {{ parent() }}{% endblock %}
 
 {% block service_name %}Use a lasting power of attorney{% endblock %}
 
@@ -26,7 +26,7 @@
                                 {
                                     'label': 'Yes, I already have an account',
                                     'value': 'yes',
-                                    'hint' : 'If you made an LPA online, you will still need to make an account to use this service'
+                                    'hint' : 'If you made an LPA online, you will still need to create an account to use this service'
                                 },
                                 {
                                     'label': 'No, this is the first time I’ve used the service',

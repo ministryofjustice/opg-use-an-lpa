@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Change Details {{ parent() }} {% endblock %}
+{% block html_title %}Let us know if a donor or attorney’s details change - {{ parent() }} {% endblock %}
 
 {% block content %}
 
@@ -32,6 +32,11 @@
                         <li>the donor or an attorney has changed their name by marriage or deed poll</li>
                         <li>the donor's or an attorney's name or address is misspelt</li>
                         <li>a date of birth is wrong</li>
+                        {% if actorToken != 'null' %}
+                            <li><a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the donor or an attorney dies</a></li>
+                        {% else %}
+                            <li><a class="govuk-link" href="{{ path('lpa.death-notification') }}">the donor or an attorney dies</a></li>
+                        {% endif %}
                     </ul>
 
                     <p class="govuk-body">We’ll update the online <abbr title="lasting power of attorney">LPA</abbr> summary and our records.</p>
@@ -63,6 +68,21 @@
                       PO Box 16185<br>
                       Birmingham<br>
                       B2 2WH
+                    </p>
+
+                    {{ include('@partials/section-break.html.twig') }}
+
+                    <h2 class="govuk-heading-m govuk-!-margin-top-6">Let us know if a donor or attorney dies</h2>
+
+                    <p class="govuk-body">It's important that we hold up-to-date information about donors and attorneys.
+                        This is because an LPA will end when the donor dies, and can end if an attorney dies.</p>
+
+                    <p class="govuk-body">Find out more about what to do if
+                        {% if actorToken != 'null' %}
+                            <a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}"> the donor or an attorney dies</a>
+                        {% else %}
+                            <a class="govuk-link" href="{{ path('lpa.death-notification') }}"> the donor or an attorney dies</a>
+                        {% endif %}
                     </p>
 
                 </div>

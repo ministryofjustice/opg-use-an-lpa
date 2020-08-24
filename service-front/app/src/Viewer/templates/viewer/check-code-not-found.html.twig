@@ -1,6 +1,6 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}Code not found - {{ parent() }} {% endblock %}
+{% block html_title %}We could not find an LPA - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -13,7 +13,7 @@
 
                     <h1 class="govuk-heading-xl">We could not find an LPA matching those details</h1>
 
-                    <p class="govuk-body">Please check the code and the spelling of the donor's surname</p>
+                    <p class="govuk-body">Please check the code and the spelling of the donor's last name</p>
 
                     <a href="{{ path('home') }}" role="button" draggable="false" class="govuk-button">
                         Try again

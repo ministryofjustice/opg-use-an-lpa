@@ -6,7 +6,7 @@ Feature: Session length is independent of cookie lifetime
 
   @ui @actor @viewer
   Scenario: A user session is created when accessing the application
-    When I access the service homepage
+    When I access the service home page
     Then I am given a session cookie
 
   @ui @actor

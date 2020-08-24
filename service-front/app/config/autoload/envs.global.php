@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 return [
 
+    'application' => getenv('CONTEXT'),
+
     'version' => getenv('CONTAINER_VERSION') ?: 'dev',
 
     'api' => [
@@ -102,6 +104,17 @@ return [
     'authentication' => [
         'username' => 'email',
         'redirect' => '/login',
+    ],
+
+    'i18n' => [
+        'default_locale' => 'en_GB',
+        'languages' => [
+            'welsh' => [
+                'format' => 'mo',
+                'resource' => '/app/languages/cy.mo',
+                'locale' => 'cy'
+            ]
+        ]
     ],
 
     'ratelimits' => [

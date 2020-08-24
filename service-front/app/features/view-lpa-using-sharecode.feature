@@ -70,12 +70,12 @@ Feature: View an LPA via sharecode
 
     Examples:
       | accessCode | reason |
-      | V-T3ST_ACE2-C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
-      | T3STP*22C0!? | LPA access codes are 13 numbers and letters long and start with a V |
-      | T3ST _ PA22 - C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
-      | V - T3ST _ PA22 - C0D3 | LPA access codes are 13 numbers and letters long and start with a V |
-      | T3STPA22C0D | LPA access codes are 13 numbers and letters long and start with a V |
-      |  | Enter the LPA access code |
+      | V-T3ST_ACE2-C0D3 | Enter LPA access code in the correct format |
+      | T3STP*22C0!? | Enter LPA access code in the correct format |
+      | T3ST _ PA22 - C0D3 | Enter LPA access code in the correct format |
+      | V - T3ST _ PA22 - C0D3 | Enter LPA access code in the correct format |
+      | T3STPA22C0D | Enter LPA access code in the correct format |
+      |  | Enter your LPA access code |
 
   @ui
   Scenario Outline: The user is shown the correct error messages when entering invalid details
@@ -85,7 +85,7 @@ Feature: View an LPA via sharecode
 
     Examples:
       | surname | reason |
-      |  | Enter the donor's surname |
+      |  | Enter the donor's last name |
 
   @ui
   Scenario: The user enters an expired sharecode and is shown the reason for not able to see the details of an LPA

@@ -165,7 +165,7 @@ class AccountContext implements Context
      */
     public function iAmToldMyCredentialsAreIncorrect()
     {
-        $this->ui->assertPageContainsText('Email and password combination not recognised');
+        $this->ui->assertPageContainsText('We cannot find an account with that email address and password');
     }
 
     /**
@@ -473,7 +473,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/forgot-password/123456');
 
-        $this->ui->assertPageContainsText('at least ' . $reason);
+        $this->ui->assertPageContainsText($reason);
     }
 
     /**
@@ -615,6 +615,18 @@ class AccountContext implements Context
     }
 
     /**
+     * @Then /^I see a page showing me the answers I have entered and content that helps me get it right$/
+     */
+    public function iSeeAPageShowingMeTheAnswersIHaveEnteredAndContentThatHelpsMeGetItRight()
+    {
+        $this->ui->assertPageAddress('/lpa/check');
+        $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
+        $this->ui->assertPageContainsText('LPA reference number: 700000000054');
+        $this->ui->assertPageContainsText('Activation key: XYUPHWQRECHV');
+        $this->ui->assertPageContainsText('Date of birth: 1975-10-05');
+    }
+
+    /**
      * @Then /^The correct LPA is found and I can confirm to add it$/
      */
     public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
@@ -696,7 +708,7 @@ class AccountContext implements Context
     public function theLPAIsNotFound()
     {
         $this->ui->assertPageAddress('/lpa/check');
-        $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
+        $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
     }
 
     /**
@@ -1640,7 +1652,7 @@ class AccountContext implements Context
      */
     public function theLPAShouldNotBeFound()
     {
-        $this->ui->assertPageContainsText('We could not find that lasting power of attorney');
+        $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
     }
 
     /**
@@ -1912,7 +1924,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('change-password');
 
-        $this->ui->assertPageContainsText('The current password you entered is incorrect');
+        $this->ui->assertPageContainsText('Current password is incorrect');
     }
 
     /**
@@ -1944,7 +1956,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/change-password');
 
-        $this->ui->assertPageContainsText('at least ' . $reason);
+        $this->ui->assertPageContainsText($reason);
     }
 
     /**
@@ -1986,9 +1998,9 @@ class AccountContext implements Context
     {
 
         $value = $this->ui->getSession()->getPage()->find('css', '#__csrf')->getValue();
-        $separated = explode('-',$value);
+        $separated = explode('-', $value);
         $separated[1] = 'youhazbeenhaaxed'; //this is the requestid.
-        $hackedValue = implode('-',$separated);
+        $hackedValue = implode('-', $separated);
         $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
     }
 
@@ -1999,9 +2011,9 @@ class AccountContext implements Context
     {
         $value = $this->ui->getSession()->getPage()->find('css', '#__csrf')->getValue();
 
-        $separated = explode('-',$value);
+        $separated = explode('-', $value);
         $separated[0] = 'youhazbeenhaaxed'; //this is the token part.
-        $hackedValue = implode("-",$separated);
+        $hackedValue = implode("-", $separated);
 
         $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
     }
@@ -2530,7 +2542,7 @@ class AccountContext implements Context
     public function myOldAccountIsNotFound()
     {
         $this->ui->assertPageAddress('/login');
-        $this->ui->assertPageContainsText('Email and password combination not recognised. Please try signing in again below or create an account');
+        $this->ui->assertPageContainsText('We cannot find an account with that email address and password');
     }
 
     /**
@@ -2885,7 +2897,7 @@ class AccountContext implements Context
      */
     public function iShouldBeToldThatICouldNotChangeMyEmailBecauseMyPasswordIsIncorrect()
     {
-        $this->ui->assertPageContainsText('Your password is incorrect');
+        $this->ui->assertPageContainsText('The password you entered is incorrect');
     }
 
     /**
@@ -3218,7 +3230,9 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])));
+                    json_encode([])
+                )
+            );
 
         $this->ui->visit('/lpa/dashboard');
 
@@ -3466,7 +3480,63 @@ class AccountContext implements Context
      */
     public function iWantToCreateANewAccount()
     {
-         // Not needed for this context
+        // Not needed for this context
     }
 
+    public function elementisOpen(string $searchStr)
+    {
+        $page = $this->ui->getSession()->getPage();
+        $element = $page->find('css', $searchStr);
+        $elementHtml = $element->getOuterHtml();
+        return str_contains($elementHtml, ' open');
+    }
+
+    /**
+     * @Given /^I can see that the What I can do link is open$/
+     */
+    public function iCanSeeThatTheWhatICanDoLinkIsOpen()
+    {
+        assertTrue($this->elementisOpen('.govuk-details'));
+    }
+
+    /**
+     * @Given /^I can see that the What I can do link is closed$/
+     */
+    public function iCanSeeThatTheWhatICanDoLinkIsClosed()
+    {
+        assertFalse($this->elementisOpen('.govuk-details'));
+    }
+
+    /**
+     * @Given /^I am on the change details page$/
+     */
+    public function iAmOnTheChangeDetailsPage()
+    {
+        $this->ui->visit('/lpa/change-details');
+        $this->ui->assertPageAddress('/lpa/change-details');
+    }
+
+    /**
+     * @When /^I select to find out more if the donor or an attorney dies$/
+     */
+    public function iSelectToFindOutMoreIfTheDonorOrAnAttorneyDies()
+    {
+        $this->ui->clickLink('the donor or an attorney dies');
+    }
+
+    /**
+     * @Then /^I expect to be on the death notification page$/
+     */
+    public function iExpectToBeOnTheDeathNotificationPage()
+    {
+        $this->ui->assertPageAddress('/lpa/death-notification');
+    }
+
+    /**
+     * @Given /^I am on the death notification page$/
+     */
+    public function iAmOnTheDeathNotificationPage()
+    {
+        $this->ui->visit('/lpa/death-notification');
+    }
 }
