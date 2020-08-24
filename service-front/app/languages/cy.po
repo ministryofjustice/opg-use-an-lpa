@@ -150,11 +150,23 @@ msgstr "Mewngofnodi"
 msgid "Forgotten your password?"
 msgstr "Wedi anghofio’ch cyfrinair?"
 
+msgid "Create an account"
+msgstr "Creu cyfrif"
+
+msgid "If you already have an account, please"
+msgstr "Os oes gennych gyfrif eisoes, os gwelwch yn dda"
+
+msgid "sign in"
+msgstr "mewngofnodi"
+
+msgid "Never share your password with anyone."
+msgstr "Peidiwch byth â rhannu eich cyfrinair ag unrhyw un."
+
+msgid "Create account"
+msgstr "Creu cyfrif"
+
 #~ msgid " LPA "
 #~ msgstr " ACLL "
-
-#~ msgid "create an account"
-#~ msgstr "creu cyfrif"
 
 #~ msgid ""
 #~ "If you made an <abbr title=\"lasting power of attorney\">LPA</abbr> "
