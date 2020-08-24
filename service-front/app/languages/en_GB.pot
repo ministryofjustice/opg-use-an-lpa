@@ -92,13 +92,7 @@ msgstr ""
 msgid "Sign in to your Use a lasting power of attorney account"
 msgstr ""
 
-msgid "If you made an"
-msgstr ""
-
-msgid "LPA </abbr> online, you'll still need to"
-msgstr ""
-
-msgid "create an account</a> to use this service."
+msgid "If you made an <abbr title="lasting power of attorney"> LPA </abbr> online, you'll still need to <a href='%link%' class="govuk-link">create an account</a> to use this service."
 msgstr ""
 
 msgid "Sign in"
@@ -120,18 +114,6 @@ msgid "Your password needs to have: <ul class="govuk-list--bullet"><li>at least 
 msgstr ""
 
 msgid "Create a password"
-msgstr ""
-
-msgid "'Your password needs to have:"
-msgstr ""
-
-msgid "at least 8 characters"
-msgstr ""
-
-msgid "at least one lower-case and one capital letter"
-msgstr ""
-
-msgid "at least one number"
 msgstr ""
 
 msgid "Confirm your password"

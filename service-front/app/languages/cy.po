@@ -138,14 +138,14 @@ msgstr "Gwall:"
 msgid "Sign in to your Use a lasting power of attorney account"
 msgstr "Mewngofnodi i’ch cyfrif Defnyddiwch atwrneiaeth barhaol"
 
-msgid "If you made an"
-msgstr "Os gwnaethoch chi"
-
-msgid "LPA </abbr> online, you'll still need to"
-msgstr "ACLL </abbr> ar-lein, bydd angen i chi wneud hynny o hyd"
-
-msgid "create an account</a> to use this service."
-msgstr "creu cyfrif </a> i ddefnyddio’r gwasanaeth hwn."
+msgid ""
+"If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> "
+"online, you'll still need to <a href='%link%' class=\"govuk-link\">create an "
+"account</a> to use this service."
+msgstr ""
+"Os gwnaethoch chi <abbr title = “pŵer atwrnai parhaol”> LPA </abbr> ar-lein, "
+"bydd angen i chi <a href=‘%link%’ class=“govuk-link”> greu cyfrif </a> "
+"defnyddio’r gwasanaeth hwn."
 
 msgid "Sign in"
 msgstr "Mewngofnodi"
@@ -177,18 +177,6 @@ msgstr ""
 
 msgid "Create a password"
 msgstr "Creu cyfrinair"
-
-msgid "'Your password needs to have:"
-msgstr "‘Mae angen i’ch cyfrinair fod â:"
-
-msgid "at least 8 characters"
-msgstr "o leiaf 8 nod"
-
-msgid "at least one lower-case and one capital letter"
-msgstr "o leiaf un llythyren fach ac un priflythyren"
-
-msgid "at least one number"
-msgstr "o leiaf un rhif"
 
 msgid "Confirm your password"
 msgstr "Cadarnhewch eich cyfrinair"
@@ -233,6 +221,27 @@ msgstr ""
 "Os ydych chi eisoes wedi actifadu’ch cyfrif, gallwch <a href=“%link%” "
 "class=“govuk-link”> arwyddo i mewn </a> nawr."
 
+#~ msgid "'Your password needs to have:"
+#~ msgstr "‘Mae angen i’ch cyfrinair fod â:"
+
+#~ msgid "at least 8 characters"
+#~ msgstr "o leiaf 8 nod"
+
+#~ msgid "at least one lower-case and one capital letter"
+#~ msgstr "o leiaf un llythyren fach ac un priflythyren"
+
+#~ msgid "at least one number"
+#~ msgstr "o leiaf un rhif"
+
+#~ msgid "If you made an"
+#~ msgstr "Os gwnaethoch chi"
+
+#~ msgid "LPA </abbr> online, you'll still need to"
+#~ msgstr "ACLL </abbr> ar-lein, bydd angen i chi wneud hynny o hyd"
+
+#~ msgid "create an account</a> to use this service."
+#~ msgstr "creu cyfrif </a> i ddefnyddio’r gwasanaeth hwn."
+
 #~ msgid "If you've already activated your account, you can"
 #~ msgstr "Os ydych chi eisoes wedi actifadu’ch cyfrif, gallwch chi"
 
@@ -263,12 +272,3 @@ msgstr ""
 
 #~ msgid " LPA "
 #~ msgstr " ACLL "
-
-#~ msgid ""
-#~ "If you made an <abbr title=\"lasting power of attorney\">LPA</abbr> "
-#~ "online, you'll still need to <a href=\"{{ path('create-account') }}\" "
-#~ "class=\"govuk-link\">create an account</a> to use this service."
-#~ msgstr ""
-#~ "Os gwnaethoch chi <abbr title = “pŵer atwrnai parhaol”> LPA </abbr> ar-"
-#~ "lein, bydd angen i chi <a href = “{{path (‘create-account’)}}” class = "
-#~ "“govuk o hyd -link “> creu cyfrif </a> i ddefnyddio’r gwasanaeth hwn"
