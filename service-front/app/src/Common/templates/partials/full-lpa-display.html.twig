@@ -149,7 +149,6 @@
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">{% trans %}Date of birth{% endtrans %}</dt>
                             <dd class="govuk-summary-list__value">{% trans with {'%date%': lpa_date(attorney.dob)} %}%date%{% endtrans %}</dd>
-                                {{ lpa_date(attorney.dob) }}</dd>
                         </div>
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">{% trans %}Address{% endtrans %}</dt>
@@ -222,7 +221,7 @@
 
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">{% trans %}Date donor signed LPA{% endtrans %}</dt>
-                        <dd class="govuk-summary-list__value">{% trans with {'%date%': lpa_date(lpa.lpaDonorSignatureDate)}%date%{% endtrans %}</dd>
+                        <dd class="govuk-summary-list__value">{% trans with {'%date%': lpa_date(lpa.lpaDonorSignatureDate)} %}%date%{% endtrans %}</dd>
                     </div>
 
                     <div class="govuk-summary-list__row">
@@ -234,11 +233,8 @@
                         <dt class="govuk-summary-list__key">{% trans %}LPA reference number{% endtrans %}</dt>
                         <dd class="govuk-summary-list__value">{{ lpa.uId }}</dd>
                     </div>
-
                 </dl>
-
             </div>
-
         </div>
 
         {% if not forDownload %}
@@ -249,7 +245,7 @@
             <div class="govuk-grid-column-two-thirds">
 
             <p class="govuk-body">
-                <a class="govuk-link" href="{{ path('home') }}">{% trans %}I want to check another LPA{% endtrans %}</a>
+                {% trans %}<a class="govuk-link" href="/home">I want to check another LPA{% endtrans %}</a>
             </p>
 
             </div>

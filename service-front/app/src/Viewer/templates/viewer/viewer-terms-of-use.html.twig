@@ -27,9 +27,13 @@
                         <li>{% trans %}agree to these terms of use and the <a class="govuk-link" href="https://www.gov.uk/help/terms-conditions">GOV.UK terms and conditions</a>{% endtrans %}</li>
                         <li>{% trans %}confirm that a donor or attorney wants you to view the <abbr title="lasting power of attorney">LPA</abbr> and has given you an access code{% endtrans %}</li>
                     </ul>
-
-                    <p class="govuk-body govuk-!-font-weight-bold">! {% trans %}It can be a criminal offence to use someone’s personal information without their permission.{% endtrans %}</p>
-
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">Warning</span>
+                            {% trans %}It can be a criminal offence to use someone’s personal information without their permission.{% endtrans %}</p>
+                        </strong>
+                    </div>
                     <h2 class="govuk-heading-m">{% trans %}Information security{% endtrans %}</h2>
 
                     <p class="govuk-body">{% trans %}You and your organisation are responsible for your use of View a lasting power of attorney.{% endtrans %}</p>
@@ -68,7 +72,7 @@
                     </h2>
 
                     <p class="govuk-body">{% trans %}We keep a record of when an access code has been used to view an <abbr title="lasting power of attorney">LPA</abbr>. This information is available to the donor and attorneys.{% endtrans %}</p>
-                    <p class="govuk-body">{% trans %}The information will be stored securely and used in line with our <a class="govuk-link" href="{{  path('viewer-privacy-notice') }}">privacy notice</a> and <a class="govuk-link" href="{{ path('viewer-cookies') }}">cookie policy</a>{% endtrans %}.</p>
+                    <p class="govuk-body">{% trans %}The information will be stored securely and used in line with our <a class="govuk-link" href="/privacy-notice">privacy notice</a> and <a class="govuk-link" href="/cookies">cookie policy</a>.{% endtrans %}</p>
 
                     <h2 class="govuk-heading-m">
                         {% trans %}If you suspect fraud or abuse{% endtrans %}
