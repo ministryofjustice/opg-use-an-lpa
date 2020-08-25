@@ -163,6 +163,9 @@ msgstr ""
 "Os oes gennych gyfrif eisoes, cofrestrwch <a href=“%link%” class=“govuk-"
 "link”> mewngofnodi </a>."
 
+msgid "Warning"
+msgstr "Rhybudd"
+
 msgid "Enter your email address"
 msgstr "Rhowch eich cyfeiriad e-bost"
 
