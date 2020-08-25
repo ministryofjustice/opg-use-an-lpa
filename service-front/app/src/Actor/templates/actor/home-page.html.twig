@@ -24,12 +24,12 @@
                             {{ govuk_form_element(form.get('triageEntry'), {'value_options':
                             [
                                 {
-                                    'label': 'Yes, I already have an account',
+                                    'label': 'Yes, I already have an account'| trans,
                                     'value': 'yes',
-                                    'hint' : 'If you made an LPA online, you will still need to create an account to use this service'
+                                    'hint' : 'If you made an LPA online, you will still need to create an account to use this service'| trans,
                                 },
                                 {
-                                    'label': 'No, this is the first time I’ve used the service',
+                                    'label': 'No, this is the first time I’ve used the service'| trans,
                                     'value': 'no'
                                 }
                             ]}

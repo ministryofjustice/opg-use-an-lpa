@@ -30,9 +30,9 @@
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
-                        {{ govuk_form_element(form.get('email'), { 'label': 'Email address', 'attr': { 'class': 'govuk-!-width-three-quarters' } }) }}
+                        {{ govuk_form_element(form.get('email'), { 'label': 'Email address', 'attr': { 'class': 'govuk-!-width-three-quarters' } })  }}
 
-                        {{ govuk_form_element(form.get('password'), { 'label': 'Password', 'attr': { 'class': 'govuk-!-width-three-quarters', 'auto-complete': 'current-password' } }) }}
+                        {{ govuk_form_element(form.get('password'), { 'label': 'Password', 'attr': { 'class': 'govuk-!-width-three-quarters', 'auto-complete': 'current-password' } })  }}
 
                         <button data-prevent-double-click="true" name="sign-in" type="submit" class="govuk-button">{% trans %}Sign in{% endtrans %}</button>
 
