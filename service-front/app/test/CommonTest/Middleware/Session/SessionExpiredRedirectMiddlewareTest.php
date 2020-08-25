@@ -109,7 +109,7 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
             ->willReturn($sessionData[EncryptedCookiePersistence::SESSION_TIME_KEY]);
 
         $sessionProphecy
-            ->get(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
+            ->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
             ->shouldBeCalled()
             ->willReturn(true);
 
@@ -160,7 +160,7 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
             ->willReturn($sessionData[EncryptedCookiePersistence::SESSION_TIME_KEY]);
 
         $sessionProphecy
-            ->get(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
+            ->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
             ->shouldBeCalled()
             ->willReturn(true);
 

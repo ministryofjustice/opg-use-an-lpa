@@ -14,6 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\RedirectResponse;
+use DateTime;
 
 class SessionExpiredRedirectMiddleware implements MiddlewareInterface
 {
@@ -32,16 +33,12 @@ class SessionExpiredRedirectMiddleware implements MiddlewareInterface
         /** @var SessionInterface $session */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
 
-        $currentDatetime =  time();
+        if ($session !== null && $session->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)) {
 
-        if ($session !== null) {
             $sessionExpiredDatetime = $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY);
-        }
-        
-        if ($session !== null && $session->get(EncryptedCookiePersistence::SESSION_EXPIRED_KEY) !== null) {
 
-            $currentDate = date("Y-m-d", $currentDatetime);
-            $expiredDate = date("Y-m-d", $sessionExpiredDatetime);
+            $currentDate = (new DateTime())->format('Y-m-d');
+            $expiredDate = (new DateTime("@$sessionExpiredDatetime"))->format('Y-m-d');
 
             $session->unset(EncryptedCookiePersistence::SESSION_EXPIRED_KEY);
             if ($currentDate > $expiredDate) {
@@ -49,7 +46,6 @@ class SessionExpiredRedirectMiddleware implements MiddlewareInterface
             } else {
                 $uri = new Uri($this->helper->generate('session-expired'));
             }
-
             return new RedirectResponse($uri);
         } else {
             return $handler->handle($request);
