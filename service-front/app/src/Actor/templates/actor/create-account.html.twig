@@ -34,11 +34,11 @@
 
                                 {{ govuk_form_element(form.get('__csrf')) }}
 
-                                {{ govuk_form_element(form.get('email'), { 'label': 'Enter your email address' }) }}
+                                {{ govuk_form_element(form.get('email'), { 'label': 'Enter your email address'| trans }) }}
 
-                                {{ govuk_form_element(form.get('password'), { 'label': 'Create a password', 'hint': 'Your password needs to have: <ul class="govuk-list--bullet"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>' }) }}
+                                {{ govuk_form_element(form.get('password'), { 'label': 'Create a password', 'hint': 'Your password needs to have: <ul class="govuk-list--bullet"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>'| trans }) }}
 
-                                {{ govuk_form_element(form.get('password_confirm'), { 'label': 'Confirm your password' }) }}
+                                {{ govuk_form_element(form.get('password_confirm'), { 'label': 'Confirm your password'| trans }) }}
 
                                 <div class="govuk-warning-text">
                                   <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
@@ -48,7 +48,7 @@
                                   </strong>
                                 </div>
 
-                                {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="/terms-of-use" class="govuk-link">terms of use</a>' }) }}
+                                {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="/terms-of-use" class="govuk-link">terms of use</a>'| trans }) }}
 
                                 <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Create account{% endtrans %}</button>
 
