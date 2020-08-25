@@ -58,11 +58,11 @@
                     {{ govuk_form_element(form.get('usageCookies'), {'value_options':
                         [
                             {
-                                'label': 'Use cookies that measure my website use',
+                                'label': 'Use cookies that measure my website use' | trans,
                                 'value': 'yes'
                             },
                             {
-                                'label': 'Do not use cookies that measure my website use',
+                                'label': 'Do not use cookies that measure my website use' | trans,
                                 'value': 'no'
                             }
                         ]}
