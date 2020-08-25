@@ -85,7 +85,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
     private bool $cookieHttpOnly;
 
-    private array $originalSessionData;
+    private ?int $originalSessionTime;
 
     private string $requestPath;
 
@@ -216,7 +216,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         $sessionData = $this->getCookieFromRequest($request);
         $data = $this->decodeCookieValue($sessionData);
 
-        $this->originalSessionData = $data;
+        $this->originalSessionTime = isset($data[self::SESSION_TIME_KEY])? $data[self::SESSION_TIME_KEY] : null;
         $this->requestPath = $request->getUri()->getPath();
 
         // responsible the for expiry of a users session
@@ -239,15 +239,8 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
     public function persistSession(SessionInterface $session, ResponseInterface $response): ResponseInterface
     {
-        // Checking session or setting current time
-        $time = isset($this->originalSessionData[self::SESSION_TIME_KEY])
-        && !is_null($this->originalSessionData[self::SESSION_TIME_KEY])
-        && preg_match("/^\/session-check(\/|)$/i", $this->requestPath)
-            ? $this->originalSessionData[self::SESSION_TIME_KEY]
-            : time();
-
         // Record the set time
-        $session->set(self::SESSION_TIME_KEY, $time);
+        $session->set(self::SESSION_TIME_KEY, $this->sessionTime());
 
         // Encode to string
         $sessionData = $this->encodeCookieValue($session->toArray());
@@ -373,5 +366,15 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         }
 
         return $lifetime > 0 ? $lifetime : 0;
+    }
+
+    private function sessionTime(): int
+    {
+        // Checking session or setting current time
+        return isset($this->originalSessionTime)
+        && !is_null($this->originalSessionTime)
+        && preg_match("/^\/session-check(\/|)$/i", $this->requestPath)
+            ? $this->originalSessionTime
+            : time();
     }
 }

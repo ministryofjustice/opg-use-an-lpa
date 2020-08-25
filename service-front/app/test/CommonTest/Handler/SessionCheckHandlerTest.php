@@ -21,16 +21,6 @@ class SessionCheckHandlerTest extends TestCase
      */
     public function testReturnsExpectedJsonResponseReturnsFalse()
     {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-        $containerProphecy->get('config')
-            ->willReturn(
-                [
-                    'session' => [
-                        'expires' => 1200
-                    ],
-                ]
-            );
-
         $sessionProphecy = $this->prophesize(SessionInterface::class);
         $sessionProphecy->get(EncryptedCookiePersistence::SESSION_TIME_KEY)
             ->willReturn(time());
@@ -41,7 +31,7 @@ class SessionCheckHandlerTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($sessionProphecy->reveal());
 
-        $handler = new SessionCheckHandler($containerProphecy->reveal());
+        $handler = new SessionCheckHandler(1200);
 
         $response = $handler->handle($requestProphecy->reveal());
         $json = json_decode($response->getBody()->getContents(), true);
@@ -60,16 +50,6 @@ class SessionCheckHandlerTest extends TestCase
      */
     public function testReturnsExpectedJsonResponseReturnsTrue()
     {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-        $containerProphecy->get('config')
-            ->willReturn(
-                [
-                    'session' => [
-                        'expires' => 1200
-                    ],
-                ]
-            );
-
         $sessionProphecy = $this->prophesize(SessionInterface::class);
         $sessionProphecy->get(EncryptedCookiePersistence::SESSION_TIME_KEY)
             ->willReturn((time() - 950));
@@ -80,7 +60,7 @@ class SessionCheckHandlerTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($sessionProphecy->reveal());
 
-        $handler = new SessionCheckHandler($containerProphecy->reveal());
+        $handler = new SessionCheckHandler(1200);
 
         $response = $handler->handle($requestProphecy->reveal());
         $json = json_decode($response->getBody()->getContents(), true);
@@ -92,30 +72,5 @@ class SessionCheckHandlerTest extends TestCase
 
         $this->assertArrayHasKey('time_remaining', $json);
         $this->assertIsInt($json['time_remaining']);
-    }
-
-    /**
-     * @test
-     */
-    public function testThrowsExceptionMissingConfigValue()
-    {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-        $containerProphecy->get('config')
-            ->willReturn([]);
-
-        $sessionProphecy = $this->prophesize(SessionInterface::class);
-        $sessionProphecy->get(EncryptedCookiePersistence::SESSION_TIME_KEY)
-            ->willReturn(time());
-
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-        $requestProphecy
-            ->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE)
-            ->shouldBeCalled()
-            ->willReturn($sessionProphecy->reveal());
-
-        $handler = new SessionCheckHandler($containerProphecy->reveal());
-        $this->expectException(\RuntimeException::class);
-
-        $response = $handler->handle($requestProphecy->reveal());
     }
 }

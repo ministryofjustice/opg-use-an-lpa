@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Common;
 
-use Common\View\Twig\GenericGlobalVariableExtension;
-
 /**
  * The configuration provider for the Common module
  *
@@ -86,6 +84,7 @@ class ConfigProvider
 
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
+                Handler\SessionCheckHandler::class => Handler\Factory\SessionCheckHandlerFactory::class,
 
                 \Symfony\Component\Translation\Translator::class => I18n\SymfonyTranslatorFactory::class,
                 \Symfony\Bridge\Twig\Extension\TranslationExtension::class =>

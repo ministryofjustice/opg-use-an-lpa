@@ -17,27 +17,22 @@ class SessionCheckHandler implements RequestHandlerInterface
 {
     use SessionTrait;
 
-    private ContainerInterface $container;
+    private int $sessionTime;
 
     /**
      * SessionCheckHandler constructor.
-     * @param ContainerInterface $container
+     * @param int $sessionTime
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(int $sessionTime)
     {
-        $this->container = $container;
+        $this->sessionTime = $sessionTime;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $session = $this->getSession($request, 'session');
-        $config = $this->container->get('config');
 
-        if (!isset($config['session']['expires'])) {
-            throw new RuntimeException('Missing session expiry value');
-        }
-
-        $expiresAt = $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY) + $config['session']['expires'];
+        $expiresAt = $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY) + $this->sessionTime;
         $timeRemaining = $expiresAt - time();
 
         // Do we have 5min remaining
