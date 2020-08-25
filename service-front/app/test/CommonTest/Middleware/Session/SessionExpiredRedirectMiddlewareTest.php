@@ -45,36 +45,31 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
             'string' => 'one',
             'bool' => true,
             'DateTime' => new DateTime(),
-            EncryptedCookiePersistence::SESSION_TIME_KEY => time() + 300, // session expired 5 minutes ago
-            EncryptedCookiePersistence::SESSION_EXPIRED_KEY => true
+            EncryptedCookiePersistence::SESSION_TIME_KEY => time() - 300, // session expired 5 minutes ago
+            EncryptedCookiePersistence::SESSION_EXPIRED_KEY => false
         ];
 
         $sessionProphecy = $this->prophesize(Session::class);
-        $sessionProphecy
-            ->get(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
-            ->shouldBeCalled()
-            ->willReturn(null);
-
+        $delegateProphecy = $this->prophesize(RequestHandlerInterface::class);
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
+
         $requestProphecy
             ->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE)
             ->shouldBeCalled()
             ->willReturn($sessionProphecy->reveal());
-
+        
         $sessionProphecy
-            ->get(EncryptedCookiePersistence::SESSION_TIME_KEY)
+            ->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
             ->shouldBeCalled()
-            ->willReturn($sessionData[EncryptedCookiePersistence::SESSION_TIME_KEY]);
+            ->willReturn(false);
 
-        $delegateProphecy = $this->prophesize(RequestHandlerInterface::class);
         $delegateProphecy
             ->handle($requestProphecy->reveal())
             ->shouldBeCalled()
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
         $request = new SessionExpiredRedirectMiddleware(
-            $this->prophesize(UrlHelper::class)->reveal()
-        );
+            $this->prophesize(UrlHelper::class)->reveal());
 
         $result = $request->process($requestProphecy->reveal(), $delegateProphecy->reveal());
         $this->assertInstanceOf(ResponseInterface::class, $result);
