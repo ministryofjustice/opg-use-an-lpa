@@ -94,3 +94,24 @@ msgstr ""
 
 msgid "Please <a href='%link%' class="govuk-link">sign in</a>"
 msgstr ""
+
+msgid "We could not activate that account"
+msgstr ""
+
+msgid "Sorry, we had a problem activating your account. This could be because:"
+msgstr ""
+
+msgid "You already have an active account"
+msgstr ""
+
+msgid "You created the account more than 24 hours ago"
+msgstr ""
+
+msgid "You need to activate your account within 24 hours of creating it. If you do not activate it within that time, we'll automatically delete it."
+msgstr ""
+
+msgid ""
+msgstr ""
+
+msgid ""
+msgstr ""
