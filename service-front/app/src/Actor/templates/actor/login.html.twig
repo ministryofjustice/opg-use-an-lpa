@@ -26,7 +26,7 @@
                             </h1>
                         </legend>
 
-                        <p class="govuk-body">{% trans with {'%link%': path('create-account')} %}If you made an <abbr title="lasting power of attorney"> LPA </abbr> online, you'll still need to <a href='%link%' class="govuk-link">create an account</a> to use this service.{% endtrans %}</p>
+                        <p class="govuk-body">{% trans with {'%link%': path('create-account')} %}If you made an <abbr title="lasting power of attorney"> LPA </abbr> online, you'll still need to <a href=%link% class="govuk-link">create an account</a> to use this service.{% endtrans %}</p>
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
