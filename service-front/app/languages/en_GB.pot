@@ -85,3 +85,12 @@ msgstr ""
 
 msgid "Error:"
 msgstr ""
+
+msgid "Account activated"
+msgstr ""
+
+msgid "Thank you. We've now activated your account."
+msgstr ""
+
+msgid "Please <a href='%link%' class="govuk-link">sign in</a>"
+msgstr ""
