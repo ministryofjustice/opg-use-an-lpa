@@ -18,11 +18,11 @@
                         <tbody class="govuk-table__body">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="row">{% trans %}Type of LPA{% endtrans %}</th>
-                            <td class="govuk-table__cell">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance'| trans | raw : 'Health and welfare'| trans | raw }}</td>
+                            <td class="govuk-table__cell">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance': 'Health and welfare' }}</td>
                         </tr>
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="row">{% trans %}Donor name{% endtrans %}</th>
-                            <td class="govuk-table__cell">{{ lpa.donor.firstname | trans | raw}} {{ lpa.donor.surname | trans | raw }}</td>
+                            <td class="govuk-table__cell">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}</td>
                         </tr>
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="row">{% trans %}Code expires{% endtrans %}</th>
