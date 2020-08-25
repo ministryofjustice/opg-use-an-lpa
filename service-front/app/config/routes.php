@@ -151,6 +151,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\InstructionsPreferencesHandler::class
     ], 'lpa.instructions-preferences');
+    $app->get('/lpa/death-notification', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\DeathNotificationHandler::class
+    ], 'lpa.death-notification');
 };
 
 switch (getenv('CONTEXT')) {
