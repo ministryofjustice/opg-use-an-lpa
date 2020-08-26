@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Is this the LPA you want to add? - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Is this the LPA you want to add?{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     {{
@@ -23,7 +23,7 @@
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
-            <h1 class="govuk-heading-xl">Is this the LPA you want to add?</h1>
+            <h1 class="govuk-heading-xl">{% trans %}Is this the LPA you want to add?{% endtrans %}</h1>
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
@@ -31,15 +31,19 @@
                     <dl class="govuk-summary-list govuk-summary-list">
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
-                                Type of LPA
+                                {% trans %}Type of LPA{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ lpa.caseSubtype == 'pfa' ? 'Property and finance' : 'Health and welfare' }}
+                                {% if lpa.caseSubtype|lower == "pfa" %}
+                                    {% trans %}Property and finance{% endtrans %}
+                                {% else %}
+                                    {% trans %}Health and welfare{% endtrans %}
+                                {% endif %}
                             </dd>
                         </div>
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
-                                Donor name
+                                {% trans %}Donor name{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
                                 {{ actor_name(lpa.donor) }}
@@ -47,7 +51,7 @@
                         </div>
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
-                                Your name
+                                {% trans %}Your name{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
                                 {{ actor_name(user) }}
@@ -55,7 +59,7 @@
                         </div>
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
-                                Your role on this LPA
+                                {% trans %}Your role on this LPA{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
                                 {{ userRole }}
@@ -66,23 +70,23 @@
                     <div class="govuk-warning-text">
                         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                         <strong class="govuk-warning-text__text">
-                            <span class="govuk-warning-text__assistive">Warning</span>
-                            Check that these details are correct before continuing
+                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                            {% trans %}Check that these details are correct before continuing{% endtrans %}
                         </strong>
                     </div>
 
                     <details class="govuk-details" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
-                                What to do if the details are wrong
+                                {% trans %}What to do if the details are wrong{% endtrans %}
                             </span>
                         </summary>
                         <div class="govuk-details__text">
                             <p>
-                                If the information is wrong, or if a name is misspelt, please call us: <br>
+                                {% trans %}If the information is wrong, or if a name is misspelt, please call us: <br>
                                 Telephone: 0300 456 0300<br>
                                 Textphone: 0115 934 2778<br>
-                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm.
+                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm.{% endtrans %}
                             </p>
                         </div>
                     </details>
@@ -91,10 +95,10 @@
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button">Continue</button>
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
 
                     <a href="{{ path('lpa.add') }}" role="button" class="govuk-button govuk-button--secondary">
-                        Cancel
+                        {% trans %}Cancel{% endtrans %}
                     </a>
 
                     {{ govuk_form_close() }}

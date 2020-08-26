@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Add a lasting power of attorney - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Add a lasting power of attorney{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     {{
@@ -56,9 +56,9 @@
 
                 {{ govuk_error_summary(form) }}
 
-                <h1 class="govuk-heading-xl">Add a lasting power of attorney</h1>
+                <h1 class="govuk-heading-xl">{% trans %}Add a lasting power of attorney{% endtrans %}</h1>
 
-                <p class="govuk-body-l">You'll need the details from the letter we sent you when the <abbr title="lasting power of attorney">LPA</abbr> was registered.</p>
+                <p class="govuk-body-l">{% trans %}You'll need the details from the letter we sent you when the <abbr title="lasting power of attorney">LPA</abbr> was registered.{% endtrans %}</p>
 
                 {{ govuk_form_open(form) }}
 
@@ -70,48 +70,48 @@
                     <details class="govuk-details" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
-                                Where to find the reference number
+                                {% trans %}Where to find the reference number{% endtrans %}
                             </span>
                         </summary>
                         <div class="govuk-details__text">
                             <ul class="govuk-list govuk-list--bullet">
-                                <li>The reference number is printed on the letter that told you the <abbr title="lasting power of attorney">LPA</abbr> had been registered.</li>
-                                <li>You can also find the reference number on the <abbr title="lasting power of attorney">LPA</abbr> or any related letters from the Office of the Public Guardian.</li>
-                                <li>It may be marked 'OPG reference number' or 'Our ref' or 'Case number'.</li>
+                                <li>{% trans %}The reference number is printed on the letter that told you the <abbr title="lasting power of attorney">LPA</abbr> had been registered.{% endtrans %}</li>
+                                <li>{% trans %}You can also find the reference number on the <abbr title="lasting power of attorney">LPA</abbr> or any related letters from the Office of the Public Guardian.{% endtrans %}</li>
+                                <li>{% trans %}It may be marked 'OPG reference number' or 'Our ref' or 'Case number'.{% endtrans %}</li>
                             </ul>
 
                         </div>
                     </details>
 
-                    <h2 class="govuk-heading-m">Your details</h2>
+                    <h2 class="govuk-heading-m">{% trans %}Your details{% endtrans %}</h2>
 
-                    <p class="govuk-body">The donor and each of the attorneys will have their own activation key. The activation key and date of birth must be for the same person.</p>
+                    <p class="govuk-body">{% trans %}The donor and each of the attorneys will have their own activation key. The activation key and date of birth must be for the same person.{% endtrans %}</p>
 
                     {{ govuk_form_element(form.get('passcode'), { 'label': 'Activation key', 'hint': 'Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56', 'input_prefix': 'C - ', 'attr' : {'class': 'govuk-input--width-10'} }) }}
 
                     <details class="govuk-details" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
-                                Where to find your activation key
+                                {% trans %}Where to find your activation key{% endtrans %}
                             </span>
                         </summary>
                         <div class="govuk-details__text">
-                            <p>Your activation key is printed on the letter that told you the <abbr title="lasting power of attorney">LPA</abbr> had been registered. The donor and each attorney will have their own unique activation key.</p>
-                            <p>
+                            <p>{% trans %}Your activation key is printed on the letter that told you the <abbr title="lasting power of attorney">LPA</abbr> had been registered. The donor and each attorney will have their own unique activation key.{% endtrans %}</p>
+                            <p>{% trans %}
                                 If you cannot find it, please call us:<br>
                                 Telephone: 0300 456 0300<br>
                                 Textphone: 0115 934 2778<br>
                                 Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm.
-                            </p>
+                                {% endtrans %}</p>
                         </div>
                     </details>
 
 
                     {{ govuk_form_fieldset(form.get('dob'), { 'label': 'What is your date of birth?', 'hint': 'For example, 31 03 1980', 'attr': {'class': 'xyz'} }) }}
 
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">Continue</button>
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
 
-                    <a href="{{ path('lpa.dashboard') }}" draggable="false" class="govuk-button govuk-button--secondary">Cancel</a>
+                    <a href="{{ path('lpa.dashboard') }}" draggable="false" class="govuk-button govuk-button--secondary">{% trans %}Cancel{% endtrans %}</a>
 
                 {{ govuk_form_close() }}
 

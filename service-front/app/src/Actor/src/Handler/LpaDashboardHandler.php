@@ -8,6 +8,8 @@ use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
+use Mezzio\Flash\FlashMessageMiddleware;
+use Mezzio\Flash\FlashMessagesInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\RedirectResponse;
@@ -86,10 +88,14 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
         }
         $lpas = $this->lpaService->sortLpasByDonorSurname($lpas);
 
+        /** @var FlashMessagesInterface $flash */
+        $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
             'user' => $user,
             'lpas' => $lpas,
             'active_access_codes_count' => $totalCodes,
+            'flash'=> $flash
         ]));
     }
 }
