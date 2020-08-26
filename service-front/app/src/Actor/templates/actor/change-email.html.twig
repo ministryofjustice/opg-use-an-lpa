@@ -3,6 +3,26 @@
 {% block html_title %}Change your email address - {{ parent() }} {% endblock %}
 
 {% block content %}
+    {{
+    translate_validation_messages(form,
+        {
+            '__csrf' :
+            {
+                'notSame'              : 'As you have not used this service for over 20 minutes, the page has timed out. We\'ve now refreshed the page - please try to sign in again' | trans,
+            },
+            'new_email_address' :
+            {
+                'isEmpty'              : 'Enter your new email address' | trans,
+                'invalidEmailAddress'  : 'Enter an email address in the correct format, like name@example.com' | trans,
+                'NewEmailNotDifferent' : 'he new email address you entered is the same as your current email address. They must be different.' | trans
+            },
+            'current_password' :
+            {
+                'isEmpty'              : 'Enter your password' | trans,
+                'invalidPassword'      : 'The password you entered is incorrect' | trans
+            }
+        })
+    }}
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
 

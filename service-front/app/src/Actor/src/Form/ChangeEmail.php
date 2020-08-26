@@ -74,11 +74,6 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name'                   => EmailAddressValidator::class,
                         'break_chain_on_failure' => true,
-                        'options'                => [
-                            'messages' => [
-                                EmailAddressValidator::INVALID => 'Enter an email address in the correct format, like name@example.com',
-                            ],
-                        ],
                     ]
                 ],
             ],
