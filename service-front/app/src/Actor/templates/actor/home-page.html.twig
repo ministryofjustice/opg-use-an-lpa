@@ -5,6 +5,19 @@
 {% block service_name %}Use a lasting power of attorney{% endblock %}
 
 {% block content %}
+    {{
+    translate_validation_messages(form,
+        {
+            '__csrf' :
+            {
+                'notSame'              : 'As you have not used this service for over 20 minutes, the page has timed out. We\'ve now refreshed the page - please try to sign in again' | trans,
+            },
+            'triageEntry' :
+            {
+                'isEmpty'              : 'Select yes if you have a Use a lasting power of attorney account' | trans
+            }
+        })
+    }}
 <div class="govuk-width-container">
     {{ include('@actor/partials/new-use-service.html.twig') }}
 
