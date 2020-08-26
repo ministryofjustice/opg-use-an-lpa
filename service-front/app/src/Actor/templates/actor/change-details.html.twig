@@ -10,7 +10,7 @@
         {{ include('@partials/account-bar.html.twig') }}
 
         {% if actorToken != 'null' %}
-        <a href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}" class="govuk-back-link">Back</a>
+        <a href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
         {% else %}
         <a href="{{ path('your-details') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
         {% endif %}
