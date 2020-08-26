@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}We could not find an LPA - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}We could not find an LPA{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -13,38 +13,38 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">We could not find a lasting power of attorney</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}We could not find a lasting power of attorney{% endtrans %}</h1>
 
-                    <p class="govuk-body">We could not find a lasting power of attorney with the information you entered.</p>
+                    <p class="govuk-body">{% trans %}We could not find a lasting power of attorney with the information you entered.{% endtrans %}</p>
 
-                    <h2 class="govuk-heading-l">Check your answers</h2>
+                    <h2 class="govuk-heading-l">{% trans %}Check your answers{% endtrans %}</h2>
                     <div class="govuk-details">
-                        <p class="govuk-body"><abbr title="lasting power of attorney">LPA</abbr> reference number: <strong>{{ referenceNumber }}</strong></p>
-                        <p class="govuk-body">Check this is the right reference number for the LPA you want to add. If you’re named on more than one LPA, you may have entered the reference number for a different LPA.</p>
-                        <p class="govuk-body">Activation key: <strong>{{ passcode }}</strong></p>
-                        <p class="govuk-body">Make sure this is the activation key we sent to you. The donor and each of their attorneys have their own activation key. If you’re using someone else’s activation key, we will not find the LPA.</p>
-                        <p class="govuk-body">Date of birth: <strong>{{ dob }}</strong></p>
-                        <p class="govuk-body">The date of birth must be for the person the activation key was sent to. For example, if you’re an attorney, you must enter the activation key we sent to you and use your date of birth.</p>
+                        <p class="govuk-body">{% trans %}<abbr title="lasting power of attorney">LPA</abbr> reference number:{% endtrans %} <strong>{{ referenceNumber }}</strong></p>
+                        <p class="govuk-body">{% trans %}Check this is the right reference number for the LPA you want to add. If you’re named on more than one LPA, you may have entered the reference number for a different LPA.{% endtrans %}</p>
+                        <p class="govuk-body">{% trans %}Activation key:{% endtrans %} <strong>{{ passcode }}</strong></p>
+                        <p class="govuk-body">{% trans %}Make sure this is the activation key we sent to you. The donor and each of their attorneys have their own activation key. If you’re using someone else’s activation key, we will not find the LPA.{% endtrans %}</p>
+                        <p class="govuk-body">{% trans %}Date of birth:{% endtrans %} <strong>{{ dob }}</strong></p>
+                        <p class="govuk-body">{% trans %}The date of birth must be for the person the activation key was sent to. For example, if you’re an attorney, you must enter the activation key we sent to you and use your date of birth.{% endtrans %}</p>
                     </div>
 
                     <details class="govuk-details" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
-                                What to do if you’re sure you entered the right information
+                                {% trans %}What to do if you’re sure you entered the right information{% endtrans %}
                             </span>
                         </summary>
                         <div class="govuk-details__text">
-                            <p>
+                            <p>{% trans %}
                                 If you're sure you entered the right information, please call us:<br>
                                 Telephone: 0300 456 0300<br>
                                 Textphone: 0115 934 2778<br>
                                 Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm.
-                            </p>
+                                {% endtrans %}</p>
                         </div>
                     </details>
 
                     <a href="{{ path('lpa.add') }}" role="button" draggable="false" class="govuk-button">
-                        Try again
+                        {% trans %}Try again{% endtrans %}
                     </a>
 
                 </div>
