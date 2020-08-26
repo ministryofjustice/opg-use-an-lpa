@@ -10,10 +10,11 @@
         {{ include('@partials/account-bar.html.twig') }}
 
         {% if actorToken != 'null' %}
-        <a href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
+            {% set backLink = path('lpa.view', {}, {'lpa': actorToken}) %}
         {% else %}
-        <a href="{{ path('your-details') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
+            {% set backLink = path('your-details') %}
         {% endif %}
+        <a href="{{ backLink }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -83,9 +84,9 @@
 
                     <p class="govuk-body">
                         {% if actorToken != 'null' %}
-                            {% trans with {'%death-notification-link%': path('lpa.death-notification', {}, {'lpa': actorToken})} %}Find out more about what to do if <a class="govuk-link" href="%death-notification-link%"> the donor or an attorney dies</a>{% endtrans %}
+                            {% trans with {'%link%': path('lpa.death-notification', {}, {'lpa': actorToken})} %}Find out more about what to do if <a class="govuk-link" href="%link%"> the donor or an attorney dies</a>{% endtrans %}
                         {% else %}
-                            {% trans with {'%death-notification-link%': path('lpa.death-notification')} %}Find out more about what to do if <a class="govuk-link" href="%death-notification-link%"> the donor or an attorney dies</a>{% endtrans %}
+                            {% trans with {'%link%': path('lpa.death-notification')} %}Find out more about what to do if <a class="govuk-link" href="%link%"> the donor or an attorney dies</a>{% endtrans %}
                         {% endif %}
                     </p>
 

@@ -10,10 +10,11 @@
         {{ include('@partials/account-bar.html.twig') }}
 
         {% if actorToken != 'null' %}
-            <a href="{{ path('lpa.change-details', {}, {'lpa': actorToken}) }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
+            {% set backLink = path('lpa.change-details', {}, {'lpa': actorToken}) %}
         {% else %}
-            <a href="{{ path('lpa.change-details') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
+            {% set backLink = path('lpa.change-details') %}
         {% endif %}
+        <a href="{{ backLink }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -48,7 +49,7 @@
 
                     <ul class="govuk-list govuk-list--bullet">
                         <li>{% trans %}there are other attorneys who can act 'jointly and severally' -
-                            but not if they are only allowed to act ‘jointly’{% endtrans %}</li>
+                            but not if they are only allowed to act 'jointly'{% endtrans %}</li>
                         <li>{% trans %}there are replacement attorneys{% endtrans %}</li>
                     </ul>
 
