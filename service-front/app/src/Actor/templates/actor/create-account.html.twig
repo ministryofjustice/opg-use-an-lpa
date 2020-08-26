@@ -3,6 +3,38 @@
 {% block html_title %}Create an account - {{ parent() }} {% endblock %}
 
 {% block content %}
+    {{
+    translate_validation_messages(form,
+        {
+            '__csrf' :
+            {
+                'notSame'              : 'As you have not used this service for over 20 minutes, the page has timed out. We\'ve now refreshed the page - please try to sign in again' | trans,
+            },
+            'email' :
+            {
+                'isEmpty'              : 'Enter an email address in the correct format, like name@example.com' | trans,
+                'invalidEmailAddress'  : 'Enter an email address in the correct format, like name@example.com' | trans,
+            },
+            'password' :
+            {
+                'isEmpty'              : 'Enter your password' | trans,
+                'stringLengthTooShort' : 'Password must be 8 characters or more' | trans,
+                'notSame'              : 'Passwords do not match' | trans,
+                'mustIncludeDigit'     : 'Password must include a number' | trans,
+                'mustIncludeLowerCase' : 'Password must include a lower case letter' | trans,
+                'mustIncludeUpperCase' : 'Password must include a capital letter' | trans,
+            },
+            'password_confirm' :
+            {
+                'isEmpty'              : 'Confirm your password' | trans
+            },
+            'terms' :
+            {
+                'notSame'              : 'You must accept the terms of use to create an account' | trans,
+                'error_message'        : 'You must accept the terms of use to create an account' | trans
+            }
+        })
+    }}
 <div class="govuk-width-container">
     {{ include('@actor/partials/new-use-service.html.twig') }}
 

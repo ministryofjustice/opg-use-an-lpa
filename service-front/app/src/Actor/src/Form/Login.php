@@ -64,7 +64,7 @@ class Login extends AbstractForm implements InputFilterProviderInterface
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'messages'           => [
-                                NotEmpty::IS_EMPTY => 'Enter your email address',
+                                NotEmpty::IS_EMPTY => 'Enter an email address in the correct format, like name@example.com',
                             ],
                         ],
                     ],
