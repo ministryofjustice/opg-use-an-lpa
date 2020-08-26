@@ -3,6 +3,19 @@
 {% block html_title %}Which organisation do you want to give access to - {{ parent() }} {% endblock %}
 
 {% block content %}
+    {{
+    translate_validation_messages(form,
+        {
+            '__csrf' :
+            {
+                'notSame' : 'As you have not used this service for over 20 minutes, the page has timed out. We\'ve now refreshed the page - please try to sign in again' | trans
+            },
+            'org_name' :
+            {
+                'isEmpty' : 'Enter an organisation name' | trans
+            }
+        })
+    }}
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
 

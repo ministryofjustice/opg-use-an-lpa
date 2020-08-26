@@ -14,6 +14,27 @@
 {% set referer = form.get('referer') %}
 
 {% block content %}
+    {% if routeName == "actor-cookies" %}
+        {{
+        translate_validation_messages(form,
+            {
+                '__csrf' :
+                {
+                    'notSame' : 'As you have not used this service for over 20 minutes, the page has timed out. We\'ve now refreshed the page - please try to sign in again' | trans
+                }
+            })
+        }}
+    {% elseif routeName == "viewer-cookies" %}
+        {{
+        translate_validation_messages(form,
+            {
+                '__csrf' :
+                {
+                    'notSame' : 'Do you want to continue? You have not used this service for 30 minutes. Click continue to use any details you entered' | trans
+                }
+            })
+        }}
+    {% endif %}
     <div class="govuk-width-container">
 
         <a class="govuk-link govuk-back-link" href="{{ form.get('referer').getValue() }}">Back</a>
