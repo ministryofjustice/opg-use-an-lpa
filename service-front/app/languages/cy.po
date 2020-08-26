@@ -128,3 +128,171 @@ msgid ""
 msgstr ""
 "Cytunaf i'r <a href=\"/cy/terms-of-use\" class=\"govuk-link\">telerau "
 "defnyddio</a>"
+
+msgid "Error:"
+msgstr "Gwall:"
+
+msgid "Account activated"
+msgstr "Cyfrif wedi’i actifadu"
+
+msgid "Thank you. We've now activated your account."
+msgstr "Diolch. Rydym bellach wedi actifadu eich cyfrif."
+
+msgid "Please <a href='%link%' class=\"govuk-link\">sign in</a>"
+msgstr "Cofrestrwch <a href=‘%link%’ class=“govuk-link”> i mewn </a>"
+
+msgid "We could not activate that account"
+msgstr "Ni allem actifadu’r cyfrif hwnnw"
+
+msgid "Sorry, we had a problem activating your account. This could be because:"
+msgstr ""
+"Mae’n ddrwg gennym, cawsom broblem wrth actifadu eich cyfrif. Gallai hyn fod "
+"oherwydd:"
+
+msgid "You already have an active account"
+msgstr "Mae gennych gyfrif gweithredol eisoes"
+
+msgid "You created the account more than 24 hours ago"
+msgstr "Fe wnaethoch chi greu’r cyfrif fwy na 24 awr yn ôl"
+
+msgid ""
+"You need to activate your account within 24 hours of creating it. If you do "
+"not activate it within that time, we'll automatically delete it."
+msgstr ""
+"Mae angen i chi actifadu eich cyfrif cyn pen 24 awr ar ôl ei greu. Os na "
+"fyddwch yn ei actifadu o fewn yr amser hwnnw, byddwn yn ei ddileu yn "
+"awtomatig."
+
+#~ msgid "Use a lasting power of attorney"
+#~ msgstr "Defnyddiwch bŵer atwrnai parhaol"
+
+#~ msgid "Sign in to your Use a lasting power of attorney account"
+#~ msgstr "Mewngofnodi i’ch cyfrif Defnyddiwch atwrneiaeth barhaol"
+
+#~ msgid ""
+#~ "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> "
+#~ "online, you'll still need to <a href=%link% class=\"govuk-link\">create "
+#~ "an account</a> to use this service."
+#~ msgstr ""
+#~ "Os gwnaethoch chi <abbr title = “pŵer atwrnai parhaol”> LPA </abbr> ar-"
+#~ "lein, bydd angen i chi <a href=%link% class=“govuk-link”> greu cyfrif </"
+#~ "a> defnyddio’r gwasanaeth hwn."
+
+#~ msgid "Sign in"
+#~ msgstr "Mewngofnodi"
+
+#~ msgid "Forgotten your password?"
+#~ msgstr "Wedi anghofio’ch cyfrinair?"
+
+#~ msgid "Create an account"
+#~ msgstr "Creu cyfrif"
+
+#~ msgid "Warning"
+#~ msgstr "Rhybudd"
+
+#~ msgid "Enter your email address"
+#~ msgstr "Rhowch eich cyfeiriad e-bost"
+
+#~ msgid ""
+#~ "Your password needs to have: <ul class=\"govuk-list--bullet\"><li>at "
+#~ "least 8 characters</li><li>at least one lower-case and one capital "
+#~ "letter</li><li>at least one number</li></ul>"
+#~ msgstr ""
+#~ "Mae angen i’ch cyfrinair fod â: <ul class = “govuk-list - bullet”> <li> o "
+#~ "leiaf 8 nod </li> <li> o leiaf un llythrennau bach ac un priflythyren </"
+#~ "li> <li> o leiaf un rhif </li> </ul>"
+
+#~ msgid "Create a password"
+#~ msgstr "Creu cyfrinair"
+
+#~ msgid "Confirm your password"
+#~ msgstr "Cadarnhewch eich cyfrinair"
+
+#~ msgid "Never share your password with anyone."
+#~ msgstr "Peidiwch byth â rhannu eich cyfrinair ag unrhyw un."
+
+#~ msgid "Create account"
+#~ msgstr "Creu cyfrif"
+
+#~ msgid "Account already exists"
+#~ msgstr "Cyfrif yn bodoli eisoes"
+
+#~ msgid "Activate your account"
+#~ msgstr "Gweithredwch eich cyfrif"
+
+#~ msgid ""
+#~ "We've emailed a link to %email%. Click on the link to activate your "
+#~ "account. The link will work for the next 24 hours."
+#~ msgstr ""
+#~ "Rydym wedi e-bostio dolen i% e-bost%. Cliciwch ar y ddolen i actifadu "
+#~ "eich cyfrif. Bydd y ddolen yn gweithio am y 24 awr nesaf."
+
+#~ msgid ""
+#~ "The email should arrive in a few minutes. If it's not in your inbox, "
+#~ "check your spam or junk folder. If you have not received the email, we "
+#~ "can <a href=%link% class=\"govuk-link\">resend the activation email</a>."
+#~ msgstr ""
+#~ "Dylai’r e-bost gyrraedd mewn ychydig funudau. Os nad yw yn eich blwch "
+#~ "derbyn, gwiriwch eich ffolder sbam neu sothach. Os nad ydych wedi derbyn "
+#~ "yr e-bost, gallwn <a href=%link% class=“govuk-link”> ail-anfon yr e-bost "
+#~ "actifadu </a>."
+
+#~ msgid ""
+#~ "If you still do not receive the email, please contact us on %number%."
+#~ msgstr "Os na dderbyniwch yr e-bost o hyd, cysylltwch â ni ar% rhif%."
+
+#~ msgid ""
+#~ "If you've already activated your account, you can <a href=%link% class="
+#~ "\"govuk-link\">sign in</a> now."
+#~ msgstr ""
+#~ "Os ydych chi eisoes wedi actifadu’ch cyfrif, gallwch <a href=%link% "
+#~ "class=“govuk-link”> arwyddo i mewn </a> nawr."
+
+#~ msgid "'Your password needs to have:"
+#~ msgstr "‘Mae angen i’ch cyfrinair fod â:"
+
+#~ msgid "at least 8 characters"
+#~ msgstr "o leiaf 8 nod"
+
+#~ msgid "at least one lower-case and one capital letter"
+#~ msgstr "o leiaf un llythyren fach ac un priflythyren"
+
+#~ msgid "at least one number"
+#~ msgstr "o leiaf un rhif"
+
+#~ msgid "If you made an"
+#~ msgstr "Os gwnaethoch chi"
+
+#~ msgid "LPA </abbr> online, you'll still need to"
+#~ msgstr "ACLL </abbr> ar-lein, bydd angen i chi wneud hynny o hyd"
+
+#~ msgid "create an account</a> to use this service."
+#~ msgstr "creu cyfrif </a> i ddefnyddio’r gwasanaeth hwn."
+
+#~ msgid "sign in</a> now."
+#~ msgstr "mewngofnodi </a> nawr."
+
+#~ msgid "We've emailed a link to"
+#~ msgstr "Rydyn ni wedi e-bostio dolen i"
+
+#~ msgid "resend the activation email"
+#~ msgstr "ail-anfonwch yr e-bost actifadu"
+
+#~ msgid "If you already have an account, please"
+#~ msgstr "Os oes gennych gyfrif eisoes, os gwelwch yn dda"
+
+#~ msgid "sign in"
+#~ msgstr "mewngofnodi"
+
+#~ msgid "Your password needs to have:"
+#~ msgstr "Mae angen i’ch cyfrinair fod â:"
+
+#~ msgid ""
+#~ "<li>at least 8 characters</li><li>at least one lower-case and one capital "
+#~ "letter</li><li>at least one number</li></ul>'"
+#~ msgstr ""
+#~ "<li> o leiaf 8 nod </li> <li> o leiaf un llythrennau bach ac un "
+#~ "briflythyren </li> <li> o leiaf un rhif </li> </ul>"
+
+#~ msgid " LPA "
+#~ msgstr " ACLL "
