@@ -47,7 +47,7 @@
                                       {% trans %}Never share your password with anyone.{% endtrans %}
                                   </strong>
                                 </div>
-                                
+
                                 {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="%link%" class="govuk-link">terms of use</a>' | trans({ '%link%': path('actor-terms-of-use') }) }) }}
 
                                 <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Create account{% endtrans %}</button>
