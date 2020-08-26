@@ -3506,4 +3506,45 @@ class AccountContext implements Context
     {
         assertFalse($this->elementisOpen('.govuk-details'));
     }
+
+    /**
+     * @Given /^I can see a flash message for the added LPA$/
+     */
+    public function iCanSeeAFlashMessageForTheAddedLPA()
+    {
+        $this->ui->assertPageContainsText("You've added Ian Deputy's health and welfare LPA");
+    }
+      
+    /**
+     * @Given /^I am on the change details page$/
+     */
+    public function iAmOnTheChangeDetailsPage()
+    {
+        $this->ui->visit('/lpa/change-details');
+        $this->ui->assertPageAddress('/lpa/change-details');
+    }
+
+    /**
+     * @When /^I select to find out more if the donor or an attorney dies$/
+     */
+    public function iSelectToFindOutMoreIfTheDonorOrAnAttorneyDies()
+    {
+        $this->ui->clickLink('the donor or an attorney dies');
+    }
+
+    /**
+     * @Then /^I expect to be on the death notification page$/
+     */
+    public function iExpectToBeOnTheDeathNotificationPage()
+    {
+        $this->ui->assertPageAddress('/lpa/death-notification');
+    }
+
+    /**
+     * @Given /^I am on the death notification page$/
+     */
+    public function iAmOnTheDeathNotificationPage()
+    {
+        $this->ui->visit('/lpa/death-notification');
+    }
 }
