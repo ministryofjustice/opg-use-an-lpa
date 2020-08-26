@@ -1,16 +1,243 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-08-26T18:30:32+00:00\n"
+"POT-Creation-Date: 2020-08-26T18:45:07+00:00\n"
 "X-Domain: messages\n"
 
-#: src/Common/templates/partials/new-service.html.twig:7
-msgid "This is a new service – your <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">feedback</a> will help us to improve it."
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:17
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:14
+msgid "Your lasting powers of attorney"
 msgstr ""
 
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:23
+msgid "Any lasting power of attorney (LPA) you add to your account will appear on this page."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:27
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:24
+msgid "What can I do with my <abbr title=\"lasting powers of attorney\">LPAs</abbr>?"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:31
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:28
+msgid "From this page you can:"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:33
+msgid "give organisations access to an online summary of this <abbr title=\"lasting power of attorney\">LPA</abbr> by making a secure access code"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:34
+msgid "keep track of which organisations have been given online access to the <abbr title=\"lasting power of attorney\">LPA</abbr>"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:35
+msgid "view the <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:41
+msgid "Add another LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:3
+msgid "We could not find an LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:16
+msgid "We could not find a lasting power of attorney"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:18
+msgid "We could not find a lasting power of attorney with the information you entered."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:20
+msgid "Check your answers"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:22
+msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number:"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:23
+msgid "Check this is the right reference number for the LPA you want to add. If you’re named on more than one LPA, you may have entered the reference number for a different LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:24
+msgid "Activation key:"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:25
+msgid "Make sure this is the activation key we sent to you. The donor and each of their attorneys have their own activation key. If you’re using someone else’s activation key, we will not find the LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:26
+msgid "Date of birth:"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:27
+msgid "The date of birth must be for the person the activation key was sent to. For example, if you’re an attorney, you must enter the activation key we sent to you and use your date of birth."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:33
+msgid "What to do if you’re sure you entered the right information"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:38
+msgid ""
+"If you're sure you entered the right information, please call us:<br>\n"
+"                                Telephone: 0300 456 0300<br>\n"
+"                                Textphone: 0115 934 2778<br>\n"
+"                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:47
+msgid "Try again"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:13
+msgid "Is this the LPA you want to add?"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:21
+msgid "Type of LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:25
+#: src/Viewer/templates/viewer/check-code-found.html.twig:22
+msgid "Property and finance"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:27
+#: src/Viewer/templates/viewer/check-code-found.html.twig:22
+msgid "Health and welfare"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:33
+msgid "Donor name"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:41
+msgid "Your name"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:49
+msgid "Your role on this LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:60
+msgid "Warning"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:61
+msgid "Check that these details are correct before continuing"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:68
+msgid "What to do if the details are wrong"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:73
+msgid ""
+"If the information is wrong, or if a name is misspelt, please call us: <br>\n"
+"                                Telephone: 0300 456 0300<br>\n"
+"                                Textphone: 0115 934 2778<br>\n"
+"                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm."
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:85
+#: src/Actor/templates/actor/lpa-add.html.twig:74
 #: src/Common/templates/partials/govuk_form.html.twig:42
 #: src/Viewer/templates/viewer/enter-code.html.twig:56
 msgid "Continue"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:88
+#: src/Actor/templates/actor/lpa-add.html.twig:76
+msgid "Cancel"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/new-use-service.html.twig:4
+msgid "beta"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/new-use-service.html.twig:7
+msgid ""
+"This is a new service – your\n"
+"            <a class=\"govuk-link\" href=\"https://www.surveymonkey.co.uk/r/Use-LPA\" target=\"_blank\">feedback</a> will help us to improve it."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:20
+msgid "Any lasting power of attorney (LPA) you add to your account will show on this page."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:30
+msgid "give organisations access to an online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr> by making a secure access code"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:31
+msgid "keep track of the organisations that have online access to an <abbr title=\"lasting power of attorney\">LPA</abbr>"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:32
+msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:38
+msgid "Add your first LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-add.html.twig:21
+msgid "Add a lasting power of attorney"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-add.html.twig:23
+msgid "You'll need the details from the letter we sent you when the <abbr title=\"lasting power of attorney\">LPA</abbr> was registered."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-add.html.twig:35
+msgid "Where to find the reference number"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-add.html.twig:40
+msgid "The reference number is printed on the letter that told you the <abbr title=\"lasting power of attorney\">LPA</abbr> had been registered."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-add.html.twig:41
+msgid "You can also find the reference number on the <abbr title=\"lasting power of attorney\">LPA</abbr> or any related letters from the Office of the Public Guardian."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-add.html.twig:42
+msgid "It may be marked 'OPG reference number' or 'Our ref' or 'Case number'."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-add.html.twig:48
+#: src/Common/templates/partials/account-bar.html.twig:4
+msgid "Your details"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-add.html.twig:50
+msgid "The donor and each of the attorneys will have their own activation key. The activation key and date of birth must be for the same person."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-add.html.twig:57
+msgid "Where to find your activation key"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-add.html.twig:61
+msgid "Your activation key is printed on the letter that told you the <abbr title=\"lasting power of attorney\">LPA</abbr> had been registered. The donor and each attorney will have their own unique activation key."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-add.html.twig:62
+msgid ""
+"If you cannot find it, please call us:<br>\n"
+"                                Telephone: 0300 456 0300<br>\n"
+"                                Textphone: 0115 934 2778<br>\n"
+"                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm."
+msgstr ""
+
+#: src/Common/templates/partials/new-service.html.twig:7
+msgid "This is a new service – your <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">feedback</a> will help us to improve it."
 msgstr ""
 
 #: src/Common/templates/partials/govuk_error.html.twig:6
@@ -39,6 +266,10 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
+#: src/Common/templates/partials/cookies.html.twig:24
+msgid "Cookies are files saved on your phone, tablet or computer when you visit a website."
+msgstr ""
+
 #: src/Common/templates/partials/cookies.html.twig:28
 msgid "We use cookies to store information about how you use the Use a lasting power of attorney service, such as the pages you visit."
 msgstr ""
@@ -51,20 +282,64 @@ msgstr ""
 msgid "Cookie settings"
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:64
+#: src/Common/templates/partials/cookies.html.twig:38
+msgid "We use two types of cookie. One type is strictly necessary and the other type of cookie is optional."
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:40
+msgid "Cookies that measure website use"
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:41
+msgid "OPG and Government Digital Services use Google Analytics to measure how you use the service so we can improve it based on user needs. Google Analytics sets cookies that store anonymised information about:"
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:44
+msgid "what pages you visit and how long you spend on each"
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:45
+msgid "what you click on while you're visiting the site"
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:49
+msgid "We do not allow Google to use or share the data about how you use this site."
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:55
+msgid "Allow use of non-essential Cookies?"
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:61
 msgid "Use cookies that measure my website use"
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:68
+#: src/Common/templates/partials/cookies.html.twig:65
 msgid "Do not use cookies that measure my website use"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:22
-msgid "Property and finance"
+#: src/Common/templates/partials/cookies.html.twig:74
+msgid "Strictly necessary cookies"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:22
-msgid "Health and welfare"
+#: src/Common/templates/partials/cookies.html.twig:75
+msgid "These essential cookies allow you to log in to the service. They always need to be on."
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:77
+msgid "Save changes"
+msgstr ""
+
+#: src/Common/templates/partials/account-bar.html.twig:2
+msgid "Last signed in:"
+msgstr ""
+
+#: src/Common/templates/partials/account-bar.html.twig:5
+msgid "Your LPAs"
+msgstr ""
+
+#: src/Common/templates/partials/account-bar.html.twig:6
+msgid "Sign out"
 msgstr ""
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:3
