@@ -6,14 +6,18 @@
     {{
     translate_validation_messages(form,
         {
+            '__csrf' :
+            {
+                'notSame'       : 'As you have not used this service for over 20 minutes, the page has timed out. We\'ve now refreshed the page - please try to sign in again' | trans,
+            },
             'lpa_code':
             {
-                'isEmpty'      : 'Enter your LPA access code' | trans,
+                'isEmpty'       : 'Enter your LPA access code'                  | trans,
                 'regexNotMatch' : 'Enter LPA access code in the correct format' | trans
             },
             'donor_surname':
             {
-                'isEmpty'     : 'Enter the donor\'s last name' | trans
+                'isEmpty'       : 'Enter the donor\'s last name' | trans
             }
         }
 
