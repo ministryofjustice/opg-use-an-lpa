@@ -5,41 +5,41 @@
 {% block content %}
     {{
     translate_validation_messages(form,
-    {
-        '__csrf' :
         {
-            'notSame'              : 'As you have not used this service for over 20 minutes, the page has timed out. We\'ve now refreshed the page - please try to sign in again' | trans,
-        },
-        'passcode' :
-        {
-            'isEmpty'              : 'Enter your activation key' | trans,
-            'stringLengthTooShort' : 'Enter an activation key in the correct format' | trans,
-            'stringLengthTooLong'  : 'Enter an activation key in the correct format' | trans,
-            'stringLengthInvalid'  : 'Enter an activation key in the correct format' | trans,
-            'regexNotMatch'        : 'Enter an activation key in the correct format' | trans,
-            'regexInvalid'         : 'Enter an activation key in the correct format' | trans,
-            'regexErrorous'        : 'Enter an activation key in the correct format' | trans,
-        },
-        'reference_number' :
-        {
-            'stringLengthTooShort' : 'The LPA reference number you entered is too short' | trans,
-            'stringLengthTooLong'  : 'The LPA reference number you entered is too long'  | trans,
-            'regexNotMatch'        : 'Enter the 12 numbers of the LPA reference number. Do not include letters or other characters' | trans,
-            'regexInvalid'         : 'Enter the 12 numbers of the LPA reference number. Do not include letters or other characters' | trans,
-            'regexErrorous'        : 'Enter the 12 numbers of the LPA reference number. Do not include letters or other characters' | trans,
-        },
-        'dob' :
-        {
-            'dateInvalidFormat' : 'Date of birth value must be provided in an array' | trans,
-            'dateEmpty'         : 'Enter your date of birth' | trans,
-            'dateInvalid'       : 'Date of birth must be a real date' | trans,
-            'dayIncomplete'     : 'Date of birth must include a day'  | trans,
-            'monthIncomplete'   : 'Date of birth must include a month'| trans,
-            'yearIncomplete'    : 'Date of birth must include a year' | trans,
-            'ageNegative'       : 'Date of birth must be in the past' | trans,
-            'ageTooYoung'       : 'Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18' | trans
-        }
-    })
+            '__csrf' :
+            {
+                'notSame'              : 'As you have not used this service for over 20 minutes, the page has timed out. We\'ve now refreshed the page - please try to sign in again' | trans,
+            },
+            'passcode' :
+            {
+                'isEmpty'              : 'Enter your activation key' | trans,
+                'stringLengthTooShort' : 'Enter an activation key in the correct format' | trans,
+                'stringLengthTooLong'  : 'Enter an activation key in the correct format' | trans,
+                'stringLengthInvalid'  : 'Enter an activation key in the correct format' | trans,
+                'regexNotMatch'        : 'Enter an activation key in the correct format' | trans,
+                'regexInvalid'         : 'Enter an activation key in the correct format' | trans,
+                'regexErrorous'        : 'Enter an activation key in the correct format' | trans,
+            },
+            'reference_number' :
+            {
+                'stringLengthTooShort' : 'The LPA reference number you entered is too short' | trans,
+                'stringLengthTooLong'  : 'The LPA reference number you entered is too long'  | trans,
+                'regexNotMatch'        : 'Enter the 12 numbers of the LPA reference number. Do not include letters or other characters' | trans,
+                'regexInvalid'         : 'Enter the 12 numbers of the LPA reference number. Do not include letters or other characters' | trans,
+                'regexErrorous'        : 'Enter the 12 numbers of the LPA reference number. Do not include letters or other characters' | trans,
+            },
+            'dob' :
+            {
+                'dateInvalidFormat' : 'Date of birth value must be provided in an array' | trans,
+                'dateEmpty'         : 'Enter your date of birth' | trans,
+                'dateInvalid'       : 'Date of birth must be a real date' | trans,
+                'dayIncomplete'     : 'Date of birth must include a day'  | trans,
+                'monthIncomplete'   : 'Date of birth must include a month'| trans,
+                'yearIncomplete'    : 'Date of birth must include a year' | trans,
+                'ageNegative'       : 'Date of birth must be in the past' | trans,
+                'ageTooYoung'       : 'Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18' | trans
+            }
+        })
     }}
 <div class="govuk-width-container">
     {{ include('@actor/partials/new-use-service.html.twig') }}
@@ -65,13 +65,7 @@
                     {{ govuk_form_element(form.get('__csrf')) }}
 
 
-                    {{ govuk_form_element(form.get('reference_number'),
-                        {
-                            'label': 'LPA reference number' | trans,
-                            'hint': 'LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000' |trans,
-                            'attr' : {'class': 'govuk-input--width-20'}
-                        })
-                    }}
+                    {{ govuk_form_element(form.get('reference_number'), { 'label': 'LPA reference number', 'hint': 'LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000', 'attr' : {'class': 'govuk-input--width-20'} }) }}
 
                     <details class="govuk-details" data-module="govuk-details">
                         <summary class="govuk-details__summary">
@@ -93,14 +87,7 @@
 
                     <p class="govuk-body">The donor and each of the attorneys will have their own activation key. The activation key and date of birth must be for the same person.</p>
 
-                    {{ govuk_form_element(form.get('passcode'),
-                        {
-                            'label': 'Activation key' | trans,
-                            'hint': 'Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56' | trans,
-                            'input_prefix': 'C - ',
-                            'attr' : {'class': 'govuk-input--width-10'}
-                        })
-                    }}
+                    {{ govuk_form_element(form.get('passcode'), { 'label': 'Activation key', 'hint': 'Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56', 'input_prefix': 'C - ', 'attr' : {'class': 'govuk-input--width-10'} }) }}
 
                     <details class="govuk-details" data-module="govuk-details">
                         <summary class="govuk-details__summary">
@@ -120,13 +107,7 @@
                     </details>
 
 
-                    {{ govuk_form_fieldset(form.get('dob'),
-                        {
-                            'label': 'What is your date of birth?' | trans,
-                            'hint': 'For example, 31 03 1980' | trans,
-                            'attr': {'class': 'xyz'}
-                        })
-                    }}
+                    {{ govuk_form_fieldset(form.get('dob'), { 'label': 'What is your date of birth?', 'hint': 'For example, 31 03 1980', 'attr': {'class': 'xyz'} }) }}
 
                     <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">Continue</button>
 
