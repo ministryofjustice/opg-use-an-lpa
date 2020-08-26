@@ -87,7 +87,8 @@ class ConfigProvider
                     View\Twig\TranslationExtensionFactory::class,
 
                 View\Twig\JavascriptVariablesExtension::class => View\Twig\JavascriptVariablesExtensionFactory::class,
-                View\Twig\GenericGlobalVariableExtension::class => View\Twig\GenericGlobalVariableExtensionFactory::class,
+                View\Twig\GenericGlobalVariableExtension::class =>
+                    View\Twig\GenericGlobalVariableExtensionFactory::class,
             ],
 
             'delegators' => [
@@ -119,12 +120,12 @@ class ConfigProvider
     {
         return [
             'extensions' => [
+                \Acpr\I18n\TranslationExtension::class,
                 View\Twig\LpaExtension::class,
                 View\Twig\OrdinalNumberExtension::class,
                 View\Twig\GovUKLaminasFormErrorsExtension::class,
                 View\Twig\GovUKLaminasFormExtension::class,
                 View\Twig\JavascriptVariablesExtension::class,
-                \Acpr\I18n\TranslationExtension::class,
                 View\Twig\GenericGlobalVariableExtension::class
             ]
         ];
