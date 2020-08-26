@@ -3508,6 +3508,14 @@ class AccountContext implements Context
     }
 
     /**
+     * @Given /^I can see a flash message for the added LPA$/
+     */
+    public function iCanSeeAFlashMessageForTheAddedLPA()
+    {
+        $this->ui->assertPageContainsText("You've added Ian Deputy's health and welfare LPA");
+    }
+      
+    /**
      * @Given /^I am on the change details page$/
      */
     public function iAmOnTheChangeDetailsPage()
