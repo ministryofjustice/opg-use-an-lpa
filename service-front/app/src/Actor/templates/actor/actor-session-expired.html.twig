@@ -1,21 +1,21 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}We’ve signed you out - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}We’ve signed you out{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
+
         {{ include('@actor/partials/new-use-service.html.twig') }}
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-xl">We've signed you out</h1>
-
-                    <p class="govuk-body">For your security, we've signed you out of this service because you did not use it for 20 minutes.</p>
-
-                    <a href="{{ path('login') }}" draggable="false" class="govuk-button">Sign in</a>
+                    <h1 class="govuk-heading-xl">{% trans %}We've signed you out{% endtrans %}</h1>
+                    {% trans with {'%login%': path('login') }%}
+                        <p class="govuk-body">For your security, we've signed you out of this service because you did not use it for 20 minutes.</p>
+                        <a href="%login%" draggable="false" class="govuk-button">Sign in</a>
+                    {% endtrans %}
                 </div>
-
             </div>
         </main>
     </div>
