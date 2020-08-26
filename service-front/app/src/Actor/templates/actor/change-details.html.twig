@@ -83,9 +83,9 @@
 
                     <p class="govuk-body">
                         {% if actorToken != 'null' %}
-                            Find out more about what to do if <a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}"> the donor or an attorney dies</a>
+                            {% trans with {'%death-notification-link%': path('lpa.death-notification', {}, {'lpa': actorToken})} %}Find out more about what to do if <a class="govuk-link" href="%death-notification-link%"> the donor or an attorney dies</a>{% endtrans %}
                         {% else %}
-                            {%trans with {'%death-notification-link%': path('lpa.death-notification')} %}Find out more about what to do if <a class="govuk-link" href="%death-notification-link%"> the donor or an attorney dies</a>{% endtrans %}
+                            {% trans with {'%death-notification-link%': path('lpa.death-notification')} %}Find out more about what to do if <a class="govuk-link" href="%death-notification-link%"> the donor or an attorney dies</a>{% endtrans %}
                         {% endif %}
                     </p>
 

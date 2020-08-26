@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Your details - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Your details{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 
@@ -13,46 +13,46 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-three-quarters">
-                    <h1 class="govuk-heading-xl">Your details</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}Your details{% endtrans %}</h1>
 
                             <dl class="govuk-summary-list">
 
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
-                                        Email address
+                                        {% trans %}Email address{% endtrans %}
                                     </dt>
                                     <dd class="govuk-summary-list__value">
                                         {{ user.getDetail('email') }}
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
                                         <a class="govuk-link" href="{{ path('change-email') }}">
-                                            Change<span class="govuk-visually-hidden"> email address</span>
+                                            {% trans %}Change<span class="govuk-visually-hidden"> email address</span>{% endtrans %}
                                         </a>
                                     </dd>
                                 </div>
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
-                                        Password
+                                        {% trans %}Password{% endtrans %}
                                     </dt>
                                     <dd class="govuk-summary-list__value">
                                         ***********
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
                                         <a class="govuk-link" href="change-password">
-                                            Change<span class="govuk-visually-hidden"> password</span>
+                                            {% trans %}Change<span class="govuk-visually-hidden"> password</span>{% endtrans %}
                                         </a>
                                     </dd>
                                 </div>
                             </dl>
 
                     <div class="govuk-inset-text">
-                        <span>Need to update the online <abbr title="lasting power of attorney">LPA</abbr> summary?</span><br>
+                        <span>{% trans %}Need to update the online <abbr title="lasting power of attorney">LPA</abbr> summary?{% endtrans %}</span><br>
                         <span>
-                             <a class="govuk-link" href="{{ path('lpa.change-details') }}">Change a donor or attorney's details</a>
+                             <a class="govuk-link" href="{{ path('lpa.change-details') }}">{% trans %}Change a donor or attorney's details{% endtrans %}</a>
                         </span>
                     </div>
 
-                    <a href="{{ path('confirm-delete-account') }}" class="govuk-body lpa-account-delete">Delete account</a>
+                    <a href="{{ path('confirm-delete-account') }}" class="govuk-body lpa-account-delete">{% trans %}Delete account{% endtrans %}</a>
 
                 </div>
             </div>
