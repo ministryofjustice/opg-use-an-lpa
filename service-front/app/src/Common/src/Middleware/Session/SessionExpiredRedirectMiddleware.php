@@ -37,8 +37,10 @@ class SessionExpiredRedirectMiddleware implements MiddlewareInterface
 
             $sessionExpiredDatetime = $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY);
 
-            $currentDate = (new DateTime())->format('Y-m-d');
-            $expiredDate = (new DateTime("@$sessionExpiredDatetime"))->format('Y-m-d');
+            // extracting the dates alone to do a date comparison to check if expire date was the previous day
+            // converting the Date string format to int to reaffirm comparison
+            $currentDate = intval((new DateTime())->format('Ymd'));
+            $expiredDate = intval((new DateTime("@$sessionExpiredDatetime"))->format('Ymd'));
 
             $session->unset(EncryptedCookiePersistence::SESSION_EXPIRED_KEY);
             if ($currentDate > $expiredDate) {
