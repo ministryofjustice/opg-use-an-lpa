@@ -6,15 +6,11 @@ RUN composer install --prefer-dist --no-suggest --no-interaction --no-scripts --
 
 FROM php:7-fpm-alpine
 
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+
 RUN set -xe \
-        && apk add --update icu \
-        && apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS icu-dev \
-        && pecl install xdebug apcu redis \
-        && docker-php-ext-install intl \
-        && docker-php-ext-enable apcu redis intl \
-        && pecl clear-cache \
-        && apk del .build-dependencies \
-        && rm -rf /var/cache/apk/*
+        && apk add --update --no-cache icu gettext \
+        && install-php-extensions apcu redis intl gettext xdebug
 
 COPY service-front/app /app
 COPY --from=composer /app/vendor /app/vendor

@@ -60,10 +60,10 @@ msgstr ""
 "arhosol."
 
 msgid ""
-"By continuing you agree to our <a href=\"{link}\" class=\"govuk-link\">terms "
+"By continuing you agree to our <a href=\"%link%\" class=\"govuk-link\">terms "
 "of use</a>."
 msgstr ""
-"Trwy barhau rydych yn cytuno i'n <a href=\"{link}\" class=\"govuk-link"
+"Trwy barhau rydych yn cytuno i'n <a href=\"%link%\" class=\"govuk-link"
 "\">telerau defnyddio</a>."
 
 msgid "Continue"

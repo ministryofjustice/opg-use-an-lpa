@@ -4,38 +4,32 @@ declare(strict_types=1);
 
 namespace Common\Command;
 
+use Acpr\I18n\ExtractorInterface;
+use DateTime;
+use Gettext\Generator\GeneratorInterface;
+use Gettext\Translations;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Translation\Catalogue\MergeOperation;
-use Symfony\Component\Translation\Catalogue\TargetOperation;
-use Symfony\Component\Translation\Extractor\ExtractorInterface;
-use Symfony\Component\Translation\Loader\LoaderInterface;
-use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\Writer\TranslationWriterInterface;
 
 class TranslationUpdateCommand extends Command
 {
     public const DEFAULT_LOCALE = 'en_GB';
 
     private ExtractorInterface $extractor;
-    private LoaderInterface $loader;
+    private GeneratorInterface $writer;
     private array $viewsPaths;
-    private TranslationWriterInterface $writer;
 
     public function __construct(
-        TranslationWriterInterface $writer,
-        LoaderInterface $loader,
         ExtractorInterface $extractor,
+        GeneratorInterface $writer,
         array $viewsPaths = []
     ) {
         parent::__construct();
 
-        $this->writer = $writer;
-        $this->loader = $loader;
         $this->extractor = $extractor;
+        $this->writer = $writer;
         $this->viewsPaths = $viewsPaths;
     }
 
@@ -46,12 +40,6 @@ class TranslationUpdateCommand extends Command
             ->setDescription(
                 'Parses application Twig template files for translatable strings and writes ' .
                 'out translation template files.'
-            )
-            ->addOption(
-                'clean',
-                'c',
-                InputOption::VALUE_NONE,
-                'Write out the translation file anew. Do not attempt to merge with existing data.'
             );
     }
 
@@ -60,47 +48,32 @@ class TranslationUpdateCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $errorIo = $io->getErrorStyle();
 
-        if (true === $input->getOption('clean')) {
-            $io->caution('Clean will replace your translation template file with one generated from your Twig files.');
-            if (!$io->confirm('Continue with this action?', false)) {
-                return Command::SUCCESS;
-            }
-        }
+        /** @var Translations[] $catalogues */
+        $catalogues = [];
 
-        // load any messages from templates
-        $extractedCatalogue = new MessageCatalogue(self::DEFAULT_LOCALE);
         $io->comment('Parsing templates...');
         foreach ($this->viewsPaths as $path) {
             if (is_dir($path) || is_file($path)) {
-                $this->extractor->extract($path, $extractedCatalogue);
+                $translations = $this->extractor->extract($path);
             }
+
+            array_walk($translations, function (Translations $translations, string $domain) use (&$catalogues) {
+                if (in_array($domain, array_keys($catalogues))) {
+                    $catalogues[$domain] = $catalogues[$domain]->mergeWith($translations);
+                } else {
+                    $catalogues[$domain] = $translations;
+                }
+                return true;
+            });
         }
 
-        // load any existing messages from the translation files
-        $currentCatalogue = new MessageCatalogue(self::DEFAULT_LOCALE);
-        $io->comment('Loading translation files...');
-        $currentCatalogue->addCatalogue(
-            $this->loader->load(
-                sprintf('languages/%s.pot', self::DEFAULT_LOCALE),
-                self::DEFAULT_LOCALE
-            )
-        );
-
-        // process catalogues
-        $operation = $input->getOption('clean')
-            ? new TargetOperation($currentCatalogue, $extractedCatalogue)
-            : new MergeOperation($currentCatalogue, $extractedCatalogue);
-
         $io->comment('Writing files...');
+        foreach ($catalogues as $domain => $translations) {
+            $translations->getHeaders()->setLanguage('en_GB'); // our template is in english
+            $translations->getHeaders()->set('POT-Creation-Date', (new DateTime())->format('c'));
 
-        $this->writer->write(
-            $operation->getResult(),
-            'po',
-            [
-                'path' => 'languages/',
-                'default_locale' => self::DEFAULT_LOCALE,
-            ]
-        );
+            $this->writer->generateFile($translations, sprintf('languages/%s.pot', $domain));
+        }
 
         $io->success('Translation files were successfully updated');
 

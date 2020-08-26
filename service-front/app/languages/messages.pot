@@ -1,0 +1,100 @@
+msgid ""
+msgstr ""
+"Language: en_GB\n"
+"POT-Creation-Date: 2020-08-26T18:30:32+00:00\n"
+"X-Domain: messages\n"
+
+#: src/Common/templates/partials/new-service.html.twig:7
+msgid "This is a new service – your <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">feedback</a> will help us to improve it."
+msgstr ""
+
+#: src/Common/templates/partials/govuk_form.html.twig:42
+#: src/Viewer/templates/viewer/enter-code.html.twig:56
+msgid "Continue"
+msgstr ""
+
+#: src/Common/templates/partials/govuk_error.html.twig:6
+msgid "There is a problem"
+msgstr ""
+
+#: src/Common/templates/partials/govuk_error.html.twig:28
+msgid "Error:"
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:23
+msgid "Cookies"
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:7
+msgid "Use a lasting power of attorney"
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:9
+#: src/Viewer/templates/viewer/layout.html.twig:5
+msgid "View a lasting power of attorney"
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:19
+#: src/Viewer/templates/viewer/enter-code.html.twig:9
+msgid "Back"
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:28
+msgid "We use cookies to store information about how you use the Use a lasting power of attorney service, such as the pages you visit."
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:30
+msgid "We use cookies to store information about how you use the View a lasting power of attorney service, such as the pages you visit."
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:37
+msgid "Cookie settings"
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:64
+msgid "Use cookies that measure my website use"
+msgstr ""
+
+#: src/Common/templates/partials/cookies.html.twig:68
+msgid "Do not use cookies that measure my website use"
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-found.html.twig:22
+msgid "Property and finance"
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-found.html.twig:22
+msgid "Health and welfare"
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:3
+msgid "Enter LPA access code"
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:25
+msgid "Enter the LPA access code"
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:33
+msgid "Donor's last name"
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:41
+msgid "LPA access code"
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:43
+msgid "Access codes are 13 characters long and start with a V<br/>For example, V-AB12-CD34-EF56"
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:49
+msgid "What is an <abbr title=\"lasting power of attorney\">LPA</abbr> access code?"
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:51
+msgid "An <abbr title=\"lasting power of attorney\">LPA</abbr> access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney."
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:54
+msgid "By continuing you agree to our <a href=\"%link%\" class=\"govuk-link\">terms of use</a>."
+msgstr ""
