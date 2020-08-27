@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Which organisation do you want to give access to - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Which organisation do you want to give access to{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -8,7 +8,7 @@
 
         {{ include('@partials/account-bar.html.twig') }}
 
-        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back to your LPAs</a>
+        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">{% trans %}Back to your LPAs{% endtrans %}</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -35,18 +35,22 @@
 
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                             <h1 class="govuk-fieldset__heading">
-                                Which organisation do you want to give access to?
+                                {% trans %}Which organisation do you want to give access to?{% endtrans %}
                             </h1>
                         </legend>
                 </div>
                 <div class="govuk-grid-column-two-thirds">
                     {% if lpa.caseSubtype|lower == 'hw' %}
-                        <p class="govuk-body">The organisation could be a hospital, care home, or other health care provider.</p>
+                        <p class="govuk-body">{% trans %}The organisation could be a hospital, care home, or other health care provider.{% endtrans %}</p>
                     {% elseif lpa.caseSubtype|lower == 'pfa' %}
-                        <p class="govuk-body">The organisation could be a bank, energy provider, or another business.</p>
+                        <p class="govuk-body">{% trans %}The organisation could be a bank, energy provider, or another business.{% endtrans %}</p>
                     {% endif %}
 
-                    {{ govuk_form_element(form.get('org_name'), { 'label': 'Organisation name', 'hint': 'This is for your reference only', 'attr' : {'class': 'govuk-!-width-one-half'} }) }}
+                    {{ govuk_form_element(form.get('org_name'), {
+                        'label': 'Organisation name' | trans,
+                        'hint': 'This is for your reference only' | trans,
+                        'attr' : {'class': 'govuk-!-width-one-half'}
+                    }) }}
 
                 </div>
                 {{ govuk_form_close() }}

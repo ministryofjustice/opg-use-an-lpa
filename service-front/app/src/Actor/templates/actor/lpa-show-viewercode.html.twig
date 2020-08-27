@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Your new access code - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Your new access code{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -8,7 +8,7 @@
 
         {{ include('@partials/account-bar.html.twig') }}
 
-        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back to your LPAs</a>
+        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">{% trans %}Back to your LPAs{% endtrans %}</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -28,14 +28,14 @@
                       <div class="moj-banner__message govuk-panel govuk-!-padding-1">
 
                         <h1 class="govuk-panel__body govuk-!-margin-top-0 govuk-!-margin-bottom-2">
-                          Give this access code to {{ organisation }}
+                            {% trans %}Give this access code to{% endtrans %} {{ organisation }}
                         </h1>
                         <span class="govuk-panel__title">
                           {{ add_hyphen_to_viewer_code(code) }}
                         </span>
-                        <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-3">This code expires in 30 days, on {{ expires | date ('j F Y') }}.</p>
+                        <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-3">{% trans with {'%date%': expires | date ('j F Y')} %}This code expires in 30 days, on %date%.{% endtrans %}</p>
                         <input readonly type="text" value="{{ add_hyphen_to_viewer_code(code) }}" id="accesscodecopy" class="offscreen" aria-hidden="true">
-                        <button id="copybutton" class="govuk-button govuk-button__copy">Copy code</button>
+                        <button id="copybutton" class="govuk-button govuk-button__copy">{% trans %}Copy code{% endtrans %}</button>
 
                       </div>
                     </div>
@@ -44,15 +44,15 @@
                 </div>
 
                 <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-two-thirds">
-                        <h2 class="govuk-body-l govuk-!-font-weight-bold">What happens next?</h2>
+                    <div class="govuk-grid-column-three-quarters">
+                        <h2 class="govuk-body-l govuk-!-font-weight-bold">{% trans %}What happens next?{% endtrans %}</h2>
 
-                        <p class="govuk-body">You’ll need to give {{ organisation }} this access code - ask them how they want to receive it so it gets to the right person.</p>
+                        <p class="govuk-body">{% trans with {'%organisation%': organisation} %}You’ll need to give %organisation% this access code - ask them how they want to receive it so it gets to the right person.{% endtrans %}</p>
 
-                        <p class="govuk-body">When {{ organisation }} have the access code, they should go to <br> www.gov.uk/view-lpa to see a summary of the LPA.</p>
+                        <p class="govuk-body">{% trans with {'%organisation%': organisation} %}When %organisation% have the access code, they should go to <br> www.gov.uk/view-lpa to see a summary of the LPA.{% endtrans %}</p>
 
                         <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button">
-                            Give another organisation access
+                            {% trans %}Give another organisation access{% endtrans %}
                         </a>
                     </div>
                 </div>
