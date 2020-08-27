@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Access codes for this LPA - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Access codes for this LPA{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 
@@ -9,7 +9,7 @@
 
         {{ include('@partials/account-bar.html.twig') }}
 
-        <a href="{{ path('lpa.dashboard', {}, {'lpa': actorToken}) }}" class="govuk-back-link">Back to your LPAs</a>
+        <a href="{{ path('lpa.dashboard', {}, {'lpa': actorToken}) }}" class="govuk-back-link">{% trans %}Back to your LPAs{% endtrans %}</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -17,9 +17,9 @@
                 <div class="govuk-grid-column-two-thirds">
                   <span class="govuk-caption-l">
                       {% if lpa.caseSubtype == "pfa" %}
-                          Property and finance
+                          {% trans %}Property and finance{% endtrans %}
                       {% else %}
-                          Health and welfare
+                          {% trans %}Health and welfare{% endtrans %}
                       {% endif %}
                   </span>
                   <span class="govuk-heading-l govuk-!-margin-bottom-3">
@@ -32,15 +32,15 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-xl">Check access codes</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}Check access codes{% endtrans %}</h1>
 
                     {% if shareCodes is empty  %}
-                        <h2 class="govuk-heading-m">There are no access codes for this LPA.</h2>
-                        <p class="govuk-body">When an organisation has been given access you will be able to see the <br>
-                            access codes and details here.</p>
+                        <h2 class="govuk-heading-m">{% trans %}There are no access codes for this LPA.{% endtrans %}</h2>
+                        <p class="govuk-body">{% trans %}When an organisation has been given access you will be able to see the <br>
+                            access codes and details here.{% endtrans %}</p>
 
                         <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}" draggable="false" class="govuk-button">
-                            Give an organisation access
+                            {% trans %}Give an organisation access{% endtrans %}
                         </a>
 
                     {% else %}
@@ -61,9 +61,9 @@
 
                         {% if containsActive %}
 
-                            <h2 class="govuk-heading-m">Active codes</h2>
+                            <h2 class="govuk-heading-m">{% trans %}Active codes{% endtrans %}</h2>
 
-                            <p class="govuk-body">Give an organisation their access code so they can view this LPA. They should go to www.gov.uk/view-lpa to use the code.</p>
+                            <p class="govuk-body">{% trans %}Give an organisation their access code so they can view this LPA. They should go to www.gov.uk/view-lpa to use the code.{% endtrans %}</p>
 
                             <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
 
@@ -79,10 +79,10 @@
                         {% endif %}
 
                         {% if containsInactive %}
-                            <h2 class="govuk-heading-m">Inactive codes</h2>
+                            <h2 class="govuk-heading-m">{% trans %}Inactive codes{% endtrans %}</h2>
 
-                            <p class="govuk-body">The following codes will no longer work.<br>
-                                If an organisation asks to see this <abbr title="lasting power of attorney">LPA</abbr> again, you can <a href="{{ path('lpa.create-code', {}, {'lpa':  actorToken }) }}">make them a new code</a>.
+                            <p class="govuk-body">{% trans %}The following codes will no longer work.{% endtrans %}<br>
+                                {%trans with {'%create-code-link%': path('lpa.create-code', {}, {'lpa':  actorToken })} %}If an organisation asks to see this <abbr title="lasting power of attorney">LPA</abbr> again, you can <a href="%create-code-link%">make them a new code</a>.{% endtrans %}
                             </p>
 
                             <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
