@@ -6,12 +6,12 @@
      aria-describedby="dialog-description"
      aria-modal="true">
     <div tabindex="0" class="dialog-focus"></div>
-    <h2 id="dialog-title" class="govuk-heading-l">We’re about to sign you out</h2>
-    <p id="dialog-description" class="govuk-body">For your security, we’ll sign you out of this service in <span id="time">5</span> minutes.</p>
+    <h2 id="dialog-title" class="govuk-heading-l">{% trans %}We’re about to sign you out{% endtrans %}</h2>
+    <p id="dialog-description" class="govuk-body">{% trans %}For your security, we’ll sign you out of this service in <span id="time">5</span> minutes.{% endtrans %}</p>
     <button class="govuk-button govuk-!-margin-bottom-1 govuk-!-margin-right-1 jsHideTimeout" aria-label="Close Navigation">
-        Stay signed in
+        {% trans %}Stay signed in{% endtrans %}
     </button>
     <a class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" href="{{ path('home') }}">
-        Sign out
+        {% trans %}Sign out{% endtrans %}
     </a>
 </div>
