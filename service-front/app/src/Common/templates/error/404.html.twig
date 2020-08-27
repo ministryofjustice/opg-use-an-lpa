@@ -1,20 +1,20 @@
 {% extends '@layout/default.html.twig' %}
 
-{% block html_title %}404 Not Found - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}404 Not Found{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
 
-    <a href="{{ path('home') }}" class="govuk-back-link">Back</a>
+    <a href="{{ path('home') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
     <main class="govuk-main-wrapper">
-        <span class="govuk-caption-xl">This is awkward.</span>
-        <h1 class="govuk-heading-xl">Oops!</h1>
-        <p class="govuk-body">We encountered a 404 Not Found error.</p>
+        <span class="govuk-caption-xl">{% trans %}This is awkward.{% endtrans %}</span>
+        <h1 class="govuk-heading-xl">{% trans %}Oops!{% endtrans %}</h1>
+        <p class="govuk-body">{% trans %}We encountered a 404 Not Found error.{% endtrans %}</p>
         <p class="govuk-body">
-            You are looking for something that doesn't exist or may have moved. Check out one of the links on this page
-            or head back to <a href="{{ path('home') }}" class="govuk-link">Home</a>.
+            {%trans with {'%link%': path('home')} %}You are looking for something that doesn't exist or may have moved. Check out one of the links on this page
+            or head back to <a href="%link%" class="govuk-link">Home</a>.{% endtrans %}
         </p>
     </main>
 </div>
