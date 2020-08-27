@@ -9,14 +9,14 @@
     <a href="{{ path('home') }}" class="govuk-back-link">Back</a>
 
     <main class="govuk-main-wrapper">
-        <span class="govuk-caption-xl">This is awkward.</span>
+        <span class="govuk-caption-xl">{% trans %}This is awkward.{% endtrans %}</span>
         <h1 class="govuk-heading-xl">Oops!</h1>
-        <p class="govuk-body">We encountered a {{ status }} {{ reason }} error.</p>
+        <p class="govuk-body">{% trans with {'%status%': status, '%reason%': reason } %}We encountered a %status% %reason% error.{% endtrans %}</p>
 
         {% if status == 404 %}
             <p class="govuk-body">
-                You are looking for something that doesn't exist or may have moved. Check out one of the links on this page
-                or head back to <a href="{{ path('home') }}" class="govuk-link">Home</a>.
+                {%trans with {'%link%': path('home')} %}You are looking for something that doesn't exist or may have moved. Check out one of the links on this page
+                or head back to <a href="%link%" class="govuk-link">Home</a>.{% endtrans %}
             </p>
         {% endif %}
 
