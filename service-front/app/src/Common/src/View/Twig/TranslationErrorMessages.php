@@ -1,7 +1,7 @@
 {# List of the error messages the actor forms might put out. #}
 
 {# actor __csrf token #}
-{% trans %}As you have not used this service for over 20 minutes, the page has timed out. We\'ve now refreshed the page - please try to sign in again{% endtrans %}
+{% trans %}As you have not used this service for over 20 minutes, the page has timed out. We've now refreshed the page - please try to sign in again{% endtrans %}
 
 {# Change email #}
 {% trans %}Enter your new email address{% endtrans %}
