@@ -1,25 +1,25 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Account activated - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Account activated{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
     {{ include('@actor/partials/new-use-service.html.twig') }}
 
-    <a href="{{ path('home') }}" class="govuk-back-link">Back</a>
+    <a href="{{ path('home') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <div class="govuk-grid-row">
 
             <div class="govuk-grid-column-two-thirds">
-                <h2 class="govuk-heading-xl">Account activated</h2>
+                <h2 class="govuk-heading-xl">{% trans %}Account activated{% endtrans %}</h2>
             </div>
 
             <div class="govuk-grid-column-one-half">
 
-                <p class="govuk-body">Thank you. We've now activated your account.</p>
-                <p class="govuk-body">Please <a href="{{ path('login') }}" class="govuk-link">sign in</a></p>
+                <p class="govuk-body">{% trans %}Thank you. We've now activated your account.{% endtrans %}</p>
+                <p class="govuk-body">{% trans with {'%link%': path('login')} %}Please <a href="%link%" class="govuk-link">sign in</a>{% endtrans %}</p>
             </div>
 
         </div>
