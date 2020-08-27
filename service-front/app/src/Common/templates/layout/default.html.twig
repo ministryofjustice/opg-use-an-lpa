@@ -2,7 +2,7 @@
 <html lang="{{ currentLocale }}" class="govuk-template ">
 <head>
     <meta charset="utf-8" />
-    <title>{% block html_title %}GOV.UK{% endblock %}</title>
+    <title>{% block html_title %}{% trans %}GOV.UK{% endtrans %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0b0c0c" />
 
@@ -38,7 +38,7 @@
 </head>
 
 <body class="govuk-template__body ">
-<a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+<a href="#main-content" class="govuk-skip-link">{% trans %}Skip to main content{% endtrans %}</a>
 {{ include('@partials/session-dialog.html.twig') }}
 
 <form>
@@ -46,16 +46,16 @@
     <div class="govuk-grid-row">
         <div class=" govuk-grid-column-two-thirds">
             <div class="cookie-banner__message">
-                <h2 class="govuk-heading-m">Tell us whether you accept cookies</h2>
-                <p class="govuk-body">GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us
-                    improve government digital services. Any data collected is anonymised.</p>
+                <h2 class="govuk-heading-m">{% trans %}Tell us whether you accept cookies{% endtrans %}</h2>
+                <p class="govuk-body">{% trans %}GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us
+                    improve government digital services. Any data collected is anonymised.{% endtrans %}</p>
             </div>
             <div class="cookie-banner__buttons">
                 <div class="cookie-banner__button cookie-banner__button-accept govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0">
-                    <button class="govuk-button button--inline" name="accept-all-cookies" type="submit" role="button">Accept all cookies</button>
+                    <button class="govuk-button button--inline" name="accept-all-cookies" type="submit" role="button">{% trans %}Accept all cookies{% endtrans %}</button>
                 </div>
                 <div class="cookie-banner__button govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0">
-                    <a href="/cookies" class="govuk-button govuk-button--secondary button--inline" name="set-cookie-preferences" role="button">Set cookie preferences</a>
+                    <a href="/cookies" class="govuk-button govuk-button--secondary button--inline" name="set-cookie-preferences" role="button">{% trans %}Set cookie preferences{% endtrans %}</a>
                 </div>
             </div>
         </div>
@@ -76,7 +76,7 @@
                     <image src="/assets/images/govuk-logotype-crown.png" class="govuk-header__logotype-crown-fallback-image"></image>
                 </svg>
                 <span class="govuk-header__logotype-text">
-                    GOV.UK
+                    {% trans %}GOV.UK{% endtrans %}
                 </span>
                 </span>
             </a>
@@ -97,26 +97,26 @@
     <div class="govuk-width-container ">
         <div class="govuk-footer__meta">
             <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
-                <h2 class="govuk-visually-hidden">Support links</h2>
+                <h2 class="govuk-visually-hidden">{% trans %}Support links{% endtrans %}</h2>
                 <ul class="govuk-footer__inline-list">
                     <li class="govuk-footer__inline-list-item">
                         <a class="govuk-footer__link" href="/terms-of-use">
-                            Terms of use
+                            {% trans %}Terms of use{% endtrans %}
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
                         <a class="govuk-footer__link" href="/cookies">
-                            Cookies
+                            {% trans %}Cookies{% endtrans %}
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
                         <a class="govuk-footer__link" href="https://www.lastingpowerofattorney.service.gov.uk/contact">
-                            Contact us
+                            {% trans %}Contact us{% endtrans %}
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
                         <a class="govuk-footer__link" href="https://jobs.jobvite.com/justicedigitalandtechnology/jobs">
-                            Built By OPG Digital
+                            {% trans %}Built By OPG Digital{% endtrans %}
                         </a>
                     </li>
                 </ul>
@@ -126,12 +126,12 @@
                     />
                 </svg>
                 <span class="govuk-footer__licence-description">
-                All content is available under the
-                <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated
+                {% trans %}All content is available under the
+                <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated{% endtrans %}
                 </span>
             </div>
             <div class="govuk-footer__meta-item">
-                <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>
+                {% trans %}<a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright{% endtrans %}</a>
             </div>
         </div>
     </div>
