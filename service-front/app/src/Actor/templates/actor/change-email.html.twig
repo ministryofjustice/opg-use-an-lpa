@@ -11,21 +11,26 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
+
                     {{ govuk_error_summary(form) }}
                     {{ govuk_form_open(form) }}
+
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                             <h1 class="govuk-fieldset__heading">{% trans %}Change your email address{% endtrans %}</h1>
                         </legend>
                         <div class="govuk-grid-row">
                             <div class="govuk-grid-column-one-half">
+
                                 {{ govuk_form_element(form.get('__csrf')) }}
-                                {{ govuk_form_element(form.get('new_email_address'), { 'label': 'New email address' }) }}
-                                {{ govuk_form_element(form.get('current_password'), { 'label': 'Confirm your password' }) }}
+                                {{ govuk_form_element(form.get('new_email_address'), { 'label': 'New email address' | trans }) }}
+                                {{ govuk_form_element(form.get('current_password'), { 'label': 'Confirm your password' | trans }) }}
+
                                 <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Save new email address{% endtrans %}</button>
                             </div>
                         </div>
                     </fieldset>
+
                     {{ govuk_form_close() }}
                 </div>
             </div>
