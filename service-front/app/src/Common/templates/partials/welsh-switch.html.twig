@@ -1,21 +1,18 @@
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        <ul class="trans-switch">
-            <li class="govuk-list trans-switch__list govuk-body-s">
-                {% if path() matches '/(^\\/cy.*)/' %}
-                    <a href="{{ path() | replace({'/cy':''}) }}" class="govuk-link">English</a>
-                {% else %}
-                    English
-                {% endif %}
-            </li>
-            <li class="govuk-list trans-switch__partition govuk-body-s">|</li>
-            <li class="govuk-list trans-switch__list govuk-body-s">
-                {% if '/cy' not in path() %}
-                    <a href="{{ '/cy' ~ path() }}" class="govuk-link">Cymraeg</a>
-                {% else %}
-                    Cymraeg
-                {% endif %}
-            </li>
-        </ul>
-    </div>
-</div>
+
+<ul class="trans-switch">
+    <li class="govuk-list trans-switch__list govuk-body-s">
+        {% if path() matches '/(^\\/cy.*)/' %}
+            <a href="{{ path() | replace({'/cy':''}) }}" class="govuk-link">English</a>
+        {% else %}
+            English
+        {% endif %}
+    </li>
+    <li class="govuk-list trans-switch__partition govuk-body-s">|</li>
+    <li class="govuk-list trans-switch__list govuk-body-s">
+        {% if '/cy' not in path() %}
+            <a href="{{ '/cy' ~ path() }}" class="govuk-link">Cymraeg</a>
+        {% else %}
+            Cymraeg
+        {% endif %}
+    </li>
+</ul>
