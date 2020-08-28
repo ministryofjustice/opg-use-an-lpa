@@ -1,12 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}
-    {% if accountExists  %}
-        {% trans %}Account already exists{% endtrans %} - {{ parent() }}
-    {% else %}
-        {% trans %}Activate your account{% endtrans %} - {{ parent() }}
-    {% endif %}
-{% endblock %}
+{% block html_title %}{% trans %}Activate your account{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
