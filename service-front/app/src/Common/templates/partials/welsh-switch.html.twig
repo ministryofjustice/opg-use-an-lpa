@@ -2,7 +2,7 @@
     <div class="govuk-grid-column-full">
         <ul class="trans-switch">
             <li class="govuk-list trans-switch__list govuk-body-s">
-                {% if path() matches '/(\\/cy.*)/' %}
+                {% if path() matches '/(^\\/cy.*)/' %}
                     <a href="{{ path() | replace({'/cy':''}) }}" class="govuk-link">English</a>
                 {% else %}
                     English
