@@ -531,6 +531,30 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
+    public function can_find_actor_who_is_a_donor_by_child_uid()
+    {
+        $lpa = [
+            'donor' => [
+                'id'  => 1,
+                'uId' => '123456789013',
+                'uids' => ['123456789013', '123456789012'],
+            ]
+        ];
+
+        $service = $this->getLpaService();
+
+        $result = $service->lookupActiveActorInLpa($lpa, '123456789012');
+
+        $this->assertEquals(
+            [
+                'type' => 'donor',
+                'details' => $lpa['donor'],
+            ],
+            $result
+        );
+    }
+
+    /** @test */
     public function can_find_actor_who_is_an_attorney()
     {
         $lpa = [

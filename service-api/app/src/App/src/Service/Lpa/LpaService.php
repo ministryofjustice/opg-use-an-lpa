@@ -284,7 +284,9 @@ class LpaService
         if (
             is_null($actor) &&
             isset($lpa['donor']) && is_array($lpa['donor']) &&
-            ((string)$lpa['donor']['id'] === $actorId || $lpa['donor']['uId'] === $actorId)
+            (isset($lpa['donor']['uids'])
+             ? array_search($actorId, $lpa['donor']['uids']) !== false
+             : ((string)$lpa['donor']['id'] === $actorId || $lpa['donor']['uId'] === $actorId))
         ) {
             $actor = $lpa['donor'];
             $actorType = 'donor';
