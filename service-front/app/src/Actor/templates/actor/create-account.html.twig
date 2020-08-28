@@ -1,12 +1,12 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Create an account - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Create an account{% endtrans %} -{{ parent() }} {% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
     {{ include('@actor/partials/new-use-service.html.twig') }}
 
-    <a href="{{ path('home') }}" class="govuk-back-link">Back</a>
+    <a href="{{ path('home') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -22,11 +22,11 @@
 
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                             <h1 class="govuk-fieldset__heading">
-                                Create an account
+                                {% trans %}Create an account{% endtrans %}
                             </h1>
                         </legend>
 
-                        <p class="govuk-body-l">If you already have an account, please <a href="{{ path('login') }}" class="govuk-link">sign in</a>.</p>
+                        <p class="govuk-body-l">{% trans with {'%link%': path('login')} %}If you already have an account, please <a href="%link%" class="govuk-link">sign in</a>.{% endtrans %}</p>
 
                         <div class="govuk-grid-row">
 
@@ -34,23 +34,23 @@
 
                                 {{ govuk_form_element(form.get('__csrf')) }}
 
-                                {{ govuk_form_element(form.get('email'), { 'label': 'Enter your email address' }) }}
+                                {{ govuk_form_element(form.get('email'), { 'label': 'Enter your email address'| trans }) }}
 
-                                {{ govuk_form_element(form.get('password'), { 'label': 'Create a password', 'hint': 'Your password needs to have: <ul class="govuk-list--bullet"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>' }) }}
+                                {{ govuk_form_element(form.get('password'), { 'label': 'Create a password'| trans, 'hint': 'Your password needs to have: <ul class="govuk-list--bullet"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>'| trans }) }}
 
-                                {{ govuk_form_element(form.get('password_confirm'), { 'label': 'Confirm your password' }) }}
+                                {{ govuk_form_element(form.get('password_confirm'), { 'label': 'Confirm your password'| trans }) }}
 
                                 <div class="govuk-warning-text">
                                   <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                                   <strong class="govuk-warning-text__text">
-                                    <span class="govuk-warning-text__assistive">Warning</span>
-                                    Never share your password with anyone.
+                                    <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                                      {% trans %}Never share your password with anyone.{% endtrans %}
                                   </strong>
                                 </div>
 
-                                {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="/terms-of-use" class="govuk-link">terms of use</a>' }) }}
+                                {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="%link%" class="govuk-link">terms of use</a>' | trans({ '%link%': path('actor-terms-of-use') }) }) }}
 
-                                <button data-prevent-double-click="true" type="submit" class="govuk-button">Create account</button>
+                                <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Create account{% endtrans %}</button>
 
                             </div>
 

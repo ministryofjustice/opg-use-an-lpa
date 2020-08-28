@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Death Notification - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Death Notification{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 
@@ -10,63 +10,64 @@
         {{ include('@partials/account-bar.html.twig') }}
 
         {% if actorToken != 'null' %}
-            <a href="{{ path('lpa.change-details', {}, {'lpa': actorToken}) }}" class="govuk-back-link">Back</a>
+            {% set backLink = path('lpa.change-details', {}, {'lpa': actorToken}) %}
         {% else %}
-            <a href="{{ path('lpa.change-details') }}" class="govuk-back-link">Back</a>
+            {% set backLink = path('lpa.change-details') %}
         {% endif %}
+        <a href="{{ backLink }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div class="govuk-grid-row">
 
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">Let us know if a donor or attorney dies</h1>
+                    <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">{% trans %}Let us know if a donor or attorney dies{% endtrans %}</h1>
 
                     <p class="govuk-body">
-                        It's important that we hold up-to-date information about donors and attorneys.
-                        This is because an LPA will end when the donor dies, and they can end if an attorney dies.
+                        {% trans %}It's important that we hold up-to-date information about donors and attorneys.
+                        This is because an LPA will end when the donor dies, and they can end if an attorney dies.{% endtrans %}
                     </p>
-                    <p class="govuk-body">You should contact us if:</p>
+                    <p class="govuk-body">{% trans %}You should contact us if:{% endtrans %}</p>
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>the donor dies</li>
-                        <li>an attorney dies</li>
-                        <li>a replacement attorney dies</li>
+                        <li>{% trans %}the donor dies{% endtrans %}</li>
+                        <li>{% trans %}an attorney dies{% endtrans %}</li>
+                        <li>{% trans %}a replacement attorney dies{% endtrans %}</li>
                     </ul>
 
-                    <p class="govuk-body">We'll update the online LPA summary and our records</p>
+                    <p class="govuk-body">{% trans %}We'll update the online LPA summary and our records{% endtrans %}</p>
 
-                    <h2 class="govuk-heading-m">If the donor dies</h2>
+                    <h2 class="govuk-heading-m">{% trans %}If the donor dies{% endtrans %}</h2>
                     <p class="govuk-body">
-                        The LPA ends when the donor dies. The donor’s affairs will be looked after
-                        by their executors or personal representatives from that point, not their attorneys.
+                        {% trans %}The LPA ends when the donor dies. The donor’s affairs will be looked after
+                        by their executors or personal representatives from that point, not their attorneys.{% endtrans %}
                     </p>
 
-                    <h2 class="govuk-heading-m">If an attorney or replacement attorney dies</h2>
-                    <p class="govuk-body">The LPA will end if your attorney dies and there is not a replacement attorney.</p>
+                    <h2 class="govuk-heading-m">{% trans %}If an attorney or replacement attorney dies{% endtrans %}</h2>
+                    <p class="govuk-body">{% trans %}The LPA will end if your attorney dies and there is not a replacement attorney.{% endtrans %}</p>
 
-                    <p class="govuk-body">The LPA can continue if:</p>
+                    <p class="govuk-body">{% trans %}The LPA can continue if:{% endtrans %}</p>
 
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>there are other attorneys who can act 'jointly and severally' -
-                            but not if they are only allowed to act ‘jointly’</li>
-                        <li>there are replacement attorneys</li>
+                        <li>{% trans %}there are other attorneys who can act 'jointly and severally' -
+                            but not if they are only allowed to act 'jointly'{% endtrans %}</li>
+                        <li>{% trans %}there are replacement attorneys{% endtrans %}</li>
                     </ul>
 
-                    <h2 class="govuk-heading-m">How to let us know</h2>
-                    <p class="govuk-body">You'll need to send us:</p>
+                    <h2 class="govuk-heading-m">{% trans %}How to let us know{% endtrans %}</h2>
+                    <p class="govuk-body">{% trans %}You'll need to send us:{% endtrans %}</p>
 
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>a copy of the death certificate</li>
-                        <li>the original LPA</li>
-                        <li>all certified copies of the LPA</li>
-                        <li>a return address where your documents can be sent back to</li>
+                        <li>{% trans %}a copy of the death certificate{% endtrans %}</li>
+                        <li>{% trans %}the original LPA{% endtrans %}</li>
+                        <li>{% trans %}all certified copies of the LPA{% endtrans %}</li>
+                        <li>{% trans %}a return address where your documents can be sent back to{% endtrans %}</li>
                     </ul>
                     <div class="govuk-inset-text">
                         <p class="govuk-body">
-                            Office of the Public Guardian<br>
+                            {% trans %}Office of the Public Guardian<br>
                             PO Box 16185<br>
                             Birmingham<br>
-                            B2 2WH
+                            B2 2WH{% endtrans %}
                         </p>
                     </div>
                     <p class="govuk-body">
