@@ -31,7 +31,6 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('check_if_code_has_expired', [$this, 'hasCodeExpired']),
             new TwigFunction('add_hyphen_to_viewer_code', [$this, 'formatViewerCode']),
             new TwigFunction('check_if_code_is_cancelled', [$this, 'isCodeCancelled']),
-            new TwigFunction('check_current_url', [$this, 'checkCurrentUrl']),
         ];
     }
 
