@@ -1,8 +1,8 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Sign in or create an account - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}Sign in or create an account{% endtrans %} - {{ parent() }}{% endblock %}
 
-{% block service_name %}Use a lasting power of attorney{% endblock %}
+{% block service_name %}{% trans %}Use a lasting power of attorney{% endtrans %}{% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
@@ -14,7 +14,7 @@
                     {{ govuk_error_summary(form) }}
                     {{ govuk_form_open(form) }}
 
-                    <h1 class="govuk-heading-xl">Do you have a Use a lasting power of attorney account?</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}Do you have a Use a lasting power of attorney account?{% endtrans %}</h1>
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
@@ -24,12 +24,12 @@
                             {{ govuk_form_element(form.get('triageEntry'), {'value_options':
                             [
                                 {
-                                    'label': 'Yes, I already have an account',
+                                    'label': 'Yes, I already have an account'| trans,
                                     'value': 'yes',
-                                    'hint' : 'If you made an LPA online, you will still need to create an account to use this service'
+                                    'hint' : 'If you made an LPA online, you will still need to create an account to use this service'| trans,
                                 },
                                 {
-                                    'label': 'No, this is the first time I’ve used the service',
+                                    'label': 'No, this is the first time I’ve used the service'| trans,
                                     'value': 'no'
                                 }
                             ]}
@@ -38,9 +38,9 @@
                         </fieldset>
                     </div>
 
-                    <p class="govuk-body">If you're named on more than one LPA, you can add all those LPAs to your account.</p>
+                    <p class="govuk-body">{% trans %}If you're named on more than one LPA, you can add all those LPAs to your account.{% endtrans %}</p>
 
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button">Continue</button>
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
                     {{ govuk_form_close() }}
                 </div>
             </div>

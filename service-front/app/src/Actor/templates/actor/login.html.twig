@@ -1,12 +1,12 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Sign in to your Use a lasting power of attorney account - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Sign in to your Use a lasting power of attorney account{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
     {{ include('@actor/partials/new-use-service.html.twig') }}
 
-    <a href="{{ path('home') }}"class="govuk-back-link">Back</a>
+    <a href="{{ path('home') }}"class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -22,25 +22,25 @@
 
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                             <h1 class="govuk-fieldset__heading">
-                                Sign in to your Use a lasting power of attorney account
+                                {% trans %}Sign in to your Use a lasting power of attorney account{% endtrans %}
                             </h1>
                         </legend>
 
-                        <p class="govuk-body">If you made an <abbr title="lasting power of attorney">LPA</abbr> online, you'll still need to <a href="{{ path('create-account') }}" class="govuk-link">create an account</a> to use this service.</p>
+                        <p class="govuk-body">{% trans with {'%link%': path('create-account')} %}If you made an <abbr title="lasting power of attorney"> LPA </abbr> online, you'll still need to <a href="%link%" class="govuk-link">create an account</a> to use this service.{% endtrans %}</p>
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
-                        {{ govuk_form_element(form.get('email'), { 'label': 'Email address', 'attr': { 'class': 'govuk-!-width-three-quarters' } }) }}
+                        {{ govuk_form_element(form.get('email'), { 'label': 'Email address' | trans, 'attr': { 'class': 'govuk-!-width-three-quarters' } })  }}
 
-                        {{ govuk_form_element(form.get('password'), { 'label': 'Password', 'attr': { 'class': 'govuk-!-width-three-quarters', 'auto-complete': 'current-password' } }) }}
+                        {{ govuk_form_element(form.get('password'), { 'label': 'Password' | trans, 'attr': { 'class': 'govuk-!-width-three-quarters', 'auto-complete': 'current-password' } })  }}
 
-                        <button data-prevent-double-click="true" name="sign-in" type="submit" class="govuk-button">Sign in</button>
+                        <button data-prevent-double-click="true" name="sign-in" type="submit" class="govuk-button">{% trans %}Sign in{% endtrans %}</button>
 
                     </fieldset>
 
                 {{ govuk_form_close() }}
 
-                <a href="{{ path('password-reset') }}" class="govuk-body govuk-link">Forgotten your password?</a>
+                <a href="{{ path('password-reset') }}" class="govuk-body govuk-link">{% trans %}Forgotten your password?{% endtrans %}</a>
             </div>
 
         </div>
