@@ -6,18 +6,18 @@
             <ul class="moj-sub-navigation__list">
                 <li class="moj-sub-navigation__item">
                     <a class="moj-sub-navigation__link govuk-link" {% if path() == path('lpa.create-code') %} aria-current="page" {% endif %} href="{{ path('lpa.create-code', {}, {'lpa':  actorToken }) }}">
-                        Give an organisation access
+                        {% trans %}Give an organisation access{% endtrans %}
                     </a>
                 </li>
 
                 <li class="moj-sub-navigation__item">
                     <a class="moj-sub-navigation__link govuk-link" {% if path() == path('lpa.access-codes') %} aria-current="page" {% endif %} href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}">
-                        Check access codes
+                        {% trans %}Check access codes{% endtrans %}
                     </a>
                 </li>
                 <li class="moj-sub-navigation__item">
                     <a class="moj-sub-navigation__link govuk-link" {% if path() == path('lpa.view') %} aria-current="page" {% endif %} href="{{ path('lpa.view', {}, {'lpa': actorToken }) }}">
-                        View LPA summary
+                        {% trans %}View LPA summary{% endtrans %}
                     </a>
                 </li>
             </ul>
