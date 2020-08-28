@@ -54,7 +54,11 @@ class ConfigProvider
                 Service\Container\ModifiableContainerInterface::class
                     => Service\Container\PhpDiModifiableContainer::class,
 
-                Service\Lpa\LpaFactory::class => Service\Lpa\Factory\Sirius::class
+                Service\Lpa\LpaFactory::class => Service\Lpa\Factory\Sirius::class,
+
+                // Language extraction
+                \Acpr\I18n\ExtractorInterface::class => \Acpr\I18n\TwigExtractor::class,
+                \Gettext\Generator\GeneratorInterface::class => \Gettext\Generator\PoGenerator::class
             ],
 
             'factories'  => [

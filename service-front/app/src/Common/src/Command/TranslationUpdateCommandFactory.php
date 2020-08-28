@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Common\Command;
 
-use Acpr\I18n\TwigExtractor;
-use Gettext\Generator\PoGenerator;
+use Common\Service\I18n\PotGenerator;
+use Common\Service\I18n\TwigCatalogueExtractor;
 use Psr\Container\ContainerInterface;
 
 class TranslationUpdateCommandFactory
@@ -13,8 +13,8 @@ class TranslationUpdateCommandFactory
     public function __invoke(ContainerInterface $container): TranslationUpdateCommand
     {
         return new TranslationUpdateCommand(
-            $container->get(TwigExtractor::class),
-            $container->get(PoGenerator::class),
+            $container->get(TwigCatalogueExtractor::class),
+            $container->get(PotGenerator::class),
             [
                 'src/Actor/templates/actor/',
                 'src/Actor/templates/actor/partials/',

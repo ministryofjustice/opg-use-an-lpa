@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 require __DIR__ . '/vendor/autoload.php';
 
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;
 
-/** @var \Interop\Container\ContainerInterface $container */
+/** @var ContainerInterface $container */
 $container = require __DIR__ . '/config/container.php';
 $application = new Application('Application console');
 

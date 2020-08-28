@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Common\Command;
 
-use Acpr\I18n\ExtractorInterface;
-use DateTime;
-use Gettext\Generator\GeneratorInterface;
-use Gettext\Translations;
+use Common\Service\I18n\PotGenerator;
+use Common\Service\I18n\TwigCatalogueExtractor;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,20 +15,20 @@ class TranslationUpdateCommand extends Command
 {
     public const DEFAULT_LOCALE = 'en_GB';
 
-    private ExtractorInterface $extractor;
-    private GeneratorInterface $writer;
+    private TwigCatalogueExtractor $extractorService;
+    private PotGenerator $writer;
     private array $viewsPaths;
 
     public function __construct(
-        ExtractorInterface $extractor,
-        GeneratorInterface $writer,
+        TwigCatalogueExtractor $extractorService,
+        PotGenerator $writer,
         array $viewsPaths = []
     ) {
-        parent::__construct();
-
-        $this->extractor = $extractor;
+        $this->extractorService = $extractorService;
         $this->writer = $writer;
         $this->viewsPaths = $viewsPaths;
+
+        parent::__construct();
     }
 
     protected function configure(): void
@@ -46,34 +44,14 @@ class TranslationUpdateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $errorIo = $io->getErrorStyle();
 
-        /** @var Translations[] $catalogues */
-        $catalogues = [];
+        $io->section('Parsing templates...');
+        $catalogues = $this->extractorService->extract($this->viewsPaths);
+        $io->text(sprintf('Found %d domains', count($catalogues)));
 
-        $io->comment('Parsing templates...');
-        foreach ($this->viewsPaths as $path) {
-            if (is_dir($path) || is_file($path)) {
-                $translations = $this->extractor->extract($path);
-            }
-
-            array_walk($translations, function (Translations $translations, string $domain) use (&$catalogues) {
-                if (in_array($domain, array_keys($catalogues))) {
-                    $catalogues[$domain] = $catalogues[$domain]->mergeWith($translations);
-                } else {
-                    $catalogues[$domain] = $translations;
-                }
-                return true;
-            });
-        }
-
-        $io->comment('Writing files...');
-        foreach ($catalogues as $domain => $translations) {
-            $translations->getHeaders()->setLanguage('en_GB'); // our template is in english
-            $translations->getHeaders()->set('POT-Creation-Date', (new DateTime())->format('c'));
-
-            $this->writer->generateFile($translations, sprintf('languages/%s.pot', $domain));
-        }
+        $io->section('Generating POT file\s...');
+        $count = $this->writer->generate($catalogues);
+        $io->text(sprintf('Created %d POT file/s', $count));
 
         $io->success('Translation files were successfully updated');
 
