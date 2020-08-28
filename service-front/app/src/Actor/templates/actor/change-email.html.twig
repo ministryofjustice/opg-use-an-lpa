@@ -1,57 +1,39 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Change your email address - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Change your email address{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
-
         {{ include('@partials/account-bar.html.twig') }}
 
-        <a href="{{ path('your-details') }}" class="govuk-back-link">Back</a>
-
+        <a href="{{ path('your-details') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
         <main class="govuk-main-wrapper" id="main-content" role="main">
-
             <div class="govuk-grid-row">
-
                 <div class="govuk-grid-column-full">
 
                     {{ govuk_error_summary(form) }}
-
                     {{ govuk_form_open(form) }}
 
                     <fieldset class="govuk-fieldset">
-
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-                            <h1 class="govuk-fieldset__heading">
-                                Change your email address
-                            </h1>
+                            <h1 class="govuk-fieldset__heading">{% trans %}Change your email address{% endtrans %}</h1>
                         </legend>
-
                         <div class="govuk-grid-row">
-
                             <div class="govuk-grid-column-one-half">
 
                                 {{ govuk_form_element(form.get('__csrf')) }}
+                                {{ govuk_form_element(form.get('new_email_address'), { 'label': 'New email address' | trans }) }}
+                                {{ govuk_form_element(form.get('current_password'), { 'label': 'Confirm your password' | trans }) }}
 
-                                {{ govuk_form_element(form.get('new_email_address'), { 'label': 'New email address' }) }}
-
-                                {{ govuk_form_element(form.get('current_password'), { 'label': 'Confirm your password' }) }}
-
-                                <button data-prevent-double-click="true" type="submit" class="govuk-button">Save new email address</button>
-
+                                <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Save new email address{% endtrans %}</button>
                             </div>
-
                         </div>
-
                     </fieldset>
 
                     {{ govuk_form_close() }}
-
                 </div>
-
             </div>
-
         </main>
     </div>
 {% endblock %}
