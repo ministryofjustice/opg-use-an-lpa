@@ -10,7 +10,8 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 
 RUN set -xe \
         && apk add --update --no-cache icu gettext \
-        && install-php-extensions apcu redis intl gettext xdebug
+        && install-php-extensions apcu redis intl gettext xdebug \
+        && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 COPY service-front/app /app
 COPY --from=composer /app/vendor /app/vendor
