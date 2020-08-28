@@ -25,10 +25,10 @@
                         <li>{% trans %}the <abbr title="lasting powers of attorney">LPAs</abbr> are still valid{% endtrans %}</li>
                         <li>{% trans %}you have not been removed as an attorney{% endtrans %}</li>
                     </ul><br>
-                    <a href="%your-details%" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
+                    <a href="{{ path('your-details')}}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
                         {% trans %}No, return to my details{% endtrans %}
                     </a>
-                    <a href="%delete-account%" role="button" draggable="false" class="govuk-button govuk-button--warning">
+                    <a href="{{ path('your-details')}}" role="button" draggable="false" class="govuk-button govuk-button--warning">
                         {% trans %}Yes, continue deleting my account{% endtrans %}
                     </a>
                 </div>
