@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Let us know if a donor or attorney’s details change - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Let us know if a donor or attorney’s details change{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 
@@ -10,78 +10,83 @@
         {{ include('@partials/account-bar.html.twig') }}
 
         {% if actorToken != 'null' %}
-        <a href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}" class="govuk-back-link">Back</a>
+            {% set backLink = path('lpa.view', {}, {'lpa': actorToken}) %}
         {% else %}
-        <a href="{{ path('your-details') }}" class="govuk-back-link">Back</a>
+            {% set backLink = path('your-details') %}
         {% endif %}
+        <a href="{{ backLink }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">Let us know if a donor or attorney's details change</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}Let us know if a donor or attorney's details change{% endtrans %}</h1>
 
-                    <p class="govuk-body">It's important that we hold up-to-date information about donors and attorneys. This is because the first
-                        time you show an <abbr title="lasting power of attorney">LPA</abbr> to an organisation, they might ask you to confirm that your name and address match what’s on the <abbr title="lasting power of attorney">LPA</abbr>.</p>
+                    <p class="govuk-body">{% trans %}It's important that we hold up-to-date information about donors and attorneys. This is because the first
+                        time you show an <abbr title="lasting power of attorney">LPA</abbr> to an organisation, they might ask you to confirm that your name and
+                        address match what’s on the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
 
-                    <p class="govuk-body">You should contact us if:</p>
+                    <p class="govuk-body">{% trans %}You should contact us if:{% endtrans %}</p>
 
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>the donor or an attorney has moved house</li>
-                        <li>the donor or an attorney has changed their name by marriage or deed poll</li>
-                        <li>the donor's or an attorney's name or address is misspelt</li>
-                        <li>a date of birth is wrong</li>
+                        <li>{% trans %}the donor or an attorney has moved house{% endtrans %}</li>
+                        <li>{% trans %}the donor or an attorney has changed their name by marriage or deed poll{% endtrans %}</li>
+                        <li>{% trans %}the donor's or an attorney's name or address is misspelt{% endtrans %}</li>
+                        <li>{% trans %}a date of birth is wrong{% endtrans %}</li>
                         {% if actorToken != 'null' %}
-                            <li><a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">the donor or an attorney dies</a></li>
+                            <li><a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}">{% trans %}the donor or an attorney dies{% endtrans %}</a></li>
                         {% else %}
-                            <li><a class="govuk-link" href="{{ path('lpa.death-notification') }}">the donor or an attorney dies</a></li>
+                            <li><a class="govuk-link" href="{{ path('lpa.death-notification') }}">{% trans %}the donor or an attorney dies{% endtrans %}</a></li>
                         {% endif %}
                     </ul>
 
-                    <p class="govuk-body">We’ll update the online <abbr title="lasting power of attorney">LPA</abbr> summary and our records.</p>
+                    <p class="govuk-body">{% trans %}We’ll update the online <abbr title="lasting power of attorney">LPA</abbr> summary and our records.{% endtrans %}</p>
 
-                    <p class="govuk-body">Do not make any changes to the paper <abbr title="lasting power of attorney">LPA</abbr> yourself. If you do, you’ll no longer be able to use the <abbr title="lasting power of attorney">LPA</abbr>.</p>
+                    <p class="govuk-body">{% trans %}Do not make any changes to the paper <abbr title="lasting power of attorney">LPA</abbr> yourself.
+                        If you do, you’ll no longer be able to use the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
 
-                    <p class="govuk-body">If you’re the donor, you can tell us about changes to your details and your attorney’s details.</p>
+                    <p class="govuk-body">{% trans %}If you’re the donor, you can tell us about changes to your details and your attorney’s details.{% endtrans %}</p>
 
-                    <p class="govuk-body">If you’re an attorney, you can tell us about changes to the donor’s details and your details. You cannot update another attorney’s details.</p>
+                    <p class="govuk-body">{% trans %}If you’re an attorney, you can tell us about changes to the donor’s details and your details. You cannot update another attorney’s details.{% endtrans %}</p>
 
-                    <h2 class="govuk-heading-m">How to let us know</h2>
+                    <h2 class="govuk-heading-m">{% trans %}How to let us know{% endtrans %}</h2>
 
-                    <h3 class="govuk-heading-s">Telephone</h3>
-                    <p class="govuk-body">When you get in touch, quote the LPA reference number.</p>
-                    <p class="govuk-body">Telephone: 0300 456 0300<br>
-                      Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm
+                    <h3 class="govuk-heading-s">{% trans %}Telephone{% endtrans %}</h3>
+                    <p class="govuk-body">{% trans %}When you get in touch, quote the LPA reference number.{% endtrans %}</p>
                     <p class="govuk-body">
-                      <a class="govuk-link" href="https://www.gov.uk/call-charges">Find out about call charges</a>
+                        {% trans %}Telephone: 0300 456 0300<br>
+                      Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm{% endtrans %}
+                    </p>
+                    <p class="govuk-body">
+                      <a class="govuk-link" href="https://www.gov.uk/call-charges">{% trans %}Find out about call charges{% endtrans %}</a>
                     </p>
 
-                    <h3 class="govuk-heading-s">Email</h3>
+                    <h3 class="govuk-heading-s">{% trans %}Email{% endtrans %}</h3>
                     <p class="govuk-body">
-                      <a class="govuk-link" href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a><br>
+                        <a class="govuk-link" href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a><br>
                     </p>
 
-                    <h3 class="govuk-heading-s">Address</h3>
+                    <h3 class="govuk-heading-s">{% trans %}Address{% endtrans %}</h3>
                     <p class="govuk-body">
-                      Office of the Public Guardian<br>
-                      PO Box 16185<br>
-                      Birmingham<br>
-                      B2 2WH
+                        Office of the Public Guardian<br>
+                        PO Box 16185<br>
+                        Birmingham<br>
+                        B2 2WH
                     </p>
 
                     {{ include('@partials/section-break.html.twig') }}
 
-                    <h2 class="govuk-heading-m govuk-!-margin-top-6">Let us know if a donor or attorney dies</h2>
+                    <h2 class="govuk-heading-m govuk-!-margin-top-6">{% trans %}Let us know if a donor or attorney dies{% endtrans %}</h2>
 
-                    <p class="govuk-body">It's important that we hold up-to-date information about donors and attorneys.
-                        This is because an LPA will end when the donor dies, and can end if an attorney dies.</p>
+                    <p class="govuk-body">{% trans %}It's important that we hold up-to-date information about donors and attorneys.
+                        This is because an LPA will end when the donor dies, and can end if an attorney dies.{% endtrans %}</p>
 
-                    <p class="govuk-body">Find out more about what to do if
+                    <p class="govuk-body">
                         {% if actorToken != 'null' %}
-                            <a class="govuk-link" href="{{ path('lpa.death-notification', {}, {'lpa': actorToken}) }}"> the donor or an attorney dies</a>
+                            {% trans with {'%link%': path('lpa.death-notification', {}, {'lpa': actorToken})} %}Find out more about what to do if <a class="govuk-link" href="%link%"> the donor or an attorney dies</a>{% endtrans %}
                         {% else %}
-                            <a class="govuk-link" href="{{ path('lpa.death-notification') }}"> the donor or an attorney dies</a>
+                            {% trans with {'%link%': path('lpa.death-notification')} %}Find out more about what to do if <a class="govuk-link" href="%link%"> the donor or an attorney dies</a>{% endtrans %}
                         {% endif %}
                     </p>
 
