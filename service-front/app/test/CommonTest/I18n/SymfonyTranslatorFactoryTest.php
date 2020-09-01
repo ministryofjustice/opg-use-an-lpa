@@ -44,7 +44,7 @@ class SymfonyTranslatorFactoryTest extends TestCase
             $instance->trans('LPA access code', [], 'messages', 'en_GB')
         );
         $this->assertEquals(
-            'Rhowch god mynediad yr ACLL',
+            'Cod mynediad yr LPA',
             $instance->trans('LPA access code', [], 'messages', 'cy')
         );
     }
