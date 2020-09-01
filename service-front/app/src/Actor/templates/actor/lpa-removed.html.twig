@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}LPA removed - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}LPA removed{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 
@@ -9,21 +9,21 @@
 
         {{ include('@partials/account-bar.html.twig') }}
 
-        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">Back</a>
+        <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
 
-                    <h1 class="govuk-heading-xl">We've removed an LPA from your account</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}We've removed an LPA from your account{% endtrans %}</h1>
 
-                    <p class="govuk-body">We've removed an <abbr title="lasting power of attorney">LPA</abbr> from your account because either:</p>
+                    <p class="govuk-body">{% trans %}We've removed an <abbr title="lasting power of attorney">LPA</abbr> from your account because either:{% endtrans %}</p>
 
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>you can no longer act as an attorney on the <abbr title="lasting power of attorney">LPA</abbr></li>
-                        <li>you've told us you no longer want to be an attorney</li>
-                        <li>the donor has removed you as an attorney</li>
+                        <li>{% trans %}you can no longer act as an attorney on the <abbr title="lasting power of attorney">LPA</abbr>{% endtrans %}</li>
+                        <li>{% trans %}you've told us you no longer want to be an attorney{% endtrans %}</li>
+                        <li>{% trans %}the donor has removed you as an attorney{% endtrans %}</li>
                     </ul>
 
                 </div>

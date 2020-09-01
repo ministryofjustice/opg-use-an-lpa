@@ -1,43 +1,36 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Delete your account - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Delete your account{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
 
-        <a href="{{ path('your-details') }}" class="govuk-back-link">Back</a><br>
+        <a href="{{ path('your-details') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a><br>
         <main class="govuk-main-wrapper" id="main-content" role="main">
-
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-xl">Are you sure you want to delete your account?</h1>
-
-                    <p class="govuk-body">If you delete your Use a lasting power of attorney account:</p>
-
+                    <h1 class="govuk-heading-xl">{% trans %}Are you sure you want to delete your account?{% endtrans %}</h1>
+                    <p class="govuk-body">{% trans %}If you delete your Use a lasting power of attorney account:{% endtrans %}</p>
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>any <abbr title="lasting powers of attorney">LPAs</abbr> you added will be removed</li>
-                        <li>you‘ll not be able to see how those <abbr title="lasting powers of attorney">LPAs</abbr> are being used</li>
+                        <li>{% trans %}any <abbr title="lasting powers of attorney">LPAs</abbr> you added will be removed{% endtrans %}</li>
+                        <li>{% trans %}you‘ll not be able to see how those <abbr title="lasting powers of attorney">LPAs</abbr> are being used{% endtrans %}</li>
                     </ul>
 
-                    <p class="govuk-body">If you want to use the <abbr title="lasting power of attorney">LPA</abbr> online after you've deleted your account, you’ll need to contact us.</p>
+                    <p class="govuk-body">{% trans %}If you want to use the <abbr title="lasting power of attorney">LPA</abbr> online after you've deleted your account, you’ll need to contact us.{% endtrans %}</p>
 
-                    <p class="govuk-body">You can still use paper versions of these <abbr title="lasting powers of attorney">LPAs</abbr> if:</p>
-
+                    <p class="govuk-body">{% trans %}You can still use paper versions of these <abbr title="lasting powers of attorney">LPAs</abbr> if:{% endtrans %}</p>
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>the <abbr title="lasting powers of attorney">LPAs</abbr> are still valid</li>
-                        <li>you have not been removed as an attorney</li>
+                        <li>{% trans %}the <abbr title="lasting powers of attorney">LPAs</abbr> are still valid{% endtrans %}</li>
+                        <li>{% trans %}you have not been removed as an attorney{% endtrans %}</li>
                     </ul><br>
-
-                    <a href="{{ path('your-details')}}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
-                        No, return to my details
+                    <a href="{{ path('your-details') }}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
+                        {% trans %}No, return to my details{% endtrans %}
                     </a>
-
                     <a href="{{ path('delete-account') }}" role="button" draggable="false" class="govuk-button govuk-button--warning">
-                        Yes, continue deleting my account
+                        {% trans %}Yes, continue deleting my account{% endtrans %}
                     </a>
-
                 </div>
             </div>
         </main>

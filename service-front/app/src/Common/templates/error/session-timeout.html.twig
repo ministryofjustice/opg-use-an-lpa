@@ -1,16 +1,16 @@
 {% extends '@layout/default.html.twig' %}
 
-{% block html_title %}Session timeout - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Session timeout{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
 
     <main class="govuk-main-wrapper">
-        <h1 class="govuk-heading-xl">Session timeout</h1>
-        <p class="govuk-body">Your session has expired.</p>
+        <h1 class="govuk-heading-xl">{% trans %}Session timeout{% endtrans %}</h1>
+        <p class="govuk-body">{% trans %}Your session has expired.{% endtrans %}</p>
         <p class="govuk-body">
-            Please head back to <a href="{{ path('home') }}" class="govuk-link">Home</a>.
+            {%trans with {'%link%': path('home')} %}Please head back to <a href="%link%" class="govuk-link">Home</a>.{% endtrans %}
         </p>
     </main>
 </div>

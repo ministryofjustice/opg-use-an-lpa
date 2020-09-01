@@ -1,6 +1,6 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}We’ve found this LPA - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}We’ve found this LPA{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -13,21 +13,20 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">We’ve found this LPA</h1>
-
+                    <h1 class="govuk-heading-xl">{% trans %}We’ve found this LPA{% endtrans %}</h1>
                     <table id="confirmation-table" class="govuk-table">
                         <tbody class="govuk-table__body">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="row">Type of LPA</th>
-                            <td class="govuk-table__cell">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' : 'Health and welfare' }}</td>
+                            <th class="govuk-table__header" scope="row">{% trans %}Type of LPA{% endtrans %}</th>
+                            <td class="govuk-table__cell">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans  }}</td>
                         </tr>
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="row">Donor name</th>
+                            <th class="govuk-table__header" scope="row">{% trans %}Donor name{% endtrans %}</th>
                             <td class="govuk-table__cell">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}</td>
                         </tr>
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="row">Code expires</th>
-                            <td class="govuk-table__cell">in {{ days_remaining_to_expiry(expires) }} days, on {{ lpa_date(expires) }}</td>
+                            <th class="govuk-table__header" scope="row">{% trans %}Code expires{% endtrans %}</th>
+                            <td class="govuk-table__cell">{% trans count days_remaining_to_expiry(expires) with {'%date%': lpa_date(expires)} %}in %count% day, on %date%|in %count% days, on %date%{% endtrans %}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -37,13 +36,13 @@
             <div class="govuk-warning-text">
                 <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                 <strong class="govuk-warning-text__text">
-                    <span class="govuk-warning-text__assistive">Warning</span>
-                    Check that these details are correct before continuing
+                    <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                    {% trans %}Check that these details are correct before continuing{% endtrans %}
                 </strong>
             </div>
 
             <div class="govuk-body">
-                <p class="govuk-body">If this is not the right LPA, ask the donor or attorney to check the access code.</p>
+                <p class="govuk-body">{% trans %}If this is not the right LPA, ask the donor or attorney to check the access code.{% endtrans %}</p>
             </div>
 
             <div class="govuk-grid-row">
@@ -52,15 +51,17 @@
                     <details class="govuk-details" role="group">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
-                                If you need to see this <abbr title="lasting power of attorney">LPA</abbr> after {{ lpa_date(expires) }}
+                                {% trans with {'%date%': lpa_date(expires)} %}If you need to see this <abbr title="lasting power of attorney">LPA</abbr> after %date%{% endtrans %}
                             </span>
                         </summary>
                         <div class="govuk-details__text">
-                            <p class="govuk-body">You can see an online summary of this <abbr title="lasting power of attorney">LPA</abbr> until {{ lpa_date(expires) }}. After this date, the access code will expire.</p>
-                            <p class="govuk-body">Ask the donor or attorney for a new access code if your organisation:
+                            <p class="govuk-body">
+                                {% trans with {'%date%': lpa_date(expires)} %}You can see an online summary of this <abbr title='lasting power of attorney'> LPA </abbr>until %date%. After this date, the access code will expire.{% endtrans %}
+                            </p>
+                            <p class="govuk-body">{% trans %}Ask the donor or attorney for a new access code if your organisation:{% endtrans %}
                                 <ul class="list list-bullet">
-                                    <li>needs more time to process this LPA</li>
-                                    <li>need to see this LPA at a later date</li>
+                                    <li>{% trans %}needs more time to process this LPA{% endtrans %}</li>
+                                    <li>{% trans %}need to see this LPA at a later date{% endtrans %}</li>
                                 </ul>
                             </p>
                         </div>
@@ -70,11 +71,11 @@
             </div>
 
             <a href="{{ path('view-lpa') }}" role="button" draggable="false" class="govuk-button">
-                View this LPA
+                {% trans %}View this LPA{% endtrans %}
             </a>
 
             <p class="govuk-body">
-                <a class="govuk-link" href="{{ path('home') }}">Try another access code</a>
+                <a class="govuk-link" href="{{ path('home') }}">{% trans %}Try another access code{% endtrans %}</a>
             </p>
         </main>
     </div>

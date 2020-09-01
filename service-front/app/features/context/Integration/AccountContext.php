@@ -814,6 +814,14 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
+     * @Given /^I can see a flash message for the added LPA$/
+     */
+    public function iCanSeeAFlashMessageForTheAddedLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @Given /^I have generated an access code for an organisation and can see the details$/
      */
     public function iHaveGeneratedAnAccessCodeForAnOrganisationAndCanSeeTheDetails()

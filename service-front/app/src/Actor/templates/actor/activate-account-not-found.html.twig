@@ -1,38 +1,37 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}We could not activate that account - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}We could not activate that account{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
 
-        <a href="{{ path('home') }}" class="govuk-back-link">Back</a>
+        <a href="{{ path('home') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div class="govuk-grid-row">
 
                 <div class="govuk-grid-column-two-thirds">
-                    <h2 class="govuk-heading-l">We could not activate that account</h2>
+                    <h2 class="govuk-heading-l">{% trans %}We could not activate that account{% endtrans %}</h2>
                 </div>
 
                 <div class="govuk-grid-column-two-thirds">
 
-                    <p class="govuk-body-l">Sorry, we had a problem activating your account. This could be because:</p>
+                    <p class="govuk-body-l">{% trans %}Sorry, we had a problem activating your account. This could be because:{% endtrans %}</p>
                     <ul class="list list-bullet">
                         <li>
-                            <p class="govuk-body govuk-!-font-weight-bold">You already have an active account</p>
-                            <p class="govuk-body">If so, you can sign in to your <a href="{{ url('login') }}">existing Use an <abbr title="lasting power of attorney">LPA</abbr> account</a> to add an <abbr title="lasting power of attorney">LPA</abbr>.</p>
+                            <p class="govuk-body govuk-!-font-weight-bold">{% trans %}You already have an active account{% endtrans %}</p>
+                            <p class="govuk-body">{% trans with {'%link%': path('login') } %}If so, you can sign in to your <a href="%link%">existing Use an <abbr title="lasting power of attorney">LPA</abbr> account</a> to add an <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
                         </li>
                         <li>
-                            <p class="govuk-body govuk-!-font-weight-bold">You created the account more than 24 hours ago</p>
-                            <p class="govuk-body">You need to activate your account within 24 hours of creating it. If you do not activate it within that time, we'll automatically delete it.</p>
-                            <p class="govuk-body">You should return to <a href="{{ url('create-account') }}">create an account</a> and complete again.</p>
+                            <p class="govuk-body govuk-!-font-weight-bold">{% trans %}You created the account more than 24 hours ago{% endtrans %}</p>
+                            <p class="govuk-body">{% trans %}You need to activate your account within 24 hours of creating it. If you do not activate it within that time, we'll automatically delete it.{% endtrans %}</p>
                         </li>
                     </ul>
                 </div>
                 <div class="govuk-grid-column-full">
-                    <p class="govuk-body">If you need more help activating your account, email <a href="mailto:lpa.research@digital.justice.gov.uk ">lpa.research@digital.justice.gov.uk</a>.</p>
+                    <p class="govuk-body">{% trans with {'%link%': "mailto:lpa.research@digital.justice.gov.uk" } %}If you need more help activating your account, email <a href="%link%">lpa.research@digital.justice.gov.uk</a>.{% endtrans %}</p>
                 </div>
             </div>
 

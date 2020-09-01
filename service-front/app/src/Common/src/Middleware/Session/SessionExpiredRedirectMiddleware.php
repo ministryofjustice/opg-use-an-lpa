@@ -6,7 +6,7 @@ namespace Common\Middleware\Session;
 
 use Common\Service\Session\EncryptedCookiePersistence;
 use Laminas\Diactoros\Uri;
-use Mezzio\Helper\ServerUrlHelper;
+use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
 use Psr\Http\Message\ResponseInterface;
@@ -14,27 +14,40 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\RedirectResponse;
+use DateTime;
 
 class SessionExpiredRedirectMiddleware implements MiddlewareInterface
 {
     /**
-     * @var ServerUrlHelper
+     * @var UrlHelper
      */
     private $helper;
 
-    public function __construct(ServerUrlHelper $helper)
+    public function __construct(UrlHelper $urlHelper)
     {
-        $this->helper = $helper;
+        $this->helper = $urlHelper;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /** @var SessionInterface $session */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
-        if ($session !== null && $session->get(EncryptedCookiePersistence::SESSION_EXPIRED_KEY) !== null) {
-            $session->unset(EncryptedCookiePersistence::SESSION_EXPIRED_KEY);
-            $uri = new Uri($this->helper->generate('/session-expired'));
 
+        if ($session !== null && $session->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)) {
+
+            $sessionExpiredDatetime = $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY);
+
+            // extracting the dates alone to do a date comparison to check if expire date was the previous day
+            // converting the Date string format to int to reaffirm comparison
+            $currentDate = intval((new DateTime())->format('Ymd'));
+            $expiredDate = intval((new DateTime("@$sessionExpiredDatetime"))->format('Ymd'));
+
+            $session->unset(EncryptedCookiePersistence::SESSION_EXPIRED_KEY);
+            if ($currentDate > $expiredDate) {
+                $uri = new Uri($this->helper->generate('home'));
+            } else {
+                $uri = new Uri($this->helper->generate('session-expired'));
+            }
             return new RedirectResponse($uri);
         } else {
             return $handler->handle($request);
