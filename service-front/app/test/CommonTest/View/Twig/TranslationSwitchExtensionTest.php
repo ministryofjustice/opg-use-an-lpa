@@ -4,6 +4,7 @@ namespace CommonTest\View\Twig;
 
 use Common\View\Twig\TranslationSwitchExtension;
 use Mezzio\Helper\UrlHelper;
+use Mezzio\Router\RouteResult;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;
 
@@ -40,13 +41,17 @@ class TranslationSwitchExtensionTest extends TestCase
     public function it_returns_the_current_route_name()
     {
         $urlHelper = $this->prophesize(UrlHelper::class);
+        $routeResult = $this->prophesize(RouteResult::class);
 
         $switchExtension = new TranslationSwitchExtension($urlHelper->reveal());
 
-        $urlHelper
-            ->getRouteResult()
+        $routeResult
             ->getMatchedRouteName()
             ->willReturn('lpa.add');
+
+        $urlHelper
+            ->getRouteResult()
+            ->willReturn($routeResult);
 
         $result = $switchExtension->getRouteName();
 
