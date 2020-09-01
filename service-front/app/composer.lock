@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5bbf22bebe90a268196721b63659de60",
+    "content-hash": "628cfd336e6cbc52b54d73d2e320db9c",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -216,16 +216,16 @@
         },
         {
             "name": "cooperaj/better-twig-i18n",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cooperaj/better-twig-i18n.git",
-                "reference": "78e34ca776b6bc0555e95648b9f584afa56ac42f"
+                "reference": "974edcbf143388c50256877cbc6d75c767a99abc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cooperaj/better-twig-i18n/zipball/78e34ca776b6bc0555e95648b9f584afa56ac42f",
-                "reference": "78e34ca776b6bc0555e95648b9f584afa56ac42f",
+                "url": "https://api.github.com/repos/cooperaj/better-twig-i18n/zipball/974edcbf143388c50256877cbc6d75c767a99abc",
+                "reference": "974edcbf143388c50256877cbc6d75c767a99abc",
                 "shasum": ""
             },
             "require": {
@@ -258,7 +258,7 @@
                 }
             ],
             "description": "Provides i18n functionality based on gettext language files.",
-            "time": "2020-09-01T11:06:55+00:00"
+            "time": "2020-09-01T14:24:58+00:00"
         },
         {
             "name": "dflydev/fig-cookies",
@@ -10495,7 +10495,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "cooperaj/better-twig-i18n": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
