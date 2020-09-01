@@ -216,7 +216,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         $sessionData = $this->getCookieFromRequest($request);
         $data = $this->decodeCookieValue($sessionData);
 
-        $this->originalSessionTime = isset($data[self::SESSION_TIME_KEY])? $data[self::SESSION_TIME_KEY] : null;
+        $this->originalSessionTime = $data[self::SESSION_TIME_KEY] ?: null;
         $this->requestPath = $request->getUri()->getPath();
 
         // responsible the for expiry of a users session
@@ -371,8 +371,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
     private function sessionTime(): int
     {
         // Checking session or setting current time
-        return isset($this->originalSessionTime)
-        && !is_null($this->originalSessionTime)
+        return !is_null($this->originalSessionTime)
         && preg_match("/^\/session-check(\/|)$/i", $this->requestPath)
             ? $this->originalSessionTime
             : time();
