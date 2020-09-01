@@ -2,12 +2,7 @@
 
 declare(strict_types=1);
 
-use Laminas\ConfigAggregator\ConfigAggregator;
-
 return [
-    'debug' => true,
-    ConfigAggregator::ENABLE_CACHE => false,
-
     'dependencies' => [
         'factories' => [
             \Http\Adapter\Guzzle6\Client::class => \BehatTest\Http\Adapter\Guzzle6\TestClientFactory::class,
