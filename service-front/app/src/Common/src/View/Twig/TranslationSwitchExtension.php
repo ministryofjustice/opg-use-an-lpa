@@ -12,7 +12,8 @@ class TranslationSwitchExtension extends AbstractExtension
 {
     private $urlHelper;
 
-    public function __construct(UrlHelper $urlHelper) {
+    public function __construct(UrlHelper $urlHelper)
+    {
         $this->urlHelper = $urlHelper;
     }
 
