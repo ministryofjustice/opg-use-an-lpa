@@ -351,6 +351,9 @@ class ActorUsers implements ActorUsersInterface
         return true;
     }
 
+
+
+
     /**
      * @inheritDoc
      */
@@ -373,5 +376,31 @@ class ActorUsers implements ActorUsersInterface
         ]);
 
         return $this->getData($user);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function resetActivationDetails(string $email, string $password, int $activationTtl): array
+    {
+
+        $foundUser = $this->getByEmail($email);
+
+        $id = $foundUser['Id'];
+        //  Update the item by setting the password and restarting the Expiry TTL
+        $this->client->updateItem([
+            'TableName' => $this->actorUsersTable,
+            'Key' => [
+                'Id' => [
+                    'S' => $id,
+                ],
+            ],
+            'UpdateExpression' => 'SET Password=:p, ExpiresTTL=:et',
+            'ExpressionAttributeValues' => [
+                ':p' => ['S' => password_hash($password, PASSWORD_DEFAULT)],
+                ':et' => ['N' => (string) $activationTtl]
+            ],
+        ]);
+        return $this->get($id);
     }
 }

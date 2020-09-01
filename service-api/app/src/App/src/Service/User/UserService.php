@@ -57,9 +57,10 @@ class UserService
     public function add(array $data): array
     {
         if ($this->usersRepository->exists($data['email'])) {
-            throw new ConflictException(
-                'User already exists with email address ' . $data['email'],
-                ['email' => $data['email']]
+            return $this->usersRepository->resetActivationDetails(
+                $data['email'],
+                $data['password'],
+                $this->getExpiryTtl()
             );
         }
 
@@ -79,11 +80,11 @@ class UserService
         }
 
         // Generate unique id for user
-        $id = Uuid::uuid4()->toString();
+        $id = $this->generateUniqueId();
 
         //  An unactivated user account can only exist for 24 hours before it is deleted
-        $activationToken = Base64UrlSafe::encode(random_bytes(32));
-        $activationTtl = time() + (60 * 60 * 24);
+        $activationToken = $this->getLinkToken();
+        $activationTtl = $this->getExpiryTtl();
 
         $user = $this->usersRepository->add($id, $data['email'], $data['password'], $activationToken, $activationTtl);
 
@@ -177,8 +178,8 @@ class UserService
      */
     public function requestPasswordReset(string $email): array
     {
-        $resetToken = Base64UrlSafe::encode(random_bytes(32));
-        $resetExpiry = time() + (60 * 60 * 24);
+        $resetToken = $this->getLinkToken();
+        $resetExpiry = $this->getExpiryTtl();
 
         try {
             $user = $this->usersRepository->recordPasswordResetRequest($email, $resetToken, $resetExpiry);
@@ -303,8 +304,8 @@ class UserService
      */
     public function requestChangeEmail(string $userId, string $newEmail, string $password)
     {
-        $resetToken = Base64UrlSafe::encode(random_bytes(32));
-        $resetExpiry = time() + (60 * 60 * 48);
+        $resetToken = $this->getLinkToken();
+        $resetExpiry = $this->getExpiryTtl();
 
         $this->canRequestChangeEmail($userId, $newEmail, $password);
 
@@ -341,7 +342,7 @@ class UserService
 
         $newEmailExists = $this->usersRepository->getUserByNewEmail($newEmail);
 
-        if (!empty($newEmailExists) && ! $this->checkIfEmailResetViable($newEmailExists,false, $userId)) {
+        if (!empty($newEmailExists) && ! $this->checkIfEmailResetViable($newEmailExists, false, $userId)) {
             $this->logger->notice(
                 'Could not request email change for account with Id {id}
                 as another user has already requested to change their email that email address',
@@ -413,5 +414,34 @@ class UserService
         $user = $this->usersRepository->get($userId);
 
         $this->usersRepository->changeEmail($userId, $resetToken, $user['NewEmail']);
+    }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    public function getLinkToken(): string
+    {
+        $activationToken = Base64UrlSafe::encode(random_bytes(32));
+        return $activationToken;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getExpiryTtl()
+    {
+        $activationTtl = time() + (60 * 60 * 24);
+        return $activationTtl;
+    }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    public function generateUniqueId(): string
+    {
+        $id = Uuid::uuid4()->toString();
+        return $id;
     }
 }

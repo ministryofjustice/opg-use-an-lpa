@@ -145,4 +145,15 @@ interface ActorUsersInterface
      * @return array The deleted user details
      */
     public function delete(string $accountId): array;
+
+
+    /**
+     * resets activation with password and ttl
+     *
+     * @param string $email
+     * @param string $password
+     * @param int $activationTtl
+     * @return mixed
+     */
+    public function resetActivationDetails(string $email, string $password, int $activationTtl) : array;
 }
