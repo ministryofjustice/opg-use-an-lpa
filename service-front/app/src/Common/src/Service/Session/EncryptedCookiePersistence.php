@@ -87,7 +87,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
     private ?int $originalSessionTime;
 
-    private string $requestPath;
+    private ?string $requestPath;
 
     /**
      * EncryptedCookiePersistence constructor.
@@ -128,6 +128,9 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         $this->cookieDomain = $cookieDomain;
         $this->cookieSecure = $cookieSecure;
         $this->cookieHttpOnly = $cookieHttpOnly;
+
+        $this->originalSessionTime = null;
+        $this->requestPath = null;
     }
 
 
@@ -372,6 +375,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
     {
         // Checking session or setting current time
         return !is_null($this->originalSessionTime)
+        && !is_null($this->requestPath)
         && preg_match("/^\/session-check(\/|)$/i", $this->requestPath)
             ? $this->originalSessionTime
             : time();
