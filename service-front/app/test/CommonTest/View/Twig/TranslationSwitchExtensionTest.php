@@ -35,4 +35,21 @@ class TranslationSwitchExtensionTest extends TestCase
             $this->assertEquals($expectedFunctions[$function->getName()], $functionCallable[1]);
         }
     }
+
+    /** @test */
+    public function it_returns_the_current_route_name()
+    {
+        $urlHelper = $this->prophesize(UrlHelper::class);
+
+        $switchExtension = new TranslationSwitchExtension($urlHelper->reveal());
+
+        $urlHelper
+            ->getRouteResult()
+            ->getMatchedRouteName()
+            ->willReturn('lpa.add');
+
+        $result = $switchExtension->getRouteName();
+
+        $this->assertEquals('lpa.add', $result);
+    }
 }
