@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\Email;
 
 use Alphagov\Notifications\Client as NotifyClient;
+use Mezzio\Helper\UrlHelper;
 
 /**
  * Class EmailClient
@@ -26,7 +27,7 @@ class EmailClient
     /**
      * Welsh template IDs for the notify client
      */
-    const WELSH_TEMPLATE_ID_ACCOUNT_ACTIVATION                = '1be4d491-28df-4dfe-b90c-b285eafba05b';
+    const WELSH_TEMPLATE_ID_ACCOUNT_ACTIVATION                = 'e0933491-b9ee-4552-adb3-7775843f4d4b';
     const WELSH_TEMPLATE_ID_PASSWORD_RESET                    = 'ea7ff73a-2a43-4f7e-a1e4-3e1351ae262d';
     const WELSH_TEMPLATE_ID_PASSWORD_CHANGE                   = 'e47fdf50-d223-4f26-a12f-417bd53b03dd';
     const WELSH_TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL= 'f06ab05a-af11-4047-bcbb-4a33d0673829';
@@ -40,12 +41,24 @@ class EmailClient
     private $notifyClient;
 
     /**
+     * @var UrlHelper
+     */
+    private $urlHelper;
+
+    /**
      * EmailClient constructor.
      * @param NotifyClient $notifyClient
      */
-    public function __construct(NotifyClient $notifyClient)
+    public function __construct(NotifyClient $notifyClient, UrlHelper $urlHelper)
     {
         $this->notifyClient = $notifyClient;
+        $this->urlHelper = $urlHelper;
+
+        if ($this->urlHelper->getBasePath() === '/cy') {
+            $this->language = "welsh";
+        } else {
+            $this->language = "english";
+        }
     }
 
     /**
@@ -56,9 +69,15 @@ class EmailClient
      */
     public function sendAccountActivationEmail(string $recipient, string $activateAccountUrl)
     {
-        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_ACCOUNT_ACTIVATION, [
-            'activate-account-url' => $activateAccountUrl,
-        ]);
+        if ($this->language == "welsh") {
+            $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_ACCOUNT_ACTIVATION, [
+                'activate-account-url' => $activateAccountUrl,
+            ]);
+        } else {
+            $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_ACCOUNT_ACTIVATION, [
+                'activate-account-url' => $activateAccountUrl,
+            ]);
+        }
     }
 
     /**
