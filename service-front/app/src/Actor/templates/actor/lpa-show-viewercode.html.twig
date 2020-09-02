@@ -14,7 +14,7 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                  <span class="govuk-caption-l">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' : 'Health and welfare' }}</span>
+                  <span class="govuk-caption-l">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans  }}</span>
                   <span class="govuk-heading-l govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</span>
                 </div>
             </div>
