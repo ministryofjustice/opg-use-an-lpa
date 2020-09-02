@@ -5,9 +5,9 @@
     <div class="govuk-summary-list__row govuk-!-margin-bottom-0 govuk-!-margin-top-4">
         <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-width-one-third">
             {% if actorActive %}
-                <span class="govuk-heading-m govuk-!-margin-bottom-0">{{ caseSubtype }}</span>
+                <span class="govuk-heading-m govuk-!-margin-bottom-0">{{ caseSubtype|trans }}</span>
             {% else %}
-                <span class="govuk-heading-m govuk-!-margin-bottom-0 lpa-secondary-text-colour">{{ caseSubtype }}</span>
+                <span class="govuk-heading-m govuk-!-margin-bottom-0 lpa-secondary-text-colour">{{ caseSubtype| trans }}</span>
             {% endif %}
         </dt>
         <dd class="govuk-summary-list__value govuk-!-padding-top-4 govuk-!-padding-bottom-4 govuk-!-margin-bottom-0">
