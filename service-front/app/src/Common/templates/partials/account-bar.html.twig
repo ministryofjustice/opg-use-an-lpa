@@ -1,5 +1,10 @@
 <div class="signin">
-    <p class="govuk-body-s">{% trans %}Last signed in:{% endtrans %} {{ user.getDetail('LastLogin') is empty ? "Never" : user.getDetail('LastLogin')|date('j F Y g:ia') }}</p>
+    <p class="govuk-body-s">{% trans %}Last signed in:{% endtrans %}
+        {% if user.getDetail('LastLogin') is empty %}
+            {% trans %}Never{% endtrans %}
+        {% else %}
+           {{ user.getDetail('LastLogin')|date('j F Y g:ia') }}
+        {% endif %}
     <nav class="navigation govuk-body-s">
         <li><a href="/your-details" class="govuk-link">{% trans %}Your details{% endtrans %}</a></li>
         <li><a href="/lpa/dashboard" class="govuk-link">{% trans %}Your LPAs{% endtrans %}</a></li>
