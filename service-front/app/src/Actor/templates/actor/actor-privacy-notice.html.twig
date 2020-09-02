@@ -1,211 +1,213 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}Privacy notice - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Privacy notice{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
 {{ include('@partials/new-service.html.twig') }}
 
-    <a class="govuk-link govuk-back-link" href="{{ path('actor-terms-of-use') }}">Back</a>
+    <a class="govuk-link govuk-back-link" href="{{ path('actor-terms-of-use') }}">{% trans %}Back{% endtrans %}</a>
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <h1 class="govuk-heading-xl">Privacy notice</h1>
+                <h1 class="govuk-heading-xl">{% trans %}Privacy notice{% endtrans %}</h1>
                 <p class="govuk-body-l">
-                    This privacy notice explains why the
-                    Office of the Public Guardian (OPG) collects personal data when you use the ‘Use a lasting power of attorney’ (LPA) service.
+                    {% trans %}
+                    This privacy notice explains why the Office of the Public Guardian (OPG)
+                    collects personal data when you use the ‘Use a lasting power of attorney’ (LPA) service.
+                    {% endtrans %}
                 </p>
-                <p class="govuk-body">
-                    This privacy notice also explains:
-                </p>
+                <p class="govuk-body">{% trans %}This privacy notice also explains:{% endtrans %}</p>
 
                 <ul class="govuk-list govuk-list--bullet">
-                        <li>
-                            how we store your data
-                        </li>
-                        <li>
-                            what we do with your data
-                        </li>
-                        <li>
-                            how you can get a copy of the data we have about you
-                        </li>
-                        <li>
-                            how you can complain if you think we’ve done something wrong
-                        </li>
+                        <li>{% trans %}how we store your data{% endtrans %}</li>
+                        <li>{% trans %}what we do with your data{% endtrans %}</li>
+                        <li>{% trans %}how you can get a copy of the data we have about you{% endtrans %}</li>
+                        <li>{% trans %}how you can complain if you think we’ve done something wrong{% endtrans %}</li>
                     </ul>
 
-                <p class="govuk-body">
-                    You should read this privacy notice alongside:
-                </p>
+                <p class="govuk-body">{% trans %}You should read this privacy notice alongside:{% endtrans %}</p>
                    <ul class="govuk-list govuk-list--bullet">
                     <li>
+                    {% trans %}
                         <a class="govuk-link" href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter">
-                        OPG’s personal information charter
-                        </a>,
-                    which sets out the standards you can expect when we ask for, use or share your personal information
+                            OPG’s personal information charter
+                        </a>, which sets out the standards you can expect when we ask for, use or share your personal information
+                    {% endtrans %}
                     </li>
                     <li>
+                    {% trans %}
                         <a class="govuk-link" href="https://www.gov.uk/government/publications/opg-privacy-notice-lasting-and-enduring-powers-of-attorney">
-                        OPG’s lasting power of attorney privacy notice
-                        </a>,
-                    which explains how we use and protect your data when you’re named on an <abbr title="lasting power of attorney">LPA</abbr>
+                            OPG’s lasting power of attorney privacy notice
+                        </a>, which explains how we use and protect your data when you’re named on an <abbr title="lasting power of attorney">LPA</abbr>
+                    {% endtrans %}
                     </li>
                 </ul>
 
-                <h2 class="govuk-heading-m">Who manages the Use a lasting power of attorney service</h2>
-                <p class="govuk-body">This service is managed by OPG, which is an executive agency sponsored by the Ministry of Justice (MOJ).</p>
-                <p class="govuk-body">MOJ is the data controller for the personal data we store.
+                <h2 class="govuk-heading-m">{% trans %}Who manages the Use a lasting power of attorney service{% endtrans %}</h2>
+                <p class="govuk-body">{% trans %}This service is managed by OPG, which is an executive agency sponsored by the Ministry of Justice (MOJ).{% endtrans %}</p>
+                <p class="govuk-body">
+                {% trans %}
+                    MOJ is the data controller for the personal data we store.
                     <a class="govuk-link" href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter">
                         OPG’s personal information charter
                     </a>
                     explains how we process personal data.
+                {% endtrans %}
                 </p>
 
-                <p class="govuk-body">You can find more information about using the Use a lasting power of attorney service in our
-                    <a class="govuk-link" href="{{ path('actor-terms-of-use') }}">terms of use</a> and <a class="govuk-link" href="{{ path('actor-cookies')}}">cookie policy.</a>
+                <p class="govuk-body">{% trans with {'%terms-of-use%': path('actor-terms-of-use'), '%cookie%': path('actor-cookies')} %}You can find more information about using the Use a lasting power of attorney service in our
+                    <a class="govuk-link" href="%terms-of-use%">terms of use</a> and <a class="govuk-link" href="%cookie%">cookie policy.{% endtrans %}</a>
                 </p>
-                <h2 class="govuk-heading-m"> Why we collect personal data and how we use it
-                </h2>
-                <p class="govuk-body">
-                    We only collect the personal data that is relevant for the services we are providing to you.
-                </p>
-                <p class="govuk-body">
-                    In order to use this service, you need to enter some personal data and create an account
-                </p>
-                <p class="govuk-body">
-                    The personal data we collect includes:
-                </p>
+                <h2 class="govuk-heading-m">{% trans %}Why we collect personal data and how we use it{% endtrans %}</h2>
+                <p class="govuk-body">{% trans %}We only collect the personal data that is relevant for the services we are providing to you.{% endtrans %}</p>
+                <p class="govuk-body">{% trans %}In order to use this service, you need to enter some personal data and create an account{% endtrans %}</p>
+                <p class="govuk-body">{% trans %}The personal data we collect includes:{% endtrans %}</p>
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>your email address</li>
-                        <li>your name and date of birth</li>
-                        <li>your computer’s IP address while you use this service</li>
+
+
+
+
+                        <li>{% trans %}your email address{% endtrans %}</li>
+                        <li>{% trans %}your name and date of birth{% endtrans %}</li>
+                        <li>{% trans %}your computer’s IP address while you use this service{% endtrans %}</li>
+
+
+
+
                     </ul>
 
                 <p class="govuk-body">
-                    We use the data to find the <abbr title="Lasting power of attorney">LPA</abbr> you’re named on and to create your account.
+                    {% trans %}We use the data to find the <abbr title="Lasting power of attorney">LPA</abbr> you’re named on and to create your account.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    The service also keeps a record of the <abbr title="lasting power of attorney">LPA</abbr> access codes you’ve made and which organisations you made them for.
+                    {% trans %}The service also keeps a record of the <abbr title="lasting power of attorney">LPA</abbr> access codes you’ve made and which organisations you made them for.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    If other people named on the <abbr title="lasting power of attorney">LPA</abbr> (the donor or attorneys) are also using the service,
-                    they can see which organisations you’ve made access codes for.
+                    {% trans %}If other people named on the <abbr title="lasting power of attorney">LPA</abbr> (the donor or attorneys) are also using the service,
+                    they can see which organisations you’ve made access codes for.{% endtrans %}
                 </p>
-                <h3 class="govuk-heading-s">Cookies and site usage data</h3>
+                <h3 class="govuk-heading-s">{% trans %}Cookies and site usage data{% endtrans %}</h3>
                 <p class="govuk-body">
-                    We collect site usage information from this service. This allows us to see how the service is being used so we can improve it. This information does not contain any personal data and is stored separately from the information you enter when using this service.
-                </p>
-                <p class="govuk-body">
-                    Find out more about <a class="govuk-link" href="https://www.gov.uk/help/cookies">cookies</a>.
-                </p>
-                <h3 class="govuk-heading-s">Legal basis for processing this data</h3>
-                <p class="govuk-body">
-                    Your use of this online service is optional.
-                    If you prefer, you can show the original paper <abbr title="lasting power of attorney">LPA</abbr>, or a certified copy, to people who need to see it.
+                    {% trans %}We collect site usage information from this service. This allows us to see how the service is being used so we can improve it.
+                    This information does not contain any personal data and is stored separately from the information you enter when using this service.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    We operate the Use a lasting power of attorney service as part of our legal responsibilities under the Mental Capacity Act 2005.
+                    {% trans %}Find out more about <a class="govuk-link" href="https://www.gov.uk/help/cookies">cookies</a>.{% endtrans %}
                 </p>
-                <h2 class="govuk-heading-m">Personal data and the online summary</h2>
+                <h3 class="govuk-heading-s">{% trans %}Legal basis for processing this data{% endtrans %}</h3>
                 <p class="govuk-body">
-                    The donor or an attorney named on an <abbr title="lasting power of attorney">LPA</abbr> can use this service
-                    to give a third party access to an online summary of the <abbr title="lasting power of attorney">LPA</abbr>.
+                    {% trans %}Your use of this online service is optional.
+                    If you prefer, you can show the original paper <abbr title="lasting power of attorney">LPA</abbr>, or a certified copy, to people who need to see it.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    This summary includes:
+                    {% trans %}We operate the Use a lasting power of attorney service as part of our legal responsibilities under the Mental Capacity Act 2005.{% endtrans %}
+                </p>
+                <h2 class="govuk-heading-m">{% trans %}Personal data and the online summary{% endtrans %}</h2>
+                <p class="govuk-body">
+                    {% trans %}The donor or an attorney named on an <abbr title="lasting power of attorney">LPA</abbr> can use this service
+                    to give a third party access to an online summary of the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
+                </p>
+                <p class="govuk-body">
+                    {% trans %}This summary includes:{% endtrans %}
                 </p>
                 <ul class="govuk-list govuk-list--bullet">
 
-                    <li>the name and address of the donor and any active attorneys</li>
-                    <li>the name of any inactive attorneys</li>
-                    <li>whether the <abbr title="lasting power of attorney">LPA</abbr> is currently valid</li>
-                    <li>when the <abbr title="lasting power of attorney">LPA</abbr> can be used (property and finance <abbr title="lasting powers of attorney">LPAs</abbr> only)</li>
-                    <li>whether the donor chose to allow their attorneys to make decisions on life-sustaining treatment
-                        (health and welfare <abbr title="lasting powers of attorney">LPAs</abbr> only)
-                    </li>
+
+
+
+                    <li>{% trans %}the name and address of the donor and any active attorneys{% endtrans %}</li>
+                    <li>{% trans %}the name of any inactive attorneys{% endtrans %}</li>
+                    <li>{% trans %}whether the <abbr title="lasting power of attorney">LPA</abbr> is currently valid{% endtrans %}</li>
+                    <li>{% trans %}when the <abbr title="lasting power of attorney">LPA</abbr> can be used (property and finance <abbr title="lasting powers of attorney">LPAs</abbr> only){% endtrans %}</li>
+                    <li>{% trans %}whether the donor chose to allow their attorneys to make decisions on life-sustaining treatment
+                        (health and welfare <abbr title="lasting powers of attorney">LPAs</abbr> only){% endtrans %}</li>
+
+
+
+
                 </ul>
                 <p class="govuk-body">
-                    Third parties can download and keep a copy of the summary.
+                    {% trans %}Third parties can download and keep a copy of the summary.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    We’re not responsible for how personal data, accessed by a third party using a code created by a donor or attorney, is used, shared, or held.
+                    {% trans %}We’re not responsible for how personal data, accessed by a third party using a code created by a donor or attorney, is used, shared, or held.{% endtrans %}
                 </p>
                 <h2 class="govuk-heading-m">How we store data</h2>
                 <p class="govuk-body">
-                    Information you enter into the service is stored in a secure database within the European Economic Area (EEA).
+                    {% trans %}Information you enter into the service is stored in a secure database within the European Economic Area (EEA).
                     However, due to the global nature of the internet, the data sent to and from the database may transit through countries outside of the EEA.
-                    Data is not stored in a non-EEA country.
+                    Data is not stored in a non-EEA country.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    It may sometimes be necessary to transfer personal information overseas.
-                    Any transfers will fully comply with all aspects of data protection law.
+                    {% trans %}It may sometimes be necessary to transfer personal information overseas.
+                    Any transfers will fully comply with all aspects of data protection law.{% endtrans %}
                 </p>
-                <h3 class="govuk-heading-s">Who has access to data in the service</h3>
+                <h3 class="govuk-heading-s">{% trans %}Who has access to data in the service{% endtrans %}</h3>
                 <p class="govuk-body">
-                    MOJ staff are responsible for supporting the service and have access to the secure database.
-                </p>
-                <p class="govuk-body">
-                    All OPG staff who have access to the database have MOJ security clearance.
+                    {% trans %}MOJ staff are responsible for supporting the service and have access to the secure database.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    Our hosting provider (Amazon Web Services) is not allowed to routinely access the secure data.
-                    If they need to do so for operational purposes, their access is strictly controlled and approved by OPG.
+                    {% trans %}All OPG staff who have access to the database have MOJ security clearance.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    You can find out more about how we store and use this data in our
+                    {% trans %}Our hosting provider (Amazon Web Services) is not allowed to routinely access the secure data.
+                    If they need to do so for operational purposes, their access is strictly controlled and approved by OPG.{% endtrans %}
+                </p>
+                <p class="govuk-body">
+                    {% trans %}You can find out more about how we store and use this data in our
                     <a class="govuk-link" href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter">
                         personal information charter
-                    </a>.
+                    </a>.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    We do not use personal data when testing the service.
+                    {% trans %}We do not use personal data when testing the service.{% endtrans %}
                 </p>
-                <h3 class="govuk-heading-s">How long we keep data</h3>
+                <h3 class="govuk-heading-s">{% trans %}How long we keep data{% endtrans %}</h3>
                 <p class="govuk-body">
-                    We’ll keep your personal data in line with our
+                    {% trans %}We’ll keep your personal data in line with our
                     <a class="govuk-link" href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter">
                         retention policy
-                    </a>.
+                    </a>.{% endtrans %}
                 </p>
                 <h3 class="govuk-heading-s">Change your personal data</h3>
                 <p class="govuk-body">
-                    Contact us if you want to change your personal data.
+                    {% trans %}Contact us if you want to change your personal data.{% endtrans %}
                 </p>
-                <h2 class="govuk-heading-m">How to get a copy of your information</h2>
+                <h2 class="govuk-heading-m">{% trans %}How to get a copy of your information{% endtrans %}</h2>
                 <p class="govuk-body">
-                    You can find out what personal data we hold about you in the service by making a subject access request.
+                    {% trans %}You can find out what personal data we hold about you in the service by making a subject access request.{% endtrans %}
                 </p>
                 <p class="govuk-body">
                     <a class="govuk-link" href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter">
-                        Find out more about subject access requests
+                        {% trans %}Find out more about subject access requests{% endtrans %}
                     </a>.
                 </p>
-                <h2 class="govuk-heading-m">Sharing personal data</h2>
-                <p class="govuk-body">We’ll only share the information you give us when the law says we can.
-                    For example, we may share information with the police to help them prevent or investigate crime.
+                <h2 class="govuk-heading-m">{% trans %}Sharing personal data{% endtrans %}</h2>
+                <p class="govuk-body">{% trans %}We’ll only share the information you give us when the law says we can.{% endtrans %}
+                    {% trans %}For example, we may share information with the police to help them prevent or investigate crime.{% endtrans %}
                 </p>
-                <p class="govuk-body">We’ll never:</p>
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li>share your information with other organisations for marketing, market research or commercial purposes</li>
-                        <li>sell or rent your data to third parties</li>
-                    </ul>
-
-                <h2 class="govuk-heading-m">Getting more information</h2>
+                <p class="govuk-body">{% trans %}We’ll never:{% endtrans %}</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>{% trans %}share your information with other organisations for marketing, market research or commercial purposes{% endtrans %}</li>
+                    <li>{% trans %}sell or rent your data to third parties{% endtrans %}</li>
+                </ul>
+                <h2 class="govuk-heading-m">{% trans %}Getting more information{% endtrans %}</h2>
                 <p class="govuk-body">
-                    You can get more details on:
+                    {% trans %}You can get more details on:{% endtrans %}
                 </p>
                 <ul class="govuk-list govuk-list--bullet">
-                    <li>agreements we have with other organisations for sharing information</li>
-                    <li>when we can pass on personal information without telling you, for example,
-                        to help with the prevention or detection of crime or to produce anonymised statistics</li>
-                    <li>instructions we give to staff on how to collect, use or delete your personal data</li>
-                    <li>how we check that the information we hold is accurate and up-to-date</li>
-                    <li>how to make a complaint</li>
-                    <li>anything in this privacy notice</li>
-                    <li>what to do if you think that your personal data has been misused or mishandled</li>
+                    <li>{% trans %}agreements we have with other organisations for sharing information{% endtrans %}</li>
+                    <li>{% trans %}when we can pass on personal information without telling you, for example,
+                        to help with the prevention or detection of crime or to produce anonymised statistics{% endtrans %}</li>
+                    <li>{% trans %}instructions we give to staff on how to collect, use or delete your personal data{% endtrans %}</li>
+                    <li>{% trans %}how we check that the information we hold is accurate and up-to-date{% endtrans %}</li>
+                    <li>{% trans %}how to make a complaint{% endtrans %}</li>
+                    <li>{% trans %}anything in this privacy notice{% endtrans %}</li>
+                    <li>{% trans %}what to do if you think that your personal data has been misused or mishandled{% endtrans %}</li>
                 </ul>
                 <p class="govuk-body">
-                    For more information, please contact:
+                    {% trans %}For more information, please contact:{% endtrans %}
                 </p>
                 <p class="govuk-body">
                     MOJ Data Protection Officer <br>
@@ -214,22 +216,24 @@
                     London <br>
                     SW1H 9AJ <br>
                 </p>
-                <h2 class="govuk-heading-m">Changes to this notice</h2>
+                <h2 class="govuk-heading-m">{% trans %}Changes to this notice{% endtrans %}</h2>
                 <p class="govuk-body">
-                    We may change this privacy notice from time to time. When we do, we’ll update the ‘last updated’ date at the bottom of this page.
+                    {% trans %}We may change this privacy notice from time to time. When we do, we’ll update the ‘last updated’ date at the bottom of this page.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    If these changes affect how your personal data is processed, we’ll take reasonable steps to let you know.
+                    {% trans %}If these changes affect how your personal data is processed, we’ll take reasonable steps to let you know.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    Any changes to this privacy notice will apply to you and your data immediately.
+                    {% trans %}Any changes to this privacy notice will apply to you and your data immediately.{% endtrans %}
                 </p>
-                <h2 class="govuk-heading-m">Making a complaint</h2>
+                <h2 class="govuk-heading-m">{% trans %}Making a complaint{% endtrans %}</h2>
                 <p class="govuk-body">
-                    When we ask for personal data, we’ll keep to the law.
-                    If you think that your information has not been handled correctly,
-                    in addition to contacting the MOJ Data Protection Officer,
-                    you can contact the Information Commissioner for independent advice about data protection at the address below:
+                    {% trans %}
+                        When we ask for personal data, we’ll keep to the law.
+                        If you think that your information has not been handled correctly,
+                        in addition to contacting the MOJ Data Protection Officer,
+                        you can contact the Information Commissioner for independent advice about data protection at the address below:
+                    {% endtrans %}
                 </p>
                 <p class="govuk-body">
                     Information Commissioner's Office <br>
@@ -240,15 +244,17 @@
                     SK9 5AF <br>
                 </p>
                 <p class="govuk-body">
-                    Phone: 0303 123 1113<br>
-                    Textphone: 01625 545860<br>
-                    Monday to Friday, 9am to 4:30pm<br>
+                    {% trans %}
+                        Phone: 0303 123 1113<br>
+                        Textphone: 01625 545860<br>
+                        Monday to Friday, 9am to 4:30pm<br>
+                    {% endtrans %}
                 </p>
                 <p class="govuk-body">
                     <a class="govuk-link" href="http://www.ico.org.uk/">www.ico.org.uk</a>
                 </p>
                 <p class="govuk-body">
-                    Last updated: 30 March 2020
+                    {% trans %}Last updated: 30 March 2020{% endtrans %}
                 </p>
             </div>
         </div>
