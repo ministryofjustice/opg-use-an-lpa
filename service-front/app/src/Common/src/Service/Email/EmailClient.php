@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Common\Service\Email;
 
 use Alphagov\Notifications\Client as NotifyClient;
-use Mezzio\Helper\UrlHelper;
 
 /**
  * Class EmailClient
@@ -27,13 +26,13 @@ class EmailClient
     /**
      * Welsh template IDs for the notify client
      */
-    const WELSH_TEMPLATE_ID_ACCOUNT_ACTIVATION                = 'e0933491-b9ee-4552-adb3-7775843f4d4b';
-    const WELSH_TEMPLATE_ID_PASSWORD_RESET                    = 'ea7ff73a-2a43-4f7e-a1e4-3e1351ae262d';
-    const WELSH_TEMPLATE_ID_PASSWORD_CHANGE                   = 'e47fdf50-d223-4f26-a12f-417bd53b03dd';
-    const WELSH_TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL= 'f06ab05a-af11-4047-bcbb-4a33d0673829';
-    const WELSH_TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL    = '0034dfdc-456b-4cea-8e0e-6915efcd91b2';
-    const WELSH_TEMPLATE_ID_CONFLICT_EMAIL_CHANGE_INCOMPLETE  = '0c2acaa0-96d6-4c01-a32d-f5d8a43ce392';
-    const WELSH_TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED  = 'b9b32dd2-67e9-45e8-a454-4301ba049a81';
+    const WELSH_TEMPLATE_ID_ACCOUNT_ACTIVATION                      = 'e0933491-b9ee-4552-adb3-7775843f4d4b';
+    const WELSH_TEMPLATE_ID_PASSWORD_RESET                          = 'ea7ff73a-2a43-4f7e-a1e4-3e1351ae262d';
+    const WELSH_TEMPLATE_ID_PASSWORD_CHANGE                         = 'e47fdf50-d223-4f26-a12f-417bd53b03dd';
+    const WELSH_TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL      = 'f06ab05a-af11-4047-bcbb-4a33d0673829';
+    const WELSH_TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL          = '0034dfdc-456b-4cea-8e0e-6915efcd91b2';
+    const WELSH_TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE  = '0c2acaa0-96d6-4c01-a32d-f5d8a43ce392';
+    const WELSH_TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED        = 'b9b32dd2-67e9-45e8-a454-4301ba049a81';
 
     /**
      * @var NotifyClient
@@ -41,24 +40,13 @@ class EmailClient
     private $notifyClient;
 
     /**
-     * @var UrlHelper
-     */
-    private $urlHelper;
-
-    /**
      * EmailClient constructor.
      * @param NotifyClient $notifyClient
      */
-    public function __construct(NotifyClient $notifyClient, UrlHelper $urlHelper)
+    public function __construct(NotifyClient $notifyClient, string $locale)
     {
         $this->notifyClient = $notifyClient;
-        $this->urlHelper = $urlHelper;
-
-        if ($this->urlHelper->getBasePath() === '/cy') {
-            $this->language = "welsh";
-        } else {
-            $this->language = "english";
-        }
+        $this->locale = $locale;
     }
 
     /**
@@ -69,7 +57,7 @@ class EmailClient
      */
     public function sendAccountActivationEmail(string $recipient, string $activateAccountUrl)
     {
-        if ($this->language == "welsh") {
+        if ($this->locale === "cy") {
             $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_ACCOUNT_ACTIVATION, [
                 'activate-account-url' => $activateAccountUrl,
             ]);
@@ -87,7 +75,11 @@ class EmailClient
      */
     public function sendAlreadyRegisteredEmail(string $recipient)
     {
-        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED);
+        if ($this->locale === "cy") {
+            $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED);
+        } else {
+            $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED);
+        }
     }
 
     /**
@@ -98,9 +90,15 @@ class EmailClient
      */
     public function sendPasswordResetEmail(string $recipient, string $passwordResetUrl)
     {
-        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_PASSWORD_RESET, [
-            'password-reset-url' => $passwordResetUrl,
-        ]);
+        if ($this->locale === "cy") {
+            $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_PASSWORD_RESET, [
+                'password-reset-url' => $passwordResetUrl,
+            ]);
+        } else {
+            $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_PASSWORD_RESET, [
+                'password-reset-url' => $passwordResetUrl,
+            ]);
+        }
     }
 
     /**
@@ -110,7 +108,11 @@ class EmailClient
      */
     public function sendPasswordChangedEmail(string $recipient)
     {
-        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_PASSWORD_CHANGE);
+        if ($this->locale === "cy") {
+            $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_PASSWORD_CHANGE);
+        } else {
+            $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_PASSWORD_CHANGE);
+        }
     }
 
     /**
@@ -121,9 +123,15 @@ class EmailClient
      */
     public function sendRequestChangeEmailToCurrentEmail(string $recipient, string $newEmailAddress)
     {
-        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL, [
-            'new-email-address' => $newEmailAddress,
-        ]);
+        if ($this->locale === "cy") {
+            $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL, [
+                'new-email-address' => $newEmailAddress,
+            ]);
+        } else {
+            $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL, [
+                'new-email-address' => $newEmailAddress,
+            ]);
+        }
     }
 
     /**
@@ -134,9 +142,15 @@ class EmailClient
      */
     public function sendRequestChangeEmailToNewEmail(string $recipient, string $completeEmailChangeUrl)
     {
-        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL, [
-            'verify-new-email-url' => $completeEmailChangeUrl,
-        ]);
+        if ($this->locale === "cy") {
+            $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL, [
+                'verify-new-email-url' => $completeEmailChangeUrl,
+            ]);
+        } else {
+            $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL, [
+                'verify-new-email-url' => $completeEmailChangeUrl,
+            ]);
+        }
     }
 
     /**
@@ -146,6 +160,10 @@ class EmailClient
      */
     public function sendSomeoneTriedToUseYourEmailInEmailResetRequest(string $recipient)
     {
-        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE);
+        if ($this->locale === "cy") {
+            $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE);
+        } else {
+            $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE);
+        }
     }
 }

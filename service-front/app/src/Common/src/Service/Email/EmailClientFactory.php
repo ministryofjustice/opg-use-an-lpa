@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\Email;
 
 use Alphagov\Notifications\Client as NotifyClient;
-use Mezzio\Helper\UrlHelper;
+use Locale;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
@@ -33,8 +33,8 @@ class EmailClientFactory
             'httpClient' => $container->get(ClientInterface::class),
         ]);
 
-        $urlHelper = $container->get(UrlHelper::class);
+        $locale = Locale::getDefault();
 
-        return new EmailClient($notifyClient, $urlHelper);
+        return new EmailClient($notifyClient, $locale);
     }
 }
