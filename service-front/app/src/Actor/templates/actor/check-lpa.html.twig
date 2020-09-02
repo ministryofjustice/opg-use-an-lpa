@@ -49,7 +49,11 @@
                                 {% trans %}Your role on this LPA{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ userRole }}
+                                {% if userRole == "Attorney" %}
+                                    {% trans %}Attorney{% endtrans %}
+                                {% else %}
+                                    {% trans %}Donor{% endtrans %}
+                                {% endif %}
                             </dd>
                         </div>
                     </dl>
