@@ -50,14 +50,15 @@ class ConfigProvider
                 \Mezzio\Authentication\AuthenticationInterface::class =>
                     \Mezzio\Authentication\Session\PhpSession::class,
 
-                \Symfony\Contracts\Translation\TranslatorInterface::class =>
-                    \Symfony\Component\Translation\Translator::class,
-
                 // allows value setting on the container at runtime.
                 Service\Container\ModifiableContainerInterface::class
                     => Service\Container\PhpDiModifiableContainer::class,
 
-                Service\Lpa\LpaFactory::class => Service\Lpa\Factory\Sirius::class
+                Service\Lpa\LpaFactory::class => Service\Lpa\Factory\Sirius::class,
+
+                // Language extraction
+                \Acpr\I18n\ExtractorInterface::class => \Acpr\I18n\TwigExtractor::class,
+                \Gettext\Generator\GeneratorInterface::class => \Gettext\Generator\PoGenerator::class
             ],
 
             'factories'  => [
@@ -86,12 +87,13 @@ class ConfigProvider
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
                 Handler\SessionCheckHandler::class => Handler\Factory\SessionCheckHandlerFactory::class,
 
-                \Symfony\Component\Translation\Translator::class => I18n\SymfonyTranslatorFactory::class,
-                \Symfony\Bridge\Twig\Extension\TranslationExtension::class =>
-                    View\Twig\SymfonyTranslationExtensionFactory::class,
+                \Acpr\I18n\TranslatorInterface::class => I18n\TranslatorFactory::class,
+                \Acpr\I18n\TranslationExtension::class =>
+                    View\Twig\TranslationExtensionFactory::class,
 
                 View\Twig\JavascriptVariablesExtension::class => View\Twig\JavascriptVariablesExtensionFactory::class,
-                View\Twig\GenericGlobalVariableExtension::class => View\Twig\GenericGlobalVariableExtensionFactory::class,
+                View\Twig\GenericGlobalVariableExtension::class =>
+                    View\Twig\GenericGlobalVariableExtensionFactory::class,
             ],
 
             'delegators' => [
@@ -123,13 +125,13 @@ class ConfigProvider
     {
         return [
             'extensions' => [
+                \Acpr\I18n\TranslationExtension::class,
                 View\Twig\LpaExtension::class,
                 View\Twig\OrdinalNumberExtension::class,
                 View\Twig\GovUKLaminasFormErrorsExtension::class,
                 View\Twig\GovUKLaminasFormExtension::class,
                 View\Twig\JavascriptVariablesExtension::class,
-                View\Twig\GenericGlobalVariableExtension::class,
-                \Symfony\Bridge\Twig\Extension\TranslationExtension::class,
+                View\Twig\GenericGlobalVariableExtension::class
             ]
         ];
     }

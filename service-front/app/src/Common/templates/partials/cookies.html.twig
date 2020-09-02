@@ -3,11 +3,11 @@
 {% block html_title %}{% trans %}Cookies{% endtrans %} - {{ block('service_name') }} - {{ parent() }}{% endblock %}
 
 {% block service_name %}
-{% if routeName == "actor-cookies" %}
-    {% trans %}Use a lasting power of attorney{% endtrans %}
-{% elseif routeName == "viewer-cookies" %}
-    {% trans %}View a lasting power of attorney{% endtrans %}
-{% endif %}
+    {% if routeName == "actor-cookies" %}
+        {% trans %}Use a lasting power of attorney{% endtrans %}
+    {% elseif routeName == "viewer-cookies" %}
+        {% trans %}View a lasting power of attorney{% endtrans %}
+    {% endif %}
 {% endblock %}
 
 {% set usageCookies = form.get('usageCookies') %}
