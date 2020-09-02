@@ -127,6 +127,9 @@ class ActorUsers implements ActorUsersInterface
         return $usersData;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getIdByPasswordResetToken(string $resetToken): string
     {
         $marshaler = new Marshaler();
@@ -149,6 +152,9 @@ class ActorUsers implements ActorUsersInterface
         return (array_pop($usersData))['Id'];
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getIdByEmailResetToken(string $resetToken): string
     {
         $marshaler = new Marshaler();
@@ -302,6 +308,9 @@ class ActorUsers implements ActorUsersInterface
         return $this->getData($user);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function recordChangeEmailRequest(string $id, string $newEmail, string $resetToken, int $resetExpiry): array
     {
         $user = $this->client->updateItem([
@@ -330,6 +339,9 @@ class ActorUsers implements ActorUsersInterface
         return $this->getData($user);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function changeEmail(string $id, string $token, string $newEmail): bool
     {
         //  Update the item by setting the new email and removing the reset token/expiry
@@ -350,9 +362,6 @@ class ActorUsers implements ActorUsersInterface
 
         return true;
     }
-
-
-
 
     /**
      * @inheritDoc
@@ -397,8 +406,12 @@ class ActorUsers implements ActorUsersInterface
             ],
             'UpdateExpression' => 'SET Password=:p, ExpiresTTL=:et',
             'ExpressionAttributeValues' => [
-                ':p' => ['S' => password_hash($password, PASSWORD_DEFAULT)],
-                ':et' => ['N' => (string) $activationTtl]
+                ':p' => [
+                    'S' => password_hash($password, PASSWORD_DEFAULT)
+                ],
+                ':et' => [
+                    'N' => (string) $activationTtl
+                ]
             ],
         ]);
         return $this->get($id);
