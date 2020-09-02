@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-09-02T08:53:28+00:00\n"
+"POT-Creation-Date: 2020-09-02T12:56:41+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -2292,6 +2292,18 @@ msgstr ""
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:257
 msgid "I want to check another LPA"
+msgstr ""
+
+#: src/Common/templates/partials/govuk_form.html.twig:127
+msgid "Day"
+msgstr ""
+
+#: src/Common/templates/partials/govuk_form.html.twig:132
+msgid "Month"
+msgstr ""
+
+#: src/Common/templates/partials/govuk_form.html.twig:137
+msgid "Year"
 msgstr ""
 
 #: src/Common/templates/partials/govuk_error.html.twig:6

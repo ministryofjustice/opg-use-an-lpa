@@ -124,17 +124,17 @@
             <div class="govuk-date-input" id="{{ fieldset.getName() }}">
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(fieldset.get('day'), { 'label': 'Day', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
+                    {{ govuk_form_element(fieldset.get('day'), { 'label': 'Day' | trans, 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
 
                 </div>
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(fieldset.get('month'), { 'label': 'Month', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
+                    {{ govuk_form_element(fieldset.get('month'), { 'label': 'Month' | trans, 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
 
                 </div>
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(fieldset.get('year'), { 'label': 'Year', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-4', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
+                    {{ govuk_form_element(fieldset.get('year'), { 'label': 'Year' | trans, 'attr' : {'class': 'govuk-date-input__input govuk-input--width-4', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
 
                 </div>
             </div>
