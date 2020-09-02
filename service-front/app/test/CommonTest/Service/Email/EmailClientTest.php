@@ -148,4 +148,18 @@ class EmailClientTest extends TestCase
 
         $emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($recipient);
     }
+
+    /** @test */
+    public function its_sends_a_welsh_email_if_locale_is_cy()
+    {
+        $this->locale = "cy";
+        $recipient = 'a@b.com';
+
+        $this->notifyClientProphecy->sendEmail($recipient, EmailClient::WELSH_TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED)
+            ->shouldBeCalledOnce();
+
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
+
+        $emailClient->sendAlreadyRegisteredEmail($recipient);
+    }
 }
