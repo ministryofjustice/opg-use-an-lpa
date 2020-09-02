@@ -40,6 +40,8 @@
 
                                 {{ govuk_form_element(form.get('password'), { 'label': 'Create a password'| trans, 'hint': 'Your password needs to have: <ul class="govuk-list--bullet"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>'| trans }) }}
 
+                                <a href="#" id="showHidePassword" class="govuk-link" data-for="password" data-hideConfirmPassword = "true">Show password</a>
+
                                 {{ govuk_form_element(form.get('password_confirm'), { 'label': 'Confirm your password'| trans }) }}
 
                                 <div class="govuk-warning-text">
