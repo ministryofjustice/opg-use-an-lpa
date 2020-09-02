@@ -147,21 +147,4 @@ class EmailClientTest extends TestCase
 
         $emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($recipient);
     }
-
-    /** @test */
-    public function can_send_someone_tried_to_use_your_email_for_account_creation()
-    {
-        $notifyClientProphecy = $this->prophesize(NotifyClient::class);
-
-        $recipient = 'new@email.com';
-
-        $notifyClientProphecy->sendEmail(
-            $recipient,
-            EmailClient::TEMPLATE_ID_ACCOUNT_CREATION_EMAIL_CHANGE_REQUESTED
-        )->shouldBeCalledOnce();
-
-        $emailClient = new EmailClient($notifyClientProphecy->reveal());
-
-        $emailClient->sendSomeoneTriedToUseYourEmailInEmailAccountCreation($recipient);
-    }
 }
