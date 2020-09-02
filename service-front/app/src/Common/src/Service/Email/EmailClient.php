@@ -39,6 +39,8 @@ class EmailClient
      */
     private $notifyClient;
 
+    private $locale;
+
     /**
      * EmailClient constructor.
      * @param NotifyClient $notifyClient

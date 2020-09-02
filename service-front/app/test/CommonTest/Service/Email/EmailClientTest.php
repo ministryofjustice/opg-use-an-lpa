@@ -10,14 +10,27 @@ use PHPUnit\Framework\TestCase;
 
 class EmailClientTest extends TestCase
 {
+    /**
+     * @var NotifyClient
+     */
+    private $notifyClientProphecy;
+    /**
+     * @var string
+     */
+    private $locale;
+
+    public function setUp()
+    {
+        $this->notifyClientProphecy = $this->prophesize(NotifyClient::class);
+        $this->locale = "en_GB";
+    }
+
     /** @test */
     public function can_send_account_activation_email()
     {
-        $notifyClientProphecy = $this->prophesize(NotifyClient::class);
-
         $recipient = 'a@b.com';
 
-        $notifyClientProphecy->sendEmail(
+        $this->notifyClientProphecy->sendEmail(
             $recipient,
             EmailClient::TEMPLATE_ID_ACCOUNT_ACTIVATION,
             [
@@ -26,7 +39,7 @@ class EmailClientTest extends TestCase
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($notifyClientProphecy->reveal());
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
 
         $emailClient->sendAccountActivationEmail($recipient, 'http://localhost:9002/activate-account/activateAccountAABBCCDDEE');
     }
@@ -34,14 +47,12 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_already_registered_email()
     {
-        $notifyClientProphecy = $this->prophesize(NotifyClient::class);
-
         $recipient = 'a@b.com';
 
-        $notifyClientProphecy->sendEmail($recipient, EmailClient::TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED)
+        $this->notifyClientProphecy->sendEmail($recipient, EmailClient::TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED)
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($notifyClientProphecy->reveal());
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
 
         $emailClient->sendAlreadyRegisteredEmail($recipient);
     }
@@ -49,11 +60,9 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_password_reset_email()
     {
-        $notifyClientProphecy = $this->prophesize(NotifyClient::class);
-
         $recipient = 'a@b.com';
 
-        $notifyClientProphecy->sendEmail(
+        $this->notifyClientProphecy->sendEmail(
             $recipient,
             EmailClient::TEMPLATE_ID_PASSWORD_RESET,
             [
@@ -62,7 +71,7 @@ class EmailClientTest extends TestCase
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($notifyClientProphecy->reveal());
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
 
         $emailClient->sendPasswordResetEmail($recipient, 'http://localhost:9002/password-reset/passwordResetAABBCCDDEE');
     }
@@ -70,17 +79,15 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_password_change_email()
     {
-        $notifyClientProphecy = $this->prophesize(NotifyClient::class);
-
         $recipient = 'a@b.com';
 
-        $notifyClientProphecy->sendEmail(
+        $this->notifyClientProphecy->sendEmail(
             $recipient,
             EmailClient::TEMPLATE_ID_PASSWORD_CHANGE
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($notifyClientProphecy->reveal());
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
 
         $emailClient->sendPasswordChangedEmail($recipient);
     }
@@ -88,12 +95,10 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_change_email_to_current_email()
     {
-        $notifyClientProphecy = $this->prophesize(NotifyClient::class);
-
         $recipient = 'current@email.com';
         $newEmail = 'new@email.com';
 
-        $notifyClientProphecy->sendEmail(
+        $this->notifyClientProphecy->sendEmail(
             $recipient,
             EmailClient::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL,
             [
@@ -102,7 +107,7 @@ class EmailClientTest extends TestCase
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($notifyClientProphecy->reveal());
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
 
         $emailClient->sendRequestChangeEmailToCurrentEmail($recipient, $newEmail);
     }
@@ -110,11 +115,9 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_change_email_verify_to_new_email()
     {
-        $notifyClientProphecy = $this->prophesize(NotifyClient::class);
-
         $recipient = 'new@email.com';
 
-        $notifyClientProphecy->sendEmail(
+        $this->notifyClientProphecy->sendEmail(
             $recipient,
             EmailClient::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL,
             [
@@ -123,7 +126,7 @@ class EmailClientTest extends TestCase
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($notifyClientProphecy->reveal());
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
 
         $emailClient->sendRequestChangeEmailToNewEmail(
             $recipient,
@@ -134,16 +137,14 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_someone_tried_to_use_your_email_for_email_change()
     {
-        $notifyClientProphecy = $this->prophesize(NotifyClient::class);
-
         $recipient = 'new@email.com';
 
-        $notifyClientProphecy->sendEmail(
+        $this->notifyClientProphecy->sendEmail(
             $recipient,
             EmailClient::TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE
         )->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($notifyClientProphecy->reveal());
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
 
         $emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($recipient);
     }
