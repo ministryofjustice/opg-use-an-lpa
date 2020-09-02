@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\I18n;
 
+use Acpr\I18n\Translator;
 use Common\Middleware\I18n\SetLocaleMiddleware;
 use Mezzio\Helper\UrlHelper;
 use PHPUnit\Framework\TestCase;
@@ -11,7 +12,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Symfony\Component\Translation\Translator;
 
 class SetLocaleMiddlewareTest extends TestCase
 {
