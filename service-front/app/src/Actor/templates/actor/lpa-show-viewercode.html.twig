@@ -26,11 +26,11 @@
                     <div class="moj-banner moj-banner--success govuk-panel--fixButton">
                         <div class="moj-banner__message govuk-panel govuk-!-padding-1">
                             <h1 class="govuk-panel__body govuk-!-margin-top-0 govuk-!-margin-bottom-2">
-                                {% trans %}Give this access code to{% endtrans %} {{ organisation }}
+                                {% trans with {'%organisation%': organisation } %}Give this access code to %organisation% {% endtrans %}
                             </h1>
                             <span class="govuk-panel__title">
-              {{ add_hyphen_to_viewer_code(code) }}
-            </span>
+                                {{ add_hyphen_to_viewer_code(code) }}
+                            </span>
                             <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-3">{% trans with {'%date%': expires | date ('j F Y')} %}This code expires in 30 days, on %date%.{% endtrans %}</p>
                             <div class="js-accesscodecopy">
                                 <input readonly type="text" value="{{ add_hyphen_to_viewer_code(code) }}" class="js-accesscodecopy-value offscreen" aria-hidden="true">
