@@ -12,9 +12,11 @@
             <div class="govuk-grid-column-two-thirds">
                 <h1 class="govuk-heading-xl">{% trans %}Privacy notice{% endtrans %} </h1>
 
-
                 <p class="govuk-body-l">
-                    {% trans %}This privacy notice explains why the Office of the Public Guardian (OPG) collects personal data when you use the ‘View a lasting power of attorney’ (LPA) service.{% endtrans %}
+                    {% trans %}
+                        This privacy notice explains why the Office of the Public Guardian (OPG)
+                        collects personal data when you use the ‘View a lasting power of attorney’ (LPA) service.
+                    {% endtrans %}
                 </p>
                 <p class="govuk-body">
                     {% trans %} This privacy notice also explains:{% endtrans %}
@@ -39,11 +41,16 @@
                     {% trans %}This service is managed by  <abbr title="Office of the Public Guardian">OPG</abbr>, which is an executive agency sponsored by the Ministry of Justice (MOJ).{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    {% trans with {'%link%':"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter"} %}MOJ is the data controller for the personal data we store. <a class="govuk-link" href="%link%"> <abbr title="Office of the Public Guardian">OPG</abbr>’s personal information charter</a> explains how we process personal data.{% endtrans %}
+                    {% trans %}
+                        MOJ is the data controller for the personal data we store.
+                        <a class="govuk-link" href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter">
+                            OPG’s personal information charter
+                        </a>
+                        explains how we process personal data.
+                    {% endtrans %}
                 </p>
-                <p class="govuk-body">
-                    {% trans with {'%terms-of-use%': path('viewer-terms-of-use'), '%cookie%': path('viewer-cookies')} %}
-                        You can find more information about using the View a lasting power of attorney service in our <a class="govuk-link" href="%terms-of-use%">terms of use</a> and <a class="govuk-link" class="govuk-link"  href="%cookie%">cookie policy</a>.
+                <p class="govuk-body">{% trans with {'%terms-of-use%': path('viewer-terms-of-use'), '%cookie%': path('viewer-cookies')} %}You can find more information about using the View a lasting power of attorney service in our
+                        <a class="govuk-link" href="%terms-of-use%">terms of use</a> and <a class="govuk-link" class="govuk-link"  href="%cookie%">cookie policy</a>.
                     {% endtrans %}
                 </p>
                 <h2 class="govuk-heading-m">{% trans %}What data we collect and how we use it{% endtrans %}</h2>
@@ -71,16 +78,18 @@
 
 
                 <p class="govuk-body">
-                    {% trans %}We collect site usage information from this service. This allows us to see how the service is being used so we can improve it. This information does not contain any personal data and is stored separately from the information you enter when using this service.{% endtrans %}
+                    {% trans %}We collect site usage information from this service. This allows us to see how the service is being used so we can improve it.
+                        This information does not contain any personal data and is stored separately from the information you enter when using this service.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    {% trans with {'%link%': "https://www.gov.uk/help/cookies"} %} Find out more about <a class="govuk-link" href="%link%">cookies</a>.{% endtrans %}
+                    {% trans %}Find out more about <a class="govuk-link" href="https://www.gov.uk/help/cookies">cookies</a>.{% endtrans %}
                 </p>
                 <h3 class="govuk-heading-s">{% trans %}Legal basis for processing this data{% endtrans %}</h3>
 
 
                 <p class="govuk-body">
-                    {% trans %} Your use of this online service is optional. If you prefer, you can ask the donor or an attorney to show you the original paper  <abbr title="lasting power of attorney">LPA</abbr> or a certified copy.{% endtrans %}
+                    {% trans %} Your use of this online service is optional.
+                        If you prefer, you can ask the donor or an attorney to show you the original paper  <abbr title="lasting power of attorney">LPA</abbr> or a certified copy.{% endtrans %}
                 </p>
                 <p class="govuk-body">
                     {% trans %} We operate the View a lasting power of attorney service as part of our legal functions under the Mental Capacity Act 2005.{% endtrans %}
