@@ -37,6 +37,11 @@ Feature: Triage
     Then I am not allowed to progress
 
   @ui
+  Scenario: The user sees a banner about the fact that only LPAs issued after a certain date can be used on this service
+    Given I am on the triage page
+    Then I can see banner about existing LPAs
+
+  @ui
   Scenario: The banner will take the user to the triage page unless they are signed in
     Given I am on the create account page
     When I click the Use a lasting power of attorney link on the page
