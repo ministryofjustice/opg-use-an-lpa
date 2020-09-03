@@ -572,21 +572,11 @@ class ViewerContext implements Context
     }
 
     /**
-     * @When /^I request to go back to the enter code page$/
      * @When /^I request to go back to the terms of use page$/
      */
     public function iRequestToGoBackToTheRequiredPage()
     {
         $this->ui->clickLink('Back');
-    }
-
-    /**
-     * @Then /^I am taken back to the enter code page$/
-     */
-    public function iAmTakenBackToTheEnterCodePage()
-    {
-        $this->ui->assertPageAddress('/home');
-        $this->ui->assertPageContainsText('Enter the LPA access code');
     }
 
     /**

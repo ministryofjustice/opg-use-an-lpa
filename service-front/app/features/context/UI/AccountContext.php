@@ -2228,7 +2228,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request to go back to the create account page$/
      * @When /^I request to go back to the terms of use page$/
      */
     public function iRequestToGoBackToTheSpecifiedPage()
