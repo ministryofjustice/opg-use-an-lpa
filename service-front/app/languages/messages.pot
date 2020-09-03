@@ -2485,7 +2485,7 @@ msgid "Enter the donor's last name"
 msgstr ""
 
 #: src/Viewer/templates/viewer/view-lpa.html.twig:3
-msgid "LPA summary -"
+msgid "LPA summary"
 msgstr ""
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:3
