@@ -85,10 +85,11 @@
                         This information does not contain any personal data and is stored separately from the information you enter when using this service.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    {% trans %}Find out more about <a class="govuk-link" href="https://www.gov.uk/help/cookies">cookies</a>.{% endtrans %}
+                    {% trans with {'%link%': "https://www.gov.uk/help/cookies" } %}
+                        Find out more about <a class="govuk-link" href="%link%">cookies</a>.
+                    {% endtrans %}
                 </p>
                 <h3 class="govuk-heading-s">{% trans %}Legal basis for processing this data{% endtrans %}</h3>
-
 
                 <p class="govuk-body">
                     {% trans %} Your use of this online service is optional.

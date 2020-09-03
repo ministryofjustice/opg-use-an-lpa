@@ -32,7 +32,9 @@
                 </div>
                 <div class="govuk-grid-column-full">
                     <p class="govuk-body">
-                        {% trans %}If you need more help activating your account, email <a class="govuk-link" href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a>.{% endtrans %}
+                        {% trans with {'%link%': "mailto:customerservices@publicguardian.gov.uk" } %}
+                            If you need more help activating your account, email <a class="govuk-link" href="%link%">customerservices@publicguardian.gov.uk</a>.
+                        {% endtrans %}
                     </p>
                 </div>
             </div>
