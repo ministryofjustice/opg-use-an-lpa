@@ -32,7 +32,10 @@
                     <li>{% trans %}how you can complain if you think we’ve done something wrong{% endtrans %} </li>
                 </ul>
                 <p class="govuk-body">
-                    {% trans with {'%link%': "https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter" } %}You should read this privacy notice alongside <a class="govuk-link" href="%link%"> <abbr title="Office of the Public Guardian">OPG</abbr>’s personal information charter</a>, which sets out the standards you can expect when we ask for, use or share your personal information.{% endtrans %}
+                    {% trans with {'%link%': "https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter" } %}
+                        You should read this privacy notice alongside <a class="govuk-link" href="%link%"> <abbr title="Office of the Public Guardian">OPG</abbr>’s personal information charter</a>,
+                        which sets out the standards you can expect when we ask for, use or share your personal information.
+                    {% endtrans %}
                 </p>
                 <h2 class="govuk-heading-m">{% trans %}Who manages the View a lasting power of attorney service{% endtrans %} </h2>
 
@@ -41,10 +44,10 @@
                     {% trans %}This service is managed by  <abbr title="Office of the Public Guardian">OPG</abbr>, which is an executive agency sponsored by the Ministry of Justice (MOJ).{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    {% trans %}
+                    {% trans with {'%link%': "https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter" } %}
                         MOJ is the data controller for the personal data we store.
-                        <a class="govuk-link" href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter">
-                            OPG’s personal information charter
+                        <a class="govuk-link" href="%link%">
+                            <abbr title="Office of the Public Guardian">OPG</abbr>’s personal information charter
                         </a>
                         explains how we process personal data.
                     {% endtrans %}
