@@ -3547,4 +3547,14 @@ class AccountContext implements Context
     {
         $this->ui->visit('/lpa/death-notification');
     }
+
+    /**
+     * @Then /^I can see banner about existing LPAs$/
+     */
+
+    public function iCanSeeBannerAboutExistingLPAs()
+    {
+        $page = $this->ui->getSession()->getPage();
+        $this->ui->assertElementOnPage(".moj-banner__message");
+    }
 }
