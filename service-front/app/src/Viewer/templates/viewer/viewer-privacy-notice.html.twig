@@ -30,7 +30,7 @@
                     <li>{% trans %}how you can complain if you think we’ve done something wrong{% endtrans %} </li>
                 </ul>
                 <p class="govuk-body">
-                    You should read this privacy notice alongside <a class="govuk-link" href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter"> <abbr title="Office of the Public Guardian">OPG</abbr>’s personal information charter</a>, which sets out the standards you can expect when we ask for, use or share your personal information.
+                    {% trans with {'%link%': "https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter" } %}You should read this privacy notice alongside <a class="govuk-link" href="%link%"> <abbr title="Office of the Public Guardian">OPG</abbr>’s personal information charter</a>, which sets out the standards you can expect when we ask for, use or share your personal information.{% endtrans %}
                 </p>
                 <h2 class="govuk-heading-m">{% trans %}Who manages the View a lasting power of attorney service{% endtrans %} </h2>
 
@@ -39,18 +39,18 @@
                     {% trans %}This service is managed by  <abbr title="Office of the Public Guardian">OPG</abbr>, which is an executive agency sponsored by the Ministry of Justice (MOJ).{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    MOJ is the data controller for the personal data we store. <a class="govuk-link" href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter"> <abbr title="Office of the Public Guardian">OPG</abbr>’s personal information charter</a> explains how we process personal data.
+                    {% trans with {'%link%':"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter"} %}MOJ is the data controller for the personal data we store. <a class="govuk-link" href="%link%"> <abbr title="Office of the Public Guardian">OPG</abbr>’s personal information charter</a> explains how we process personal data.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    You can find more information about using the View a lasting power of attorney service in our <a class="govuk-link" href="{{ path('viewer-terms-of-use') }}">terms of use</a> and <a class="govuk-link" class="govuk-link"  href="{{ path('viewer-cookies')}}">cookie policy</a>.
+                    {% trans with {'%terms-of-use%': path('viewer-terms-of-use'), '%cookie%': path('viewer-cookies')} %}
+                        You can find more information about using the View a lasting power of attorney service in our <a class="govuk-link" href="%terms-of-use%">terms of use</a> and <a class="govuk-link" class="govuk-link"  href="%cookie%">cookie policy</a>.
+                    {% endtrans %}
                 </p>
-                <h2 class="govuk-heading-m">What data we collect and how we use it</h2>
+                <h2 class="govuk-heading-m">{% trans %}What data we collect and how we use it{% endtrans %}</h2>
 
 
                 <p class="govuk-body">
-                    The donor or an attorney on an
-                    <abbr title="lasting power of attorney">LPA</abbr>
-                    can use the <span style="text-decoration:underline;">{% trans %}Use a lasting power of attorney service</span> to create an ‘access code’ to give to a named organisation and professional. They should create a unique code for each organisation or professional.{% endtrans %}
+                    {% trans %}The donor or an attorney on an <abbr title="lasting power of attorney">LPA</abbr> can use the <span style="text-decoration:underline;">Use a lasting power of attorney service</span> to create an ‘access code’ to give to a named organisation and professional. They should create a unique code for each organisation or professional.{% endtrans %}
                 </p>
                 <p class="govuk-body">
                     {% trans %}In order to use the View a lasting power of attorney service, you need to enter the unique ‘access code’ given to you by the donor or an attorney on the <abbr title="lasting power of attorney">LPA</abbr> you want to view.{% endtrans %}
@@ -65,10 +65,7 @@
                     </li>
                 </ul>
                 <p class="govuk-body">
-                    This information will be shared with the donor and attorneys on the
-                    <abbr title="lasting power of attorney">LPA</abbr>,
-                    if they’re using the Use a lasting power of attorney service.
-                    This is to help prevent and detect unauthorised access.
+                    {% trans %}This information will be shared with the donor and attorneys on the <abbr title="lasting power of attorney">LPA</abbr>, if they’re using the Use a lasting power of attorney service. This is to help prevent and detect unauthorised access.{% endtrans %}
                 </p>
                 <h3 class="govuk-heading-s">{% trans %}Cookies and site usage data{% endtrans %}</h3>
 
@@ -77,7 +74,7 @@
                     {% trans %}We collect site usage information from this service. This allows us to see how the service is being used so we can improve it. This information does not contain any personal data and is stored separately from the information you enter when using this service.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    Find out more about <a class="govuk-link"  href="https://www.gov.uk/help/cookies">cookies</a>.
+                    {% trans with {'%link%': "https://www.gov.uk/help/cookies"} %} Find out more about <a class="govuk-link" href="%link%">cookies</a>.{% endtrans %}
                 </p>
                 <h3 class="govuk-heading-s">{% trans %}Legal basis for processing this data{% endtrans %}</h3>
 
@@ -102,19 +99,14 @@
                     {% trans %}MOJ staff are responsible for supporting the service and have access to the secure database.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    All  <abbr title="Office of the Public Guardian">OPG</abbr>
-                    staff who have access to the database have MOJ security clearance.
+                    {% trans %}All  <abbr title="Office of the Public Guardian">OPG</abbr> staff who have access to the database have MOJ security clearance.{% endtrans %}
                 </p>
                 <p class="govuk-body">
                     {% trans %}Our hosting provider (Amazon Web Services) is not allowed to routinely access the secure data.{% endtrans %}
                     {% trans %}If they need to do so for operational purposes, their access is strictly controlled and approved by <abbr title="Office of the Public Guardian">OPG</abbr>.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    You can find out more about how we store and use this data in
-                    <abbr title="Office of the Public Guardian">OPG</abbr>’s
-                    <a class="govuk-link"  href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter">
-                        personal information charter
-                    </a>.
+                    {% trans with {'%link%': "https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter"} %}You can find out more about how we store and use this data in <abbr title="Office of the Public Guardian">OPG</abbr>’s <a class="govuk-link"  href="%link%"> personal information charter </a>.{% endtrans %}
                 </p>
                 <p class="govuk-body">
                     {% trans %}We do not use personal data when testing the service.{% endtrans %}
@@ -123,7 +115,7 @@
 
 
                 <p class="govuk-body">
-                    We will keep your personal data inline with our <a class="govuk-link"  href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter">retention policy</a>.
+                    {% trans with {'%link%': "https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter"} %} We will keep your personal data inline with our <a class="govuk-link"  href="%link%">retention policy</a>.{% endtrans %}
                 </p>
                 <h2 class="govuk-heading-m">{% trans %}How to get a copy of your information{% endtrans %}</h2>
 
@@ -132,7 +124,7 @@
                     {% trans %}You can find out what personal data we hold about you in the service by making a subject access request.{% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    <a class="govuk-link"  href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter">Find out more about subject access requests</a>.
+                    <a class="govuk-link"  href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter">{% trans %}Find out more about subject access requests{% endtrans %}</a>.
                 </p>
                 <h2 class="govuk-heading-m">{% trans %}Sharing personal data{% endtrans %}</h2>
 
@@ -158,9 +150,7 @@
                 </p>
                 <ul class="govuk-list govuk-list--bullet">
                     <li>{% trans %}agreements we have with other organisations for sharing information{% endtrans %}</li>
-                    <li>{% trans %}when we can pass on personal information without telling you,
-                        for example, to help with the prevention or detection of crime or to produce anonymised statistics{% endtrans %}
-                    </li>
+                    <li>{% trans %}when we can pass on personal information without telling you, for example, to help with the prevention or detection of crime or to produce anonymised statistics{% endtrans %}</li>
                     <li>{% trans %}instructions we give to staff on how to collect, use or delete your personal data{% endtrans %}</li>
                     <li>{% trans %}how we check that the information we hold is accurate and up-to-date{% endtrans %}</li>
                     <li>{% trans %}how to make a complaint{% endtrans %}</li>
@@ -172,11 +162,13 @@
                     {% trans %}For more information, please contact:{% endtrans %}
                 </p>
                 <p class="govuk-body">
+                    {% trans %}
                     MOJ Data Protection Officer<br>
                     Post point 10.38<br>
                     102 Petty France<br>
                     London<br>
                     SW1H 9AJ<br>
+                    {% endtrans %}
                 </p>
                 <h2 class="govuk-heading-m">{% trans %}Changes to this notice{% endtrans %}</h2>
                 <p class="govuk-body">
@@ -193,17 +185,19 @@
                     {% trans %} When we ask for personal data, we’ll keep to the law. If you think that your information has not been handled correctly, in addition to contacting the MOJ Data Protection Officer, you can contact the Information Commissioner for independent advice about data protection at the address below:{% endtrans %}
                 </p>
                 <p class="govuk-body">
+                    {% trans %}
                     Information Commissioner's Office <br>
                     Wycliffe House <br>
                     Water Lane <br>
                     Wilmslow <br>
                     Cheshire <br>
                     SK9 5AF <br>
+                    {% endtrans %}
                 </p>
                 <p class="govuk-body">
-                    Phone: 0303 123 1113 <br>
-                    Textphone: 01625 545860 <br>
-                    Monday to Friday, 9am to 4:30pm <br>
+                    {% trans %}Phone: 0303 123 1113{% endtrans %} <br>
+                    {% trans %}Textphone: 01625 545860{% endtrans %} <br>
+                    {% trans %}Monday to Friday, 9am to 4:30pm{% endtrans %} <br>
                 </p>
                 <p class="govuk-body">
                     <a class="govuk-link"  href="http://www.ico.org.uk/">www.ico.org.uk</a>
