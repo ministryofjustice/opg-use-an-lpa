@@ -7,10 +7,10 @@ describe('given a copy access code is found', () => {
     test('it should copy the code', () => {
         document.body.innerHTML = `
         <div class="js-accesscodecopy">
-        <input readonly type="text" value="12345" class="js-accesscodecopy-button offscreen" aria-hidden="true">
+        <input readonly type="text" value="12345" class="js-accesscodecopy-value offscreen" aria-hidden="true">
         <button class="js-accesscodecopy-button govuk-button govuk-button__copy">
             <span class="js-accesscodecopy-default">{% trans %}Copy code{% endtrans %}</span>
-            <span class="js-accesscodecopy-success hidden">{% trans %}Code copied{% endtrans %}</span>
+            <span class="js-accesscodecopy-success hide">{% trans %}Code copied{% endtrans %}</span>
         </button>
       </div>
     `;
@@ -19,32 +19,19 @@ describe('given a copy access code is found', () => {
         const successText = document.querySelector(".js-accesscodecopy-success");
         copyAccessCode();
         expect(deafultText.classList).toHaveLength(1);
-        expect(deafultText.classList).not.toContain('hidden');
+        expect(deafultText.classList).not.toContain('hide');
         expect(successText.classList).toHaveLength(2);
-        expect(successText.classList).toContain('hidden');
+        expect(successText.classList).toContain('hide');
         button.click();
         expect(document.execCommand).toHaveBeenCalledWith('copy');
         expect(deafultText.classList).toHaveLength(2);
-        expect(deafultText.classList).toContain('hidden');
+        expect(deafultText.classList).toContain('hide');
         expect(successText.classList).toHaveLength(1);
-        expect(successText.classList.not).toContain('hidden');
+        expect(successText.classList).not.toContain('hide');
         jest.advanceTimersByTime(4000);
         expect(deafultText.classList).toHaveLength(1);
-        expect(deafultText.classList).not.toContain('hidden');
+        expect(deafultText.classList).not.toContain('hide');
         expect(successText.classList).toHaveLength(2);
-        expect(successText.classList).toContain('hidden');
-    });
-    test('it should not copy the code if the id is not found', () => {
-        document.body.innerHTML = `
-        <div class="">
-        <input readonly type="text" value="{{ add_hyphen_to_viewer_code(code) }}" class="js-accesscodecopy-button offscreen" aria-hidden="true">
-        <button class="js-accesscodecopy-button govuk-button govuk-button__copy">
-            <span class="js-accesscodecopy-default">{% trans %}Copy code{% endtrans %}</span>
-            <span class="js-accesscodecopy-success hidden">{% trans %}Code copied{% endtrans %}</span>
-        </button>
-      </div>
-    `;
-        copyAccessCode();
-        expect(button).toBeNull();
+        expect(successText.classList).toContain('hide');
     });
 });
