@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\Email;
 
 use Alphagov\Notifications\Client as NotifyClient;
+use Locale;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
@@ -32,6 +33,8 @@ class EmailClientFactory
             'httpClient' => $container->get(ClientInterface::class),
         ]);
 
-        return new EmailClient($notifyClient);
+        $locale = Locale::getDefault();
+
+        return new EmailClient($notifyClient, $locale);
     }
 }
