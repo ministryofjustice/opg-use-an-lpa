@@ -3555,8 +3555,6 @@ class AccountContext implements Context
     public function iCanSeeBannerAboutExistingLPAs()
     {
         $page = $this->ui->getSession()->getPage();
-        $element = $page->find('css', '.moj-banner__message');
-        $elementHtml = $element->getOuterHtml();
-        return str_contains($elementHtml, 'You can only use this service if we\'ve sent you a letter or email with an activation key. Only LPAs registered after 16 July 2020 have an activation key.');
+        $this->ui->assertElementOnPage(".moj-banner__message");
     }
 }
