@@ -14,10 +14,10 @@ $aggregator = new ConfigAggregator([
 
     // Include cache configuration
     new ArrayProvider(
-       [
-           'debug' => true,
-           ConfigAggregator::ENABLE_CACHE => false,
-       ]
+        [
+            'debug' => true,
+            ConfigAggregator::ENABLE_CACHE => false,
+        ]
     ),
 ]);
 
