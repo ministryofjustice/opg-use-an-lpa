@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Common\Service\I18n;
 
-use Gettext\Loader\PoLoader;
+use Gettext\Loader\LoaderInterface;
 use Gettext\Translations;
 use Symfony\Component\Finder\Finder;
 
 class CatalogueLoader
 {
-    private PoLoader $loader;
+    private Finder $fileFinder;
+    private LoaderInterface $loader;
 
-    public function __construct(PoLoader $loader)
+    public function __construct(LoaderInterface $loader, Finder $fileFinder)
     {
         $this->loader = $loader;
+        $this->fileFinder = $fileFinder;
     }
 
     /**
@@ -40,8 +42,6 @@ class CatalogueLoader
 
     private function findPotFiles(string $directory): Finder
     {
-        $finder = new Finder();
-
-        return $finder->files()->name('*.pot')->in($directory);
+        return $this->fileFinder->files()->name('*.pot')->in($directory);
     }
 }
