@@ -68,11 +68,67 @@ class CommonContext implements Context
     }
 
     /**
+     * @Given I access the Welsh service homepage
+     * @Given I access the Welsh viewer service
+     * @Given I access the Welsh actor service
+     */
+    public function iAccessTheWelshServiceHomepage()
+    {
+        $this->ui->visit('/cy/home');
+    }
+
+    /**
+     * @Then I can see English text
+     */
+    public function iCanSeeEnglishText()
+    {
+        $this->ui->assertPageContainsText("a lasting power of attorney");
+    }
+
+    /**
+     * @Then /^I can see Welsh text$/
+     */
+    public function iCanSeeWelshText()
+    {
+        $this->ui->assertPageContainsText("atwrneiaeth arhosol");
+    }
+
+    /**
      * @Given I fetch the healthcheck endpoint
      */
     public function iFetchTheHealthcheckEndpoint(): void
     {
         $this->ui->visit('/healthcheck');
+    }
+
+    /**
+     * @Given /^the documents language is set to English$/
+     */
+    public function theDocumentsLanguageIsSetToEnglish()
+    {
+        $htmlElement = $this->ui->getMink()->getSession()->getPage()->find('css', 'html');
+
+        if ($htmlElement->getAttribute('lang') !== 'en_GB') {
+            throw new ExpectationException(
+                'Language not specified in html tag',
+                $this->ui->getMink()->getSession()->getDriver()
+            );
+        }
+    }
+
+    /**
+     * @Given the documents language is set to Welsh
+     */
+    public function theDocumentsLanguageIsSetToWelsh()
+    {
+        $htmlElement = $this->ui->getMink()->getSession()->getPage()->find('css', 'html');
+
+        if ($htmlElement->getAttribute('lang') !== 'cy') {
+            throw new ExpectationException(
+                'Language not specified in html tag',
+                $this->ui->getMink()->getSession()->getDriver()
+            );
+        }
     }
 
     /**
