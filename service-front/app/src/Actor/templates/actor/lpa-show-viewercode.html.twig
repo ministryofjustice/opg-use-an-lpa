@@ -21,29 +21,30 @@
 
             {{ include('@actor/partials/lpa-sub-navigation.html.twig') }}
 
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-full">
-
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
                     <div class="moj-banner moj-banner--success govuk-panel--fixButton">
-                      <div class="moj-banner__message govuk-panel govuk-!-padding-1">
-
-                        <h1 class="govuk-panel__body govuk-!-margin-top-0 govuk-!-margin-bottom-2">
-                            {% trans %}Give this access code to{% endtrans %} {{ organisation }}
-                        </h1>
-                        <span class="govuk-panel__title">
-                          {{ add_hyphen_to_viewer_code(code) }}
-                        </span>
-                        <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-3">{% trans with {'%date%': expires | date ('j F Y')} %}This code expires in 30 days, on %date%.{% endtrans %}</p>
-                        <input readonly type="text" value="{{ add_hyphen_to_viewer_code(code) }}" id="accesscodecopy" class="offscreen" aria-hidden="true">
-                        <button id="copybutton" class="govuk-button govuk-button__copy">{% trans %}Copy code{% endtrans %}</button>
-
-                      </div>
-                    </div>
-
+                        <div class="moj-banner__message govuk-panel govuk-!-padding-1">
+                            <h1 class="govuk-panel__body govuk-!-margin-top-0 govuk-!-margin-bottom-2">
+                                {% trans with {'%organisation%': organisation } %}Give this access code to %organisation% {% endtrans %}
+                            </h1>
+                            <span class="govuk-panel__title">
+                                {{ add_hyphen_to_viewer_code(code) }}
+                            </span>
+                            <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-3">{% trans with {'%date%': expires | date ('j F Y')} %}This code expires in 30 days, on %date%.{% endtrans %}</p>
+                            <div class="js-accesscodecopy">
+                                <input readonly type="text" value="{{ add_hyphen_to_viewer_code(code) }}" class="js-accesscodecopy-value offscreen" aria-hidden="true">
+                                <button class="js-accesscodecopy-button govuk-button govuk-button__copy">
+                                    <span class="js-accesscodecopy-default">{% trans %}Copy code{% endtrans %}</span>
+                                    <span class="js-accesscodecopy-success hide">{% trans %}Code copied{% endtrans %}</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="govuk-grid-row">
+            <div class="govuk-grid-row">
                     <div class="govuk-grid-column-three-quarters">
                         <h2 class="govuk-body-l govuk-!-font-weight-bold">{% trans %}What happens next?{% endtrans %}</h2>
 
