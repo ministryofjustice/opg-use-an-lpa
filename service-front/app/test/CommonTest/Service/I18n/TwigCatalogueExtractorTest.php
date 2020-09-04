@@ -80,7 +80,10 @@ class TwigCatalogueExtractorTest extends TestCase
             'rootDir',
             null,
             [
-                'home.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>'
+                'home.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>',
+                'partials' => [
+                    'page.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>'
+                ]
             ]
         );
 
@@ -96,7 +99,7 @@ class TwigCatalogueExtractorTest extends TestCase
         /** @var TwigExtractor|ObjectProphecy $extractorProphecy */
         $extractorProphecy = $this->prophesize(ExtractorInterface::class);
         $extractorProphecy
-            ->extract($vfs->url())
+            ->extract(Argument::type('string'))
             ->shouldBeCalled()
             ->willReturn(
                 [ 'messages' => $translationsProphecy->reveal() ]
@@ -104,10 +107,7 @@ class TwigCatalogueExtractorTest extends TestCase
 
         $extractor = new TwigCatalogueExtractor($extractorProphecy->reveal());
 
-        $translations = $extractor->extract([$vfs->url()]);
-        $this->assertEquals(['messages' => $translationsProphecy->reveal()], $translations);
-
-        $translations = $extractor->extract([$vfs->url()]);
+        $translations = $extractor->extract([$vfs->url(), $vfs->getChild('partials')->url()]);
         $this->assertEquals(['messages' => $translationsProphecy->reveal()], $translations);
     }
 }
