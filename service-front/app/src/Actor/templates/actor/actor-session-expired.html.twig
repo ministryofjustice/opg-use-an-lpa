@@ -11,10 +11,8 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
                     <h1 class="govuk-heading-xl">{% trans %}We've signed you out{% endtrans %}</h1>
-                    {% trans with {'%login%': path('login') }%}
-                        <p class="govuk-body">For your security, we've signed you out of this service because you did not use it for 20 minutes.</p>
-                        <a href="%login%" draggable="false" class="govuk-button">Sign in</a>
-                    {% endtrans %}
+                    <p class="govuk-body">{% trans %}For your security, we've signed you out of this service because you did not use it for 20 minutes.{% endtrans %}</p>
+                    <a href="{{ path('login') }}" draggable="false" class="govuk-button">{% trans %}Sign in{% endtrans %}</a>
                 </div>
             </div>
         </main>
