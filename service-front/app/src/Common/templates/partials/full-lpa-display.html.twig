@@ -3,7 +3,6 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
-
             <div class="govuk-grid-column-two-thirds">
                     <span class="govuk-caption-l">
                         {% if lpa.caseSubtype|lower == "pfa" %}
@@ -45,7 +44,11 @@
                                 {% trans %}This health and welfare LPA has been cancelled{% endtrans %}
                             {% endif %}
                         </h1>
-
+                        {% if lpa.status == 'Cancelled' %}
+                            <div class="govuk-panel__body govuk-!-font-size-24">
+                                <strong>{% trans with {'%cancellationDate%': lpa_date(lpa.cancellationDate)} %}Cancelled on %cancellationDate%{% endtrans %}</strong>
+                            </div>
+                        {% endif %}
                         <div class="govuk-panel__body govuk-!-font-size-24">
                             <strong>{% trans with {'%date%': lpa_date("today")} %}The information on this LPA summary was correct on %date%{% endtrans %}</strong>
                         </div>

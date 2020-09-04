@@ -19,8 +19,6 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Common\Entity\CaseActor;
-use Common\Entity\Lpa;
 
 /**
  * Class CheckCodeHandler
@@ -76,12 +74,13 @@ class CheckCodeHandler extends AbstractHandler
                 if ($lpa instanceof ArrayObject) {
                     // Then we found a LPA for the given code
                     $expires = new DateTime($lpa->expires);
-                    if (strtolower(($lpa->lpa)->getStatus()) === 'registered') {
+                    $status = strtolower(($lpa->lpa)->getStatus());
+                    if ($status === 'registered' || $status === 'cancelled') {
                         return new HtmlResponse($this->renderer->render(
                             'viewer::check-code-found',
                             [
                                 'lpa' => $lpa->lpa,
-                                'expires' => $expires->format('Y-m-d')
+                                'expires' => $expires->format('Y-m-d'),
                             ]
                         ));
                     }
