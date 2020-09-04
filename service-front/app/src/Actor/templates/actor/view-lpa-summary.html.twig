@@ -124,7 +124,7 @@
 
                 {% for attorney in lpa.attorneys %}
 
-                    <h3 class="govuk-heading-m">{{ lpa.attorneys | length == 1 ? '1st' : loop.index | ordinal }} attorney</h3>
+                    <h3 class="govuk-heading-m">{% trans count loop.index with {'%attorneyOrdinal%': loop.index | ordinal} %}%attorneyOrdinal% attorney|%attorneyOrdinal% attorney{% endtrans %}</h3>
 
                     <dl class="govuk-summary-list govuk-summary-list--no-border">
                         <div class="govuk-summary-list__row">

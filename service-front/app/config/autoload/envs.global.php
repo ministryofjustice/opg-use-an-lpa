@@ -108,13 +108,8 @@ return [
 
     'i18n' => [
         'default_locale' => 'en_GB',
-        'languages' => [
-            'welsh' => [
-                'format' => 'mo',
-                'resource' => '/app/languages/cy.mo',
-                'locale' => 'cy'
-            ]
-        ]
+        'default_domain' => 'messages',
+        'locale_path' => '/app/languages/'
     ],
 
     'ratelimits' => [
