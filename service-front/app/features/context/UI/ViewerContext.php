@@ -694,4 +694,13 @@ class ViewerContext implements Context
     {
         $this->ui->visit('/home');
     }
+
+    /**
+     * @Then /^I am taken back to the enter code page$/
+     */
+    public function iAmTakenBackToTheEnterCodePage()
+    {
+        $this->ui->assertPageAddress('/home');
+        $this->ui->assertPageContainsText('Enter the LPA access code');
+    }
 }
