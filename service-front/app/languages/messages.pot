@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-09-03T15:32:10+00:00\n"
+"POT-Creation-Date: 2020-09-03T15:47:47+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -37,11 +37,11 @@ msgstr ""
 msgid "Health and welfare"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:31
-msgid "Give this access code to"
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:29
+msgid "Give this access code to %organisation%"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:36
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:34
 msgid "This code expires in 30 days, on %date%."
 msgstr ""
 
@@ -49,19 +49,23 @@ msgstr ""
 msgid "Copy code"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:48
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:39
+msgid "Code copied"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:49
 msgid "What happens next?"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:50
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:51
 msgid "You’ll need to give %organisation% this access code - ask them how they want to receive it so it gets to the right person."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:52
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:53
 msgid "When %organisation% have the access code, they should go to <br> www.gov.uk/view-lpa to see a summary of the LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:55
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:56
 msgid "Give another organisation access"
 msgstr ""
 
