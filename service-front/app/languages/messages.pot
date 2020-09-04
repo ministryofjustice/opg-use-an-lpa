@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-09-03T15:47:47+00:00\n"
+"POT-Creation-Date: 2020-09-04T09:59:45+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -101,6 +101,21 @@ msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:66
 msgid "Give an organisation their access code so they can view this LPA. They should go to www.gov.uk/view-lpa to use the code."
+msgstr ""
+
+#. Accordion label
+#: src/Actor/templates/actor/check-access-codes.html.twig:68
+msgid "Open all"
+msgstr ""
+
+#. Accordion label
+#: src/Actor/templates/actor/check-access-codes.html.twig:68
+msgid "Close all"
+msgstr ""
+
+#. Accordion label
+#: src/Actor/templates/actor/check-access-codes.html.twig:68
+msgid "section"
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:82
