@@ -35,3 +35,4 @@ describe('given a copy access code is found', () => {
         expect(successText.classList).toContain('hide');
     });
 });
+
