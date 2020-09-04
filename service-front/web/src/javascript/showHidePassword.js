@@ -1,9 +1,13 @@
-const showHidePassword = (document) => {
+const showHidePassword = () => {
     if (document.getElementById('showHidePassword')) {
-        var forms = document.getElementsByTagName('form');
+
         var link = document.getElementById('showHidePassword');
 
         link.addEventListener('click', function showHideToggle(e) {
+
+            e.preventDefault();
+            var pwdConfirmParent = document.getElementById("password_confirm").parentElement;
+            var passwordElement = document.getElementById("password");
 
             var pwd = this.getAttribute('data-for');
             var hideConfirm = this.getAttribute('data-hideConfirmPassword');
@@ -13,10 +17,22 @@ const showHidePassword = (document) => {
 
             if (isShowing) {
                 if (hideConfirm) {
-
+                    pwdConfirmParent.hidden = true;
+                    passwordElement.setAttribute('type', 'text');
+                    this.setAttribute('data-for', 'password_confirm');
                 }
-
+            } else {
+                if (hideConfirm) {
+                    pwdConfirmParent.hidden = false;
+                    passwordElement.setAttribute('type', 'password');
+                    this.setAttribute('data-for', 'password');
+                }
             }
+
+            //  Change the link text
+            link.textContent = (isShowing ? 'Hide password' : 'Show password');
+
+            return false;
         });
     }
 }
