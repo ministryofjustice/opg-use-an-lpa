@@ -157,6 +157,30 @@ class LpaServiceTest extends TestCase
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
 
+
+    /** @test */
+    public function it_finds_a_cancelled_lpa_by_passcode_and_surname()
+    {
+
+        $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
+            'code' => 'P9H8A6MLD3AM',
+            'name' => 'Sanderson',
+        ])
+            ->willThrow(new ApiException('Share code cancelled', StatusCodeInterface::STATUS_GONE));
+
+        $service = new LpaService(
+            $this->apiClientProphecy->reveal(),
+            $this->lpaFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
+        $this->expectExceptionMessage('Share code cancelled');
+
+
+        $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', false);
+    }
     /** @test */
     public function it_finds_an_expired_lpa_by_passcode_and_surname()
     {
@@ -165,7 +189,7 @@ class LpaServiceTest extends TestCase
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
         ])
-            ->willThrow(new ApiException('',StatusCodeInterface::STATUS_GONE));
+            ->willThrow(new ApiException('Share code expired', StatusCodeInterface::STATUS_GONE));
 
         $service = new LpaService(
             $this->apiClientProphecy->reveal(),
@@ -176,6 +200,7 @@ class LpaServiceTest extends TestCase
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
 
+
         $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', false);
     }
 
@@ -185,7 +210,7 @@ class LpaServiceTest extends TestCase
         $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
-        ])->willThrow(new ApiException('',StatusCodeInterface::STATUS_NOT_FOUND));
+        ])->willThrow(new ApiException('', StatusCodeInterface::STATUS_NOT_FOUND));
 
         $service = new LpaService(
             $this->apiClientProphecy->reveal(),
@@ -317,7 +342,7 @@ class LpaServiceTest extends TestCase
         $passcode = '123456789012';
         $referenceNumber = '123456789012';
         $dob = '1980-01-01';
-        $cancellationDate=(new \DateTime('-1 days'))->format('Y-m-d');
+        $cancellationDate = (new \DateTime('-1 days'))->format('Y-m-d');
 
         $params = [
             'actor-code' => $passcode,
