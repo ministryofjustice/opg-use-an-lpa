@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-09-04T09:59:45+00:00\n"
+"POT-Creation-Date: 2020-09-04T20:21:01+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -289,6 +289,7 @@ msgid "Change password"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:14
+#: src/Common/templates/layout/default.html.twig:104
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:16
 msgid "Terms of use"
 msgstr ""
@@ -1050,27 +1051,27 @@ msgid "We’ll never:"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:192
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:153
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:152
 msgid "share your information with other organisations for marketing, market research or commercial purposes"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:193
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:155
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:153
 msgid "sell or rent your data to third parties"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:195
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:158
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:155
 msgid "Getting more information"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:197
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:162
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:159
 msgid "You can get more details on:"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:200
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:165
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:162
 msgid "agreements we have with other organisations for sharing information"
 msgstr ""
 
@@ -1081,42 +1082,42 @@ msgid ""
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:203
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:167
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:164
 msgid "instructions we give to staff on how to collect, use or delete your personal data"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:204
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:168
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:165
 msgid "how we check that the information we hold is accurate and up-to-date"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:205
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:169
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:166
 msgid "how to make a complaint"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:206
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:170
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:167
 msgid "anything in this privacy notice"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:207
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:171
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:168
 msgid "what to do if you think that your personal data has been misused or mishandled"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:210
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:175
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:171
 msgid "For more information, please contact:"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:219
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:186
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:182
 msgid "Changes to this notice"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:221
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:188
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:184
 msgid "We may change this privacy notice from time to time. When we do, we’ll update the ‘last updated’ date at the bottom of this page."
 msgstr ""
 
@@ -1125,12 +1126,12 @@ msgid "If these changes affect how your personal data is processed, we’ll take
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:227
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:194
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:190
 msgid "Any changes to this privacy notice will apply to you and your data immediately."
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:229
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:196
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:192
 msgid "Making a complaint"
 msgstr ""
 
@@ -1509,115 +1510,115 @@ msgid "Enter an activation key in the correct format"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:32
+#: src/Actor/templates/actor/form-error-messages.html.twig:33
 msgctxt "error"
 msgid "The LPA reference number you entered is too short"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:33
+#: src/Actor/templates/actor/form-error-messages.html.twig:34
 msgctxt "error"
 msgid "The LPA reference number you entered is too long"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:34
+#: src/Actor/templates/actor/form-error-messages.html.twig:35
 msgctxt "error"
 msgid "Enter the 12 numbers of the LPA reference number. Do not include letters or other characters"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:35
+#: src/Actor/templates/actor/form-error-messages.html.twig:36
 msgctxt "error"
 msgid "Date of birth value must be provided in an array"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:36
+#: src/Actor/templates/actor/form-error-messages.html.twig:37
 msgctxt "error"
 msgid "Enter your date of birth"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:37
+#: src/Actor/templates/actor/form-error-messages.html.twig:38
 msgctxt "error"
 msgid "Date of birth must be a real date"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:38
+#: src/Actor/templates/actor/form-error-messages.html.twig:39
 msgctxt "error"
 msgid "Date of birth must include a day"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:39
+#: src/Actor/templates/actor/form-error-messages.html.twig:40
 msgctxt "error"
 msgid "Date of birth must include a month"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:40
+#: src/Actor/templates/actor/form-error-messages.html.twig:41
 msgctxt "error"
 msgid "Date of birth must include a year"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:41
+#: src/Actor/templates/actor/form-error-messages.html.twig:42
 msgctxt "error"
 msgid "Date of birth must be in the past"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:42
+#: src/Actor/templates/actor/form-error-messages.html.twig:43
 msgctxt "error"
 msgid "Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18"
 msgstr ""
 
 #. Create viewer code
-#: src/Actor/templates/actor/form-error-messages.html.twig:45
+#: src/Actor/templates/actor/form-error-messages.html.twig:46
 msgctxt "error"
 msgid "Enter an organisation name"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:48
+#: src/Actor/templates/actor/form-error-messages.html.twig:49
 msgctxt "error"
 msgid "Enter your current password"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:49
+#: src/Actor/templates/actor/form-error-messages.html.twig:50
 msgctxt "error"
 msgid "Current password is incorrect"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:50
+#: src/Actor/templates/actor/form-error-messages.html.twig:51
 msgctxt "error"
 msgid "Enter your new password"
 msgstr ""
 
 #. Change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:51
+#: src/Actor/templates/actor/form-error-messages.html.twig:52
 msgctxt "error"
 msgid "New password and confirm new password do not match"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:52
+#: src/Actor/templates/actor/form-error-messages.html.twig:53
 msgctxt "error"
 msgid "Enter your password again to confirm it"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:55
+#: src/Actor/templates/actor/form-error-messages.html.twig:56
 msgctxt "error"
 msgid "Confirm your email address"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:56
+#: src/Actor/templates/actor/form-error-messages.html.twig:57
 msgctxt "error"
 msgid "The emails did not match"
 msgstr ""
@@ -2398,6 +2399,7 @@ msgstr ""
 msgid "Error:"
 msgstr ""
 
+#: src/Common/templates/layout/default.html.twig:109
 #: src/Common/templates/partials/cookies.html.twig:23
 msgid "Cookies"
 msgstr ""
@@ -2875,11 +2877,11 @@ msgstr ""
 msgid "We’ll only share the information you give us when the law says we can. For example, we may share information with the police to help them prevent or investigate crime."
 msgstr ""
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:166
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:163
 msgid "when we can pass on personal information without telling you, for example, to help with the prevention or detection of crime or to produce anonymised statistics"
 msgstr ""
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:178
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:174
 msgid ""
 "MOJ Data Protection Officer<br>\n"
 "                    Post point 10.38<br>\n"
@@ -2888,15 +2890,15 @@ msgid ""
 "                    SW1H 9AJ<br>"
 msgstr ""
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:191
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:187
 msgid "If these changes affect how your personal data is processed, We’ll take reasonable steps to let you know."
 msgstr ""
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:198
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:194
 msgid "When we ask for personal data, we’ll keep to the law. If you think that your information has not been handled correctly, in addition to contacting the MOJ Data Protection Officer, you can contact the Information Commissioner for independent advice about data protection at the address below:"
 msgstr ""
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:201
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:197
 msgid ""
 "Information Commissioner's Office <br>\n"
 "                    Wycliffe House <br>\n"
@@ -2906,19 +2908,19 @@ msgid ""
 "                    SK9 5AF <br>"
 msgstr ""
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:211
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:207
 msgid "Phone: 0303 123 1113"
 msgstr ""
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:212
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:208
 msgid "Textphone: 01625 545860"
 msgstr ""
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:213
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:209
 msgid "Monday to Friday, 9am to 4:30pm"
 msgstr ""
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:219
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:215
 msgid "Last updated: 24 May 2019"
 msgstr ""
 
@@ -2940,4 +2942,60 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/viewer-session-expired.html.twig:18
 msgid "Start again"
+msgstr ""
+
+#: src/Common/templates/layout/default.html.twig:41
+msgid "Skip to main content"
+msgstr ""
+
+#: src/Common/templates/layout/default.html.twig:49
+msgid "Tell us whether you accept cookies"
+msgstr ""
+
+#: src/Common/templates/layout/default.html.twig:50
+msgid ""
+"GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us\n"
+"                    improve government digital services. Any data collected is anonymised."
+msgstr ""
+
+#: src/Common/templates/layout/default.html.twig:55
+msgid "Accept all cookies"
+msgstr ""
+
+#: src/Common/templates/layout/default.html.twig:58
+msgid "Set cookie preferences"
+msgstr ""
+
+#: src/Common/templates/layout/default.html.twig:5
+msgid "GOV.UK"
+msgstr ""
+
+#: src/Common/templates/layout/default.html.twig:100
+msgid "Support links"
+msgstr ""
+
+#: src/Common/templates/layout/default.html.twig:114
+msgid "Contact us"
+msgstr ""
+
+#: src/Common/templates/layout/default.html.twig:119
+msgid "Built by OPG Digital"
+msgstr ""
+
+#: src/Common/templates/layout/default.html.twig:129
+msgid ""
+"All content is available under the\n"
+"                    <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\">\n"
+"                        Open Government Licence v3.0\n"
+"                    </a>, except where otherwise stated"
+msgstr ""
+
+#: src/Common/templates/layout/default.html.twig:138
+msgid "© Crown copyright"
+msgstr ""
+
+#. Add LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:32
+msgctxt "error"
+msgid "Enter the LPA reference number"
 msgstr ""
