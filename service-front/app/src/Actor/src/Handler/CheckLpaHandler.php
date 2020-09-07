@@ -134,7 +134,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
             if (!is_null($lpa) && (strtolower($lpa->getStatus()) === 'registered')) {
                 // Are we displaying Donor or Attorney user role
-                $actorRole = ($lpa->getDonor()->getId() === $actor->getId()) ?
+                $actorRole = (array_search($actor->getId(), $lpa->getDonor()->getIds()) !== false) ?
                     'Donor' :
                     'Attorney';
 

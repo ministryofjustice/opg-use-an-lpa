@@ -55,7 +55,7 @@
                     <button class="govuk-button button--inline" name="accept-all-cookies" type="submit" role="button">{% trans %}Accept all cookies{% endtrans %}</button>
                 </div>
                 <div class="cookie-banner__button govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0">
-                    <a href="/cookies" class="govuk-button govuk-button--secondary button--inline" name="set-cookie-preferences" role="button">{% trans %}Set cookie preferences{% endtrans %}</a>
+                    <a href="{{ path('cookies') }}" class="govuk-button govuk-button--secondary button--inline" name="set-cookie-preferences" role="button">{% trans %}Set cookie preferences{% endtrans %}</a>
                 </div>
             </div>
         </div>
@@ -100,12 +100,12 @@
                 <h2 class="govuk-visually-hidden">{% trans %}Support links{% endtrans %}</h2>
                 <ul class="govuk-footer__inline-list">
                     <li class="govuk-footer__inline-list-item">
-                        <a class="govuk-footer__link" href="/terms-of-use">
+                        <a class="govuk-footer__link" href="{{ path('terms-of-use') }}">
                             {% trans %}Terms of use{% endtrans %}
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
-                        <a class="govuk-footer__link" href="/cookies">
+                        <a class="govuk-footer__link" href="{{ path('cookies') }}">
                             {% trans %}Cookies{% endtrans %}
                         </a>
                     </li>

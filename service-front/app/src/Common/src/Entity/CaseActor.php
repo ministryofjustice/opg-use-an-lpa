@@ -14,6 +14,9 @@ class CaseActor
     /** @var string|null */
     protected $uId = null;
 
+    /** @var array<array<mixed>>|null */
+    protected $linked = null;
+
     /** @var string|null */
     protected $email = null;
 
@@ -59,6 +62,28 @@ class CaseActor
     public function setUId(string $uId): void
     {
         $this->uId = $uId;
+    }
+
+    /**
+     * @return ?array<int>
+     */
+    public function getIds(): ?array
+    {
+        if ($this->linked === null) {
+            return [$this->getId()];
+        }
+
+        return array_map(function($x) {
+            return $x['id'];
+        }, $this->linked);
+    }
+
+    /**
+     * @param array<array<mixed>> $linked
+     */
+    public function setLinked(array $linked): void
+    {
+        $this->linked = $linked;;
     }
 
     public function getEmail(): ?string
