@@ -85,7 +85,7 @@ class SiriusLpaFactoryTest extends TestCase
 
         $this->assertEquals(null, $lpa->getRejectedDate());
         $this->assertEquals(null, $lpa->getLifeSustainingTreatment());
-
+        $this->assertEquals(null, $lpa->getCancellationDate());
         $this->assertInstanceOf(CaseActor::class, $lpa->getDonor());
         $this->assertInstanceOf(Address::class, $lpa->getDonor()->getAddresses()[0]);
 
