@@ -194,6 +194,7 @@ class ViewerContext implements Context
     public function iConfirmTheCancelledLPAIsCorrect()
     {
         $this->lpaData['status'] = 'Cancelled';
+        $this->lpaData['cancellationDate'] = (new \DateTime('-1 day'))->format('Y-m-d');
 
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText(
@@ -242,6 +243,9 @@ class ViewerContext implements Context
             $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
         );
         $this->ui->assertPageContainsText('LPA has been cancelled');
+        $this->ui->assertPageContainsText(
+            'Cancelled on ' . (new \DateTime($this->lpaData['cancellationDate']))->format('j F Y')
+        );
     }
 
     /**

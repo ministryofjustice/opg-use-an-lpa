@@ -108,7 +108,7 @@ final class Sirius implements LpaFactory
         if (isset($data['certificateProviders'])) {
             $lpa->setCertificateProviders($this->createCaseActorsFromData($data['certificateProviders']));
         }
-        if (isset ($data['cancellationDate'])) {
+        if (isset($data['cancellationDate'])) {
             $lpa->setCancellationDate(new DateTime($data['cancellationDate']));
         }
         return $lpa;
