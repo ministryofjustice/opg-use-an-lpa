@@ -471,6 +471,31 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
+    public function cannot_get_lpa_by_viewer_code_with_cancelled()
+    {
+        $t = $this->init_valid_get_by_viewer_account();
+
+        $service = $this->getLpaService();
+
+        //---
+
+        $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn([
+            'ViewerCode' => $t->ViewerCode,
+            'SiriusUid' => $t->SiriusUid,
+            'Expires' => new DateTime('1 hour'),
+            'Cancelled' => true,
+            'Organisation' => $t->Organisation,
+        ]);
+
+        //---
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Share code cancelled");
+
+        $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, false);
+    }
+
+    /** @test */
     public function cannot_get_lpa_by_viewer_code_with_expired_expiry()
     {
         $t = $this->init_valid_get_by_viewer_account();

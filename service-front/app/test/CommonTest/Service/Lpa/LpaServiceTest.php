@@ -309,6 +309,63 @@ class LpaServiceTest extends TestCase
         $this->assertEquals($dob, ($lpa['lpa'])->getDonor()->getDob()->format('Y-m-d'));
     }
 
+
+    /** @test */
+    public function it_finds_an_lpa_by_passcode_cancelled()
+    {
+        $token = '01234567-01234-01234-01234-012345678901';
+        $passcode = '123456789012';
+        $referenceNumber = '123456789012';
+        $dob = '1980-01-01';
+        $cancellationDate=(new \DateTime('-1 days'))->format('Y-m-d');
+
+        $params = [
+            'actor-code' => $passcode,
+            'uid'  => $referenceNumber,
+            'dob'  => $dob,
+        ];
+
+        $lpaData = [
+            'uId' => $referenceNumber,
+            'cancellationDate' => $cancellationDate,
+            'donor' => [
+                'dob' => $dob
+            ]
+        ];
+
+        $lpa = new Lpa();
+        $lpa->setUId($referenceNumber);
+
+        $donor = new CaseActor();
+        $donor->setDob(new \DateTime($dob));
+        $lpa->setDonor($donor);
+
+        $lpa->setCancellationDate(new \DateTime($cancellationDate));
+
+        $this->apiClientProphecy->httpPost('/v1/actor-codes/summary', $params)
+            ->willReturn([
+                'lpa' => $lpaData
+            ]);
+        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
+
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData)->willReturn($lpa);
+
+        $service = new LpaService(
+            $this->apiClientProphecy->reveal(),
+            $this->lpaFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $lpa = $service->getLpaByPasscode($token, $passcode, $referenceNumber, $dob);
+
+        $this->assertInstanceOf(ArrayObject::class, $lpa);
+        $this->assertInstanceOf(Lpa::class, $lpa['lpa']);
+        $this->assertEquals(123456789012, ($lpa['lpa'])->getUId());
+        $this->assertEquals($donor, ($lpa['lpa'])->getDonor());
+        $this->assertEquals($dob, ($lpa['lpa'])->getDonor()->getDob()->format('Y-m-d'));
+        $this->assertEquals($cancellationDate, ($lpa['lpa'])->getCancellationDate()->format('Y-m-d'));
+    }
+
     /** @test */
     public function an_invalid_find_by_passcode_response_returns_null()
     {
