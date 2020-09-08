@@ -38,17 +38,24 @@
 
                                 {{ govuk_form_element(form.get('email'), { 'label': 'Enter your email address'| trans }) }}
 
-                                {{ govuk_form_element(form.get('password'), {
-                                    'label': 'Create a password'| trans,
-                                    'hint': 'Your password needs to have: <ul class="govuk-list--bullet"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>'| trans,
-                                })
-                                }}
+                                <div class="js-showhidepassword">
+                                    {{ govuk_form_element(form.get('password'), {
+                                        'label': 'Create a password'| trans,
+                                        'hint': 'Your password needs to have: <ul class="govuk-list--bullet"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>'| trans,
+                                        'attr': { 'class': 'js-showhidepassword-input' }
+                                    })
+                                    }}
 
-                                <div class="govuk-!-margin-bottom-5">
-                                    <a href="#" id="showHidePassword" class="govuk-link govuk-body" data-for="password" data-hideConfirmPassword = "true">Show password</a>
+                                    <button class="govuk-button govuk-button--secondary js-showhidepassword-button" data-module="govuk-button" type="button"
+                                           data-showpassword="{% trans %}Show password{% notes %}Show password label{% endtrans%}"
+                                           data-hidepassword="{% trans %}Hide password{% notes %}Hide password label{% endtrans %}">
+                                    </button>
+
+                                    {{ govuk_form_element(form.get('password_confirm'),
+                                        { 'label': 'Confirm your password'| trans,
+                                        'attr': { 'class': 'js-showhidepassword-confirm' }}
+                                    ) }}
                                 </div>
-
-                                {{ govuk_form_element(form.get('password_confirm'), { 'label': 'Confirm your password'| trans }) }}
 
                                 <div class="govuk-warning-text">
                                   <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
