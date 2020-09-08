@@ -83,7 +83,7 @@ class UserServiceTest extends TestCase
     /** @test */
     public function cannot_add_existing_user()
     {
-        $userData = ['email' => 'a@b.com', 'password' => new HiddenString(self::PASS)];
+        $userData = ['email' => 'a@b.com', 'password' => self::PASS];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -189,7 +189,7 @@ class UserServiceTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Email' => 'a@b.com', 'Password' => new HiddenString(self::PASS_HASH), 'ActivationToken' => 'aToken', 'Id' => '1234-1234-1234']);
+            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'ActivationToken' => 'aToken', 'Id' => '1234-1234-1234']);
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
@@ -224,7 +224,7 @@ class UserServiceTest extends TestCase
     public function will_reset_a_password_given_a_valid_token()
     {
         $token = 'RESET_TOKEN_123';
-        $password = new HiddenString('newpassword');
+        $password = 'newpassword';
         $id = '12345-1234-1234-1234-12345';
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -250,7 +250,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $us->completePasswordReset($token, $password);
+        $us->completePasswordReset($token, new HiddenString($password));
     }
 
     /** @test */
@@ -280,7 +280,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(BadRequestException::class);
-        $us->completePasswordReset($token, $password);
+        $us->completePasswordReset($token, new HiddenString($password));
     }
 
     /** @test */
@@ -371,7 +371,7 @@ class UserServiceTest extends TestCase
             'Id'        => $id,
             'Email'     => 'a@b.com',
             'LastLogin' => null,
-            'Password'  => new HiddenString(self::PASS_HASH)
+            'Password'  => self::PASS_HASH
         ];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -460,7 +460,7 @@ class UserServiceTest extends TestCase
             'Id'        => $id,
             'Email'     => 'a@b.com',
             'LastLogin' => null,
-            'Password'  => new HiddenString(self::PASS_HASH)
+            'Password'  => self::PASS_HASH
         ];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -474,7 +474,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(ForbiddenException::class);
-        $us->requestChangeEmail($id, $newEmail, 'inc0rr3ct');
+        $us->requestChangeEmail($id, $newEmail, new HiddenString('inc0rr3ct'));
     }
 
     /** @test */
@@ -487,7 +487,7 @@ class UserServiceTest extends TestCase
             'Id'        => $id,
             'Email'     => 'a@b.com',
             'LastLogin' => null,
-            'Password'  => new HiddenString(self::PASS_HASH)
+            'Password'  => self::PASS_HASH
         ];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -519,7 +519,7 @@ class UserServiceTest extends TestCase
             'Id'        => $id,
             'Email'     => 'a@b.com',
             'LastLogin' => null,
-            'Password'  => new HiddenString(self::PASS_HASH)
+            'Password'  => self::PASS_HASH
         ];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -599,7 +599,7 @@ class UserServiceTest extends TestCase
                 'Id'               => $id,
                 'NewEmail'         => $newEmail,
                 'EmailResetToken'  => $token,
-                'Password'         => new HiddenString(self::PASS_HASH),
+                'Password'         => self::PASS_HASH,
             ])
             ->shouldBeCalled();
 
