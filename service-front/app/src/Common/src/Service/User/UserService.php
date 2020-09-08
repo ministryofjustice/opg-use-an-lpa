@@ -99,11 +99,10 @@ class UserService implements UserRepositoryInterface
     public function authenticate(string $email, HiddenString $password = null): ?UserInterface
     {
         try {
-            if (is_null($password) {
-                $unhiddenPassword = null
-            }
-            else {
-                $unhiddenPassword = $password->getString()
+            if (is_null($password)) {
+                $unhiddenPassword = null;
+            } else {
+                $unhiddenPassword = $password->getString();
             }
 
             $userData = $this->apiClient->httpPatch('/v1/auth', [
