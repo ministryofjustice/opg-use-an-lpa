@@ -89,7 +89,7 @@ msgstr "Rhoi mynediad i sefydliad arall"
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:3
 msgid "Access codes for this LPA"
-msgstr "Codau mynediad ar gyfer y LPA hon"
+msgstr "Codau mynediad ar gyfer yr LPA hon"
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:35
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:17
@@ -99,7 +99,7 @@ msgstr "Gwirio codau mynediad"
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:38
 msgid "There are no access codes for this LPA."
-msgstr "Nid oes codau mynediad ar gyfer y LPA hon."
+msgstr "Nid oes codau mynediad ar gyfer yr LPA hon."
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:39
 msgid ""
@@ -117,7 +117,7 @@ msgstr "Rhoi mynediad i sefydliad"
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:64
 msgid "Active codes"
-msgstr "Codau i’w ddefnyddio"
+msgstr "Codau i’w defnyddio"
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:66
 msgid ""
@@ -346,7 +346,7 @@ msgstr "Newid eich cyfrinair"
 #: src/Common/templates/layout/default.html.twig:104
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:16
 msgid "Terms of use"
-msgstr "Telerau Defnyddio"
+msgstr "Telerau defnyddio"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:16
 msgid ""
@@ -609,7 +609,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:142
 msgid "Let us know if you want us to change the LPA"
-msgstr "Gadewch i ni wybod os ydych eisiau i ni newid y LPA"
+msgstr "Gadewch i ni wybod os ydych eisiau i ni newid yr LPA"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:144
 msgid ""
@@ -652,7 +652,7 @@ msgstr "os yw’r rhoddwr neu atwrnai wedi newid ei enw neu ei gyfeiriad"
 # The donor wants to remove an attorneys name from the LPA
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:161
 msgid "the donor wants to remove an attorney"
-msgstr "os yw’r rhoddwr eisiau tynnu enw atwrnai oddi ar y LPA"
+msgstr "os yw’r rhoddwr eisiau tynnu enw atwrnai oddi ar yr LPA"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:162
 msgid "an attorney dies or can no longer act"
@@ -946,12 +946,12 @@ msgstr ""
 #: src/Common/templates/partials/full-lpa-display.html.twig:151
 msgid "%attorneyOrdinal% attorney"
 msgid_plural "%attorneyOrdinal% attorney"
-msgstr[0] "%attorneyOrdinal% attorney"
-msgstr[1] "Attorney 1af"
-msgstr[2] "%attorneyOrdinal% attorney"
-msgstr[3] "%attorneyOrdinal% attorney"
-msgstr[4] "%attorneyOrdinal% attorney"
-msgstr[5] "%attorneyOrdinal% attorney"
+msgstr[0] "%attorneyOrdinal% atwrnai"
+msgstr[1] "Atwrnai 1af"
+msgstr[2] "%attorneyOrdinal% atwrnai"
+msgstr[3] "%attorneyOrdinal% atwrnai"
+msgstr[4] "%attorneyOrdinal% atwrnai"
+msgstr[5] "%attorneyOrdinal% atwrnai"
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:146
 msgid "Need to change an attorney's details?"
@@ -972,14 +972,14 @@ msgid ""
 "attorney\">LPA</abbr>.<br>To view these, ask to see the paper <abbr title="
 "\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
-"Do, mae’r rhoddwr wedi nodi dymuniadau yn ei <abbr title=\"atwrneiaeth "
+"Oes, mae’r rhoddwr wedi nodi dymuniadau yn ei <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr>. I weld y rhain, gofynnwch am gael gweld y <abbr "
 "title=\"atwrneiaeth arhosol\">LPA</abbr> papur"
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:178
 #: src/Common/templates/partials/full-lpa-display.html.twig:198
 msgid "No"
-msgstr "Naddo"
+msgstr "Nac oes"
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:173
 #: src/Common/templates/partials/full-lpa-display.html.twig:193
@@ -992,7 +992,7 @@ msgid ""
 "attorney\">LPA</abbr>.<br>To view these, ask to see the paper <abbr title="
 "\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
-"Do, mae’r rhoddwr wedi rhoi cyfarwyddiadau yn ei <abbr title=\"atwrneiaeth "
+"Oes, mae’r rhoddwr wedi rhoi cyfarwyddiadau yn ei <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr>. I weld y rhain, gofynnwch am gael gweld y <abbr "
 "title=\"atwrneiaeth arhosol\">LPA</abbr> papur"
 
@@ -1890,7 +1890,7 @@ msgstr ""
 #: src/Actor/templates/actor/death-notification.html.twig:30
 #: src/Actor/templates/actor/change-details.html.twig:30
 msgid "You should contact us if:"
-msgstr "Dylech gysylltu â ni:"
+msgstr "Dylech gysylltu â ni os bydd:"
 
 #: src/Actor/templates/actor/death-notification.html.twig:32
 msgid "the donor dies"
@@ -2399,7 +2399,7 @@ msgid ""
 "you’re named on more than one LPA, you may have entered the reference number "
 "for a different LPA."
 msgstr ""
-"Gwiriwch mai dyma’r cyfeirnod cywir ar gyfer y LPA rydych eisiau ei "
+"Gwiriwch mai dyma’r cyfeirnod cywir ar gyfer yr LPA rydych eisiau ei "
 "hychwanegu. Os ydych wedi’ch enwi ar fwy nag un LPA, efallai eich bod wedi "
 "nodi cyfeirnod LPA gwahanol."
 
@@ -3003,12 +3003,12 @@ msgid ""
 "keep track of the organisations that have online access to an <abbr title="
 "\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
-"cadw golwg ar ba sefydliadau sydd wedi cael mynediad ar-lein at yr <abbr "
+"gadw golwg ar ba sefydliadau sydd wedi cael mynediad ar-lein at yr <abbr "
 "title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:32
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
-msgstr "gweld crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+msgstr "weld crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:38
 msgid "Add your first LPA"
@@ -3249,16 +3249,16 @@ msgid ""
 "Yes, the donor made preferences on their LPA.<br>To view these, ask to see the "
 "paper LPA"
 msgstr ""
-"Do, mae’r rhoddwr wedi nodi dymuniadau yn ei LPA.<br>I weld y rhain, gofynnwch "
-"am gael gweld y LPA papur"
+"Oes, mae’r rhoddwr wedi nodi dymuniadau yn ei LPA.<br>I weld y rhain, "
+"gofynnwch am gael gweld yr LPA papur"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:196
 msgid ""
 "Yes, the donor set instructions on their LPA.<br>To view these, ask to see the "
 "paper LPA"
 msgstr ""
-"Do, mae’r rhoddwr wedi rhoi cyfarwyddiadau yn ei LPA. <br>I weld y rhain, "
-"gofynnwch am gael gweld y LPA papur"
+"Oes, mae’r rhoddwr wedi rhoi cyfarwyddiadau yn ei LPA. <br>I weld y rhain, "
+"gofynnwch am gael gweld yr LPA papur"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:205
 msgid "When can the LPA be used?"
@@ -3289,7 +3289,7 @@ msgstr "Triniaeth <br>cynnal bywyd"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:225
 msgid "To view this, ask to see the paper LPA"
-msgstr "I weld y manylion hyn, gofynnwch am gael gweld y LPA papur"
+msgstr "I weld y manylion hyn, gofynnwch am gael gweld yr LPA papur"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:232
 msgid "Date donor signed LPA"
@@ -3470,12 +3470,12 @@ msgstr "Daw’r cod i ben"
 #: src/Viewer/templates/viewer/check-code-found.html.twig:29
 msgid "in %count% day, on %date%"
 msgid_plural "in %count% days, on %date%"
-msgstr[0] "mewn %count%o ddiwrnodau, ar %date%"
+msgstr[0] "mewn %count% o ddiwrnodau, ar %date%"
 msgstr[1] "mewn %count% diwrnod, ar %date%"
-msgstr[2] "mewn %count%o ddiwrnodau, ar %date%"
-msgstr[3] "mewn %count%o ddiwrnodau, ar %date%"
-msgstr[4] "mewn %count%o ddiwrnodau, ar %date%"
-msgstr[5] "mewn %count%o ddiwrnodau, ar %date%"
+msgstr[2] "mewn %count% o ddiwrnodau, ar %date%"
+msgstr[3] "mewn %count% o ddiwrnodau, ar %date%"
+msgstr[4] "mewn %count% o ddiwrnodau, ar %date%"
+msgstr[5] "mewn %count% o ddiwrnodau, ar %date%"
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:45
 msgid ""
