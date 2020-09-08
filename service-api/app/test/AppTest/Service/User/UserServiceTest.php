@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class UserServiceTest
@@ -74,7 +75,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $return = $us->add(['email' => $email, 'password' => $password]);
+        $return = $us->add(['email' => $email, 'password' => new HiddenString($password)]);
 
         $this->assertEquals(['Id' => $id, 'Email' => $email], $return);
     }
@@ -82,7 +83,7 @@ class UserServiceTest extends TestCase
     /** @test */
     public function cannot_add_existing_user()
     {
-        $userData = ['email' => 'a@b.com', 'password' => self::PASS];
+        $userData = ['email' => 'a@b.com', 'password' => new HiddenString(self::PASS)];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -103,13 +104,13 @@ class UserServiceTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
+            ->willReturn(['Email' => 'a@b.com', 'Password' => new HiddenString(self::PASS_HASH)]);
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $return = $us->getByEmail('a@b.com');
 
-        $this->assertEquals(['Email' => 'a@b.com', 'Password' => self::PASS_HASH], $return);
+        $this->assertEquals(['Email' => 'a@b.com', 'Password' => new HiddenString(self::PASS_HASH)], $return);
     }
 
     /** @test */
@@ -134,7 +135,7 @@ class UserServiceTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'LastLogin' => '2020-01-01']);
+            ->willReturn(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => new HiddenString(self::PASS_HASH), 'LastLogin' => '2020-01-01']);
         $repoProphecy->recordSuccessfulLogin('1234-1234-1234', Argument::that(function($dateTime) {
             $this->assertIsString($dateTime);
 
@@ -146,7 +147,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $return = $us->authenticate('a@b.com', self::PASS);
+        $return = $us->authenticate('a@b.com', new HiddenString(self::PASS));
 
         $this->assertEquals(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'LastLogin' => '2020-01-01'], $return);
     }
@@ -163,7 +164,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(ForbiddenException::class);
-        $return = $us->authenticate('a@b.com', 'badpassword');
+        $return = $us->authenticate('a@b.com', new HiddenString('badpassword'));
     }
 
     /** @test */
@@ -178,7 +179,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(NotFoundException::class);
-        $return = $us->authenticate('baduser@b.com', self::PASS);
+        $return = $us->authenticate('baduser@b.com', new HiddenString(self::PASS));
     }
 
     /** @test */
@@ -188,12 +189,12 @@ class UserServiceTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'ActivationToken' => 'aToken', 'Id' => '1234-1234-1234']);
+            ->willReturn(['Email' => 'a@b.com', 'Password' => new HiddenString(self::PASS_HASH), 'ActivationToken' => 'aToken', 'Id' => '1234-1234-1234']);
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(UnauthorizedException::class);
-        $return = $us->authenticate('a@b.com', self::PASS);
+        $return = $us->authenticate('a@b.com', new HiddenString(self::PASS));
     }
 
     /** @test */
@@ -223,7 +224,7 @@ class UserServiceTest extends TestCase
     public function will_reset_a_password_given_a_valid_token()
     {
         $token = 'RESET_TOKEN_123';
-        $password = 'newpassword';
+        $password = new HiddenString('newpassword');
         $id = '12345-1234-1234-1234-12345';
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -370,7 +371,7 @@ class UserServiceTest extends TestCase
             'Id'        => $id,
             'Email'     => 'a@b.com',
             'LastLogin' => null,
-            'Password'  => self::PASS_HASH
+            'Password'  => new HiddenString(self::PASS_HASH)
         ];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -439,7 +440,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $reset = $us->requestChangeEmail($id, $newEmail,self::PASS);
+        $reset = $us->requestChangeEmail($id, $newEmail,new HiddenString(self::PASS));
 
         $this->assertEquals($id, $reset['Id']);
         $this->assertEquals($email, $reset['Email']);
@@ -459,7 +460,7 @@ class UserServiceTest extends TestCase
             'Id'        => $id,
             'Email'     => 'a@b.com',
             'LastLogin' => null,
-            'Password'  => self::PASS_HASH
+            'Password'  => new HiddenString(self::PASS_HASH)
         ];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -486,7 +487,7 @@ class UserServiceTest extends TestCase
             'Id'        => $id,
             'Email'     => 'a@b.com',
             'LastLogin' => null,
-            'Password'  => self::PASS_HASH
+            'Password'  => new HiddenString(self::PASS_HASH)
         ];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -505,7 +506,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(ConflictException::class);
-        $us->requestChangeEmail($id, $newEmail, self::PASS);
+        $us->requestChangeEmail($id, $newEmail, new HiddenString(self::PASS));
     }
 
     /** @test */
@@ -518,7 +519,7 @@ class UserServiceTest extends TestCase
             'Id'        => $id,
             'Email'     => 'a@b.com',
             'LastLogin' => null,
-            'Password'  => self::PASS_HASH
+            'Password'  => new HiddenString(self::PASS_HASH)
         ];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -552,7 +553,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(ConflictException::class);
-        $us->requestChangeEmail($id, $newEmail, self::PASS);
+        $us->requestChangeEmail($id, $newEmail, new HiddenString(self::PASS));
     }
 
     /** @test */
@@ -598,7 +599,7 @@ class UserServiceTest extends TestCase
                 'Id'               => $id,
                 'NewEmail'         => $newEmail,
                 'EmailResetToken'  => $token,
-                'Password'         => self::PASS_HASH,
+                'Password'         => new HiddenString(self::PASS_HASH),
             ])
             ->shouldBeCalled();
 

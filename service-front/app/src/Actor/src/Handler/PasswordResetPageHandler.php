@@ -15,6 +15,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class PasswordResetPageHandler
@@ -72,7 +73,7 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                $this->userService->completePasswordReset($request->getAttribute('token'), $data['password']);
+                $this->userService->completePasswordReset($request->getAttribute('token'), new HiddenString($data['password']));
 
                 //  Redirect to the login screen with success flash message
                 return $this->redirectToRoute('login');

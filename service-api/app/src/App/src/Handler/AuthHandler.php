@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\JsonResponse;
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class AuthHandler
@@ -41,7 +42,7 @@ class AuthHandler implements RequestHandlerInterface
             throw new BadRequestException('Email address and password must be provided');
         }
 
-        $user = $this->userService->authenticate($params['email'], $params['password']);
+        $user = $this->userService->authenticate($params['email'], new HiddenString($params['password']));
 
         return new JsonResponse($user);
     }

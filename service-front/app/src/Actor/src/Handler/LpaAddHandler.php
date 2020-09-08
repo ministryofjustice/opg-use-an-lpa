@@ -18,6 +18,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class LpaAddHandler

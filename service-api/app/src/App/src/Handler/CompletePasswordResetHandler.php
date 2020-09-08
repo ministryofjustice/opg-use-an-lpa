@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\JsonResponse;
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class CompletePasswordResetHandler
@@ -46,7 +47,7 @@ class CompletePasswordResetHandler implements RequestHandlerInterface
             throw new BadRequestException('Replacement password must be provided');
         }
 
-        $this->userService->completePasswordReset($requestData['token'], $requestData['password']);
+        $this->userService->completePasswordReset($requestData['token'], new HiddenString($requestData['password']));
 
         return new JsonResponse([]);
     }

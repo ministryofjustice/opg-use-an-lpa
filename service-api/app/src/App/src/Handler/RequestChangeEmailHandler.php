@@ -12,6 +12,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class RequestChangeEmailHandler
@@ -54,7 +55,7 @@ class RequestChangeEmailHandler implements RequestHandlerInterface
         $user = $this->userService->requestChangeEmail(
             $requestData['user-id'],
             $requestData['new-email'],
-            $requestData['password']
+            new HiddenString($requestData['password'])
         );
 
         return new JsonResponse($user);

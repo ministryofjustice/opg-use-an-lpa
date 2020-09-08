@@ -18,6 +18,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class CreateAccountHandler
@@ -78,7 +79,7 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
                 $formData = $form->getData();
 
                 $emailAddress = $formData['email'];
-                $password = $formData['password'];
+                $password = new HiddenString($formData['password']);
 
                 try {
                     $userData = $this->userService->create($emailAddress, $password);

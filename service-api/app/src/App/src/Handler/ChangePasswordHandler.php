@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class ChangePasswordHandler
@@ -52,8 +53,8 @@ class ChangePasswordHandler implements RequestHandlerInterface
 
         $this->userService->completeChangePassword(
             $requestData['user-id'],
-            $requestData['password'],
-            $requestData['new-password']
+            new HiddenString($requestData['password']),
+            new HiddenString($requestData['new-password'])
         );
 
         return new JsonResponse([]);
