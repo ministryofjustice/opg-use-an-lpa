@@ -55,9 +55,8 @@
                         explains how we process personal data.
                     {% endtrans %}
                 </p>
-                <p class="govuk-body">{% trans with {'%terms-of-use%': path('viewer-terms-of-use'), '%cookie%': path('viewer-cookies')} %}You can find more information about using the View a lasting power of attorney service in our
-                        <a class="govuk-link" href="%terms-of-use%">terms of use</a> and <a class="govuk-link" class="govuk-link"  href="%cookie%">cookie policy</a>.
-                    {% endtrans %}
+                <p class="govuk-body">
+                    You can find more information about using the View a lasting power of attorney service in our <a class="govuk-link" href="{{ path('terms-of-use') }}">terms of use</a> and <a class="govuk-link" class="govuk-link"  href="{{ path('cookies')}}">cookie policy</a>.
                 </p>
                 <h2 class="govuk-heading-m">{% trans %}What data we collect and how we use it{% endtrans %}</h2>
 
@@ -75,7 +74,6 @@
                     <li>{% trans %}when the access code is used to view an  <abbr title="lasting power of attorney">LPA</abbr>{% endtrans %}</li>
                     <li>{% trans %}the name of the organisation or individual the donor or attorney said they were giving that code to{% endtrans %}</li>
                     <li>{% trans %}your computer’s IP address while you use this service{% endtrans %}</li>
-                    </li>
                 </ul>
                 <p class="govuk-body">
                     {% trans %}This information will be shared with the donor and attorneys on the <abbr title="lasting power of attorney">LPA</abbr>, if they’re using the Use a lasting power of attorney service. This is to help prevent and detect unauthorised access.{% endtrans %}

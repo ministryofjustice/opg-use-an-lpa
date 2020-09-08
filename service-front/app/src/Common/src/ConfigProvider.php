@@ -86,6 +86,7 @@ class ConfigProvider
                 \Mezzio\Authentication\UserInterface::class => Entity\UserFactory::class,
 
                 // Handlers
+                Handler\CookiesPageHandler::class => Handler\Factory\CookiesPageHandlerFactory::class,
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
 
                 \Acpr\I18n\TranslatorInterface::class => I18n\TranslatorFactory::class,
