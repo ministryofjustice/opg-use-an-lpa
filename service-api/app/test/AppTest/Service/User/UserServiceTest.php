@@ -104,13 +104,13 @@ class UserServiceTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Email' => 'a@b.com', 'Password' => new HiddenString(self::PASS_HASH)]);
+            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $return = $us->getByEmail('a@b.com');
 
-        $this->assertEquals(['Email' => 'a@b.com', 'Password' => new HiddenString(self::PASS_HASH)], $return);
+        $this->assertEquals(['Email' => 'a@b.com', 'Password' => self::PASS_HASH], $return);
     }
 
     /** @test */
@@ -135,7 +135,7 @@ class UserServiceTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => new HiddenString(self::PASS_HASH), 'LastLogin' => '2020-01-01']);
+            ->willReturn(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'LastLogin' => '2020-01-01']);
         $repoProphecy->recordSuccessfulLogin('1234-1234-1234', Argument::that(function($dateTime) {
             $this->assertIsString($dateTime);
 

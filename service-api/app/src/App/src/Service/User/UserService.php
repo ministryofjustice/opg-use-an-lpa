@@ -141,7 +141,7 @@ class UserService
     {
         $user = $this->usersRepository->getByEmail($email);
 
-        if (! password_verify($password->getString(), $user['Password'])->getString()) {
+        if (! password_verify($password->getString(), $user['Password'])) {
             throw new ForbiddenException('Authentication failed for email ' . $email, ['email' => $email ]);
         }
 
