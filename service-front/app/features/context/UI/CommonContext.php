@@ -359,4 +359,20 @@ class CommonContext implements Context
     {
         $this->ui->assertPageAddress('https://www.gov.uk');
     }
+
+    /**
+     * @When /^I request to view the content in welsh$/
+     */
+    public function iRequestToViewTheContentInWelsh()
+    {
+        $this->ui->clickLink('Cymraeg');
+    }
+
+    /**
+     * @Given /^I request to view the content in english$/
+     */
+    public function iRequestToViewTheContentInEnglish()
+    {
+        $this->ui->clickLink('English');
+    }
 }

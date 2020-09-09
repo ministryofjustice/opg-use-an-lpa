@@ -7,6 +7,7 @@ namespace Common\Service\Url;
 use Laminas\Diactoros\ServerRequestFactory;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Router\RouterInterface;
+use Locale;
 
 /**
  * Class UrlValidityCheckService
@@ -29,6 +30,8 @@ class UrlValidityCheckService
      */
     private UrlHelper $urlHelper;
 
+    private string $locale;
+
     public function __construct(
         ServerRequestFactory $serverRequestFactory,
         RouterInterface $router,
@@ -37,6 +40,7 @@ class UrlValidityCheckService
         $this->serverRequestFactory = $serverRequestFactory;
         $this->router               = $router;
         $this->urlHelper            = $urlHelper;
+        $this->locale               = Locale::getDefault();
     }
 
     /**
@@ -59,6 +63,11 @@ class UrlValidityCheckService
     public function checkRefererRouteValid(string $refererUrl): bool
     {
         if ($refererUrl !== null) {
+
+            if ($this->locale === 'cy') {
+                $refererUrl = str_replace('/cy', '', $refererUrl);
+            }
+
             $request = $this->serverRequestFactory->createServerRequest('GET', $refererUrl);
             $result = $this->router->match($request);
 
@@ -76,9 +85,19 @@ class UrlValidityCheckService
 
             $isValidRefererRoute = $this->checkRefererRouteValid($referer);
 
-            return ($validUrl && $isValidRefererRoute ? $referer : $this->urlHelper->generate('home'));
+            return ($validUrl && $isValidRefererRoute ? $referer : $this->generateHomeUrlForCurrentLocale());
         }
 
-        return $this->urlHelper->generate('home');
+        return $this->generateHomeUrlForCurrentLocale();
+    }
+
+    public function generateHomeUrlForCurrentLocale(): string
+    {
+        if ($this->locale === "cy") {
+            $homeUrl = $this->urlHelper->generate('home');
+            return str_replace('/home', '/cy/home', $homeUrl);
+        } else {
+            return $this->urlHelper->generate('home');
+        }
     }
 }
