@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Common\Command;
 
+use Common\Service\I18n\CatalogueLoader;
 use Common\Service\I18n\PotGenerator;
-use Common\Service\I18n\TwigCatalogueExtractor;
+use Common\Service\I18n\TwigCatalogueExtractorFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,16 +16,19 @@ class TranslationUpdateCommand extends Command
 {
     public const DEFAULT_LOCALE = 'en_GB';
 
-    private TwigCatalogueExtractor $extractorService;
+    private TwigCatalogueExtractorFactory $extractorFactory;
+    private CatalogueLoader $loader;
     private PotGenerator $writer;
     private array $viewsPaths;
 
     public function __construct(
-        TwigCatalogueExtractor $extractorService,
+        TwigCatalogueExtractorFactory $extractorFactory,
+        CatalogueLoader $loader,
         PotGenerator $writer,
         array $viewsPaths = []
     ) {
-        $this->extractorService = $extractorService;
+        $this->extractorFactory = $extractorFactory;
+        $this->loader = $loader;
         $this->writer = $writer;
         $this->viewsPaths = $viewsPaths;
 
@@ -45,8 +49,13 @@ class TranslationUpdateCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        $io->section('Loading existing catalogues...');
+        $existing = $this->loader->loadByDirectory('languages/');
+        $io->text(sprintf('Found %d domains', count($existing)));
+
         $io->section('Parsing templates...');
-        $catalogues = $this->extractorService->extract($this->viewsPaths);
+        $extractorService = ($this->extractorFactory)($existing);
+        $catalogues = $extractorService->extract($this->viewsPaths);
         $io->text(sprintf('Found %d domains', count($catalogues)));
 
         $io->section('Generating POT file\s...');

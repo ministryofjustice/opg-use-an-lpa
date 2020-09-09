@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace CommonTest\Command;
 
 use Common\Command\TranslationUpdateCommand;
+use Common\Service\I18n\CatalogueLoader;
 use Common\Service\I18n\PotGenerator;
 use Common\Service\I18n\TwigCatalogueExtractor;
+use Common\Service\I18n\TwigCatalogueExtractorFactory;
 use Gettext\Translations;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
@@ -37,6 +39,21 @@ class TranslationUpdateCommandTest extends TestCase
                 ['messages' => $translationsProphecy->reveal()]
             );
 
+        /** @var TwigCatalogueExtractorFactory|ObjectProphecy $extractorProphecy */
+        $extractorFactoryProphecy = $this->prophesize(TwigCatalogueExtractorFactory::class);
+        $extractorFactoryProphecy
+            ->__invoke(
+                ['messages' => $translationsProphecy->reveal()]
+            )->willReturn(
+                $extractorProphecy->reveal()
+            );
+
+        $loaderProphecy = $this->prophesize(CatalogueLoader::class);
+        $loaderProphecy->loadByDirectory('languages/')
+            ->willReturn(
+                ['messages' => $translationsProphecy->reveal()]
+            );
+
         $generatorProphecy = $this->prophesize(PotGenerator::class);
         $generatorProphecy
             ->generate(['messages' => $translationsProphecy->reveal()])
@@ -45,7 +62,8 @@ class TranslationUpdateCommandTest extends TestCase
             );
 
         $command = new TranslationUpdateCommand(
-            $extractorProphecy->reveal(),
+            $extractorFactoryProphecy->reveal(),
+            $loaderProphecy->reveal(),
             $generatorProphecy->reveal(),
             [$vfs->url()]
         );
