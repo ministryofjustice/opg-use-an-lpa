@@ -6,10 +6,12 @@ const showHidePassword = () => {
         let showHidePwdButton = element.querySelector('.js-showhidepassword-button');
         let showHidePwdInput = element.querySelector('.js-showhidepassword-input');
         let showHidePwdInputConfirm = element.querySelector('.js-showhidepassword-confirm');
+        let showHidePwdSkipConfirm = document.getElementById('skip_password_confirm');
         let showPasswordText = showHidePwdButton.dataset.showpassword;
         let hidePasswordText = showHidePwdButton.dataset.hidepassword;
 
         showHidePwdButton.innerText = showPasswordText;
+        showHidePwdSkipConfirm.setAttribute('value', false);
 
         showHidePwdButton.onclick = function () {
 
@@ -22,11 +24,13 @@ const showHidePassword = () => {
                 showHidePwdInput.setAttribute('type', 'text');
                 if (showHidePwdInputHasConfirm) {
                     showHidePwdInputConfirm.parentElement.hidden = true;
+                    showHidePwdSkipConfirm.setAttribute('value', true);
                 }
             } else {
                 showHidePwdInput.setAttribute('type', 'password');
                 if (showHidePwdInputHasConfirm) {
                     showHidePwdInputConfirm.parentElement.hidden = false;
+                    showHidePwdSkipConfirm.setAttribute('value', false);
                 }
             }
 

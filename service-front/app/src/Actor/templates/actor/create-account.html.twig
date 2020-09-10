@@ -55,6 +55,8 @@
                                         { 'label': 'Confirm your password'| trans,
                                         'attr': { 'class': 'js-showhidepassword-confirm' }}
                                     ) }}
+
+                                    {{ govuk_form_element(form.get('skip_password_confirm') ) }}
                                 </div>
 
                                 <div class="govuk-warning-text">

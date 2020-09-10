@@ -55,6 +55,11 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
         ]);
 
         $this->add([
+            'name' => 'skip_password_confirm',
+            'type' => 'Hidden',
+        ]);
+
+        $this->add([
             'name'  => 'terms',
             'type'  => 'Checkbox',
             'value' => 1,
@@ -159,5 +164,20 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                 ],
             ],
         ];
+    }
+
+    public function isValid()
+    {
+        //  If the skip confirm password flag has been passed then set the password value as the password confirm value to pass validation
+        if (array_key_exists('skip_password_confirm', $this->data) && $this->data['skip_password_confirm'] === "true") {
+            $this->data['password_confirm'] = $this->data['password'];
+
+            //  Remove confirm password input filter to stop validation error for hidden field
+            $this->getInputFilter()
+                ->remove('password_confirm');
+        }
+
+        //  Continue validation
+        return parent::isValid();
     }
 }
