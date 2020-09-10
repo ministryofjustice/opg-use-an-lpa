@@ -5,50 +5,49 @@ declare(strict_types=1);
 namespace Common\Handler;
 
 use Common\Form\CookieConsent;
-use Common\Handler\AbstractHandler;
-use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
-use Common\Handler\Traits\User;
-use Common\Handler\UserAware;
+use Common\Service\Url\UrlValidityCheckService;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
-use Mezzio\Template\TemplateRendererInterface;
 use Mezzio\Helper\UrlHelper;
-use Common\Service\Url\UrlValidityCheckService;
+use Mezzio\Template\TemplateRendererInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
  * Class CookiesPageHandler
  * @package Viewer\Handler
  * @codeCoverageIgnore
  */
-class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuardAware
+class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
 {
-    use User;
     use CsrfGuard;
 
-    /**
-     * @var UrlValidityCheckService
-     */
-    private $urlValidityCheckService;
+    private string $application;
 
-    const COOKIE_POLICY_NAME = 'cookie_policy';
-    const SEEN_COOKIE_NAME   = 'seen_cookie_message';
+    private UrlValidityCheckService $urlValidityCheckService;
+
+    private const COOKIE_POLICY_NAME = 'cookie_policy';
+    private const SEEN_COOKIE_NAME   = 'seen_cookie_message';
 
     /**
      * CreateAccountHandler constructor.
+     *
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
+     * @param UrlValidityCheckService $urlValidityCheckService
+     * @param string $application
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UrlValidityCheckService $urlValidityCheckService
+        UrlValidityCheckService $urlValidityCheckService,
+        string $application = 'actor'
     ) {
         parent::__construct($renderer, $urlHelper);
         $this->urlValidityCheckService = $urlValidityCheckService;
+        $this->application = $application;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -72,11 +71,9 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
 
         $form->get('referer')->setValue($this->urlValidityCheckService->setValidReferer($cookiesPageReferer));
 
-        $routeName = $this->urlHelper->getRouteResult()->getMatchedRouteName();
-
         return new HtmlResponse($this->renderer->render('partials::cookies', [
-            'form'         => $form,
-            'routeName'    => $routeName
+            'form'        => $form,
+            'application' => $this->application
         ]));
     }
 
@@ -98,7 +95,7 @@ class CookiesPageHandler extends AbstractHandler implements UserAware, CsrfGuard
                 return $response;
             }
 
-            $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes' ? true : false;
+            $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes';
             $response = FigResponseCookies::set(
                 $response,
                 SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))

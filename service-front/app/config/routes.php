@@ -40,11 +40,11 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/check-code', Viewer\Handler\CheckCodeHandler::class, 'check-code');
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
     $app->get('/download-lpa', Viewer\Handler\DownloadLpaHandler::class, 'download-lpa');
-    $app->get('/terms-of-use', Viewer\Handler\ViewerTermsOfUseHandler::class, 'viewer-terms-of-use');
-    $app->get('/privacy-notice', Viewer\Handler\ViewerPrivacyNoticeHandler::class, 'viewer-privacy-notice');
+    $app->get('/terms-of-use', Viewer\Handler\ViewerTermsOfUseHandler::class, 'terms-of-use');
+    $app->get('/privacy-notice', Viewer\Handler\ViewerPrivacyNoticeHandler::class, 'privacy-notice');
     $app->get('/stats', Viewer\Handler\StatsPageHandler::class, 'viewer-stats');
     $app->get('/session-expired', Viewer\Handler\ViewerSessionExpiredHandler::class, 'session-expired');
-    $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'viewer-cookies');
+    $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
@@ -53,9 +53,9 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
 
-    $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'actor-cookies');
-    $app->get('/terms-of-use', [Actor\Handler\ActorTermsOfUseHandler::class], 'actor-terms-of-use');
-    $app->get('/privacy-notice', [Actor\Handler\ActorPrivacyNoticeHandler::class], 'actor-privacy-notice');
+    $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
+    $app->get('/terms-of-use', [Actor\Handler\ActorTermsOfUseHandler::class], 'terms-of-use');
+    $app->get('/privacy-notice', [Actor\Handler\ActorPrivacyNoticeHandler::class], 'privacy-notice');
 
     // User creation
     $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');

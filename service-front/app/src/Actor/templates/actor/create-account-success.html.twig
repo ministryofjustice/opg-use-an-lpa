@@ -6,6 +6,8 @@
 <div class="govuk-width-container">
     {{ include('@actor/partials/new-use-service.html.twig') }}
 
+    {{ include('@partials/welsh-switch.html.twig') }}
+
     <a href="{{ path('home') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -18,7 +20,9 @@
 
                 <p class="govuk-body">{% trans with {'%email%': emailAddress} %}We've emailed a link to %email%. Click on the link to activate your account. The link will work for the next 24 hours.{% endtrans %}</p>
 
-                <p class="govuk-body">{% trans with {'%link%': path('create-account-success', {}, {'email': emailAddress, 'resend': 'true'})} %}The email should arrive in a few minutes. If it's not in your inbox, check your spam or junk folder. If you have not received the email, we can <a href="%link%" class="govuk-link">resend the activation email</a>.{% endtrans %}</p>
+                <p class="govuk-body">{% trans with {'%link%': path('create-account-success', {}, {'email': emailAddress, 'resend': 'true'})} %}The email should arrive in a few minutes.
+                        If it's not in your inbox, check your spam or junk folder.
+                        If you have not received the email, we can <a href="%link%" class="govuk-link">resend the activation email</a>.{% endtrans %}</p>
 
                 <p class="govuk-body">{% trans with {'%number%': '0300 456 0300'} %}If you still do not receive the email, please contact us on %number%.{% endtrans %}</p>
 

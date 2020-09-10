@@ -1,23 +1,25 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}Expired LPA access code - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Expired LPA access code{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         {{ include('@partials/new-service.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">The access code you entered has expired</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}The access code you entered has expired{% endtrans %}</h1>
 
-                    <p class="govuk-body">Access codes expire 30 days after they’re made.</p> <br>
-                    <p class="govuk-body">To see this <abbr title="lasting power of attorney">LPA</abbr>, ask the donor or attorney you’re dealing with to make a new code.</p>
+                    <p class="govuk-body">{% trans %}Access codes expire 30 days after they’re made.{% endtrans %}</p> <br>
+                    <p class="govuk-body">{% trans %}To see this <abbr title="lasting power of attorney">LPA</abbr>, ask the donor or attorney you’re dealing with to make a new code.{% endtrans %}</p>
 
                     <a href="{{ path('home') }}" role="button" draggable="false" class="govuk-button">
-                        Enter another code
+                        {% trans %}Enter another code{% endtrans %}
                     </a>
 
                 </div>
