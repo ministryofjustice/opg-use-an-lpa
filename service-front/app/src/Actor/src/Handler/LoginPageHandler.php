@@ -104,8 +104,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                    $emailAddress = $formValues['email'];
 
                    return $this->redirectToRoute('create-account-success', [], [
-                       'email' => $emailAddress,
-                       'accountExists' => 'true'
+                       'email' => $emailAddress
                    ]);
                }
            }
