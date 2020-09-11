@@ -6,7 +6,7 @@ const showHidePassword = () => {
         let showHidePwdButton = element.querySelector('.js-showhidepassword-button');
         let showHidePwdInput = element.querySelector('.js-showhidepassword-input');
         let showHidePwdInputConfirm = element.querySelector('.js-showhidepassword-confirm');
-        let showHidePwdSkipConfirm = document.getElementById('skip_password_confirm');
+        let showHidePwdSkipConfirm = element.querySelector('#skip_password_confirm');
         let showPasswordText = showHidePwdButton.dataset.showpassword;
         let hidePasswordText = showHidePwdButton.dataset.hidepassword;
 
