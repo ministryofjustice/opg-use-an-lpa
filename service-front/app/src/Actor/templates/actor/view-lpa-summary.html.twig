@@ -9,6 +9,8 @@
 
     {{ include('@partials/account-bar.html.twig') }}
 
+    {{ include('@partials/welsh-switch.html.twig') }}
+
     <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link">{% trans %}Back to your <abbr title="lasting power of attorney">LPAs</abbr>{% endtrans %}</a>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -46,9 +48,9 @@
             <div class="govuk-grid-row lpa-valid-border">
                 <div class="govuk-grid-column-full column-full-alt-1">
                     {% if lpa.caseSubtype == "pfa" and lpa.attorneyActDecisions|lower == 'when registered' %}
-                            <h2 class="govuk-heading-m heading-m-alt-1">{% trans with {'%status%': lpa.status|lower} %}This <abbr title="lasting power of attorney">LPA</abbr> is %status% and can be used now{% endtrans %}</h2>
+                            <h2 class="govuk-heading-m heading-m-alt-1">{% trans %}This <abbr title="lasting power of attorney">LPA</abbr> is registered and can be used now{% endtrans %}</h2>
                     {% else %}
-                            <h2 class="govuk-heading-m heading-m-alt-1">{% trans with {'%status%': lpa.status|lower} %}This <abbr title="lasting power of attorney">LPA</abbr> is %status%{% endtrans %}</h2>
+                            <h2 class="govuk-heading-m heading-m-alt-1">{% trans %}This <abbr title="lasting power of attorney">LPA</abbr> is registered{% endtrans %}</h2>
                     {% endif %}
 
                     <p class="govuk-body body-alt-1">

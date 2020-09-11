@@ -6,7 +6,10 @@
 <div class="govuk-width-container">
 {{ include('@partials/new-service.html.twig') }}
 
-    <a class="govuk-link govuk-back-link" href="{{ path('actor-terms-of-use') }}">{% trans %}Back{% endtrans %}</a>
+    {{ include('@partials/welsh-switch.html.twig') }}
+
+    <a class="govuk-link govuk-back-link" href="{{ path('terms-of-use') }}">{% trans %}Back{% endtrans %}</a>
+
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
@@ -56,26 +59,18 @@
                 {% endtrans %}
                 </p>
 
-                <p class="govuk-body">{% trans with {'%terms-of-use%': path('actor-terms-of-use'), '%cookie%': path('actor-cookies')} %}You can find more information about using the Use a lasting power of attorney service in our
+                <p class="govuk-body">{% trans with {'%terms-of-use%': path('terms-of-use'), '%cookie%': path('cookies')} %}You can find more information about using the Use a lasting power of attorney service in our
                     <a class="govuk-link" href="%terms-of-use%">terms of use</a> and <a class="govuk-link" href="%cookie%">cookie policy.{% endtrans %}</a>
                 </p>
                 <h2 class="govuk-heading-m">{% trans %}Why we collect personal data and how we use it{% endtrans %}</h2>
                 <p class="govuk-body">{% trans %}We only collect the personal data that is relevant for the services we are providing to you.{% endtrans %}</p>
                 <p class="govuk-body">{% trans %}In order to use this service, you need to enter some personal data and create an account{% endtrans %}</p>
                 <p class="govuk-body">{% trans %}The personal data we collect includes:{% endtrans %}</p>
-                    <ul class="govuk-list govuk-list--bullet">
-
-
-
-
-                        <li>{% trans %}your email address{% endtrans %}</li>
-                        <li>{% trans %}your name and date of birth{% endtrans %}</li>
-                        <li>{% trans %}your computer’s IP address while you use this service{% endtrans %}</li>
-
-
-
-
-                    </ul>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>{% trans %}your email address{% endtrans %}</li>
+                    <li>{% trans %}your name and date of birth{% endtrans %}</li>
+                    <li>{% trans %}your computer’s IP address while you use this service{% endtrans %}</li>
+                </ul>
 
                 <p class="govuk-body">
                     {% trans %}We use the data to find the <abbr title="Lasting power of attorney">LPA</abbr> you’re named on and to create your account.{% endtrans %}
@@ -112,20 +107,12 @@
                     {% trans %}This summary includes:{% endtrans %}
                 </p>
                 <ul class="govuk-list govuk-list--bullet">
-
-
-
-
                     <li>{% trans %}the name and address of the donor and any active attorneys{% endtrans %}</li>
                     <li>{% trans %}the name of any inactive attorneys{% endtrans %}</li>
                     <li>{% trans %}whether the <abbr title="lasting power of attorney">LPA</abbr> is currently valid{% endtrans %}</li>
                     <li>{% trans %}when the <abbr title="lasting power of attorney">LPA</abbr> can be used (property and finance <abbr title="lasting powers of attorney">LPAs</abbr> only){% endtrans %}</li>
                     <li>{% trans %}whether the donor chose to allow their attorneys to make decisions on life-sustaining treatment
                         (health and welfare <abbr title="lasting powers of attorney">LPAs</abbr> only){% endtrans %}</li>
-
-
-
-
                 </ul>
                 <p class="govuk-body">
                     {% trans %}Third parties can download and keep a copy of the summary.{% endtrans %}

@@ -1,21 +1,23 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}Start again to view an LPA - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Start again to view an LPA{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         {{ include('@partials/new-service.html.twig') }}
 
+        {{ include('@partials/welsh-switch.html.twig') }}
+
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-xl">You'll have to start again</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}You'll have to start again{% endtrans %}</h1>
 
-                    <p class="govuk-body">As you have not used the service for 30 minutes, we've cleared any information you entered.</p>
+                    <p class="govuk-body">{% trans %}As you have not used the service for 30 minutes, we've cleared any information you entered.{% endtrans %}</p>
 
-                    <p class="govuk-body">To view an LPA, you'll need to start again.</p>
+                    <p class="govuk-body">{% trans %}To view an LPA, you'll need to start again.{% endtrans %}</p>
 
-                    <a href="{{ path('home') }}" draggable="false" class="govuk-button">Start again</a>
+                    <a href="{{ path('home') }}" draggable="false" class="govuk-button">{% trans %}Start again{% endtrans %}</a>
                 </div>
 
             </div>

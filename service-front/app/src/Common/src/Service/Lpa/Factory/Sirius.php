@@ -130,6 +130,9 @@ final class Sirius implements LpaFactory
         if (isset($caseActorData['uId'])) {
             $actor->setUId($caseActorData['uId']);
         }
+        if (isset($caseActorData['linked'])) {
+            $actor->setLinked($caseActorData['linked']);
+        }
         if (isset($caseActorData['email'])) {
             $actor->setEmail($caseActorData['email']);
         }

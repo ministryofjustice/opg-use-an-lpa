@@ -112,6 +112,7 @@
         "cs-fix": "@dc-php /app/vendor/bin/phpcbf",
         "unit-test": "@dc-php /app/vendor/bin/phpunit --colors=always",
         "acc-test": "@dc-php -dapc.enable_cli=1 /app/vendor/bin/behat -p acceptance --colors",
-        "int-test": "@dc-php /app/vendor/bin/behat -p integration --colors"
+        "int-test": "@dc-php /app/vendor/bin/behat -p integration --colors",
+        "extract": "@dc-php console.php translation:update"
     }
 }
