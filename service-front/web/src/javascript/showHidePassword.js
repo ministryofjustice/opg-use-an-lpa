@@ -11,7 +11,10 @@ const showHidePassword = () => {
         let hidePasswordText = showHidePwdButton.dataset.hidepassword;
 
         showHidePwdButton.innerText = showPasswordText;
-        showHidePwdSkipConfirm.setAttribute('value', false);
+
+        if (showHidePwdSkipConfirm !== null) {
+            showHidePwdSkipConfirm.setAttribute('value', false);
+        }
 
         showHidePwdButton.onclick = function () {
 
@@ -22,13 +25,13 @@ const showHidePassword = () => {
 
             if (isShowing) {
                 showHidePwdInput.setAttribute('type', 'text');
-                if (showHidePwdInputHasConfirm) {
+                if (showHidePwdInputHasConfirm && showHidePwdSkipConfirm !== null) {
                     showHidePwdInputConfirm.parentElement.hidden = true;
                     showHidePwdSkipConfirm.setAttribute('value', true);
                 }
             } else {
                 showHidePwdInput.setAttribute('type', 'password');
-                if (showHidePwdInputHasConfirm) {
+                if (showHidePwdInputHasConfirm && showHidePwdSkipConfirm !== null) {
                     showHidePwdInputConfirm.parentElement.hidden = false;
                     showHidePwdSkipConfirm.setAttribute('value', false);
                 }

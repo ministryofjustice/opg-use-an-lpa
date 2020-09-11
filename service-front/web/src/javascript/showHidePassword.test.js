@@ -18,23 +18,28 @@ describe('given a password and confirm password input is defined', () => {
                 </label>
                 <input class="govuk-input js-showhidepassword-confirm" id="password_confirm" name="password_confirm" type="password" value="">
             </div>
+            <input id="skip_password_confirm" name="skip_password_confirm" type="hidden" value="false">
     `;
         const button = document.querySelector(".js-showhidepassword-button");
         const confirmPassword = document.querySelector("#confirm-password");
         const passwordInput = document.querySelector(".js-showhidepassword-input");
+        const skipConfirmPassword = document.querySelector('#skip_password_confirm');
 
         showHidePassword();
         expect(confirmPassword.hidden).toBeFalsy();
         expect(passwordInput.getAttribute('type')).toBe('password');
         expect(button.innerText).toBe('Show password');
+        expect(skipConfirmPassword.value).toBe("false");
         button.click();
         expect(confirmPassword.hidden).toBeTruthy();
         expect(passwordInput.getAttribute('type')).toBe('text');
         expect(button.innerText).toBe('Hide password');
+        expect(skipConfirmPassword.value).toBe("true");
         button.click();
         expect(confirmPassword.hidden).toBeFalsy();
         expect(passwordInput.getAttribute('type')).toBe('password');
         expect(button.innerText).toBe('Show password');
+        expect(skipConfirmPassword.value).toBe("false");
     });
 });
 
