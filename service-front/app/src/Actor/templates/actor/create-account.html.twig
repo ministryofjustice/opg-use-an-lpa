@@ -60,11 +60,11 @@
                                 </div>
 
                                 <div class="govuk-warning-text">
-                                  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                                  <strong class="govuk-warning-text__text">
-                                    <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                                      {% trans %}Never share your password with anyone.{% endtrans %}
-                                  </strong>
+                                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                                    <strong class="govuk-warning-text__text">
+                                        <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                                        {% trans %}Never share your password with anyone.{% endtrans %}
+                                    </strong>
                                 </div>
 
                                 {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="%link%" class="govuk-link">terms of use</a>' | trans({ '%link%': path('terms-of-use') }) }) }}
