@@ -146,6 +146,9 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                     ],
                 ],
             ],
+            'skip_password_confirm' => [
+                'required'   => false,
+            ],
             'terms'            => [
                 'required'      => true,
                 'error_message' => 'You must accept the terms of use to create an account',
