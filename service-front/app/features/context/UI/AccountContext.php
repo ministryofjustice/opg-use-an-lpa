@@ -3514,7 +3514,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageContainsText("You've added Ian Deputy's health and welfare LPA");
     }
-      
+
     /**
      * @Given /^I am on the change details page$/
      */
@@ -3556,5 +3556,39 @@ class AccountContext implements Context
     {
         $page = $this->ui->getSession()->getPage();
         $this->ui->assertElementOnPage(".moj-banner__message");
+    }
+
+    /**
+     * @When /^I create an account using the show password option$/
+     */
+    public function iCreateAnAccountUsingTheShowPasswordOption()
+    {
+        $this->email = 'test@example.com';
+        $this->password = 'n3wPassWord';
+        $this->activationToken = 'activate1234567890';
+
+        $this->ui->assertPageAddress('/create-account');
+
+        // API call for account creation
+        $this->apiFixtures->post('/v1/user')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'Id' => '123',
+                'Email' => $this->email,
+                'ActivationToken' => $this->activationToken,
+            ])));
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $page = $this->ui->getSession()->getPage();
+        $page->findById('skip_password_confirm')->setValue("true");
+
+        $this->ui->fillField('email', $this->email);
+        $this->ui->fillField('password', $this->password);
+        // confirm password is not needed if show password button has been clicked
+        $this->ui->fillField('password_confirm', "");
+        $this->ui->fillField('terms', 1);
+        $this->ui->pressButton("Create account");
     }
 }

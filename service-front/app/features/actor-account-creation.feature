@@ -84,3 +84,11 @@ Feature: Account creation
     And I access the account creation page
     When I create an account using with an email address that has been requested for reset
     Then I am informed that there was a problem with that email address
+
+  @ui
+  Scenario: As a new user I want to have the option to see my password when creating an account
+    Given I am not a user of the lpa application
+    And I want to create a new account
+    And I access the account creation page
+    When I create an account using the show password option
+    Then I receive unique instructions on how to activate my account
