@@ -28,7 +28,7 @@ Feature: Account creation
     Given I am not a user of the lpa application
     And I have asked to create a new account
     When I create an account using duplicate details
-    Then I am informed about an existing account
+    Then I send the activation email again
 
   @integration @acceptance
   Scenario: The user account cannot create an account with an email address that has been requested for reset
