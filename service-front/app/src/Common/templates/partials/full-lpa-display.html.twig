@@ -1,6 +1,10 @@
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
 
+    {% if not forDownload %}
+        {{ include('@partials/welsh-switch.html.twig') }}
+    {% endif %}
+
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
 
@@ -147,8 +151,8 @@
                 </dl>
 
                 {% for attorney in lpa.attorneys %}
-                    
-                    <h3 class="govuk-heading-m">{% set attorneyOrdinal = lpa.attorneys | length == 1 ? '1st' : loop.index | ordinal %}{% trans count lpa.attorneys | length with {'%attorneyOrdinal%': attorneyOrdinal} %}%attorneyOrdinal% attorney|%attorneyOrdinal% attorney{% endtrans %}</h3>
+
+                    <h3 class="govuk-heading-m">{% trans count loop.index with {'%attorneyOrdinal%': loop.index | ordinal} %}%attorneyOrdinal% attorney|%attorneyOrdinal% attorney{% endtrans %}</h3>
 
                     <dl class="govuk-summary-list govuk-summary-list--no-border">
                         <div class="govuk-summary-list__row">

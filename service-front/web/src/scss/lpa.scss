@@ -1,3 +1,4 @@
+$govuk-typography-use-rem: false;
 @import "../../node_modules/govuk-frontend/govuk/settings/all";
 @import "../../node_modules/govuk-frontend/govuk/tools/all";
 @import "../../node_modules/govuk-frontend/govuk/helpers/all";
@@ -15,3 +16,5 @@
 @import 'cookie-banner';
 @import 'lpa-dialog';
 @import 'lpa-flash-message';
+@import 'banner';
+@import 'translation-switch';

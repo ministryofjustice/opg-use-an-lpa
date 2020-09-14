@@ -9,6 +9,8 @@
 
         {{ include('@partials/account-bar.html.twig') }}
 
+        {{ include('@partials/welsh-switch.html.twig') }}
+
         {% if actorToken != 'null' %}
             {% set backLink = path('lpa.view', {}, {'lpa': actorToken}) %}
         {% else %}
@@ -69,10 +71,12 @@
 
                     <h3 class="govuk-heading-s">{% trans %}Address{% endtrans %}</h3>
                     <p class="govuk-body">
-                        Office of the Public Guardian<br>
-                        PO Box 16185<br>
-                        Birmingham<br>
-                        B2 2WH
+                        {% trans %}
+                            Office of the Public Guardian<br>
+                            PO Box 16185<br>
+                            Birmingham<br>
+                            B2 2WH
+                        {% endtrans %}
                     </p>
 
                     {{ include('@partials/section-break.html.twig') }}

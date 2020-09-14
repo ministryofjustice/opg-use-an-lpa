@@ -1,0 +1,13 @@
+.trans-switch {
+  &__list {
+    display: inline;
+  }
+
+  &__partition {
+    display: inline;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+
+  float: right;
+}

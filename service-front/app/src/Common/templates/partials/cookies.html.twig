@@ -3,9 +3,9 @@
 {% block html_title %}{% trans %}Cookies{% endtrans %} - {{ block('service_name') }} - {{ parent() }}{% endblock %}
 
 {% block service_name %}
-{% if routeName == "actor-cookies" %}
+{% if application == "actor" %}
     {% trans %}Use a lasting power of attorney{% endtrans %}
-{% elseif routeName == "viewer-cookies" %}
+{% elseif application == "viewer" %}
     {% trans %}View a lasting power of attorney{% endtrans %}
 {% endif %}
 {% endblock %}
@@ -24,9 +24,9 @@
             <p class="govuk-body">{% trans %}Cookies are files saved on your phone, tablet or computer when you visit a website.{% endtrans %}</p>
 
             <p class="govuk-body">
-            {% if routeName == "actor-cookies" %}
+            {% if application == "actor" %}
                 {% trans %}We use cookies to store information about how you use the Use a lasting power of attorney service, such as the pages you visit.{% endtrans %}
-            {% elseif routeName == "viewer-cookies" %}
+            {% elseif application == "viewer" %}
                 {% trans %}We use cookies to store information about how you use the View a lasting power of attorney service, such as the pages you visit.{% endtrans %}
             {% endif %}
             </p>
