@@ -9,6 +9,8 @@
 
         {{ include('@partials/account-bar.html.twig') }}
 
+        {{ include('@partials/welsh-switch.html.twig') }}
+
         {% if actorToken != 'null' %}
             {% set backLink = path('lpa.view', {}, {'lpa': actorToken}) %}
         {% else %}

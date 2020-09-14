@@ -8,6 +8,8 @@
 
     {{ include('@partials/account-bar.html.twig') }}
 
+    {{ include('@partials/welsh-switch.html.twig') }}
+
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         {{ include('@actor/partials/flash-message.html.twig', {'flash': flash, 'flash_key':'Actor\\Handler\\CheckLpaHandler::ADD_LPA_FLASH_MSG'}) }}
