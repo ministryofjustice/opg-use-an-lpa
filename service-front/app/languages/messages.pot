@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-09-11T18:00:55+00:00\n"
+"POT-Creation-Date: 2020-09-14T10:00:12+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -155,7 +155,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-add.html.twig:13
 #: src/Common/templates/error/error.html.twig:9
 #: src/Common/templates/error/404.html.twig:9
-#: src/Common/templates/partials/cookies.html.twig:19
+#: src/Common/templates/partials/cookies.html.twig:21
 #: src/Viewer/templates/viewer/check-code-found.html.twig:11
 #: src/Viewer/templates/viewer/enter-code.html.twig:11
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:11
@@ -283,7 +283,7 @@ msgid "Change password"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:13
-#: src/Common/templates/layout/default.html.twig:106
+#: src/Common/templates/layout/default.html.twig:104
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:15
 msgid "Terms of use"
 msgstr ""
@@ -2394,8 +2394,8 @@ msgstr ""
 msgid "Error:"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:111
-#: src/Common/templates/partials/cookies.html.twig:23
+#: src/Common/templates/layout/default.html.twig:109
+#: src/Common/templates/partials/cookies.html.twig:25
 msgid "Cookies"
 msgstr ""
 
@@ -2404,67 +2404,67 @@ msgstr ""
 msgid "View a lasting power of attorney"
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:24
+#: src/Common/templates/partials/cookies.html.twig:26
 msgid "Cookies are files saved on your phone, tablet or computer when you visit a website."
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:28
+#: src/Common/templates/partials/cookies.html.twig:30
 msgid "We use cookies to store information about how you use the Use a lasting power of attorney service, such as the pages you visit."
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:30
+#: src/Common/templates/partials/cookies.html.twig:32
 msgid "We use cookies to store information about how you use the View a lasting power of attorney service, such as the pages you visit."
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:37
+#: src/Common/templates/partials/cookies.html.twig:39
 msgid "Cookie settings"
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:38
+#: src/Common/templates/partials/cookies.html.twig:40
 msgid "We use two types of cookie. One type is strictly necessary and the other type of cookie is optional."
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:40
+#: src/Common/templates/partials/cookies.html.twig:42
 msgid "Cookies that measure website use"
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:41
+#: src/Common/templates/partials/cookies.html.twig:43
 msgid "OPG and Government Digital Services use Google Analytics to measure how you use the service so we can improve it based on user needs. Google Analytics sets cookies that store anonymised information about:"
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:44
+#: src/Common/templates/partials/cookies.html.twig:46
 msgid "what pages you visit and how long you spend on each"
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:45
+#: src/Common/templates/partials/cookies.html.twig:47
 msgid "what you click on while you're visiting the site"
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:49
+#: src/Common/templates/partials/cookies.html.twig:51
 msgid "We do not allow Google to use or share the data about how you use this site."
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:55
+#: src/Common/templates/partials/cookies.html.twig:57
 msgid "Allow use of non-essential Cookies?"
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:61
+#: src/Common/templates/partials/cookies.html.twig:63
 msgid "Use cookies that measure my website use"
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:65
+#: src/Common/templates/partials/cookies.html.twig:67
 msgid "Do not use cookies that measure my website use"
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:74
+#: src/Common/templates/partials/cookies.html.twig:76
 msgid "Strictly necessary cookies"
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:75
+#: src/Common/templates/partials/cookies.html.twig:77
 msgid "These essential cookies allow you to log in to the service. They always need to be on."
 msgstr ""
 
-#: src/Common/templates/partials/cookies.html.twig:77
+#: src/Common/templates/partials/cookies.html.twig:79
 msgid "Save changes"
 msgstr ""
 
@@ -2965,15 +2965,15 @@ msgstr ""
 msgid "Support links"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:116
+#: src/Common/templates/layout/default.html.twig:114
 msgid "Contact us"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:121
+#: src/Common/templates/layout/default.html.twig:119
 msgid "Built by OPG Digital"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:131
+#: src/Common/templates/layout/default.html.twig:129
 msgid ""
 "All content is available under the\n"
 "                    <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\">\n"
@@ -2981,7 +2981,7 @@ msgid ""
 "                    </a>, except where otherwise stated"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:140
+#: src/Common/templates/layout/default.html.twig:138
 msgid "© Crown copyright"
 msgstr ""
 
