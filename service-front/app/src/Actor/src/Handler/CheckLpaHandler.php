@@ -29,6 +29,7 @@ use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Acpr\I18n\TranslatorInterface;
 
 /**
  * Class CheckLpaHandler
@@ -53,6 +54,11 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     private $rateLimitService;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * LpaAddHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
@@ -60,6 +66,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
      * @param LpaService $lpaService
      * @param LoggerInterface $logger
      * @param RateLimitService $rateLimitService
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -67,13 +74,15 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         AuthenticationInterface $authenticator,
         LpaService $lpaService,
         LoggerInterface $logger,
-        RateLimitService $rateLimitService
+        RateLimitService $rateLimitService,
+        TranslatorInterface $translator
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
         $this->lpaService = $lpaService;
         $this->rateLimitService = $rateLimitService;
+        $this->translator = $translator;
     }
 
     /**
@@ -134,7 +143,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
             if (!is_null($lpa) && (strtolower($lpa->getStatus()) === 'registered')) {
                 // Are we displaying Donor or Attorney user role
-                $actorRole = ($lpa->getDonor()->getId() === $actor->getId()) ?
+                $actorRole = (array_search($actor->getId(), $lpa->getDonor()->getIds()) !== false) ?
                     'Donor' :
                     'Attorney';
 
@@ -225,7 +234,13 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 $donor = $this->session->get('donor_name');
                 $lpaType = $this->session->get('lpa_type');
 
-                $flash->flash(self::ADD_LPA_FLASH_MSG, "You've added $donor's $lpaType LPA");
+                $message = $this->translator->translate(
+                    "You've added %donor%'s %lpaType% LPA",
+                    [
+                        '%donor%' => $donor, '%lpaType%' => $lpaType
+                    ]
+                );
+                $flash->flash(self::ADD_LPA_FLASH_MSG, $message);
 
                 return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
             }
