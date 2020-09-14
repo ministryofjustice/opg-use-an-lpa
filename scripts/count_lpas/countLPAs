@@ -38,6 +38,16 @@ get_accounts_created() {
       | jq 'reduce .["Datapoints"][].Sum as $item (0; . + $item)'
 }
 
+get_lpas_with_dups() {
+    results=`aws dynamodb scan \
+      --table-name $environment-UserLpaActorMap \
+      --filter-expression "Added BETWEEN :fromdate AND :todate" \
+      --expression-attribute-values "{ \":fromdate\" : { \"S\" : \"$fromdate\" }, \":todate\" : { \"S\" : \"$todate\" } }" \
+      | jq '.Items[] | {SiriusUid, UserId}' | jq -j '.SiriusUid.S," ",.UserId.S,"\n"' | sort | uniq -d | awk '{print $1}' | sort | uniq`
+    echo "$results"
+    echo "$results" | wc -l
+}
+
 # if no args supplied, default to demo environment
 if [ $# -lt 1 ]
 then
@@ -70,3 +80,4 @@ echo "Viewer codes viewed in $environment environment between $fromdate and $tod
 get_viewer_codes_viewed
 echo "Actor accounts created in $environment environment between $fromdate and $todate:"
 get_accounts_created
+get_lpas_with_dups
