@@ -15,9 +15,7 @@
 
 {% block content %}
     <div class="govuk-width-container">
-
-        {{ form.get('referer').getValue() }}
-
+        
         <a class="govuk-link govuk-back-link" href="{{ form.get('referer').getValue() }}">{% trans %}Back{% endtrans %}</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
