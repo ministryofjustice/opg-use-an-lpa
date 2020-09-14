@@ -420,7 +420,7 @@ class UserService
      * @return string
      * @throws Exception
      */
-    public function getLinkToken(): string
+    private function getLinkToken(): string
     {
         $activationToken = Base64UrlSafe::encode(random_bytes(32));
         return $activationToken;
@@ -429,7 +429,7 @@ class UserService
     /**
      * @return float|int
      */
-    public function getExpiryTtl()
+    private function getExpiryTtl()
     {
         $activationTtl = time() + (60 * 60 * 24);
         return $activationTtl;
@@ -439,7 +439,7 @@ class UserService
      * @return string
      * @throws Exception
      */
-    public function generateUniqueId(): string
+    private function generateUniqueId(): string
     {
         $id = Uuid::uuid4()->toString();
         return $id;
