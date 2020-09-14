@@ -80,20 +80,30 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_add_existing_user()
+    public function can_reset_existing_user_for_add()
     {
-        $userData = ['email' => 'a@b.com', 'password' => self::PASS];
+        $id = '12345678-1234-1234-1234-123456789012';
+        $email = 'a@b.com';
+        $password = 'password1';
+        $ttl = (new \DateTime('+24 hours'))->getTimestamp();
+        $userData = ['email' => $email, 'password' => $password];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->exists($userData['email'])
             ->willReturn(true);
+        $repoProphecy->resetActivationDetails($userData['email'], $userData['password'], Argument::type('integer'))
+            ->willReturn([
+                'Id' => $id,
+                'Email' => $email
+            ]);
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $this->expectException(ConflictException::class);
         $return = $us->add($userData);
+
+        $this->assertEquals(['Id' => $id, 'Email' => $email], $return);
     }
 
     /** @test */
@@ -135,7 +145,7 @@ class UserServiceTest extends TestCase
 
         $repoProphecy->getByEmail('a@b.com')
             ->willReturn(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'LastLogin' => '2020-01-01']);
-        $repoProphecy->recordSuccessfulLogin('1234-1234-1234', Argument::that(function($dateTime) {
+        $repoProphecy->recordSuccessfulLogin('1234-1234-1234', Argument::that(function ($dateTime) {
             $this->assertIsString($dateTime);
 
             $date = new \DateTime($dateTime);
@@ -439,7 +449,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $reset = $us->requestChangeEmail($id, $newEmail,self::PASS);
+        $reset = $us->requestChangeEmail($id, $newEmail, self::PASS);
 
         $this->assertEquals($id, $reset['Id']);
         $this->assertEquals($email, $reset['Email']);
