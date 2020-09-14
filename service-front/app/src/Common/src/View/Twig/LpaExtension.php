@@ -6,6 +6,7 @@ namespace Common\View\Twig;
 
 use Common\Entity\Address;
 use Common\Entity\CaseActor;
+use Common\Entity\Lpa;
 use Common\Form\Fieldset\Date;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -31,7 +32,8 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('check_if_code_has_expired', [$this, 'hasCodeExpired']),
             new TwigFunction('add_hyphen_to_viewer_code', [$this, 'formatViewerCode']),
             new TwigFunction('check_if_code_is_cancelled', [$this, 'isCodeCancelled']),
-        ];
+            new TwigFunction('is_lpa_cancelled', [$this, 'isLpaCancelled']),
+            ];
     }
 
     /**
@@ -153,10 +155,9 @@ class LpaExtension extends AbstractExtension
      * @return bool|null
      * @throws \Exception
      */
-    public function isCodeCancelled(?array $code) : ?bool
+    public function isCodeCancelled(?array $code): ?bool
     {
-        if (array_key_exists("Cancelled",$code))
-        {
+        if (array_key_exists("Cancelled", $code)) {
             return $cancelledStatus = true;
         }
 
@@ -191,5 +192,15 @@ class LpaExtension extends AbstractExtension
         array_unshift($viewerCodeParts, 'V');
 
         return implode(" - ", $viewerCodeParts);
+    }
+
+    /**
+     * @param array $lpa
+     * @return bool
+     */
+    public function isLPACancelled(Lpa $lpa): bool
+    {
+        $status = $lpa->getStatus();
+        return ($status === 'Cancelled') || ($status === 'Revoked');
     }
 }

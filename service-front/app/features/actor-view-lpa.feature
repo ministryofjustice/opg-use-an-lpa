@@ -18,5 +18,6 @@ Feature: View an LPA that I have added to my account
 
     Examples:
       | status | message |
-      | registered | This LPA is registered |
-      | cancelled | This LPA has been cancelled |
+      | Registered | This LPA is registered |
+      | Cancelled | This LPA has been cancelled |
+      | Revoked   | This LPA has been cancelled |

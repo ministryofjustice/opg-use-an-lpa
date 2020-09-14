@@ -31,6 +31,7 @@ class LpaExtensionTest extends TestCase
             'check_if_code_has_expired' => 'hasCodeExpired',
             'add_hyphen_to_viewer_code' => 'formatViewerCode',
             'check_if_code_is_cancelled' => 'isCodeCancelled',
+            'is_lpa_cancelled'           => 'isLpaCancelled',
 
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));

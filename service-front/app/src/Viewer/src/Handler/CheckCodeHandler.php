@@ -75,7 +75,7 @@ class CheckCodeHandler extends AbstractHandler
                     // Then we found a LPA for the given code
                     $expires = new DateTime($lpa->expires);
                     $status = strtolower(($lpa->lpa)->getStatus());
-                    if ($status === 'registered' || $status === 'cancelled') {
+                    if ($this->canDisplayLPA($status)){
                         return new HtmlResponse($this->renderer->render(
                             'viewer::check-code-found',
                             [
@@ -101,5 +101,14 @@ class CheckCodeHandler extends AbstractHandler
 
         //  We don't have a code so the session has timed out
         throw new SessionTimeoutException();
+    }
+
+    /**
+     * @param string $status
+     * @return bool
+     */
+    public function canDisplayLPA(string $status): bool
+    {
+        return $status === 'registered' || $status === 'cancelled' || $status === 'revoked';
     }
 }

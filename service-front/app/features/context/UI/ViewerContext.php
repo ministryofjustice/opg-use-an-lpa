@@ -218,6 +218,37 @@ class ViewerContext implements Context
 
         $this->ui->clickLink('View this LPA');
     }
+
+    /**
+     * @When /^I confirm the revoked LPA is correct/
+     */
+    public function iConfirmTheRevokedLPAIsCorrect()
+    {
+        $this->lpaData['status'] = 'Revoked';
+
+        $this->ui->assertPageAddress('/check-code');
+        $this->ui->assertPageContainsText(
+            $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
+        );
+
+        // API call for lpa full fetch
+        $this->apiFixtures->post('/v1/viewer-codes/full')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'lpa'     => $this->lpaData,
+                'expires' => (new \DateTime('+30 days'))->format('c'),
+                'cancelled' => (new \DateTime('-1 day'))->format('c'),
+            ])))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $params = json_decode($request->getBody()->getContents(), true);
+
+                assertInternalType('array', $params);
+                assertEquals($params['name'], $this->lpaSurname);
+                assertEquals($params['code'], $this->lpaStoredCode);
+            });
+
+        $this->ui->clickLink('View this LPA');
+    }
+
     /**
      * @Given /^I am viewing a valid LPA$/
      * @Then /^I can see the full details of the valid LPA$/
@@ -245,6 +276,22 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('LPA has been cancelled');
         $this->ui->assertPageContainsText(
             'Cancelled on ' . (new \DateTime($this->lpaData['cancellationDate']))->format('j F Y')
+        );
+    }
+
+    /**
+     * @Given /^I am viewing a revoked LPA$/
+     * @Then /^I can see the full details of the revoked LPA$/
+     */
+    public function iAmViewingARevokedLPA()
+    {
+        $this->ui->assertPageAddress('/view-lpa');
+        $this->ui->assertPageContainsText(
+            $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
+        );
+        $this->ui->assertPageContainsText('LPA has been cancelled');
+        $this->ui->assertPageNotContainsText(
+            'Cancelled on'
         );
     }
 
