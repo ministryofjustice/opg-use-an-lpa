@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\I18n;
 
+use Acpr\I18n\Translator;
 use Common\Middleware\I18n\SetLocaleMiddleware;
 use Common\Middleware\I18n\SetLocaleMiddlewareFactory;
 use Mezzio\Helper\UrlHelper;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Translation\Translator;
 
 class SetLocaleMiddlewareFactoryTest extends TestCase
 {

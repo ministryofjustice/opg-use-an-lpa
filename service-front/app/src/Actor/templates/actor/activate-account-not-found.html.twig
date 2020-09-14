@@ -6,6 +6,8 @@
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
 
+        {{ include('@partials/welsh-switch.html.twig') }}
+
         <a href="{{ path('home') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -31,7 +33,11 @@
                     </ul>
                 </div>
                 <div class="govuk-grid-column-full">
-                    <p class="govuk-body">{% trans with {'%link%': "mailto:lpa.research@digital.justice.gov.uk" } %}If you need more help activating your account, email <a href="%link%">lpa.research@digital.justice.gov.uk</a>.{% endtrans %}</p>
+                    <p class="govuk-body">
+                        {% trans with {'%link%': "mailto:customerservices@publicguardian.gov.uk" } %}
+                            If you need more help activating your account, email <a class="govuk-link" href="%link%">customerservices@publicguardian.gov.uk</a>.
+                        {% endtrans %}
+                    </p>
                 </div>
             </div>
 

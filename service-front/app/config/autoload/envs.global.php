@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
 
-    'application' => getenv('CONTEXT'),
+    'application' => getenv('CONTEXT') ?: null,
 
     'version' => getenv('CONTAINER_VERSION') ?: 'dev',
 
@@ -108,13 +108,8 @@ return [
 
     'i18n' => [
         'default_locale' => 'en_GB',
-        'languages' => [
-            'welsh' => [
-                'format' => 'mo',
-                'resource' => '/app/languages/cy.mo',
-                'locale' => 'cy'
-            ]
-        ]
+        'default_domain' => 'messages',
+        'locale_path' => '/app/languages/'
     ],
 
     'ratelimits' => [

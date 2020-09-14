@@ -6,7 +6,9 @@
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
 
-        <a href="{{ path('lpa.add') }}" class="govuk-back-link">Back</a>
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <a href="{{ path('lpa.add') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -49,7 +51,11 @@
                                 {% trans %}Your role on this LPA{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ userRole }}
+                                {% if userRole == "Attorney" %}
+                                    {% trans %}Attorney{% endtrans %}
+                                {% else %}
+                                    {% trans %}Donor{% endtrans %}
+                                {% endif %}
                             </dd>
                         </div>
                     </dl>

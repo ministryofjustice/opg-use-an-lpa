@@ -12,7 +12,7 @@
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
 
         <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ element.getName() }}">
-            {{ label | trans | raw }}
+            {{ label | raw }}
         </label>
 
         {{- block('input_hint') -}}
@@ -77,7 +77,7 @@
                 <input class="govuk-checkboxes__input" id="{{ element.getName() }}" name="{{ element.getName() }}" value="{{ element.getCheckedValue() }}" type="checkbox" {% if element.getValue() == element.getCheckedValue() %}checked="checked"{% endif %}>
 
                 <label class="govuk-label govuk-checkboxes__label" for="{{ element.getName() }}">
-                    {{ label |trans | raw }}
+                    {{ label | raw }}
 
                     {{ govuk_error(element) }}
                 </label>
@@ -93,11 +93,11 @@
             <div class="govuk-radios__item">
                 <input class="govuk-radios__input" id="{{ element.getName() }}-{{ loop.index }}" name="{{ element.getName() }}" type="radio" value="{{ option.value }}" {% if option.value == element.getValue() %}checked="checked"{% endif %} >
                 <label class="govuk-label govuk-radios__label" for="{{ element.getName() }}-{{ loop.index }}">
-                    {{ option.label | trans }}
+                    {{ option.label }}
                 </label>
                 {% if option.hint is defined %}
                     <span id="{{ element.getName() }}-{{ loop.index }}" class="govuk-hint govuk-radios__hint">
-                        {{ option.hint  | trans }}
+                        {{ option.hint }}
                     </span>
                 {% endif %}
             </div>
@@ -111,7 +111,7 @@
         <fieldset name="{{ fieldset.getName() }}" class="govuk-fieldset" aria-describedby="{{ fieldset.getName() }}-hint" role="group">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                 <label class="govuk-label" for="{{ fieldset.getName() }}">
-                    {{ label | trans | raw }}
+                    {{ label | raw }}
                 </label>
             </legend>
 
@@ -124,17 +124,17 @@
             <div class="govuk-date-input" id="{{ fieldset.getName() }}">
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(fieldset.get('day'), { 'label': 'Day', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
+                    {{ govuk_form_element(fieldset.get('day'), { 'label': 'Day' | trans, 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
 
                 </div>
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(fieldset.get('month'), { 'label': 'Month', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
+                    {{ govuk_form_element(fieldset.get('month'), { 'label': 'Month' | trans, 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
 
                 </div>
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(fieldset.get('year'), { 'label': 'Year', 'attr' : {'class': 'govuk-date-input__input govuk-input--width-4', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
+                    {{ govuk_form_element(fieldset.get('year'), { 'label': 'Year' | trans, 'attr' : {'class': 'govuk-date-input__input govuk-input--width-4', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
 
                 </div>
             </div>
@@ -185,7 +185,7 @@
 {%- block input_hint -%}
     {% if hint is defined %}
         <span id="{{ element.getName() }}-hint" class="govuk-hint">
-            {{ hint | trans | raw }}
+            {{ hint | raw }}
         </span>
     {% endif %}
 {%- endblock input_hint -%}
