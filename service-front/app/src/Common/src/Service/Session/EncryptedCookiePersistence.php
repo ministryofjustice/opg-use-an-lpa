@@ -85,6 +85,10 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
     private bool $cookieHttpOnly;
 
+    private ?int $originalSessionTime;
+
+    private ?string $requestPath;
+
     /**
      * EncryptedCookiePersistence constructor.
      * @param KeyManagerInterface $keyManager
@@ -124,6 +128,9 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         $this->cookieDomain = $cookieDomain;
         $this->cookieSecure = $cookieSecure;
         $this->cookieHttpOnly = $cookieHttpOnly;
+
+        $this->originalSessionTime = null;
+        $this->requestPath = null;
     }
 
 
@@ -212,6 +219,9 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         $sessionData = $this->getCookieFromRequest($request);
         $data = $this->decodeCookieValue($sessionData);
 
+        $this->originalSessionTime = $data[self::SESSION_TIME_KEY] ?: null;
+        $this->requestPath = $request->getUri()->getPath();
+
         // responsible the for expiry of a users session
         if (isset($data[self::SESSION_TIME_KEY])) {
             $expiresAt = $data[self::SESSION_TIME_KEY] + $this->sessionExpire;
@@ -232,8 +242,8 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
     public function persistSession(SessionInterface $session, ResponseInterface $response): ResponseInterface
     {
-        // Record the current time.
-        $session->set(self::SESSION_TIME_KEY, time());
+        // Record the set time
+        $session->set(self::SESSION_TIME_KEY, $this->sessionTime());
 
         // Encode to string
         $sessionData = $this->encodeCookieValue($session->toArray());
@@ -359,5 +369,15 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         }
 
         return $lifetime > 0 ? $lifetime : 0;
+    }
+
+    private function sessionTime(): int
+    {
+        // Checking session or setting current time
+        return !is_null($this->originalSessionTime)
+        && !is_null($this->requestPath)
+        && preg_match("/^\/session-check(\/|)$/i", $this->requestPath)
+            ? $this->originalSessionTime
+            : time();
     }
 }
