@@ -31,11 +31,26 @@
 
         {% endif %}
 
-        <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
-                id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}"
-                {% if inputmode is defined %}inputmode="{{ inputmode }}"{% endif %}
-                {% if spellcheck is defined %}spellcheck="{{ spellcheck }}"{% endif %}
-                {% if autocomplete is defined %}autocomplete="{{ autocomplete }}"{% endif %} />
+        {% if element.getName() == 'show_hide_password' %}
+            <div class="moj-password-reveal">
+                <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
+                       id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}"
+                       {% if inputmode is defined %}inputmode="{{ inputmode }}"{% endif %}
+                        {% if spellcheck is defined %}spellcheck="{{ spellcheck }}"{% endif %}
+                        {% if autocomplete is defined %}autocomplete="{{ autocomplete }}"{% endif %} />
+
+                <button class="govuk-button govuk-button--secondary moj-password-reveal__button" data-module="govuk-button" type="button"
+                        data-showpassword="{% trans %}Show{% notes %}Show password label{% endtrans%}"
+                        data-hidepassword="{% trans %}Hide{% notes %}Hide password label{% endtrans %}">
+                </button>
+            </div>
+        {% else %}
+            <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
+                   id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}"
+                   {% if inputmode is defined %}inputmode="{{ inputmode }}"{% endif %}
+                    {% if spellcheck is defined %}spellcheck="{{ spellcheck }}"{% endif %}
+                    {% if autocomplete is defined %}autocomplete="{{ autocomplete }}"{% endif %} />
+        {% endif %}
 
         {% if element.getName() == 'org_name' %}
             <button data-prevent-double-click="true" type="submit" class="govuk-button">

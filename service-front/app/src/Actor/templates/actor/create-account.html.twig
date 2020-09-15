@@ -39,17 +39,12 @@
                                 {{ govuk_form_element(form.get('email'), { 'label': 'Enter your email address'| trans }) }}
 
                                 <div class="js-showhidepassword">
-                                    {{ govuk_form_element(form.get('password'), {
+                                    {{ govuk_form_element(form.get('show_hide_password'), {
                                         'label': 'Create a password'| trans,
                                         'hint': 'Your password needs to have: <ul class="govuk-list--bullet"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>'| trans,
-                                        'attr': { 'class': 'js-showhidepassword-input' }
+                                        'attr': { 'class': 'govuk-input moj-password-reveal__input govuk-input--width-20' }
                                     })
                                     }}
-
-                                    <button class="govuk-button govuk-button--secondary js-showhidepassword-button" data-module="govuk-button" type="button" style="display: inline"
-                                           data-showpassword="{% trans %}Show{% notes %}Show password label{% endtrans%}"
-                                           data-hidepassword="{% trans %}Hide{% notes %}Hide password label{% endtrans %}">
-                                    </button>
                                 </div>
 
                                 <div class="govuk-warning-text">

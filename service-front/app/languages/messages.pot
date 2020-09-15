@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-09-11T10:39:15+00:00\n"
+"POT-Creation-Date: 2020-09-15T13:43:57+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -220,12 +220,11 @@ msgstr ""
 msgid "Your password needs to have: <ul class=\"govuk-list--bullet\"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>"
 msgstr ""
 
-#: src/Actor/templates/actor/create-account.html.twig:55
 #: src/Actor/templates/actor/change-email.html.twig:30
 msgid "Confirm your password"
 msgstr ""
 
-#: src/Actor/templates/actor/create-account.html.twig:65
+#: src/Actor/templates/actor/create-account.html.twig:53
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:34
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:243
 #: src/Actor/templates/actor/check-lpa.html.twig:66
@@ -234,17 +233,17 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
-#: src/Actor/templates/actor/create-account.html.twig:66
+#: src/Actor/templates/actor/create-account.html.twig:54
 #: src/Actor/templates/actor/password-reset.html.twig:45
 #: src/Actor/templates/actor/password-change.html.twig:35
 msgid "Never share your password with anyone."
 msgstr ""
 
-#: src/Actor/templates/actor/create-account.html.twig:70
+#: src/Actor/templates/actor/create-account.html.twig:58
 msgid "I agree to the <a href=\"%link%\" class=\"govuk-link\">terms of use</a>"
 msgstr ""
 
-#: src/Actor/templates/actor/create-account.html.twig:72
+#: src/Actor/templates/actor/create-account.html.twig:60
 msgid "Create account"
 msgstr ""
 
@@ -1846,7 +1845,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-add.html.twig:87
-#: src/Common/templates/partials/govuk_form.html.twig:42
+#: src/Common/templates/partials/govuk_form.html.twig:57
 #: src/Viewer/templates/viewer/enter-code.html.twig:58
 msgid "Continue"
 msgstr ""
@@ -2379,15 +2378,15 @@ msgstr ""
 msgid "I want to check another LPA"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:127
+#: src/Common/templates/partials/govuk_form.html.twig:142
 msgid "Day"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:132
+#: src/Common/templates/partials/govuk_form.html.twig:147
 msgid "Month"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:137
+#: src/Common/templates/partials/govuk_form.html.twig:152
 msgid "Year"
 msgstr ""
 
@@ -3001,11 +3000,11 @@ msgid "Enter the LPA reference number"
 msgstr ""
 
 #. Show password label
-#: src/Actor/templates/actor/create-account.html.twig:50
-msgid "Show password"
+#: src/Common/templates/partials/govuk_form.html.twig:43
+msgid "Show"
 msgstr ""
 
 #. Hide password label
-#: src/Actor/templates/actor/create-account.html.twig:51
-msgid "Hide password"
+#: src/Common/templates/partials/govuk_form.html.twig:44
+msgid "Hide"
 msgstr ""

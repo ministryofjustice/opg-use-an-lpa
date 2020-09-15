@@ -45,7 +45,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
         $this->add(new Email('email'));
 
         $this->add([
-            'name' => 'password',
+            'name' => 'show_hide_password',
             'type' => 'Password',
         ]);
 
@@ -86,7 +86,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                     ]
                 ],
             ],
-            'password'         => [
+            'show_hide_password'    => [
                 'required'   => true,
                 'validators' => [
                     [

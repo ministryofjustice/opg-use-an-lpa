@@ -3,8 +3,8 @@ const showHidePassword = () => {
 
     for (let i = 0; i < elements.length; i++) {
         let element = elements[i];
-        let showHidePwdButton = element.querySelector('.js-showhidepassword-button');
-        let showHidePwdInput = element.querySelector('.js-showhidepassword-input');
+        let showHidePwdButton = element.querySelector('.moj-password-reveal__button');
+        let showHidePwdInput = element.querySelector('.moj-password-reveal__input');
         let showPasswordText = showHidePwdButton.dataset.showpassword;
         let hidePasswordText = showHidePwdButton.dataset.hidepassword;
 
