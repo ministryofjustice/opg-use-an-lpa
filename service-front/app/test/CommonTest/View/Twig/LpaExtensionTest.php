@@ -6,6 +6,7 @@ namespace CommonTest\View\Twig;
 
 use Common\Entity\Address;
 use Common\Entity\CaseActor;
+use Common\Entity\Lpa;
 use Common\View\Twig\LpaExtension;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;
@@ -57,12 +58,24 @@ class LpaExtensionTest extends TestCase
         $extension = new LpaExtension();
 
         $address = new Address();
-        if (isset($addressLines['addressLine1'])) { $address->setAddressLine1($addressLines['addressLine1']); }
-        if (isset($addressLines['addressLine2'])) { $address->setAddressLine2($addressLines['addressLine2']); }
-        if (isset($addressLines['addressLine3'])) { $address->setAddressLine3($addressLines['addressLine3']); }
-        if (isset($addressLines['town'])) { $address->setTown($addressLines['town']); }
-        if (isset($addressLines['county'])) { $address->setCounty($addressLines['county']); }
-        if (isset($addressLines['postcode'])) { $address->setPostcode($addressLines['postcode']); }
+        if (isset($addressLines['addressLine1'])) {
+            $address->setAddressLine1($addressLines['addressLine1']);
+        }
+        if (isset($addressLines['addressLine2'])) {
+            $address->setAddressLine2($addressLines['addressLine2']);
+        }
+        if (isset($addressLines['addressLine3'])) {
+            $address->setAddressLine3($addressLines['addressLine3']);
+        }
+        if (isset($addressLines['town'])) {
+            $address->setTown($addressLines['town']);
+        }
+        if (isset($addressLines['county'])) {
+            $address->setCounty($addressLines['county']);
+        }
+        if (isset($addressLines['postcode'])) {
+            $address->setPostcode($addressLines['postcode']);
+        }
 
         $actor = new CaseActor();
         $actor->setAddresses([$address]);
@@ -138,10 +151,18 @@ class LpaExtensionTest extends TestCase
         $extension = new LpaExtension();
 
         $actor = new CaseActor();
-        if (isset($nameLines['salutation'])) { $actor->setSalutation($nameLines['salutation']); }
-        if (isset($nameLines['firstname'])) { $actor->setFirstname($nameLines['firstname']); }
-        if (isset($nameLines['middlenames'])) { $actor->setMiddlenames($nameLines['middlenames']); }
-        if (isset($nameLines['surname'])) { $actor->setSurname($nameLines['surname']); }
+        if (isset($nameLines['salutation'])) {
+            $actor->setSalutation($nameLines['salutation']);
+        }
+        if (isset($nameLines['firstname'])) {
+            $actor->setFirstname($nameLines['firstname']);
+        }
+        if (isset($nameLines['middlenames'])) {
+            $actor->setMiddlenames($nameLines['middlenames']);
+        }
+        if (isset($nameLines['surname'])) {
+            $actor->setSurname($nameLines['surname']);
+        }
 
         $name = $extension->actorName($actor);
 
@@ -261,7 +282,8 @@ class LpaExtensionTest extends TestCase
      * @test
      * @dataProvider cancelledDateProvider
      */
-    public function it_checks_if_a_code_is_cancelled($shareCodeArray, $expected){
+    public function it_checks_if_a_code_is_cancelled($shareCodeArray, $expected)
+    {
 
         $extension = new LpaExtension();
 
@@ -305,7 +327,8 @@ class LpaExtensionTest extends TestCase
      * @test
      * @dataProvider expiryDateProvider
      */
-    public function it_checks_if_a_code_has_expired($expiryDate, $expected){
+    public function it_checks_if_a_code_has_expired($expiryDate, $expected)
+    {
 
         $extension = new LpaExtension();
 
@@ -318,7 +341,7 @@ class LpaExtensionTest extends TestCase
     {
         $future = (new DateTime('+1 week'))->format('Y-m-d');
         $past = (new DateTime('-1 week'))->format('Y-m-d');
-        $endOfToday = (new DateTime('now'))->setTime(23,59,59)->format('Y-m-d');
+        $endOfToday = (new DateTime('now'))->setTime(23, 59, 59)->format('Y-m-d');
 
         return [
             [
@@ -370,5 +393,39 @@ class LpaExtensionTest extends TestCase
         $viewerCode = $extension->formatViewerCode('111122223333');
 
         $this->assertEquals('V - 1111 - 2222 - 3333', $viewerCode);
+    }
+
+
+    public function it_checks_if_an_LPA_is_cancelled()
+    {
+        $extension = new LpaExtension();
+        $lpa = new Lpa();
+
+        $lpa->setCancellationDate(new DateTime('-1 days'));
+        $lpa->setStatus('Cancelled');
+        $status = $extension->isLPACancelled($lpa);
+
+        $this->assertEquals(true, $status);
+    }
+    public function it_checks_if_an_LPA_is_not_cancelled()
+    {
+        $extension = new LpaExtension();
+        $lpa = new Lpa();
+
+        $lpa->setStatus('Registered');
+        $status = $extension->isLPACancelled($lpa);
+
+        $this->assertEquals(false, $status);
+    }
+
+    public function it_checks_if_an_LPA_is_revoked()
+    {
+        $extension = new LpaExtension();
+        $lpa = new Lpa();
+
+        $lpa->setStatus('Revoked');
+        $status = $extension->isLPACancelled($lpa);
+
+        $this->assertEquals(true, $status);
     }
 }
