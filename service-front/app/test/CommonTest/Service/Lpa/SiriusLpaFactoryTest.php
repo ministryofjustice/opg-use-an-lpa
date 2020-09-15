@@ -66,6 +66,8 @@ class SiriusLpaFactoryTest extends TestCase
         $lpa = $factory->createLpaFromData($this->fullExampleFixtureData);
         $this->assertInstanceOf(Lpa::class, $lpa);
         $this->assertEquals('700000000054', $lpa->getUId()); // from full_example.json
+        $this->assertNull($lpa->getCancellationDate());
+
 
         $this->assertInstanceOf(CaseActor::class, $lpa->getDonor());
         $this->assertInstanceOf(Address::class, $lpa->getDonor()->getAddresses()[0]);
@@ -82,10 +84,10 @@ class SiriusLpaFactoryTest extends TestCase
         $lpa = $factory->createLpaFromData($this->simpleExampleFixtureData);
         $this->assertInstanceOf(Lpa::class, $lpa);
         $this->assertEquals('7000-0000-0054', $lpa->getUId()); // from simple_example.json
-
+        $this->assertEquals(new DateTime('2020-02-02'), $lpa->getCancellationDate());
         $this->assertEquals(null, $lpa->getRejectedDate());
         $this->assertEquals(null, $lpa->getLifeSustainingTreatment());
-        $this->assertEquals(null, $lpa->getCancellationDate());
+
         $this->assertInstanceOf(CaseActor::class, $lpa->getDonor());
         $this->assertInstanceOf(Address::class, $lpa->getDonor()->getAddresses()[0]);
 
@@ -97,7 +99,7 @@ class SiriusLpaFactoryTest extends TestCase
 
         $this->assertEquals([0], $lpa->getDonor()->getIds());
     }
-    
+
     public function testCanCreateLpaFromExampleWithLinkedDonors()
     {
         $factory = new Sirius();
@@ -107,7 +109,7 @@ class SiriusLpaFactoryTest extends TestCase
             ['id' => 5, 'uId' => '7000-0000-0033'],
             ['id' => 6, 'uId' => '7000-0000-0133'],
         ];
-        
+
         $lpa = $factory->createLpaFromData($data);
         $this->assertInstanceOf(Lpa::class, $lpa);
         $this->assertEquals('7000-0000-0054', $lpa->getUId()); // from simple_example.json

@@ -6,7 +6,7 @@
   "receiptDate": "2018-06-30",
   "rejectedDate": null,
   "registrationDate": null,
-  "cancellationDate" : null,
+  "cancellationDate" : "2020-02-02",
   "status": "Cancelled",
   "caseAttorneySingular": true,
   "caseAttorneyJointlyAndSeverally": true,
