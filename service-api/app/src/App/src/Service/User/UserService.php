@@ -428,31 +428,31 @@ class UserService
     }
 
     /**
+     * Get link token
      * @return string
      * @throws Exception
      */
     private function getLinkToken(): string
     {
-        $activationToken = Base64UrlSafe::encode(random_bytes(32));
-        return $activationToken;
+        return Base64UrlSafe::encode(random_bytes(32));
     }
 
     /**
+     * get Expiry TTL
      * @return float|int
      */
     private function getExpiryTtl()
     {
-        $activationTtl = time() + (60 * 60 * 24);
-        return $activationTtl;
+        return time() + (60 * 60 * 24);
     }
 
     /**
+     * Generate unique id (UUID)
      * @return string
      * @throws Exception
      */
     private function generateUniqueId(): string
     {
-        $id = Uuid::uuid4()->toString();
-        return $id;
+        return Uuid::uuid4()->toString();
     }
 }
