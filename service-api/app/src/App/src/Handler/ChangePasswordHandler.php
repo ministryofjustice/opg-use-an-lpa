@@ -6,6 +6,7 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Service\User\UserService;
+use ParagonIE\HiddenString\HiddenString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -52,8 +53,8 @@ class ChangePasswordHandler implements RequestHandlerInterface
 
         $this->userService->completeChangePassword(
             $requestData['user-id'],
-            $requestData['password'],
-            $requestData['new-password']
+            new HiddenString($requestData['password']),
+            new HiddenString($requestData['new-password'])
         );
 
         return new JsonResponse([]);
