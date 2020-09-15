@@ -57,11 +57,22 @@ class UserService
     public function add(array $data): array
     {
         if ($this->usersRepository->exists($data['email'])) {
-            return $this->usersRepository->resetActivationDetails(
-                $data['email'],
-                $data['password'],
-                $this->getExpiryTtl()
-            );
+            $user = $this->getByEmail($data['email']);
+
+            if (isset($user['ActivationToken']) && isset($user['ExpiresTTL'])) {
+                //we're not activated yet, so push forward the time and update password (as this may change)
+                return $this->usersRepository->resetActivationDetails(
+                    $user['Id'],
+                    $data['password'],
+                    $this->getExpiryTtl()
+                );
+            } else {
+                //already activated.
+                throw new ConflictException(
+                    'User already exists with email address ' . $data['email'],
+                    ['email' => $data['email']]
+                );
+            }
         }
 
         $emailResetExists = $this->usersRepository->getUserByNewEmail($data['email']);

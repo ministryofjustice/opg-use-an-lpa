@@ -390,14 +390,10 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function resetActivationDetails(string $email, string $password, int $activationTtl): array
+    public function resetActivationDetails(string $id, string $password, int $activationTtl): array
     {
-
-        $foundUser = $this->getByEmail($email);
-
-        $id = $foundUser['Id'];
         //  Update the item by setting the password and restarting the Expiry TTL
-        $this->client->updateItem([
+         $result = $this->client->updateItem([
             'TableName' => $this->actorUsersTable,
             'Key' => [
                 'Id' => [
@@ -413,7 +409,7 @@ class ActorUsers implements ActorUsersInterface
                     'N' => (string) $activationTtl
                 ]
             ],
-        ]);
-        return $this->get($id);
+         ]);
+        return $this->getData($result);
     }
 }

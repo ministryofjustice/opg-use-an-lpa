@@ -150,10 +150,11 @@ interface ActorUsersInterface
     /**
      * resets activation with password and ttl
      *
+     * @param string $id
      * @param string $email
      * @param string $password
      * @param int $activationTtl
      * @return mixed
      */
-    public function resetActivationDetails(string $email, string $password, int $activationTtl) : array;
+    public function resetActivationDetails(string $id, string $password, int $activationTtl): array;
 }

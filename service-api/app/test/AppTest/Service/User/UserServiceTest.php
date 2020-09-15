@@ -12,6 +12,8 @@ use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Exception\UnauthorizedException;
 use App\Service\User\UserService;
+use DateTime;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
@@ -57,7 +59,7 @@ class UserServiceTest extends TestCase
 
         $repoProphecy
             ->add(
-                Argument::that(function(string $data) {
+                Argument::that(function (string $data) {
                     return Uuid::isValid($data);
                 }),
                 Argument::exact($email),
@@ -85,15 +87,23 @@ class UserServiceTest extends TestCase
         $id = '12345678-1234-1234-1234-123456789012';
         $email = 'a@b.com';
         $password = 'password1';
-        $ttl = (new \DateTime('+24 hours'))->getTimestamp();
-        $userData = ['email' => $email, 'password' => $password];
+        $activationToken = 'activationToken1';
+        $ttl = (new DateTime('+24 hours'))->getTimestamp();
+        $userData = ['email' => $email, 'password' => $password, 'id' => $id];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->exists($userData['email'])
             ->willReturn(true);
-        $repoProphecy->resetActivationDetails($userData['email'], $userData['password'], Argument::type('integer'))
+        $repoProphecy->getByEmail($userData['email'])
+            ->willReturn([
+                'Id' => $id,
+                'Email' => $email,
+                'ExpiresTTL' => $ttl,
+                'ActivationToken' => $activationToken
+            ]);
+        $repoProphecy->resetActivationDetails($id,$password, Argument::type('integer'))
             ->willReturn([
                 'Id' => $id,
                 'Email' => $email
@@ -104,6 +114,33 @@ class UserServiceTest extends TestCase
         $return = $us->add($userData);
 
         $this->assertEquals(['Id' => $id, 'Email' => $email], $return);
+    }
+
+    /** @test
+     * @throws Exception
+     */
+    public function cannot_add_existing_user_already_activated()
+    {
+        $id = '12345678-1234-1234-1234-123456789012';
+        $email = 'a@b.com';
+        $password = 'password1';
+        $userData = ['email' => 'a@b.com', 'password' => $password];
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $repoProphecy->exists($userData['email'])
+            ->willReturn(true);
+
+        $repoProphecy->getByEmail($userData['email'])
+            ->willReturn([
+                'Id' => $id,
+                'Email' => $email
+            ]);
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+
+        $this->expectException(ConflictException::class);
+        $us->add($userData);
     }
 
     /** @test */
@@ -148,8 +185,8 @@ class UserServiceTest extends TestCase
         $repoProphecy->recordSuccessfulLogin('1234-1234-1234', Argument::that(function ($dateTime) {
             $this->assertIsString($dateTime);
 
-            $date = new \DateTime($dateTime);
-            $this->assertInstanceOf(\DateTime::class, $date);
+            $date = new DateTime($dateTime);
+            $this->assertInstanceOf(DateTime::class, $date);
 
             return true;
         }));
@@ -249,7 +286,7 @@ class UserServiceTest extends TestCase
             ->willReturn([
                 'Id' => $id,
                 'PasswordResetToken' => $token,
-                'PasswordResetExpiry' => (new \DateTime('+1 week'))->format('U')
+                'PasswordResetExpiry' => (new DateTime('+1 week'))->format('U')
             ])
             ->shouldBeCalled();
 
@@ -282,7 +319,7 @@ class UserServiceTest extends TestCase
             ->willReturn([
                 'Id' => $id,
                 'PasswordResetToken' => $token,
-                'PasswordResetExpiry' => (new \DateTime('-1 week'))->format('U')
+                'PasswordResetExpiry' => (new DateTime('-1 week'))->format('U')
             ])
             ->shouldBeCalled();
 
@@ -311,7 +348,7 @@ class UserServiceTest extends TestCase
             ->willReturn([
                 'Id' => $id,
                 'PasswordResetToken' => $token,
-                'PasswordResetExpiry' => (new \DateTime('+1 week'))->format('U')
+                'PasswordResetExpiry' => (new DateTime('+1 week'))->format('U')
             ])
             ->shouldBeCalled();
 
@@ -341,7 +378,7 @@ class UserServiceTest extends TestCase
             ->willReturn([
                 'Id' => $id,
                 'PasswordResetToken' => $token,
-                'PasswordResetExpiry' => (new \DateTime('-1 week'))->format('U')
+                'PasswordResetExpiry' => (new DateTime('-1 week'))->format('U')
             ])
             ->shouldBeCalled();
 
