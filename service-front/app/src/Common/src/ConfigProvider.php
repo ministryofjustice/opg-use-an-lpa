@@ -89,6 +89,7 @@ class ConfigProvider
                 // Handlers
                 Handler\CookiesPageHandler::class => Handler\Factory\CookiesPageHandlerFactory::class,
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
+                Handler\SessionCheckHandler::class => Handler\Factory\SessionCheckHandlerFactory::class,
 
                 \Acpr\I18n\TranslatorInterface::class => I18n\TranslatorFactory::class,
                 \Acpr\I18n\TranslationExtension::class =>
