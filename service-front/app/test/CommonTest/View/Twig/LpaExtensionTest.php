@@ -395,7 +395,7 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals('V - 1111 - 2222 - 3333', $viewerCode);
     }
 
-
+     /** @test */
     public function it_checks_if_an_LPA_is_cancelled()
     {
         $extension = new LpaExtension();
@@ -407,6 +407,8 @@ class LpaExtensionTest extends TestCase
 
         $this->assertEquals(true, $status);
     }
+
+    /** @test */
     public function it_checks_if_an_LPA_is_not_cancelled()
     {
         $extension = new LpaExtension();
@@ -418,6 +420,7 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals(false, $status);
     }
 
+    /** @test */
     public function it_checks_if_an_LPA_is_revoked()
     {
         $extension = new LpaExtension();
