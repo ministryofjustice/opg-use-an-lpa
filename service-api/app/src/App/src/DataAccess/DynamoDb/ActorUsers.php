@@ -409,6 +409,7 @@ class ActorUsers implements ActorUsersInterface
                     'N' => (string) $activationTtl
                 ]
             ],
+             'ReturnValues' => 'ALL_NEW'
          ]);
         return $this->getData($result);
     }
