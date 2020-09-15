@@ -50,16 +50,6 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
         ]);
 
         $this->add([
-            'name' => 'password_confirm',
-            'type' => 'Password',
-        ]);
-
-        $this->add([
-            'name' => 'skip_password_confirm',
-            'type' => 'Hidden',
-        ]);
-
-        $this->add([
             'name'  => 'terms',
             'type'  => 'Checkbox',
             'value' => 1,
@@ -132,23 +122,6 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                     ],
                 ],
             ],
-            'password_confirm' => [
-                'required'   => true,
-                'validators' => [
-                    [
-                        'name'                   => NotEmpty::class,
-                        'break_chain_on_failure' => true,
-                        'options'                => [
-                            'messages' => [
-                                NotEmpty::IS_EMPTY => 'Confirm your password',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'skip_password_confirm' => [
-                'required'   => false,
-            ],
             'terms'            => [
                 'required'      => true,
                 'error_message' => 'You must accept the terms of use to create an account',
@@ -167,20 +140,5 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                 ],
             ],
         ];
-    }
-
-    public function isValid()
-    {
-        //  If the skip confirm password flag has been passed then set the password value as the password confirm value to pass validation
-        if (array_key_exists('skip_password_confirm', $this->data) && $this->data['skip_password_confirm'] === "true") {
-            $this->data['password_confirm'] = $this->data['password'];
-
-            //  Remove confirm password input filter to stop validation error for hidden field
-            $this->getInputFilter()
-                ->remove('password_confirm');
-        }
-
-        //  Continue validation
-        return parent::isValid();
     }
 }

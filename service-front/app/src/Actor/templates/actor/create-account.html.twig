@@ -46,17 +46,10 @@
                                     })
                                     }}
 
-                                    <button class="govuk-button govuk-button--secondary js-showhidepassword-button" data-module="govuk-button" type="button"
-                                           data-showpassword="{% trans %}Show password{% notes %}Show password label{% endtrans%}"
-                                           data-hidepassword="{% trans %}Hide password{% notes %}Hide password label{% endtrans %}">
+                                    <button class="govuk-button govuk-button--secondary js-showhidepassword-button" data-module="govuk-button" type="button" style="display: inline"
+                                           data-showpassword="{% trans %}Show{% notes %}Show password label{% endtrans%}"
+                                           data-hidepassword="{% trans %}Hide{% notes %}Hide password label{% endtrans %}">
                                     </button>
-
-                                    {{ govuk_form_element(form.get('password_confirm'),
-                                        { 'label': 'Confirm your password'| trans,
-                                        'attr': { 'class': 'js-showhidepassword-confirm' }}
-                                    ) }}
-
-                                    {{ govuk_form_element(form.get('skip_password_confirm')) }}
                                 </div>
 
                                 <div class="govuk-warning-text">
