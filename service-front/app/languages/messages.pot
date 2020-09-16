@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-09-15T13:43:57+00:00\n"
+"POT-Creation-Date: 2020-09-16T10:11:31+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -2991,12 +2991,6 @@ msgstr ""
 
 #: src/Common/templates/layout/default.html.twig:138
 msgid "© Crown copyright"
-msgstr ""
-
-#. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:32
-msgctxt "error"
-msgid "Enter the LPA reference number"
 msgstr ""
 
 #. Show password label
