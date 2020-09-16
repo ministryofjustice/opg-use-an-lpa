@@ -100,7 +100,9 @@ class LpaExtension extends AbstractExtension
             }
 
             if ($date instanceof DateTime) {
-                return $this->getDateFormatter(\Locale::getDefault(), $format)->format($date);
+                $formatter = $this->getDateFormatter(\Locale::getDefault(), null);
+                $formatter->setTimeZone($date->getTimezone());
+                return $formatter->format($date);
             }
         }
 
@@ -116,12 +118,13 @@ class LpaExtension extends AbstractExtension
      */
     public function codeDate($date): string
     {
-
         if (!is_null($date)) {
             $date = DateTime::createFromFormat('Y-m-d\TH:i:sP', $date);
 
             if ($date instanceof DateTime) {
-                return $date->format('j F Y');
+                $formatter = $this->getDateFormatter(\Locale::getDefault(), null);
+                $formatter->setTimeZone($date->getTimezone());
+                return $formatter->format($date);
             } else {
                 return '';
             }
