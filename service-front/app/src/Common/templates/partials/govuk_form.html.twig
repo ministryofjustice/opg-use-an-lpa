@@ -30,7 +30,7 @@
             </span>
 
         {% endif %}
-
+        
         {{- block('form_input') -}}
 
     </div>
@@ -48,6 +48,8 @@
 {%- block form_input_text -%}
     {%- set type = type|default('text') -%}
     {%- set value = element.getValue() -%}
+    {%- set inputmode = inputmode -%}
+    {%- set pattern = pattern -%}
     {{ block('form_element_simple') }}
 {%- endblock form_input_text -%}
 
@@ -114,17 +116,32 @@
             <div class="govuk-date-input" id="{{ fieldset.getName() }}">
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(fieldset.get('day'), { 'label': 'Day' | trans, 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
+                    {{ govuk_form_element(fieldset.get('day'), {
+                        'label': 'Day' | trans,
+                        'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'},
+                        'inputmode': 'numeric',
+                        'pattern': '[0-9]*'
+                    }, fieldset) }}
 
                 </div>
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(fieldset.get('month'), { 'label': 'Month' | trans, 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
+                    {{ govuk_form_element(fieldset.get('month'), {
+                        'label': 'Month' | trans,
+                        'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'},
+                        'inputmode': 'numeric',
+                        'pattern': '[0-9]*'
+                    }, fieldset) }}
 
                 </div>
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(fieldset.get('year'), { 'label': 'Year' | trans, 'attr' : {'class': 'govuk-date-input__input govuk-input--width-4', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
+                    {{ govuk_form_element(fieldset.get('year'), {
+                        'label': 'Year' | trans,
+                        'attr' : {'class': 'govuk-date-input__input govuk-input--width-4', 'label_class': 'govuk-date-input__label'},
+                        'inputmode': 'numeric',
+                        'pattern': '[0-9]*'
+                    }, fieldset) }}
 
                 </div>
             </div>
@@ -187,9 +204,10 @@
 
     <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
            id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}"
-           {% if inputmode is defined %}inputmode="{{ inputmode }}"{% endif %}
-            {% if spellcheck is defined %}spellcheck="{{ spellcheck }}"{% endif %}
-            {% if autocomplete is defined %}autocomplete="{{ autocomplete }}"{% endif %}/>
+            {% if inputmode is defined and inputmode is not empty %}inputmode="{{ inputmode }}"{% endif %}
+            {% if pattern is defined and pattern is not empty %}pattern="{{ pattern }}"{% endif %}
+            {% if spellcheck is defined and spellcheck is not empty %}spellcheck="{{ spellcheck }}"{% endif %}
+            {% if autocomplete is defined and autocomplete is not empty %}autocomplete="{{ autocomplete }}"{% endif %} />
 
     {% if element.getName() == 'show_hide_password' %}
         <button class="govuk-button govuk-button--secondary moj-password-reveal__button" data-module="govuk-button" type="button"
