@@ -159,7 +159,7 @@ class LpaServiceTest extends TestCase
 
 
     /** @test */
-    public function it_finds_a_cancelled_lpa_by_passcode_and_surname()
+    public function it_finds_a_cancelled_share_code_by_passcode_and_surname()
     {
 
         $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
@@ -182,7 +182,7 @@ class LpaServiceTest extends TestCase
         $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', false);
     }
     /** @test */
-    public function it_finds_an_expired_lpa_by_passcode_and_surname()
+    public function it_finds_an_expired_share_code_by_passcode_and_surname()
     {
 
         $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
@@ -336,7 +336,7 @@ class LpaServiceTest extends TestCase
 
 
     /** @test */
-    public function it_finds_an_lpa_by_passcode_cancelled()
+    public function it_finds_a_cancelled_lpa_by_passcode()
     {
         $token = '01234567-01234-01234-01234-012345678901';
         $passcode = '123456789012';
