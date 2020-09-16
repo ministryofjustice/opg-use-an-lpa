@@ -281,11 +281,7 @@ class LpaService
         }
 
         // If not an attorney, check if they're the donor.
-        if (
-            is_null($actor) &&
-            isset($lpa['donor']) && is_array($lpa['donor']) &&
-            ((string)$lpa['donor']['id'] === $actorId || $lpa['donor']['uId'] === $actorId)
-        ) {
+        if (is_null($actor) && $this->isDonor($lpa, $actorId)) {
             $actor = $lpa['donor'];
             $actorType = 'donor';
         }
@@ -298,6 +294,27 @@ class LpaService
             'type' => $actorType,
             'details' => $actor,
         ];
+    }
+
+    private function isDonor(array $lpa, string $actorId): bool
+    {
+        if (!isset($lpa['donor']) || !is_array($lpa['donor'])) {
+            return false;
+        }
+
+        // TODO: When new Sirius API has been released this property will always
+        //       be present, then this `if` block can be removed.
+        if (!isset($lpa['donor']['linked'])) {
+            return ((string)$lpa['donor']['id'] === $actorId || $lpa['donor']['uId'] === $actorId);
+        }
+
+        foreach ($lpa['donor']['linked'] as $key => $value) {
+            if ((string)$value['id'] === $actorId || $value['uId'] === $actorId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function attorneyStatus(array $attorney): int

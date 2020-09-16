@@ -12,6 +12,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Acpr\I18n\TranslatorInterface;
 
 class CheckLpaHandlerFactory
 {
@@ -25,7 +26,8 @@ class CheckLpaHandlerFactory
             $container->get(AuthenticationInterface::class),
             $container->get(LpaService::class),
             $container->get(LoggerInterface::class),
-            $rateLimitFactory->factory('actor_code_failure')
+            $rateLimitFactory->factory('actor_code_failure'),
+            $container->get(TranslatorInterface::class)
         );
     }
 }

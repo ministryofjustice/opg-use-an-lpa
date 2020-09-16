@@ -71,7 +71,6 @@ class CreateAccountSuccessHandler extends AbstractHandler
         /** @var string $emailAddress */
         $emailAddress = $params['email'] ?? null;
         $resend = (isset($params['resend']) && $params['resend'] === 'true');
-        $accountExists = (isset($params['accountExists']) && $params['accountExists'] === 'true');
 
         if (is_null($emailAddress)) {
             return $this->redirectToRoute('create-account');
@@ -102,8 +101,7 @@ class CreateAccountSuccessHandler extends AbstractHandler
         }
 
         return new HtmlResponse($this->renderer->render('actor::create-account-success', [
-            'emailAddress' => $emailAddress,
-            'accountExists' => $accountExists
+            'emailAddress' => $emailAddress
         ]));
     }
 }

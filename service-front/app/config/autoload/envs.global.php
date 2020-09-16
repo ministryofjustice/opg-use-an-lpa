@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
 
-    'application' => getenv('CONTEXT'),
+    'application' => getenv('CONTEXT') ?: null,
 
     'version' => getenv('CONTAINER_VERSION') ?: 'dev',
 
