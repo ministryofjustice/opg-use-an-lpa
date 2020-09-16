@@ -111,15 +111,6 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name' => PasswordValidator::class,
                     ],
-                    [
-                        'name'    => Identical::class,
-                        'options' => [
-                            'token'    => 'password_confirm',
-                            'messages' => [
-                                Identical::NOT_SAME => 'Passwords do not match',
-                            ],
-                        ],
-                    ],
                 ],
             ],
             'terms'            => [

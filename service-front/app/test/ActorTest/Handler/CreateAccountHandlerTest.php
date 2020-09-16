@@ -129,11 +129,10 @@ class CreateAccountHandlerTest extends TestCase
             ->willReturn('POST');
         $this->requestProphecy->getParsedBody()
             ->willReturn([
-                '__csrf'           => self::CSRF_CODE,
-                'email'            => 'a@b.com',
-                'password'         => 'P@55word',
-                'password_confirm' => 'P@55word',
-                'terms'            => '1',
+                '__csrf'                => self::CSRF_CODE,
+                'email'                 => 'a@b.com',
+                'show_hide_password'    => 'P@55word',
+                'terms'                 => '1',
             ]);
 
         $response = $handler->handle($this->requestProphecy->reveal());
@@ -172,11 +171,10 @@ class CreateAccountHandlerTest extends TestCase
             ->willReturn('POST');
         $this->requestProphecy->getParsedBody()
             ->willReturn([
-                '__csrf'           => self::CSRF_CODE,
-                'email'            => 'a@b.com',
-                'password'         => 'P@55word',
-                'password_confirm' => 'P@55word',
-                'terms'            => '1',
+                '__csrf'                => self::CSRF_CODE,
+                'email'                 => 'a@b.com',
+                'show_hide_password'    => 'P@55word',
+                'terms'                 => '1',
             ]);
 
         $response = $handler->handle($this->requestProphecy->reveal());
@@ -201,11 +199,10 @@ class CreateAccountHandlerTest extends TestCase
             ->willReturn('POST');
         $this->requestProphecy->getParsedBody()
             ->willReturn([
-                '__csrf'           => self::CSRF_CODE,
-                'email'            => 'a@b.com',
-                'password'         => 'P@55word',
-                'password_confirm' => 'P@55word',
-                'terms'            => '1',
+                '__csrf'                => self::CSRF_CODE,
+                'email'                 => 'a@b.com',
+                'show_hide_password'    => 'P@55word',
+                'terms'                 => '1',
             ]);
 
         $this->expectException(ApiException::class);

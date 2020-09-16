@@ -844,8 +844,7 @@ class AccountContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $this->email);
-        $this->ui->fillField('password', $this->password);
-        $this->ui->fillField('password_confirm', $this->password);
+        $this->ui->fillField('show_hide_password', $this->password);
         $this->ui->fillField('terms', 1);
         $this->ui->pressButton('Create account');
     }
@@ -950,16 +949,15 @@ class AccountContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $this->email);
-        $this->ui->fillField('password', $this->password);
-        $this->ui->fillField('password_confirm', $this->password);
+        $this->ui->fillField('show_hide_password', $this->password);
         $this->ui->fillField('terms', 1);
         $this->ui->pressButton('Create account');
     }
 
     /**
-     * @When /^I have provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
+     * @When /^I have provided required information for account creation such as (.*)(.*)(.*)$/
      */
-    public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1, $email2, $password1, $password2, $terms)
+    public function iHaveProvidedRequiredInformationForAccountCreationSuchAs($email, $password, $terms)
     {
         $this->ui->assertPageAddress('/create-account');
 
@@ -971,9 +969,11 @@ class AccountContext implements Context
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
-        $this->ui->fillField('email', $email1);
-        $this->ui->fillField('password', $password1);
-        $this->ui->fillField('password_confirm', $password2);
+        $this->ui->fillField('email', $email);
+        $this->ui->fillField('show_hide_password', $password);
+        if ($terms === 1) {
+            $this->ui->checkOption('terms');
+        }
 
         $this->ui->pressButton('Create account');
     }
@@ -989,9 +989,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^Creating account I provide mismatching (.*) (.*)$/
+     * @When /^I create an account with a password of (.*)$/
      */
-    public function CreatingAccountIProvideMismatching($value1, $value2)
+    public function iCreateAnAccountWithAPasswordOf($password)
     {
         $this->ui->assertPageAddress('/create-account');
 
@@ -1003,9 +1003,8 @@ class AccountContext implements Context
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
-        $this->ui->fillField('email', $value1);
-        $this->ui->fillField('password', $value1);
-        $this->ui->fillField('password_confirm', $value2);
+        $this->ui->fillField('email', 'a@b.com');
+        $this->ui->fillField('show_hide_password', $password);
 
         $this->ui->pressButton('Create account');
     }
@@ -2141,7 +2140,7 @@ class AccountContext implements Context
     /**
      * @Then /^An account is created using (.*)(.*)(.*)(.*)$/
      */
-    public function anAccountIsCreatedUsingEmail1Password1Password2Terms($email1, $password1, $password2, $terms)
+    public function anAccountIsCreatedUsingEmail1Password1Password2Terms($email1, $password, $terms)
     {
         $this->activationToken = 'activate1234567890';
 
@@ -2160,8 +2159,7 @@ class AccountContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $email1);
-        $this->ui->fillField('password', $password1);
-        $this->ui->fillField('password_confirm', $password2);
+        $this->ui->fillField('password', $password);
         $this->ui->fillField('terms', 1);
         $this->ui->pressButton('Create account');
     }
@@ -3177,7 +3175,6 @@ class AccountContext implements Context
 
         $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('password', $this->userPassword);
-        $this->ui->fillField('password_confirm', $this->userPassword);
         $this->ui->fillField('terms', 1);
         $this->ui->pressButton('Create account');
     }
@@ -3558,37 +3555,4 @@ class AccountContext implements Context
         $this->ui->assertElementOnPage(".moj-banner__message");
     }
 
-    /**
-     * @When /^I create an account using the show password option$/
-     */
-    public function iCreateAnAccountUsingTheShowPasswordOption()
-    {
-        $this->email = 'test@example.com';
-        $this->password = 'n3wPassWord';
-        $this->activationToken = 'activate1234567890';
-
-        $this->ui->assertPageAddress('/create-account');
-
-        // API call for account creation
-        $this->apiFixtures->post('/v1/user')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'Id' => '123',
-                'Email' => $this->email,
-                'ActivationToken' => $this->activationToken,
-            ])));
-
-        // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
-
-        $page = $this->ui->getSession()->getPage();
-        $page->findById('skip_password_confirm')->setValue("true");
-
-        $this->ui->fillField('email', $this->email);
-        $this->ui->fillField('password', $this->password);
-        // confirm password is not needed if show password button has been clicked
-        $this->ui->fillField('password_confirm', "");
-        $this->ui->fillField('terms', 1);
-        $this->ui->pressButton("Create account");
-    }
 }
