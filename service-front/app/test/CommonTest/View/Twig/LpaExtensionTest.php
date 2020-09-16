@@ -8,9 +8,9 @@ use Common\Entity\Address;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\View\Twig\LpaExtension;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;
-use DateTime;
 
 class LpaExtensionTest extends TestCase
 {
@@ -208,36 +208,48 @@ class LpaExtensionTest extends TestCase
      * @test
      * @dataProvider lpaDateDataProvider
      */
-    public function it_creates_a_correctly_formatted_string_from_an_iso_date($date, $expected)
+    public function it_creates_a_correctly_formatted_string_from_an_iso_date($date, $locale, $expected)
     {
         $extension = new LpaExtension();
 
-        $name = $extension->lpaDate($date);
+        // retain the current locale
+        $originalLocale = \Locale::getDefault();
+        \Locale::setDefault($locale);
 
-        $this->assertEquals($expected, $name);
+        $dateString = $extension->lpaDate($date);
+
+        // restore the locale setting
+        \Locale::setDefault($originalLocale);
+
+        $this->assertEquals($expected, $dateString);
     }
 
     public function lpaDateDataProvider()
     {
         return [
             [
-                '1980-01-01',
-                '1 January 1980',
-            ],
-            [
                 '1948-02-17',
+                'en_GB',
                 '17 February 1948',
             ],
             [
+                '1948-02-17',
+                'cy_GB',
+                '17 Chwefror 1948',
+            ],
+            [
                 'today',
+                'en_GB',
                 (new DateTime('now'))->format('j F Y')
             ],
             [
                 'not-a-date',
+                'en_GB',
                 '',
             ],
             [
                 null,
+                'en_GB',
                 '',
             ]
         ];
