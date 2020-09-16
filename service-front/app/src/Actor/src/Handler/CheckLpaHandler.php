@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Acpr\I18n\TranslatorInterface;
 use Actor\Form\LpaConfirm;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
@@ -19,19 +20,18 @@ use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitService;
 use Fig\Http\Message\StatusCodeInterface;
-use Mezzio\Authentication\UserInterface;
-use Mezzio\Flash\FlashMessageMiddleware;
-use Mezzio\Flash\FlashMessagesInterface;
-use Mezzio\Session\SessionInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Flash\FlashMessageMiddleware;
+use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
+use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
-use Acpr\I18n\TranslatorInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class CheckLpaHandler
@@ -149,9 +149,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
             if (!is_null($lpa) && (strtolower($lpa->getStatus()) === 'registered')) {
                 // Are we displaying Donor or Attorney user role
-                $actorRole = (array_search($actor->getId(), $lpa->getDonor()->getIds()) !== false) ?
-                    'Donor' :
-                    'Attorney';
+                $actorRole = (array_search($actor->getId(), $lpa->getDonor()->getIds()) !== false)
+                    ? 'Donor'
+                    : 'Attorney';
 
                 $this->getLogger()->debug(
                     'Account with Id {id} identified as Role {role} on LPA with Id {uId}',
