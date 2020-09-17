@@ -15,8 +15,8 @@ Feature: View an LPA that I have added to my account
     Given I am on the dashboard page
     When I request to view an LPA which status is "<status>"
     Then The full LPA is displayed with the correct <message>
-
     Examples:
       | status | message |
-      | registered | This LPA is registered |
-      | cancelled | This LPA has been cancelled |
+      | Registered | This LPA is registered |
+      | Cancelled | This LPA has been cancelled |
+      | Revoked   | This LPA has been cancelled |

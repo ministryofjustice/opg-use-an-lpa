@@ -16,8 +16,9 @@ Feature: View an LPA via sharecode
   Scenario: View a cancelled LPA
     Given I have been given access to a cancelled LPA via share code
     And I access the viewer service
-    When I give a share code that's been cancelled
-    Then I see a message that LPA has been cancelled
+    And I give a valid LPA share code on a cancelled LPA
+    When I confirm the cancelled LPA is correct
+    Then I can see the full details of the cancelled LPA
 
   @ui @integration
   Scenario: The user can see an option to re enter code if the displayed LPA is incorrect
@@ -91,8 +92,15 @@ Feature: View an LPA via sharecode
   Scenario: The user enters an expired sharecode and is shown the reason for not able to see the details of an LPA
     Given I have been given access to an LPA via share code
     And I access the viewer service
-    When I give a share code that has got expired
-    Then I see a message that LPA has been expired
+    When I give a share code that has expired
+    Then I see a message that the share code has expired
+
+  @ui
+  Scenario: The user enters a cancelled sharecode and is shown the reason for not able to see the details of an LPA
+    Given I have been given access to an LPA via share code
+    And I access the viewer service
+    When I give a share code that's been cancelled
+    Then I see a message that the share code has been cancelled
 
   @ui
   Scenario Outline: The user enters a non existing surname and share code and is shown the reason for not able to see the details of an LPA

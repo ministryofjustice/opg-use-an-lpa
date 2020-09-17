@@ -32,6 +32,7 @@ use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 
 class EncryptedCookiePersistenceTest extends TestCase
 {
@@ -110,6 +111,15 @@ class EncryptedCookiePersistenceTest extends TestCase
          * If the header does not appear in the message, this method MUST return an empty array
          */
         $requestProphecy->getHeaderLine('Cookie')->willReturn('')->shouldBeCalled();
+
+        $uriProphecy = $this->prophesize(UriInterface::class);
+        $uriProphecy->getPath()
+            ->shouldBeCalled()
+            ->willReturn('/');
+
+        $requestProphecy->getUri()
+            ->shouldBeCalled()
+            ->willReturn($uriProphecy->reveal());
 
         //---
 
@@ -385,6 +395,15 @@ class EncryptedCookiePersistenceTest extends TestCase
             true
         );
 
+        $uriProphecy = $this->prophesize(UriInterface::class);
+        $uriProphecy->getPath()
+            ->shouldBeCalled()
+            ->willReturn('/');
+
+        $requestProphecy->getUri()
+            ->shouldBeCalled()
+            ->willReturn($uriProphecy->reveal());
+
         $session = $cp->initializeSessionFromRequest($requestProphecy->reveal());
 
         $this->assertArrayHasKey(EncryptedCookiePersistence::SESSION_EXPIRED_KEY, $session->toArray());
@@ -429,6 +448,15 @@ class EncryptedCookiePersistenceTest extends TestCase
             true,
             true
         );
+
+        $uriProphecy = $this->prophesize(UriInterface::class);
+        $uriProphecy->getPath()
+            ->shouldBeCalled()
+            ->willReturn('/');
+
+        $requestProphecy->getUri()
+            ->shouldBeCalled()
+            ->willReturn($uriProphecy->reveal());
 
         $session = $cp->initializeSessionFromRequest($requestProphecy->reveal());
 
