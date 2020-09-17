@@ -184,7 +184,7 @@ services:
 
       # Local only
       AWS_ACCESS_KEY_ID: "-"
-      AWS_ENDPOINT_DYNAMODB: http://localstack:14569
+      AWS_ENDPOINT_DYNAMODB: http://localstack:4566
       AWS_SECRET_ACCESS_KEY: "-"
       LPA_CODES_STATIC_AUTH_TOKEN: asdf1234567890
       PACT_BROKER_PUBLISH: "false"
@@ -219,5 +219,5 @@ services:
       DYNAMODB_TABLE_VIEWER_CODES: "ViewerCodes"
       DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
-      AWS_ENDPOINT_DYNAMODB: localstack:14569
+      AWS_ENDPOINT_DYNAMODB: localstack:4566
       CODES_ENDPOINT: codes-gateway:4343
