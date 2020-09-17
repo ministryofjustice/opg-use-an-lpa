@@ -140,15 +140,25 @@ class LpaService
                 ]
             );
         } catch (ApiException $apiEx) {
-            switch($apiEx->getCode()) {
+            switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_GONE:
-                    $this->logger->notice(
-                        'Share code {code} expired when attempting to fetch {type}',
-                        [
+                    if ($apiEx->getMessage() === 'Share code cancelled') {
+                        $this->logger->notice(
+                            'Share code {code} cancelled when attempting to fetch {type}',
+                            [
+                                'code' => $shareCode,
+                                'type' => $trackRoute
+                            ]
+                        );
+                    } else {
+                        $this->logger->notice(
+                            'Share code {code} expired when attempting to fetch {type}',
+                            [
                             'code' => $shareCode,
                             'type' => $trackRoute
-                        ]
-                    );
+                            ]
+                        );
+                    }
                     break;
 
                 case StatusCodeInterface::STATUS_NOT_FOUND:
