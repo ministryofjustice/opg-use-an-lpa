@@ -4325,6 +4325,16 @@ msgstr "Rydych wedi ychwanegu atwrneiaeth arhosol %lpaType% %donor%"
 msgid "Cancelled on %cancellationDate%"
 msgstr "Diddymwyd ar %cancellationDate%"
 
+#: src/Common/templates/partials/govuk_form.html.twig:43
+msgctxt "Show password label"
+msgid "Show"
+msgstr "Dangos"
+
+#: src/Common/templates/partials/govuk_form.html.twig:44
+msgctxt "Hide password label"
+msgid "Hide"
+msgstr "Cuddio"
+
 #~ msgid ""
 #~ "<p class=\"govuk-body\">For your security, we've signed you out of this "
 #~ "service because you did not use it for 20 minutes.</p>\n"
