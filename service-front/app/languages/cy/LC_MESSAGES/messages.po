@@ -293,10 +293,9 @@ msgstr "Rhybudd"
 msgid "Never share your password with anyone."
 msgstr "Peidiwch â rhoi eich cyfrinair i neb arall."
 
-#: src/Actor/templates/actor/create-account.html.twig:53
-msgid "I agree to the <a href=\"%link%\" class=\"govuk-link\">terms of use</a>"
-msgstr ""
-"Rwy’n cytuno i’r <a href=\"%link%\" class=\"govuk-link\">telerau defnyddio</a>"
+#: src/Actor/templates/actor/create-account.html.twig:51
+msgid "I agree to the <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>"
+msgstr "Rwy’n cytuno i’r <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">telerau defnyddio (agor mewn tab newydd)</a>"
 
 #: src/Actor/templates/actor/create-account.html.twig:55
 msgid "Create account"
@@ -3623,13 +3622,11 @@ msgstr ""
 "Cod unigryw yw cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> a "
 "roir i chi gan y rhoddwr neu atwrnai a enwir mewn atwrneiaeth arhosol."
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:56
-msgid ""
-"By continuing you agree to our <a href=\"%link%\" class=\"govuk-link\">terms "
-"of use</a>."
+#: src/Viewer/templates/viewer/enter-code.html.twig:54
+msgid "By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>."
 msgstr ""
-"Drwy barhau rydych yn derbyn ein <a href=\"%link%\" class=\"govuk-link\">telerau "
-"defnyddio</a>."
+"Drwy barhau rydych yn derbyn ein <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">telerau "
+"defnyddio (agor mewn tab newydd)</a>."
 
 #: src/Viewer/templates/viewer/check-code-expired.html.twig:3
 msgid "Expired LPA access code"
