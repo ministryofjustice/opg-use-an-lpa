@@ -3575,8 +3575,7 @@ class AccountContext implements Context
                             'ActorId' => $this->actorId
                         ]
                     ])
-                )
-            );
+                ));
     }
 
     /**
