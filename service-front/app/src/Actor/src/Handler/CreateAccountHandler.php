@@ -22,6 +22,7 @@ use Mezzio\Template\TemplateRendererInterface;
 /**
  * Class CreateAccountHandler
  * @package Actor\Handler
+ * @codeCoverageIgnore
  */
 class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
 {
