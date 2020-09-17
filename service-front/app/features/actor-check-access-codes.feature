@@ -46,3 +46,4 @@ Feature: The user is able to check the access codes they have created
     Examples:
       | status    |
       | CANCELLED   |
+    
