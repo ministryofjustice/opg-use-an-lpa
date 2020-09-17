@@ -87,9 +87,10 @@
                                 {%trans with {'%create-code-link%': path('lpa.create-code', {}, {'lpa':  actorToken })} %}If an organisation asks to see this <abbr title="lasting power of attorney">LPA</abbr> again, you can <a href="%create-code-link%">make them a new code</a>.{% endtrans %}
                             </p>
 
-                            <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default"
+                            <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+
                                 {% for code in shareCodes %}
-                                    {% if (check_if_code_has_expired(code.Expires) or check_if_code_is_cancelled(code)) %}
+                                    {% if check_if_code_has_expired(code.Expires) or check_if_code_is_cancelled(code) %}
                                         {{ include('@actor/partials/check-code-details.html.twig') }}
                                     {% endif %}
                                 {% endfor %}
