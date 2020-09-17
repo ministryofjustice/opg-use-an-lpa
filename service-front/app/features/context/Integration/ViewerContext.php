@@ -83,6 +83,16 @@ class ViewerContext extends BaseIntegrationContext
         $this->lpaData['status'] = 'Cancelled';
     }
 
+
+    /**
+     * @Given /^I have been given access to a revoked LPA via share code$/
+     */
+    public function iHaveBeenGivenAccessToARevokedLPAViaShareCode() {
+        $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
+
+        $this->lpaData['status'] = 'Revoked';
+    }
+
     /**
      * @Given /^I have been given access to an expired LPA via share code$/
      */
@@ -107,6 +117,13 @@ class ViewerContext extends BaseIntegrationContext
     }
 
     /**
+    * @When /^I give a valid LPA share code on a cancelled LPA$/
+    */
+    public function iGiveAValidLPAShareCodeOnACancelledLPA() {
+        // not used in this context
+    }
+
+    /**
      * @When /^I confirm the LPA is correct$/
      */
     public function iConfirmTheLPAIsCorrect() {
@@ -114,9 +131,24 @@ class ViewerContext extends BaseIntegrationContext
     }
 
     /**
+     * @When /^I confirm the cancelled LPA is correct$/
+     */
+    public function iConfirmTheCancelledLPAIsCorrect() {
+        // not used in this context
+    }
+
+
+    /**
      * @When /^I give a share code that's been cancelled$/
      */
     public function iGiveAShareCodeThatsBeenCancelled() {
+        // not used in this context
+    }
+
+    /**
+    * @When /^I give a share code that's been revoked$/
+    */
+    public function iGiveAShareCodeThatsBeenRevoked() {
         // not used in this context
     }
 
@@ -143,6 +175,27 @@ class ViewerContext extends BaseIntegrationContext
         $this->viewedLpa = ($lpaService->getLpaByCode($this->lpaShareCode, $this->lpaSurname, LpaService::FULL))['lpa'];
     }
 
+    /**
+     * @Then /^I can see the full details of the cancelled LPA$/
+     */
+    public function iAmViewingACancelledLPA()
+    {
+        $this->lpaData['status'] = 'Cancelled';
+        $this->apiFixtures->post('/v1/viewer-codes/full')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'lpa' => $this->lpaData
+            ])))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $body = json_decode($request->getBody()->getContents());
+
+                assertEquals('111111111111', $body->code); // code gets hyphens removed
+                assertEquals($this->lpaSurname, $body->name);
+            });
+
+        $lpaService = $this->container->get(LpaService::class);
+
+        $this->viewedLpa = ($lpaService->getLpaByCode($this->lpaShareCode, $this->lpaSurname, LpaService::FULL))['lpa'];
+    }
     /**
      * @When /^I choose to download a document version of the LPA$/
      */

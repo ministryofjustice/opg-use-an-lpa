@@ -55,8 +55,8 @@
                         explains how we process personal data.
                     {% endtrans %}
                 </p>
-                <p class="govuk-body">
-                    You can find more information about using the View a lasting power of attorney service in our <a class="govuk-link" href="{{ path('terms-of-use') }}">terms of use</a> and <a class="govuk-link" class="govuk-link"  href="{{ path('cookies')}}">cookie policy</a>.
+                <p class="govuk-body">{% trans with {'%terms-of-use%': path('terms-of-use'), '%cookie%': path('cookies')} %}You can find more information about using the Use a lasting power of attorney service in our
+                    <a class="govuk-link" href="%terms-of-use%">terms of use</a> and <a class="govuk-link" href="%cookie%">cookie policy.{% endtrans %}</a>
                 </p>
                 <h2 class="govuk-heading-m">{% trans %}What data we collect and how we use it{% endtrans %}</h2>
 
