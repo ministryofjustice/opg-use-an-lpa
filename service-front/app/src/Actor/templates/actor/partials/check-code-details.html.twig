@@ -40,18 +40,25 @@
                 {% endif %}
             </div>
 
-            {% if (check_if_code_is_cancelled(code)) or (check_if_code_is_cancelled(code) and check_if_code_has_expired(code.Expires)) %}
+            {% if (check_if_code_has_expired(code.Expires) and check_if_code_is_cancelled(code)) %}
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">{% trans %}Status{% endtrans %}</dt>
                     <dd class="govuk-summary-list__value">
                         <span class="moj-badge moj-badge--red">{% trans %}CANCELLED{% endtrans %}</span>
                     </dd>
                 </div>
-            {% else %}
+            {% elseif check_if_code_has_expired(code.Expires) %}
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">{% trans %}Status{% endtrans %}</dt>
                     <dd class="govuk-summary-list__value">
                         <span class="moj-badge moj-badge--red">{% trans %}EXPIRED{% endtrans %}</span>
+                    </dd>
+                </div>
+            {% elseif check_if_code_is_cancelled(code) %}
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">{% trans %}Status{% endtrans %}</dt>
+                    <dd class="govuk-summary-list__value">
+                        <span class="moj-badge moj-badge--red">{% trans %}CANCELLED{% endtrans %}</span>
                     </dd>
                 </div>
             {% endif %}
