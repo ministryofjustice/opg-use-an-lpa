@@ -11,6 +11,11 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Class ViewerAccessibilityStatementHandler
+ * @package Viewer\Handler
+ * @codCoverageIgnore
+ */
 class ViewerAccessibilityStatementHandler extends AbstractHandler
 {
     public function __construct(
