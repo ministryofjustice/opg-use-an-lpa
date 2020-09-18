@@ -11,7 +11,7 @@ export default class SessionDialog {
         this._setupEventHandlers();
         this._trapFocus();
 
-        this.on('tick', (timeRemaining) => {
+        this.on('tick', timeRemaining => {
             if (timeRemaining >= 200 && timeRemaining <= 300) {
                 this._isHidden(false);
             }
@@ -53,7 +53,7 @@ export default class SessionDialog {
         }
     }
 
-    async _requestSessionTimeRemaining()
+    async _getSessionTime()
     {
         await fetch("/session-check", this.requestHeaders)
         .then(response => {
@@ -61,7 +61,7 @@ export default class SessionDialog {
         });
     }
 
-    async _refreshSession()
+    async _getNewSession()
     {
         await fetch("/session-refresh", this.requestHeaders);
     }
