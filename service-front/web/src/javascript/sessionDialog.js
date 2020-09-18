@@ -4,23 +4,47 @@ export default class SessionDialog {
     constructor(element, countdownMinutes)
     {
         this.showDialogMinutesBeforeLogout = 5;
+        // this.countdownMinutes = countdownMinutes; // Temporary until final solution in place
+
+
         this.element = element;
-        this.countdownMinutes = countdownMinutes; // Temporary until final solution in place
         this.dialogOverlay = document.getElementById("dialog-overlay");
         this.dialogFocus = document.querySelector(".dialog-focus");
         this._setupEventHandlers();
         this._trapFocus();
-        this.timer = new countdownTimer(this.element.querySelector('#time'), this.countdownMinutes);
-        this.timer.on('tick', (event) => {
-            if (event === this.showDialogMinutesBeforeLogout) {
+
+        this.on('tick', (timeRemaining) => {
+            if (timeRemaining >= 200 && timeRemaining <= 300)
+            {
                 this._isHidden(false);
             }
-        });
-        this.timer.on('tickCompleted', () => {
-            window.location.href = '/timeout';
-        });
+        })
+        // this.timer = new countdownTimer(this.element.querySelector('#time'), this.countdownMinutes);
+        // this.timer.on('tick', (event) => {
+        //     if (event === this.showDialogMinutesBeforeLogout) {
+        //         this._isHidden(false);
+        //     }
+        // });
+        // this.timer.on('tickCompleted', () => {
+        //     window.location.href = '/timeout';
+        // });
+        //
+        // this.timer.start()
+    }
 
-        this.timer.start()
+    _runInterval()
+    {
+        const _this = this;
+
+        setInterval(function () {
+            const sessionData = _this._requestSessionTimeRemaining();
+
+            if (sessionData.session_warning) {
+                if (sessionData.time_remaining > 0) {
+                    _this.emit('tick', sessionData.time_remaining);
+                }
+            }
+        }, 60000);
     }
 
     _setupEventHandlers()
@@ -39,14 +63,33 @@ export default class SessionDialog {
         for (let i = 0; i < hideTimeoutElements.length; i++) {
             hideTimeoutElements[i].addEventListener("click", function () {
                 _this._isHidden(true);
-                _this.timer.reset(_this.countdownMinutes);
+                _this._refreshSession();
             });
         }
     }
 
+    async _requestSessionTimeRemaining()
+    {
+        const request = { headers: {"Content-type": "application/json"}};
+        const response = await fetch("/session-check", request);
+        const data = await response.json()
+
+        if (data.session_warning !== true) {
+            return false;
+        }
+
+        return data;
+    }
+
+    async _refreshSession()
+    {
+        const request = { headers: {"Content-type": "application/json"}};
+        return await fetch("/session-refresh", request);
+    }
+
     _isHidden(isVisible)
     {
-        this.element.classList.toggle('hide', isVisible);
+        this.element.classList.toggle("hide", isVisible);
         this.element.classList.toggle("dialog", !isVisible);
         this.dialogOverlay.classList.toggle("hide", isVisible);
         this.dialogOverlay.classList.toggle("dialog-overlay", !isVisible);
