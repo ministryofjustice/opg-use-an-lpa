@@ -98,7 +98,7 @@ class UserService
         $activationToken = $this->getLinkToken();
         $activationTtl = $this->getExpiryTtl();
 
-        $user = $this->usersRepository->add($id, $data['email'], new HiddenString($data['password']), $activationToken, $activationTtl);
+        $user = $this->usersRepository->add($id, $data['email'], $data['password'], $activationToken, $activationTtl);
 
         $this->logger->info(
             'Account with Id {id} created using email {email}',
