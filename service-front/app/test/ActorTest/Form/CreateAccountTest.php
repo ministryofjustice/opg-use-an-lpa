@@ -33,11 +33,10 @@ class CreateAccountTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'           => Csrf::class,
-            'email'            => Email::class,
-            'password'         => Password::class,
-            'password_confirm' => Password::class,
-            'terms'            => Checkbox::class,
+            '__csrf'                => Csrf::class,
+            'email'                 => Email::class,
+            'show_hide_password'    => Password::class,
+            'terms'                 => Checkbox::class,
         ];
     }
 

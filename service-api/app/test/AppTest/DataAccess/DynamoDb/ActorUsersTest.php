@@ -60,7 +60,7 @@ class ActorUsersTest extends TestCase
             ->shouldBeCalled();
 
         $this->dynamoDbClientProphecy
-            ->getItem(Argument::that(function(array $data) use ($id) {
+            ->getItem(Argument::that(function (array $data) use ($id) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -102,6 +102,65 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($activationTtl, $result['ExpiresTTL']);
     }
 
+
+    /** @test */
+    public function will_reset_activation_for_existing_user()
+    {
+        $id = '12345-1234-1234-1234-12345';
+        $email = 'a@b.com';
+        $password = 'P@55word';
+        $activationToken = 'actok123';
+        $activationTtl = time() + 3600;
+
+        $this->dynamoDbClientProphecy
+            ->updateItem(Argument::that(function (array $data) use ($id, $password, $activationTtl) {
+                $this->assertIsArray($data);
+
+                // we don't care what the array looks like as it's specific to the AWS api and may change
+                // we do care that the data *at least* contains the items we want to affect
+                $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
+                $this->assertStringContainsString($id, serialize($data));
+                $this->assertStringContainsString(strval($activationTtl), serialize($data));
+                //---
+
+                $this->assertArrayHasKey('UpdateExpression', $data);
+
+                return true;
+            }))
+            ->willReturn($this->createAWSResult([
+                'Item' => [
+                    'Id' => [
+                        'S' => $id,
+                    ],
+                    'Email' => [
+                        'S' => $email,
+                    ],
+                    'Password' => [
+                        'S' => $password,
+                    ],
+                    'ActivationToken' => [
+                        'S' => $activationToken,
+                    ],
+                    'ExpiresTTL' => [
+                        'N' => $activationTtl,
+                    ],
+                ],
+            ]))
+            ->shouldBeCalled();
+
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $result = $actorRepo->resetActivationDetails($id, $password, $activationTtl);
+
+        $this->assertEquals($id, $result['Id']);
+        $this->assertEquals($email, $result['Email']);
+        $this->assertEquals($password, $result['Password']);
+        $this->assertEquals($activationToken, $result['ActivationToken']);
+        $this->assertEquals($activationTtl, $result['ExpiresTTL']);
+    }
+
+
     /** @test */
     public function will_throw_exception_when_adding_a_new_user_that_doesnt_succeed()
     {
@@ -135,7 +194,7 @@ class ActorUsersTest extends TestCase
                 ->shouldBeCalled();
 
         $this->dynamoDbClientProphecy
-            ->getItem(Argument::that(function(array $data) use ($id) {
+            ->getItem(Argument::that(function (array $data) use ($id) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -164,7 +223,7 @@ class ActorUsersTest extends TestCase
         $id = '12345-1234-1234-1234-12345';
 
         $this->dynamoDbClientProphecy
-            ->getItem(Argument::that(function(array $data) use ($id) {
+            ->getItem(Argument::that(function (array $data) use ($id) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -197,7 +256,7 @@ class ActorUsersTest extends TestCase
         $id = '12345-1234-1234-1234-12345';
 
         $this->dynamoDbClientProphecy
-            ->query(Argument::that(function(array $data) use ($email) {
+            ->query(Argument::that(function (array $data) use ($email) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
                 $this->assertArrayHasKey('IndexName', $data);
@@ -235,7 +294,7 @@ class ActorUsersTest extends TestCase
         $id = '12345-1234-1234-1234-12345';
 
         $this->dynamoDbClientProphecy
-            ->query(Argument::that(function(array $data) use ($token) {
+            ->query(Argument::that(function (array $data) use ($token) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
                 $this->assertArrayHasKey('IndexName', $data);
@@ -271,7 +330,7 @@ class ActorUsersTest extends TestCase
         $id = '12345-1234-1234-1234-12345';
 
         $this->dynamoDbClientProphecy
-            ->getItem(Argument::that(function(array $data) use ($id) {
+            ->getItem(Argument::that(function (array $data) use ($id) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -300,7 +359,7 @@ class ActorUsersTest extends TestCase
         $email = 'c@d.com';
 
         $this->dynamoDbClientProphecy
-            ->query(Argument::that(function(array $data) use ($email) {
+            ->query(Argument::that(function (array $data) use ($email) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -346,7 +405,7 @@ class ActorUsersTest extends TestCase
         ];
 
         $this->dynamoDbClientProphecy
-            ->query(Argument::that(function(array $data) use ($activationToken) {
+            ->query(Argument::that(function (array $data) use ($activationToken) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -379,7 +438,7 @@ class ActorUsersTest extends TestCase
             ]));
 
         $this->dynamoDbClientProphecy
-            ->updateItem(Argument::that(function(array $data) use ($id) {
+            ->updateItem(Argument::that(function (array $data) use ($id) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -397,7 +456,7 @@ class ActorUsersTest extends TestCase
             ->shouldBeCalled();
 
         $this->dynamoDbClientProphecy
-            ->getItem(Argument::that(function(array $data) use ($id) {
+            ->getItem(Argument::that(function (array $data) use ($id) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -443,7 +502,7 @@ class ActorUsersTest extends TestCase
         $activationToken = 'activateTok123';
 
         $this->dynamoDbClientProphecy
-            ->query(Argument::that(function(array $data) use ($activationToken) {
+            ->query(Argument::that(function (array $data) use ($activationToken) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -472,7 +531,7 @@ class ActorUsersTest extends TestCase
         $email = 'a@b.com';
 
         $this->dynamoDbClientProphecy
-            ->query(Argument::that(function(array $data) use ($email) {
+            ->query(Argument::that(function (array $data) use ($email) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -503,7 +562,7 @@ class ActorUsersTest extends TestCase
         $email = 'c@d.com';
 
         $this->dynamoDbClientProphecy
-            ->query(Argument::that(function(array $data) use ($email) {
+            ->query(Argument::that(function (array $data) use ($email) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -528,7 +587,7 @@ class ActorUsersTest extends TestCase
         $date = (new DateTime('now'))->format(DateTimeInterface::ATOM);
 
         $this->dynamoDbClientProphecy
-            ->updateItem(Argument::that(function(array $data) use ($date) {
+            ->updateItem(Argument::that(function (array $data) use ($date) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -554,7 +613,7 @@ class ActorUsersTest extends TestCase
 
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
         $dynamoDbClientProphecy
-            ->query(Argument::that(function(array $data) use ($email) {
+            ->query(Argument::that(function (array $data) use ($email) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -577,7 +636,7 @@ class ActorUsersTest extends TestCase
         $time = time() + (60 * 60 * 24);
 
         $dynamoDbClientProphecy
-            ->updateItem(Argument::that(function(array $data) use ($id, $time) {
+            ->updateItem(Argument::that(function (array $data) use ($id, $time) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -624,7 +683,7 @@ class ActorUsersTest extends TestCase
 
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
         $dynamoDbClientProphecy
-            ->query(Argument::that(function(array $data) use ($email) {
+            ->query(Argument::that(function (array $data) use ($email) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -654,7 +713,7 @@ class ActorUsersTest extends TestCase
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
 
         $dynamoDbClientProphecy
-            ->updateItem(Argument::that(function(array $data) use ($id) {
+            ->updateItem(Argument::that(function (array $data) use ($id) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -681,7 +740,7 @@ class ActorUsersTest extends TestCase
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
 
         $dynamoDbClientProphecy
-            ->updateItem(Argument::that(function(array $data) use ($id) {
+            ->updateItem(Argument::that(function (array $data) use ($id) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -706,7 +765,7 @@ class ActorUsersTest extends TestCase
         $email = 'a@b.com';
         $password = 'H@shedP@55word';
 
-        $this->dynamoDbClientProphecy->deleteItem(Argument::that(function(array $data) use ($id) {
+        $this->dynamoDbClientProphecy->deleteItem(Argument::that(function (array $data) use ($id) {
             $this->assertIsArray($data);
 
             $this->assertStringContainsString('users-table', serialize($data));
@@ -744,7 +803,7 @@ class ActorUsersTest extends TestCase
     {
         $id = 'd0E2nT-ex12t';
 
-        $this->dynamoDbClientProphecy->deleteItem(Argument::that(function(array $data) use ($id) {
+        $this->dynamoDbClientProphecy->deleteItem(Argument::that(function (array $data) use ($id) {
             $this->assertIsArray($data);
 
             $this->assertStringContainsString('users-table', serialize($data));
@@ -770,7 +829,7 @@ class ActorUsersTest extends TestCase
         $resetToken = 'abcde12345';
         $resetExpiry = time() + (60 * 60 * 48);
 
-        $this->dynamoDbClientProphecy->updateItem(Argument::that(function(array $data) use ($id) {
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($id) {
             $this->assertIsArray($data);
 
             $this->assertStringContainsString('users-table', serialize($data));
@@ -821,14 +880,14 @@ class ActorUsersTest extends TestCase
         $id = '12345-1234-1234-1234-12345';
         $resetToken = 'abcde12345';
 
-        $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($resetToken) {
+        $this->dynamoDbClientProphecy->query(Argument::that(function (array $data) use ($resetToken) {
                 $this->assertIsArray($data);
 
                 $this->assertStringContainsString('users-table', serialize($data));
                 $this->assertStringContainsString($resetToken, serialize($data));
 
                 return true;
-            }))->willReturn($this->createAWSResult([
+        }))->willReturn($this->createAWSResult([
                 'Items' => [
                     [
                         'Id' => [
@@ -854,7 +913,7 @@ class ActorUsersTest extends TestCase
         $id = '12345-1234-1234-1234-12345';
         $newEmail = 'new@email.com';
 
-        $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($newEmail) {
+        $this->dynamoDbClientProphecy->query(Argument::that(function (array $data) use ($newEmail) {
             $this->assertIsArray($data);
 
             $this->assertStringContainsString('users-table', serialize($data));
@@ -887,7 +946,7 @@ class ActorUsersTest extends TestCase
     {
         $resetToken = 'abcde12345';
 
-        $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($resetToken) {
+        $this->dynamoDbClientProphecy->query(Argument::that(function (array $data) use ($resetToken) {
             $this->assertIsArray($data);
 
             $this->assertStringContainsString('users-table', serialize($data));
@@ -911,7 +970,7 @@ class ActorUsersTest extends TestCase
         $newEmail = 'new@email.com';
         $resetToken = 'abcde12345';
 
-        $this->dynamoDbClientProphecy->updateItem(Argument::that(function(array $data) use ($id) {
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($id) {
             $this->assertIsArray($data);
 
             $this->assertStringContainsString('users-table', serialize($data));

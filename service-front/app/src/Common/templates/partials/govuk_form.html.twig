@@ -31,17 +31,7 @@
 
         {% endif %}
 
-        <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
-                id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}"
-                {% if inputmode is defined %}inputmode="{{ inputmode }}"{% endif %}
-                {% if spellcheck is defined %}spellcheck="{{ spellcheck }}"{% endif %}
-                {% if autocomplete is defined %}autocomplete="{{ autocomplete }}"{% endif %} />
-
-        {% if element.getName() == 'org_name' %}
-            <button data-prevent-double-click="true" type="submit" class="govuk-button">
-                {% trans %}Continue{% endtrans %}
-            </button>
-        {% endif %}
+        {{- block('form_input') -}}
 
     </div>
 {%- endblock form_element_simple -%}
@@ -189,3 +179,30 @@
         </span>
     {% endif %}
 {%- endblock input_hint -%}
+
+{%- block form_input -%}
+    {% if element.getName() == 'show_hide_password' %}
+        <div class="moj-password-reveal">
+    {% endif %}
+
+    <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
+           id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}"
+           {% if inputmode is defined %}inputmode="{{ inputmode }}"{% endif %}
+            {% if spellcheck is defined %}spellcheck="{{ spellcheck }}"{% endif %}
+            {% if autocomplete is defined %}autocomplete="{{ autocomplete }}"{% endif %}/>
+
+    {% if element.getName() == 'show_hide_password' %}
+        <button class="govuk-button govuk-button--secondary moj-password-reveal__button" data-module="govuk-button" type="button"
+                data-showpassword="{% trans %}Show{% notes %}Show password label{% endtrans%}"
+                data-hidepassword="{% trans %}Hide{% notes %}Hide password label{% endtrans %}">
+        </button>
+        </div>
+    {% endif %}
+
+    {% if element.getName() == 'org_name' %}
+        <button data-prevent-double-click="true" type="submit" class="govuk-button">
+            {% trans %}Continue{% endtrans %}
+        </button>
+    {% endif %}
+
+{%- endblock form_input -%}
