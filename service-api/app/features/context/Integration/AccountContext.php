@@ -121,6 +121,7 @@ class AccountContext extends BaseIntegrationContext
 
     /**
      * @Then I am informed about an existing account
+     * @Then I send the activation email again
      */
     public function iAmInformedAboutAnExistingAccount()
     {
@@ -666,46 +667,106 @@ class AccountContext extends BaseIntegrationContext
         )['ActivationToken'];
     }
 
+
     /**
+     * @When I create an account using duplicate details not yet activated
+     */
+    public function iCreateAnAccountUsingDuplicateDetailsNotActivated()
+    {
+        $userAccountCreateData = [
+            'Id' => '1234567890abcdef',
+            'ActivationToken' => 'activate1234567890',
+            'ExpiresTTL' => '232424232244',
+            'Email' => 'test@test.com',
+            'Password' => 'Pa33w0rd'
+        ];
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'ActivationToken' => $userAccountCreateData['ActivationToken'],
+                    'Email' => $userAccountCreateData['Email'],
+                    'Password' => $userAccountCreateData['Password'],
+                    'Id' => $userAccountCreateData['Id'],
+                    'ExpiresTTL' => $userAccountCreateData['ExpiresTTL'],
+                ])
+            ]
+        ]));
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'ActivationToken' => $userAccountCreateData['ActivationToken'],
+                    'ExpiresTTL' => $userAccountCreateData['ExpiresTTL'],
+                    'Email' => $userAccountCreateData['Email'],
+                    'Password' => $userAccountCreateData['Password'],
+                    'Id' => $userAccountCreateData['Id'],
+                ])
+            ]
+        ]));
+
+        // ActorUsers::resetActivationDetails
+        $this->awsFixtures->append(new Result([
+            'Item' =>
+                $this->marshalAwsResultData([
+                    'ActivationToken' => $userAccountCreateData['ActivationToken'],
+                    'Email' => $userAccountCreateData['Email'],
+                    'Password' => $userAccountCreateData['Password'],
+                    'Id' => $userAccountCreateData['Id'],
+                ])
+        ]));
+
+        $us = $this->container->get(UserService::class);
+
+
+        $result = $us->add(
+            [
+                'email' => $userAccountCreateData['Email'],
+                'password' => $userAccountCreateData['Password'],
+            ]
+        );
+        assertEquals($result['Email'], $userAccountCreateData['Email']);
+    }
+
+        /**
      * @When I create an account using duplicate details
      */
     public function iCreateAnAccountUsingDuplicateDetails()
     {
-        $actorAccountCreateData = [
+        $userAccountCreateData = [
             'email' => 'hello@test.com',
             'password' => 'n3wPassWord',
-            'activationToken' => 'activate1234567890',
         ];
 
-        // ActorUsers::activate
+        $id = '1234567890abcdef';
+
+        // ActorUsers::getByEmail
         $this->awsFixtures->append(
             new Result(
                 [
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'AccountActivationToken' => $actorAccountCreateData['activationToken'],
-                                'Email' => $actorAccountCreateData['email'],
-                                'Password' => $actorAccountCreateData['password'],
+                                'Email' => $userAccountCreateData['email'],
+                                'Password' => $userAccountCreateData['password'],
                             ]
                         ),
                     ],
                 ]
             )
         );
-
-        // ActorUsers::add
-        $this->awsFixtures->append(new Result());
-
-        // ActorUsers::get
+        // ActorUsers::getByEmail
         $this->awsFixtures->append(
             new Result(
                 [
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'AccountActivationToken' => $actorAccountCreateData['activationToken'],
-                                'Email' => $actorAccountCreateData['email'],
+                                'Email' => $userAccountCreateData['email'],
+                                'Password' => $userAccountCreateData['password'],
+                                "Id" => $id,
                             ]
                         ),
                     ],
@@ -716,19 +777,15 @@ class AccountContext extends BaseIntegrationContext
         $us = $this->container->get(UserService::class);
 
         try {
-            $us->add(
-                [
-                    'email' => $actorAccountCreateData['email'],
-                    'password' => $actorAccountCreateData['password'],
-                ]
-            );
-        } catch (\Exception $ex) {
-            assertContains(
-                'User already exists with email address' . ' ' . $actorAccountCreateData['email'],
-                $ex->getMessage()
-            );
+            $us->add(['email' => $userAccountCreateData['email'], 'password' => $userAccountCreateData['password']]);
+        } catch (ConflictException $ex) {
+            assertEquals(409, $ex->getCode());
+            return;
         }
+
+        throw new ExpectationFailedException();
     }
+
 
     /**
      * @When /^I create an account using with an email address that has been requested for reset$/
