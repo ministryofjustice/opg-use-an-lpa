@@ -3,9 +3,7 @@ import countdownTimer from "./countdownTimer";
 export default class SessionDialog {
     constructor(element, countdownMinutes)
     {
-        this.showDialogMinutesBeforeLogout = 5;
-        // this.countdownMinutes = countdownMinutes; // Temporary until final solution in place
-
+        this.requestHeaders = {"Content-type": "application/json"};
 
         this.element = element;
         this.dialogOverlay = document.getElementById("dialog-overlay");
@@ -14,22 +12,10 @@ export default class SessionDialog {
         this._trapFocus();
 
         this.on('tick', (timeRemaining) => {
-            if (timeRemaining >= 200 && timeRemaining <= 300)
-            {
+            if (timeRemaining >= 200 && timeRemaining <= 300) {
                 this._isHidden(false);
             }
         })
-        // this.timer = new countdownTimer(this.element.querySelector('#time'), this.countdownMinutes);
-        // this.timer.on('tick', (event) => {
-        //     if (event === this.showDialogMinutesBeforeLogout) {
-        //         this._isHidden(false);
-        //     }
-        // });
-        // this.timer.on('tickCompleted', () => {
-        //     window.location.href = '/timeout';
-        // });
-        //
-        // this.timer.start()
     }
 
     _runInterval()
@@ -37,13 +23,12 @@ export default class SessionDialog {
         const _this = this;
 
         setInterval(function () {
-            const sessionData = _this._requestSessionTimeRemaining();
-
-            if (sessionData.session_warning) {
-                if (sessionData.time_remaining > 0) {
+            _this._requestSessionTimeRemaining()
+            .then(sessionData => {
+                if (sessionData.session_warning) {
                     _this.emit('tick', sessionData.time_remaining);
                 }
-            }
+            });
         }, 60000);
     }
 
@@ -70,21 +55,15 @@ export default class SessionDialog {
 
     async _requestSessionTimeRemaining()
     {
-        const request = { headers: {"Content-type": "application/json"}};
-        const response = await fetch("/session-check", request);
-        const data = await response.json()
-
-        if (data.session_warning !== true) {
-            return false;
-        }
-
-        return data;
+        await fetch("/session-check", this.requestHeaders)
+        .then(response => {
+            return response.json()
+        });
     }
 
     async _refreshSession()
     {
-        const request = { headers: {"Content-type": "application/json"}};
-        return await fetch("/session-refresh", request);
+        await fetch("/session-refresh", this.requestHeaders);
     }
 
     _isHidden(isVisible)
