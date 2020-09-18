@@ -5,10 +5,10 @@ services:
   localstack:
     image: localstack/localstack
     ports:
-      - 4569:14569
-      - 8000:14569
+      - 4569:4566
+      - 8000:4566
     environment:
-      - SERVICES=dynamodb:14569
+      - SERVICES=dynamodb
       - DEFAULT_REGION=eu-west-1
       - HOSTNAME=gateway-localstack
     networks:
@@ -28,6 +28,8 @@ services:
       - ../opg-sirius-api-gateway/localstack-config:/config
     depends_on:
       - localstack
+    environment:
+      AWS_ENDPOINT_DYNAMODB: localstack:4566
 
   lpa-gateway:
     build:
@@ -46,7 +48,7 @@ services:
 
       PASSTHROUGH_DYNAMODB_DATA_CACHE_TABLE_NAME: opg-gateway-cache-data
       PASSTHROUGH_DYNAMODB_AUTH_CACHE_TABLE_NAME: opg-gateway-cache-auth
-      PASSTHROUGH_AWS_ENDPOINT_DYNAMODB : http://localstack:14569
+      PASSTHROUGH_AWS_ENDPOINT_DYNAMODB : http://localstack:4566
       PASSTHROUGH_URL_MEMBRANE: https://membrane
       PASSTHROUGH_CREDENTIALS: '{"email": "publicapi@opgtest.com","password": "Password1"}' # Non-secret credentials, deliberately committed.
       PASSTHROUGH_ENABLE_DEBUG: 'false'
