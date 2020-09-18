@@ -22,7 +22,7 @@ export default class SessionDialog {
     {
         const _this = this;
 
-        setInterval(function () {
+        setInterval(() => {
             _this._requestSessionTimeRemaining()
             .then(sessionData => {
                 if (sessionData.session_warning) {
@@ -55,7 +55,7 @@ export default class SessionDialog {
 
     async _getSessionTime()
     {
-        await fetch("/session-check", this.requestHeaders)
+        return fetch("/session-check", this.requestHeaders)
         .then(response => {
             return response.json()
         });
