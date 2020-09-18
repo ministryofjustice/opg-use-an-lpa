@@ -129,6 +129,35 @@ class ViewerContext implements Context
         $this->ui->pressButton('Continue');
     }
 
+
+    /**
+     * @When /^I give a valid LPA share code on a cancelled LPA$/
+     */
+    public function iGiveAValidCancelledLPAShareCode()
+    {
+        $this->lpaData['status'] = 'Cancelled';
+
+        $this->ui->assertPageAddress('/home');
+
+        // API call for lpa summary check
+        $this->apiFixtures->post('/v1/viewer-codes/summary')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'lpa'     => $this->lpaData,
+                'expires' => (new \DateTime('+30 days'))->format('c')
+            ])))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $params = json_decode($request->getBody()->getContents(), true);
+
+                assertInternalType('array', $params);
+                assertEquals($params['name'], $this->lpaSurname);
+                assertEquals($params['code'], $this->lpaStoredCode);
+            });
+
+        $this->ui->fillField('donor_surname', $this->lpaSurname);
+        $this->ui->fillField('lpa_code', $this->lpaShareCode);
+        $this->ui->pressButton('Continue');
+    }
+
     /**
      * @When /^I confirm the LPA is correct$/
      */
@@ -158,6 +187,68 @@ class ViewerContext implements Context
         $this->ui->clickLink('View this LPA');
     }
 
+
+    /**
+     * @When /^I confirm the cancelled LPA is correct/
+     */
+    public function iConfirmTheCancelledLPAIsCorrect()
+    {
+        $this->lpaData['status'] = 'Cancelled';
+        $this->lpaData['cancellationDate'] = (new \DateTime('-1 day'))->format('Y-m-d');
+
+        $this->ui->assertPageAddress('/check-code');
+        $this->ui->assertPageContainsText(
+            $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
+        );
+
+        // API call for lpa full fetch
+        $this->apiFixtures->post('/v1/viewer-codes/full')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'lpa'     => $this->lpaData,
+                'expires' => (new \DateTime('+30 days'))->format('c'),
+                'cancelled' => (new \DateTime('-1 day'))->format('c'),
+            ])))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $params = json_decode($request->getBody()->getContents(), true);
+
+                assertInternalType('array', $params);
+                assertEquals($params['name'], $this->lpaSurname);
+                assertEquals($params['code'], $this->lpaStoredCode);
+            });
+
+        $this->ui->clickLink('View this LPA');
+    }
+
+    /**
+     * @When /^I confirm the revoked LPA is correct/
+     */
+    public function iConfirmTheRevokedLPAIsCorrect()
+    {
+        $this->lpaData['status'] = 'Revoked';
+
+        $this->ui->assertPageAddress('/check-code');
+        $this->ui->assertPageContainsText(
+            $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
+        );
+
+        // API call for lpa full fetch
+        $this->apiFixtures->post('/v1/viewer-codes/full')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
+                'lpa'     => $this->lpaData,
+                'expires' => (new \DateTime('+30 days'))->format('c'),
+                'cancelled' => (new \DateTime('-1 day'))->format('c'),
+            ])))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+                $params = json_decode($request->getBody()->getContents(), true);
+
+                assertInternalType('array', $params);
+                assertEquals($params['name'], $this->lpaSurname);
+                assertEquals($params['code'], $this->lpaStoredCode);
+            });
+
+        $this->ui->clickLink('View this LPA');
+    }
+
     /**
      * @Given /^I am viewing a valid LPA$/
      * @Then /^I can see the full details of the valid LPA$/
@@ -171,23 +262,57 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('LPA is valid');
     }
 
+
     /**
-     * @Then /^I see a message that LPA has been cancelled$/
+     * @Given /^I am viewing a cancelled LPA$/
+     * @Then /^I can see the full details of the cancelled LPA$/
      */
-    public function iSeeAMessageThatLPAHasBeenCancelled()
+    public function iAmViewingACancelledLPA()
+    {
+        $this->ui->assertPageAddress('/view-lpa');
+        $this->ui->assertPageContainsText(
+            $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
+        );
+        $this->ui->assertPageContainsText('LPA has been cancelled');
+        $this->ui->assertPageContainsText(
+            'Cancelled on ' . (new \DateTime($this->lpaData['cancellationDate']))->format('j F Y')
+        );
+    }
+
+    /**
+     * @Given /^I am viewing a revoked LPA$/
+     * @Then /^I can see the full details of the revoked LPA$/
+     */
+    public function iAmViewingARevokedLPA()
+    {
+        $this->ui->assertPageAddress('/view-lpa');
+        $this->ui->assertPageContainsText(
+            $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
+        );
+        $this->ui->assertPageContainsText('LPA has been cancelled');
+        $this->ui->assertPageNotContainsText(
+            'Cancelled on'
+        );
+    }
+
+    /**
+     * @Then /^I see a message that the share code has expired$/
+     */
+    public function iSeeAMessageThatTheShareCodeHasBeenExpired()
     {
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText('The access code you entered has expired');
     }
 
     /**
-     * @Then /^I see a message that LPA has been expired$/
+     * @Then /^I see a message that the share code has been cancelled$/
      */
-    public function iSeeAMessageThatLPAHasBeenExpired()
+    public function iSeeAMessageThatTheShareCodeHasBeenCancelled()
     {
         $this->ui->assertPageAddress('/check-code');
-        $this->ui->assertPageContainsText('The access code you entered has expired');
+        $this->ui->assertPageContainsText('The access code you entered has been cancelled');
     }
+
 
     /**
      * @When /^I choose to download a document version of the LPA$/
@@ -275,9 +400,9 @@ class ViewerContext implements Context
     }
 
     /**
-     * @When /^I give a share code that has got expired$/
+     * @When /^I give a share code that has expired$/
      */
-    public function iGiveAShareCodeThatHasGotExpired()
+    public function iGiveAShareCodeThatHasExpired()
     {
         $this->lpaData['status'] = 'Expired';
         $this->ui->assertPageAddress('/home');
@@ -307,7 +432,7 @@ class ViewerContext implements Context
                 'title' => 'Gone',
                 'details' => 'Share code cancelled',
                 'data' => [],
-            ])));
+            ]), '1.1', 'Share code cancelled'));
 
         $this->ui->fillField('donor_surname', $this->lpaSurname);
         $this->ui->fillField('lpa_code', $this->lpaShareCode);
@@ -350,7 +475,7 @@ class ViewerContext implements Context
     {
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
         $this->iAccessTheViewerService();
-        $this->iGiveAShareCodeThatHasGotExpired();
+        $this->iGiveAShareCodeThatHasExpired();
     }
 
     /**
@@ -447,21 +572,11 @@ class ViewerContext implements Context
     }
 
     /**
-     * @When /^I request to go back to the enter code page$/
      * @When /^I request to go back to the terms of use page$/
      */
     public function iRequestToGoBackToTheRequiredPage()
     {
         $this->ui->clickLink('Back');
-    }
-
-    /**
-     * @Then /^I am taken back to the enter code page$/
-     */
-    public function iAmTakenBackToTheEnterCodePage()
-    {
-        $this->ui->assertPageAddress('/home');
-        $this->ui->assertPageContainsText('Enter the LPA access code');
     }
 
     /**
@@ -578,5 +693,14 @@ class ViewerContext implements Context
     public function iAmOnTheTriagePage()
     {
         $this->ui->visit('/home');
+    }
+
+    /**
+     * @Then /^I am taken back to the enter code page$/
+     */
+    public function iAmTakenBackToTheEnterCodePage()
+    {
+        $this->ui->assertPageAddress('/home');
+        $this->ui->assertPageContainsText('Enter the LPA access code');
     }
 }

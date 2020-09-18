@@ -27,6 +27,9 @@ class Lpa
     protected $rejectedDate = null;
 
     /** @var DateTime|null */
+    protected $cancellationDate = null;
+
+    /** @var DateTime|null */
     protected $registrationDate = null;
 
     /** @var string|null */
@@ -305,5 +308,15 @@ class Lpa
     public function setTrustCorporations(array $trustCorporations): void
     {
         $this->trustCorporations = $trustCorporations;
+    }
+
+    public function setCancellationDate(DateTime $date)
+    {
+        $this->cancellationDate = $date;
+    }
+
+    public function getCancellationDate() : ?DateTime
+    {
+        return $this->cancellationDate;
     }
 }

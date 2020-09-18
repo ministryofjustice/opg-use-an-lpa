@@ -40,10 +40,6 @@ class ActorTermsOfUseHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $referer = $this->urlValidityCheckService->setValidReferer($request->getHeaders()['referer'][0]);
-
-        return new HtmlResponse($this->renderer->render('actor::actor-terms-of-use', [
-            'referer' => $referer
-        ]));
+        return new HtmlResponse($this->renderer->render('actor::actor-terms-of-use'));
     }
 }
