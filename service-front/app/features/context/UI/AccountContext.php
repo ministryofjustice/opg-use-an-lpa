@@ -2208,16 +2208,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I navigate to the actor terms of use page$/
-     */
-    public function iNavigateToTheActorTermsOfUsePage()
-    {
-        $this->ui->assertPageAddress('/create-account');
-        $this->ui->clickLink('terms of use');
-        $this->ui->assertPageAddress('/terms-of-use');
-    }
-
-    /**
      * @Given /^I am on the actor terms of use page$/
      */
     public function iAmOnTheActorTermsOfUsePage()
@@ -2236,20 +2226,11 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request to go back to the create account page$/
      * @When /^I request to go back to the terms of use page$/
      */
     public function iRequestToGoBackToTheSpecifiedPage()
     {
         $this->ui->clickLink('Back');
-    }
-
-    /**
-     * @Then /^I am taken back to the create account page$/
-     */
-    public function iAmTakenBackToTheCreateAccountPage()
-    {
-        $this->ui->assertPageAddress('/create-account');
     }
 
     /**

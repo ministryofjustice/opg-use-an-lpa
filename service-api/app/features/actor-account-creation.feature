@@ -24,6 +24,14 @@ Feature: Account creation
     Then I am told my unique instructions to activate my account have expired
 
   @integration @acceptance
+  Scenario: The user account creates an account which already exists but still not activated
+    Given I am not a user of the lpa application
+    And I have asked to create a new account
+    When I create an account using duplicate details not yet activated
+    Then I send the activation email again
+
+
+  @integration @acceptance
   Scenario: The user account creates an account which already exists
     Given I am not a user of the lpa application
     And I have asked to create a new account

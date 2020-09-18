@@ -55,7 +55,7 @@
                                     </strong>
                                 </div>
 
-                                {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="%link%" class="govuk-link">terms of use</a>' | trans({ '%link%': path('terms-of-use') }) }) }}
+                                {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="%link%" target="_blank" class="govuk-link" rel="noreferrer noopener">terms of use (opens in new tab)</a>' | trans({ '%link%': path('terms-of-use') }) }) }}
 
                                 <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Create account{% endtrans %}</button>
 

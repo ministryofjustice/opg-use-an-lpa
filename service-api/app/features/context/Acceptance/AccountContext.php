@@ -443,12 +443,71 @@ class AccountContext implements Context
     }
 
     /**
+     * @When I create an account using duplicate details not yet activated
+     */
+    public function iCreateAnAccountUsingDuplicateDetailsNotActivated()
+    {
+        $this->userAccountCreateData = [
+            'Id'                  => '1234567890abcdef',
+            'ActivationToken'     => 'activate1234567890',
+            'ExpiresTTL'          => '232424232244',
+            'Email'               => 'test@test.com',
+            'Password'            => 'Pa33w0rd'
+        ];
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'ActivationToken'  => $this->userAccountCreateData['ActivationToken'] ,
+                    'Email' => $this->userAccountCreateData['Email'],
+                    'Password' => $this->userAccountCreateData['Password'],
+                    'Id' => $this->userAccountCreateData['Id'],
+                    'ExpiresTTL' => $this->userAccountCreateData['ExpiresTTL'],
+                ])
+            ]
+        ]));
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(new Result([
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'ActivationToken'  => $this->userAccountCreateData['ActivationToken'] ,
+                    'ExpiresTTL' => $this->userAccountCreateData['ExpiresTTL'],
+                    'Email' => $this->userAccountCreateData['Email'],
+                    'Password' => $this->userAccountCreateData['Password'],
+                    'Id' => $this->userAccountCreateData['Id'],
+                ])
+            ]
+        ]));
+
+        // ActorUsers::resetActivationDetails
+        $this->awsFixtures->append(new Result([
+            'Item' =>
+                $this->marshalAwsResultData([
+                    'ActivationToken'  => $this->userAccountCreateData['ActivationToken'] ,
+                    'Email' => $this->userAccountCreateData['Email'],
+                    'Password' => $this->userAccountCreateData['Password'],
+                    'Id' => $this->userAccountCreateData['Id'],
+                ])
+        ]));
+
+
+        $this->apiPost('/v1/user', [
+            'email' => $this->userAccountCreateData['Email'],
+            'password' => $this->userAccountCreateData['Password']
+        ], []);
+        assertEquals($this->userAccountCreateData['Email'], $this->getResponseAsJson()['Email']);
+    }
+
+
+    /**
      * @When I create an account using duplicate details
      */
     public function iCreateAnAccountUsingDuplicateDetails()
     {
         $this->userAccountCreateData = [
-            'Id'                  => 1,
+            'Id'                  => '1234567890abcdef',
             'ActivationToken'     => 'activate1234567890',
             'Email'               => 'test@test.com',
             'Password'            => 'Pa33w0rd'
@@ -458,22 +517,18 @@ class AccountContext implements Context
         $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
-                    'AccountActivationToken'  => $this->userAccountCreateData['ActivationToken'] ,
                     'Email' => $this->userAccountCreateData['Email'],
-                    'Password' => $this->userAccountCreateData['Password']
                 ])
             ]
         ]));
 
-        // ActorUsers::add
-        $this->awsFixtures->append(new Result());
-
-        // ActorUsers::get
+        // ActorUsers::getByEmail
         $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Email' => $this->userAccountCreateData['Email'],
-                'ActivationToken' => $this->userAccountCreateData['ActivationToken']
-            ])
+            'Items' => [
+                $this->marshalAwsResultData([
+                    'Email' => $this->userAccountCreateData['Email'],
+                ])
+            ]
         ]));
 
         $this->apiPost('/v1/user', [
@@ -486,7 +541,6 @@ class AccountContext implements Context
         );
 
     }
-
     /**
      * @Given I have asked to create a new account
      */
@@ -501,6 +555,7 @@ class AccountContext implements Context
 
     /**
      * @Then I am informed about an existing account
+     * @Then I send the activation email again
      */
     public function iAmInformedAboutAnExistingAccount()
     {
