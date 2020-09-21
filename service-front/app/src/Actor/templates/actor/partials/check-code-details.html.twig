@@ -40,7 +40,9 @@
                 {% endif %}
             </div>
 
-            {% if (check_if_code_has_expired(code.Expires) and check_if_code_is_cancelled(code)) %}
+            {# Checking for cancelled status first.
+            This would reduce logic to check and display cancelled status for codes that is cancelled and expired #}
+            {% if check_if_code_is_cancelled(code)  %}
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">{% trans %}Status{% endtrans %}</dt>
                     <dd class="govuk-summary-list__value">
@@ -52,13 +54,6 @@
                     <dt class="govuk-summary-list__key">{% trans %}Status{% endtrans %}</dt>
                     <dd class="govuk-summary-list__value">
                         <span class="moj-badge moj-badge--red">{% trans %}EXPIRED{% endtrans %}</span>
-                    </dd>
-                </div>
-            {% elseif check_if_code_is_cancelled(code) %}
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">{% trans %}Status{% endtrans %}</dt>
-                    <dd class="govuk-summary-list__value">
-                        <span class="moj-badge moj-badge--red">{% trans %}CANCELLED{% endtrans %}</span>
                     </dd>
                 </div>
             {% endif %}
