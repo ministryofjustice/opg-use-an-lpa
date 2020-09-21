@@ -6,10 +6,11 @@ namespace Common\View\Twig;
 
 use Common\Entity\Address;
 use Common\Entity\CaseActor;
+use Common\Entity\Lpa;
 use DateTime;
+use DateTimeInterface;
 use Exception;
 use IntlDateFormatter;
-use Common\Entity\Lpa;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -99,7 +100,7 @@ class LpaExtension extends AbstractExtension
                 $date = DateTime::createFromFormat('Y-m-d', $date);
             }
 
-            if ($date instanceof DateTime) {
+            if ($date instanceof DateTimeInterface) {
                 $formatter = $this->getDateFormatter(\Locale::getDefault(), null);
                 $formatter->setTimeZone($date->getTimezone());
                 return $formatter->format($date);
@@ -121,7 +122,7 @@ class LpaExtension extends AbstractExtension
         if (!is_null($date)) {
             $date = DateTime::createFromFormat('Y-m-d\TH:i:sP', $date);
 
-            if ($date instanceof DateTime) {
+            if ($date instanceof DateTimeInterface) {
                 $formatter = $this->getDateFormatter(\Locale::getDefault(), null);
                 $formatter->setTimeZone($date->getTimezone());
                 return $formatter->format($date);
