@@ -663,7 +663,7 @@ class AccountContext extends BaseIntegrationContext
         $this->userActivationToken = $us->add(
             [
                 'email' => $this->userAccountEmail,
-                'password' => $this->userAccountPassword,
+                'password' => new HiddenString($this->userAccountPassword),
             ]
         )['ActivationToken'];
     }

@@ -9,6 +9,7 @@ use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use Fig\Http\Message\StatusCodeInterface;
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class AccountContext
@@ -434,9 +435,10 @@ class AccountContext implements Context
             ])
         ]));
 
+
         $this->apiPost('/v1/user', [
             'email' => $this->userAccountCreateData['Email'],
-            'password' => $this->userAccountCreateData['Password']
+            'password' => new HiddenString($this->userAccountCreateData['Password'])
         ], []);
 
         assertEquals($this->userAccountCreateData['Email'], $this->getResponseAsJson()['Email']);
