@@ -1,81 +1,71 @@
-import countdownTimer from "./countdownTimer";
-
 export default class SessionDialog {
-    constructor(element, countdownMinutes)
-    {
-        this.requestHeaders = {"Content-type": "application/json"};
+    constructor(element) {
+        this.requestHeaders = { "Content-type": "application/json" };
 
         this.element = element;
-        this.dialogOverlay = document.getElementById("dialog-overlay");
+        this.dialogOverlay = document.querySelector("#dialog-overlay");
         this.dialogFocus = document.querySelector(".dialog-focus");
         this._setupEventHandlers();
         this._trapFocus();
-
-        this.on('tick', timeRemaining => {
-            if (timeRemaining >= 200 && timeRemaining <= 300) {
-                this._isHidden(false);
-            }
-        })
+        this._runInterval();
     }
 
-    _runInterval()
-    {
-        const _this = this;
+    async checkSessionExpires() {
+        const sessionData = await this._getSessionTime();
 
-        setInterval(function () {
-            _this._requestSessionTimeRemaining()
-            .then(sessionData => {
-                if (sessionData.session_warning) {
-                    _this.emit('tick', sessionData.time_remaining);
-                }
-            });
+        if (sessionData.session_warning) {
+            if (sessionData.time_remaining >= 200 && sessionData.time_remaining <= 300) {
+                this._isHidden(false);
+                return
+            }
+        } else {
+            return;
+        }
+    }
+
+    async _runInterval() {
+        /* istanbul ignore next */
+        setInterval(async function () {
+            return checkSessionExpires();
         }, 60000);
     }
 
-    _setupEventHandlers()
-    {
-        const _this = this;
+    _hideDialog() {
+        this._isHidden(true);
+        this._getNewSession();
+    }
 
-        const showTimeoutElements = document.querySelectorAll('.jsShowTimeout');
-        for (let i = 0; i < showTimeoutElements.length; i++) {
-            showTimeoutElements[i].addEventListener("click", function () {
-                _this._isHidden(false);
-                _this.dialogFocus.focus();
-            });
-        }
+    _setupEventHandlers() {
+        const _this = this;
 
         const hideTimeoutElements = document.querySelectorAll('.jsHideTimeout');
         for (let i = 0; i < hideTimeoutElements.length; i++) {
             hideTimeoutElements[i].addEventListener("click", function () {
-                _this._isHidden(true);
-                _this._refreshSession();
+                _this._hideDialog();
             });
         }
     }
 
-    async _getSessionTime()
-    {
-        await fetch("/session-check", this.requestHeaders)
-        .then(response => {
-            return response.json()
-        });
+    async _getSessionTime() {
+        const response = await fetch("/session-check", this.requestHeaders)
+        return response.json()
     }
 
-    async _getNewSession()
-    {
+    async _getNewSession() {
         await fetch("/session-refresh", this.requestHeaders);
     }
 
-    _isHidden(isVisible)
-    {
+    _isHidden(isVisible) {
         this.element.classList.toggle("hide", isVisible);
         this.element.classList.toggle("dialog", !isVisible);
         this.dialogOverlay.classList.toggle("hide", isVisible);
         this.dialogOverlay.classList.toggle("dialog-overlay", !isVisible);
+        if (!isVisible) {
+            this.dialogFocus.focus();
+        }
     }
 
-    _trapFocus()
-    {
+    _trapFocus() {
         const focusableEls = this.element.querySelectorAll('a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])');
         const firstFocusableEl = focusableEls[0];
         const lastFocusableEl = focusableEls[focusableEls.length - 1];
@@ -95,7 +85,7 @@ export default class SessionDialog {
 
             if (isTabPressed) {
                 /* istanbul ignore next */
-                if ( e.shiftKey ) { /* shift + tab */
+                if (e.shiftKey) { /* shift + tab */
                     if (document.activeElement === firstFocusableEl) {
                         lastFocusableEl.focus();
                         e.preventDefault();
@@ -109,7 +99,7 @@ export default class SessionDialog {
             }
 
             if (isEscPressed) {
-                _this._isHidden(true);
+                _this._hideDialog();
             }
         });
     }
