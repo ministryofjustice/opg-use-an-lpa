@@ -1,0 +1,81 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block html_title %}{% trans %}Contact us{% endtrans %} - {{ block('service_name') }} - {{ parent() }}{% endblock %}
+
+{% block service_name %}
+{% if application == "actor" %}
+    {% trans %}Use a lasting power of attorney{% endtrans %}
+{% elseif application == "viewer" %}
+    {% trans %}View a lasting power of attorney{% endtrans %}
+{% endif %}
+{% endblock %}
+
+{#{% set usageCookies = form.get('usageCookies') %}#}
+{#{% set referer = form.get('referer') %}#}
+
+{% block content %}
+    <div class="govuk-width-container">
+        <a class="govuk-link govuk-back-link" href="{{ form.get('referer').getValue() }}">{% trans %}Back{% endtrans %}</a>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <h1 class="govuk-heading-xl">{% trans %}Contact the Office of the Public Guardian{% endtrans %}</h1>
+            <p class="govuk-body">{% trans %}Cookies are files saved on your phone, tablet or computer when you visit a website.{% endtrans %}</p>
+
+            <p class="govuk-body">
+            {% if application == "actor" %}
+                {% trans %}We use cookies to store information about how you use the Use a lasting power of attorney service, such as the pages you visit.{% endtrans %}
+            {% elseif application == "viewer" %}
+                {% trans %}We use cookies to store information about how you use the View a lasting power of attorney service, such as the pages you visit.{% endtrans %}
+            {% endif %}
+            </p>
+
+            {{ govuk_form_open(form) }}
+            {{ govuk_form_element(form.get('__csrf')) }}
+
+            <h2 class="govuk-heading-l">{% trans %}Cookie settings{% endtrans %}</h2>
+            <p class="govuk-body">{% trans %}We use two types of cookie. One type is strictly necessary and the other type of cookie is optional.{% endtrans %}</p>
+
+            <h3 class="govuk-heading-m">{% trans %}Cookies that measure website use{% endtrans %}</h3>
+            <p class="govuk-body">{% trans %}OPG and Government Digital Services use Google Analytics to measure how you use the service so we can improve it based on user needs. Google Analytics sets cookies that store anonymised information about:{% endtrans %}</p>
+
+            <ul class="govuk-list govuk-list--bullet">
+                <li>{% trans %}what pages you visit and how long you spend on each{% endtrans %}</li>
+                <li>{% trans %}what you click on while you're visiting the site{% endtrans %}</li>
+            </ul>
+
+            <p class="govuk-body">
+                {% trans %}We do not allow Google to use or share the data about how you use this site.{% endtrans %}
+            </p>
+
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="changed-name-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <span class="govuk-visually-hidden question-text">{% trans %}Allow use of non-essential Cookies?{% endtrans %}</span>
+                    </legend>
+
+                    {{ govuk_form_element(form.get('usageCookies'), {'value_options':
+                        [
+                            {
+                                'label': 'Use cookies that measure my website use' | trans,
+                                'value': 'yes'
+                            },
+                            {
+                                'label': 'Do not use cookies that measure my website use' | trans,
+                                'value': 'no'
+                            }
+                        ]}
+                    )}}
+                  {{ govuk_form_element(form.get('referer')) }}
+
+                </fieldset>
+            </div>
+            <h3 class="govuk-heading-m">{% trans %}Strictly necessary cookies{% endtrans %}</h3>
+            <p class="govuk-body">{% trans %}These essential cookies allow you to log in to the service. They always need to be on.{% endtrans %}</p>
+
+            <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Save changes{% endtrans %}</button>
+            {{ govuk_form_close() }}
+        </main>
+
+    </div>
+{% endblock %}
