@@ -14,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Class ViewerAccessibilityStatementHandler
  * @package Viewer\Handler
- * @codCoverageIgnore
+ * @codeCoverageIgnore
  */
 class ViewerAccessibilityStatementHandler extends AbstractHandler
 {
