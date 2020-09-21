@@ -77,7 +77,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $return = $us->add(['email' => $email, 'password' => $password]);
+        $return = $us->add(['email' => $email, 'password' => new HiddenString($password)]);
 
         $this->assertEquals(['Id' => $id, 'Email' => $email], $return);
     }
