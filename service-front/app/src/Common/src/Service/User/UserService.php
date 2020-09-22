@@ -66,7 +66,7 @@ class UserService implements UserRepositoryInterface
     {
         $data = $this->apiClient->httpPost('/v1/user', [
             'email'    => $email,
-            'password' => $password->getString(),
+            'password' => $password->getString()
         ]);
 
         $this->logger->info('Account with Id {id} created using email hash {email}', [
