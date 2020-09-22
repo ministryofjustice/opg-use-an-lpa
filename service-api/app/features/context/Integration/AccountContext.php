@@ -725,7 +725,7 @@ class AccountContext extends BaseIntegrationContext
         $result = $us->add(
             [
                 'email' => $userAccountCreateData['Email'],
-                'password' => $userAccountCreateData['Password'],
+                'password' => new HiddenString($userAccountCreateData['Password']),
             ]
         );
         assertEquals($result['Email'], $userAccountCreateData['Email']);
