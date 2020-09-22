@@ -667,23 +667,21 @@ class UserServiceTest extends TestCase
     public function will_complete_change_password_given_a_valid_token_and_password()
     {
         $token = 'RESET_TOKEN_123';
-        $password1 = 'newpassword';
+        $password1 = self::PASS_HASH;
         $password2 = 'newpassword';
         $id = '12345-1234-1234-1234-12345';
-
-        $userData = [
-            'Id'        => $id,
-            'Email'     => 'a@b.com',
-            'LastLogin' => null,
-            'Password'  => self::PASS_HASH
-        ];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy
             ->get($id)
-            ->willReturn($userData)
+            ->willReturn([
+                    'Id'        => $id,
+                    'Email'     => 'a@b.com',
+                    'LastLogin' => null,
+                    'Password'  => self::PASS_HASH
+                ])
             ->shouldBeCalled();
 
         $repoProphecy
@@ -692,6 +690,6 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $us->completeChangePassword($token, new HiddenString($password1), new HiddenString($password2));
+        $us->completeChangePassword($id, new HiddenString($password1), new HiddenString($password2));
     }
 }
