@@ -152,7 +152,7 @@ class ActorUsersTest extends TestCase
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $actorRepo->resetActivationDetails($id, $password, $activationTtl);
+        $result = $actorRepo->resetActivationDetails($id, new HiddenString($password), $activationTtl);
 
         $this->assertEquals($id, $result['Id']);
         $this->assertEquals($email, $result['Email']);
