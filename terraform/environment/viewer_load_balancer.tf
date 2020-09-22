@@ -153,7 +153,7 @@ resource "aws_lb_listener_rule" "viewer_maintenance" {
 }
 
 
-resource "aws_lb_listener_rule" "viewer_maintenance" {
+resource "aws_lb_listener_rule" "viewer_maintenance_welsh" {
   listener_arn = aws_lb_listener.viewer_loadbalancer.arn
   priority     = 100 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
