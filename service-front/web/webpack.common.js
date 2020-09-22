@@ -62,6 +62,7 @@ module.exports = {
         patterns: [
           { from: 'src/robots.txt', to: 'robots.txt' },
           { from: 'node_modules/govuk-frontend/govuk/assets', to: 'assets' },
+          { from: 'src/images', to: 'assets/images' },
           {
             from: 'node_modules/@ministryofjustice/frontend/moj/assets',
             to: 'assets',
