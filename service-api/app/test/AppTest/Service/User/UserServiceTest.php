@@ -660,5 +660,39 @@ class UserServiceTest extends TestCase
 
         $response = $us->completeChangeEmail($token);
         $this->assertNull($response);
+
+    }
+
+    /** @test */
+    public function will_complete_change_password_given_a_valid_token_and_password()
+    {
+        $id = '12345-1234-1234-1234-12345';
+
+        $userData = [
+            'Id'        => $id,
+            'Email'     => 'a@b.com',
+            'LastLogin' => null,
+            'Password'  => self::PASS_HASH
+        ];
+
+        $token = 'RESET_TOKEN_123';
+        $password1 = 'newpassword';
+        $password2 = 'newpassword';
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $repoProphecy
+            ->get($id)
+            ->willReturn($userData)
+            ->shouldBeCalled();
+
+        $repoProphecy
+            ->resetPassword($id, $password1)
+            ->shouldBeCalled();
+
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+
+        $us->completeChangePassword($token, new HiddenString($password1), new HiddenString($password2));
     }
 }

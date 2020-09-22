@@ -391,7 +391,7 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function resetActivationDetails(string $id, string $password, int $activationTtl): array
+    public function resetActivationDetails(string $id, HiddenString $password, int $activationTtl): array
     {
         //  Update the item by setting the password and restarting the Expiry TTL
          $result = $this->client->updateItem([
@@ -404,7 +404,7 @@ class ActorUsers implements ActorUsersInterface
             'UpdateExpression' => 'SET Password=:p, ExpiresTTL=:et',
             'ExpressionAttributeValues' => [
                 ':p' => [
-                    'S' => password_hash($password, PASSWORD_DEFAULT)
+                    'S' => password_hash($password->getString(), PASSWORD_DEFAULT)
                 ],
                 ':et' => [
                     'N' => (string) $activationTtl

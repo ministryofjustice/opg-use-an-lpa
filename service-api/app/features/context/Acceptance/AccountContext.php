@@ -435,10 +435,9 @@ class AccountContext implements Context
             ])
         ]));
 
-
         $this->apiPost('/v1/user', [
             'email' => $this->userAccountCreateData['Email'],
-            'password' => new HiddenString($this->userAccountCreateData['Password'])
+            'password' => $this->userAccountCreateData['Password']
         ], []);
 
         assertEquals($this->userAccountCreateData['Email'], $this->getResponseAsJson()['Email']);

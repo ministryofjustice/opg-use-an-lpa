@@ -153,9 +153,9 @@ interface ActorUsersInterface
      *
      * @param string $id
      * @param string $email
-     * @param string $password
+     * @param HiddenString $password
      * @param int $activationTtl
      * @return mixed
      */
-    public function resetActivationDetails(string $id, string $password, int $activationTtl): array;
+    public function resetActivationDetails(string $id, HiddenString $password, int $activationTtl): array;
 }
