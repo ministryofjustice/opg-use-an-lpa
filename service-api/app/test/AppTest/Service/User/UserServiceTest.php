@@ -664,11 +664,11 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_complete_change_password_given_a_valid_token_and_password()
+    public function will_throw_exception_when_complete_change_password_not_given_a_valid_token_and_password()
     {
         $token = 'RESET_TOKEN_123';
-        $password1 = self::PASS_HASH;
-        $password2 = 'newpassword';
+        $password = 'incorrect';
+        $newPassword = 'newpassword';
         $id = '12345-1234-1234-1234-12345';
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -680,16 +680,47 @@ class UserServiceTest extends TestCase
                     'Id'        => $id,
                     'Email'     => 'a@b.com',
                     'LastLogin' => null,
-                    'Password'  => self::PASS_HASH
+                    'Password'  => 'password'
                 ])
             ->shouldBeCalled();
 
         $repoProphecy
-            ->resetPassword($id, $password2)
+            ->resetPassword($id, $newPassword)
             ->shouldBeCalled();
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $us->completeChangePassword($id, new HiddenString($password1), new HiddenString($password2));
+        $this->expectException(ForbiddenException::class);
+        $us->completeChangePassword($id, new HiddenString($password), new HiddenString($newPassword));
+    }
+
+    /** @test */
+    public function will_complete_change_password_given_a_valid_token_and_password()
+    {
+        $token = 'RESET_TOKEN_123';
+        $password = self::PASS_HASH;
+        $newPassword = 'newpassword';
+        $id = '12345-1234-1234-1234-12345';
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $repoProphecy
+            ->get($id)
+            ->willReturn([
+                'Id'        => $id,
+                'Email'     => 'a@b.com',
+                'LastLogin' => null,
+                'Password'  => self::PASS_HASH
+            ])
+            ->shouldBeCalled();
+
+        $repoProphecy
+            ->resetPassword($id, $newPassword)
+            ->shouldBeCalled();
+
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+
+        $us->completeChangePassword($id, new HiddenString($password), new HiddenString($newPassword));
     }
 }
