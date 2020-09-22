@@ -35,3 +35,15 @@ Feature: The user is able to check the access codes they have created
     Examples:
       | ActiveSection       | InactiveSection    |
       | Active codes        | Inactive codes     |
+
+  @ui
+  Scenario Outline: As a user I can see the relevant status when an access code has been cancelled and is later expired
+    Given I am on the dashboard page
+    Given I have created an access code
+    And I cancel the viewer code
+    When I click to check the viewer code has been cancelled which is now expired
+    Then I should be shown the details of the viewer code with status <status>
+    Examples:
+      | status    |
+      | CANCELLED   |
+    
