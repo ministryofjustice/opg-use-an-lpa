@@ -77,7 +77,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $return = $us->add(['email' => $email, 'password' => $password]);
+        $return = $us->add(['email' => $email, 'password' => new HiddenString($password)]);
 
         $this->assertEquals(['Id' => $id, 'Email' => $email], $return);
     }
@@ -90,7 +90,7 @@ class UserServiceTest extends TestCase
         $password = 'password1';
         $activationToken = 'activationToken1';
         $ttl = (new DateTime('+24 hours'))->getTimestamp();
-        $userData = ['email' => $email, 'password' => $password, 'id' => $id];
+        $userData = ['email' => $email, 'password' => new HiddenString($password), 'id' => $id];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
