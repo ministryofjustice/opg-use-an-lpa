@@ -3535,4 +3535,53 @@ class AccountContext implements Context
         $this->ui->assertElementOnPage(".moj-banner__message");
     }
 
+    /**
+     * @When /^I cancel the viewer code/
+     */
+    public function iCancelTheViewerCode()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ])
+                )
+            );
+
+        // API call to get access codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => [
+                            'SiriusUid' => $this->lpa->uId,
+                            'Added' => '2020-09-16T22:57:12.398570Z',
+                            'Organisation' => $this->organisation,
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'ViewerCode' => $this->accessCode,
+                            'Cancelled' => '2020-09-16T22:58:43+00:00',
+                            'Expires' => '2020-09-16T23:59:59+01:00',
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId
+                        ]
+                    ])
+                ));
+    }
+
+    /**
+     * @When /^I click to check the viewer code has been cancelled which is now expired/
+     */
+    public function iClickToCheckTheViewerCodeHasBeenCancelledWhichIsNowExpired()
+    {
+        $this->ui->clickLink('Check access codes');
+    }
 }
