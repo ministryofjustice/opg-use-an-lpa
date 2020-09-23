@@ -1,11 +1,7 @@
 export default class SessionDialog {
-    constructor(element) {
-        this.requestHeaders = { "Content-type": "application/json" };
-
-export default class SessionDialog {
-    constructor(element, countdownMinutes)
+    constructor(element)
     {
-        this.showDialogMinutesBeforeLogout = 5;
+        this.requestHeaders = { "Content-type": "application/json" };
         this.element = element;
         this.dialogOverlay = document.querySelector("#dialog-overlay");
         this.dialogFocus = document.querySelector(".dialog-focus");
@@ -14,32 +10,34 @@ export default class SessionDialog {
         this._runInterval();
     }
 
-    async checkSessionExpires() {
+    async checkSessionExpires()
+    {
         const sessionData = await this._getSessionTime();
 
-        if (sessionData.session_warning) {
-            if (sessionData.time_remaining >= 200 && sessionData.time_remaining <= 300) {
-                this._isHidden(false);
-                return
-            }
+        if (sessionData.session_warning && sessionData.time_remaining > 1 && sessionData.time_remaining <= 300) {
+            this._isHidden(false);
+            return;
         } else {
             return;
         }
     }
 
-    async _runInterval() {
+    async _runInterval()
+    {
         /* istanbul ignore next */
         setInterval(async function () {
             return checkSessionExpires();
         }, 60000);
     }
 
-    _hideDialog() {
+    _hideDialog()
+    {
         this._isHidden(true);
         this._getNewSession();
     }
 
-    _setupEventHandlers() {
+    _setupEventHandlers()
+    {
         const _this = this;
 
         const hideTimeoutElements = document.querySelectorAll('.jsHideTimeout');
@@ -50,16 +48,19 @@ export default class SessionDialog {
         }
     }
 
-    async _getSessionTime() {
+    async _getSessionTime()
+    {
         const response = await fetch("/session-check", this.requestHeaders)
         return response.json()
     }
 
-    async _getNewSession() {
+    async _getNewSession()
+    {
         await fetch("/session-refresh", this.requestHeaders);
     }
 
-    _isHidden(isVisible) {
+    _isHidden(isVisible)
+    {
         this.element.classList.toggle("hide", isVisible);
         this.element.classList.toggle("dialog", !isVisible);
         this.dialogOverlay.classList.toggle("hide", isVisible);
@@ -69,7 +70,8 @@ export default class SessionDialog {
         }
     }
 
-    _trapFocus() {
+    _trapFocus()
+    {
         const focusableEls = this.element.querySelectorAll('a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])');
         const firstFocusableEl = focusableEls[0];
         const lastFocusableEl = focusableEls[focusableEls.length - 1];
