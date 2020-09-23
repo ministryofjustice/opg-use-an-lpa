@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BehatTest\Context\UI;
 
 use Alphagov\Notifications\Client;
-use App\Exception\ApiException;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
@@ -623,7 +622,7 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
         $this->ui->assertPageContainsText('LPA reference number: 700000000054');
         $this->ui->assertPageContainsText('Activation key: XYUPHWQRECHV');
-        $this->ui->assertPageContainsText('Date of birth: 1975-10-05');
+        $this->ui->assertPageContainsText('Date of birth: 5 October 1975');
     }
 
     /**
@@ -3584,5 +3583,13 @@ class AccountContext implements Context
     public function iClickToCheckTheViewerCodeHasBeenCancelledWhichIsNowExpired()
     {
         $this->ui->clickLink('Check access codes');
+    }
+
+    /**
+     * @Then /^I can see the accessibility statement for the Use service$/
+     */
+    public function iCanSeeTheAccessibilityStatementForTheUseService()
+    {
+        $this->ui->assertPageContainsText('Accessibility statement for Use a lasting power of attorney');
     }
 }
