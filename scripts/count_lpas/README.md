@@ -44,3 +44,14 @@ Viewer codes viewed in name-of-env environment between 2020-07-17 and 2020-07-31
 Actor accounts created in name-of-env environment between 2020-07-17 and 2020-08-11:
 2029
 ```
+
+
+## Notes
+
+The `Actor` accounts count can fail due to large number of data points - you will get an error like:
+
+```text
+An error occurred (InvalidParameterCombination) when calling the GetMetricStatistics operation: You have requested up to 1,608 datapoints, which exceeds the limit of 1,440. You may reduce the datapoints requested by increasing Period, or decreasing the time range.
+```
+
+Reduce the date range and run again
