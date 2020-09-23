@@ -383,4 +383,21 @@ class CommonContext implements Context
     {
         $this->ui->clickLink('Accessibility statement');
     }
+
+    /**
+     * @When /^I request to see the contact us details$/
+     */
+    public function iRequestToSeeTheContactUsDetails()
+    {
+        $this->ui->clickLink('Contact us');
+    }
+
+    /**
+     * @Then /^I can see the contact us page$/
+     */
+    public function iCanSeeTheContactUsPage()
+    {
+        $this->ui->assertPageAddress('/contact-us');
+        $this->ui->assertPageContainsText('Contact the Office of the Public Guardian');
+    }
 }

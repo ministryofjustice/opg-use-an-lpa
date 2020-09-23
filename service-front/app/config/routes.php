@@ -48,6 +48,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
     $app->get('/accessibility-statement', \Viewer\Handler\ViewerAccessibilityStatementHandler::class, 'accessibility-statement');
+    $app->get('/contact-us', Common\Handler\ContactUsPageHandler::class, 'contact-us');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
@@ -60,6 +61,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/terms-of-use', [Actor\Handler\ActorTermsOfUseHandler::class], 'terms-of-use');
     $app->get('/privacy-notice', [Actor\Handler\ActorPrivacyNoticeHandler::class], 'privacy-notice');
     $app->get('/accessibility-statement', \Actor\Handler\ActorAccessibilityStatementHandler::class, 'accessibility-statement');
+    $app->get('/contact-us', Common\Handler\ContactUsPageHandler::class, 'contact-us');
 
     // User creation
     $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');
