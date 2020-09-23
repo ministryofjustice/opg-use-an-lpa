@@ -5,8 +5,7 @@
 {% block content %}
     <div class="govuk-width-container">
         {{ include('@partials/new-service.html.twig') }}
-
-        <a href="{{ referer }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
+        {{ include('@partials/welsh-switch.html.twig') }}
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
@@ -26,13 +25,17 @@
                         You should be able to use this service instead of showing someone the original paper <abbr title="lasting power of attorney">LPA</abbr>.
                         {% endtrans %}
                     </p>
-                    <p class="govuk-body govuk-!-font-weight-bold"> !
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
                         {% trans %}
                         You cannot use a download or print out of the
                         <abbr title="lasting power of attorney">LPA</abbr> summary in place of the original paper
                         <abbr title="lasting power of attorney">LPA</abbr> or instead of giving someone an access code
                         {% endtrans %}
-                    </p>
+                        </strong>
+                    </div>
                     <p class="govuk-body">
                         {% trans %}By using this service you agree to these terms of use and the
                         <a class="govuk-link" href="https://www.gov.uk/help/terms-conditions">GOV.UK terms and conditions</a>.
@@ -129,7 +132,7 @@
                     </ul>
                     <h2 class="govuk-heading-m">{% trans %}Keeping your information safe{% endtrans %}</h2>
                     <p class="govuk-body">
-                        {% trans with {'%privacy-notice%': path('actor-privacy-notice'), '%cookie%': path('actor-cookies')} %}
+                        {% trans with {'%privacy-notice%': path('privacy-notice'), '%cookie%': path('cookies')} %}
                         Any information you submit will be stored securely and used inline with our <a class="govuk-link" href="%privacy-notice%">privacy notice</a>
                         and <a class="govuk-link" href="%cookie%">cookie policy</a>.
                         {% endtrans %}

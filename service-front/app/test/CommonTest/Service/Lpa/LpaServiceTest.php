@@ -157,15 +157,39 @@ class LpaServiceTest extends TestCase
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
 
+
     /** @test */
-    public function it_finds_an_expired_lpa_by_passcode_and_surname()
+    public function it_finds_a_cancelled_share_code_by_passcode_and_surname()
     {
 
         $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
         ])
-            ->willThrow(new ApiException('',StatusCodeInterface::STATUS_GONE));
+            ->willThrow(new ApiException('Share code cancelled', StatusCodeInterface::STATUS_GONE));
+
+        $service = new LpaService(
+            $this->apiClientProphecy->reveal(),
+            $this->lpaFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
+        $this->expectExceptionMessage('Share code cancelled');
+
+
+        $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', false);
+    }
+    /** @test */
+    public function it_finds_an_expired_share_code_by_passcode_and_surname()
+    {
+
+        $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
+            'code' => 'P9H8A6MLD3AM',
+            'name' => 'Sanderson',
+        ])
+            ->willThrow(new ApiException('Share code expired', StatusCodeInterface::STATUS_GONE));
 
         $service = new LpaService(
             $this->apiClientProphecy->reveal(),
@@ -176,6 +200,7 @@ class LpaServiceTest extends TestCase
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
 
+
         $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', false);
     }
 
@@ -185,7 +210,7 @@ class LpaServiceTest extends TestCase
         $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
-        ])->willThrow(new ApiException('',StatusCodeInterface::STATUS_NOT_FOUND));
+        ])->willThrow(new ApiException('', StatusCodeInterface::STATUS_NOT_FOUND));
 
         $service = new LpaService(
             $this->apiClientProphecy->reveal(),
@@ -307,6 +332,63 @@ class LpaServiceTest extends TestCase
         $this->assertEquals(123456789012, ($lpa['lpa'])->getUId());
         $this->assertEquals($donor, ($lpa['lpa'])->getDonor());
         $this->assertEquals($dob, ($lpa['lpa'])->getDonor()->getDob()->format('Y-m-d'));
+    }
+
+
+    /** @test */
+    public function it_finds_a_cancelled_lpa_by_passcode()
+    {
+        $token = '01234567-01234-01234-01234-012345678901';
+        $passcode = '123456789012';
+        $referenceNumber = '123456789012';
+        $dob = '1980-01-01';
+        $cancellationDate = (new \DateTime('-1 days'))->format('Y-m-d');
+
+        $params = [
+            'actor-code' => $passcode,
+            'uid'  => $referenceNumber,
+            'dob'  => $dob,
+        ];
+
+        $lpaData = [
+            'uId' => $referenceNumber,
+            'cancellationDate' => $cancellationDate,
+            'donor' => [
+                'dob' => $dob
+            ]
+        ];
+
+        $lpa = new Lpa();
+        $lpa->setUId($referenceNumber);
+
+        $donor = new CaseActor();
+        $donor->setDob(new \DateTime($dob));
+        $lpa->setDonor($donor);
+
+        $lpa->setCancellationDate(new \DateTime($cancellationDate));
+
+        $this->apiClientProphecy->httpPost('/v1/actor-codes/summary', $params)
+            ->willReturn([
+                'lpa' => $lpaData
+            ]);
+        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
+
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData)->willReturn($lpa);
+
+        $service = new LpaService(
+            $this->apiClientProphecy->reveal(),
+            $this->lpaFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $lpa = $service->getLpaByPasscode($token, $passcode, $referenceNumber, $dob);
+
+        $this->assertInstanceOf(ArrayObject::class, $lpa);
+        $this->assertInstanceOf(Lpa::class, $lpa['lpa']);
+        $this->assertEquals(123456789012, ($lpa['lpa'])->getUId());
+        $this->assertEquals($donor, ($lpa['lpa'])->getDonor());
+        $this->assertEquals($dob, ($lpa['lpa'])->getDonor()->getDob()->format('Y-m-d'));
+        $this->assertEquals($cancellationDate, ($lpa['lpa'])->getCancellationDate()->format('Y-m-d'));
     }
 
     /** @test */

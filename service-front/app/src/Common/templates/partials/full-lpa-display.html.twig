@@ -1,9 +1,12 @@
 <div class="govuk-width-container">
     {{ include('@partials/new-service.html.twig') }}
 
+    {% if not forDownload %}
+        {{ include('@partials/welsh-switch.html.twig') }}
+    {% endif %}
+
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
-
             <div class="govuk-grid-column-two-thirds">
                     <span class="govuk-caption-l">
                         {% if lpa.caseSubtype|lower == "pfa" %}
@@ -34,7 +37,7 @@
 
             <div class="govuk-grid-column-full">
 
-                {% if lpa.status == 'Cancelled' %}
+                {% if is_lpa_cancelled(lpa) %}
 
                     <div class="govuk-panel govuk-panel--failed">
 
@@ -45,7 +48,11 @@
                                 {% trans %}This health and welfare LPA has been cancelled{% endtrans %}
                             {% endif %}
                         </h1>
-
+                        {% if lpa.cancellationDate is not null %}
+                            <div class="govuk-panel__body govuk-!-font-size-24">
+                                <strong>{% trans with {'%cancellationDate%': lpa_date(lpa.cancellationDate)} %}Cancelled on %cancellationDate%{% endtrans %}</strong>
+                            </div>
+                        {% endif %}
                         <div class="govuk-panel__body govuk-!-font-size-24">
                             <strong>{% trans with {'%date%': lpa_date("today")} %}The information on this LPA summary was correct on %date%{% endtrans %}</strong>
                         </div>
@@ -99,7 +106,7 @@
         </div>
         <div class="govuk-grid-row">
 
-            <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-column-full">
                 <h2 class="govuk-heading-l">{% trans %}The donor{% endtrans %}</h2>
 
                 <dl class="govuk-summary-list govuk-summary-list--no-border">
@@ -127,7 +134,7 @@
         {{ include('@partials/section-break.html.twig') }}
 
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-column-full">
 
                 <h2 class="govuk-heading-l">{% trans %}The attorneys{% endtrans %}</h2>
 
@@ -173,7 +180,7 @@
 
         <div class="govuk-grid-row">
 
-            <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-column-full">
 
                 <h2 class="govuk-heading-l">{% trans %}LPA details{% endtrans %}</h2>
 
@@ -254,7 +261,7 @@
             <div class="govuk-grid-column-two-thirds">
 
             <p class="govuk-body">
-                <a class="govuk-link" href="{{ path('home') }}">{% trans %}I want to check another LPA{% endtrans %}</a>
+                <a class="govuk-link check-another" href="{{ path('home') }}">{% trans %}I want to check another LPA{% endtrans %}</a>
             </p>
 
             </div>

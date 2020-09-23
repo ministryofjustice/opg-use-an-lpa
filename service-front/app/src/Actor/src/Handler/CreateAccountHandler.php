@@ -22,6 +22,7 @@ use Mezzio\Template\TemplateRendererInterface;
 /**
  * Class CreateAccountHandler
  * @package Actor\Handler
+ * @codeCoverageIgnore
  */
 class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
 {
@@ -78,7 +79,7 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
                 $formData = $form->getData();
 
                 $emailAddress = $formData['email'];
-                $password = $formData['password'];
+                $password = $formData['show_hide_password'];
 
                 try {
                     $userData = $this->userService->create($emailAddress, $password);

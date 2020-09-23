@@ -18,4 +18,5 @@ _Any tips and tricks, blog posts or tools which helped you. Plus anything notabl
 * [ ] I have added relevant logging with appropriate levels to my code
 * [ ] I have updated documentation (Confluence/GitHub wiki/tech debt doc) where relevant
 * [ ] I have added tests to prove my work
+* [ ] I have added welsh translation tags and updated translation files
 * [ ] The product team have tested these changes

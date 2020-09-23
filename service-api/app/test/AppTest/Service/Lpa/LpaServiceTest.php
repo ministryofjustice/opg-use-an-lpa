@@ -313,6 +313,82 @@ class LpaServiceTest extends TestCase
         $this->assertCount(0, $result);
     }
 
+    private function init_valid_get_all_users_with_linked()
+    {
+        $t = new \StdClass();
+
+        $t->UserId = 'test-user-id';
+
+        $t->mapResults = [
+            [
+                'Id' => 'token-1',
+                'SiriusUid' => 'uid-1',
+                'ActorId' => 1,
+            ],
+            [
+                'Id' => 'token-2',
+                'SiriusUid' => 'uid-2',
+                'ActorId' => 2,
+            ]
+        ];
+
+        $t->lpaResults = [
+            'uid-1' => new Lpa([
+                'uId' => 'uid-1',
+                'donor' => [
+                    'linked' => [['id' => 1, 'uId' => 'person-1']]
+                ],
+            ], new DateTime),
+            'uid-2' => new Lpa([
+                'uId' => 'uid-2',
+                'donor' => [
+                    'linked' => [['id' => 2, 'uId' => 'person-2']]
+                ],
+            ], new DateTime),
+        ];
+
+        $this->userLpaActorMapInterfaceProphecy->getUsersLpas($t->UserId)->willReturn($t->mapResults);
+
+        $this->lpasInterfaceProphecy->lookup(array_column($t->mapResults, 'SiriusUid'))->willReturn($t->lpaResults);
+
+        return $t;
+    }
+
+    /** @test */
+    public function can_get_all_lpas_for_user_when_linked_donor()
+    {
+        $t = $this->init_valid_get_all_users_with_linked();
+
+        $this->userLpaActorMapInterfaceProphecy->getUsersLpas($t->UserId)->willReturn($t->mapResults);
+
+        $this->lpasInterfaceProphecy->lookup(array_column($t->mapResults, 'SiriusUid'))->willReturn($t->lpaResults);
+
+        $service = $this->getLpaService();
+
+        $result = $service->getAllForUser($t->UserId);
+
+        $this->assertIsArray($result);
+        $this->assertCount(2, $result);
+
+        $result = array_pop($result);
+
+        //---
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('user-lpa-actor-token', $result);
+        $this->assertArrayHasKey('date', $result);
+        $this->assertArrayHasKey('actor', $result);
+        $this->assertArrayHasKey('lpa', $result);
+
+        $lpa = array_pop($t->lpaResults);
+        $map = array_pop($t->mapResults);
+
+        $this->assertEquals($map['Id'], $result['user-lpa-actor-token']);
+        $this->assertEquals($lpa->getLookupTime()->getTimestamp(), strtotime($result['date']));
+        $this->assertEquals(['type' => 'donor', 'details' => $lpa->getData()['donor']], $result['actor']);   
+        $this->assertEquals($lpa->getData(), $result['lpa']);
+    }
+
     //-------------------------------------------------------------------------
     // Test getByViewerCode()
 
@@ -471,6 +547,31 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
+    public function cannot_get_lpa_by_viewer_code_with_cancelled()
+    {
+        $t = $this->init_valid_get_by_viewer_account();
+
+        $service = $this->getLpaService();
+
+        //---
+
+        $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn([
+            'ViewerCode' => $t->ViewerCode,
+            'SiriusUid' => $t->SiriusUid,
+            'Expires' => new DateTime('1 hour'),
+            'Cancelled' => true,
+            'Organisation' => $t->Organisation,
+        ]);
+
+        //---
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Share code cancelled");
+
+        $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, false);
+    }
+
+    /** @test */
     public function cannot_get_lpa_by_viewer_code_with_expired_expiry()
     {
         $t = $this->init_valid_get_by_viewer_account();
@@ -528,6 +629,90 @@ class LpaServiceTest extends TestCase
             ],
             $result
         );
+    }
+
+    /** @test */
+    public function can_find_actor_who_is_a_donor_by_linked_id()
+    {
+        $lpa = [
+            'donor' => [
+                'id'  => 1,
+                'uId' => '123456789013',
+                'linked' => [['id' => 1, 'uId' => '123456789013'], ['id' => 2, 'uId' => '123456789012']],
+            ]
+        ];
+
+        $service = $this->getLpaService();
+
+        $result = $service->lookupActiveActorInLpa($lpa, '2');
+
+        $this->assertEquals(
+            [
+                'type' => 'donor',
+                'details' => $lpa['donor'],
+            ],
+            $result
+        );
+    }
+
+    /** @test */
+    public function can_find_actor_who_is_a_donor_by_linked_uid()
+    {
+        $lpa = [
+            'donor' => [
+                'id'  => 1,
+                'uId' => '123456789013',
+                'linked' => [['id' => 1, 'uId' => '123456789013'], ['id' => 2, 'uId' => '123456789012']],
+            ]
+        ];
+
+        $service = $this->getLpaService();
+
+        $result = $service->lookupActiveActorInLpa($lpa, '123456789012');
+
+        $this->assertEquals(
+            [
+                'type' => 'donor',
+                'details' => $lpa['donor'],
+            ],
+            $result
+        );
+    }
+
+    /** @test */
+    public function can_not_find_actor_who_is_not_a_donor_by_linked_id()
+    {
+        $lpa = [
+            'donor' => [
+                'id'  => 1,
+                'uId' => '123456789013',
+                'linked' => [['id' => 1, 'uId' => '123456789013'], ['id' => 2, 'uId' => '123456789012']],
+            ]
+        ];
+
+        $service = $this->getLpaService();
+
+        $result = $service->lookupActiveActorInLpa($lpa, '3');
+
+        $this->assertNull($result);
+    }
+    
+    /** @test */
+    public function can_not_find_actor_who_is_not_a_donor_by_linked_uid()
+    {
+        $lpa = [
+            'donor' => [
+                'id'  => 1,
+                'uId' => '123456789013',
+                'linked' => [['id' => 1, 'uId' => '123456789013'], ['id' => 2, 'uId' => '123456789012']],
+            ]
+        ];
+
+        $service = $this->getLpaService();
+
+        $result = $service->lookupActiveActorInLpa($lpa, '123456789999');
+
+        $this->assertNull($result);
     }
 
     /** @test */

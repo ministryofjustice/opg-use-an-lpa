@@ -108,7 +108,9 @@ final class Sirius implements LpaFactory
         if (isset($data['certificateProviders'])) {
             $lpa->setCertificateProviders($this->createCaseActorsFromData($data['certificateProviders']));
         }
-
+        if (isset($data['cancellationDate'])) {
+            $lpa->setCancellationDate(new DateTime($data['cancellationDate']));
+        }
         return $lpa;
     }
 
@@ -129,6 +131,9 @@ final class Sirius implements LpaFactory
         }
         if (isset($caseActorData['uId'])) {
             $actor->setUId($caseActorData['uId']);
+        }
+        if (isset($caseActorData['linked'])) {
+            $actor->setLinked($caseActorData['linked']);
         }
         if (isset($caseActorData['email'])) {
             $actor->setEmail($caseActorData['email']);

@@ -844,8 +844,7 @@ class AccountContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $this->email);
-        $this->ui->fillField('password', $this->password);
-        $this->ui->fillField('password_confirm', $this->password);
+        $this->ui->fillField('show_hide_password', $this->password);
         $this->ui->fillField('terms', 1);
         $this->ui->pressButton('Create account');
     }
@@ -950,16 +949,15 @@ class AccountContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $this->email);
-        $this->ui->fillField('password', $this->password);
-        $this->ui->fillField('password_confirm', $this->password);
+        $this->ui->fillField('show_hide_password', $this->password);
         $this->ui->fillField('terms', 1);
         $this->ui->pressButton('Create account');
     }
 
     /**
-     * @When /^I have provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
+     * @When /^I have provided required information for account creation such as (.*)(.*)(.*)$/
      */
-    public function iHaveNotProvidedRequiredInformationForAccountCreationSuchAs($email1, $email2, $password1, $password2, $terms)
+    public function iHaveProvidedRequiredInformationForAccountCreationSuchAs($email, $password, $terms)
     {
         $this->ui->assertPageAddress('/create-account');
 
@@ -971,9 +969,11 @@ class AccountContext implements Context
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
-        $this->ui->fillField('email', $email1);
-        $this->ui->fillField('password', $password1);
-        $this->ui->fillField('password_confirm', $password2);
+        $this->ui->fillField('email', $email);
+        $this->ui->fillField('show_hide_password', $password);
+        if ($terms === 1) {
+            $this->ui->checkOption('terms');
+        }
 
         $this->ui->pressButton('Create account');
     }
@@ -989,9 +989,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^Creating account I provide mismatching (.*) (.*)$/
+     * @When /^I create an account with a password of (.*)$/
      */
-    public function CreatingAccountIProvideMismatching($value1, $value2)
+    public function iCreateAnAccountWithAPasswordOf($password)
     {
         $this->ui->assertPageAddress('/create-account');
 
@@ -1003,9 +1003,8 @@ class AccountContext implements Context
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
-        $this->ui->fillField('email', $value1);
-        $this->ui->fillField('password', $value1);
-        $this->ui->fillField('password_confirm', $value2);
+        $this->ui->fillField('email', 'a@b.com');
+        $this->ui->fillField('show_hide_password', $password);
 
         $this->ui->pressButton('Create account');
     }
@@ -2141,7 +2140,7 @@ class AccountContext implements Context
     /**
      * @Then /^An account is created using (.*)(.*)(.*)(.*)$/
      */
-    public function anAccountIsCreatedUsingEmail1Password1Password2Terms($email1, $password1, $password2, $terms)
+    public function anAccountIsCreatedUsingEmail1Password1Password2Terms($email1, $password, $terms)
     {
         $this->activationToken = 'activate1234567890';
 
@@ -2160,8 +2159,7 @@ class AccountContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->ui->fillField('email', $email1);
-        $this->ui->fillField('password', $password1);
-        $this->ui->fillField('password_confirm', $password2);
+        $this->ui->fillField('password', $password);
         $this->ui->fillField('terms', 1);
         $this->ui->pressButton('Create account');
     }
@@ -2210,16 +2208,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I navigate to the actor terms of use page$/
-     */
-    public function iNavigateToTheActorTermsOfUsePage()
-    {
-        $this->ui->assertPageAddress('/create-account');
-        $this->ui->clickLink('terms of use');
-        $this->ui->assertPageAddress('/terms-of-use');
-    }
-
-    /**
      * @Given /^I am on the actor terms of use page$/
      */
     public function iAmOnTheActorTermsOfUsePage()
@@ -2238,20 +2226,11 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request to go back to the create account page$/
      * @When /^I request to go back to the terms of use page$/
      */
     public function iRequestToGoBackToTheSpecifiedPage()
     {
         $this->ui->clickLink('Back');
-    }
-
-    /**
-     * @Then /^I am taken back to the create account page$/
-     */
-    public function iAmTakenBackToTheCreateAccountPage()
-    {
-        $this->ui->assertPageAddress('/create-account');
     }
 
     /**
@@ -3177,7 +3156,6 @@ class AccountContext implements Context
 
         $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('password', $this->userPassword);
-        $this->ui->fillField('password_confirm', $this->userPassword);
         $this->ui->fillField('terms', 1);
         $this->ui->pressButton('Create account');
     }
@@ -3514,7 +3492,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageContainsText("You've added Ian Deputy's health and welfare LPA");
     }
-      
+
     /**
      * @Given /^I am on the change details page$/
      */
@@ -3556,5 +3534,55 @@ class AccountContext implements Context
     {
         $page = $this->ui->getSession()->getPage();
         $this->ui->assertElementOnPage(".moj-banner__message");
+    }
+
+    /**
+     * @When /^I cancel the viewer code/
+     */
+    public function iCancelTheViewerCode()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ])
+                )
+            );
+
+        // API call to get access codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => [
+                            'SiriusUid' => $this->lpa->uId,
+                            'Added' => '2020-09-16T22:57:12.398570Z',
+                            'Organisation' => $this->organisation,
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'ViewerCode' => $this->accessCode,
+                            'Cancelled' => '2020-09-16T22:58:43+00:00',
+                            'Expires' => '2020-09-16T23:59:59+01:00',
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId
+                        ]
+                    ])
+                ));
+    }
+
+    /**
+     * @When /^I click to check the viewer code has been cancelled which is now expired/
+     */
+    public function iClickToCheckTheViewerCodeHasBeenCancelledWhichIsNowExpired()
+    {
+        $this->ui->clickLink('Check access codes');
     }
 }

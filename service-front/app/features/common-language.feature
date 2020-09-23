@@ -9,3 +9,16 @@ Feature: The application supports Welsh as a language
     Given I prefix a url with the welsh language code
     When I access the service home page
     Then I should be on the welsh home page of the service
+
+  @ui @welsh
+  Scenario: Users can change content to welsh using the translation switch
+    Given I access the service home page
+    When I request to view the content in welsh
+    Then I should be on the welsh home page of the service
+
+  @ui @welsh
+  Scenario: Users can change content to english using the translation switch
+    Given I prefix a url with the welsh language code
+    When I access the service home page
+    And I request to view the content in english
+    Then I should be on the home page of the service
