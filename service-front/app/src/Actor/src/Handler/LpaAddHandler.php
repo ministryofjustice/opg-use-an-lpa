@@ -12,12 +12,12 @@ use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class LpaAddHandler
@@ -80,7 +80,6 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
                 $postData = str_replace('-', '', $postData);
 
                 //  Convert the date of birth
-                /** @var TYPE_NAME $dobString */
                 $dobString = sprintf(
                     '%s-%s-%s',
                     $postData['dob']['year'],
