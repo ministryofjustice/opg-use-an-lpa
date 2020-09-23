@@ -1,37 +1,37 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-09-18T11:07:45+00:00\n"
+"POT-Creation-Date: 2020-09-21T11:05:08+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
 msgid "Your new access code"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:13
 #: src/Actor/templates/actor/check-access-codes.html.twig:14
 #: src/Actor/templates/actor/instructions-preferences.html.twig:11
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:13
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:13
 msgid "Back to your LPAs"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:22
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:22
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:57
 #: src/Actor/templates/actor/check-lpa.html.twig:27
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:57
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:22
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
 #: src/Viewer/templates/viewer/check-code-found.html.twig:23
 msgid "Property and finance"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:24
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:57
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:57
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:24
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
 #: src/Viewer/templates/viewer/check-code-found.html.twig:23
 msgid "Health and welfare"
@@ -134,27 +134,27 @@ msgstr ""
 msgid "Confirm your new email address"
 msgstr ""
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:13
-#: src/Actor/templates/actor/activate-account.html.twig:11
-#: src/Actor/templates/actor/create-account.html.twig:11
-#: src/Actor/templates/actor/password-reset.html.twig:11
-#: src/Actor/templates/actor/password-change.html.twig:12
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:11
-#: src/Actor/templates/actor/create-account-success.html.twig:11
-#: src/Actor/templates/actor/change-email.html.twig:12
-#: src/Actor/templates/actor/password-reset-request.html.twig:11
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:11
-#: src/Actor/templates/actor/death-notification.html.twig:19
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:12
-#: src/Actor/templates/actor/login.html.twig:11
-#: src/Actor/templates/actor/lpa-removed.html.twig:14
-#: src/Actor/templates/actor/check-lpa.html.twig:11
-#: src/Actor/templates/actor/password-reset-not-found.html.twig:11
+#: src/Actor/templates/actor/activate-account.html.twig:11
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:11
 #: src/Actor/templates/actor/change-details.html.twig:19
-#: src/Actor/templates/actor/password-reset-request-done.html.twig:11
+#: src/Actor/templates/actor/change-email.html.twig:12
+#: src/Actor/templates/actor/check-lpa.html.twig:11
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:12
+#: src/Actor/templates/actor/create-account-success.html.twig:11
+#: src/Actor/templates/actor/create-account.html.twig:11
+#: src/Actor/templates/actor/death-notification.html.twig:19
+#: src/Actor/templates/actor/login.html.twig:11
 #: src/Actor/templates/actor/lpa-add.html.twig:13
-#: src/Common/templates/error/error.html.twig:9
+#: src/Actor/templates/actor/lpa-removed.html.twig:14
+#: src/Actor/templates/actor/password-change.html.twig:12
+#: src/Actor/templates/actor/password-reset-not-found.html.twig:11
+#: src/Actor/templates/actor/password-reset-request-done.html.twig:11
+#: src/Actor/templates/actor/password-reset-request.html.twig:11
+#: src/Actor/templates/actor/password-reset.html.twig:11
+#: src/Actor/templates/actor/request-email-change-success.html.twig:13
 #: src/Common/templates/error/404.html.twig:9
+#: src/Common/templates/error/error.html.twig:9
 #: src/Common/templates/partials/cookies.html.twig:18
 #: src/Viewer/templates/viewer/check-code-found.html.twig:11
 #: src/Viewer/templates/viewer/enter-code.html.twig:11
@@ -222,18 +222,18 @@ msgstr ""
 msgid "Confirm your password"
 msgstr ""
 
-#: src/Actor/templates/actor/create-account.html.twig:53
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:243
 #: src/Actor/templates/actor/check-lpa.html.twig:66
+#: src/Actor/templates/actor/create-account.html.twig:53
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:243
 #: src/Viewer/templates/viewer/check-code-found.html.twig:41
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:45
 msgid "Warning"
 msgstr ""
 
 #: src/Actor/templates/actor/create-account.html.twig:54
-#: src/Actor/templates/actor/password-reset.html.twig:45
 #: src/Actor/templates/actor/password-change.html.twig:35
+#: src/Actor/templates/actor/password-reset.html.twig:45
 msgid "Never share your password with anyone."
 msgstr ""
 
@@ -241,34 +241,34 @@ msgstr ""
 msgid "Create account"
 msgstr ""
 
-#: src/Actor/templates/actor/password-reset.html.twig:27
 #: src/Actor/templates/actor/password-change.html.twig:22
+#: src/Actor/templates/actor/password-reset.html.twig:27
 msgid "Change your password"
 msgstr ""
 
-#: src/Actor/templates/actor/password-reset.html.twig:37
 #: src/Actor/templates/actor/password-change.html.twig:29
+#: src/Actor/templates/actor/password-reset.html.twig:37
 msgid "Your password needs to have:"
 msgstr ""
 
-#: src/Actor/templates/actor/password-reset.html.twig:40
 #: src/Actor/templates/actor/password-change.html.twig:31
+#: src/Actor/templates/actor/password-reset.html.twig:40
 msgid "at least 8 characters"
 msgstr ""
 
-#: src/Actor/templates/actor/password-reset.html.twig:41
 #: src/Actor/templates/actor/password-change.html.twig:32
+#: src/Actor/templates/actor/password-reset.html.twig:41
 msgid "at least one lower-case and one capital letter"
 msgstr ""
 
-#: src/Actor/templates/actor/password-reset.html.twig:42
 #: src/Actor/templates/actor/password-change.html.twig:33
+#: src/Actor/templates/actor/password-reset.html.twig:42
 msgid "at least one number"
 msgstr ""
 
+#: src/Actor/templates/actor/login.html.twig:37
 #: src/Actor/templates/actor/password-reset.html.twig:47
 #: src/Actor/templates/actor/your-details.html.twig:37
-#: src/Actor/templates/actor/login.html.twig:37
 msgid "Password"
 msgstr ""
 
@@ -276,8 +276,8 @@ msgstr ""
 msgid "Confirm Password"
 msgstr ""
 
-#: src/Actor/templates/actor/password-reset.html.twig:51
 #: src/Actor/templates/actor/password-change.html.twig:41
+#: src/Actor/templates/actor/password-reset.html.twig:51
 msgid "Change password"
 msgstr ""
 
@@ -625,8 +625,8 @@ msgstr ""
 msgid "Date of birth"
 msgstr ""
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:141
 #: src/Actor/templates/actor/change-details.html.twig:72
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:141
 #: src/Common/templates/partials/full-lpa-display.html.twig:170
 msgid "Address"
 msgstr ""
@@ -747,8 +747,8 @@ msgstr ""
 msgid "You cannot use a download or print out of this <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original paper <abbr title=\"lasting power of attorney\">LPA</abbr> or instead of giving someone an access code."
 msgstr ""
 
-#: src/Actor/templates/actor/layout.html.twig:5
 #: src/Actor/templates/actor/home-page.html.twig:5
+#: src/Actor/templates/actor/layout.html.twig:5
 #: src/Common/templates/partials/cookies.html.twig:7
 msgid "Use a lasting power of attorney"
 msgstr ""
@@ -1207,9 +1207,9 @@ msgstr ""
 msgid "Enter your email address below. If there's an account associated with the address, we'll send you a link to reset your password."
 msgstr ""
 
+#: src/Actor/templates/actor/login.html.twig:35
 #: src/Actor/templates/actor/password-reset-request.html.twig:32
 #: src/Actor/templates/actor/your-details.html.twig:24
-#: src/Actor/templates/actor/login.html.twig:35
 msgid "Email address"
 msgstr ""
 
@@ -1262,8 +1262,8 @@ msgid "For your security, we've signed you out of this service because you did n
 msgstr ""
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:17
-#: src/Actor/templates/actor/login.html.twig:39
 #: src/Actor/templates/actor/email-reset-not-found.html.twig:22
+#: src/Actor/templates/actor/login.html.twig:39
 msgid "Sign in"
 msgstr ""
 
@@ -1271,8 +1271,8 @@ msgstr ""
 msgid "Death Notification"
 msgstr ""
 
-#: src/Actor/templates/actor/death-notification.html.twig:26
 #: src/Actor/templates/actor/change-details.html.twig:84
+#: src/Actor/templates/actor/death-notification.html.twig:26
 msgid "Let us know if a donor or attorney dies"
 msgstr ""
 
@@ -1282,8 +1282,8 @@ msgid ""
 "                        This is because an LPA will end when the donor dies, and they can end if an attorney dies."
 msgstr ""
 
-#: src/Actor/templates/actor/death-notification.html.twig:32
 #: src/Actor/templates/actor/change-details.html.twig:32
+#: src/Actor/templates/actor/death-notification.html.twig:32
 msgid "You should contact us if:"
 msgstr ""
 
@@ -1335,8 +1335,8 @@ msgstr ""
 msgid "there are replacement attorneys"
 msgstr ""
 
-#: src/Actor/templates/actor/death-notification.html.twig:58
 #: src/Actor/templates/actor/change-details.html.twig:55
+#: src/Actor/templates/actor/death-notification.html.twig:58
 msgid "How to let us know"
 msgstr ""
 
@@ -1360,8 +1360,8 @@ msgstr ""
 msgid "a return address where your documents can be sent back to"
 msgstr ""
 
-#: src/Actor/templates/actor/death-notification.html.twig:69
 #: src/Actor/templates/actor/change-details.html.twig:74
+#: src/Actor/templates/actor/death-notification.html.twig:69
 msgid ""
 "Office of the Public Guardian<br>\n"
 "                            PO Box 16185<br>\n"
@@ -1369,8 +1369,8 @@ msgid ""
 "                            B2 2WH"
 msgstr ""
 
-#: src/Actor/templates/actor/your-details.html.twig:18
 #: src/Actor/templates/actor/lpa-add.html.twig:54
+#: src/Actor/templates/actor/your-details.html.twig:18
 #: src/Common/templates/partials/account-bar.html.twig:7
 msgid "Your details"
 msgstr ""
@@ -1617,8 +1617,8 @@ msgctxt "error"
 msgid "The emails did not match"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:19
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:16
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:19
 msgid "Your lasting powers of attorney"
 msgstr ""
 
@@ -1626,13 +1626,13 @@ msgstr ""
 msgid "Any lasting power of attorney (LPA) you add to your account will appear on this page."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:29
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:26
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:29
 msgid "What can I do with my <abbr title=\"lasting powers of attorney\">LPAs</abbr>?"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:33
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:30
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:33
 msgid "From this page you can:"
 msgstr ""
 
@@ -1840,7 +1840,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-add.html.twig:87
-#: src/Common/templates/partials/govuk_form.html.twig:207
+#: src/Common/templates/partials/govuk_form.html.twig:204
 #: src/Viewer/templates/viewer/enter-code.html.twig:58
 msgid "Continue"
 msgstr ""
@@ -2074,7 +2074,9 @@ msgstr ""
 msgid "If you’re an attorney, you can tell us about changes to the donor’s details and your details. You cannot update another attorney’s details."
 msgstr ""
 
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:67
 #: src/Actor/templates/actor/change-details.html.twig:57
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:71
 msgid "Telephone"
 msgstr ""
 
@@ -2092,7 +2094,9 @@ msgstr ""
 msgid "Find out about call charges"
 msgstr ""
 
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:61
 #: src/Actor/templates/actor/change-details.html.twig:67
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:65
 msgid "Email"
 msgstr ""
 
@@ -2239,13 +2243,13 @@ msgstr ""
 msgid "For example, 31 03 1980"
 msgstr ""
 
-#: src/Common/templates/error/error.html.twig:12
 #: src/Common/templates/error/404.html.twig:12
+#: src/Common/templates/error/error.html.twig:12
 msgid "This is awkward."
 msgstr ""
 
-#: src/Common/templates/error/error.html.twig:13
 #: src/Common/templates/error/404.html.twig:13
+#: src/Common/templates/error/error.html.twig:13
 msgid "Oops!"
 msgstr ""
 
@@ -2968,11 +2972,11 @@ msgstr ""
 msgid "Contact us"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:119
+#: src/Common/templates/layout/default.html.twig:124
 msgid "Built by OPG Digital"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:129
+#: src/Common/templates/layout/default.html.twig:134
 msgid ""
 "All content is available under the\n"
 "                    <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\">\n"
@@ -2980,7 +2984,7 @@ msgid ""
 "                    </a>, except where otherwise stated"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:138
+#: src/Common/templates/layout/default.html.twig:143
 msgid "© Crown copyright"
 msgstr ""
 
@@ -3009,11 +3013,266 @@ msgid "Cancelled on %cancellationDate%"
 msgstr ""
 
 #. Show password label
-#: src/Common/templates/partials/govuk_form.html.twig:193
+#: src/Common/templates/partials/govuk_form.html.twig:196
 msgid "Show"
 msgstr ""
 
 #. Hide password label
-#: src/Common/templates/partials/govuk_form.html.twig:194
+#: src/Common/templates/partials/govuk_form.html.twig:197
 msgid "Hide"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:3
+#: src/Common/templates/layout/default.html.twig:119
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:3
+msgid "Accessibility statement"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:15
+msgid "Accessibility statement for Use a lasting power of attorney"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:18
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:18
+msgid ""
+"This online service is run by the\n"
+"                            <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian\">Office of the Public Guardian</a>.\n"
+"                            We want as many people as possible to be able to use this service. For example, that means you should be able to:"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:24
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:24
+msgid "change colours, contrast levels and fonts"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:25
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:25
+msgid "zoom in up to 300% without the text spilling off the screen"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:26
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:26
+msgid "navigate most of the service using just a keyboard"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:27
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:27
+msgid "navigate most of the service using speech recognition software"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:28
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:28
+msgid "listen to most of the service using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver)"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:32
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:32
+msgid "We’ve also made the service text as simple as possible to understand."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:35
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:35
+msgid "Get help"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:37
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:37
+msgid "<a class=\"govuk-link\" href=\"https://mcmw.abilitynet.org.uk/\">AbilityNet</a> has guidance about how to:"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:40
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:40
+msgid "make your mouse easier to use"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:41
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:41
+msgid "use your keyboard instead of a mouse"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:42
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:42
+msgid "talk to your device"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:43
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:43
+msgid "make your device talk to you"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:44
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:44
+msgid "make text larger"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:45
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:45
+msgid "change your colours"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:46
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:46
+msgid "magnify the screen"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:49
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:49
+msgid "What to do if you cannot access parts of this service"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:52
+msgid "If you cannot use this service, you can use the paper version of the LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:55
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:59
+msgid "Reporting accessibility problems with this service"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:58
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:62
+msgid "We’re always looking to improve the accessibility of this service. If you find any problems not listed on this page or think we’re not meeting accessibility requirements, please contact us."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:71
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:75
+msgid ""
+"Monday to Friday 9:30am to 5pm, except Wednesday.<br>\n"
+"                        Wednesday 10am to 5pm"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:76
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:80
+msgid "<a class=\"govuk-link\" href=\"https://www.gov.uk/call-charges\">Find out about call charges</a>"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:79
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:83
+msgid "Textphone"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:85
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:89
+msgid "Enforcement procedure"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:88
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:92
+msgid ""
+"The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications)\n"
+"                        (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’).\n"
+"                        If you’re not happy with how we respond to your complaint, <a class=\"govuk-link\" href=\"https://www.equalityadvisoryservice.com/\">contact the Equality Advisory and Support Service (EASS)</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:93
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:97
+msgid "Technical information about this service’s accessibility"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:96
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:100
+msgid "The Office of the Public Guardian is committed to making its online services accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:100
+msgid "This service is partially compliant with the <a class=\"govuk-link\" href=\"https://www.w3.org/TR/WCAG21/\">Web Content Accessibility Guidelines version 2.1</a> AA standard, due to the non-compliances listed below."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:103
+msgid "Non-accessible content"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:106
+msgid "The content listed below is non-accessible for the following reasons."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:109
+msgid "Non compliance with the accessibility regulations"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:112
+msgid "Some page titles do not have a unique and helpful title that indicates the purpose of the page. This fails WCAG 2.1 success criteria 2.4.2 (Page Titled)."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:116
+msgid "Some list elements are not correctly associated with parent elements.  This fails WCAG 2.1 success criteria 1.3.1 (Info and Relationships) and 4.1.1 (Parsing)."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:120
+msgid "There is an incorrect aria attribute value. This fails WCAG 2.1 success criteria 4.1.2 (Name, Role, Value) and 4.1.1 (Parsing)."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:124
+msgid "Some mark-up is not implemented according to element specification. This fails WCAG 2.1 success criteria 4.1.1 (Parsing) and 4.1.2 (Name, Role, Value)."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:128
+msgid "Some semantic elements were implemented in a way that did not convey the relationships within the page. This fails WCAG 2.1 success criteria 1.3.1 (Info and Relationships)."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:132
+msgid "The purpose of some links could not be determined from the link text. This fails WCAG 2.1 success criteria 2.4.4 (Link Purpose (In Context)) and 2.4.9 (Link Purpose (Link Only))"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:136
+msgid "The role of some components was not correctly determinable. This fails WCAG 2.1 success criteria 4.1.2 (Name, Role, Value) and 1.3.1 (Info and Relationships)."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:140
+msgid "Some users can not zoom in on content without needing to scroll or without causing poor experience This fails WCAG 2.1 success criteria 1.4.10 (Reflow)."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:144
+msgid "Some labels were implemented that did not clearly describe the topic or purpose. This fails WCAG 2.1 success criteria 2.4.6 (Headings and Labels)."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:148
+msgid "We’ll fix all the accessibility issues we’ve found by December 2020."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:151
+msgid "Disproportionate burden"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:157
+msgid "Not applicable"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:155
+msgid "Content that’s not within the scope of the accessibility regulations"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:159
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:109
+msgid "Preparation of this accessibility statement"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:162
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:112
+msgid "This statement was prepared on %date%"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:166
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:116
+msgid "This service was last tested on 4 June 2020. The test was carried out by Digital Accessibility Centre (DAC)."
+msgstr ""
+
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:15
+msgid "Accessibility statement for View a lasting power of attorney"
+msgstr ""
+
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:52
+msgid "If you cannot use this service, you can ask to see the paper version of the LPA."
+msgstr ""
+
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:56
+msgid "Find out more about <a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/lasting-power-of-attorney-valid-examples\">checking a paper LPA</a>"
+msgstr ""
+
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:103
+msgid "Compliance status"
+msgstr ""
+
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:106
+msgid "This service is fully compliant with the <a class=\"govuk-link\" href=\"https://www.w3.org/TR/WCAG21/\">Web Content Accessibility Guidelines version 2.1</a> AA standard."
 msgstr ""

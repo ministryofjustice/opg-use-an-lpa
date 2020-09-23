@@ -3584,4 +3584,12 @@ class AccountContext implements Context
     {
         $this->ui->clickLink('Check access codes');
     }
+
+    /**
+     * @Then /^I can see the accessibility statement for the Use service$/
+     */
+    public function iCanSeeTheAccessibilityStatementForTheUseService()
+    {
+        $this->ui->assertPageContainsText('Accessibility statement for Use a lasting power of attorney');
+    }
 }

@@ -375,4 +375,12 @@ class CommonContext implements Context
     {
         $this->ui->clickLink('English');
     }
+
+    /**
+     * @When /^I request to view the accessibility statement$/
+     */
+    public function iRequestToViewTheAccessibilityStatement()
+    {
+        $this->ui->clickLink('Accessibility statement');
+    }
 }
