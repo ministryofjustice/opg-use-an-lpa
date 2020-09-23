@@ -1,0 +1,174 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block html_title %}{% trans %}Accessibility statement{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">{% trans %}Accessibility statement for Use a lasting power of attorney{% endtrans %}</h1>
+
+                    <p class="govuk-body">
+                        {% trans %}This online service is run by the
+                            <a class="govuk-link" href="https://www.gov.uk/government/organisations/office-of-the-public-guardian">Office of the Public Guardian</a>.
+                            We want as many people as possible to be able to use this service. For example, that means you should be able to:{% endtrans %}
+                    </p>
+
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}change colours, contrast levels and fonts{% endtrans %}</li>
+                        <li>{% trans %}zoom in up to 300% without the text spilling off the screen{% endtrans %}</li>
+                        <li>{% trans %}navigate most of the service using just a keyboard{% endtrans %}</li>
+                        <li>{% trans %}navigate most of the service using speech recognition software{% endtrans %}</li>
+                        <li>{% trans %}listen to most of the service using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver){% endtrans %}</li>
+                    </ul>
+
+                    <p class="govuk-body">
+                        {% trans %}We’ve also made the service text as simple as possible to understand.{% endtrans %}
+                    </p>
+
+                    <h2 class="govuk-heading-m">{% trans %}Get help{% endtrans %}</h2>
+
+                    <p class="govuk-body">{% trans %}<a class="govuk-link" href="https://mcmw.abilitynet.org.uk/">AbilityNet</a> has guidance about how to:{% endtrans %}</p>
+
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li><a class="govuk-link" href="https://mcmw.abilitynet.org.uk/impairment/making-your-mouse-easier-to-use">{% trans %}make your mouse easier to use{% endtrans %}</a></li>
+                        <li><a class="govuk-link" href="https://mcmw.abilitynet.org.uk/category/keyboard-shortcuts">{% trans %}use your keyboard instead of a mouse{% endtrans %}</a></li>
+                        <li><a class="govuk-link" href="https://mcmw.abilitynet.org.uk/impairment/talking-to-your-device">{% trans %}talk to your device{% endtrans %}</a></li>
+                        <li><a class="govuk-link" href="https://mcmw.abilitynet.org.uk/impairment/make-your-device-talk-to-you">{% trans %}make your device talk to you{% endtrans %}</a></li>
+                        <li><a class="govuk-link" href="https://mcmw.abilitynet.org.uk/impairment/making-text-larger">{% trans %}make text larger{% endtrans %}</a></li>
+                        <li><a class="govuk-link" href="https://mcmw.abilitynet.org.uk/impairment/changing-your-colours">{% trans %}change your colours{% endtrans %}</a></li>
+                        <li><a class="govuk-link" href="https://mcmw.abilitynet.org.uk/impairment/magnifying-the-screen">{% trans %}magnify the screen{% endtrans %}</a></li>
+                    </ul>
+
+                    <h2 class="govuk-heading-m">{% trans %}What to do if you cannot access parts of this service{% endtrans %}</h2>
+
+                    <p class="govuk-body">
+                        {% trans %}If you cannot use this service, you can use the paper version of the LPA.{% endtrans %}
+                    </p>
+
+                    <h2 class="govuk-heading-m">{% trans %}Reporting accessibility problems with this service{% endtrans %}</h2>
+
+                    <p class="govuk-body">
+                        {% trans %}We’re always looking to improve the accessibility of this service. If you find any problems not listed on this page or think we’re not meeting accessibility requirements, please contact us.{% endtrans %}
+                    </p>
+
+                    <h2 class="govuk-heading-s">{% trans %}Email{% endtrans %}</h2>
+
+                    <p class="govuk-body">
+                        <a href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a>
+                    </p>
+
+                    <h2 class="govuk-heading-s">{% trans %}Telephone{% endtrans %}</h2>
+
+                    <p class="govuk-body">
+                        0300 456 0300<br>
+                        {% trans %}Monday to Friday 9:30am to 5pm, except Wednesday.<br>
+                        Wednesday 10am to 5pm{% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}<a class="govuk-link" href="https://www.gov.uk/call-charges">Find out about call charges</a>{% endtrans %}
+                    </p>
+
+                    <h2 class="govuk-heading-s">{% trans %}Textphone{% endtrans %}</h2>
+
+                    <p class="govuk-body">
+                        0115 934 2778
+                    </p>
+
+                    <h2 class="govuk-heading-m">{% trans %}Enforcement procedure{% endtrans %}</h2>
+
+                    <p class="govuk-body">
+                        {% trans %}The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications)
+                        (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’).
+                        If you’re not happy with how we respond to your complaint, <a class="govuk-link" href="https://www.equalityadvisoryservice.com/">contact the Equality Advisory and Support Service (EASS)</a>.{% endtrans %}
+                    </p>
+
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9">{% trans %}Technical information about this service’s accessibility{% endtrans %}</h2>
+
+                    <p class="govuk-body">
+                        {% trans %}The Office of the Public Guardian is committed to making its online services accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.{% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}This service is partially compliant with the <a class="govuk-link" href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility Guidelines version 2.1</a> AA standard, due to the non-compliances listed below.{% endtrans %}
+                    </p>
+
+                    <h2 class="govuk-heading-l govuk-!-margin-top-6">{% trans %}Non-accessible content{% endtrans %}</h2>
+
+                    <p class="govuk-body">
+                        {% trans %}The content listed below is non-accessible for the following reasons.{% endtrans %}
+                    </p>
+
+                    <h2 class="govuk-heading-m">{% trans %}Non compliance with the accessibility regulations{% endtrans %}</h2>
+
+                    <p class="govuk-body">
+                        {% trans %}Some page titles do not have a unique and helpful title that indicates the purpose of the page. This fails WCAG 2.1 success criteria 2.4.2 (Page Titled).{% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}Some list elements are not correctly associated with parent elements.  This fails WCAG 2.1 success criteria 1.3.1 (Info and Relationships) and 4.1.1 (Parsing).{% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}There is an incorrect aria attribute value. This fails WCAG 2.1 success criteria 4.1.2 (Name, Role, Value) and 4.1.1 (Parsing).{% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}Some mark-up is not implemented according to element specification. This fails WCAG 2.1 success criteria 4.1.1 (Parsing) and 4.1.2 (Name, Role, Value).{% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}Some semantic elements were implemented in a way that did not convey the relationships within the page. This fails WCAG 2.1 success criteria 1.3.1 (Info and Relationships).{% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}The purpose of some links could not be determined from the link text. This fails WCAG 2.1 success criteria 2.4.4 (Link Purpose (In Context)) and 2.4.9 (Link Purpose (Link Only)){% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}The role of some components was not correctly determinable. This fails WCAG 2.1 success criteria 4.1.2 (Name, Role, Value) and 1.3.1 (Info and Relationships).{% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}Some users can not zoom in on content without needing to scroll or without causing poor experience This fails WCAG 2.1 success criteria 1.4.10 (Reflow).{% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}Some labels were implemented that did not clearly describe the topic or purpose. This fails WCAG 2.1 success criteria 2.4.6 (Headings and Labels).{% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}We’ll fix all the accessibility issues we’ve found by December 2020.{% endtrans %}
+                    </p>
+
+                    <h2 class="govuk-heading-m">{% trans %}Disproportionate burden{% endtrans %}</h2>
+
+                    <p class="govuk-body">{% trans %}Not applicable{% endtrans %}</p>
+
+                    <h2 class="govuk-heading-m">{% trans %}Content that’s not within the scope of the accessibility regulations{% endtrans %}</h2>
+
+                    <p class="govuk-body">{% trans %}Not applicable{% endtrans %}</p>
+
+                    <h2 class="govuk-heading-l">{% trans %}Preparation of this accessibility statement{% endtrans %}</h2>
+
+                    <p class="govuk-body">
+                        {% trans with {"%date%": lpa_date('2020-09-23')} %}This statement was prepared on %date%{% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}This service was last tested on 4 June 2020. The test was carried out by Digital Accessibility Centre (DAC).{% endtrans %}
+                    </p>
+
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}
