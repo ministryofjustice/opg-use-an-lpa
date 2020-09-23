@@ -3592,30 +3592,5 @@ class AccountContext implements Context
     {
         $this->ui->assertPageContainsText('Accessibility statement for Use a lasting power of attorney');
     }
-
-    /**
-     * @Given /^I am on the contact us page$/
-     */
-    public function iAmOnTheContactUsPage()
-    {
-        $this->ui->visit('/contact-us');
-        $this->ui->assertPageAddress('/contact-us');
-    }
-
-    /**
-     * @When /^I navigate to the feedback page$/
-     */
-    public function iNavigateToTheFeedbackPage()
-    {
-        $this->ui->clickLink('feedback');
-    }
-
-    /**
-     * @Then /^I am taken to the survey page$/
-     */
-    public function iAmTakenToTheSurveyPage()
-    {
-        $this->ui->assertPageAddress('https://www.surveymonkey.co.uk/r/Use-LPA');
-    }
-
 }
+
