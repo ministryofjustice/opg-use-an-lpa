@@ -25,7 +25,7 @@
                         <p class="govuk-body">{% trans %}Check this is the right reference number for the LPA you want to add. If you’re named on more than one LPA, you may have entered the reference number for a different LPA.{% endtrans %}</p>
                         <p class="govuk-body">{% trans %}Activation key:{% endtrans %} <strong>{{ passcode }}</strong></p>
                         <p class="govuk-body">{% trans %}Make sure this is the activation key we sent to you. The donor and each of their attorneys have their own activation key. If you’re using someone else’s activation key, we will not find the LPA.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans %}Date of birth:{% endtrans %} <strong>{{ dob }}</strong></p>
+                        <p class="govuk-body">{% trans %}Date of birth:{% endtrans %} <strong>{{ lpa_date(dob) }}</strong></p>
                         <p class="govuk-body">{% trans %}The date of birth must be for the person the activation key was sent to. For example, if you’re an attorney, you must enter the activation key we sent to you and use your date of birth.{% endtrans %}</p>
                     </div>
 

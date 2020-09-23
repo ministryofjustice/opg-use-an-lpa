@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Common;
 
-use Common\View\Twig\TranslationSwitchExtension;
-
 /**
  * The configuration provider for the Common module
  *
@@ -136,7 +134,7 @@ class ConfigProvider
                 View\Twig\GovUKLaminasFormExtension::class,
                 View\Twig\JavascriptVariablesExtension::class,
                 View\Twig\GenericGlobalVariableExtension::class,
-                TranslationSwitchExtension::class
+                View\Twig\TranslationSwitchExtension::class
             ]
         ];
     }

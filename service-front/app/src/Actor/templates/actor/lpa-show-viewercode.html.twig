@@ -33,7 +33,7 @@
                             <span class="govuk-panel__title">
                                 {{ add_hyphen_to_viewer_code(code) }}
                             </span>
-                            <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-3">{% trans with {'%date%': expires | date ('j F Y')} %}This code expires in 30 days, on %date%.{% endtrans %}</p>
+                            <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-3">{% trans with {'%date%': lpa_date(expires)} %}This code expires in 30 days, on %date%.{% endtrans %}</p>
                             <div class="js-accesscodecopy">
                                 <input readonly type="text" value="{{ add_hyphen_to_viewer_code(code) }}" class="js-accesscodecopy-value offscreen" aria-hidden="true">
                                 <button class="js-accesscodecopy-button govuk-button govuk-button__copy">
