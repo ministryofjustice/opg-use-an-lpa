@@ -622,7 +622,7 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
         $this->ui->assertPageContainsText('LPA reference number: 700000000054');
         $this->ui->assertPageContainsText('Activation key: XYUPHWQRECHV');
-        $this->ui->assertPageContainsText('Date of birth: 1975-10-05');
+        $this->ui->assertPageContainsText('Date of birth: 5 October 1975');
     }
 
     /**

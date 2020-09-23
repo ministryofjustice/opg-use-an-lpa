@@ -7,10 +7,12 @@ namespace Common\View\Twig;
 use Common\Entity\Address;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
-use Common\Form\Fieldset\Date;
+use DateTime;
+use DateTimeInterface;
+use Exception;
+use IntlDateFormatter;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use DateTime;
 
 /**
  * Class LpaExtension
@@ -40,7 +42,7 @@ class LpaExtension extends AbstractExtension
      * @param CaseActor $actor
      * @return string
      */
-    public function actorAddress(CaseActor $actor)
+    public function actorAddress(CaseActor $actor): string
     {
         //  Multiple addresses can appear for an actor - just use the first one
         if (is_array($actor->getAddresses()) && count($actor->getAddresses()) > 0) {
@@ -63,9 +65,10 @@ class LpaExtension extends AbstractExtension
 
     /**
      * @param CaseActor $actor
+     * @param bool $withSalutation Prepend salutation?
      * @return string
      */
-    public function actorName(CaseActor $actor, bool $withSalutation = true)
+    public function actorName(CaseActor $actor, bool $withSalutation = true): string
     {
         $nameData = [];
 
@@ -85,10 +88,10 @@ class LpaExtension extends AbstractExtension
      * and converts it for display in an LPA context.
      *
      * @param DateTime|string|null $date
+     * @param string|null $format
      * @return string
-     * @throws \Exception
      */
-    public function lpaDate($date)
+    public function lpaDate($date, ?string $format = null): string
     {
         if (!is_null($date)) {
             if ($date === "today") {
@@ -97,8 +100,10 @@ class LpaExtension extends AbstractExtension
                 $date = DateTime::createFromFormat('Y-m-d', $date);
             }
 
-            if ($date instanceof DateTime) {
-                return $date->format('j F Y');
+            if ($date instanceof DateTimeInterface) {
+                $formatter = $this->getDateFormatter(\Locale::getDefault(), null);
+                $formatter->setTimeZone($date->getTimezone());
+                return $formatter->format($date);
             }
         }
 
@@ -112,14 +117,15 @@ class LpaExtension extends AbstractExtension
      * @param DateTime|string|null $date
      * @return string
      */
-    public function codeDate($date)
+    public function codeDate($date): string
     {
-
         if (!is_null($date)) {
             $date = DateTime::createFromFormat('Y-m-d\TH:i:sP', $date);
 
-            if ($date instanceof DateTime) {
-                return $date->format('j F Y');
+            if ($date instanceof DateTimeInterface) {
+                $formatter = $this->getDateFormatter(\Locale::getDefault(), null);
+                $formatter->setTimeZone($date->getTimezone());
+                return $formatter->format($date);
             } else {
                 return '';
             }
@@ -133,7 +139,7 @@ class LpaExtension extends AbstractExtension
      *
      * @param string $expiryDate
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function daysRemaining(?string $expiryDate): string
     {
@@ -153,7 +159,7 @@ class LpaExtension extends AbstractExtension
      *
      * @param string|null $expiryDate
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function isCodeCancelled(?array $code): ?bool
     {
@@ -169,7 +175,7 @@ class LpaExtension extends AbstractExtension
      *
      * @param string|null $expiryDate
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function hasCodeExpired(?string $expiryDate): ?bool
     {
@@ -183,7 +189,7 @@ class LpaExtension extends AbstractExtension
     /**
      * Create a hyphenated viewer code
      *
-     * @param string $viewerCode
+     * @param string|null $viewerCode
      * @return string
      */
     public function formatViewerCode(?string $viewerCode): string
@@ -202,5 +208,29 @@ class LpaExtension extends AbstractExtension
     {
         $status = $lpa->getStatus();
         return ($status === 'Cancelled') || ($status === 'Revoked');
+    }
+
+    /**
+     * Creates an international date formatter that is capable of doing locale based dates.
+     *
+     * @param string $locale
+     * @param string|null $pattern Optional pattern to format the date as
+     * @return IntlDateFormatter
+     */
+    private function getDateFormatter(string $locale, ?string $pattern): IntlDateFormatter
+    {
+        $formatter = IntlDateFormatter::create(
+            $locale,
+            IntlDateFormatter::LONG,
+            IntlDateFormatter::NONE,
+            'Europe/London',
+            IntlDateFormatter::GREGORIAN
+        );
+
+        if ($pattern !== null) {
+            $formatter->setPattern($pattern);
+        }
+
+        return $formatter;
     }
 }
