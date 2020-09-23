@@ -615,9 +615,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^Creating account I provide mismatching (.*) (.*)$/
+     * @When /^I create an account with a password of (.*)$/
      */
-    public function CreatingAccountIProvideMismatching()
+    public function iCreateAnAccountWithAPasswordOf($password)
     {
         // Not needed for this context
     }

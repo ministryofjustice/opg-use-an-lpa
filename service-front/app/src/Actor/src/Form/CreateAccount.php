@@ -45,12 +45,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
         $this->add(new Email('email'));
 
         $this->add([
-            'name' => 'password',
-            'type' => 'Password',
-        ]);
-
-        $this->add([
-            'name' => 'password_confirm',
+            'name' => 'show_hide_password',
             'type' => 'Password',
         ]);
 
@@ -91,7 +86,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                     ]
                 ],
             ],
-            'password'         => [
+            'show_hide_password'    => [
                 'required'   => true,
                 'validators' => [
                     [
@@ -115,29 +110,6 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                     ],
                     [
                         'name' => PasswordValidator::class,
-                    ],
-                    [
-                        'name'    => Identical::class,
-                        'options' => [
-                            'token'    => 'password_confirm',
-                            'messages' => [
-                                Identical::NOT_SAME => 'Passwords do not match',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'password_confirm' => [
-                'required'   => true,
-                'validators' => [
-                    [
-                        'name'                   => NotEmpty::class,
-                        'break_chain_on_failure' => true,
-                        'options'                => [
-                            'messages' => [
-                                NotEmpty::IS_EMPTY => 'Confirm your password',
-                            ],
-                        ],
                     ],
                 ],
             ],
