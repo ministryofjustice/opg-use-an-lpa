@@ -3249,7 +3249,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:162
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:112
-msgid "This statement was prepared on xx xxxxxxx 2020"
+msgid "This statement was prepared on %date%"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:166

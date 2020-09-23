@@ -159,7 +159,7 @@
                     <h2 class="govuk-heading-l">{% trans %}Preparation of this accessibility statement{% endtrans %}</h2>
 
                     <p class="govuk-body">
-                        {% trans %}This statement was prepared on xx xxxxxxx 2020{% endtrans %}
+                        {% trans with {"%date%": lpa_date('2020-09-23')} %}This statement was prepared on %date%{% endtrans %}
                     </p>
 
                     <p class="govuk-body">
