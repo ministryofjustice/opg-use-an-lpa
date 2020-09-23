@@ -28,11 +28,11 @@ function enable_maintenance() {
     MM_DNS_PREFIX=""
   fi
   aws ssm put-parameter --name "${ENVIRONMENT}_${SERVICE}_enable_maintenance" --type "String" --value "true" --overwrite
-  aws-vault exec ual-dev-operator -- aws elbv2 modify-rule \
+  aws elbv2 modify-rule \
   --rule-arn $MM_RULE_ARN_WELSH \
   --conditions Field=host-header,Values="${MM_DNS_PREFIX}${front_end}-lasting-power-of-attorney.service.gov.uk" Field=path-pattern,Values='/cy*'
 
-  aws-vault exec ual-dev-operator --  aws elbv2 modify-rule \
+  aws elbv2 modify-rule \
   --rule-arn $MM_RULE_ARN \
   --conditions Field=host-header,Values="${MM_DNS_PREFIX}${front_end}-lasting-power-of-attorney.service.gov.uk"
 
