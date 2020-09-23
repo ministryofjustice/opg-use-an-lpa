@@ -696,6 +696,14 @@ class ViewerContext implements Context
     }
 
     /**
+     * @Then /^I can see the accessibility statement for the View service$/
+     */
+    public function iCanSeeTheAccessibilityStatementForTheViewService()
+    {
+        $this->ui->assertPageContainsText('Accessibility statement for View a lasting power of attorney');
+    }
+
+    /**
      * @Then /^I am taken back to the enter code page$/
      */
     public function iAmTakenBackToTheEnterCodePage()
