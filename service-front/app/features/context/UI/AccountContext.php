@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BehatTest\Context\UI;
 
 use Alphagov\Notifications\Client;
-use App\Exception\ApiException;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
@@ -3584,5 +3583,13 @@ class AccountContext implements Context
     public function iClickToCheckTheViewerCodeHasBeenCancelledWhichIsNowExpired()
     {
         $this->ui->clickLink('Check access codes');
+    }
+
+    /**
+     * @Then /^I can see the accessibility statement for the Use service$/
+     */
+    public function iCanSeeTheAccessibilityStatementForTheUseService()
+    {
+        $this->ui->assertPageContainsText('Accessibility statement for Use a lasting power of attorney');
     }
 }
