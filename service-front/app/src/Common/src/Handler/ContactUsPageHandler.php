@@ -18,8 +18,6 @@ use Laminas\Diactoros\Response\HtmlResponse;
  */
 class ContactUsPageHandler extends AbstractHandler
 {
-    private string $application;
-
     /**
      * @var UrlValidityCheckService
      */
@@ -28,12 +26,10 @@ class ContactUsPageHandler extends AbstractHandler
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UrlValidityCheckService $urlValidityCheckService,
-        string $application = 'actor'
+        UrlValidityCheckService $urlValidityCheckService
     ) {
         parent::__construct($renderer, $urlHelper);
         $this->urlValidityCheckService = $urlValidityCheckService;
-        $this->application = $application;
     }
 
     /**
@@ -44,8 +40,7 @@ class ContactUsPageHandler extends AbstractHandler
     {
         $referer = $this->urlValidityCheckService->setValidReferer($request->getHeaders()['referer'][0]);
         return new HtmlResponse($this->renderer->render('partials::contact-us', [
-            'referer' => $referer,
-            'application' => $this->application
+            'referer' => $referer
         ]));
     }
 }

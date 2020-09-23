@@ -398,6 +398,31 @@ class CommonContext implements Context
     public function iCanSeeTheContactUsPage()
     {
         $this->ui->assertPageAddress('/contact-us');
-        $this->ui->assertPageContainsText('Contact the Office of the Public Guardian');
+        $this->ui->assertPageContainsText('Contact us');
+    }
+
+    /**
+     * @Given /^I am on the contact us page$/
+     */
+    public function iAmOnTheContactUsPage()
+    {
+        $this->ui->visit('/contact-us');
+        $this->ui->assertPageAddress('/contact-us');
+    }
+
+    /**
+     * @When /^I navigate to the call charges page$/
+     */
+    public function iNavigateToTheFeedbackPage()
+    {
+        $this->ui->clickLink('Find out about call charges');
+    }
+
+    /**
+     * @Then /^I am taken to the call charges page$/
+     */
+    public function iAmTakenToTheCallChargesPage()
+    {
+        $this->ui->assertPageAddress('https://www.gov.uk/call-charges');
     }
 }

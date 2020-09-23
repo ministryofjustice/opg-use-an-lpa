@@ -714,31 +714,6 @@ class ViewerContext implements Context
     }
 
     /**
-     * @Given /^I am on the contact us page$/
-     */
-    public function iAmOnTheContactUsPage()
-    {
-        $this->ui->visit('/contact-us');
-        $this->ui->assertPageAddress('/contact-us');
-    }
-
-    /**
-     * @When /^I navigate to the feedback page$/
-     */
-    public function iNavigateToTheFeedbackPage()
-    {
-        $this->ui->clickLink('feedback');
-    }
-
-    /**
-     * @Then /^I am taken to the survey page$/
-     */
-    public function iAmTakenToTheSurveyPage()
-    {
-        $this->ui->assertPageAddress('https://www.surveymonkey.co.uk/r/Use-LPA');
-    }
-
-    /**
      * @When /^I click the (.*) link on the page$/
      */
     public function iClickTheBackLinkOnThePage($backLink)

@@ -18,71 +18,34 @@
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full">
+                <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">{% trans %}Contact the Office of the Public Guardian{% endtrans %}
-                        <span id="contact-us-page-hint" class="govuk-hint"> {% trans %}Telephone, email, post or fax{% endtrans %}</span>
-                    </h1>
+                    <h1 class="govuk-heading-xl">{% trans %}Contact us{% endtrans %}</h1>
                     <p class="govuk-body">
-                        {% trans %}If you have a query about using the online service or completing your LPA and cannot find the answer in the online help, then please contact us.{% endtrans %}
+                        {% trans %}If you need help with this service you can get in touch by telephone or email.{% endtrans %}
                     </p>
 
                     <h2 class="govuk-heading-m">
-                        <i class="icon icon-phone"></i>
-                        {% trans %}Telephone{% endtrans %}
+                        {% trans %}Telephone: {% endtrans %}
                     </h2>
-
-                    <p class="govuk-body">{% trans %}0300 456 0300{% endtrans %}</p>
-
-                    <h2 class="govuk-heading-s">{% trans %}Call centre opening times:{% endtrans %}</h2>
-
+                    <ul class="govuk-list">
+                        <li>{% trans %}Telephone: 0300 456 0300{% endtrans %}</li>
+                        <li>{% trans %}Monday to Friday 9.30am to 5pm, except Wednesday, 10am to 5pm.{% endtrans %}</li>
+                    </ul>
                     <p class="govuk-body">
-                        {% trans %}
-                        Monday, Tuesday, Thursday, Friday 9.30am to 5pm<br>
-                        Wednesday 10am to 5pm
-                        {% endtrans %}
+                        <a class="govuk-link" href="https://www.gov.uk/call-charges">{% trans %}Find out about call charges{% endtrans %}</a>
                     </p>
 
                     <h2 class="govuk-heading-m">
                         <i class="icon icon-email"></i>
                         {% trans %}Email{% endtrans %}
                     </h2>
-
-                    <p class="govuk-body"><a href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a></p>
-
-                    <p class="govuk-body">{% trans %}Our target is to respond to emails within 10 working days{% endtrans %}</p>
-
-                    <h2 class="govuk-heading-m">
-                        <i class="icon icon-fax"></i>
-                        {% trans %}Fax{% endtrans %}
-                    </h2>
-
-                    <p class="govuk-body">{% trans %}0870 739 5780{% endtrans %}</p>
-
-                    <h2 id="postal-address" class="govuk-heading-m">
-                        <i class="icon icon-post"></i>
-                        {% trans %}Post your LPA documents for registration to:{% endtrans %}
-                    </h2>
-
-                    <p class="govuk-body">
-                        {% trans %}
-                        Office of the Public Guardian<br>
-                        PO Box 16185<br>
-                        Birmingham<br>
-                        B2 2WH
-                        {% endtrans %}
-                    </p>
+                    <ul class="govuk-list">
+                        <li><a class="govuk-link" href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a></li>
+                        <li>{% trans %}We’ll respond to emails within 10 working days.{% endtrans %}</li>
+                    </ul>
                 </div>
             </div>
-            <hr>
-
-            <p class="govuk-body">
-                {% if application == "actor" %}
-                    {% trans %}Your <a class="govuk-link" href="https://www.surveymonkey.co.uk/r/Use-LPA" target="_blank">feedback</a> will help us to improve{% endtrans %}
-                {% elseif application == "viewer"  %}
-                    {% trans %}Your <a class="govuk-link" href="https://www.surveymonkey.com/r/View-LPA" target="_blank">feedback</a> will help us to improve{% endtrans %}
-                {% endif %}
-            </p>
         </main>
     </div>
 {% endblock %}

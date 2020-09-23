@@ -11,10 +11,10 @@ Feature: View contact us from footer of page
     Then I can see the contact us page
 
   @ui
-  Scenario: Viewer can access the feedback link from the contact us page
+  Scenario: Viewer can access the call charges link from the contact us page
     Given I am on the contact us page
-    When I navigate to the feedback page
-    Then I am taken to the survey page
+    When I navigate to the call charges page
+    Then I am taken to the call charges page
 
   @ui
   Scenario: Viewer is taken back to previous page from the contact us page
