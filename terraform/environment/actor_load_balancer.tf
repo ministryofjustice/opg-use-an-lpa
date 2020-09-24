@@ -128,7 +128,7 @@ resource "aws_ssm_parameter" "actor_maintenance_switch" {
 
 resource "aws_lb_listener_rule" "actor_maintenance" {
   listener_arn = aws_lb_listener.actor_loadbalancer.arn
-  priority     = 100 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
+  priority     = 101 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
     type = "fixed-response"
 
@@ -151,6 +151,33 @@ resource "aws_lb_listener_rule" "actor_maintenance" {
     ]
   }
 }
+
+resource "aws_lb_listener_rule" "actor_maintenance_welsh" {
+  listener_arn = aws_lb_listener.actor_loadbalancer.arn
+  priority     = 100 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
+  action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/html"
+      message_body = file("${path.module}/maintenance/actor_maintenance_welsh.html")
+      status_code  = "503"
+    }
+  }
+  condition {
+    path_pattern {
+      values = ["/maintenance-cy"]
+    }
+  }
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to the condition as this is modified by a script
+      # when putting the service into maintenance mode.
+      condition,
+    ]
+  }
+}
+
 
 
 resource "aws_security_group" "actor_loadbalancer" {
