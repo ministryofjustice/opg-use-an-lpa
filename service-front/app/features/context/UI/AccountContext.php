@@ -2480,11 +2480,12 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I am logged out of the service and taken to the index page$/
+     * @Given /^I am logged out of the service and taken to the deleted account confirmation page$/
      */
-    public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage()
+    public function iAmLoggedOutOfTheServiceAndTakenToTheDeletedAccountConfirmationPage()
     {
-        $this->ui->assertPageAddress('/home');
+        $this->ui->assertPageAddress('/delete-account');
+        $this->ui->assertPageContainsText("We've deleted your account");
     }
 
     /**
