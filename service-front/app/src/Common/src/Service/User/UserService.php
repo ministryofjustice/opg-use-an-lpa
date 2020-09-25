@@ -11,7 +11,6 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authentication\UserRepositoryInterface;
-use phpDocumentor\Reflection\Types\Mixed_;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use ParagonIE\HiddenString\HiddenString;
