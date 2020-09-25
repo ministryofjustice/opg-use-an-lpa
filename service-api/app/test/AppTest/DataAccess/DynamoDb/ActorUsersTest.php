@@ -11,6 +11,7 @@ use Aws\DynamoDb\DynamoDbClient;
 use Aws\Result;
 use DateTime;
 use DateTimeInterface;
+use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 
@@ -93,7 +94,7 @@ class ActorUsersTest extends TestCase
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $actorRepo->add($id, $email, $password, $activationToken, $activationTtl);
+        $result = $actorRepo->add($id, $email, new HiddenString($password), $activationToken, $activationTtl);
 
         $this->assertEquals($id, $result['Id']);
         $this->assertEquals($email, $result['Email']);
@@ -151,7 +152,7 @@ class ActorUsersTest extends TestCase
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $actorRepo->resetActivationDetails($id, $password, $activationTtl);
+        $result = $actorRepo->resetActivationDetails($id, new HiddenString($password), $activationTtl);
 
         $this->assertEquals($id, $result['Id']);
         $this->assertEquals($email, $result['Email']);
@@ -214,7 +215,7 @@ class ActorUsersTest extends TestCase
         $this->expectException(CreationException::class);
         $this->expectExceptionMessage('Unable to retrieve newly created actor from database');
 
-        $actorRepo->add($id, $email, $password, $activationToken, $activationTtl);
+        $actorRepo->add($id, $email, new HiddenString($password), $activationToken, $activationTtl);
     }
 
     /** @test */
@@ -709,6 +710,7 @@ class ActorUsersTest extends TestCase
     public function will_reset_a_password_when_given_a_correct_user_id()
     {
         $id = '12345-1234-1234-1234-12345';
+        $password = 'password';
 
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
 
@@ -727,7 +729,7 @@ class ActorUsersTest extends TestCase
 
         $actorRepo = new ActorUsers($dynamoDbClientProphecy->reveal(), 'users-table');
 
-        $result = $actorRepo->resetPassword($id, 'password');
+        $result = $actorRepo->resetPassword($id, new HiddenString($password));
 
         $this->assertTrue($result);
     }
@@ -736,6 +738,7 @@ class ActorUsersTest extends TestCase
     public function will_not_reset_a_password_when_given_an_incorrect_user_id()
     {
         $id = '12345-1234-1234-1234-12345';
+        $password = 'passwordToHash';
 
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
 
@@ -755,7 +758,7 @@ class ActorUsersTest extends TestCase
         $actorRepo = new ActorUsers($dynamoDbClientProphecy->reveal(), 'users-table');
 
         $this->expectException(\Exception::class);
-        $result = $actorRepo->resetPassword($id, 'passwordToHash');
+        $result = $actorRepo->resetPassword($id, new HiddenString($password));
     }
 
     /** @test */

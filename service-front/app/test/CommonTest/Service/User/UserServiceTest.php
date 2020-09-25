@@ -14,6 +14,7 @@ use Common\Service\User\UserService;
 use DateTime;
 use DI\NotFoundException;
 use Fig\Http\Message\StatusCodeInterface;
+use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -47,7 +48,7 @@ class UserServiceTest extends TestCase
 
         $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
-        $return = $service->create('test@example.com', 'test');
+        $return = $service->create('test@example.com', new HiddenString('test'));
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey('Email', $return);
@@ -399,6 +400,9 @@ class UserServiceTest extends TestCase
     /** @test */
     public function can_change_password_for_authenticated_user()
     {
+        $password1 = new HiddenString('CurrentPassw0rd');
+        $password2 = new HiddenString('FinalF0rm');
+
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $apiClientProphecy = $this->prophesize(Client::class);
@@ -406,8 +410,8 @@ class UserServiceTest extends TestCase
             '/v1/change-password',
             [
                 'user-id'       => '01234567-0123-0123-0123-012345678901',
-                'password'      => 'CurrentPassw0rd',
-                'new-password'  => 'FinalF0rm'
+                'password'      => $password1->getString(),
+                'new-password'  => $password2->getString()
             ]
         )
             ->willReturn([]);
@@ -418,7 +422,7 @@ class UserServiceTest extends TestCase
         };
 
         $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
-        $return = $service->changePassword('01234567-0123-0123-0123-012345678901', 'CurrentPassw0rd', 'FinalF0rm');
+        $return = $service->changePassword('01234567-0123-0123-0123-012345678901', $password1, $password2);
 
         $this->assertEmpty($return);
     }
@@ -426,6 +430,9 @@ class UserServiceTest extends TestCase
     /** @test */
     public function exception_thrown_when_bad_password_provided_for_change_password_for_authenticated_user()
     {
+        $password1 = new HiddenString('BadPassw0rd');
+        $password2 = new HiddenString('FinalF0rm');
+
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $apiClientProphecy = $this->prophesize(Client::class);
@@ -433,8 +440,8 @@ class UserServiceTest extends TestCase
             '/v1/change-password',
             [
                 'user-id'       => '01234567-0123-0123-0123-012345678901',
-                'password'      => 'BadPassw0rd',
-                'new-password'  => 'FinalF0rm'
+                'password'      => $password1->getString(),
+                'new-password'  => $password2->getString()
             ]
         )
             ->willThrow(new ApiException(
@@ -451,12 +458,15 @@ class UserServiceTest extends TestCase
 
         $this->expectExceptionCode(StatusCodeInterface::STATUS_FORBIDDEN);
         $this->expectException(ApiException::class);
-        $return = $service->changePassword('01234567-0123-0123-0123-012345678901', 'BadPassw0rd', 'FinalF0rm');
+        $return = $service->changePassword('01234567-0123-0123-0123-012345678901', $password1, $password2);
     }
 
     /** @test */
     public function exception_thrown_when_user_not_found_for_change_password_for_authenticated_user()
     {
+        $password1 = new HiddenString('BadPassw0rd');
+        $password2 = new HiddenString('FinalF0rm');
+
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $apiClientProphecy = $this->prophesize(Client::class);
@@ -464,8 +474,8 @@ class UserServiceTest extends TestCase
             '/v1/change-password',
             [
                 'user-id'       => '01234567-9999-9999-9999-012345678901',
-                'password'      => 'BadPassw0rd',
-                'new-password'  => 'FinalF0rm'
+                'password'      => $password1->getString(),
+                'new-password'  => $password2->getString()
             ]
         )
             ->willThrow(new ApiException('User not found', StatusCodeInterface::STATUS_NOT_FOUND));
@@ -479,7 +489,7 @@ class UserServiceTest extends TestCase
 
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
         $this->expectException(ApiException::class);
-        $return = $service->changePassword('01234567-9999-9999-9999-012345678901', 'BadPassw0rd', 'FinalF0rm');
+        $return = $service->changePassword('01234567-9999-9999-9999-012345678901', $password1, $password2);
     }
 
     /** @test */
@@ -540,6 +550,7 @@ class UserServiceTest extends TestCase
     /** @test */
     public function can_request_email_reset()
     {
+        $password = new HiddenString('pa33W0rd');
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $apiClientProphecy = $this->prophesize(Client::class);
@@ -548,7 +559,7 @@ class UserServiceTest extends TestCase
             [
                 'user-id'       => '12345',
                 'new-email'     => 'new@email.com',
-                'password'      => 'pa33W0rd',
+                'password'      => $password->getString(),
             ]
         )->willReturn([
                 'EmailResetExpiry' => time() + (60 * 60 * 48),
@@ -557,7 +568,7 @@ class UserServiceTest extends TestCase
                 'Id'               => '12345',
                 'NewEmail'         => 'new@email.com',
                 'EmailResetToken'  => 't0ken12345',
-                'Password'         => 'pa33W0rd',
+                'Password'         => $password->getString(),
             ]);
 
         $userFactoryCallable = function ($identity, $roles, $details) {
@@ -567,12 +578,12 @@ class UserServiceTest extends TestCase
 
         $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
-        $data = $service->requestChangeEmail('12345', 'new@email.com', 'pa33W0rd');
+        $data = $service->requestChangeEmail('12345', 'new@email.com', $password);
 
         $this->assertEquals('12345', $data['Id']);
         $this->assertEquals('old@email.com', $data['Email']);
         $this->assertEquals('new@email.com', $data['NewEmail']);
-        $this->assertEquals('pa33W0rd', $data['Password']);
+        $this->assertEquals($password, $data['Password']);
         $this->assertEquals('t0ken12345', $data['EmailResetToken']);
         $this->assertArrayHasKey('EmailResetExpiry', $data);
     }
@@ -580,6 +591,8 @@ class UserServiceTest extends TestCase
     /** @test */
     public function exception_thrown_when_user_id_not_provided_in_request_email_change()
     {
+        $password = new HiddenString('pa33W0rd');
+
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $apiClientProphecy = $this->prophesize(Client::class);
@@ -588,7 +601,7 @@ class UserServiceTest extends TestCase
             [
                 'user-id'       => '',
                 'new-email'     => 'new@email.com',
-                'password'      => 'pa33W0rd',
+                'password'      => $password->getString(),
             ]
         )->willThrow(new ApiException('User Id must be provided', StatusCodeInterface::STATUS_BAD_REQUEST));
 
@@ -602,12 +615,13 @@ class UserServiceTest extends TestCase
 
         $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
-        $service->requestChangeEmail('', 'new@email.com', 'pa33W0rd');
+        $service->requestChangeEmail('', 'new@email.com', $password);
     }
 
     /** @test */
     public function exception_thrown_when_new_email_not_provided_in_request_email_change()
     {
+        $password = new HiddenString('pa33W0rd');
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $apiClientProphecy = $this->prophesize(Client::class);
@@ -616,7 +630,7 @@ class UserServiceTest extends TestCase
             [
                 'user-id'       => '12345',
                 'new-email'     => '',
-                'password'      => 'pa33W0rd',
+                'password'      => $password->getString(),
             ]
         )->willThrow(new ApiException('New email address must be provided', StatusCodeInterface::STATUS_BAD_REQUEST));
 
@@ -630,12 +644,13 @@ class UserServiceTest extends TestCase
 
         $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
-        $service->requestChangeEmail('12345', '', 'pa33W0rd');
+        $service->requestChangeEmail('12345', '', $password);
     }
 
     /** @test */
     public function exception_thrown_when_password_not_provided_in_request_email_change()
     {
+        $password = new HiddenString('');
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $apiClientProphecy = $this->prophesize(Client::class);
@@ -644,7 +659,7 @@ class UserServiceTest extends TestCase
             [
                 'user-id'       => '12345',
                 'new-email'     => 'new@email.com',
-                'password'      => '',
+                'password'      =>  $password->getString(),
             ]
         )->willThrow(new ApiException('Current password must be provided', StatusCodeInterface::STATUS_BAD_REQUEST));
 
@@ -658,7 +673,7 @@ class UserServiceTest extends TestCase
 
         $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
 
-        $service->requestChangeEmail('12345', 'new@email.com', '');
+        $service->requestChangeEmail('12345', 'new@email.com', $password);
     }
 
     /** @test */

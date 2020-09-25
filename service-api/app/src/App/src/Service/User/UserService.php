@@ -16,6 +16,7 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\HiddenString\HiddenString;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -245,10 +246,10 @@ class UserService
      * not expired.
      *
      * @param string $resetToken
-     * @param string $password
+     * @param HiddenString $password
      * @throws Exception
      */
-    public function completePasswordReset(string $resetToken, string $password): void
+    public function completePasswordReset(string $resetToken, HiddenString $password): void
     {
         // PasswordResetToken index is KEY only so fetch the id to do work on
         $userId = $this->usersRepository->getIdByPasswordResetToken($resetToken);
@@ -273,14 +274,14 @@ class UserService
 
     /**
      * @param string $userId
-     * @param string $password
-     * @param string $newPassword
+     * @param HiddenString $password
+     * @param HiddenString $newPassword
      */
-    public function completeChangePassword(string $userId, string $password, string $newPassword): void
+    public function completeChangePassword(string $userId, HiddenString $password, HiddenString $newPassword): void
     {
         $user = $this->usersRepository->get($userId);
 
-        if (! password_verify($password, $user['Password'])) {
+        if (! password_verify($password->getString(), $user['Password'])) {
             throw new ForbiddenException('Authentication failed for user ID ' . $userId, ['userId' => $userId]);
         }
 
@@ -309,11 +310,11 @@ class UserService
     /**
      * @param string $userId
      * @param string $newEmail
-     * @param string $password
+     * @param HiddenString $password
      * @return array
      * @throws Exception
      */
-    public function requestChangeEmail(string $userId, string $newEmail, string $password)
+    public function requestChangeEmail(string $userId, string $newEmail, HiddenString $password)
     {
         $resetToken = $this->getLinkToken();
         $resetExpiry = $this->getExpiryTtl();
@@ -335,15 +336,15 @@ class UserService
      *
      * @param string $userId
      * @param string $newEmail
-     * @param string $password
+     * @param HiddenString $password
      * @return void
      * @throws Exception
      */
-    public function canRequestChangeEmail(string $userId, string $newEmail, string $password): void
+    public function canRequestChangeEmail(string $userId, string $newEmail, HiddenString $password): void
     {
         $user = $this->usersRepository->get($userId);
 
-        if (! password_verify($password, $user['Password'])) {
+        if (! password_verify($password->getString(), $user['Password'])) {
             throw new ForbiddenException('Authentication failed for user ID ' . $userId, ['userId' => $userId]);
         }
 

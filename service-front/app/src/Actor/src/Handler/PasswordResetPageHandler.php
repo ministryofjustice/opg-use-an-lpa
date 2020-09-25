@@ -9,6 +9,7 @@ use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Service\User\UserService;
+use ParagonIE\HiddenString\HiddenString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -72,7 +73,7 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                $this->userService->completePasswordReset($request->getAttribute('token'), $data['password']);
+                $this->userService->completePasswordReset($request->getAttribute('token'), new HiddenString($data['password']));
 
                 //  Redirect to the login screen with success flash message
                 return $this->redirectToRoute('login');

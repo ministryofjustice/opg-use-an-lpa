@@ -15,7 +15,8 @@ function set_service_name() {
 function get_alb_rule_arn() {
   MM_ALB_ARN=$(aws elbv2 describe-load-balancers --names  "${ENVIRONMENT}-${SERVICE}" | jq -r .[][]."LoadBalancerArn")
   MM_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn ${MM_ALB_ARN} | jq -r '.[][]  | select(.Protocol == "HTTPS") | .ListenerArn')
-  MM_RULE_ARN=$(aws elbv2 describe-rules --listener-arn ${MM_LISTENER_ARN} | jq -r '.[][]  | select(.Priority == "100") | .RuleArn')
+  MM_RULE_ARN=$(aws elbv2 describe-rules --listener-arn ${MM_LISTENER_ARN} | jq -r '.[][]  | select(.Priority == "101") | .RuleArn')
+  MM_RULE_ARN_WELSH=$(aws elbv2 describe-rules --listener-arn ${MM_LISTENER_ARN} | jq -r '.[][]  | select(.Priority == "100") | .RuleArn')
 
 }
 
@@ -28,8 +29,13 @@ function enable_maintenance() {
   fi
   aws ssm put-parameter --name "${ENVIRONMENT}_${SERVICE}_enable_maintenance" --type "String" --value "true" --overwrite
   aws elbv2 modify-rule \
+  --rule-arn $MM_RULE_ARN_WELSH \
+  --conditions Field=host-header,Values="${MM_DNS_PREFIX}${front_end}-lasting-power-of-attorney.service.gov.uk" Field=path-pattern,Values='/cy*'
+
+  aws elbv2 modify-rule \
   --rule-arn $MM_RULE_ARN \
   --conditions Field=host-header,Values="${MM_DNS_PREFIX}${front_end}-lasting-power-of-attorney.service.gov.uk"
+
 }
 
 function disable_maintenance() {
@@ -37,6 +43,10 @@ function disable_maintenance() {
   aws elbv2 modify-rule \
   --rule-arn $MM_RULE_ARN \
   --conditions Field=path-pattern,Values='/maintenance'
+
+  aws elbv2 modify-rule \
+  --rule-arn $MM_RULE_ARN_WELSH \
+  --conditions Field=path-pattern,Values='/maintenance-cy'
 }
 
 function parse_args() {
