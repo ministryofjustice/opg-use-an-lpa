@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-09-23T15:50:00+00:00\n"
+"POT-Creation-Date: 2020-09-25T09:24:48+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2895,7 +2895,7 @@ msgstr "Gwybodaeth am brisiau galwadau"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:61
 #: src/Actor/templates/actor/change-details.html.twig:67
-#: src/Common/templates/partials/contact-us.html.twig:41
+#: src/Common/templates/partials/contact-us.html.twig:40
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:65
 msgid "Email"
 msgstr "E-bost"
@@ -4755,9 +4755,45 @@ msgstr ""
 "Dydd Llun i ddydd Gwener rhwng 9.30am a 5pm, ac eithrio dydd Mercher, rhwng "
 "10am a 5pm."
 
-#: src/Common/templates/partials/contact-us.html.twig:45
+#: src/Common/templates/partials/contact-us.html.twig:44
 msgid "We’ll respond to emails within 10 working days."
 msgstr "Byddwn yn ateb e-byst o fewn 10 diwrnod gwaith."
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:17
+msgid "We've deleted your account"
+msgstr "Rydym wedi dileu eich cyfrif"
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:19
+msgid ""
+"To use a lasting power of attorney online, you'll need to <a href=\"%link%\" "
+"class=\"govuk-link\">create a new account</a>."
+msgstr ""
+"I ddefnyddio atwrneiaeth arhosol ar-lein, bydd angen i chi <a href=\"%link%\" "
+"class=\"govuk-link\">greu cyfrif newydd</a>."
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:21
+msgid ""
+"<a class=\"govuk-link\" href=\"https://www.lastingpowerofattorney.service.gov."
+"uk/contact\">Contact us</a> if you want to use an LPA you added to the account "
+"you deleted - you'll need to ask us for a new activation key."
+msgstr ""
+"<a href=\"https://www.lastingpowerofattorney.service.gov.uk/contact\" class="
+"\"govuk-body govuk-link\">Cysylltwch â ni</a> os ydych eisiau defnyddio LPA a "
+"wnaethoch ychwanegu at y cyfrif y bu i chi ei ddileu - bydd angen i chi ofyn i "
+"ni am allwedd weithredol newydd."
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:23
+msgid ""
+"Your <a href=\"https://www.surveymonkey.co.uk/r/Use-LPA\" class=\"govuk-link"
+"\">feedback</a> is important to us - it will help us to improve this service."
+msgstr ""
+"Mae eich <a class=\"govuk-link\" href=\"https://www.surveymonkey.co.uk/r/Use-"
+"LPA\" target=\"_blank\">adborth</a> yn bwysig i ni – bydd yn ein helpu i "
+"wella’r gwasanaeth hwn."
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:26
+msgid "Back to GOV.UK"
+msgstr "Yn ôl i GOV.UK"
 
 #~ msgid ""
 #~ "<p class=\"govuk-body\">For your security, we've signed you out of this "

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-09-23T15:50:00+00:00\n"
+"POT-Creation-Date: 2020-09-25T09:24:48+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -2099,7 +2099,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:61
 #: src/Actor/templates/actor/change-details.html.twig:67
-#: src/Common/templates/partials/contact-us.html.twig:41
+#: src/Common/templates/partials/contact-us.html.twig:40
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:65
 msgid "Email"
 msgstr ""
@@ -3299,6 +3299,26 @@ msgstr ""
 msgid "Monday to Friday 9.30am to 5pm, except Wednesday, 10am to 5pm."
 msgstr ""
 
-#: src/Common/templates/partials/contact-us.html.twig:45
+#: src/Common/templates/partials/contact-us.html.twig:44
 msgid "We’ll respond to emails within 10 working days."
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:17
+msgid "We've deleted your account"
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:19
+msgid "To use a lasting power of attorney online, you'll need to <a href=\"%link%\" class=\"govuk-link\">create a new account</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:21
+msgid "<a class=\"govuk-link\" href=\"https://www.lastingpowerofattorney.service.gov.uk/contact\">Contact us</a> if you want to use an LPA you added to the account you deleted - you'll need to ask us for a new activation key."
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:23
+msgid "Your <a href=\"https://www.surveymonkey.co.uk/r/Use-LPA\" class=\"govuk-link\">feedback</a> is important to us - it will help us to improve this service."
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:26
+msgid "Back to GOV.UK"
 msgstr ""
