@@ -26,7 +26,11 @@
                             <div class="govuk-grid-column-one-half">
 
                                 {{ govuk_form_element(form.get('__csrf')) }}
-                                {{ govuk_form_element(form.get('new_email_address'), { 'label': 'New email address' | trans }) }}
+                                {{ govuk_form_element(form.get('new_email_address'), {
+                                    'label': 'New email address' | trans, 'hint':
+                                    'Check that your email address is spelt correctly' | trans
+                                    })
+                                }}
                                 {{ govuk_form_element(form.get('current_password'), { 'label': 'Confirm your password' | trans }) }}
 
                                 <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Save new email address{% endtrans %}</button>
