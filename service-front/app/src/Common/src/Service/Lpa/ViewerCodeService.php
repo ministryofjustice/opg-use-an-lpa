@@ -15,6 +15,7 @@ use DateTime;
  */
 class ViewerCodeService
 {
+    const SORT_ADDED = 'Added';
 
     /**
      * @var ApiClient
@@ -80,6 +81,11 @@ class ViewerCodeService
         $this->apiClient->setUserTokenHeader($userToken);
 
         $shareCodes = $this->apiClient->httpGet('/v1/lpas/' . $lpaId . '/codes');
+
+        //sort the result array to appear in order of most recent added
+        usort($shareCodes, function ($a, $b) use (&$sort_by_field_name) {
+            return strtotime($b[self::SORT_ADDED]) - strtotime($a[self::SORT_ADDED]);
+        });
 
         if (is_array($shareCodes)) {
             $shareCodes = new ArrayObject($shareCodes, ArrayObject::ARRAY_AS_PROPS);
