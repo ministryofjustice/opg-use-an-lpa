@@ -71,6 +71,14 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             false
         );
 
+        //sort the result array to appear in order of most recent added
+        $shareCodes = $shareCodes->getArrayCopy();
+        $sort_by_field_name = 'Added';
+
+        usort($shareCodes, function ($a, $b) use (&$sort_by_field_name) {
+            return strtotime($b[$sort_by_field_name]) - strtotime($a[$sort_by_field_name]);
+        });
+
         foreach ($shareCodes as $key => $code) {
 
             if (!array_key_exists('Cancelled', $code) || (new DateTime('now') > $code['Expires'])) {

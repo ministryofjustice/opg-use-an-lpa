@@ -219,6 +219,7 @@ class CheckAccessCodesHandlerTest extends TestCase
         $donor = new CaseActor();
         $donor->setId(self::ACTOR_ID);
         $donor->setFirstname(self::FIRST_NAME);
+        $donor->setSurname(self::SUR_NAME);
         $attorney = new CaseActor();
         $attorney->setId(15);
         $attorney->setFirstname(self::FIRST_NAME);
@@ -227,7 +228,12 @@ class CheckAccessCodesHandlerTest extends TestCase
         $lpa->setDonor($donor);
         $lpa->setAttorneys([$attorney]);
 
-        $shareCodes = new ArrayObject([['ActorId' => self::ACTOR_ID,'CreatedBy' => self::FIRST_NAME, 'ViewerCode' => 'ABCD', 'Organisation' => 'TestOrg']], ArrayObject::ARRAY_AS_PROPS);
+        $shareCodes = new ArrayObject([[
+            'ActorId' => self::ACTOR_ID,
+            'CreatedBy' => self::FIRST_NAME . ' ' . self::SUR_NAME,
+            'ViewerCode' => 'ABCD',
+            'Organisation' => 'TestOrg'
+        ]], ArrayObject::ARRAY_AS_PROPS);
 
 
         $this->lpaServiceProphecy
@@ -293,6 +299,7 @@ class CheckAccessCodesHandlerTest extends TestCase
         $donor = new CaseActor();
         $donor->setId(self::ACTOR_ID);
         $donor->setFirstname(self::FIRST_NAME);
+        $donor->setSurname(self::SUR_NAME);
         $attorney = new CaseActor();
         $attorney->setId(self::ACTOR_ID);
         $attorney->setFirstname(self::FIRST_NAME);
@@ -301,7 +308,12 @@ class CheckAccessCodesHandlerTest extends TestCase
         $lpa->setDonor($donor);
         $lpa->setAttorneys([$attorney]);
 
-        $shareCodes = new ArrayObject([['ActorId' => self::ACTOR_ID,'CreatedBy' => self::FIRST_NAME, 'ViewerCode' => 'ABCD', 'Organisation' => 'TestOrg']], ArrayObject::ARRAY_AS_PROPS);
+        $shareCodes = new ArrayObject([[
+            'ActorId' => self::ACTOR_ID,
+            'CreatedBy' => self::FIRST_NAME . ' ' . self::SUR_NAME,
+            'ViewerCode' => 'ABCD',
+            'Organisation' => 'TestOrg'
+        ]], ArrayObject::ARRAY_AS_PROPS);
 
 
         $this->lpaServiceProphecy
