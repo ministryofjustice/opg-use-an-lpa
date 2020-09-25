@@ -12,6 +12,7 @@ use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Log\Output\Email;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
@@ -72,6 +73,6 @@ class DeleteAccountHandler extends AbstractHandler implements SessionAware, User
         $session->unset(UserInterface::class);
         $session->regenerate();
 
-        return $this->redirectToRoute('home');
+        return new HtmlResponse($this->renderer->render('actor::deleted-account-confirmation'));
     }
 }
