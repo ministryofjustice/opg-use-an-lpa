@@ -11,6 +11,7 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authentication\UserRepositoryInterface;
+use phpDocumentor\Reflection\Types\Mixed_;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use ParagonIE\HiddenString\HiddenString;
@@ -144,10 +145,9 @@ class UserService implements UserRepositoryInterface
 
     /**
      * @param string $activationToken
-     * @return bool
-     * @throws \Http\Client\Exception
+     * @return false|mixed
      */
-    public function activate(string $activationToken): ?string
+    public function activate(string $activationToken)
     {
         try {
             $userData = $this->apiClient->httpPatch('/v1/user-activation', [
