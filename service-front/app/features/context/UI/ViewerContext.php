@@ -533,6 +533,7 @@ class ViewerContext implements Context
     {
         $this->ui->clickLink("privacy notice");
     }
+
     /**
      * @Then /^I can see the viewer terms of use$/
      */
@@ -710,5 +711,14 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText('Enter the LPA access code');
+    }
+
+    /**
+     * @When /^I click the (.*) link on the page$/
+     */
+    public function iClickTheBackLinkOnThePage($backLink)
+    {
+        $this->ui->assertPageContainsText($backLink);
+        $this->ui->clickLink($backLink);
     }
 }

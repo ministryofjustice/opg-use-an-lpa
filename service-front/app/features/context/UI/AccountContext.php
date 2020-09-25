@@ -3593,3 +3593,4 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('Accessibility statement for Use a lasting power of attorney');
     }
 }
+
