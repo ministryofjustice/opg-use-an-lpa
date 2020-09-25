@@ -1,5 +1,5 @@
 {%- block form_open -%}
-    <form name="{{ form.getName() }}" method="post" action="{{ form.getAttribute('action') ?: path() }}">
+    <form name="{{ form.getName() }}" method="post" novalidate action="{{ form.getAttribute('action') ?: path() }}">
 {%- endblock form_open -%}
 
 
