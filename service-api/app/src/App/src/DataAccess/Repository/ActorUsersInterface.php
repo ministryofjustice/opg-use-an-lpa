@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataAccess\Repository;
 
 use App\Exception\NotFoundException;
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Interface for Data relating to Users of the Actor System.
@@ -19,12 +20,12 @@ interface ActorUsersInterface
      *
      * @param string $id
      * @param string $email
-     * @param string $password
+     * @param HiddenString $password
      * @param string $activationToken
      * @param int $activationTtl
      * @return array
      */
-    public function add(string $id, string $email, string $password, string $activationToken, int $activationTtl): array;
+    public function add(string $id, string $email, HiddenString $password, string $activationToken, int $activationTtl): array;
 
     /**
      * Get an actor user from the database
@@ -91,10 +92,10 @@ interface ActorUsersInterface
      * Reset a password in the system using a reset token and the intended password
      *
      * @param string $id The Id of the user to reset the password for
-     * @param string $password
+     * @param HiddenString $password
      * @return bool The password reset was successful or not
      */
-    public function resetPassword(string $id, string $password): bool;
+    public function resetPassword(string $id, HiddenString $password): bool;
 
     /**
      * Records a successful login against the actor user
@@ -152,9 +153,9 @@ interface ActorUsersInterface
      *
      * @param string $id
      * @param string $email
-     * @param string $password
+     * @param HiddenString $password
      * @param int $activationTtl
      * @return mixed
      */
-    public function resetActivationDetails(string $id, string $password, int $activationTtl): array;
+    public function resetActivationDetails(string $id, HiddenString $password, int $activationTtl): array;
 }

@@ -14,6 +14,7 @@ use Common\Handler\UserAware;
 use Common\Service\User\UserService;
 use Common\Service\Email\EmailClient;
 use Fig\Http\Message\StatusCodeInterface;
+use ParagonIE\HiddenString\HiddenString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -87,7 +88,7 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
                 $data = $form->getData();
 
                 try {
-                    $this->userService->changePassword($user->getIdentity(), $data['current_password'], $data['new_password']);
+                    $this->userService->changePassword($user->getIdentity(), new HiddenString($data['current_password']), new HiddenString($data['new_password']));
 
                     $this->emailClient->sendPasswordChangedEmail($user->getDetail('email'));
 

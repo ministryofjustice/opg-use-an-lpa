@@ -25,6 +25,7 @@ use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use ParagonIE\HiddenString\HiddenString;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -90,7 +91,7 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                 $formData = $form->getData();
 
                 $newEmail = $formData['new_email_address'];
-                $password = $formData['current_password'];
+                $password = new HiddenString($formData['current_password']);
 
                 if ($newEmail === $user->getDetails()['Email']) {
                     $form->addErrorMessage(ChangeEmail::NEW_EMAIL_NOT_DIFFERENT, 'new_email_address');

@@ -14,6 +14,7 @@ use App\Exception\UnauthorizedException;
 use App\Service\User\UserService;
 use DateTime;
 use Exception;
+use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
@@ -76,7 +77,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $return = $us->add(['email' => $email, 'password' => $password]);
+        $return = $us->add(['email' => $email, 'password' => new HiddenString($password)]);
 
         $this->assertEquals(['Id' => $id, 'Email' => $email], $return);
     }
@@ -89,7 +90,7 @@ class UserServiceTest extends TestCase
         $password = 'password1';
         $activationToken = 'activationToken1';
         $ttl = (new DateTime('+24 hours'))->getTimestamp();
-        $userData = ['email' => $email, 'password' => $password, 'id' => $id];
+        $userData = ['email' => $email, 'password' => new HiddenString($password), 'id' => $id];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -296,7 +297,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $us->completePasswordReset($token, $password);
+        $us->completePasswordReset($token, new HiddenString($password));
     }
 
     /** @test */
@@ -326,7 +327,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(BadRequestException::class);
-        $us->completePasswordReset($token, $password);
+        $us->completePasswordReset($token, new HiddenString($password));
     }
 
     /** @test */
@@ -486,7 +487,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $reset = $us->requestChangeEmail($id, $newEmail, self::PASS);
+        $reset = $us->requestChangeEmail($id, $newEmail, new HiddenString(self::PASS));
 
         $this->assertEquals($id, $reset['Id']);
         $this->assertEquals($email, $reset['Email']);
@@ -501,6 +502,7 @@ class UserServiceTest extends TestCase
     {
         $id = '12345-1234-1234-1234-12345';
         $newEmail = 'new@email.com';
+        $password = 'inc0rr3ct';
 
         $userData = [
             'Id'        => $id,
@@ -520,7 +522,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(ForbiddenException::class);
-        $us->requestChangeEmail($id, $newEmail, 'inc0rr3ct');
+        $us->requestChangeEmail($id, $newEmail, new HiddenString($password));
     }
 
     /** @test */
@@ -552,7 +554,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(ConflictException::class);
-        $us->requestChangeEmail($id, $newEmail, self::PASS);
+        $us->requestChangeEmail($id, $newEmail, new HiddenString(self::PASS));
     }
 
     /** @test */
@@ -599,7 +601,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(ConflictException::class);
-        $us->requestChangeEmail($id, $newEmail, self::PASS);
+        $us->requestChangeEmail($id, $newEmail, new HiddenString(self::PASS));
     }
 
     /** @test */
@@ -658,5 +660,7 @@ class UserServiceTest extends TestCase
 
         $response = $us->completeChangeEmail($token);
         $this->assertNull($response);
+
     }
+
 }

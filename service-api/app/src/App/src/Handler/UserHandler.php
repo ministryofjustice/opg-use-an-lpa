@@ -9,6 +9,7 @@ use App\Exception\ConflictException;
 use App\Exception\NotFoundException;
 use App\Service\User\UserService;
 use Exception;
+use ParagonIE\HiddenString\HiddenString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -77,6 +78,7 @@ class UserHandler implements RequestHandlerInterface
             throw new BadRequestException('Email address and password must be provided');
         }
 
+        $requestData['password'] = new HiddenString($requestData['password']);
         $data = $this->userService->add($requestData);
 
         return new JsonResponse($data, 201);

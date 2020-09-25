@@ -9,6 +9,7 @@ use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
+use ParagonIE\HiddenString\HiddenString;
 
 class ActorUsers implements ActorUsersInterface
 {
@@ -38,14 +39,14 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function add(string $id, string $email, string $password, string $activationToken, int $activationTtl): array
+    public function add(string $id, string $email, HiddenString $password, string $activationToken, int $activationTtl): array
     {
         $this->client->putItem([
             'TableName' => $this->actorUsersTable,
             'Item' => [
                 'Id' => ['S' => $id],
                 'Email' => ['S' => $email],
-                'Password' => ['S' => password_hash($password, PASSWORD_DEFAULT)],
+                'Password' => ['S' => password_hash($password->getString(), PASSWORD_DEFAULT)],
                 'ActivationToken' => ['S' => $activationToken],
                 'ExpiresTTL' => ['N' => (string) $activationTtl],
             ]
@@ -234,7 +235,7 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function resetPassword(string $id, string $password): bool
+    public function resetPassword(string $id, HiddenString $password): bool
     {
         //  Update the item by setting the password and removing the reset token/expiry
         $this->client->updateItem([
@@ -247,7 +248,7 @@ class ActorUsers implements ActorUsersInterface
             'UpdateExpression' => 'SET Password=:p REMOVE PasswordResetToken, PasswordResetExpiry',
             'ExpressionAttributeValues' => [
                 ':p' => [
-                    'S' => password_hash($password, PASSWORD_DEFAULT)
+                    'S' => password_hash($password->getString(), PASSWORD_DEFAULT)
                 ]
             ]
         ]);
@@ -390,7 +391,7 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function resetActivationDetails(string $id, string $password, int $activationTtl): array
+    public function resetActivationDetails(string $id, HiddenString $password, int $activationTtl): array
     {
         //  Update the item by setting the password and restarting the Expiry TTL
          $result = $this->client->updateItem([
@@ -403,7 +404,7 @@ class ActorUsers implements ActorUsersInterface
             'UpdateExpression' => 'SET Password=:p, ExpiresTTL=:et',
             'ExpressionAttributeValues' => [
                 ':p' => [
-                    'S' => password_hash($password, PASSWORD_DEFAULT)
+                    'S' => password_hash($password->getString(), PASSWORD_DEFAULT)
                 ],
                 ':et' => [
                     'N' => (string) $activationTtl

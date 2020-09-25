@@ -15,6 +15,7 @@ use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use BehatTest\Context\SetupEnv;
 use JSHayes\FakeRequests\MockHandler;
+use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
@@ -380,7 +381,7 @@ class AccountContext extends BaseIntegrationContext
 
         $us = $this->container->get(UserService::class);
 
-        $us->completeChangePassword($this->userAccountId, $failedPassword, $newPassword);
+        $us->completeChangePassword($this->userAccountId, new HiddenString($failedPassword), new HiddenString($newPassword));
 
         $command = $this->awsFixtures->getLastCommand();
 
@@ -432,7 +433,7 @@ class AccountContext extends BaseIntegrationContext
 
         $us = $this->container->get(UserService::class);
 
-        $us->completePasswordReset($this->passwordResetData['PasswordResetToken'], $password);
+        $us->completePasswordReset($this->passwordResetData['PasswordResetToken'], new HiddenString($password));
     }
 
     /**
@@ -662,7 +663,7 @@ class AccountContext extends BaseIntegrationContext
         $this->userActivationToken = $us->add(
             [
                 'email' => $this->userAccountEmail,
-                'password' => $this->userAccountPassword,
+                'password' => new HiddenString($this->userAccountPassword),
             ]
         )['ActivationToken'];
     }
@@ -724,7 +725,7 @@ class AccountContext extends BaseIntegrationContext
         $result = $us->add(
             [
                 'email' => $userAccountCreateData['Email'],
-                'password' => $userAccountCreateData['Password'],
+                'password' => new HiddenString($userAccountCreateData['Password']),
             ]
         );
         assertEquals($result['Email'], $userAccountCreateData['Email']);
@@ -1120,7 +1121,7 @@ class AccountContext extends BaseIntegrationContext
 
         $us = $this->container->get(UserService::class);
 
-        $us->completeChangePassword($this->userAccountId, $this->userAccountPassword, $newPassword);
+        $us->completeChangePassword($this->userAccountId, new HiddenString($this->userAccountPassword), new HiddenString($newPassword));
 
         $command = $this->awsFixtures->getLastCommand();
 
@@ -1305,7 +1306,7 @@ class AccountContext extends BaseIntegrationContext
         $userService = $this->container->get(UserService::class);
 
         try {
-            $userService->requestChangeEmail($this->userAccountId, $this->newEmail, $this->userAccountPassword);
+            $userService->requestChangeEmail($this->userAccountId, $this->newEmail, new HiddenString($this->userAccountPassword));
         } catch (ConflictException $ex) {
             assertEquals(409, $ex->getCode());
             return;
@@ -1353,7 +1354,7 @@ class AccountContext extends BaseIntegrationContext
         $userService = $this->container->get(UserService::class);
 
         try {
-            $userService->requestChangeEmail($this->userAccountId, $this->newEmail, $this->userAccountPassword);
+            $userService->requestChangeEmail($this->userAccountId, $this->newEmail, new HiddenString($this->userAccountPassword));
         } catch (ConflictException $ex) {
             assertEquals(409, $ex->getCode());
             return;
@@ -1367,6 +1368,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iRequestToChangeMyEmailWithAnIncorrectPassword()
     {
+        $password = 'inc0rr3cT';
         // ActorUsers::get
         $this->awsFixtures->append(
             new Result(
@@ -1385,7 +1387,7 @@ class AccountContext extends BaseIntegrationContext
         $userService = $this->container->get(UserService::class);
 
         try {
-            $userService->requestChangeEmail($this->userAccountId, $this->newEmail, 'inc0rr3cT');
+            $userService->requestChangeEmail($this->userAccountId, $this->newEmail, new HiddenString($password));
         } catch (ForbiddenException $ex) {
             assertEquals(403, $ex->getCode());
             return;
@@ -1448,7 +1450,7 @@ class AccountContext extends BaseIntegrationContext
     public function iShouldBeToldThatMyRequestWasSuccessful()
     {
         $userService = $this->container->get(UserService::class);
-        $response = $userService->requestChangeEmail($this->userAccountId, $this->newEmail, $this->userAccountPassword);
+        $response = $userService->requestChangeEmail($this->userAccountId, $this->newEmail, new HiddenString($this->userAccountPassword));
 
         assertEquals($this->userAccountId, $response['Id']);
         assertEquals($this->userAccountEmail, $response['Email']);
