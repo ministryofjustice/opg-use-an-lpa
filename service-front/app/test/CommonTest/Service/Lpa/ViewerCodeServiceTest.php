@@ -13,6 +13,7 @@ use DateTime;
 class ViewerCodeServiceTest extends TestCase
 {
     const IDENTITY_TOKEN = '01234567-01234-01234-01234-012345678901';
+    const SORT_ADDED = 'Added';
 
     /**
      * @var \Prophecy\Prophecy\ObjectProphecy|Client
@@ -109,14 +110,17 @@ class ViewerCodeServiceTest extends TestCase
 
         $return = [
             [
+                'Added' => '2020-09-16 22:00:00',
                 'UserLpaActor' => $lpaId,
                 'Expires' => $pastWeek,
             ],
             [
+                'Added' => '2020-09-16 22:00:00',
                 'UserLpaActor' => $lpaId,
                 'Expires' => $futureWeek,
             ],
             [
+                'Added' => '2020-09-16 22:00:00',
                 'UserLpaActor' => $lpaId,
                 'Expires' => $endOfToday,
             ],
@@ -128,7 +132,7 @@ class ViewerCodeServiceTest extends TestCase
 
         $viewerCodeService = new ViewerCodeService($this->apiClientProphecy->reveal());
 
-        $shareCodes = $viewerCodeService->getShareCodes(self::IDENTITY_TOKEN, $lpaId, true);
+        $shareCodes = $viewerCodeService->getShareCodes(self::IDENTITY_TOKEN, $lpaId, true, self::SORT_ADDED);
 
         $this->assertInstanceOf(ArrayObject::class, $shareCodes);
         $this->assertEquals($lpaId, $shareCodes[0]['UserLpaActor']);

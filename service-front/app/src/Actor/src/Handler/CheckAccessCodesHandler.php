@@ -71,7 +71,6 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             false,
             ViewerCodeService::SORT_ADDED
         );
-        
         foreach ($shareCodes as $key => $code) {
 
             if (!array_key_exists('Cancelled', $code) || (new DateTime('now') > $code['Expires'])) {
