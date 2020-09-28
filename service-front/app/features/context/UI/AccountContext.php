@@ -922,7 +922,7 @@ class AccountContext implements Context
     {
         $this->activationToken = 'activate1234567890';
         $this->ui->assertPageAddress('/activate-account/' . $this->activationToken);
-        $this->ui->assertPageContainsText('You created the account more than 24 hours ago');
+        $this->ui->assertPageContainsText('We could not activate that account');
     }
 
     /**
@@ -3594,4 +3594,3 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('Accessibility statement for Use a lasting power of attorney');
     }
 }
-
