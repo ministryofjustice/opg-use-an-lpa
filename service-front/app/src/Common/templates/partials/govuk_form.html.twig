@@ -1,5 +1,5 @@
 {%- block form_open -%}
-    <form name="{{ form.getName() }}" method="post" action="{{ form.getAttribute('action') ?: path() }}">
+    <form name="{{ form.getName() }}" method="post" novalidate action="{{ form.getAttribute('action') ?: path() }}">
 {%- endblock form_open -%}
 
 
@@ -30,7 +30,7 @@
             </span>
 
         {% endif %}
-        
+
         {{- block('form_input') -}}
 
     </div>
@@ -47,9 +47,9 @@
 
 {%- block form_input_text -%}
     {%- set type = type|default('text') -%}
+    {%- set inputmode = inputmode|default('') -%}
+    {%- set pattern = pattern|default('') -%}
     {%- set value = element.getValue() -%}
-    {%- set inputmode = inputmode -%}
-    {%- set pattern = pattern -%}
     {{ block('form_element_simple') }}
 {%- endblock form_input_text -%}
 

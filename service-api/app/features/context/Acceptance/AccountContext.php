@@ -9,6 +9,7 @@ use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use Fig\Http\Message\StatusCodeInterface;
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class AccountContext

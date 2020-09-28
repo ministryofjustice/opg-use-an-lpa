@@ -17,6 +17,7 @@ use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
+use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Http\Message\RequestInterface;
 
@@ -275,7 +276,7 @@ class AccountContext extends BaseIntegrationContext
                 assertEquals($expectedPassword, $params['password']);
             });
 
-        $this->userService->completePasswordReset($this->userPasswordResetToken, $expectedPassword);
+        $this->userService->completePasswordReset($this->userPasswordResetToken, new HiddenString($expectedPassword));
     }
 
     /**
@@ -373,7 +374,7 @@ class AccountContext extends BaseIntegrationContext
                 )
             );
 
-        $userData = $this->userService->create($this->userEmail, $this->userPassword);
+        $userData = $this->userService->create($this->userEmail, new HiddenString($this->userPassword));
 
         assertInternalType('string', $userData['activationToken']);
         assertEquals($this->activationToken, $userData['activationToken']);
@@ -1546,7 +1547,7 @@ class AccountContext extends BaseIntegrationContext
             );
 
         try {
-            $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, $this->userPassword);
+            $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, new HiddenString($this->userPassword));
         } catch (ApiException $aex) {
             assertEquals(403, $aex->getCode());
             return;
@@ -1582,7 +1583,7 @@ class AccountContext extends BaseIntegrationContext
             );
 
         try {
-            $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, $this->userPassword);
+            $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, new HiddenString($this->userPassword));
         } catch (ApiException $aex) {
             assertEquals(409, $aex->getCode());
             return;
@@ -1618,7 +1619,7 @@ class AccountContext extends BaseIntegrationContext
             );
 
         try {
-            $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, $this->userPassword);
+            $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, new HiddenString($this->userPassword));
         } catch (ApiException $aex) {
             assertEquals(409, $aex->getCode());
             return;
@@ -1658,7 +1659,7 @@ class AccountContext extends BaseIntegrationContext
                 }
             );
 
-        $data = $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, $this->userPassword);
+        $data = $this->userService->requestChangeEmail($this->userIdentity, $this->newUserEmail, new HiddenString($this->userPassword));
 
         assertNotEmpty($data);
         assertEquals($this->userEmail, $data['Email']);
@@ -1825,7 +1826,7 @@ class AccountContext extends BaseIntegrationContext
             ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([])));
 
         try {
-            $this->userService->create($this->userEmail, $this->userPassword);
+            $this->userService->create($this->userEmail, new HiddenString($this->userPassword));
         } catch (ApiException $ex) {
             assertEquals(409, $ex->getCode());
             return;

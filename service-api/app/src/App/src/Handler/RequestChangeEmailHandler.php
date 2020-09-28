@@ -9,6 +9,7 @@ use App\Exception\ConflictException;
 use App\Exception\ForbiddenException;
 use App\Service\User\UserService;
 use Laminas\Diactoros\Response\JsonResponse;
+use ParagonIE\HiddenString\HiddenString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -54,7 +55,7 @@ class RequestChangeEmailHandler implements RequestHandlerInterface
         $user = $this->userService->requestChangeEmail(
             $requestData['user-id'],
             $requestData['new-email'],
-            $requestData['password']
+            new HiddenString($requestData['password'])
         );
 
         return new JsonResponse($user);
