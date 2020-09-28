@@ -17,6 +17,7 @@ use Mezzio\Template\TemplateRendererInterface;
 /**
  * Class ActivateAccountHandler
  * @package Actor\Handler
+ * @codeCoverageIgnore
  */
 class ActivateAccountHandler extends AbstractHandler
 {
