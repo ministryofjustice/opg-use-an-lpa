@@ -1798,7 +1798,7 @@ msgstr "Anfon y ddolen ataf drwy e-bost"
 
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:16
 msgid "We could not activate that account"
-msgstr "Nid oedd modd i ni gadarnhau’r cyfrif"
+msgstr "Nid oedd modd gwneud y cyfrif yn weithredol"
 
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:23
 msgid "Sorry, we had a problem activating your account. This could be because:"
