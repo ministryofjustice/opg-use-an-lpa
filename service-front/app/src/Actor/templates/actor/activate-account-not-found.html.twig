@@ -8,36 +8,41 @@
 
         {{ include('@partials/welsh-switch.html.twig') }}
 
-        <a href="{{ path('home') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
-
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div class="govuk-grid-row">
 
                 <div class="govuk-grid-column-two-thirds">
-                    <h2 class="govuk-heading-l">{% trans %}We could not activate that account{% endtrans %}</h2>
+                    <h2 class="govuk-heading-xl">{% trans %}We could not activate that account{% endtrans %}</h2>
                 </div>
 
                 <div class="govuk-grid-column-two-thirds">
 
-                    <p class="govuk-body-l">{% trans %}Sorry, we had a problem activating your account. This could be because:{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}We could not activate the account with the link you used. This could be because:{% endtrans %}</p>
                     <ul class="list list-bullet">
                         <li>
-                            <p class="govuk-body govuk-!-font-weight-bold">{% trans %}You already have an active account{% endtrans %}</p>
-                            <p class="govuk-body">{% trans with {'%link%': path('login') } %}If so, you can sign in to your <a href="%link%">existing Use an <abbr title="lasting power of attorney">LPA</abbr> account</a> to add an <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
+                            <p class="govuk-body govuk-!-font-weight-bold">{% trans %}you already have an active account{% endtrans %}</p>
+                            <p class="govuk-body">{% trans with {'%link%': path('login') } %}<a href="%link%">Sign in to your account</a>{% endtrans %}</p>
                         </li>
                         <li>
-                            <p class="govuk-body govuk-!-font-weight-bold">{% trans %}You created the account more than 24 hours ago{% endtrans %}</p>
-                            <p class="govuk-body">{% trans %}You need to activate your account within 24 hours of creating it. If you do not activate it within that time, we'll automatically delete it.{% endtrans %}</p>
+                            <p class="govuk-body govuk-!-font-weight-bold">{% trans %}the account activation link has expired{% endtrans %}</p>
+                            <p class="govuk-body">{% trans with {'%link%': path('create-account') } %}The link we sent you to activate your account lasts for 24 hours. If you did not use the link in that time, you'll need to <a href="%link%">create an account</a>.{% endtrans %}</p>
                         </li>
                     </ul>
-                </div>
-                <div class="govuk-grid-column-full">
-                    <p class="govuk-body">
+
+                    <p class="govuk-body govuk-!-margin-bottom-7">
                         {% trans with {'%link%': "mailto:customerservices@publicguardian.gov.uk" } %}
-                            If you need more help activating your account, email <a class="govuk-link" href="%link%">customerservices@publicguardian.gov.uk</a>.
+                            If you need help activating your account, email <a class="govuk-link" href="%link%">customerservices@publicguardian.gov.uk</a>.
                         {% endtrans %}
                     </p>
+
+                    <p class="govuk-body">
+                        {% trans %}If you're names on more than one <abbr title="lasting power of attorney">LPA</abbr>, you can add all those <abbr title="lasting powers of attorney">LPAs</abbr> to your account{% endtrans %}
+                    </p>
+
+                    <a href="{{ path('home') }}" draggable="false" class="govuk-button">
+                        {% trans %}Continue{% endtrans %}
+                    </a>
                 </div>
             </div>
 
