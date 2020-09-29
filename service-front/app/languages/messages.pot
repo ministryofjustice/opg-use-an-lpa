@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-09-28T09:40:31+00:00\n"
+"POT-Creation-Date: 2020-09-28T14:56:09+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -3329,4 +3329,24 @@ msgstr ""
 
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:40
 msgid "If you're names on more than one <abbr title=\"lasting power of attorney\">LPA</abbr>, you can add all those <abbr title=\"lasting powers of attorney\">LPAs</abbr> to your account"
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:17
+msgid "We've deleted your account"
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:19
+msgid "To use a lasting power of attorney online, you'll need to <a href=\"%link%\" class=\"govuk-link\">create a new account</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:21
+msgid "<a class=\"govuk-link\" href=\"https://www.lastingpowerofattorney.service.gov.uk/contact\">Contact us</a> if you want to use an LPA you added to the account you deleted - you'll need to ask us for a new activation key."
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:23
+msgid "Your <a href=\"https://www.surveymonkey.co.uk/r/Use-LPA\" class=\"govuk-link\">feedback</a> is important to us - it will help us to improve this service."
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:26
+msgid "Back to GOV.UK"
 msgstr ""
