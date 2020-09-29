@@ -45,6 +45,25 @@ class EmailClientTest extends TestCase
     }
 
     /** @test */
+    public function can_send_account_activated_confirmation_email()
+    {
+        $recipient = 'a@b.com';
+
+        $this->notifyClientProphecy->sendEmail(
+            $recipient,
+            EmailClient::TEMPLATE_ID_ACCOUNT_ACTIVATED_CONFIRMATION,
+            [
+                'sign-in-url' => 'http://localhost:9002/login'
+            ]
+        )
+            ->shouldBeCalledOnce();
+
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
+
+        $emailClient->sendAccountActivatedConfirmationEmail($recipient, 'http://localhost:9002/login');
+    }
+
+    /** @test */
     public function can_send_already_registered_email()
     {
         $recipient = 'a@b.com';
@@ -167,6 +186,26 @@ class EmailClientTest extends TestCase
         $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
 
         $emailClient->sendAccountActivationEmail($recipient, 'http://localhost:9002/cy/activate-account/activateAccountAABBCCDDEE');
+    }
+
+    /** @test */
+    public function can_send_account_activated_confirmation_email_if_locale_is_cy()
+    {
+        $this->locale = "cy";
+        $recipient = 'a@b.com';
+
+        $this->notifyClientProphecy->sendEmail(
+            $recipient,
+            EmailClient::WELSH_TEMPLATE_ID_ACCOUNT_ACTIVATED_CONFIRMATION,
+            [
+                'sign-in-url' => 'http://localhost:9002/cy/login'
+            ]
+        )
+            ->shouldBeCalledOnce();
+
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
+
+        $emailClient->sendAccountActivatedConfirmationEmail($recipient, 'http://localhost:9002/cy/login');
     }
 
     /** @test */

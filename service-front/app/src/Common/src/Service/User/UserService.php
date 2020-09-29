@@ -144,10 +144,9 @@ class UserService implements UserRepositoryInterface
 
     /**
      * @param string $activationToken
-     * @return bool
-     * @throws \Http\Client\Exception
+     * @return false|mixed
      */
-    public function activate(string $activationToken): bool
+    public function activate(string $activationToken)
     {
         try {
             $userData = $this->apiClient->httpPatch('/v1/user-activation', [
@@ -163,7 +162,7 @@ class UserService implements UserRepositoryInterface
                     ]
                 );
 
-                return true;
+                return $userData['Email'];
             }
         } catch (ApiException $ex) {
             if ($ex->getCode() !== StatusCodeInterface::STATUS_NOT_FOUND) {
