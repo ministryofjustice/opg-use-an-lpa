@@ -232,33 +232,7 @@ class UserServiceTest extends TestCase
 
         $return = $service->activate('activate1234567890');
 
-        $this->assertTrue($return);
-    }
-
-    /** @test */
-    public function can_activate_a_user_and_return_empty_data()
-    {
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
-        $apiClientProphecy = $this->prophesize(Client::class);
-        $apiClientProphecy->httpPatch(
-            '/v1/user-activation',
-            [
-                'activation_token' => 'activate1234567890',
-            ]
-        )
-            ->willReturn([]);
-
-        $userFactoryCallable = function ($identity, $roles, $details) {
-            // Not returning a user here since it shouldn't be called.
-            $this->fail('User should not be created');
-        };
-
-        $service = new UserService($apiClientProphecy->reveal(), $userFactoryCallable, $loggerProphecy->reveal());
-
-        $return = $service->activate('activate1234567890');
-
-        $this->assertFalse($return);
+        $this->assertEquals('test@example.com', $return);
     }
 
     /** @test */
