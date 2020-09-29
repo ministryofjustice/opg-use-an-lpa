@@ -16,7 +16,7 @@ Feature: Account creation
   Scenario: The user can follow their unique instructions to activate new account
     Given I have asked to create a new account
     When I follow the instructions on how to activate my account
-    Then my account is activated
+    Then my account is activated and I receive a confirmation email
 
   @ui
   Scenario: The user cannot follow expired instructions to create new account
