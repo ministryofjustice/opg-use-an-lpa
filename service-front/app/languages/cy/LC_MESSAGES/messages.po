@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-09-23T15:50:00+00:00\n"
+"POT-Creation-Date: 2020-09-28T14:56:09+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -173,7 +173,6 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 #: src/Actor/templates/actor/create-account-success.html.twig:11
 #: src/Actor/templates/actor/change-email.html.twig:12
 #: src/Actor/templates/actor/password-reset-request.html.twig:11
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:11
 #: src/Actor/templates/actor/death-notification.html.twig:19
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:12
 #: src/Actor/templates/actor/login.html.twig:11
@@ -1797,9 +1796,9 @@ msgstr "Cadarnhewch eich cyfeiriad e-bost"
 msgid "Email me the link"
 msgstr "Anfon y ddolen ataf drwy e-bost"
 
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:18
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:16
 msgid "We could not activate that account"
-msgstr "Nid oedd modd i ni gadarnhau’r cyfrif"
+msgstr "Nid oedd modd gwneud y cyfrif yn weithredol"
 
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:23
 msgid "Sorry, we had a problem activating your account. This could be because:"
@@ -1988,7 +1987,7 @@ msgstr ""
 "                            B2 2WH"
 
 #: src/Actor/templates/actor/your-details.html.twig:18
-#: src/Actor/templates/actor/lpa-add.html.twig:57
+#: src/Actor/templates/actor/lpa-add.html.twig:56
 #: src/Common/templates/partials/account-bar.html.twig:10
 msgid "Your details"
 msgstr "Eich manylion"
@@ -2558,16 +2557,17 @@ msgstr ""
 "                                Dydd Llun i ddydd Gwener, 9am tan 5pm, heblaw "
 "bob dydd Mercher 10am tan 5pm."
 
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:44
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/home-page.html.twig:46
-#: src/Actor/templates/actor/lpa-add.html.twig:90
+#: src/Actor/templates/actor/lpa-add.html.twig:89
 #: src/Common/templates/partials/govuk_form.html.twig:222
 #: src/Viewer/templates/viewer/enter-code.html.twig:58
 msgid "Continue"
 msgstr "Parhau"
 
 #: src/Actor/templates/actor/check-lpa.html.twig:94
-#: src/Actor/templates/actor/lpa-add.html.twig:92
+#: src/Actor/templates/actor/lpa-add.html.twig:91
 msgid "Cancel"
 msgstr "Canslo"
 
@@ -2895,7 +2895,7 @@ msgstr "Gwybodaeth am brisiau galwadau"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:61
 #: src/Actor/templates/actor/change-details.html.twig:67
-#: src/Common/templates/partials/contact-us.html.twig:41
+#: src/Common/templates/partials/contact-us.html.twig:40
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:65
 msgid "Email"
 msgstr "E-bost"
@@ -3040,11 +3040,11 @@ msgstr "Cyfeirnod LPA"
 msgid "LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000"
 msgstr "Mae cyfeirnodau LPA yn cynnwys 12 rhif<br/>Er enghraifft, 7000-000-000"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:44
+#: src/Actor/templates/actor/lpa-add.html.twig:43
 msgid "Where to find the reference number"
 msgstr "Cael hyd i’ch cyfeirnod LPA"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:49
+#: src/Actor/templates/actor/lpa-add.html.twig:48
 msgid ""
 "The reference number is printed on the letter that told you the <abbr title="
 "\"lasting power of attorney\">LPA</abbr> had been registered."
@@ -3052,7 +3052,7 @@ msgstr ""
 "Gellir gweld cyfeirnod yn y llythyr oedd yn rhoi gwybod i chi fod yr LPA wedi "
 "ei chofrestru."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:50
+#: src/Actor/templates/actor/lpa-add.html.twig:49
 msgid ""
 "You can also find the reference number on the <abbr title=\"lasting power of "
 "attorney\">LPA</abbr> or any related letters from the Office of the Public "
@@ -3061,11 +3061,11 @@ msgstr ""
 "Gwelir y cyfeirnod hefyd ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> "
 "neu unrhyw lythyr cysylltiedig gan Swyddfa’r Gwarcheidwad Cyhoeddus."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:51
+#: src/Actor/templates/actor/lpa-add.html.twig:50
 msgid "It may be marked 'OPG reference number' or 'Our ref' or 'Case number'."
 msgstr "Bydd wedi ei nodi fel ‘cyfeirnod OPG’ neu ‘Ein cyf’ neu ‘Rhif achos’."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:59
+#: src/Actor/templates/actor/lpa-add.html.twig:58
 msgid ""
 "The donor and each of the attorneys will have their own activation key. The "
 "activation key and date of birth must be for the same person."
@@ -3073,11 +3073,11 @@ msgstr ""
 "Bydd gan y rhoddwr a phob atwrnai allwedd cadarnhau cyfrif unigryw. Rhaid i’r "
 "allwedd cadarnhau cyfrif a’r dyddiad geni fod ar gyfer yr un unigolyn."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:62
+#: src/Actor/templates/actor/lpa-add.html.twig:61
 msgid "Activation key"
 msgstr "Allwedd cadarnhau cyfrif"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:63
+#: src/Actor/templates/actor/lpa-add.html.twig:62
 msgid ""
 "Activation keys are 13 letters and numbers long and start with a C<br/>For "
 "example, C-AB12 CD34 EF56"
@@ -3085,11 +3085,11 @@ msgstr ""
 "Mae allweddi cadarnhau cyfrif yn gyfuniad o 13 llythyren a rhifau ac yn "
 "dechrau gyda C.<br/>Er enghraifft, C-AB12 CD34 EF56"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:70
+#: src/Actor/templates/actor/lpa-add.html.twig:69
 msgid "Where to find your activation key"
 msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:74
+#: src/Actor/templates/actor/lpa-add.html.twig:73
 msgid ""
 "Your activation key is printed on the letter that told you the <abbr title="
 "\"lasting power of attorney\">LPA</abbr> had been registered. The donor and "
@@ -3099,7 +3099,7 @@ msgstr ""
 "title=\"atwrneiaeth arhosol\">LPA</abbr> wedi ei chofrestru. Bydd gan y "
 "rhoddwr a phob atwrnai allwedd cadarnhau cyfrif unigryw."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:75
+#: src/Actor/templates/actor/lpa-add.html.twig:74
 msgid ""
 "If you cannot find it, please call us:<br>\n"
 "                                Telephone: 0300 456 0300<br>\n"
@@ -3113,11 +3113,11 @@ msgstr ""
 "                                Dydd Llun i ddydd Gwener, 9am tan 5pm, heblaw "
 "bob dydd Mercher 10am tan 5pm."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:86
+#: src/Actor/templates/actor/lpa-add.html.twig:85
 msgid "What is your date of birth?"
 msgstr "Beth yw eich dyddiad geni?"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:87
+#: src/Actor/templates/actor/lpa-add.html.twig:86
 msgid "For example, 31 03 1980"
 msgstr "Er enghraifft, 31 03 1980"
 
@@ -4743,7 +4743,7 @@ msgstr ""
 
 #: src/Common/templates/partials/contact-us.html.twig:29
 msgid "Telephone:"
-msgstr "Ffôn"
+msgstr "Ffôn:"
 
 #: src/Common/templates/partials/contact-us.html.twig:32
 msgid "Telephone: 0300 456 0300"
@@ -4755,9 +4755,93 @@ msgstr ""
 "Dydd Llun i ddydd Gwener rhwng 9.30am a 5pm, ac eithrio dydd Mercher, rhwng "
 "10am a 5pm."
 
-#: src/Common/templates/partials/contact-us.html.twig:45
+#: src/Common/templates/partials/contact-us.html.twig:44
 msgid "We’ll respond to emails within 10 working days."
 msgstr "Byddwn yn ateb e-byst o fewn 10 diwrnod gwaith."
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:21
+msgid ""
+"We could not activate the account with the link you used. This could be "
+"because:"
+msgstr ""
+"Nid oedd modd inni wneud y cyfrif yn weithredol gyda’r ddolen a ddefnyddiwyd "
+"gennych. Gall hyn fod oherwydd:"
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:24
+msgid "you already have an active account"
+msgstr "bod gennych gyfrif gweithredol yn barod"
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:25
+msgid "<a href=\"%link%\">Sign in to your account</a>"
+msgstr "<a href=\"%link%\">Mewngofnodwch i’ch cyfrif</a>"
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:28
+msgid "the account activation link has expired"
+msgstr "bod y ddolen i wneud y cyfrif yn weithredol wedi dod i ben"
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:29
+msgid ""
+"The link we sent you to activate your account lasts for 24 hours. If you did "
+"not use the link in that time, you'll need to <a href=\"%link%\">create an "
+"account</a>."
+msgstr ""
+"Mae’r ddolen wnaethom ni ei hanfon atoch yn para am 24 awr. Os na wnaethoch "
+"chi ddefnyddio’r ddolen o fewn y cyfnod hwnnw, bydd rhaid i chi <a href=\"%link"
+"%\">greu cyfrif</a>."
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:34
+msgid ""
+"If you need help activating your account, email <a class=\"govuk-link\" href="
+"\"%link%\">customerservices@publicguardian.gov.uk</a>."
+msgstr ""
+"Os oes arnoch angen cymorth i wneud eich cyfrif yn weithredol, anfonwch neges "
+"e-bost i <a href=\"%link%\">customerservices@publicguardian.gov.uk</a>."
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:40
+msgid ""
+"If you're names on more than one <abbr title=\"lasting power of attorney"
+"\">LPA</abbr>, you can add all those <abbr title=\"lasting powers of attorney"
+"\">LPAs</abbr> to your account"
+msgstr ""
+"Os ydych wedi’ch enwi ar fwy nac un <abbr title=\"atwrneiaeth arhosol\">LPA</"
+"abbr>, gallwch ychwanegu’r holl <abbr title=\"atwrneiaeth arhosol\">LPAs</"
+"abbr> hynny at eich cyfrif"
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:17
+msgid "We've deleted your account"
+msgstr "Rydym wedi dileu eich cyfrif"
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:19
+msgid ""
+"To use a lasting power of attorney online, you'll need to <a href=\"%link%\" "
+"class=\"govuk-link\">create a new account</a>."
+msgstr ""
+"I ddefnyddio atwrneiaeth arhosol ar-lein, bydd angen i chi <a href=\"%link%\" "
+"class=\"govuk-link\">greu cyfrif newydd</a>."
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:21
+msgid ""
+"<a class=\"govuk-link\" href=\"https://www.lastingpowerofattorney.service.gov."
+"uk/contact\">Contact us</a> if you want to use an LPA you added to the account "
+"you deleted - you'll need to ask us for a new activation key."
+msgstr ""
+"<a class=\"govuk-link\" href=\"https://www.lastingpowerofattorney.service.gov."
+"uk/contact\">Cysylltwch â ni</a> os ydych eisiau defnyddio LPA a wnaethoch "
+"ychwanegu at y cyfrif y bu i chi ei ddileu - bydd angen i chi ofyn i ni am "
+"allwedd weithredol newydd."
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:23
+msgid ""
+"Your <a href=\"https://www.surveymonkey.co.uk/r/Use-LPA\" class=\"govuk-link"
+"\">feedback</a> is important to us - it will help us to improve this service."
+msgstr ""
+"Mae eich <a class=\"govuk-link\" href=\"https://www.surveymonkey.co.uk/r/Use-"
+"LPA\" target=\"_blank\">adborth</a> yn bwysig i ni – bydd yn ein helpu i "
+"wella’r gwasanaeth hwn."
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:26
+msgid "Back to GOV.UK"
+msgstr "Yn ôl i GOV.UK"
 
 #~ msgid ""
 #~ "<p class=\"govuk-body\">For your security, we've signed you out of this "

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-09-23T15:50:00+00:00\n"
+"POT-Creation-Date: 2020-09-28T14:56:09+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -143,7 +143,6 @@ msgstr ""
 #: src/Actor/templates/actor/create-account-success.html.twig:11
 #: src/Actor/templates/actor/change-email.html.twig:12
 #: src/Actor/templates/actor/password-reset-request.html.twig:11
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:11
 #: src/Actor/templates/actor/death-notification.html.twig:19
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:12
 #: src/Actor/templates/actor/login.html.twig:11
@@ -1223,7 +1222,7 @@ msgstr ""
 msgid "Email me the link"
 msgstr ""
 
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:18
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:16
 msgid "We could not activate that account"
 msgstr ""
 
@@ -1372,7 +1371,7 @@ msgid ""
 msgstr ""
 
 #: src/Actor/templates/actor/your-details.html.twig:18
-#: src/Actor/templates/actor/lpa-add.html.twig:57
+#: src/Actor/templates/actor/lpa-add.html.twig:56
 #: src/Common/templates/partials/account-bar.html.twig:10
 msgid "Your details"
 msgstr ""
@@ -1839,16 +1838,17 @@ msgid ""
 "                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm."
 msgstr ""
 
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:44
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/home-page.html.twig:46
-#: src/Actor/templates/actor/lpa-add.html.twig:90
+#: src/Actor/templates/actor/lpa-add.html.twig:89
 #: src/Common/templates/partials/govuk_form.html.twig:222
 #: src/Viewer/templates/viewer/enter-code.html.twig:58
 msgid "Continue"
 msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:94
-#: src/Actor/templates/actor/lpa-add.html.twig:92
+#: src/Actor/templates/actor/lpa-add.html.twig:91
 msgid "Cancel"
 msgstr ""
 
@@ -2099,7 +2099,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:61
 #: src/Actor/templates/actor/change-details.html.twig:67
-#: src/Common/templates/partials/contact-us.html.twig:41
+#: src/Common/templates/partials/contact-us.html.twig:40
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:65
 msgid "Email"
 msgstr ""
@@ -2195,43 +2195,43 @@ msgstr ""
 msgid "LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:44
+#: src/Actor/templates/actor/lpa-add.html.twig:43
 msgid "Where to find the reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:49
+#: src/Actor/templates/actor/lpa-add.html.twig:48
 msgid "The reference number is printed on the letter that told you the <abbr title=\"lasting power of attorney\">LPA</abbr> had been registered."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:50
+#: src/Actor/templates/actor/lpa-add.html.twig:49
 msgid "You can also find the reference number on the <abbr title=\"lasting power of attorney\">LPA</abbr> or any related letters from the Office of the Public Guardian."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:51
+#: src/Actor/templates/actor/lpa-add.html.twig:50
 msgid "It may be marked 'OPG reference number' or 'Our ref' or 'Case number'."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:59
+#: src/Actor/templates/actor/lpa-add.html.twig:58
 msgid "The donor and each of the attorneys will have their own activation key. The activation key and date of birth must be for the same person."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:62
+#: src/Actor/templates/actor/lpa-add.html.twig:61
 msgid "Activation key"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:63
+#: src/Actor/templates/actor/lpa-add.html.twig:62
 msgid "Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:70
+#: src/Actor/templates/actor/lpa-add.html.twig:69
 msgid "Where to find your activation key"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:74
+#: src/Actor/templates/actor/lpa-add.html.twig:73
 msgid "Your activation key is printed on the letter that told you the <abbr title=\"lasting power of attorney\">LPA</abbr> had been registered. The donor and each attorney will have their own unique activation key."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:75
+#: src/Actor/templates/actor/lpa-add.html.twig:74
 msgid ""
 "If you cannot find it, please call us:<br>\n"
 "                                Telephone: 0300 456 0300<br>\n"
@@ -2239,11 +2239,11 @@ msgid ""
 "                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:86
+#: src/Actor/templates/actor/lpa-add.html.twig:85
 msgid "What is your date of birth?"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:87
+#: src/Actor/templates/actor/lpa-add.html.twig:86
 msgid "For example, 31 03 1980"
 msgstr ""
 
@@ -3299,6 +3299,54 @@ msgstr ""
 msgid "Monday to Friday 9.30am to 5pm, except Wednesday, 10am to 5pm."
 msgstr ""
 
-#: src/Common/templates/partials/contact-us.html.twig:45
+#: src/Common/templates/partials/contact-us.html.twig:44
 msgid "We’ll respond to emails within 10 working days."
+msgstr ""
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:21
+msgid "We could not activate the account with the link you used. This could be because:"
+msgstr ""
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:24
+msgid "you already have an active account"
+msgstr ""
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:25
+msgid "<a href=\"%link%\">Sign in to your account</a>"
+msgstr ""
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:28
+msgid "the account activation link has expired"
+msgstr ""
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:29
+msgid "The link we sent you to activate your account lasts for 24 hours. If you did not use the link in that time, you'll need to <a href=\"%link%\">create an account</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:34
+msgid "If you need help activating your account, email <a class=\"govuk-link\" href=\"%link%\">customerservices@publicguardian.gov.uk</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:40
+msgid "If you're names on more than one <abbr title=\"lasting power of attorney\">LPA</abbr>, you can add all those <abbr title=\"lasting powers of attorney\">LPAs</abbr> to your account"
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:17
+msgid "We've deleted your account"
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:19
+msgid "To use a lasting power of attorney online, you'll need to <a href=\"%link%\" class=\"govuk-link\">create a new account</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:21
+msgid "<a class=\"govuk-link\" href=\"https://www.lastingpowerofattorney.service.gov.uk/contact\">Contact us</a> if you want to use an LPA you added to the account you deleted - you'll need to ask us for a new activation key."
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:23
+msgid "Your <a href=\"https://www.surveymonkey.co.uk/r/Use-LPA\" class=\"govuk-link\">feedback</a> is important to us - it will help us to improve this service."
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:26
+msgid "Back to GOV.UK"
 msgstr ""

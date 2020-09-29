@@ -1512,9 +1512,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I am logged out of the service and taken to the index page$/
+     * @Given /^I am logged out of the service and taken to the deleted account confirmation page$/
      */
-    public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage()
+    public function iAmLoggedOutOfTheServiceAndTakenToTheDeletedAccountConfirmationPage()
     {
         // Not needed for this context
     }
