@@ -14,7 +14,6 @@ class ViewerCodeServiceTest extends TestCase
 {
     const IDENTITY_TOKEN = '01234567-01234-01234-01234-012345678901';
     const SORT_ADDED = 'Added';
-    //const IDENTITY_TOKEN = '01234567-01234-01234-01234-012345678901';
     const LPA_ID = '98765432-12345-54321-12345-9876543210';
     const ACTOR_ID = 10;
     const FIRST_NAME = "John";
