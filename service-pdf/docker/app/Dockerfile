@@ -2,9 +2,9 @@
 #
 # Based upon:
 # https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-in-docker
-# https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md#running-on-alpine 
+# https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md#running-on-alpine
 
-FROM node:lts-alpine
+FROM node:lts-alpine3.12
 
 RUN apk add --no-cache \
       chromium \
@@ -18,7 +18,7 @@ RUN apk add --no-cache \
       yarn
 
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true 
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 # Tell puppeteer where to look for chromium and install here.
 ENV CHROMIUM_PATH /usr/bin/chromium-browser
 
