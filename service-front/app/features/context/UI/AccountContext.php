@@ -876,6 +876,8 @@ class AccountContext implements Context
      */
     public function iFollowTheInstructionsOnHowToActivateMyAccount()
     {
+        $this->activationToken = 'abcd2345';
+        $this->userEmail = 'a@b.com';
         // API fixture for reset token check
         $this->apiFixtures->patch('/v1/user-activation')
             ->respondWith(
@@ -885,19 +887,36 @@ class AccountContext implements Context
                     json_encode(
                         [
                             'Id' => '123',
+                            'Email' => $this->userEmail,
                             'activation_token' => $this->activationToken,
-                        ]
-                    )
-                )
-            );
+                        ])))
+            ->inspectRequest(function (RequestInterface $request, array $options) {
+            $params = json_decode($request->getBody()->getContents(), true);
+            assertEquals('abcd2345', $params['activation_token']);
+        });
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+            function (RequestInterface $request, array $options) {
+                $params = json_decode($request->getBody()->getContents(), true);
+
+                assertInternalType('array', $params);
+                assertArrayHasKey('template_id', $params);
+                assertArrayHasKey('personalisation', $params);
+                assertArrayHasKey('sign-in-url', $params['personalisation']);
+                assertContains('/login', $params['personalisation']['sign-in-url']);
+            }
+    );
 
         $this->ui->visit('/activate-account/' . $this->activationToken);
     }
 
     /**
-     * @Then /^my account is activated$/
+     * @Then /^my account is activated and I receive a confirmation email$/
      */
-    public function myAccountIsActivated()
+    public function myAccountIsActivatedAndIReceiveAConfirmationEmail()
     {
         $this->ui->assertPageContainsText('Account activated');
         $this->ui->assertPageContainsText('sign in');
