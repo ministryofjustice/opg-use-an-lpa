@@ -425,4 +425,25 @@ class CommonContext implements Context
     {
         $this->ui->assertPageAddress('https://www.gov.uk/call-charges');
     }
+
+    /**
+     * @When /^I provide a wrong url that does not exist$/
+     */
+    public function iProvideAWrongUrlThatDoesNotExist()
+    {
+        $this->ui->assertPageAddress('/home');
+        $this->ui->visit('/home/random');
+    }
+
+    /**
+     * @When /^I should be shown an error page with details$/
+     */
+    public function iShouldBeShownAnErrorPageWithDetails()
+    {
+        var_dump("hello");
+        die;
+
+        $this->ui->assertPageAddress('/home/random');
+        $this->ui->assertPageContainsText('hello');
+    }
 }

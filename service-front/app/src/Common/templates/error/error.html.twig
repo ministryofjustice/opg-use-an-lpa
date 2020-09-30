@@ -4,22 +4,28 @@
 
 {% block content %}
 <div class="govuk-width-container">
-    {{ include('@partials/new-service.html.twig') }}
-
-    <a href="{{ path('home') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
-
     <main class="govuk-main-wrapper">
-        <span class="govuk-caption-xl">{% trans %}This is awkward.{% endtrans %}</span>
-        <h1 class="govuk-heading-xl">{% trans %}Oops!{% endtrans %}</h1>
-        <p class="govuk-body">{% trans with {'%status%': status, '%reason%': reason } %}We encountered a %status% %reason% error.{% endtrans %}</p>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-xl">{% trans %}Sorry, there is a problem with the service{% endtrans %}</h1>
+                <p class="govuk-body">{% trans %}Try again later.{% endtrans %}</h2></p>
+                <p class="govuk-body">
+                    {%trans with {'%link%': path('home')} %}
+                        We’ve not saved any information you entered. When the service is available,
+                        you’ll have to <a href="%link%" class="govuk-link">start again.</a>
+                    {% endtrans %}
+                </p>
+                <p class="govuk-body">
+                    {%trans with {'%link%': path('contact-us')} %}
+                        You can <a class="govuk-link" href="%link%">contact us</a> if you have any questions.
+                    {% endtrans %}
+                </p>
 
-        {% if status == 404 %}
-            <p class="govuk-body">
-                {%trans with {'%link%': path('home')} %}You are looking for something that doesn't exist or may have moved. Check out one of the links on this page
-                or head back to <a href="%link%" class="govuk-link">Home</a>.{% endtrans %}
-            </p>
-        {% endif %}
-
+{#                {% if status == 404 %}#}
+{#                    {{ include('@error/404.html.twig') }}#}
+{#                {% endif %}#}
+            </div>
+        </div>
     </main>
 </div>
 {% endblock %}
