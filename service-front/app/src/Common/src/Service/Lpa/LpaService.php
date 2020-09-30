@@ -281,6 +281,12 @@ class LpaService
             return strcmp($surnameA, $surnameB);
         });
 
+        uasort($lpas, function ($a, $b) {
+            $firstnameA = $a->lpa->getDonor()->getFirstname();
+            $firstnameB = $b->lpa->getDonor()->getFirstname();
+            return strcmp($firstnameA, $firstnameB);
+        });
+
         return new ArrayObject($lpas, ArrayObject::ARRAY_AS_PROPS);
     }
 
