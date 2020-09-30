@@ -440,10 +440,7 @@ class CommonContext implements Context
      */
     public function iShouldBeShownAnErrorPageWithDetails()
     {
-        var_dump("hello");
-        die;
-
         $this->ui->assertPageAddress('/home/random');
-        $this->ui->assertPageContainsText('hello');
+        $this->ui->assertPageContainsText('Page not found');
     }
 }
