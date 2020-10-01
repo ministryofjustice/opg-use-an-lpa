@@ -98,7 +98,7 @@ class ViewerCodesTest extends TestCase
     }
 
     /** @test */
-    public function can_query_by_user_lpa_actor_id(){
+    public function can_query_by_user_lpa(){
 
         $testSiriusUid = '98765-43210';
         $testActorId = '12345-67891';
@@ -112,7 +112,6 @@ class ViewerCodesTest extends TestCase
 
             $this->assertArrayHasKey('ExpressionAttributeValues', $data);
             $this->assertArrayHasKey(':uId', $data['ExpressionAttributeValues']);
-            $this->assertArrayHasKey(':actor', $data['ExpressionAttributeValues']);
 
             $this->assertEquals(['S' => $testSiriusUid], $data['ExpressionAttributeValues'][':uId']);
 
@@ -155,10 +154,9 @@ class ViewerCodesTest extends TestCase
 
             $this->assertArrayHasKey('ExpressionAttributeValues', $data);
             $this->assertArrayHasKey(':uId', $data['ExpressionAttributeValues']);
-            $this->assertArrayHasKey(':actor', $data['ExpressionAttributeValues']);
-
-            $this->assertEquals(['S' => $testSiriusUid], $data['ExpressionAttributeValues'][':uId']);
             
+            $this->assertEquals(['S' => $testSiriusUid], $data['ExpressionAttributeValues'][':uId']);
+
             return true;
         }))
             ->willReturn($this->createAWSResult([
