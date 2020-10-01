@@ -266,7 +266,7 @@ class LpaContext implements Context
             )
         );
 
-        // ViewerCodesRepository::getCodesByUserLpaActorId
+        // ViewerCodesRepository::getCodesByUserLpa
         $this->awsFixtures->append(
             new Result(
                 [
@@ -402,7 +402,7 @@ class LpaContext implements Context
             )
         );
 
-        // ViewerCodesRepository::getCodesByUserLpaActorId
+        // ViewerCodesRepository::getCodesByUserLpa
         $this->awsFixtures->append(new Result());
 
         // LpaService::getLpas
@@ -491,7 +491,7 @@ class LpaContext implements Context
             )
         );
 
-        // ViewerCodes::getCodesByUserLpaActorId
+        // ViewerCodes::getCodesByUserLpa
         $this->awsFixtures->append(
             new Result(
                 [
@@ -622,7 +622,7 @@ class LpaContext implements Context
             )
         );
 
-        // ViewerCodes::getCodesByUserLpaActorId
+        // ViewerCodes::getCodesByUserLpa
         $this->awsFixtures->append(
             new Result(
                 [
@@ -755,7 +755,7 @@ class LpaContext implements Context
             )
         );
 
-        // ViewerCodes::getCodesByUserLpaActorId
+        // ViewerCodes::getCodesByUserLpa
         $this->awsFixtures->append(
             new Result(
                 [
