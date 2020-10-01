@@ -115,7 +115,6 @@ class ViewerCodesTest extends TestCase
             $this->assertArrayHasKey(':actor', $data['ExpressionAttributeValues']);
 
             $this->assertEquals(['S' => $testSiriusUid], $data['ExpressionAttributeValues'][':uId']);
-            $this->assertEquals(['S' => $testActorId], $data['ExpressionAttributeValues'][':actor']);
 
             return true;
         }))
@@ -159,8 +158,7 @@ class ViewerCodesTest extends TestCase
             $this->assertArrayHasKey(':actor', $data['ExpressionAttributeValues']);
 
             $this->assertEquals(['S' => $testSiriusUid], $data['ExpressionAttributeValues'][':uId']);
-            $this->assertEquals(['S' => $testActorId], $data['ExpressionAttributeValues'][':actor']);
-
+            
             return true;
         }))
             ->willReturn($this->createAWSResult([
