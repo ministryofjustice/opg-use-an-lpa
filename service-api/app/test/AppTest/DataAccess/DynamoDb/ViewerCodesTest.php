@@ -133,7 +133,7 @@ class ViewerCodesTest extends TestCase
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $repo->getCodesByUserLpa($testSiriusUid, $testActorId);
+        $result = $repo->getCodesByUserLpa($testSiriusUid);
 
         $this->assertEquals($testSiriusUid, $result[0]['SiriusUid']);
         $this->assertEquals($testActorId, $result[0]['UserLpaActor']);
@@ -154,7 +154,7 @@ class ViewerCodesTest extends TestCase
 
             $this->assertArrayHasKey('ExpressionAttributeValues', $data);
             $this->assertArrayHasKey(':uId', $data['ExpressionAttributeValues']);
-            
+
             $this->assertEquals(['S' => $testSiriusUid], $data['ExpressionAttributeValues'][':uId']);
 
             return true;
@@ -166,7 +166,7 @@ class ViewerCodesTest extends TestCase
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $repo->getCodesByUserLpa($testSiriusUid, $testActorId);
+        $result = $repo->getCodesByUserLpa($testSiriusUid);
 
         $this->assertEmpty($result);
     }
