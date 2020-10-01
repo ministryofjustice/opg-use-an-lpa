@@ -110,7 +110,6 @@ class ViewerCodesTest extends TestCase
             $this->assertArrayHasKey('IndexName', $data);
             $this->assertEquals('SiriusUidIndex', $data['IndexName']);
 
-            $this->assertArrayHasKey('FilterExpression', $data);
             $this->assertArrayHasKey('ExpressionAttributeValues', $data);
             $this->assertArrayHasKey(':uId', $data['ExpressionAttributeValues']);
             $this->assertArrayHasKey(':actor', $data['ExpressionAttributeValues']);
@@ -136,7 +135,7 @@ class ViewerCodesTest extends TestCase
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $repo->getCodesByUserLpaActorId($testSiriusUid, $testActorId);
+        $result = $repo->getCodesByUserLpa($testSiriusUid, $testActorId);
 
         $this->assertEquals($testSiriusUid, $result[0]['SiriusUid']);
         $this->assertEquals($testActorId, $result[0]['UserLpaActor']);
@@ -155,7 +154,6 @@ class ViewerCodesTest extends TestCase
             $this->assertArrayHasKey('IndexName', $data);
             $this->assertEquals('SiriusUidIndex', $data['IndexName']);
 
-            $this->assertArrayHasKey('FilterExpression', $data);
             $this->assertArrayHasKey('ExpressionAttributeValues', $data);
             $this->assertArrayHasKey(':uId', $data['ExpressionAttributeValues']);
             $this->assertArrayHasKey(':actor', $data['ExpressionAttributeValues']);
@@ -172,7 +170,7 @@ class ViewerCodesTest extends TestCase
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $repo->getCodesByUserLpaActorId($testSiriusUid, $testActorId);
+        $result = $repo->getCodesByUserLpa($testSiriusUid, $testActorId);
 
         $this->assertEmpty($result);
     }
