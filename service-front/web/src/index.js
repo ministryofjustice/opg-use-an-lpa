@@ -20,4 +20,6 @@ disableButtonOnClick(document.getElementsByTagName('form'));
 new cookieConsent(document.getElementsByClassName('cookie-banner')[0], window.location.pathname === '/cookies');
 copyAccessCode();
 showHidePassword();
-new sessionDialog(document.getElementById("dialog"));
+if (document.getElementsByClassName('js-signed-in').length > 0) {
+    new sessionDialog(document.getElementById("dialog"));
+}
