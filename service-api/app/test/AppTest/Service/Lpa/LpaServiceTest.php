@@ -243,11 +243,13 @@ class LpaServiceTest extends TestCase
                 'Id' => 'token-1',
                 'SiriusUid' => 'uid-1',
                 'ActorId' => 1,
+                'Added'   => new DateTime('now')
             ],
             [
                 'Id' => 'token-2',
                 'SiriusUid' => 'uid-2',
                 'ActorId' => 2,
+                'Added'   => new DateTime('now')
             ]
         ];
 
@@ -324,11 +326,13 @@ class LpaServiceTest extends TestCase
                 'Id' => 'token-1',
                 'SiriusUid' => 'uid-1',
                 'ActorId' => 1,
+                'Added'   => new DateTime('today')
             ],
             [
                 'Id' => 'token-2',
                 'SiriusUid' => 'uid-2',
                 'ActorId' => 2,
+                'Added'   => new DateTime('today')
             ]
         ];
 
@@ -385,7 +389,7 @@ class LpaServiceTest extends TestCase
 
         $this->assertEquals($map['Id'], $result['user-lpa-actor-token']);
         $this->assertEquals($lpa->getLookupTime()->getTimestamp(), strtotime($result['date']));
-        $this->assertEquals(['type' => 'donor', 'details' => $lpa->getData()['donor']], $result['actor']);   
+        $this->assertEquals(['type' => 'donor', 'details' => $lpa->getData()['donor']], $result['actor']);
         $this->assertEquals($lpa->getData(), $result['lpa']);
     }
 
@@ -696,7 +700,7 @@ class LpaServiceTest extends TestCase
 
         $this->assertNull($result);
     }
-    
+
     /** @test */
     public function can_not_find_actor_who_is_not_a_donor_by_linked_uid()
     {
