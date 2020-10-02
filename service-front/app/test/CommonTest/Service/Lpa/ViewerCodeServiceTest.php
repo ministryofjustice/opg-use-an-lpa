@@ -13,6 +13,12 @@ use DateTime;
 class ViewerCodeServiceTest extends TestCase
 {
     const IDENTITY_TOKEN = '01234567-01234-01234-01234-012345678901';
+    const SORT_ADDED = 'Added';
+    const LPA_ID = '98765432-12345-54321-12345-9876543210';
+    const ACTOR_ID = 10;
+    const FIRST_NAME = "John";
+    const SUR_NAME = "Will";
+    const CSRF_CODE = '1234';
 
     /**
      * @var \Prophecy\Prophecy\ObjectProphecy|Client
@@ -109,14 +115,17 @@ class ViewerCodeServiceTest extends TestCase
 
         $return = [
             [
+                'Added' => '2020-09-16 22:00:00',
                 'UserLpaActor' => $lpaId,
                 'Expires' => $pastWeek,
             ],
             [
+                'Added' => '2020-09-16 22:00:00',
                 'UserLpaActor' => $lpaId,
                 'Expires' => $futureWeek,
             ],
             [
+                'Added' => '2020-09-16 22:00:00',
                 'UserLpaActor' => $lpaId,
                 'Expires' => $endOfToday,
             ],
@@ -155,5 +164,51 @@ class ViewerCodeServiceTest extends TestCase
         $codeData = $viewerCodeService->cancelShareCode(self::IDENTITY_TOKEN, $lpaId, $viewerCode);
 
         $this->assertEquals(null,$codeData);
+    }
+
+    /** @test */
+    public function it_orders_viewercode_by_order_of_added_date()
+    {
+        $lpaId = '98765432-01234-01234-01234-012345678901';
+        $expiry     = (new \DateTime('now +30 days'))->format('c');
+
+        $shareCodes = [
+            0 => [
+                'ActorId' => 123,
+                'CreatedBy' => self::FIRST_NAME . ' ' . self::SUR_NAME,
+                'Added' => '2020-09-16 22:00:00',
+                'ViewerCode' => 'ABCD',
+                'Organisation' => 'TestOrg1'
+            ],
+            1 => [
+                'ActorId' => self::ACTOR_ID,
+                'CreatedBy' => self::FIRST_NAME . ' ' . self::SUR_NAME,
+                'Added' => '2020-09-16 22:10:00',
+                'ViewerCode' => 'WXYZ',
+                'Organisation' => 'TestOrg2'
+            ],
+            2 => [
+                'ActorId' => self::ACTOR_ID,
+                'CreatedBy' => self::FIRST_NAME . ' ' . self::SUR_NAME,
+                'Added' => '2020-09-16 22:20:00',
+                'ViewerCode' => 'LMNO',
+                'Organisation' => 'TestOrg3'
+            ]
+        ];
+
+        $this->apiClientProphecy
+            ->httpGet('/v1/lpas/' . $lpaId . '/codes')
+            ->willReturn($shareCodes);
+
+        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy->reveal());
+
+        $codeData = $viewerCodeService->getShareCodes(self::IDENTITY_TOKEN, $lpaId, false, self::SORT_ADDED);
+        $codeData = $codeData->getArrayCopy();
+
+        $this->assertIsArray($codeData);
+        $this->assertNotEquals($shareCodes, $codeData);
+        $this->assertEquals($codeData[0]['Added'], $shareCodes[2]['Added']);
+        $this->assertEquals( $codeData[1]['Added'], $shareCodes[1]['Added']);
+        $this->assertEquals($codeData[2]['Added'], $shareCodes[0]['Added']);
     }
 }

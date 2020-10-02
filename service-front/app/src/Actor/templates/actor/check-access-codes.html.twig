@@ -17,16 +17,16 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                  <span class="govuk-caption-l">
+                  <h2 class="govuk-caption-l">
                       {% if lpa.caseSubtype == "pfa" %}
                           {% trans %}Property and finance{% endtrans %}
                       {% else %}
                           {% trans %}Health and welfare{% endtrans %}
                       {% endif %}
-                  </span>
-                  <span class="govuk-heading-l govuk-!-margin-bottom-3">
+                  </h2>
+                  <h2 class="govuk-heading-l govuk-!-margin-bottom-3">
                     {{ actor_name(lpa.donor, false) }}
-                  </span>
+                  </h2>
                 </div>
             </div>
 
