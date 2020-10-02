@@ -113,7 +113,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         'name'    => Regex::class,
                         'options' => [
                             'pattern' => '/^(\d{4}(?\'dash\' |-|)\d{4}(\g{dash})\d{4})$/',
-                            'message' => 'Enter the 12 numbers of the LPA reference number. Do not include letters or other characters',
+                            'message' => 'Enter the LPA reference number in the correct format',
                         ],
                     ],
                 ]
