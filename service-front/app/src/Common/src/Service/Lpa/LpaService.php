@@ -265,6 +265,14 @@ class LpaService
         return null;
     }
 
+    public function sortLpasInOrder(ArrayObject $lpas): ArrayObject
+    {
+        $sort1 = $this->sortLpasByDonorSurname($lpas);
+        $sort2 = $this->groupLpasByDonor($sort1);
+
+        return $this->sortGroupedDonorsLpasByTypeThenAddedDate($sort2);
+    }
+
     /**
      * Sorts a list of LPA's in alphabetical order by the donor's surname
      *
@@ -278,16 +286,63 @@ class LpaService
         uasort($lpas, function ($a, $b) {
             $surnameA = $a->lpa->getDonor()->getSurname();
             $surnameB = $b->lpa->getDonor()->getSurname();
+            if ($surnameA === $surnameB) {
+                // Compare firstnames if surnames are the same
+                return strcmp($a->lpa->getDonor()->getFirstname(), $b->lpa->getDonor()->getFirstname());
+            }
             return strcmp($surnameA, $surnameB);
         });
 
-        uasort($lpas, function ($a, $b) {
-            $firstnameA = $a->lpa->getDonor()->getFirstname();
-            $firstnameB = $b->lpa->getDonor()->getFirstname();
-            return strcmp($firstnameA, $firstnameB);
-        });
-
         return new ArrayObject($lpas, ArrayObject::ARRAY_AS_PROPS);
+    }
+
+    /**
+     * Groups LPAs by Donor as key
+     *
+     * @param ArrayObject $lpas
+     * @return ArrayObject
+     */
+    public function groupLpasByDonor(ArrayObject $lpas): ArrayObject
+    {
+        $lpas = $lpas->getArrayCopy();
+
+        $donors = [];
+        foreach ($lpas as $userLpaToken => $lpa) {
+            $donor = $lpa->lpa->getDonor()->getFirstname()
+                . " " . $lpa->lpa->getDonor()->getMiddlenames()
+                . " " . $lpa->lpa->getDonor()->getSurname();
+
+            if (array_key_exists($donor, $donors)) {
+                $donors[$donor][$userLpaToken] = $lpa;
+            } else {
+                $donors[$donor] = [$userLpaToken => $lpa];
+            }
+        }
+
+        return new ArrayObject($donors, ArrayObject::ARRAY_AS_PROPS);
+    }
+
+    public function sortGroupedDonorsLpasByTypeThenAddedDate(ArrayObject $donors): ArrayObject
+    {
+        $donors = $donors->getArrayCopy();
+
+        foreach ($donors as $donor => $donorsLpas) {
+            if (sizeof($donorsLpas) > 1) {
+                foreach ($donorsLpas as $lpaKey => $lpaData) {
+                    uasort($donors[$donor], function ($keyA, $keyB) {
+                        $lpaAType = $keyA->lpa->getCaseSubtype();
+                        $lpaBType = $keyB->lpa->getCaseSubtype();
+                        if ($lpaAType === $lpaBType) {
+                            // when comparing 2 LPAs of the same type, put most recently added first
+                            return $keyA->added >= $keyB->added ? -1 : 1;
+                        }
+                        return strcmp($lpaAType, $lpaBType);
+                    });
+                }
+            }
+        }
+
+        return new ArrayObject($donors, ArrayObject::ARRAY_AS_PROPS);
     }
 
     /**

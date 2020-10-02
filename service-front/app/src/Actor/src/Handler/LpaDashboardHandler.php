@@ -86,7 +86,8 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
             $totalCodes += $shareCodes['activeCodeCount'];
             $lpas[$lpaKey]['actorActive'] = $lpaData['actor']['type'] === 'donor' || $lpaData['actor']['details']->getSystemStatus();
         }
-        $lpas = $this->lpaService->sortLpasByDonorSurname($lpas);
+
+        $lpas = $this->lpaService->sortLpasInOrder($lpas);
 
         /** @var FlashMessagesInterface $flash */
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
