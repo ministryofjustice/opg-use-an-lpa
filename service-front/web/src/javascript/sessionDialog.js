@@ -52,7 +52,13 @@ export default class SessionDialog {
     async _getSessionTime()
     {
         const response = await fetch("/session-check", this.requestHeaders)
-        return response.json()
+        console.log(response);
+        if (response.status === 302) {
+            document.location.href = "/session-expired";
+        }
+        else {
+            return response.json()
+        }
     }
 
     async _getNewSession()
