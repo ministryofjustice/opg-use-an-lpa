@@ -53,7 +53,7 @@ export default class SessionDialog {
     {
         const response = await fetch("/session-check", this.requestHeaders)
         console.log(response);
-        if (response.status === 302) {
+        if (response.redirected) {
             document.location.href = "/session-expired";
         }
         else {
