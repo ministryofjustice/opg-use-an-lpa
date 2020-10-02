@@ -14,7 +14,7 @@ export default class SessionDialog {
     {
         const sessionData = await this._getSessionTime();
 
-        if (sessionData.session_warning && sessionData.time_remaining > 1 && sessionData.time_remaining <= 300) {
+        if (sessionData && sessionData.session_warning && sessionData.time_remaining > 1 && sessionData.time_remaining <= 300) {
             this._isHidden(false);
             return;
         } else {
@@ -52,9 +52,8 @@ export default class SessionDialog {
     async _getSessionTime()
     {
         const response = await fetch("/session-check", this.requestHeaders)
-        console.log(response);
         if (response.redirected) {
-            document.location.href = "/session-expired";
+            window.location.href = "/session-expired";
         }
         else {
             return response.json()

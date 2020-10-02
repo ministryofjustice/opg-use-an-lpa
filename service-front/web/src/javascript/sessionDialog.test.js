@@ -38,7 +38,11 @@ describe('Session Dialog', () => {
 
         delete window.location;
         window.location = {
-            href: '/',
+            port: '80',
+            protocol: 'https:',
+            hostname: 'localhost',
+            pathname: '/',
+            href: ''
         };
 
         delete global.fetch;
@@ -77,6 +81,31 @@ describe('Session Dialog', () => {
                 expect(dialogOverlay.classList.contains('dialog-overlay')).toBeTruthy();
                 expect(dialog.classList.contains('hide')).toBeFalsy();
                 expect(dialog.classList.contains('dialog')).toBeTruthy();
+
+            });
+
+            test('it should redirect to /session-expired', async () => {
+
+                jest.useRealTimers();
+
+                expect(dialogOverlay.classList.contains('hide')).toBeTruthy();
+                expect(dialogOverlay.classList.contains('dialog-overlay')).toBeFalsy();
+                expect(dialog.classList.contains('hide')).toBeTruthy();
+                expect(dialog.classList.contains('dialog')).toBeFalsy();
+
+                window.fetch.mockResolvedValueOnce({
+                    ok: true,
+                    redirected: true,
+                    json: async () => Promise.resolve({
+                        session_warning: true,
+                        time_remaining: 0
+                    })
+                })
+                await sessionDialogElement.checkSessionExpires();
+                expect(window.fetch).toHaveBeenCalledTimes(1)
+
+                expect(window.location.href).toBe('/session-expired');
+
 
             });
         });
