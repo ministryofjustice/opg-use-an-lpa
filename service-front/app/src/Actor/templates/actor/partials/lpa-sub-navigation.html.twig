@@ -9,7 +9,6 @@
                         {% trans %}Give an organisation access{% endtrans %}
                     </a>
                 </li>
-
                 <li class="moj-sub-navigation__item">
                     <a class="moj-sub-navigation__link govuk-link" {% if path() == path('lpa.access-codes') %} aria-current="page" {% endif %} href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}">
                         {% trans %}Check access codes{% endtrans %}
