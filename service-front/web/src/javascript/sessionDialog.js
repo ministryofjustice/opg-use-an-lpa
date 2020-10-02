@@ -24,9 +24,10 @@ export default class SessionDialog {
 
     async _runInterval()
     {
+        const _this = this;
         /* istanbul ignore next */
         setInterval(async function () {
-            return checkSessionExpires();
+            return _this.checkSessionExpires();
         }, 60000);
     }
 
