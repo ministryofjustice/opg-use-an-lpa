@@ -265,6 +265,14 @@ class LpaService
         return null;
     }
 
+    /**
+     * Sorts LPAs alphabetically by donor's lastname
+     * Donors with multiple LPAs are then grouped
+     * Finally each donor's LPAs are sorted with HW LPAs first, then by the most recently added
+     *
+     * @param ArrayObject $lpas
+     * @return ArrayObject
+     */
     public function sortLpasInOrder(ArrayObject $lpas): ArrayObject
     {
         $sort1 = $this->sortLpasByDonorSurname($lpas);
@@ -297,7 +305,7 @@ class LpaService
     }
 
     /**
-     * Groups LPAs by Donor as key
+     * Groups LPAs by Donor name as key
      *
      * @param ArrayObject $lpas
      * @return ArrayObject
@@ -322,6 +330,12 @@ class LpaService
         return new ArrayObject($donors, ArrayObject::ARRAY_AS_PROPS);
     }
 
+    /**
+     * Sorts each donors LPAs with HW type first, followed by most recently added
+     *
+     * @param ArrayObject $donors
+     * @return ArrayObject
+     */
     public function sortGroupedDonorsLpasByTypeThenAddedDate(ArrayObject $donors): ArrayObject
     {
         $donors = $donors->getArrayCopy();
