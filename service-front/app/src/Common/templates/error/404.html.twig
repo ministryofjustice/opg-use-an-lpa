@@ -1,21 +1,31 @@
 {% extends '@layout/default.html.twig' %}
 
-{% block html_title %}{% trans %}404 Not Found{% endtrans %} - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Page Not Found{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
-    {{ include('@partials/new-service.html.twig') }}
-
-    <a href="{{ path('home') }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
-
     <main class="govuk-main-wrapper">
-        <span class="govuk-caption-xl">{% trans %}This is awkward.{% endtrans %}</span>
-        <h1 class="govuk-heading-xl">{% trans %}Oops!{% endtrans %}</h1>
-        <p class="govuk-body">{% trans %}We encountered a 404 Not Found error.{% endtrans %}</p>
-        <p class="govuk-body">
-            {%trans with {'%link%': path('home')} %}You are looking for something that doesn't exist or may have moved. Check out one of the links on this page
-            or head back to <a href="%link%" class="govuk-link">Home</a>.{% endtrans %}
-        </p>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-xl">{% trans %}Page not found{% endtrans %}</h1>
+                <p class="govuk-body">
+                    {% trans %}We could not find the page you're looking for.{% endtrans %}
+                </p>
+                <p class="govuk-body">
+                    {% trans %}If you entered a web address, check it's correct.{% endtrans %}
+                </p>
+                <p class="govuk-body">
+                    {% trans %}
+                        You can <a class="govuk-link" href="https://www.gov.uk/">return to GOV.UK</a> or start again.
+                    {% endtrans %}
+                </p><br>
+                <p class="govuk-body">
+                    {%trans with {'%link%': path('home')} %}
+                        <a href="%link%" draggable="false" class="govuk-button">Start again</a>
+                    {% endtrans %}
+                </p>
+            </div>
+        </div>
     </main>
 </div>
 {% endblock %}
