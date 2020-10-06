@@ -154,15 +154,13 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         if (!empty($viewerCodes)) {
             $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($viewerCodes);
 
-            //gets the LPA in question
-            $lpa = $this->userLpaActorMap->get($request->getAttribute('user-lpa-actor-token'));
-
-            //adds the same actorId for each code in the array
-            //the actorId value is that of the LPA data returned for the given user token
-            foreach ($viewerCodesAndStatuses as $key => $code){
-                $viewerCodesAndStatuses[$key]['ActorId'] = $lpa['ActorId'];
+            /// Get the actor id for the respective sharecode by UserLpaActor
+            foreach ($viewerCodesAndStatuses as $key => $viewerCode){
+                if(!empty($viewerCode['UserLpaActor'])) {
+                     $codeOwner = $this->userLpaActorMap->get($viewerCode['UserLpaActor']);
+                     $viewerCodesAndStatuses[$key]['ActorId'] = $codeOwner['ActorId'];
+                }
             }
-
             return new JsonResponse($viewerCodesAndStatuses);
         }
 
