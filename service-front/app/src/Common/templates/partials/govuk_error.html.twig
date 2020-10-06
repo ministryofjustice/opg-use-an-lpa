@@ -24,7 +24,7 @@
     {% if errors|length > 0 %}
         {# ... display the errors for a single field #}
         {%- for error in errors -%}
-            <span id="{{ id }}-error" class="govuk-error-message">
+            <span class="govuk-error-message">
                 <span class="govuk-visually-hidden">{% trans %}Error:{% endtrans %}</span> {{ error | trans([], null, 'error') | raw }}
             </span>
         {%- endfor -%}
