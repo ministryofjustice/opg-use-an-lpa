@@ -482,8 +482,7 @@ class LpaServiceTest extends TestCase
         $this->assertNull($lpaCode);
     }
 
-    /** @test */
-    public function can_sort_lpas_by_donors_surname()
+    public function get_test_lpa_data_for_sorting_unit_tests()
     {
         $token = '01234567-01234-01234-01234-012345678901';
         $dob = '1980-01-01';
@@ -707,6 +706,41 @@ class LpaServiceTest extends TestCase
 
         $lpas = $service->getLpas($token);
 
+        return $lpas;
+    }
+
+    /** @test */
+    public function can_sort_lpas_into_final_order()
+    {
+        $lpas = $this->get_test_lpa_data_for_sorting_unit_tests();
+
+        $service = new LpaService(
+            $this->apiClientProphecy->reveal(),
+            $this->lpaFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $completeOrder = $service->sortLpasInOrder($lpas);
+
+        $completeOrder = $completeOrder->getArrayCopy();
+
+        $this->assertEquals(['0007-01-01-01-777777', '0002-01-01-01-222222'], array_keys($completeOrder['Amy Johnson']));
+        $this->assertEquals(['0008-01-01-01-888888'], array_keys($completeOrder['Gemma Taylor']));
+        $this->assertEquals(['0004-01-01-01-444444', '0003-01-01-01-333333'], array_keys($completeOrder['Sam Taylor']));
+        $this->assertEquals(['0001-01-01-01-111111', '0006-01-01-01-666666', '0005-01-01-01-555555'], array_keys($completeOrder['Daniel Williams']));
+    }
+
+    /** @test */
+    public function can_sort_lpas_by_donors_surname()
+    {
+        $lpas = $this->get_test_lpa_data_for_sorting_unit_tests();
+
+        $service = new LpaService(
+            $this->apiClientProphecy->reveal(),
+            $this->lpaFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
         $orderedLpas = $service->sortLpasByDonorSurname($lpas);
 
         $resultOrder = [];
@@ -773,6 +807,7 @@ class LpaServiceTest extends TestCase
 
         $this->assertEquals(['0007-01-01-01-777777', '0002-01-01-01-222222'], array_keys($orderedLpasArray['Amy Johnson']));
         $this->assertEquals(['0004-01-01-01-444444', '0003-01-01-01-333333'], array_keys($orderedLpasArray['Sam Taylor']));
+        $this->assertEquals(['0008-01-01-01-888888'], array_keys($orderedLpasArray['Gemma Taylor']));
         $this->assertEquals(['0001-01-01-01-111111', '0006-01-01-01-666666', '0005-01-01-01-555555'], array_keys($orderedLpasArray['Daniel Williams']));
     }
 }
