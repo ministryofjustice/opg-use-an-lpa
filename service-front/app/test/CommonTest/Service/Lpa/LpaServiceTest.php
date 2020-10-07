@@ -486,77 +486,218 @@ class LpaServiceTest extends TestCase
     public function can_sort_lpas_by_donors_surname()
     {
         $token = '01234567-01234-01234-01234-012345678901';
-        $referenceNumber = '123456789012';
         $dob = '1980-01-01';
+
+        // --------------------- Daniel Williams, 3 LPAs, 1 HW, 2 PFA
 
         $lpaData1 = [
             'lpa' => [
-                'uId' => $referenceNumber,
+                'uId' => '700000000001',
+                'caseSubtype' => 'hw',
                 'donor' => [
-                    'uId' => $referenceNumber,
+                    'uId' => '700000000001',
                     'dob' => $dob,
+                    'firstname' => 'Daniel',
                     'surname' => 'Williams'
                 ]
-            ]
+            ],
+            'added' => date('Y-m-d H:i:s', strtotime('-1 hour')) // added an hour ago
         ];
+
+        $lpaData5 = [
+            'lpa' => [
+                'uId' => '700000000005',
+                'caseSubtype' => 'pfa',
+                'donor' => [
+                    'uId' => '700000000001',
+                    'dob' => $dob,
+                    'firstname' => 'Daniel',
+                    'surname' => 'Williams'
+                ]
+            ],
+            'added' => date('Y-m-d H:i:s', strtotime('-10 minutes'))
+        ];
+
+        $lpaData6 = [
+            'lpa' => [
+                'uId' => '700000000006',
+                'caseSubtype' => 'pfa',
+                'donor' => [
+                    'uId' => '700000000001',
+                    'dob' => $dob,
+                    'firstname' => 'Daniel',
+                    'surname' => 'Williams'
+                ]
+            ],
+            'added' => date('Y-m-d H:i:s', strtotime('-5 minutes'))
+        ];
+
+        // --------------------- Amy Johnson, 2 LPAs, both PFA
 
         $lpaData2 = [
             'lpa' => [
-                'uId' => $referenceNumber,
+                'uId' => '700000000002',
+                'caseSubtype' => 'pfa',
                 'donor' => [
-                    'uId' => $referenceNumber,
+                    'uId' => '700000000002',
                     'dob' => $dob,
+                    'firstname' => 'Amy',
                     'surname' => 'Johnson'
                 ]
-            ]
+            ],
+            'added' => date('Y-m-d H:i:s', strtotime('-5 minutes'))
         ];
+
+        $lpaData7 = [
+            'lpa' => [
+                'uId' => '700000000007',
+                'caseSubtype' => 'pfa',
+                'donor' => [
+                    'uId' => '700000000002',
+                    'dob' => $dob,
+                    'firstname' => 'Amy',
+                    'surname' => 'Johnson'
+                ]
+            ],
+            'added' => date('Y-m-d H:i:s', strtotime('-2 minutes'))
+        ];
+
+        // --------------------- Sam Taylor, 2 LPAs, both HW
 
         $lpaData3 = [
             'lpa' => [
-                'uId' => $referenceNumber,
+                'uId' => '700000000003',
+                'caseSubtype' => 'hw',
                 'donor' => [
-                    'uId' => $referenceNumber,
+                    'uId' => '700000000003',
                     'dob' => $dob,
+                    'firstname' => 'Sam',
                     'surname' => 'Taylor'
                 ]
-            ]
+            ],
+            'added' => date('Y-m-d H:i:s', strtotime('-3 hours'))
         ];
 
+        $lpaData4 = [
+            'lpa' => [
+                'uId' => '700000000004',
+                'caseSubtype' => 'hw',
+                'donor' => [
+                    'uId' => '700000000004',
+                    'dob' => $dob,
+                    'firstname' => 'Sam',
+                    'surname' => 'Taylor'
+                ]
+            ],
+            'added' => date('Y-m-d H:i:s', strtotime('-2 hours'))
+        ];
+
+        // --------------------- Gemma Taylor, 1 HW LPA
+
+        $lpaData8 = [
+            'lpa' => [
+                'uId' => '700000000008',
+                'caseSubtype' => 'hw',
+                'donor' => [
+                    'uId' => '700000000008',
+                    'dob' => $dob,
+                    'firstname' => 'Gemma',
+                    'surname' => 'Taylor'
+                ]
+            ],
+            'added' => date('Y-m-d H:i:s', strtotime('-5 hours'))
+        ];
+
+        // ---- Daniel Williams 3 LPAs
+
         $lpa1 = new Lpa();
-        $lpa1->setUId($referenceNumber);
+        $lpa1->setUId('700000000001');
+        $lpa1->setCaseSubtype('hw');
         $donor1 = new CaseActor();
-        $donor1->setUId($referenceNumber);
+        $donor1->setUId('700000000001');
         $donor1->setDob(new \DateTime($dob));
+        $donor1->setFirstname('Daniel');
         $donor1->setSurname('Williams');
         $lpa1->setDonor($donor1);
 
+        $lpa5 = new Lpa();
+        $lpa5->setUId('700000000005');
+        $lpa5->setCaseSubtype('pfa');
+        $lpa5->setDonor($donor1);
+
+        $lpa6 = new Lpa();
+        $lpa6->setUId('700000000006');
+        $lpa6->setCaseSubtype('pfa');
+        $lpa6->setDonor($donor1);
+
+        // ---- Amy Johnson 2 LPAs
+
         $lpa2 = new Lpa();
-        $lpa2->setUId($referenceNumber);
+        $lpa2->setUId('700000000002');
+        $lpa2->setCaseSubtype('pfa');
         $donor2 = new CaseActor();
-        $donor2->setUId($referenceNumber);
+        $donor2->setUId('700000000002');
         $donor2->setDob(new \DateTime($dob));
+        $donor2->setFirstname('Amy');
         $donor2->setSurname('Johnson');
         $lpa2->setDonor($donor2);
 
+        $lpa7 = new Lpa();
+        $lpa7->setUId('700000000007');
+        $lpa7->setCaseSubtype('pfa');
+        $lpa7->setDonor($donor2);
+
+        // ---- Sam Taylor 2 LPAs
+
         $lpa3 = new Lpa();
-        $lpa3->setUId($referenceNumber);
+        $lpa3->setUId('700000000003');
+        $lpa3->setCaseSubtype('hw');
         $donor3 = new CaseActor();
-        $donor3->setUId($referenceNumber);
+        $donor3->setUId('700000000003');
         $donor3->setDob(new \DateTime($dob));
+        $donor3->setFirstname('Sam');
         $donor3->setSurname('Taylor');
         $lpa3->setDonor($donor3);
 
+        $lpa4 = new Lpa();
+        $lpa4->setUId('700000000004');
+        $lpa4->setCaseSubtype('hw');
+        $lpa4->setDonor($donor3);
+
+        // ---- Gemma Taylor 1 LPA (to test case if surname is same, donors are then ordered by firstname)
+
+        $lpa8 = new Lpa();
+        $lpa8->setUId('700000000008');
+        $lpa8->setCaseSubtype('hw');
+        $donor8 = new CaseActor();
+        $donor8->setUId('700000000008');
+        $donor8->setDob(new \DateTime($dob));
+        $donor8->setFirstname('Gemma');
+        $donor8->setSurname('Taylor');
+        $lpa8->setDonor($donor8);
+
+
         $this->apiClientProphecy->httpGet('/v1/lpas')
             ->willReturn([
-                '0123-01-01-01-012345' => $lpaData1, // UserLpaActorMap from DynamoDb
-                '9876-01-01-01-012345' => $lpaData2,
-                '3456-01-01-01-012345' => $lpaData3
+                '0001-01-01-01-111111' => $lpaData1, // UserLpaActorMap from DynamoDb
+                '0002-01-01-01-222222' => $lpaData2,
+                '0003-01-01-01-333333' => $lpaData3,
+                '0004-01-01-01-444444' => $lpaData4,
+                '0005-01-01-01-555555' => $lpaData5,
+                '0006-01-01-01-666666' => $lpaData6,
+                '0007-01-01-01-777777' => $lpaData7,
+                '0008-01-01-01-888888' => $lpaData8
             ]);
         $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
         $this->lpaFactoryProphecy->createLpaFromData($lpaData1['lpa'])->willReturn($lpa1);
         $this->lpaFactoryProphecy->createLpaFromData($lpaData2['lpa'])->willReturn($lpa2);
         $this->lpaFactoryProphecy->createLpaFromData($lpaData3['lpa'])->willReturn($lpa3);
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData4['lpa'])->willReturn($lpa4);
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData5['lpa'])->willReturn($lpa5);
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData6['lpa'])->willReturn($lpa6);
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData7['lpa'])->willReturn($lpa7);
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData8['lpa'])->willReturn($lpa8);
 
         $service = new LpaService(
             $this->apiClientProphecy->reveal(),
@@ -570,12 +711,68 @@ class LpaServiceTest extends TestCase
 
         $resultOrder = [];
         foreach ($orderedLpas as $lpaKey => $lpaData) {
-            $surname = $lpaData['lpa']->getDonor()->getSurname();
-            array_push($resultOrder, $surname);
+            $name = $lpaData['lpa']->getDonor()->getFirstname() . " " . $lpaData['lpa']->getDonor()->getSurname();
+            array_push($resultOrder, $name);
         }
 
-        $this->assertEquals('Johnson', $resultOrder[0]);
-        $this->assertEquals('Taylor', $resultOrder[1]);
-        $this->assertEquals('Williams', $resultOrder[2]);
+        $this->assertEquals('Amy Johnson', $resultOrder[0]);
+        $this->assertEquals('Amy Johnson', $resultOrder[1]);
+        $this->assertEquals('Gemma Taylor', $resultOrder[2]);
+        $this->assertEquals('Sam Taylor', $resultOrder[3]);
+        $this->assertEquals('Sam Taylor', $resultOrder[4]);
+        $this->assertEquals('Daniel Williams', $resultOrder[5]);
+        $this->assertEquals('Daniel Williams', $resultOrder[6]);
+        $this->assertEquals('Daniel Williams', $resultOrder[7]);
+
+        return $orderedLpas;
+    }
+
+    /** @test */
+    public function can_group_lpas_by_donor()
+    {
+        $lpas = $this->can_sort_lpas_by_donors_surname();
+
+        $service = new LpaService(
+            $this->apiClientProphecy->reveal(),
+            $this->lpaFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $groupedLpas = $service->groupLpasByDonor($lpas);
+
+        $groupedLpasArray = $groupedLpas->getArrayCopy();
+
+        $groupedLpaKeys = array_keys($groupedLpasArray);
+
+        $this->assertEquals('Amy Johnson', $groupedLpaKeys[0]);
+        $this->assertEquals('Gemma Taylor', $groupedLpaKeys[1]);
+        $this->assertEquals('Sam Taylor', $groupedLpaKeys[2]);
+        $this->assertEquals('Daniel Williams', $groupedLpaKeys[3]);
+        $this->assertEquals(2, sizeof($groupedLpasArray['Amy Johnson']));
+        $this->assertEquals(1, sizeof($groupedLpasArray['Gemma Taylor']));
+        $this->assertEquals(2, sizeof($groupedLpasArray['Sam Taylor']));
+        $this->assertEquals(3, sizeof($groupedLpasArray['Daniel Williams']));
+
+        return $groupedLpas;
+    }
+
+    /** @test */
+    public function can_order_lpas_by_type_followed_by_most_recently_added()
+    {
+        $lpasGroupedByDonor = $this->can_group_lpas_by_donor();
+
+        $service = new LpaService(
+            $this->apiClientProphecy->reveal(),
+            $this->lpaFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $orderedLpas = $service->sortGroupedDonorsLpasByTypeThenAddedDate($lpasGroupedByDonor);
+
+        $orderedLpasArray = $orderedLpas->getArrayCopy();
+
+        $this->assertEquals(['0007-01-01-01-777777', '0002-01-01-01-222222'], array_keys($orderedLpasArray['Amy Johnson']));
+        $this->assertEquals(['0004-01-01-01-444444', '0003-01-01-01-333333'], array_keys($orderedLpasArray['Sam Taylor']));
+        $this->assertEquals(['0001-01-01-01-111111', '0006-01-01-01-666666', '0005-01-01-01-555555'], array_keys($orderedLpasArray['Daniel Williams']));
     }
 }
