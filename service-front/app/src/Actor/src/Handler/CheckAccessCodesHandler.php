@@ -64,8 +64,6 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         $identity = (!is_null($user)) ? $user->getIdentity() : null;
 
         $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
-      //  var_dump($lpaData);
-      //  die;
 
         $shareCodes = $this->viewerCodeService->getShareCodes(
             $identity,
