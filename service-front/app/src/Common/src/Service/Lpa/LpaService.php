@@ -316,9 +316,7 @@ class LpaService
 
         $donors = [];
         foreach ($lpas as $userLpaToken => $lpa) {
-            $donor = $lpa->lpa->getDonor()->getFirstname()
-                . " " . $lpa->lpa->getDonor()->getMiddlenames()
-                . " " . $lpa->lpa->getDonor()->getSurname();
+            $donor = implode(" ", array_filter([$lpa->lpa->getDonor()->getFirstname(), $lpa->lpa->getDonor()->getMiddlenames(), $lpa->lpa->getDonor()->getSurname()])) ;
 
             if (array_key_exists($donor, $donors)) {
                 $donors[$donor][$userLpaToken] = $lpa;
@@ -347,7 +345,6 @@ class LpaService
                         $lpaAType = $keyA->lpa->getCaseSubtype();
                         $lpaBType = $keyB->lpa->getCaseSubtype();
                         if ($lpaAType === $lpaBType) {
-                            // when comparing 2 LPAs of the same type, put most recently added first
                             return $keyA->added >= $keyB->added ? -1 : 1;
                         }
                         return strcmp($lpaAType, $lpaBType);
