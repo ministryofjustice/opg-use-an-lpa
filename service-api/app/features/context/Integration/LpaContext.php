@@ -681,7 +681,7 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->iHaveCreatedAnAccessCode();
         $this->iClickToCheckMyAccessCodes();
-        $this->iCanSeeAllOfMyAccessCodesAndTheirDetails();
+        $this->iCanSeeAllOfTheAccessCodesAndTheirDetails();
     }
 
     /**
