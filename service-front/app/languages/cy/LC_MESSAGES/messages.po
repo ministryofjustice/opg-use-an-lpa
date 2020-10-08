@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-10-05T11:15:35+00:00\n"
+"POT-Creation-Date: 2020-10-08T22:45:50+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1716,7 +1716,7 @@ msgstr ""
 msgid "Account already exists"
 msgstr "Cyfrif eisoes yn bodoli"
 
-#: src/Actor/templates/actor/create-account-success.html.twig:19
+#: src/Actor/templates/actor/create-account-success.html.twig:3
 msgid "Activate your account"
 msgstr "Cadarnhau eich cyfrif"
 
@@ -4851,6 +4851,28 @@ msgstr "Gwiriwch bod eich cyfeiriad e-bost wedi’i sillafu’n gywir"
 msgctxt "error"
 msgid "Enter the LPA reference number in the correct format"
 msgstr "Nodwch y cyfeirnod LPA yn y fformat cywir"
+
+#: src/Actor/templates/actor/create-account-success.html.twig:19
+msgid "Check your email"
+msgstr "Gwiriwch eich e-bost"
+
+#: src/Actor/templates/actor/create-account-success.html.twig:23
+msgid ""
+"The email should arrive in a few minutes.\n"
+"                        If it's not in your inbox, check your spam, bulk or "
+"junk email inbox.\n"
+"                        If you've not received the email, we can <a href="
+"\"%link%\" class=\"govuk-link\">resend the activation email</a>."
+msgstr ""
+"Dylai’r e-bost gyrraedd ymhen ychydig funudau.\n"
+"                        Os nad ydyw yn eich mewnflwch, edrychwch yn y ffolder "
+"spam neu junk. \n"
+"                        Os nad ydych wedi cael yr e-bost, gallwn <a href=“%link"
+"%” class=“govuk-link”>anfon yr e-bost cadarnhau eto</a>."
+
+#: src/Actor/templates/actor/create-account-success.html.twig:31
+msgid "Your email address can only be used on one account."
+msgstr "Gellir defnyddio eich cyfeiriad e-bost ar gyfer un cyfrif yn unig"
 
 #~ msgid ""
 #~ "<p class=\"govuk-body\">For your security, we've signed you out of this "

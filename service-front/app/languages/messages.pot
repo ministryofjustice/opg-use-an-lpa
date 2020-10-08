@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-10-05T11:15:35+00:00\n"
+"POT-Creation-Date: 2020-10-08T22:45:50+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1163,7 +1163,7 @@ msgstr ""
 msgid "Account already exists"
 msgstr ""
 
-#: src/Actor/templates/actor/create-account-success.html.twig:19
+#: src/Actor/templates/actor/create-account-success.html.twig:3
 msgid "Activate your account"
 msgstr ""
 
@@ -3358,4 +3358,19 @@ msgstr ""
 #: src/Actor/templates/actor/form-error-messages.html.twig:35
 msgctxt "error"
 msgid "Enter the LPA reference number in the correct format"
+msgstr ""
+
+#: src/Actor/templates/actor/create-account-success.html.twig:19
+msgid "Check your email"
+msgstr ""
+
+#: src/Actor/templates/actor/create-account-success.html.twig:23
+msgid ""
+"The email should arrive in a few minutes.\n"
+"                        If it's not in your inbox, check your spam, bulk or junk email inbox.\n"
+"                        If you've not received the email, we can <a href=\"%link%\" class=\"govuk-link\">resend the activation email</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/create-account-success.html.twig:31
+msgid "Your email address can only be used on one account."
 msgstr ""
