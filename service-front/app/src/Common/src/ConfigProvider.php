@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Common;
 
-use Common\View\Twig\TranslationSwitchExtension;
-
 /**
  * The configuration provider for the Common module
  *
@@ -89,6 +87,7 @@ class ConfigProvider
                 // Handlers
                 Handler\CookiesPageHandler::class => Handler\Factory\CookiesPageHandlerFactory::class,
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
+                Handler\SessionCheckHandler::class => Handler\Factory\SessionCheckHandlerFactory::class,
 
                 \Acpr\I18n\TranslatorInterface::class => I18n\TranslatorFactory::class,
                 \Acpr\I18n\TranslationExtension::class =>
@@ -135,7 +134,7 @@ class ConfigProvider
                 View\Twig\GovUKLaminasFormExtension::class,
                 View\Twig\JavascriptVariablesExtension::class,
                 View\Twig\GenericGlobalVariableExtension::class,
-                TranslationSwitchExtension::class
+                View\Twig\TranslationSwitchExtension::class
             ]
         ];
     }

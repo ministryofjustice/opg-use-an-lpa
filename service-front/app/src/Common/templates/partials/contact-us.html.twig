@@ -1,0 +1,50 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block html_title %}{% trans %}Contact us{% endtrans %} - {{ block('service_name') }} - {{ parent() }}{% endblock %}
+
+{% block service_name %}
+{% if application == "actor" %}
+    {% trans %}Use a lasting power of attorney{% endtrans %}
+{% elseif application == "viewer" %}
+    {% trans %}View a lasting power of attorney{% endtrans %}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <a href="{{ referer }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}Contact us{% endtrans %}</h1>
+                    <p class="govuk-body">
+                        {% trans %}If you need help with this service you can get in touch by telephone or email.{% endtrans %}
+                    </p>
+
+                    <h2 class="govuk-heading-m">
+                        {% trans %}Telephone: {% endtrans %}
+                    </h2>
+                    <ul class="govuk-list">
+                        <li>{% trans %}Telephone: 0300 456 0300{% endtrans %}</li>
+                        <li>{% trans %}Monday to Friday 9.30am to 5pm, except Wednesday, 10am to 5pm.{% endtrans %}</li>
+                    </ul>
+                    <p class="govuk-body">
+                        <a class="govuk-link" href="https://www.gov.uk/call-charges">{% trans %}Find out about call charges{% endtrans %}</a>
+                    </p>
+
+                    <h2 class="govuk-heading-m">
+                        {% trans %}Email{% endtrans %}
+                    </h2>
+                    <ul class="govuk-list">
+                        <li><a class="govuk-link" href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a></li>
+                        <li>{% trans %}We’ll respond to emails within 10 working days.{% endtrans %}</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

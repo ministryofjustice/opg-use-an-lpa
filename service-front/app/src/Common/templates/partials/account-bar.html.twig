@@ -1,7 +1,10 @@
 <div class="signin">
     <p class="govuk-body-s">
         {% trans %}Last signed in:{% endtrans %}
-        {{ user.getDetail('LastLogin') is empty ? "Never" | trans : user.getDetail('LastLogin')|date('j F Y g:ia') }}
+        {{ user.getDetail('LastLogin') is empty
+           ? "Never" | trans
+           : lpa_date(user.getDetail('LastLogin'), 'd MMMM y, h:mma')
+        }}
     </p>
     <nav class="navigation govuk-body-s">
         <li><a href="{{ path('your-details') }}" class="govuk-link">{% trans %}Your details{% endtrans %}</a></li>

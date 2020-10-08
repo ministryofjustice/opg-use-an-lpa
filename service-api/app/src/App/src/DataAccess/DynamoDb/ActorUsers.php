@@ -9,6 +9,7 @@ use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
+use ParagonIE\HiddenString\HiddenString;
 
 class ActorUsers implements ActorUsersInterface
 {
@@ -38,14 +39,14 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function add(string $id, string $email, string $password, string $activationToken, int $activationTtl): array
+    public function add(string $id, string $email, HiddenString $password, string $activationToken, int $activationTtl): array
     {
         $this->client->putItem([
             'TableName' => $this->actorUsersTable,
             'Item' => [
                 'Id' => ['S' => $id],
                 'Email' => ['S' => $email],
-                'Password' => ['S' => password_hash($password, PASSWORD_DEFAULT)],
+                'Password' => ['S' => password_hash($password->getString(), PASSWORD_DEFAULT)],
                 'ActivationToken' => ['S' => $activationToken],
                 'ExpiresTTL' => ['N' => (string) $activationTtl],
             ]
@@ -127,6 +128,9 @@ class ActorUsers implements ActorUsersInterface
         return $usersData;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getIdByPasswordResetToken(string $resetToken): string
     {
         $marshaler = new Marshaler();
@@ -149,6 +153,9 @@ class ActorUsers implements ActorUsersInterface
         return (array_pop($usersData))['Id'];
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getIdByEmailResetToken(string $resetToken): string
     {
         $marshaler = new Marshaler();
@@ -228,7 +235,7 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function resetPassword(string $id, string $password): bool
+    public function resetPassword(string $id, HiddenString $password): bool
     {
         //  Update the item by setting the password and removing the reset token/expiry
         $this->client->updateItem([
@@ -241,7 +248,7 @@ class ActorUsers implements ActorUsersInterface
             'UpdateExpression' => 'SET Password=:p REMOVE PasswordResetToken, PasswordResetExpiry',
             'ExpressionAttributeValues' => [
                 ':p' => [
-                    'S' => password_hash($password, PASSWORD_DEFAULT)
+                    'S' => password_hash($password->getString(), PASSWORD_DEFAULT)
                 ]
             ]
         ]);
@@ -302,6 +309,9 @@ class ActorUsers implements ActorUsersInterface
         return $this->getData($user);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function recordChangeEmailRequest(string $id, string $newEmail, string $resetToken, int $resetExpiry): array
     {
         $user = $this->client->updateItem([
@@ -330,6 +340,9 @@ class ActorUsers implements ActorUsersInterface
         return $this->getData($user);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function changeEmail(string $id, string $token, string $newEmail): bool
     {
         //  Update the item by setting the new email and removing the reset token/expiry
@@ -373,5 +386,32 @@ class ActorUsers implements ActorUsersInterface
         ]);
 
         return $this->getData($user);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function resetActivationDetails(string $id, HiddenString $password, int $activationTtl): array
+    {
+        //  Update the item by setting the password and restarting the Expiry TTL
+         $result = $this->client->updateItem([
+            'TableName' => $this->actorUsersTable,
+            'Key' => [
+                'Id' => [
+                    'S' => $id,
+                ],
+            ],
+            'UpdateExpression' => 'SET Password=:p, ExpiresTTL=:et',
+            'ExpressionAttributeValues' => [
+                ':p' => [
+                    'S' => password_hash($password->getString(), PASSWORD_DEFAULT)
+                ],
+                ':et' => [
+                    'N' => (string) $activationTtl
+                ]
+            ],
+             'ReturnValues' => 'ALL_NEW'
+         ]);
+        return $this->getData($result);
     }
 }

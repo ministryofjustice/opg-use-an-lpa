@@ -6,10 +6,11 @@ namespace CommonTest\View\Twig;
 
 use Common\Entity\Address;
 use Common\Entity\CaseActor;
+use Common\Entity\Lpa;
 use Common\View\Twig\LpaExtension;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;
-use DateTime;
 
 class LpaExtensionTest extends TestCase
 {
@@ -31,6 +32,7 @@ class LpaExtensionTest extends TestCase
             'check_if_code_has_expired' => 'hasCodeExpired',
             'add_hyphen_to_viewer_code' => 'formatViewerCode',
             'check_if_code_is_cancelled' => 'isCodeCancelled',
+            'is_lpa_cancelled'           => 'isLpaCancelled',
 
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
@@ -56,12 +58,24 @@ class LpaExtensionTest extends TestCase
         $extension = new LpaExtension();
 
         $address = new Address();
-        if (isset($addressLines['addressLine1'])) { $address->setAddressLine1($addressLines['addressLine1']); }
-        if (isset($addressLines['addressLine2'])) { $address->setAddressLine2($addressLines['addressLine2']); }
-        if (isset($addressLines['addressLine3'])) { $address->setAddressLine3($addressLines['addressLine3']); }
-        if (isset($addressLines['town'])) { $address->setTown($addressLines['town']); }
-        if (isset($addressLines['county'])) { $address->setCounty($addressLines['county']); }
-        if (isset($addressLines['postcode'])) { $address->setPostcode($addressLines['postcode']); }
+        if (isset($addressLines['addressLine1'])) {
+            $address->setAddressLine1($addressLines['addressLine1']);
+        }
+        if (isset($addressLines['addressLine2'])) {
+            $address->setAddressLine2($addressLines['addressLine2']);
+        }
+        if (isset($addressLines['addressLine3'])) {
+            $address->setAddressLine3($addressLines['addressLine3']);
+        }
+        if (isset($addressLines['town'])) {
+            $address->setTown($addressLines['town']);
+        }
+        if (isset($addressLines['county'])) {
+            $address->setCounty($addressLines['county']);
+        }
+        if (isset($addressLines['postcode'])) {
+            $address->setPostcode($addressLines['postcode']);
+        }
 
         $actor = new CaseActor();
         $actor->setAddresses([$address]);
@@ -137,10 +151,18 @@ class LpaExtensionTest extends TestCase
         $extension = new LpaExtension();
 
         $actor = new CaseActor();
-        if (isset($nameLines['salutation'])) { $actor->setSalutation($nameLines['salutation']); }
-        if (isset($nameLines['firstname'])) { $actor->setFirstname($nameLines['firstname']); }
-        if (isset($nameLines['middlenames'])) { $actor->setMiddlenames($nameLines['middlenames']); }
-        if (isset($nameLines['surname'])) { $actor->setSurname($nameLines['surname']); }
+        if (isset($nameLines['salutation'])) {
+            $actor->setSalutation($nameLines['salutation']);
+        }
+        if (isset($nameLines['firstname'])) {
+            $actor->setFirstname($nameLines['firstname']);
+        }
+        if (isset($nameLines['middlenames'])) {
+            $actor->setMiddlenames($nameLines['middlenames']);
+        }
+        if (isset($nameLines['surname'])) {
+            $actor->setSurname($nameLines['surname']);
+        }
 
         $name = $extension->actorName($actor);
 
@@ -186,36 +208,48 @@ class LpaExtensionTest extends TestCase
      * @test
      * @dataProvider lpaDateDataProvider
      */
-    public function it_creates_a_correctly_formatted_string_from_an_iso_date($date, $expected)
+    public function it_creates_a_correctly_formatted_string_from_an_iso_date($date, $locale, $expected)
     {
         $extension = new LpaExtension();
 
-        $name = $extension->lpaDate($date);
+        // retain the current locale
+        $originalLocale = \Locale::getDefault();
+        \Locale::setDefault($locale);
 
-        $this->assertEquals($expected, $name);
+        $dateString = $extension->lpaDate($date);
+
+        // restore the locale setting
+        \Locale::setDefault($originalLocale);
+
+        $this->assertEquals($expected, $dateString);
     }
 
     public function lpaDateDataProvider()
     {
         return [
             [
-                '1980-01-01',
-                '1 January 1980',
-            ],
-            [
                 '1948-02-17',
+                'en_GB',
                 '17 February 1948',
             ],
             [
+                '1948-02-17',
+                'cy_GB',
+                '17 Chwefror 1948',
+            ],
+            [
                 'today',
+                'en_GB',
                 (new DateTime('now'))->format('j F Y')
             ],
             [
                 'not-a-date',
+                'en_GB',
                 '',
             ],
             [
                 null,
+                'en_GB',
                 '',
             ]
         ];
@@ -225,13 +259,20 @@ class LpaExtensionTest extends TestCase
      * @test
      * @dataProvider codeDateDataProvider
      */
-    public function it_creates_a_correctly_formatted_string_from_an_iso_date_for_check_codes($date, $expected)
+    public function it_creates_a_correctly_formatted_string_from_an_iso_date_for_check_codes($date, $locale, $expected)
     {
         $extension = new LpaExtension();
 
-        $name = $extension->codeDate($date);
+        // retain the current locale
+        $originalLocale = \Locale::getDefault();
+        \Locale::setDefault($locale);
 
-        $this->assertEquals($expected, $name);
+        $dateString = $extension->codeDate($date);
+
+        // restore the locale setting
+        \Locale::setDefault($originalLocale);
+
+        $this->assertEquals($expected, $dateString);
     }
 
     public function codeDateDataProvider()
@@ -239,18 +280,22 @@ class LpaExtensionTest extends TestCase
         return [
             [
                 '2019-11-01T23:59:59+00:00',
+                'en_GB',
                 '1 November 2019',
             ],
             [
                 '1972-03-22T23:59:59+00:00',
-                '22 March 1972',
+                'cy_GB',
+                '22 Mawrth 1972',
             ],
             [
                 'not-a-date',
+                'en_GB',
                 '',
             ],
             [
                 null,
+                'en_GB',
                 '',
             ]
         ];
@@ -260,7 +305,8 @@ class LpaExtensionTest extends TestCase
      * @test
      * @dataProvider cancelledDateProvider
      */
-    public function it_checks_if_a_code_is_cancelled($shareCodeArray, $expected){
+    public function it_checks_if_a_code_is_cancelled($shareCodeArray, $expected)
+    {
 
         $extension = new LpaExtension();
 
@@ -304,7 +350,8 @@ class LpaExtensionTest extends TestCase
      * @test
      * @dataProvider expiryDateProvider
      */
-    public function it_checks_if_a_code_has_expired($expiryDate, $expected){
+    public function it_checks_if_a_code_has_expired($expiryDate, $expected)
+    {
 
         $extension = new LpaExtension();
 
@@ -317,7 +364,7 @@ class LpaExtensionTest extends TestCase
     {
         $future = (new DateTime('+1 week'))->format('Y-m-d');
         $past = (new DateTime('-1 week'))->format('Y-m-d');
-        $endOfToday = (new DateTime('now'))->setTime(23,59,59)->format('Y-m-d');
+        $endOfToday = (new DateTime('now'))->setTime(23, 59, 59)->format('Y-m-d');
 
         return [
             [
@@ -369,5 +416,42 @@ class LpaExtensionTest extends TestCase
         $viewerCode = $extension->formatViewerCode('111122223333');
 
         $this->assertEquals('V - 1111 - 2222 - 3333', $viewerCode);
+    }
+
+     /** @test */
+    public function it_checks_if_an_LPA_is_cancelled()
+    {
+        $extension = new LpaExtension();
+        $lpa = new Lpa();
+
+        $lpa->setCancellationDate(new DateTime('-1 days'));
+        $lpa->setStatus('Cancelled');
+        $status = $extension->isLPACancelled($lpa);
+
+        $this->assertEquals(true, $status);
+    }
+
+    /** @test */
+    public function it_checks_if_an_LPA_is_not_cancelled()
+    {
+        $extension = new LpaExtension();
+        $lpa = new Lpa();
+
+        $lpa->setStatus('Registered');
+        $status = $extension->isLPACancelled($lpa);
+
+        $this->assertEquals(false, $status);
+    }
+
+    /** @test */
+    public function it_checks_if_an_LPA_is_revoked()
+    {
+        $extension = new LpaExtension();
+        $lpa = new Lpa();
+
+        $lpa->setStatus('Revoked');
+        $status = $extension->isLPACancelled($lpa);
+
+        $this->assertEquals(true, $status);
     }
 }

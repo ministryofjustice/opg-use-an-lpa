@@ -1,10 +1,10 @@
 <div class="govuk-accordion__section ">
     <div class="govuk-accordion__section-header">
-        <h2 class="govuk-accordion__section-heading">
+        <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-4" aria-controls="accordion-default-content-4">
           {{ code.Organisation }}
         </span>
-        </h2>
+        </h3>
     </div>
     <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
         <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
@@ -40,22 +40,22 @@
                 {% endif %}
             </div>
 
-            {% if check_if_code_has_expired(code.Expires) %}
+            {# Checking for cancelled status first.
+            This would reduce logic to check and display cancelled status for codes that is cancelled and expired #}
+            {% if check_if_code_is_cancelled(code)  %}
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">{% trans %}Status{% endtrans %}</dt>
+                    <dd class="govuk-summary-list__value">
+                        <span class="moj-badge moj-badge--red">{% trans %}CANCELLED{% endtrans %}</span>
+                    </dd>
+                </div>
+            {% elseif check_if_code_has_expired(code.Expires) %}
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">{% trans %}Status{% endtrans %}</dt>
                     <dd class="govuk-summary-list__value">
                         <span class="moj-badge moj-badge--red">{% trans %}EXPIRED{% endtrans %}</span>
                     </dd>
                 </div>
-            {% endif %}
-
-            {% if check_if_code_is_cancelled(code) %}
-            <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">{% trans %}Status{% endtrans %}</dt>
-            <dd class="govuk-summary-list__value">
-            <span class="moj-badge moj-badge--red">{% trans %}CANCELLED{% endtrans %}</span>
-            </dd>
-            </div>
             {% endif %}
 
         </dl>

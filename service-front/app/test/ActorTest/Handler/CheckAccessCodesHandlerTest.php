@@ -31,6 +31,7 @@ class CheckAccessCodesHandlerTest extends TestCase
     const FIRST_NAME = "John";
     const SUR_NAME = "Will";
     const CSRF_CODE = '1234';
+    const SORT_ADDED = 'Added';
 
     /**
      * @var TemplateRendererInterface
@@ -135,14 +136,19 @@ class CheckAccessCodesHandlerTest extends TestCase
         $lpa->setDonor($donor);
         $lpa->setAttorneys([$attorney]);
 
-        $shareCodes = new ArrayObject([['ActorId' => self::ACTOR_ID, 'ViewerCode' => 'ABCD', 'Organisation' => 'TestOrg']], ArrayObject::ARRAY_AS_PROPS);
+        $shareCodes = new ArrayObject([[
+            'ActorId' => self::ACTOR_ID,
+            'ViewerCode' => 'ABCD',
+            'Organisation' => 'TestOrg',
+            'Added' => '2020-09-16 22:00:00'
+        ]], ArrayObject::ARRAY_AS_PROPS);
 
         $this->lpaServiceProphecy
             ->getLpaById(self::IDENTITY_TOKEN, self::LPA_ID)
             ->willReturn($lpaData);
 
         $this->viewerCodeServiceProphecy
-            ->getShareCodes(self::IDENTITY_TOKEN, self::LPA_ID, false)
+            ->getShareCodes(self::IDENTITY_TOKEN, self::LPA_ID, false, self::SORT_ADDED )
             ->willReturn($shareCodes);
 
 
@@ -219,6 +225,7 @@ class CheckAccessCodesHandlerTest extends TestCase
         $donor = new CaseActor();
         $donor->setId(self::ACTOR_ID);
         $donor->setFirstname(self::FIRST_NAME);
+        $donor->setSurname(self::SUR_NAME);
         $attorney = new CaseActor();
         $attorney->setId(15);
         $attorney->setFirstname(self::FIRST_NAME);
@@ -227,7 +234,13 @@ class CheckAccessCodesHandlerTest extends TestCase
         $lpa->setDonor($donor);
         $lpa->setAttorneys([$attorney]);
 
-        $shareCodes = new ArrayObject([['ActorId' => self::ACTOR_ID,'CreatedBy' => self::FIRST_NAME, 'ViewerCode' => 'ABCD', 'Organisation' => 'TestOrg']], ArrayObject::ARRAY_AS_PROPS);
+        $shareCodes = new ArrayObject([[
+            'ActorId' => self::ACTOR_ID,
+            'CreatedBy' => self::FIRST_NAME . ' ' . self::SUR_NAME,
+            'ViewerCode' => 'ABCD',
+            'Organisation' => 'TestOrg',
+            'Added' => '2020-09-16 22:00:00'
+        ]], ArrayObject::ARRAY_AS_PROPS);
 
 
         $this->lpaServiceProphecy
@@ -235,7 +248,7 @@ class CheckAccessCodesHandlerTest extends TestCase
             ->willReturn($lpaData);
 
         $this->viewerCodeServiceProphecy
-            ->getShareCodes(self::IDENTITY_TOKEN, self::LPA_ID, false)
+            ->getShareCodes(self::IDENTITY_TOKEN, self::LPA_ID, false, self::SORT_ADDED)
             ->willReturn($shareCodes);
 
         $this->urlHelperProphecy->generate(Argument::type('string'))->willReturn('confirm-cancel-code');
@@ -293,6 +306,7 @@ class CheckAccessCodesHandlerTest extends TestCase
         $donor = new CaseActor();
         $donor->setId(self::ACTOR_ID);
         $donor->setFirstname(self::FIRST_NAME);
+        $donor->setSurname(self::SUR_NAME);
         $attorney = new CaseActor();
         $attorney->setId(self::ACTOR_ID);
         $attorney->setFirstname(self::FIRST_NAME);
@@ -301,7 +315,13 @@ class CheckAccessCodesHandlerTest extends TestCase
         $lpa->setDonor($donor);
         $lpa->setAttorneys([$attorney]);
 
-        $shareCodes = new ArrayObject([['ActorId' => self::ACTOR_ID,'CreatedBy' => self::FIRST_NAME, 'ViewerCode' => 'ABCD', 'Organisation' => 'TestOrg']], ArrayObject::ARRAY_AS_PROPS);
+        $shareCodes = new ArrayObject([[
+            'ActorId' => self::ACTOR_ID,
+            'CreatedBy' => self::FIRST_NAME . ' ' . self::SUR_NAME,
+            'ViewerCode' => 'ABCD',
+            'Organisation' => 'TestOrg',
+            'Added' => '2020-09-16 22:00:00'
+        ]], ArrayObject::ARRAY_AS_PROPS);
 
 
         $this->lpaServiceProphecy
@@ -309,7 +329,7 @@ class CheckAccessCodesHandlerTest extends TestCase
             ->willReturn($lpaData);
 
         $this->viewerCodeServiceProphecy
-            ->getShareCodes(self::IDENTITY_TOKEN, self::LPA_ID, false)
+            ->getShareCodes(self::IDENTITY_TOKEN, self::LPA_ID, false, self::SORT_ADDED)
             ->willReturn($shareCodes);
 
         $this->urlHelperProphecy->generate(Argument::type('string'))->willReturn('confirm-cancel-code');

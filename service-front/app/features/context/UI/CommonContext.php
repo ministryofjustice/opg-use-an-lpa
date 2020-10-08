@@ -375,4 +375,72 @@ class CommonContext implements Context
     {
         $this->ui->clickLink('English');
     }
+
+    /**
+     * @When /^I request to view the accessibility statement$/
+     */
+    public function iRequestToViewTheAccessibilityStatement()
+    {
+        $this->ui->clickLink('Accessibility statement');
+    }
+
+    /**
+     * @When /^I request to see the contact us details$/
+     */
+    public function iRequestToSeeTheContactUsDetails()
+    {
+        $this->ui->clickLink('Contact us');
+    }
+
+    /**
+     * @Then /^I can see the contact us page$/
+     */
+    public function iCanSeeTheContactUsPage()
+    {
+        $this->ui->assertPageAddress('/contact-us');
+        $this->ui->assertPageContainsText('Contact us');
+    }
+
+    /**
+     * @Given /^I am on the contact us page$/
+     */
+    public function iAmOnTheContactUsPage()
+    {
+        $this->ui->visit('/contact-us');
+        $this->ui->assertPageAddress('/contact-us');
+    }
+
+    /**
+     * @When /^I navigate to the call charges page$/
+     */
+    public function iNavigateToTheFeedbackPage()
+    {
+        $this->ui->clickLink('Find out about call charges');
+    }
+
+    /**
+     * @Then /^I am taken to the call charges page$/
+     */
+    public function iAmTakenToTheCallChargesPage()
+    {
+        $this->ui->assertPageAddress('https://www.gov.uk/call-charges');
+    }
+
+    /**
+     * @When /^I provide a wrong url that does not exist$/
+     */
+    public function iProvideAWrongUrlThatDoesNotExist()
+    {
+        $this->ui->assertPageAddress('/home');
+        $this->ui->visit('/home/random');
+    }
+
+    /**
+     * @When /^I should be shown an error page with details$/
+     */
+    public function iShouldBeShownAnErrorPageWithDetails()
+    {
+        $this->ui->assertPageAddress('/home/random');
+        $this->ui->assertPageContainsText('Page not found');
+    }
 }

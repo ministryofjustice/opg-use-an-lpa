@@ -26,7 +26,7 @@ Feature: The user is able to delete their account
     When I request to delete my account
     And I confirm that I want to delete my account
     Then My account is deleted
-    And I am logged out of the service and taken to the index page
+    And I am logged out of the service and taken to the deleted account confirmation page
 
   @ui
   Scenario: As a user I cannot access my account once it has been deleted

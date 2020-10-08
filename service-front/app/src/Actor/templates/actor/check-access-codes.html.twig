@@ -17,16 +17,16 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                  <span class="govuk-caption-l">
+                  <h2 class="govuk-caption-l">
                       {% if lpa.caseSubtype == "pfa" %}
                           {% trans %}Property and finance{% endtrans %}
                       {% else %}
                           {% trans %}Health and welfare{% endtrans %}
                       {% endif %}
-                  </span>
-                  <span class="govuk-heading-l govuk-!-margin-bottom-3">
+                  </h2>
+                  <h2 class="govuk-heading-l govuk-!-margin-bottom-3">
                     {{ actor_name(lpa.donor, false) }}
-                  </span>
+                  </h2>
                 </div>
             </div>
 
@@ -87,15 +87,10 @@
                                 {%trans with {'%create-code-link%': path('lpa.create-code', {}, {'lpa':  actorToken })} %}If an organisation asks to see this <abbr title="lasting power of attorney">LPA</abbr> again, you can <a href="%create-code-link%">make them a new code</a>.{% endtrans %}
                             </p>
 
-                            <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+                            <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default" data-opentext="{% trans %}Open all{% notes %}Accordion label{% endtrans%}" data-closetext="{% trans %}Close all{% notes %}Accordion label{% endtrans %}" data-sectiontext="{% trans %}section{% notes %}Accordion label{% endtrans %}">
 
                                 {% for code in shareCodes %}
-                                    {% if check_if_code_has_expired(code.Expires) %}
-                                        {{ include('@actor/partials/check-code-details.html.twig') }}
-                                    {% endif %}
-                                {% endfor %}
-                                {% for code in shareCodes %}
-                                    {% if check_if_code_is_cancelled(code) %}
+                                    {% if check_if_code_has_expired(code.Expires) or check_if_code_is_cancelled(code) %}
                                         {{ include('@actor/partials/check-code-details.html.twig') }}
                                     {% endif %}
                                 {% endfor %}

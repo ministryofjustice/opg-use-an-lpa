@@ -16,6 +16,7 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\HiddenString\HiddenString;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -57,10 +58,22 @@ class UserService
     public function add(array $data): array
     {
         if ($this->usersRepository->exists($data['email'])) {
-            throw new ConflictException(
-                'User already exists with email address ' . $data['email'],
-                ['email' => $data['email']]
-            );
+            $user = $this->getByEmail($data['email']);
+
+            if (isset($user['ActivationToken']) && isset($user['ExpiresTTL'])) {
+                //we're not activated yet, so push forward the time and update password (as this may change)
+                return $this->usersRepository->resetActivationDetails(
+                    $user['Id'],
+                    $data['password'],
+                    $this->getExpiryTtl()
+                );
+            } else {
+                //already activated.
+                throw new ConflictException(
+                    'User already exists with email address ' . $data['email'],
+                    ['email' => $data['email']]
+                );
+            }
         }
 
         $emailResetExists = $this->usersRepository->getUserByNewEmail($data['email']);
@@ -79,11 +92,11 @@ class UserService
         }
 
         // Generate unique id for user
-        $id = Uuid::uuid4()->toString();
+        $id = $this->generateUniqueId();
 
         //  An unactivated user account can only exist for 24 hours before it is deleted
-        $activationToken = Base64UrlSafe::encode(random_bytes(32));
-        $activationTtl = time() + (60 * 60 * 24);
+        $activationToken = $this->getLinkToken();
+        $activationTtl = $this->getExpiryTtl();
 
         $user = $this->usersRepository->add($id, $data['email'], $data['password'], $activationToken, $activationTtl);
 
@@ -177,8 +190,8 @@ class UserService
      */
     public function requestPasswordReset(string $email): array
     {
-        $resetToken = Base64UrlSafe::encode(random_bytes(32));
-        $resetExpiry = time() + (60 * 60 * 24);
+        $resetToken = $this->getLinkToken();
+        $resetExpiry = $this->getExpiryTtl();
 
         try {
             $user = $this->usersRepository->recordPasswordResetRequest($email, $resetToken, $resetExpiry);
@@ -233,10 +246,10 @@ class UserService
      * not expired.
      *
      * @param string $resetToken
-     * @param string $password
+     * @param HiddenString $password
      * @throws Exception
      */
-    public function completePasswordReset(string $resetToken, string $password): void
+    public function completePasswordReset(string $resetToken, HiddenString $password): void
     {
         // PasswordResetToken index is KEY only so fetch the id to do work on
         $userId = $this->usersRepository->getIdByPasswordResetToken($resetToken);
@@ -261,14 +274,14 @@ class UserService
 
     /**
      * @param string $userId
-     * @param string $password
-     * @param string $newPassword
+     * @param HiddenString $password
+     * @param HiddenString $newPassword
      */
-    public function completeChangePassword(string $userId, string $password, string $newPassword): void
+    public function completeChangePassword(string $userId, HiddenString $password, HiddenString $newPassword): void
     {
         $user = $this->usersRepository->get($userId);
 
-        if (! password_verify($password, $user['Password'])) {
+        if (! password_verify($password->getString(), $user['Password'])) {
             throw new ForbiddenException('Authentication failed for user ID ' . $userId, ['userId' => $userId]);
         }
 
@@ -297,14 +310,14 @@ class UserService
     /**
      * @param string $userId
      * @param string $newEmail
-     * @param string $password
+     * @param HiddenString $password
      * @return array
      * @throws Exception
      */
-    public function requestChangeEmail(string $userId, string $newEmail, string $password)
+    public function requestChangeEmail(string $userId, string $newEmail, HiddenString $password)
     {
-        $resetToken = Base64UrlSafe::encode(random_bytes(32));
-        $resetExpiry = time() + (60 * 60 * 48);
+        $resetToken = $this->getLinkToken();
+        $resetExpiry = $this->getExpiryTtl();
 
         $this->canRequestChangeEmail($userId, $newEmail, $password);
 
@@ -323,15 +336,15 @@ class UserService
      *
      * @param string $userId
      * @param string $newEmail
-     * @param string $password
+     * @param HiddenString $password
      * @return void
      * @throws Exception
      */
-    public function canRequestChangeEmail(string $userId, string $newEmail, string $password): void
+    public function canRequestChangeEmail(string $userId, string $newEmail, HiddenString $password): void
     {
         $user = $this->usersRepository->get($userId);
 
-        if (! password_verify($password, $user['Password'])) {
+        if (! password_verify($password->getString(), $user['Password'])) {
             throw new ForbiddenException('Authentication failed for user ID ' . $userId, ['userId' => $userId]);
         }
 
@@ -341,7 +354,7 @@ class UserService
 
         $newEmailExists = $this->usersRepository->getUserByNewEmail($newEmail);
 
-        if (!empty($newEmailExists) && ! $this->checkIfEmailResetViable($newEmailExists,false, $userId)) {
+        if (!empty($newEmailExists) && ! $this->checkIfEmailResetViable($newEmailExists, false, $userId)) {
             $this->logger->notice(
                 'Could not request email change for account with Id {id}
                 as another user has already requested to change their email that email address',
@@ -413,5 +426,34 @@ class UserService
         $user = $this->usersRepository->get($userId);
 
         $this->usersRepository->changeEmail($userId, $resetToken, $user['NewEmail']);
+    }
+
+    /**
+     * Get link token
+     * @return string
+     * @throws Exception
+     */
+    private function getLinkToken(): string
+    {
+        return Base64UrlSafe::encode(random_bytes(32));
+    }
+
+    /**
+     * get Expiry TTL
+     * @return float|int
+     */
+    private function getExpiryTtl()
+    {
+        return time() + (60 * 60 * 24);
+    }
+
+    /**
+     * Generate unique id (UUID)
+     * @return string
+     * @throws Exception
+     */
+    private function generateUniqueId(): string
+    {
+        return Uuid::uuid4()->toString();
     }
 }

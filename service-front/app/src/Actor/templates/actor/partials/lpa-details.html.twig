@@ -5,17 +5,20 @@
     <div class="govuk-summary-list__row govuk-!-margin-bottom-0 govuk-!-margin-top-4">
         <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-width-one-third">
             {% if actorActive %}
-                <span class="govuk-heading-m govuk-!-margin-bottom-0">{{ caseSubtype }}</span>
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">{{ caseSubtype }}</h2>
             {% else %}
-                <span class="govuk-heading-m govuk-!-margin-bottom-0 lpa-secondary-text-colour">{{ caseSubtype }}</span>
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0 lpa-secondary-text-colour">{{ caseSubtype }}</h2>
             {% endif %}
         </dt>
         <dd class="govuk-summary-list__value govuk-!-padding-top-4 govuk-!-padding-bottom-4 govuk-!-margin-bottom-0">
             {% if actorActive %}
                 <p class="govuk-!-margin-top-0">
                     <a class="govuk-link" href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">{% trans %}Give an organisation access{% endtrans %}</a><br>
+                    <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype}}</span>
                     <a class="govuk-link" href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}">{% trans %}Check access codes{% endtrans %}</a><br>
+                    <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype }}</span>
                     <a class="govuk-link" href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">{% trans %}View LPA summary{% endtrans %}</a>
+                    <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype}}</span>
                 </p>
             {% else %}
                 <p class="govuk-!-margin-top-0 lpa-secondary-text-colour">

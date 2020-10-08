@@ -18,7 +18,7 @@ use Exception;
 /**
  * Class ConfirmDeleteAccountHandler
  * @package Actor\Handler
- * @codCoverageIgnore
+ * @codeCoverageIgnore
  */
 class ConfirmDeleteAccountHandler extends AbstractHandler implements UserAware
 {

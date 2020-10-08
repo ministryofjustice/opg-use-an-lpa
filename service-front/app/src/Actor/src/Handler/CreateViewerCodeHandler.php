@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\CreateShareCode;
-use Common\Entity\Lpa;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
@@ -15,12 +14,13 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\ViewerCodeService;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class CreateViewerCodeHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
@@ -84,7 +84,7 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
                     'user'         => $user,
                     'actorToken'   => $validated['lpa_token'],
                     'code'         => $codeData['code'],
-                    'expires'      => $codeData['expires'],
+                    'expires'      => new DateTimeImmutable($codeData['expires']),
                     'organisation' => $codeData['organisation'],
                     'lpa'          => $lpaData->lpa
                 ]));

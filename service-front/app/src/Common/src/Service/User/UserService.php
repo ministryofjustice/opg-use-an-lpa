@@ -13,6 +13,7 @@ use Mezzio\Authentication\UserInterface;
 use Mezzio\Authentication\UserRepositoryInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class UserService
@@ -58,14 +59,14 @@ class UserService implements UserRepositoryInterface
 
     /**
      * @param string $email
-     * @param string $password
+     * @param HiddenString $password
      * @return array
      */
-    public function create(string $email, string $password): array
+    public function create(string $email, HiddenString $password): array
     {
         $data = $this->apiClient->httpPost('/v1/user', [
             'email'    => $email,
-            'password' => $password,
+            'password' => $password->getString()
         ]);
 
         $this->logger->info('Account with Id {id} created using email hash {email}', [
@@ -143,10 +144,9 @@ class UserService implements UserRepositoryInterface
 
     /**
      * @param string $activationToken
-     * @return bool
-     * @throws \Http\Client\Exception
+     * @return false|mixed
      */
-    public function activate(string $activationToken): bool
+    public function activate(string $activationToken)
     {
         try {
             $userData = $this->apiClient->httpPatch('/v1/user-activation', [
@@ -162,7 +162,7 @@ class UserService implements UserRepositoryInterface
                     ]
                 );
 
-                return true;
+                return $userData['Email'];
             }
         } catch (ApiException $ex) {
             if ($ex->getCode() !== StatusCodeInterface::STATUS_NOT_FOUND) {
@@ -233,11 +233,11 @@ class UserService implements UserRepositoryInterface
         return false;
     }
 
-    public function completePasswordReset(string $token, string $password): void
+    public function completePasswordReset(string $token, HiddenString $password): void
     {
         $this->apiClient->httpPatch('/v1/complete-password-reset', [
             'token' => $token,
-            'password' => $password
+            'password' => $password->getString(),
         ]);
 
         $this->logger->info(
@@ -248,13 +248,13 @@ class UserService implements UserRepositoryInterface
         );
     }
 
-    public function requestChangeEmail(string $userId, string $newEmail, string $password): array
+    public function requestChangeEmail(string $userId, string $newEmail, HiddenString $password): array
     {
         try {
             $data = $this->apiClient->httpPatch('/v1/request-change-email', [
                 'user-id'       => $userId,
                 'new-email'     => $newEmail,
-                'password'      => $password
+                'password'      => $password->getString()
             ]);
 
             if (!is_null($data) && isset($data['EmailResetToken'])) {
@@ -329,13 +329,13 @@ class UserService implements UserRepositoryInterface
         );
     }
 
-    public function changePassword(string $id, string $password, string $newPassword): void
+    public function changePassword(string $id, HiddenString $password, HiddenString $newPassword): void
     {
         try {
             $this->apiClient->httpPatch('/v1/change-password', [
                 'user-id'       => $id,
-                'password'      => $password,
-                'new-password'  => $newPassword
+                'password'      => $password->getString(),
+                'new-password'  => $newPassword->getString()
             ]);
 
             $this->logger->info(

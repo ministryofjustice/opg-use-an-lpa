@@ -12,6 +12,7 @@ use Common\Handler\Traits\CsrfGuard;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
+use ParagonIE\HiddenString\HiddenString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -22,6 +23,7 @@ use Mezzio\Template\TemplateRendererInterface;
 /**
  * Class CreateAccountHandler
  * @package Actor\Handler
+ * @codeCoverageIgnore
  */
 class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
 {
@@ -78,7 +80,8 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
                 $formData = $form->getData();
 
                 $emailAddress = $formData['email'];
-                $password = $formData['password'];
+
+                $password = new HiddenString($formData['show_hide_password']);
 
                 try {
                     $userData = $this->userService->create($emailAddress, $password);

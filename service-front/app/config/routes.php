@@ -44,7 +44,11 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/privacy-notice', Viewer\Handler\ViewerPrivacyNoticeHandler::class, 'privacy-notice');
     $app->get('/stats', Viewer\Handler\StatsPageHandler::class, 'viewer-stats');
     $app->get('/session-expired', Viewer\Handler\ViewerSessionExpiredHandler::class, 'session-expired');
+    $app->get('/session-check', Common\Handler\SessionCheckHandler::class, 'session-check');
+    $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
+    $app->get('/accessibility-statement', \Viewer\Handler\ViewerAccessibilityStatementHandler::class, 'accessibility-statement');
+    $app->get('/contact-us', Common\Handler\ContactUsPageHandler::class, 'contact-us');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
@@ -56,6 +60,8 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
     $app->get('/terms-of-use', [Actor\Handler\ActorTermsOfUseHandler::class], 'terms-of-use');
     $app->get('/privacy-notice', [Actor\Handler\ActorPrivacyNoticeHandler::class], 'privacy-notice');
+    $app->get('/accessibility-statement', \Actor\Handler\ActorAccessibilityStatementHandler::class, 'accessibility-statement');
+    $app->get('/contact-us', Common\Handler\ContactUsPageHandler::class, 'contact-us');
 
     // User creation
     $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');
@@ -66,6 +72,8 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
     $app->get('/logout', Actor\Handler\LogoutPageHandler::class, 'logout');
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
+    $app->get('/session-check', Common\Handler\SessionCheckHandler::class, 'session-check');
+    $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
 
     // User management
     $app->route(

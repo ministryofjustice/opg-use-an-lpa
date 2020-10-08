@@ -1,0 +1,34 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}We've deleted your account{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <div class="govuk-grid-row">
+
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}We've deleted your account{% endtrans %}</h1>
+
+                    <p class="govuk-body">{% trans with {'%link%': path('create-account')} %}To use a lasting power of attorney online, you'll need to <a href="%link%" class="govuk-link">create a new account</a>.{% endtrans %}</p>
+
+                    <p class="govuk-body">{% trans %}<a class="govuk-link" href="https://www.lastingpowerofattorney.service.gov.uk/contact">Contact us</a> if you want to use an LPA you added to the account you deleted - you'll need to ask us for a new activation key.{% endtrans %}</p>
+
+                    <p class="govuk-body">{% trans %}Your <a href="https://www.surveymonkey.co.uk/r/Use-LPA" class="govuk-link">feedback</a> is important to us - it will help us to improve this service.{% endtrans %}</p>
+
+                    <a href="https://www.gov.uk/" draggable="false" class="govuk-button govuk-!-margin-top-4">
+                        {% trans %}Back to GOV.UK{% endtrans %}
+                    </a>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+{% endblock %}

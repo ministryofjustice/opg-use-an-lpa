@@ -1,5 +1,5 @@
 {%- block form_open -%}
-    <form name="{{ form.getName() }}" method="post" action="{{ form.getAttribute('action') ?: path() }}">
+    <form name="{{ form.getName() }}" method="post" novalidate action="{{ form.getAttribute('action') ?: path() }}">
 {%- endblock form_open -%}
 
 
@@ -31,17 +31,7 @@
 
         {% endif %}
 
-        <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
-                id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}"
-                {% if inputmode is defined %}inputmode="{{ inputmode }}"{% endif %}
-                {% if spellcheck is defined %}spellcheck="{{ spellcheck }}"{% endif %}
-                {% if autocomplete is defined %}autocomplete="{{ autocomplete }}"{% endif %} />
-
-        {% if element.getName() == 'org_name' %}
-            <button data-prevent-double-click="true" type="submit" class="govuk-button">
-                {% trans %}Continue{% endtrans %}
-            </button>
-        {% endif %}
+        {{- block('form_input') -}}
 
     </div>
 {%- endblock form_element_simple -%}
@@ -57,6 +47,8 @@
 
 {%- block form_input_text -%}
     {%- set type = type|default('text') -%}
+    {%- set inputmode = inputmode|default('') -%}
+    {%- set pattern = pattern|default('') -%}
     {%- set value = element.getValue() -%}
     {{ block('form_element_simple') }}
 {%- endblock form_input_text -%}
@@ -124,17 +116,32 @@
             <div class="govuk-date-input" id="{{ fieldset.getName() }}">
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(fieldset.get('day'), { 'label': 'Day' | trans, 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
+                    {{ govuk_form_element(fieldset.get('day'), {
+                        'label': 'Day' | trans,
+                        'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'},
+                        'inputmode': 'numeric',
+                        'pattern': '[0-9]*'
+                    }, fieldset) }}
 
                 </div>
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(fieldset.get('month'), { 'label': 'Month' | trans, 'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
+                    {{ govuk_form_element(fieldset.get('month'), {
+                        'label': 'Month' | trans,
+                        'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'},
+                        'inputmode': 'numeric',
+                        'pattern': '[0-9]*'
+                    }, fieldset) }}
 
                 </div>
                 <div class="govuk-date-input__item">
 
-                    {{ govuk_form_element(fieldset.get('year'), { 'label': 'Year' | trans, 'attr' : {'class': 'govuk-date-input__input govuk-input--width-4', 'label_class': 'govuk-date-input__label'} }, fieldset) }}
+                    {{ govuk_form_element(fieldset.get('year'), {
+                        'label': 'Year' | trans,
+                        'attr' : {'class': 'govuk-date-input__input govuk-input--width-4', 'label_class': 'govuk-date-input__label'},
+                        'inputmode': 'numeric',
+                        'pattern': '[0-9]*'
+                    }, fieldset) }}
 
                 </div>
             </div>
@@ -189,3 +196,31 @@
         </span>
     {% endif %}
 {%- endblock input_hint -%}
+
+{%- block form_input -%}
+    {% if element.getName() == 'show_hide_password' %}
+        <div class="moj-password-reveal">
+    {% endif %}
+
+    <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
+           id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}"
+            {% if inputmode is defined and inputmode is not empty %}inputmode="{{ inputmode }}"{% endif %}
+            {% if pattern is defined and pattern is not empty %}pattern="{{ pattern }}"{% endif %}
+            {% if spellcheck is defined and spellcheck is not empty %}spellcheck="{{ spellcheck }}"{% endif %}
+            {% if autocomplete is defined and autocomplete is not empty %}autocomplete="{{ autocomplete }}"{% endif %} />
+
+    {% if element.getName() == 'show_hide_password' %}
+        <button class="govuk-button govuk-button--secondary moj-password-reveal__button" data-module="govuk-button" type="button"
+                data-showpassword="{% trans %}Show{% notes %}Show password label{% endtrans%}"
+                data-hidepassword="{% trans %}Hide{% notes %}Hide password label{% endtrans %}">
+        </button>
+        </div>
+    {% endif %}
+
+    {% if element.getName() == 'org_name' %}
+        <button data-prevent-double-click="true" type="submit" class="govuk-button">
+            {% trans %}Continue{% endtrans %}
+        </button>
+    {% endif %}
+
+{%- endblock form_input -%}
