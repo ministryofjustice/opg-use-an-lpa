@@ -111,9 +111,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I can see all of my access codes and their details$/
+     * @Then /^I can see all of the access codes and their details$/
      */
-    public function iCanSeeAllOfMyAccessCodesAndTheirDetails()
+    public function iCanSeeAllOfTheAccessCodesAndTheirDetails()
     {
         // Not needed for this context
     }
