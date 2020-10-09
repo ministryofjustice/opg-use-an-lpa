@@ -316,7 +316,14 @@ class LpaService
 
         $donors = [];
         foreach ($lpas as $userLpaToken => $lpa) {
-            $donor = implode(" ", array_filter([$lpa->lpa->getDonor()->getFirstname(), $lpa->lpa->getDonor()->getMiddlenames(), $lpa->lpa->getDonor()->getSurname()])) ;
+            $donor = implode(" ", array_filter(
+                [
+                    $lpa->lpa->getDonor()->getFirstname(),
+                    $lpa->lpa->getDonor()->getMiddlenames(),
+                    $lpa->lpa->getDonor()->getSurname(),
+                    ($lpa->lpa->getDonor()->getDob())->format('Y-m-d') //prevents different donors with name from being grouped together
+                ]
+            ));
 
             if (array_key_exists($donor, $donors)) {
                 $donors[$donor][$userLpaToken] = $lpa;

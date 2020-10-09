@@ -51,7 +51,7 @@
 
                 {% for donorName, token in lpas %}
 
-                    <span class="govuk-heading-l govuk-!-margin-top-5 govuk-!-margin-bottom-3">{{ donorName }}</span>
+                    <span class="govuk-heading-l govuk-!-margin-top-5 govuk-!-margin-bottom-3">{{ donor_name_with_dob_removed(donorName) }}</span>
 
                     {% for lpaData in token %}
                         {% set lpa = lpaData['lpa'] %}
