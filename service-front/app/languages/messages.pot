@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-09-29T10:15:25+00:00\n"
+"POT-Creation-Date: 2020-10-05T11:15:35+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -74,8 +74,8 @@ msgid "Access codes for this LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:37
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:17
-#: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:15
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:18
+#: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:14
 msgid "Check access codes"
 msgstr ""
 
@@ -152,8 +152,6 @@ msgstr ""
 #: src/Actor/templates/actor/change-details.html.twig:19
 #: src/Actor/templates/actor/password-reset-request-done.html.twig:11
 #: src/Actor/templates/actor/lpa-add.html.twig:13
-#: src/Common/templates/error/error.html.twig:9
-#: src/Common/templates/error/404.html.twig:9
 #: src/Common/templates/partials/cookies.html.twig:18
 #: src/Common/templates/partials/contact-us.html.twig:17
 #: src/Viewer/templates/viewer/check-code-found.html.twig:11
@@ -1924,44 +1922,44 @@ msgstr ""
 msgid "This is for your reference only"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:18
-#: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:20
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:20
+#: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:19
 msgid "View LPA summary"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:22
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:25
 msgid ""
 "Give an organisation access<br>\n"
 "                    Check access codes<br>\n"
 "                    View LPA summary"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:30
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:33
 msgid "Access revoked"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:33
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:36
 msgid "%count% active code"
 msgid_plural "%count% active codes"
 msgstr[0] ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:36
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:39
 msgid "No organisations have access"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:43
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:46
 msgid "You no longer have access to this <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:44
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:47
 msgid "Why is this?"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:50
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:53
 msgid "<strong>Important: </strong>This lpa has instructions or preferences."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:51
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:54
 msgid "Read more"
 msgstr ""
 
@@ -2293,7 +2291,7 @@ msgid ""
 "            or head back to <a href=\"%link%\" class=\"govuk-link\">Home</a>."
 msgstr ""
 
-#: src/Common/templates/partials/new-service.html.twig:7
+#: src/Viewer/templates/viewer/new-view-service.html.twig:7
 msgid "This is a new service – your <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">feedback</a> will help us to improve it."
 msgstr ""
 
@@ -3354,4 +3352,10 @@ msgstr ""
 #: src/Actor/templates/actor/create-account.html.twig:41
 #: src/Actor/templates/actor/change-email.html.twig:31
 msgid "Check that your email address is spelt correctly"
+msgstr ""
+
+#. Add LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:35
+msgctxt "error"
+msgid "Enter the LPA reference number in the correct format"
 msgstr ""
