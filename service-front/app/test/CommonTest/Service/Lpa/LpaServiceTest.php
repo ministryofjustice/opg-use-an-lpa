@@ -607,6 +607,20 @@ class LpaServiceTest extends TestCase
             'added' => date('Y-m-d H:i:s', strtotime('-5 hours'))
         ];
 
+        $lpaData9 = [
+            'lpa' => [
+                'uId' => '700000000009',
+                'caseSubtype' => 'hw',
+                'donor' => [
+                    'uId' => '700000000009',
+                    'dob' => '1998-02-09', // different donor with different dob so should not be grouped
+                    'firstname' => 'Gemma',
+                    'surname' => 'Taylor'
+                ]
+            ],
+            'added' => date('Y-m-d H:i:s', strtotime('-9 hours'))
+        ];
+
         // ---- Daniel Williams 3 LPAs
 
         $lpa1 = new Lpa();
@@ -675,6 +689,18 @@ class LpaServiceTest extends TestCase
         $donor8->setSurname('Taylor');
         $lpa8->setDonor($donor8);
 
+        // ---- Different donor! Gemma Taylor 1 LPA (to test case if donors with same name but different dob arent grouped)
+
+        $lpa9 = new Lpa();
+        $lpa9->setUId('700000000009');
+        $lpa9->setCaseSubtype('hw');
+        $donor9 = new CaseActor();
+        $donor9->setUId('700000000009');
+        $donor9->setDob(new \DateTime('1998-02-09'));
+        $donor9->setFirstname('Gemma');
+        $donor9->setSurname('Taylor');
+        $lpa9->setDonor($donor9);
+
 
         $this->apiClientProphecy->httpGet('/v1/lpas')
             ->willReturn([
@@ -685,7 +711,8 @@ class LpaServiceTest extends TestCase
                 '0005-01-01-01-555555' => $lpaData5,
                 '0006-01-01-01-666666' => $lpaData6,
                 '0007-01-01-01-777777' => $lpaData7,
-                '0008-01-01-01-888888' => $lpaData8
+                '0008-01-01-01-888888' => $lpaData8,
+                '0009-01-01-01-999999' => $lpaData9
             ]);
         $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
@@ -697,6 +724,7 @@ class LpaServiceTest extends TestCase
         $this->lpaFactoryProphecy->createLpaFromData($lpaData6['lpa'])->willReturn($lpa6);
         $this->lpaFactoryProphecy->createLpaFromData($lpaData7['lpa'])->willReturn($lpa7);
         $this->lpaFactoryProphecy->createLpaFromData($lpaData8['lpa'])->willReturn($lpa8);
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData9['lpa'])->willReturn($lpa9);
 
         $service = new LpaService(
             $this->apiClientProphecy->reveal(),
@@ -724,10 +752,11 @@ class LpaServiceTest extends TestCase
 
         $completeOrder = $completeOrder->getArrayCopy();
 
-        $this->assertEquals(['0007-01-01-01-777777', '0002-01-01-01-222222'], array_keys($completeOrder['Amy Johnson']));
-        $this->assertEquals(['0008-01-01-01-888888'], array_keys($completeOrder['Gemma Taylor']));
-        $this->assertEquals(['0004-01-01-01-444444', '0003-01-01-01-333333'], array_keys($completeOrder['Sam Taylor']));
-        $this->assertEquals(['0001-01-01-01-111111', '0006-01-01-01-666666', '0005-01-01-01-555555'], array_keys($completeOrder['Daniel Williams']));
+        $this->assertEquals(['0007-01-01-01-777777', '0002-01-01-01-222222'], array_keys($completeOrder['Amy Johnson 1980-01-01']));
+        $this->assertEquals(['0008-01-01-01-888888'], array_keys($completeOrder['Gemma Taylor 1980-01-01']));
+        $this->assertEquals(['0009-01-01-01-999999'], array_keys($completeOrder['Gemma Taylor 1998-02-09']));
+        $this->assertEquals(['0004-01-01-01-444444', '0003-01-01-01-333333'], array_keys($completeOrder['Sam Taylor 1980-01-01']));
+        $this->assertEquals(['0001-01-01-01-111111', '0006-01-01-01-666666', '0005-01-01-01-555555'], array_keys($completeOrder['Daniel Williams 1980-01-01']));
     }
 
     /** @test */
@@ -752,11 +781,12 @@ class LpaServiceTest extends TestCase
         $this->assertEquals('Amy Johnson', $resultOrder[0]);
         $this->assertEquals('Amy Johnson', $resultOrder[1]);
         $this->assertEquals('Gemma Taylor', $resultOrder[2]);
-        $this->assertEquals('Sam Taylor', $resultOrder[3]);
+        $this->assertEquals('Gemma Taylor', $resultOrder[3]);
         $this->assertEquals('Sam Taylor', $resultOrder[4]);
-        $this->assertEquals('Daniel Williams', $resultOrder[5]);
+        $this->assertEquals('Sam Taylor', $resultOrder[5]);
         $this->assertEquals('Daniel Williams', $resultOrder[6]);
         $this->assertEquals('Daniel Williams', $resultOrder[7]);
+        $this->assertEquals('Daniel Williams', $resultOrder[8]);
 
         return $orderedLpas;
     }
@@ -778,14 +808,16 @@ class LpaServiceTest extends TestCase
 
         $groupedLpaKeys = array_keys($groupedLpasArray);
 
-        $this->assertEquals('Amy Johnson', $groupedLpaKeys[0]);
-        $this->assertEquals('Gemma Taylor', $groupedLpaKeys[1]);
-        $this->assertEquals('Sam Taylor', $groupedLpaKeys[2]);
-        $this->assertEquals('Daniel Williams', $groupedLpaKeys[3]);
-        $this->assertEquals(2, sizeof($groupedLpasArray['Amy Johnson']));
-        $this->assertEquals(1, sizeof($groupedLpasArray['Gemma Taylor']));
-        $this->assertEquals(2, sizeof($groupedLpasArray['Sam Taylor']));
-        $this->assertEquals(3, sizeof($groupedLpasArray['Daniel Williams']));
+        $this->assertEquals('Amy Johnson 1980-01-01', $groupedLpaKeys[0]);
+        $this->assertEquals('Gemma Taylor 1980-01-01', $groupedLpaKeys[1]);
+        $this->assertEquals('Gemma Taylor 1998-02-09', $groupedLpaKeys[2]);
+        $this->assertEquals('Sam Taylor 1980-01-01', $groupedLpaKeys[3]);
+        $this->assertEquals('Daniel Williams 1980-01-01', $groupedLpaKeys[4]);
+        $this->assertEquals(2, sizeof($groupedLpasArray['Amy Johnson 1980-01-01']));
+        $this->assertEquals(1, sizeof($groupedLpasArray['Gemma Taylor 1980-01-01']));
+        $this->assertEquals(1, sizeof($groupedLpasArray['Gemma Taylor 1998-02-09']));
+        $this->assertEquals(2, sizeof($groupedLpasArray['Sam Taylor 1980-01-01']));
+        $this->assertEquals(3, sizeof($groupedLpasArray['Daniel Williams 1980-01-01']));
 
         return $groupedLpas;
     }
@@ -805,9 +837,10 @@ class LpaServiceTest extends TestCase
 
         $orderedLpasArray = $orderedLpas->getArrayCopy();
 
-        $this->assertEquals(['0007-01-01-01-777777', '0002-01-01-01-222222'], array_keys($orderedLpasArray['Amy Johnson']));
-        $this->assertEquals(['0004-01-01-01-444444', '0003-01-01-01-333333'], array_keys($orderedLpasArray['Sam Taylor']));
-        $this->assertEquals(['0008-01-01-01-888888'], array_keys($orderedLpasArray['Gemma Taylor']));
-        $this->assertEquals(['0001-01-01-01-111111', '0006-01-01-01-666666', '0005-01-01-01-555555'], array_keys($orderedLpasArray['Daniel Williams']));
+        $this->assertEquals(['0007-01-01-01-777777', '0002-01-01-01-222222'], array_keys($orderedLpasArray['Amy Johnson 1980-01-01']));
+        $this->assertEquals(['0004-01-01-01-444444', '0003-01-01-01-333333'], array_keys($orderedLpasArray['Sam Taylor 1980-01-01']));
+        $this->assertEquals(['0008-01-01-01-888888'], array_keys($orderedLpasArray['Gemma Taylor 1980-01-01']));
+        $this->assertEquals(['0009-01-01-01-999999'], array_keys($orderedLpasArray['Gemma Taylor 1998-02-09']));
+        $this->assertEquals(['0001-01-01-01-111111', '0006-01-01-01-666666', '0005-01-01-01-555555'], array_keys($orderedLpasArray['Daniel Williams 1980-01-01']));
     }
 }
