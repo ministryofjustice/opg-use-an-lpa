@@ -12,6 +12,7 @@ class SessionCheckHandlerFactory
 {
     public function __invoke(ContainerInterface $container): SessionCheckHandler
     {
+        //
         $config = $container->get('config');
 
         if (!isset($config['session']['expires'])) {

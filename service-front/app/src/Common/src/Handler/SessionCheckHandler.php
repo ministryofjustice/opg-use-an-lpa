@@ -34,14 +34,17 @@ class SessionCheckHandler implements RequestHandlerInterface
 
         $expiresAt = $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY) + $this->sessionTime;
         $timeRemaining = $expiresAt - time();
+        $sessionWarning = false;
 
-        // Do we have 5min remaining
-        $sessionWarning = $timeRemaining <= 300;
+        if ($session->get('email') !== null && $timeRemaining >= 300) {
+            $sessionWarning = true;
+        }
 
         return new JsonResponse(
             [
                 'session_warning' => $sessionWarning,
-                'time_remaining'  => $timeRemaining
+                'time_remaining'  => $timeRemaining,
+                'test' => var_dump($session)
             ],
             201
         );

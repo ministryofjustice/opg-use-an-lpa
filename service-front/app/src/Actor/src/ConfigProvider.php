@@ -34,7 +34,8 @@ class ConfigProvider
         return [
             'factories'  => [
                 \Actor\Handler\CheckLpaHandler::class => \Actor\Handler\Factory\CheckLpaHandlerFactory::class,
-                \Actor\Handler\LoginPageHandler::class => \Actor\Handler\Factory\LoginPageHandlerFactory::class
+                \Actor\Handler\LoginPageHandler::class => \Actor\Handler\Factory\LoginPageHandlerFactory::class,
+                \Actor\Handler\ActorSessionCheckHandler::class => \Actor\Handler\Factor\ActorSessionCheckHandlerFactory::class
             ],
         ];
     }
