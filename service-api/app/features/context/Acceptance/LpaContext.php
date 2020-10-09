@@ -1536,9 +1536,9 @@ class LpaContext implements Context
                         [
                             'SiriusUid' => $this->lpaUid,
                             'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorId,
-                            'UserId' => $this->userId,
+                            'Id' => '65d6833a-66d3-430f-8cf6-9e4fb1d851f1',
+                            'ActorId' => '4455',
+                            'UserId' => 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
                         ]
                     ),
                 ]
@@ -1562,10 +1562,12 @@ class LpaContext implements Context
         assertEquals($response[0]['SiriusUid'], $this->lpaUid);
         assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
         assertEquals($response[0]['ViewerCode'], $this->accessCode);
+        assertEquals($response[0]['ActorId'], $this->actorId);
 
         assertEquals($response[1]['Organisation'], 'SomeOrganisation');
         assertEquals($response[1]['SiriusUid'], '700000000054');
         assertEquals($response[1]['UserLpaActor'], '65d6833a-66d3-430f-8cf6-9e4fb1d851f1');
         assertEquals($response[1]['ViewerCode'], 'B97LRK3U68PE');
+        assertEquals($response[1]['ActorId'], '4455');
     }
 }
