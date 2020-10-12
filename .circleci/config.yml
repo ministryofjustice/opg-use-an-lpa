@@ -316,22 +316,46 @@ orbs:
 
     executors:
       puppeteer:
-        docker: [image: buildkite/puppeteer]
+        docker:
+          - image: buildkite/puppeteer
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       php:
-        docker: [image: circleci/php:7-cli]
+        docker:
+          - image: circleci/php:7-cli
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       php-browsers:
-        docker: [image: circleci/php:7-cli-browsers]
+        docker:
+          - image: circleci/php:7-cli-browsers
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       node-browsers:
-        docker: [image: circleci/node:14.0-browsers]
+        docker:
+          - image: circleci/node:14.0-browsers
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       python:
-        docker: [image: circleci/python]
+        docker:
+          - image: circleci/python
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       terraform:
-        docker: [image: hashicorp/terraform:latest]
+        docker:
+          - image: hashicorp/terraform:latest
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
 
     jobs:
@@ -1001,6 +1025,9 @@ jobs:
   slack_environment_redeploy:
     docker:
       - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     parameters:
       environment:
@@ -1019,6 +1046,9 @@ jobs:
   slack_notify_domain:
     docker:
       - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
       - checkout
@@ -1037,6 +1067,9 @@ jobs:
   slack_notify_production_release:
     docker:
       - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
       - checkout
@@ -1056,6 +1089,9 @@ jobs:
   ecr_scan_results:
     docker:
       - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
       - checkout
@@ -1070,6 +1106,9 @@ jobs:
   workspace_cleanup:
     docker:
       - image: hashicorp/terraform:latest
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
       - checkout
@@ -1083,6 +1122,9 @@ jobs:
   cancel_redundant_builds:
     docker:
       - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
       - checkout
