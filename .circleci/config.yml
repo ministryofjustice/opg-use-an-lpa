@@ -306,6 +306,7 @@ orbs:
                 sudo ln -sf /usr/bin/python3-config python-config
       dockerhub_login:
         steps:
+          - docker/install-docker-credential-helper
           - docker/check:
               docker-password: DOCKER_ACCESS_TOKEN
               docker-username: DOCKER_USER
