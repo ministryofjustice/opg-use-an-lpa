@@ -98,7 +98,7 @@ class ViewerCodesTest extends TestCase
     }
 
     /** @test */
-    public function can_query_by_user_lpa(){
+    public function can_query_by_lpa_id(){
 
         $testSiriusUid = '98765-43210';
         $testActorId = '12345-67891';
@@ -133,7 +133,7 @@ class ViewerCodesTest extends TestCase
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $repo->getCodesByUserLpa($testSiriusUid);
+        $result = $repo->getCodesByLpaId($testSiriusUid);
 
         $this->assertEquals($testSiriusUid, $result[0]['SiriusUid']);
         $this->assertEquals($testActorId, $result[0]['UserLpaActor']);
@@ -166,7 +166,7 @@ class ViewerCodesTest extends TestCase
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $repo->getCodesByUserLpa($testSiriusUid);
+        $result = $repo->getCodesByLpaId($testSiriusUid);
 
         $this->assertEmpty($result);
     }

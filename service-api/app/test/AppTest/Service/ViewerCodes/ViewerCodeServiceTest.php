@@ -165,7 +165,7 @@ class ViewerCodeServiceTest extends TestCase
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeRepoProphecy
-            ->getCodesByUserLpa('700000000047')
+            ->getCodesByLpaId('700000000047')
             ->shouldBeCalled()
             ->willReturn(['some_lpa_code_data']);
 

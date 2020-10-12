@@ -58,7 +58,7 @@ class ViewerCodes implements ViewerCodesInterface
     /**
      * @inheritDoc
      */
-    public function getCodesByUserLpa(string $siriusUid): array
+    public function getCodesByLpaId(string $siriusUid): array
     {
         $marshaler = new Marshaler();
 

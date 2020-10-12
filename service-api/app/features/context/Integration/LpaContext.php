@@ -199,7 +199,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        // ViewerCodesRepository::getCodesByUserLpa
+        // ViewerCodesRepository::getCodesByLpaId
         $this->awsFixtures->append(
             new Result(
                 [
@@ -333,7 +333,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        // ViewerCodesRepository::getCodesByUserLpa
+        // ViewerCodesRepository::getCodesByLpaId
         $this->awsFixtures->append(new Result());
 
         $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
@@ -413,7 +413,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        // ViewerCodes::getCodesByUserLpa
+        // ViewerCodes::getCodesByLpaId
         $this->awsFixtures->append(
             new Result(
                 [
@@ -508,7 +508,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        // ViewerCodes::getCodesByUserLpa
+        // ViewerCodes::getCodesByLpaId
         $this->awsFixtures->append(
             new Result(
                 [
@@ -1097,7 +1097,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        // ViewerCodes::getCodesByUserLpa
+        // ViewerCodes::getCodesByLpaId
         $this->awsFixtures->append(
             new Result(
                 [

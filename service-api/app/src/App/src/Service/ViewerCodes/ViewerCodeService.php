@@ -94,7 +94,7 @@ class ViewerCodeService
 
         $siriusUid = $map['SiriusUid'];
 
-        return $this->viewerCodesRepository->getCodesByUserLpa($siriusUid);
+        return $this->viewerCodesRepository->getCodesByLpaId($siriusUid);
     }
 
     /**

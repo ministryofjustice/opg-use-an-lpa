@@ -23,7 +23,7 @@ interface ViewerCodesInterface
      * @param string $siriusUid
      * @return array
      */
-    public function getCodesByUserLpa(string $siriusUid): array;
+    public function getCodesByLpaId(string $siriusUid): array;
 
     /**
      * Adds a code to the database.
