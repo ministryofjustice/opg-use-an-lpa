@@ -284,6 +284,8 @@ workflows:
 orbs:
   slack: circleci/slack@3.3.0
   use-my-lpa:
+    orbs:
+      docker: circleci/docker@1.4.0
     commands:
       install_aws_cli:
         steps:
@@ -302,6 +304,11 @@ orbs:
                 sudo ln -sf /usr/bin/pydoc3 pydoc
                 sudo ln -sf /usr/bin/python3 python
                 sudo ln -sf /usr/bin/python3-config python-config
+      dockerhub_login:
+        steps:
+          - docker/check:
+              docker-password: DOCKER_ACCESS_TOKEN
+              docker-username: DOCKER_USER
       ecr_login:
         steps:
           - run:
