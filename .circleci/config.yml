@@ -506,6 +506,7 @@ orbs:
               docker_layer_caching: false
           - attach_workspace:
               at: ~/project
+          - dockerhub_login
           - run:
               name: Build
               command: |
@@ -575,6 +576,7 @@ orbs:
               docker_layer_caching: false
           - attach_workspace:
               at: ~/project
+          - dockerhub_login
           - run:
               name: Build
               command: |
@@ -616,6 +618,7 @@ orbs:
           - setup_remote_docker:
               version: 19.03.12
               docker_layer_caching: false
+          - dockerhub_login
           - run:
               name: Build
               command: |
@@ -686,6 +689,7 @@ orbs:
           - setup_remote_docker:
               version: 19.03.12
               docker_layer_caching: false
+          - dockerhub_login
           - run:
               name: Build
               command: |
@@ -723,6 +727,7 @@ orbs:
           - setup_remote_docker:
               version: 19.03.12
               docker_layer_caching: false
+          - dockerhub_login
           - run:
               name: Build
               command: |
