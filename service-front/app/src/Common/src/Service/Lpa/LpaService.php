@@ -275,10 +275,9 @@ class LpaService
      */
     public function sortLpasInOrder(ArrayObject $lpas): ArrayObject
     {
-        $sort1 = $this->sortLpasByDonorSurname($lpas);
-        $sort2 = $this->groupLpasByDonor($sort1);
-
-        return $this->sortGroupedDonorsLpasByTypeThenAddedDate($sort2);
+        $lpas = $this->sortLpasByDonorSurname($lpas);
+        $lpas = $this->groupLpasByDonor($lpas);
+        return $this->sortGroupedDonorsLpasByTypeThenAddedDate($lpas);
     }
 
     /**
