@@ -284,6 +284,8 @@ workflows:
 orbs:
   slack: circleci/slack@3.3.0
   use-my-lpa:
+    orbs:
+      docker: circleci/docker@1.4.0
     commands:
       install_aws_cli:
         steps:
@@ -302,6 +304,12 @@ orbs:
                 sudo ln -sf /usr/bin/pydoc3 pydoc
                 sudo ln -sf /usr/bin/python3 python
                 sudo ln -sf /usr/bin/python3-config python-config
+      dockerhub_login:
+        steps:
+          - docker/install-docker-credential-helper
+          - docker/check:
+              docker-password: DOCKER_ACCESS_TOKEN
+              docker-username: DOCKER_USER
       ecr_login:
         steps:
           - run:
@@ -316,22 +324,46 @@ orbs:
 
     executors:
       puppeteer:
-        docker: [image: buildkite/puppeteer]
+        docker:
+          - image: buildkite/puppeteer
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       php:
-        docker: [image: circleci/php:7-cli]
+        docker:
+          - image: circleci/php:7-cli
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       php-browsers:
-        docker: [image: circleci/php:7-cli-browsers]
+        docker:
+          - image: circleci/php:7-cli-browsers
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       node-browsers:
-        docker: [image: circleci/node:14.0-browsers]
+        docker:
+          - image: circleci/node:14.0-browsers
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       python:
-        docker: [image: circleci/python]
+        docker:
+          - image: circleci/python
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       terraform:
-        docker: [image: hashicorp/terraform:latest]
+        docker:
+          - image: hashicorp/terraform:latest
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
 
     jobs:
@@ -475,6 +507,7 @@ orbs:
               docker_layer_caching: false
           - attach_workspace:
               at: ~/project
+          - dockerhub_login
           - run:
               name: Build
               command: |
@@ -544,6 +577,7 @@ orbs:
               docker_layer_caching: false
           - attach_workspace:
               at: ~/project
+          - dockerhub_login
           - run:
               name: Build
               command: |
@@ -585,6 +619,7 @@ orbs:
           - setup_remote_docker:
               version: 19.03.12
               docker_layer_caching: false
+          - dockerhub_login
           - run:
               name: Build
               command: |
@@ -655,6 +690,7 @@ orbs:
           - setup_remote_docker:
               version: 19.03.12
               docker_layer_caching: false
+          - dockerhub_login
           - run:
               name: Build
               command: |
@@ -692,6 +728,7 @@ orbs:
           - setup_remote_docker:
               version: 19.03.12
               docker_layer_caching: false
+          - dockerhub_login
           - run:
               name: Build
               command: |
@@ -1001,6 +1038,9 @@ jobs:
   slack_environment_redeploy:
     docker:
       - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     parameters:
       environment:
@@ -1019,6 +1059,9 @@ jobs:
   slack_notify_domain:
     docker:
       - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
       - checkout
@@ -1037,6 +1080,9 @@ jobs:
   slack_notify_production_release:
     docker:
       - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
       - checkout
@@ -1056,6 +1102,9 @@ jobs:
   ecr_scan_results:
     docker:
       - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
       - checkout
@@ -1070,6 +1119,9 @@ jobs:
   workspace_cleanup:
     docker:
       - image: hashicorp/terraform:latest
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
       - checkout
@@ -1083,6 +1135,9 @@ jobs:
   cancel_redundant_builds:
     docker:
       - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
       - checkout
