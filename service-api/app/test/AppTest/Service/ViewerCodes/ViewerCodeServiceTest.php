@@ -161,11 +161,11 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_will_retrieve_codes_of_a_user()
+    public function it_will_retrieve_codes_for_a_lpa()
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeRepoProphecy
-            ->getCodesByUserLpaActorId('700000000047', 'user_actor_lpa_token')
+            ->getCodesByLpaId('700000000047')
             ->shouldBeCalled()
             ->willReturn(['some_lpa_code_data']);
 
