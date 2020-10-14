@@ -58,7 +58,7 @@ class ViewerCodes implements ViewerCodesInterface
     /**
      * @inheritDoc
      */
-    public function getCodesByUserLpaActorId(string $siriusUid, string $userLpaActor): array
+    public function getCodesByLpaId(string $siriusUid): array
     {
         $marshaler = new Marshaler();
 
@@ -66,10 +66,8 @@ class ViewerCodes implements ViewerCodesInterface
             'TableName' => $this->viewerCodesTable,
             'IndexName' => 'SiriusUidIndex',
             'KeyConditionExpression' => 'SiriusUid = :uId',
-            'FilterExpression' => 'UserLpaActor = :actor',
             'ExpressionAttributeValues' => $marshaler->marshalItem([
                 ':uId' => $siriusUid,
-                ':actor' => $userLpaActor
             ]),
         ]);
 
