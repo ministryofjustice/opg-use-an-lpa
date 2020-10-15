@@ -27,25 +27,6 @@ get_viewer_codes_viewed() {
       | jq '.Items[].ViewerCode.S' | sort | wc -l
 }
 
-get_accounts_created() {
-    aws cloudwatch get-metric-statistics \
-      --namespace ${environment}_events \
-      --metric-name account_created_event \
-      --statistics Sum \
-      --start-time "$fromdate" \
-      --end-time "$todate" \
-      --period 3600 \
-      | jq 'reduce .["Datapoints"][].Sum as $item (0; . + $item)'
-}
-
-get_accounts_with_duplicate_lpas() {
-    results=`aws dynamodb scan \
-      --table-name $environment-UserLpaActorMap \
-      | jq '.Items[] | {SiriusUid, UserId}' | jq -j '.SiriusUid.S," ",.UserId.S,"\n"' | sort | uniq -d | awk '{print $2}' | sort | uniq`
-    echo "$results"
-    echo "$results" | wc -l
-}
-
 # if no args supplied, default to demo environment
 if [ $# -lt 1 ]
 then
@@ -76,6 +57,3 @@ echo "Viewer codes created in $environment environment between $fromdate and $to
 get_viewer_codes_created
 echo "Viewer codes viewed in $environment environment between $fromdate and $todate:"
 get_viewer_codes_viewed
-echo "Actor accounts created in $environment environment between $fromdate and $todate:"
-get_accounts_created
-get_accounts_with_duplicate_lpas
