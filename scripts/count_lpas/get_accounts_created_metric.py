@@ -11,11 +11,18 @@ class AccountsCreatedChecker:
     aws_account_id = ''
     aws_iam_session = ''
     aws_cloudwatch_client = ''
+    aws_dynamodb_client = ''
     environment = ''
     startdate = ''
     enddate = ''
-    total = 0
-    monthly_totals = {}
+    account_created_monthly_totals = {}
+    account_created_total = 0
+    lpas_added_monthly_totals = {}
+    lpas_added_total = 0
+    viewer_codes_created_monthly_totals = {}
+    viewer_codes_created_total = 0
+    viewer_codes_viewed_monthly_totals = {}
+    viewer_codes_viewed_total = 0
     json_output = ''
 
     def __init__(self, environment, startdate, enddate):
@@ -31,6 +38,13 @@ class AccountsCreatedChecker:
         self.set_iam_role_session()
         self.aws_cloudwatch_client = boto3.client(
             'cloudwatch',
+            region_name='eu-west-1',
+            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
+            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
+            aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+
+        self.aws_dynamodb_client = boto3.client(
+            'dynamodb',
             region_name='eu-west-1',
             aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
             aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
@@ -53,17 +67,6 @@ class AccountsCreatedChecker:
         )
         self.aws_iam_session = session
 
-    def sum_metrics(self):
-        for month_start in self.iterate_months():
-            month_end = month_start + relativedelta(months=1)
-            datapoints = self.get_metric_statistic(self.format_month(
-                month_start), self.format_month(month_end))
-
-            sum_value = int(sum(each['Sum'] for each in datapoints if each))
-
-            self.monthly_totals[str(month_start)] = sum_value
-            self.total = self.total + sum_value
-
     def format_dates(self, startdate, enddate):
         self.startdate = datetime.date.fromisoformat(
             startdate)
@@ -75,6 +78,40 @@ class AccountsCreatedChecker:
 
     def format_month(self, date):
         return datetime.datetime.combine(date, datetime.datetime.min.time())
+
+    def sum_account_created_metrics(self):
+        for month_start in self.iterate_months():
+            month_end = month_start + relativedelta(months=1)
+            datapoints = self.get_account_created_metric_statistic(self.format_month(
+                month_start), self.format_month(month_end))
+
+            sum_value = int(sum(each['Sum'] for each in datapoints if each))
+
+            self.account_created_monthly_totals[str(month_start)] = sum_value
+            self.account_created_total = self.account_created_total + sum_value
+
+    def sum_lpas_added_count(self):
+        for month_start in self.iterate_months():
+            month_end = month_start + relativedelta(months=1)
+            sum_value = self.get_lpas_added_count(self.format_month(
+                month_start), self.format_month(month_end))
+            self.lpas_added_monthly_totals[str(month_start)] = sum_value
+
+    def sum_viewer_codes_created_count(self):
+        for month_start in self.iterate_months():
+            month_end = month_start + relativedelta(months=1)
+            sum_value = self.get_viewer_codes_created_count(self.format_month(
+                month_start), self.format_month(month_end))
+            self.viewer_codes_created_monthly_totals[str(
+                month_start)] = sum_value
+
+    def sum_viewer_codes_viewed_count(self):
+        for month_start in self.iterate_months():
+            month_end = month_start + relativedelta(months=1)
+            sum_value = self.get_viewer_codes_viewed_count(self.format_month(
+                month_start), self.format_month(month_end))
+            self.viewer_codes_viewed_monthly_totals[str(
+                month_start)] = sum_value
 
     def iterate_months(self):
         year = self.startdate.year
@@ -89,7 +126,7 @@ class AccountsCreatedChecker:
                 if month == 1:
                     year += 1
 
-    def get_metric_statistic(self, month_start, month_end):
+    def get_account_created_metric_statistic(self, month_start, month_end):
         response = self.aws_cloudwatch_client.get_metric_statistics(
             Namespace='{}_events'.format(self.environment),
             MetricName='account_created_event',
@@ -100,14 +137,57 @@ class AccountsCreatedChecker:
         )
         return response['Datapoints']
 
+    def get_lpas_added_count(self, month_start, month_end):
+        response = self.aws_dynamodb_client.scan(
+            TableName='{}-UserLpaActorMap'.format(self.environment),
+            FilterExpression='Added BETWEEN :fromdate AND :todate',
+            ExpressionAttributeValues={':fromdate': {
+                'S': str(month_start)}, ':todate': {'S': str(month_end)}}
+        )
+        return response['Count']
+
+    def get_viewer_codes_created_count(self, month_start, month_end):
+        response = self.aws_dynamodb_client.scan(
+            TableName='{}-ViewerCodes'.format(self.environment),
+            FilterExpression='Added BETWEEN :fromdate AND :todate',
+            ExpressionAttributeValues={':fromdate': {
+                'S': str(month_start)}, ':todate': {'S': str(month_end)}}
+        )
+        return response['Count']
+
+    def get_viewer_codes_viewed_count(self, month_start, month_end):
+        response = self.aws_dynamodb_client.scan(
+            TableName='{}-ViewerActivity'.format(self.environment),
+            FilterExpression='Viewed BETWEEN :fromdate AND :todate',
+            ExpressionAttributeValues={':fromdate': {
+                'S': str(month_start)}, ':todate': {'S': str(month_end)}}
+        )
+        return response['Count']
+
     def produce_json(self):
-        self.sum_metrics()
+        self.sum_lpas_added_count()
+        self.sum_viewer_codes_created_count()
+        self.sum_viewer_codes_viewed_count()
+        self.sum_account_created_metrics()
         statistics = {}
         statistics['statistics'] = {}
+
         statistics['statistics']['accounts_created'] = {}
-        statistics['statistics']['accounts_created']['total'] = self.total
+        statistics['statistics']['accounts_created']['total'] = self.account_created_total
         statistics['statistics']['accounts_created']['monthly'] = {}
-        statistics['statistics']['accounts_created']['monthly'] = self.monthly_totals
+        statistics['statistics']['accounts_created']['monthly'] = self.account_created_monthly_totals
+
+        statistics['statistics']['lpas_added'] = {}
+        statistics['statistics']['lpas_added']['monthly'] = {}
+        statistics['statistics']['lpas_added']['monthly'] = self.lpas_added_monthly_totals
+
+        statistics['statistics']['viewer_codes_created'] = {}
+        statistics['statistics']['viewer_codes_created']['monthly'] = {}
+        statistics['statistics']['viewer_codes_created']['monthly'] = self.viewer_codes_created_monthly_totals
+
+        statistics['statistics']['viewer_codes_viewed'] = {}
+        statistics['statistics']['viewer_codes_viewed']['monthly'] = {}
+        statistics['statistics']['viewer_codes_viewed']['monthly'] = self.viewer_codes_viewed_monthly_totals
 
         self.json_output = json.dumps(statistics)
         print(self.json_output)
