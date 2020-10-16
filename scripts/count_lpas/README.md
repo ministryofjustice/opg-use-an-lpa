@@ -17,19 +17,19 @@ countLPAs demo
 If you specifiy the environment, you can also provide 2 dates, in valid format, e:g
 
 ```bash
-countLPAs demo 2018-01-01 2020-07-09
+countLPAs demo 2020-07-17 2020-07-09
 ```
 
 To use aws-vault to run this on a Mac, from within this directory, do for example:
 
 ```bash
-aws-vault exec ual-dev -- ./countLPAs demo 2018-01-01 2020-07-09
+aws-vault exec ual-dev -- ./countLPAs demo 2020-07-17 2020-07-09
 ```
 
 or:
 
 ```bash
-aws-vault exec ual-dev -- /exact/path/to/countLPAs demo 2018-01-01 2020-07-09
+aws-vault exec ual-dev -- /exact/path/to/countLPAs demo  2020-07-17 2020-10-15
 ```
 
 The expected output is something like:

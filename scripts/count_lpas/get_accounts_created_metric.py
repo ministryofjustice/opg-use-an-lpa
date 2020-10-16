@@ -14,14 +14,21 @@ class AccountsCreatedChecker:
     environment = ''
     startdate = ''
     enddate = ''
-    show_monthly_totals = False
     total = 0
+    monthly_totals = {}
+    json_output = ''
 
-    def __init__(self, environment, startdate, enddate, show_monthly_totals):
-        self.aws_account_id = 690083044361
-        self.set_iam_role_session()
+    def __init__(self, environment, startdate, enddate):
+        self.aws_account_ids = {
+            'production': "690083044361",
+            'preproduction': "888228022356",
+            'development': "367815980639",
+        }
         self.environment = environment
+        self.aws_account_id = self.aws_account_ids.get(
+            self.environment, "367815980639")
 
+        self.set_iam_role_session()
         self.aws_cloudwatch_client = boto3.client(
             'cloudwatch',
             region_name='eu-west-1',
@@ -30,7 +37,6 @@ class AccountsCreatedChecker:
             aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
 
         self.format_dates(startdate, enddate)
-        self.show_monthly_totals = show_monthly_totals
 
     def set_iam_role_session(self):
         role_arn = 'arn:aws:iam::{}:role/operator'.format(
@@ -53,14 +59,10 @@ class AccountsCreatedChecker:
             datapoints = self.get_metric_statistic(self.format_month(
                 month_start), self.format_month(month_end))
 
-            sumValue1 = int(sum(each['Sum'] for each in datapoints if each))
+            sum_value = int(sum(each['Sum'] for each in datapoints if each))
 
-            if self.show_monthly_totals:
-                print("total for date range", self.format_month(
-                    month_start), self.format_month(month_end))
-                print(sumValue1)
-            self.total = self.total + sumValue1
-        return self.total
+            self.monthly_totals[str(month_start)] = sum_value
+            self.total = self.total + sum_value
 
     def format_dates(self, startdate, enddate):
         self.startdate = datetime.date.fromisoformat(
@@ -75,7 +77,6 @@ class AccountsCreatedChecker:
         return datetime.datetime.combine(date, datetime.datetime.min.time())
 
     def iterate_months(self):
-
         year = self.startdate.year
         month = self.startdate.month
         while True:
@@ -99,6 +100,18 @@ class AccountsCreatedChecker:
         )
         return response['Datapoints']
 
+    def produce_json(self):
+        self.sum_metrics()
+        statistics = {}
+        statistics['statistics'] = {}
+        statistics['statistics']['accounts_created'] = {}
+        statistics['statistics']['accounts_created']['total'] = self.total
+        statistics['statistics']['accounts_created']['monthly'] = {}
+        statistics['statistics']['accounts_created']['monthly'] = self.monthly_totals
+
+        self.json_output = json.dumps(statistics)
+        print(self.json_output)
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -112,14 +125,11 @@ def main():
     parser.add_argument("--enddate",
                         default="",
                         help="Where to end metric summing, defaults to today")
-    parser.add_argument("--monthlytotals",
-                        action="store_true",
-                        help="Show totals for each full month in range")
 
     args = parser.parse_args()
     work = AccountsCreatedChecker(
-        args.environment, args.startdate, args.enddate, args.monthlytotals)
-    print("Total accounts created", work.sum_metrics())
+        args.environment, args.startdate, args.enddate)
+    work.produce_json()
 
 
 if __name__ == "__main__":
