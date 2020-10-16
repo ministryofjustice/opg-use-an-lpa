@@ -53,7 +53,7 @@ class AccountsCreatedChecker:
         self.format_dates(startdate, enddate)
 
     def set_iam_role_session(self):
-        role_arn = 'arn:aws:iam::{}:role/operator'.format(
+        role_arn = 'arn:aws:iam::{}:role/breakglass'.format(
             self.aws_account_id)
 
         sts = boto3.client(
@@ -169,24 +169,27 @@ class AccountsCreatedChecker:
         self.sum_viewer_codes_created_count()
         self.sum_viewer_codes_viewed_count()
         self.sum_account_created_metrics()
+
         statistics = {}
         statistics['statistics'] = {}
 
         statistics['statistics']['accounts_created'] = {}
         statistics['statistics']['accounts_created']['total'] = self.account_created_total
-        statistics['statistics']['accounts_created']['monthly'] = {}
         statistics['statistics']['accounts_created']['monthly'] = self.account_created_monthly_totals
 
         statistics['statistics']['lpas_added'] = {}
-        statistics['statistics']['lpas_added']['monthly'] = {}
+        statistics['statistics']['lpas_added']['total'] = sum(
+            self.lpas_added_monthly_totals.values())
         statistics['statistics']['lpas_added']['monthly'] = self.lpas_added_monthly_totals
 
         statistics['statistics']['viewer_codes_created'] = {}
-        statistics['statistics']['viewer_codes_created']['monthly'] = {}
+        statistics['statistics']['viewer_codes_created']['total'] = sum(
+            self.viewer_codes_created_monthly_totals.values())
         statistics['statistics']['viewer_codes_created']['monthly'] = self.viewer_codes_created_monthly_totals
 
         statistics['statistics']['viewer_codes_viewed'] = {}
-        statistics['statistics']['viewer_codes_viewed']['monthly'] = {}
+        statistics['statistics']['viewer_codes_viewed']['total'] = sum(
+            self.viewer_codes_viewed_monthly_totals.values())
         statistics['statistics']['viewer_codes_viewed']['monthly'] = self.viewer_codes_viewed_monthly_totals
 
         self.json_output = json.dumps(statistics)
