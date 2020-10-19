@@ -21,10 +21,9 @@ interface ViewerCodesInterface
      * Gets a list of viewer codes for a given LPA
      *
      * @param string $siriusUid
-     * @param string $userLpaActorId
      * @return array
      */
-    public function getCodesByUserLpaActorId(string $siriusUid, string $userLpaActorId): array;
+    public function getCodesByLpaId(string $siriusUid): array;
 
     /**
      * Adds a code to the database.

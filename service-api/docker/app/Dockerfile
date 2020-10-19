@@ -4,14 +4,15 @@ COPY service-api/app /app
 
 RUN composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
 
-FROM php:7-fpm-alpine
+FROM php:7-fpm-alpine3.12
 
 RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
-        && pecl install xdebug \
-        && pecl install apcu \
-        && docker-php-ext-enable apcu \
-        && pecl clear-cache \
-        && apk del .build-dependencies
+  && apk upgrade curl \
+  && pecl install xdebug \
+  && pecl install apcu \
+  && docker-php-ext-enable apcu \
+  && pecl clear-cache \
+  && apk del .build-dependencies
 
 COPY service-api/app /app
 COPY --from=composer /app/vendor /app/vendor
@@ -21,4 +22,4 @@ COPY service-api/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.con
 WORKDIR /app
 
 CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
-    && php-fpm
+  && php-fpm

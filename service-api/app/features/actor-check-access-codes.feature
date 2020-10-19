@@ -21,3 +21,10 @@ Feature: The user is able to check the access codes they have created
     Given I have created an access code
     When I click to check my access code now expired
     Then I should be shown the details of the viewer code with status "EXPIRED"
+
+  @integration @acceptance
+  Scenario: As a user I can see all the access codes for the LPA I have added to my account
+    Given I have created an access code
+    And Co-actors have also created access codes for the same LPA
+    When I click to check the access codes
+    Then I can see all of the access codes and their details
