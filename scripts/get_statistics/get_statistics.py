@@ -62,7 +62,7 @@ class AccountsCreatedChecker:
         )
         session = sts.assume_role(
             RoleArn=role_arn,
-            RoleSessionName='checking_accounts_created_metric',
+            RoleSessionName='getting_service_statistics',
             DurationSeconds=900
         )
         self.aws_iam_session = session
