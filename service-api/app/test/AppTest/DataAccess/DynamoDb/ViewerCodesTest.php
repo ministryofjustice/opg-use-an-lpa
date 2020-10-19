@@ -98,7 +98,7 @@ class ViewerCodesTest extends TestCase
     }
 
     /** @test */
-    public function can_query_by_user_lpa_actor_id(){
+    public function can_query_by_lpa_id(){
 
         $testSiriusUid = '98765-43210';
         $testActorId = '12345-67891';
@@ -110,13 +110,10 @@ class ViewerCodesTest extends TestCase
             $this->assertArrayHasKey('IndexName', $data);
             $this->assertEquals('SiriusUidIndex', $data['IndexName']);
 
-            $this->assertArrayHasKey('FilterExpression', $data);
             $this->assertArrayHasKey('ExpressionAttributeValues', $data);
             $this->assertArrayHasKey(':uId', $data['ExpressionAttributeValues']);
-            $this->assertArrayHasKey(':actor', $data['ExpressionAttributeValues']);
 
             $this->assertEquals(['S' => $testSiriusUid], $data['ExpressionAttributeValues'][':uId']);
-            $this->assertEquals(['S' => $testActorId], $data['ExpressionAttributeValues'][':actor']);
 
             return true;
         }))
@@ -136,7 +133,7 @@ class ViewerCodesTest extends TestCase
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $repo->getCodesByUserLpaActorId($testSiriusUid, $testActorId);
+        $result = $repo->getCodesByLpaId($testSiriusUid);
 
         $this->assertEquals($testSiriusUid, $result[0]['SiriusUid']);
         $this->assertEquals($testActorId, $result[0]['UserLpaActor']);
@@ -155,13 +152,10 @@ class ViewerCodesTest extends TestCase
             $this->assertArrayHasKey('IndexName', $data);
             $this->assertEquals('SiriusUidIndex', $data['IndexName']);
 
-            $this->assertArrayHasKey('FilterExpression', $data);
             $this->assertArrayHasKey('ExpressionAttributeValues', $data);
             $this->assertArrayHasKey(':uId', $data['ExpressionAttributeValues']);
-            $this->assertArrayHasKey(':actor', $data['ExpressionAttributeValues']);
 
             $this->assertEquals(['S' => $testSiriusUid], $data['ExpressionAttributeValues'][':uId']);
-            $this->assertEquals(['S' => $testActorId], $data['ExpressionAttributeValues'][':actor']);
 
             return true;
         }))
@@ -172,7 +166,7 @@ class ViewerCodesTest extends TestCase
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $repo->getCodesByUserLpaActorId($testSiriusUid, $testActorId);
+        $result = $repo->getCodesByLpaId($testSiriusUid);
 
         $this->assertEmpty($result);
     }
