@@ -93,11 +93,10 @@ class ECRScanChecker:
 
                     for finding in findings["findings"]:
                         cve = finding["name"]
-                        description = finding["description"]
                         severity = finding["severity"]
                         link = finding["uri"]
-                        result = "*Image:* {0} \n**Tag:* {1} \n*Severity:* {2} \n*CVE:* {3} \n*Description:* {4} \n*Link:* {5}\n\n".format(
-                            image, tag, severity, cve, description, link)
+                        result = "*Image:* {0} \n**Tag:* {1} \n*Severity:* {2} \n*CVE:* {3} \n*Link:* {4}\n\n".format(
+                            image, tag, severity, cve, link)
                         self.report += result
                     print(self.report)
             except:
