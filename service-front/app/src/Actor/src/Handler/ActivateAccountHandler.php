@@ -62,7 +62,7 @@ class ActivateAccountHandler extends AbstractHandler
     {
         $activationToken = $request->getAttribute('token');
 
-        // The implicitHeadMiddleware will attach an attribute to the request if it detects a HEAD request
+        // The ImplicitHeadMiddleware will attach an attribute to the request if it detects a HEAD request
         // We only want to continue with account activation if it is not there.
         if (
             $request->getAttribute(
@@ -70,14 +70,17 @@ class ActivateAccountHandler extends AbstractHandler
                 false
             ) === false
         ) {
+            /** @var bool|string $activated */
             $activated = $this->userService->activate($activationToken);
 
-            $loginUrl = $this->urlHelper->generate('login');
-            $signInLink = $this->serverUrlHelper->generate($loginUrl);
+            if (is_string($activated)) {
+                $loginUrl = $this->urlHelper->generate('login');
+                $signInLink = $this->serverUrlHelper->generate($loginUrl);
 
-            $this->emailClient->sendAccountActivatedConfirmationEmail($activated, $signInLink);
+                $this->emailClient->sendAccountActivatedConfirmationEmail($activated, $signInLink);
 
-            return new HtmlResponse($this->renderer->render('actor::activate-account'));
+                return new HtmlResponse($this->renderer->render('actor::activate-account'));
+            }
         }
 
         return new HtmlResponse($this->renderer->render('actor::activate-account-not-found'));
