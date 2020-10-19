@@ -17,8 +17,8 @@ use Psr\Log\LoggerInterface;
  */
 class LpaService
 {
-    public const FULL = true;
-    public const SUMMARY = false;
+//    public const FULL = true;
+//    public const SUMMARY = false;
 
     /**
      * @var ApiClient
@@ -107,21 +107,30 @@ class LpaService
      *
      * @param string $shareCode
      * @param string $donorSurname
-     * @param bool $response
+     * @param string|null $organisation
      * @return ArrayObject|null
-     * @throws ApiException|Exception
+     * @throws Exception
      */
-    public function getLpaByCode(string $shareCode, string $donorSurname, bool $response = self::SUMMARY): ?ArrayObject
+    public function getLpaByCode(string $shareCode, string $donorSurname, string $organisation = null): ?ArrayObject
     {
         //  Filter dashes out of the share code
         $shareCode = str_replace('-', '', $shareCode);
         $shareCode = str_replace(' ', '', $shareCode);
         $shareCode = strtoupper($shareCode);
 
-        if ($response) {
-            $trackRoute = 'full';
+        if (!is_null($organisation)) {
+            $trackRoute = "full";
+            $requestData = [
+                'code' => $shareCode,
+                'name' => $donorSurname,
+                'organisation' => $organisation
+            ];
         } else {
-            $trackRoute = 'summary';
+            $trackRoute = "summary";
+            $requestData = [
+                'code' => $shareCode,
+                'name' => $donorSurname,
+            ];
         }
 
         $this->logger->debug(
@@ -134,10 +143,7 @@ class LpaService
         try {
             $lpaData = $this->apiClient->httpPost(
                 '/v1/viewer-codes/' . $trackRoute,
-                [
-                    'code' => $shareCode,
-                    'name' => $donorSurname,
-                ]
+                $requestData
             );
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {

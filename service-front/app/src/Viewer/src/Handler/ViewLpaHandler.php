@@ -50,12 +50,13 @@ class ViewLpaHandler extends AbstractHandler
     {
         $code = $this->getSession($request, 'session')->get('code');
         $surname = $this->getSession($request, 'session')->get('surname');
+        $organisation = $this->getSession($request, 'session')->get('organisation');
 
         if (!isset($code)) {
             throw new SessionTimeoutException();
         }
 
-        $lpa = $this->lpaService->getLpaByCode($code, $surname, LpaService::FULL);
+        $lpa = $this->lpaService->getLpaByCode($code, $surname, $organisation);
 
         return new HtmlResponse($this->renderer->render('viewer::view-lpa', [
             'lpa' => $lpa->lpa,

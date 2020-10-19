@@ -166,11 +166,10 @@ class LpaService
      *
      * @param string $viewerCode
      * @param string $donorSurname
-     * @param bool $logActivity
+     * @param string|null $organisation
      * @return array|null
-     * @throws \Exception
      */
-    public function getByViewerCode(string $viewerCode, string $donorSurname, bool $logActivity): ?array
+    public function getByViewerCode(string $viewerCode, string $donorSurname, string $organisation = null): ?array
     {
         $viewerCodeData = $this->viewerCodesRepository->get($viewerCode);
 
@@ -212,10 +211,10 @@ class LpaService
             throw new GoneException('Share code cancelled');
         }
 
-        if ($logActivity) {
+        if (!is_null($organisation)) {
             // Record the lookup in the activity table
-            // We only do this if it was a 'full' lookup. i.e. not just the confirmation page.
-            $this->viewerCodeActivityRepository->recordSuccessfulLookupActivity($viewerCodeData['ViewerCode']);
+            // We only do this if the organisation is provided
+            $this->viewerCodeActivityRepository->recordSuccessfulLookupActivity($viewerCodeData['ViewerCode'], $organisation);
         }
 
         $lpaData = $lpa->getData();

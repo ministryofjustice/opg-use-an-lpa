@@ -19,6 +19,7 @@ class ViewLpaHandlerTest extends TestCase
 {
     const TEST_LPA_CODE = '1234-5678-9012';
     const TEST_SURNAME = 'test_surname';
+    const TEST_ORGANISATION = 'test_organisation';
 
     /** @test */
     public function it_returns_an_html_response_when_appropriate_session_data_in_place()
@@ -37,7 +38,7 @@ class ViewLpaHandlerTest extends TestCase
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
 
         $lpaServiceProphecy = $this->prophesize(LpaService::class);
-        $lpaServiceProphecy->getLpaByCode(self::TEST_LPA_CODE, self::TEST_SURNAME, true)
+        $lpaServiceProphecy->getLpaByCode(self::TEST_LPA_CODE, self::TEST_SURNAME, self::TEST_ORGANISATION)
             ->willReturn($lpaData);
 
         //  Set up the handler
@@ -48,6 +49,7 @@ class ViewLpaHandlerTest extends TestCase
         $sessionProphecy = $this->prophesize(SessionInterface::class );
         $sessionProphecy->get('code')->willReturn(self::TEST_LPA_CODE);
         $sessionProphecy->get('surname')->willReturn(self::TEST_SURNAME);
+        //$sessionProphecy->get('organisation')->willReturn(self::TEST_SURNAME);
 
         $requestProphecy->getAttribute('session', null)->willReturn($sessionProphecy->reveal());
         $response = $handler->handle($requestProphecy->reveal());

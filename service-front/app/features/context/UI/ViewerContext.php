@@ -20,6 +20,7 @@ use Psr\Http\Message\RequestInterface;
  * @property $lpaShareCode
  * @property $lpaData
  * @property $lpaStoredCode
+ * @property $lpaViewedBy
  */
 class ViewerContext implements Context
 {
@@ -34,6 +35,7 @@ class ViewerContext implements Context
         $this->lpaSurname = 'Testerson';
         $this->lpaShareCode = '1111-1111-1111';
         $this->lpaStoredCode = '111111111111';
+        $this->lpaViewedBy = 'Santander';
         $this->lpaData = [
             'id' => 1,
             'uId' => '7000-0000-0000',
@@ -60,7 +62,9 @@ class ViewerContext implements Context
                         'addressLine3' => ''
                     ]
                 ]
-            ]
+            ],
+            'status' => 'Registered',
+            'caseSubtype' => 'hw'
         ];
     }
 
@@ -159,9 +163,9 @@ class ViewerContext implements Context
     }
 
     /**
-     * @When /^I confirm the LPA is correct$/
+     * @When /^I enter an organisation name and confirm the LPA is correct$/
      */
-    public function iConfirmTheLPAIsCorrect()
+    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect()
     {
         $this->lpaData['status'] = 'Registered';
 
@@ -174,7 +178,7 @@ class ViewerContext implements Context
         $this->apiFixtures->post('/v1/viewer-codes/full')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
                 'lpa'     => $this->lpaData,
-                'expires' => (new \DateTime('+30 days'))->format('c')
+                'expires' => (new \DateTime('+30 days'))->format('c'),
             ])))
             ->inspectRequest(function (RequestInterface $request, array $options) {
                 $params = json_decode($request->getBody()->getContents(), true);
@@ -182,9 +186,11 @@ class ViewerContext implements Context
                 assertInternalType('array', $params);
                 assertEquals($params['name'], $this->lpaSurname);
                 assertEquals($params['code'], $this->lpaStoredCode);
+                assertEquals($params['organisation'], $this->lpaViewedBy);
             });
 
-        $this->ui->clickLink('View this LPA');
+        $this->ui->fillField('organisation', $this->lpaViewedBy);
+        $this->ui->pressButton('View this LPA');
     }
 
 
@@ -214,9 +220,11 @@ class ViewerContext implements Context
                 assertInternalType('array', $params);
                 assertEquals($params['name'], $this->lpaSurname);
                 assertEquals($params['code'], $this->lpaStoredCode);
+                assertEquals($params['organisation'], $this->lpaViewedBy);
             });
 
-        $this->ui->clickLink('View this LPA');
+        $this->ui->fillField('organisation', $this->lpaViewedBy);
+        $this->ui->pressButton('View this LPA');
     }
 
     /**
@@ -244,9 +252,11 @@ class ViewerContext implements Context
                 assertInternalType('array', $params);
                 assertEquals($params['name'], $this->lpaSurname);
                 assertEquals($params['code'], $this->lpaStoredCode);
+                assertEquals($params['organisation'], $this->lpaViewedBy);
             });
 
-        $this->ui->clickLink('View this LPA');
+        $this->ui->fillField('organisation', $this->lpaViewedBy);
+        $this->ui->pressButton('View this LPA');
     }
 
     /**
@@ -322,7 +332,7 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/view-lpa');
 
         // API call for lpa full fetch
-        $this->apiFixtures->post('/v1/viewer-codes/full')
+        $this->apiFixtures->post('/v1/viewer-codes/summary')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
                 'lpa'     => $this->lpaData,
                 'expires' => (new \DateTime('+30 days'))->format('c')
@@ -504,7 +514,7 @@ class ViewerContext implements Context
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
         $this->iAccessTheViewerService();
         $this->iGiveAValidLPAShareCode();
-        $this->iConfirmTheLPAIsCorrect();
+        $this->iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect();
         $this->iAmViewingAValidLPA();
     }
 

@@ -38,11 +38,11 @@ class ViewerCodeFullHandler implements RequestHandlerInterface
     {
         $params = $request->getParsedBody();
 
-        if (!isset($params['code']) || !isset($params['name'])) {
+        if (!isset($params['code']) || !isset($params['name']) || !isset($params['organisation'])) {
             throw new RuntimeException("'code' and 'name' are required fields.");
         }
 
-        $data = $this->lpaService->getByViewerCode($params['code'], $params['name'], true);
+        $data = $this->lpaService->getByViewerCode($params['code'], $params['name'], $params['organisation']);
 
         if (is_null($data)) {
             throw new NotFoundException();

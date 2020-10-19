@@ -7,6 +7,8 @@ namespace Viewer\Handler;
 use ArrayObject;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
+use Common\Handler\CsrfGuardAware;
+use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Middleware\Session\SessionTimeoutException;
@@ -19,6 +21,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Viewer\Form\Organisation;
 
 /**
  * Class CheckCodeHandler
@@ -27,9 +30,10 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @codeCoverageIgnore
  */
-class CheckCodeHandler extends AbstractHandler
+class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
 {
     use SessionTrait;
+    use CsrfGuard;
 
     /** @var LpaService */
     private $lpaService;
@@ -40,10 +44,11 @@ class CheckCodeHandler extends AbstractHandler
     private $failureRateLimiter;
 
     /**
-     * EnterCodeHandler constructor.
+     * CheckCodeHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param LpaService $lpaService
+     * @param RateLimitService $failureRateLimiter
      */
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -66,10 +71,20 @@ class CheckCodeHandler extends AbstractHandler
     {
         $code = $this->getSession($request, 'session')->get('code');
         $surname = $this->getSession($request, 'session')->get('surname');
+        $form = new Organisation($this->getCsrfGuard($request));
+
+        if ($request->getMethod() === "POST") {
+            $form->setData($request->getParsedBody());
+            if ($form->isValid()) {
+                $session = $this->getSession($request, 'session');
+                $session->set('organisation', $form->getData()['organisation']);
+                return $this->redirectToRoute('view-lpa');
+            }
+        }
 
         if (isset($code)) {
             try {
-                $lpa = $this->lpaService->getLpaByCode($code, $surname, LpaService::SUMMARY);
+                $lpa = $this->lpaService->getLpaByCode($code, $surname, null);
 
                 if ($lpa instanceof ArrayObject) {
                     // Then we found a LPA for the given code
@@ -79,8 +94,9 @@ class CheckCodeHandler extends AbstractHandler
                         return new HtmlResponse($this->renderer->render(
                             'viewer::check-code-found',
                             [
-                                'lpa' => $lpa->lpa,
+                                'lpa'     => $lpa->lpa,
                                 'expires' => $expires->format('Y-m-d'),
+                                'form'    => $form
                             ]
                         ));
                     }
@@ -97,6 +113,7 @@ class CheckCodeHandler extends AbstractHandler
 
             $this->failureRateLimiter->limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
             return new HtmlResponse($this->renderer->render('viewer::check-code-not-found'));
+
         }
 
         //  We don't have a code so the session has timed out
