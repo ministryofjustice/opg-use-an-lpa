@@ -12,16 +12,16 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class ViewerSessionCheckHandlerFactory
+ * @package Viewer\Handler\Factory
+ * @codeCoverageIgnore
+ * Tests are covered by ActorSessionCheckHandlerFactory
+ */
 class ViewerSessionCheckHandlerFactory
 {
-    public function __invoke(
-        ContainerInterface $container,
-        TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
-        LoggerInterface $logger,
-        UrlHelper $urlHelper
-    ): ViewerSessionCheckHandler {
-
+    public function __invoke(ContainerInterface $container): ViewerSessionCheckHandler
+    {
         $config = $container->get('config');
 
         if (!isset($config['session']['expires'])) {
@@ -29,10 +29,10 @@ class ViewerSessionCheckHandlerFactory
         }
 
         return new ViewerSessionCheckHandler(
-            $renderer,
-            $authenticator,
-            $logger,
-            $urlHelper,
+            $container->get(TemplateRendererInterface::class),
+            $container->get(AuthenticationInterface::class),
+            $container->get(LoggerInterface::class),
+            $container->get(UrlHelper::class),
             $config['session']['expires']
         );
     }

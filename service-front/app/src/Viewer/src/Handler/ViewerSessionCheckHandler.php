@@ -20,6 +20,12 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class ViewerSessionCheckHandler
+ * @package Viewer\Handler
+ * @codeCoverageIgnore
+ * Tests are covered by ActorSessionCheckHandler
+ */
 class ViewerSessionCheckHandler extends AbstractHandler implements UserAware, SessionAware, LoggerAware
 {
     use User;

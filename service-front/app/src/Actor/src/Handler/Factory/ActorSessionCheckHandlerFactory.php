@@ -14,14 +14,8 @@ use Psr\Log\LoggerInterface;
 
 class ActorSessionCheckHandlerFactory
 {
-    public function __invoke(
-        ContainerInterface $container,
-        TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
-        LoggerInterface $logger,
-        UrlHelper $urlHelper
-    ): ActorSessionCheckHandler {
-
+    public function __invoke(ContainerInterface $container): ActorSessionCheckHandler
+    {
         $config = $container->get('config');
 
         if (!isset($config['session']['expires'])) {
@@ -29,10 +23,10 @@ class ActorSessionCheckHandlerFactory
         }
 
         return new ActorSessionCheckHandler(
-            $renderer,
-            $authenticator,
-            $logger,
-            $urlHelper,
+            $container->get(TemplateRendererInterface::class),
+            $container->get(AuthenticationInterface::class),
+            $container->get(LoggerInterface::class),
+            $container->get(UrlHelper::class),
             $config['session']['expires']
         );
     }
