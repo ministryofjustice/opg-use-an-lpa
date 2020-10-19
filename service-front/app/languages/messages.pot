@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-10-08T22:45:50+00:00\n"
+"POT-Creation-Date: 2020-10-19T15:45:13+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1167,25 +1167,6 @@ msgstr ""
 msgid "Activate your account"
 msgstr ""
 
-#: src/Actor/templates/actor/create-account-success.html.twig:21
-msgid "We've emailed a link to %email%. Click on the link to activate your account. The link will work for the next 24 hours."
-msgstr ""
-
-#: src/Actor/templates/actor/create-account-success.html.twig:23
-msgid ""
-"The email should arrive in a few minutes.\n"
-"                        If it's not in your inbox, check your spam or junk folder.\n"
-"                        If you have not received the email, we can <a href=\"%link%\" class=\"govuk-link\">resend the activation email</a>."
-msgstr ""
-
-#: src/Actor/templates/actor/create-account-success.html.twig:27
-msgid "If you still do not receive the email, please contact us on %number%."
-msgstr ""
-
-#: src/Actor/templates/actor/create-account-success.html.twig:29
-msgid "If you've already activated your account, you can <a href=\"%link%\" class=\"govuk-link\">sign in</a> now."
-msgstr ""
-
 #: src/Actor/templates/actor/change-email.html.twig:23
 msgid "Change your email address"
 msgstr ""
@@ -2142,10 +2123,6 @@ msgstr ""
 
 #: src/Actor/templates/actor/password-reset-request-done.html.twig:17
 msgid "Updating your password"
-msgstr ""
-
-#: src/Actor/templates/actor/password-reset-request-done.html.twig:19
-msgid "We've emailed a link to <strong class=\"govuk-!-font-weight-bold\">%email%</strong> so that you can reset your password."
 msgstr ""
 
 #: src/Actor/templates/actor/password-reset-request-done.html.twig:21
@@ -3364,13 +3341,27 @@ msgstr ""
 msgid "Check your email"
 msgstr ""
 
-#: src/Actor/templates/actor/create-account-success.html.twig:23
-msgid ""
-"The email should arrive in a few minutes.\n"
-"                        If it's not in your inbox, check your spam, bulk or junk email inbox.\n"
-"                        If you've not received the email, we can <a href=\"%link%\" class=\"govuk-link\">resend the activation email</a>."
+#: src/Actor/templates/actor/password-reset-request-done.html.twig:19
+msgid "We've emailed a link to <strong class=\"govuk-!-font-weight-bold\">%email%</strong> so that you can reset your password."
 msgstr ""
 
-#: src/Actor/templates/actor/create-account-success.html.twig:31
+#: src/Actor/templates/actor/create-account-success.html.twig:33
+msgid "If you still do not receive the email, please contact us on %number%."
+msgstr ""
+
+#: src/Actor/templates/actor/create-account-success.html.twig:35
+msgid "If you've already activated your account, you can <a href=\"%link%\" class=\"govuk-link\">sign in</a> now."
+msgstr ""
+
+#: src/Actor/templates/actor/create-account-success.html.twig:37
 msgid "Your email address can only be used on one account."
 msgstr ""
+
+#: src/Actor/templates/actor/create-account-success.html.twig:22
+msgid "We've emailed a link to <strong>%email%</strong>. Click on the link to activate your account. The link will work for the next 24 hours."
+msgstr ""
+
+#: src/Actor/templates/actor/create-account-success.html.twig:28
+msgid "The email should arrive in a few minutes. If it's not in your inbox, check your spam, bulk or junk email inbox. If you have not received the email, we can <a href=\"%link%\" class=\"govuk-link\">resend the activation email</a>."
+msgstr ""
+
