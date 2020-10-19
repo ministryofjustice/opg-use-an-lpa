@@ -17,9 +17,6 @@ use Psr\Log\LoggerInterface;
  */
 class LpaService
 {
-//    public const FULL = true;
-//    public const SUMMARY = false;
-
     /**
      * @var ApiClient
      */

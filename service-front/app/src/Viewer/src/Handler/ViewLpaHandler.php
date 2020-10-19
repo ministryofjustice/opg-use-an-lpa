@@ -18,6 +18,7 @@ use Mezzio\Template\TemplateRendererInterface;
 /**
  * Class ViewLpaHandler
  * @package Viewer\Handler
+ * @codeCoverageIgnore
  */
 class ViewLpaHandler extends AbstractHandler
 {
