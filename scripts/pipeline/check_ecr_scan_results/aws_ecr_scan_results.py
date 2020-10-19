@@ -96,7 +96,7 @@ class ECRScanChecker:
                         severity = finding["severity"]
 
                         description = "None"
-                        if "description" in findings:
+                        if "description" in finding:
                             description = finding["description"]
 
                         link = finding["uri"]
