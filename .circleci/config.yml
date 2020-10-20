@@ -131,6 +131,10 @@ workflows:
             requires: [dev_seed_database]
 
         - slack_notify_domain:
+            name: post_environment_domains_early
+            filters: { branches: { ignore: [master] } }
+
+        - slack_notify_domain:
             name: post_environment_domains
             filters: { branches: { ignore: [master] } }
             requires: [dev_run_behat_tests]
