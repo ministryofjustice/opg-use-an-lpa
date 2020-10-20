@@ -31,6 +31,7 @@ use Psr\Http\Message\RequestInterface;
  * @property $organisation
  * @property $newUserEmail
  * @property $userEmailResetToken
+ * @property $activationToken
  */
 class AccountContext implements Context
 {
