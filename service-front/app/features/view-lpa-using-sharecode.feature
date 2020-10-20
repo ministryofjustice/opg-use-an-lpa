@@ -12,6 +12,14 @@ Feature: View an LPA via sharecode
     When I enter an organisation name and confirm the LPA is correct
     Then I can see the full details of the valid LPA
 
+  @ui
+  Scenario: User must enter their organisation name to view full lpa
+    Given I have been given access to an LPA via share code
+    And I access the viewer service
+    And I give a valid LPA share code
+    When I leave the organisation name blank and confirm the LPA is correct
+    Then I am told that I must enter my organisation name
+
   @integration @ui
   Scenario: View a cancelled LPA
     Given I have been given access to a cancelled LPA via share code
