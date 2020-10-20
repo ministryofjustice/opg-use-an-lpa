@@ -111,9 +111,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I can see all of the access codes and their details$/
+     * @Then /^I can see all of my access codes and their details$/
      */
-    public function iCanSeeAllOfTheAccessCodesAndTheirDetails()
+    public function iCanSeeAllOfMyAccessCodesAndTheirDetails()
     {
         // Not needed for this context
     }
@@ -413,7 +413,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        // ViewerCodes::getCodesByLpaId
+        // ViewerCodes::getCodesByUserLpaActorId
         $this->awsFixtures->append(
             new Result(
                 [
@@ -508,7 +508,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        // ViewerCodes::getCodesByLpaId
+        // ViewerCodes::getCodesByUserLpaActorId
         $this->awsFixtures->append(
             new Result(
                 [
@@ -681,7 +681,7 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->iHaveCreatedAnAccessCode();
         $this->iClickToCheckMyAccessCodes();
-        $this->iCanSeeAllOfTheAccessCodesAndTheirDetails();
+        $this->iCanSeeAllOfMyAccessCodesAndTheirDetails();
     }
 
     /**
@@ -1156,5 +1156,21 @@ class LpaContext extends BaseIntegrationContext
         assertEquals($codesWithStatuses[0]['UserLpaActor'], $this->userLpaActorToken);
         assertEquals($codesWithStatuses[0]['ViewerCode'], $this->accessCode);
         assertEquals($codesWithStatuses[0]['ActorId'], $lpaData['actor']['details']['uId']);
+    }
+
+    /**
+     * @Given /^Co\-actors have also created access codes for the same LPA$/
+     */
+    public function coActorsHaveAlsoCreatedAccessCodesForTheSameLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I can see all of the access codes and their details$/
+     */
+    public function iCanSeeAllOfTheAccessCodesAndTheirDetails()
+    {
+        // Not needed for this context
     }
 }

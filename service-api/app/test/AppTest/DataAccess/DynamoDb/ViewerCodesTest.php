@@ -101,9 +101,8 @@ class ViewerCodesTest extends TestCase
     public function can_query_by_lpa_id(){
 
         $testSiriusUid = '98765-43210';
-        $testActorId = '12345-67891';
 
-        $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($testSiriusUid, $testActorId) {
+        $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($testSiriusUid) {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -123,9 +122,6 @@ class ViewerCodesTest extends TestCase
                         'SiriusUid' => [
                             'S' => $testSiriusUid,
                         ],
-                        'UserLpaActor' => [
-                            'S' => $testActorId,
-                        ],
                     ]
                 ],
                 'Count' => 1
@@ -136,16 +132,14 @@ class ViewerCodesTest extends TestCase
         $result = $repo->getCodesByLpaId($testSiriusUid);
 
         $this->assertEquals($testSiriusUid, $result[0]['SiriusUid']);
-        $this->assertEquals($testActorId, $result[0]['UserLpaActor']);
     }
 
     /** @test */
     public function lpa_with_no_generated_codes_returns_empty_array(){
 
         $testSiriusUid = '98765-43210';
-        $testActorId = '12345-67891';
 
-        $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($testSiriusUid, $testActorId) {
+        $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($testSiriusUid) {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 

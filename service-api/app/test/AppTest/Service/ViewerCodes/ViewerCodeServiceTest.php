@@ -161,7 +161,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_will_retrieve_codes_for_a_lpa()
+    public function it_will_retrieve_codes_of_a_user()
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeRepoProphecy

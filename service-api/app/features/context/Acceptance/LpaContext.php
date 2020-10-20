@@ -169,9 +169,9 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^I can see all of the access codes and their details$/
+     * @Then /^I can see all of my access codes and their details$/
      */
-    public function iCanSeeAllOfTheAccessCodesAndTheirDetails()
+    public function iCanSeeAllOfMyAccessCodesAndTheirDetails()
     {
         // Not needed for this context
     }
@@ -194,9 +194,9 @@ class LpaContext implements Context
             'SiriusUid' => $this->lpaUid,
             'Added' => '2020-01-01T00:00:00Z',
             'Expires' => $code2Expiry,
-            'UserLpaActor' => $this->userLpaActorToken,
-            'Organisation' => $this->organisation,
-            'ViewerCode' => $this->accessCode,
+            'UserLpaActor' => '123456789',
+            'Organisation' => 'HSBC',
+            'ViewerCode' => 'XYZABC12345',
         ];
 
         // LpaService:getLpas
@@ -310,9 +310,9 @@ class LpaContext implements Context
                         [
                             'SiriusUid' => $this->lpaUid,
                             'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorId,
-                            'UserId' => $this->userId,
+                            'Id' => '123456789',
+                            'ActorId' => 23,
+                            'UserId' => '10000000001',
                         ]
                     ),
                 ]
@@ -333,20 +333,19 @@ class LpaContext implements Context
 
         assertCount(2, $response);
 
-        // Loop for asserting on both the 2 codes returned
-        for ($i = 0; $i < 2; $i++) {
-            assertEquals($response[$i]['SiriusUid'], $this->lpaUid);
-            assertEquals($response[$i]['UserLpaActor'], $this->userLpaActorToken);
-            assertEquals($response[$i]['Organisation'], $this->organisation);
-            assertEquals($response[$i]['ViewerCode'], $this->accessCode);
-            assertEquals($response[$i]['ActorId'], $this->actorId);
+        assertEquals($response[0]['SiriusUid'], $this->lpaUid);
+        assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
+        assertEquals($response[0]['Organisation'], $this->organisation);
+        assertEquals($response[0]['ViewerCode'], $this->accessCode);
+        assertEquals($response[0]['ActorId'], $this->actorId);
+        assertEquals($response[0]['Expires'], $code1Expiry);
 
-            if ($i == 0) {
-                assertEquals($response[$i]['Expires'], $code1Expiry);
-            } else {
-                assertEquals($response[$i]['Expires'], $code2Expiry);
-            }
-        }
+        assertEquals($response[1]['SiriusUid'], $this->lpaUid);
+        assertEquals($response[1]['UserLpaActor'], '123456789');
+        assertEquals($response[1]['Organisation'], 'HSBC');
+        assertEquals($response[1]['ViewerCode'], 'XYZABC12345');
+        assertEquals($response[1]['ActorId'], 23);
+        assertEquals($response[1]['Expires'], $code2Expiry);
     }
 
     /**
@@ -508,7 +507,7 @@ class LpaContext implements Context
             )
         );
 
-        // ViewerCodes::getCodesByLpaId
+        // ViewerCodes::getCodesByUserLpaActorId
         $this->awsFixtures->append(
             new Result(
                 [
@@ -639,7 +638,7 @@ class LpaContext implements Context
             )
         );
 
-        // ViewerCodes::getCodesByLpaId
+        // ViewerCodes::getCodesByUserLpaActorId
         $this->awsFixtures->append(
             new Result(
                 [
@@ -772,7 +771,7 @@ class LpaContext implements Context
             )
         );
 
-        // ViewerCodes::getCodesByLpaId
+        // ViewerCodes::getCodesByUserLpaActorId
         $this->awsFixtures->append(
             new Result(
                 [
@@ -1569,5 +1568,21 @@ class LpaContext implements Context
         assertEquals($response[1]['UserLpaActor'], '65d6833a-66d3-430f-8cf6-9e4fb1d851f1');
         assertEquals($response[1]['ViewerCode'], 'B97LRK3U68PE');
         assertEquals($response[1]['ActorId'], '4455');
+    }
+
+    /**
+     * @Given /^Co\-actors have also created access codes for the same LPA$/
+     */
+    public function coActorsHaveAlsoCreatedAccessCodesForTheSameLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I can see all of the access codes and their details$/
+     */
+    public function iCanSeeAllOfTheAccessCodesAndTheirDetails()
+    {
+        // Not needed for this context
     }
 }

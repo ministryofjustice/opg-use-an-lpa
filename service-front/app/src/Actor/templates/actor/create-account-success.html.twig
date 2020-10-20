@@ -14,20 +14,27 @@
 
         <div class="govuk-grid-row">
 
-            <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-column-three-quarters">
 
-                <h1 class="govuk-heading-l">{% trans %}Activate your account{% endtrans %}</h1>
+                <h1 class="govuk-heading-l">{% trans %}Check your email{% endtrans %}</h1>
 
-                <p class="govuk-body">{% trans with {'%email%': emailAddress} %}We've emailed a link to %email%. Click on the link to activate your account. The link will work for the next 24 hours.{% endtrans %}</p>
+                <p class="govuk-body-l">
+                    {% trans with {'%email%': emailAddress} %}
+                        We've emailed a link to <strong>%email%</strong>. Click on the link to activate your account. The link will work for the next 24 hours.
+                    {% endtrans %}
+                </p>
 
-                <p class="govuk-body">{% trans with {'%link%': path('create-account-success', {}, {'email': emailAddress, 'resend': 'true'})} %}The email should arrive in a few minutes.
-                        If it's not in your inbox, check your spam or junk folder.
-                        If you have not received the email, we can <a href="%link%" class="govuk-link">resend the activation email</a>.{% endtrans %}</p>
+                <p class="govuk-body">
+                    {% trans with {'%link%': path('create-account-success', {}, {'email': emailAddress, 'resend': 'true'})} %}
+                        The email should arrive in a few minutes. If it's not in your inbox, check your spam, bulk or junk email inbox. If you have not received the email, we can <a href="%link%" class="govuk-link">resend the activation email</a>.
+                    {% endtrans %}
+                </p>
 
                 <p class="govuk-body">{% trans with {'%number%': '0300 456 0300'} %}If you still do not receive the email, please contact us on %number%.{% endtrans %}</p>
 
                 <p class="govuk-body">{% trans with {'%link%': path('login') } %}If you've already activated your account, you can <a href="%link%" class="govuk-link">sign in</a> now.{% endtrans %}</p>
 
+                <p class="govuk-inset-text">{% trans %}Your email address can only be used on one account.{% endtrans %}</p>
             </div>
 
         </div>

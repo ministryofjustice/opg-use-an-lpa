@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# count LPAs added between the specified dates, by doing a DynamoDB scan and reducing this down todate unique SiriusUids so that we don't count LPAs twice when
+# added todate more than one account
+
+get_accounts_with_duplicate_lpas() {
+    results=`aws dynamodb scan \
+      --table-name $environment-UserLpaActorMap \
+      | jq '.Items[] | {SiriusUid, UserId}' | jq -j '.SiriusUid.S," ",.UserId.S,"\n"' | sort | uniq -d | awk '{print $2}' | sort | uniq`
+    echo "$results"
+    echo "$results" | wc -l
+}
+
+# if no args supplied, default to demo environment
+if [ $# -lt 1 ]
+then
+    environment="demo"
+else
+    environment=$1
+fi
+
+echo "Accounts in $environment that contain duplicates of the same LPA:"
+get_accounts_with_duplicate_lpas
