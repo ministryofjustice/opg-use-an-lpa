@@ -17,7 +17,7 @@ use RuntimeException;
 /**
  * Class LpasResourceCodesCollectionHandler
  * @package App\Handler
- * * @codeCoverageIgnore
+ * @codeCoverageIgnore
  */
 class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
 {
@@ -155,15 +155,18 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         if (!empty($viewerCodes)) {
             $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($viewerCodes);
 
-            /// Get the actor id for the respective sharecode by UserLpaActor
-            foreach ($viewerCodesAndStatuses as $key => $viewerCode){
-                if(!empty($viewerCode['UserLpaActor'])) {
-                     $codeOwner = $this->userLpaActorMap->get($viewerCode['UserLpaActor']);
-                     $viewerCodesAndStatuses[$key]['ActorId'] = $codeOwner['ActorId'];
+            // Get the actor id for the respective sharecode by UserLpaActor
+            foreach ($viewerCodesAndStatuses as $key => $viewerCode) {
+                if (!empty($viewerCode['UserLpaActor'])) {
+                    $codeOwner = $this->userLpaActorMap->get($viewerCode['UserLpaActor']);
+                    $viewerCodesAndStatuses[$key]['ActorId'] = $codeOwner['ActorId'];
                 }
             }
+
             return new JsonResponse($viewerCodesAndStatuses);
         }
+
         return new JsonResponse($viewerCodes);
+
     }
 }

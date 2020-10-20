@@ -11,9 +11,9 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authentication\UserRepositoryInterface;
+use ParagonIE\HiddenString\HiddenString;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
-use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class UserService
@@ -144,7 +144,7 @@ class UserService implements UserRepositoryInterface
 
     /**
      * @param string $activationToken
-     * @return false|mixed
+     * @return bool|string
      */
     public function activate(string $activationToken)
     {
@@ -162,7 +162,7 @@ class UserService implements UserRepositoryInterface
                     ]
                 );
 
-                return $userData['Email'];
+                return (string)$userData['Email'];
             }
         } catch (ApiException $ex) {
             if ($ex->getCode() !== StatusCodeInterface::STATUS_NOT_FOUND) {
