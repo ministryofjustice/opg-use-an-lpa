@@ -108,7 +108,7 @@ class LpaService
      * @return ArrayObject|null
      * @throws Exception
      */
-    public function getLpaByCode(string $shareCode, string $donorSurname, string $organisation = null): ?ArrayObject
+    public function getLpaByCode(string $shareCode, string $donorSurname, ?string $organisation = null): ?ArrayObject
     {
         //  Filter dashes out of the share code
         $shareCode = str_replace('-', '', $shareCode);

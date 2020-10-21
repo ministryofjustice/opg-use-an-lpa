@@ -169,7 +169,7 @@ class LpaService
      * @param string|null $organisation
      * @return array|null
      */
-    public function getByViewerCode(string $viewerCode, string $donorSurname, string $organisation = null): ?array
+    public function getByViewerCode(string $viewerCode, string $donorSurname, ?string $organisation = null): ?array
     {
         $viewerCodeData = $this->viewerCodesRepository->get($viewerCode);
 
