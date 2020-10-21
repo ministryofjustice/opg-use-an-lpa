@@ -13,6 +13,7 @@ use Behat\Behat\Context\Context;
  *
  * @property string $shareCode
  * @property string $donorSurname
+ * @property string $organisation
  */
 class ViewerContext implements Context
 {
@@ -25,6 +26,7 @@ class ViewerContext implements Context
     {
         $this->shareCode = 'P9H8A6MLD3AM';
         $this->donorSurname = 'Gilson';
+        $this->organisation = 'Test organisation';
     }
 
     /**
@@ -41,16 +43,16 @@ class ViewerContext implements Context
     }
 
     /**
-     * @When I confirm the LPA is correct
+     * @When /^I enter an organisation name and confirm the LPA is correct$/
      */
-    public function iConfirmTheLpaIsCorrect(): void
+    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect()
     {
         $this->ui->assertPageAddress('/check-code');
 
         $this->ui->assertPageContainsText('We’ve found this LPA');
         $this->ui->assertPageContainsText('Babara Gilson');
-
-        $this->ui->clickLink('View this LPA');
+        $this->ui->fillField('organisation', $this->organisation);
+        $this->ui->pressButton('View this LPA');
     }
 
     /**
