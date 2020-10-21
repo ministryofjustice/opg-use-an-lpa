@@ -69,8 +69,8 @@ resource "aws_ecs_task_definition" "viewer" {
   family                   = "${local.environment}-viewer"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 512
-  memory                   = 1024
+  cpu                      = 256
+  memory                   = 512
   container_definitions    = "[${local.viewer_web}, ${local.viewer_app}]"
   task_role_arn            = aws_iam_role.viewer_task_role.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
