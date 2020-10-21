@@ -143,10 +143,6 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
     name = "Viewed"
     type = "S"
   }
-  attribute {
-    name = "ViewedBy"
-    type = "S"
-  }
 
   point_in_time_recovery {
     enabled = true
