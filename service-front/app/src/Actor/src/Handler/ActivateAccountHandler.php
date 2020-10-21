@@ -7,12 +7,13 @@ namespace Actor\Handler;
 use Common\Handler\AbstractHandler;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\ServerUrlHelper;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
+use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 
 /**
  * Class ActivateAccountHandler
@@ -61,19 +62,27 @@ class ActivateAccountHandler extends AbstractHandler
     {
         $activationToken = $request->getAttribute('token');
 
-        $activated = $this->userService->activate($activationToken);
+        // The ImplicitHeadMiddleware will attach an attribute to the request if it detects a HEAD request
+        // We only want to continue with account activation if it is not there.
+        if (
+            $request->getAttribute(
+                ImplicitHeadMiddleware::FORWARDED_HTTP_METHOD_ATTRIBUTE,
+                false
+            ) === false
+        ) {
+            /** @var bool|string $activated */
+            $activated = $this->userService->activate($activationToken);
 
-        if (!$activated) {
-            //  If the user activate failed (probably because the token has been used) then redirect home
-            return new HtmlResponse($this->renderer->render('actor::activate-account-not-found'));
+            if (is_string($activated)) {
+                $loginUrl = $this->urlHelper->generate('login');
+                $signInLink = $this->serverUrlHelper->generate($loginUrl);
+
+                $this->emailClient->sendAccountActivatedConfirmationEmail($activated, $signInLink);
+
+                return new HtmlResponse($this->renderer->render('actor::activate-account'));
+            }
         }
 
-        $loginUrl = $this->urlHelper->generate('login');
-
-        $signInLink = $this->serverUrlHelper->generate($loginUrl);
-
-        $this->emailClient->sendAccountActivatedConfirmationEmail($activated, $signInLink);
-
-        return new HtmlResponse($this->renderer->render('actor::activate-account'));
+        return new HtmlResponse($this->renderer->render('actor::activate-account-not-found'));
     }
 }
