@@ -167,6 +167,5 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         }
 
         return new JsonResponse($viewerCodes);
-
     }
 }

@@ -71,7 +71,8 @@ class ViewerCodeActivity implements ViewerCodeActivityInterface
             if ($result['Count'] === 0) {
                 $viewerCodes[$key]['Viewed'] = false;
             } else {
-                $viewerCodes[$key]['Viewed'] = true;
+                $viewerActivityDetails = $this->getDataCollection($result);
+                $viewerCodes[$key]['Viewed'] = $viewerActivityDetails;
             }
         }
 
