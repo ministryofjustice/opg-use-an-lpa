@@ -69,8 +69,8 @@ resource "aws_ecs_task_definition" "actor" {
   family                   = "${local.environment}-actor"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 256
-  memory                   = 512
+  cpu                      = 512
+  memory                   = 1024
   container_definitions    = "[${local.actor_web}, ${local.actor_app}]"
   task_role_arn            = aws_iam_role.actor_task_role.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
