@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-10-23T08:59:33+00:00\n"
+"POT-Creation-Date: 2020-10-23T14:59:41+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4856,6 +4856,30 @@ msgstr ""
 "Dylai’r e-bost gyrraedd ymhen ychydig funudau.Os nad ydyw yn eich mewnflwch, "
 "edrychwch yn y ffolder spam neu junk.Os nad ydych wedi cael yr e-bost, gallwn "
 "<a href=\"%link%\" class=\"govuk-link\">anfon yr e-bost cadarnhau eto</a>."
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:40
+msgid ""
+"If you're named on more than one <abbr title=\"lasting power of attorney"
+"\">LPA</abbr>, you can add all those <abbr title=\"lasting powers of attorney"
+"\">LPAs</abbr> to your account"
+msgstr ""
+"Os ydych wedi’ch enwi ar fwy nac un <abbr title=\"atwrneiaeth arhosol\">LPA</"
+"abbr>, gallwch ychwanegu’r holl <abbr title=\"atwrneiaeth arhosol\">LPAs</"
+"abbr> hynny at eich cyfrif"
+
+#: src/Viewer/templates/viewer/check-code-found.html.twig:75
+msgid "Your organisation name"
+msgstr "Enw eich sefydliad"
+
+#: src/Viewer/templates/viewer/check-code-found.html.twig:76
+msgid "This will be displayed to the attorneys and donor on the LPA"
+msgstr "Dangosir hwn i’r rhoddwr a’r atwrneiod ar yr LPA"
+
+#. Check code
+#: src/Viewer/templates/viewer/form-error-messages.html.twig:12
+msgctxt "error"
+msgid "Enter your organisation name"
+msgstr "Nodwch enw eich sefydliad"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:51
 msgid "What to do next"

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-10-23T08:59:33+00:00\n"
+"POT-Creation-Date: 2020-10-23T14:59:41+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -3364,6 +3364,24 @@ msgstr ""
 
 #: src/Actor/templates/actor/create-account-success.html.twig:28
 msgid "The email should arrive in a few minutes. If it's not in your inbox, check your spam, bulk or junk email inbox. If you have not received the email, we can <a href=\"%link%\" class=\"govuk-link\">resend the activation email</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:40
+msgid "If you're named on more than one <abbr title=\"lasting power of attorney\">LPA</abbr>, you can add all those <abbr title=\"lasting powers of attorney\">LPAs</abbr> to your account"
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-found.html.twig:75
+msgid "Your organisation name"
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-found.html.twig:76
+msgid "This will be displayed to the attorneys and donor on the LPA"
+msgstr ""
+
+#. Check code
+#: src/Viewer/templates/viewer/form-error-messages.html.twig:12
+msgctxt "error"
+msgid "Enter your organisation name"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:51
