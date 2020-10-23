@@ -14,10 +14,12 @@ interface ViewerCodeActivityInterface
 {
     /**
      * Records the fact that a given code has just been successfully accessed
+     * and by which organisation
      *
      * @param string $activityCode
+     * @param string $organisation
      */
-    public function recordSuccessfulLookupActivity(string $activityCode): void;
+    public function recordSuccessfulLookupActivity(string $activityCode, string $organisation): void;
 
     /**
      * Checks activity status of all viewer codes for a specific lpa

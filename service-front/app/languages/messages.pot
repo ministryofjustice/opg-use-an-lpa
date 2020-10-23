@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-10-23T14:59:41+00:00\n"
+"POT-Creation-Date: 2020-10-21T08:10:16+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -22,7 +22,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:27
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
-#: src/Viewer/templates/viewer/check-code-found.html.twig:23
+#: src/Viewer/templates/viewer/check-code-found.html.twig:27
 msgid "Property and finance"
 msgstr ""
 
@@ -33,7 +33,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
-#: src/Viewer/templates/viewer/check-code-found.html.twig:23
+#: src/Viewer/templates/viewer/check-code-found.html.twig:27
 msgid "Health and welfare"
 msgstr ""
 
@@ -65,7 +65,7 @@ msgstr ""
 msgid "When %organisation% have the access code, they should go to <br> www.gov.uk/view-lpa to see a summary of the LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:56
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:58
 msgid "Give another organisation access"
 msgstr ""
 
@@ -224,8 +224,7 @@ msgstr ""
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:243
 #: src/Actor/templates/actor/check-lpa.html.twig:66
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:60
-#: src/Viewer/templates/viewer/check-code-found.html.twig:41
+#: src/Viewer/templates/viewer/check-code-found.html.twig:43
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:45
 msgid "Warning"
 msgstr ""
@@ -1776,12 +1775,12 @@ msgid "Is this the LPA you want to add?"
 msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:23
-#: src/Viewer/templates/viewer/check-code-found.html.twig:22
+#: src/Viewer/templates/viewer/check-code-found.html.twig:26
 msgid "Type of LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:35
-#: src/Viewer/templates/viewer/check-code-found.html.twig:26
+#: src/Viewer/templates/viewer/check-code-found.html.twig:30
 msgid "Donor name"
 msgstr ""
 
@@ -1802,7 +1801,7 @@ msgid "Donor"
 msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:67
-#: src/Viewer/templates/viewer/check-code-found.html.twig:42
+#: src/Viewer/templates/viewer/check-code-found.html.twig:44
 msgid "Check that these details are correct before continuing"
 msgstr ""
 
@@ -1821,8 +1820,8 @@ msgstr ""
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:44
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/home-page.html.twig:46
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
 #: src/Actor/templates/actor/lpa-add.html.twig:89
+#: src/Common/templates/partials/govuk_form.html.twig:222
 #: src/Viewer/templates/viewer/enter-code.html.twig:58
 msgid "Continue"
 msgstr ""
@@ -2481,48 +2480,48 @@ msgstr ""
 msgid "Stay signed in"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:18
+#: src/Viewer/templates/viewer/check-code-found.html.twig:22
 msgid "We’ve found this LPA"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:30
+#: src/Viewer/templates/viewer/check-code-found.html.twig:34
 msgid "Code expires"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:31
+#: src/Viewer/templates/viewer/check-code-found.html.twig:35
 msgid "in %count% day, on %date%"
 msgid_plural "in %count% days, on %date%"
 msgstr[0] ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:47
+#: src/Viewer/templates/viewer/check-code-found.html.twig:49
 msgid "If this is not the right LPA, ask the donor or attorney to check the access code."
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:56
+#: src/Viewer/templates/viewer/check-code-found.html.twig:55
 msgid "If you need to see this <abbr title=\"lasting power of attorney\">LPA</abbr> after %date%"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:61
+#: src/Viewer/templates/viewer/check-code-found.html.twig:60
 msgid "You can see an online summary of this <abbr title='lasting power of attorney'> LPA </abbr>until %date%. After this date, the access code will expire."
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:63
+#: src/Viewer/templates/viewer/check-code-found.html.twig:62
 msgid "Ask the donor or attorney for a new access code if your organisation:"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:65
+#: src/Viewer/templates/viewer/check-code-found.html.twig:64
 msgid "needs more time to process this LPA"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:66
+#: src/Viewer/templates/viewer/check-code-found.html.twig:65
 msgid "need to see this LPA at a later date"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:76
+#: src/Viewer/templates/viewer/check-code-found.html.twig:80
 msgid "View this LPA"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:80
+#: src/Viewer/templates/viewer/check-code-found.html.twig:83
 msgid "Try another access code"
 msgstr ""
 
@@ -3382,16 +3381,4 @@ msgstr ""
 #: src/Viewer/templates/viewer/form-error-messages.html.twig:12
 msgctxt "error"
 msgid "Enter your organisation name"
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:51
-msgid "What to do next"
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:53
-msgid "Give %organisation% this access code. They should go to www.gov.uk/view-lpa to enter the access code and see a summary of the <abbr title=\"lasting power of attorney\">LPA</abbr>."
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:61
-msgid "This is a new service, check that the organisation will accept an online summary of the <abbr title=\"lasting power of attorney\">LPA</abbr> and how they want to receive the access code you make for them."
 msgstr ""
