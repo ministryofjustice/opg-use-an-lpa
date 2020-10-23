@@ -89,7 +89,7 @@ class ViewerCodeActivityTest extends TestCase
                             0 => [
                                 'Viewed' => '2020-10-01T15:27:23.263483Z',
                                 'ViewerCode' => $testCodes[0]['ViewerCode'],
-                                'ViewedBy' => 'Some Organisation'
+                                'ViewedBy' => 'Some Organisation',
                             ],
                         ],
                     ]
@@ -102,8 +102,10 @@ class ViewerCodeActivityTest extends TestCase
         $result = $repo->getStatusesForViewerCodes($testCodes);
 
         $this->assertEquals($testCodes[0]['ViewerCode'], $result[0]['ViewerCode']);
+        $this->assertNotEmpty($result[0]['Viewed'][0]);
         $this->assertEquals($testCodes[0]['ViewerCode'], $result[0]['Viewed'][0]['ViewerCode']);
-        $this->assertEquals('Some Organisation', $result[0]['Viewed'][0]['ViewedBy']);
+        $this->assertNotEmpty($result[0]['Viewed'][0]['Viewed']);
+        $this->assertNotEmpty($result[0]['Viewed'][0]['ViewedBy']);
     }
 
     /** @test */
