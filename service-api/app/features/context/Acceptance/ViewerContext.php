@@ -19,6 +19,7 @@ use GuzzleHttp\Psr7\Response;
  * @property string viewerCode
  * @property string donorSurname
  * @property array lpa
+ * @property string lpaViewedBy
  */
 class ViewerContext implements Context
 {
@@ -32,6 +33,7 @@ class ViewerContext implements Context
     {
         $this->viewerCode = '1111-1111-1111';
         $this->donorSurname = 'Deputy';
+        $this->lpaViewedBy = 'Santander';
         $this->lpa = json_decode(
             file_get_contents(__DIR__ . '../../../../test/fixtures/example_lpa.json'),
             true
@@ -139,9 +141,9 @@ class ViewerContext implements Context
     }
 
     /**
-     * @When I confirm the LPA is correct
+     * @When /^I enter an organisation name and confirm the LPA is correct$/
      */
-    public function iConfirmTheLPAIsCorrect()
+    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect()
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $lpaData = $this->getResponseAsJson();
@@ -182,7 +184,8 @@ class ViewerContext implements Context
             '/v1/viewer-codes/full',
             [
                 'code' => $this->viewerCode,
-                'name' => $this->donorSurname
+                'name' => $this->donorSurname,
+                'organisation' => $this->lpaViewedBy
             ]
         );
     }

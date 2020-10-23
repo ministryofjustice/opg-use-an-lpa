@@ -116,7 +116,7 @@ class LpaServiceTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $lpa = $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', LpaService::SUMMARY);
+        $lpa = $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
 
         $this->assertInstanceOf(ArrayObject::class, $lpa);
 
@@ -139,6 +139,7 @@ class LpaServiceTest extends TestCase
             [
                 'code' => 'P9H8A6MLD3AM',
                 'name' => 'Sanderson',
+                'organisation' => 'Santander'
             ]
         )->willReturn($lpaData);
 
@@ -150,7 +151,7 @@ class LpaServiceTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $lpa = $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', LpaService::FULL);
+        $lpa = $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', 'Santander');
 
         $this->assertInstanceOf(ArrayObject::class, $lpa);
         $this->assertEquals('other data', $lpa->other);
@@ -179,7 +180,7 @@ class LpaServiceTest extends TestCase
         $this->expectExceptionMessage('Share code cancelled');
 
 
-        $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', false);
+        $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
     }
     /** @test */
     public function it_finds_an_expired_share_code_by_passcode_and_surname()
@@ -201,7 +202,7 @@ class LpaServiceTest extends TestCase
         $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
 
 
-        $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', false);
+        $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
     }
 
     /** @test */
@@ -221,7 +222,7 @@ class LpaServiceTest extends TestCase
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
 
-        $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', false);
+        $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
     }
 
     /** @test */

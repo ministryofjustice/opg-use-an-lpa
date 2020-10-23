@@ -72,7 +72,7 @@ class DownloadLpaHandler implements RequestHandlerInterface
             throw new SessionTimeoutException();
         }
 
-        $lpa = $this->lpaService->getLpaByCode($code, $surname, LpaService::FULL);
+        $lpa = $this->lpaService->getLpaByCode($code, $surname, null);
         $pdfStream = $this->pdfService->getLpaAsPdf($lpa->lpa);
 
         return new PdfResponse($pdfStream, 'lpa-' . $lpa->lpa->getUId());

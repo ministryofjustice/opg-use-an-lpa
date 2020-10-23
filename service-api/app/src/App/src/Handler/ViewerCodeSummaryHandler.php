@@ -42,7 +42,7 @@ class ViewerCodeSummaryHandler implements RequestHandlerInterface
             throw new RuntimeException("'code' and 'name' are required fields.");
         }
 
-        $data = $this->lpaService->getByViewerCode($params['code'], $params['name'], false);
+        $data = $this->lpaService->getByViewerCode($params['code'], $params['name'], null);
 
         if (is_null($data)) {
             throw new NotFoundException();

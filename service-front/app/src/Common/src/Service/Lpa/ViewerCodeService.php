@@ -98,7 +98,11 @@ class ViewerCodeService
         return $shareCodes;
     }
 
-
+    /**
+     * @param ArrayObject $shareCodes
+     * @return ArrayObject|null
+     * @throws \Exception
+     */
     private function getNumberOfActiveCodes(ArrayObject $shareCodes): ?ArrayObject
     {
         $counter = 0;
