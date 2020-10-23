@@ -64,6 +64,7 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --region eu-west-1 \
     --endpoint $DYNAMODN_ENDPOINT
 
+
     aws dynamodb create-table \
     --attribute-definitions AttributeName=Id,AttributeType=S AttributeName=UserId,AttributeType=S \
     --table-name UserLpaActorMap \

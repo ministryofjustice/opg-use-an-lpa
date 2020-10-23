@@ -15,6 +15,10 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
+                    {{ govuk_error_summary(form) }}
+
+                    {{ govuk_form_open(form) }}
+
                     <h1 class="govuk-heading-xl">{% trans %}We’ve found this LPA{% endtrans %}</h1>
                     <table id="confirmation-table" class="govuk-table">
                         <tbody class="govuk-table__body">
@@ -32,23 +36,18 @@
                         </tr>
                         </tbody>
                     </table>
-                </div>
-            </div>
 
-            <div class="govuk-warning-text">
-                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                <strong class="govuk-warning-text__text">
-                    <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                    {% trans %}Check that these details are correct before continuing{% endtrans %}
-                </strong>
-            </div>
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                            {% trans %}Check that these details are correct before continuing{% endtrans %}
+                        </strong>
+                    </div>
 
-            <div class="govuk-body">
-                <p class="govuk-body">{% trans %}If this is not the right LPA, ask the donor or attorney to check the access code.{% endtrans %}</p>
-            </div>
-
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
+                    <div class="govuk-body">
+                        <p class="govuk-body">{% trans %}If this is not the right LPA, ask the donor or attorney to check the access code.{% endtrans %}</p>
+                    </div>
 
                     <details class="govuk-details" role="group">
                         <summary class="govuk-details__summary">
@@ -69,16 +68,26 @@
                         </div>
                     </details>
 
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    {{ govuk_form_element(form.get('organisation'),
+                        {
+                            'label': 'Your organisation name' | trans,
+                            'hint': 'This will be displayed to the attorneys and donor on the LPA' | trans
+                        }
+                    ) }}
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}View this LPA{% endtrans %}</button>
+
+                    <p class="govuk-body">
+                        <a class="govuk-link" href="{{ path('home') }}">{% trans %}Try another access code{% endtrans %}</a>
+                    </p>
+
+                    {{ govuk_form_close() }}
+
                 </div>
             </div>
 
-            <a href="{{ path('view-lpa') }}" role="button" draggable="false" class="govuk-button">
-                {% trans %}View this LPA{% endtrans %}
-            </a>
-
-            <p class="govuk-body">
-                <a class="govuk-link" href="{{ path('home') }}">{% trans %}Try another access code{% endtrans %}</a>
-            </p>
         </main>
     </div>
 {% endblock %}

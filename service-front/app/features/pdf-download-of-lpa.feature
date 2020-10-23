@@ -8,11 +8,10 @@ Feature: PDF download
     Given I have been given access to an LPA via share code
     And I access the viewer service
     And I give a valid LPA share code
-    And I confirm the LPA is correct
+    And I enter an organisation name and confirm the LPA is correct
 
   @integration @ui
   Scenario: The user can download a document version of the LPA they're viewing
     Given I am viewing a valid LPA
     When I choose to download a document version of the LPA
     Then a PDF is downloaded
-

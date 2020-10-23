@@ -37,7 +37,7 @@ class ViewerCodeActivity implements ViewerCodeActivityInterface
     /**
      * @inheritDoc
      */
-    public function recordSuccessfulLookupActivity(string $activityCode): void
+    public function recordSuccessfulLookupActivity(string $activityCode, string $organisation): void
     {
         // The current DateTime, including microseconds
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
@@ -47,6 +47,7 @@ class ViewerCodeActivity implements ViewerCodeActivityInterface
             'Item' => [
                 'ViewerCode'    => ['S' => $activityCode],
                 'Viewed'        => ['S' => $now],
+                'ViewedBy'      => ['S' => $organisation]
             ]
         ]);
     }

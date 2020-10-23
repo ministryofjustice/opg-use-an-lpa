@@ -20,6 +20,7 @@ use Psr\Http\Message\RequestInterface;
  * @property $lpaShareCode
  * @property $lpaData
  * @property $viewedLpa
+ * @property $lpaViewedBy
  */
 class ViewerContext extends BaseIntegrationContext
 {
@@ -44,6 +45,7 @@ class ViewerContext extends BaseIntegrationContext
     {
         $this->lpaShareCode = '1111-1111-1111';
         $this->lpaSurname = 'Testerson';
+        $this->lpaViewedBy = 'Santander';
         $this->lpaData = [
             'id' => 1,
             'uId' => '7000-0000-0000',
@@ -124,9 +126,9 @@ class ViewerContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I confirm the LPA is correct$/
+     * @When /^I enter an organisation name and confirm the LPA is correct$/
      */
-    public function iConfirmTheLPAIsCorrect() {
+    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect() {
         // not used in this context
     }
 
@@ -168,11 +170,12 @@ class ViewerContext extends BaseIntegrationContext
 
                 assertEquals('111111111111', $body->code); // code gets hyphens removed
                 assertEquals($this->lpaSurname, $body->name);
+                assertEquals( $this->lpaViewedBy, $body->organisation);
             });
 
         $lpaService = $this->container->get(LpaService::class);
 
-        $this->viewedLpa = ($lpaService->getLpaByCode($this->lpaShareCode, $this->lpaSurname, LpaService::FULL))['lpa'];
+        $this->viewedLpa = ($lpaService->getLpaByCode($this->lpaShareCode, $this->lpaSurname, $this->lpaViewedBy))['lpa'];
     }
 
     /**
@@ -190,11 +193,12 @@ class ViewerContext extends BaseIntegrationContext
 
                 assertEquals('111111111111', $body->code); // code gets hyphens removed
                 assertEquals($this->lpaSurname, $body->name);
+                assertEquals( $this->lpaViewedBy, $body->organisation);
             });
 
         $lpaService = $this->container->get(LpaService::class);
 
-        $this->viewedLpa = ($lpaService->getLpaByCode($this->lpaShareCode, $this->lpaSurname, LpaService::FULL))['lpa'];
+        $this->viewedLpa = ($lpaService->getLpaByCode($this->lpaShareCode, $this->lpaSurname, $this->lpaViewedBy))['lpa'];
     }
     /**
      * @When /^I choose to download a document version of the LPA$/

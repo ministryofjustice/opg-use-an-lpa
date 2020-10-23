@@ -23,5 +23,5 @@ Feature: Session length is independent of cookie lifetime
     And I access the viewer service
     And I give a valid LPA share code
     When my session expires
-    And I confirm the LPA is correct
+    And I enter an organisation name and confirm the LPA is correct
     Then I am taken to the session expired page
