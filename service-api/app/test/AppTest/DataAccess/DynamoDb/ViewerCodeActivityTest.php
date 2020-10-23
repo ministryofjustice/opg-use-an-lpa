@@ -105,7 +105,6 @@ class ViewerCodeActivityTest extends TestCase
         $this->assertNotEmpty($result[0]['Viewed'][0]);
         $this->assertEquals($testCodes[0]['ViewerCode'], $result[0]['Viewed'][0]['ViewerCode']);
         $this->assertNotEmpty($result[0]['Viewed'][0]['Viewed']);
-        $this->assertNotEmpty($result[0]['Viewed'][0]['ViewedBy']);
     }
 
     /** @test */
