@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-10-19T15:45:13+00:00\n"
+"POT-Creation-Date: 2020-10-23T08:59:33+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -83,7 +83,7 @@ msgstr ""
 "Pan fydd %organisation% wedi cael y cod mynediad, dylent fynd i <br> www.gov."
 "uk/gweld-atwrneiaeth-arhosol i weld crynodeb o’r LPA."
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:58
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:56
 msgid "Give another organisation access"
 msgstr "Rhoi mynediad i sefydliad arall"
 
@@ -279,6 +279,7 @@ msgstr "Cadarnhau eich cyfrinair"
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:243
 #: src/Actor/templates/actor/check-lpa.html.twig:66
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:60
 #: src/Viewer/templates/viewer/check-code-found.html.twig:41
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:45
 msgid "Warning"
@@ -2522,8 +2523,8 @@ msgstr ""
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:44
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/home-page.html.twig:46
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
 #: src/Actor/templates/actor/lpa-add.html.twig:89
-#: src/Common/templates/partials/govuk_form.html.twig:222
 #: src/Viewer/templates/viewer/enter-code.html.twig:58
 msgid "Continue"
 msgstr "Parhau"
@@ -4855,3 +4856,26 @@ msgstr ""
 "Dylai’r e-bost gyrraedd ymhen ychydig funudau.Os nad ydyw yn eich mewnflwch, "
 "edrychwch yn y ffolder spam neu junk.Os nad ydych wedi cael yr e-bost, gallwn "
 "<a href=\"%link%\" class=\"govuk-link\">anfon yr e-bost cadarnhau eto</a>."
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:51
+msgid "What to do next"
+msgstr "Beth i’w wneud nesaf"
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:53
+msgid ""
+"Give %organisation% this access code. They should go to www.gov.uk/view-lpa to "
+"enter the access code and see a summary of the <abbr title=\"lasting power of "
+"attorney\">LPA</abbr>."
+msgstr ""
+"Rhowch y cod mynediad hwn i %organisation%. Dylent fynd i www.gov.uk/view-lpa "
+"i roi’r cod mynediad a gweld crynodeb o’r atwrneiaeth."
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:61
+msgid ""
+"This is a new service, check that the organisation will accept an online "
+"summary of the <abbr title=\"lasting power of attorney\">LPA</abbr> and how "
+"they want to receive the access code you make for them."
+msgstr ""
+"Gwasanaeth newydd yw hwn. Gwiriwch a fydd y sefydliad yn derbyn crynodeb ar-"
+"lein o’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> a sut maen nhw "
+"eisiau cael y cod mynediad y byddwch yn ei greu iddynt."
