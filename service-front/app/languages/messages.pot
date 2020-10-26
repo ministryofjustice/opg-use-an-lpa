@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-10-23T16:31:13+00:00\n"
+"POT-Creation-Date: 2020-10-21T08:10:16+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -65,7 +65,7 @@ msgstr ""
 msgid "When %organisation% have the access code, they should go to <br> www.gov.uk/view-lpa to see a summary of the LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:56
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:58
 msgid "Give another organisation access"
 msgstr ""
 
@@ -224,7 +224,6 @@ msgstr ""
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:243
 #: src/Actor/templates/actor/check-lpa.html.twig:66
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:60
 #: src/Viewer/templates/viewer/check-code-found.html.twig:43
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:45
 msgid "Warning"
@@ -1821,8 +1820,8 @@ msgstr ""
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:44
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/home-page.html.twig:46
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
 #: src/Actor/templates/actor/lpa-add.html.twig:89
+#: src/Common/templates/partials/govuk_form.html.twig:222
 #: src/Viewer/templates/viewer/enter-code.html.twig:58
 msgid "Continue"
 msgstr ""
@@ -3382,16 +3381,4 @@ msgstr ""
 #: src/Viewer/templates/viewer/form-error-messages.html.twig:12
 msgctxt "error"
 msgid "Enter your organisation name"
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:51
-msgid "What to do next"
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:53
-msgid "Give %organisation% this access code. They should go to www.gov.uk/view-lpa to enter the access code and see a summary of the <abbr title=\"lasting power of attorney\">LPA</abbr>."
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:61
-msgid "This is a new service, check that the organisation will accept an online summary of the <abbr title=\"lasting power of attorney\">LPA</abbr> and how they want to receive the access code you make for them."
 msgstr ""
