@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-10-19T15:45:13+00:00\n"
+"POT-Creation-Date: 2020-10-21T08:10:16+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -32,7 +32,7 @@ msgstr "Yn ôl i’ch LPAs"
 #: src/Actor/templates/actor/check-lpa.html.twig:27
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
-#: src/Viewer/templates/viewer/check-code-found.html.twig:23
+#: src/Viewer/templates/viewer/check-code-found.html.twig:27
 msgid "Property and finance"
 msgstr "Eiddo ac arian"
 
@@ -43,7 +43,7 @@ msgstr "Eiddo ac arian"
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
-#: src/Viewer/templates/viewer/check-code-found.html.twig:23
+#: src/Viewer/templates/viewer/check-code-found.html.twig:27
 msgid "Health and welfare"
 msgstr "Iechyd a lles"
 
@@ -279,7 +279,7 @@ msgstr "Cadarnhau eich cyfrinair"
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:243
 #: src/Actor/templates/actor/check-lpa.html.twig:66
-#: src/Viewer/templates/viewer/check-code-found.html.twig:41
+#: src/Viewer/templates/viewer/check-code-found.html.twig:43
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:45
 msgid "Warning"
 msgstr "Rhybudd"
@@ -2470,12 +2470,12 @@ msgid "Is this the LPA you want to add?"
 msgstr "Ai hon yw’r LPA yr ydych eisiau ei hychwanegu?"
 
 #: src/Actor/templates/actor/check-lpa.html.twig:23
-#: src/Viewer/templates/viewer/check-code-found.html.twig:22
+#: src/Viewer/templates/viewer/check-code-found.html.twig:26
 msgid "Type of LPA"
 msgstr "Math o LPA"
 
 #: src/Actor/templates/actor/check-lpa.html.twig:35
-#: src/Viewer/templates/viewer/check-code-found.html.twig:26
+#: src/Viewer/templates/viewer/check-code-found.html.twig:30
 msgid "Donor name"
 msgstr "Enw’r rhoddwr"
 
@@ -2496,7 +2496,7 @@ msgid "Donor"
 msgstr "Rhoddwr"
 
 #: src/Actor/templates/actor/check-lpa.html.twig:67
-#: src/Viewer/templates/viewer/check-code-found.html.twig:42
+#: src/Viewer/templates/viewer/check-code-found.html.twig:44
 msgid "Check that these details are correct before continuing"
 msgstr "Gwiriwch fod y manylion hyn yn gywir cyn mynd ymlaen"
 
@@ -3420,15 +3420,15 @@ msgstr ""
 msgid "Stay signed in"
 msgstr "Parhau i ddefnyddio’r gwasanaeth"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:18
+#: src/Viewer/templates/viewer/check-code-found.html.twig:22
 msgid "We’ve found this LPA"
 msgstr "Rydym wedi dod o hyd i’r LPA hwn"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:30
+#: src/Viewer/templates/viewer/check-code-found.html.twig:34
 msgid "Code expires"
 msgstr "Daw’r cod i ben"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:31
+#: src/Viewer/templates/viewer/check-code-found.html.twig:35
 msgid "in %count% day, on %date%"
 msgid_plural "in %count% days, on %date%"
 msgstr[0] "mewn %count% o ddiwrnodau, ar %date%"
@@ -3438,7 +3438,7 @@ msgstr[3] "mewn %count% o ddiwrnodau, ar %date%"
 msgstr[4] "mewn %count% o ddiwrnodau, ar %date%"
 msgstr[5] "mewn %count% o ddiwrnodau, ar %date%"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:47
+#: src/Viewer/templates/viewer/check-code-found.html.twig:49
 msgid ""
 "If this is not the right LPA, ask the donor or attorney to check the access "
 "code."
@@ -3446,7 +3446,7 @@ msgstr ""
 "Os nad dyma’r LPA iawn, gofynnwch i’r rhoddwr neu atwrnai wirio’r cod mynediad "
 "LPA."
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:56
+#: src/Viewer/templates/viewer/check-code-found.html.twig:55
 msgid ""
 "If you need to see this <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "after %date%"
@@ -3454,7 +3454,7 @@ msgstr ""
 "Os oes angen i chi weld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hwn "
 "ar ôl %date%"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:61
+#: src/Viewer/templates/viewer/check-code-found.html.twig:60
 msgid ""
 "You can see an online summary of this <abbr title='lasting power of attorney'> "
 "LPA </abbr>until %date%. After this date, the access code will expire."
@@ -3462,25 +3462,25 @@ msgstr ""
 "Gallwch weld crynodeb ar-lein o’r <abbr title=‘atwrneiaethau arhosol’> LPA </"
 "abbr> tan yr %date%. Ar ôl y dyddiad hwn bydd y cod mynediad yn dod i ben."
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:63
+#: src/Viewer/templates/viewer/check-code-found.html.twig:62
 msgid "Ask the donor or attorney for a new access code if your organisation:"
 msgstr ""
 "Gofynnwch i’r rhoddwr neu’r atwrnai am god mynediad newydd os oes ar eich "
 "sefydliad angen:"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:65
+#: src/Viewer/templates/viewer/check-code-found.html.twig:64
 msgid "needs more time to process this LPA"
 msgstr "rhagor o amser i brosesu’r LPA"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:66
+#: src/Viewer/templates/viewer/check-code-found.html.twig:65
 msgid "need to see this LPA at a later date"
 msgstr "gweld yr LPA ymhellach ymlaen"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:76
+#: src/Viewer/templates/viewer/check-code-found.html.twig:80
 msgid "View this LPA"
 msgstr "Gweld yr LPA"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:80
+#: src/Viewer/templates/viewer/check-code-found.html.twig:83
 msgid "Try another access code"
 msgstr "Ceisio defnyddio cod mynediad arall"
 
@@ -4855,3 +4855,27 @@ msgstr ""
 "Dylai’r e-bost gyrraedd ymhen ychydig funudau.Os nad ydyw yn eich mewnflwch, "
 "edrychwch yn y ffolder spam neu junk.Os nad ydych wedi cael yr e-bost, gallwn "
 "<a href=\"%link%\" class=\"govuk-link\">anfon yr e-bost cadarnhau eto</a>."
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:40
+msgid ""
+"If you're named on more than one <abbr title=\"lasting power of attorney"
+"\">LPA</abbr>, you can add all those <abbr title=\"lasting powers of attorney"
+"\">LPAs</abbr> to your account"
+msgstr ""
+"Os ydych wedi’ch enwi ar fwy nac un <abbr title=\"atwrneiaeth arhosol\">LPA</"
+"abbr>, gallwch ychwanegu’r holl <abbr title=\"atwrneiaeth arhosol\">LPAs</"
+"abbr> hynny at eich cyfrif"
+
+#: src/Viewer/templates/viewer/check-code-found.html.twig:75
+msgid "Your organisation name"
+msgstr "Enw eich sefydliad"
+
+#: src/Viewer/templates/viewer/check-code-found.html.twig:76
+msgid "This will be displayed to the attorneys and donor on the LPA"
+msgstr "Dangosir hwn i’r rhoddwr a’r atwrneiod ar yr LPA"
+
+#. Check code
+#: src/Viewer/templates/viewer/form-error-messages.html.twig:12
+msgctxt "error"
+msgid "Enter your organisation name"
+msgstr "Nodwch enw eich sefydliad"

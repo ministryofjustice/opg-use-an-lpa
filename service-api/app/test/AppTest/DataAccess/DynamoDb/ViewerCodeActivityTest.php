@@ -26,8 +26,9 @@ class ViewerCodeActivityTest extends TestCase
     public function testRecordSuccessfulLookupActivity()
     {
         $testCode = '123456789ABC';
+        $organisation = 'HSBC';
 
-        $this->dynamoDbClient->putItem(Argument::that(function ($v) use ($testCode) {
+        $this->dynamoDbClient->putItem(Argument::that(function ($v) use ($testCode, $organisation) {
             $this->assertArrayHasKey('TableName', $v);
             $this->assertEquals(self::TABLE_NAME, $v['TableName']);
 
@@ -40,6 +41,9 @@ class ViewerCodeActivityTest extends TestCase
 
             $this->assertArrayHasKey('Viewed', $v['Item']);
             $this->assertArrayHasKey('S', $v['Item']['Viewed']);
+
+            $this->assertArrayHasKey('ViewedBy', $v['Item']);
+            $this->assertArrayHasKey('S', $v['Item']['ViewedBy']);
             $time = new DateTime($v['Item']['Viewed']['S']);
 
             // We test the timestamp is now, with a 2 second allowance
@@ -55,7 +59,7 @@ class ViewerCodeActivityTest extends TestCase
             self::TABLE_NAME
         );
 
-        $repo->recordSuccessfulLookupActivity($testCode);
+        $repo->recordSuccessfulLookupActivity($testCode, $organisation);
     }
 
     /** @test */

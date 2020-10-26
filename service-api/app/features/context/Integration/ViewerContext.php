@@ -21,6 +21,7 @@ use JSHayes\FakeRequests\MockHandler;
  * @property string viewerCode The share code given to an organisation
  * @property string donorSurname The surname of the donors LPA reference by the share code
  * @property array lpa LPA data as returned by the API gateway
+ * @property string lpaViewedBy The organisation that the lpa has been viewed by using the share code
  */
 class ViewerContext extends BaseIntegrationContext
 {
@@ -54,6 +55,7 @@ class ViewerContext extends BaseIntegrationContext
     {
         $this->viewerCode = '1111-1111-1111';
         $this->donorSurname = 'Deputy';
+        $this->lpaViewedBy = 'Santander';
         $this->lpa = json_decode(
             file_get_contents(__DIR__ . '../../../../test/fixtures/example_lpa.json'),
             true
@@ -104,8 +106,8 @@ class ViewerContext extends BaseIntegrationContext
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa['uId'])
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
-        // logActivity parameter is false when doing a summary check
-        $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, false);
+        // organisation parameter is null when doing a summary check
+        $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, null);
 
         assertEquals($this->lpa, $lpaData['lpa']);
         assertEquals($lpaExpiry, $lpaData['expires']);
@@ -140,15 +142,15 @@ class ViewerContext extends BaseIntegrationContext
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa['uId'])
             ->respondWith(new Response(StatusCodeInterface::STATUS_GONE, [], json_encode($this->lpa)));
 
-        // logActivity parameter is false when doing a summary check
-        $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, false);
+        // organisation parameter is null when doing a summary check
+        $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, null);
         assertEquals(null, $lpaData);
     }
 
     /**
-     * @When I confirm the LPA is correct
+     * @When /^I enter an organisation name and confirm the LPA is correct$/
      */
-    public function iConfirmTheLPAIsCorrect()
+    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect()
     {
         $lpaExpiry = (new \DateTime('+20 days'))->format('c');
 
@@ -175,8 +177,8 @@ class ViewerContext extends BaseIntegrationContext
         // ViewerCodeActivity::recordSuccessfulLookupActivity
         $this->awsFixtures->append(new Result([]));
 
-        // logActivity parameter is false when doing a summary check
-        $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, true);
+        // organisation parameter is a string when doing a full check
+        $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, $this->lpaViewedBy);
 
         assertEquals($this->lpa, $lpaData['lpa']);
         assertEquals($lpaExpiry, $lpaData['expires']);
