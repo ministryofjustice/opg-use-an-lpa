@@ -9,4 +9,4 @@ function get_commit_message() {
   message=$(git log -1 --pretty=%B | sed 's/"//g')
   echo $message
 }
-export COMMIT_MESSAGE="$(get_commit_message)"
+export COMMIT_MESSAGE=$(get_commit_message)
