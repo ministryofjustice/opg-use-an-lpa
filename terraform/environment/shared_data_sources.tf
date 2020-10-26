@@ -99,3 +99,7 @@ data "aws_elasticache_replication_group" "brute_force_cache_replication_group" {
   replication_group_id = "brute-force-cache-replication-group"
 
 }
+
+data "aws_iam_role" "ecs_autoscaling_service_role" {
+  name = "AWSServiceRoleForApplicationAutoScaling_ECSService"
+}
