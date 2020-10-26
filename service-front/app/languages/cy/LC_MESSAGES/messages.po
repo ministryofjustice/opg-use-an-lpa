@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-10-21T08:10:16+00:00\n"
+"POT-Creation-Date: 2020-10-26T15:27:18+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -28,7 +28,7 @@ msgstr "Yn ôl i’ch LPAs"
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:22
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:22
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:57
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:60
 #: src/Actor/templates/actor/check-lpa.html.twig:27
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
@@ -39,7 +39,7 @@ msgstr "Eiddo ac arian"
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:24
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:57
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:60
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
@@ -2232,19 +2232,7 @@ msgstr ""
 "Bydd unrhyw atwrneiaeth arhosol (LPA) y byddwch yn ei hychwanegu at eich "
 "cyfrif yn ymddangos ar y dudalen hon."
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:29
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:26
-msgid ""
-"What can I do with my <abbr title=\"lasting powers of attorney\">LPAs</abbr>?"
-msgstr ""
-"Beth allaf ei wneud gyda fy <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr>?"
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:33
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:30
-msgid "From this page you can:"
-msgstr "Ar y dudalen hon gallwch:"
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:35
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:38
 msgid ""
 "give organisations access to an online summary of this <abbr title=\"lasting "
 "power of attorney\">LPA</abbr> by making a secure access code"
@@ -2252,7 +2240,7 @@ msgstr ""
 "alluogi sefydliadau i gael mynediad at grynodeb ar-lein o <abbr title="
 "\"atwrneiaethau arhosol\">LPA</abbr> drwy greu cod diogel"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:36
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:39
 msgid ""
 "keep track of which organisations have been given online access to the <abbr "
 "title=\"lasting power of attorney\">LPA</abbr>"
@@ -2260,11 +2248,11 @@ msgstr ""
 "cadw golwg ar ba sefydliadau sydd wedi cael mynediad ar-lein at yr <abbr title="
 "\"atwrneiaethau arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:37
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
 msgid "view the <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr "gweld crynodeb o’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:43
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:46
 msgid "Add another LPA"
 msgstr "Ychwanegu LPA arall"
 
@@ -4879,3 +4867,21 @@ msgstr "Dangosir hwn i’r rhoddwr a’r atwrneiod ar yr LPA"
 msgctxt "error"
 msgid "Enter your organisation name"
 msgstr "Nodwch enw eich sefydliad"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:27
+msgid ""
+"Find out about <a href=\"https://www.gov.uk/lasting-power-attorney-duties\" "
+"class=\"govuk-link\">the role of an attorney</a> and how to support the donor "
+"<a href=\"https://www.gov.uk/make-decisions-for-someone/making-decisions\" "
+"class=\"govuk-link\">to make decisions</a>."
+msgstr ""
+"Canfod mwy am <a href=\"https://www.gov.uk/atwrneiaeth-arhosol\" class=\"govuk-"
+"link\">rôl atwrnai</a>"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:32
+msgid "What can I do with this service?"
+msgstr "Beth alla’i wneud gyda’r gwasanaeth hwn?"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:36
+msgid "Use this service to:"
+msgstr "Trwy ddefnyddio’r gwasanaeth hwn rydych yn:"
