@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-10-21T08:10:16+00:00\n"
+"POT-Creation-Date: 2020-10-26T16:13:08+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -18,7 +18,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:22
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:22
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:57
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:60
 #: src/Actor/templates/actor/check-lpa.html.twig:27
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
@@ -29,7 +29,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:24
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:57
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:60
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
@@ -1606,29 +1606,19 @@ msgstr ""
 msgid "Any lasting power of attorney (LPA) you add to your account will appear on this page."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:29
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:26
-msgid "What can I do with my <abbr title=\"lasting powers of attorney\">LPAs</abbr>?"
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:33
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:30
-msgid "From this page you can:"
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:35
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:38
 msgid "give organisations access to an online summary of this <abbr title=\"lasting power of attorney\">LPA</abbr> by making a secure access code"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:36
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:39
 msgid "keep track of which organisations have been given online access to the <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:37
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
 msgid "view the <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:43
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:46
 msgid "Add another LPA"
 msgstr ""
 
@@ -2137,19 +2127,19 @@ msgstr ""
 msgid "Any lasting power of attorney (LPA) you add to your account will show on this page."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:32
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:35
 msgid "give organisations access to an online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr> by making a secure access code"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:33
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:36
 msgid "keep track of the organisations that have online access to an <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:34
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:37
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:40
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:43
 msgid "Add your first LPA"
 msgstr ""
 
@@ -3381,4 +3371,19 @@ msgstr ""
 #: src/Viewer/templates/viewer/form-error-messages.html.twig:12
 msgctxt "error"
 msgid "Enter your organisation name"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:27
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:24
+msgid "Find out about <a href=\"https://www.gov.uk/lasting-power-attorney-duties\" class=\"govuk-link\">the role of an attorney</a> and how to support the donor <a href=\"https://www.gov.uk/make-decisions-for-someone/making-decisions\" class=\"govuk-link\">to make decisions</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:32
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:29
+msgid "What can I do with this service?"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:36
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:33
+msgid "Use this service to:"
 msgstr ""
