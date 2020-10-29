@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "45ef94cb682f12c8324b5e7f2927f6a6",
+    "content-hash": "15bf70a395142d2cdcee67f3d560caa1",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -233,22 +233,23 @@
         },
         {
             "name": "cooperaj/better-twig-i18n",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cooperaj/better-twig-i18n.git",
-                "reference": "974edcbf143388c50256877cbc6d75c767a99abc"
+                "reference": "3ffc3b0377d5b66004a275a71fe06b0881ef9cbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cooperaj/better-twig-i18n/zipball/974edcbf143388c50256877cbc6d75c767a99abc",
-                "reference": "974edcbf143388c50256877cbc6d75c767a99abc",
+                "url": "https://api.github.com/repos/cooperaj/better-twig-i18n/zipball/3ffc3b0377d5b66004a275a71fe06b0881ef9cbd",
+                "reference": "3ffc3b0377d5b66004a275a71fe06b0881ef9cbd",
                 "shasum": ""
             },
             "require": {
                 "ext-gettext": "*",
-                "gettext/gettext": "^v5.5",
-                "gettext/translator": "^v1.0",
+                "gettext/gettext": "^5.5",
+                "gettext/translator": "^1.0",
+                "nikic/php-parser": "^4.9",
                 "symfony/finder": "^4.0 || ^5.0",
                 "twig/twig": "^v3.0"
             },
@@ -277,9 +278,9 @@
             "description": "Provides i18n functionality based on gettext language files.",
             "support": {
                 "issues": "https://github.com/cooperaj/better-twig-i18n/issues",
-                "source": "https://github.com/cooperaj/better-twig-i18n/tree/master"
+                "source": "https://github.com/cooperaj/better-twig-i18n/tree/v1.1.0"
             },
-            "time": "2020-09-01T14:24:58+00:00"
+            "time": "2020-10-14T17:41:01+00:00"
         },
         {
             "name": "dflydev/fig-cookies",
