@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-10-26T16:13:08+00:00\n"
+"POT-Creation-Date: 2020-10-29T09:31:48+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 2.4\n"
+"X-Generator: Poedit 2.4.1\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 
@@ -83,7 +83,7 @@ msgstr ""
 "Pan fydd %organisation% wedi cael y cod mynediad, dylent fynd i <br> www.gov."
 "uk/gweld-atwrneiaeth-arhosol i weld crynodeb o’r LPA."
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:58
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:56
 msgid "Give another organisation access"
 msgstr "Rhoi mynediad i sefydliad arall"
 
@@ -279,6 +279,7 @@ msgstr "Cadarnhau eich cyfrinair"
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:243
 #: src/Actor/templates/actor/check-lpa.html.twig:66
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:60
 #: src/Viewer/templates/viewer/check-code-found.html.twig:43
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:45
 msgid "Warning"
@@ -2510,8 +2511,8 @@ msgstr ""
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:44
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/home-page.html.twig:46
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
 #: src/Actor/templates/actor/lpa-add.html.twig:89
-#: src/Common/templates/partials/govuk_form.html.twig:222
 #: src/Viewer/templates/viewer/enter-code.html.twig:58
 msgid "Continue"
 msgstr "Parhau"
@@ -4888,3 +4889,71 @@ msgstr "Beth alla’i wneud gyda’r gwasanaeth hwn?"
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:33
 msgid "Use this service to:"
 msgstr "Trwy ddefnyddio’r gwasanaeth hwn rydych yn:"
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:51
+msgid "What to do next"
+msgstr "Beth i’w wneud nesaf"
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:53
+msgid ""
+"Give %organisation% this access code. They should go to www.gov.uk/view-lpa to "
+"enter the access code and see a summary of the <abbr title=\"lasting power of "
+"attorney\">LPA</abbr>."
+msgstr ""
+"Rhowch y cod mynediad hwn i %organisation%. Dylent fynd i www.gov.uk/view-lpa "
+"i roi’r cod mynediad a gweld crynodeb o’r atwrneiaeth."
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:61
+msgid ""
+"This is a new service, check that the organisation will accept an online "
+"summary of the <abbr title=\"lasting power of attorney\">LPA</abbr> and how "
+"they want to receive the access code you make for them."
+msgstr ""
+"Gwasanaeth newydd yw hwn. Gwiriwch a fydd y sefydliad yn derbyn crynodeb ar-"
+"lein o’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> a sut maen nhw "
+"eisiau cael y cod mynediad y byddwch yn ei greu iddynt."
+
+#: src/Common/templates/error/error.html.twig:10
+msgid "Sorry, there is a problem with the service"
+msgstr ""
+
+#: src/Common/templates/error/error.html.twig:11
+msgid "Try again later."
+msgstr ""
+
+#: src/Common/templates/error/error.html.twig:13
+msgid ""
+"We’ve not saved any information you entered. When the service is available,\n"
+"                        you’ll have to <a href=\"%link%\" class=\"govuk-link"
+"\">start again.</a>"
+msgstr ""
+
+#: src/Common/templates/error/error.html.twig:19
+msgid ""
+"You can <a class=\"govuk-link\" href=\"%link%\">contact us</a> if you have any "
+"questions."
+msgstr ""
+
+#: src/Common/templates/error/404.html.twig:3
+#: src/Common/templates/error/404.html.twig:10
+msgid "Page not found"
+msgstr ""
+
+#: src/Common/templates/error/404.html.twig:12
+msgid "We could not find the page you're looking for."
+msgstr ""
+
+#: src/Common/templates/error/404.html.twig:15
+msgid "If you entered a web address, check it's correct."
+msgstr ""
+
+#: src/Common/templates/error/404.html.twig:18
+msgid ""
+"You can <a class=\"govuk-link\" href=\"https://www.gov.uk/\">return to GOV.UK</"
+"a> or start again."
+msgstr ""
+
+#: src/Common/templates/error/404.html.twig:23
+msgid ""
+"<a href=\"%link%\" draggable=\"false\" class=\"govuk-button\">Start again</a>"
+msgstr ""
