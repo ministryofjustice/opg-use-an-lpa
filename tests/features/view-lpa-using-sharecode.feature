@@ -14,7 +14,7 @@ Feature: View an LPA via share code
     Given I have been given access to an LPA via share code
     And I access the viewer service
     And I give a valid LPA share code
-    When I confirm the LPA is correct
+    When I enter an organisation name and confirm the LPA is correct
     Then I can see the full details of the valid LPA
 
   @integration @acceptance
@@ -37,7 +37,7 @@ Feature: View an LPA via share code
     Given I have been given access to an LPA via share code
     And I access the viewer service
     And I give a valid LPA share code
-    When I confirm the LPA is correct
+    When I enter an organisation name and confirm the LPA is correct
     Then I can see the full details of the valid LPA
     And I want to see an option to check another LPA
 
@@ -65,7 +65,7 @@ Feature: View an LPA via share code
   Scenario: The user enters an expired share code and is shown the reason for not able to see the details of an LPA
     Given I have been given access to an LPA via share code
     And I access the viewer service
-    When I give a share code that has got expired
+    When I give a share code that has expired
     Then I am told that the share code is invalid because "The access code you entered has expired"
 
   @acceptance

@@ -194,9 +194,9 @@ class LpaContext implements Context
             'SiriusUid' => $this->lpaUid,
             'Added' => '2020-01-01T00:00:00Z',
             'Expires' => $code2Expiry,
-            'UserLpaActor' => $this->userLpaActorToken,
-            'Organisation' => $this->organisation,
-            'ViewerCode' => $this->accessCode,
+            'UserLpaActor' => '123456789',
+            'Organisation' => 'HSBC',
+            'ViewerCode' => 'XYZABC12345',
         ];
 
         // LpaService:getLpas
@@ -266,7 +266,7 @@ class LpaContext implements Context
             )
         );
 
-        // ViewerCodesRepository::getCodesByUserLpaActorId
+        // ViewerCodesRepository::getCodesByLpaId
         $this->awsFixtures->append(
             new Result(
                 [
@@ -302,6 +302,23 @@ class LpaContext implements Context
             )
         );
 
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => '123456789',
+                            'ActorId' => 23,
+                            'UserId' => '10000000001',
+                        ]
+                    ),
+                ]
+            )
+        );
+
         // LpaService::getLpas
         $this->apiGet(
             '/v1/lpas/' . $this->userLpaActorToken . '/codes',
@@ -316,20 +333,19 @@ class LpaContext implements Context
 
         assertCount(2, $response);
 
-        // Loop for asserting on both the 2 codes returned
-        for ($i = 0; $i < 2; $i++) {
-            assertEquals($response[$i]['SiriusUid'], $this->lpaUid);
-            assertEquals($response[$i]['UserLpaActor'], $this->userLpaActorToken);
-            assertEquals($response[$i]['Organisation'], $this->organisation);
-            assertEquals($response[$i]['ViewerCode'], $this->accessCode);
-            assertEquals($response[$i]['ActorId'], $this->actorId);
+        assertEquals($response[0]['SiriusUid'], $this->lpaUid);
+        assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
+        assertEquals($response[0]['Organisation'], $this->organisation);
+        assertEquals($response[0]['ViewerCode'], $this->accessCode);
+        assertEquals($response[0]['ActorId'], $this->actorId);
+        assertEquals($response[0]['Expires'], $code1Expiry);
 
-            if ($i == 0) {
-                assertEquals($response[$i]['Expires'], $code1Expiry);
-            } else {
-                assertEquals($response[$i]['Expires'], $code2Expiry);
-            }
-        }
+        assertEquals($response[1]['SiriusUid'], $this->lpaUid);
+        assertEquals($response[1]['UserLpaActor'], '123456789');
+        assertEquals($response[1]['Organisation'], 'HSBC');
+        assertEquals($response[1]['ViewerCode'], 'XYZABC12345');
+        assertEquals($response[1]['ActorId'], 23);
+        assertEquals($response[1]['Expires'], $code2Expiry);
     }
 
     /**
@@ -402,7 +418,7 @@ class LpaContext implements Context
             )
         );
 
-        // ViewerCodesRepository::getCodesByUserLpaActorId
+        // ViewerCodesRepository::getCodesByLpaId
         $this->awsFixtures->append(new Result());
 
         // LpaService::getLpas
@@ -1381,6 +1397,191 @@ class LpaContext implements Context
      * @Then /^The LPA should not be found$/
      */
     public function theLPAShouldNotBeFound()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I click to check the access codes$/
+     */
+    public function iClickToCheckTheAccessCodes()
+    {
+        $code1 = [
+            'SiriusUid' => $this->lpaUid,
+            'Added' => '2020-01-01T00:00:00Z',
+            'Expires' => '2020-12-01T00:00:00Z',
+            'UserLpaActor' => $this->userLpaActorToken,
+            'Organisation' => $this->organisation,
+            'ViewerCode' => $this->accessCode,
+        ];
+
+        $code2 = [
+            'SiriusUid' => $this->lpaUid,
+            'Added' => '2020-01-01T00:00:00Z',
+            'Expires' => '2020-12-01T00:00:00Z',
+            'UserLpaActor' => '65d6833a-66d3-430f-8cf6-9e4fb1d851f1',
+            'Organisation' => 'SomeOrganisation',
+            'ViewerCode' => 'B97LRK3U68PE',
+        ];
+
+        // LpaService:getLpas
+
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorId,
+                                'UserId' => $this->userId,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // LpaService::getLpas
+        $this->apiGet(
+            '/v1/lpas',
+            [
+                'user-token' => $this->userLpaActorToken,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        assertArrayHasKey($this->userLpaActorToken, $response);
+        assertEquals($response[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
+        assertEquals($response[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
+        assertEquals($response[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
+
+        //ViewerCodeService:getShareCodes
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // ViewerCodesRepository::getCodesByLpaId
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData($code1),
+                        $this->marshalAwsResultData($code2),
+                    ],
+                ]
+            )
+        );
+
+        // ViewerCodeActivity::getStatusesForViewerCodes
+        $this->awsFixtures->append(new Result());
+
+        // This response is duplicated for the 2nd code
+        // ViewerCodeActivity::getStatusesForViewerCodes
+        $this->awsFixtures->append(new Result());
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => '65d6833a-66d3-430f-8cf6-9e4fb1d851f1',
+                            'ActorId' => '4455',
+                            'UserId' => 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // LpaService::getLpas
+        $this->apiGet(
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+        $response = $this->getResponseAsJson();
+
+        assertCount(2, $response);
+
+        assertEquals($response[0]['Organisation'], $this->organisation);
+        assertEquals($response[0]['SiriusUid'], $this->lpaUid);
+        assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
+        assertEquals($response[0]['ViewerCode'], $this->accessCode);
+        assertEquals($response[0]['ActorId'], $this->actorId);
+
+        assertEquals($response[1]['Organisation'], 'SomeOrganisation');
+        assertEquals($response[1]['SiriusUid'], '700000000054');
+        assertEquals($response[1]['UserLpaActor'], '65d6833a-66d3-430f-8cf6-9e4fb1d851f1');
+        assertEquals($response[1]['ViewerCode'], 'B97LRK3U68PE');
+        assertEquals($response[1]['ActorId'], '4455');
+    }
+
+    /**
+     * @Given /^Co\-actors have also created access codes for the same LPA$/
+     */
+    public function coActorsHaveAlsoCreatedAccessCodesForTheSameLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I can see all of the access codes and their details$/
+     */
+    public function iCanSeeAllOfTheAccessCodesAndTheirDetails()
     {
         // Not needed for this context
     }

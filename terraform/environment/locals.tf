@@ -37,6 +37,24 @@ variable "accounts" {
       use_legacy_codes_service = bool
       log_retention_in_days    = number
       have_a_backup_plan       = bool
+      autoscaling = object({
+        use = object({
+          minimum = number
+          maximum = number
+        })
+        view = object({
+          minimum = number
+          maximum = number
+        })
+        api = object({
+          minimum = number
+          maximum = number
+        })
+        pdf = object({
+          minimum = number
+          maximum = number
+        })
+      })
     })
   )
 }

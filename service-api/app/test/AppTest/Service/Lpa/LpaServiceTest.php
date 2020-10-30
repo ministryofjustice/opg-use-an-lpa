@@ -40,6 +40,11 @@ class LpaServiceTest extends TestCase
      */
     private $loggerProphecy;
 
+    /**
+     * @var string
+     */
+    private $organisation;
+
     public function setUp()
     {
         $this->viewerCodesInterfaceProphecy = $this->prophesize(Repository\ViewerCodesInterface::class);
@@ -440,7 +445,7 @@ class LpaServiceTest extends TestCase
 
         //---
 
-        $result = $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, false);
+        $result = $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('expires', $result);
@@ -465,11 +470,11 @@ class LpaServiceTest extends TestCase
         //---
 
         // This should be called when logging = true.
-        $this->viewerCodeActivityInterfaceProphecy->recordSuccessfulLookupActivity($t->ViewerCode)->shouldBeCalled();
+        $this->viewerCodeActivityInterfaceProphecy->recordSuccessfulLookupActivity($t->ViewerCode, $t->Organisation)->shouldBeCalled();
 
         //---
 
-        $result = $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, true);
+        $result = $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, $t->Organisation);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('expires', $result);
@@ -494,7 +499,7 @@ class LpaServiceTest extends TestCase
         // Change this to return null
         $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn(null)->shouldBeCalled();
 
-        $result = $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, false);
+        $result = $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
 
         $this->assertNull($result);
     }
@@ -509,7 +514,7 @@ class LpaServiceTest extends TestCase
         // Change this to return null
         $this->lpasInterfaceProphecy->get($t->SiriusUid)->willReturn(null)->shouldBeCalled();
 
-        $result = $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, false);
+        $result = $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
 
         $this->assertNull($result);
     }
@@ -521,7 +526,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getByViewerCode($t->ViewerCode, 'different-donor-name', false);
+        $result = $service->getByViewerCode($t->ViewerCode, 'different-donor-name', null);
 
         $this->assertNull($result);
     }
@@ -547,7 +552,7 @@ class LpaServiceTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("'Expires' field missing or invalid.");
 
-        $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, false);
+        $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
     }
 
     /** @test */
@@ -572,7 +577,7 @@ class LpaServiceTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("Share code cancelled");
 
-        $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, false);
+        $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
     }
 
     /** @test */
@@ -596,7 +601,7 @@ class LpaServiceTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("Share code expired");
 
-        $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, false);
+        $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
     }
 
     //-------------------------------------------------------------------------
