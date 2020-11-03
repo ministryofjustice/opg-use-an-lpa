@@ -33,7 +33,7 @@ class LpaExtensionTest extends TestCase
             'add_hyphen_to_viewer_code' => 'formatViewerCode',
             'check_if_code_is_cancelled' => 'isCodeCancelled',
             'is_lpa_cancelled'           => 'isLpaCancelled',
-
+            'donor_name_with_dob_removed' =>'donorNameWithDobRemoved'
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
@@ -453,5 +453,16 @@ class LpaExtensionTest extends TestCase
         $status = $extension->isLPACancelled($lpa);
 
         $this->assertEquals(true, $status);
+    }
+
+    /** @test */
+    public function it_returns_donor_name_from_donor_nameDob_string()
+    {
+        $extension = new LpaExtension();
+
+        $donorNameWithDob = "Harry Potter 1980-07-31";
+        $donorName = $extension->donorNameWithDobRemoved($donorNameWithDob);
+
+        $this->assertEquals('Harry Potter', $donorName);
     }
 }

@@ -148,6 +148,7 @@ class LpaService
             $lpa = $lpas[$item['SiriusUid']];
             $lpaData = $lpa->getData();
             $actor = $this->lookupActiveActorInLpa($lpaData, $item['ActorId']);
+            $added = $item['Added']->format('Y-m-d H:i:s');
             unset($lpaData['original_attorneys']);
 
             $result[$item['Id']] = [
@@ -155,6 +156,7 @@ class LpaService
                 'date' => $lpa->getLookupTime()->format('c'),
                 'actor' => $actor,
                 'lpa' => $lpaData,
+                'added' => $added
             ];
         }
 
