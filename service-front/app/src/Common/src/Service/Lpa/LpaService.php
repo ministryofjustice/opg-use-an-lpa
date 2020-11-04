@@ -269,7 +269,6 @@ class LpaService
     }
 
     /**
-     * <<<<<<< HEAD
      * Sorts LPAs alphabetically by donor's lastname
      * Donors with multiple LPAs are then grouped
      * Finally each donor's LPAs are sorted with HW LPAs first, then by the most recently added
@@ -410,7 +409,7 @@ class LpaService
         $this->apiClient->setUserTokenHeader($userToken);
 
         try {
-            $lpaActordata = $this->apiClient->httpDelete('/v1/lpas/' . $actorLpaToken);
+           // $lpaActordata = $this->apiClient->httpDelete('/v1/lpas/' . $actorLpaToken);
 
             $this->logger->notice(
                 'Successfully removed lpa for user lpa actor {token}',
