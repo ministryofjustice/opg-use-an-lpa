@@ -1,0 +1,43 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Confirm LPA deletion{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <a href="{{ path('lpa.dashboard', {}, {'lpa': actorToken}) }}" class="govuk-back-link">{% trans %}Back to your LPAs{% endtrans %}</a>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}Are you sure you want to delete this <abbr title="lasting power of attorney">LPA</abbr>?{% endtrans %}</h1>
+
+                    <p class="govuk-body">{% trans %}If you remove an <abbr title="lasting power of attorney">LPA</abbr> from your Use a lasting power of attorney account:{% endtrans %}</p>
+
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}all access codes you've created for that <abbr title="lasting power of attorney">LPA</abbr> will be cancelled{% endtrans %}</li>
+                        <li>{% trans %}you'll not be able to see how the <abbr title="lasting power of attorney">LPA</abbr> is being used or has been used{% endtrans %}</li>
+                        <li>{% trans %}you must contact us for a new activation key if you want to add the <abbr title="lasting power of attorney">LPA</abbr> back to your account{% endtrans %}</li>
+                    </ul>
+
+                    <a href="{{ path('lpa.dashboard', {}, {'lpa': actorToken}) }}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
+                        {% trans %}Cancel{% endtrans %}
+                    </a>
+                    <a href="{{ path('lpa.delete-lpa', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button--warning">
+                        {% trans %}Yes, remove <abbr title="lasting power of attorney">LPA</abbr>{% endtrans %}
+                    </a>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+{% endblock %}

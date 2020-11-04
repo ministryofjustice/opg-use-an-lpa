@@ -11,6 +11,9 @@
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            {{ include('@actor/partials/flash-message.html.twig', {'flash': flash, 'flash_key':'Actor\\Handler\\RemoveLpaHandler::REMOVE_LPA_FLASH_MSG'}) }}
+
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
                     <h1 class="govuk-heading-xl">{% trans %}Your lasting powers of attorney{% endtrans %}</h1>

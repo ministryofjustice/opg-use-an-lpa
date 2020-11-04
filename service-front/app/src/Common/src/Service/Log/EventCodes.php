@@ -38,4 +38,14 @@ class EventCodes
      * A share code has been attempted and not found
      */
     public const SHARE_CODE_NOT_FOUND = 'SHARE_CODE_NOT_FOUND';
+
+    /**
+     * A lpa from user account has been deleted
+     */
+    public const LPA_DELETED = 'LPA_DELETED';
+
+    /**
+     * A share code has been deleted
+     */
+    public const SHARE_CODE_DELETED = 'SHARE_CODE_DELETED';
 }

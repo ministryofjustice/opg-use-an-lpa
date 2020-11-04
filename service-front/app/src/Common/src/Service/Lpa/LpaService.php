@@ -64,7 +64,7 @@ class LpaService
         $this->logger->info(
             'Account with Id {id} retrieved {count} LPA(s)',
             [
-                'id'    => $userToken,
+                'id' => $userToken,
                 'count' => count($lpaData)
             ]
         );
@@ -90,7 +90,7 @@ class LpaService
             $this->logger->info(
                 'Account with Id {id} fetched LPA with Id {uId}',
                 [
-                    'id'  => $userToken,
+                    'id' => $userToken,
                     'uId' => $lpaData['lpa']->getUId()
                 ]
             );
@@ -157,8 +157,8 @@ class LpaService
                         $this->logger->notice(
                             'Share code {code} expired when attempting to fetch {type}',
                             [
-                            'code' => $shareCode,
-                            'type' => $trackRoute
+                                'code' => $shareCode,
+                                'type' => $trackRoute
                             ]
                         );
                     }
@@ -209,8 +209,8 @@ class LpaService
     {
         $data = [
             'actor-code' => $passcode,
-            'uid'        => $referenceNumber,
-            'dob'        => $dob,
+            'uid' => $referenceNumber,
+            'dob' => $dob,
         ];
 
         $this->apiClient->setUserTokenHeader($userToken);
@@ -222,7 +222,7 @@ class LpaService
             $this->logger->info(
                 'Account with Id {id} fetched LPA with Id {uId} by passcode',
                 [
-                    'id'  => $userToken,
+                    'id' => $userToken,
                     'uId' => ($lpaData->lpa)->getUId()
                 ]
             );
@@ -245,8 +245,8 @@ class LpaService
     {
         $data = [
             'actor-code' => $passcode,
-            'uid'        => $referenceNumber,
-            'dob'        => $dob,
+            'uid' => $referenceNumber,
+            'dob' => $dob,
         ];
 
         $this->apiClient->setUserTokenHeader($userToken);
@@ -257,7 +257,7 @@ class LpaService
             $this->logger->info(
                 'Account with Id {id} added LPA with Id {uId} to account by passcode',
                 [
-                    'id'  => $userToken,
+                    'id' => $userToken,
                     'uId' => $referenceNumber
                 ]
             );
@@ -269,6 +269,7 @@ class LpaService
     }
 
     /**
+     * <<<<<<< HEAD
      * Sorts LPAs alphabetically by donor's lastname
      * Donors with multiple LPAs are then grouped
      * Finally each donor's LPAs are sorted with HW LPAs first, then by the most recently added
@@ -394,5 +395,41 @@ class LpaService
         }
 
         return new ArrayObject($data, ArrayObject::ARRAY_AS_PROPS);
+    }
+
+    /**
+     * Removes a selected lpa
+     *
+     * @param string $userToken
+     * @param string $actorLpaToken
+     * @return array
+     * @throws ApiException
+     */
+    public function removeLpa(string $userToken, string $actorLpaToken): array
+    {
+        $this->apiClient->setUserTokenHeader($userToken);
+
+        try {
+            $lpaActordata = $this->apiClient->httpDelete('/v1/lpas/' . $actorLpaToken);
+
+            $this->logger->notice(
+                'Successfully removed lpa for user lpa actor {token}',
+                [
+                    'event_code' => EventCodes::LPA_DELETED,
+                    'token' => $actorLpaToken,
+                ]
+            );
+        } catch (ApiException $ex) {
+            $this->logger->notice(
+                'Failed to remove lpa for user lpa actor {token}',
+                [
+                    'token' => $actorLpaToken,
+                ]
+            );
+
+            throw $ex;
+        }
+
+        return $lpaActordata;
     }
 }

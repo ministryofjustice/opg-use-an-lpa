@@ -151,6 +151,14 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CancelCodeHandler::class
     ], 'lpa.cancel-code');
+    $app->get('/lpa/confirm-remove-lpa', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\ConfirmRemoveLpaHandler::class
+    ], 'lpa.confirm-remove-lpa');
+    $app->get('/lpa/delete-lpa', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\RemoveLpaHandler::class
+    ], 'lpa.delete-lpa');
     $app->get('/lpa/removed', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaRemovedHandler::class

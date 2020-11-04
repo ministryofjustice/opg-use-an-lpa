@@ -1952,6 +1952,91 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
+     * @When /^I request to remove the added LPA/
+     */
+    public function iRequestToRemoveTheAddedLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I am asked to confirm whether I am sure if I want to/
+     */
+    public function iAmAskedToConfirmWhetherIAmSureIfIWantToDeleteLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I am on the confirm lpa deletion page$/
+     */
+    public function iAmOnTheConfirmLpaDeletionPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to return to the dashboard page$/
+     */
+    public function iRequestToReturnToTheDashboardPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I can see a flash message for the removed LPA$/
+     */
+    public function iCanSeeAFlashMessageForTheRemovedLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^The deleted LPA will not be displayed on the dashboard$/
+     */
+    public function theDeletedLPAWillNotBeDisplayedOnTheDashboard()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I confirm removal of the LPA$/
+     */
+    public function iConfirmRemovalOfTheLPA()
+    {
+
+        $actorLpaToken = $this->actorLpaToken;
+
+        // API call to remove lpa
+        $this->apiFixtures->delete('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'SiriusUid' => '700000000138',
+                        'Added' => '2020-11-04',
+                        'Id' => '3ff586fc-cc66-4901-ba64-8b4aa7e91655',
+                        'ActorId' => 25,
+                        'UserId' => '97321175-a712-403f-b416-eaaa3a891a01'
+                    ])
+                )
+            )
+            ->inspectRequest(function (RequestInterface $request) use ($actorLpaToken) {
+                $uri = $request->getUri()->getPath();
+
+                assertEquals($uri, '/v1/lpas/24680');
+            });
+
+        $lpaData = $this->lpaService->removeLpa(
+            $this->userIdentity,
+            $this->actorLpaToken,
+        );
+
+        assertNotNull($lpaData);
+    }
+
+    /**
      * @Then /^I can see the code has not been used to view the LPA$/
      */
     public function iCanSeeTheCodeHasNotBeenUsedToViewTheLPA()

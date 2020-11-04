@@ -2435,12 +2435,16 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I am asked to confirm whether I am sure if I want to delete my account$/
+     * @Then /^I am asked to confirm whether I am sure if I want to (.*)$/
      */
-    public function iAmAskedToConfirmWhetherIAmSureIfIWantToDeleteMyAccount()
+    public function iAmAskedToConfirmWhetherIAmSureIfIWantToDeleteMyAccount($deleteOption)
     {
-        $this->ui->assertPageAddress('/confirm-delete-account');
-        $this->ui->assertPageContainsText('Are you sure you want to delete your account?');
+        if($deleteOption === 'delete my account') {
+            $this->ui->assertPageAddress('/confirm-delete-account');
+            $this->ui->assertPageContainsText('Are you sure you want to delete your account?');
+        } elseif($deleteOption === 'delete lpa') {
+            $this->ui->assertPageAddress('/lpa/confirm-remove-lpa');
+        }
     }
 
     /**
@@ -3730,5 +3734,101 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
         $this->ui->assertPageContainsText('LPA Viewed');
         $this->ui->assertPageContainsText('Not viewed');
+    }
+
+    /**
+     * @When /^I request to remove the added LPA$/
+     */
+    public function iRequestToRemoveTheAddedLPA()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->clickLink('Remove Lpa');
+    }
+
+    /**
+     * @Given /^I am on the confirm lpa deletion page$/
+     */
+    public function iAmOnTheConfirmlpaDeletionPage()
+    {
+        $this->iAmOnTheDashboardPage();
+        $this->iRequestToRemoveTheAddedLPA();
+    }
+
+    /**
+     * @When /^I request to return to the dashboard page$/
+     */
+    public function iRequestToReturnToTheDashboardPage()
+    {
+        $this->ui->assertPageAddress('/lpa/confirm-remove-lpa');
+        $this->ui->assertPageContainsText('Are you sure you want to delete this');
+        $this->ui->clickLink('Cancel');
+    }
+
+    /**
+     * @When /^I confirm removal of the LPA/
+     */
+    public function iConfirmRemovalOfTheLPA()
+    {
+        $this->ui->assertPageAddress('/lpa/confirm-remove-lpa');
+
+        // API call to remove lpa
+        $this->apiFixtures->delete('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'SiriusUid' => '700000000138',
+                        'Added' => '2020-11-04',
+                        'Id' => '3ff586fc-cc66-4901-ba64-8b4aa7e91655',
+                        'ActorId' => 25,
+                        'UserId' => '97321175-a712-403f-b416-eaaa3a891a01'
+                    ])
+                )
+            );
+
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ])
+                )
+            );
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $this->ui->pressButton("Yes, remove LPA");
+    }
+
+    /**
+     * @Then /^The deleted LPA will not be displayed on the dashboard$/
+     */
+    public function theDeletedLPAWillNotBeDisplayedOnTheDashboard()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageNotContainsText('Ian Deputy Deputy');
+    }
+
+    /**
+     * @Given /^I can see a flash message for the removed LPA$/
+     */
+    public function iCanSeeAFlashMessageForTheRemovedLPA()
+    {
+        $this->ui->assertPageContainsText("You've removed Ian Deputy's health and welfare LPA");
     }
 }
