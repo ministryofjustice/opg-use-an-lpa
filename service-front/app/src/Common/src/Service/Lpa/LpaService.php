@@ -406,6 +406,7 @@ class LpaService
      */
     public function removeLpa(string $userToken, string $actorLpaToken): array
     {
+        $lpaActordata = [];
         $this->apiClient->setUserTokenHeader($userToken);
 
         try {
