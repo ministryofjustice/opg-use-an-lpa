@@ -32,8 +32,23 @@ class LpasResourceHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        switch ($request->getMethod()) {
+            case 'DELETE':
+                return $this->handleDelete($request);
+            default:
+                return $this->handleGet($request);
+        }
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         if (is_null($request->getAttribute('actor-id'))) {
             throw new BadRequestException("'actor-id' missing.");
@@ -53,5 +68,23 @@ class LpasResourceHandler implements RequestHandlerInterface
         }
 
         return new JsonResponse($result);
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     * @throws \Exception
+     */
+    public function handleDelete(ServerRequestInterface $request): ResponseInterface
+    {
+        $actorLpaToken = $request->getAttribute('user-lpa-actor-token');
+
+        if (!isset($actorLpaToken)) {
+            throw new BadRequestException('User actor LPA token must be provided for lpa removal');
+        }
+
+        $lpaRemoveResponse = $this->lpaService->removerLPaFromUserLpaActorMap($actorLpaToken);
+
+        return new JsonResponse($lpaRemoveResponse);
     }
 }

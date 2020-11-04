@@ -330,4 +330,43 @@ class LpaService
 
         return self::ACTIVE_ATTORNEY;
     }
+
+    /**
+     * @param string $accountId
+     * @return array
+     */
+    public function deleteUserAccount(string $accountId): array
+    {
+        $user = $this->usersRepository->get($accountId);
+
+        if (is_null($user)) {
+            $this->logger->notice(
+                'Account not found for user Id {Id}',
+                ['Id' => $accountId]
+            );
+            throw new NotFoundException('User not found for account with Id ' . $accountId);
+        }
+
+        return $this->usersRepository->delete($accountId);
+    }
+
+    /**
+     * @param string $actorLpaToken
+     * @return array
+     */
+    public function removerLPaFromUserLpaActorMap(string $actorLpaToken): array
+    {
+        $userActorLpa = $this->userLpaActorMapRepository->get($actorLpaToken);
+
+        if (is_null($userActorLpa)) {
+            $this->logger->notice(
+                'User actor lpa record  not found for actor token {Id}',
+                ['Id' => $actorLpaToken]
+            );
+            throw new NotFoundException('User actor lpa record  not found for actor token ' . $actorLpaToken);
+        }
+
+        return $this->userLpaActorMapRepository->delete($actorLpaToken);
+    }
+
 }

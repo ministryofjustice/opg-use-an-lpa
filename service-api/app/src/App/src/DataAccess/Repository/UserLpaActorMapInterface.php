@@ -47,5 +47,5 @@ interface UserLpaActorMapInterface
      * @param string $lpaActorToken
      * @return mixed
      */
-    public function delete(string $lpaActorToken);
+    public function delete(string $lpaActorToken): array;
 }
