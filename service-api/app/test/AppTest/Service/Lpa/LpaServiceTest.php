@@ -248,11 +248,13 @@ class LpaServiceTest extends TestCase
                 'Id' => 'token-1',
                 'SiriusUid' => 'uid-1',
                 'ActorId' => 1,
+                'Added'   => new DateTime('now')
             ],
             [
                 'Id' => 'token-2',
                 'SiriusUid' => 'uid-2',
                 'ActorId' => 2,
+                'Added'   => new DateTime('now')
             ]
         ];
 
@@ -329,11 +331,13 @@ class LpaServiceTest extends TestCase
                 'Id' => 'token-1',
                 'SiriusUid' => 'uid-1',
                 'ActorId' => 1,
+                'Added'   => new DateTime('today')
             ],
             [
                 'Id' => 'token-2',
                 'SiriusUid' => 'uid-2',
                 'ActorId' => 2,
+                'Added'   => new DateTime('today')
             ]
         ];
 

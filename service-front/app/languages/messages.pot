@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-10-21T08:10:16+00:00\n"
+"POT-Creation-Date: 2020-10-29T09:31:48+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -18,7 +18,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:22
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:22
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:57
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:60
 #: src/Actor/templates/actor/check-lpa.html.twig:27
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
@@ -29,7 +29,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:24
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:57
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:60
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
@@ -65,7 +65,7 @@ msgstr ""
 msgid "When %organisation% have the access code, they should go to <br> www.gov.uk/view-lpa to see a summary of the LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:58
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:56
 msgid "Give another organisation access"
 msgstr ""
 
@@ -224,6 +224,7 @@ msgstr ""
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:243
 #: src/Actor/templates/actor/check-lpa.html.twig:66
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:60
 #: src/Viewer/templates/viewer/check-code-found.html.twig:43
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:45
 msgid "Warning"
@@ -1606,29 +1607,19 @@ msgstr ""
 msgid "Any lasting power of attorney (LPA) you add to your account will appear on this page."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:29
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:26
-msgid "What can I do with my <abbr title=\"lasting powers of attorney\">LPAs</abbr>?"
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:33
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:30
-msgid "From this page you can:"
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:35
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:38
 msgid "give organisations access to an online summary of this <abbr title=\"lasting power of attorney\">LPA</abbr> by making a secure access code"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:36
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:39
 msgid "keep track of which organisations have been given online access to the <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:37
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
 msgid "view the <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:43
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:46
 msgid "Add another LPA"
 msgstr ""
 
@@ -1820,8 +1811,8 @@ msgstr ""
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:44
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/home-page.html.twig:46
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
 #: src/Actor/templates/actor/lpa-add.html.twig:89
-#: src/Common/templates/partials/govuk_form.html.twig:222
 #: src/Viewer/templates/viewer/enter-code.html.twig:58
 msgid "Continue"
 msgstr ""
@@ -2137,19 +2128,19 @@ msgstr ""
 msgid "Any lasting power of attorney (LPA) you add to your account will show on this page."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:32
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:35
 msgid "give organisations access to an online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr> by making a secure access code"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:33
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:36
 msgid "keep track of the organisations that have online access to an <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:34
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:37
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:40
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:43
 msgid "Add your first LPA"
 msgstr ""
 
@@ -3381,4 +3372,70 @@ msgstr ""
 #: src/Viewer/templates/viewer/form-error-messages.html.twig:12
 msgctxt "error"
 msgid "Enter your organisation name"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:27
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:24
+msgid "Find out about <a href=\"https://www.gov.uk/lasting-power-attorney-duties\" class=\"govuk-link\">the role of an attorney</a> and how to support the donor <a href=\"https://www.gov.uk/make-decisions-for-someone/making-decisions\" class=\"govuk-link\">to make decisions</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:32
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:29
+msgid "What can I do with this service?"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:36
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:33
+msgid "Use this service to:"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:51
+msgid "What to do next"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:53
+msgid "Give %organisation% this access code. They should go to www.gov.uk/view-lpa to enter the access code and see a summary of the <abbr title=\"lasting power of attorney\">LPA</abbr>."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:61
+msgid "This is a new service, check that the organisation will accept an online summary of the <abbr title=\"lasting power of attorney\">LPA</abbr> and how they want to receive the access code you make for them."
+msgstr ""
+
+#: src/Common/templates/error/error.html.twig:10
+msgid "Sorry, there is a problem with the service"
+msgstr ""
+
+#: src/Common/templates/error/error.html.twig:11
+msgid "Try again later."
+msgstr ""
+
+#: src/Common/templates/error/error.html.twig:13
+msgid ""
+"We’ve not saved any information you entered. When the service is available,\n"
+"                        you’ll have to <a href=\"%link%\" class=\"govuk-link\">start again.</a>"
+msgstr ""
+
+#: src/Common/templates/error/error.html.twig:19
+msgid "You can <a class=\"govuk-link\" href=\"%link%\">contact us</a> if you have any questions."
+msgstr ""
+
+#: src/Common/templates/error/404.html.twig:3
+#: src/Common/templates/error/404.html.twig:10
+msgid "Page not found"
+msgstr ""
+
+#: src/Common/templates/error/404.html.twig:12
+msgid "We could not find the page you're looking for."
+msgstr ""
+
+#: src/Common/templates/error/404.html.twig:15
+msgid "If you entered a web address, check it's correct."
+msgstr ""
+
+#: src/Common/templates/error/404.html.twig:18
+msgid "You can <a class=\"govuk-link\" href=\"https://www.gov.uk/\">return to GOV.UK</a> or start again."
+msgstr ""
+
+#: src/Common/templates/error/404.html.twig:23
+msgid "<a href=\"%link%\" draggable=\"false\" class=\"govuk-button\">Start again</a>"
 msgstr ""
