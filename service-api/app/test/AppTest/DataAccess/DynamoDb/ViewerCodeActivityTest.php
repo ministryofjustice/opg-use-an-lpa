@@ -65,7 +65,11 @@ class ViewerCodeActivityTest extends TestCase
     /** @test */
     public function viewerCodesStatusSetToTrueWithQueryMatch()
     {
-        $testCodes = [['ViewerCode' => 'RT6Y98VEF7A2']];
+        $testCodes = [
+            0 => [
+                'ViewerCode' => 'RT6Y98VEF7A2'
+                ]
+        ];
 
         $this->dynamoDbClient->query(Argument::that(function (array $data) use ($testCodes) {
             $this->assertArrayHasKey('TableName', $data);
@@ -82,24 +86,27 @@ class ViewerCodeActivityTest extends TestCase
             ->willReturn($this->createAWSResult([
                 'Items' => [
                     [
+                        'Viewed' => [
+                            'S' => '2020-01-11'
+                        ],
                         'ViewerCode' => [
                             'S' => $testCodes[0]['ViewerCode']
                         ],
-                        'Viewed' => [
-                            0 => [
-                                0 => [
-                                    'Viewed' => '2020-10-01T15:27:23.263483Z',
-                                    'ViewerCode' => $testCodes[0]['ViewerCode'],
-                                    'ViewedBy' => 'Some Organisation1'
-                                ],
-                                1 => [
-                                    'Viewed' => '2020-10-01T15:27:23.263483Z',
-                                    'ViewerCode' => $testCodes[0]['ViewerCode'],
-                                    'ViewedBy' => 'Some Organisation2'
-                                ]
-                            ],
+                        'ViewedBy' => [
+                            'S' => 'Some organisation1'
                         ],
-                    ]
+                    ],
+                    [
+                        'Viewed' => [
+                            'S' => '2020-01-11'
+                        ],
+                        'ViewerCode' => [
+                            'S' => $testCodes[0]['ViewerCode']
+                        ],
+                        'ViewedBy' => [
+                            'S' => 'Some organisation2'
+                        ],
+                    ],
                 ],
                 'Count' => 1
             ]));
@@ -108,11 +115,20 @@ class ViewerCodeActivityTest extends TestCase
 
         $result = $repo->getStatusesForViewerCodes($testCodes);
 
-        $this->assertEquals($testCodes[0]['ViewerCode'], $result[0]['ViewerCode']);
-        $this->assertNotEmpty($result[0]['Viewed'][0]);
-        $this->assertEquals($testCodes[0]['ViewerCode'], $result[0]['Viewed'][0]['ViewerCode']);
-        $this->assertNotEmpty($result[0]['Viewed'][0]['Viewed']);
-//        $this->assertEquals($testCodes[0]['ViewerCode'], $result[0]['Viewed'][1]['ViewerCode']);
+        $viewerCode = $testCodes[0]['ViewerCode'];
+
+        foreach ($result[0]['Viewed'] as $viewedInstance => $viewedData) {
+            $this->assertEquals($testCodes[0]['ViewerCode'], $viewedData['ViewerCode']);
+            $this->assertNotEmpty($viewedData['Viewed']);
+        }
+        $this->assertEquals('Some organisation1', $result[0]['Viewed'][0]['ViewedBy']);
+        $this->assertEquals('Some organisation2', $result[0]['Viewed'][1]['ViewedBy']);
+
+//        $this->assertEquals($viewerCode, $result[0]['ViewerCode']);
+//        $this->assertNotEmpty($result[0]['Viewed'][0]);
+//        $this->assertEquals($viewerCode, $result[0]['Viewed'][0]['ViewerCode']);
+//        $this->assertNotEmpty($result[0]['Viewed'][0]['Viewed']);
+//        $this->assertEquals($viewerCode, $result[0]['Viewed'][1]['ViewerCode']);
 //        $this->assertNotEmpty($result[0]['Viewed'][1]['Viewed']);
     }
 
