@@ -3623,6 +3623,7 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
         $this->ui->assertPageContainsText('LPA Viewed');
         $this->ui->assertPageContainsText('Natwest');
+        $this->ui->assertPageContainsText('Another Organisation');
     }
 
     /**
@@ -3674,6 +3675,11 @@ class AccountContext implements Context
                                     'Viewed' => '2020-10-01T15:27:23.263483Z',
                                     'ViewerCode' => $this->accessCode,
                                     'ViewedBy' => $organisation
+                                ],
+                                1 => [
+                                    'Viewed' => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy' => 'Another Organisation'
                                 ],
                             ],
                             'ActorId' => $this->actorId

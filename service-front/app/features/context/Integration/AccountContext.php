@@ -1850,4 +1850,27 @@ class AccountContext extends BaseIntegrationContext
     {
         // Not needed for this context
     }
+
+    /**
+     * @When /^I have shared the access code with organisations to view my LPA$/
+     */
+    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I can see the name of the organisation that viewed the LPA$/
+     */
+    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I click to check my access codes that is used to view LPA/
+     */
+    public function iClickToCheckMyAccessCodeThatIsUsedToViewLPA()
+    {
+    }
 }

@@ -29,8 +29,8 @@ Feature: The user is able to check the access codes they have created
     When I click to check the access codes
     Then I can see all of the access codes and their details
 
-  @acceptance
-  Scenario: As a user I can see the access codes I have created
+  @acceptance @integration
+  Scenario: As a user I can see which organisations have used access codes to view an LPA
     Given I have created an access code
     And I have shared the access code with organisations to view my LPA
     When I click to check my access codes that is used to view LPA

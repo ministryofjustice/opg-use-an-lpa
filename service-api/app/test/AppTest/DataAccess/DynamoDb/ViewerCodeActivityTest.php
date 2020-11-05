@@ -89,7 +89,17 @@ class ViewerCodeActivityTest extends TestCase
                             0 => [
                                 'Viewed' => '2020-10-01T15:27:23.263483Z',
                                 'ViewerCode' => $testCodes[0]['ViewerCode'],
-                                'ViewedBy' => 'Some Organisation',
+                                'ViewedBy' => 'Some Organisation1',
+                            ],
+                            1 => [
+                                'Viewed' => '2020-10-01T15:27:23.263483Z',
+                                'ViewerCode' => $testCodes[0]['ViewerCode'],
+                                'ViewedBy' => 'Some Organisation2',
+                            ],
+                            2 => [
+                                'Viewed' => '2020-10-01T15:27:23.263483Z',
+                                'ViewerCode' => $testCodes[0]['ViewerCode'],
+                                'ViewedBy' => 'Some Organisation2',
                             ],
                         ],
                     ]
@@ -105,6 +115,10 @@ class ViewerCodeActivityTest extends TestCase
         $this->assertNotEmpty($result[0]['Viewed'][0]);
         $this->assertEquals($testCodes[0]['ViewerCode'], $result[0]['Viewed'][0]['ViewerCode']);
         $this->assertNotEmpty($result[0]['Viewed'][0]['Viewed']);
+        $this->assertEquals($testCodes[0]['ViewerCode'], $result[0]['Viewed'][1]['ViewerCode']);
+        $this->assertNotEmpty($result[0]['Viewed'][1]['Viewed']);
+        $this->assertEquals($testCodes[0]['ViewerCode'], $result[0]['Viewed'][2]['ViewerCode']);
+        $this->assertNotEmpty($result[0]['Viewed'][2]['Viewed']);
     }
 
     /** @test */
