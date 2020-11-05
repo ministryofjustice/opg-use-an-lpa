@@ -70,6 +70,6 @@ class AccountContext implements Context
      */
     public function iAmSignedIn(): void
     {
-        $this->ui->assertElementOnPage('nav.signin');
+        $this->ui->assertPageAddress('/lpa/dashboard');
     }
 }
