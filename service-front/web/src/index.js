@@ -7,7 +7,6 @@ import copyAccessCode from './javascript/copyAccessCode';
 import cookieConsent from './javascript/cookieConsent';
 import sessionDialog from './javascript/sessionDialog';
 import showHidePassword from  './javascript/showHidePassword';
-import {doc} from "prettier";
 
 Accordion.prototype.updateOpenAllButton = function (expanded) {
     var newButtonText = expanded ? this.$module.dataset.closetext : this.$module.dataset.opentext;
