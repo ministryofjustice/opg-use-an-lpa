@@ -7,6 +7,7 @@ import copyAccessCode from './javascript/copyAccessCode';
 import cookieConsent from './javascript/cookieConsent';
 import sessionDialog from './javascript/sessionDialog';
 import showHidePassword from  './javascript/showHidePassword';
+import {doc} from "prettier";
 
 Accordion.prototype.updateOpenAllButton = function (expanded) {
     var newButtonText = expanded ? this.$module.dataset.closetext : this.$module.dataset.opentext;
@@ -20,6 +21,7 @@ disableButtonOnClick(document.getElementsByTagName('form'));
 new cookieConsent(document.getElementsByClassName('cookie-banner')[0], window.location.pathname === '/cookies');
 copyAccessCode();
 showHidePassword();
-if (document.getElementsByClassName('js-signed-in').length > 0) {
+
+if (document.getElementsByClassName('js-signed-in').length > 0 && document.getElementById('dialog') !== null) {
     new sessionDialog(document.getElementById("dialog"));
 }

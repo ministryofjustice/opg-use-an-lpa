@@ -77,7 +77,8 @@ class ActorSessionCheckHandlerTest extends TestCase
             $this->authenticatorProphecy->reveal(),
             $this->loggerProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),
-            1200
+            1200,
+            300
         );
 
         $response = $handler->handle($requestProphecy->reveal());
@@ -113,7 +114,8 @@ class ActorSessionCheckHandlerTest extends TestCase
             $this->authenticatorProphecy->reveal(),
             $this->loggerProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),
-            1200
+            1200,
+            300
         );
 
         $response = $handler->handle($requestProphecy->reveal());

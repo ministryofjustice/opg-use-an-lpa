@@ -34,17 +34,21 @@ class ViewerSessionCheckHandler extends AbstractHandler implements UserAware, Se
 
     private int $sessionTime;
 
+    private int $sessionWarningTime;
+
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         LoggerInterface $logger,
         UrlHelper $urlHelper,
-        int $sessionTime
+        int $sessionTime,
+        int $sessionWarningTime
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
         $this->sessionTime = $sessionTime;
+        $this->sessionWarningTime = $sessionWarningTime;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -54,15 +58,15 @@ class ViewerSessionCheckHandler extends AbstractHandler implements UserAware, Se
 
         $expiresAt = $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY) + $this->sessionTime;
         $timeRemaining = $expiresAt - time();
-        $sessionWarning = false;
+        $showSessionWarning = false;
 
-        if ($user !== null && $timeRemaining <= 300) {
-            $sessionWarning = true;
+        if ($user !== null && $timeRemaining <= $this->sessionWarningTime) {
+            $showSessionWarning = true;
         }
 
         return new JsonResponse(
             [
-                'session_warning' => $sessionWarning,
+                'session_warning' => $showSessionWarning,
                 'time_remaining'  => $timeRemaining
             ],
             201

@@ -28,12 +28,17 @@ class ViewerSessionCheckHandlerFactory
             throw new RuntimeException('Missing session expiry value');
         }
 
+        if (!isset($config['session']['expiry_warning'])) {
+            throw new RuntimeException('Missing session expiry warning value');
+        }
+
         return new ViewerSessionCheckHandler(
             $container->get(TemplateRendererInterface::class),
             $container->get(AuthenticationInterface::class),
             $container->get(LoggerInterface::class),
             $container->get(UrlHelper::class),
-            $config['session']['expires']
+            $config['session']['expires'],
+            $config['session']['expiry_warning']
         );
     }
 }

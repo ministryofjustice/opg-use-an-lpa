@@ -36,6 +36,10 @@ return [
         // Time in seconds after which a session will expire.
         'expires' => 60 * getenv('SESSION_EXPIRES') ?: 1200,             // default to 20 minutes
 
+        // Time in seconds before a users session will expire
+        // whereby a popup window will appear to warn them
+        'expiry_warning' => 60 * getenv('SESSION_EXPIRY_WARNING') ?: 300,  // default to 5 minutes
+
         'cookie_ttl' => 60 * getenv('SESSION_COOKIE_LIFETIME') ?: 86400, // default to one day
 
         'key' => [

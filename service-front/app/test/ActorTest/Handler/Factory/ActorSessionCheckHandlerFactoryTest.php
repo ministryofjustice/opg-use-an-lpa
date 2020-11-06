@@ -52,7 +52,8 @@ class ActorSessionCheckHandlerFactoryTest extends TestCase
             ->willReturn(
                 [
                     'session' => [
-                        'expires' => 1200
+                        'expires' => 1200,
+                        'expiry_warning' => 300
                     ],
                 ]
             );
