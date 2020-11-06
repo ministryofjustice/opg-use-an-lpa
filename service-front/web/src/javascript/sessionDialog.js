@@ -1,55 +1,79 @@
-import countdownTimer from "./countdownTimer";
-
 export default class SessionDialog {
-    constructor(element, countdownMinutes)
+    constructor(element)
     {
-        this.showDialogMinutesBeforeLogout = 5;
+        this.requestHeaders = { "Content-type": "application/json" };
         this.element = element;
-        this.countdownMinutes = countdownMinutes; // Temporary until final solution in place
-        this.dialogOverlay = document.getElementById("dialog-overlay");
+        this.dialogOverlay = document.querySelector("#dialog-overlay");
         this.dialogFocus = document.querySelector(".dialog-focus");
         this._setupEventHandlers();
         this._trapFocus();
-        this.timer = new countdownTimer(this.element.querySelector('#time'), this.countdownMinutes);
-        this.timer.on('tick', (event) => {
-            if (event === this.showDialogMinutesBeforeLogout) {
-                this._isHidden(false);
-            }
-        });
-        this.timer.on('tickCompleted', () => {
-            window.location.href = '/timeout';
-        });
+        this._runInterval();
+    }
 
-        this.timer.start()
+    async checkSessionExpires()
+    {
+        const sessionData = await this._getSessionTime();
+
+        if (sessionData && sessionData.session_warning && sessionData.time_remaining > 1 && sessionData.time_remaining <= 300) {
+            this._isHidden(false);
+            return;
+        } else {
+            return;
+        }
+    }
+
+    async _runInterval()
+    {
+        const _this = this;
+        /* istanbul ignore next */
+        setInterval(async function () {
+            return _this.checkSessionExpires();
+        }, 60000);
+    }
+
+    _hideDialog()
+    {
+        this._isHidden(true);
+        this._getNewSession();
     }
 
     _setupEventHandlers()
     {
         const _this = this;
 
-        const showTimeoutElements = document.querySelectorAll('.jsShowTimeout');
-        for (let i = 0; i < showTimeoutElements.length; i++) {
-            showTimeoutElements[i].addEventListener("click", function () {
-                _this._isHidden(false);
-                _this.dialogFocus.focus();
-            });
-        }
-
         const hideTimeoutElements = document.querySelectorAll('.jsHideTimeout');
         for (let i = 0; i < hideTimeoutElements.length; i++) {
             hideTimeoutElements[i].addEventListener("click", function () {
-                _this._isHidden(true);
-                _this.timer.reset(_this.countdownMinutes);
+                _this._hideDialog();
             });
         }
     }
 
+    async _getSessionTime()
+    {
+        const response = await fetch("/session-check", this.requestHeaders)
+        if (response.redirected) {
+            window.location.href = "/session-expired";
+        }
+        else {
+            return response.json()
+        }
+    }
+
+    async _getNewSession()
+    {
+        await fetch("/session-refresh", this.requestHeaders);
+    }
+
     _isHidden(isVisible)
     {
-        this.element.classList.toggle('hide', isVisible);
+        this.element.classList.toggle("hide", isVisible);
         this.element.classList.toggle("dialog", !isVisible);
         this.dialogOverlay.classList.toggle("hide", isVisible);
         this.dialogOverlay.classList.toggle("dialog-overlay", !isVisible);
+        if (!isVisible) {
+            this.dialogFocus.focus();
+        }
     }
 
     _trapFocus()
@@ -73,7 +97,7 @@ export default class SessionDialog {
 
             if (isTabPressed) {
                 /* istanbul ignore next */
-                if ( e.shiftKey ) { /* shift + tab */
+                if (e.shiftKey) { /* shift + tab */
                     if (document.activeElement === firstFocusableEl) {
                         lastFocusableEl.focus();
                         e.preventDefault();
@@ -87,7 +111,7 @@ export default class SessionDialog {
             }
 
             if (isEscPressed) {
-                _this._isHidden(true);
+                _this._hideDialog();
             }
         });
     }

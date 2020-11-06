@@ -28,6 +28,7 @@ variable "accounts" {
       lpa_codes_endpoint       = string
       session_expires_view     = number
       session_expires_use      = number
+      session_expiry_warning   = number
       cookie_expires_view      = number
       cookie_expires_use       = number
       google_analytics_id_view = string

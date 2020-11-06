@@ -39,7 +39,9 @@
 
 <body class="govuk-template__body ">
 <a href="#main-content" class="govuk-skip-link">{% trans %}Skip to main content{% endtrans %}</a>
-{{ include('@partials/session-dialog.html.twig') }}
+{% if application == 'actor' %}
+    {{ include('@actor/partials/use-session-dialog.html.twig') }}
+{% endif %}
 
 <form>
 <div class="cookie-banner govuk-width-container" role="region" aria-label="cookie banner">
