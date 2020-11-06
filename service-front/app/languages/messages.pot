@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-10-29T09:31:48+00:00\n"
+"POT-Creation-Date: 2020-11-03T16:26:06+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -18,7 +18,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:22
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:22
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:60
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:64
 #: src/Actor/templates/actor/check-lpa.html.twig:27
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
@@ -29,7 +29,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:24
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:60
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:64
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
@@ -74,7 +74,7 @@ msgid "Access codes for this LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:37
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:18
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:15
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:14
 msgid "Check access codes"
 msgstr ""
@@ -90,7 +90,7 @@ msgid ""
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:45
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:16
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:13
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:9
 msgid "Give an organisation access"
 msgstr ""
@@ -1607,18 +1607,6 @@ msgstr ""
 msgid "Any lasting power of attorney (LPA) you add to your account will appear on this page."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:38
-msgid "give organisations access to an online summary of this <abbr title=\"lasting power of attorney\">LPA</abbr> by making a secure access code"
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:39
-msgid "keep track of which organisations have been given online access to the <abbr title=\"lasting power of attorney\">LPA</abbr>"
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
-msgid "view the <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
-msgstr ""
-
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:46
 msgid "Add another LPA"
 msgstr ""
@@ -1894,44 +1882,44 @@ msgstr ""
 msgid "This is for your reference only"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:20
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:17
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:19
 msgid "View LPA summary"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:25
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:22
 msgid ""
 "Give an organisation access<br>\n"
 "                    Check access codes<br>\n"
 "                    View LPA summary"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:33
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:30
 msgid "Access revoked"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:36
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:33
 msgid "%count% active code"
 msgid_plural "%count% active codes"
 msgstr[0] ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:39
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:36
 msgid "No organisations have access"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:46
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:43
 msgid "You no longer have access to this <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:47
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:44
 msgid "Why is this?"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:53
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:50
 msgid "<strong>Important: </strong>This lpa has instructions or preferences."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:54
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:51
 msgid "Read more"
 msgstr ""
 
@@ -2128,14 +2116,17 @@ msgstr ""
 msgid "Any lasting power of attorney (LPA) you add to your account will show on this page."
 msgstr ""
 
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:38
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:35
 msgid "give organisations access to an online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr> by making a secure access code"
 msgstr ""
 
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:39
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:36
 msgid "keep track of the organisations that have online access to an <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:37
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr ""
@@ -3419,7 +3410,6 @@ msgstr ""
 msgid "You can <a class=\"govuk-link\" href=\"%link%\">contact us</a> if you have any questions."
 msgstr ""
 
-#: src/Common/templates/error/404.html.twig:3
 #: src/Common/templates/error/404.html.twig:10
 msgid "Page not found"
 msgstr ""
