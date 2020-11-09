@@ -844,4 +844,38 @@ class LpaServiceTest extends TestCase
         $this->assertEquals(['0009-01-01-01-999999'], array_keys($orderedLpasArray['Gemma Taylor 1998-02-09']));
         $this->assertEquals(['0001-01-01-01-111111', '0006-01-01-01-666666', '0005-01-01-01-555555'], array_keys($orderedLpasArray['Daniel Williams 1980-01-01']));
     }
+
+    /** @test */
+    public function it_confirms_remove_lpa()
+    {
+        $userToken = '01234567-01234-01234-01234-012345678901';
+        $lpaActorToken = '98765432-01234-01234-01234-012345678901';
+
+        $lpaData = [
+            'user-lpa-actor-token' => $lpaActorToken,
+            'lpa' => [
+                'id' => '70000000047'
+            ]
+        ];
+
+        $lpa = new Lpa();
+        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaActorToken)
+            ->willReturn([
+                'lpa' => $lpaData['lpa'],
+                'lpaId' => $lpaData['user-lpa-actor-token']
+            ]);
+
+        $this->apiClientProphecy->setUserTokenHeader($userToken)->shouldBeCalled();
+
+        $service = new LpaService(
+            $this->apiClientProphecy->reveal(),
+            $this->lpaFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $lpaActordata = $service->removeLpa($userToken, $lpaActorToken);
+
+        $this->assertEmpty($lpaActordata);
+        $this->assertNotEmpty($lpaActorToken, $lpaActordata['lpaActorToken']);
+    }
 }
