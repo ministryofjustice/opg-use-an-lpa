@@ -861,8 +861,6 @@ class LpaServiceTest extends TestCase
         $lpa = new Lpa();
         $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaActorToken)
             ->willReturn([
-                'lpa' => $lpaData['lpa'],
-                'lpaActorToken' => $lpaData['user-lpa-actor-token']
             ]);
 
         $this->apiClientProphecy->setUserTokenHeader($userToken)->shouldBeCalled();
@@ -874,8 +872,7 @@ class LpaServiceTest extends TestCase
         );
 
         $lpaActorData = $service->removeLpa($userToken, $lpaActorToken);
-
-        $this->assertNotEmpty($lpaActorData);
-        $this->assertEquals($lpaActorToken, $lpaActorData['lpaActorToken']);
+        
+        $this->assertEmpty($lpaActorData);
     }
 }
