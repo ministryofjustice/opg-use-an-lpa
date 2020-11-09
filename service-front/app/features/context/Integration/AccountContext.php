@@ -1872,5 +1872,66 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iClickToCheckMyAccessCodeThatIsUsedToViewLPA()
     {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
+                    ])
+                )
+            );
+
+        // API call to make code
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => [
+                            'SiriusUid' => $this->lpa['uId'],
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Expires' => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->actorLpaToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode' => $this->accessCode,
+                            'Viewed' => [
+                                0 => [
+                                    'Viewed' => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy' => $this->organisation
+                                ],
+                                1 => [
+                                    'Viewed' => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy' => 'Another Organisation'
+                                ],
+                            ],
+                            'ActorId' => $this->actorId
+                        ]
+                    ])
+                )
+            );
+        $lpa = $this->lpaService->getLpaById($this->userIdentity, $this->actorLpaToken);
+
+        $shareCodes = $this->viewerCodeService->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
+
+        assertNotEmpty($lpa['lpa']);
+        assertEquals($this->accessCode, $shareCodes[0]['ViewerCode']);
+        assertEquals($this->organisation, $shareCodes[0]['Organisation']);
+        assertEquals($this->actorId, $shareCodes[0]['ActorId']);
+        assertEquals($this->actorLpaToken, $shareCodes[0]['UserLpaActor']);
+
+        assertNotEmpty($shareCodes[0]['Viewed']);
+        assertEquals($this->accessCode, $shareCodes[0]['Viewed'][0]['ViewerCode']);
+        assertEquals($this->accessCode, $shareCodes[0]['Viewed'][1]['ViewerCode']);
+        assertEquals($this->organisation, $shareCodes[0]['Viewed'][0]['ViewedBy']);
+        assertEquals('Another Organisation', $shareCodes[0]['Viewed'][1]['ViewedBy']);
     }
 }

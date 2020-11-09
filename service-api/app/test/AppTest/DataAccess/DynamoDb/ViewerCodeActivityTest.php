@@ -123,13 +123,6 @@ class ViewerCodeActivityTest extends TestCase
         }
         $this->assertEquals('Some organisation1', $result[0]['Viewed'][0]['ViewedBy']);
         $this->assertEquals('Some organisation2', $result[0]['Viewed'][1]['ViewedBy']);
-
-//        $this->assertEquals($viewerCode, $result[0]['ViewerCode']);
-//        $this->assertNotEmpty($result[0]['Viewed'][0]);
-//        $this->assertEquals($viewerCode, $result[0]['Viewed'][0]['ViewerCode']);
-//        $this->assertNotEmpty($result[0]['Viewed'][0]['Viewed']);
-//        $this->assertEquals($viewerCode, $result[0]['Viewed'][1]['ViewerCode']);
-//        $this->assertNotEmpty($result[0]['Viewed'][1]['Viewed']);
     }
 
     /** @test */
