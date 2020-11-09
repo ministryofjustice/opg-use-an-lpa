@@ -19,92 +19,201 @@ const html = `
             Sign out
         </a>
     </div>
-    <div>
-        <button id="show-timeout" class="jsShowTimeout">Show Timeout</button>
-        <button id="hide-timeout" class="jsHideTimeout">Hide Timeout</button>
-    </div>
 `
 
+
 describe('Session Dialog', () => {
-    jest.useFakeTimers();
+
     let sessionDialogElement;
     let dialog;
-    let showButton;
-    let hideButton;
     let dialogOverlay;
     let dialogFocus;
-    let lastButton;
+    let jsHideTimeout;
 
     beforeEach(() => {
         jest.clearAllTimers();
+        jest.useFakeTimers();
+
         document.body.innerHTML = html;
+
         delete window.location;
         window.location = {
-            href: '/',
+            port: '80',
+            protocol: 'https:',
+            hostname: 'localhost',
+            pathname: '/',
+            href: ''
         };
-        sessionDialogElement = new sessionDialog(document.getElementById("dialog"), 20);
+
+        delete global.fetch;
+        global.fetch = jest.fn();
+
+        sessionDialogElement = new sessionDialog(document.getElementById("dialog"));
 
         dialog = document.getElementById('dialog');
-        showButton = document.getElementById('show-timeout');
-        lastButton = document.getElementById('lastButton');
-        hideButton = document.getElementById('hide-timeout');
+        jsHideTimeout = document.querySelector('.jsHideTimeout');
         dialogOverlay = document.getElementById('dialog-overlay');
         dialogFocus = document.querySelector(".dialog-focus");
     });
 
-    describe('Given I use buttons to show and hide the dialog box', () => {
-        test('it should show the dialog', () => {
-            showButton.click();
-            expect(dialogOverlay.classList.contains('hide')).toBeFalsy();
-            expect(dialogOverlay.classList.contains('dialog-overlay')).toBeTruthy();
-            expect(dialog.classList.contains('hide')).toBeFalsy();
-            expect(dialog.classList.contains('dialog')).toBeTruthy();
+    describe('Timeout Features', () => {
+        describe('Given the timer counts down to 5 minutes', () => {
+            test('it should show the dialog', async () => {
+
+                jest.useRealTimers();
+
+                expect(dialogOverlay.classList.contains('hide')).toBeTruthy();
+                expect(dialogOverlay.classList.contains('dialog-overlay')).toBeFalsy();
+                expect(dialog.classList.contains('hide')).toBeTruthy();
+                expect(dialog.classList.contains('dialog')).toBeFalsy();
+
+                window.fetch.mockResolvedValueOnce({
+                    ok: true,
+                    json: async () => Promise.resolve({
+                        session_warning: true,
+                        time_remaining: 295
+                    })
+                })
+                await sessionDialogElement.checkSessionExpires();
+                expect(window.fetch).toHaveBeenCalledTimes(1)
+
+                expect(dialogOverlay.classList.contains('hide')).toBeFalsy();
+                expect(dialogOverlay.classList.contains('dialog-overlay')).toBeTruthy();
+                expect(dialog.classList.contains('hide')).toBeFalsy();
+                expect(dialog.classList.contains('dialog')).toBeTruthy();
+
+            });
+
+            test('it should redirect to /session-expired', async () => {
+
+                jest.useRealTimers();
+
+                expect(dialogOverlay.classList.contains('hide')).toBeTruthy();
+                expect(dialogOverlay.classList.contains('dialog-overlay')).toBeFalsy();
+                expect(dialog.classList.contains('hide')).toBeTruthy();
+                expect(dialog.classList.contains('dialog')).toBeFalsy();
+
+                window.fetch.mockResolvedValueOnce({
+                    ok: true,
+                    redirected: true,
+                    json: async () => Promise.resolve({
+                        session_warning: true,
+                        time_remaining: 0
+                    })
+                })
+                await sessionDialogElement.checkSessionExpires();
+                expect(window.fetch).toHaveBeenCalledTimes(1)
+
+                expect(window.location.href).toBe('/session-expired');
+
+
+            });
         });
-        test('it should hide the dialog', () => {
-            showButton.click();
-            hideButton.click();
-            expect(dialogOverlay.classList.contains('hide')).toBeTruthy();
-            expect(dialogOverlay.classList.contains('dialog-overlay')).toBeFalsy();
-            expect(dialog.classList.contains('hide')).toBeTruthy();
-            expect(dialog.classList.contains('dialog')).toBeFalsy();
+
+        describe('Given the timer is greater than 5 minutes', () => {
+            test('it should not show the dialog', async () => {
+
+                jest.useRealTimers();
+
+                expect(dialogOverlay.classList.contains('hide')).toBeTruthy();
+                expect(dialogOverlay.classList.contains('dialog-overlay')).toBeFalsy();
+                expect(dialog.classList.contains('hide')).toBeTruthy();
+                expect(dialog.classList.contains('dialog')).toBeFalsy();
+
+                window.fetch.mockResolvedValueOnce({
+                    ok: true,
+                    json: async () => Promise.resolve({
+                        session_warning: false,
+                        time_remaining: 1796
+                    })
+                })
+                await sessionDialogElement.checkSessionExpires();
+                expect(window.fetch).toHaveBeenCalledTimes(1)
+
+                expect(dialogOverlay.classList.contains('hide')).toBeTruthy();
+                expect(dialogOverlay.classList.contains('dialog-overlay')).toBeFalsy();
+                expect(dialog.classList.contains('hide')).toBeTruthy();
+                expect(dialog.classList.contains('dialog')).toBeFalsy();
+
+            });
+        });
+
+        describe('Given the timer is greater than 5 minutes but says a warning', () => {
+            test('it should not show the dialog', async () => {
+
+                jest.useRealTimers();
+
+                expect(dialogOverlay.classList.contains('hide')).toBeTruthy();
+                expect(dialogOverlay.classList.contains('dialog-overlay')).toBeFalsy();
+                expect(dialog.classList.contains('hide')).toBeTruthy();
+                expect(dialog.classList.contains('dialog')).toBeFalsy();
+
+                window.fetch.mockResolvedValueOnce({
+                    ok: true,
+                    json: async () => Promise.resolve({
+                        session_warning: true,
+                        time_remaining: 1796
+                    })
+                })
+                await sessionDialogElement.checkSessionExpires();
+                expect(window.fetch).toHaveBeenCalledTimes(1)
+
+                expect(dialogOverlay.classList.contains('hide')).toBeTruthy();
+                expect(dialogOverlay.classList.contains('dialog-overlay')).toBeFalsy();
+                expect(dialog.classList.contains('hide')).toBeTruthy();
+                expect(dialog.classList.contains('dialog')).toBeFalsy();
+
+            });
         });
     });
-    describe('Given the timer counts down to 5 minutes', () => {
-        test('it should show the dialog', async() => {
-            await jest.advanceTimersToNextTimer(15);
-            expect(dialogOverlay.classList.contains('hide')).toBeFalsy();
-            expect(dialogOverlay.classList.contains('dialog-overlay')).toBeTruthy();
-            expect(dialog.classList.contains('hide')).toBeFalsy();
-            expect(dialog.classList.contains('dialog')).toBeTruthy();
-        });
-    });
-    describe('Given the timer counts down to 0 minutes', () => {
-        test('it should redirect to the timeout page', async() => {
-            await jest.advanceTimersToNextTimer(20);
-            expect(window.location.href).toBe('/timeout');
-        });
-    });
-    describe('Given the user presses tab or esc in the dialog', () => {
-        test('it should tab through active elements', () => {
-            showButton.click();
-            expect(document.activeElement.getAttribute('class')).toBe("dialog-focus");
-            fireEvent.keyDown(dialog, { key: 'Tab', keyCode: 9 });
-            expect(document.activeElement.getAttribute('class')).toBe("dialog-focus");
-        });
-        test('it should hide the dialog when ESC is pressed', () => {
-            showButton.click();
-            fireEvent.keyDown(dialog, { key: 'Esc', keyCode: 27 });
-            expect(dialogOverlay.classList.contains('hide')).toBeTruthy();
-            expect(dialogOverlay.classList.contains('dialog-overlay')).toBeFalsy();
-            expect(dialog.classList.contains('hide')).toBeTruthy();
-            expect(dialog.classList.contains('dialog')).toBeFalsy();
-        });
-    })
-    describe('Given the user presses any other character', () => {
-        test('it should tab through active elements', () => {
-            showButton.click();
-            fireEvent.keyDown(dialog, { key: 'P', keyCode: 80 });
-            expect(document.activeElement.getAttribute('class')).toBe("dialog-focus");
-        });
+
+    describe('Trap Focus', () => {
+
+        beforeEach(async () => {
+            window.fetch.mockResolvedValue({
+                ok: true,
+                json: async () => Promise.resolve({
+                    session_warning: true,
+                    time_remaining: 295
+                })
+            })
+            await sessionDialogElement.checkSessionExpires();
+        })
+
+        describe('Given the user presses tab or esc in the dialog', () => {
+            test('it should tab through active elements', async () => {
+                expect(window.fetch).toHaveBeenCalledTimes(1)
+                expect(document.activeElement.getAttribute('class')).toBe("dialog-focus");
+                fireEvent.keyDown(dialog, { key: 'Tab', keyCode: 9 });
+                expect(document.activeElement.getAttribute('class')).toBe("dialog-focus");
+            });
+            test('it should hide the dialog when ESC is pressed', async () => {
+                expect(window.fetch).toHaveBeenCalledTimes(1)
+                fireEvent.keyDown(dialog, { key: 'Esc', keyCode: 27 });
+                expect(dialogOverlay.classList.contains('hide')).toBeTruthy();
+                expect(dialogOverlay.classList.contains('dialog-overlay')).toBeFalsy();
+                expect(dialog.classList.contains('hide')).toBeTruthy();
+                expect(dialog.classList.contains('dialog')).toBeFalsy();
+                expect(window.fetch).toHaveBeenCalledTimes(2)
+            });
+        })
+        describe('Given the user presses any other character', () => {
+            test('it should tab through active elements', async () => {
+                expect(window.fetch).toHaveBeenCalledTimes(1)
+                fireEvent.keyDown(dialog, { key: 'P', keyCode: 80 });
+                expect(document.activeElement.getAttribute('class')).toBe("dialog-focus");
+            });
+        })
+        describe('Given the user presses the close button', () => {
+            test('it should hide the dialog box and refresh the session', async () => {
+                expect(window.fetch).toHaveBeenCalledTimes(1)
+                jsHideTimeout.click();
+                expect(dialogOverlay.classList.contains('hide')).toBeTruthy();
+                expect(dialogOverlay.classList.contains('dialog-overlay')).toBeFalsy();
+                expect(dialog.classList.contains('hide')).toBeTruthy();
+                expect(dialog.classList.contains('dialog')).toBeFalsy();
+                expect(window.fetch).toHaveBeenCalledTimes(2)
+            });
+        })
     })
 });

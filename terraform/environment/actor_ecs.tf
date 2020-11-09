@@ -207,6 +207,10 @@ EOF
       "value": "${local.account.session_expires_use}"
     },
     {
+      "name": "SESSION_EXPIRY_WARNING",
+      "value": "${local.account.session_expiry_warning}"
+    },
+    {
       "name": "COOKIE_EXPIRES",
       "value": "${local.account.cookie_expires_use}"
     },
