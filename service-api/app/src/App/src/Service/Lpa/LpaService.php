@@ -366,6 +366,8 @@ class LpaService
             throw new NotFoundException('User actor lpa record  not found for actor token ' . $actorLpaToken);
         }
 
+        //lookup lpactortoken in viewer code table and remove actor association with viewer code
+
         return $this->userLpaActorMapRepository->delete($actorLpaToken);
     }
 
