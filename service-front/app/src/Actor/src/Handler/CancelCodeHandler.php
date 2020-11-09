@@ -8,12 +8,14 @@ use Actor\Form\CancelCode;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\{Lpa\LpaService, Lpa\ViewerCodeService};
+use Mezzio\Flash\FlashMessageMiddleware;
+use Mezzio\Flash\FlashMessagesInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-
+use Acpr\I18n\TranslatorInterface;
 
 /**
  * Class CancelCodeHandler
@@ -26,6 +28,13 @@ class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardA
     use User;
     use Session;
     use CsrfGuard;
+
+    public const CANCEL_CODE_FLASH_MSG = 'cancel_code_flash_msg';
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @var ViewerCodeService
@@ -41,13 +50,15 @@ class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardA
         AuthenticationInterface $authenticator,
         LpaService $lpaService,
         ViewerCodeService $viewerCodeService,
-        UrlHelper $urlHelper)
-    {
+        UrlHelper $urlHelper,
+        TranslatorInterface $translator
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
         $this->lpaService = $lpaService;
         $this->viewerCodeService = $viewerCodeService;
+        $this->translator = $translator;
     }
 
     /**
@@ -75,7 +86,26 @@ class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardA
                 $validated['viewer_code']
             );
 
-            return new RedirectResponse($this->urlHelper->generate('lpa.access-codes',[],['lpa' => $validated['lpa_token']]));
+            /** @var FlashMessagesInterface $flash */
+            $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+
+            $message = $this->translator->translate(
+                "You've cancelled the access code %code% for %organisation%",
+                [
+                    '%code%' => $validated['viewer_code'],
+                    '%organisation%' => $validated['organisation']
+                ]
+            );
+
+            $flash->flash(self::CANCEL_CODE_FLASH_MSG, $message);
+
+            return new RedirectResponse(
+                $this->urlHelper->generate(
+                    'lpa.access-codes',
+                    [],
+                    ['lpa' => $validated['lpa_token']]
+                )
+            );
         }
 
         throw new InvalidRequestException('Invalid form submission');
