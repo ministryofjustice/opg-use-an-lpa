@@ -1731,10 +1731,10 @@ class LpaContext implements Context
         $response = $this->getResponseAsJson();
 
         assertArrayHasKey('Viewed', $response[0]);
-        $this->assertEquals($this->accessCode, $response[0]['Viewed'][0]['ViewerCode']);
-        $this->assertEquals('Test', $response[0]['Viewed'][0]['ViewedBy']);
+        assertEquals($this->accessCode, $response[0]['Viewed'][0]['ViewerCode']);
+        assertEquals('Test', $response[0]['Viewed'][0]['ViewedBy']);
 
-        $this->assertEquals($this->accessCode, $response[0]['Viewed'][0]['ViewerCode']);
-        $this->assertEquals('Test Org', $response[0]['Viewed'][1]['ViewedBy']);
+        assertEquals($this->accessCode, $response[0]['Viewed'][0]['ViewerCode']);
+        assertEquals('Test Org', $response[0]['Viewed'][1]['ViewedBy']);
     }
 }
