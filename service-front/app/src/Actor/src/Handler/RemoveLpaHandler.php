@@ -22,6 +22,7 @@ use Mezzio\Flash\FlashMessagesInterface;
 /**
  * Class DeleteLpaHandler
  * @package Actor\Handler
+ * @codeCoverageIgnore
  */
 class RemoveLpaHandler extends AbstractHandler implements UserAware
 {
