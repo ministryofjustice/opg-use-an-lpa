@@ -7,8 +7,10 @@
         }}
     </p>
     <nav class="navigation govuk-body-s">
-        <li><a href="{{ path('your-details') }}" class="govuk-link">{% trans %}Your details{% endtrans %}</a></li>
-        <li><a href="{{ path('lpa.dashboard') }}" class="govuk-link">{% trans %}Your LPAs{% endtrans %}</a></li>
-        <li><a href="{{ path('logout') }}">{% trans %}Sign out{% endtrans %}</a></li>
+        <ul>
+            <li><a href="{{ path('your-details') }}" class="govuk-link">{% trans %}Your details{% endtrans %}</a></li>
+            <li><a href="{{ path('lpa.dashboard') }}" class="govuk-link">{% trans %}Your LPAs{% endtrans %}</a></li>
+            <li><a href="{{ path('logout') }}" class="govuk-link">{% trans %}Sign out{% endtrans %}</a></li>
+        </ul>
     </nav>
 </div>
