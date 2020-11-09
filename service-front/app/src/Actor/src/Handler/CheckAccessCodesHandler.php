@@ -17,6 +17,11 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use DateTime;
 
+/**
+ * Class CheckAccessCodesHandler
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class CheckAccessCodesHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
     use User;

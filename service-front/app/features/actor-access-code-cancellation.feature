@@ -28,6 +28,7 @@ Feature: Actor able to cancel access code
     When I cancel the organisation access code
     And I confirm cancellation of the chosen viewer code
     Then I should be shown the details of the viewer code with status <status>
+    And I should see a flash message to confirm the code that I have cancelled
       Examples:
       | status    |
       | CANCELLED |
@@ -38,3 +39,4 @@ Feature: Actor able to cancel access code
     When I cancel the organisation access code
     And I do not confirm cancellation of the chosen viewer code
     Then I should be taken back to the access code summary page
+    And I should not see a flash message to confirm the code that I have cancelled

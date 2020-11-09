@@ -1850,4 +1850,20 @@ class AccountContext extends BaseIntegrationContext
     {
         // Not needed for this context
     }
+
+    /**
+     * @Given /^I should see a flash message to confirm the code that I have cancelled$/
+     */
+    public function iShouldSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I should not see a flash message to confirm the code that I have cancelled$/
+     */
+    public function iShouldNotSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled()
+    {
+        // Not needed for this context
+    }
 }

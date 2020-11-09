@@ -890,26 +890,29 @@ class AccountContext implements Context
                             'Id' => '123',
                             'Email' => $this->userEmail,
                             'activation_token' => $this->activationToken,
-                        ])))
+                        ]
+                    )
+                )
+            )
             ->inspectRequest(function (RequestInterface $request, array $options) {
-            $params = json_decode($request->getBody()->getContents(), true);
-            assertEquals('abcd2345', $params['activation_token']);
-        });
+                $params = json_decode($request->getBody()->getContents(), true);
+                assertEquals('abcd2345', $params['activation_token']);
+            });
 
         // API call for Notify
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(
-            function (RequestInterface $request, array $options) {
-                $params = json_decode($request->getBody()->getContents(), true);
+                function (RequestInterface $request, array $options) {
+                    $params = json_decode($request->getBody()->getContents(), true);
 
-                assertInternalType('array', $params);
-                assertArrayHasKey('template_id', $params);
-                assertArrayHasKey('personalisation', $params);
-                assertArrayHasKey('sign-in-url', $params['personalisation']);
-                assertContains('/login', $params['personalisation']['sign-in-url']);
-            }
-    );
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                    assertArrayHasKey('personalisation', $params);
+                    assertArrayHasKey('sign-in-url', $params['personalisation']);
+                    assertContains('/login', $params['personalisation']['sign-in-url']);
+                }
+            );
 
         $this->ui->visit('/activate-account/' . $this->activationToken);
     }
@@ -3595,7 +3598,8 @@ class AccountContext implements Context
                             'ActorId' => $this->actorId
                         ]
                     ])
-                ));
+                )
+            );
     }
 
     /**
@@ -3612,5 +3616,33 @@ class AccountContext implements Context
     public function iCanSeeTheAccessibilityStatementForTheUseService()
     {
         $this->ui->assertPageContainsText('Accessibility statement for Use a lasting power of attorney');
+    }
+
+    /**
+     * @Given /^I should see a flash message to confirm the code that I have cancelled$/
+     */
+    public function iShouldSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled()
+    {
+        $this->ui->assertPageContainsText(
+            sprintf(
+                "You've cancelled the access code %s for %s",
+                $this->accessCode,
+                $this->organisation
+            )
+        );
+    }
+
+    /**
+     * @Given /^I should not see a flash message to confirm the code that I have cancelled$/
+     */
+    public function iShouldNotSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled()
+    {
+        $this->ui->assertPageNotContainsText(
+            sprintf(
+                "You've cancelled the access code %s for %s",
+                $this->accessCode,
+                $this->organisation
+            )
+        );
     }
 }
