@@ -173,6 +173,9 @@ services:
       dockerfile: service-api/docker/app/Dockerfile
     volumes:
       - ./service-api/app:/app
+    networks:
+      - default
+      - lpas-collection
     environment:
       DYNAMODB_TABLE_ACTOR_CODES: "ActorCodes"
       DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
@@ -182,7 +185,7 @@ services:
 
       # SIRIUS_API_ENDPOINT: "http://lpa-gateway:5000"
       SIRIUS_API_ENDPOINT: "http://api_gateway:4343"
-      LPA_CODES_API_ENDPOINT: "http://codes-gateway:4242"
+      LPA_CODES_API_ENDPOINT: "http://codes-gateway:4343"
 
       # Local only
       AWS_ACCESS_KEY_ID: "-"
@@ -223,3 +226,7 @@ services:
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
       AWS_ENDPOINT_DYNAMODB: localstack:4566
       CODES_ENDPOINT: codes-gateway:4343
+
+networks:
+  lpas-collection:
+    driver: bridge
