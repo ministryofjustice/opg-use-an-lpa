@@ -65,7 +65,11 @@ class ViewerCodeActivityTest extends TestCase
     /** @test */
     public function viewerCodesStatusSetToTrueWithQueryMatch()
     {
-        $testCodes = [['ViewerCode' => 'RT6Y98VEF7A2']];
+        $testCodes = [
+            0 => [
+                'ViewerCode' => 'RT6Y98VEF7A2'
+                ]
+        ];
 
         $this->dynamoDbClient->query(Argument::that(function (array $data) use ($testCodes) {
             $this->assertArrayHasKey('TableName', $data);
@@ -82,13 +86,27 @@ class ViewerCodeActivityTest extends TestCase
             ->willReturn($this->createAWSResult([
                 'Items' => [
                     [
+                        'Viewed' => [
+                            'S' => '2020-01-11'
+                        ],
                         'ViewerCode' => [
                             'S' => $testCodes[0]['ViewerCode']
                         ],
-                        'Viewed' => [
-                            'B' => true,
+                        'ViewedBy' => [
+                            'S' => 'Some organisation1'
                         ],
-                    ]
+                    ],
+                    [
+                        'Viewed' => [
+                            'S' => '2020-01-11'
+                        ],
+                        'ViewerCode' => [
+                            'S' => $testCodes[0]['ViewerCode']
+                        ],
+                        'ViewedBy' => [
+                            'S' => 'Some organisation2'
+                        ],
+                    ],
                 ],
                 'Count' => 1
             ]));
@@ -97,9 +115,14 @@ class ViewerCodeActivityTest extends TestCase
 
         $result = $repo->getStatusesForViewerCodes($testCodes);
 
-        $this->assertEquals($testCodes[0]['ViewerCode'], $result[0]['ViewerCode']);
-        $this->assertEquals(true, $result[0]['Viewed']);
+        $viewerCode = $testCodes[0]['ViewerCode'];
 
+        foreach ($result[0]['Viewed'] as $viewedInstance => $viewedData) {
+            $this->assertEquals($testCodes[0]['ViewerCode'], $viewedData['ViewerCode']);
+            $this->assertNotEmpty($viewedData['Viewed']);
+        }
+        $this->assertEquals('Some organisation1', $result[0]['Viewed'][0]['ViewedBy']);
+        $this->assertEquals('Some organisation2', $result[0]['Viewed'][1]['ViewedBy']);
     }
 
     /** @test */
