@@ -898,4 +898,25 @@ class LpaServiceTest extends TestCase
 
         $this->assertEmpty($lpaActorData[0]);
     }
+
+//    /** @test */
+    public function it_throws_exception_when_actor_token_not_found_for_removing_lpa()
+    {
+        $userToken = '01234567-01234-01234-01234-012345678901';
+        $lpaActorToken = '98765432-01234-01234-01234-012345678901';
+
+        $lpaActorData = null;
+
+        $this->apiClientProphecy->httpDelete('/v1/lpas/' . $lpaActorToken)
+            ->willThrow(new ApiException('Token not found', StatusCodeInterface::STATUS_NOT_FOUND));
+
+        $service = new LpaService(
+            $this->apiClientProphecy->reveal(),
+            $this->lpaFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $lpaActorData = $service->removeLpa($userToken, $lpaActorToken);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+    }
 }
