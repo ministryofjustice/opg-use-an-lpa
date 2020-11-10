@@ -1563,7 +1563,7 @@ class AccountContext implements Context
 
         assertEquals($codeDetails[0], 'V - XYZ3 - 21AB - C987');
         assertEquals($codeDetails[1], 'Ian Deputy');
-        assertEquals($codeDetails[2], 'Not Viewed');
+        assertEquals($codeDetails[2], 'Not viewed');
         assertEquals($codeDetails[4], $status);
 
         if ($codeDetails === null) {
