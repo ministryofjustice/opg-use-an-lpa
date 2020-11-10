@@ -407,12 +407,11 @@ class LpaService
     public function removeLpa(string $userToken, string $actorLpaToken): ?array
     {
         $this->apiClient->setUserTokenHeader($userToken);
-
         $lpaActorData = null;
+
         try {
             $lpaActorData = $this->apiClient->httpDelete('/v1/lpas/' . $actorLpaToken);
-
-            if (isset($lpaActordata)) {
+            if (isset($lpaActorData)) {
                 $this->logger->notice(
                     'Successfully removed LPA for user lpa actor {token}',
                     [
@@ -430,6 +429,7 @@ class LpaService
             );
             throw $ex;
         }
+
         return $lpaActorData;
     }
 }
