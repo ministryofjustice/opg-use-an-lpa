@@ -907,8 +907,6 @@ class LpaServiceTest extends TestCase
 
         $lpaActorData = null;
 
-        //mock the setU
-
         $this->apiClientProphecy->httpDelete('/v1/lpas/' . $lpaActorToken)
             ->willThrow(new ApiException('', StatusCodeInterface::STATUS_NOT_FOUND));
 
