@@ -3625,8 +3625,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageContainsText(
             sprintf(
-                "You've cancelled the access code %s for %s",
-                $this->accessCode,
+                "You cancelled the access code for %s: V-XYZ3-21AB-C987",
                 $this->organisation
             )
         );
@@ -3639,8 +3638,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageNotContainsText(
             sprintf(
-                "You've cancelled the access code %s for %s",
-                $this->accessCode,
+                "You cancelled the access code for %s: V-XYZ3-21AB-C987",
                 $this->organisation
             )
         );
