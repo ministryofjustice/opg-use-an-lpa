@@ -852,7 +852,7 @@ class LpaServiceTest extends TestCase
         $lpaActorToken = '98765432-01234-01234-01234-012345678901';
 
         $lpaActorData = [
-            'SiriusUid' => $this->lpaUid,
+            'SiriusUid' => '70000000001',
             'Added' => '2020-01-01',
             'Id' => $lpaActorToken,
             'ActorId' => '59',
@@ -873,5 +873,29 @@ class LpaServiceTest extends TestCase
         $lpaActorData = $service->removeLpa($userToken, $lpaActorToken);
 
         $this->assertNotEmpty($lpaActorData);
+    }
+
+    /** @test */
+    public function it_returns_null_when_lpa_not_removed()
+    {
+        $userToken = '01234567-01234-01234-01234-012345678901';
+        $lpaActorToken = '98765432-01234-01234-01234-012345678901';
+
+        $lpaActorData = null;
+
+        $this->apiClientProphecy->httpDelete('/v1/lpas/' . $lpaActorToken)
+            ->willReturn([$lpaActorData]);
+
+        $this->apiClientProphecy->setUserTokenHeader($userToken)->shouldBeCalled();
+
+        $service = new LpaService(
+            $this->apiClientProphecy->reveal(),
+            $this->lpaFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $lpaActorData = $service->removeLpa($userToken, $lpaActorToken);
+
+        $this->assertEmpty($lpaActorData[0]);
     }
 }
