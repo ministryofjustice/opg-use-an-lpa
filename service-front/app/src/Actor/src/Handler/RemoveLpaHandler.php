@@ -90,8 +90,6 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware
         );
         $flash->flash(self::REMOVE_LPA_FLASH_MSG, $message);
 
-
-       // return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
         return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
     }
 }

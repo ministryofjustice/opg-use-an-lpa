@@ -401,35 +401,24 @@ class LpaService
      *
      * @param string $userToken
      * @param string $actorLpaToken
-     * @return array
+     * @return array|null
      * @throws ApiException
      */
-    public function removeLpa(string $userToken, string $actorLpaToken): array
+    public function removeLpa(string $userToken, string $actorLpaToken): ?array
     {
-        $lpaActordata = [];
         $this->apiClient->setUserTokenHeader($userToken);
 
-        try {
-           // $lpaActordata = $this->apiClient->httpDelete('/v1/lpas/' . $actorLpaToken);
+        $lpaActorData = $this->apiClient->httpDelete('/v1/lpas/' . $actorLpaToken);
 
+        if (isset($lpaActordata)) {
             $this->logger->notice(
-                'Successfully removed lpa for user lpa actor {token}',
+                'Successfully removed LPA for user lpa actor {token}',
                 [
                     'event_code' => EventCodes::LPA_DELETED,
                     'token' => $actorLpaToken,
                 ]
             );
-        } catch (ApiException $ex) {
-            $this->logger->notice(
-                'Failed to remove lpa for user lpa actor {token}',
-                [
-                    'token' => $actorLpaToken,
-                ]
-            );
-
-            throw $ex;
         }
-
-        return $lpaActordata;
+        return $lpaActorData;
     }
 }
