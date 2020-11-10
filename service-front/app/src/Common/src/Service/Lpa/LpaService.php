@@ -408,8 +408,9 @@ class LpaService
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
+        $lpaActorData = null;
         try {
-            $lpaActorData = $this->apiClient->httpDelete('/v1/lpas/' . $actorLpaToken);
+           // $lpaActorData = $this->apiClient->httpDelete('/v1/lpas/' . $actorLpaToken);
 
             if (isset($lpaActordata)) {
                 $this->logger->notice(
