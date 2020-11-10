@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-11-10T15:11:25+00:00\n"
+"POT-Creation-Date: 2020-11-10T17:07:06+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1940,7 +1940,7 @@ msgid "Viewed"
 msgstr ""
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:28
-msgid "Not Viewed"
+msgid "Not viewed"
 msgstr ""
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:35

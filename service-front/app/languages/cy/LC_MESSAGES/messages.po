@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-11-10T15:11:25+00:00\n"
+"POT-Creation-Date: 2020-11-10T17:07:06+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2664,7 +2664,7 @@ msgid "Viewed"
 msgstr "Gweld"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:28
-msgid "Not Viewed"
+msgid "Not viewed"
 msgstr "Heb weld LPA"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:35
