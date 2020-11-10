@@ -1,16 +1,13 @@
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
 .PHONY: everything rebuild down destroy ps logs up_dependencies up_service up_seeding
 
-up_everything: | up_data_lpa up_dependencies up_service
-
-rebuild_everything: | build_data_lpa build
-
-down_everything: | down down_data_lpa
-
-destroy_everything: | destroy destroy_data_lpa
-
 up:
 	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml up -d
+
+exec:
+	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml exec api-app /bin/sh
+
+up_all: | up_dependencies up_service
 
 build:
 	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml build
@@ -28,33 +25,13 @@ ps:
 	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml ps
 
 logs:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml logs --tail=100 -f $(c)
+	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml logs -f $(c)
 
 up_dependencies:
 	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml up -d localstack codes-gateway redis kms
 
-up_service:
+up_services:
 	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml up -d webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
 
-up_seeding:
+seed:
 	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml up -d api-seeding
-
-up_data_lpa:
-	aws-vault exec sirius-dev-bg -- docker-compose -f ../opg-data-lpa/docker-compose.yml up -d mock-sirius motoserver api_gateway
-	chmod +x ../opg-data-lpa/mock_aws_services/create_secret.sh
-	../opg-data-lpa/mock_aws_services/create_secret.sh
-
-down_data_lpa:
-	docker-compose -f ../opg-data-lpa/docker-compose.yml down
-
-ps_data_lpa:
-	docker-compose -f ../opg-data-lpa/docker-compose.yml ps
-
-build_data_lpa:
-	aws-vault exec sirius-dev-bg -- docker-compose -f ../opg-data-lpa/docker-compose.yml build mock-sirius motoserver api_gateway
-
-rebuild_data_lpa:
-	aws-vault exec sirius-dev-bg -- docker-compose -f ../opg-data-lpa/docker-compose.yml build --no-cache mock-sirius motoserver api_gateway
-
-destroy_data_lpa:
-	docker-compose -f ../opg-data-lpa/docker-compose.yml down -v --rmi all --remove-orphans

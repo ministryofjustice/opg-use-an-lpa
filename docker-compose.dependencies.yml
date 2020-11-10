@@ -17,49 +17,6 @@ services:
           - gateway-localstack
 
   # -----
-  # API Gateway local development environment
-  # -----
-
-  lpa-gateway-setup:
-    build:
-      context: ../opg-sirius-api-gateway/
-      dockerfile: localstack-config/Dockerfile
-    volumes:
-      - ../opg-sirius-api-gateway/localstack-config:/config
-    depends_on:
-      - localstack
-    environment:
-      AWS_ENDPOINT_DYNAMODB: localstack:4566
-
-  lpa-gateway:
-    build:
-      context: ../opg-sirius-api-gateway/
-    volumes:
-      - ../opg-sirius-api-gateway/docker:/srv/docker:cached
-      - ../opg-sirius-api-gateway/lambdas:/srv/lambdas:cached
-      - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - lpa-gateway-setup
-    ports:
-      - 5000:5000
-    environment:
-      LAMBDAS_PATH: ${PWD}/../opg-sirius-api-gateway/lambdas
-      LAMBDAS_JSON_PROVIDER_PATH: ${PWD}/test-data/api-gateway.json
-
-      PASSTHROUGH_DYNAMODB_DATA_CACHE_TABLE_NAME: opg-gateway-cache-data
-      PASSTHROUGH_DYNAMODB_AUTH_CACHE_TABLE_NAME: opg-gateway-cache-auth
-      PASSTHROUGH_AWS_ENDPOINT_DYNAMODB : http://localstack:4566
-      PASSTHROUGH_URL_MEMBRANE: https://membrane
-      PASSTHROUGH_CREDENTIALS: '{"email": "publicapi@opgtest.com","password": "Password1"}' # Non-secret credentials, deliberately committed.
-      PASSTHROUGH_ENABLE_DEBUG: 'false'
-      PASSTHROUGH_DATA_PROVIDER: json
-      PASSTHROUGH_AWS_ACCESS_KEY_ID: testing
-      PASSTHROUGH_AWS_SECRET_ACCESS_KEY: testing
-      PASSTHROUGH_AWS_SECURITY_TOKEN: testing
-      PASSTHROUGH_AWS_SESSION_TOKEN: testing
-      PASSTHROUGH_AWS_DEFAULT_REGION: eu-west-1
-
-  # -----
   # Code Generation API development environment
   # -----
 
@@ -67,7 +24,7 @@ services:
     build:
       context: ../opg-data-lpa-codes/lambda_functions/v1
     ports:
-      - 4242:4242
+      - 4343:4343
     volumes:
       - ../opg-data-lpa-codes/lambda_functions/v1/:/var/www/lambda_functions/v1/
     depends_on:
