@@ -89,10 +89,14 @@ class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardA
             /** @var FlashMessagesInterface $flash */
             $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
+            $formattedCode = str_split($validated['viewer_code'], 4);
+            array_unshift($formattedCode, 'V');
+            $formattedCode = implode("-", $formattedCode);
+
             $message = $this->translator->translate(
-                "You've cancelled the access code %code% for %organisation%",
+                "You cancelled the access code for %organisation%: %code%",
                 [
-                    '%code%' => $validated['viewer_code'],
+                    '%code%' => $formattedCode,
                     '%organisation%' => $validated['organisation']
                 ]
             );
