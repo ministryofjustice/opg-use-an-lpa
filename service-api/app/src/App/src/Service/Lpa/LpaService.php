@@ -367,6 +367,10 @@ class LpaService
         }
 
         //lookup lpactortoken in viewer code table and remove actor association with viewer code
+        // get sirius uid from lpaactormap table
+        // lookup records from viewercode table using siriusuid [db query]
+        // filter records from result set using lpaactortoken  [php code]
+        //update query to remove actor association in viewer code table
 
         return $this->userLpaActorMapRepository->delete($actorLpaToken);
     }
