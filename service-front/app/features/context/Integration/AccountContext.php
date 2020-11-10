@@ -2004,7 +2004,6 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iConfirmRemovalOfTheLPA()
     {
-
         $actorLpaToken = $this->actorLpaToken;
 
         // API call to remove lpa
