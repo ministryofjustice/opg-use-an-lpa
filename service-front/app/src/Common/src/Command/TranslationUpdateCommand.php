@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Common\Command;
 
 use Common\Service\I18n\CatalogueLoader;
+use Common\Service\I18n\Extractors\TwigFactory;
 use Common\Service\I18n\PotGenerator;
-use Common\Service\I18n\TwigCatalogueExtractorFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,13 +16,13 @@ class TranslationUpdateCommand extends Command
 {
     public const DEFAULT_LOCALE = 'en_GB';
 
-    private TwigCatalogueExtractorFactory $extractorFactory;
+    private TwigFactory $extractorFactory;
     private CatalogueLoader $loader;
     private PotGenerator $writer;
     private array $viewsPaths;
 
     public function __construct(
-        TwigCatalogueExtractorFactory $extractorFactory,
+        TwigFactory $extractorFactory,
         CatalogueLoader $loader,
         PotGenerator $writer,
         array $viewsPaths = []

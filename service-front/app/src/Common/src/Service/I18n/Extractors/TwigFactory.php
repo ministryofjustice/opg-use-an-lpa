@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Common\Service\I18n;
+namespace Common\Service\I18n\Extractors;
 
 use Acpr\I18n\ExtractorInterface;
 use Gettext\Translations;
 
-class TwigCatalogueExtractorFactory
+class TwigFactory
 {
     private ExtractorInterface $extractor;
 
@@ -20,11 +20,11 @@ class TwigCatalogueExtractorFactory
      * Allows the creation of an extractor that is aware of previous extractions.
      *
      * @param Translations[] $existing
-     * @return TwigCatalogueExtractor
+     * @return Twig
      */
-    public function __invoke(array $existing): TwigCatalogueExtractor
+    public function __invoke(array $existing): Twig
     {
-        return new TwigCatalogueExtractor(
+        return new Twig(
             $this->extractor,
             $existing
         );

@@ -2,25 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Common\Service\I18n;
+namespace Common\Service\I18n\Extractors;
 
 use Acpr\I18n\ExtractorInterface;
+use Common\Service\I18n\CatalogueExtractor;
 use Gettext\Merge;
 use Gettext\Translations;
 
-class TwigCatalogueExtractor
+class Twig extends CatalogueExtractor
 {
     public const MERGE_FLAGS =
         Merge::REFERENCES_THEIRS
         | Merge::EXTRACTED_COMMENTS_THEIRS;
 
-    /** @var Translations[] $catalogues */
-    private array $catalogues;
-
     /** @var Translations[] $existing */
     private array $existing;
-
-    private ExtractorInterface $extractor;
 
     /**
      * TwigCatalogueExtractor constructor.
@@ -42,7 +38,7 @@ class TwigCatalogueExtractor
     {
         // Generate new POT catalogue/s
         foreach ($twigPaths as $path) {
-            $translations = $this->parseTemplates($path);
+            $translations = $this->parseFiles($path);
             array_walk($translations, [$this, 'mergeCatalogues']);
         }
 
@@ -58,33 +54,5 @@ class TwigCatalogueExtractor
 
 
         return $this->existing;
-    }
-
-    /**
-     * @param string $path
-     * @return Translations[]
-     */
-    protected function parseTemplates(string $path): array
-    {
-        $translations = [];
-
-        if (is_dir($path) || is_file($path)) {
-            $translations = $this->extractor->extract($path);
-        }
-
-        return $translations;
-    }
-
-    /**
-     * @param Translations $translations
-     * @param string $domain
-     */
-    protected function mergeCatalogues(Translations $translations, string $domain): void
-    {
-        if (in_array($domain, array_keys($this->catalogues))) {
-            $this->catalogues[$domain] = $this->catalogues[$domain]->mergeWith($translations);
-        } else {
-            $this->catalogues[$domain] = $translations;
-        }
     }
 }
