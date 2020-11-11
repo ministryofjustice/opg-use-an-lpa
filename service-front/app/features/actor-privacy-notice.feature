@@ -12,12 +12,6 @@ Feature: View privacy notice from the terms of use page
     Then I can see the actor privacy notice
 
   @ui
-  Scenario: The user can go back to the terms of use page from the actor privacy notice page
-    Given I am on the actor privacy notice page
-    When I request to go back to the terms of use page
-    Then I am taken back to the terms of use page
-
-  @ui
   Scenario: Actor can access the actor cookies page from the actor privacy notice page
     Given I am on the actor privacy notice page
     When I navigate to the actor cookies page
