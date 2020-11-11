@@ -25,12 +25,17 @@
         margin: govuk-spacing(0);
         padding: govuk-spacing(0);
 
-        > li {
-            list-style-position: inside;
-            list-style-type: none;
-            display: inline;
-            margin-left: govuk-spacing(0);
-            margin-right: govuk-spacing(2);
+        > ul {
+            margin: govuk-spacing(0);
+            padding: govuk-spacing(0);
+
+            > li {
+                list-style-position: inside;
+                list-style-type: none;
+                display: inline;
+                margin-left: govuk-spacing(0);
+                margin-right: govuk-spacing(2);
+            }
         }
 
         @media screen and (min-width: 769px) {
@@ -44,5 +49,3 @@
         }
     }
 }
-
-
