@@ -887,6 +887,7 @@ class LpaContext implements Context
 
     /**
      * @When /^I do not confirm cancellation of the chosen viewer code/
+     * @When /^I request to return to the dashboard page/
      */
     public function iDoNotConfirmCancellationOfTheChosenViewerCode()
     {

@@ -759,6 +759,9 @@ class AccountContext implements Context
 
     /**
      * @When /^I request to delete my account$/
+     * @When /^I request to remove the added LPA$/
+     * @Then /^The deleted LPA will not be displayed on the dashboard$/
+     * @Then /^I can see a flash message for the removed LPA$/
      */
     public function iRequestToDeleteMyAccount()
     {
@@ -767,6 +770,8 @@ class AccountContext implements Context
 
     /**
      * @Given /^I confirm that I want to delete my account$/
+     * @Then /^I am asked to confirm whether I am sure if I want to delete lpa$/
+     * @Given /^I am on the confirm lpa deletion page$/
      */
     public function iConfirmThatIWantToDeleteMyAccount()
     {
@@ -1304,5 +1309,33 @@ class AccountContext implements Context
     public function iShouldBeToldThatABadRequestWasMade()
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @When /^I confirm removal of the LPA$/
+     */
+    public function iConfirmRemovalOfTheLPA()
+    {
+        $actorToken = 'token123';
+        $siriusUid = '700000001';
+        $added = '2020-08-20';
+        $actorId = '59';
+        $userId = 'user123';
+
+        // userLpaActorMapRepository::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'            => $actorToken,
+                'SiriusUid'     => $siriusUid,
+                'Added'         => $added,
+                'ActorId'       => $actorId,
+                'UserId'        => $userId
+            ])
+        ]));
+
+        // userLpaActorMapRepository::delete
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiDelete('/v1/lpas/' . $actorToken);
     }
 }

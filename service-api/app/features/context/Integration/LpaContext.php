@@ -615,6 +615,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @When /^I do not confirm cancellation of the chosen viewer code/
+     * @When /^I request to return to the dashboard page/
      */
     public function iDoNotConfirmCancellationOfTheChosenViewerCode()
     {
@@ -1293,5 +1294,54 @@ class LpaContext extends BaseIntegrationContext
     public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @When /^I confirm removal of the LPA/
+     */
+    public function iConfirmRremovalOfTheLpa()
+    {
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // UserLpaActorMap::delete
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => '700000000138',
+                                'Added' => '2020-11-04',
+                                'Id' => '3ff586fc-cc66-4901-ba64-8b4aa7e91655',
+                                'ActorId' => 25,
+                                'UserId' => '97321175-a712-403f-b416-eaaa3a891a01'
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        $this->awsFixtures->append(new Result());
+
+        $lpaService = $this->container->get(\App\Service\Lpa\LpaService::class);
+        $lpaRemoveResponse = $lpaService->removeLPaFromUserLpaActorMap($this->userLpaActorToken);
+
+        assertNotEmpty($lpaRemoveResponse);
     }
 }

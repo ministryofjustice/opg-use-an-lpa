@@ -354,7 +354,7 @@ class LpaService
      * @param string $actorLpaToken
      * @return array
      */
-    public function removerLPaFromUserLpaActorMap(string $actorLpaToken): array
+    public function removeLPaFromUserLpaActorMap(string $actorLpaToken): array
     {
         $userActorLpa = $this->userLpaActorMapRepository->get($actorLpaToken);
 

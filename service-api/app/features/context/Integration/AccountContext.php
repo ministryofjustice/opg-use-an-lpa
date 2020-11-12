@@ -615,6 +615,8 @@ class AccountContext extends BaseIntegrationContext
 
     /**
      * @Given /^I confirm that I want to delete my account$/
+     * @Then /^I am asked to confirm whether I am sure if I want to delete lpa$/
+     * @Given /^I am on the confirm lpa deletion page$/
      */
     public function iConfirmThatIWantToDeleteMyAccount()
     {
@@ -1398,6 +1400,9 @@ class AccountContext extends BaseIntegrationContext
 
     /**
      * @When /^I request to delete my account$/
+     * @When /^I request to remove the added LPA$/
+     * @Then /^The deleted LPA will not be displayed on the dashboard$/
+     * @Then /^I can see a flash message for the removed LPA$/
      */
     public function iRequestToDeleteMyAccount()
     {
