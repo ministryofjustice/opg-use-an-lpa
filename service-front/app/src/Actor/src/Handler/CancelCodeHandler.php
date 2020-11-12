@@ -98,7 +98,9 @@ class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardA
                 [
                     '%code%' => $formattedCode,
                     '%organisation%' => $validated['organisation']
-                ]
+                ],
+                null,
+                'flashMessage'
             );
 
             $flash->flash(self::CANCEL_CODE_FLASH_MSG, $message);
