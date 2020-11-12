@@ -366,13 +366,30 @@ class LpaService
             throw new NotFoundException('User actor lpa record  not found for actor token ' . $actorLpaToken);
         }
 
-        //lookup lpactortoken in viewer code table and remove actor association with viewer code
-        // get sirius uid from lpaactormap table
-        // lookup records from viewercode table using siriusuid [db query]
-        // filter records from result set using lpaactortoken  [php code]
-        //update query to remove actor association in viewer code table
+        //Get list of viewer codes to be updated
+        $viewerCodes = $this->getListOfViewerCodesToBeUpdated($userActorLpa);
+
+        //Update query to remove actor association in viewer code table
+        if (!empty($viewerCodes)) {
+            foreach ($viewerCodes as $key => $viewerCode) {
+                $this->viewerCodesRepository->removeActorAssociation($viewerCode);
+            }
+        }
 
         return $this->userLpaActorMapRepository->delete($actorLpaToken);
     }
 
+    private function getListOfViewerCodesToBeUpdated(array $userActorLpa ): ?array
+    {
+        $siriusUid = $userActorLpa['SiriusUid'];
+
+        //Lookup records in ViewerCodes table using siriusUid
+        $viewerCodesData = $this->viewerCodesRepository->getCodesByLpaId($siriusUid);
+        foreach ($viewerCodesData as $key => $viewerCodeRecord) {
+            if (isset($viewerCodeRecord['UserLpaActor']) && ($viewerCodeRecord['UserLpaActor'] === $userActorLpa['Id'])) {
+                $viewerCodes[] = $viewerCodeRecord['ViewerCode'];
+            }
+        }
+        return $viewerCodes;
+    }
 }
