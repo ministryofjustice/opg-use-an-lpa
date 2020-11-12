@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Command;
 
 use Common\Service\I18n\CatalogueLoader;
+use Common\Service\I18n\Extractors\PhpFactory;
 use Common\Service\I18n\Extractors\TwigFactory;
 use Common\Service\I18n\PotGenerator;
 use Symfony\Component\Console\Command\Command;
@@ -15,22 +16,28 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class TranslationUpdateCommand extends Command
 {
     public const DEFAULT_LOCALE = 'en_GB';
+    private array $viewsPaths;
+    private array $phpPaths;
 
-    private TwigFactory $extractorFactory;
+    private TwigFactory $twigExtractorFactory;
+    private PhpFactory $phpExtractorFactory;
     private CatalogueLoader $loader;
     private PotGenerator $writer;
-    private array $viewsPaths;
 
     public function __construct(
-        TwigFactory $extractorFactory,
+        TwigFactory $twigExtractorFactory,
+        PhpFactory $phpExtractorFactory,
         CatalogueLoader $loader,
         PotGenerator $writer,
-        array $viewsPaths = []
+        array $viewsPaths = [],
+        array $phpPaths = []
     ) {
-        $this->extractorFactory = $extractorFactory;
+        $this->twigExtractorFactory = $twigExtractorFactory;
+        $this->phpExtractorFactory = $phpExtractorFactory;
         $this->loader = $loader;
         $this->writer = $writer;
         $this->viewsPaths = $viewsPaths;
+        $this->phpPaths = $phpPaths;
 
         parent::__construct();
     }
@@ -54,8 +61,13 @@ class TranslationUpdateCommand extends Command
         $io->text(sprintf('Found %d domains', count($existing)));
 
         $io->section('Parsing templates...');
-        $extractorService = ($this->extractorFactory)($existing);
+        $extractorService = ($this->twigExtractorFactory)($existing);
         $catalogues = $extractorService->extract($this->viewsPaths);
+        $io->text(sprintf('Found %d domains', count($catalogues)));
+
+        $io->section('Parsing php...');
+        $extractorService = ($this->phpExtractorFactory)($catalogues);
+        $catalogues = $extractorService->extract($this->phpPaths);
         $io->text(sprintf('Found %d domains', count($catalogues)));
 
         $io->section('Generating POT file\s...');

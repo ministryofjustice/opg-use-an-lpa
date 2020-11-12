@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Common\Service\I18n\Extractors;
 
 use Acpr\I18n\ExtractorInterface;
-use Acpr\I18n\TwigExtractor;
+use Acpr\I18n\PhpExtractor;
 use Common\Service\I18n\CatalogueExtractor;
 use Gettext\Translations;
 
-class TwigFactory
+class PhpFactory
 {
     private ExtractorInterface $extractor;
 
-    public function __construct(TwigExtractor $extractor)
+    public function __construct(PhpExtractor $extractor)
     {
         $this->extractor = $extractor;
     }
