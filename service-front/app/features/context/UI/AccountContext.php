@@ -3760,7 +3760,7 @@ class AccountContext implements Context
     public function iRequestToReturnToTheDashboardPage()
     {
         $this->ui->assertPageAddress('/lpa/confirm-remove-lpa');
-        $this->ui->assertPageContainsText('Are you sure you want to delete this');
+        $this->ui->assertPageContainsText('Are you sure you want to remove this');
         $this->ui->clickLink('Cancel');
     }
 

@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Confirm LPA deletion{% endtrans %} - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Confirm LPA removal{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 
@@ -18,7 +18,7 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">{% trans %}Are you sure you want to delete this <abbr title="lasting power of attorney">LPA</abbr>?{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}Are you sure you want to remove this <abbr title="lasting power of attorney">LPA</abbr>?{% endtrans %}</h1>
 
                     <p class="govuk-body">{% trans %}If you remove an <abbr title="lasting power of attorney">LPA</abbr> from your Use a lasting power of attorney account:{% endtrans %}</p>
 
@@ -31,7 +31,7 @@
                     <a href="{{ path('lpa.dashboard', {}, {'lpa': actorToken}) }}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
                         {% trans %}Cancel{% endtrans %}
                     </a>
-                    <a href="{{ path('lpa.delete-lpa', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button--warning">
+                    <a href="{{ path('lpa.remove-lpa', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button--warning">
                         {% trans %}Yes, remove <abbr title="lasting power of attorney">LPA</abbr>{% endtrans %}
                     </a>
 
