@@ -1110,6 +1110,18 @@ class LpaContext extends BaseIntegrationContext
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
                                 'ViewerCode' => $this->accessCode,
+                                'Viewed' => [
+                                    0 => [
+                                        'Viewed' => '2020-10-01T23:59:59+00:00',
+                                        'ViewerCode' => $this->accessCode,
+                                        'ViewedBy' => 'organisation1'
+                                    ],
+                                    1 => [
+                                        'Viewed' => '2020-10-20T23:59:59+00:00',
+                                        'ViewerCode' => $this->accessCode,
+                                        'ViewedBy' => 'organisation2'
+                                    ],
+                                ]
                             ]
                         ),
                     ],
@@ -1170,6 +1182,115 @@ class LpaContext extends BaseIntegrationContext
      * @Then /^I can see all of the access codes and their details$/
      */
     public function iCanSeeAllOfTheAccessCodesAndTheirDetails()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I have shared the access code with organisations to view my LPA$/
+     */
+    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I click to check my access codes that is used to view LPA/
+     */
+    public function iClickToCheckMyAccessCodeThatIsUsedToViewLPA()
+    {
+        //Get the LPA
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        $lpaService = $this->container->get(LpaService::class);
+
+        $lpaData = $lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
+
+        assertArrayHasKey('date', $lpaData);
+        assertArrayHasKey('actor', $lpaData);
+        assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
+        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+        assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
+
+        // Get the share codes
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // ViewerCodes::getCodesByUserLpaActorId
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => '2020-01-05 12:34:56',
+                                'Expires' => '2021-01-05 12:34:56',
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => $this->organisation,
+                                'ViewerCode' => $this->accessCode,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
+        $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
+
+        assertArrayHasKey('ViewerCode', $accessCodes[0]);
+        assertArrayHasKey('Expires', $accessCodes[0]);
+        assertEquals($accessCodes[0]['Organisation'], $this->organisation);
+        assertEquals($accessCodes[0]['SiriusUid'], $this->lpaUid);
+        assertEquals($accessCodes[0]['UserLpaActor'], $this->userLpaActorToken);
+        assertEquals($accessCodes[0]['Expires'], '2021-01-05 12:34:56');
+    }
+
+    /**
+     * @Then /^I can see the name of the organisation that viewed the LPA$/
+     */
+    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA()
     {
         // Not needed for this context
     }

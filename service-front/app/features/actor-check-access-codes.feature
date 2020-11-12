@@ -46,4 +46,20 @@ Feature: The user is able to check the access codes they have created
     Examples:
       | status    |
       | CANCELLED   |
+
+  @ui @integration
+  Scenario: As a user I can see the who has viewed the LPA's I have added using the access code
+    Given I am on the dashboard page
+    And I have created an access code
+    And I have shared the access code with organisations to view my LPA
+    When I click to check my access codes that is used to view LPA
+    Then I can see the name of the organisation that viewed the LPA
+
+  @ui @integration
+  Scenario: As a user I can see the code had not been used to view an LPA
+    Given I am on the dashboard page
+    And I have created an access code
+    And I have shared the access code with organisations to view my LPA
+    When I click to check my access codes
+    Then I can see the code has not been used to view the LPA
     

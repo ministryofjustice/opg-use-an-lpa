@@ -23,8 +23,11 @@
                 <dt class="govuk-summary-list__key">{% trans %}LPA viewed{% endtrans %}</dt>
                 <dd class="govuk-summary-list__value">
                     {% if code.Viewed %}
-                        {% trans %}Viewed{% endtrans %}
+                        {% for code in code.Viewed %}
+                            {{ code.ViewedBy }}<br>
+                        {% endfor %}
                     {% else %}
+                        {{ code.Viewed }}
                         {% trans %}Not Viewed{% endtrans %}
                     {% endif %}
                 </dd>

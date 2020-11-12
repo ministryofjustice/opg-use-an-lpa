@@ -102,8 +102,13 @@
                 <h2 class="govuk-visually-hidden">{% trans %}Support links{% endtrans %}</h2>
                 <ul class="govuk-footer__inline-list">
                     <li class="govuk-footer__inline-list-item">
-                        <a class="govuk-footer__link" href="{{ path('terms-of-use') }}" target="_blank">
+                        <a class="govuk-footer__link" href="{{ path('terms-of-use') }}">
                             {% trans %}Terms of use{% endtrans %}
+                        </a>
+                    </li>
+                    <li class="govuk-footer__inline-list-item">
+                        <a class="govuk-footer__link" href="{{ path('privacy-notice') }}">
+                            {% trans %}Privacy notice{% endtrans %}
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
@@ -112,13 +117,13 @@
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
-                        <a class="govuk-footer__link" href="{{ path('contact-us') }}">
-                            {% trans %}Contact us{% endtrans %}
+                        <a class="govuk-footer__link" href="{{ path('accessibility-statement') }}">
+                            {% trans %}Accessibility statement{% endtrans %}
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
-                        <a class="govuk-footer__link" href="{{ path('accessibility-statement') }}">
-                            {% trans %}Accessibility statement{% endtrans %}
+                        <a class="govuk-footer__link" href="{{ path('contact-us') }}">
+                            {% trans %}Contact us{% endtrans %}
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">

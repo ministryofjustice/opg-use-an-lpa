@@ -28,3 +28,11 @@ Feature: The user is able to check the access codes they have created
     And Co-actors have also created access codes for the same LPA
     When I click to check the access codes
     Then I can see all of the access codes and their details
+
+  @acceptance @integration
+  Scenario: As a user I can see which organisations have used access codes to view an LPA
+    Given I have created an access code
+    And I have shared the access code with organisations to view my LPA
+    When I click to check my access codes that is used to view LPA
+    Then I can see the name of the organisation that viewed the LPA
+

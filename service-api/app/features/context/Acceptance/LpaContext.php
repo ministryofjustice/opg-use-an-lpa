@@ -1413,6 +1413,7 @@ class LpaContext implements Context
             'UserLpaActor' => $this->userLpaActorToken,
             'Organisation' => $this->organisation,
             'ViewerCode' => $this->accessCode,
+            'Viewed' => false,
         ];
 
         $code2 = [
@@ -1422,6 +1423,7 @@ class LpaContext implements Context
             'UserLpaActor' => '65d6833a-66d3-430f-8cf6-9e4fb1d851f1',
             'Organisation' => 'SomeOrganisation',
             'ViewerCode' => 'B97LRK3U68PE',
+            'Viewed' => false,
         ];
 
         // LpaService:getLpas
@@ -1584,5 +1586,150 @@ class LpaContext implements Context
     public function iCanSeeAllOfTheAccessCodesAndTheirDetails()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @Then /^I can see the name of the organisation that viewed the LPA$/
+     */
+    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I have shared the access code with organisations to view my LPA$/
+     */
+    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I click to check my access codes that is used to view LPA$/
+     */
+    public function iClickToCheckMyAccessCodesThatIsUsedToViewLPA()
+    {
+        // Get the LPA
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // API call to get lpa
+        $this->apiGet(
+            '/v1/lpas/' . $this->userLpaActorToken,
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
+
+        // Get the share codes
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // ViewerCodes::getCodesByUserLpaActorId
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                [
+                                'Viewed' => '2020-10-01T23:59:59+00:00',
+                                'ViewerCode' => $this->accessCode,
+                                'ViewedBy' => 'organisation1'
+                                ],
+                                [
+                                'Viewed' => '2020-10-01T23:59:59+00:00',
+                                'ViewerCode' => $this->accessCode,
+                                'ViewedBy' => 'organisation2'
+                                ]
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // ViewerCodeActivity::getStatusesForViewerCodes
+        $this->awsFixtures->append(new Result());
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // API call to get access codes
+        $this->apiGet(
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        assertArrayHasKey('Viewed', $response[0]);
+        assertEquals($response[0][0]['ViewerCode'], $this->accessCode);
+        assertEquals($response[0][0]['ViewedBy'], 'organisation1');
+        assertEquals($response[0][1]['ViewedBy'], 'organisation2');
     }
 }
