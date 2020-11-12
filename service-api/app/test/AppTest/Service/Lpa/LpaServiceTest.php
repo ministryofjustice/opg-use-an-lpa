@@ -7,6 +7,7 @@ namespace AppTest\Service\Lpa;
 use App\DataAccess\Repository;
 use App\DataAccess\Repository\Response\Lpa;
 use App\Service\Lpa\LpaService;
+use App\Service\ViewerCodes\ViewerCodeService;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -65,6 +66,19 @@ class LpaServiceTest extends TestCase
             $this->lpasInterfaceProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
             $this->loggerProphecy->reveal()
+        );
+    }
+
+    private function getViewerCodeService(): ViewerCodeService
+    {
+        $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
+        $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
+        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+
+        $service = new ViewerCodeService(
+            $viewerCodeRepoProphecy->reveal(),
+            $userActorLpaRepoProphecy->reveal(),
+            $lpaServiceProphecy->reveal()
         );
     }
 

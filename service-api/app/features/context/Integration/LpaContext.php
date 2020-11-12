@@ -1307,7 +1307,7 @@ class LpaContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'SiriusUid' => $this->lpaUid,
+                            'SiriusUid' => '700000055554',
                             'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id' => $this->userLpaActorToken,
                             'ActorId' => $this->actorLpaId,
@@ -1318,18 +1318,63 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        // UserLpaActorMap::delete
+        // ViewerCodes::getCodesByLpaId
         $this->awsFixtures->append(
             new Result(
                 [
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'SiriusUid' => '700000000138',
-                                'Added' => '2020-11-04',
-                                'Id' => '3ff586fc-cc66-4901-ba64-8b4aa7e91655',
-                                'ActorId' => 25,
-                                'UserId' => '97321175-a712-403f-b416-eaaa3a891a01'
+                                'Id'            => '1',
+                                'ViewerCode'    => '123ABCD6789',
+                                'SiriusUid'     => '700000055554',
+                                'Added'         => '2021-01-01 00:00:00',
+                                'Expires'       => '2021-02-01 00:00:00',
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => $this->organisation,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        $this->awsFixtures->append(new Result());
+
+        // viewerCodesRepository::removeActorAssociation
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => '2021-01-05 12:34:56',
+                                'Expires' => '2022-01-05 12:34:56',
+                                'UserLpaActor' => '',
+                                'Organisation' => $this->organisation,
+                                'ViewerCode' => '123ABCD6789',
+                                'Viewed' => false,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+       $this->awsFixtures->append(new Result());
+
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'Id' => '1',
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => '2021-01-05 12:34:56',
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId
                             ]
                         ),
                     ],
@@ -1342,6 +1387,6 @@ class LpaContext extends BaseIntegrationContext
         $lpaService = $this->container->get(\App\Service\Lpa\LpaService::class);
         $lpaRemoveResponse = $lpaService->removeLPaFromUserLpaActorMap($this->userLpaActorToken);
 
-        assertNotEmpty($lpaRemoveResponse);
+        assertEmpty($lpaRemoveResponse);
     }
 }

@@ -16,6 +16,7 @@ use RuntimeException;
 /**
  * Class LpaSearchHandler
  * @package App\Handler
+ * @codeCoverageIgnore
  */
 class LpasResourceHandler implements RequestHandlerInterface
 {
