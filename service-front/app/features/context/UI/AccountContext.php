@@ -3643,4 +3643,92 @@ class AccountContext implements Context
             )
         );
     }
+  
+    /**
+     * @Then /^I can see the name of the organisation that viewed the LPA$/
+     */
+    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA()
+    {
+        $this->ui->assertPageContainsText('Active codes');
+        $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
+        $this->ui->assertPageContainsText('LPA Viewed');
+        $this->ui->assertPageContainsText('Natwest');
+        $this->ui->assertPageContainsText('Another Organisation');
+    }
+
+    /**
+     * @When /^I have shared the access code with organisations to view my LPA$/
+     */
+    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I click to check my access codes that is used to view LPA$/
+     */
+    public function iClickToCheckMyAccessCodesThatIsUsedToViewLPA()
+    {
+        $organisation = 'Natwest';
+
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ])
+                )
+            );
+
+        // API call to get access codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        0 => [
+                            'SiriusUid' => $this->lpa->uId,
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Expires' => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode' => $this->accessCode,
+                            'Viewed' => [
+                                0 => [
+                                    'Viewed' => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy' => $organisation
+                                ],
+                                1 => [
+                                    'Viewed' => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy' => 'Another Organisation'
+                                ],
+                            ],
+                            'ActorId' => $this->actorId
+                        ]
+                    ])
+                )
+            );
+
+        $this->ui->clickLink('Check access codes');
+    }
+
+    /**
+     * @Then /^I can see the code has not been used to view the LPA$/
+     */
+    public function iCanSeeTheCodeHasNotBeenUsedToViewTheLPA()
+    {
+        $this->ui->assertPageContainsText('Active codes');
+        $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
+        $this->ui->assertPageContainsText('LPA Viewed');
+        $this->ui->assertPageContainsText('Not Viewed');
+    }
 }
