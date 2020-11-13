@@ -1297,9 +1297,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I confirm removal of the LPA/
+     * @Then /^The LPA is removed/
      */
-    public function iConfirmRremovalOfTheLpa()
+    public function theLPAIsRemoved()
     {
         // UserLpaActorMap::get
         $this->awsFixtures->append(

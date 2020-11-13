@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use App\Exception\NotFoundException;
 
 class LpaServiceTest extends TestCase
 {
@@ -843,5 +844,49 @@ class LpaServiceTest extends TestCase
 
         $result = $service->lookupActiveActorInLpa($lpa, '234567890123');
         $this->assertNull($result);
+    }
+
+    /** @test */
+    public function remove_lpa_from_user_lpa_actor_map_invalid_token()
+    {
+        $userActorLpa = [
+                'SiriusUid' => '700000055554',
+                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id' => '2345Token0123',
+                'ActorId' => '1',
+                'UserId' => '1234',
+            ];
+
+        $viewerCodes = [
+            'Id'            => '1',
+            'ViewerCode'    => '123ABCD6789',
+            'SiriusUid'     => '700000055554',
+            'Added'         => '2020-01-01 00:00:00',
+            'Expires'       => '2021-02-01 00:00:00',
+            'UserLpaActor' => '2345Token0123',
+            'Organisation' => 'Some Organisation',
+        ];
+
+        $removedresponse = [
+            'Id' => '1',
+            'SiriusUid' => '700000055554',
+            'Added' => '2020-01-01 00:00:00',
+            'ActorId' => '1',
+            'UserId' => '1234',
+        ];
+
+        $this->userLpaActorMapInterfaceProphecy
+            ->get('2345Token0123')
+            ->willReturn($userActorLpa)
+            ->shouldBeCalled();
+
+        $this->viewerCodesInterfaceProphecy->getCodesByLpaId($userActorLpa['SiriusUid'])->willReturn($viewerCodes);
+        $this->viewerCodesInterfaceProphecy->removeActorAssociation($viewerCodes['ViewerCode'])->willReturn(true);
+        $this->userLpaActorMapInterfaceProphecy->delete('2345Token0123')->willReturn($removedresponse);
+
+
+        $service = $this->getLpaService();
+        $result = $service->removeLPaFromUserLpaActorMap('2345Token0123');
+        $this->assertEquals($result['SiriusUid'], $userActorLpa['SiriusUid']);
     }
 }

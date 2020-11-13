@@ -344,7 +344,7 @@ class LpaService
                 'User actor lpa record  not found for actor token {Id}',
                 ['Id' => $actorLpaToken]
             );
-            throw new NotFoundException('User actor lpa record  not found for actor token ' . $actorLpaToken);
+           throw new NotFoundException('User actor lpa record  not found for actor token ' . $actorLpaToken);
         }
 
         //Get list of viewer codes to be updated
@@ -360,7 +360,7 @@ class LpaService
         return $this->userLpaActorMapRepository->delete($actorLpaToken);
     }
 
-    private function getListOfViewerCodesToBeUpdated(array $userActorLpa ): ?array
+    private function getListOfViewerCodesToBeUpdated(array $userActorLpa): ?array
     {
         $siriusUid = $userActorLpa['SiriusUid'];
 

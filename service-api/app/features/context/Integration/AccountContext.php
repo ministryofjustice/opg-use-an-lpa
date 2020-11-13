@@ -1401,8 +1401,9 @@ class AccountContext extends BaseIntegrationContext
     /**
      * @When /^I request to delete my account$/
      * @When /^I request to remove the added LPA$/
-     * @Then /^The deleted LPA will not be displayed on the dashboard$/
+     * @Then /^The removed LPA will not be displayed on the dashboard$/
      * @Then /^I can see a flash message for the removed LPA$/
+     * @Then /^I confirm removal of the LPA$/
      */
     public function iRequestToDeleteMyAccount()
     {

@@ -760,7 +760,7 @@ class AccountContext implements Context
     /**
      * @When /^I request to delete my account$/
      * @When /^I request to remove the added LPA$/
-     * @Then /^The deleted LPA will not be displayed on the dashboard$/
+     * @Then /^The removed LPA will not be displayed on the dashboard$/
      * @Then /^I can see a flash message for the removed LPA$/
      */
     public function iRequestToDeleteMyAccount()
@@ -772,6 +772,7 @@ class AccountContext implements Context
      * @Given /^I confirm that I want to delete my account$/
      * @Then /^I am asked to confirm whether I am sure if I want to delete lpa$/
      * @Given /^I am on the confirm lpa deletion page$/
+     * @When /^I confirm removal of the LPA$/
      */
     public function iConfirmThatIWantToDeleteMyAccount()
     {
@@ -1312,9 +1313,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I confirm removal of the LPA$/
+     * @Then /^The LPA is removed$/
      */
-    public function iConfirmRemovalOfTheLPA()
+    public function theLpaIsRemoved()
     {
         $actorToken = 'token123';
         $siriusUid = '700000001';
@@ -1332,6 +1333,48 @@ class AccountContext implements Context
                 'UserId'        => $userId
             ])
         ]));
+
+        //viewerCodesRepository::getCodesByLpaId
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'Id'            => '1',
+                                'ViewerCode'    => '123ABCD6789',
+                                'SiriusUid'     => '700000055554',
+                                'Added'         => '2021-01-01 00:00:00',
+                                'Expires'       => '2021-02-01 00:00:00',
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => $this->organisation,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+        //viewerCodesRepository::removeActorAssociation
+        // viewerCodesRepository::removeActorAssociation
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => '2021-01-05 12:34:56',
+                                'Expires' => '2022-01-05 12:34:56',
+                                'UserLpaActor' => '',
+                                'Organisation' => $this->organisation,
+                                'ViewerCode' => '123ABCD6789',
+                                'Viewed' => false,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
 
         // userLpaActorMapRepository::delete
         $this->awsFixtures->append(new Result([]));

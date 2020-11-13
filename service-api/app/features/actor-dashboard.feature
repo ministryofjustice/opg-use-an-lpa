@@ -44,5 +44,6 @@ Feature: The user is able to see correct information on their dashboard
     Given I am on the dashboard page
     When I request to remove the added LPA
     And I confirm removal of the LPA
-    Then The deleted LPA will not be displayed on the dashboard
+    Then The LPA is removed
+    And The removed LPA will not be displayed on the dashboard
     And I can see a flash message for the removed LPA
