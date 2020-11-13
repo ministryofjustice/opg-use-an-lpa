@@ -76,7 +76,7 @@ class LpaServiceTest extends TestCase
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $lpaServiceProphecy = $this->prophesize(LpaService::class);
 
-        $service = new ViewerCodeService(
+        return new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
             $lpaServiceProphecy->reveal()
@@ -847,7 +847,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function remove_lpa_from_user_lpa_actor_map_invalid_token()
+    public function remove_lpa_from_user_lpa_actor_map_successfully()
     {
         $userActorLpa = [
                 'SiriusUid' => '700000055554',
@@ -886,7 +886,7 @@ class LpaServiceTest extends TestCase
 
 
         $service = $this->getLpaService();
-        $result = $service->removeLPaFromUserLpaActorMap('2345Token0123');
+        $result = $service->removeLpaFromUserLpaActorMap('2345Token0123');
         $this->assertEquals($result['SiriusUid'], $userActorLpa['SiriusUid']);
     }
 }

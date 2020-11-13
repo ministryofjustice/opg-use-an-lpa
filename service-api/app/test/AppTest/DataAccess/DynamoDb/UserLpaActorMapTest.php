@@ -208,7 +208,6 @@ class UserLpaActorMapTest extends TestCase
         $testToken = 'test-token';
 
         $this->dynamoDbClientProphecy->deleteItem(Argument::that(function(array $data) use ($testToken) {
-            //$this->assertArrayHasKey('TableName', $data);
             $this->assertIsArray($data);
 
             $this->assertStringContainsString(SELF::TABLE_NAME, serialize($data));

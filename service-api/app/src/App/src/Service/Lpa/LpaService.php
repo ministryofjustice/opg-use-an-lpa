@@ -335,7 +335,7 @@ class LpaService
      * @param string $actorLpaToken
      * @return array
      */
-    public function removeLPaFromUserLpaActorMap(string $actorLpaToken): array
+    public function removeLpaFromUserLpaActorMap(string $actorLpaToken): array
     {
         $userActorLpa = $this->userLpaActorMapRepository->get($actorLpaToken);
 
@@ -344,7 +344,7 @@ class LpaService
                 'User actor lpa record  not found for actor token {Id}',
                 ['Id' => $actorLpaToken]
             );
-           throw new NotFoundException('User actor lpa record  not found for actor token ' . $actorLpaToken);
+            throw new NotFoundException('User actor lpa record  not found for actor token ' . $actorLpaToken);
         }
 
         //Get list of viewer codes to be updated
