@@ -1852,9 +1852,25 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
+     * @Given /^I should see a flash message to confirm the code that I have cancelled$/
+     */
+    public function iShouldSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @When /^I have shared the access code with organisations to view my LPA$/
      */
     public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I should not see a flash message to confirm the code that I have cancelled$/
+     */
+    public function iShouldNotSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled()
     {
         // Not needed for this context
     }
