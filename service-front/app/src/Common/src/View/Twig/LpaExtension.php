@@ -258,9 +258,9 @@ class LpaExtension extends AbstractExtension
      */
     public function isUserLpaActorSet(string $token): ?bool
     {
-        if (empty($token)) {
+        if (!empty($token)) {
             return true;
         }
-        return null;
+        return false;
     }
 }

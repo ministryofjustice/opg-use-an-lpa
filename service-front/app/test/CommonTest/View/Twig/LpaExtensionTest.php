@@ -483,7 +483,7 @@ class LpaExtensionTest extends TestCase
         $extension = new LpaExtension();
         $isSet = $extension->isUserLpaActorSet($code['UserLpaActor']);
 
-        $this->assertEquals(true, $isSet);
+        $this->assertEquals(false, $isSet);
     }
 
     /** @test */
@@ -502,6 +502,6 @@ class LpaExtensionTest extends TestCase
         $extension = new LpaExtension();
         $isSet = $extension->isUserLpaActorSet($code['UserLpaActor']);
 
-        $this->assertEquals(false, $isSet);
+        $this->assertEquals(true, $isSet);
     }
 }

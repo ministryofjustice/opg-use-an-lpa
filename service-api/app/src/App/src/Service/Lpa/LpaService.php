@@ -4,6 +4,7 @@ namespace App\Service\Lpa;
 
 use App\DataAccess\Repository;
 use App\Exception\GoneException;
+use App\Exception\NotFoundException;
 use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -334,6 +335,7 @@ class LpaService
     /**
      * @param string $actorLpaToken
      * @return array
+     * @throws NotFoundException
      */
     public function removeLpaFromUserLpaActorMap(string $actorLpaToken): array
     {
@@ -344,9 +346,8 @@ class LpaService
                 'User actor lpa record  not found for actor token {Id}',
                 ['Id' => $actorLpaToken]
             );
-            throw new NotFoundException('User actor lpa record  not found for actor token ' . $actorLpaToken);
+            throw new NotFoundException('User actor lpa record  not found for actor token - ' . $actorLpaToken);
         }
-
         //Get list of viewer codes to be updated
         $viewerCodes = $this->getListOfViewerCodesToBeUpdated($userActorLpa);
 
@@ -356,7 +357,6 @@ class LpaService
                 $this->viewerCodesRepository->removeActorAssociation($viewerCode);
             }
         }
-
         return $this->userLpaActorMapRepository->delete($actorLpaToken);
     }
 
