@@ -1960,9 +1960,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I am asked to confirm whether I am sure if I want to/
+     * @Then /^I am asked to confirm whether I am sure if I want to (.*)$/
      */
-    public function iAmAskedToConfirmWhetherIAmSureIfIWantToDeleteLPA()
+    public function iAmAskedToConfirmWhetherIAmSureIfIWantTo($deleteOption)
     {
         // Not needed for this context
     }

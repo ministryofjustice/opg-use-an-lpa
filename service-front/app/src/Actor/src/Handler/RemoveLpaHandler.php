@@ -86,7 +86,9 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware
             [
                 '%donor%' => $donor,
                 '%lpaType%' => $lpaType
-            ]
+            ],
+            null,
+            'flashMessage'
         );
         $flash->flash(self::REMOVE_LPA_FLASH_MSG, $message);
 

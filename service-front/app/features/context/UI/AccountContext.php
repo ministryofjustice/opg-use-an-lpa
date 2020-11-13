@@ -2437,12 +2437,12 @@ class AccountContext implements Context
     /**
      * @Then /^I am asked to confirm whether I am sure if I want to (.*)$/
      */
-    public function iAmAskedToConfirmWhetherIAmSureIfIWantToDeleteMyAccount($deleteOption)
+    public function iAmAskedToConfirmWhetherIAmSureIfIWantTo($deleteOption)
     {
         if($deleteOption === 'delete my account') {
             $this->ui->assertPageAddress('/confirm-delete-account');
             $this->ui->assertPageContainsText('Are you sure you want to delete your account?');
-        } elseif($deleteOption === 'delete lpa') {
+        } elseif($deleteOption === 'remove lpa') {
             $this->ui->assertPageAddress('/lpa/confirm-remove-lpa');
         }
     }
