@@ -1733,4 +1733,73 @@ class LpaContext implements Context
         assertEquals($response[0][0]['ViewedBy'], 'organisation1');
         assertEquals($response[0][1]['ViewedBy'], 'organisation2');
     }
+
+    /**
+     * @Then /^The LPA is removed$/
+     */
+    public function theLpaIsRemoved()
+    {
+        $actorToken = 'token123';
+        $siriusUid = '700000001';
+        $added = '2020-08-20';
+        $actorId = '59';
+        $userId = 'user123';
+
+        // userLpaActorMapRepository::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'            => $actorToken,
+                'SiriusUid'     => $siriusUid,
+                'Added'         => $added,
+                'ActorId'       => $actorId,
+                'UserId'        => $userId
+            ])
+        ]));
+
+        //viewerCodesRepository::getCodesByLpaId
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'Id'            => '1',
+                                'ViewerCode'    => '123ABCD6789',
+                                'SiriusUid'     => '700000055554',
+                                'Added'         => '2021-01-01 00:00:00',
+                                'Expires'       => '2021-02-01 00:00:00',
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => $this->organisation,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+        //viewerCodesRepository::removeActorAssociation
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => '2021-01-05 12:34:56',
+                                'Expires' => '2022-01-05 12:34:56',
+                                'UserLpaActor' => '',
+                                'Organisation' => $this->organisation,
+                                'ViewerCode' => '123ABCD6789',
+                                'Viewed' => false,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // userLpaActorMapRepository::delete
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiDelete('/v1/lpas/' . $actorToken);
+    }
 }

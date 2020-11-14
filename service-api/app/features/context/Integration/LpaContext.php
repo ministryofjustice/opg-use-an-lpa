@@ -1362,7 +1362,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-       $this->awsFixtures->append(new Result());
+        $this->awsFixtures->append(new Result());
 
         $this->awsFixtures->append(
             new Result(
