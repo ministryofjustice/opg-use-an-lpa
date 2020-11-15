@@ -885,7 +885,7 @@ class LpaServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->delete('2345Token0123')->willReturn($removedresponse);
 
         $service = $this->getLpaService();
-        $result = $service->removeLpaFromUserLpaActorMap('2345Token0123');
+        $result = $service->removeLpaFromUserLpaActorMap('1234','2345Token0123');
 
         $this->assertNotEmpty($result);
         $this->assertEquals($result['SiriusUid'], $userActorLpa['SiriusUid']);
@@ -922,14 +922,14 @@ class LpaServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->delete('2345Token0123')->willReturn($removedresponse);
 
         $service = $this->getLpaService();
-        $result = $service->removeLpaFromUserLpaActorMap('2345Token0123');
+        $result = $service->removeLpaFromUserLpaActorMap('1234','2345Token0123');
 
         $this->assertNotEmpty($result);
         $this->assertEquals($result['SiriusUid'], $userActorLpa['SiriusUid']);
     }
 
     /** @test */
-    public function remove_lpa_from_user_lpa_actor_map_when_ator_token_not_found()
+    public function remove_lpa_from_user_lpa_actor_map_when_actor_token_not_found()
     {
         $userActorLpa = null;
         $viewerCodes = null;
@@ -942,6 +942,29 @@ class LpaServiceTest extends TestCase
         $this->expectException(NotFoundException::class);
 
         $service = $this->getLpaService();
-        $result = $service->removeLpaFromUserLpaActorMap('2345Token0123');
+        $result = $service->removeLpaFromUserLpaActorMap('1234','2345Token0123');
+    }
+
+    /** @test */
+    public function remove_lpa_from_user_lpa_actor_map_when_user_id_does_not_match()
+    {
+        $userActorLpa = [
+            'SiriusUid' => '700000055554',
+            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+            'Id' => '2345Token0123',
+            'ActorId' => '1',
+            'UserId' => '6789',
+        ];
+        $viewerCodes = null;
+
+        $this->userLpaActorMapInterfaceProphecy
+            ->get('2345Token0123')
+            ->willReturn($userActorLpa)
+            ->shouldBeCalled();
+
+
+        $service = $this->getLpaService();
+        $result = $service->removeLpaFromUserLpaActorMap('1234','2345Token0123');
+        $this->assertNull($result);
     }
 }

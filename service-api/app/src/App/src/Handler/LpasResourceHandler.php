@@ -79,12 +79,13 @@ class LpasResourceHandler implements RequestHandlerInterface
     public function handleDelete(ServerRequestInterface $request): ResponseInterface
     {
         $actorLpaToken = $request->getAttribute('user-lpa-actor-token');
+        $userToken =  $request->getAttribute('actor-id');
 
         if (!isset($actorLpaToken)) {
             throw new BadRequestException('User actor LPA token must be provided for lpa removal');
         }
 
-        $lpaRemoveResponse = $this->lpaService->removeLpaFromUserLpaActorMap($actorLpaToken);
+        $lpaRemoveResponse = $this->lpaService->removeLpaFromUserLpaActorMap($userToken, $actorLpaToken);
 
         return new JsonResponse($lpaRemoveResponse);
     }

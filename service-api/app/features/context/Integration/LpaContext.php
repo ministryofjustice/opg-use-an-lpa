@@ -1385,7 +1385,7 @@ class LpaContext extends BaseIntegrationContext
         $this->awsFixtures->append(new Result());
 
         $lpaService = $this->container->get(\App\Service\Lpa\LpaService::class);
-        $lpaRemoveResponse = $lpaService->removeLpaFromUserLpaActorMap($this->userLpaActorToken);
+        $lpaRemoveResponse = $lpaService->removeLpaFromUserLpaActorMap($this->userId, $this->userLpaActorToken);
 
         assertEmpty($lpaRemoveResponse);
     }
