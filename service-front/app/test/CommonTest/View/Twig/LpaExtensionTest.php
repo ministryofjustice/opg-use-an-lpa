@@ -33,8 +33,7 @@ class LpaExtensionTest extends TestCase
             'add_hyphen_to_viewer_code' => 'formatViewerCode',
             'check_if_code_is_cancelled' => 'isCodeCancelled',
             'is_lpa_cancelled'           => 'isLpaCancelled',
-            'donor_name_with_dob_removed' => 'donorNameWithDobRemoved',
-            'check_if_user_lpa_actor_set' => 'isUserLpaActorSet',
+            'donor_name_with_dob_removed' => 'donorNameWithDobRemoved'
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
@@ -465,43 +464,5 @@ class LpaExtensionTest extends TestCase
         $donorName = $extension->donorNameWithDobRemoved($donorNameWithDob);
 
         $this->assertEquals('Harry Potter', $donorName);
-    }
-
-    /** @test */
-    public function it_checks_if_user_LPA_actor_is_not_set()
-    {
-        $code = [
-            'SiriusUid' => '700000000138',
-            'Added' => '2020-11-11T16:25:05.004938Z',
-            'Expires' => '2020-12-11T23:59:59+00:00',
-            'Organisation' => 'bank',
-            'UserLpaActor' => '',
-            'ViewerCode' => 'KGC6CB6GNXHC',
-            'Viewed' => false,
-        ];
-
-        $extension = new LpaExtension();
-        $isSet = $extension->isUserLpaActorSet($code['UserLpaActor']);
-
-        $this->assertEquals(false, $isSet);
-    }
-
-    /** @test */
-    public function it_checks_if_user_LPA_actor_is_set()
-    {
-        $code = [
-            'SiriusUid' => '700000000138',
-            'Added' => '2020-11-11T16:25:05.004938Z',
-            'Expires' => '2020-12-11T23:59:59+00:00',
-            'Organisation' => 'bank',
-            'UserLpaActor' => 'be89ba48-0415-4ec7-9ca1-f5e8f7f8b224',
-            'ViewerCode' => 'KGC6CB6GNXHC',
-            'Viewed' => false,
-        ];
-
-        $extension = new LpaExtension();
-        $isSet = $extension->isUserLpaActorSet($code['UserLpaActor']);
-
-        $this->assertEquals(true, $isSet);
     }
 }

@@ -75,11 +75,9 @@
 
                                 {% for code in shareCodes %}
                                     {% set id_counter = ( id_counter | default(0) ) + 1 %}
-                                    {% if not check_if_code_has_expired(code.Expires) %}
-                                        {% if not check_if_code_is_cancelled(code) %}
-                                            {% if check_if_user_lpa_actor_set(code.UserLpaActor) %}
-                                                {{ include('@actor/partials/check-code-details.html.twig', {'id_counter': id_counter }) }}
-                                            {% endif %}
+                                    {% if not (check_if_code_has_expired(code.Expires) and check_if_code_is_cancelled(code)) %}
+                                        {% if code.UserLpaActor is not empty %}
+                                            {{ include('@actor/partials/check-code-details.html.twig', {'id_counter': id_counter }) }}
                                         {% endif %}
                                     {% endif %}
                                 {% endfor %}
