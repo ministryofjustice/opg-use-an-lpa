@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-11-03T16:26:06+00:00\n"
+"POT-Creation-Date: 2020-11-10T17:07:06+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -16,7 +16,7 @@ msgid "Back to your LPAs"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
-#: src/Actor/templates/actor/check-access-codes.html.twig:22
+#: src/Actor/templates/actor/check-access-codes.html.twig:24
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:22
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:64
 #: src/Actor/templates/actor/check-lpa.html.twig:27
@@ -27,7 +27,7 @@ msgid "Property and finance"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
-#: src/Actor/templates/actor/check-access-codes.html.twig:24
+#: src/Actor/templates/actor/check-access-codes.html.twig:26
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:64
 #: src/Actor/templates/actor/check-lpa.html.twig:29
@@ -73,60 +73,60 @@ msgstr ""
 msgid "Access codes for this LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:37
+#: src/Actor/templates/actor/check-access-codes.html.twig:39
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:15
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:14
 msgid "Check access codes"
 msgstr ""
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:40
+#: src/Actor/templates/actor/check-access-codes.html.twig:42
 msgid "There are no access codes for this LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:41
+#: src/Actor/templates/actor/check-access-codes.html.twig:43
 msgid ""
 "When an organisation has been given access you will be able to see the <br>\n"
 "                            access codes and details here."
 msgstr ""
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:45
+#: src/Actor/templates/actor/check-access-codes.html.twig:47
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:13
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:9
 msgid "Give an organisation access"
 msgstr ""
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:66
+#: src/Actor/templates/actor/check-access-codes.html.twig:68
 msgid "Active codes"
 msgstr ""
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:68
+#: src/Actor/templates/actor/check-access-codes.html.twig:70
 msgid "Give an organisation their access code so they can view this LPA. They should go to www.gov.uk/view-lpa to use the code."
 msgstr ""
 
 #. Accordion label
-#: src/Actor/templates/actor/check-access-codes.html.twig:90
+#: src/Actor/templates/actor/check-access-codes.html.twig:92
 msgid "Open all"
 msgstr ""
 
 #. Accordion label
-#: src/Actor/templates/actor/check-access-codes.html.twig:90
+#: src/Actor/templates/actor/check-access-codes.html.twig:92
 msgid "Close all"
 msgstr ""
 
 #. Accordion label
-#: src/Actor/templates/actor/check-access-codes.html.twig:90
+#: src/Actor/templates/actor/check-access-codes.html.twig:92
 msgid "section"
 msgstr ""
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:84
+#: src/Actor/templates/actor/check-access-codes.html.twig:86
 msgid "Inactive codes"
 msgstr ""
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:86
+#: src/Actor/templates/actor/check-access-codes.html.twig:88
 msgid "The following codes will no longer work."
 msgstr ""
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:87
+#: src/Actor/templates/actor/check-access-codes.html.twig:89
 msgid "If an organisation asks to see this <abbr title=\"lasting power of attorney\">LPA</abbr> again, you can <a href=\"%create-code-link%\">make them a new code</a>."
 msgstr ""
 
@@ -281,7 +281,7 @@ msgid "Change password"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:13
-#: src/Common/templates/layout/default.html.twig:104
+#: src/Common/templates/layout/default.html.twig:106
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:15
 msgid "Terms of use"
 msgstr ""
@@ -1940,7 +1940,7 @@ msgid "Viewed"
 msgstr ""
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:28
-msgid "Not Viewed"
+msgid "Not viewed"
 msgstr ""
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:35
@@ -2358,7 +2358,7 @@ msgstr ""
 msgid "Error:"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:109
+#: src/Common/templates/layout/default.html.twig:111
 #: src/Common/templates/partials/cookies.html.twig:22
 msgid "Cookies"
 msgstr ""
@@ -2445,20 +2445,20 @@ msgstr ""
 msgid "Your LPAs"
 msgstr ""
 
+#: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
 #: src/Common/templates/partials/account-bar.html.twig:12
-#: src/Common/templates/partials/session-dialog.html.twig:15
 msgid "Sign out"
 msgstr ""
 
-#: src/Common/templates/partials/session-dialog.html.twig:9
+#: src/Actor/templates/actor/partials/use-session-dialog.html.twig:9
 msgid "We’re about to sign you out"
 msgstr ""
 
-#: src/Common/templates/partials/session-dialog.html.twig:10
+#: src/Actor/templates/actor/partials/use-session-dialog.html.twig:10
 msgid "For your security, we’ll sign you out of this service in <span id=\"time\">5</span> minutes."
 msgstr ""
 
-#: src/Common/templates/partials/session-dialog.html.twig:12
+#: src/Actor/templates/actor/partials/use-session-dialog.html.twig:12
 msgid "Stay signed in"
 msgstr ""
 
@@ -2904,21 +2904,21 @@ msgstr ""
 msgid "Skip to main content"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:49
+#: src/Common/templates/layout/default.html.twig:51
 msgid "Tell us whether you accept cookies"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:50
+#: src/Common/templates/layout/default.html.twig:52
 msgid ""
 "GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us\n"
 "                    improve government digital services. Any data collected is anonymised."
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:55
+#: src/Common/templates/layout/default.html.twig:57
 msgid "Accept all cookies"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:58
+#: src/Common/templates/layout/default.html.twig:60
 msgid "Set cookie preferences"
 msgstr ""
 
@@ -2926,20 +2926,20 @@ msgstr ""
 msgid "GOV.UK"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:100
+#: src/Common/templates/layout/default.html.twig:102
 msgid "Support links"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:114
+#: src/Common/templates/layout/default.html.twig:116
 #: src/Common/templates/partials/contact-us.html.twig:23
 msgid "Contact us"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:124
+#: src/Common/templates/layout/default.html.twig:126
 msgid "Built by OPG Digital"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:134
+#: src/Common/templates/layout/default.html.twig:136
 msgid ""
 "All content is available under the\n"
 "                    <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\">\n"
@@ -2947,7 +2947,7 @@ msgid ""
 "                    </a>, except where otherwise stated"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:143
+#: src/Common/templates/layout/default.html.twig:145
 msgid "© Crown copyright"
 msgstr ""
 
@@ -2986,7 +2986,7 @@ msgid "Hide"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:3
-#: src/Common/templates/layout/default.html.twig:119
+#: src/Common/templates/layout/default.html.twig:121
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:3
 msgid "Accessibility statement"
 msgstr ""
@@ -3428,4 +3428,10 @@ msgstr ""
 
 #: src/Common/templates/error/404.html.twig:23
 msgid "<a href=\"%link%\" draggable=\"false\" class=\"govuk-button\">Start again</a>"
+msgstr ""
+
+#. Cancelling viewer code
+#: src/Actor/templates/actor/flash-messages.html.twig:7
+msgctxt "flashMessage"
+msgid "You cancelled the access code for %organisation%: %code%"
 msgstr ""

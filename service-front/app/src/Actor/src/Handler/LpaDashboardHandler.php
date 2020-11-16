@@ -93,10 +93,10 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
-            'user' => $user,
-            'lpas' => $lpas,
+            'user'                      => $user,
+            'lpas'                      => $lpas,
             'active_access_codes_count' => $totalCodes,
-            'flash'=> $flash
+            'flash'                     => $flash
         ]));
     }
 }

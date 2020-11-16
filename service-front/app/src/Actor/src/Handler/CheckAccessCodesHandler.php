@@ -8,6 +8,8 @@ use Actor\Form\CancelCode;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\Lpa\{LpaService, ViewerCodeService};
+use Mezzio\Flash\FlashMessageMiddleware;
+use Mezzio\Flash\FlashMessagesInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -15,6 +17,11 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use DateTime;
 
+/**
+ * Class CheckAccessCodesHandler
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class CheckAccessCodesHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
     use User;
@@ -98,11 +105,15 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             }
         }
 
+        /** @var FlashMessagesInterface $flash */
+        $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+
         return new HtmlResponse($this->renderer->render('actor::check-access-codes', [
             'actorToken'    => $actorLpaToken,
             'user'          => $user,
             'lpa'           => $lpaData->lpa,
             'shareCodes'    => $shareCodes,
+            'flash'         => $flash
         ]));
     }
 }
