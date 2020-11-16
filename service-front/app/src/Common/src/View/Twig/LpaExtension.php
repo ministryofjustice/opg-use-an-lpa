@@ -35,7 +35,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('add_hyphen_to_viewer_code', [$this, 'formatViewerCode']),
             new TwigFunction('check_if_code_is_cancelled', [$this, 'isCodeCancelled']),
             new TwigFunction('is_lpa_cancelled', [$this, 'isLpaCancelled']),
-            new TwigFunction('donor_name_with_dob_removed', [$this, 'donorNameWithDobRemoved'])
+            new TwigFunction('donor_name_with_dob_removed', [$this, 'donorNameWithDobRemoved']),
             ];
     }
 
