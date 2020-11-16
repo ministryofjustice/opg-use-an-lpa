@@ -955,7 +955,6 @@ class LpaServiceTest extends TestCase
             'ActorId' => '1',
             'UserId' => '6789',
         ];
-        $viewerCodes = null;
 
         $this->userLpaActorMapInterfaceProphecy
             ->get('2345Token0123')
@@ -963,8 +962,9 @@ class LpaServiceTest extends TestCase
             ->shouldBeCalled();
 
 
+        $this->expectException(NotFoundException::class);
+
         $service = $this->getLpaService();
         $result = $service->removeLpaFromUserLpaActorMap('1234','2345Token0123');
-        $this->assertNull($result);
     }
 }

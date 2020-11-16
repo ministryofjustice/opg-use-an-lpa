@@ -352,7 +352,11 @@ class LpaService
 
         // Ensure the passed userId matches the passed token
         if ($userId !== $userActorLpa['UserId']) {
-            return null;
+            $this->logger->notice(
+                'User Id passed does not match the user in userActorLpaMap for token - ' . $actorLpaToken,
+                ['Id' => $actorLpaToken]
+            );
+            throw new NotFoundException('User Id passed does not match the user in userActorLpaMap for token - ' . $actorLpaToken);
         }
 
         //Get list of viewer codes to be updated
