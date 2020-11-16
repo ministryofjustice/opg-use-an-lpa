@@ -7,7 +7,6 @@ namespace Common\Service\I18n\Extractors;
 use Acpr\I18n\ExtractorInterface;
 use Acpr\I18n\PhpExtractor;
 use Common\Service\I18n\CatalogueExtractor;
-use Gettext\Translations;
 
 class PhpFactory
 {
@@ -21,14 +20,12 @@ class PhpFactory
     /**
      * Allows the creation of an extractor that is aware of previous extractions.
      *
-     * @param Translations[] $existing
      * @return CatalogueExtractor
      */
-    public function __invoke(array $existing): CatalogueExtractor
+    public function __invoke(): CatalogueExtractor
     {
         return new CatalogueExtractor(
-            $this->extractor,
-            $existing
+            $this->extractor
         );
     }
 }

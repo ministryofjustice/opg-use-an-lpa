@@ -61,14 +61,19 @@ class TranslationUpdateCommand extends Command
         $io->text(sprintf('Found %d domains', count($existing)));
 
         $io->section('Parsing templates...');
-        $extractorService = ($this->twigExtractorFactory)($existing);
-        $catalogues = $extractorService->extract($this->viewsPaths);
-        $io->text(sprintf('Found %d domains', count($catalogues)));
+        $extractorService = ($this->twigExtractorFactory)();
+        $twigCatalogues = $extractorService->extract($this->viewsPaths);
+        $io->text(sprintf('Found %d domains', count($twigCatalogues)));
 
         $io->section('Parsing php...');
-        $extractorService = ($this->phpExtractorFactory)($catalogues);
-        $catalogues = $extractorService->extract($this->phpPaths);
-        $io->text(sprintf('Found %d domains', count($catalogues)));
+        $extractorService = ($this->phpExtractorFactory)();
+        $phpCatalogues = $extractorService->extract($this->phpPaths);
+        $io->text(sprintf('Found %d domains', count($phpCatalogues)));
+
+        $io->section('Merging translation catalogues...');
+        $extracted = $extractorService->mergeCatalogues($twigCatalogues, $phpCatalogues, 0);
+        $catalogues = $extractorService->mergeCatalogues($existing, $extracted);
+        $io->text(sprintf('%d domains extracted', count($catalogues)));
 
         $io->section('Generating POT file\s...');
         $count = $this->writer->generate($catalogues);

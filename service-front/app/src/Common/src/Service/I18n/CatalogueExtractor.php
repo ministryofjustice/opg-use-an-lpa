@@ -16,22 +16,15 @@ class CatalogueExtractor
 
     protected ExtractorInterface $extractor;
 
-    /** @var Translations[] $existing */
-    private array $existing;
-
     /**
      * TwigCatalogueExtractor constructor.
      *
      * @param ExtractorInterface $extractor
-     * @param Translations[] $existing
      */
     public function __construct(
-        ExtractorInterface $extractor,
-        array $existing = []
+        ExtractorInterface $extractor
     ) {
         $this->extractor = $extractor;
-
-        $this->existing = $existing;
     }
 
     public function extract(array $twigPaths): array
@@ -47,24 +40,26 @@ class CatalogueExtractor
             }
         }
 
-        $this->mergeCatalogues($this->existing, $catalogues);
-
-        return $this->existing;
+        return $catalogues;
     }
 
     /**
      * Merges two catalogues of translations together specifying that the existing catalogue be the starting
      * point for any changes.
      *
-     * @param Translations[] $existing
-     * @param Translations[] $catalogues
+     * @param Translations[] $into An array of translations catalogues to merge new translations into
+     * @param Translations[] $catalogue An array of translations to merge
+     * @param int $strategy The merge strategy to use when merging catalogues
+     * @return array The merged translation catalogues
      */
-    protected function mergeCatalogues(array &$existing, array $catalogues): void
+    public function mergeCatalogues(array $into, array $catalogue, int $strategy = self::MERGE_FLAGS): array
     {
         // Merge with existing
-        foreach ($catalogues as $domain => $translations) {
-            $this->mergeIntoCatalogue($existing, $translations, $domain, self::MERGE_FLAGS);
+        foreach ($catalogue as $domain => $translations) {
+            $this->mergeIntoCatalogue($into, $translations, $domain, $strategy);
         }
+
+        return $into;
     }
 
     /**
