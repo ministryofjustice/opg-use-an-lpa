@@ -51,7 +51,7 @@
     "@babel/runtime": "^7.11.2",
     "@ministryofjustice/frontend": "0.0.18-alpha",
     "@ministryofjustice/opg-performance-analytics": "^1.1.1",
-    "govuk-frontend": "^3.6.0"
+    "govuk-frontend": "^3.9.0"
   },
   "jest-junit": {
     "outputDirectory": "./test-results/junit",
