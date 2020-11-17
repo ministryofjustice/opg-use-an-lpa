@@ -3643,7 +3643,7 @@ class AccountContext implements Context
             )
         );
     }
-  
+
     /**
      * @Then /^I can see the name of the organisation that viewed the LPA$/
      */
@@ -3729,6 +3729,6 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('Active codes');
         $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
         $this->ui->assertPageContainsText('LPA Viewed');
-        $this->ui->assertPageContainsText('Not Viewed');
+        $this->ui->assertPageContainsText('Not viewed');
     }
 }

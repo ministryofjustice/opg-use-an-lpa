@@ -1,4 +1,4 @@
-<div class="signin js-signed-in">
+<nav class="signin js-signed-in" role="navigation" aria-labelledby="account-bar-navigation">
     <p class="govuk-body-s">
         {% trans %}Last signed in:{% endtrans %}
         {{ user.getDetail('LastLogin') is empty
@@ -6,11 +6,11 @@
            : lpa_date(user.getDetail('LastLogin'), 'd MMMM y, h:mma')
         }}
     </p>
-    <nav class="navigation govuk-body-s">
+    <div class="govuk-body-s" id="account-bar-navigation">
         <ul>
             <li><a href="{{ path('your-details') }}" class="govuk-link">{% trans %}Your details{% endtrans %}</a></li>
             <li><a href="{{ path('lpa.dashboard') }}" class="govuk-link">{% trans %}Your LPAs{% endtrans %}</a></li>
             <li><a href="{{ path('logout') }}" class="govuk-link">{% trans %}Sign out{% endtrans %}</a></li>
         </ul>
-    </nav>
-</div>
+    </div>
+</nav>

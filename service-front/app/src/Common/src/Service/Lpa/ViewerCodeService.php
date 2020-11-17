@@ -111,7 +111,9 @@ class ViewerCodeService
             foreach ($shareCodes as $codeKey => $code) {
                 //if the code has not expired
 
-                if (new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23,59,59) &&  !(array_key_exists("Cancelled",$code))) {
+                if (new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23,59,59) &&
+                    !(array_key_exists("Cancelled",$code)) &&
+                    (!empty($code['UserLpaActor']))) {
 
                     $counter += 1;
                 }

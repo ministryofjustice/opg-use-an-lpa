@@ -1950,4 +1950,12 @@ class AccountContext extends BaseIntegrationContext
         assertEquals($this->organisation, $shareCodes[0]['Viewed'][0]['ViewedBy']);
         assertEquals('Another Organisation', $shareCodes[0]['Viewed'][1]['ViewedBy']);
     }
+
+    /**
+     * @Then /^I can see the code has not been used to view the LPA$/
+     */
+    public function iCanSeeTheCodeHasNotBeenUsedToViewTheLPA()
+    {
+        // Not needed for this context
+    }
 }

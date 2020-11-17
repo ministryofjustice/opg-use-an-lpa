@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-11-10T17:07:06+00:00\n"
+"POT-Creation-Date: 2020-11-17T11:18:13+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 2.4\n"
+"X-Generator: Poedit 2.4.2\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 
@@ -18,48 +18,48 @@ msgstr ""
 msgid "Your new access code"
 msgstr "Eich cod mynediad yr LPA newydd"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:13
-#: src/Actor/templates/actor/check-access-codes.html.twig:14
-#: src/Actor/templates/actor/instructions-preferences.html.twig:11
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:13
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:14
+#: src/Actor/templates/actor/check-access-codes.html.twig:15
+#: src/Actor/templates/actor/instructions-preferences.html.twig:12
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:14
 msgid "Back to your LPAs"
 msgstr "Yn ôl i’ch LPAs"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
-#: src/Actor/templates/actor/check-access-codes.html.twig:24
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:22
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:64
-#: src/Actor/templates/actor/check-lpa.html.twig:27
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
-#: src/Common/templates/partials/full-lpa-display.html.twig:13
-#: src/Viewer/templates/viewer/check-code-found.html.twig:27
-msgid "Property and finance"
-msgstr "Eiddo ac arian"
-
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/check-access-codes.html.twig:26
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:64
 #: src/Actor/templates/actor/check-lpa.html.twig:29
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
+#: src/Common/templates/partials/full-lpa-display.html.twig:13
+#: src/Viewer/templates/viewer/check-code-found.html.twig:29
+msgid "Property and finance"
+msgstr "Eiddo ac arian"
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
+#: src/Actor/templates/actor/check-access-codes.html.twig:28
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:26
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:64
+#: src/Actor/templates/actor/check-lpa.html.twig:31
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
-#: src/Viewer/templates/viewer/check-code-found.html.twig:27
+#: src/Viewer/templates/viewer/check-code-found.html.twig:29
 msgid "Health and welfare"
 msgstr "Iechyd a lles"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:31
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:33
 msgid "Give this access code to %organisation%"
 msgstr "Rhowch y cod mynediad hwn i %organisation%"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:36
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:38
 msgid "This code expires in 30 days, on %date%."
 msgstr "Daw’r cod hwn i ben ymhen 30 diwrnod, ar yr %date%."
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:40
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:42
 msgid "Copy code"
 msgstr "Cod copi"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:41
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:43
 msgid "Code copied"
 msgstr "Cod wedi ei gopïo"
 
@@ -83,7 +83,7 @@ msgstr ""
 "Pan fydd %organisation% wedi cael y cod mynediad, dylent fynd i <br> www.gov."
 "uk/gweld-atwrneiaeth-arhosol i weld crynodeb o’r LPA."
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:56
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:58
 msgid "Give another organisation access"
 msgstr "Rhoi mynediad i sefydliad arall"
 
@@ -91,17 +91,17 @@ msgstr "Rhoi mynediad i sefydliad arall"
 msgid "Access codes for this LPA"
 msgstr "Codau mynediad ar gyfer yr LPA hon"
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:39
+#: src/Actor/templates/actor/check-access-codes.html.twig:41
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:15
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:14
 msgid "Check access codes"
 msgstr "Gwirio codau mynediad"
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:42
+#: src/Actor/templates/actor/check-access-codes.html.twig:44
 msgid "There are no access codes for this LPA."
 msgstr "Nid oes codau mynediad ar gyfer yr LPA hon."
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:43
+#: src/Actor/templates/actor/check-access-codes.html.twig:45
 msgid ""
 "When an organisation has been given access you will be able to see the <br>\n"
 "                            access codes and details here."
@@ -109,17 +109,17 @@ msgstr ""
 "Pan fydd sefydliad wedi cael mynediad at LPA, gallwch weld y<br>\n"
 "                            codau mynediad a’r manylion yma."
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:47
+#: src/Actor/templates/actor/check-access-codes.html.twig:49
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:13
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:9
 msgid "Give an organisation access"
 msgstr "Rhoi mynediad i sefydliad"
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:68
+#: src/Actor/templates/actor/check-access-codes.html.twig:70
 msgid "Active codes"
 msgstr "Codau i’w defnyddio"
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:70
+#: src/Actor/templates/actor/check-access-codes.html.twig:72
 msgid ""
 "Give an organisation their access code so they can view this LPA. They should "
 "go to www.gov.uk/view-lpa to use the code."
@@ -128,12 +128,12 @@ msgstr ""
 "gweld-atwrneiaeth-arhosol i ddefnyddio’r cod hwn."
 
 #. Accordion label
-#: src/Actor/templates/actor/check-access-codes.html.twig:92
+#: src/Actor/templates/actor/check-access-codes.html.twig:95
 msgid "Open all"
 msgstr "Agor y cyfan"
 
 #. Accordion label
-#: src/Actor/templates/actor/check-access-codes.html.twig:92
+#: src/Actor/templates/actor/check-access-codes.html.twig:95
 msgid "Close all"
 msgstr "Cau’r cyfan"
 
@@ -142,15 +142,15 @@ msgstr "Cau’r cyfan"
 msgid "section"
 msgstr "adran"
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:86
+#: src/Actor/templates/actor/check-access-codes.html.twig:89
 msgid "Inactive codes"
 msgstr "Codau sydd wedi dod i ben"
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:88
+#: src/Actor/templates/actor/check-access-codes.html.twig:91
 msgid "The following codes will no longer work."
 msgstr "Nid yw’r codau canlynol yn gweithio bellach."
 
-#: src/Actor/templates/actor/check-access-codes.html.twig:89
+#: src/Actor/templates/actor/check-access-codes.html.twig:92
 msgid ""
 "If an organisation asks to see this <abbr title=\"lasting power of attorney"
 "\">LPA</abbr> again, you can <a href=\"%create-code-link%\">make them a new "
@@ -164,41 +164,39 @@ msgstr ""
 msgid "Confirm your new email address"
 msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:13
-#: src/Actor/templates/actor/activate-account.html.twig:11
-#: src/Actor/templates/actor/create-account.html.twig:11
-#: src/Actor/templates/actor/password-reset.html.twig:11
-#: src/Actor/templates/actor/password-change.html.twig:12
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:11
-#: src/Actor/templates/actor/create-account-success.html.twig:11
-#: src/Actor/templates/actor/change-email.html.twig:12
-#: src/Actor/templates/actor/password-reset-request.html.twig:11
-#: src/Actor/templates/actor/death-notification.html.twig:19
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:12
-#: src/Actor/templates/actor/login.html.twig:11
-#: src/Actor/templates/actor/lpa-removed.html.twig:14
-#: src/Actor/templates/actor/check-lpa.html.twig:11
-#: src/Actor/templates/actor/password-reset-not-found.html.twig:11
-#: src/Actor/templates/actor/change-details.html.twig:19
-#: src/Actor/templates/actor/password-reset-request-done.html.twig:11
-#: src/Actor/templates/actor/lpa-add.html.twig:13
-#: src/Common/templates/partials/cookies.html.twig:18
+#: src/Actor/templates/actor/request-email-change-success.html.twig:14
+#: src/Actor/templates/actor/activate-account.html.twig:12
+#: src/Actor/templates/actor/create-account.html.twig:12
+#: src/Actor/templates/actor/password-reset.html.twig:12
+#: src/Actor/templates/actor/password-change.html.twig:13
+#: src/Actor/templates/actor/create-account-success.html.twig:12
+#: src/Actor/templates/actor/change-email.html.twig:13
+#: src/Actor/templates/actor/password-reset-request.html.twig:12
+#: src/Actor/templates/actor/death-notification.html.twig:20
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:13
+#: src/Actor/templates/actor/login.html.twig:12
+#: src/Actor/templates/actor/lpa-removed.html.twig:15
+#: src/Actor/templates/actor/check-lpa.html.twig:12
+#: src/Actor/templates/actor/password-reset-not-found.html.twig:12
+#: src/Actor/templates/actor/change-details.html.twig:20
+#: src/Actor/templates/actor/password-reset-request-done.html.twig:12
+#: src/Actor/templates/actor/lpa-add.html.twig:14
+#: src/Common/templates/partials/cookies.html.twig:19
 #: src/Common/templates/partials/contact-us.html.twig:17
-#: src/Viewer/templates/viewer/check-code-found.html.twig:11
-#: src/Viewer/templates/viewer/enter-code.html.twig:11
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:11
+#: src/Viewer/templates/viewer/check-code-found.html.twig:12
+#: src/Viewer/templates/viewer/enter-code.html.twig:12
 msgid "Back"
 msgstr "Yn ôl"
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:21
+#: src/Actor/templates/actor/request-email-change-success.html.twig:23
 msgid "Updating your email address"
 msgstr "Diweddaru eich cyfeiriad e-bost"
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:23
+#: src/Actor/templates/actor/request-email-change-success.html.twig:25
 msgid "You’ve asked us to change your email address."
 msgstr "Rydych wedi gofyn i ni newid eich cyfeiriad e-bost."
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:25
+#: src/Actor/templates/actor/request-email-change-success.html.twig:27
 msgid ""
 "We've emailed a link to %email% – please follow the link in the email to "
 "confirm the change."
@@ -206,7 +204,7 @@ msgstr ""
 "Rydym wedi anfon dolen i %email% - cliciwch ar y ddolen yn y neges e-bost i "
 "gadarnhau’r newid."
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:27
+#: src/Actor/templates/actor/request-email-change-success.html.twig:29
 msgid ""
 "The email should arrive in a few minutes, check your spam, bulk and junk "
 "folders."
@@ -214,11 +212,11 @@ msgstr ""
 "Dylai’r neges e-bost gyrraedd ymhen ychydig funudau, gwiriwch eich ffolderi "
 "spam, bulk a junk."
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:29
+#: src/Actor/templates/actor/request-email-change-success.html.twig:31
 msgid "The link will work for 48 hours."
 msgstr "Mae gennych 48 awr i glicio ar y ddolen."
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:31
+#: src/Actor/templates/actor/request-email-change-success.html.twig:33
 msgid ""
 "If you’ve already confirmed the change, you can use your new email address to "
 "<a href=\"%link%\" class=\"govuk-link\">sign in</a> now."
@@ -227,25 +225,25 @@ msgstr ""
 "cyfeiriad e-bost newydd i <a href=\"%link%\" class=\"govuk-link\">fewngofnodi</"
 "a>."
 
-#: src/Actor/templates/actor/activate-account.html.twig:18
+#: src/Actor/templates/actor/activate-account.html.twig:20
 msgid "Account activated"
 msgstr "Cyfrif wedi’i gadarnhau"
 
-#: src/Actor/templates/actor/activate-account.html.twig:23
+#: src/Actor/templates/actor/activate-account.html.twig:25
 msgid "Thank you. We've now activated your account."
 msgstr "Diolch yn fawr. Rydym wedi cadarnhau eich cyfrif."
 
-#: src/Actor/templates/actor/activate-account.html.twig:24
+#: src/Actor/templates/actor/activate-account.html.twig:26
 msgid "Please <a href=\"%link%\" class=\"govuk-link\">sign in</a>"
 msgstr ""
 "Gallwch nawr <a href=\"%link%\" class=\"govuk-link\">fewngofnodi i’ch cyfrif</"
 "a>"
 
-#: src/Actor/templates/actor/create-account.html.twig:27
+#: src/Actor/templates/actor/create-account.html.twig:29
 msgid "Create an account"
 msgstr "Creu cyfrif"
 
-#: src/Actor/templates/actor/create-account.html.twig:31
+#: src/Actor/templates/actor/create-account.html.twig:33
 msgid ""
 "If you already have an account, please <a href=\"%link%\" class=\"govuk-link"
 "\">sign in</a>."
@@ -253,15 +251,15 @@ msgstr ""
 "Os oes gennych gyfrif yn barod, <a href=\"%link%\" class=\"govuk-link"
 "\">mewngofnodwch</a>."
 
-#: src/Actor/templates/actor/create-account.html.twig:40
+#: src/Actor/templates/actor/create-account.html.twig:42
 msgid "Enter your email address"
 msgstr "Teipiwch eich cyfeiriad e-bost"
 
-#: src/Actor/templates/actor/create-account.html.twig:47
+#: src/Actor/templates/actor/create-account.html.twig:49
 msgid "Create a password"
 msgstr "Crëwch gyfrinair"
 
-#: src/Actor/templates/actor/create-account.html.twig:48
+#: src/Actor/templates/actor/create-account.html.twig:50
 msgid ""
 "Your password needs to have: <ul class=\"govuk-list--bullet\"><li>at least 8 "
 "characters</li><li>at least one lower-case and one capital letter</li><li>at "
@@ -271,67 +269,67 @@ msgstr ""
 "leiaf 8 o nodau</li><li>o leiaf un llythyren fach ac un briflythyren</li><li>o "
 "leiaf un rhif</li></ul>"
 
-#: src/Actor/templates/actor/change-email.html.twig:34
+#: src/Actor/templates/actor/change-email.html.twig:36
 msgid "Confirm your password"
 msgstr "Cadarnhau eich cyfrinair"
 
-#: src/Actor/templates/actor/create-account.html.twig:57
+#: src/Actor/templates/actor/create-account.html.twig:59
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:243
-#: src/Actor/templates/actor/check-lpa.html.twig:66
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:60
-#: src/Viewer/templates/viewer/check-code-found.html.twig:43
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:245
+#: src/Actor/templates/actor/check-lpa.html.twig:68
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
+#: src/Viewer/templates/viewer/check-code-found.html.twig:45
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:45
 msgid "Warning"
 msgstr "Rhybudd"
 
-#: src/Actor/templates/actor/create-account.html.twig:58
-#: src/Actor/templates/actor/password-reset.html.twig:45
-#: src/Actor/templates/actor/password-change.html.twig:35
+#: src/Actor/templates/actor/create-account.html.twig:60
+#: src/Actor/templates/actor/password-reset.html.twig:47
+#: src/Actor/templates/actor/password-change.html.twig:38
 msgid "Never share your password with anyone."
 msgstr "Peidiwch â rhoi eich cyfrinair i neb arall."
 
-#: src/Actor/templates/actor/create-account.html.twig:64
+#: src/Actor/templates/actor/create-account.html.twig:66
 msgid "Create account"
 msgstr "Creu cyfrif"
 
-#: src/Actor/templates/actor/password-reset.html.twig:27
-#: src/Actor/templates/actor/password-change.html.twig:22
+#: src/Actor/templates/actor/password-reset.html.twig:29
+#: src/Actor/templates/actor/password-change.html.twig:25
 msgid "Change your password"
 msgstr "Newid eich cyfrinair"
 
-#: src/Actor/templates/actor/password-reset.html.twig:37
-#: src/Actor/templates/actor/password-change.html.twig:29
+#: src/Actor/templates/actor/password-reset.html.twig:39
+#: src/Actor/templates/actor/password-change.html.twig:32
 msgid "Your password needs to have:"
 msgstr "Mae’n rhaid i’ch cyfrinair gynnwys:"
 
-#: src/Actor/templates/actor/password-reset.html.twig:40
-#: src/Actor/templates/actor/password-change.html.twig:31
+#: src/Actor/templates/actor/password-reset.html.twig:42
+#: src/Actor/templates/actor/password-change.html.twig:34
 msgid "at least 8 characters"
 msgstr "o leiaf 8 o nodau"
 
-#: src/Actor/templates/actor/password-reset.html.twig:41
-#: src/Actor/templates/actor/password-change.html.twig:32
+#: src/Actor/templates/actor/password-reset.html.twig:43
+#: src/Actor/templates/actor/password-change.html.twig:35
 msgid "at least one lower-case and one capital letter"
 msgstr "o leiaf un llythyren fach ac un briflythyren"
 
-#: src/Actor/templates/actor/password-reset.html.twig:42
-#: src/Actor/templates/actor/password-change.html.twig:33
+#: src/Actor/templates/actor/password-reset.html.twig:44
+#: src/Actor/templates/actor/password-change.html.twig:36
 msgid "at least one number"
 msgstr "o leiaf un rhif"
 
-#: src/Actor/templates/actor/password-reset.html.twig:47
+#: src/Actor/templates/actor/password-reset.html.twig:49
 #: src/Actor/templates/actor/your-details.html.twig:37
-#: src/Actor/templates/actor/login.html.twig:37
+#: src/Actor/templates/actor/login.html.twig:39
 msgid "Password"
 msgstr "Cyfrinair"
 
-#: src/Actor/templates/actor/password-reset.html.twig:49
+#: src/Actor/templates/actor/password-reset.html.twig:51
 msgid "Confirm Password"
 msgstr "Cadarnhau cyfrinair"
 
-#: src/Actor/templates/actor/password-reset.html.twig:51
-#: src/Actor/templates/actor/password-change.html.twig:41
+#: src/Actor/templates/actor/password-reset.html.twig:53
+#: src/Actor/templates/actor/password-change.html.twig:44
 msgid "Change password"
 msgstr "Newid eich cyfrinair"
 
@@ -778,15 +776,15 @@ msgstr ""
 "                        Byddwch yn cytuno i unrhyw newidiadau os byddwch yn "
 "parhau i ddefnyddio’r gwasanaeth ar ôl i’r telerau defnyddio gael eu diweddaru."
 
-#: src/Actor/templates/actor/password-change.html.twig:37
+#: src/Actor/templates/actor/password-change.html.twig:40
 msgid "Current password"
 msgstr "Cyfrinair presennol"
 
-#: src/Actor/templates/actor/password-change.html.twig:38
+#: src/Actor/templates/actor/password-change.html.twig:41
 msgid "New password"
 msgstr "Cyfrinair newydd"
 
-#: src/Actor/templates/actor/password-change.html.twig:39
+#: src/Actor/templates/actor/password-change.html.twig:42
 msgid "Confirm new password"
 msgstr "Cadarnhau cyfrinair newydd"
 
@@ -795,20 +793,20 @@ msgstr "Cadarnhau cyfrinair newydd"
 msgid "LPA summary"
 msgstr "Crynodeb o’r LPA"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:14
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:15
 msgid "Back to your <abbr title=\"lasting power of attorney\">LPAs</abbr>"
 msgstr "Yn ôl i’ch <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr>"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:34
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:36
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr "Gweld crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:42
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:44
 msgid ""
 "This <abbr title=\"lasting power of attorney\">LPA</abbr> has been cancelled"
 msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon wedi ei chanslo"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:51
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:53
 msgid ""
 "This <abbr title=\"lasting power of attorney\">LPA</abbr> is registered and "
 "can be used now"
@@ -816,12 +814,12 @@ msgstr ""
 "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon wedi ei chofrestru a "
 "gallwch nawr ei defnyddio"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:53
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:55
 msgid "This <abbr title=\"lasting power of attorney\">LPA</abbr> is registered"
 msgstr ""
 "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon wedi ei chofrestru"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:60
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:62
 msgid ""
 "While you have mental capacity, your attorneys must get your permission to use "
 "this <abbr title=\"lasting power of attorney\">LPA</abbr>."
@@ -829,7 +827,7 @@ msgstr ""
 "Tra bod gennych allu meddyliol, rhaid i’ch atwrneiod gael eich caniatâd chi i "
 "ddefnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon."
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:62
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:64
 msgid ""
 "While the donor has mental capacity, you must get their permission to use this "
 "<abbr title=\"lasting power of attorney\">LPA</abbr>."
@@ -837,7 +835,7 @@ msgstr ""
 "Tra bod gan y rhoddwr allu meddyliol, rhaid i chi gael eu caniatâd i "
 "ddefnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon."
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:65
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:67
 msgid ""
 "This <abbr title=\"lasting power of attorney\">LPA</abbr> can only be used "
 "when the donor has lost capacity."
@@ -845,7 +843,7 @@ msgstr ""
 "Ni ellir defnyddio’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> hon ond "
 "pan nad oes gan y rhoddwr alluedd meddyliol."
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:198
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:200
 msgid ""
 "This <abbr title=\"lasting power of attorney\">LPA</abbr> can be used as soon "
 "as it's registered unless instructions say otherwise."
@@ -854,7 +852,7 @@ msgstr ""
 "gynted ag y bydd wedi’i chofrestru oni bai bod y cyfarwyddiadau yn dweud fel "
 "arall."
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:207
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:209
 #: src/Common/templates/partials/full-lpa-display.html.twig:228
 msgid ""
 "The attorneys have the authority to make decisions about life-sustaining "
@@ -863,7 +861,7 @@ msgstr ""
 "Mae gan yr atwrneiod awdurdod i wneud penderfyniadau ynglŷn â thriniaeth "
 "cynnal bywyd"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:73
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:75
 #: src/Common/templates/partials/full-lpa-display.html.twig:91
 msgid ""
 "The attorneys do NOT have the authority to make decisions about life-"
@@ -872,52 +870,52 @@ msgstr ""
 "NID oes gan yr atwrneiod yr awdurdod i wneud penderfyniadau ynglŷn â "
 "thriniaeth cynnal bywyd"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:83
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:85
 #: src/Common/templates/partials/full-lpa-display.html.twig:110
 msgid "The donor"
 msgstr "Y rhoddwr"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:133
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:135
 #: src/Common/templates/partials/full-lpa-display.html.twig:162
 msgid "Name"
 msgstr "Enw"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:137
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:139
 #: src/Common/templates/partials/full-lpa-display.html.twig:166
 msgid "Date of birth"
 msgstr "Dyddiad geni"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:141
-#: src/Actor/templates/actor/change-details.html.twig:72
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:143
+#: src/Actor/templates/actor/change-details.html.twig:74
 #: src/Common/templates/partials/full-lpa-display.html.twig:170
 msgid "Address"
 msgstr "Cyfeiriad"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:100
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:102
 msgid "Need to change the donor's details?"
 msgstr "A oes angen newid manylion y rhoddwr?"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:109
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:111
 #: src/Common/templates/partials/full-lpa-display.html.twig:139
 msgid "The attorneys"
 msgstr "Yr atwrneiod"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:112
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:114
 #: src/Common/templates/partials/full-lpa-display.html.twig:142
 msgid "How decisions are made"
 msgstr "Sut y gwneir penderfyniadau"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:115
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:117
 #: src/Common/templates/partials/full-lpa-display.html.twig:145
 msgid "Decisions are made by one attorney"
 msgstr "Gwneir penderfyniadau gan un atwrnai"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:117
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:119
 #: src/Common/templates/partials/full-lpa-display.html.twig:147
 msgid "Attorneys must make decisions jointly (together)"
 msgstr "Rhaid i atwrneiod wneud penderfyniadau ar y cyd (gyda’i gilydd)"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:119
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:121
 #: src/Common/templates/partials/full-lpa-display.html.twig:149
 msgid ""
 "Attorneys can make decisions jointly (together) and severally (separately)"
@@ -925,7 +923,7 @@ msgstr ""
 "Gall atwrneiod wneud penderfyniadau ar y cyd (gyda’i gilydd) neu yn annibynnol "
 "ar ei gilydd (ar wahân)"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:121
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:123
 msgid ""
 "Attorneys must make some decisions jointly (together) and can make some "
 "decisions severally (separately). Check the paper <abbr title=\"lasting power "
@@ -936,7 +934,7 @@ msgstr ""
 "Gwiriwch yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> papur i gael gwybod "
 "pa benderfyniadau y mae’n rhaid eu gwneud ar y cyd."
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:129
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:131
 #: src/Common/templates/partials/full-lpa-display.html.twig:158
 msgid "%attorneyOrdinal% attorney"
 msgid_plural "%attorneyOrdinal% attorney"
@@ -947,20 +945,20 @@ msgstr[3] "%attorneyOrdinal% atwrnai"
 msgstr[4] "%attorneyOrdinal% atwrnai"
 msgstr[5] "%attorneyOrdinal% atwrnai"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:148
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:150
 msgid "Need to change an attorney's details?"
 msgstr "A oes angen newid manylion atwrnai?"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:160
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:162
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> details"
 msgstr "Manylion <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:164
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:166
 #: src/Common/templates/partials/full-lpa-display.html.twig:189
 msgid "Preferences"
 msgstr "Dymuniadau"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:167
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:169
 msgid ""
 "Yes, the donor made preferences on their <abbr title=\"lasting power of "
 "attorney\">LPA</abbr>.<br>To view these, ask to see the paper <abbr title="
@@ -970,17 +968,17 @@ msgstr ""
 "\">LPA</abbr>. I weld y rhain, gofynnwch am gael gweld y <abbr title="
 "\"atwrneiaeth arhosol\">LPA</abbr> papur"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:180
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:182
 #: src/Common/templates/partials/full-lpa-display.html.twig:205
 msgid "No"
 msgstr "Nac oes"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:175
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:177
 #: src/Common/templates/partials/full-lpa-display.html.twig:200
 msgid "Instructions"
 msgstr "Cyfarwyddiadau"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:178
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:180
 msgid ""
 "Yes, the donor set instructions on their <abbr title=\"lasting power of "
 "attorney\">LPA</abbr>.<br>To view these, ask to see the paper <abbr title="
@@ -990,13 +988,13 @@ msgstr ""
 "arhosol\">LPA</abbr>. I weld y rhain, gofynnwch am gael gweld y <abbr title="
 "\"atwrneiaeth arhosol\">LPA</abbr> papur"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:187
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:189
 msgid ""
 "When can the <abbr title=\"lasting power of attorney\">LPA</abbr> be used?"
 msgstr ""
 "Pa bryd y gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:191
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:193
 msgid ""
 "You have said that this <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "can be used now. While you have mental capacity, your attorneys can only use "
@@ -1007,7 +1005,7 @@ msgstr ""
 "gael eich caniatâd chi i ddefnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</"
 "abbr>."
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:193
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:195
 msgid ""
 "The donor has said that this <abbr title=\"lasting power of attorney\">LPA</"
 "abbr> can be used now. While the donor has mental capacity, you can only use "
@@ -1019,7 +1017,7 @@ msgstr ""
 "caniatâd y rhoddwr i ddefnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</"
 "abbr>."
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:196
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:198
 msgid ""
 "This <abbr title=\"lasting power of attorney\">LPA</abbr> can only be used "
 "when the donor has lost capacity"
@@ -1029,11 +1027,11 @@ msgstr ""
 
 # Should be:
 # life-sustaining treatment
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:204
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:206
 msgid "Life sustaining <br>treatment"
 msgstr "Triniaeth <br>cynnal bywyd"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:209
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:211
 #: src/Common/templates/partials/full-lpa-display.html.twig:230
 msgid ""
 "The attorneys do not have the authority to make decisions about life-"
@@ -1042,7 +1040,7 @@ msgstr ""
 "Nid oes gan yr atwrneiod yr awdurdod i wneud penderfyniadau ynglŷn â "
 "thriniaeth cynnal bywyd"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:211
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:213
 msgid ""
 "To view this, ask to see the paper <abbr title=\"lasting power of attorney"
 "\">LPA</abbr>"
@@ -1050,22 +1048,22 @@ msgstr ""
 "I weld y manylion hyn, gofynnwch am gael gweld y <abbr title=\"atwrneiaethau "
 "arhosol\">LPA</abbr> papur"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:218
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:220
 msgid "Date donor signed <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 "Y Dyddiad y llofnododd y rhoddwr yr <abbr title=\"atwrneiaethau arhosol"
 "\">LPAs</abbr>"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:223
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:225
 #: src/Common/templates/partials/full-lpa-display.html.twig:244
 msgid "Registration date"
 msgstr "Dyddiad cofrestru"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:228
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:230
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
 msgstr "Cyfeirnod <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:244
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:246
 msgid ""
 "You cannot use a download or print out of this <abbr title=\"lasting power of "
 "attorney\">LPA</abbr> summary in place of the original paper <abbr title="
@@ -1083,12 +1081,13 @@ msgstr ""
 msgid "Use a lasting power of attorney"
 msgstr "Defnyddio atwrneiaeth arhosol"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:16
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:16
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:14
+#: src/Common/templates/layout/default.html.twig:111
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:14
 msgid "Privacy notice"
 msgstr "Hysbysiad preifatrwydd"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:18
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:16
 msgid ""
 "This privacy notice explains why the Office of the Public Guardian (OPG)\n"
 "                    collects personal data when you use the ‘Use a lasting "
@@ -1099,37 +1098,37 @@ msgstr ""
 "                    yn casglu data personol pan fyddwch yn defnyddio’r "
 "gwasanaeth ‘Defnyddio atwrneiaeth arhosol’ (LPA)."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:23
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:25
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:21
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:23
 msgid "This privacy notice also explains:"
 msgstr "Mae’r hysbysiad preifatrwydd hwn hefyd yn egluro:"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:26
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:29
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:24
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:27
 msgid "how we store your data"
 msgstr "sut rydym yn storio eich data"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:27
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:31
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:25
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:29
 msgid "what we do with your data"
 msgstr "beth rydym yn ei wneud gyda’ch data"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:28
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:33
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:26
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:31
 msgid "how you can get a copy of the data we have about you"
 msgstr "sut y gallwch gael copi o’r data sydd gennym amdanoch"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:29
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:35
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:27
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:33
 msgid "how you can complain if you think we’ve done something wrong"
 msgstr ""
 "sut y gallwch wneud cwyn os ydych yn credu ein bod wedi gwneud rhywbeth o’i le"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:32
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:30
 msgid "You should read this privacy notice alongside:"
 msgstr "Dylech ddarllen yr hysbysiad preifatrwydd hwn ochr yn ochr â:"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:35
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:33
 msgid ""
 "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/"
 "office-of-the-public-guardian/about/personal-information-charter\">\n"
@@ -1144,7 +1143,7 @@ msgstr ""
 "                        </a>, sy’n nodi’r safonau y gallwch eu disgwyl pan "
 "fyddwn yn gofyn am eich gwybodaeth bersonol, ei defnyddio neu ei rhannu"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:42
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:40
 msgid ""
 "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/opg-"
 "privacy-notice-lasting-and-enduring-powers-of-attorney\">\n"
@@ -1159,11 +1158,11 @@ msgstr ""
 "                        </a>, sy’n egluro sut rydym yn defnyddio ac yn diogelu "
 "eich data pan fyddwch wedi’ch enwi ar LPA"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:50
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:48
 msgid "Who manages the Use a lasting power of attorney service"
 msgstr "Pwy sy’n rheoli’r gwasanaeth Defnyddio atwrneiaeth arhosol"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:51
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:49
 msgid ""
 "This service is managed by OPG, which is an executive agency sponsored by the "
 "Ministry of Justice (MOJ)."
@@ -1172,7 +1171,7 @@ msgstr ""
 "gwasanaeth hwn, sef asiantaeth weithredol sy’n cael ei chefnogi gan y "
 "Weinyddiaeth Gyfiawnder (MOJ)."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:53
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:51
 msgid ""
 "MOJ is the data controller for the personal data we store.\n"
 "                    <a class=\"govuk-link\" href=\"https://www.gov.uk/"
@@ -1192,8 +1191,8 @@ msgstr ""
 "                    </a>\n"
 "                    yn egluro sut rydym yn prosesu data personol."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:62
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:58
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:60
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:56
 msgid ""
 "You can find more information about using the Use a lasting power of attorney "
 "service in our\n"
@@ -1205,11 +1204,11 @@ msgstr ""
 "defnyddio a’r <a class=\"govuk-link\" href=\"%cookie%\">polisi cwcis."
 
 # What data we collect and how we use it
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:65
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:63
 msgid "Why we collect personal data and how we use it"
 msgstr "Pa ddata rydym ni’n ei gasglu a sut rydym yn ei ddefnyddio"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:66
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:64
 msgid ""
 "We only collect the personal data that is relevant for the services we are "
 "providing to you."
@@ -1217,7 +1216,7 @@ msgstr ""
 "Rydym ond yn casglu’r data personol sy’n berthnasol i’r gwasanaethau rydym yn "
 "eu darparu ar eich cyfer."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:67
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:65
 msgid ""
 "In order to use this service, you need to enter some personal data and create "
 "an account"
@@ -1225,24 +1224,24 @@ msgstr ""
 "Er mwyn gallu defnyddio’r gwasanaeth hwn, bydd angen i chi roi data personol i "
 "ni a chreu cyfrif"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:68
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:66
 msgid "The personal data we collect includes:"
 msgstr "Mae’r data personol rydym yn ei gasglu yn cynnwys:"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:70
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:68
 msgid "your email address"
 msgstr "eich cyfeiriad e-bost"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:71
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:69
 msgid "your name and date of birth"
 msgstr "eich enw a’ch dyddiad geni"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:72
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:76
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:70
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:74
 msgid "your computer’s IP address while you use this service"
 msgstr "cyfeiriad IP eich cyfrifiadur tra byddwch yn defnyddio’r gwasanaeth hwn"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:76
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:74
 msgid ""
 "We use the data to find the <abbr title=\"Lasting power of attorney\">LPA</"
 "abbr> you’re named on and to create your account."
@@ -1250,7 +1249,7 @@ msgstr ""
 "Rydym yn defnyddio’r data i ddod o hyd i’r <abbr title=\"atwrneiaeth arhosol"
 "\">LPA</abbr> rydych wedi’ch henwi arni ac i greu eich cyfrif."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:79
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:77
 msgid ""
 "The service also keeps a record of the <abbr title=\"lasting power of attorney"
 "\">LPA</abbr> access codes you’ve made and which organisations you made them "
@@ -1260,7 +1259,7 @@ msgstr ""
 "\"atwrneiaethau arhosol\">LPA</abbr> rydych wedi’u creu a’r sefydliadau rydych "
 "wedi rhoi cod iddynt."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:82
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:80
 msgid ""
 "If other people named on the <abbr title=\"lasting power of attorney\">LPA</"
 "abbr> (the donor or attorneys) are also using the service,\n"
@@ -1272,12 +1271,12 @@ msgstr ""
 "                    gallant weld pa sefydliadau rydych wedi creu codau "
 "mynediad ar eu cyfer."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:85
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:81
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:83
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:79
 msgid "Cookies and site usage data"
 msgstr "Cwcis a data am y defnydd a wneir o’r gwasanaeth"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:87
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:85
 msgid ""
 "We collect site usage information from this service. This allows us to see how "
 "the service is being used so we can improve it.\n"
@@ -1290,7 +1289,7 @@ msgstr ""
 "fe’i cedwir ar wahân i’r wybodaeth y byddwch yn ei rhoi wrth ddefnyddio’r "
 "gwasanaeth hwn."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:91
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:89
 msgid ""
 "Find out more about <a class=\"govuk-link\" href=\"https://www.gov.uk/help/"
 "cookies\">cookies</a>."
@@ -1298,12 +1297,12 @@ msgstr ""
 "Darganfod mwy am <a class=\"govuk-link\" href=\"https://www.gov.uk/help/cookies"
 "\">gwcis</a>."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:93
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:93
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:91
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:91
 msgid "Legal basis for processing this data"
 msgstr "Y sail gyfreithiol dros brosesu’r data hwn"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:95
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:93
 msgid ""
 "Your use of this online service is optional.\n"
 "                    If you prefer, you can show the original paper <abbr title="
@@ -1315,7 +1314,7 @@ msgstr ""
 "title=\"atwrneiaeth arhosol\">LPA</abbr>, neu gopi ardystiedig, i bobl sydd "
 "angen ei weld."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:99
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:97
 msgid ""
 "We operate the Use a lasting power of attorney service as part of our legal "
 "responsibilities under the Mental Capacity Act 2005."
@@ -1323,11 +1322,11 @@ msgstr ""
 "Rydym yn cynnig y gwasanaeth Defnyddio atwrneiaeth arhosol fel rhan o’n "
 "cyfrifoldebau cyfreithiol dan Ddeddf Galluedd Meddyliol 2005."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:101
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:99
 msgid "Personal data and the online summary"
 msgstr "Data personol a’r crynodeb ar-lein"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:103
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:101
 msgid ""
 "The donor or an attorney named on an <abbr title=\"lasting power of attorney"
 "\">LPA</abbr> can use this service\n"
@@ -1339,19 +1338,19 @@ msgstr ""
 "                    i roi mynediad i drydydd parti at grynodeb ar-lein o’r "
 "<abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:107
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:105
 msgid "This summary includes:"
 msgstr "Mae’r crynodeb hwn yn cynnwys:"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:110
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:108
 msgid "the name and address of the donor and any active attorneys"
 msgstr "enw a chyfeiriad y rhoddwr ac unrhyw atwrneiod gweithredol"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:111
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:109
 msgid "the name of any inactive attorneys"
 msgstr "enw unrhyw atwrnai anweithredol"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:112
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:110
 msgid ""
 "whether the <abbr title=\"lasting power of attorney\">LPA</abbr> is currently "
 "valid"
@@ -1359,7 +1358,7 @@ msgstr ""
 "a yw’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> yn weithredol ar hyn o "
 "bryd"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:113
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:111
 msgid ""
 "when the <abbr title=\"lasting power of attorney\">LPA</abbr> can be used "
 "(property and finance <abbr title=\"lasting powers of attorney\">LPAs</abbr> "
@@ -1369,7 +1368,7 @@ msgstr ""
 "(<abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar gyfer eiddo a materion "
 "ariannol yn unig)"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:114
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:112
 msgid ""
 "whether the donor chose to allow their attorneys to make decisions on life-"
 "sustaining treatment\n"
@@ -1381,11 +1380,11 @@ msgstr ""
 "                        (<abbr title=\"atwrneiaeth arhosol\">LPAs</abbr> ar "
 "gyfer iechyd a lles yn unig)"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:118
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:116
 msgid "Third parties can download and keep a copy of the summary."
 msgstr "Gall trydydd parti lawrlwytho a chadw copi o’r crynodeb."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:121
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:119
 msgid ""
 "We’re not responsible for how personal data, accessed by a third party using a "
 "code created by a donor or attorney, is used, shared, or held."
@@ -1394,7 +1393,7 @@ msgstr ""
 "y ceir mynediad ato gan drydydd parti drwy ddefnyddio cod a grëwyd gan roddwr "
 "neu atwrnai."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:125
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:123
 msgid ""
 "Information you enter into the service is stored in a secure database within "
 "the European Economic Area (EEA).\n"
@@ -1410,7 +1409,7 @@ msgstr ""
 "AEE.\n"
 "                    Ni chedwir data mewn gwlad y tu allan i’r AEE."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:130
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:128
 msgid ""
 "It may sometimes be necessary to transfer personal information overseas.\n"
 "                    Any transfers will fully comply with all aspects of data "
@@ -1420,13 +1419,13 @@ msgstr ""
 "                    Bydd unrhyw drosglwyddiadau a wneir yn cydymffurfio’n "
 "llwyr â phob agwedd o’r gyfraith diogelu data."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:133
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:111
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:131
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:109
 msgid "Who has access to data in the service"
 msgstr "Pwy sydd â mynediad i ddata yn y gwasanaeth hwn"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:135
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:113
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:133
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:111
 msgid ""
 "MOJ staff are responsible for supporting the service and have access to the "
 "secure database."
@@ -1434,7 +1433,7 @@ msgstr ""
 "Staff <abbr title=\"Weinyddiaeth Gyfiawnder\">MOJ</abbr> sy’n gyfrifol am "
 "gefnogi’r gwasanaeth ac mae ganddynt fynediad at y gronfa ddata ddiogel."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:138
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:136
 msgid ""
 "All OPG staff who have access to the database have MOJ security clearance."
 msgstr ""
@@ -1442,7 +1441,7 @@ msgstr ""
 "sydd â mynediad at y gronfa ddata gliriad diogelwch <abbr title=\"Weinyddiaeth "
 "Gyfiawnder\">MOJ</abbr>."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:141
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:139
 msgid ""
 "Our hosting provider (Amazon Web Services) is not allowed to routinely access "
 "the secure data.\n"
@@ -1455,7 +1454,7 @@ msgstr ""
 "rheolir a chymeradwyir eu mynediad yn gadarn gan <abbr title=\"Swyddfa’r "
 "Gwarcheidwad Cyhoeddus\">OPG</abbr>."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:145
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:143
 msgid ""
 "You can find out more about how we store and use this data in our\n"
 "                    <a class=\"govuk-link\" href=\"https://www.gov.uk/"
@@ -1471,17 +1470,17 @@ msgstr ""
 "                        siarter gwybodaeth bersonol\n"
 "                    </a>."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:151
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:126
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:149
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:124
 msgid "We do not use personal data when testing the service."
 msgstr "Nid ydym yn defnyddio data personol pan fyddwn yn profi’r gwasanaeth."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:153
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:128
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:151
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:126
 msgid "How long we keep data"
 msgstr "Pa mor hir y byddwn yn cadw data"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:155
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:153
 msgid ""
 "We’ll keep your personal data in line with our\n"
 "                    <a class=\"govuk-link\" href=\"https://www.gov.uk/"
@@ -1497,17 +1496,17 @@ msgstr ""
 "                        polisi cadw\n"
 "                    </a>."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:162
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:160
 msgid "Contact us if you want to change your personal data."
 msgstr "Cysylltwch â ni os ydych eisiau newid eich data personol."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:164
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:134
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:162
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:132
 msgid "How to get a copy of your information"
 msgstr "Sut i gael copi o’ch gwybodaeth"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:166
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:138
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:164
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:136
 msgid ""
 "You can find out what personal data we hold about you in the service by making "
 "a subject access request."
@@ -1515,23 +1514,23 @@ msgstr ""
 "Gallwch ganfod pa ddata personol rydym yn ei gadw amdanoch yn y gwasanaeth "
 "drwy wneud ‘cais gwrthrych am wybodaeth’."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:170
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:141
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:168
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:139
 msgid "Find out more about subject access requests"
 msgstr "Darganfyddwch mwy am geisiadau gwrthrych am wybodaeth"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:173
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:143
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:171
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:141
 msgid "Sharing personal data"
 msgstr "Rhannu data personol"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:174
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:172
 msgid "We’ll only share the information you give us when the law says we can."
 msgstr ""
 "Byddwn ond yn rhannu’r wybodaeth a roddwch i ni pan fydd y gyfraith yn datgan "
 "y cawn wneud hynny."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:175
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:173
 msgid ""
 "For example, we may share information with the police to help them prevent or "
 "investigate crime."
@@ -1539,13 +1538,13 @@ msgstr ""
 "Er enghraifft, efallai y byddwn yn rhannu gwybodaeth gyda’r heddlu i’w helpu i "
 "atal neu ymchwilio i drosedd."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:177
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:149
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:175
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:147
 msgid "We’ll never:"
 msgstr "Ni fyddwn byth yn:"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:179
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:153
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:177
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:151
 msgid ""
 "share your information with other organisations for marketing, market research "
 "or commercial purposes"
@@ -1553,27 +1552,27 @@ msgstr ""
 "rhannu eich gwybodaeth gyda sefydliadau eraill at bwrpas marchnata, cynnal "
 "ymchwil i’r farchnad neu bwrpas masnachol"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:180
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:154
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:178
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:152
 msgid "sell or rent your data to third parties"
 msgstr "gwerthu neu rentu eich data i drydydd parti"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:182
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:156
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:180
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:154
 msgid "Getting more information"
 msgstr "Cael rhagor o wybodaeth"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:184
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:160
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:182
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:158
 msgid "You can get more details on:"
 msgstr "Gellir cael mwy o fanylion am:"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:187
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:163
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:185
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:161
 msgid "agreements we have with other organisations for sharing information"
 msgstr "gytundebau sydd gennym â sefydliadau eraill ar gyfer rhannu gwybodaeth"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:188
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:186
 msgid ""
 "when we can pass on personal information without telling you, for example,\n"
 "                        to help with the prevention or detection of crime or "
@@ -1584,8 +1583,8 @@ msgstr ""
 "                        i helpu i atal neu ddatrys trosedd neu i gynhyrchu "
 "ystadegau dienw"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:190
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:165
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:188
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:163
 msgid ""
 "instructions we give to staff on how to collect, use or delete your personal "
 "data"
@@ -1593,41 +1592,41 @@ msgstr ""
 "cyfarwyddiadau a roir i staff ar sut i gasglu, defnyddio neu ddileu eich data "
 "personol"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:191
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:166
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:189
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:164
 msgid "how we check that the information we hold is accurate and up-to-date"
 msgstr "sut rydym yn gwirio bod yr wybodaeth sydd gennym yn gywir ac yn gyfredol"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:192
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:167
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:190
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:165
 msgid "how to make a complaint"
 msgstr "sut i wneud cwyn"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:193
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:168
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:191
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:166
 msgid "anything in this privacy notice"
 msgstr "unrhyw beth sydd yn yr hysbysiad preifatrwydd hwn"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:194
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:169
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:192
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:167
 msgid ""
 "what to do if you think that your personal data has been misused or mishandled"
 msgstr ""
 "beth i’w wneud os ydych yn credu bod eich data personol wedi’i gamddefnyddio "
 "neu ei gam-drafod"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:197
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:172
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:195
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:170
 msgid "For more information, please contact:"
 msgstr "Am ragor o wybodaeth, cysylltwch â:"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:206
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:183
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:204
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:181
 msgid "Changes to this notice"
 msgstr "Newidiadau i’r hysbysiad hwn"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:208
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:185
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:206
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:183
 msgid ""
 "We may change this privacy notice from time to time. When we do, we’ll update "
 "the ‘last updated’ date at the bottom of this page."
@@ -1636,7 +1635,7 @@ msgstr ""
 "fyddwn yn gwneud hynny, byddwn yn diweddaru’r dyddiad ‘diweddarwyd ddiwethaf’ "
 "ar waelod y dudalen hon."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:211
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:209
 msgid ""
 "If these changes affect how your personal data is processed, we’ll take "
 "reasonable steps to let you know."
@@ -1644,20 +1643,20 @@ msgstr ""
 "Os yw’r newidiadau hyn yn effeithio ar sut mae eich data personol yn cael ei "
 "brosesu, byddwn yn cymryd camau rhesymol i roi gwybod i chi."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:214
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:191
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:212
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:189
 msgid ""
 "Any changes to this privacy notice will apply to you and your data immediately."
 msgstr ""
 "Bydd unrhyw newidiadau i’r hysbysiad preifatrwydd hwn yn berthnasol i chi a’ch "
 "data ar unwaith."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:216
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:193
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:214
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:191
 msgid "Making a complaint"
 msgstr "Gwneud cwyn"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:218
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:216
 msgid ""
 "When we ask for personal data, we’ll keep to the law.\n"
 "                        If you think that your information has not been "
@@ -1675,7 +1674,7 @@ msgstr ""
 "                        gallwch gysylltu â’r Comisiynydd Gwybodaeth i gael "
 "cyngor annibynnol am ddiogelu data yn y cyfeiriad isod:"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:234
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:232
 msgid ""
 "Phone: 0303 123 1113<br>\n"
 "                        Textphone: 01625 545860<br>\n"
@@ -1685,15 +1684,15 @@ msgstr ""
 "                        Ffôn testun: 01625 545860<br>\n"
 "                        Dydd Llun i ddydd Gwener, 9am tan 4:30pm.<br>"
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:244
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:242
 msgid "Last updated: 30 March 2020"
 msgstr "Diweddarwyd diwethaf: 30 Mawrth 2020"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:18
+#: src/Actor/templates/actor/instructions-preferences.html.twig:20
 msgid "Instructions and preferences"
 msgstr "Cyfarwyddiadau a dymuniadau"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:23
+#: src/Actor/templates/actor/instructions-preferences.html.twig:25
 msgid ""
 "If an <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions or "
 "preferences we cannot show these online. Organisations might ask to see the "
@@ -1705,7 +1704,7 @@ msgstr ""
 "gofyn am gael gweld y <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> papur "
 "fel y gallant ddarllen y cyfarwyddiadau a’r dymuniadau."
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:24
+#: src/Actor/templates/actor/instructions-preferences.html.twig:26
 msgid ""
 "In some older LPA's, instructions and preferences are called 'restrictions and "
 "conditions'."
@@ -1721,23 +1720,23 @@ msgstr "Cyfrif eisoes yn bodoli"
 msgid "Activate your account"
 msgstr "Cadarnhau eich cyfrif"
 
-#: src/Actor/templates/actor/change-email.html.twig:23
+#: src/Actor/templates/actor/change-email.html.twig:25
 msgid "Change your email address"
 msgstr "Newid eich cyfeiriad e-bost"
 
-#: src/Actor/templates/actor/change-email.html.twig:30
+#: src/Actor/templates/actor/change-email.html.twig:32
 msgid "New email address"
 msgstr "Cyfeiriad e-bost newydd"
 
-#: src/Actor/templates/actor/change-email.html.twig:36
+#: src/Actor/templates/actor/change-email.html.twig:38
 msgid "Save new email address"
 msgstr "Arbed cyfeiriad e-bost newydd"
 
-#: src/Actor/templates/actor/password-reset-request.html.twig:24
+#: src/Actor/templates/actor/password-reset-request.html.twig:26
 msgid "Reset your password"
 msgstr "Ailosod eich cyfrinair"
 
-#: src/Actor/templates/actor/password-reset-request.html.twig:28
+#: src/Actor/templates/actor/password-reset-request.html.twig:30
 msgid ""
 "Enter your email address below. If there's an account associated with the "
 "address, we'll send you a link to reset your password."
@@ -1745,17 +1744,17 @@ msgstr ""
 "Nodwch eich cyfeiriad e-bost isod. Os oes yna gyfrif ar gyfer y cyfeiriad e-"
 "bost hwn, byddwn yn anfon dolen atoch i ailosod eich cyfrinair."
 
-#: src/Actor/templates/actor/password-reset-request.html.twig:32
+#: src/Actor/templates/actor/password-reset-request.html.twig:34
 #: src/Actor/templates/actor/your-details.html.twig:24
-#: src/Actor/templates/actor/login.html.twig:35
+#: src/Actor/templates/actor/login.html.twig:37
 msgid "Email address"
 msgstr "Cyfeiriad e-bost"
 
-#: src/Actor/templates/actor/password-reset-request.html.twig:34
+#: src/Actor/templates/actor/password-reset-request.html.twig:36
 msgid "Confirm your email address"
 msgstr "Cadarnhewch eich cyfeiriad e-bost"
 
-#: src/Actor/templates/actor/password-reset-request.html.twig:37
+#: src/Actor/templates/actor/password-reset-request.html.twig:39
 msgid "Email me the link"
 msgstr "Anfon y ddolen ataf drwy e-bost"
 
@@ -1822,7 +1821,7 @@ msgstr ""
 "wnaethoch ei ddefnyddio am 20 munud."
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:17
-#: src/Actor/templates/actor/login.html.twig:39
+#: src/Actor/templates/actor/login.html.twig:41
 #: src/Actor/templates/actor/email-reset-not-found.html.twig:22
 msgid "Sign in"
 msgstr "Mewngofnodi"
@@ -1831,12 +1830,12 @@ msgstr "Mewngofnodi"
 msgid "Death Notification"
 msgstr "Hysbysiad o Farwolaeth"
 
-#: src/Actor/templates/actor/death-notification.html.twig:26
-#: src/Actor/templates/actor/change-details.html.twig:84
+#: src/Actor/templates/actor/death-notification.html.twig:28
+#: src/Actor/templates/actor/change-details.html.twig:86
 msgid "Let us know if a donor or attorney dies"
 msgstr "Rhowch wybod i ni os bydd rhoddwr neu atwrnai yn marw"
 
-#: src/Actor/templates/actor/death-notification.html.twig:29
+#: src/Actor/templates/actor/death-notification.html.twig:31
 msgid ""
 "It's important that we hold up-to-date information about donors and "
 "attorneys.\n"
@@ -1847,32 +1846,32 @@ msgstr ""
 "                        Y rheswm am hyn yw y bydd yr LPA yn dod i ben pan fydd "
 "y rhoddwr yn marw, a gall ddod i ben os bydd atwrnai’n marw."
 
-#: src/Actor/templates/actor/death-notification.html.twig:32
-#: src/Actor/templates/actor/change-details.html.twig:32
+#: src/Actor/templates/actor/death-notification.html.twig:34
+#: src/Actor/templates/actor/change-details.html.twig:34
 msgid "You should contact us if:"
 msgstr "Dylech gysylltu â ni os bydd:"
 
-#: src/Actor/templates/actor/death-notification.html.twig:34
+#: src/Actor/templates/actor/death-notification.html.twig:36
 msgid "the donor dies"
 msgstr "rhoddwr yn marw"
 
-#: src/Actor/templates/actor/death-notification.html.twig:35
+#: src/Actor/templates/actor/death-notification.html.twig:37
 msgid "an attorney dies"
 msgstr "atwrnai yn marw"
 
-#: src/Actor/templates/actor/death-notification.html.twig:36
+#: src/Actor/templates/actor/death-notification.html.twig:38
 msgid "a replacement attorney dies"
 msgstr "atwrnai newydd yn marw"
 
-#: src/Actor/templates/actor/death-notification.html.twig:39
+#: src/Actor/templates/actor/death-notification.html.twig:41
 msgid "We'll update the online LPA summary and our records"
 msgstr "Byddwn yn diweddaru’r crynodeb o’r LPA ar-lein a’n cofnodion"
 
-#: src/Actor/templates/actor/death-notification.html.twig:41
+#: src/Actor/templates/actor/death-notification.html.twig:43
 msgid "If the donor dies"
 msgstr "Os bydd y rhoddwr yn marw"
 
-#: src/Actor/templates/actor/death-notification.html.twig:43
+#: src/Actor/templates/actor/death-notification.html.twig:45
 msgid ""
 "The LPA ends when the donor dies. The donor’s affairs will be looked after\n"
 "                        by their executors or personal representatives from "
@@ -1883,22 +1882,22 @@ msgstr ""
 "                        am ei faterion o’r pwynt hwnnw ymlaen, nid ei "
 "atwrneiod."
 
-#: src/Actor/templates/actor/death-notification.html.twig:47
+#: src/Actor/templates/actor/death-notification.html.twig:49
 msgid "If an attorney or replacement attorney dies"
 msgstr "Os bydd atwrnai neu atwrnai newydd yn marw"
 
-#: src/Actor/templates/actor/death-notification.html.twig:48
+#: src/Actor/templates/actor/death-notification.html.twig:50
 msgid ""
 "The LPA will end if your attorney dies and there is not a replacement attorney."
 msgstr ""
 "Bydd eich LPA yn dod i ben os bydd eich atwrnai’n marw ac os nad oes gennych "
 "chi unrhyw atwrneiod newydd."
 
-#: src/Actor/templates/actor/death-notification.html.twig:50
+#: src/Actor/templates/actor/death-notification.html.twig:52
 msgid "The LPA can continue if:"
 msgstr "Caiff eich LPA barhau os:"
 
-#: src/Actor/templates/actor/death-notification.html.twig:53
+#: src/Actor/templates/actor/death-notification.html.twig:55
 msgid ""
 "there are other attorneys who can act 'jointly and severally' -\n"
 "                            but not if they are only allowed to act 'jointly'"
@@ -1907,37 +1906,37 @@ msgstr ""
 "                            ond nid os mai dim ond ‘ar y cyd’ maent yn cael "
 "gweithredu"
 
-#: src/Actor/templates/actor/death-notification.html.twig:55
+#: src/Actor/templates/actor/death-notification.html.twig:57
 msgid "there are replacement attorneys"
 msgstr "oes atwrneiod i gymryd eu lle"
 
-#: src/Actor/templates/actor/death-notification.html.twig:58
-#: src/Actor/templates/actor/change-details.html.twig:55
+#: src/Actor/templates/actor/death-notification.html.twig:60
+#: src/Actor/templates/actor/change-details.html.twig:57
 msgid "How to let us know"
 msgstr "Sut i roi gwybod i ni am newid"
 
-#: src/Actor/templates/actor/death-notification.html.twig:59
+#: src/Actor/templates/actor/death-notification.html.twig:61
 msgid "You'll need to send us:"
 msgstr "Bydd angen i chi anfon atom:"
 
-#: src/Actor/templates/actor/death-notification.html.twig:62
+#: src/Actor/templates/actor/death-notification.html.twig:64
 msgid "a copy of the death certificate"
 msgstr "copi o’i dystysgrif marwolaeth"
 
-#: src/Actor/templates/actor/death-notification.html.twig:63
+#: src/Actor/templates/actor/death-notification.html.twig:65
 msgid "the original LPA"
 msgstr "yr LPA wreiddiol"
 
-#: src/Actor/templates/actor/death-notification.html.twig:64
+#: src/Actor/templates/actor/death-notification.html.twig:66
 msgid "all certified copies of the LPA"
 msgstr "pob copi ardystiedig o’r LPA"
 
-#: src/Actor/templates/actor/death-notification.html.twig:65
+#: src/Actor/templates/actor/death-notification.html.twig:67
 msgid "a return address where your documents can be sent back to"
 msgstr "cyfeiriad dychwelyd ar gyfer anfon eich dogfennau’n ôl atoch"
 
-#: src/Actor/templates/actor/death-notification.html.twig:69
-#: src/Actor/templates/actor/change-details.html.twig:74
+#: src/Actor/templates/actor/death-notification.html.twig:71
+#: src/Actor/templates/actor/change-details.html.twig:76
 msgid ""
 "Office of the Public Guardian<br>\n"
 "                            PO Box 16185<br>\n"
@@ -1950,8 +1949,8 @@ msgstr ""
 "                            B2 2WH"
 
 #: src/Actor/templates/actor/your-details.html.twig:18
-#: src/Actor/templates/actor/lpa-add.html.twig:56
-#: src/Common/templates/partials/account-bar.html.twig:10
+#: src/Actor/templates/actor/lpa-add.html.twig:58
+#: src/Common/templates/partials/account-bar.html.twig:11
 msgid "Your details"
 msgstr "Eich manylion"
 
@@ -2241,15 +2240,15 @@ msgstr "Ychwanegu LPA arall"
 msgid "Delete your account"
 msgstr "Dileu eich cyfrif"
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:17
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:19
 msgid "Are you sure you want to delete your account?"
 msgstr "Ydych chi’n siŵr eich bod eisiau dileu eich cyfrif?"
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:18
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:20
 msgid "If you delete your Use a lasting power of attorney account:"
 msgstr "Os byddwch yn dileu eich cyfrif Defnyddio atwrneiaeth arhosol:"
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:20
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:22
 msgid ""
 "any <abbr title=\"lasting powers of attorney\">LPAs</abbr> you added will be "
 "removed"
@@ -2257,7 +2256,7 @@ msgstr ""
 "bydd <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> yr ydych wedi’u "
 "hychwanegu yn cael eu dileu"
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:21
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:23
 msgid ""
 "you‘ll not be able to see how those <abbr title=\"lasting powers of attorney"
 "\">LPAs</abbr> are being used"
@@ -2265,7 +2264,7 @@ msgstr ""
 "ni fyddwch yn gallu gweld sut mae’r <abbr title=\"atwrneiaethau arhosol"
 "\">LPAs</abbr> hynny yn cael eu defnyddio"
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:24
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:26
 msgid ""
 "If you want to use the <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "online after you've deleted your account, you’ll need to contact us."
@@ -2273,7 +2272,7 @@ msgstr ""
 "Os byddwch eisiau defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> "
 "ar-lein ar ôl i chi ddileu eich cyfrif, bydd angen i chi gysylltu â ni."
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:26
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:28
 msgid ""
 "You can still use paper versions of these <abbr title=\"lasting powers of "
 "attorney\">LPAs</abbr> if:"
@@ -2281,22 +2280,22 @@ msgstr ""
 "Gallwch dal ddefnyddio fersiynau papur o’r <abbr title=\"atwrneiaethau arhosol"
 "\">LPAs</abbr> hyn:"
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:28
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:30
 msgid ""
 "the <abbr title=\"lasting powers of attorney\">LPAs</abbr> are still valid"
 msgstr ""
 "os yw’r <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> yn dal i fod yn "
 "ddilys"
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:29
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:31
 msgid "you have not been removed as an attorney"
 msgstr "os nad ydych wedi eich disodli fel atwrnai"
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:32
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:34
 msgid "No, return to my details"
 msgstr "Nac ydw, hoffwn ddychwelyd i fy manylion"
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:35
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:37
 msgid "Yes, continue deleting my account"
 msgstr "Ydw, hoffwn i chi ddileu fy nghyfrif"
 
@@ -2384,11 +2383,11 @@ msgstr ""
 msgid "Try again"
 msgstr "Rhowch gynnig arall arni"
 
-#: src/Actor/templates/actor/login.html.twig:27
+#: src/Actor/templates/actor/login.html.twig:29
 msgid "Sign in to your Use a lasting power of attorney account"
 msgstr "Mewngofnodi i’ch cyfrif Defnyddio atwrneiaeth arhosol"
 
-#: src/Actor/templates/actor/login.html.twig:31
+#: src/Actor/templates/actor/login.html.twig:33
 msgid ""
 "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, "
 "you'll still need to <a href=\"%link%\" class=\"govuk-link\">create an "
@@ -2398,7 +2397,7 @@ msgstr ""
 "dal angen i chi <a href=\"%link%\" class=\"govuk-link\">greu cyfrif</a> i allu "
 "defnyddio’r gwasanaeth hwn."
 
-#: src/Actor/templates/actor/login.html.twig:45
+#: src/Actor/templates/actor/login.html.twig:47
 msgid "Forgotten your password?"
 msgstr "Wedi anghofio eich cyfrinair?"
 
@@ -2406,11 +2405,11 @@ msgstr "Wedi anghofio eich cyfrinair?"
 msgid "LPA removed"
 msgstr "Mae’r LPA wedi’i dileu"
 
-#: src/Actor/templates/actor/lpa-removed.html.twig:21
+#: src/Actor/templates/actor/lpa-removed.html.twig:23
 msgid "We've removed an LPA from your account"
 msgstr "Rydym wedi dileu LPA o’ch cyfrif"
 
-#: src/Actor/templates/actor/lpa-removed.html.twig:23
+#: src/Actor/templates/actor/lpa-removed.html.twig:25
 msgid ""
 "We've removed an <abbr title=\"lasting power of attorney\">LPA</abbr> from "
 "your account because either:"
@@ -2418,7 +2417,7 @@ msgstr ""
 "Rydym wedi dileu <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> o’ch cyfrif "
 "oherwydd naill ai:"
 
-#: src/Actor/templates/actor/lpa-removed.html.twig:26
+#: src/Actor/templates/actor/lpa-removed.html.twig:28
 msgid ""
 "you can no longer act as an attorney on the <abbr title=\"lasting power of "
 "attorney\">LPA</abbr>"
@@ -2426,54 +2425,54 @@ msgstr ""
 "ni allwch weithredu fel atwrnai ar y <abbr title=\"atwrneiaethau arhosol"
 "\">LPAs</abbr> mwyach"
 
-#: src/Actor/templates/actor/lpa-removed.html.twig:27
+#: src/Actor/templates/actor/lpa-removed.html.twig:29
 msgid "you've told us you no longer want to be an attorney"
 msgstr "rydych wedi dweud wrthym nad ydych eisiau bod yn atwrnai mwyach"
 
-#: src/Actor/templates/actor/lpa-removed.html.twig:28
+#: src/Actor/templates/actor/lpa-removed.html.twig:30
 msgid "the donor has removed you as an attorney"
 msgstr "mae’r rhoddwr wedi eich dileu fel atwrnai"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:15
+#: src/Actor/templates/actor/check-lpa.html.twig:17
 msgid "Is this the LPA you want to add?"
 msgstr "Ai hon yw’r LPA yr ydych eisiau ei hychwanegu?"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:23
-#: src/Viewer/templates/viewer/check-code-found.html.twig:26
+#: src/Actor/templates/actor/check-lpa.html.twig:25
+#: src/Viewer/templates/viewer/check-code-found.html.twig:28
 msgid "Type of LPA"
 msgstr "Math o LPA"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:35
-#: src/Viewer/templates/viewer/check-code-found.html.twig:30
+#: src/Actor/templates/actor/check-lpa.html.twig:37
+#: src/Viewer/templates/viewer/check-code-found.html.twig:32
 msgid "Donor name"
 msgstr "Enw’r rhoddwr"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:43
+#: src/Actor/templates/actor/check-lpa.html.twig:45
 msgid "Your name"
 msgstr "Eich enw"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:51
+#: src/Actor/templates/actor/check-lpa.html.twig:53
 msgid "Your role on this LPA"
 msgstr "Eich swyddogaeth yn yr LPA hon"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:55
+#: src/Actor/templates/actor/check-lpa.html.twig:57
 msgid "Attorney"
 msgstr "Atwrnai"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:57
+#: src/Actor/templates/actor/check-lpa.html.twig:59
 msgid "Donor"
 msgstr "Rhoddwr"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:67
-#: src/Viewer/templates/viewer/check-code-found.html.twig:44
+#: src/Actor/templates/actor/check-lpa.html.twig:69
+#: src/Viewer/templates/viewer/check-code-found.html.twig:46
 msgid "Check that these details are correct before continuing"
 msgstr "Gwiriwch fod y manylion hyn yn gywir cyn mynd ymlaen"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:74
+#: src/Actor/templates/actor/check-lpa.html.twig:76
 msgid "What to do if the details are wrong"
 msgstr "Beth i’w wneud os yw’r manylion yn anghywir"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:79
+#: src/Actor/templates/actor/check-lpa.html.twig:81
 msgid ""
 "If the information is wrong, or if a name is misspelt, please call us: <br>\n"
 "                                Telephone: 0300 456 0300<br>\n"
@@ -2489,16 +2488,16 @@ msgstr ""
 "bob dydd Mercher 10am tan 5pm."
 
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:44
-#: src/Actor/templates/actor/check-lpa.html.twig:91
+#: src/Actor/templates/actor/check-lpa.html.twig:93
 #: src/Actor/templates/actor/home-page.html.twig:46
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
-#: src/Actor/templates/actor/lpa-add.html.twig:89
-#: src/Viewer/templates/viewer/enter-code.html.twig:58
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:68
+#: src/Actor/templates/actor/lpa-add.html.twig:91
+#: src/Viewer/templates/viewer/enter-code.html.twig:60
 msgid "Continue"
 msgstr "Parhau"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:94
-#: src/Actor/templates/actor/lpa-add.html.twig:91
+#: src/Actor/templates/actor/check-lpa.html.twig:96
+#: src/Actor/templates/actor/lpa-add.html.twig:93
 msgid "Cancel"
 msgstr "Canslo"
 
@@ -2558,11 +2557,11 @@ msgstr ""
 "Mae gennych 48 awr i gadarnhau eich cyfeiriad e-bost drwy ddefnyddio’r ddolen "
 "y byddwn yn ei hanfon atoch."
 
-#: src/Actor/templates/actor/password-reset-not-found.html.twig:17
+#: src/Actor/templates/actor/password-reset-not-found.html.twig:19
 msgid "We cannot change your password"
 msgstr "Ni allwn newid eich cyfrinair"
 
-#: src/Actor/templates/actor/password-reset-not-found.html.twig:19
+#: src/Actor/templates/actor/password-reset-not-found.html.twig:21
 msgid "The link you have clicked on is invalid or has expired."
 msgstr "Mae’r ddolen y bu i chi glicio arni yn annilys neu mae wedi dod i ben."
 
@@ -2570,26 +2569,26 @@ msgstr "Mae’r ddolen y bu i chi glicio arni yn annilys neu mae wedi dod i ben.
 msgid "Which organisation do you want to give access to"
 msgstr "Pa sefydliad ydych chi eisiau rhoi mynediad iddo"
 
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:40
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:42
 msgid "Which organisation do you want to give access to?"
 msgstr "Pa sefydliad ydych chi eisiau rhoi mynediad iddo?"
 
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:46
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:48
 msgid ""
 "The organisation could be a hospital, care home, or other health care provider."
 msgstr ""
 "Gallai’r sefydliad fod yn ysbyty, yn gartref gofal, neu’n ddarparwr gofal "
 "iechyd o fath arall."
 
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:48
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:50
 msgid "The organisation could be a bank, energy provider, or another business."
 msgstr "Gallai’r sefydliad fod yn fanc, yn ddarparwr ynni neu’n fusnes arall."
 
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:52
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:54
 msgid "Organisation name"
 msgstr "Enw’r sefydliad"
 
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:53
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:55
 msgid "This is for your reference only"
 msgstr "Mae hyn er gwybodaeth i chi yn unig"
 
@@ -2663,27 +2662,27 @@ msgstr "Wedi gweld LPA"
 msgid "Viewed"
 msgstr "Gweld"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:28
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:31
 msgid "Not viewed"
 msgstr "Heb weld LPA"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:35
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:38
 msgid "Expires"
 msgstr "Daw i ben"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:38
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:41
 msgid "Expired"
 msgstr "Wedi dod i ben"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:54
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:57
 msgid "Status"
 msgstr "Statws"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:56
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:59
 msgid "EXPIRED"
 msgstr "WEDI DOD I BEN"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:49
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:52
 msgid "CANCELLED"
 msgstr "DILËWYD"
 
@@ -2719,11 +2718,11 @@ msgstr "Canslo mynediad sefydliad"
 msgid "Let us know if a donor or attorney’s details change"
 msgstr "Rhowch wybod inni os bydd manylion rhoddwr neu atwrnai yn newid"
 
-#: src/Actor/templates/actor/change-details.html.twig:26
+#: src/Actor/templates/actor/change-details.html.twig:28
 msgid "Let us know if a donor or attorney's details change"
 msgstr "Rhowch wybod inni os bydd manylion rhoddwr neu atwrnai yn newid"
 
-#: src/Actor/templates/actor/change-details.html.twig:28
+#: src/Actor/templates/actor/change-details.html.twig:30
 msgid ""
 "It's important that we hold up-to-date information about donors and attorneys. "
 "This is because the first\n"
@@ -2741,29 +2740,29 @@ msgstr ""
 "                        a’ch cyfeiriad yn cyfateb i’r hyn sydd ar y <abbr "
 "title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
-#: src/Actor/templates/actor/change-details.html.twig:35
+#: src/Actor/templates/actor/change-details.html.twig:37
 msgid "the donor or an attorney has moved house"
 msgstr "os yw’r rhoddwr neu atwrnai wedi symud tŷ"
 
-#: src/Actor/templates/actor/change-details.html.twig:36
+#: src/Actor/templates/actor/change-details.html.twig:38
 msgid "the donor or an attorney has changed their name by marriage or deed poll"
 msgstr ""
 "os yw’r rhoddwr neu atwrnai wedi newid ei enw drwy briodas neu weithred newid "
 "enw"
 
-#: src/Actor/templates/actor/change-details.html.twig:37
+#: src/Actor/templates/actor/change-details.html.twig:39
 msgid "the donor's or an attorney's name or address is misspelt"
 msgstr "os yw enw neu gyfeiriad y rhoddwr neu atwrnai wedi ei gamsillafu"
 
-#: src/Actor/templates/actor/change-details.html.twig:38
+#: src/Actor/templates/actor/change-details.html.twig:40
 msgid "a date of birth is wrong"
 msgstr "os yw dyddiad geni rhywun yn anghywir"
 
-#: src/Actor/templates/actor/change-details.html.twig:42
+#: src/Actor/templates/actor/change-details.html.twig:44
 msgid "the donor or an attorney dies"
 msgstr "rhoddwr neu atwrnai yn marw"
 
-#: src/Actor/templates/actor/change-details.html.twig:46
+#: src/Actor/templates/actor/change-details.html.twig:48
 msgid ""
 "We’ll update the online <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "summary and our records."
@@ -2771,7 +2770,7 @@ msgstr ""
 "Byddwn yn diweddaru’r crynodeb o’r <abbr title=\"atwrneiaethau arhosol\">LPA</"
 "abbr> ar-lein a’n cofnodion."
 
-#: src/Actor/templates/actor/change-details.html.twig:48
+#: src/Actor/templates/actor/change-details.html.twig:50
 msgid ""
 "Do not make any changes to the paper <abbr title=\"lasting power of attorney"
 "\">LPA</abbr> yourself.\n"
@@ -2783,7 +2782,7 @@ msgstr ""
 "                        Os byddwch yn gwneud hyn, yna ni fyddwch yn gallu "
 "defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> mwyach."
 
-#: src/Actor/templates/actor/change-details.html.twig:51
+#: src/Actor/templates/actor/change-details.html.twig:53
 msgid ""
 "If you’re the donor, you can tell us about changes to your details and your "
 "attorney’s details."
@@ -2791,7 +2790,7 @@ msgstr ""
 "Os mai chi yw’r rhoddwr, gallwch ddweud wrthym am unrhyw newid i’ch manylion "
 "chi a manylion atwrnai."
 
-#: src/Actor/templates/actor/change-details.html.twig:53
+#: src/Actor/templates/actor/change-details.html.twig:55
 msgid ""
 "If you’re an attorney, you can tell us about changes to the donor’s details "
 "and your details. You cannot update another attorney’s details."
@@ -2800,16 +2799,16 @@ msgstr ""
 "rhoddwr a’ch manylion chi. Ni allwch ddiweddaru manylion atwrnai arall."
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:67
-#: src/Actor/templates/actor/change-details.html.twig:57
+#: src/Actor/templates/actor/change-details.html.twig:59
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:71
 msgid "Telephone"
 msgstr "Ffonio"
 
-#: src/Actor/templates/actor/change-details.html.twig:58
+#: src/Actor/templates/actor/change-details.html.twig:60
 msgid "When you get in touch, quote the LPA reference number."
 msgstr "Pan fyddwch yn cysylltu â ni, cofiwch ddyfynnu eich cyfeirnod LPA."
 
-#: src/Actor/templates/actor/change-details.html.twig:60
+#: src/Actor/templates/actor/change-details.html.twig:62
 msgid ""
 "Telephone: 0300 456 0300<br>\n"
 "                      Monday to Friday, 9:30am to 5pm, except Wednesday, 10am "
@@ -2819,19 +2818,19 @@ msgstr ""
 "                      Dydd Llun i ddydd Gwener, 9:30am tan 5pm, heblaw bob "
 "dydd Mercher, 10am tan 5pm"
 
-#: src/Actor/templates/actor/change-details.html.twig:64
+#: src/Actor/templates/actor/change-details.html.twig:66
 #: src/Common/templates/partials/contact-us.html.twig:36
 msgid "Find out about call charges"
 msgstr "Gwybodaeth am brisiau galwadau"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:61
-#: src/Actor/templates/actor/change-details.html.twig:67
+#: src/Actor/templates/actor/change-details.html.twig:69
 #: src/Common/templates/partials/contact-us.html.twig:40
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:65
 msgid "Email"
 msgstr "E-bost"
 
-#: src/Actor/templates/actor/change-details.html.twig:86
+#: src/Actor/templates/actor/change-details.html.twig:88
 msgid ""
 "It's important that we hold up-to-date information about donors and "
 "attorneys.\n"
@@ -2842,7 +2841,7 @@ msgstr ""
 "                        Y rheswm am hyn yw y bydd yr LPA yn dod i ben pan fydd "
 "y rhoddwr yn marw, a gall ddod i ben os bydd atwrnai’n marw."
 
-#: src/Actor/templates/actor/change-details.html.twig:93
+#: src/Actor/templates/actor/change-details.html.twig:95
 msgid ""
 "Find out more about what to do if <a class=\"govuk-link\" href=\"%link%\"> the "
 "donor or an attorney dies</a>"
@@ -2884,11 +2883,11 @@ msgstr "Ydw, hoffwn ganslo’r cod"
 msgid "Confirm your new password"
 msgstr "Cadarnhewch eich cyfrinair newydd"
 
-#: src/Actor/templates/actor/password-reset-request-done.html.twig:17
+#: src/Actor/templates/actor/password-reset-request-done.html.twig:19
 msgid "Updating your password"
 msgstr "Diweddaru eich cyfrinair"
 
-#: src/Actor/templates/actor/password-reset-request-done.html.twig:21
+#: src/Actor/templates/actor/password-reset-request-done.html.twig:23
 msgid ""
 "If you have not received the email within a few minutes, please check your "
 "spam, bulk or junk email folder &mdash; your email system may have blocked it "
@@ -2898,7 +2897,7 @@ msgstr ""
 "ffolder spam, bulk neu junk &mdash; efallai bod eich system e-bost wedi "
 "blocio’r neges mewn camgymeriad."
 
-#: src/Actor/templates/actor/password-reset-request-done.html.twig:25
+#: src/Actor/templates/actor/password-reset-request-done.html.twig:27
 msgid ""
 "If it does not arrive at all, please check that you've given us the correct "
 "email address for your existing <abbr title=\"lasting power of attorney\">LPA</"
@@ -2945,11 +2944,11 @@ msgstr "gweld crynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 msgid "Add your first LPA"
 msgstr "Ychwanegu eich LPA cyntaf"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:23
+#: src/Actor/templates/actor/lpa-add.html.twig:25
 msgid "Add a lasting power of attorney"
 msgstr "Ychwanegu atwrneiaeth arhosol"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:25
+#: src/Actor/templates/actor/lpa-add.html.twig:27
 msgid ""
 "You'll need the details from the letter we sent you when the <abbr title="
 "\"lasting power of attorney\">LPA</abbr> was registered."
@@ -2957,20 +2956,20 @@ msgstr ""
 "Byddwch angen y manylion sydd yn y llythyr a anfonwyd atoch pan gofnodwyd yr "
 "<abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:33
+#: src/Actor/templates/actor/lpa-add.html.twig:35
 #: src/Common/templates/partials/full-lpa-display.html.twig:249
 msgid "LPA reference number"
 msgstr "Cyfeirnod LPA"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:34
+#: src/Actor/templates/actor/lpa-add.html.twig:36
 msgid "LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000"
 msgstr "Mae cyfeirnodau LPA yn cynnwys 12 rhif<br/>Er enghraifft, 7000-000-000"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:43
+#: src/Actor/templates/actor/lpa-add.html.twig:45
 msgid "Where to find the reference number"
 msgstr "Cael hyd i’ch cyfeirnod LPA"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:48
+#: src/Actor/templates/actor/lpa-add.html.twig:50
 msgid ""
 "The reference number is printed on the letter that told you the <abbr title="
 "\"lasting power of attorney\">LPA</abbr> had been registered."
@@ -2978,7 +2977,7 @@ msgstr ""
 "Gellir gweld cyfeirnod yn y llythyr oedd yn rhoi gwybod i chi fod yr LPA wedi "
 "ei chofrestru."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:49
+#: src/Actor/templates/actor/lpa-add.html.twig:51
 msgid ""
 "You can also find the reference number on the <abbr title=\"lasting power of "
 "attorney\">LPA</abbr> or any related letters from the Office of the Public "
@@ -2987,11 +2986,11 @@ msgstr ""
 "Gwelir y cyfeirnod hefyd ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> "
 "neu unrhyw lythyr cysylltiedig gan Swyddfa’r Gwarcheidwad Cyhoeddus."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:50
+#: src/Actor/templates/actor/lpa-add.html.twig:52
 msgid "It may be marked 'OPG reference number' or 'Our ref' or 'Case number'."
 msgstr "Bydd wedi ei nodi fel ‘cyfeirnod OPG’ neu ‘Ein cyf’ neu ‘Rhif achos’."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:58
+#: src/Actor/templates/actor/lpa-add.html.twig:60
 msgid ""
 "The donor and each of the attorneys will have their own activation key. The "
 "activation key and date of birth must be for the same person."
@@ -2999,11 +2998,11 @@ msgstr ""
 "Bydd gan y rhoddwr a phob atwrnai allwedd cadarnhau cyfrif unigryw. Rhaid i’r "
 "allwedd cadarnhau cyfrif a’r dyddiad geni fod ar gyfer yr un unigolyn."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:61
+#: src/Actor/templates/actor/lpa-add.html.twig:63
 msgid "Activation key"
 msgstr "Allwedd cadarnhau cyfrif"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:62
+#: src/Actor/templates/actor/lpa-add.html.twig:64
 msgid ""
 "Activation keys are 13 letters and numbers long and start with a C<br/>For "
 "example, C-AB12 CD34 EF56"
@@ -3011,11 +3010,11 @@ msgstr ""
 "Mae allweddi cadarnhau cyfrif yn gyfuniad o 13 llythyren a rhifau ac yn "
 "dechrau gyda C.<br/>Er enghraifft, C-AB12 CD34 EF56"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:69
+#: src/Actor/templates/actor/lpa-add.html.twig:71
 msgid "Where to find your activation key"
 msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:73
+#: src/Actor/templates/actor/lpa-add.html.twig:75
 msgid ""
 "Your activation key is printed on the letter that told you the <abbr title="
 "\"lasting power of attorney\">LPA</abbr> had been registered. The donor and "
@@ -3025,7 +3024,7 @@ msgstr ""
 "title=\"atwrneiaeth arhosol\">LPA</abbr> wedi ei chofrestru. Bydd gan y "
 "rhoddwr a phob atwrnai allwedd cadarnhau cyfrif unigryw."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:74
+#: src/Actor/templates/actor/lpa-add.html.twig:76
 msgid ""
 "If you cannot find it, please call us:<br>\n"
 "                                Telephone: 0300 456 0300<br>\n"
@@ -3039,11 +3038,11 @@ msgstr ""
 "                                Dydd Llun i ddydd Gwener, 9am tan 5pm, heblaw "
 "bob dydd Mercher 10am tan 5pm."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:85
+#: src/Actor/templates/actor/lpa-add.html.twig:87
 msgid "What is your date of birth?"
 msgstr "Beth yw eich dyddiad geni?"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:86
+#: src/Actor/templates/actor/lpa-add.html.twig:88
 msgid "For example, 31 03 1980"
 msgstr "Er enghraifft, 31 03 1980"
 
@@ -3251,8 +3250,8 @@ msgstr "Mae problem"
 msgid "Error:"
 msgstr "Gwall:"
 
-#: src/Common/templates/layout/default.html.twig:111
-#: src/Common/templates/partials/cookies.html.twig:22
+#: src/Common/templates/layout/default.html.twig:116
+#: src/Common/templates/partials/cookies.html.twig:24
 msgid "Cookies"
 msgstr "Cwcis"
 
@@ -3262,7 +3261,7 @@ msgstr "Cwcis"
 msgid "View a lasting power of attorney"
 msgstr "Gweld atwrneiaeth arhosol"
 
-#: src/Common/templates/partials/cookies.html.twig:23
+#: src/Common/templates/partials/cookies.html.twig:25
 msgid ""
 "Cookies are files saved on your phone, tablet or computer when you visit a "
 "website."
@@ -3270,7 +3269,7 @@ msgstr ""
 "Ffeiliau a arbedir ar eich ffôn, eich tabled neu eich cyfrifiadur pan fyddwch "
 "yn ymweld â gwefan yw cwcis."
 
-#: src/Common/templates/partials/cookies.html.twig:27
+#: src/Common/templates/partials/cookies.html.twig:29
 msgid ""
 "We use cookies to store information about how you use the Use a lasting power "
 "of attorney service, such as the pages you visit."
@@ -3279,7 +3278,7 @@ msgstr ""
 "gwasanaeth Defnyddio atwrneiaeth arhosol, er enghraifft y tudalennau y byddwch "
 "yn ymweld â hwy."
 
-#: src/Common/templates/partials/cookies.html.twig:29
+#: src/Common/templates/partials/cookies.html.twig:31
 msgid ""
 "We use cookies to store information about how you use the View a lasting power "
 "of attorney service, such as the pages you visit."
@@ -3288,11 +3287,11 @@ msgstr ""
 "gwasanaeth Gweld atwrneiaeth arhosol, er enghraifft y tudalennau y byddwch yn "
 "ymweld â hwy."
 
-#: src/Common/templates/partials/cookies.html.twig:36
+#: src/Common/templates/partials/cookies.html.twig:38
 msgid "Cookie settings"
 msgstr "Gosodiadau cwcis"
 
-#: src/Common/templates/partials/cookies.html.twig:37
+#: src/Common/templates/partials/cookies.html.twig:39
 msgid ""
 "We use two types of cookie. One type is strictly necessary and the other type "
 "of cookie is optional."
@@ -3300,11 +3299,11 @@ msgstr ""
 "Rydym yn defnyddio dau fath o gwcis. Mae un math yn wir angenrheidiol a’r math "
 "arall o gwci yn ddewisol."
 
-#: src/Common/templates/partials/cookies.html.twig:39
+#: src/Common/templates/partials/cookies.html.twig:41
 msgid "Cookies that measure website use"
 msgstr "Cwcis sy’n mesur y defnydd a wneir o’r wefan"
 
-#: src/Common/templates/partials/cookies.html.twig:40
+#: src/Common/templates/partials/cookies.html.twig:42
 msgid ""
 "OPG and Government Digital Services use Google Analytics to measure how you "
 "use the service so we can improve it based on user needs. Google Analytics "
@@ -3315,38 +3314,38 @@ msgstr ""
 "defnyddio’r gwasanaeth er mwyn inni ei wella yn seiliedig ar anghenion y "
 "defnyddwyr. Mae Google Analytics yn gosod cwcis sy’n storio data anhysbys am:"
 
-#: src/Common/templates/partials/cookies.html.twig:43
+#: src/Common/templates/partials/cookies.html.twig:45
 msgid "what pages you visit and how long you spend on each"
 msgstr "y tudalennau y byddwch yn ymweld â hwy a’r amser a dreulir arnynt"
 
-#: src/Common/templates/partials/cookies.html.twig:44
+#: src/Common/templates/partials/cookies.html.twig:46
 msgid "what you click on while you're visiting the site"
 msgstr "beth fyddwch chi’n glicio arno pan fyddwch yn ymweld â’r safle"
 
-#: src/Common/templates/partials/cookies.html.twig:48
+#: src/Common/templates/partials/cookies.html.twig:50
 msgid ""
 "We do not allow Google to use or share the data about how you use this site."
 msgstr ""
 "Nid ydym yn caniatáu i Google ddefnyddio na rhannu’r data am sut y byddwch yn "
 "defnyddio’r safle."
 
-#: src/Common/templates/partials/cookies.html.twig:54
+#: src/Common/templates/partials/cookies.html.twig:56
 msgid "Allow use of non-essential Cookies?"
 msgstr "Caniatáu’r defnydd o Gwcis nad ydynt yn angenrheidiol?"
 
-#: src/Common/templates/partials/cookies.html.twig:60
+#: src/Common/templates/partials/cookies.html.twig:62
 msgid "Use cookies that measure my website use"
 msgstr "Defnyddio cwcis sy’n mesur y defnydd a wnaf o’r wefan"
 
-#: src/Common/templates/partials/cookies.html.twig:64
+#: src/Common/templates/partials/cookies.html.twig:66
 msgid "Do not use cookies that measure my website use"
 msgstr "Peidio á defnyddio cwcis sy’n mesur y defnydd a wnaf o’r wefan"
 
-#: src/Common/templates/partials/cookies.html.twig:73
+#: src/Common/templates/partials/cookies.html.twig:75
 msgid "Strictly necessary cookies"
 msgstr "Cwcis sy’n wir angenrheidiol"
 
-#: src/Common/templates/partials/cookies.html.twig:74
+#: src/Common/templates/partials/cookies.html.twig:76
 msgid ""
 "These essential cookies allow you to log in to the service. They always need "
 "to be on."
@@ -3354,7 +3353,7 @@ msgstr ""
 "Mae’r cwcis hanfodol hyn yn caniatáu i chi fewngofnodi i’r gwasanaeth. Mae "
 "gofyn iddynt fod yn weithredol drwy’r amser."
 
-#: src/Common/templates/partials/cookies.html.twig:76
+#: src/Common/templates/partials/cookies.html.twig:78
 msgid "Save changes"
 msgstr "Arbed newidiadau"
 
@@ -3367,12 +3366,12 @@ msgstr "Mewngofnodwyd diwethaf:"
 msgid "Never"
 msgstr "Erioed wedi mewngofnodi"
 
-#: src/Common/templates/partials/account-bar.html.twig:11
+#: src/Common/templates/partials/account-bar.html.twig:12
 msgid "Your LPAs"
 msgstr "Eich LPAs"
 
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
-#: src/Common/templates/partials/account-bar.html.twig:12
+#: src/Common/templates/partials/account-bar.html.twig:13
 msgid "Sign out"
 msgstr "Allgofnodi"
 
@@ -3392,15 +3391,15 @@ msgstr ""
 msgid "Stay signed in"
 msgstr "Parhau i ddefnyddio’r gwasanaeth"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:22
+#: src/Viewer/templates/viewer/check-code-found.html.twig:24
 msgid "We’ve found this LPA"
 msgstr "Rydym wedi dod o hyd i’r LPA hwn"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:34
+#: src/Viewer/templates/viewer/check-code-found.html.twig:36
 msgid "Code expires"
 msgstr "Daw’r cod i ben"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:35
+#: src/Viewer/templates/viewer/check-code-found.html.twig:37
 msgid "in %count% day, on %date%"
 msgid_plural "in %count% days, on %date%"
 msgstr[0] "mewn %count% o ddiwrnodau, ar %date%"
@@ -3410,7 +3409,7 @@ msgstr[3] "mewn %count% o ddiwrnodau, ar %date%"
 msgstr[4] "mewn %count% o ddiwrnodau, ar %date%"
 msgstr[5] "mewn %count% o ddiwrnodau, ar %date%"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:49
+#: src/Viewer/templates/viewer/check-code-found.html.twig:51
 msgid ""
 "If this is not the right LPA, ask the donor or attorney to check the access "
 "code."
@@ -3418,7 +3417,7 @@ msgstr ""
 "Os nad dyma’r LPA iawn, gofynnwch i’r rhoddwr neu atwrnai wirio’r cod mynediad "
 "LPA."
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:55
+#: src/Viewer/templates/viewer/check-code-found.html.twig:57
 msgid ""
 "If you need to see this <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "after %date%"
@@ -3426,7 +3425,7 @@ msgstr ""
 "Os oes angen i chi weld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hwn "
 "ar ôl %date%"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:60
+#: src/Viewer/templates/viewer/check-code-found.html.twig:62
 msgid ""
 "You can see an online summary of this <abbr title='lasting power of attorney'> "
 "LPA </abbr>until %date%. After this date, the access code will expire."
@@ -3434,25 +3433,25 @@ msgstr ""
 "Gallwch weld crynodeb ar-lein o’r <abbr title=‘atwrneiaethau arhosol’> LPA </"
 "abbr> tan yr %date%. Ar ôl y dyddiad hwn bydd y cod mynediad yn dod i ben."
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:62
+#: src/Viewer/templates/viewer/check-code-found.html.twig:64
 msgid "Ask the donor or attorney for a new access code if your organisation:"
 msgstr ""
 "Gofynnwch i’r rhoddwr neu’r atwrnai am god mynediad newydd os oes ar eich "
 "sefydliad angen:"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:64
+#: src/Viewer/templates/viewer/check-code-found.html.twig:66
 msgid "needs more time to process this LPA"
 msgstr "rhagor o amser i brosesu’r LPA"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:65
+#: src/Viewer/templates/viewer/check-code-found.html.twig:67
 msgid "need to see this LPA at a later date"
 msgstr "gweld yr LPA ymhellach ymlaen"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:80
+#: src/Viewer/templates/viewer/check-code-found.html.twig:82
 msgid "View this LPA"
 msgstr "Gweld yr LPA"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:83
+#: src/Viewer/templates/viewer/check-code-found.html.twig:85
 msgid "Try another access code"
 msgstr "Ceisio defnyddio cod mynediad arall"
 
@@ -3522,19 +3521,19 @@ msgstr "Gwiriwch y cod a sillafiad enw olaf y rhoddwr"
 msgid "Enter LPA access code"
 msgstr "Rhowch god mynediad yr LPA"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:27
+#: src/Viewer/templates/viewer/enter-code.html.twig:29
 msgid "Enter the LPA access code"
 msgstr "Rhowch god mynediad LPA"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:35
+#: src/Viewer/templates/viewer/enter-code.html.twig:37
 msgid "Donor's last name"
 msgstr "Enw olaf y rhoddwr"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:43
+#: src/Viewer/templates/viewer/enter-code.html.twig:45
 msgid "LPA access code"
 msgstr "Cod mynediad yr LPA"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:45
+#: src/Viewer/templates/viewer/enter-code.html.twig:47
 msgid ""
 "Access codes are 13 characters long and start with a V<br/>For example, V-AB12-"
 "CD34-EF56"
@@ -3542,13 +3541,13 @@ msgstr ""
 "Mae codau mynediad yn gyfuniad o 13 llythyren a rhifau ac yn dechrau gyda V<br/"
 ">Er enghraifft, V-AB12-CD34-EF56"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:51
+#: src/Viewer/templates/viewer/enter-code.html.twig:53
 msgid ""
 "What is an <abbr title=\"lasting power of attorney\">LPA</abbr> access code?"
 msgstr ""
 "Beth yw cod mynediad <abbr title=\"lasting power of attorney\">LPA</abbr>?"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:53
+#: src/Viewer/templates/viewer/enter-code.html.twig:55
 msgid ""
 "An <abbr title=\"lasting power of attorney\">LPA</abbr> access code is a "
 "unique code given to you by the donor or an attorney named on a lasting power "
@@ -3819,7 +3818,7 @@ msgstr ""
 "newidiadau os byddwch yn parhau i ddefnyddio’r gwasanaeth ar ôl i’r telerau "
 "defnyddio gael eu diweddaru"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:19
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:17
 msgid ""
 "This privacy notice explains why the Office of the Public Guardian (OPG)\n"
 "                        collects personal data when you use the ‘View a "
@@ -3830,7 +3829,7 @@ msgstr ""
 "                    yn casglu data personol pan fyddwch yn defnyddio’r "
 "gwasanaeth ‘Defnyddio atwrneiaeth arhosol’ (LPA)."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:38
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:36
 msgid ""
 "You should read this privacy notice alongside <a class=\"govuk-link\" href="
 "\"%link%\"> <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s "
@@ -3845,11 +3844,11 @@ msgstr ""
 "am eich gwybodaeth bersonol, pan fyddwn yn ei defnyddio a phan fyddwn yn ei "
 "rhannu."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:43
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:41
 msgid "Who manages the View a lasting power of attorney service"
 msgstr "Pwy sy’n rheoli’r gwasanaeth gweld atwrneiaeth arhosol"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:47
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:45
 msgid ""
 "This service is managed by  <abbr title=\"Office of the Public Guardian\">OPG</"
 "abbr>, which is an executive agency sponsored by the Ministry of Justice (MOJ)."
@@ -3858,7 +3857,7 @@ msgstr ""
 "gwasanaeth hwn, sef asiantaeth weithredol sy’n cael ei chefnogi gan y "
 "Weinyddiaeth Gyfiawnder (MOJ)."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:50
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:48
 msgid ""
 "MOJ is the data controller for the personal data we store.\n"
 "                        <a class=\"govuk-link\" href=\"%link%\">\n"
@@ -3892,11 +3891,11 @@ msgstr ""
 "href=\"%cookie%\">polisi cwcis</a>."
 
 # What data we collect and how we use it
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:61
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:59
 msgid "What data we collect and how we use it"
 msgstr "Pa ddata rydyn ni’n ei gasglu a sut rydyn ni’n ei ddefnyddio"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:65
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:63
 msgid ""
 "The donor or an attorney on an <abbr title=\"lasting power of attorney\">LPA</"
 "abbr> can use the <span style=\"text-decoration:underline;\">Use a lasting "
@@ -3909,7 +3908,7 @@ msgstr ""
 "i’w roi i sefydliad a enwir a gweithiwr proffesiynol. Dylent greu cod unigryw "
 "ar gyfer pob sefydliad neu weithiwr proffesiynol."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:68
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:66
 msgid ""
 "In order to use the View a lasting power of attorney service, you need to "
 "enter the unique ‘access code’ given to you by the donor or an attorney on the "
@@ -3919,11 +3918,11 @@ msgstr ""
 "roi’r ‘cod mynediad’ unigryw a roddwyd i chi gan y rhoddwr neu’r atwrnai ar yr "
 "<abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yr ydych am ei weld."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:71
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:69
 msgid "We keep a record of:"
 msgstr "Rydym yn cadw cofnod o’r canlynol:"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:74
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:72
 msgid ""
 "when the access code is used to view an  <abbr title=\"lasting power of "
 "attorney\">LPA</abbr>"
@@ -3931,7 +3930,7 @@ msgstr ""
 "pan ddefnyddir y cod mynediad i weld <abbr title=\"atwrneiaeth arhosol\">LPA</"
 "abbr>"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:75
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:73
 msgid ""
 "the name of the organisation or individual the donor or attorney said they "
 "were giving that code to"
@@ -3939,7 +3938,7 @@ msgstr ""
 "enw’r sefydliad neu’r unigolyn y dywedodd y rhoddwr neu’r atwrnai ei fod yn "
 "rhoi’r cod hwnnw iddo"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:79
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:77
 msgid ""
 "This information will be shared with the donor and attorneys on the <abbr "
 "title=\"lasting power of attorney\">LPA</abbr>, if they’re using the Use a "
@@ -3951,7 +3950,7 @@ msgstr ""
 "gwasanaeth Defnyddio atwrneiaeth arhosol. Gwneir hyn er mwyn helpu i atal "
 "mynediad anawdurdodedig a chanfod achosion o fynediad anawdurdodedig."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:85
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:83
 msgid ""
 "We collect site usage information from this service. This allows us to see how "
 "the service is being used so we can improve it.\n"
@@ -3965,11 +3964,11 @@ msgstr ""
 "fe’i cedwir ar wahân i’r wybodaeth y byddwch yn ei rhoi wrth ddefnyddio’r "
 "gwasanaeth hwn."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:89
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:87
 msgid "Find out more about <a class=\"govuk-link\" href=\"%link%\">cookies</a>."
 msgstr "Darganfod mwy am <a class=\"govuk-link\" href=\"%link%\">gwcis</a>."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:96
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:94
 msgid ""
 "Your use of this online service is optional.\n"
 "                        If you prefer, you can ask the donor or an attorney to "
@@ -3981,7 +3980,7 @@ msgstr ""
 "atwrnai ddangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> papur "
 "gwreiddiol neu gopi ardystiedig i chi."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:100
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:98
 msgid ""
 "We operate the View a lasting power of attorney service as part of our legal "
 "functions under the Mental Capacity Act 2005."
@@ -3989,11 +3988,11 @@ msgstr ""
 "Rydym yn gweithredu’r gwasanaeth gweld atwrneiaeth arhosol fel rhan o’n "
 "swyddogaethau cyfreithiol o dan Ddeddf Galluedd Meddyliol 2005."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:102
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:100
 msgid "How we store data"
 msgstr "Sut yr ydym yn storio data"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:106
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:104
 msgid ""
 "Information you enter into the service is stored in a secure database within "
 "the European Economic Area (EEA). However, due to the global nature of the "
@@ -4006,7 +4005,7 @@ msgstr ""
 "ddata ac ohoni drosglwyddo trwy wledydd y tu allan i’r EEA. Nid yw data’n cael "
 "ei storio mewn gwlad nad yw’n EEA."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:109
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:107
 msgid ""
 "It may sometimes be necessary to transfer personal information overseas. Any "
 "transfers made will fully comply with all aspects of data protection law."
@@ -4015,7 +4014,7 @@ msgstr ""
 "drosglwyddiadau a wneir yn cydymffurfio’n llawn â phob agwedd ar gyfraith "
 "diogelu data."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:116
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:114
 msgid ""
 "All  <abbr title=\"Office of the Public Guardian\">OPG</abbr> staff who have "
 "access to the database have MOJ security clearance."
@@ -4024,7 +4023,7 @@ msgstr ""
 "sydd â mynediad at y gronfa ddata gliriad diogelwch <abbr title=\"Weinyddiaeth "
 "Gyfiawnder\">MOJ</abbr>."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:119
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:117
 msgid ""
 "Our hosting provider (Amazon Web Services) is not allowed to routinely access "
 "the secure data."
@@ -4032,7 +4031,7 @@ msgstr ""
 "Ni chaniateir i’n darparwr cynnal (Amazon Web Services) gyrchu’r data diogel "
 "fel mater o drefn."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:120
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:118
 msgid ""
 "If they need to do so for operational purposes, their access is strictly "
 "controlled and approved by <abbr title=\"Office of the Public Guardian\">OPG</"
@@ -4042,7 +4041,7 @@ msgstr ""
 "cael ei reoli a’i awdurdodi’n llym gan yr <abbr title=\"Swyddfa’r Gwarcheidwad "
 "Cyhoeddus\">OPG</abbr>."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:123
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:121
 msgid ""
 "You can find out more about how we store and use this data in <abbr title="
 "\"Office of the Public Guardian\">OPG</abbr>’s <a class=\"govuk-link\"  href="
@@ -4052,7 +4051,7 @@ msgstr ""
 "class=\"govuk-link\" href=\"%link%\">siarter wybodaeth bersonol</a> yr <abbr "
 "title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr>."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:132
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:130
 msgid ""
 "We will keep your personal data inline with our <a class=\"govuk-link\"  href="
 "\"%link%\">retention policy</a>."
@@ -4060,7 +4059,7 @@ msgstr ""
 "Byddwn yn cadw’ch data personol yn unol â’n <a class=\"govuk-link\"  href="
 "\"%link%\">polisi cadw</a>."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:146
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:144
 msgid ""
 "We’ll only share the information you give us when the law says we can. For "
 "example, we may share information with the police to help them prevent or "
@@ -4070,7 +4069,7 @@ msgstr ""
 "chi’n ei rhoi i ni y byddwn yn gwneud hynny. Er enghraifft, efallai y byddwn "
 "yn rhannu gwybodaeth gyda’r heddlu i’w helpu i atal neu ymchwilio i droseddau."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:164
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:162
 msgid ""
 "when we can pass on personal information without telling you, for example, to "
 "help with the prevention or detection of crime or to produce anonymised "
@@ -4080,7 +4079,7 @@ msgstr ""
 "enghraifft, i helpu i atal neu ganfod trosedd neu i gynhyrchu ystadegau "
 "anhysbys"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:175
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:173
 msgid ""
 "MOJ Data Protection Officer<br>\n"
 "                    Post point 10.38<br>\n"
@@ -4094,7 +4093,7 @@ msgstr ""
 "                    Llundain<br>\n"
 "                    SW1H 9AJ<br>"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:188
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:186
 msgid ""
 "If these changes affect how your personal data is processed, We’ll take "
 "reasonable steps to let you know."
@@ -4102,7 +4101,7 @@ msgstr ""
 "Os yw’r newidiadau hyn yn effeithio ar sut mae eich data personol yn cael ei "
 "brosesu, byddwn yn cymryd camau rhesymol i roi gwybod i chi."
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:195
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:193
 msgid ""
 "When we ask for personal data, we’ll keep to the law. If you think that your "
 "information has not been handled correctly, in addition to contacting the MOJ "
@@ -4115,7 +4114,7 @@ msgstr ""
 "\">MOJ</abbr>, gallwch gysylltu â’r Comisiynydd Gwybodaeth i gael cyngor "
 "annibynnol ar ddiogelu data. Dyma’r cyfeiriad:"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:198
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:196
 msgid ""
 "Information Commissioner's Office <br>\n"
 "                    Wycliffe House <br>\n"
@@ -4131,19 +4130,19 @@ msgstr ""
 "                    Cheshire<br>\n"
 "                    SK9 5AF"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:208
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:206
 msgid "Phone: 0303 123 1113"
 msgstr "Ffôn: 0303 123 1113"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:209
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:207
 msgid "Textphone: 01625 545860"
 msgstr "Ffôn testun: 01625 545860"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:210
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:208
 msgid "Monday to Friday, 9am to 4:30pm"
 msgstr "Dydd Llun i ddydd Gwener, 9am i 4:30 pm"
 
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:216
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:214
 msgid "Last updated: 24 May 2019"
 msgstr "Diweddarwyd ddiwethaf: 24 Mai 2019"
 
@@ -4207,16 +4206,16 @@ msgstr "GOV.UK"
 msgid "Support links"
 msgstr "Dolenni cymorth"
 
-#: src/Common/templates/layout/default.html.twig:116
+#: src/Common/templates/layout/default.html.twig:126
 #: src/Common/templates/partials/contact-us.html.twig:23
 msgid "Contact us"
 msgstr "Cysylltwch â ni"
 
-#: src/Common/templates/layout/default.html.twig:126
+#: src/Common/templates/layout/default.html.twig:131
 msgid "Built by OPG Digital"
 msgstr "Adeiladwyd gan OPG Digidol"
 
-#: src/Common/templates/layout/default.html.twig:136
+#: src/Common/templates/layout/default.html.twig:141
 msgid ""
 "All content is available under the\n"
 "                    <a class=\"govuk-footer__link\" href=\"https://www."
@@ -4232,7 +4231,7 @@ msgstr ""
 "                        Trwydded Llywodraeth Agored v3.0\n"
 "                    </a>, oni nodir yn wahanol"
 
-#: src/Common/templates/layout/default.html.twig:145
+#: src/Common/templates/layout/default.html.twig:150
 msgid "© Crown copyright"
 msgstr "© Hawlfraint y goron"
 
@@ -4242,7 +4241,7 @@ msgctxt "error"
 msgid "Enter the LPA reference number"
 msgstr "Nodwch y cyfeirnod LPA"
 
-#: src/Actor/templates/actor/create-account.html.twig:62
+#: src/Actor/templates/actor/create-account.html.twig:64
 #, fuzzy
 msgid ""
 "I agree to the <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel="
@@ -4251,7 +4250,7 @@ msgstr ""
 "Rwy’n cytuno i’r <a href=\"%link%\" class=\"govuk-link\">telerau defnyddio (yn "
 "agor mewn tab newydd)</a>"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:56
+#: src/Viewer/templates/viewer/enter-code.html.twig:58
 #, fuzzy
 msgid ""
 "By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class="
@@ -4769,8 +4768,8 @@ msgstr ""
 msgid "Back to GOV.UK"
 msgstr "Yn ôl i GOV.UK"
 
-#: src/Actor/templates/actor/create-account.html.twig:41
-#: src/Actor/templates/actor/change-email.html.twig:31
+#: src/Actor/templates/actor/create-account.html.twig:43
+#: src/Actor/templates/actor/change-email.html.twig:33
 msgid "Check that your email address is spelt correctly"
 msgstr "Gwiriwch bod eich cyfeiriad e-bost wedi’i sillafu’n gywir"
 
@@ -4780,11 +4779,11 @@ msgctxt "error"
 msgid "Enter the LPA reference number in the correct format"
 msgstr "Nodwch y cyfeirnod LPA yn y fformat cywir"
 
-#: src/Actor/templates/actor/create-account-success.html.twig:19
+#: src/Actor/templates/actor/create-account-success.html.twig:21
 msgid "Check your email"
 msgstr "Gwiriwch eich e-bost"
 
-#: src/Actor/templates/actor/password-reset-request-done.html.twig:19
+#: src/Actor/templates/actor/password-reset-request-done.html.twig:21
 msgid ""
 "We've emailed a link to <strong class=\"govuk-!-font-weight-bold\">%email%</"
 "strong> so that you can reset your password."
@@ -4792,13 +4791,13 @@ msgstr ""
 "Rydym wedi anfon y ddolen i <strong class=\"govuk-!-font-weight-bold\">%email"
 "%</strong> er mwyn ichi ailosod eich cyfrinair."
 
-#: src/Actor/templates/actor/create-account-success.html.twig:33
+#: src/Actor/templates/actor/create-account-success.html.twig:35
 msgid "If you still do not receive the email, please contact us on %number%."
 msgstr ""
 "Os nad ydych byth wedi cael yr e-bost, cysylltwch â ni ar %number% (yn "
 "Saesneg)."
 
-#: src/Actor/templates/actor/create-account-success.html.twig:35
+#: src/Actor/templates/actor/create-account-success.html.twig:37
 msgid ""
 "If you've already activated your account, you can <a href=\"%link%\" class="
 "\"govuk-link\">sign in</a> now."
@@ -4806,11 +4805,11 @@ msgstr ""
 "Os ydych wedi cadarnhau eich cyfrif yn barod, gallwch <a href=\"%link%\" class="
 "\"govuk-link\">fewngofnodi</a> nawr."
 
-#: src/Actor/templates/actor/create-account-success.html.twig:37
+#: src/Actor/templates/actor/create-account-success.html.twig:39
 msgid "Your email address can only be used on one account."
 msgstr "Gellir defnyddio eich cyfeiriad e-bost ar gyfer un cyfrif yn unig."
 
-#: src/Actor/templates/actor/create-account-success.html.twig:22
+#: src/Actor/templates/actor/create-account-success.html.twig:24
 msgid ""
 "We've emailed a link to <strong>%email%</strong>. Click on the link to "
 "activate your account. The link will work for the next 24 hours."
@@ -4818,7 +4817,7 @@ msgstr ""
 "Rydym wedi e-bostio dolen i <strong>%email%</strong>. Cliciwch ar y ddolen i "
 "gadarnhau eich cyfrif. Mae gennych 24 awr i glicio ar y ddolen."
 
-#: src/Actor/templates/actor/create-account-success.html.twig:28
+#: src/Actor/templates/actor/create-account-success.html.twig:30
 msgid ""
 "The email should arrive in a few minutes. If it's not in your inbox, check "
 "your spam, bulk or junk email inbox. If you have not received the email, we "
@@ -4838,11 +4837,11 @@ msgstr ""
 "abbr>, gallwch ychwanegu’r holl <abbr title=\"atwrneiaeth arhosol\">LPAs</"
 "abbr> hynny at eich cyfrif"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:75
+#: src/Viewer/templates/viewer/check-code-found.html.twig:77
 msgid "Your organisation name"
 msgstr "Enw eich sefydliad"
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:76
+#: src/Viewer/templates/viewer/check-code-found.html.twig:78
 msgid "This will be displayed to the attorneys and donor on the LPA"
 msgstr "Dangosir hwn i’r rhoddwr a’r atwrneiod ar yr LPA"
 
@@ -4873,11 +4872,11 @@ msgstr "Beth alla’i wneud gyda’r gwasanaeth hwn?"
 msgid "Use this service to:"
 msgstr "Trwy ddefnyddio’r gwasanaeth hwn rydych yn:"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:51
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:53
 msgid "What to do next"
 msgstr "Beth i’w wneud nesaf"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:53
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:55
 msgid ""
 "Give %organisation% this access code. They should go to www.gov.uk/view-lpa to "
 "enter the access code and see a summary of the <abbr title=\"lasting power of "
@@ -4886,7 +4885,7 @@ msgstr ""
 "Rhowch y cod mynediad hwn i %organisation%. Dylent fynd i www.gov.uk/view-lpa "
 "i roi’r cod mynediad a gweld crynodeb o’r atwrneiaeth."
 
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:61
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:63
 msgid ""
 "This is a new service, check that the organisation will accept an online "
 "summary of the <abbr title=\"lasting power of attorney\">LPA</abbr> and how "
@@ -4945,3 +4944,13 @@ msgstr ""
 msgctxt "flashMessage"
 msgid "You cancelled the access code for %organisation%: %code%"
 msgstr "Gwnaethoch ganslo’r cod mynediad ar gyfer %organisation%: %code%"
+
+#. Accordion label
+#: src/Actor/templates/actor/check-access-codes.html.twig:74
+msgid "active code details"
+msgstr "manylion y codau i’w defnyddio"
+
+#. Accordion label
+#: src/Actor/templates/actor/check-access-codes.html.twig:95
+msgid "inactive code details"
+msgstr "manylion y codau sydd wedi dod i ben"

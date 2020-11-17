@@ -1,27 +1,29 @@
 {% set route_name = get_route_name() %}
 
-<ul class="trans-switch">
-    <li class="govuk-list trans-switch__list govuk-body-s">
-        {% if path() matches '/(^\\/cy.*)/' %}
-            {% if actorToken is defined and actorToken != 'null' %}
-                <a href="{{ path(route_name, {}, {'lpa': actorToken }) | replace({'/cy':''}) }}" class="govuk-link">English</a>
+<div role="navigation" aria-labelledby="language-switch">
+    <ul class="trans-switch" id="language-switch" aria-label="english-welsh-language-switch">
+        <li class="govuk-list trans-switch__list govuk-body-s">
+            {% if path() matches '/(^\\/cy.*)/' %}
+                {% if actorToken is defined and actorToken != 'null' %}
+                    <a href="{{ path(route_name, {}, {'lpa': actorToken }) | replace({'/cy':''}) }}" class="govuk-link">English</a>
+                {% else %}
+                    <a href="{{ path() | replace({'/cy':''}) }}" class="govuk-link">English</a>
+                {% endif %}
             {% else %}
-                <a href="{{ path() | replace({'/cy':''}) }}" class="govuk-link">English</a>
+                English
             {% endif %}
-        {% else %}
-            English
-        {% endif %}
-    </li>
-    <li class="govuk-list trans-switch__partition govuk-body-s">|</li>
-    <li class="govuk-list trans-switch__list govuk-body-s">
-        {% if '/cy' not in path() %}
-            {% if actorToken is defined and actorToken != 'null' %}
-                <a href="{{ '/cy' ~ path(route_name, {}, {'lpa': actorToken }) }}" class="govuk-link">Cymraeg</a>
+        </li>
+        <li class="govuk-list trans-switch__partition govuk-body-s">|</li>
+        <li class="govuk-list trans-switch__list govuk-body-s">
+            {% if '/cy' not in path() %}
+                {% if actorToken is defined and actorToken != 'null' %}
+                    <a href="{{ '/cy' ~ path(route_name, {}, {'lpa': actorToken }) }}" class="govuk-link">Cymraeg</a>
+                {% else %}
+                    <a href="{{ '/cy' ~ path() }}" class="govuk-link">Cymraeg</a>
+                {% endif %}
             {% else %}
-                <a href="{{ '/cy' ~ path() }}" class="govuk-link">Cymraeg</a>
+                Cymraeg
             {% endif %}
-        {% else %}
-            Cymraeg
-        {% endif %}
-    </li>
-</ul>
+        </li>
+    </ul>
+</div>

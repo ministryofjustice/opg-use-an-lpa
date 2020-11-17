@@ -4,6 +4,7 @@ namespace App\Service\Lpa;
 
 use App\DataAccess\Repository;
 use App\Exception\GoneException;
+use App\Exception\NotFoundException;
 use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -329,5 +330,58 @@ class LpaService
         }
 
         return self::ACTIVE_ATTORNEY;
+    }
+
+    /**
+     * @param string $userId
+     * @param string $actorLpaToken
+     * @return array|null
+     * @throws NotFoundException
+     */
+    public function removeLpaFromUserLpaActorMap(string $userId, string $actorLpaToken): ?array
+    {
+        $userActorLpa = $this->userLpaActorMapRepository->get($actorLpaToken);
+
+        if (is_null($userActorLpa)) {
+            $this->logger->notice(
+                'User actor lpa record  not found for actor token {Id}',
+                ['Id' => $actorLpaToken]
+            );
+            throw new NotFoundException('User actor lpa record  not found for actor token - ' . $actorLpaToken);
+        }
+
+        // Ensure the passed userId matches the passed token
+        if ($userId !== $userActorLpa['UserId']) {
+            $this->logger->notice(
+                'User Id {userId} passed does not match the user in userActorLpaMap for actor token {actorToken}',
+                ['userId' => $userId, 'actorToken' => $actorLpaToken]
+            );
+            throw new NotFoundException('User Id passed does not match the user in userActorLpaMap for token - ' . $actorLpaToken);
+        }
+
+        //Get list of viewer codes to be updated
+        $viewerCodes = $this->getListOfViewerCodesToBeUpdated($userActorLpa);
+
+        //Update query to remove actor association in viewer code table
+        if (!empty($viewerCodes)) {
+            foreach ($viewerCodes as $key => $viewerCode) {
+                $this->viewerCodesRepository->removeActorAssociation($viewerCode);
+            }
+        }
+        return $this->userLpaActorMapRepository->delete($actorLpaToken);
+    }
+
+    private function getListOfViewerCodesToBeUpdated(array $userActorLpa): ?array
+    {
+        $siriusUid = $userActorLpa['SiriusUid'];
+
+        //Lookup records in ViewerCodes table using siriusUid
+        $viewerCodesData = $this->viewerCodesRepository->getCodesByLpaId($siriusUid);
+        foreach ($viewerCodesData as $key => $viewerCodeRecord) {
+            if (isset($viewerCodeRecord['UserLpaActor']) && ($viewerCodeRecord['UserLpaActor'] === $userActorLpa['Id'])) {
+                $viewerCodes[] = $viewerCodeRecord['ViewerCode'];
+            }
+        }
+        return $viewerCodes;
     }
 }
