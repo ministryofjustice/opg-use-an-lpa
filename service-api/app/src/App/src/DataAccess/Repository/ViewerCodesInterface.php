@@ -47,4 +47,12 @@ interface ViewerCodesInterface
      * @return bool The code cancellation was successful or not
      */
     public function cancel(string $code, DateTime $cancelledDate): bool;
+
+    /**
+     * update a viewer code from the database
+     *
+     * @param string $code
+     * @return bool
+     */
+    public function removeActorAssociation(string $code): bool;
 }

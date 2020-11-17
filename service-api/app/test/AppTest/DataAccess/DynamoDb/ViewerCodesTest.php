@@ -277,4 +277,33 @@ class ViewerCodesTest extends TestCase
 
         $this->assertTrue($result);
     }
+
+    /** @test */
+    public function can_remove_actor_and_code_association()
+    {
+        $testCode    = 'test-code';
+
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function(array $data) use (
+            $testCode
+        ) {
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+
+            $this->assertEquals(['S'=> $testCode], $data['Key']['ViewerCode']);
+
+            $this->assertArrayHasKey('UpdateExpression', $data);
+            $this->assertEquals('SET UserLpaActor=:c', $data['UpdateExpression']);
+
+            $this->assertArrayHasKey(':c', $data['ExpressionAttributeValues']);
+            $this->assertEquals(['S' => ''], $data['ExpressionAttributeValues'][':c']);
+
+            return true;
+        }))->shouldBeCalled();
+
+        $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $result = $repo->removeActorAssociation($testCode);
+
+        $this->assertTrue($result);
+    }
 }

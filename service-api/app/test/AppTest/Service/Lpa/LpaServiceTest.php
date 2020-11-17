@@ -7,11 +7,13 @@ namespace AppTest\Service\Lpa;
 use App\DataAccess\Repository;
 use App\DataAccess\Repository\Response\Lpa;
 use App\Service\Lpa\LpaService;
+use App\Service\ViewerCodes\ViewerCodeService;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use App\Exception\NotFoundException;
 
 class LpaServiceTest extends TestCase
 {
@@ -65,6 +67,19 @@ class LpaServiceTest extends TestCase
             $this->lpasInterfaceProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
             $this->loggerProphecy->reveal()
+        );
+    }
+
+    private function getViewerCodeService(): ViewerCodeService
+    {
+        $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
+        $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
+        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+
+        return new ViewerCodeService(
+            $viewerCodeRepoProphecy->reveal(),
+            $userActorLpaRepoProphecy->reveal(),
+            $lpaServiceProphecy->reveal()
         );
     }
 
@@ -829,5 +844,127 @@ class LpaServiceTest extends TestCase
 
         $result = $service->lookupActiveActorInLpa($lpa, '234567890123');
         $this->assertNull($result);
+    }
+
+    /** @test */
+    public function remove_lpa_from_user_lpa_actor_map_successfully()
+    {
+        $userActorLpa = [
+                'SiriusUid' => '700000055554',
+                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                'Id' => '2345Token0123',
+                'ActorId' => '1',
+                'UserId' => '1234',
+            ];
+
+        $viewerCodes = [
+            'Id'            => '1',
+            'ViewerCode'    => '123ABCD6789',
+            'SiriusUid'     => '700000055554',
+            'Added'         => '2020-01-01 00:00:00',
+            'Expires'       => '2021-02-01 00:00:00',
+            'UserLpaActor' => '2345Token0123',
+            'Organisation' => 'Some Organisation',
+        ];
+
+        $removedresponse = [
+            'Id' => '1',
+            'SiriusUid' => '700000055554',
+            'Added' => '2020-01-01 00:00:00',
+            'ActorId' => '1',
+            'UserId' => '1234',
+        ];
+
+        $this->userLpaActorMapInterfaceProphecy
+            ->get('2345Token0123')
+            ->willReturn($userActorLpa)
+            ->shouldBeCalled();
+
+        $this->viewerCodesInterfaceProphecy->getCodesByLpaId($userActorLpa['SiriusUid'])->willReturn($viewerCodes);
+        $this->viewerCodesInterfaceProphecy->removeActorAssociation($viewerCodes['ViewerCode'])->willReturn(true);
+        $this->userLpaActorMapInterfaceProphecy->delete('2345Token0123')->willReturn($removedresponse);
+
+        $service = $this->getLpaService();
+        $result = $service->removeLpaFromUserLpaActorMap('1234','2345Token0123');
+
+        $this->assertNotEmpty($result);
+        $this->assertEquals($result['SiriusUid'], $userActorLpa['SiriusUid']);
+    }
+
+    /** @test */
+    public function remove_lpa_from_user_lpa_actor_map_when_no_viewer_codes_to_update()
+    {
+        $userActorLpa = [
+            'SiriusUid' => '700000055554',
+            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+            'Id' => '2345Token0123',
+            'ActorId' => '1',
+            'UserId' => '1234',
+        ];
+
+        $viewerCodes = [];
+
+        $removedresponse = [
+            'Id' => '1',
+            'SiriusUid' => '700000055554',
+            'Added' => '2020-01-01 00:00:00',
+            'ActorId' => '1',
+            'UserId' => '1234',
+        ];
+
+        $this->userLpaActorMapInterfaceProphecy
+            ->get('2345Token0123')
+            ->willReturn($userActorLpa)
+            ->shouldBeCalled();
+
+        $this->viewerCodesInterfaceProphecy->getCodesByLpaId($userActorLpa['SiriusUid'])->willReturn($viewerCodes);
+        $this->viewerCodesInterfaceProphecy->removeActorAssociation($viewerCodes['ViewerCode'])->willReturn(true);
+        $this->userLpaActorMapInterfaceProphecy->delete('2345Token0123')->willReturn($removedresponse);
+
+        $service = $this->getLpaService();
+        $result = $service->removeLpaFromUserLpaActorMap('1234','2345Token0123');
+
+        $this->assertNotEmpty($result);
+        $this->assertEquals($result['SiriusUid'], $userActorLpa['SiriusUid']);
+    }
+
+    /** @test */
+    public function remove_lpa_from_user_lpa_actor_map_when_actor_token_not_found()
+    {
+        $userActorLpa = null;
+        $viewerCodes = null;
+
+        $this->userLpaActorMapInterfaceProphecy
+            ->get('2345Token0123')
+            ->willReturn($userActorLpa)
+            ->shouldBeCalled();
+
+        $this->expectException(NotFoundException::class);
+
+        $service = $this->getLpaService();
+        $result = $service->removeLpaFromUserLpaActorMap('1234','2345Token0123');
+    }
+
+    /** @test */
+    public function remove_lpa_from_user_lpa_actor_map_when_user_id_does_not_match()
+    {
+        $userActorLpa = [
+            'SiriusUid' => '700000055554',
+            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+            'Id' => '2345Token0123',
+            'ActorId' => '1',
+            'UserId' => '6789',
+        ];
+
+        $this->userLpaActorMapInterfaceProphecy
+            ->get('2345Token0123')
+            ->willReturn($userActorLpa)
+            ->shouldBeCalled();
+
+
+        $this->expectException(NotFoundException::class);
+
+        $service = $this->getLpaService();
+        $result = $service->removeLpaFromUserLpaActorMap('1234','2345Token0123');
     }
 }

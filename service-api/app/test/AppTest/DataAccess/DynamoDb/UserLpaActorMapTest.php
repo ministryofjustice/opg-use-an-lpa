@@ -208,22 +208,36 @@ class UserLpaActorMapTest extends TestCase
         $testToken = 'test-token';
 
         $this->dynamoDbClientProphecy->deleteItem(Argument::that(function(array $data) use ($testToken) {
-            $this->assertArrayHasKey('TableName', $data);
-            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+            $this->assertIsArray($data);
 
-            //---
-
-            $this->assertArrayHasKey('Key', $data);
-            $this->assertArrayHasKey('Id', $data['Key']);
-
-            $this->assertEquals(['S' => $testToken], $data['Key']['Id']);
+            $this->assertStringContainsString(SELF::TABLE_NAME, serialize($data));
+            $this->assertStringContainsString($testToken, serialize($data));
 
             return true;
-        }))->shouldBeCalled();
+        }))->willReturn($this->createAWSResult([
+            'Item' => [
+                'Id' => [
+                    'S' => $id,
+                ],
+                'SiriusUid' => [
+                    'S' => $siriusUid,
+                ],
+                'Added' => [
+                    'S' => $added,
+                ],
+                'ActorId' => [
+                    'S' => $actorId
+                ],
+                'UserId' => [
+                    'S' => $userId
+                ],
+            ]
+        ]));
 
-        $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $userLpaActorMaprepo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $repo->delete($testToken);
+        $removeActorMap = $userLpaActorMaprepo->delete($testToken);
+        $this->assertEquals($id, $removeActorMap['Id']);
     }
 
     //--------------------------------------------------------------------------------

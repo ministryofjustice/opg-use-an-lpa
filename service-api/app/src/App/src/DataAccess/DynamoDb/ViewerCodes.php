@@ -132,4 +132,28 @@ class ViewerCodes implements ViewerCodesInterface
 
         return true;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeActorAssociation(string $code): bool
+    {
+        //  Update the item by cancelling the code and setting cancelled date
+        $this->client->updateItem([
+            'TableName' => $this->viewerCodesTable,
+            'Key' => [
+                'ViewerCode' => [
+                    'S' => $code,
+                ],
+            ],
+            'UpdateExpression' => 'SET UserLpaActor=:c',
+            'ExpressionAttributeValues'=> [
+                ':c' => [
+                    'S' => ''
+                ]
+            ]
+        ]);
+
+        return true;
+    }
 }

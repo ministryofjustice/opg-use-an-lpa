@@ -33,7 +33,7 @@ class LpaExtensionTest extends TestCase
             'add_hyphen_to_viewer_code' => 'formatViewerCode',
             'check_if_code_is_cancelled' => 'isCodeCancelled',
             'is_lpa_cancelled'           => 'isLpaCancelled',
-            'donor_name_with_dob_removed' =>'donorNameWithDobRemoved'
+            'donor_name_with_dob_removed' => 'donorNameWithDobRemoved'
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
