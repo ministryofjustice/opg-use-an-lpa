@@ -113,42 +113,38 @@ class CatalogueExtractorTest extends TestCase
     }
 
     /** @test */
-    public function it_will_merge_into_existing_catalogues_from_twig(): void
+    public function it_will_merge_translation_catalogues(): void
     {
-        $vfs = vfsStream::setup(
-            'rootDir',
-            null,
-            [
-                'home.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>',
-                'partials' => [
-                    'page.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>'
-                ]
-            ]
-        );
-
-        /** @var Translations|ObjectProphecy $translationsProphecy */
-        $translationsProphecy = $this->prophesize(Translations::class);
-        $translationsProphecy
-            ->mergeWith(Argument::type(Translations::class), Argument::type('integer'))
+        /** @var Translations|ObjectProphecy $originalTranslationsProphecy */
+        $originalTranslationsProphecy = $this->prophesize(Translations::class);
+        $originalTranslationsProphecy
+            ->mergeWith(Argument::type(Translations::class), Argument::that(function($arg) {
+                $this->assertEquals(8704, $arg, 'The merge strategy is incorrect');
+                return true;
+            }))
             ->shouldBeCalled()
             ->willReturn(
-                $translationsProphecy->reveal()
+                $originalTranslationsProphecy->reveal()
             );
+        $originalTranslations = [
+            'default' => $originalTranslationsProphecy->reveal(),
+            'errors' => $originalTranslationsProphecy->reveal()
+        ];
 
-        $originalTranslations = ['messages' => $translationsProphecy->reveal()];
+        /** @var Translations|ObjectProphecy $newTranslationsProphecy */
+        $newTranslationsProphecy = $this->prophesize(Translations::class);
+        $newTranslations = [
+            'default' => $newTranslationsProphecy->reveal(),
+            'new' => $newTranslationsProphecy->reveal()
+        ];
 
         /** @var TwigExtractor|ObjectProphecy $extractorProphecy */
         $extractorProphecy = $this->prophesize(ExtractorInterface::class);
-        $extractorProphecy
-            ->extract(Argument::type('string'))
-            ->shouldBeCalled()
-            ->willReturn(
-                [ 'messages' => $translationsProphecy->reveal() ]
-            );
 
-        $extractor = new CatalogueExtractor($extractorProphecy->reveal(), $originalTranslations);
+        $extractor = new CatalogueExtractor($extractorProphecy->reveal());
 
-        $translations = $extractor->extract([$vfs->url(), $vfs->getChild('partials')->url()]);
-        $this->assertEquals(['messages' => $translationsProphecy->reveal()], $translations);
+        $translations = $extractor->mergeCatalogues($originalTranslations, $newTranslations);
+
+        $this->assertCount(3, $translations);
     }
 }

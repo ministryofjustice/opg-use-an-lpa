@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\I18n;
 
-use Acpr\I18n\TwigExtractor;
+use Acpr\I18n\PhpExtractor;
 use Common\Service\I18n\CatalogueExtractor;
-use Common\Service\I18n\Extractors\TwigFactory;
+use Common\Service\I18n\Extractors\PhpFactory;
 use PHPUnit\Framework\TestCase;
 
-class TwigFactoryTest extends TestCase
+class PhpFactoryTest extends TestCase
 {
     /** @test */
     public function it_returns_an_extractor(): void
     {
-        $factory = new TwigFactory(
-            $this->prophesize(TwigExtractor::class)->reveal()
+        $factory = new PhpFactory(
+            $this->prophesize(PhpExtractor::class)->reveal()
         );
 
         $extractor = $factory();
