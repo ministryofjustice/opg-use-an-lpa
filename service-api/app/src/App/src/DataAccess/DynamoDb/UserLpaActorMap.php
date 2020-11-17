@@ -85,16 +85,25 @@ class UserLpaActorMap implements UserLpaActorMapInterface
     /**
      * @inheritDoc
      */
-    public function delete(string $lpaActorToken)
+    public function delete(string $lpaActorToken): array
     {
-        $this->client->deleteItem([
+        $response = $this->client->deleteItem([
             'TableName' => $this->userLpaActorTable,
             'Key' => [
                 'Id' => [
                     'S' => $lpaActorToken,
                 ],
             ],
+            'ConditionExpression' => 'Id = :id',
+            'ExpressionAttributeValues' => [
+                ':id' => [
+                    'S' => $lpaActorToken
+                ],
+            ],
+            'ReturnValues' => 'ALL_OLD'
         ]);
+
+        return $this->getData($response);
     }
 
     /**
