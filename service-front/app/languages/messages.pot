@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-11-17T11:18:13+00:00\n"
+"POT-Creation-Date: 2020-11-17T16:36:02+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -2966,6 +2966,7 @@ msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
+#: src/Actor/src/Handler/CheckLpaHandler.php:267
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr ""
@@ -3431,6 +3432,7 @@ msgstr ""
 
 #. Cancelling viewer code
 #: src/Actor/templates/actor/flash-messages.html.twig:7
+#: src/Actor/src/Handler/CancelCodeHandler.php:96
 msgctxt "flashMessage"
 msgid "You cancelled the access code for %organisation%: %code%"
 msgstr ""

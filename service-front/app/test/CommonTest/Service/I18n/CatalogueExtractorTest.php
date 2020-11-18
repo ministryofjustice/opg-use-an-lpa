@@ -6,6 +6,7 @@ namespace CommonTest\Service\I18n;
 
 use Acpr\I18n\ExtractorInterface;
 use Acpr\I18n\TwigExtractor;
+use Common\Service\I18n\CatalogueExtractor;
 use Common\Service\I18n\TwigCatalogueExtractor;
 use Gettext\Translations;
 use org\bovigo\vfs\vfsStream;
@@ -13,10 +14,10 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 
-class TwigCatalogueExtractorTest extends TestCase
+class CatalogueExtractorTest extends TestCase
 {
     /** @test */
-    public function it_will_extract_a_single_file(): void
+    public function it_will_extract_a_single_twig_file(): void
     {
         $vfs = vfsStream::setup(
             'rootDir',
@@ -37,7 +38,7 @@ class TwigCatalogueExtractorTest extends TestCase
                 [ 'messages' => $translationsProphecy->reveal() ]
             );
 
-        $extractor = new TwigCatalogueExtractor($extractorProphecy->reveal());
+        $extractor = new CatalogueExtractor($extractorProphecy->reveal());
 
         $translations = $extractor->extract([$vfs->getChild('home.html.twig')->url()]);
 
@@ -45,7 +46,7 @@ class TwigCatalogueExtractorTest extends TestCase
     }
 
     /** @test */
-    public function it_will_extract_a_folder(): void
+    public function it_will_extract_a_folder_of_twig(): void
     {
         $vfs = vfsStream::setup(
             'rootDir',
@@ -66,7 +67,7 @@ class TwigCatalogueExtractorTest extends TestCase
                 [ 'messages' => $translationsProphecy->reveal() ]
             );
 
-        $extractor = new TwigCatalogueExtractor($extractorProphecy->reveal());
+        $extractor = new CatalogueExtractor($extractorProphecy->reveal());
 
         $translations = $extractor->extract([$vfs->url()]);
 
@@ -74,7 +75,7 @@ class TwigCatalogueExtractorTest extends TestCase
     }
 
     /** @test */
-    public function it_will_merge_catalogues_across_extractions(): void
+    public function it_will_merge_catalogues_across_extractions_of_twig(): void
     {
         $vfs = vfsStream::setup(
             'rootDir',
@@ -90,7 +91,7 @@ class TwigCatalogueExtractorTest extends TestCase
         /** @var Translations|ObjectProphecy $translationsProphecy */
         $translationsProphecy = $this->prophesize(Translations::class);
         $translationsProphecy
-            ->mergeWith(Argument::type(Translations::class))
+            ->mergeWith(Argument::type(Translations::class), Argument::type('integer'))
             ->shouldBeCalled()
             ->willReturn(
                 $translationsProphecy->reveal()
@@ -105,55 +106,45 @@ class TwigCatalogueExtractorTest extends TestCase
                 [ 'messages' => $translationsProphecy->reveal() ]
             );
 
-        $extractor = new TwigCatalogueExtractor($extractorProphecy->reveal());
+        $extractor = new CatalogueExtractor($extractorProphecy->reveal());
 
         $translations = $extractor->extract([$vfs->url(), $vfs->getChild('partials')->url()]);
         $this->assertEquals(['messages' => $translationsProphecy->reveal()], $translations);
     }
 
     /** @test */
-    public function it_will_merge_into_existing_catalogues(): void
+    public function it_will_merge_translation_catalogues(): void
     {
-        $vfs = vfsStream::setup(
-            'rootDir',
-            null,
-            [
-                'home.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>',
-                'partials' => [
-                    'page.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>'
-                ]
-            ]
-        );
-
-        /** @var Translations|ObjectProphecy $translationsProphecy */
-        $translationsProphecy = $this->prophesize(Translations::class);
-        $translationsProphecy
-            ->mergeWith(Argument::type(Translations::class))
+        /** @var Translations|ObjectProphecy $originalTranslationsProphecy */
+        $originalTranslationsProphecy = $this->prophesize(Translations::class);
+        $originalTranslationsProphecy
+            ->mergeWith(Argument::type(Translations::class), Argument::that(function($arg) {
+                $this->assertEquals(8704, $arg, 'The merge strategy is incorrect');
+                return true;
+            }))
             ->shouldBeCalled()
             ->willReturn(
-                $translationsProphecy->reveal()
+                $originalTranslationsProphecy->reveal()
             );
-        $translationsProphecy
-            ->mergeWith(Argument::type(Translations::class), 8704)
-            ->shouldBeCalled()
-            ->willReturn(
-                $translationsProphecy->reveal()
-            );
+        $originalTranslations = [
+            'default' => $originalTranslationsProphecy->reveal(),
+            'errors' => $originalTranslationsProphecy->reveal()
+        ];
 
-        $originalTranslations = ['messages' => $translationsProphecy->reveal()];
+        /** @var Translations|ObjectProphecy $newTranslationsProphecy */
+        $newTranslationsProphecy = $this->prophesize(Translations::class);
+        $newTranslations = [
+            'default' => $newTranslationsProphecy->reveal(),
+            'new' => $newTranslationsProphecy->reveal()
+        ];
 
         /** @var TwigExtractor|ObjectProphecy $extractorProphecy */
         $extractorProphecy = $this->prophesize(ExtractorInterface::class);
-        $extractorProphecy
-            ->extract(Argument::type('string'))
-            ->shouldBeCalled()
-            ->willReturn(
-                [ 'messages' => $translationsProphecy->reveal() ]
-            );
 
-        $extractor = new TwigCatalogueExtractor($extractorProphecy->reveal(), $originalTranslations);
+        $extractor = new CatalogueExtractor($extractorProphecy->reveal());
 
-        $translations = $extractor->extract([$vfs->url(), $vfs->getChild('partials')->url()]);
-        $this->assertEquals(['messages' => $translationsProphecy->reveal()], $translations);
+        $translations = $extractor->mergeCatalogues($originalTranslations, $newTranslations);
+
+        $this->assertCount(3, $translations);
     }
 }

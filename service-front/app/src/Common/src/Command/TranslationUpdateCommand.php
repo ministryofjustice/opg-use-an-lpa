@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Common\Command;
 
 use Common\Service\I18n\CatalogueLoader;
+use Common\Service\I18n\Extractors\PhpFactory;
+use Common\Service\I18n\Extractors\TwigFactory;
 use Common\Service\I18n\PotGenerator;
-use Common\Service\I18n\TwigCatalogueExtractorFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,22 +16,28 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class TranslationUpdateCommand extends Command
 {
     public const DEFAULT_LOCALE = 'en_GB';
+    private array $viewsPaths;
+    private array $phpPaths;
 
-    private TwigCatalogueExtractorFactory $extractorFactory;
+    private TwigFactory $twigExtractorFactory;
+    private PhpFactory $phpExtractorFactory;
     private CatalogueLoader $loader;
     private PotGenerator $writer;
-    private array $viewsPaths;
 
     public function __construct(
-        TwigCatalogueExtractorFactory $extractorFactory,
+        TwigFactory $twigExtractorFactory,
+        PhpFactory $phpExtractorFactory,
         CatalogueLoader $loader,
         PotGenerator $writer,
-        array $viewsPaths = []
+        array $viewsPaths = [],
+        array $phpPaths = []
     ) {
-        $this->extractorFactory = $extractorFactory;
+        $this->twigExtractorFactory = $twigExtractorFactory;
+        $this->phpExtractorFactory = $phpExtractorFactory;
         $this->loader = $loader;
         $this->writer = $writer;
         $this->viewsPaths = $viewsPaths;
+        $this->phpPaths = $phpPaths;
 
         parent::__construct();
     }
@@ -54,9 +61,19 @@ class TranslationUpdateCommand extends Command
         $io->text(sprintf('Found %d domains', count($existing)));
 
         $io->section('Parsing templates...');
-        $extractorService = ($this->extractorFactory)($existing);
-        $catalogues = $extractorService->extract($this->viewsPaths);
-        $io->text(sprintf('Found %d domains', count($catalogues)));
+        $extractorService = ($this->twigExtractorFactory)();
+        $twigCatalogues = $extractorService->extract($this->viewsPaths);
+        $io->text(sprintf('Found %d domains', count($twigCatalogues)));
+
+        $io->section('Parsing php...');
+        $extractorService = ($this->phpExtractorFactory)();
+        $phpCatalogues = $extractorService->extract($this->phpPaths);
+        $io->text(sprintf('Found %d domains', count($phpCatalogues)));
+
+        $io->section('Merging translation catalogues...');
+        $extracted = $extractorService->mergeCatalogues($twigCatalogues, $phpCatalogues, 0);
+        $catalogues = $extractorService->mergeCatalogues($existing, $extracted);
+        $io->text(sprintf('%d domains extracted', count($catalogues)));
 
         $io->section('Generating POT file\s...');
         $count = $this->writer->generate($catalogues);

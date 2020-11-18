@@ -269,7 +269,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     [
                         '%donor%' => $donor,
                         '%lpaType%' => $lpaType
-                    ]
+                    ],
+                    null,
+                    'flashMessage'
                 );
                 $flash->flash(self::ADD_LPA_FLASH_MSG, $message);
 
