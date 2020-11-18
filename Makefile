@@ -2,10 +2,10 @@ THIS_FILE := $(lastword $(MAKEFILE_LIST))
 .PHONY: everything rebuild down destroy ps logs up_dependencies up_service up_seeding
 
 up:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml up -d
+	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml up -d $(c)
 
 exec:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml exec api-app /bin/sh
+	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml exec $(c)
 
 up_all: | up_dependencies up_service
 
