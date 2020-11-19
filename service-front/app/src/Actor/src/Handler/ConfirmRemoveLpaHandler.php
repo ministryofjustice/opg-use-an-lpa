@@ -8,7 +8,6 @@ use Common\Exception\InvalidRequestException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Common\Service\Lpa\LpaService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -17,8 +16,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 
 /**
- * Class LpaRemovedHandler
- *
+ * Class ConfirmRemoveLpaHandler
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
@@ -26,21 +24,14 @@ class ConfirmRemoveLpaHandler extends AbstractHandler implements UserAware
 {
     use User;
 
-    /**
-     * @var LpaService
-     */
-    private $lpaService;
-
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authenticator,
-        LpaService $lpaService
+        AuthenticationInterface $authenticator
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
-        $this->lpaService = $lpaService;
     }
 
     /**
@@ -52,10 +43,13 @@ class ConfirmRemoveLpaHandler extends AbstractHandler implements UserAware
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $actorLpaToken = $request->getQueryParams()['lpa'];
+
         if (is_null($actorLpaToken)) {
             throw new InvalidRequestException('No actor-lpa token specified');
         }
+
         $user = $this->getUser($request);
+
         return new HtmlResponse($this->renderer->render('actor::confirm-remove-lpa', [
             'actorToken' => $actorLpaToken,
             'user' => $user,

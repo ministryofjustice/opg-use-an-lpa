@@ -90,9 +90,8 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
             $totalCodes += $shareCodes['activeCodeCount'];
             $lpas[$lpaKey]['actorActive'] = $lpaData['actor']['type'] === 'donor' || $lpaData['actor']['details']->getSystemStatus();
         }
-        
+
         $lpas = $this->lpaService->sortLpasInOrder($lpas);
-        $lpas = $this->lpaService->sortLpasByDonorSurname($lpas);
 
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
             'user'                      => $user,

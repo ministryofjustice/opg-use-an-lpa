@@ -20,7 +20,7 @@ use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Flash\FlashMessagesInterface;
 
 /**
- * Class DeleteLpaHandler
+ * Class RemoveLpaHandler
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
@@ -69,7 +69,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware
         $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
         // remove LPA from UserLpaActorMap
-        $response = $this->lpaService->removeLpa(
+        $this->lpaService->removeLpa(
             $identity,
             $actorLpaToken,
         );
@@ -81,11 +81,13 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware
         $donor = $lpaData['lpa']->getDonor()->getFirstname() . ' ' . $lpaData['lpa']->getDonor()->getSurname();
         $lpaType = $lpaData['lpa']->getCaseSubtype() === 'hw' ? 'health and welfare' : 'property and finance';
 
+        $translatedLpaType = $this->translator->translate($lpaType, [], null, 'flashMessage');
+
         $message = $this->translator->translate(
             "You've removed %donor%'s %lpaType% LPA",
             [
                 '%donor%' => $donor,
-                '%lpaType%' => $lpaType
+                '%lpaType%' => $translatedLpaType
             ],
             null,
             'flashMessage'

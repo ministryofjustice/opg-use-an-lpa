@@ -82,7 +82,21 @@ class LpaService
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
-        $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
+        try {
+            $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
+        } catch (ApiException $apiEx) {
+            if ($apiEx->getCode() === StatusCodeInterface::STATUS_NOT_FOUND) {
+                $this->logger->notice(
+                    'Account with id {id} attempted to delete LPA with token {token} that they do not own',
+                    [
+                        'id' => $userToken,
+                        'token' => $actorLpaToken
+                    ]
+                );
+            }
+
+            throw $apiEx;
+        }
 
         $lpaData = isset($lpaData) ? $this->parseLpaData($lpaData) : null;
 
