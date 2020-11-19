@@ -77,17 +77,18 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware
         /** @var FlashMessagesInterface $flash */
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
+        $hw = $this->translator->translate('health and welfare', [], null, 'flashMessage');
+        $pfa = $this->translator->translate('property and finance', [], null, 'flashMessage');
+
         //data to be used in flash message
         $donor = $lpaData['lpa']->getDonor()->getFirstname() . ' ' . $lpaData['lpa']->getDonor()->getSurname();
-        $lpaType = $lpaData['lpa']->getCaseSubtype() === 'hw' ? 'health and welfare' : 'property and finance';
-
-        $translatedLpaType = $this->translator->translate($lpaType, [], null, 'flashMessage');
+        $lpaType = $lpaData['lpa']->getCaseSubtype() === 'hw' ? $hw : $pfa;
 
         $message = $this->translator->translate(
             "You've removed %donor%'s %lpaType% LPA",
             [
                 '%donor%' => $donor,
-                '%lpaType%' => $translatedLpaType
+                '%lpaType%' => $lpaType
             ],
             null,
             'flashMessage'

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-11-17T14:08:18+00:00\n"
+"POT-Creation-Date: 2020-11-19T16:20:16+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -21,7 +21,6 @@ msgstr "Eich cod mynediad yr LPA newydd"
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:14
 #: src/Actor/templates/actor/check-access-codes.html.twig:15
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:14
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:14
 msgid "Back to your LPAs"
 msgstr "Yn ôl i’ch LPAs"
@@ -172,6 +171,7 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 #: src/Actor/templates/actor/password-change.html.twig:13
 #: src/Actor/templates/actor/create-account-success.html.twig:12
 #: src/Actor/templates/actor/change-email.html.twig:13
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:15
 #: src/Actor/templates/actor/password-reset-request.html.twig:12
 #: src/Actor/templates/actor/death-notification.html.twig:20
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:13
@@ -2497,7 +2497,7 @@ msgstr ""
 msgid "Continue"
 msgstr "Parhau"
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:32
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:34
 #: src/Actor/templates/actor/check-lpa.html.twig:96
 #: src/Actor/templates/actor/lpa-add.html.twig:93
 msgid "Cancel"
@@ -4263,6 +4263,7 @@ msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
+#: src/Actor/src/Handler/CheckLpaHandler.php:267
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi ychwanegu atwrneiaeth arhosol %lpaType% %donor%"
@@ -4943,6 +4944,7 @@ msgstr ""
 
 #. Cancelling viewer code
 #: src/Actor/templates/actor/flash-messages.html.twig:6
+#: src/Actor/src/Handler/CancelCodeHandler.php:96
 msgctxt "flashMessage"
 msgid "You cancelled the access code for %organisation%: %code%"
 msgstr "Gwnaethoch ganslo’r cod mynediad ar gyfer %organisation%: %code%"
@@ -4961,7 +4963,7 @@ msgstr "manylion y codau sydd wedi dod i ben"
 msgid "Confirm LPA removal"
 msgstr "Cadarnhau cael gwared ar yr LPA"
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:21
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:23
 msgid ""
 "Are you sure you want to remove this <abbr title=\"lasting power of attorney"
 "\">LPA</abbr>?"
@@ -4969,7 +4971,7 @@ msgstr ""
 "A ydych yn siŵr eich bod am ddileu’r <abbr title=\"atwrneiaethau arhosol"
 "\">LPA</abbr> hon?"
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:23
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:25
 msgid ""
 "If you remove an <abbr title=\"lasting power of attorney\">LPA</abbr> from "
 "your Use a lasting power of attorney account:"
@@ -4977,7 +4979,7 @@ msgstr ""
 "Os byddwch yn dileu <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> oddi ar "
 "eich cyfrif Defnyddio atwrneiaeth arhosol:"
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:26
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:28
 msgid ""
 "all access codes you've created for that <abbr title=\"lasting power of "
 "attorney\">LPA</abbr> will be cancelled"
@@ -4985,7 +4987,7 @@ msgstr ""
 "diddymir pob cod mynediad a grëwyd gennych ar gyfer yr <abbr title="
 "\"atwrneiaeth arhosol\">LPA</abbr> honno"
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:27
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:29
 msgid ""
 "you'll not be able to see how the <abbr title=\"lasting power of attorney"
 "\">LPA</abbr> is being used or has been used"
@@ -4993,7 +4995,7 @@ msgstr ""
 "ni fyddwch yn gallu gweld sut y mae’r <abbr title=\"atwrneiaethau arhosol"
 "\">LPAs</abbr> yn cael ei defnyddio na sut y mae wedi cael ei defnyddio"
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:28
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:30
 msgid ""
 "you must contact us for a new activation key if you want to add the <abbr "
 "title=\"lasting power of attorney\">LPA</abbr> back to your account"
@@ -5001,12 +5003,13 @@ msgstr ""
 "bydd rhaid ichi gysylltu â ni i gael allweddair newydd os byddwch am roi’r "
 "<abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar y cyfrif eto"
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:35
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:37
 msgid "Yes, remove <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr "Ie, dileu <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>"
 
 #. Remove LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:8
+#: src/Actor/src/Handler/RemoveLpaHandler.php:87
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor%’s ar gyfer %lpaType%"
@@ -5014,3 +5017,13 @@ msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor%’s ar gyfer %lpaType%"
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:39
 msgid "Remove Lpa"
 msgstr "Dileu LPA"
+
+#: src/Actor/src/Handler/RemoveLpaHandler.php:80
+msgctxt "flashMessage"
+msgid "health and welfare"
+msgstr "Iechyd a lles"
+
+#: src/Actor/src/Handler/RemoveLpaHandler.php:81
+msgctxt "flashMessage"
+msgid "property and finance"
+msgstr "eiddo ac arian"
