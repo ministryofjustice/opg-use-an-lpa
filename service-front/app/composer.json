@@ -33,7 +33,7 @@
         "ext-intl": "*",
         "alphagov/notifications-php-client": "^3.0",
         "aws/aws-sdk-php": "^3.91",
-        "cooperaj/better-twig-i18n": "1.0.0",
+        "cooperaj/better-twig-i18n": "^1.1",
         "dflydev/fig-cookies": "^2.0",
         "elie29/zend-phpdi-config": "^3.0",
         "laminas/laminas-cache": "2.9.0",

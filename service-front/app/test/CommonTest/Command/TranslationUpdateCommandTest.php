@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace CommonTest\Command;
 
 use Common\Command\TranslationUpdateCommand;
+use Common\Service\I18n\CatalogueExtractor;
 use Common\Service\I18n\CatalogueLoader;
+use Common\Service\I18n\Extractors\PhpFactory;
+use Common\Service\I18n\Extractors\TwigFactory;
 use Common\Service\I18n\PotGenerator;
-use Common\Service\I18n\TwigCatalogueExtractor;
-use Common\Service\I18n\TwigCatalogueExtractorFactory;
 use Gettext\Translations;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
@@ -24,27 +25,55 @@ class TranslationUpdateCommandTest extends TestCase
             'rootDir',
             null,
             [
-                'home.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>'
+                'home.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>',
+                'home.php' => '<?php $translator->translate("Some translated PHP content", []);'
             ]
         );
 
         $translationsProphecy = $this->prophesize(Translations::class);
 
-        /** @var TwigCatalogueExtractor|ObjectProphecy $extractorProphecy */
-        $extractorProphecy = $this->prophesize(TwigCatalogueExtractor::class);
+        /** @var CatalogueExtractor|ObjectProphecy $extractorProphecy */
+        $extractorProphecy = $this->prophesize(CatalogueExtractor::class);
         $extractorProphecy
             ->extract([$vfs->url()])
             ->shouldBeCalled()
             ->willReturn(
                 ['messages' => $translationsProphecy->reveal()]
             );
-
-        /** @var TwigCatalogueExtractorFactory|ObjectProphecy $extractorProphecy */
-        $extractorFactoryProphecy = $this->prophesize(TwigCatalogueExtractorFactory::class);
-        $extractorFactoryProphecy
-            ->__invoke(
+        $extractorProphecy
+            ->mergeCatalogues(
+                ['messages' => $translationsProphecy->reveal()],
+                ['messages' => $translationsProphecy->reveal()],
+                0
+            )
+            ->shouldBeCalled()
+            ->willReturn(
                 ['messages' => $translationsProphecy->reveal()]
-            )->willReturn(
+            );
+        $extractorProphecy
+            ->mergeCatalogues(
+                ['messages' => $translationsProphecy->reveal()],
+                ['messages' => $translationsProphecy->reveal()]
+            )
+            ->shouldBeCalled()
+            ->willReturn(
+                ['messages' => $translationsProphecy->reveal()]
+            );
+
+
+        /** @var TwigFactory|ObjectProphecy $extractorProphecy */
+        $twigExtractorFactoryProphecy = $this->prophesize(TwigFactory::class);
+        $twigExtractorFactoryProphecy
+            ->__invoke()
+            ->willReturn(
+                $extractorProphecy->reveal()
+            );
+
+        /** @var PhpFactory|ObjectProphecy $extractorProphecy */
+        $phpExtractorFactoryProphecy = $this->prophesize(PhpFactory::class);
+        $phpExtractorFactoryProphecy
+            ->__invoke()
+            ->willReturn(
                 $extractorProphecy->reveal()
             );
 
@@ -62,9 +91,11 @@ class TranslationUpdateCommandTest extends TestCase
             );
 
         $command = new TranslationUpdateCommand(
-            $extractorFactoryProphecy->reveal(),
+            $twigExtractorFactoryProphecy->reveal(),
+            $phpExtractorFactoryProphecy->reveal(),
             $loaderProphecy->reveal(),
             $generatorProphecy->reveal(),
+            [$vfs->url()],
             [$vfs->url()]
         );
 
