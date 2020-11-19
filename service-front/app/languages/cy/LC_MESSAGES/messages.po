@@ -5021,9 +5021,9 @@ msgstr "Dileu LPA"
 #: src/Actor/src/Handler/RemoveLpaHandler.php:80
 msgctxt "flashMessage"
 msgid "health and welfare"
-msgstr "lechyd a lles"
+msgstr "iechyd a lles"
 
 #: src/Actor/src/Handler/RemoveLpaHandler.php:81
 msgctxt "flashMessage"
 msgid "property and finance"
-msgstr "eiddo ac arian"
+msgstr "eiddo a materion ariannol"
