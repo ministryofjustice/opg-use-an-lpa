@@ -30,7 +30,7 @@
                         <li>{% trans %}you must contact us for a new activation key if you want to add the <abbr title="lasting power of attorney">LPA</abbr> back to your account{% endtrans %}</li>
                     </ul>
 
-                    <a href="{{ path('lpa.dashboard', {}, {'lpa': actorToken}) }}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
+                    <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
                         {% trans %}Cancel{% endtrans %}
                     </a>
                     <a href="{{ path('lpa.remove-lpa', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button--warning">

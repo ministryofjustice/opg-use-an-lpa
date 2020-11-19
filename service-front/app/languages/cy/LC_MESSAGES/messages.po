@@ -45,7 +45,7 @@ msgstr "Eiddo ac arian"
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
 #: src/Viewer/templates/viewer/check-code-found.html.twig:29
 msgid "Health and welfare"
-msgstr "Iechyd a lles"
+msgstr "Lechyd a lles"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:33
 msgid "Give this access code to %organisation%"
@@ -4863,7 +4863,7 @@ msgid ""
 "class=\"govuk-link\">to make decisions</a>."
 msgstr ""
 "Canfod mwy am <a href=\"https://www.gov.uk/atwrneiaeth-arhosol\" class=\"govuk-"
-"link\">rôl atwrnai</a>"
+"link\">rôl atwrnai</a>."
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:33
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:32
@@ -5021,7 +5021,7 @@ msgstr "Dileu LPA"
 #: src/Actor/src/Handler/RemoveLpaHandler.php:80
 msgctxt "flashMessage"
 msgid "health and welfare"
-msgstr "Iechyd a lles"
+msgstr "lechyd a lles"
 
 #: src/Actor/src/Handler/RemoveLpaHandler.php:81
 msgctxt "flashMessage"
