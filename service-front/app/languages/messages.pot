@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-11-19T16:26:33+00:00\n"
+"POT-Creation-Date: 2020-11-20T10:19:46+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -2968,7 +2968,7 @@ msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
-#: src/Actor/src/Handler/CheckLpaHandler.php:267
+#: src/Actor/src/Handler/CheckLpaHandler.php:272
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr ""
@@ -3488,11 +3488,13 @@ msgstr ""
 msgid "Remove LPA"
 msgstr ""
 
+#: src/Actor/src/Handler/CheckLpaHandler.php:267
 #: src/Actor/src/Handler/RemoveLpaHandler.php:80
 msgctxt "flashMessage"
 msgid "health and welfare"
 msgstr ""
 
+#: src/Actor/src/Handler/CheckLpaHandler.php:268
 #: src/Actor/src/Handler/RemoveLpaHandler.php:81
 msgctxt "flashMessage"
 msgid "property and finance"

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-11-19T16:26:33+00:00\n"
+"POT-Creation-Date: 2020-11-20T10:19:46+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4263,7 +4263,7 @@ msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
-#: src/Actor/src/Handler/CheckLpaHandler.php:267
+#: src/Actor/src/Handler/CheckLpaHandler.php:272
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi ychwanegu atwrneiaeth arhosol %lpaType% %donor%"
@@ -5018,11 +5018,13 @@ msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor%’s ar gyfer %lpaType%"
 msgid "Remove LPA"
 msgstr "Dileu LPA"
 
+#: src/Actor/src/Handler/CheckLpaHandler.php:267
 #: src/Actor/src/Handler/RemoveLpaHandler.php:80
 msgctxt "flashMessage"
 msgid "health and welfare"
 msgstr "iechyd a lles"
 
+#: src/Actor/src/Handler/CheckLpaHandler.php:268
 #: src/Actor/src/Handler/RemoveLpaHandler.php:81
 msgctxt "flashMessage"
 msgid "property and finance"
