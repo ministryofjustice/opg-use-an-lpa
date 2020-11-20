@@ -2439,11 +2439,10 @@ class AccountContext implements Context
      */
     public function iAmAskedToConfirmWhetherIAmSureIfIWantTo($deleteOption)
     {
-        if($deleteOption === 'delete my account') {
-            $this->ui->assertPageAddress('/confirm-delete-account');
+        if ($deleteOption === 'delete my account') {
             $this->ui->assertPageContainsText('Are you sure you want to delete your account?');
-        } elseif($deleteOption === 'remove lpa') {
-            $this->ui->assertPageAddress('/lpa/confirm-remove-lpa');
+        } elseif ($deleteOption === 'remove an lpa') {
+            $this->ui->assertPageContainsText('Are you sure you want to remove this LPA?');
         }
     }
 
@@ -3742,7 +3741,7 @@ class AccountContext implements Context
     public function iRequestToRemoveTheAddedLPA()
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->clickLink('Remove Lpa');
+        $this->ui->clickLink('Remove LPA');
     }
 
     /**
@@ -3780,9 +3779,9 @@ class AccountContext implements Context
                     json_encode([
                         'SiriusUid' => '700000000138',
                         'Added' => '2020-11-04',
-                        'Id' => '3ff586fc-cc66-4901-ba64-8b4aa7e91655',
-                        'ActorId' => 25,
-                        'UserId' => '97321175-a712-403f-b416-eaaa3a891a01'
+                        'Id' => $this->userLpaActorToken,
+                        'ActorId' => $this->actorId,
+                        'UserId' => $this->userId
                     ])
                 )
             );

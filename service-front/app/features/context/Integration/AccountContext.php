@@ -2004,8 +2004,6 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iConfirmRemovalOfTheLPA()
     {
-        $actorLpaToken = $this->actorLpaToken;
-
         // API call to remove lpa
         $this->apiFixtures->delete('/v1/lpas/' . $this->actorLpaToken)
             ->respondWith(
@@ -2013,26 +2011,24 @@ class AccountContext extends BaseIntegrationContext
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode([
-                        'SiriusUid' => '700000000138',
+                        'SiriusUid' => $this->referenceNo,
                         'Added' => '2020-11-04',
-                        'Id' => '3ff586fc-cc66-4901-ba64-8b4aa7e91655',
-                        'ActorId' => 25,
-                        'UserId' => '97321175-a712-403f-b416-eaaa3a891a01'
+                        'Id' => $this->actorLpaToken,
+                        'ActorId' => $this->actorId,
+                        'UserId' => $this->userIdentity
                     ])
                 )
-            )
-            ->inspectRequest(function (RequestInterface $request) use ($actorLpaToken) {
-                $uri = $request->getUri()->getPath();
+            );
 
-                assertEquals($uri, '/v1/lpas/24680');
-            });
-
-        $lpaData = $this->lpaService->removeLpa(
+        $deletedLpa = $this->lpaService->removeLpa(
             $this->userIdentity,
             $this->actorLpaToken,
         );
 
-        assertNotNull($lpaData);
+        assertEquals($deletedLpa['SiriusUid'], $this->referenceNo);
+        assertEquals($deletedLpa['Id'], $this->actorLpaToken);
+        assertEquals($deletedLpa['ActorId'], $this->actorId);
+        assertEquals($deletedLpa['UserId'], $this->userIdentity);
     }
 
     /**

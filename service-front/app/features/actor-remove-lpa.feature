@@ -9,19 +9,19 @@ Feature: The user is able to delete an added LPA from their account
     And I have added an LPA to my account
 
   @ui @integration
-  Scenario: As a user I am asked to confirm removal of LPA if I have requested to do so
+  Scenario: The user is asked to confirm that they want to remove an LPA from their account
     Given I am on the dashboard page
     When I request to remove the added LPA
-    Then I am asked to confirm whether I am sure if I want to remove lpa
+    Then I am asked to confirm whether I am sure if I want to remove an lpa
 
   @ui @integration
-  Scenario: As a user I can go back to the dashboard page if I change my mind about deleting the LPA
+  Scenario: The user can go back to the dashboard if they change their mind about removing an LPA
     Given I am on the confirm lpa deletion page
     When I request to return to the dashboard page
     Then I am taken back to the dashboard page
 
   @ui @integration
-  Scenario: As a user I no more see the removed LPA details on the dashboard
+  Scenario: The user can remove an LPA from their account
     Given I am on the dashboard page
     When I request to remove the added LPA
     And I confirm removal of the LPA

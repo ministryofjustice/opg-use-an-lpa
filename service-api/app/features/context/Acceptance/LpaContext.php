@@ -1575,6 +1575,9 @@ class LpaContext implements Context
 
     /**
      * @Given /^Co\-actors have also created access codes for the same LPA$/
+     * @When /^I request to remove the LPA$/
+     * @Then /^The removed LPA will not be displayed on the dashboard$/
+     * @Then /^I can see a flash message for the removed LPA$/
      */
     public function coActorsHaveAlsoCreatedAccessCodesForTheSameLPA()
     {
@@ -1583,6 +1586,9 @@ class LpaContext implements Context
 
     /**
      * @Then /^I can see all of the access codes and their details$/
+     * @Then /^I am asked to confirm whether I am sure if I want to delete lpa$/
+     * @Given /^I am on the confirm lpa deletion page$/
+     * @When /^I confirm removal of the LPA$/
      */
     public function iCanSeeAllOfTheAccessCodesAndTheirDetails()
     {

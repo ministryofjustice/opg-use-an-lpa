@@ -3485,7 +3485,7 @@ msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:39
-msgid "Remove Lpa"
+msgid "Remove LPA"
 msgstr ""
 
 #: src/Actor/src/Handler/RemoveLpaHandler.php:80

@@ -759,9 +759,6 @@ class AccountContext implements Context
 
     /**
      * @When /^I request to delete my account$/
-     * @When /^I request to remove the added LPA$/
-     * @Then /^The removed LPA will not be displayed on the dashboard$/
-     * @Then /^I can see a flash message for the removed LPA$/
      */
     public function iRequestToDeleteMyAccount()
     {
@@ -770,9 +767,6 @@ class AccountContext implements Context
 
     /**
      * @Given /^I confirm that I want to delete my account$/
-     * @Then /^I am asked to confirm whether I am sure if I want to delete lpa$/
-     * @Given /^I am on the confirm lpa deletion page$/
-     * @When /^I confirm removal of the LPA$/
      */
     public function iConfirmThatIWantToDeleteMyAccount()
     {
