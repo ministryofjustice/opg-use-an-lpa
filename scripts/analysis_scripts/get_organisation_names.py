@@ -1,10 +1,5 @@
 import boto3
 import argparse
-import datetime
-from dateutil.relativedelta import relativedelta
-import requests
-import json
-import os
 import csv
 
 
@@ -13,13 +8,6 @@ class AccountsCreatedChecker:
     aws_iam_session = ''
     aws_dynamodb_client = ''
     environment = ''
-    startdate = ''
-    enddate = ''
-    viewer_codes_created_monthly_totals = {}
-    viewer_codes_created_total = 0
-    viewer_codes_viewed_monthly_totals = {}
-    viewer_codes_viewed_total = 0
-    json_output = ''
 
     def __init__(self, environment):
         self.aws_account_ids = {
