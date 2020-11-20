@@ -13,6 +13,15 @@ class SiriusLpaSanitiser implements DataSanitiserStrategy
      */
     public function sanitise(array $data): array
     {
+        array_walk_recursive($data, [$this, 'removeHyphens']);
+
         return $data;
+    }
+
+    protected function removeHyphens(&$item, $key): void
+    {
+        if ($key === 'uId') {
+            $item = str_replace('-', '', $item);
+        }
     }
 }
