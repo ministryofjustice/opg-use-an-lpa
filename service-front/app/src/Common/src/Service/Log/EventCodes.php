@@ -43,9 +43,4 @@ class EventCodes
      * A lpa from user account has been deleted
      */
     public const LPA_DELETED = 'LPA_DELETED';
-
-    /**
-     * A share code has been deleted
-     */
-    public const SHARE_CODE_DELETED = 'SHARE_CODE_DELETED';
 }
