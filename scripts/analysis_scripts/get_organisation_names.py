@@ -1,7 +1,9 @@
 import boto3
 import argparse
 import csv
-
+from boto3.dynamodb.conditions import Key
+from datetime import datetime
+from dateutil import parser
 
 class AccountsCreatedChecker:
     aws_account_id = ''
@@ -53,17 +55,33 @@ class AccountsCreatedChecker:
                 FilterExpression=FilterExpression):
             yield from page["Items"]
 
+    def get_created_by_date(self, viewer_code):
+        response = self.aws_dynamodb_client.get_item(
+            TableName='{}-ViewerCodes'.format(self.environment),
+            Key={
+                'ViewerCode': {'S': viewer_code}
+            }
+        )
+        date = parser.isoparse(response['Item']['Added']['S']).date()
+        return date
+
     def write_csv(self):
+        n = 1
         with open('some.csv', 'w', newline='') as f:
             writer = csv.writer(
                 f, quoting=csv.QUOTE_NONNUMERIC)
-            writer.writerow(["  org_name_string"])
+            writer.writerow(["  org_name_string", "org_viewed_date", "code_created_date"])
             viewer_codes = self.get_viewer_codes()
 
             for Item in viewer_codes:
-                print(Item)
+                print(n)
                 org = Item['ViewedBy']['S']
-                writer.writerow([str(org)])
+                viewed_date = parser.isoparse(Item['Viewed']['S']).date()
+                created_date = self.get_created_by_date(Item['ViewerCode']['S'])
+                #print(str(org), viewed_date, created_date)
+                writer.writerow([str(org), viewed_date, created_date])
+                n += 1
+            print("Done!")
 
 
 def main():
