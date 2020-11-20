@@ -23,9 +23,23 @@
                 <dt class="govuk-summary-list__key">{% trans %}LPA viewed{% endtrans %}</dt>
                 <dd class="govuk-summary-list__value">
                     {% if code.Viewed %}
+                        {% set allEmpty = true %}
+
                         {% for code in code.Viewed %}
-                            {{ code.ViewedBy }}<br>
+                            {% if code.ViewedBy is not empty %}
+                                {% set allEmpty = false %}
+                            {% endif %}
                         {% endfor %}
+
+                        {% if allEmpty %}
+                            {% trans %}Viewed{% endtrans %}
+                        {% else %}
+                            {% for code in code.Viewed %}
+                                {% if code.ViewedBy is not empty %}
+                                    {{ code.ViewedBy }}<br>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     {% else %}
                         {{ code.Viewed }}
                         {% trans %}Not viewed{% endtrans %}
