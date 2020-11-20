@@ -45,9 +45,12 @@ class AccountsCreatedChecker:
 
     def get_viewer_codes(self):
         paginator = self.aws_dynamodb_client.get_paginator("scan")
-        TableName = '{}-ViewerCodes'.format(self.environment)
+        TableName = '{}-ViewerActivity'.format(self.environment)
+        FilterExpression = "attribute_exists(ViewedBy)"
 
-        for page in paginator.paginate(TableName=TableName):
+        for page in paginator.paginate(
+                TableName=TableName,
+                FilterExpression=FilterExpression):
             yield from page["Items"]
 
     def write_csv(self):
@@ -58,7 +61,8 @@ class AccountsCreatedChecker:
             viewer_codes = self.get_viewer_codes()
 
             for Item in viewer_codes:
-                org = Item['Organisation']['S']
+                print(Item)
+                org = Item['ViewedBy']['S']
                 writer.writerow([str(org)])
 
 
