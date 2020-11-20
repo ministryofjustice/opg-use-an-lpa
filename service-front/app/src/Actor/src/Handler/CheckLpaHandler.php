@@ -267,7 +267,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 $hw = $this->translator->translate('health and welfare', [], null, 'flashMessage');
                 $pfa = $this->translator->translate('property and finance', [], null, 'flashMessage');
 
-                $lpaType = $lpaType === 'hw' ? $hw : $pfa;
+                $lpaType = $lpaType === 'health and welfare' ? $hw : $pfa;
 
                 $message = $this->translator->translate(
                     "You've added %donor%'s %lpaType% LPA",
