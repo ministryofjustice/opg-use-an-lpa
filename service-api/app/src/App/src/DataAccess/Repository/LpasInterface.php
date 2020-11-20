@@ -10,17 +10,14 @@ interface LpasInterface
 {
     /**
      * Looks up an LPA based on its Sirius uid.
-     *
-     * @param string $uid
-     * @return Lpa
      */
     public function get(string $uid): ?LpaInterface;
 
     /**
      * Looks up the all the LPA uids in the passed array.
      *
-     * @param array $uids
-     * @return array
+     * @param string[] $uids
+     * @return LpaInterface[]
      */
     public function lookup(array $uids): array;    // array of Lpa objects.
 }
