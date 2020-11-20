@@ -7,3 +7,4 @@ geckodriver.log
 **/cluster_config.json
 
 .python-version
+scripts/analysis_scripts/*.csv
