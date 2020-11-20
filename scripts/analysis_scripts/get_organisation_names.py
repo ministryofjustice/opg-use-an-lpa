@@ -50,7 +50,7 @@ class AccountsCreatedChecker:
         for page in paginator.paginate(TableName=TableName):
             yield from page["Items"]
 
-    def get(self):
+    def write_csv(self):
         with open('some.csv', 'w', newline='') as f:
             writer = csv.writer(
                 f, quoting=csv.QUOTE_NONNUMERIC)
@@ -64,15 +64,15 @@ class AccountsCreatedChecker:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Print the total accounts created. Starts from teh first of the month of the given start date.")
+        description="Exports a CSV file of organisation names used with Viewer codes.")
     parser.add_argument("--environment",
                         default="production",
-                        help="The environment to provide stats for")
+                        help="The environment to get organistion names for")
 
     args = parser.parse_args()
     work = AccountsCreatedChecker(
         args.environment)
-    work.get()
+    work.write_csv()
 
 
 if __name__ == "__main__":
