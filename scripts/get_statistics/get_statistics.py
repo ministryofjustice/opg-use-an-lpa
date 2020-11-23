@@ -16,9 +16,6 @@ class StatisticsCollector:
     account_created_total = 0
     lpas_added_monthly_totals = {}
     lpas_added_total = 0
-    lpas_added_scanned_count = 0
-    viewer_codes_created_scanned_count = 0
-    viewer_codes_viewed_scanned_count = 0
     viewer_codes_created_monthly_totals = {}
     viewer_codes_created_total = 0
     viewer_codes_viewed_monthly_totals = {}
@@ -90,6 +87,17 @@ class StatisticsCollector:
 
             self.account_created_monthly_totals[str(month_start)] = sum_value
             self.account_created_total = self.account_created_total + sum_value
+
+    def sum_lpas_added_count(self):
+        for month_start in self.iterate_months():
+            month_end = month_start + relativedelta(months=1)
+            sum_value = self.pagintated_get_total_counts_by_month(
+                self.format_month(month_start),
+                self.format_month(month_end),
+                table_name='{}-UserLpaActorMap'.format(self.environment),
+                filter_exp='Added BETWEEN :fromdate AND :todate'
+            )
+            self.lpas_added_monthly_totals[str(month_start)] = sum_value
 
     def sum_lpas_added_count(self):
         for month_start in self.iterate_months():
