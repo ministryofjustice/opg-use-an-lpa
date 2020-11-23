@@ -12,6 +12,7 @@ class AccountsCreatedChecker:
     aws_iam_session = ''
     aws_cloudwatch_client = ''
     aws_dynamodb_client = ''
+    dynamodb_scan_paginator = ''
     environment = ''
     startdate = ''
     enddate = ''
@@ -19,6 +20,9 @@ class AccountsCreatedChecker:
     account_created_total = 0
     lpas_added_monthly_totals = {}
     lpas_added_total = 0
+    lpas_added_scanned_count = 0
+    viewer_codes_created_scanned_count = 0
+    viewer_codes_viewed_scanned_count = 0
     viewer_codes_created_monthly_totals = {}
     viewer_codes_created_total = 0
     viewer_codes_viewed_monthly_totals = {}
@@ -49,6 +53,8 @@ class AccountsCreatedChecker:
             aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
             aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
             aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+
+        self.dynamodb_scan_paginator = self.aws_dynamodb_client.get_paginator("scan")
 
         self.format_dates(startdate, enddate)
 
@@ -93,23 +99,35 @@ class AccountsCreatedChecker:
     def sum_lpas_added_count(self):
         for month_start in self.iterate_months():
             month_end = month_start + relativedelta(months=1)
-            sum_value = self.get_lpas_added_count(self.format_month(
-                month_start), self.format_month(month_end))
+            sum_value = self.pagintated_get_total_counts_by_month(
+                self.format_month(month_start),
+                self.format_month(month_end),
+                TableName='{}-UserLpaActorMap'.format(self.environment),
+                FilterExpression='Added BETWEEN :fromdate AND :todate'
+            )
             self.lpas_added_monthly_totals[str(month_start)] = sum_value
 
     def sum_viewer_codes_created_count(self):
         for month_start in self.iterate_months():
             month_end = month_start + relativedelta(months=1)
-            sum_value = self.get_viewer_codes_created_count(self.format_month(
-                month_start), self.format_month(month_end))
+            sum_value = self.pagintated_get_total_counts_by_month(
+                self.format_month(month_start),
+                self.format_month(month_end),
+                TableName='{}-ViewerCodes'.format(self.environment),
+                FilterExpression='Added BETWEEN :fromdate AND :todate',
+            )
             self.viewer_codes_created_monthly_totals[str(
                 month_start)] = sum_value
 
     def sum_viewer_codes_viewed_count(self):
         for month_start in self.iterate_months():
             month_end = month_start + relativedelta(months=1)
-            sum_value = self.get_viewer_codes_viewed_count(self.format_month(
-                month_start), self.format_month(month_end))
+            sum_value = self.pagintated_get_total_counts_by_month(
+                self.format_month(month_start),
+                self.format_month(month_end),
+                TableName='{}-ViewerActivity'.format(self.environment),
+                FilterExpression='Viewed BETWEEN :fromdate AND :todate',
+            )
             self.viewer_codes_viewed_monthly_totals[str(
                 month_start)] = sum_value
 
@@ -137,32 +155,18 @@ class AccountsCreatedChecker:
         )
         return response['Datapoints']
 
-    def get_lpas_added_count(self, month_start, month_end):
-        response = self.aws_dynamodb_client.scan(
-            TableName='{}-UserLpaActorMap'.format(self.environment),
-            FilterExpression='Added BETWEEN :fromdate AND :todate',
-            ExpressionAttributeValues={':fromdate': {
-                'S': str(month_start)}, ':todate': {'S': str(month_end)}}
-        )
-        return response['Count']
 
-    def get_viewer_codes_created_count(self, month_start, month_end):
-        response = self.aws_dynamodb_client.scan(
-            TableName='{}-ViewerCodes'.format(self.environment),
-            FilterExpression='Added BETWEEN :fromdate AND :todate',
-            ExpressionAttributeValues={':fromdate': {
-                'S': str(month_start)}, ':todate': {'S': str(month_end)}}
-        )
-        return response['Count']
+    def pagintated_get_total_counts_by_month(self, month_start, month_end, TableName, FilterExpression):
+        running_sum = 0
 
-    def get_viewer_codes_viewed_count(self, month_start, month_end):
-        response = self.aws_dynamodb_client.scan(
-            TableName='{}-ViewerActivity'.format(self.environment),
-            FilterExpression='Viewed BETWEEN :fromdate AND :todate',
-            ExpressionAttributeValues={':fromdate': {
-                'S': str(month_start)}, ':todate': {'S': str(month_end)}}
-        )
-        return response['Count']
+        for page in self.dynamodb_scan_paginator.paginate(
+          TableName=TableName,
+          FilterExpression=FilterExpression,
+          ExpressionAttributeValues={':fromdate': {'S': str(month_start)}, ':todate': {'S': str(month_end)}}
+          ):
+          running_sum += page['Count']
+
+        return running_sum
 
     def produce_json(self):
         self.sum_lpas_added_count()
