@@ -15,7 +15,3 @@ repos:
     rev: master
     hooks:
       - id: git-secrets
-  - repo: https://github.com/PyCQA/pylint
-    rev: master
-    hooks:
-      - id: pylint

@@ -1,15 +1,11 @@
-import boto3
 import argparse
 import datetime
-from dateutil.relativedelta import relativedelta
-import requests
 import json
-import os
+import boto3
+from dateutil.relativedelta import relativedelta
 
 
-class AccountsCreatedChecker:
-    aws_account_id = ''
-    aws_iam_session = ''
+class StatisticsCollector:
     aws_cloudwatch_client = ''
     aws_dynamodb_client = ''
     dynamodb_scan_paginator = ''
@@ -27,40 +23,39 @@ class AccountsCreatedChecker:
     viewer_codes_created_total = 0
     viewer_codes_viewed_monthly_totals = {}
     viewer_codes_viewed_total = 0
-    json_output = ''
 
     def __init__(self, environment, startdate, enddate):
-        self.aws_account_ids = {
+        aws_account_ids = {
             'production': "690083044361",
             'preproduction': "888228022356",
             'development': "367815980639",
         }
         self.environment = environment
-        self.aws_account_id = self.aws_account_ids.get(
+        aws_account_id = aws_account_ids.get(
             self.environment, "367815980639")
 
-        self.set_iam_role_session()
+        aws_iam_session = self.set_iam_role_session(aws_account_id)
         self.aws_cloudwatch_client = boto3.client(
             'cloudwatch',
             region_name='eu-west-1',
-            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
-            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
-            aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+            aws_access_key_id=aws_iam_session['Credentials']['AccessKeyId'],
+            aws_secret_access_key=aws_iam_session['Credentials']['SecretAccessKey'],
+            aws_session_token=aws_iam_session['Credentials']['SessionToken'])
 
         self.aws_dynamodb_client = boto3.client(
             'dynamodb',
             region_name='eu-west-1',
-            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
-            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
-            aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+            aws_access_key_id=aws_iam_session['Credentials']['AccessKeyId'],
+            aws_secret_access_key=aws_iam_session['Credentials']['SecretAccessKey'],
+            aws_session_token=aws_iam_session['Credentials']['SessionToken'])
 
         self.dynamodb_scan_paginator = self.aws_dynamodb_client.get_paginator("scan")
 
         self.format_dates(startdate, enddate)
 
-    def set_iam_role_session(self):
+    def set_iam_role_session(self, aws_account_id):
         role_arn = 'arn:aws:iam::{}:role/breakglass'.format(
-            self.aws_account_id)
+            aws_account_id)
 
         sts = boto3.client(
             'sts',
@@ -71,7 +66,7 @@ class AccountsCreatedChecker:
             RoleSessionName='getting_service_statistics',
             DurationSeconds=900
         )
-        self.aws_iam_session = session
+        return session
 
     def format_dates(self, startdate, enddate):
         self.startdate = datetime.date.fromisoformat(
@@ -102,8 +97,8 @@ class AccountsCreatedChecker:
             sum_value = self.pagintated_get_total_counts_by_month(
                 self.format_month(month_start),
                 self.format_month(month_end),
-                TableName='{}-UserLpaActorMap'.format(self.environment),
-                FilterExpression='Added BETWEEN :fromdate AND :todate'
+                table_name='{}-UserLpaActorMap'.format(self.environment),
+                filter_exp='Added BETWEEN :fromdate AND :todate'
             )
             self.lpas_added_monthly_totals[str(month_start)] = sum_value
 
@@ -113,8 +108,8 @@ class AccountsCreatedChecker:
             sum_value = self.pagintated_get_total_counts_by_month(
                 self.format_month(month_start),
                 self.format_month(month_end),
-                TableName='{}-ViewerCodes'.format(self.environment),
-                FilterExpression='Added BETWEEN :fromdate AND :todate',
+                table_name='{}-ViewerCodes'.format(self.environment),
+                filter_exp='Added BETWEEN :fromdate AND :todate',
             )
             self.viewer_codes_created_monthly_totals[str(
                 month_start)] = sum_value
@@ -125,8 +120,8 @@ class AccountsCreatedChecker:
             sum_value = self.pagintated_get_total_counts_by_month(
                 self.format_month(month_start),
                 self.format_month(month_end),
-                TableName='{}-ViewerActivity'.format(self.environment),
-                FilterExpression='Viewed BETWEEN :fromdate AND :todate',
+                table_name='{}-ViewerActivity'.format(self.environment),
+                filter_exp='Viewed BETWEEN :fromdate AND :todate',
             )
             self.viewer_codes_viewed_monthly_totals[str(
                 month_start)] = sum_value
@@ -156,15 +151,18 @@ class AccountsCreatedChecker:
         return response['Datapoints']
 
 
-    def pagintated_get_total_counts_by_month(self, month_start, month_end, TableName, FilterExpression):
+    def pagintated_get_total_counts_by_month(self, month_start, month_end, table_name, filter_exp):
         running_sum = 0
 
         for page in self.dynamodb_scan_paginator.paginate(
-          TableName=TableName,
-          FilterExpression=FilterExpression,
-          ExpressionAttributeValues={':fromdate': {'S': str(month_start)}, ':todate': {'S': str(month_end)}}
+          TableName=table_name,
+          FilterExpression=filter_exp,
+          ExpressionAttributeValues={
+            ':fromdate': {'S': str(month_start)},
+            ':todate': {'S': str(month_end)}
+            }
           ):
-          running_sum += page['Count']
+            running_sum += page['Count']
 
         return running_sum
 
@@ -176,33 +174,33 @@ class AccountsCreatedChecker:
 
         statistics = {}
         statistics['statistics'] = {}
+        stats=statistics['statistics']
 
-        statistics['statistics']['accounts_created'] = {}
-        statistics['statistics']['accounts_created']['total'] = self.account_created_total
-        statistics['statistics']['accounts_created']['monthly'] = self.account_created_monthly_totals
+        stats['accounts_created'] = {}
+        stats['accounts_created']['total'] = self.account_created_total
+        stats['accounts_created']['monthly'] = self.account_created_monthly_totals
 
-        statistics['statistics']['lpas_added'] = {}
-        statistics['statistics']['lpas_added']['total'] = sum(
+        stats['lpas_added'] = {}
+        stats['lpas_added']['total'] = sum(
             self.lpas_added_monthly_totals.values())
-        statistics['statistics']['lpas_added']['monthly'] = self.lpas_added_monthly_totals
+        stats['lpas_added']['monthly'] = self.lpas_added_monthly_totals
 
-        statistics['statistics']['viewer_codes_created'] = {}
-        statistics['statistics']['viewer_codes_created']['total'] = sum(
+        stats['viewer_codes_created'] = {}
+        stats['viewer_codes_created']['total'] = sum(
             self.viewer_codes_created_monthly_totals.values())
-        statistics['statistics']['viewer_codes_created']['monthly'] = self.viewer_codes_created_monthly_totals
+        stats['viewer_codes_created']['monthly'] = self.viewer_codes_created_monthly_totals
 
-        statistics['statistics']['viewer_codes_viewed'] = {}
-        statistics['statistics']['viewer_codes_viewed']['total'] = sum(
+        stats['viewer_codes_viewed'] = {}
+        stats['viewer_codes_viewed']['total'] = sum(
             self.viewer_codes_viewed_monthly_totals.values())
-        statistics['statistics']['viewer_codes_viewed']['monthly'] = self.viewer_codes_viewed_monthly_totals
+        stats['viewer_codes_viewed']['monthly'] = self.viewer_codes_viewed_monthly_totals
 
-        self.json_output = json.dumps(statistics)
-        print(self.json_output)
+        print(json.dumps(statistics))
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Print the total accounts created. Starts from teh first of the month of the given start date.")
+        description="Print whole month service statistics as JSON.")
     parser.add_argument("--environment",
                         default="production",
                         help="The environment to provide stats for")
@@ -214,7 +212,7 @@ def main():
                         help="Where to end metric summing, defaults to today")
 
     args = parser.parse_args()
-    work = AccountsCreatedChecker(
+    work = StatisticsCollector(
         args.environment, args.startdate, args.enddate)
     work.produce_json()
 
