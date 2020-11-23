@@ -5,7 +5,7 @@ from boto3.dynamodb.conditions import Key
 from datetime import datetime
 from dateutil import parser
 
-class AccountsCreatedChecker:
+class OrganisationsViewedChecker:
     aws_account_id = ''
     aws_iam_session = ''
     aws_dynamodb_client = ''
@@ -92,7 +92,7 @@ def main():
                         help="The environment to get organistion names for")
 
     args = parser.parse_args()
-    work = AccountsCreatedChecker(
+    work = OrganisationsViewedChecker(
         args.environment)
     work.write_csv()
 
