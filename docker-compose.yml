@@ -183,7 +183,6 @@ services:
       DYNAMODB_TABLE_VIEWER_ACTIVITY: "ViewerActivity"
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
 
-      # SIRIUS_API_ENDPOINT: "http://lpa-gateway:5000"
       SIRIUS_API_ENDPOINT: "http://api_gateway:4343"
       LPA_CODES_API_ENDPOINT: "http://codes-gateway:4343"
 
