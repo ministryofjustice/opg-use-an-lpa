@@ -1578,13 +1578,23 @@ class AccountContext implements Context
     {
         $this->iAmOnTheAddAnLPAPage();
 
-        // API call for adding/checking LPA
+        // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
             ->respondWith(
                 new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])
+                    json_encode($this->lpaData)
+                )
+            );
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
                 )
             );
 
@@ -1666,14 +1676,6 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('Active codes');
         $this->ui->assertPageContainsText("V - XYZ3 - 21AB - C987");
         $this->ui->assertPageNotContainsText('Cancelled');
-    }
-
-    /**
-     * @Then /^The LPA should not be found$/
-     */
-    public function theLPAShouldNotBeFound()
-    {
-        $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
     }
 
     /**
@@ -3730,5 +3732,13 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
         $this->ui->assertPageContainsText('LPA Viewed');
         $this->ui->assertPageContainsText('Not viewed');
+    }
+
+    /**
+     * @Then /^I should be told that I have already added this LPA$/
+     */
+    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
+    {
+        $this->ui->assertPageContainsText("You've already added this LPA to your account");
     }
 }

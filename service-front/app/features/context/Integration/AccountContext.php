@@ -1087,14 +1087,6 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^The LPA should not be found$/
-     */
-    public function theLPAShouldNotBeFound()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @When /^I click to check my access code now expired/
      */
     public function iClickToCheckMyAccessCodeNowExpired()
@@ -1955,6 +1947,14 @@ class AccountContext extends BaseIntegrationContext
      * @Then /^I can see the code has not been used to view the LPA$/
      */
     public function iCanSeeTheCodeHasNotBeenUsedToViewTheLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should be told that I have already added this LPA$/
+     */
+    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
     {
         // Not needed for this context
     }
