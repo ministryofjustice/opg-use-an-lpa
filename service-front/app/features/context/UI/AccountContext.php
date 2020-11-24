@@ -575,6 +575,17 @@ class AccountContext implements Context
                 assertEquals($storedCode, $params['actor-code']);
             });
 
+        // API call for getting all the users added LPAs
+        // to check if they have already added the LPA
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
         $this->ui->fillField('passcode', $code);
         $this->ui->fillField('reference_number', '700000000054');
         $this->ui->fillField('dob[day]', '05');
@@ -605,6 +616,17 @@ class AccountContext implements Context
                 $params = json_decode($request->getBody()->getContents(), true);
                 assertEquals('XYUPHWQRECHV', $params['actor-code']);
             });
+
+        // API call for getting all the users added LPAs
+        // to check if they have already added the LPA
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
 
         $this->ui->fillField('passcode', $code);
         $this->ui->fillField('reference_number', '700000000054');
@@ -3348,6 +3370,17 @@ class AccountContext implements Context
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode($this->lpaData)
+                )
+            );
+
+        // API call for getting all the users added LPAs
+        // to check if they have already added the LPA
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
                 )
             );
 
