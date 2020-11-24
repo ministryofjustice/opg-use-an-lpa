@@ -78,7 +78,7 @@ class OrganisationsViewedChecker:
 
     def write_csv(self):
         print('Collecting data and writing CSV...')
-        n = 1
+        n = 0
         with open('some.csv', 'w', newline='') as f:
             writer = csv.writer(
                 f, quoting=csv.QUOTE_NONNUMERIC)
