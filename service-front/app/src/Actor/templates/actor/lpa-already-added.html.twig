@@ -17,7 +17,7 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">{% trans %}You've already added this LPA to your account{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}You've already added this <abbr title="lasting power of attorney">LPA</abbr> to your account{% endtrans %}</h1>
 
                     <dl class="govuk-summary-list govuk-summary-list">
                         <div class="govuk-summary-list__row">
@@ -43,7 +43,9 @@
                     </dl>
 
                     <p class="govuk-body">
-                        {% trans with {'%dashboard%': path('lpa.dashboard'), '%addLpa%': path('lpa.add')} %}You can <a href="%dashboard%" class="govuk-link">see this LPA</a> now or <a href="%addLpa%" class="govuk-link">add another LPA</a> to your account.{% endtrans %}
+                        {% trans with {'%viewLpa%': path('lpa.view', {}, {'lpa': actorToken }), '%addLpa%': path('lpa.add')} %}
+                            You can <a href="%viewLpa%" class="govuk-link">see this <abbr title="lasting power of attorney">LPA</abbr></a> now or <a href="%addLpa%" class="govuk-link">add another LPA</a> to your account.
+                        {% endtrans %}
                     </p>
                 </div>
             </div>
