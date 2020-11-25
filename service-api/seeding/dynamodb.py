@@ -44,23 +44,26 @@ viewerCodes = [
     {
         'ViewerCode': "P9H8A6MLD3AM",
         'SiriusUid': "700000000138",
-        'Expires': "2021-09-12 12:34:56",
-        'Added': "2019-01-01 12:34:56",
+        'Expires': "2021-09-12T12:34:56+00:00",
+        'Added': "2019-01-01T12:34:56.123456Z",
         'Organisation': "Test Organisation",
+        'UserLpaActor': "806f3720-5b43-49ce-ac66-c670860bf4ee",
     },
     {
         'ViewerCode': "JLUPAHNXNKFP",
         'SiriusUid': "700000000138",
-        'Expires': "2021-01-01 12:34:56",
-        'Added': "2019-01-01 12:34:56",
+        'Expires': "2021-01-01T12:34:56+00:00",
+        'Added': "2019-01-01T12:34:56.123456Z",
         'Organisation': "Test Organisation",
+        'UserLpaActor': "806f3720-5b43-49ce-ac66-c670860bf4ee",
     },
     {
         'ViewerCode': "N4KBEBEZMNJF",
         'SiriusUid': "700000000138",
-        'Expires': "2020-01-01 12:34:56",
-        'Added': "2019-01-01 12:34:56",
+        'Expires': "2020-01-01T12:34:56+00:00",
+        'Added': "2019-01-01T12:34:56.123456Z",
         'Organisation': "Test Organisation",
+        'UserLpaActor': "806f3720-5b43-49ce-ac66-c670860bf4ee",
     },
 ]
 
