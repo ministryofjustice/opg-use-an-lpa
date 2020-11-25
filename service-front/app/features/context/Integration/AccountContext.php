@@ -206,7 +206,7 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(function (RequestInterface $request, array $options)
- use ($expectedUrl, $expectedTemplateId) {
+            use ($expectedUrl, $expectedTemplateId) {
                 $requestBody = $request->getBody()->getContents();
 
                 assertContains($this->userPasswordResetToken, $requestBody);
@@ -1062,28 +1062,6 @@ class AccountContext extends BaseIntegrationContext
     public function iShouldBeShownTheDetailsOfTheExpiredViewerCodeWithExpiredStatus()
     {
         // Not needed for this context
-    }
-
-    /**
-     * @When /^I attempt to add the same LPA again$/
-     */
-    public function iAttemptToAddTheSameLPAAgain()
-    {
-        // API call for adding/checking LPA
-        $this->apiFixtures->post('/v1/actor-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode([])
-                )
-            );
-
-        try {
-            $this->lpaService->getLpaByPasscode($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
-        } catch (ApiException $aex) {
-            assertEquals($aex->getCode(), 404);
-        }
     }
 
     /**
@@ -1947,14 +1925,6 @@ class AccountContext extends BaseIntegrationContext
      * @Then /^I can see the code has not been used to view the LPA$/
      */
     public function iCanSeeTheCodeHasNotBeenUsedToViewTheLPA()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Then /^I should be told that I have already added this LPA$/
-     */
-    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
     {
         // Not needed for this context
     }

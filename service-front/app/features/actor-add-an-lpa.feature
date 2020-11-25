@@ -107,7 +107,7 @@ Feature: Add an LPA
       |  |  |  | Enter your date of birth |
 
 
-  @ui @integration
+  @ui
   Scenario: The user is shown an error message when attempting to add the same LPA twice
     Given I have added an LPA to my account
     When I attempt to add the same LPA again
