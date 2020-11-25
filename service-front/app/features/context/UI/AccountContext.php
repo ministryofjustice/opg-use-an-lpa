@@ -3774,4 +3774,36 @@ class AccountContext implements Context
     {
         $this->ui->assertPageContainsText("You've already added this LPA to your account");
     }
+
+    /**
+     * @When /^I request to view the LPA that has already been added$/
+     */
+    public function iRequestToViewTheLPAThatHasAlreadyBeenAdded()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ])
+                )
+            );
+
+        $this->ui->clickLink('see this LPA');
+    }
+
+    /**
+     * @Then /^The full LPA is displayed$/
+     */
+    public function theFullLPAIsDisplayed()
+    {
+        $this->ui->assertPageAddress('/lpa/view-lpa?=' . $this->userLpaActorToken);
+        $this->ui->assertPageContainsText('This LPA is registered');
+    }
 }
