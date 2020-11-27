@@ -76,9 +76,9 @@ class AccountLookup:
             writer = csv.writer(
                 csv_file, quoting=csv.QUOTE_NONNUMERIC)
             writer.writerow(["email", "last_login_datetime","lpas_added"])
-            viewer_codes = self.get_actor_users()
+            actor_users = self.get_actor_users()
 
-            for item in viewer_codes:
+            for item in actor_users:
                 if item['Email']['S'] in email_address:
                     email = item['Email']['S']
                     last_login = 'Never logged in'
@@ -92,9 +92,9 @@ class AccountLookup:
     def print_results(self,email_address):
         print('Collecting data...')
         count = 0
-        viewer_codes = self.get_actor_users()
+        actor_users = self.get_actor_users()
 
-        for item in viewer_codes:
+        for item in actor_users:
             if item['Email']['S'] in email_address:
                 email = item['Email']['S']
                 last_login = item['LastLogin']['S']
