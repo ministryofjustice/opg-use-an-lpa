@@ -1,12 +1,16 @@
 <div class="govuk-accordion__section ">
     <div class="govuk-accordion__section-header">
         <h3 class="govuk-accordion__section-heading">
-        <span class="govuk-accordion__section-button" id="accordion-default-heading-{{ id_counter }}" aria-controls="accordion-default-content-{{ id_counter }}">
-          {{ code.Organisation }}
-        </span>
+            <span class="govuk-accordion__section-button" id="accordion-default-heading-{{ id_counter }}" aria-controls="accordion-default-content-{{ id_counter }}" aria-describedby="accordion-sections-summary-{{ id_counter }}">
+                {{ code.Organisation }}
+            </span>
         </h3>
+        <div class="govuk-accordion__section-summary govuk-body" id="accordion-sections-summary-{{ id_counter }}">
+            {# the code.Added property is not usually displayed and is in a different format #}
+            {% trans with {'%date%': code_date(code.Added, 'Y-m-d\\TH:i:s.u\\Z')} %}Access code created %date%{% endtrans %}
+        </div>
     </div>
-    <div id="accordion-default-content-{{ id_counter }}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-{{ id_counter }}">
+    <div id="accordion-default-content-{{ id_counter }}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-{{ id_counter }} accordion-sections-summary-{{ id_counter }}">
         <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
 
             <div class="govuk-summary-list__row">
