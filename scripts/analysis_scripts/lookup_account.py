@@ -1,10 +1,8 @@
-import boto3
 import argparse
 import csv
-from boto3.dynamodb.conditions import Key
-from datetime import datetime
-from dateutil import parser
 from datetime import date
+from dateutil import parser
+import boto3
 
 class AccountLookup:
     aws_account_id = ''
@@ -19,6 +17,7 @@ class AccountLookup:
             'development': "367815980639",
         }
         self.environment = environment
+
         self.aws_account_id = aws_account_ids.get(
             self.environment, "367815980639")
 
@@ -48,27 +47,20 @@ class AccountLookup:
 
     def get_actor_users(self):
         paginator = self.aws_dynamodb_client.get_paginator("scan")
-        TableName = '{}-ActorUsers'.format(self.environment)
-        FilterExpression = "attribute_exists(Email)"
-
         for page in paginator.paginate(
-                TableName=TableName,
-                FilterExpression=FilterExpression,
+                TableName='{}-ActorUsers'.format(self.environment),
+                FilterExpression="attribute_exists(Email)",
                 ):
             yield from page["Items"]
 
-    def get_lpas(self, id):
-        TableName='{}-UserLpaActorMap'.format(self.environment)
-        IndexName='UserIndex',
-        KeyConditionExpression='UserId = :user_id'
-        ExpressionAttributeValues={
-            ':user_id': {'S': id}
-        }
+    def get_lpas(self, user_id):
         response = self.aws_dynamodb_client.query(
             IndexName='UserIndex',
-            TableName=TableName,
-            KeyConditionExpression=KeyConditionExpression,
-            ExpressionAttributeValues=ExpressionAttributeValues
+            TableName='{}-UserLpaActorMap'.format(self.environment),
+            KeyConditionExpression='UserId = :user_id',
+            ExpressionAttributeValues={
+                ':user_id': {'S': user_id}
+            }
         )
         lpas = {}
         for lpa in response['Items']:
@@ -77,58 +69,58 @@ class AccountLookup:
 
     def write_csv(self,email_address):
         print('Collecting data and writing CSV...')
-        n = 0
+        count = 0
         csv_filename = "account-lookup-{}.csv".format((date.today()))
-        with open(csv_filename, 'w', newline='') as f:
+
+        with open(csv_filename, 'w', newline='') as csv_file:
             writer = csv.writer(
-                f, quoting=csv.QUOTE_NONNUMERIC)
+                csv_file, quoting=csv.QUOTE_NONNUMERIC)
             writer.writerow(["email", "last_login_datetime","lpas_added"])
             viewer_codes = self.get_actor_users()
 
-            for Item in viewer_codes:
-                if Item['Email']['S'] in email_address:
-                    email = Item['Email']['S']
+            for item in viewer_codes:
+                if item['Email']['S'] in email_address:
+                    email = item['Email']['S']
                     last_login = 'Never logged in'
-                    if 'LastLogin' in Item:
-                        last_login = Item['LastLogin']['S']
-                    lpas = self.get_lpas(Item['Id']['S'])
+                    if 'LastLogin' in item:
+                        last_login = item['LastLogin']['S']
+                    lpas = self.get_lpas(item['Id']['S'])
                     writer.writerow([str(email), "Last Login: {}".format(last_login), lpas])
-                    n += 1
-            print("Done! Collected {} records".format(n))
+                    count += 1
+            print("Done! Collected {} records".format(count))
 
     def print_results(self,email_address):
         print('Collecting data...')
-        n = 0
-
+        count = 0
         viewer_codes = self.get_actor_users()
 
-        for Item in viewer_codes:
-            if Item['Email']['S'] in email_address:
-                email = Item['Email']['S']
-                last_login = Item['LastLogin']['S']
-                lpas = self.get_lpas_query(Item['Id']['S'])
+        for item in viewer_codes:
+            if item['Email']['S'] in email_address:
+                email = item['Email']['S']
+                last_login = item['LastLogin']['S']
+                lpas = self.get_lpas(item['Id']['S'])
                 print(str(email), "Last Login: {}".format(last_login))
                 print(lpas)
-                n += 1
-        print("Done! Record Count: {}".format(n))
+                count += 1
+        print("Done! Record Count: {}".format(count))
 
 
 def main():
-    parser = argparse.ArgumentParser(
+    arguments = argparse.ArgumentParser(
         description="Look up an account by email address.")
-    parser.add_argument("--environment",
+    arguments.add_argument("--environment",
                         default="production",
                         help="The environment to target")
 
-    parser.add_argument("--email_address",
+    arguments.add_argument("--email_address",
                         default="",
                         help="Email address to look up")
 
-    parser.add_argument('--csv', dest='make_csv_file', action='store_const',
+    arguments.add_argument('--csv', dest='make_csv_file', action='store_const',
                         const=True, default=False,
                         help='Write a csv file instead of printing to terminal')
 
-    args = parser.parse_args()
+    args = arguments.parse_args()
     work = AccountLookup(args.environment)
 
     if args.make_csv_file:
