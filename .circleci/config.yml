@@ -519,7 +519,7 @@ orbs:
               command: |
                 docker run -d --name tests front-app:latest
                 docker exec tests docker-php-ext-enable xdebug
-                docker exec tests /app/vendor/bin/phpunit
+                docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
           - run:
               name: Run integration/acceptance tests
               command: |
@@ -629,7 +629,7 @@ orbs:
               command: |
                 docker run -d --name tests api-app:latest
                 docker exec tests docker-php-ext-enable xdebug
-                docker exec tests /app/vendor/bin/phpunit
+                docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
           - run:
               name: Run integration/acceptance tests
               command: |
