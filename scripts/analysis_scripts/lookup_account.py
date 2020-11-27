@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil import parser
 from datetime import date
 
-class OrganisationsViewedChecker:
+class AccountLookup:
     aws_account_id = ''
     aws_iam_session = ''
     aws_dynamodb_client = ''
@@ -53,19 +53,20 @@ class OrganisationsViewedChecker:
         )
         self.aws_iam_session = session
 
-    def get_viewer_codes(self):
+    def get_actor_users(self):
         paginator = self.aws_dynamodb_client.get_paginator("scan")
         TableName = '{}-ActorUsers'.format(self.environment)
-        FilterExpression = "attribute_exists(Email) AND LastLogin BETWEEN :fromdate AND :todate"
-        ExpressionAttributeValues={
-                    ':fromdate': {'S': str(self.start_date)},
-                    ':todate': {'S': str(self.end_date)}
-                }
+        FilterExpression = "attribute_exists(Email)"
+        # FilterExpression = "attribute_exists(Email) AND LastLogin BETWEEN :fromdate AND :todate"
+        # ExpressionAttributeValues={
+        #             ':fromdate': {'S': str(self.start_date)},
+        #             ':todate': {'S': str(self.end_date)}
+        #         }
 
         for page in paginator.paginate(
                 TableName=TableName,
                 FilterExpression=FilterExpression,
-                ExpressionAttributeValues=ExpressionAttributeValues,
+                # ExpressionAttributeValues=ExpressionAttributeValues,
                 ):
             yield from page["Items"]
 
@@ -90,16 +91,19 @@ class OrganisationsViewedChecker:
     def write_csv(self,email_address):
         print('Collecting data and writing CSV...')
         n = 0
-        with open('some.csv', 'w', newline='') as f:
+        csv_filename = "account-lookup-{}.csv".format((date.today()))
+        with open(csv_filename, 'w', newline='') as f:
             writer = csv.writer(
                 f, quoting=csv.QUOTE_NONNUMERIC)
             writer.writerow(["email", "last_login_datetime","lpas_added"])
-            viewer_codes = self.get_viewer_codes()
+            viewer_codes = self.get_actor_users()
 
             for Item in viewer_codes:
                 if Item['Email']['S'] in email_address:
                     email = Item['Email']['S']
-                    last_login = Item['LastLogin']['S']
+                    last_login = 'Never logged in'
+                    if 'LastLogin' in Item:
+                        last_login = Item['LastLogin']['S']
                     lpas = self.get_lpas_query(Item['Id']['S'])
                     writer.writerow([str(email), last_login, lpas])
                     n += 1
@@ -109,7 +113,7 @@ class OrganisationsViewedChecker:
         print('Collecting data...')
         n = 0
 
-        viewer_codes = self.get_viewer_codes()
+        viewer_codes = self.get_actor_users()
 
         for Item in viewer_codes:
             if Item['Email']['S'] in email_address:
@@ -124,10 +128,10 @@ class OrganisationsViewedChecker:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Exports a CSV file of organisation names used with Viewer codes.")
+        description="Look up an account by email address.")
     parser.add_argument("--environment",
                         default="production",
-                        help="The environment to get organistion names for")
+                        help="The environment to target")
 
     parser.add_argument("--start_date",
                         default="2020-07-17",
@@ -135,7 +139,7 @@ def main():
 
     parser.add_argument("--end_date",
                         default=str(date.today()),
-                        help="Where to end collecting data. Defaults to today")
+                        help="Where to end collecting data to. Defaults to today")
 
     parser.add_argument("--email_address",
                         default="",
@@ -146,7 +150,7 @@ def main():
                         help='Write a csv file instead of printing to terminal')
 
     args = parser.parse_args()
-    work = OrganisationsViewedChecker(
+    work = AccountLookup(
         args.environment,
         args.start_date,
         args.end_date)
