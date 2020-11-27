@@ -124,9 +124,9 @@ def main():
     work = AccountLookup(args.environment)
 
     if args.make_csv_file:
-        work.write_csv(args.email_address)
+        work.write_csv(args.email_address.lower())
     else:
-        work.print_results(args.email_address)
+        work.print_results(args.email_address.lower())
 
 
 if __name__ == "__main__":
