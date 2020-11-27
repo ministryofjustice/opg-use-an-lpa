@@ -11,23 +11,16 @@ class AccountLookup:
     aws_iam_session = ''
     aws_dynamodb_client = ''
     environment = ''
-    start_date = ''
-    end_date = ''
-    emails = []
 
-    def __init__(self, environment, start_date, end_date):
-        self.aws_account_ids = {
+    def __init__(self, environment):
+        aws_account_ids = {
             'production': "690083044361",
             'preproduction': "888228022356",
             'development': "367815980639",
         }
         self.environment = environment
-        self.aws_account_id = self.aws_account_ids.get(
+        self.aws_account_id = aws_account_ids.get(
             self.environment, "367815980639")
-
-        self.start_date = date.fromisoformat(start_date)
-        self.end_date = date.fromisoformat(end_date)
-        assert self.start_date <= self.end_date
 
         self.set_iam_role_session()
 
@@ -57,20 +50,14 @@ class AccountLookup:
         paginator = self.aws_dynamodb_client.get_paginator("scan")
         TableName = '{}-ActorUsers'.format(self.environment)
         FilterExpression = "attribute_exists(Email)"
-        # FilterExpression = "attribute_exists(Email) AND LastLogin BETWEEN :fromdate AND :todate"
-        # ExpressionAttributeValues={
-        #             ':fromdate': {'S': str(self.start_date)},
-        #             ':todate': {'S': str(self.end_date)}
-        #         }
 
         for page in paginator.paginate(
                 TableName=TableName,
                 FilterExpression=FilterExpression,
-                # ExpressionAttributeValues=ExpressionAttributeValues,
                 ):
             yield from page["Items"]
 
-    def get_lpas_query(self, id):
+    def get_lpas(self, id):
         TableName='{}-UserLpaActorMap'.format(self.environment)
         IndexName='UserIndex',
         KeyConditionExpression='UserId = :user_id'
@@ -104,8 +91,8 @@ class AccountLookup:
                     last_login = 'Never logged in'
                     if 'LastLogin' in Item:
                         last_login = Item['LastLogin']['S']
-                    lpas = self.get_lpas_query(Item['Id']['S'])
-                    writer.writerow([str(email), last_login, lpas])
+                    lpas = self.get_lpas(Item['Id']['S'])
+                    writer.writerow([str(email), "Last Login: {}".format(last_login), lpas])
                     n += 1
             print("Done! Collected {} records".format(n))
 
@@ -120,10 +107,10 @@ class AccountLookup:
                 email = Item['Email']['S']
                 last_login = Item['LastLogin']['S']
                 lpas = self.get_lpas_query(Item['Id']['S'])
-                print(str(email), last_login)
+                print(str(email), "Last Login: {}".format(last_login))
                 print(lpas)
                 n += 1
-        print("Done! Collected {} records".format(n))
+        print("Done! Record Count: {}".format(n))
 
 
 def main():
@@ -132,14 +119,6 @@ def main():
     parser.add_argument("--environment",
                         default="production",
                         help="The environment to target")
-
-    parser.add_argument("--start_date",
-                        default="2020-07-17",
-                        help="Where to start collecting data from. Defaults to the launch of the service")
-
-    parser.add_argument("--end_date",
-                        default=str(date.today()),
-                        help="Where to end collecting data to. Defaults to today")
 
     parser.add_argument("--email_address",
                         default="",
@@ -150,10 +129,7 @@ def main():
                         help='Write a csv file instead of printing to terminal')
 
     args = parser.parse_args()
-    work = AccountLookup(
-        args.environment,
-        args.start_date,
-        args.end_date)
+    work = AccountLookup(args.environment)
 
     if args.make_csv_file:
         work.write_csv(args.email_address)
