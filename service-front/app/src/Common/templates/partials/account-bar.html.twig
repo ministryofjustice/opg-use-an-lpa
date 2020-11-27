@@ -3,7 +3,7 @@
         {% trans %}Last signed in:{% endtrans %}
         {{ user.getDetail('LastLogin') is empty
            ? "Never" | trans
-           : lpa_date(user.getDetail('LastLogin'), 'd MMMM y, h:mma')
+           : lpa_date(user.getDetail('LastLogin'))
         }}
     </p>
     <div class="govuk-body-s" id="account-bar-navigation">
