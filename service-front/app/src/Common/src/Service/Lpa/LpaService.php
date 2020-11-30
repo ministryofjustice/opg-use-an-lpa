@@ -370,10 +370,10 @@ class LpaService
      *
      * @param string $referenceNumber
      * @param string $identity
-     * @return string
+     * @return bool|string
      * @throws Exception
      */
-    public function lpaAlreadyAdded(string $referenceNumber, string $identity): string
+    public function isLpaAlreadyAdded(string $referenceNumber, string $identity): ?bool
     {
         $lpasAdded = $this->getLpas($identity);
 
@@ -389,7 +389,7 @@ class LpaService
                 return $userLpaActorToken;
             }
         }
-        return '';
+        return false;
     }
 
     /**
