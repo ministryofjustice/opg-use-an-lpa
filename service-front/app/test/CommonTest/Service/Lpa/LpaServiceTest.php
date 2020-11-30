@@ -32,11 +32,22 @@ class LpaServiceTest extends TestCase
      */
     private $lpaFactoryProphecy;
 
+    /**
+     * @var LpaService
+     */
+    private $lpaService;
+
     public function setUp()
     {
         $this->apiClientProphecy = $this->prophesize(Client::class);
         $this->lpaFactoryProphecy = $this->prophesize(LpaFactory::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $this->lpaService = new LpaService(
+            $this->apiClientProphecy->reveal(),
+            $this->lpaFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
     }
 
     /** @test */
@@ -73,13 +84,7 @@ class LpaServiceTest extends TestCase
 
         $this->lpaFactoryProphecy->createLpaFromData($lpaData['lpa'])->willReturn($lpa);
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $lpas = $service->getLpas($token);
+        $lpas = $this->lpaService->getLpas($token);
 
         $this->assertInstanceOf(ArrayObject::class, $lpas);
         $this->assertArrayHasKey('0123-01-01-01-012345', $lpas);
@@ -110,13 +115,7 @@ class LpaServiceTest extends TestCase
 
         $this->lpaFactoryProphecy->createLpaFromData($lpaData['lpa'])->willReturn($lpaType);
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $lpa = $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
+        $lpa = $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
 
         $this->assertInstanceOf(ArrayObject::class, $lpa);
 
@@ -145,13 +144,7 @@ class LpaServiceTest extends TestCase
 
         $this->lpaFactoryProphecy->createLpaFromData($lpaData['lpa'])->willReturn($lpaType);
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $lpa = $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', 'Santander');
+        $lpa = $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', 'Santander');
 
         $this->assertInstanceOf(ArrayObject::class, $lpa);
         $this->assertEquals('other data', $lpa->other);
@@ -162,26 +155,19 @@ class LpaServiceTest extends TestCase
     /** @test */
     public function it_finds_a_cancelled_share_code_by_passcode_and_surname()
     {
-
         $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
         ])
             ->willThrow(new ApiException('Share code cancelled', StatusCodeInterface::STATUS_GONE));
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
         $this->expectExceptionMessage('Share code cancelled');
 
-
-        $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
+        $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
     }
+
     /** @test */
     public function it_finds_an_expired_share_code_by_passcode_and_surname()
     {
@@ -192,17 +178,10 @@ class LpaServiceTest extends TestCase
         ])
             ->willThrow(new ApiException('Share code expired', StatusCodeInterface::STATUS_GONE));
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
 
-
-        $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
+        $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
     }
 
     /** @test */
@@ -213,16 +192,10 @@ class LpaServiceTest extends TestCase
             'name' => 'Sanderson',
         ])->willThrow(new ApiException('', StatusCodeInterface::STATUS_NOT_FOUND));
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
 
-        $service->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
+        $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
     }
 
     /** @test */
@@ -250,13 +223,7 @@ class LpaServiceTest extends TestCase
 
         $this->lpaFactoryProphecy->createLpaFromData($lpaData['lpa'])->willReturn($lpa);
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $lpa = $service->getLpaById($token, $lpaId);
+        $lpa = $this->lpaService->getLpaById($token, $lpaId);
 
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
@@ -272,16 +239,10 @@ class LpaServiceTest extends TestCase
 
         $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(404);
 
-        $service->getLpaById($token, $lpaId);
+        $this->lpaService->getLpaById($token, $lpaId);
     }
 
     /** @test */
@@ -320,13 +281,7 @@ class LpaServiceTest extends TestCase
 
         $this->lpaFactoryProphecy->createLpaFromData($lpaData)->willReturn($lpa);
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $lpa = $service->getLpaByPasscode($token, $passcode, $referenceNumber, $dob);
+        $lpa = $this->lpaService->getLpaByPasscode($token, $passcode, $referenceNumber, $dob);
 
         $this->assertInstanceOf(ArrayObject::class, $lpa);
         $this->assertInstanceOf(Lpa::class, $lpa['lpa']);
@@ -376,13 +331,7 @@ class LpaServiceTest extends TestCase
 
         $this->lpaFactoryProphecy->createLpaFromData($lpaData)->willReturn($lpa);
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $lpa = $service->getLpaByPasscode($token, $passcode, $referenceNumber, $dob);
+        $lpa = $this->lpaService->getLpaByPasscode($token, $passcode, $referenceNumber, $dob);
 
         $this->assertInstanceOf(ArrayObject::class, $lpa);
         $this->assertInstanceOf(Lpa::class, $lpa['lpa']);
@@ -410,13 +359,7 @@ class LpaServiceTest extends TestCase
             ->willReturn([ 'bad-response' => 'bad']);
         $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $lpa = $service->getLpaByPasscode($token, $passcode, $referenceNumber, $dob);
+        $lpa = $this->lpaService->getLpaByPasscode($token, $passcode, $referenceNumber, $dob);
 
         $this->assertNull($lpa);
     }
@@ -441,13 +384,7 @@ class LpaServiceTest extends TestCase
             ]);
         $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $lpaCode = $service->confirmLpaAddition($token, $passcode, $referenceNumber, $dob);
+        $lpaCode = $this->lpaService->confirmLpaAddition($token, $passcode, $referenceNumber, $dob);
 
         $this->assertEquals('actor-lpa-code', $lpaCode);
     }
@@ -472,13 +409,7 @@ class LpaServiceTest extends TestCase
             ]);
         $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $lpaCode = $service->confirmLpaAddition($token, $passcode, $referenceNumber, $dob);
+        $lpaCode = $this->lpaService->confirmLpaAddition($token, $passcode, $referenceNumber, $dob);
 
         $this->assertNull($lpaCode);
     }
@@ -727,13 +658,7 @@ class LpaServiceTest extends TestCase
         $this->lpaFactoryProphecy->createLpaFromData($lpaData8['lpa'])->willReturn($lpa8);
         $this->lpaFactoryProphecy->createLpaFromData($lpaData9['lpa'])->willReturn($lpa9);
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $lpas = $service->getLpas($token);
+        $lpas = $this->lpaService->getLpas($token);
 
         return $lpas;
     }
@@ -743,13 +668,7 @@ class LpaServiceTest extends TestCase
     {
         $lpas = $this->get_test_lpa_data_for_sorting_unit_tests();
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $completeOrder = $service->sortLpasInOrder($lpas);
+        $completeOrder = $this->lpaService->sortLpasInOrder($lpas);
 
         $completeOrder = $completeOrder->getArrayCopy();
 
@@ -765,13 +684,7 @@ class LpaServiceTest extends TestCase
     {
         $lpas = $this->get_test_lpa_data_for_sorting_unit_tests();
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $orderedLpas = $service->sortLpasByDonorSurname($lpas);
+        $orderedLpas = $this->lpaService->sortLpasByDonorSurname($lpas);
 
         $resultOrder = [];
         foreach ($orderedLpas as $lpaKey => $lpaData) {
@@ -797,13 +710,7 @@ class LpaServiceTest extends TestCase
     {
         $lpas = $this->can_sort_lpas_by_donors_surname();
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $groupedLpas = $service->groupLpasByDonor($lpas);
+        $groupedLpas = $this->lpaService->groupLpasByDonor($lpas);
 
         $groupedLpasArray = $groupedLpas->getArrayCopy();
 
@@ -828,13 +735,7 @@ class LpaServiceTest extends TestCase
     {
         $lpasGroupedByDonor = $this->can_group_lpas_by_donor();
 
-        $service = new LpaService(
-            $this->apiClientProphecy->reveal(),
-            $this->lpaFactoryProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $orderedLpas = $service->sortGroupedDonorsLpasByTypeThenAddedDate($lpasGroupedByDonor);
+        $orderedLpas = $this->lpaService->sortGroupedDonorsLpasByTypeThenAddedDate($lpasGroupedByDonor);
 
         $orderedLpasArray = $orderedLpas->getArrayCopy();
 
@@ -843,5 +744,84 @@ class LpaServiceTest extends TestCase
         $this->assertEquals(['0008-01-01-01-888888'], array_keys($orderedLpasArray['Gemma Taylor 1980-01-01']));
         $this->assertEquals(['0009-01-01-01-999999'], array_keys($orderedLpasArray['Gemma Taylor 1998-02-09']));
         $this->assertEquals(['0001-01-01-01-111111', '0006-01-01-01-666666', '0005-01-01-01-555555'], array_keys($orderedLpasArray['Daniel Williams 1980-01-01']));
+    }
+
+    /** @test */
+    public function it_returns_false_if_an_lpa_is_not_already_added()
+    {
+        $userId = '11111-22222-33333';
+        $referenceNumber = '123456789012';
+        $dob = '1980-01-01';
+
+        $lpaData = [
+            'other' => 'other data',
+            'lpa' => [
+                'uId' => '888999',
+                'donor' => [
+                    'uId' => $referenceNumber,
+                    'dob' => $dob
+                ]
+            ]
+        ];
+
+        $lpa = new Lpa();
+        $lpa->setUId($referenceNumber);
+
+        $donor = new CaseActor();
+        $donor->setUId($referenceNumber);
+        $donor->setDob(new \DateTime($dob));
+        $lpa->setDonor($donor);
+
+        $this->apiClientProphecy->httpGet('/v1/lpas')
+            ->willReturn([
+                '01234567-01234-01234-01234' => $lpaData // UserLpaActorMap from DynamoDb
+            ]);
+        $this->apiClientProphecy->setUserTokenHeader($userId)->shouldBeCalled();
+
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData['lpa'])->willReturn($lpa);
+
+        $lpaAdded = $this->lpaService->isLpaAlreadyAdded('333333333333', $userId);
+
+        $this->assertFalse($lpaAdded);
+    }
+
+    /** @test */
+    public function it_returns_userLpaToken_if_an_lpa_is_already_added()
+    {
+        $userId = '11111-22222-33333';
+        $userLpaToken = '01234567-01234-01234-01234';
+        $referenceNumber = '123456789012';
+        $dob = '1980-01-01';
+
+        $lpaData = [
+            'other' => 'other data',
+            'lpa' => [
+                'uId' => '888999',
+                'donor' => [
+                    'uId' => $referenceNumber,
+                    'dob' => $dob
+                ]
+            ]
+        ];
+
+        $lpa = new Lpa();
+        $lpa->setUId($referenceNumber);
+
+        $donor = new CaseActor();
+        $donor->setUId($referenceNumber);
+        $donor->setDob(new \DateTime($dob));
+        $lpa->setDonor($donor);
+
+        $this->apiClientProphecy->httpGet('/v1/lpas')
+            ->willReturn([
+                $userLpaToken => $lpaData // UserLpaActorMap from DynamoDb
+            ]);
+        $this->apiClientProphecy->setUserTokenHeader($userId)->shouldBeCalled();
+
+        $this->lpaFactoryProphecy->createLpaFromData($lpaData['lpa'])->willReturn($lpa);
+
+        $lpaAdded = $this->lpaService->isLpaAlreadyAdded($referenceNumber, $userId);
+
+        $this->assertEquals($userLpaToken, $lpaAdded);
     }
 }

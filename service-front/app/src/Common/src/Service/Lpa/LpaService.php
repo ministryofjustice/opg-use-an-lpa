@@ -366,14 +366,12 @@ class LpaService
     }
 
     /**
-     * Checks if an LPA exists in a users account
-     *
      * @param string $referenceNumber
      * @param string $identity
-     * @return string|bool
+     * @return bool|string
      * @throws Exception
      */
-    public function isLpaAlreadyAdded(string $referenceNumber, string $identity): ?string
+    public function isLpaAlreadyAdded(string $referenceNumber, string $identity)
     {
         $lpasAdded = $this->getLpas($identity);
 
