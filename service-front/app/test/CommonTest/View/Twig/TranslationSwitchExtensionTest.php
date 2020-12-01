@@ -47,7 +47,7 @@ class TranslationSwitchExtensionTest extends TestCase
 
         $routeResult
             ->getMatchedRouteName()
-            ->willReturn('lpa.add');
+            ->willReturn('add.by-code');
 
         $urlHelper
             ->getRouteResult()
@@ -55,6 +55,6 @@ class TranslationSwitchExtensionTest extends TestCase
 
         $result = $switchExtension->getRouteName();
 
-        $this->assertEquals('lpa.add', $result);
+        $this->assertEquals('add.by-code', $result);
     }
 }
