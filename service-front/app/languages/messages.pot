@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-11-17T16:36:02+00:00\n"
+"POT-Creation-Date: 2020-11-26T12:02:56+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -17,6 +17,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/check-access-codes.html.twig:26
+#: src/Actor/templates/actor/lpa-already-added.html.twig:37
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:64
 #: src/Actor/templates/actor/check-lpa.html.twig:29
@@ -28,6 +29,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/check-access-codes.html.twig:28
+#: src/Actor/templates/actor/lpa-already-added.html.twig:39
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:26
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:64
 #: src/Actor/templates/actor/check-lpa.html.twig:31
@@ -135,6 +137,7 @@ msgid "Confirm your new email address"
 msgstr ""
 
 #: src/Actor/templates/actor/request-email-change-success.html.twig:14
+#: src/Actor/templates/actor/lpa-already-added.html.twig:12
 #: src/Actor/templates/actor/activate-account.html.twig:12
 #: src/Actor/templates/actor/create-account.html.twig:12
 #: src/Actor/templates/actor/password-reset.html.twig:12
@@ -1752,11 +1755,13 @@ msgstr ""
 msgid "Is this the LPA you want to add?"
 msgstr ""
 
+#: src/Actor/templates/actor/lpa-already-added.html.twig:33
 #: src/Actor/templates/actor/check-lpa.html.twig:25
 #: src/Viewer/templates/viewer/check-code-found.html.twig:28
 msgid "Type of LPA"
 msgstr ""
 
+#: src/Actor/templates/actor/lpa-already-added.html.twig:25
 #: src/Actor/templates/actor/check-lpa.html.twig:37
 #: src/Viewer/templates/viewer/check-code-found.html.twig:32
 msgid "Donor name"
@@ -1934,31 +1939,31 @@ msgstr ""
 msgid "LPA viewed"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:26
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:35
 msgid "Viewed"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:31
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:45
 msgid "Not viewed"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:38
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:52
 msgid "Expires"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:41
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:55
 msgid "Expired"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:57
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:71
 msgid "Status"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:59
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:73
 msgid "EXPIRED"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:52
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:66
 msgid "CANCELLED"
 msgstr ""
 
@@ -2966,7 +2971,7 @@ msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
-#: src/Actor/src/Handler/CheckLpaHandler.php:267
+#: src/Actor/src/Handler/CheckLpaHandler.php:292
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr ""
@@ -3445,4 +3450,12 @@ msgstr ""
 #. Accordion label
 #: src/Actor/templates/actor/check-access-codes.html.twig:95
 msgid "inactive code details"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-already-added.html.twig:20
+msgid "You've already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-already-added.html.twig:46
+msgid "You can <a href=\"%view-lpa%\" class=\"govuk-link\">see this LPA</a> now or <a href=\"%add-lpa%\" class=\"govuk-link\">add another LPA</a> to your account."
 msgstr ""
