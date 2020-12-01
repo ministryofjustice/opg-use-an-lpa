@@ -366,6 +366,31 @@ class LpaService
     }
 
     /**
+     * @param string $referenceNumber
+     * @param string $identity
+     * @return bool|string
+     * @throws Exception
+     */
+    public function isLpaAlreadyAdded(string $referenceNumber, string $identity)
+    {
+        $lpasAdded = $this->getLpas($identity);
+
+        foreach ($lpasAdded as $userLpaActorToken => $lpaData) {
+            if ($lpaData['lpa']->getUId() === $referenceNumber) {
+                $this->logger->info(
+                    'Account with Id {id} has attempted to add LPA {uId} which already exists in their account',
+                    [
+                        'id' => $identity,
+                        'uId' => $referenceNumber
+                    ]
+                );
+                return $userLpaActorToken;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Attempts to convert the data arrays received via the various endpoints into an ArrayObject containing
      * scalar and object values.
      *

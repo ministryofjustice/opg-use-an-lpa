@@ -1,0 +1,55 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}You've already added this <abbr title="lasting power of attorney">LPA</abbr> to your account{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.add') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}You've already added this <abbr title="lasting power of attorney">LPA</abbr> to your account{% endtrans %}</h1>
+
+                    <dl class="govuk-summary-list govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Donor name{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ actor_name(lpa.donor) }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Type of LPA{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {% if lpa.caseSubtype|lower == "pfa" %}
+                                    {% trans %}Property and finance{% endtrans %}
+                                {% else %}
+                                    {% trans %}Health and welfare{% endtrans %}
+                                {% endif %}
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <p class="govuk-body">
+                        {% trans with {'%view-lpa%': path('lpa.view', {}, {'lpa': actorToken }), '%add-lpa%': path('lpa.add')} %}
+                            You can <a href="%view-lpa%" class="govuk-link">see this LPA</a> now or <a href="%add-lpa%" class="govuk-link">add another LPA</a> to your account.
+                        {% endtrans %}
+                    </p>
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}

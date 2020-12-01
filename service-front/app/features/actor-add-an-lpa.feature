@@ -111,7 +111,13 @@ Feature: Add an LPA
   Scenario: The user is shown an error message when attempting to add the same LPA twice
     Given I have added an LPA to my account
     When I attempt to add the same LPA again
-    Then The LPA should not be found
+    Then I should be told that I have already added this LPA
+
+  @ui
+  Scenario: The user can request to see the LPA they have already added
+    Given I attempt to add the same LPA again
+    When I request to view the LPA that has already been added
+    Then The full LPA is displayed
 
   @ui
   Scenario Outline: The user can add an LPA to their account when they have the same DOB as others on the LPA

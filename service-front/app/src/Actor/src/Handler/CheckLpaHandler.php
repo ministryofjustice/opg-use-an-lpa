@@ -139,6 +139,18 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             $lpa = $lpaData['lpa'];
             $actor = $lpaData['actor']['details'];
 
+            if (false !== $lpaTokenAdded = $this->lpaService->isLpaAlreadyAdded($referenceNumber, $this->identity)) {
+                return new HtmlResponse(
+                    $this->renderer->render(
+                        'actor::lpa-already-added',
+                        [
+                            'lpa' => $lpa,
+                            'actorToken' => $lpaTokenAdded
+                        ]
+                    )
+                );
+            }
+
             $this->getLogger()->debug(
                 'Account with Id {id} has found an LPA with Id {uId} using their passcode',
                 [
