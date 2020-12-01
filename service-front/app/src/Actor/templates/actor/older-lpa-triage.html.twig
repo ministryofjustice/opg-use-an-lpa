@@ -1,0 +1,28 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Older LPA Triage Page{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">Do you have an activation key to add an LPA?</h1>
+
+                    <p class="govuk-body">The activation key is on the letter that told you the LPA had been registered or in an email we sent you.
+                        The donor and each attorney will have their own unique activation key.
+                    </p>
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}
