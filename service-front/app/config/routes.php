@@ -170,8 +170,8 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     if ($container->get('config')['feature_flags']['use_older_lpa_journey'] === "true") {
         $app->get('/add', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\OlderLpaTriageHandler::class
-        ], 'add.by-paper');
+            Actor\Handler\AddLpaTriageHandler::class
+        ], 'add.triage');
     }
 };
 
