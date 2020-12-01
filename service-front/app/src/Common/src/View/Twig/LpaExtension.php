@@ -29,7 +29,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('actor_address', [$this, 'actorAddress']),
             new TwigFunction('actor_name', [$this, 'actorName']),
             new TwigFunction('lpa_date', [$this, 'lpaDate']),
-            new TwigFunction('code_date', [$this, 'codeDate']),
+            new TwigFunction('code_date', [$this, 'formatDate']),
             new TwigFunction('days_remaining_to_expiry', [$this, 'daysRemaining']),
             new TwigFunction('check_if_code_has_expired', [$this, 'hasCodeExpired']),
             new TwigFunction('add_hyphen_to_viewer_code', [$this, 'formatViewerCode']),
@@ -98,50 +98,38 @@ class LpaExtension extends AbstractExtension
     }
 
     /**
-     * Takes an input date, whether as a string (relative or absolute) or as a Datetime
-     * and converts it for display in an LPA context.
+     * Takes an input date, whether as a string (relative or absolute - in the format 2020-11-27)
+     * or as a Datetime and converts it for displaying on pages
      *
-     * @param DateTime|string|null $date
-     * @param string|null $format
+     * @param DateTimeInterface|string|null $date
      * @return string
      */
-    public function lpaDate($date, ?string $format = null): string
+    public function lpaDate($date): string
     {
-        if (!is_null($date)) {
-            if ($date === "today") {
-                $date = new DateTime("today");
-            } elseif (is_string($date)) {
-                $date = DateTime::createFromFormat('Y-m-d', $date);
-            }
-
-            if ($date instanceof DateTimeInterface) {
-                $formatter = $this->getDateFormatter(\Locale::getDefault(), null);
-                $formatter->setTimeZone($date->getTimezone());
-                return $formatter->format($date);
-            }
-        }
-
-        return '';
+        return $this->formatDate($date, 'Y-m-d');
     }
 
     /**
      * Takes an input date, whether as a string (relative or absolute) or as a Datetime
-     * and converts it for displaying codes on check access codes page
+     * and converts it for displaying on pages
      *
-     * @param DateTime|string|null $date
+     * @param DateTimeInterface|string|null $date
+     * @param string $parseFormat A PHP Datetime format string that should be used to parse $date
      * @return string
      */
-    public function codeDate($date): string
+    public function formatDate($date, string $parseFormat = 'Y-m-d\TH:i:sP'): string
     {
         if (!is_null($date)) {
-            $date = DateTime::createFromFormat('Y-m-d\TH:i:sP', $date);
+            if ($date === 'today') {
+                $date = new DateTime('today');
+            } elseif (is_string($date)) {
+                $date = DateTime::createFromFormat($parseFormat, $date);
+            }
 
             if ($date instanceof DateTimeInterface) {
                 $formatter = $this->getDateFormatter(\Locale::getDefault(), null);
                 $formatter->setTimeZone($date->getTimezone());
                 return $formatter->format($date);
-            } else {
-                return '';
             }
         }
 
