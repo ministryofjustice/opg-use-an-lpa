@@ -206,7 +206,7 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(function (RequestInterface $request, array $options)
- use ($expectedUrl, $expectedTemplateId) {
+            use ($expectedUrl, $expectedTemplateId) {
                 $requestBody = $request->getBody()->getContents();
 
                 assertContains($this->userPasswordResetToken, $requestBody);
@@ -1060,36 +1060,6 @@ class AccountContext extends BaseIntegrationContext
      * @Then /^I should be shown the details of the expired viewer code with expired status $/
      */
     public function iShouldBeShownTheDetailsOfTheExpiredViewerCodeWithExpiredStatus()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @When /^I attempt to add the same LPA again$/
-     */
-    public function iAttemptToAddTheSameLPAAgain()
-    {
-        // API call for adding/checking LPA
-        $this->apiFixtures->post('/v1/actor-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode([])
-                )
-            );
-
-        try {
-            $this->lpaService->getLpaByPasscode($this->userIdentity, $this->passcode, $this->referenceNo, $this->userDob);
-        } catch (ApiException $aex) {
-            assertEquals($aex->getCode(), 404);
-        }
-    }
-
-    /**
-     * @Then /^The LPA should not be found$/
-     */
-    public function theLPAShouldNotBeFound()
     {
         // Not needed for this context
     }

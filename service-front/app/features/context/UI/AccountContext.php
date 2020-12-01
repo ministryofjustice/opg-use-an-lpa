@@ -575,6 +575,17 @@ class AccountContext implements Context
                 assertEquals($storedCode, $params['actor-code']);
             });
 
+        // API call for getting all the users added LPAs
+        // to check if they have already added the LPA
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
         $this->ui->fillField('passcode', $code);
         $this->ui->fillField('reference_number', '700000000054');
         $this->ui->fillField('dob[day]', '05');
@@ -605,6 +616,17 @@ class AccountContext implements Context
                 $params = json_decode($request->getBody()->getContents(), true);
                 assertEquals('XYUPHWQRECHV', $params['actor-code']);
             });
+
+        // API call for getting all the users added LPAs
+        // to check if they have already added the LPA
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
 
         $this->ui->fillField('passcode', $code);
         $this->ui->fillField('reference_number', '700000000054');
@@ -1578,13 +1600,23 @@ class AccountContext implements Context
     {
         $this->iAmOnTheAddAnLPAPage();
 
-        // API call for adding/checking LPA
+        // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
             ->respondWith(
                 new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([])
+                    json_encode($this->lpaData)
+                )
+            );
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
                 )
             );
 
@@ -1666,14 +1698,6 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('Active codes');
         $this->ui->assertPageContainsText("V - XYZ3 - 21AB - C987");
         $this->ui->assertPageNotContainsText('Cancelled');
-    }
-
-    /**
-     * @Then /^The LPA should not be found$/
-     */
-    public function theLPAShouldNotBeFound()
-    {
-        $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
     }
 
     /**
@@ -3349,6 +3373,17 @@ class AccountContext implements Context
                 )
             );
 
+        // API call for getting all the users added LPAs
+        // to check if they have already added the LPA
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
         $this->ui->fillField('passcode', $passcode);
         $this->ui->fillField('reference_number', '700000000054');
         $this->ui->fillField('dob[day]', '05');
@@ -3730,5 +3765,45 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
         $this->ui->assertPageContainsText('LPA Viewed');
         $this->ui->assertPageContainsText('Not viewed');
+    }
+
+    /**
+     * @Then /^I should be told that I have already added this LPA$/
+     */
+    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
+    {
+        $this->ui->assertPageContainsText("You've already added this LPA to your account");
+    }
+
+    /**
+     * @When /^I request to view the LPA that has already been added$/
+     */
+    public function iRequestToViewTheLPAThatHasAlreadyBeenAdded()
+    {
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ])
+                )
+            );
+
+        $this->ui->clickLink('see this LPA');
+    }
+
+    /**
+     * @Then /^The full LPA is displayed$/
+     */
+    public function theFullLPAIsDisplayed()
+    {
+        $this->ui->assertPageAddress('/lpa/view-lpa?=' . $this->userLpaActorToken);
+        $this->ui->assertPageContainsText('This LPA is registered');
     }
 }
