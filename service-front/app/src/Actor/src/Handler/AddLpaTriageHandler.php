@@ -16,20 +16,14 @@ use Mezzio\Template\TemplateRendererInterface;
 use Mezzio\Helper\UrlHelper;
 
 /**
- * Class OlderLpaTriageHandler
+ * Class AddLpaTriageHandler
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class OlderLpaTriageHandler extends AbstractHandler implements UserAware
+class AddLpaTriageHandler extends AbstractHandler implements UserAware
 {
     use User;
 
-    /**
-     * CreateAccountHandler constructor.
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param AuthenticationInterface $authenticator
-     */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
@@ -41,6 +35,6 @@ class OlderLpaTriageHandler extends AbstractHandler implements UserAware
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new HtmlResponse($this->renderer->render('actor::older-lpa-triage'));
+        return new HtmlResponse($this->renderer->render('actor::add-lpa-triage'));
     }
 }
