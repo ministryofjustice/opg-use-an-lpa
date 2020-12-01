@@ -167,7 +167,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     ], ['GET', 'POST'], 'add.by-code');
 
     // Older LPA journey
-    if ($container->get('config')['feature_flags']['use_older_lpa_journey'] === "true") {
+    if ($container->get('config')['feature_flags']['use_older_lpa_journey']) {
         $app->get('/add', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\AddLpaTriageHandler::class
