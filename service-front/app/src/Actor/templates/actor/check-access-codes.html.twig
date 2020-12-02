@@ -48,9 +48,7 @@
                         <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}" draggable="false" class="govuk-button">
                             {% trans %}Give an organisation access{% endtrans %}
                         </a>
-
                     {% else %}
-
                         {% set containsActive = false %}
                         {% set containsInactive = false %}
 
@@ -66,22 +64,20 @@
                         {% endfor %}
 
                         {% if containsActive %}
-
                             <h2 class="govuk-heading-m">{% trans %}Active codes{% endtrans %}</h2>
 
                             <p class="govuk-body">{% trans %}Give an organisation their access code so they can view this LPA. They should go to www.gov.uk/view-lpa to use the code.{% endtrans %}</p>
 
                             <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default-1" data-opentext="{% trans %}Open all{% notes %}Accordion label{% endtrans%}" data-closetext="{% trans %}Close all{% notes %}Accordion label{% endtrans %}" data-sectiontext="{% trans %}active code details{% notes %}Accordion label{% endtrans %}">
-
                                 {% for code in shareCodes %}
                                     {% set id_counter = ( id_counter | default(0) ) + 1 %}
-                                    {% if not (check_if_code_has_expired(code.Expires) and check_if_code_is_cancelled(code)) %}
+                                    {% if not (check_if_code_has_expired(code.Expires) or check_if_code_is_cancelled(code)) %}
                                         {% if code.UserLpaActor is not empty %}
+                                            {# check UserLpaActor to not show code if it belongs to a deleted LPA #}
                                             {{ include('@actor/partials/check-code-details.html.twig', {'id_counter': id_counter }) }}
                                         {% endif %}
                                     {% endif %}
                                 {% endfor %}
-
                             </div>
                         {% endif %}
 
@@ -93,11 +89,13 @@
                             </p>
 
                             <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default-2" data-opentext="{% trans %}Open all{% notes %}Accordion label{% endtrans%}" data-closetext="{% trans %}Close all{% notes %}Accordion label{% endtrans %}" data-sectiontext="{% trans %}inactive code details{% notes %}Accordion label{% endtrans %}">
-
                                 {% for code in shareCodes %}
                                     {% set id_counter = ( id_counter | default(0) ) + 1 %}
                                     {% if check_if_code_has_expired(code.Expires) or check_if_code_is_cancelled(code) %}
-                                        {{ include('@actor/partials/check-code-details.html.twig', {'id_counter': id_counter }) }}
+                                        {% if code.UserLpaActor is not empty %}
+                                            {# check UserLpaActor to not show code if it belongs to a deleted LPA #}
+                                            {{ include('@actor/partials/check-code-details.html.twig', {'id_counter': id_counter }) }}
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </div>

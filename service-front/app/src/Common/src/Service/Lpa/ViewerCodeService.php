@@ -107,16 +107,13 @@ class ViewerCodeService
     {
         $counter = 0;
 
-        if (!empty($shareCodes[0])) {
-            foreach ($shareCodes as $codeKey => $code) {
-                //if the code has not expired
-
-                if (new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23,59,59) &&
-                    !(array_key_exists("Cancelled",$code)) &&
-                    (!empty($code['UserLpaActor']))) {
-
-                    $counter += 1;
-                }
+        foreach ($shareCodes as $code) {
+            if (
+                new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23, 59, 59)
+                && !array_key_exists('Cancelled', $code)
+                && !empty($code['UserLpaActor']) // We don't want to count codes that have been soft-deleted
+            ) {
+                $counter += 1;
             }
         }
 
