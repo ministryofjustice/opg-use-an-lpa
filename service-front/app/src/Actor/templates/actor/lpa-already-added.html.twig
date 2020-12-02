@@ -9,7 +9,7 @@
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('add.by-code') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+            <a href="{{ path('lpa.add') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -43,7 +43,7 @@
                     </dl>
 
                     <p class="govuk-body">
-                        {% trans with {'%view-lpa%': path('lpa.view', {}, {'lpa': actorToken }), '%add-lpa%': path('add.by-code')} %}
+                        {% trans with {'%view-lpa%': path('lpa.view', {}, {'lpa': actorToken }), '%add-lpa%': path('lpa.add')} %}
                             You can <a href="%view-lpa%" class="govuk-link">see this LPA</a> now or <a href="%add-lpa%" class="govuk-link">add another LPA</a> to your account.
                         {% endtrans %}
                     </p>
