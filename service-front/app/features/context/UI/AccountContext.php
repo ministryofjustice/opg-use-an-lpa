@@ -3806,4 +3806,38 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/lpa/view-lpa?=' . $this->userLpaActorToken);
         $this->ui->assertPageContainsText('This LPA is registered');
     }
+
+    /**
+     * @Given /^I am on the add an LPA triage page$/
+     */
+    public function iAmOnTheAddAnLPATriagePage()
+    {
+        $this->ui->visit('/lpa/add');
+        $this->ui->assertPageContainsText('Do you have an activation key to add an LPA?');
+    }
+
+    /**
+     * @When /^I select that I do have an activation key$/
+     */
+    public function iSelectThatIDoHaveAnActivationKey()
+    {
+        $this->ui->fillField('activation_key_triage', 'Yes');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I will be taken to add an LPA to my account using an activation key$/
+     */
+    public function iWillBeTakenToAddAnLPAToMyAccountUsingAnActivationKey()
+    {
+        $this->ui->assertPageAddress('/lpa/add-by-code');
+    }
+
+    /**
+     * @When /^I select to add an LPA$/
+     */
+    public function iSelectToAddAnLPA()
+    {
+        $this->ui->clickLink('Add another LPA');
+    }
 }

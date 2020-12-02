@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Actor\Form\AddLpaTriage;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\CsrfGuardAware;
@@ -20,9 +21,10 @@ use Mezzio\Helper\UrlHelper;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class AddLpaTriageHandler extends AbstractHandler implements UserAware
+class AddLpaTriageHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
     use User;
+    use CsrfGuard;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -35,6 +37,36 @@ class AddLpaTriageHandler extends AbstractHandler implements UserAware
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new HtmlResponse($this->renderer->render('actor::add-lpa-triage'));
+        $form = new AddLpaTriage($this->getCsrfGuard($request));
+
+        if ($request->getMethod() == 'POST') {
+            return $this->handlePost($request);
+        }
+
+        return new HtmlResponse($this->renderer->render('actor::add-lpa-triage', [
+            'user' => $this->getUser($request),
+            'form' => $form->prepare()
+        ]));
+    }
+
+    public function handlePost(ServerRequestInterface $request): ResponseInterface
+    {
+        $form = new AddLpaTriage($this->getCsrfGuard($request));
+        $requestData = $request->getParsedBody();
+
+        $form->setData($requestData);
+
+        if ($form->isValid()) {
+
+            if ($form->getData()['activation_key_triage'] === 'Yes') {
+                return $this->redirectToRoute('lpa.add-by-code');
+            }
+            //return $this->redirectToRoute('lpa');
+        }
+
+        return new HtmlResponse($this->renderer->render('actor::add-lpa-triage', [
+            'user' => $this->getUser($request),
+            'form' => $form->prepare()
+        ]));
     }
 }
