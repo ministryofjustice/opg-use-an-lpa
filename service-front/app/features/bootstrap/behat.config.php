@@ -25,10 +25,6 @@ return [
         //'debug'   => true,
     ],
 
-    'feature_flags' => [
-        'use_older_lpa_journey' => 'true',
-    ],
-
     'notify' => [
         'api' => [
             'key' => 'not_a_real_key-22996155-4e04-42d0-8d1a-d1d3998e2149-be30242e-049d-4039-b43e-14aa8a6a76a4',
