@@ -8,14 +8,14 @@ use Actor\Form\CancelCode;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\Lpa\{LpaService, ViewerCodeService};
-use Mezzio\Flash\FlashMessageMiddleware;
-use Mezzio\Flash\FlashMessagesInterface;
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use DateTime;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Flash\FlashMessageMiddleware;
+use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use DateTime;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
  * Class CheckAccessCodesHandler
@@ -75,12 +75,10 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         $shareCodes = $this->viewerCodeService->getShareCodes(
             $identity,
             $actorLpaToken,
-            false,
-            ViewerCodeService::SORT_ADDED
+            false
         );
-        
-        foreach ($shareCodes as $key => $code) {
 
+        foreach ($shareCodes as $key => $code) {
             if (!array_key_exists('Cancelled', $code) || (new DateTime('now') > $code['Expires'])) {
                 $form = new CancelCode($this->getCsrfGuard($request));
                 $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-cancel-code'));
@@ -95,7 +93,8 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             }
 
             if ($lpaData->lpa->getDonor()->getId() == $code['ActorId']) {
-                $shareCodes[$key]['CreatedBy'] = $lpaData->lpa->getDonor()->getFirstname() . ' ' . $lpaData->lpa->getDonor()->getSurname();
+                $shareCodes[$key]['CreatedBy'] =
+                    $lpaData->lpa->getDonor()->getFirstname() . ' ' . $lpaData->lpa->getDonor()->getSurname();
             }
 
             foreach ($lpaData->lpa->getAttorneys() as $attorney) {
