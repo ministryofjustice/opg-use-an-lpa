@@ -233,7 +233,12 @@ EOF
     {
       "name": "BRUTE_FORCE_CACHE_TIMEOUT",
       "value": "60"
-    }]
+    },
+    {
+      "name": "USE_OLDER_LPA_JOURNEY",
+      "value": "${local.account.use_older_lpa_journey}"
+    }
+    ]
   }
 
 EOF
