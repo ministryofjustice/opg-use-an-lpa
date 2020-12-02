@@ -27,7 +27,7 @@ class LpaExtensionTest extends TestCase
             'actor_address'             => 'actorAddress',
             'actor_name'                => 'actorName',
             'lpa_date'                  => 'lpaDate',
-            'code_date'                 => 'codeDate',
+            'code_date'                 => 'formatDate',
             'days_remaining_to_expiry'  => 'daysRemaining',
             'check_if_code_has_expired' => 'hasCodeExpired',
             'add_hyphen_to_viewer_code' => 'formatViewerCode',
@@ -267,7 +267,7 @@ class LpaExtensionTest extends TestCase
         $originalLocale = \Locale::getDefault();
         \Locale::setDefault($locale);
 
-        $dateString = $extension->codeDate($date);
+        $dateString = $extension->formatDate($date);
 
         // restore the locale setting
         \Locale::setDefault($originalLocale);

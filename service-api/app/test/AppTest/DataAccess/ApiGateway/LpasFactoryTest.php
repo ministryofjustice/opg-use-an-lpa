@@ -6,11 +6,12 @@ namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\Lpas;
 use App\DataAccess\ApiGateway\LpasFactory;
+use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
 use App\Service\Log\RequestTracing;
+use Exception;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Exception;
 
 class LpasFactoryTest extends TestCase
 {
@@ -32,6 +33,10 @@ class LpasFactoryTest extends TestCase
         );
 
         $containerProphecy->get(RequestTracing::TRACE_PARAMETER_NAME)->willReturn('');
+
+        $containerProphecy->get(SiriusLpaSanitiser::class)->willReturn(
+            $this->prophesize(SiriusLpaSanitiser::class)->reveal()
+        );
 
         $factory = new LpasFactory();
         $repo = $factory($containerProphecy->reveal());

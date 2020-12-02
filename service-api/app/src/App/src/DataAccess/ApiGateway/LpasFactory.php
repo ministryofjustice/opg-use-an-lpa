@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\DataAccess\ApiGateway;
 
+use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
 use App\Service\Log\RequestTracing;
-use Psr\Container\ContainerInterface;
-use GuzzleHttp\Client as HttpClient;
 use Aws\Signature\SignatureV4;
+use GuzzleHttp\Client as HttpClient;
+use Psr\Container\ContainerInterface;
 
 class LpasFactory
 {
@@ -24,7 +25,8 @@ class LpasFactory
             $container->get(HttpClient::class),
             new SignatureV4('execute-api', 'eu-west-1'),
             $config['sirius_api']['endpoint'],
-            $container->get(RequestTracing::TRACE_PARAMETER_NAME)
+            $container->get(RequestTracing::TRACE_PARAMETER_NAME),
+            $container->get(SiriusLpaSanitiser::class)
         );
     }
 }
