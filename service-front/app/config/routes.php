@@ -123,6 +123,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaDashboardHandler::class
     ], 'lpa.dashboard');
+    $app->route('/lpa/add-details', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\LpaAddHandler::class
+    ], ['GET', 'POST'], 'lpa.add');
     $app->route('/lpa/check', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckLpaHandler::class
@@ -159,26 +163,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\DeathNotificationHandler::class
     ], 'lpa.death-notification');
-
-    // Older LPA journey
-    if ($container->get('config')['feature_flags']['use_older_lpa_journey']) {
-        // if flag true, send user to triage page as entry point
-        $app->route('/lpa/add', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\AddLpaTriageHandler::class
-        ], ['GET', 'POST'], 'lpa.add');
-
-        $app->route('/lpa/add-by-code', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\LpaAddHandler::class
-        ], ['GET', 'POST'], 'lpa.add-by-code');
-
-    } else {
-        $app->route('/lpa/add-details', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\LpaAddHandler::class
-        ], ['GET', 'POST'], 'lpa.add');
-    }
 };
 
 switch (getenv('CONTEXT')) {

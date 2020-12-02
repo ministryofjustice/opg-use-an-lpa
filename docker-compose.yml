@@ -118,8 +118,6 @@ services:
       GOOGLE_ANALYTICS_ID: "UA-170469426-1"
       KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
 
-      USE_OLDER_LPA_JOURNEY: "true"
-
       # Local only
       API_SERVICE_URL: http://api-web
       AWS_ENDPOINT_KMS: http://kms:8080
