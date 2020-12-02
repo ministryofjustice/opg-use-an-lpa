@@ -10,8 +10,6 @@ interface LpaInterface
 {
     /**
      * Returns the data the makes up the LPA.
-     *
-     * @return array|null
      */
     public function getData(): ?array;
 
@@ -20,8 +18,6 @@ interface LpaInterface
      *
      * In normal circumstance this will be within the last few minutes, but could be longer if Sirius is experiencing
      * a problem. It's our responsibility to check this and decide how to act accordingly.
-     *
-     * @return DateTime|null
      */
     public function getLookupTime(): ?DateTime;
 }

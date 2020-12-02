@@ -1,12 +1,12 @@
 /* istanbul ignore file */
 import './scss.js';
-import { initAll, Accordion } from 'govuk-frontend';
+import {Accordion, initAll} from 'govuk-frontend';
 import jsEnabled from './javascript/jsEnabled';
 import disableButtonOnClick from './javascript/disableButtonOnClick';
 import copyAccessCode from './javascript/copyAccessCode';
 import cookieConsent from './javascript/cookieConsent';
 import sessionDialog from './javascript/sessionDialog';
-import showHidePassword from  './javascript/showHidePassword';
+import showHidePassword from './javascript/showHidePassword';
 
 Accordion.prototype.updateOpenAllButton = function (expanded) {
     var newButtonText = expanded ? this.$module.dataset.closetext : this.$module.dataset.opentext;
@@ -14,6 +14,7 @@ Accordion.prototype.updateOpenAllButton = function (expanded) {
     this.$openAllButton.setAttribute('aria-expanded', expanded);
     this.$openAllButton.innerHTML = newButtonText;
 };
+
 initAll();
 jsEnabled(document.body);
 disableButtonOnClick(document.getElementsByTagName('form'));

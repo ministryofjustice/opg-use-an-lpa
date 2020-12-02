@@ -2,9 +2,13 @@
 
 namespace App\Service\Lpa;
 
-use App\DataAccess\Repository;
-use App\Exception\GoneException;
-use App\Exception\NotFoundException;
+use App\DataAccess\Repository\{LpasInterface,
+    Response\Lpa,
+    Response\LpaInterface,
+    UserLpaActorMapInterface,
+    ViewerCodeActivityInterface,
+    ViewerCodesInterface};
+use App\Exception\{GoneException, NotFoundException};
 use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -19,36 +23,17 @@ class LpaService
     private const GHOST_ATTORNEY = 1;
     private const INACTIVE_ATTORNEY = 2;
 
-    /**
-     * @var Repository\ViewerCodesInterface
-     */
-    private $viewerCodesRepository;
-
-    /**
-     * @var Repository\ViewerCodeActivityInterface
-     */
-    private $viewerCodeActivityRepository;
-
-    /**
-     * @var Repository\LpasInterface
-     */
-    private $lpaRepository;
-
-    /**
-     * @var Repository\UserLpaActorMapInterface
-     */
-    private $userLpaActorMapRepository;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private ViewerCodesInterface $viewerCodesRepository;
+    private ViewerCodeActivityInterface $viewerCodeActivityRepository;
+    private LpasInterface $lpaRepository;
+    private UserLpaActorMapInterface $userLpaActorMapRepository;
+    private LoggerInterface $logger;
 
     public function __construct(
-        Repository\ViewerCodesInterface $viewerCodesRepository,
-        Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
-        Repository\LpasInterface $lpaRepository,
-        Repository\UserLpaActorMapInterface $userLpaActorMapRepository,
+        ViewerCodesInterface $viewerCodesRepository,
+        ViewerCodeActivityInterface $viewerCodeActivityRepository,
+        LpasInterface $lpaRepository,
+        UserLpaActorMapInterface $userLpaActorMapRepository,
         LoggerInterface $logger
     ) {
         $this->viewerCodesRepository = $viewerCodesRepository;
@@ -61,10 +46,10 @@ class LpaService
     /**
      * Get an LPA using the ID value
      *
-     * @param string $uid
-     * @return ?array
+     * @param string $uid Sirius uId of LPA to fetch
+     * @return ?LpaInterface A processed LPA data transfer object
      */
-    public function getByUid(string $uid): ?Repository\Response\LpaInterface
+    public function getByUid(string $uid): ?LpaInterface
     {
         $lpa = $this->lpaRepository->get($uid);
         if ($lpa === null) {
@@ -80,15 +65,15 @@ class LpaService
             }));
         }
 
-        return new Repository\Response\Lpa($lpaData, $lpa->getLookupTime());
+        return new Lpa($lpaData, $lpa->getLookupTime());
     }
 
     /**
-     * Given a user token and a user id (who should own the token), return the actor and LPA details.
+     * Given a user token and a user id (who should own the token), return the actor and LPA details
      *
-     * @param string $token
-     * @param string $userId
-     * @return array|null
+     * @param string $token UserLpaActorToken that map an LPA to a user account
+     * @param string $userId The user account ID that must correlate to the $token
+     * @return ?array A structure that contains processed LPA data and metadata
      */
     public function getByUserLpaActorToken(string $token, string $userId): ?array
     {
@@ -125,8 +110,8 @@ class LpaService
     /**
      * Return all LPAs for the given user_id
      *
-     * @param string $userId
-     * @return array
+     * @param string $userId User account ID to fetch LPAs for
+     * @return array An array of LPA data structures containing processed LPA data and metadata
      */
     public function getAllForUser(string $userId): array
     {
@@ -167,10 +152,10 @@ class LpaService
     /**
      * Get an LPA using the share code.
      *
-     * @param string $viewerCode
-     * @param string $donorSurname
-     * @param string|null $organisation
-     * @return array|null
+     * @param string $viewerCode A code that directly maps to an LPA
+     * @param string $donorSurname The surname of the donor that must correlate to the $viewerCode
+     * @param ?string $organisation An organisation name that will be recorded as used against the $viewerCode
+     * @return ?array A structure that contains processed LPA data and metadata
      */
     public function getByViewerCode(string $viewerCode, string $donorSurname, ?string $organisation = null): ?array
     {
@@ -200,7 +185,10 @@ class LpaService
         // at this point as we only want to acknowledge if a code has expired iff donor surname matched.
 
         if (!isset($viewerCodeData['Expires']) || !($viewerCodeData['Expires'] instanceof DateTime)) {
-            $this->logger->info('The code {code} entered by user to view LPA does not have an expiry date set.', ['code' => $viewerCode]);
+            $this->logger->info(
+                'The code {code} entered by user to view LPA does not have an expiry date set.',
+                ['code' => $viewerCode]
+            );
             throw new RuntimeException("'Expires' field missing or invalid.");
         }
 
@@ -217,7 +205,10 @@ class LpaService
         if (!is_null($organisation)) {
             // Record the lookup in the activity table
             // We only do this if the organisation is provided
-            $this->viewerCodeActivityRepository->recordSuccessfulLookupActivity($viewerCodeData['ViewerCode'], $organisation);
+            $this->viewerCodeActivityRepository->recordSuccessfulLookupActivity(
+                $viewerCodeData['ViewerCode'],
+                $organisation
+            );
         }
 
         $lpaData = $lpa->getData();
@@ -241,12 +232,16 @@ class LpaService
     /**
      * Given an LPA and an Actor ID, this returns the actor's details, and what type of actor they are.
      *
-     * TODO: Confirm if we need to look in Trust Corporations, or if an active Trust Corporation would appear in `attorneys`.
-     * TODO: Remove dual checks for id/uId when code validation API goes live
+     * This function is used by code that expects to be able to check for Sirius uId's (code validation) and
+     * database id's (UserActorLpa lookup) so it checks both fields for the id. This is not ideal but we now have
+     * many thousands of live data rows with database id's at this point.
      *
-     * @param array $lpa
-     * @param string $actorId
-     * @return array|null
+     * TODO: Confirm if we need to look in Trust Corporations, or if an active Trust Corporation would appear
+     *       in `attorneys`.
+     *
+     * @param array $lpa An LPA data structure
+     * @param string $actorId The actors Database ID or Sirius UId to search for within the $lpa data structure
+     * @return ?array A data structure containing details of the discovered actor
      */
     public function lookupActiveActorInLpa(array $lpa, string $actorId): ?array
     {
@@ -298,6 +293,49 @@ class LpaService
         ];
     }
 
+    /**
+     * Deletes an LPA from a users account
+     *
+     * @param string $userId The user account ID that must correlate to the $token
+     * @param string $token UserLpaActorToken that map an LPA to a user account
+     * @return ?array A structure that contains processed LPA data and metadata
+     */
+    public function removeLpaFromUserLpaActorMap(string $userId, string $token): ?array
+    {
+        $userActorLpa = $this->userLpaActorMapRepository->get($token);
+
+        if (is_null($userActorLpa)) {
+            $this->logger->notice(
+                'User actor lpa record  not found for actor token {Id}',
+                ['Id' => $token]
+            );
+            throw new NotFoundException('User actor lpa record  not found for actor token - ' . $token);
+        }
+
+        // Ensure the passed userId matches the passed token
+        if ($userId !== $userActorLpa['UserId']) {
+            $this->logger->notice(
+                'User Id {userId} passed does not match the user in userActorLpaMap for actor token {actorToken}',
+                ['userId' => $userId, 'actorToken' => $token]
+            );
+            throw new NotFoundException(
+                'User Id passed does not match the user in userActorLpaMap for token - ' . $token
+            );
+        }
+
+        //Get list of viewer codes to be updated
+        $viewerCodes = $this->getListOfViewerCodesToBeUpdated($userActorLpa);
+
+        //Update query to remove actor association in viewer code table
+        if (!empty($viewerCodes)) {
+            foreach ($viewerCodes as $key => $viewerCode) {
+                $this->viewerCodesRepository->removeActorAssociation($viewerCode);
+            }
+        }
+
+        return $this->userLpaActorMapRepository->delete($token);
+    }
+
     private function isDonor(array $lpa, string $actorId): bool
     {
         if (!isset($lpa['donor']) || !is_array($lpa['donor'])) {
@@ -332,45 +370,6 @@ class LpaService
         return self::ACTIVE_ATTORNEY;
     }
 
-    /**
-     * @param string $userId
-     * @param string $actorLpaToken
-     * @return array|null
-     * @throws NotFoundException
-     */
-    public function removeLpaFromUserLpaActorMap(string $userId, string $actorLpaToken): ?array
-    {
-        $userActorLpa = $this->userLpaActorMapRepository->get($actorLpaToken);
-
-        if (is_null($userActorLpa)) {
-            $this->logger->notice(
-                'User actor lpa record  not found for actor token {Id}',
-                ['Id' => $actorLpaToken]
-            );
-            throw new NotFoundException('User actor lpa record  not found for actor token - ' . $actorLpaToken);
-        }
-
-        // Ensure the passed userId matches the passed token
-        if ($userId !== $userActorLpa['UserId']) {
-            $this->logger->notice(
-                'User Id {userId} passed does not match the user in userActorLpaMap for actor token {actorToken}',
-                ['userId' => $userId, 'actorToken' => $actorLpaToken]
-            );
-            throw new NotFoundException('User Id passed does not match the user in userActorLpaMap for token - ' . $actorLpaToken);
-        }
-
-        //Get list of viewer codes to be updated
-        $viewerCodes = $this->getListOfViewerCodesToBeUpdated($userActorLpa);
-
-        //Update query to remove actor association in viewer code table
-        if (!empty($viewerCodes)) {
-            foreach ($viewerCodes as $key => $viewerCode) {
-                $this->viewerCodesRepository->removeActorAssociation($viewerCode);
-            }
-        }
-        return $this->userLpaActorMapRepository->delete($actorLpaToken);
-    }
-
     private function getListOfViewerCodesToBeUpdated(array $userActorLpa): ?array
     {
         $siriusUid = $userActorLpa['SiriusUid'];
@@ -378,7 +377,10 @@ class LpaService
         //Lookup records in ViewerCodes table using siriusUid
         $viewerCodesData = $this->viewerCodesRepository->getCodesByLpaId($siriusUid);
         foreach ($viewerCodesData as $key => $viewerCodeRecord) {
-            if (isset($viewerCodeRecord['UserLpaActor']) && ($viewerCodeRecord['UserLpaActor'] === $userActorLpa['Id'])) {
+            if (
+                isset($viewerCodeRecord['UserLpaActor'])
+                && ($viewerCodeRecord['UserLpaActor'] === $userActorLpa['Id'])
+            ) {
                 $viewerCodes[] = $viewerCodeRecord['ViewerCode'];
             }
         }

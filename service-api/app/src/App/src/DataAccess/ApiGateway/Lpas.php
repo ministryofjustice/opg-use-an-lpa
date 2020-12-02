@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace App\DataAccess\ApiGateway;
 
-use App\Service\Log\RequestTracing;
-use DateTime;
+use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\LpasInterface;
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Pool;
 use App\DataAccess\Repository\Response;
-use Aws\Signature\SignatureV4 as AwsSignatureV4;
+use App\Service\Log\RequestTracing;
 use Aws\Credentials\CredentialProvider as AwsCredentialProvider;
+use Aws\Signature\SignatureV4 as AwsSignatureV4;
+use DateTime;
+use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Pool;
+use GuzzleHttp\Psr7\Request;
 
 /**
  * Looks up LPAs in the Sirius API Gateway.
@@ -22,38 +23,24 @@ use Aws\Credentials\CredentialProvider as AwsCredentialProvider;
  */
 class Lpas implements LpasInterface
 {
-    /**
-     * @var HttpClient
-     */
-    private $httpClient;
+    private HttpClient $httpClient;
+    private string $apiBaseUri;
+    private AwsSignatureV4 $awsSignature;
+    private DataSanitiserStrategy $sanitiser;
+    private string $traceId;
 
-    /**
-     * @var string
-     */
-    private $apiBaseUri;
-
-    /**
-     * @var AwsSignatureV4
-     */
-    private $awsSignature;
-
-    /**
-     * @var string
-     */
-    private $traceId;
-
-    /**
-     * Lpas constructor.
-     * @param HttpClient $httpClient
-     * @param string $apiUrl
-     * @param string $awsRegion
-     */
-    public function __construct(HttpClient $httpClient, AwsSignatureV4 $awsSignature, string $apiUrl, string $traceId)
-    {
+    public function __construct(
+        HttpClient $httpClient,
+        AwsSignatureV4 $awsSignature,
+        string $apiUrl,
+        string $traceId,
+        DataSanitiserStrategy $sanitiser
+    ) {
         $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiUrl;
         $this->awsSignature = $awsSignature;
         $this->traceId = $traceId;
+        $this->sanitiser = $sanitiser;
     }
 
     /**
@@ -128,7 +115,7 @@ class Lpas implements LpasInterface
                 case 200:
                     # TODO: We can some more error checking around this.
                     $results[$uid] = new Response\Lpa(
-                        json_decode((string)$result->getBody(), true),
+                        $this->sanitiser->sanitise(json_decode((string)$result->getBody(), true)),
                         new DateTime($result->getHeaderLine('Date'))
                     );
                     break;
