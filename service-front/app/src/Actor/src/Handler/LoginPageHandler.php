@@ -88,7 +88,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
                 if (! is_null($user)) {
                     if (empty($user->getDetail('LastLogin'))) {
-                        return $this->redirectToRoute('add.by-code');
+                        return $this->redirectToRoute('lpa.add');
                     } else {
                         return $this->redirectToRoute('lpa.dashboard');
                     }

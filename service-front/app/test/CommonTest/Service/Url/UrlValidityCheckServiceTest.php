@@ -50,7 +50,7 @@ class UrlValidityCheckServiceTest extends TestCase
     /** @test */
     public function it_checks_if_referer_url_is_valid()
     {
-        $refererUrl = 'https://366uml695cook.use.lastingpowerofattorney.opg.service.justice.gov.uk/add/by-code';
+        $refererUrl = 'https://366uml695cook.use.lastingpowerofattorney.opg.service.justice.gov.uk/lpa/add-details';
 
         $service = new UrlValidityCheckService(
             $this->serverRequestFactoryProphecy->reveal(),
@@ -84,7 +84,7 @@ class UrlValidityCheckServiceTest extends TestCase
     /** @test */
     public function it_checks_if_referer_route_exists()
     {
-        $refererUrl = 'https://366uml695cook.use.lastingpowerofattorney.opg.service.justice.gov.uk/add/by-code';
+        $refererUrl = 'https://366uml695cook.use.lastingpowerofattorney.opg.service.justice.gov.uk/lpa/add-details';
 
         $routeResult = $this->prophesize(RouteResult::class);
         $requestReturn =  new ServerRequest(

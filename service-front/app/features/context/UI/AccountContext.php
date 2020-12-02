@@ -549,8 +549,8 @@ class AccountContext implements Context
      */
     public function iAmOnTheAddAnLPAPage()
     {
-        $this->ui->visit('/add/by-code');
-        $this->ui->assertPageAddress('/add/by-code');
+        $this->ui->visit('/lpa/add-by-code');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
     }
 
     /**
@@ -558,7 +558,7 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode)
     {
-        $this->ui->assertPageAddress('/add/by-code');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
@@ -601,7 +601,7 @@ class AccountContext implements Context
     {
         $this->lpa->status = $status;
 
-        $this->ui->assertPageAddress('/add/by-code');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
@@ -706,7 +706,7 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAThatDoesNotExist()
     {
-        $this->ui->assertPageAddress('/add/by-code');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
@@ -739,7 +739,7 @@ class AccountContext implements Context
     public function iRequestToGoBackAndTryAgain()
     {
         $this->ui->pressButton('Try again');
-        $this->ui->assertPageAddress('/add/by-code');
+        $this->ui->assertPageAddress('/lpa/add');
     }
 
     /**
@@ -747,7 +747,7 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithAnInvalidPasscodeFormatOf1($passcode)
     {
-        $this->ui->assertPageAddress('/add/by-code');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
         $this->ui->fillField('passcode', $passcode);
         $this->ui->fillField('reference_number', '700000000001');
         $this->ui->fillField('dob[day]', '05');
@@ -761,7 +761,7 @@ class AccountContext implements Context
      */
     public function iAmToldThatMyInputIsInvalidBecause($reason)
     {
-        $this->ui->assertPageAddress('/add/by-code');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
         $this->ui->assertPageContainsText($reason);
     }
 
@@ -770,7 +770,7 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithAnInvalidReferenceNumberFormatOf($referenceNo)
     {
-        $this->ui->assertPageAddress('/add/by-code');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
         $this->ui->fillField('passcode', 'T3STPA22C0D3');
         $this->ui->fillField('reference_number', $referenceNo);
         $this->ui->fillField('dob[day]', '05');
@@ -784,7 +784,7 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithAnInvalidDOBFormatOf1($day, $month, $year)
     {
-        $this->ui->assertPageAddress('/add/by-code');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
         $this->ui->fillField('passcode', 'T3STPA22C0D3');
         $this->ui->fillField('reference_number', '700000000001');
         $this->ui->fillField('dob[day]', $day);
@@ -808,7 +808,7 @@ class AccountContext implements Context
                 )
             );
 
-        $this->ui->assertPageAddress('/add/by-code');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
         $this->ui->fillField('passcode', 'T3STPA22C0D3');
         $this->ui->fillField('reference_number', '700000000001');
         $this->ui->fillField('dob[day]', '05');
@@ -2831,7 +2831,7 @@ class AccountContext implements Context
         } elseif ($page == 'your details') {
             $this->ui->assertPageAddress('/your-details');
         } elseif ($page == 'add a lpa') {
-            $this->ui->assertPageAddress('/add/by-code');
+            $this->ui->assertPageAddress('/lpa/add-details');
         }
     }
 
