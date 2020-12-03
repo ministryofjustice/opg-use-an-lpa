@@ -6,6 +6,8 @@
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
 
+        {{ include('@partials/account-bar.html.twig') }}
+
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
@@ -19,9 +21,19 @@
 
                     <h1 class="govuk-heading-xl">{% trans %}Do you have an activation key to add an LPA?{% endtrans %}</h1>
 
-                    <p class="govuk-body">{% trans %}The activation key is on the letter that told you the LPA had been registered or in an email we sent you.
-                        The donor and each attorney will have their own unique activation key.{% endtrans %}
-                    </p>
+                    <p class="govuk-body">{% trans %}You need an activation key to add an LPA to your account. The donor and each attorney will have their own unique activation key.{% endtrans %}</p>
+
+                    <details class="govuk-details" data-module="govuk-details">
+                        <summary class="govuk-details__summary" role="button">
+                            <span class="govuk-details__summary-text">
+                                {% trans %}Where can I find my activation key?{% endtrans %}
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p>{% trans %}If your LPA was registered on or after 17 July 2020, the activation key is on the letter that told you the LPA had been registered.{% endtrans %}</p>
+                            <p>{% trans %}If your LPA was registered before 17 July 2020 and you have asked us for an activation key, you'll find it on the letter or email we sent you.{% endtrans %}</p>
+                        </div>
+                    </details>
 
                     {{ govuk_form_open(form) }}
 

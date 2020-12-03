@@ -6,7 +6,13 @@
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
 
+        {{ include('@partials/account-bar.html.twig') }}
+
         {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.add') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">

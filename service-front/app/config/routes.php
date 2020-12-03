@@ -173,6 +173,11 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Actor\Handler\LpaAddHandler::class
         ], ['GET', 'POST'], 'lpa.add-by-code');
 
+        $app->route('/lpa/add-by-paper', [
+            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Actor\Handler\RequestActivationKeyHandler::class
+        ], ['GET', 'POST'], 'lpa.add-by-paper');
+
     } else {
         $app->route('/lpa/add-details', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
