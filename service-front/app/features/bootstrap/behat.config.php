@@ -26,7 +26,7 @@ return [
     ],
 
     'feature_flags' => [
-        'use_older_lpa_journey' => 'true',
+        'use_older_lpa_journey' => true,
     ],
 
     'notify' => [
