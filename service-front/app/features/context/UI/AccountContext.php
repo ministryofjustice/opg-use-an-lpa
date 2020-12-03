@@ -3840,4 +3840,22 @@ class AccountContext implements Context
     {
         $this->ui->clickLink('Add another LPA');
     }
+
+    /**
+     * @When /^I select that I do not have an activation key$/
+     */
+    public function iSelectThatIDoNotHaveAnActivationKey()
+    {
+        $this->ui->fillField('activation_key_triage', 'No');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I will be taken to a page where I can request an activation key$/
+     */
+    public function iWillBeTakenToAPageWhereICanRequestAnActivationKey()
+    {
+        $this->ui->assertPageAddress('/lpa/add-by-paper');
+        $this->ui->assertPageContainsText('Ask for an activation key');
+    }
 }
