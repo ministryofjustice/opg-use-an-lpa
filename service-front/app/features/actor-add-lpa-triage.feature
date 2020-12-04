@@ -25,3 +25,9 @@ Feature: Add an LPA triage page
       | option | page                             |
       | Yes    | Add a lasting power of attorney  |
       | No     | Ask for an activation key        |
+
+  @ui
+  Scenario: The user is shown an error message if they do not select either option
+    Given I am on the add an LPA triage page
+    When I do not select an option for whether I have an activation key
+    Then I will be told that I must select whether I have an activation key

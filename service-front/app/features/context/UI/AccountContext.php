@@ -3848,4 +3848,20 @@ class AccountContext implements Context
     {
         $this->ui->clickLink('Add another LPA');
     }
+
+    /**
+     * @When /^I do not select an option for whether I have an activation key$/
+     */
+    public function iDoNotSelectAnOptionForWhetherIHaveAnActivationKey()
+    {
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I will be told that I must select whether I have an activation key$/
+     */
+    public function iWillBeToldThatIMustSelectWhetherIHaveAnActivationKey()
+    {
+        $this->ui->assertPageContainsText('Select if you have an activation key to add the LPA');
+    }
 }
