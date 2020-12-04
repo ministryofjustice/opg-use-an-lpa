@@ -56,9 +56,8 @@ class AddLpaTriageHandler extends AbstractHandler implements UserAware, CsrfGuar
 
             if ($selected === 'Yes') {
                 return $this->redirectToRoute('lpa.add-by-code');
-            } elseif ($selected === 'No') {
-                return $this->redirectToRoute('lpa.add-by-paper');
             }
+            return $this->redirectToRoute('lpa.add-by-paper');
         }
 
         return new HtmlResponse($this->renderer->render('actor::add-lpa-triage', [
