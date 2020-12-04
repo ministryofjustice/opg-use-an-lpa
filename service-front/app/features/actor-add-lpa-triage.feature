@@ -1,7 +1,7 @@
 @actor @addLpaTriage
 Feature: Add an LPA triage page
   As a user
-  I want to take to the right path to add an LPA to my account
+  I want to take the right path to add an LPA to my account
   So that I do not spend time incorrectly trying to add an LPA to my account
 
   Background:
