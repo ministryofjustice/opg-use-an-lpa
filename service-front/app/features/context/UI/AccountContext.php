@@ -3834,14 +3834,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I will be taken to add an LPA to my account using an activation key$/
-     */
-    public function iWillBeTakenToAddAnLPAToMyAccountUsingAnActivationKey()
-    {
-        $this->ui->assertPageAddress('/lpa/add-by-code');
-    }
-
-    /**
      * @When /^I select to add an LPA$/
      */
     public function iSelectToAddAnLPA()

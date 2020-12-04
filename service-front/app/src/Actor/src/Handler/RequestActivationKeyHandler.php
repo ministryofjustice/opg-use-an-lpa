@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
-use Common\Handler\AbstractHandler;
+use Common\Handler\{AbstractHandler, UserAware};
 use Common\Handler\Traits\User;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Common\Handler\UserAware;
 
 /**
  * Class RequestActivationKeyHandler

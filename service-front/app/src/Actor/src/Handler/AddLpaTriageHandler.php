@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\AddLpaTriage;
-use Common\Handler\AbstractHandler;
-use Common\Handler\Traits\CsrfGuard;
-use Common\Handler\CsrfGuardAware;
-use Common\Handler\Traits\User;
-use Common\Handler\UserAware;
+use Common\Handler\{AbstractHandler, CsrfGuardAware, UserAware};
+use Common\Handler\Traits\{CsrfGuard, User};
 use Mezzio\Authentication\AuthenticationInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
