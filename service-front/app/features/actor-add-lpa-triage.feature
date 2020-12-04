@@ -16,13 +16,12 @@ Feature: Add an LPA triage page
     Then I am on the add an LPA triage page
 
   @ui
-  Scenario: A user with an activation key is taken to the add an LPA page
+  Scenario Outline: A user with an activation key is taken to the add an LPA page
     Given I am on the add an LPA triage page
-    When I select that I do have an activation key
-    Then I will be taken to add an LPA to my account using an activation key
+    When I select <option> whether I have an activation key
+    Then I will be taken to the appropriate <page> to add an lpa
 
-  @ui
-  Scenario: A user without an activation key is taken to the request an activation key page
-    Given I am on the add an LPA triage page
-    When I select that I do not have an activation key
-    Then I will be taken to a page where I can request an activation key
+    Examples:
+      | option | page                             |
+      | Yes    | Add a lasting power of attorney  |
+      | No     | Ask for an activation key        |

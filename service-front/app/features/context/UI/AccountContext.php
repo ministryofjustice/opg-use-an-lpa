@@ -3817,12 +3817,20 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I select that I do have an activation key$/
+     * @When /^I select (.*) whether I have an activation key$/
      */
-    public function iSelectThatIDoHaveAnActivationKey()
+    public function iSelectWhetherIHaveAnActivationKey($option)
     {
-        $this->ui->fillField('activation_key_triage', 'Yes');
+        $this->ui->fillField('activation_key_triage', $option);
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I will be taken to the appropriate (.*) to add an lpa$/
+     */
+    public function iWillBeTakenToTheAppropriateToAddAnLpa($page)
+    {
+        $this->ui->assertPageContainsText($page);
     }
 
     /**
@@ -3839,23 +3847,5 @@ class AccountContext implements Context
     public function iSelectToAddAnLPA()
     {
         $this->ui->clickLink('Add another LPA');
-    }
-
-    /**
-     * @When /^I select that I do not have an activation key$/
-     */
-    public function iSelectThatIDoNotHaveAnActivationKey()
-    {
-        $this->ui->fillField('activation_key_triage', 'No');
-        $this->ui->pressButton('Continue');
-    }
-
-    /**
-     * @Then /^I will be taken to a page where I can request an activation key$/
-     */
-    public function iWillBeTakenToAPageWhereICanRequestAnActivationKey()
-    {
-        $this->ui->assertPageAddress('/lpa/add-by-paper');
-        $this->ui->assertPageContainsText('Ask for an activation key');
     }
 }
