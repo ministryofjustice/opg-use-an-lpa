@@ -7,9 +7,9 @@ namespace Actor\Handler;
 use Actor\Form\AddLpaTriage;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, UserAware};
 use Common\Handler\Traits\{CsrfGuard, User};
-use Mezzio\Authentication\AuthenticationInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Mezzio\Helper\UrlHelper;
 
@@ -49,16 +49,16 @@ class AddLpaTriageHandler extends AbstractHandler implements UserAware, CsrfGuar
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $form = new AddLpaTriage($this->getCsrfGuard($request));
-        $requestData = $request->getParsedBody();
-
-        $form->setData($requestData);
+        $form->setData($request->getParsedBody());
 
         if ($form->isValid()) {
+            $selected = $form->getData()['activation_key_triage'];
 
-            if ($form->getData()['activation_key_triage'] === 'Yes') {
+            if ($selected === 'Yes') {
                 return $this->redirectToRoute('lpa.add-by-code');
+            } elseif ($selected === 'No') {
+                return $this->redirectToRoute('lpa.add-by-paper');
             }
-            return $this->redirectToRoute('lpa.add-by-paper');
         }
 
         return new HtmlResponse($this->renderer->render('actor::add-lpa-triage', [
