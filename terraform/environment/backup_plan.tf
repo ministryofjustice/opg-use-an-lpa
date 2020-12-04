@@ -12,7 +12,7 @@ resource "aws_backup_plan" "main" {
 
     lifecycle {
       cold_storage_after = 0
-      delete_after       = 35
+      delete_after       = 90
     }
   }
   rule {
