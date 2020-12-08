@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
-use Common\Handler\AbstractHandler;
-use Common\Handler\Traits\User;
-use Common\Handler\UserAware;
+use Common\Handler\{AbstractHandler, Traits\User, UserAware};
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
  * Class CheckYourAnswersHandler

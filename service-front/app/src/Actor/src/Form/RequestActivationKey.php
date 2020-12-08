@@ -5,16 +5,12 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
-use Common\Form\Fieldset\Date;
-use Common\Form\Fieldset\DatePrefixFilter;
-use Common\Form\Fieldset\DateTrimFilter;
+use Common\Form\Fieldset\{Date, DatePrefixFilter, DateTrimFilter};
 use Common\Validator\DobValidator;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
-use Laminas\Validator\NotEmpty;
-use Laminas\Validator\Regex;
-use Laminas\Validator\StringLength;
+use Laminas\Validator\{NotEmpty, Regex, StringLength};
 
 /**
  * Class RequestActivationKey
