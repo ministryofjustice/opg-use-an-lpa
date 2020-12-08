@@ -21,6 +21,49 @@
                     <h1 class="govuk-heading-xl">{% trans %}Ask for an activation key{% endtrans %}</h1>
 
                     <p class="govuk-body">{% trans %}To add an LPA to your account, you need as activation key. We'll send an activation key by post to the address we have for you on our records.{% endtrans %}</p>
+
+                    <p class="govuk-body">{% trans with {'%link%': path('lpa.change-details')} %}Find out what to do if you've <a href="%link%" class="govuk-link">changed address and not told us</a>.{% endtrans %}</p>
+
+                    {{ govuk_error_summary(form) }}
+
+                    {{ govuk_form_open(form) }}
+
+                        {{ govuk_form_element(form.get('__csrf')) }}
+
+                        {{ govuk_form_element(form.get('opg_reference_number'), {
+                            'label': 'OPG reference number'| trans,
+                            'hint': 'OPG reference numbers are 12 numbers long.<br/>For example, 700000000000'| trans,
+                            'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-!-font-weight-bold govuk-!-margin-bottom-4'},
+                            'inputmode': 'numeric',
+                            'pattern': '[0-9 -]*'
+                        }) }}
+
+                        <p class="govuk-body govuk-!-font-weight-bold">{% trans %}Your details{% endtrans %}</p>
+
+                        {{ govuk_form_element(form.get('first_names'), {
+                            'label': 'First names'| trans,
+                            'attr' : {'class': 'govuk-input--width-20'}
+                        }) }}
+
+                        {{ govuk_form_element(form.get('last_name'), {
+                            'label': 'Last name'| trans,
+                            'attr' : {'class': 'govuk-input--width-20'}
+                        }) }}
+
+                        {{ govuk_form_fieldset(form.get('dob'), {
+                            'label': 'What is your date of birth?'| trans,
+                            'hint': 'For example, 31 03 1980'| trans,
+                            'attr': {'class': 'xyz', 'label_class': 'govuk-!-font-weight-bold'} }) }}
+
+                        {{ govuk_form_element(form.get('postcode'), {
+                            'label': 'Postcode'| trans,
+                            'label_attr': {'class': 'govuk-!-font-weight-bold'},
+                            'attr' : {'class': 'govuk-input--width-10', 'label_class': 'govuk-!-font-weight-bold'}
+                        }) }}
+
+                        <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+
+                    {{ govuk_form_close() }}
                 </div>
             </div>
         </main>
