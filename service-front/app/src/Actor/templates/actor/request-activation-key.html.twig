@@ -1,0 +1,29 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Ask for an activation key{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.add') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}Ask for an activation key{% endtrans %}</h1>
+
+                    <p class="govuk-body">{% trans %}To add an LPA to your account, you need as activation key. We'll send an activation key by post to the address we have for you on our records.{% endtrans %}</p>
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}

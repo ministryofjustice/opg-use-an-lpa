@@ -3806,4 +3806,54 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/lpa/view-lpa?=' . $this->userLpaActorToken);
         $this->ui->assertPageContainsText('This LPA is registered');
     }
+
+    /**
+     * @Given /^I am on the add an LPA triage page$/
+     */
+    public function iAmOnTheAddAnLPATriagePage()
+    {
+        $this->ui->visit('/lpa/add');
+        $this->ui->assertPageContainsText('Do you have an activation key to add an LPA?');
+    }
+
+    /**
+     * @When /^I select (.*) whether I have an activation key$/
+     */
+    public function iSelectWhetherIHaveAnActivationKey($option)
+    {
+        $this->ui->fillField('activation_key_triage', $option);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I will be taken to the appropriate (.*) to add an lpa$/
+     */
+    public function iWillBeTakenToTheAppropriateToAddAnLpa($page)
+    {
+        $this->ui->assertPageContainsText($page);
+    }
+
+    /**
+     * @When /^I select to add an LPA$/
+     */
+    public function iSelectToAddAnLPA()
+    {
+        $this->ui->clickLink('Add another LPA');
+    }
+
+    /**
+     * @When /^I do not select an option for whether I have an activation key$/
+     */
+    public function iDoNotSelectAnOptionForWhetherIHaveAnActivationKey()
+    {
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I will be told that I must select whether I have an activation key$/
+     */
+    public function iWillBeToldThatIMustSelectWhetherIHaveAnActivationKey()
+    {
+        $this->ui->assertPageContainsText('Select if you have an activation key to add the LPA');
+    }
 }
