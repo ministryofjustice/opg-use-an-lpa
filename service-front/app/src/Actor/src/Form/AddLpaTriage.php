@@ -41,7 +41,6 @@ class AddLpaTriage extends AbstractForm implements InputFilterProviderInterface
                 'validators' => [
                     [
                         'name'                   => NotEmpty::class,
-                        'break_chain_on_failure' => true,
                         'options'                => [
                             'messages'           => [
                                 NotEmpty::IS_EMPTY => 'Select if you have an activation key to add the LPA',

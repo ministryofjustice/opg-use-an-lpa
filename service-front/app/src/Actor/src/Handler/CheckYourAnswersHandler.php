@@ -14,6 +14,11 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Class CheckYourAnswersHandler
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class CheckYourAnswersHandler extends AbstractHandler implements UserAware
 {
     use User;
