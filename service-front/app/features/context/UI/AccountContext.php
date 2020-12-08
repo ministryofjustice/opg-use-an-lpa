@@ -3920,6 +3920,6 @@ class AccountContext implements Context
     public function iAmAskedToCheckMyAnswersBeforeRequestingAnActivationKey()
     {
         $this->ui->assertPageAddress('/lpa/check-answers');
-        $this->ui->assertPageAddress('Check your answers');
+        $this->ui->assertPageContainsText('Check your answers');
     }
 }
