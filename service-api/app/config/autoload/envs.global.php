@@ -7,7 +7,6 @@ return [
     'version' => getenv('CONTAINER_VERSION') ?: 'dev',
 
     'sirius_api' => [
-        //'endpoint' => getenv('SIRIUS_API_ENDPOINT') ?: 'https://api.dev.sirius.opg.digital/v1/use-an-lpa',
         'endpoint' => getenv('SIRIUS_API_ENDPOINT') ?: null,
     ],
 

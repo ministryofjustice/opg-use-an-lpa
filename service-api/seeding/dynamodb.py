@@ -100,7 +100,8 @@ for i in actorUsers:
 
 # added lpas on test user account
 
-userLpaActorMapTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_USER_LPA_ACTOR_MAP'])
+userLpaActorMapTable = dynamodb.Table(
+    os.environ['DYNAMODB_TABLE_USER_LPA_ACTOR_MAP'])
 
 userLpaActorMap = [
     {
