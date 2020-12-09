@@ -1,64 +1,90 @@
-THIS_FILE := $(lastword $(MAKEFILE_LIST))
-.PHONY: everything rebuild down destroy ps logs up_dependencies up_service up_seeding
+COMPOSE = docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml
+OVERRIDE := $(shell find . -name "docker-compose.override.yml")
+ifdef OVERRIDE
+COMPOSE := $(COMPOSE) -f docker-compose.override.yml
+endif
 
 up:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml up -d $(c)
+	$(COMPOSE) up -d $(c)
+.PHONY: up
 
 exec:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml exec $(c)
+	$(COMPOSE) exec $(c)
+.PHONY: exec
 
-up_all: | up_dependencies up_service
+# Starts the application and seeds initial data.
+up_all: | up_dependencies up_services seed
+.PHONY: up_all
 
 build:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml build
+	$(COMPOSE) build
+.PHONY: build
 
 rebuild:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml build --no-cache
+	$(COMPOSE) build --no-cache
+.PHONY: rebuild
 
 down:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml down $(c)
+	$(COMPOSE) down $(c)
+.PHONY: down
 
 destroy:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml down -v --rmi all --remove-orphans
+	$(COMPOSE) down -v --rmi all --remove-orphans
+.PHONY: destroy
 
 ps:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml ps
+	$(COMPOSE) ps
+.PHONY: ps
 
 logs:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml logs -f $(c)
+	$(COMPOSE) logs -f $(c)
+.PHONY: logs
 
 up_dependencies:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml up -d localstack codes-gateway redis kms
+	$(COMPOSE) up -d localstack codes-gateway redis kms
+	$(MAKE) up-bridge-ual create_secrets --directory=../opg-data-lpa/
+.PHONY: up_dependencies
 
 up_services:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml up -d webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
+	$(COMPOSE) up -d webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
+.PHONY: up_services
 
 seed:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml up -d api-seeding
+	$(COMPOSE) up -d api-seeding
+.PHONY: seed
 
 unit_test_all: | up unit_test_viewer_app unit_test_actor_app unit_test_api_app
+.PHONY: unit_test_all
 
 unit_test_viewer_app:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml run viewer-app /app/vendor/bin/phpunit
+	$(COMPOSE) run viewer-app /app/vendor/bin/phpunit
+.PHONY: unit_test_viewer_app
 
 unit_test_actor_app:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml run actor-app /app/vendor/bin/phpunit
+	$(COMPOSE) run actor-app /app/vendor/bin/phpunit
+.PHONY: unit_test_actor_app
 
 unit_test_api_app:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml run api-app /app/vendor/bin/phpunit
+	$(COMPOSE) run api-app /app/vendor/bin/phpunit
+.PHONY: unit_test_api_app
 
-dev_mode: | up run_front_composer run_api_composer clear_config_cache
+dev_mode: | up run_front_composer_dev run_api_composer_dev clear_config_cache
+.PHONY: dev_mode
 
-run_front_composer:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml run front-composer composer development-enable
+run_front_composer_dev:
+	$(COMPOSE) run front-composer composer development-enable
+.PHONY: run_front_composer_dev
 
-run_api_composer:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml run api-composer composer development-enable
+run_api_composer_dev:
+	$(COMPOSE) run api-composer composer development-enable
+.PHONY: run_api_composer_dev
 
 clear_config_cache:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml exec viewer-app rm -f /tmp/config-cache.php
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml exec actor-app rm -f /tmp/config-cache.php
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml exec api-app rm -f /tmp/config-cache.php
+	$(COMPOSE) exec viewer-app rm -f /tmp/config-cache.php
+	$(COMPOSE) exec actor-app rm -f /tmp/config-cache.php
+	$(COMPOSE) exec api-app rm -f /tmp/config-cache.php
+.PHONY: clear_config_cache
 
 smoke_tests:
-	docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml -f docker-compose.testing.yml run smoke-tests composer behat
+	$(COMPOSE) -f docker-compose.testing.yml run smoke-tests composer behat
+.PHONY: smoke_tests

@@ -29,11 +29,15 @@ make build --directory=../opg-data-lpa/ # build lpas-collection endpoint
 To start the service and its dependencies
 
 ```shell
-make up # start ual and lpa-codes
+make up # start ual and lpa-codes then run seeding
 make up-bridge-ual create_secrets --directory=../opg-data-lpa/ # start lpas-collection endpoint
+
+# alternatively
+
+make up_all # start ual and all dependencies then run seeding of local data
 ```
 
-To stop the service and its dependencies (ordering is important so that the networks are removed first)
+To stop the service and its dependencies (ordering is important so that the networks are removed last)
 
 ```shell
 make down-bridge-ual --directory=../opg-data-lpa/ # bring down the lpas-collection endpoint
