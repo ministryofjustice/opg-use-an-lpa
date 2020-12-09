@@ -549,8 +549,8 @@ class AccountContext implements Context
      */
     public function iAmOnTheAddAnLPAPage()
     {
-        $this->ui->visit('/lpa/add-details');
-        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->visit('/lpa/add-by-code');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
     }
 
     /**
@@ -558,7 +558,7 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode)
     {
-        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
@@ -601,7 +601,7 @@ class AccountContext implements Context
     {
         $this->lpa->status = $status;
 
-        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
@@ -706,7 +706,7 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAThatDoesNotExist()
     {
-        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
@@ -739,7 +739,7 @@ class AccountContext implements Context
     public function iRequestToGoBackAndTryAgain()
     {
         $this->ui->pressButton('Try again');
-        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add');
     }
 
     /**
@@ -747,7 +747,7 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithAnInvalidPasscodeFormatOf1($passcode)
     {
-        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
         $this->ui->fillField('passcode', $passcode);
         $this->ui->fillField('reference_number', '700000000001');
         $this->ui->fillField('dob[day]', '05');
@@ -761,7 +761,7 @@ class AccountContext implements Context
      */
     public function iAmToldThatMyInputIsInvalidBecause($reason)
     {
-        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
         $this->ui->assertPageContainsText($reason);
     }
 
@@ -770,7 +770,7 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithAnInvalidReferenceNumberFormatOf($referenceNo)
     {
-        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
         $this->ui->fillField('passcode', 'T3STPA22C0D3');
         $this->ui->fillField('reference_number', $referenceNo);
         $this->ui->fillField('dob[day]', '05');
@@ -784,7 +784,7 @@ class AccountContext implements Context
      */
     public function iRequestToAddAnLPAWithAnInvalidDOBFormatOf1($day, $month, $year)
     {
-        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
         $this->ui->fillField('passcode', 'T3STPA22C0D3');
         $this->ui->fillField('reference_number', '700000000001');
         $this->ui->fillField('dob[day]', $day);
@@ -808,7 +808,7 @@ class AccountContext implements Context
                 )
             );
 
-        $this->ui->assertPageAddress('/lpa/add-details');
+        $this->ui->assertPageAddress('/lpa/add-by-code');
         $this->ui->fillField('passcode', 'T3STPA22C0D3');
         $this->ui->fillField('reference_number', '700000000001');
         $this->ui->fillField('dob[day]', '05');
@@ -3805,5 +3805,55 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/view-lpa?=' . $this->userLpaActorToken);
         $this->ui->assertPageContainsText('This LPA is registered');
+    }
+
+    /**
+     * @Given /^I am on the add an LPA triage page$/
+     */
+    public function iAmOnTheAddAnLPATriagePage()
+    {
+        $this->ui->visit('/lpa/add');
+        $this->ui->assertPageContainsText('Do you have an activation key to add an LPA?');
+    }
+
+    /**
+     * @When /^I select (.*) whether I have an activation key$/
+     */
+    public function iSelectWhetherIHaveAnActivationKey($option)
+    {
+        $this->ui->fillField('activation_key_triage', $option);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I will be taken to the appropriate (.*) to add an lpa$/
+     */
+    public function iWillBeTakenToTheAppropriateToAddAnLpa($page)
+    {
+        $this->ui->assertPageContainsText($page);
+    }
+
+    /**
+     * @When /^I select to add an LPA$/
+     */
+    public function iSelectToAddAnLPA()
+    {
+        $this->ui->clickLink('Add another LPA');
+    }
+
+    /**
+     * @When /^I do not select an option for whether I have an activation key$/
+     */
+    public function iDoNotSelectAnOptionForWhetherIHaveAnActivationKey()
+    {
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I will be told that I must select whether I have an activation key$/
+     */
+    public function iWillBeToldThatIMustSelectWhetherIHaveAnActivationKey()
+    {
+        $this->ui->assertPageContainsText('Select if you have an activation key to add the LPA');
     }
 }

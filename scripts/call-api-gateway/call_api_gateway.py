@@ -27,10 +27,10 @@ class APIGatewayCaller:
     def choose_target_gateway(self, target_production):
         if target_production:
             self.aws_account_id = '690083044361'
-            self.api_gateway_url = 'https://api.sirius.opg.digital/v1/use-an-lpa/lpas/'
+            self.api_gateway_url = 'https://lpa.api.opg.service.justice.gov.uk/v1/use-an-lpa/lpas/'
         else:
             self.aws_account_id = '367815980639'
-            self.api_gateway_url = 'https://api.dev.sirius.opg.digital/v1/use-an-lpa/lpas/'
+            self.api_gateway_url = 'https://integration.dev.lpa.api.opg.service.justice.gov.uk/v1/use-an-lpa/lpas/'
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
