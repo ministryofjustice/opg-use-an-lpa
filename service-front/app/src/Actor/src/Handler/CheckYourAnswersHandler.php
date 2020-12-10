@@ -11,6 +11,7 @@ use Common\Handler\{AbstractHandler,
     UserAware,
     Traits\Session as SessionTrait};
 use Actor\Form\CheckYourAnswers;
+use Common\Middleware\Session\SessionTimeoutException;
 use DateTime;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
@@ -54,6 +55,19 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         $this->form = new CheckYourAnswers($this->getCsrfGuard($request));
         $this->user = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
+
+        if (
+            is_null($this->session)
+            || is_null($this->session->get('opg_reference_number'))
+            || is_null($this->session->get('first_names'))
+            || is_null($this->session->get('last_name'))
+            || is_null($this->session->get('dob')['day'])
+            || is_null($this->session->get('dob')['month'])
+            || is_null($this->session->get('dob')['year'])
+            || is_null($this->session->get('postcode'))
+        ) {
+            throw new SessionTimeoutException();
+        }
 
         $dobString = sprintf(
             '%s/%s/%s',
