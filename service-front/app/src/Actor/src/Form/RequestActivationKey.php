@@ -7,6 +7,7 @@ namespace Actor\Form;
 use Common\Form\AbstractForm;
 use Common\Form\Fieldset\{Date, DatePrefixFilter, DateTrimFilter};
 use Common\Validator\DobValidator;
+use Laminas\Filter\StringToUpper;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -132,6 +133,7 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
             'postcode' => [
                 'filters'  => [
                     ['name' => StringTrim::class],
+                    ['name' => StringToUpper::class],
                 ],
                 'validators' => [
                     [
