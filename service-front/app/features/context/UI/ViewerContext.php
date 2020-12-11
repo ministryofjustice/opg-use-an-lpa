@@ -770,4 +770,21 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText('Enter your organisation name');
     }
+
+    /**
+     * @When /^I request to view an LPA without entering a donor's surname$/
+     */
+    public function iRequestToViewAnLPAWithoutEnteringADonorSSurname()
+    {
+        $this->ui->fillField('lpa_code', 'ABCD1234EFGH');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I am told that I must enter the donor's last name$/
+     */
+    public function iAmToldThatIMustEnterTheDonorSLastName()
+    {
+        $this->ui->assertPageContainsText("Enter the donor's last name");
+    }
 }

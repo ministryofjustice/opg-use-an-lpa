@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Actor\Form;
 
+use Common\Filter\ActivationKeyFilter;
+use Common\Filter\ReferenceNumberFilter;
 use Common\Form\AbstractForm;
 use Common\Form\Fieldset\Date;
 use Common\Form\Fieldset\DatePrefixFilter;
@@ -56,6 +58,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                 'filters'  => [
                     ['name' => StringTrim::class],
                     ['name' => StringToUpper::class],
+                    ['name' => ActivationKeyFilter::class]
                 ],
                 'validators' => [
                     [
@@ -71,15 +74,18 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         'options' => [
                             'encoding' => 'UTF-8',
                             'min'      => 12,
-                            'max'      => 23,
-                            'message'  => 'Enter an activation key in the correct format',
+                            'max'      => 12,
+                            'messages'  => [
+                                StringLength::TOO_LONG => 'The activation key you entered is too long',
+                                StringLength::TOO_SHORT => 'The activation key you entered is too short'
+                            ],
                         ],
                     ],
                     [
                         'name'    => Regex::class,
                         'break_chain_on_failure' => true,
                         'options' => [
-                            'pattern' => "/^(C(?'dash'-| ){1,6})?[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}$/i",
+                            'pattern' => "/^[[:alnum:]]{12}$/",
                             'message' => 'Enter an activation key in the correct format',
                         ],
                     ],
@@ -88,6 +94,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
             'reference_number' => [
                 'filters'  => [
                     ['name' => StringTrim::class],
+                    ['name' => ReferenceNumberFilter::class]
                 ],
                 'validators' => [
                     [
@@ -102,17 +109,17 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                         'options' => [
                             'encoding' => 'UTF-8',
                             'min'      => 12,
-                            'max'      => 14,
+                            'max'      => 12,
                             'messages'  => [
                                 StringLength::TOO_LONG => 'The LPA reference number you entered is too long',
-                                StringLength::TOO_SHORT => 'The LPA reference number you entered is too short',
+                                StringLength::TOO_SHORT => 'The LPA reference number you entered is too short'
                             ],
                         ],
                     ],
                     [
                         'name'    => Regex::class,
                         'options' => [
-                            'pattern' => '/^(\d{4}(?\'dash\' |-|)\d{4}(\g{dash})\d{4})$/',
+                            'pattern' => '/^\d{12}$/',
                             'message' => 'Enter the LPA reference number in the correct format',
                         ],
                     ],

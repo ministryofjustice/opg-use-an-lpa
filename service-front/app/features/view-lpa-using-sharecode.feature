@@ -78,23 +78,19 @@ Feature: View an LPA via sharecode
     Then I am told that my input is invalid because <reason>
 
     Examples:
-      | accessCode | reason |
-      | V-T3ST_ACE2-C0D3 | Enter LPA access code in the correct format |
-      | T3STP*22C0!? | Enter LPA access code in the correct format |
-      | T3ST _ PA22 - C0D3 | Enter LPA access code in the correct format |
+      | accessCode             | reason                                      |
+      | V-T3ST_ACE2-C0D3       | Enter LPA access code in the correct format |
+      | T3STP*22C0!?           | Enter LPA access code in the correct format |
+      | T3ST _ PA22 - C0D3     | Enter LPA access code in the correct format |
       | V - T3ST _ PA22 - C0D3 | Enter LPA access code in the correct format |
-      | T3STPA22C0D | Enter LPA access code in the correct format |
-      |  | Enter your LPA access code |
+      | T3STPA22C0D            | Enter LPA access code in the correct format |
+      |                        | Enter your LPA access code                  |
 
   @ui
-  Scenario Outline: The user is shown the correct error messages when entering invalid details
+  Scenario: The user is shown the correct error messages when entering invalid details
     Given I am on the enter code page
-    When I request to view an LPA with an invalid donor's surname of "<surname>"
-    Then I am told that my input is invalid because <reason>
-
-    Examples:
-      | surname | reason |
-      |  | Enter the donor's last name |
+    When I request to view an LPA without entering a donor's surname
+    Then I am told that I must enter the donor's last name
 
   @ui
   Scenario: The user enters an expired sharecode and is shown the reason for not able to see the details of an LPA
@@ -117,10 +113,10 @@ Feature: View an LPA via sharecode
     When I give an invalid <sharecode> and <surname>
     Then I am told that the share code is invalid because <reason>
     Examples:
-      |surname  | sharecode       | reason |
-      | Billson | V-1110-1111-0111  | We could not find an LPA matching those details |
+      |surname  | sharecode               | reason                                          |
+      | Billson | V-1110-1111-0111        | We could not find an LPA matching those details |
       | Billson | V - 1110 - 1111 - 0111  | We could not find an LPA matching those details |
-      | Billson | 1110-1111-0111  | We could not find an LPA matching those details |
+      | Billson | 1110-1111-0111          | We could not find an LPA matching those details |
 
   @ui
   Scenario: The user is allowed to re-enter code after an invalid one entered

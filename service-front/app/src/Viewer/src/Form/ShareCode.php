@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Viewer\Form;
 
+use Common\Filter\ViewerCodeFilter;
 use Common\Form\AbstractForm;
 use Laminas\Filter\File\UpperCase;
 use Laminas\Filter\StringToUpper;
@@ -46,7 +47,8 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                 'required' => true,
                 'filters'  => [
                     ['name' => StringTrim::class],
-                    ['name' => StringToUpper::class]
+                    ['name' => StringToUpper::class],
+                    ['name' => ViewerCodeFilter::class]
                 ],
                 'validators' => [
                     [
@@ -56,12 +58,14 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                             'message'  => 'Enter your LPA access code',
                         ],
                     ],
-                    new Regex([
-                        'pattern' => "/^(V(?'dash'-| ){1,6})?[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}$/i",
-                        'message' => [
-                            Regex::NOT_MATCH => 'Enter LPA access code in the correct format'
+                    [
+                        'name'    => Regex::class,
+                        'break_chain_on_failure' => true,
+                        'options' => [
+                            'pattern' => "/^[[:alnum:]]{12}$/",
+                            'message' => 'Enter LPA access code in the correct format',
                         ]
-                    ])
+                    ]
                 ]
             ],
             'donor_surname' => [
