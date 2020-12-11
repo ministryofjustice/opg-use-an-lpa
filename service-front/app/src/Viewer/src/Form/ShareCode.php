@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Viewer\Form;
 
-use Common\Filter\ViewerCodeFilter;
+use Common\Filter\ActorViewerCodeFilter;
 use Common\Form\AbstractForm;
-use Laminas\Filter\File\UpperCase;
 use Laminas\Filter\StringToUpper;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringTrim;
@@ -47,8 +46,7 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                 'required' => true,
                 'filters'  => [
                     ['name' => StringTrim::class],
-                    ['name' => StringToUpper::class],
-                    ['name' => ViewerCodeFilter::class]
+                    ['name' => ActorViewerCodeFilter::class]
                 ],
                 'validators' => [
                     [

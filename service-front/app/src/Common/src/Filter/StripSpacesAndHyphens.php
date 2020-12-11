@@ -6,7 +6,7 @@ namespace Common\Filter;
 
 use Laminas\Filter\AbstractFilter;
 
-class ReferenceNumberFilter extends AbstractFilter
+class StripSpacesAndHyphens extends AbstractFilter
 {
     /**
      * @param string $referenceNo

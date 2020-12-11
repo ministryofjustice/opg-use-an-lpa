@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Actor\Form;
 
-use Common\Filter\ActivationKeyFilter;
-use Common\Filter\ReferenceNumberFilter;
+use Common\Filter\ActorViewerCodeFilter;
+use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
 use Common\Form\Fieldset\Date;
 use Common\Form\Fieldset\DatePrefixFilter;
@@ -57,8 +57,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
             'passcode' => [
                 'filters'  => [
                     ['name' => StringTrim::class],
-                    ['name' => StringToUpper::class],
-                    ['name' => ActivationKeyFilter::class]
+                    ['name' => ActorViewerCodeFilter::class]
                 ],
                 'validators' => [
                     [
@@ -94,7 +93,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
             'reference_number' => [
                 'filters'  => [
                     ['name' => StringTrim::class],
-                    ['name' => ReferenceNumberFilter::class]
+                    ['name' => StripSpacesAndHyphens::class]
                 ],
                 'validators' => [
                     [
