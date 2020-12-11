@@ -9,14 +9,14 @@ use Laminas\Filter\AbstractFilter;
 class StripSpacesAndHyphens extends AbstractFilter
 {
     /**
-     * @param string $referenceNo
+     * @param string $value
      * @return string
      */
-    public function filter($referenceNo): string
+    public function filter($value): string
     {
         // strip out whitespace
-        $referenceNo = str_replace(' ', '', $referenceNo);
+        $value = str_replace(' ', '', $value);
         // strip out hyphens
-        return str_replace('-', '', $referenceNo);
+        return str_replace('-', '', $value);
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Common\Filter;
 
-use Common\Filter\StripSpacesAndHyphens;
 use Laminas\Filter\AbstractFilter;
 
 class ActorViewerCodeFilter extends AbstractFilter
