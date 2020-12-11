@@ -1,10 +1,12 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Add LPA triage page{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}Do you have an activation key to add an LPA?{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
 
         {{ include('@partials/welsh-switch.html.twig') }}
 
@@ -15,11 +17,52 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-xl">Do you have an activation key to add an LPA?</h1>
+                    {{ govuk_error_summary(form) }}
 
-                    <p class="govuk-body">The activation key is on the letter that told you the LPA had been registered or in an email we sent you.
-                        The donor and each attorney will have their own unique activation key.
-                    </p>
+                    <h1 class="govuk-heading-xl">{% trans %}Do you have an activation key to add an LPA?{% endtrans %}</h1>
+
+                    <p class="govuk-body">{% trans %}You need an activation key to add an LPA to your account. The donor and each attorney will have their own unique activation key.{% endtrans %}</p>
+
+                    <details class="govuk-details" data-module="govuk-details">
+                        <summary class="govuk-details__summary" role="button">
+                            <span class="govuk-details__summary-text">
+                                {% trans %}Where can I find my activation key?{% endtrans %}
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p>{% trans %}If your LPA was registered on or after 17 July 2020, the activation key is on the letter that told you the LPA had been registered.{% endtrans %}</p>
+                            <p>{% trans %}If your LPA was registered before 17 July 2020 and you have asked us for an activation key, you'll find it on the letter or email we sent you.{% endtrans %}</p>
+                        </div>
+                    </details>
+
+                    {{ govuk_form_open(form) }}
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+
+                            {{ govuk_form_element(form.get('activation_key_triage'), {'value_options':
+                                [
+                                    {
+                                        'label': 'Yes, I have an activation key'| trans,
+                                        'value': 'Yes'
+                                    },
+                                    {
+                                        'label': 'No, I do not have an activation key'| trans,
+                                        'value': 'No'
+                                    }
+                                ]}
+                            )}}
+
+                        </fieldset>
+                    </div>
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+
+                    <a href="{{ path('lpa.dashboard') }}" draggable="false" class="govuk-button govuk-button--secondary">{% trans %}Cancel{% endtrans %}</a>
+
+                    {{ govuk_form_close() }}
                 </div>
             </div>
         </main>

@@ -761,7 +761,6 @@ class AccountContext implements Context
      */
     public function iAmToldThatMyInputIsInvalidBecause($reason)
     {
-        $this->ui->assertPageAddress('/lpa/add-by-code');
         $this->ui->assertPageContainsText($reason);
     }
 
@@ -3805,5 +3804,122 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/view-lpa?=' . $this->userLpaActorToken);
         $this->ui->assertPageContainsText('This LPA is registered');
+    }
+
+    /**
+     * @Given /^I am on the add an LPA triage page$/
+     */
+    public function iAmOnTheAddAnLPATriagePage()
+    {
+        $this->ui->visit('/lpa/add');
+        $this->ui->assertPageContainsText('Do you have an activation key to add an LPA?');
+    }
+
+    /**
+     * @When /^I select (.*) whether I have an activation key$/
+     */
+    public function iSelectWhetherIHaveAnActivationKey($option)
+    {
+        $this->ui->fillField('activation_key_triage', $option);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I will be taken to the appropriate (.*) to add an lpa$/
+     */
+    public function iWillBeTakenToTheAppropriateToAddAnLpa($page)
+    {
+        $this->ui->assertPageContainsText($page);
+    }
+
+    /**
+     * @When /^I select to add an LPA$/
+     */
+    public function iSelectToAddAnLPA()
+    {
+        $this->ui->clickLink('Add another LPA');
+    }
+
+    /**
+     * @When /^I do not select an option for whether I have an activation key$/
+     */
+    public function iDoNotSelectAnOptionForWhetherIHaveAnActivationKey()
+    {
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I will be told that I must select whether I have an activation key$/
+     */
+    public function iWillBeToldThatIMustSelectWhetherIHaveAnActivationKey()
+    {
+        $this->ui->assertPageContainsText('Select if you have an activation key to add the LPA');
+    }
+
+    /**
+     * @Given /^I am on the request an activation key page$/
+     */
+    public function iAmOnTheRequestAnActivationKeyPage()
+    {
+        $this->ui->visit('/lpa/add-by-paper');
+        $this->ui->assertPageAddress('/lpa/add-by-paper');
+    }
+
+    /**
+     * @When /^I request an activation key with an invalid lpa reference number format of "([^"]*)"$/
+     */
+    public function iRequestAnActivationKeyWithAnInvalidLpaReferenceNumberFormatOf($referenceNumber)
+    {
+        $this->ui->fillField('opg_reference_number', $referenceNumber);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I request an activation key without entering my (.*)$/
+     */
+    public function iRequestAnActivationKeyWithoutEnteringMy($data)
+    {
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I request an activation key with an invalid DOB format of "([^"]*)" "([^"]*)" "([^"]*)"$/
+     */
+    public function iRequestAnActivationKeyWithAnInvalidDOBFormatOf($day, $month, $year)
+    {
+        $this->ui->assertPageAddress('/lpa/add-by-paper');
+        $this->ui->fillField('opg_reference_number', '700000000001');
+        $this->ui->fillField('first_names', 'Attorney');
+        $this->ui->fillField('last_name', 'Person');
+        $this->ui->fillField('postcode', 'ABC123');
+        $this->ui->fillField('dob[day]', $day);
+        $this->ui->fillField('dob[month]', $month);
+        $this->ui->fillField('dob[year]', $year);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I request an activation key with valid details$/
+     */
+    public function iRequestAnActivationKeyWithValidDetails()
+    {
+        $this->ui->assertPageAddress('/lpa/add-by-paper');
+        $this->ui->fillField('opg_reference_number', '700000000001');
+        $this->ui->fillField('first_names', 'Attorney');
+        $this->ui->fillField('last_name', 'Person');
+        $this->ui->fillField('postcode', 'ABC123');
+        $this->ui->fillField('dob[day]', '09');
+        $this->ui->fillField('dob[month]', '02');
+        $this->ui->fillField('dob[year]', '1998');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I am asked to check my answers before requesting an activation key$/
+     */
+    public function iAmAskedToCheckMyAnswersBeforeRequestingAnActivationKey()
+    {
+        $this->ui->assertPageAddress('/lpa/check-answers');
+        $this->ui->assertPageContainsText('Check your answers');
     }
 }
