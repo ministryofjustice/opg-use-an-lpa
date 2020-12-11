@@ -78,13 +78,18 @@ Feature: View an LPA via sharecode
     Then I am told that my input is invalid because <reason>
 
     Examples:
-      | accessCode             | reason                                      |
-      | V-T3ST_ACE2-C0D3       | Enter LPA access code in the correct format |
-      | T3STP*22C0!?           | Enter LPA access code in the correct format |
-      | T3ST _ PA22 - C0D3     | Enter LPA access code in the correct format |
-      | V - T3ST _ PA22 - C0D3 | Enter LPA access code in the correct format |
-      | T3STPA22C0D            | Enter LPA access code in the correct format |
-      |                        | Enter your LPA access code                  |
+      | accessCode             | reason                                       |
+      | V-T3ST_ACE2-C0D3       | The LPA access code you entered is too long  |
+      | V-T3ST ACE2 C0D35      | The LPA access code you entered is too long  |
+      | V-T3STACE2C0D35        | The LPA access code you entered is too long  |
+      | T3STACE2C0D35          | The LPA access code you entered is too long  |
+      | T3STP*22C0!?           | Enter LPA access code in the correct format  |
+      | V - T3ST P*22 C0!?     | Enter LPA access code in the correct format  |
+      | T3ST _ PA22 - C0D3     | The LPA access code you entered is too long  |
+      | V - T3ST _ PA22 - C0D3 | The LPA access code you entered is too long  |
+      | T3STPA22C0D            | The LPA access code you entered is too short |
+      | V - T3ST - PA2 - C0D3  | The LPA access code you entered is too short |
+      |                        | Enter your LPA access code                   |
 
   @ui
   Scenario: The user is shown the correct error messages when entering invalid details
