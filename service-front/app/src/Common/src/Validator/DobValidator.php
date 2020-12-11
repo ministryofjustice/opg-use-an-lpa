@@ -24,7 +24,6 @@ class DobValidator extends DateValidator
 
         self::AGE_NEGATIVE        => 'Date of birth must be in the past',
         self::AGE_TOO_YOUNG       => 'Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18',
-
         ];
 
     /**

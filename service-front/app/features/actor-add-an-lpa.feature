@@ -96,15 +96,16 @@ Feature: Add an LPA
     Then I am told that my input is invalid because <reason>
 
     Examples:
-      | day | month | year | reason |
-      | 32 | 05 | 1975 | Date of birth must be a real date |
-      | 10 | 13 | 1975 | Date of birth must be a real date |
-      | XZ | 10 | 1975 | Date of birth must be a real date |
-      |  | 10 |    | Date of birth must include a day Date of birth must include a year|
-      |  |  | 1975 | Date of birth must include a day Date of birth must include a month |
-      | XZ |  |    | Date of birth must include a month Date of birth must include a year |
-      | 10 | 05 | 3000 | Date of birth must be in the past |
-      |  |  |  | Enter your date of birth |
+      | day | month | year | reason                                                                                      |
+      | 32  | 05    | 1975 | Date of birth must be a real date                                                           |
+      | 10  | 13    | 1975 | Date of birth must be a real date                                                           |
+      | XZ  | 10    | 1975 | Date of birth must be a real date                                                           |
+      |     | 10    |      | Date of birth must include a day Date of birth must include a year                          |
+      |     |       | 1975 | Date of birth must include a day Date of birth must include a month                         |
+      | XZ  |       |      | Date of birth must include a month Date of birth must include a year                        |
+      | 10  | 05    | 3000 | Date of birth must be in the past                                                           |
+      |     |       |      | Enter your date of birth                                                                    |
+      | 05  | 12    | 2020 | Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18 |
 
 
   @ui
