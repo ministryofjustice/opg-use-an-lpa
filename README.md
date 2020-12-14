@@ -10,10 +10,43 @@ OPG Use My LPA: Managed by opg-org-infra &amp; Terraform
 Clone the following two repositories into the same base directory:
 
 - https://github.com/ministryofjustice/opg-use-an-lpa
-- https://github.com/ministryofjustice/opg-sirius-api-gateway
+- https://github.com/ministryofjustice/opg-data-lpa
 - https://github.com/ministryofjustice/opg-data-lpa-codes
 
 All commands assume a working directory of `opg-use-my-lpa`.
+
+### Makefile
+
+A Makefile is maintained that aliases the most useful docker-compose commands.
+
+To build the service and it's dependencies
+
+```shell
+make build # build ual and lpa-codes
+make build --directory=../opg-data-lpa/ # build lpas-collection endpoint
+```
+
+To start the service and its dependencies
+
+```shell
+make up # start ual and lpa-codes
+make up-bridge-ual create_secrets --directory=../opg-data-lpa/ # start lpas-collection endpoint
+```
+
+To stop the service and its dependencies (ordering is important so that the networks are removed first)
+
+```shell
+make down-bridge-ual --directory=../opg-data-lpa/ # bring down the lpas-collection endpoint
+make down # bring down ual and lpa-codes
+```
+
+There are other make file targets for common operations such as
+
+`logs` to follow docker-compose logs for the service
+`seed` to rerun seeding scripts to put or reset fixture data
+`destroy` to stop the service and remove all images
+
+### Docker-Compose
 
 In all cases commands are run with a docker-compose command prefix
 
@@ -105,7 +138,7 @@ Packages can be removed with:
 <DOCKER_COMPOSE> run front-composer composer remove author/package
 ```
 
-## Troubleshooting 
+## Troubleshooting
 There are occasions when your local dev environment doesn't quite act as it should.
 _Feel free to add further troubleshooting steps here._
 
