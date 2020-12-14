@@ -8,7 +8,6 @@ use Common\Form\Element\Csrf;
 use Common\Form\Fieldset\Date;
 use Laminas\Form\Element\Text;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
-use Laminas\Form\Element\Radio;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 

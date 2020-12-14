@@ -42,13 +42,16 @@ trait LaminasFormTests
     /** @test */
     public function it_declares_all_neccessary_input_filters()
     {
-        $this->assertIsArray($this->getForm()->getInputFilterSpecification());
-        $this->assertInstanceOf(InputFilter::class, $this->getForm()->getInputFilter());
+        if (method_exists($this->getForm(), 'getInputFilterSpecification')) {
+            $this->assertIsArray($this->getForm()->getInputFilterSpecification());
+            $this->assertInstanceOf(InputFilter::class, $this->getForm()->getInputFilter());
 
-        foreach ($this->getFormElements() as $elementName => $elementType) {
-            if ($elementName === '__csrf') { continue; }
+            foreach ($this->getFormElements() as $elementName => $elementType) {
+                if ($elementName === '__csrf') { continue; }
 
-            $this->assertArrayHasKey($elementName, $this->getForm()->getInputFilterSpecification());
+                $this->assertArrayHasKey($elementName, $this->getForm()->getInputFilterSpecification());
+            }
         }
+        $this->markTestSkipped('Form doesnt have an input filter. Test skipped');
     }
 }
