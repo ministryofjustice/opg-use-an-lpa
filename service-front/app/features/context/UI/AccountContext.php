@@ -2831,6 +2831,8 @@ class AccountContext implements Context
             $this->ui->assertPageAddress('/your-details');
         } elseif ($page == 'add a lpa') {
             $this->ui->assertPageAddress('/lpa/add-details');
+        } elseif ($page == 'add by code') {
+            $this->ui->assertPageAddress('/lpa/add-by-code');
         }
     }
 
@@ -3966,5 +3968,35 @@ class AccountContext implements Context
     public function iDecideNotToContinueOnThePage()
     {
         // Not needed for one this context
+    }
+
+    /**
+     * @When /^I say I do not have an activation key$/
+     */
+    public function iSayIDoNotHaveAnActivationKey()
+    {
+        $this->ui->fillField('No, I do not have an activation key', 'No');
+    }
+
+    /**
+     * @When /^I am shown content explaining why I can not use this service$/
+     */
+    public function iAmShownContentExplainingWhyICannotUseThisService()
+    {
+        $this->ui->assertPageAddress('/lpa/add');
+
+        $element = $this->ui->getSession()->getPage()->find('css', '.govuk-radios__conditional');
+        $elementHtml = $element->getOuterHtml();
+
+        assertTrue(str_contains($elementHtml, 'If the LPA was registered before this date, you need to use the paper LPA with people and organisations.'));
+    }
+
+    /**
+     * @When /^I say I have an activation key$/
+     */
+    public function iSayIHaveAnActivationKey()
+    {
+        $this->ui->fillField('Yes, I have an activation key', 'Yes');
+        $this->ui->assertPageAddress('/lpa/add');
     }
 }
