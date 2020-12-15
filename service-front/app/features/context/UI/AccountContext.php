@@ -3959,4 +3959,12 @@ class AccountContext implements Context
         $this->ui->assertFieldContains('dob[year]', '1998');
         $this->ui->assertFieldContains('postcode', 'ABC123');
     }
+
+    /**
+     * @Given /^I decide not to continue on the page$/
+     */
+    public function iDecideNotToContinueOnThePage()
+    {
+        // Not needed for one this context
+    }
 }
