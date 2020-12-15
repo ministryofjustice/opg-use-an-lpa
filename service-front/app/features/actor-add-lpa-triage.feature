@@ -51,6 +51,3 @@ Feature: Add an LPA triage page
     Given I am on the add an LPA triage page
     When I say I do not have an activation key
     Then I am shown content explaining why I can not use this service
-
-
-
