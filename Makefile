@@ -20,6 +20,15 @@ build:
 	$(COMPOSE) build
 .PHONY: build
 
+build_all: build
+ifeq (, $(shell which go))
+	$(error "No golang in PATH, consider doing brew install go")
+endif
+	@echo "Installing go dependencies..."
+	go get -u github.com/aws/aws-sdk-go/...
+	$(MAKE) build --directory=../opg-data-lpa/
+.PHONY: build_all
+
 rebuild:
 	$(COMPOSE) build --no-cache
 .PHONY: rebuild
@@ -28,9 +37,19 @@ down:
 	$(COMPOSE) down $(c)
 .PHONY: down
 
+down_all:
+	$(COMPOSE) down
+	$(MAKE) down --directory=../opg-data-lpa/
+.PHONY: down_all
+
 destroy:
 	$(COMPOSE) down -v --rmi all --remove-orphans
 .PHONY: destroy
+
+destroy_all:
+	$(COMPOSE) down -v --rmi all --remove-orphans
+	$(MAKE) destroy --directory=../opg-data-lpa/
+.PHONY: destroy_all
 
 ps:
 	$(COMPOSE) ps
@@ -68,16 +87,19 @@ unit_test_api_app:
 	$(COMPOSE) run api-app /app/vendor/bin/phpunit
 .PHONY: unit_test_api_app
 
-dev_mode: | up run_front_composer_dev run_api_composer_dev clear_config_cache
-.PHONY: dev_mode
-
-run_front_composer_dev:
+development_mode:
 	$(COMPOSE) run front-composer composer development-enable
-.PHONY: run_front_composer_dev
-
-run_api_composer_dev:
 	$(COMPOSE) run api-composer composer development-enable
-.PHONY: run_api_composer_dev
+	clear_config_cache
+.PHONY: development_mode
+
+run_front_composer:
+	$(COMPOSE) run front-composer composer install
+.PHONY: run_front_composer
+
+run_api_composer:
+	$(COMPOSE) run api-composer composer install
+.PHONY: run_api_composer
 
 clear_config_cache:
 	$(COMPOSE) exec viewer-app rm -f /tmp/config-cache.php
