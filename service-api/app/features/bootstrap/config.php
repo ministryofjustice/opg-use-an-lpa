@@ -59,7 +59,7 @@ return [
     ],
 
     'sirius_api' => [
-        'endpoint' => 'https://sirius',
+        'endpoint' => 'api-gateway-pact-mock',
     ],
 
     'codes_api' => [
