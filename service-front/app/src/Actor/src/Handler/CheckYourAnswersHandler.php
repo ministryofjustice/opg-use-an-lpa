@@ -11,10 +11,12 @@ use Common\Handler\{AbstractHandler,
     UserAware,
     Traits\Session as SessionTrait};
 use Actor\Form\CheckYourAnswers;
+use Common\Exception\InvalidRequestException;
 use Common\Middleware\Session\SessionTimeoutException;
 use DateTime;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
+use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
@@ -106,7 +108,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            // TODO UML-1161 / 1162 / 1157
+            return $this->redirectToRoute('send-activation-key-confirmation');
         }
     }
 }
