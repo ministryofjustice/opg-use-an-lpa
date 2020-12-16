@@ -8,7 +8,7 @@ use App\DataAccess\Repository\{LpasInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
-use App\Exception\{GoneException, NotFoundException};
+use App\Exception\{ApiException, GoneException, NotFoundException};
 use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -228,6 +228,29 @@ class LpaService
         return $lpaData;
     }
 
+    public function requestAccessByLetter(string $uid, string $actorUid): void
+    {
+        $uidInt = intval($uid);
+        $actorUidInt = intval($actorUid);
+
+        if ($uidInt === 0 || $actorUidInt === 0) {
+            throw new RuntimeException('Could not convert Sirius uIds into valid integers');
+        }
+
+        try {
+            $this->lpaRepository->requestLetter($uidInt, $actorUidInt);
+        } catch (ApiException $apiException) {
+            $this->logger->notice(
+                'Failed to request letter for attorney {attorney} on LPA {lpa}',
+                [
+                    'attorney' => $actorUidInt,
+                    'lpa' => $uidInt
+                ]
+            );
+
+            throw $apiException;
+        }
+    }
 
     /**
      * Given an LPA and an Actor ID, this returns the actor's details, and what type of actor they are.
