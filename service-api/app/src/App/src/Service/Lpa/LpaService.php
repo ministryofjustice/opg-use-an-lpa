@@ -228,14 +228,18 @@ class LpaService
         return $lpaData;
     }
 
+    /**
+     * Provides the capability to request a letter be sent to the registered
+     * address of the specified actor with a new one-time-use registration code.
+     * This will allow them to add the LPA to their UaLPA account.
+     *
+     * @param string $uid Sirius uId for an LPA
+     * @param string $actorUid uId of an actor on that LPA
+     */
     public function requestAccessByLetter(string $uid, string $actorUid): void
     {
-        $uidInt = intval($uid);
-        $actorUidInt = intval($actorUid);
-
-        if ($uidInt === 0 || $actorUidInt === 0) {
-            throw new RuntimeException('Could not convert Sirius uIds into valid integers');
-        }
+        $uidInt = (int) $uid;
+        $actorUidInt = (int) $actorUid;
 
         try {
             $this->lpaRepository->requestLetter($uidInt, $actorUidInt);

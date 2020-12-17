@@ -39,9 +39,21 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/v1/lpas', App\Handler\LpasCollectionHandler::class, 'lpa.collection');
     $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.resource');
     $app->delete('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.remove');
-    $app->post('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/codes', App\Handler\LpasResourceCodesCollectionHandler::class, 'lpa.create.code');
-    $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/codes', App\Handler\LpasResourceCodesCollectionHandler::class, 'lpa.get.codes');
-    $app->put('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/codes', App\Handler\LpasResourceCodesCollectionHandler::class, 'lpa.cancel.code');
+    $app->post(
+        '/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/codes',
+        App\Handler\LpasResourceCodesCollectionHandler::class,
+        'lpa.create.code'
+    );
+    $app->get(
+        '/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/codes',
+        App\Handler\LpasResourceCodesCollectionHandler::class,
+        'lpa.get.codes'
+    );
+    $app->put(
+        '/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/codes',
+        App\Handler\LpasResourceCodesCollectionHandler::class,
+        'lpa.cancel.code'
+    );
 
     $app->post('/v1/actor-codes/summary', App\Handler\ActorCodeSummaryHandler::class, 'lpa.actor-code.summary');
     $app->post('/v1/actor-codes/confirm', App\Handler\ActorCodeConfirmHandler::class, 'lpa.actor-code.confirm');
@@ -55,13 +67,25 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     $app->patch('/v1/request-password-reset', App\Handler\RequestPasswordResetHandler::class, 'user.password-reset');
     $app->get('/v1/can-password-reset', App\Handler\CanPasswordResetHandler::class, 'user.can-password-reset');
-    $app->patch('/v1/complete-password-reset', App\Handler\CompletePasswordResetHandler::class, 'user.complete-password-reset');
+    $app->patch(
+        '/v1/complete-password-reset',
+        App\Handler\CompletePasswordResetHandler::class,
+        'user.complete-password-reset'
+    );
 
     $app->patch('/v1/request-change-email', App\Handler\RequestChangeEmailHandler::class, 'user.request-change-email');
     $app->get('/v1/can-reset-email', App\Handler\CanResetEmailHandler::class, 'user.can-reset-email');
-    $app->patch('/v1/complete-change-email', App\Handler\CompleteChangeEmailHandler::class, 'user.complete-change-email');
+    $app->patch(
+        '/v1/complete-change-email',
+        App\Handler\CompleteChangeEmailHandler::class,
+        'user.complete-change-email'
+    );
     $app->patch('/v1/change-password', App\Handler\ChangePasswordHandler::class, 'user.change-password');
-    $app->delete('/v1/delete-account/{account-id:[0-9a-f\-]+}', App\Handler\CompleteDeleteAccountHandler::class, 'user.delete-account');
+    $app->delete(
+        '/v1/delete-account/{account-id:[0-9a-f\-]+}',
+        App\Handler\CompleteDeleteAccountHandler::class,
+        'user.delete-account'
+    );
 
     $app->patch('/v1/auth', App\Handler\AuthHandler::class, 'user.auth');
 };
