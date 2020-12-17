@@ -317,6 +317,7 @@ class AccountContext implements Context
 
     /**
      * @When /^I logout of the application$/
+     * @When /^I sign out from the page$/
      */
     public function iLogoutOfTheApplication()
     {
