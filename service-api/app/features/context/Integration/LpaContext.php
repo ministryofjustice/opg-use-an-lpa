@@ -60,8 +60,8 @@ class LpaContext extends BaseIntegrationContext
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
 
         $config = $this->container->get('config');
-        $this->codesApiPactProvider = $config['codes_api']['endpoint'];
-        $this->apiGatewayPactProvider = $config['sirius_api']['endpoint'];
+        $this->codesApiPactProvider = parse_url($config['codes_api']['endpoint'], PHP_URL_HOST);
+        $this->apiGatewayPactProvider = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);
     }
 
     /**

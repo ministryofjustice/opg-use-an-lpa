@@ -42,7 +42,7 @@ class ViewerContext extends BaseIntegrationContext
         $this->lpaService = $this->lpaService = $this->container->get(LpaService::class);
 
         $config = $this->container->get('config');
-        $this->apiGatewayPactProvider = $config['sirius_api']['endpoint'];
+        $this->apiGatewayPactProvider = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);
     }
 
     /**

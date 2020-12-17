@@ -149,7 +149,7 @@ class LpaContext implements Context
     public function iAttemptToAddTheSameLPAAgain()
     {
         // codes api service call
-        $this->apiFixtures->post('lpa-codes-pact-mock/v1/validate')
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => ''])));
 
         // LpaService::getLpaById
@@ -441,8 +441,6 @@ class LpaContext implements Context
      */
     public function iCancelTheOrganisationAccessCode()
     {
-        // Get the LPA
-
         // UserLpaActorMap::get
         $this->awsFixtures->append(
             new Result(
@@ -961,7 +959,7 @@ class LpaContext implements Context
     public function iRequestToAddAnLPAThatDoesNotExist()
     {
         // codes api service call
-        $this->apiFixtures->post('lpa-codes-pact-mock/v1/validate')
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => ''])));
 
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
@@ -1051,7 +1049,7 @@ class LpaContext implements Context
     public function iRequestToAddAnLPAWithValidDetails()
     {
         // codes api service call
-        $this->apiFixtures->post('lpa-codes-pact-mock/v1/validate')
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
 
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
@@ -1345,7 +1343,7 @@ class LpaContext implements Context
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
 
         // codes api service call
-        $this->apiFixtures->post('lpa-codes-pact-mock/v1/validate')
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
 
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
@@ -1373,7 +1371,7 @@ class LpaContext implements Context
         );
 
         // codes api service call
-        $this->apiFixtures->post('lpa-codes-pact-mock/v1/revoke')
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/revoke')
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->apiPost(

@@ -13,7 +13,6 @@ use Psr\Container\ContainerInterface;
 
 class PactLpasFactory
 {
-
     public function __invoke(ContainerInterface $container)
     {
         $config = $container->get('config');
@@ -22,10 +21,12 @@ class PactLpasFactory
             throw new \Exception('Sirius API Gateway endpoint is not set');
         }
 
+        $apiHost = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);
+
         return new Lpas(
             new HttpClient(),
             new SignatureV4('execute-api', 'eu-west-1'),
-            $config['sirius_api']['endpoint'],
+            $apiHost,
             $container->get(RequestTracing::TRACE_PARAMETER_NAME),
             $container->get(SiriusLpaSanitiser::class)
         );
