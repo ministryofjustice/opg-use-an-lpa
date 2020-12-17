@@ -626,7 +626,7 @@ orbs:
           - run:
               name: Build
               command: |
-                docker build --file service-api/docker/app/Dockerfile --tag api-app:latest .
+                docker build --target << parameters.docker_build_stage >> --file service-api/docker/app/Dockerfile --tag api-app:latest .
           - run:
               name: Run unit tests
               command: |
