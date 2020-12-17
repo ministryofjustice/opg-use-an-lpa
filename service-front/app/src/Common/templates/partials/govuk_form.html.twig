@@ -88,7 +88,11 @@
         {%  for option in value_options %}
         <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="{{ element.getName() }}-{{ loop.index }}" name="{{ element.getName() }}" type="radio" value="{{ option.value }}" {% if option.value == element.getValue() %}checked="checked"{% endif %} data-aria-controls="conditional-{{ element.getName() }}-{{ loop.index }}">
+                {% if option.conditionalContent is defined %}
+                    <input class="govuk-radios__input" id="{{ element.getName() }}-{{ loop.index }}" name="{{ element.getName() }}" type="radio" value="{{ option.value }}" {% if option.value == element.getValue() %}checked="checked"{% endif %} data-aria-controls="conditional-{{ element.getName() }}-{{ loop.index }}">
+                {% else %}
+                    <input class="govuk-radios__input" id="{{ element.getName() }}-{{ loop.index }}" name="{{ element.getName() }}" type="radio" value="{{ option.value }}" {% if option.value == element.getValue() %}checked="checked"{% endif %} >
+                {% endif %}
                 <label class="govuk-label govuk-radios__label" for="{{ element.getName() }}-{{ loop.index }}">
                     {{ option.label }}
                 </label>
