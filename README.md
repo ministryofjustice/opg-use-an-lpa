@@ -24,6 +24,10 @@ To build the service and it's dependencies
 ```shell
 make build # build ual and lpa-codes
 make build --directory=../opg-data-lpa/ # build lpas-collection endpoint
+
+# or
+
+make build_all
 ```
 
 To start the service and its dependencies
@@ -42,6 +46,10 @@ To stop the service and its dependencies (ordering is important so that the netw
 ```shell
 make down-bridge-ual --directory=../opg-data-lpa/ # bring down the lpas-collection endpoint
 make down # bring down ual and lpa-codes
+
+# alternatively
+
+make down_all # bring down everything including the lpa endpoint
 ```
 
 There are other make file targets for common operations such as
