@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.170.0",
+            "version": "3.171.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "7f457a08219173eba4b856cb7aef3a903cd790cc"
+                "reference": "01407effc918634048346d8bd6513b2db0d07ad8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/7f457a08219173eba4b856cb7aef3a903cd790cc",
-                "reference": "7f457a08219173eba4b856cb7aef3a903cd790cc",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/01407effc918634048346d8bd6513b2db0d07ad8",
+                "reference": "01407effc918634048346d8bd6513b2db0d07ad8",
                 "shasum": ""
             },
             "require": {
@@ -92,9 +92,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.170.0"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.171.1"
             },
-            "time": "2020-12-15T19:13:22+00:00"
+            "time": "2020-12-17T19:16:51+00:00"
         },
         {
             "name": "brick/varexporter",
@@ -6206,21 +6206,21 @@
         },
         {
             "name": "laminas/laminas-development-mode",
-            "version": "3.2.1",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-development-mode.git",
-                "reference": "dccbfc5a1503eb3f3805869525258ca6e6f6a0ce"
+                "reference": "11b2adc8837e4419a5b31e2a7ae59f06636d4096"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-development-mode/zipball/dccbfc5a1503eb3f3805869525258ca6e6f6a0ce",
-                "reference": "dccbfc5a1503eb3f3805869525258ca6e6f6a0ce",
+                "url": "https://api.github.com/repos/laminas/laminas-development-mode/zipball/11b2adc8837e4419a5b31e2a7ae59f06636d4096",
+                "reference": "11b2adc8837e4419a5b31e2a7ae59f06636d4096",
                 "shasum": ""
             },
             "require": {
                 "laminas/laminas-zendframework-bridge": "^1.0",
-                "php": "^5.6 || ^7.0"
+                "php": "^7.3 || ~8.0.0"
             },
             "replace": {
                 "zfcampus/zf-development-mode": "^3.2.0"
@@ -6228,7 +6228,7 @@
             "require-dev": {
                 "laminas/laminas-coding-standard": "~1.0.0",
                 "mikey179/vfsstream": "^1.6.5",
-                "phpunit/phpunit": "^5.7.27 || ^6.5.8 || ^7.1.5"
+                "phpunit/phpunit": "^9.3"
             },
             "bin": [
                 "bin/laminas-development-mode"
@@ -6262,7 +6262,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2020-08-03T14:07:04+00:00"
+            "time": "2020-12-16T22:26:52+00:00"
         },
         {
             "name": "laminas/laminas-eventmanager",
@@ -8730,16 +8730,16 @@
         },
         {
             "name": "smart-gamma/pact-behat-extension",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cooperaj/pact-behat-extension.git",
-                "reference": "f820dbdb16fc93c7a06484e0ce6a5f98b43f7ca7"
+                "reference": "cd9d3d18f7f8fba5ac9cb014de36a27ecd458ccf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cooperaj/pact-behat-extension/zipball/f820dbdb16fc93c7a06484e0ce6a5f98b43f7ca7",
-                "reference": "f820dbdb16fc93c7a06484e0ce6a5f98b43f7ca7",
+                "url": "https://api.github.com/repos/cooperaj/pact-behat-extension/zipball/cd9d3d18f7f8fba5ac9cb014de36a27ecd458ccf",
+                "reference": "cd9d3d18f7f8fba5ac9cb014de36a27ecd458ccf",
                 "shasum": ""
             },
             "require": {
@@ -8781,9 +8781,9 @@
                 "pact"
             ],
             "support": {
-                "source": "https://github.com/cooperaj/pact-behat-extension/tree/v2.0.0"
+                "source": "https://github.com/cooperaj/pact-behat-extension/tree/v2.0.1"
             },
-            "time": "2020-12-15T19:37:37+00:00"
+            "time": "2020-12-17T21:42:59+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
