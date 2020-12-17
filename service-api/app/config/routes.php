@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Handler\LpasCollectionHandler;
-use Psr\Container\ContainerInterface;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
+use Psr\Container\ContainerInterface;
 
 /**
  * Setup routes with a single request method:
@@ -37,6 +36,11 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/healthcheck', App\Handler\HealthcheckHandler::class, 'healthcheck');
 
     $app->get('/v1/lpas', App\Handler\LpasCollectionHandler::class, 'lpa.collection');
+    $app->put(
+        '/v1/lpas/request-letter',
+        App\Handler\LpasActionsHandler::class,
+        'lpa.requestletter'
+    );
     $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.resource');
     $app->delete('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.remove');
     $app->post(
