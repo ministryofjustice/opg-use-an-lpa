@@ -241,11 +241,19 @@ class LpaService
         $uidInt = (int) $uid;
         $actorUidInt = (int) $actorUid;
 
+        $this->logger->info(
+            'Requesting new access code letter for attorney {attorney} on LPA {lpa}',
+            [
+                'attorney' => $actorUidInt,
+                'lpa' => $uidInt
+            ]
+        );
+
         try {
             $this->lpaRepository->requestLetter($uidInt, $actorUidInt);
         } catch (ApiException $apiException) {
             $this->logger->notice(
-                'Failed to request letter for attorney {attorney} on LPA {lpa}',
+                'Failed to request access code letter for attorney {attorney} on LPA {lpa}',
                 [
                     'attorney' => $actorUidInt,
                     'lpa' => $uidInt
