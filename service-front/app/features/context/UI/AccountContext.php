@@ -3963,19 +3963,11 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I decide not to continue on the page$/
-     */
-    public function iDecideNotToContinueOnThePage()
-    {
-        // Not needed for one this context
-    }
-
-    /**
      * @When /^I say I do not have an activation key$/
      */
     public function iSayIDoNotHaveAnActivationKey()
     {
-        $this->ui->fillField('No, I do not have an activation key', 'No');
+        $this->ui->fillField('activation_key_triage', 'No');
     }
 
     /**
@@ -3984,11 +3976,7 @@ class AccountContext implements Context
     public function iAmShownContentExplainingWhyICannotUseThisService()
     {
         $this->ui->assertPageAddress('/lpa/add');
-
-        $element = $this->ui->getSession()->getPage()->find('css', '.govuk-radios__conditional');
-        $elementHtml = $element->getOuterHtml();
-
-        assertTrue(str_contains($elementHtml, 'If the LPA was registered before this date, you need to use the paper LPA with people and organisations.'));
+        $this->ui->assertPageContainsText('If the LPA was registered before this date, you need to use the paper LPA with people and organisations.');
     }
 
     /**
@@ -3996,7 +3984,7 @@ class AccountContext implements Context
      */
     public function iSayIHaveAnActivationKey()
     {
-        $this->ui->fillField('Yes, I have an activation key', 'Yes');
+        $this->ui->fillField('activation_key_triage', 'Yes');
         $this->ui->assertPageAddress('/lpa/add');
     }
 }

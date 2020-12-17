@@ -102,10 +102,11 @@
             <div>
                 {% if option.conditionalContent is defined %}
                     <div class="govuk-radios__item govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-{{ element.getName() }}-{{ loop.index }}">
-                        {{ option.conditionalContent }}<br><br>
-                        {{ option.conditionalContent1 }}
+                    {%  for content in option.conditionalContent %}
+                        <p>{{ content }}</p>
+                    {% endfor %}
                     </div>
-            {% endif %}
+                {% endif %}
             </div>
         </div>
         {% endfor %}

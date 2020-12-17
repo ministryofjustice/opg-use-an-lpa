@@ -51,8 +51,10 @@
                                     {
                                         'label': 'No, I do not have an activation key'| trans,
                                         'value': 'No',
-                                        'conditionalContent' : 'If the LPA you want to add was registered on or after 1 September 2019, select \'continue\' to ask us for an activation key.'| trans,
-                                        'conditionalContent1': 'If the LPA was registered before this date, you need to use the paper LPA with people and organisations.'| trans,
+                                        'conditionalContent' : [
+                                            'If the LPA you want to add was registered on or after 1 September 2019, select \'continue\' to ask us for an activation key.'| trans,
+                                            'If the LPA was registered before this date, you need to use the paper LPA with people and organisations.'| trans,
+                                        ]
                                     }
                                 ]}
                             )}}

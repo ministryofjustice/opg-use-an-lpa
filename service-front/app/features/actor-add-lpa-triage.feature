@@ -35,19 +35,11 @@ Feature: Add an LPA triage page
   @ui
   Scenario: Check cancel button on add an LPA triage page
     Given I am on the add an LPA triage page
-    And I decide not to continue on the page
     When I click the Cancel link on the page
     Then I should be taken to the <dashboard> page
 
   @ui
-  Scenario: Check continue button on add an LPA triage page
-    Given I am on the add an LPA triage page
-    When I say I have an activation key
-    And I click on Continue button
-    Then I should be taken to the <add by code> page
-
-  @ui
-  Scenario: Show content explaining user can not use this service and must use the paper LPA when they say they do not have an activation key
+  Scenario: The user is shown additional content if they do not have an activation key
     Given I am on the add an LPA triage page
     When I say I do not have an activation key
     Then I am shown content explaining why I can not use this service
