@@ -1568,7 +1568,7 @@ class AccountContext implements Context
     /**
      * @Then /^I should be shown the details of the viewer code with status (.*)/
      */
-    public function iShouldBeShownTheDetailsOfTheCancelledCodeWithStatus($status)
+    public function iShouldBeShownTheDetailsOfTheViewerCodeWithStatus($status)
     {
         $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
 

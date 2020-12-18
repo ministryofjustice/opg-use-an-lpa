@@ -17,35 +17,26 @@ Feature: The user is able to check the access codes they have created
     Then I can see all of my access codes and their details
 
   @ui @integration
-  Scenario Outline: As a user I can see the expired access codes I have created
+  Scenario: As a user I can see the expired access codes I have created
     Given I am on the dashboard page
     Given I have created an access code
     When I click to check my access code now expired
-    Then I should be shown the details of the viewer code with status <status>
-      Examples:
-      | status    |
-      | EXPIRED   |
+    Then I should be shown the details of the viewer code with status EXPIRED
 
   @ui @integration
-  Scenario Outline: As a user I can see the active and inactive access codes
+  Scenario: As a user I can see the active and inactive access codes
     Given I am on the dashboard page
     Given I have created an access code
     When I click to check my active and inactive codes
-    Then I can see the relevant <ActiveSection> and <InactiveSection> of my access codes and their details
-    Examples:
-      | ActiveSection       | InactiveSection    |
-      | Active codes        | Inactive codes     |
+    Then I can see the relevant Active codes and Inactive codes of my access codes and their details
 
   @ui
-  Scenario Outline: As a user I can see the relevant status when an access code has been cancelled and is later expired
+  Scenario: As a user I can see the relevant status when an access code has been cancelled and is later expired
     Given I am on the dashboard page
     Given I have created an access code
     And I cancel the viewer code
     When I click to check the viewer code has been cancelled which is now expired
-    Then I should be shown the details of the viewer code with status <status>
-    Examples:
-      | status    |
-      | CANCELLED   |
+    Then I should be shown the details of the viewer code with status CANCELLED
 
   @ui @integration
   Scenario: As a user I can see the who has viewed the LPA's I have added using the access code
@@ -62,4 +53,3 @@ Feature: The user is able to check the access codes they have created
     And I have shared the access code with organisations to view my LPA
     When I click to check my access codes
     Then I can see the code has not been used to view the LPA
-    
