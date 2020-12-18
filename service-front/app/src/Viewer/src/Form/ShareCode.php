@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Viewer\Form;
 
+use Common\Filter\ActorViewerCodeFilter;
 use Common\Form\AbstractForm;
-use Laminas\Filter\File\UpperCase;
 use Laminas\Filter\StringToUpper;
+use Laminas\Validator\StringLength;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -46,7 +47,7 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                 'required' => true,
                 'filters'  => [
                     ['name' => StringTrim::class],
-                    ['name' => StringToUpper::class]
+                    ['name' => ActorViewerCodeFilter::class]
                 ],
                 'validators' => [
                     [
@@ -56,12 +57,27 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                             'message'  => 'Enter your LPA access code',
                         ],
                     ],
-                    new Regex([
-                        'pattern' => "/^(V(?'dash'-| ){1,6})?[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}(\g'dash'){0,6}[[:alnum:]]{4}$/i",
-                        'message' => [
-                            Regex::NOT_MATCH => 'Enter LPA access code in the correct format'
+                    [
+                        'name'    => StringLength::class,
+                        'break_chain_on_failure' => true,
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min'      => 12,
+                            'max'      => 12,
+                            'messages'  => [
+                                StringLength::TOO_LONG => 'The LPA access code you entered is too long',
+                                StringLength::TOO_SHORT => 'The LPA access code you entered is too short'
+                            ],
+                        ],
+                    ],
+                    [
+                        'name'    => Regex::class,
+                        'break_chain_on_failure' => true,
+                        'options' => [
+                            'pattern' => "/^[[:alnum:]]{12}$/",
+                            'message' => 'Enter LPA access code in the correct format',
                         ]
-                    ])
+                    ]
                 ]
             ],
             'donor_surname' => [

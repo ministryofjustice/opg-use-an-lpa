@@ -67,12 +67,12 @@ Feature: Add an LPA
     Then I am told that my input is invalid because <reason>
 
     Examples:
-      | passcode | reason |
-      | T3ST$PA22-C0D3 |  Enter an activation key in the correct format |
-      | T3STP*22C0!? |  Enter an activation key in the correct format |
-      | C - T3S* - PA22 - C0D3 |  Enter an activation key in the correct format |
-      | T3STPA22C0D | Enter an activation key in the correct format |
-      |  | Enter your activation key |
+      | passcode                | reason                                         |
+      | T3ST$PA22-C0D3          |  The activation key you entered is too long    |
+      | T3STP*22C0!?            |  Enter an activation key in the correct format |
+      | C - T3S* - PA22 - C0D3  |  Enter an activation key in the correct format |
+      | T3STPA22C0D             | The activation key you entered is too short    |
+      |                         | Enter your activation key                      |
 
   @ui
   Scenario Outline: The user cannot add an LPA with an invalid reference number
@@ -81,13 +81,12 @@ Feature: Add an LPA
     Then I am told that my input is invalid because <reason>
 
     Examples:
-      | referenceNo | reason |
-      | 7000-00000001 | Enter the LPA reference number in the correct format |
-      | 7000-0000 0001 | Enter the LPA reference number in the correct format |
-      | 7000-0000-ABC! | Enter the LPA reference number in the correct format |
-      | 7000-0000-00011 | The LPA reference number you entered is too long |
-      | 70000000000 | The LPA reference number you entered is too short |
-      |  | Enter the LPA reference number |
+      | referenceNo     | reason                                               |
+      | 7000-0000-ABC!  | Enter the LPA reference number in the correct format |
+      | 7000-0000 00    | The LPA reference number you entered is too short    |
+      | 7000-0000-00011 | The LPA reference number you entered is too long     |
+      | 70000000000     | The LPA reference number you entered is too short    |
+      |                 | Enter the LPA reference number                       |
 
   @ui
   Scenario Outline: The user cannot add an LPA with an invalid DOB
