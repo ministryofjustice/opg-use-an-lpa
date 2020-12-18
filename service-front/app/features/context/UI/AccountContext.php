@@ -1568,7 +1568,7 @@ class AccountContext implements Context
     /**
      * @Then /^I should be shown the details of the viewer code with status (.*)/
      */
-    public function iShouldBeShownTheDetailsOfTheCancelledCodeWithStatus($status)
+    public function iShouldBeShownTheDetailsOfTheViewerCodeWithStatus($status)
     {
         $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
 
@@ -3905,7 +3905,7 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/add-by-paper');
         $this->ui->fillField('opg_reference_number', '700000000001');
-        $this->ui->fillField('first_names', 'Attorney');
+        $this->ui->fillField('first_names', 'The Attorney');
         $this->ui->fillField('last_name', 'Person');
         $this->ui->fillField('postcode', 'ABC123');
         $this->ui->fillField('dob[day]', '09');
@@ -3921,5 +3921,42 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/check-answers');
         $this->ui->assertPageContainsText('Check your answers');
+        $this->ui->assertPageContainsText('700000000001');
+        $this->ui->assertPageContainsText('The Attorney Person');
+        $this->ui->assertPageContainsText('09/02/1998');
+        $this->ui->assertPageContainsText('ABC123');
+    }
+
+    /**
+     * @Given /^I have requested an activation key with valid details$/
+     */
+    public function iHaveRequestedAnActivationKeyWithValidDetails()
+    {
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iRequestAnActivationKeyWithValidDetails();
+        $this->iAmAskedToCheckMyAnswersBeforeRequestingAnActivationKey();
+    }
+
+    /**
+     * @When /^I request to go back and change my answers$/
+     */
+    public function iRequestToGoBackAndChangeMyAnswers()
+    {
+        $this->ui->clickLink('Change');
+    }
+
+    /**
+     * @Then /^I am taken back to previous page where I can see my answers and change them$/
+     */
+    public function iAmTakenBackToPreviousPageWhereICanSeeMyAnswersAndChangeThem()
+    {
+        $this->ui->assertPageAddress('/lpa/add-by-paper');
+        $this->ui->assertFieldContains('opg_reference_number', '700000000001');
+        $this->ui->assertFieldContains('first_names', 'The Attorney');
+        $this->ui->assertFieldContains('last_name', 'Person');
+        $this->ui->assertFieldContains('dob[day]', '09');
+        $this->ui->assertFieldContains('dob[month]', '02');
+        $this->ui->assertFieldContains('dob[year]', '1998');
+        $this->ui->assertFieldContains('postcode', 'ABC123');
     }
 }

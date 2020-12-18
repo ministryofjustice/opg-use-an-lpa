@@ -7,6 +7,9 @@ namespace Actor\Handler;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session as SessionTrait, UserAware};
 use Actor\Form\RequestActivationKey;
 use Common\Handler\Traits\User;
+use Common\Middleware\Session\SessionTimeoutException;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Session\SessionInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
@@ -24,6 +27,10 @@ class RequestActivationKeyHandler extends AbstractHandler implements UserAware, 
     use CsrfGuard;
     use SessionTrait;
 
+    private RequestActivationKey $form;
+    private ?SessionInterface $session;
+    private ?UserInterface $user;
+
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
@@ -40,49 +47,54 @@ class RequestActivationKeyHandler extends AbstractHandler implements UserAware, 
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $form = new RequestActivationKey($this->getCsrfGuard($request));
+        $this->form = new RequestActivationKey($this->getCsrfGuard($request));
+        $this->user = $this->getUser($request);
+        $this->session = $this->getSession($request, 'session');
 
-        if ($request->getMethod() == 'POST') {
-            return $this->handlePost($request);
+        switch ($request->getMethod()) {
+            case 'POST':
+                return $this->handlePost($request);
+            default:
+                return $this->handleGet($request);
         }
+    }
+
+    public function handleGet(ServerRequestInterface $request): ResponseInterface
+    {
+        $this->form->setData($this->session->toArray());
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key', [
-            'user' => $this->getUser($request),
-            'form' => $form->prepare()
+            'user' => $this->user,
+            'form' => $this->form->prepare()
         ]));
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
-        $form = new RequestActivationKey($this->getCsrfGuard($request));
-        $form->setData($request->getParsedBody());
+        $this->form->setData($request->getParsedBody());
 
-        $session = $this->getSession($request, 'session');
-
-        if ($form->isValid()) {
-            $postData = $form->getData();
-
-            //  Convert the date of birth
-            $dobString = sprintf(
-                '%s-%s-%s',
-                $postData['dob']['year'],
-                $postData['dob']['month'],
-                $postData['dob']['day']
-            );
+        if ($this->form->isValid()) {
+            $postData = $this->form->getData();
 
             //  Set the data in the session and pass to the check your answers handler
-            $session->set('opg_reference_number', $postData['opg_reference_number']);
-            $session->set('first_names', $postData['first_names']);
-            $session->set('last_name', $postData['last_name']);
-            $session->set('dob', $dobString);
-            $session->set('postcode', $postData['postcode']);
-
+            $this->session->set('opg_reference_number', $postData['opg_reference_number']);
+            $this->session->set('first_names', $postData['first_names']);
+            $this->session->set('last_name', $postData['last_name']);
+            $this->session->set('postcode', $postData['postcode']);
+            $this->session->set(
+                'dob',
+                [
+                    'day' => $postData['dob']['day'],
+                    'month' => $postData['dob']['month'],
+                    'year' => $postData['dob']['year']
+                ]
+            );
             return $this->redirectToRoute('lpa.check-answers');
         }
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key', [
-            'user' => $this->getUser($request),
-            'form' => $form->prepare()
+            'user' => $this->user,
+            'form' => $this->form->prepare()
         ]));
     }
 }

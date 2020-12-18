@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\DataAccess\Repository;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\ViewerCodes\ViewerCodeService;
+use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Laminas\Diactoros\Response\JsonResponse;
-use App\DataAccess\Repository;
 use RuntimeException;
 
 /**
@@ -152,6 +152,8 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
             $request->getAttribute('actor-id')
         );
 
+        // TODO https://opgtransform.atlassian.net/browse/UML-1206
+        // Refactor how all this activity status works.
         if (!empty($viewerCodes)) {
             $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($viewerCodes);
 
