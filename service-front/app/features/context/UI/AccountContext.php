@@ -317,6 +317,7 @@ class AccountContext implements Context
 
     /**
      * @When /^I logout of the application$/
+     * @When /^I sign out from the page$/
      */
     public function iLogoutOfTheApplication()
     {
@@ -3958,5 +3959,42 @@ class AccountContext implements Context
         $this->ui->assertFieldContains('dob[month]', '02');
         $this->ui->assertFieldContains('dob[year]', '1998');
         $this->ui->assertFieldContains('postcode', 'ABC123');
+    }
+
+    /**
+     * @When /^I am on (.*) page after checking provided answers$/
+     */
+    public function iAmOnPage($page)
+    {
+        if ($page == 'send activation key confirmation') {
+            $this->ui->visit('/lpa/send-activation-key-confirmation');
+            $this->ui->assertPageAddress('/lpa/send-activation-key-confirmation');
+        } elseif ($page == 'cannot find LPA') {
+            $this->ui->visit('/lpa/cannot-find-lpa');
+            $this->ui->assertPageAddress('/lpa/cannot-find-lpa');
+        } elseif ($page == 'cannot send activation key') {
+            $this->ui->visit('/lpa/cannot-send-activation-key');
+            $this->ui->assertPageAddress('/lpa/cannot-send-activation-key');
+        }
+
+        $this->ui->assertPageContainsText('Back to LPAs');
+        $this->ui->assertPageContainsText('Sign out');
+    }
+
+    /**
+     * @When /^I request to go back to lpas page$/
+     */
+    public function iRequestToGoBackToLpasPage()
+    {
+        $this->ui->assertPageContainsText('Back to LPAs');
+        $this->ui->clickLink('Back to LPAs');
+    }
+
+    /**
+     * @When /^I click on Continue in the check answers page$/
+     */
+    public function iClickOnContinueInTheCheckAnswersPage()
+    {
+        $this->ui->assertPageContainsText('Continue');
     }
 }

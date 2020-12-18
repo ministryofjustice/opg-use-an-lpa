@@ -183,6 +183,24 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Actor\Handler\CheckYourAnswersHandler::class
         ], ['GET', 'POST'], 'lpa.check-answers');
 
+        $app->get(
+            '/lpa/cannot-send-activation-key',
+            Actor\Handler\CannotSendActivationKeyHandler::class,
+            'cannot-send-activation-key'
+        );
+
+        $app->get(
+            '/lpa/cannot-find-lpa',
+            Actor\Handler\CannotFindLpaHandler::class,
+            'cannot-find-lpa'
+        );
+
+        $app->get(
+            '/lpa/send-activation-key-confirmation',
+            Actor\Handler\SendActivationKeyConfirmationHandler::class,
+            'send-activation-key-confirmation'
+        );
+
     } else {
         $app->route('/lpa/add-details', [
             Mezzio\Authentication\AuthenticationMiddleware::class,

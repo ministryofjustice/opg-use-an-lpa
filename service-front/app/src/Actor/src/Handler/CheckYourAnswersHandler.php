@@ -12,6 +12,7 @@ use Common\Handler\{AbstractHandler,
     Traits\Session as SessionTrait};
 use Actor\Form\CheckYourAnswers;
 use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Lpa\LpaService;
 use DateTime;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
@@ -35,15 +36,19 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     private ?SessionInterface $session;
     private ?UserInterface $user;
     private array $data;
+    private LpaService $lpaService;
+    private ?string $identity;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper
+        UrlHelper $urlHelper,
+        LpaService $lpaService
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
+        $this->lpaService = $lpaService;
     }
 
     /**
@@ -55,6 +60,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         $this->form = new CheckYourAnswers($this->getCsrfGuard($request));
         $this->user = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
+        $this->identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
 
         if (
             is_null($this->session)
@@ -86,7 +92,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
         switch ($request->getMethod()) {
             case 'POST':
-                return $this->handlePost($request);
+                return $this->handlePost($request, $this->data);
             default:
                 return $this->handleGet($request);
         }
@@ -101,12 +107,46 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         ]));
     }
 
-    public function handlePost(ServerRequestInterface $request): ResponseInterface
+    public function handlePost(ServerRequestInterface $request, Array $data): ResponseInterface
     {
         $this->form->setData($request->getParsedBody());
 
+        $user = $this->getUser($request);
+        $identity = (!is_null($user)) ? $user->getIdentity() : null;
+
+
+
         if ($this->form->isValid()) {
-            // TODO UML-1161 / 1162 / 1157
+            // TODO UML-1161 / 1162 / 1163/ 1164
+
+            // Does the user already have an activation key for the LPA
+            // UML - 1164 -> already have an activation key for the LPA page
+
+            // Check with Sirius if user provided data matches records
+            //TO BE REMOVED and REPLACED with new logic created in LPA Service layer
+            $lpaData = $this->lpaService->getLpaById($identity, '8e03498e-d24a-4770-affd-41225fe95aa4');
+            $lpaData = $lpaData->lpa;
+
+            //TO BE REMOVED. Added for UAT testing UI page.
+            //$lpaData = null;
+
+            // If LPA data found
+            if (!is_null($lpaData)) {
+                $expectedRegistrationDate = '2019-09-01';
+
+                // Check if date LPA registered is not after Sep 2019
+                // UML - 1163 -> Cannot send an activation key for that LPA
+                if ($lpaData->getRegistrationDate() <= $expectedRegistrationDate) {
+                    return $this->redirectToRoute('cannot-send-activation-key');
+                }
+
+                // If all user entered data matches in Sirius
+                // UML- 1161  -> request to send letter and show activation key confirmation page
+                return $this->redirectToRoute('send-activation-key-confirmation');
+            } else {
+                //  UML - 1162 -> LPA cannot be found
+                return $this->redirectToRoute('cannot-find-lpa');
+            }
         }
     }
 }
