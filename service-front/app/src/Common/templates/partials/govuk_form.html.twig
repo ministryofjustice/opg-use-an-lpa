@@ -15,6 +15,10 @@
             {{ label | raw }}
         </label>
 
+        {% if element.getName() == 'opg_reference_number' %}
+            <p class="govuk-body">{% trans %}The OPG reference number (also called LPA reference number) is on the first page of the paper LPA and printed on any letter you get from the Office of the Public Guardian.{% endtrans %}</p>
+        {% endif %}
+
         {{- block('input_hint') -}}
 
         {% if fieldset is not defined or fieldset is empty %}
@@ -102,7 +106,7 @@
 
         <fieldset name="{{ fieldset.getName() }}" class="govuk-fieldset" aria-describedby="{{ fieldset.getName() }}-hint" role="group">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                <label class="govuk-label" for="{{ fieldset.getName() }}">
+                <label class="govuk-label {{- block('input_extra_label_class') -}}" for="{{ fieldset.getName() }}">
                     {{ label | raw }}
                 </label>
             </legend>

@@ -1,0 +1,100 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Check your answers{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.add-by-paper') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">{% trans %}Check your answers{% endtrans %}</h1>
+
+                    <dl class="govuk-summary-list govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}OPG reference number{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ data.reference_number }}
+                            </dd>
+                            <dd class="govuk-summary-list__actions">
+                                <a class="govuk-link" href="{{ path('lpa.add-by-paper') }}">
+                                    {% trans %}Change<span class="govuk-visually-hidden"> reference number</span>{% endtrans %}
+                                </a>
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Name{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ data.first_names ~ ' ' ~  data.last_name }}
+                            </dd>
+                            <dd class="govuk-summary-list__actions">
+                                <a class="govuk-link" href="{{ path('lpa.add-by-paper') }}">
+                                    {% trans %}Change<span class="govuk-visually-hidden"> name</span>{% endtrans %}
+                                </a>
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Date of birth{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ data.dob }}
+                            </dd>
+                            <dd class="govuk-summary-list__actions">
+                                <a class="govuk-link" href="{{ path('lpa.add-by-paper') }}">
+                                    {% trans %}Change<span class="govuk-visually-hidden"> dob</span>{% endtrans %}
+                                </a>
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Postcode{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ data.postcode }}
+                            </dd>
+                            <dd class="govuk-summary-list__actions">
+                                <a class="govuk-link" href="{{ path('lpa.add-by-paper') }}">
+                                    {% trans %}Change<span class="govuk-visually-hidden"> postcode</span>{% endtrans %}
+                                </a>
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                            {% trans %}Check all the details you entered are correct before continuing{% endtrans %}
+                        </strong>
+                    </div>
+
+                    {{ govuk_form_open(form) }}
+
+                        {{ govuk_form_element(form.get('__csrf')) }}
+
+                        <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+
+                    {{ govuk_form_close() }}
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+{% endblock %}
