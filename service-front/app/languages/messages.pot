@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-12-01T16:14:37+00:00\n"
+"POT-Creation-Date: 2020-12-18T13:35:28+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -137,9 +137,11 @@ msgid "Confirm your new email address"
 msgstr ""
 
 #: src/Actor/templates/actor/activate-account.html.twig:12
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:14
 #: src/Actor/templates/actor/change-details.html.twig:20
 #: src/Actor/templates/actor/change-email.html.twig:13
 #: src/Actor/templates/actor/check-lpa.html.twig:12
+#: src/Actor/templates/actor/check-your-answers.html.twig:15
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:13
 #: src/Actor/templates/actor/create-account-success.html.twig:12
 #: src/Actor/templates/actor/create-account.html.twig:12
@@ -153,6 +155,7 @@ msgstr ""
 #: src/Actor/templates/actor/password-reset-request-done.html.twig:12
 #: src/Actor/templates/actor/password-reset-request.html.twig:12
 #: src/Actor/templates/actor/password-reset.html.twig:12
+#: src/Actor/templates/actor/request-activation-key.html.twig:14
 #: src/Actor/templates/actor/request-email-change-success.html.twig:14
 #: src/Common/templates/partials/contact-us.html.twig:17
 #: src/Common/templates/partials/cookies.html.twig:19
@@ -1353,6 +1356,7 @@ msgid ""
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-add.html.twig:58
+#: src/Actor/templates/actor/request-activation-key.html.twig:41
 #: src/Actor/templates/actor/your-details.html.twig:18
 #: src/Common/templates/partials/account-bar.html.twig:11
 msgid "Your details"
@@ -1487,13 +1491,13 @@ msgid "Enter an activation key in the correct format"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:33
+#: src/Actor/templates/actor/form-error-messages.html.twig:35
 msgctxt "error"
 msgid "The LPA reference number you entered is too short"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:34
+#: src/Actor/templates/actor/form-error-messages.html.twig:36
 msgctxt "error"
 msgid "The LPA reference number you entered is too long"
 msgstr ""
@@ -1505,97 +1509,97 @@ msgid "Enter the 12 numbers of the LPA reference number. Do not include letters 
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:36
+#: src/Actor/templates/actor/form-error-messages.html.twig:38
 msgctxt "error"
 msgid "Date of birth value must be provided in an array"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:37
+#: src/Actor/templates/actor/form-error-messages.html.twig:39
 msgctxt "error"
 msgid "Enter your date of birth"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:38
+#: src/Actor/templates/actor/form-error-messages.html.twig:40
 msgctxt "error"
 msgid "Date of birth must be a real date"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:39
+#: src/Actor/templates/actor/form-error-messages.html.twig:41
 msgctxt "error"
 msgid "Date of birth must include a day"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:40
+#: src/Actor/templates/actor/form-error-messages.html.twig:42
 msgctxt "error"
 msgid "Date of birth must include a month"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:41
+#: src/Actor/templates/actor/form-error-messages.html.twig:43
 msgctxt "error"
 msgid "Date of birth must include a year"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:42
+#: src/Actor/templates/actor/form-error-messages.html.twig:44
 msgctxt "error"
 msgid "Date of birth must be in the past"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:43
+#: src/Actor/templates/actor/form-error-messages.html.twig:45
 msgctxt "error"
 msgid "Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18"
 msgstr ""
 
 #. Create viewer code
-#: src/Actor/templates/actor/form-error-messages.html.twig:46
+#: src/Actor/templates/actor/form-error-messages.html.twig:48
 msgctxt "error"
 msgid "Enter an organisation name"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:49
+#: src/Actor/templates/actor/form-error-messages.html.twig:51
 msgctxt "error"
 msgid "Enter your current password"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:50
+#: src/Actor/templates/actor/form-error-messages.html.twig:52
 msgctxt "error"
 msgid "Current password is incorrect"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:51
+#: src/Actor/templates/actor/form-error-messages.html.twig:53
 msgctxt "error"
 msgid "Enter your new password"
 msgstr ""
 
 #. Change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:52
+#: src/Actor/templates/actor/form-error-messages.html.twig:54
 msgctxt "error"
 msgid "New password and confirm new password do not match"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:53
+#: src/Actor/templates/actor/form-error-messages.html.twig:55
 msgctxt "error"
 msgid "Enter your password again to confirm it"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:56
+#: src/Actor/templates/actor/form-error-messages.html.twig:58
 msgctxt "error"
 msgid "Confirm your email address"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:57
+#: src/Actor/templates/actor/form-error-messages.html.twig:59
 msgctxt "error"
 msgid "The emails did not match"
 msgstr ""
@@ -1670,6 +1674,7 @@ msgstr ""
 msgid "We could not find a lasting power of attorney with the information you entered."
 msgstr ""
 
+#: src/Actor/templates/actor/check-your-answers.html.twig:22
 #: src/Actor/templates/actor/lpa-not-found.html.twig:22
 msgid "Check your answers"
 msgstr ""
@@ -1801,14 +1806,17 @@ msgid ""
 msgstr ""
 
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:44
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:61
 #: src/Actor/templates/actor/check-lpa.html.twig:93
 #: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-add.html.twig:91
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:68
+#: src/Actor/templates/actor/request-activation-key.html.twig:64
 #: src/Viewer/templates/viewer/enter-code.html.twig:60
 msgid "Continue"
 msgstr ""
 
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:63
 #: src/Actor/templates/actor/check-lpa.html.twig:96
 #: src/Actor/templates/actor/lpa-add.html.twig:93
 msgid "Cancel"
@@ -2201,10 +2209,12 @@ msgid ""
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-add.html.twig:87
+#: src/Actor/templates/actor/request-activation-key.html.twig:54
 msgid "What is your date of birth?"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-add.html.twig:88
+#: src/Actor/templates/actor/request-activation-key.html.twig:55
 msgid "For example, 31 03 1980"
 msgstr ""
 
@@ -2342,15 +2352,15 @@ msgstr ""
 msgid "I want to check another LPA"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:120
+#: src/Common/templates/partials/govuk_form.html.twig:124
 msgid "Day"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:130
+#: src/Common/templates/partials/govuk_form.html.twig:134
 msgid "Month"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:140
+#: src/Common/templates/partials/govuk_form.html.twig:144
 msgid "Year"
 msgstr ""
 
@@ -2546,13 +2556,13 @@ msgid "Enter your LPA access code"
 msgstr ""
 
 #. ShareCode
-#: src/Viewer/templates/viewer/form-error-messages.html.twig:8
+#: src/Viewer/templates/viewer/form-error-messages.html.twig:10
 msgctxt "error"
 msgid "Enter LPA access code in the correct format"
 msgstr ""
 
 #. ShareCode
-#: src/Viewer/templates/viewer/form-error-messages.html.twig:9
+#: src/Viewer/templates/viewer/form-error-messages.html.twig:11
 msgctxt "error"
 msgid "Enter the donor's last name"
 msgstr ""
@@ -2956,7 +2966,7 @@ msgid "© Crown copyright"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:32
+#: src/Actor/templates/actor/form-error-messages.html.twig:34
 msgctxt "error"
 msgid "Enter the LPA reference number"
 msgstr ""
@@ -2981,12 +2991,12 @@ msgid "Cancelled on %cancellationDate%"
 msgstr ""
 
 #. Show password label
-#: src/Common/templates/partials/govuk_form.html.twig:214
+#: src/Common/templates/partials/govuk_form.html.twig:218
 msgid "Show"
 msgstr ""
 
 #. Hide password label
-#: src/Common/templates/partials/govuk_form.html.twig:215
+#: src/Common/templates/partials/govuk_form.html.twig:219
 msgid "Hide"
 msgstr ""
 
@@ -3319,7 +3329,7 @@ msgid "Check that your email address is spelt correctly"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:35
+#: src/Actor/templates/actor/form-error-messages.html.twig:37
 msgctxt "error"
 msgid "Enter the LPA reference number in the correct format"
 msgstr ""
@@ -3365,7 +3375,7 @@ msgid "This will be displayed to the attorneys and donor on the LPA"
 msgstr ""
 
 #. Check code
-#: src/Viewer/templates/viewer/form-error-messages.html.twig:12
+#: src/Viewer/templates/viewer/form-error-messages.html.twig:14
 msgctxt "error"
 msgid "Enter your organisation name"
 msgstr ""
@@ -3462,4 +3472,92 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:10
 msgid "Access code created %date%"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:22
+msgid "Do you have an activation key to add an LPA?"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:24
+msgid "You need an activation key to add an LPA to your account. The donor and each attorney will have their own unique activation key."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:29
+msgid "Where can I find my activation key?"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:33
+msgid "If your LPA was registered on or after 17 July 2020, the activation key is on the letter that told you the LPA had been registered."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:34
+msgid "If your LPA was registered before 17 July 2020 and you have asked us for an activation key, you'll find it on the letter or email we sent you."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:48
+msgid "Yes, I have an activation key"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:52
+msgid "No, I do not have an activation key"
+msgstr ""
+
+#. Add LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:32
+msgctxt "error"
+msgid "The activation key you entered is too long"
+msgstr ""
+
+#. Add LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:33
+msgctxt "error"
+msgid "The activation key you entered is too short"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key.html.twig:21
+msgid "Ask for an activation key"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key.html.twig:23
+msgid "To add an LPA to your account, you need as activation key. We'll send an activation key by post to the address we have for you on our records."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key.html.twig:25
+msgid "Find out what to do if you've <a href=\"%link%\" class=\"govuk-link\">changed address and not told us</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key.html.twig:34
+msgid "OPG reference number"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key.html.twig:35
+msgid "OPG reference numbers are 12 numbers long.<br/>For example, 700000000000"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key.html.twig:44
+msgid "First names"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key.html.twig:49
+msgid "Last name"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key.html.twig:59
+msgid "Postcode"
+msgstr ""
+
+#: src/Common/templates/partials/govuk_form.html.twig:19
+msgid "The OPG reference number (also called LPA reference number) is on the first page of the paper LPA and printed on any letter you get from the Office of the Public Guardian."
+msgstr ""
+
+#. ShareCode
+#: src/Viewer/templates/viewer/form-error-messages.html.twig:8
+msgctxt "error"
+msgid "The LPA access code you entered is too long"
+msgstr ""
+
+#. ShareCode
+#: src/Viewer/templates/viewer/form-error-messages.html.twig:9
+msgctxt "error"
+msgid "The LPA access code you entered is too short"
 msgstr ""
