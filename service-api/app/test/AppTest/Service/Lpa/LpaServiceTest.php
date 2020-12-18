@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\DataAccess\Repository;
-use App\DataAccess\Repository\Response\Lpa;
+use App\DataAccess\{Repository,
+    Repository\Response\Lpa,
+    Repository\UserLpaActorMapInterface,
+    Repository\ViewerCodesInterface};
+use App\Exception\ApiException;
+use App\Exception\NotFoundException;
 use App\Service\Lpa\LpaService;
 use App\Service\ViewerCodes\ViewerCodeService;
 use DateTime;
@@ -13,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
-use App\Exception\NotFoundException;
+use stdClass;
 
 class LpaServiceTest extends TestCase
 {
@@ -28,7 +32,7 @@ class LpaServiceTest extends TestCase
     private $viewerCodeActivityInterfaceProphecy;
 
     /**
-     * @var Repository\ViewerCodesInterface
+     * @var Repository\LpasInterface
      */
     private $lpasInterfaceProphecy;
 
@@ -41,11 +45,6 @@ class LpaServiceTest extends TestCase
      * @var LoggerInterface
      */
     private $loggerProphecy;
-
-    /**
-     * @var string
-     */
-    private $organisation;
 
     public function setUp()
     {
@@ -127,25 +126,28 @@ class LpaServiceTest extends TestCase
     //-------------------------------------------------------------------------
     // Test getByUserLpaActorToken()
 
-    private function init_valid_user_token_test()
+    private function init_valid_user_token_test(): stdClass
     {
-        $t = new \StdClass();
+        $t = new stdClass();
 
         $t->Token = 'test-token';
         $t->UserId = 'test-user-id';
         $t->SiriusUid = 'test-sirius-uid';
         $t->ActorId = 1;
-        $t->Lpa = new Lpa([
-            'uId' => $t->SiriusUid,
-            'attorneys' => [
-                [
-                    'id' => $t->ActorId,
-                    'firstname' => 'Test',
-                    'surname' => 'Test',
-                    'systemStatus' => true
+        $t->Lpa = new Lpa(
+            [
+                'uId' => $t->SiriusUid,
+                'attorneys' => [
+                    [
+                        'id' => $t->ActorId,
+                        'firstname' => 'Test',
+                        'surname' => 'Test',
+                        'systemStatus' => true
+                    ]
                 ]
-            ]
-        ], new DateTime);
+            ],
+            new DateTime()
+        );
 
         $this->userLpaActorMapInterfaceProphecy->get($t->Token)->willReturn([
             'Id' => $t->Token,
@@ -254,7 +256,7 @@ class LpaServiceTest extends TestCase
 
     private function init_valid_get_all_users()
     {
-        $t = new \StdClass();
+        $t = new stdClass();
 
         $t->UserId = 'test-user-id';
 
@@ -276,10 +278,10 @@ class LpaServiceTest extends TestCase
         $t->lpaResults = [
             'uid-1' => new Lpa([
                 'uId' => 'uid-1'
-            ], new DateTime),
+            ], new DateTime()),
             'uid-2' => new Lpa([
                 'uId' => 'uid-2'
-            ], new DateTime),
+            ], new DateTime()),
         ];
 
         $this->userLpaActorMapInterfaceProphecy->getUsersLpas($t->UserId)->willReturn($t->mapResults);
@@ -337,7 +339,7 @@ class LpaServiceTest extends TestCase
 
     private function init_valid_get_all_users_with_linked()
     {
-        $t = new \StdClass();
+        $t = new stdClass();
 
         $t->UserId = 'test-user-id';
 
@@ -362,13 +364,13 @@ class LpaServiceTest extends TestCase
                 'donor' => [
                     'linked' => [['id' => 1, 'uId' => 'person-1']]
                 ],
-            ], new DateTime),
+            ], new DateTime()),
             'uid-2' => new Lpa([
                 'uId' => 'uid-2',
                 'donor' => [
                     'linked' => [['id' => 2, 'uId' => 'person-2']]
                 ],
-            ], new DateTime),
+            ], new DateTime()),
         ];
 
         $this->userLpaActorMapInterfaceProphecy->getUsersLpas($t->UserId)->willReturn($t->mapResults);
@@ -418,7 +420,7 @@ class LpaServiceTest extends TestCase
 
     private function init_valid_get_by_viewer_account()
     {
-        $t = new \StdClass();
+        $t = new stdClass();
 
         $t->ViewerCode = 'test-viewer-code';
         $t->Organisation = 'test-organisation';
@@ -456,7 +458,9 @@ class LpaServiceTest extends TestCase
         //---
 
         // This should NOT be called when logging = false.
-        $this->viewerCodeActivityInterfaceProphecy->recordSuccessfulLookupActivity(Argument::any())->shouldNotBeCalled();
+        $this->viewerCodeActivityInterfaceProphecy->recordSuccessfulLookupActivity(
+            Argument::any()
+        )->shouldNotBeCalled();
 
         //---
 
@@ -485,7 +489,10 @@ class LpaServiceTest extends TestCase
         //---
 
         // This should be called when logging = true.
-        $this->viewerCodeActivityInterfaceProphecy->recordSuccessfulLookupActivity($t->ViewerCode, $t->Organisation)->shouldBeCalled();
+        $this->viewerCodeActivityInterfaceProphecy->recordSuccessfulLookupActivity(
+            $t->ViewerCode,
+            $t->Organisation
+        )->shouldBeCalled();
 
         //---
 
@@ -885,7 +892,7 @@ class LpaServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->delete('2345Token0123')->willReturn($removedresponse);
 
         $service = $this->getLpaService();
-        $result = $service->removeLpaFromUserLpaActorMap('1234','2345Token0123');
+        $result = $service->removeLpaFromUserLpaActorMap('1234', '2345Token0123');
 
         $this->assertNotEmpty($result);
         $this->assertEquals($result['SiriusUid'], $userActorLpa['SiriusUid']);
@@ -922,7 +929,7 @@ class LpaServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->delete('2345Token0123')->willReturn($removedresponse);
 
         $service = $this->getLpaService();
-        $result = $service->removeLpaFromUserLpaActorMap('1234','2345Token0123');
+        $result = $service->removeLpaFromUserLpaActorMap('1234', '2345Token0123');
 
         $this->assertNotEmpty($result);
         $this->assertEquals($result['SiriusUid'], $userActorLpa['SiriusUid']);
@@ -942,7 +949,7 @@ class LpaServiceTest extends TestCase
         $this->expectException(NotFoundException::class);
 
         $service = $this->getLpaService();
-        $result = $service->removeLpaFromUserLpaActorMap('1234','2345Token0123');
+        $result = $service->removeLpaFromUserLpaActorMap('1234', '2345Token0123');
     }
 
     /** @test */
@@ -965,6 +972,36 @@ class LpaServiceTest extends TestCase
         $this->expectException(NotFoundException::class);
 
         $service = $this->getLpaService();
-        $result = $service->removeLpaFromUserLpaActorMap('1234','2345Token0123');
+        $result = $service->removeLpaFromUserLpaActorMap('1234', '2345Token0123');
+    }
+
+    /** @test */
+    public function request_access_code_letter(): void
+    {
+        $caseUid = '700000055554';
+        $actorUid = '700000055554';
+
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $caseUid, (int)$actorUid)
+            ->shouldBeCalled();
+
+        $service = $this->getLpaService();
+        $service->requestAccessByLetter($caseUid, $actorUid);
+    }
+
+    /** @test */
+    public function request_access_code_letter_api_call_fails(): void
+    {
+        $caseUid = '700000055554';
+        $actorUid = '700000055554';
+
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $caseUid, (int)$actorUid)
+            ->willThrow(ApiException::create('bad api call'));
+
+        $service = $this->getLpaService();
+
+        $this->expectException(ApiException::class);
+        $service->requestAccessByLetter($caseUid, $actorUid);
     }
 }

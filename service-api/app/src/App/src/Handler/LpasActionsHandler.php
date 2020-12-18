@@ -34,17 +34,17 @@ class LpasActionsHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $uid = $request->getAttribute('lpa-id');
-        if ($uid === null) {
+        $requestData = $request->getParsedBody();
+
+        if (!isset($requestData['lpa-id'])) {
             throw new BadRequestException("'lpa-id' missing.");
         }
 
-        $actorUid = $request->getAttribute('actor-id');
-        if ($actorUid === null) {
+        if (!isset($requestData['actor-id'])) {
             throw new BadRequestException("'actor-id' missing.");
         }
 
-        $this->lpaService->requestAccessByLetter($uid, $actorUid);
+        $this->lpaService->requestAccessByLetter($requestData['lpa-id'], $requestData['actor-id']);
 
         return new EmptyResponse();
     }
