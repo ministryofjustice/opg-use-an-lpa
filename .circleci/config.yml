@@ -738,7 +738,7 @@ orbs:
           - run:
               name: Docker Build Production Target
               command: |
-                docker build --target production --file service-api/docker/app/Dockerfile.multistage --tag api-app:latest .
+                docker build --target production --file service-api/docker/app/Dockerfile --tag api-app:latest .
           - ecr_login
           - run:
               name: Push container
