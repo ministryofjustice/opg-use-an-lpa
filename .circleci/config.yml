@@ -63,7 +63,7 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires: [build_web_pr_build]
 
-        - use-my-lpa/docker_build_api_app_multistage:
+        - use-my-lpa/docker_build_api_app:
             name: app_api_build_pr_build
             filters: { branches: { ignore: [master] } }
 
@@ -509,11 +509,11 @@ orbs:
               at: ~/project
           - dockerhub_login
           - run:
-              name: Build
+              name: Docker Build Development Target
               command: |
                 mkdir -p service-front/app/assets/stylesheets \
                   && cp -R ~/project/service-front/web/dist/stylesheets/pdf.css service-front/app/assets/stylesheets/pdf.css
-                docker build --file service-front/docker/app/Dockerfile --tag front-app:latest .
+                docker build --target development --file service-front/docker/app/Dockerfile --tag front-app:latest .
           - run:
               name: Run unit tests
               command: |
@@ -543,6 +543,12 @@ orbs:
               paths:
                 - service-front/
               when: always
+          - run:
+              name: Docker Build Production Target
+              command: |
+                mkdir -p service-front/app/assets/stylesheets \
+                  && cp -R ~/project/service-front/web/dist/stylesheets/pdf.css service-front/app/assets/stylesheets/pdf.css
+                docker build --target production --file service-front/docker/app/Dockerfile --tag front-app:latest .
           - ecr_login
           - run:
               name: Push container
@@ -559,6 +565,77 @@ orbs:
                 else
                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
+
+      # docker_build_front_app:
+      #   #
+      #   # Build Docker container for Front App
+      #   #   and runs the Unit Tests.
+      #   #
+      #   executor: python
+      #   parameters:
+      #     container_repo_url:
+      #       type: string
+      #       default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/front_app
+      #   steps:
+      #     - checkout
+      #     - install_aws_cli
+      #     - setup_remote_docker:
+      #         version: 19.03.12
+      #         docker_layer_caching: false
+      #     - attach_workspace:
+      #         at: ~/project
+      #     - dockerhub_login
+      #     - run:
+      #         name: Build
+      #         command: |
+      #           mkdir -p service-front/app/assets/stylesheets \
+      #             && cp -R ~/project/service-front/web/dist/stylesheets/pdf.css service-front/app/assets/stylesheets/pdf.css
+      #           docker build --file service-front/docker/app/Dockerfile --tag front-app:latest .
+      #     - run:
+      #         name: Run unit tests
+      #         command: |
+      #           docker run -d --name tests front-app:latest
+      #           docker exec tests docker-php-ext-enable xdebug
+      #           docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
+      #     - run:
+      #         name: Run integration/acceptance tests
+      #         command: |
+      #           docker run -d --name inttests front-app:latest
+      #           docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
+      #           docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 \
+      #             /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
+      #     - run:
+      #         name: Fetch test results
+      #         command: |
+      #           mkdir -p build/service-front
+      #           docker cp tests:/app/build/reports build/service-front/phpunit
+      #           docker cp inttests:/app/build/reports build/service-front/behat
+      #         when: always
+      #     - store_test_results:
+      #         path: build/service-front/
+      #     - store_artifacts:
+      #         path: build/service-front/
+      #     - persist_to_workspace:
+      #         root: build
+      #         paths:
+      #           - service-front/
+      #         when: always
+      #     - ecr_login
+      #     - run:
+      #         name: Push container
+      #         command: |
+      #           export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+      #           echo $IMAGE_TAG
+
+      #           docker tag front-app:latest << parameters.container_repo_url >>:latest
+      #           docker tag front-app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
+
+      #           if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #             # We want all of the tags pushed
+      #             docker push << parameters.container_repo_url >>
+      #           else
+      #             docker push << parameters.container_repo_url >>:${IMAGE_TAG}
+      #           fi
 
       docker_build_front_web:
         #
