@@ -62,110 +62,110 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires: [app_api_build_pr_build]
 
-  # pr_build:
-  #     jobs:
-  #       - cancel_redundant_builds:
-  #           name: cancel_previous_jobs
-  #           filters: { branches: { ignore: [master] } }
+  pr_build:
+      jobs:
+        - cancel_redundant_builds:
+            name: cancel_previous_jobs
+            filters: { branches: { ignore: [master] } }
 
-  #       - use-my-lpa/lint_terraform:
-  #           name: lint_terraform_pr_build
-  #           filters: { branches: { ignore: [master] } }
+        - use-my-lpa/lint_terraform:
+            name: lint_terraform_pr_build
+            filters: { branches: { ignore: [master] } }
 
-  #       - use-my-lpa/node_test_web:
-  #           name: test_web_pr_build
-  #           filters: { branches: { ignore: [master] } }
+        - use-my-lpa/node_test_web:
+            name: test_web_pr_build
+            filters: { branches: { ignore: [master] } }
 
-  #       - use-my-lpa/node_build_web:
-  #           name: build_web_pr_build
-  #           filters: { branches: { ignore: [master] } }
-  #           requires: [test_web_pr_build]
+        - use-my-lpa/node_build_web:
+            name: build_web_pr_build
+            filters: { branches: { ignore: [master] } }
+            requires: [test_web_pr_build]
 
-  #       - use-my-lpa/node_test_service_pdf:
-  #           name: test_pdf_pr_build
-  #           filters: { branches: { ignore: [master] } }
+        - use-my-lpa/node_test_service_pdf:
+            name: test_pdf_pr_build
+            filters: { branches: { ignore: [master] } }
 
-  #       - use-my-lpa/docker_build_front_app:
-  #           name: app_front_build_pr_build
-  #           filters: { branches: { ignore: [master] } }
-  #           requires: [build_web_pr_build]
+        - use-my-lpa/docker_build_front_app:
+            name: app_front_build_pr_build
+            filters: { branches: { ignore: [master] } }
+            requires: [build_web_pr_build]
 
-  #       - use-my-lpa/docker_build_front_web:
-  #           name: web_front_build_pr_build
-  #           filters: { branches: { ignore: [master] } }
-  #           requires: [build_web_pr_build]
+        - use-my-lpa/docker_build_front_web:
+            name: web_front_build_pr_build
+            filters: { branches: { ignore: [master] } }
+            requires: [build_web_pr_build]
 
-  #       - use-my-lpa/docker_build_api_app_multistage:
-  #           name: app_api_build_pr_build
-  #           filters: { branches: { ignore: [master] } }
+        - use-my-lpa/docker_build_api_app_multistage:
+            name: app_api_build_pr_build
+            filters: { branches: { ignore: [master] } }
 
-  #       - use-my-lpa/docker_build_api_web:
-  #           name: web_api_build_pr_build
-  #           filters: { branches: { ignore: [master] } }
+        - use-my-lpa/docker_build_api_web:
+            name: web_api_build_pr_build
+            filters: { branches: { ignore: [master] } }
 
-  #       - use-my-lpa/docker_build_pdf:
-  #           name: pdf_build_pr_build
-  #           filters: { branches: { ignore: [master] } }
-  #           requires: [test_pdf_pr_build]
+        - use-my-lpa/docker_build_pdf:
+            name: pdf_build_pr_build
+            filters: { branches: { ignore: [master] } }
+            requires: [test_pdf_pr_build]
 
-  #       - use-my-lpa/codecov_upload:
-  #           name: codecov_upload_pr_build
-  #           filters: { branches: { ignore: [master] } }
-  #           requires:
-  #             [
-  #               app_front_build_pr_build,
-  #               app_api_build_pr_build,
-  #               test_web_pr_build,
-  #               test_pdf_pr_build,
-  #             ]
+        - use-my-lpa/codecov_upload:
+            name: codecov_upload_pr_build
+            filters: { branches: { ignore: [master] } }
+            requires:
+              [
+                app_front_build_pr_build,
+                app_api_build_pr_build,
+                test_web_pr_build,
+                test_pdf_pr_build,
+              ]
 
-  #           # Provision and test development
-  #       - use-my-lpa/plan_shared_terraform:
-  #           name: dev_plan_shared_terraform
-  #           filters: { branches: { ignore: [master] } }
-  #           requires: [cancel_previous_jobs,lint_terraform_pr_build]
+            # Provision and test development
+        - use-my-lpa/plan_shared_terraform:
+            name: dev_plan_shared_terraform
+            filters: { branches: { ignore: [master] } }
+            requires: [cancel_previous_jobs,lint_terraform_pr_build]
 
-  #       - use-my-lpa/apply_environment_terraform:
-  #           name: dev_apply_environment_terraform
-  #           filters: { branches: { ignore: [master] } }
-  #           requires:
-  #             [
-  #               cancel_previous_jobs,
-  #               dev_plan_shared_terraform,
-  #               app_front_build_pr_build,
-  #               web_front_build_pr_build,
-  #               web_api_build_pr_build,
-  #               app_api_build_pr_build,
-  #               pdf_build_pr_build,
-  #             ]
+        - use-my-lpa/apply_environment_terraform:
+            name: dev_apply_environment_terraform
+            filters: { branches: { ignore: [master] } }
+            requires:
+              [
+                cancel_previous_jobs,
+                dev_plan_shared_terraform,
+                app_front_build_pr_build,
+                web_front_build_pr_build,
+                web_api_build_pr_build,
+                app_api_build_pr_build,
+                pdf_build_pr_build,
+              ]
 
-  #       - ecr_scan_results:
-  #           name: ecr_scan_results_development
-  #           filters: { branches: { ignore: [master] } }
-  #           requires:
-  #             [
-  #               app_front_build_pr_build,
-  #               web_front_build_pr_build,
-  #               web_api_build_pr_build,
-  #               app_api_build_pr_build,
-  #               pdf_build_pr_build,
-  #               dev_apply_environment_terraform,
-  #             ]
+        - ecr_scan_results:
+            name: ecr_scan_results_development
+            filters: { branches: { ignore: [master] } }
+            requires:
+              [
+                app_front_build_pr_build,
+                web_front_build_pr_build,
+                web_api_build_pr_build,
+                app_api_build_pr_build,
+                pdf_build_pr_build,
+                dev_apply_environment_terraform,
+              ]
 
-  #       - use-my-lpa/seed_database:
-  #           name: dev_seed_database
-  #           filters: { branches: { ignore: [master] } }
-  #           requires: [dev_apply_environment_terraform]
+        - use-my-lpa/seed_database:
+            name: dev_seed_database
+            filters: { branches: { ignore: [master] } }
+            requires: [dev_apply_environment_terraform]
 
-  #       - use-my-lpa/run_behat_suite:
-  #           name: dev_run_behat_tests
-  #           filters: { branches: { ignore: [master] } }
-  #           requires: [dev_seed_database]
+        - use-my-lpa/run_behat_suite:
+            name: dev_run_behat_tests
+            filters: { branches: { ignore: [master] } }
+            requires: [dev_seed_database]
 
-  #       - slack_notify_domain:
-  #           name: post_environment_domains
-  #           filters: { branches: { ignore: [master] } }
-  #           requires: [dev_run_behat_tests]
+        - slack_notify_domain:
+            name: post_environment_domains
+            filters: { branches: { ignore: [master] } }
+            requires: [dev_run_behat_tests]
 
   path_to_live:
       jobs:
