@@ -32,10 +32,6 @@ workflows:
 
   docker_build_experiment:
       jobs:
-        - cancel_redundant_builds:
-            name: cancel_previous_jobs
-            filters: { branches: { ignore: [master] } }
-
         - use-my-lpa/docker_build_api_app_multistage:
             name: app_api_build_pr_build
             filters: { branches: { ignore: [master] } }
