@@ -813,7 +813,7 @@ orbs:
           - run:
               name: Build
               command: |
-                docker build --production --file service-pdf/docker/app/Dockerfile --tag pdf:latest .
+                docker build --target production --file service-pdf/docker/app/Dockerfile --tag pdf:latest .
           - ecr_login
           - run:
               name: Push container
