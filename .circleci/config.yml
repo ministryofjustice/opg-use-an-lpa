@@ -644,9 +644,6 @@ orbs:
           container_repo_url:
             type: string
             default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api_app
-          docker_build_stage:
-            type: string
-            default: production
         steps:
           - checkout
           - install_aws_cli
@@ -657,7 +654,7 @@ orbs:
           - run:
               name: Build
               command: |
-                docker build --target << parameters.docker_build_stage >> --file service-api/docker/app/Dockerfile --tag api-app:latest .
+                docker build --file service-api/docker/app/Dockerfile --tag api-app:latest .
           - run:
               name: Run unit tests
               command: |
@@ -732,11 +729,11 @@ orbs:
           - run:
               name: Build
               command: |
-                docker build --target << parameters.docker_build_stage >> --file service-api/docker/app/Dockerfile --tag api-app:latest .
+                docker build --file service-api/docker/app/Dockerfile --tag api-app:latest .
           - run:
               name: Build
               command: |
-                docker build --target << parameters.docker_build_stage >> --file service-api/docker/app/Dockerfile --tag api-app:latest .
+                docker build --file service-api/docker/app/Dockerfile --tag api-app:latest .
           - run:
               name: Run unit tests
               command: |
