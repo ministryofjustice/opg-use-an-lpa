@@ -108,7 +108,7 @@ workflows:
               ]
 
         - ecr_scan_results:
-            name: ecr_scan_results_development
+            name: ecr_scan_results
             filters: { branches: { ignore: [master] } }
             requires:
               [
@@ -226,7 +226,7 @@ workflows:
               ]
 
         - ecr_scan_results:
-            name: ecr_scan_results_master
+            name: ecr_scan_results
             filters: { branches: { only: [master] } }
             requires:
               [
