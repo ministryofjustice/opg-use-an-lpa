@@ -174,7 +174,7 @@ services:
     image: api-app
     build:
       context: .
-      dockerfile: service-api/docker/app/Dockerfile
+      dockerfile: service-api/docker/app/Dockerfile.multistage
     volumes:
       - ./service-api/app:/app
     networks:
