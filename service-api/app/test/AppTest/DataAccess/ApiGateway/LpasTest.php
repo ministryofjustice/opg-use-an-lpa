@@ -7,7 +7,7 @@ namespace AppTest\DataAccess\ApiGateway;
 use App\DataAccess\ApiGateway\Lpas;
 use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\Exception\ApiException;
-use Aws\Credentials\Credentials;
+use Aws\Credentials\CredentialsInterface;
 use Aws\Signature\SignatureV4;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client;
@@ -57,7 +57,7 @@ class LpasTest extends TestCase
         $this->signatureV4Prophecy
             ->signRequest(
                 Argument::type(Request::class),
-                Argument::type(Credentials::class)
+                Argument::type(CredentialsInterface::class)
             )->shouldBeCalled()
             ->will(function ($args) use ($assert) {
                 // assert the request has trace-id
@@ -92,7 +92,7 @@ class LpasTest extends TestCase
         $this->signatureV4Prophecy
             ->signRequest(
                 Argument::type(Request::class),
-                Argument::type(Credentials::class)
+                Argument::type(CredentialsInterface::class)
             )->shouldBeCalled()
             ->will(function ($args) {
                 return $args[0];
@@ -134,7 +134,7 @@ class LpasTest extends TestCase
         $this->signatureV4Prophecy
             ->signRequest(
                 Argument::type(Request::class),
-                Argument::type(Credentials::class)
+                Argument::type(CredentialsInterface::class)
             )->shouldBeCalled()
             ->will(function ($args) {
                 return $args[0];
