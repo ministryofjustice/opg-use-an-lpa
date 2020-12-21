@@ -40,41 +40,41 @@ workflows:
             name: lint_terraform_pr_build
             filters: { branches: { ignore: [master] } }
 
-        - use-my-lpa/node_test_web:
-            name: test_web_pr_build
-            filters: { branches: { ignore: [master] } }
+        # - use-my-lpa/node_test_web:
+        #     name: test_web_pr_build
+        #     filters: { branches: { ignore: [master] } }
 
-        - use-my-lpa/node_build_web:
-            name: build_web_pr_build
-            filters: { branches: { ignore: [master] } }
-            requires: [test_web_pr_build]
+        # - use-my-lpa/node_build_web:
+        #     name: build_web_pr_build
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [test_web_pr_build]
 
-        - use-my-lpa/node_test_service_pdf:
-            name: test_pdf_pr_build
-            filters: { branches: { ignore: [master] } }
+        # - use-my-lpa/node_test_service_pdf:
+        #     name: test_pdf_pr_build
+        #     filters: { branches: { ignore: [master] } }
 
-        - use-my-lpa/docker_build_front_app:
-            name: app_front_build_pr_build
-            filters: { branches: { ignore: [master] } }
-            requires: [build_web_pr_build]
+        # - use-my-lpa/docker_build_front_app:
+        #     name: app_front_build_pr_build
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [build_web_pr_build]
 
-        - use-my-lpa/docker_build_front_web:
-            name: web_front_build_pr_build
-            filters: { branches: { ignore: [master] } }
-            requires: [build_web_pr_build]
+        # - use-my-lpa/docker_build_front_web:
+        #     name: web_front_build_pr_build
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [build_web_pr_build]
 
-        - use-my-lpa/docker_build_api_app:
+        - use-my-lpa/docker_build_api_app_multistage:
             name: app_api_build_pr_build
             filters: { branches: { ignore: [master] } }
 
-        - use-my-lpa/docker_build_api_web:
-            name: web_api_build_pr_build
-            filters: { branches: { ignore: [master] } }
+        # - use-my-lpa/docker_build_api_web:
+        #     name: web_api_build_pr_build
+        #     filters: { branches: { ignore: [master] } }
 
-        - use-my-lpa/docker_build_pdf:
-            name: pdf_build_pr_build
-            filters: { branches: { ignore: [master] } }
-            requires: [test_pdf_pr_build]
+        # - use-my-lpa/docker_build_pdf:
+        #     name: pdf_build_pr_build
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [test_pdf_pr_build]
 
         - use-my-lpa/codecov_upload:
             name: codecov_upload_pr_build
@@ -88,24 +88,24 @@ workflows:
               ]
 
             # Provision and test development
-        - use-my-lpa/plan_shared_terraform:
-            name: dev_plan_shared_terraform
-            filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs,lint_terraform_pr_build]
+        # - use-my-lpa/plan_shared_terraform:
+        #     name: dev_plan_shared_terraform
+        #     filters: { branches: { ignore: [master] } }
+        #     requires: [cancel_previous_jobs,lint_terraform_pr_build]
 
-        - use-my-lpa/apply_environment_terraform:
-            name: dev_apply_environment_terraform
-            filters: { branches: { ignore: [master] } }
-            requires:
-              [
-                cancel_previous_jobs,
-                dev_plan_shared_terraform,
-                app_front_build_pr_build,
-                web_front_build_pr_build,
-                web_api_build_pr_build,
-                app_api_build_pr_build,
-                pdf_build_pr_build,
-              ]
+        # - use-my-lpa/apply_environment_terraform:
+        #     name: dev_apply_environment_terraform
+        #     filters: { branches: { ignore: [master] } }
+        #     requires:
+        #       [
+        #         cancel_previous_jobs,
+        #         dev_plan_shared_terraform,
+        #         app_front_build_pr_build,
+        #         web_front_build_pr_build,
+        #         web_api_build_pr_build,
+        #         app_api_build_pr_build,
+        #         pdf_build_pr_build,
+        #       ]
 
         - ecr_scan_results:
             name: ecr_scan_results_development
@@ -623,6 +623,85 @@ orbs:
               version: 19.03.12
               docker_layer_caching: false
           - dockerhub_login
+          - run:
+              name: Build
+              command: |
+                docker build --target << parameters.docker_build_stage >> --file service-api/docker/app/Dockerfile --tag api-app:latest .
+          - run:
+              name: Run unit tests
+              command: |
+                docker run -d --name tests api-app:latest
+                docker exec tests docker-php-ext-enable xdebug
+                docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
+          - run:
+              name: Run integration/acceptance tests
+              command: |
+                ~/project/scripts/pipeline/set_environment_variables/set_pact.sh
+                docker run -d --rm --name lpa-codes-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
+                  --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes-pact-mock
+                export DOCKER_REMOTE_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
+                docker run -d --name inttests --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_PACT_IP api-app:latest
+                docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
+                docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 \
+                  /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
+                docker stop lpa-codes-pact-mock
+          - run:
+              name: Fetch test results
+              command: |
+                mkdir -p build/service-api
+                docker cp tests:/app/build/reports build/service-api/phpunit
+                docker cp inttests:/app/build/reports build/service-api/behat
+              when: always
+          - store_test_results:
+              path: build/service-api/
+          - store_artifacts:
+              path: build/service-api/
+          - persist_to_workspace:
+              root: build
+              paths:
+                - service-api/
+              when: always
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
+
+                docker tag api-app:latest << parameters.container_repo_url >>:latest
+                docker tag api-app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
+
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  # We want all of the tags pushed
+                  docker push << parameters.container_repo_url >>
+                else
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
+                fi
+
+      docker_build_api_app_multistage:
+        #
+        # Build Docker container for API App
+        #   and runs the Unit Tests.
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api_app
+          docker_build_stage:
+            type: string
+            default: production
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 19.03.12
+              docker_layer_caching: false
+          - dockerhub_login
+          - run:
+              name: Build
+              command: |
+                docker build --target << parameters.docker_build_stage >> --file service-api/docker/app/Dockerfile --tag api-app:latest .
           - run:
               name: Build
               command: |
