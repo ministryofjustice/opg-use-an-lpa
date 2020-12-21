@@ -2,13 +2,13 @@ FROM composer AS composer
 
 COPY service-front/app/composer.json service-front/app/composer.lock /app/
 
-RUN composer install --prefer-dist --no-dev --no-suggest --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
+RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
 
 FROM composer AS composer-dev
 
 COPY service-front/app/composer.json service-front/app/composer.lock /app/
 
-RUN composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
+RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
 
 FROM php:7-fpm-alpine3.12 AS production
 
