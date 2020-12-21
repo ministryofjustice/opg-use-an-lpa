@@ -30,32 +30,32 @@ workflows:
       - workspace_cleanup:
           name: workspace_cleanup
 
-  docker_build_experiment:
-      jobs:
-        - use-my-lpa/docker_build_api_app_multistage:
-            name: app_api_build_pr_build
-            filters: { branches: { ignore: [master] } }
+  # docker_build_experiment:
+  #     jobs:
+  #       - use-my-lpa/docker_build_api_app_multistage:
+  #           name: app_api_build_pr_build
+  #           filters: { branches: { ignore: [master] } }
 
-        - use-my-lpa/codecov_upload:
-            name: codecov_upload_pr_build
-            filters: { branches: { ignore: [master] } }
-            requires:
-              [
-                app_api_build_pr_build,
-              ]
+  #       - use-my-lpa/codecov_upload:
+  #           name: codecov_upload_pr_build
+  #           filters: { branches: { ignore: [master] } }
+  #           requires:
+  #             [
+  #               app_api_build_pr_build,
+  #             ]
 
-        - ecr_scan_results:
-            name: ecr_scan_results_development
-            filters: { branches: { ignore: [master] } }
-            requires:
-              [
-                app_api_build_pr_build,
-              ]
+  #       - ecr_scan_results:
+  #           name: ecr_scan_results_development
+  #           filters: { branches: { ignore: [master] } }
+  #           requires:
+  #             [
+  #               app_api_build_pr_build,
+  #             ]
 
-        - slack_notify_domain:
-            name: post_environment_domains
-            filters: { branches: { ignore: [master] } }
-            requires: [app_api_build_pr_build]
+  #       - slack_notify_domain:
+  #           name: post_environment_domains
+  #           filters: { branches: { ignore: [master] } }
+  #           requires: [app_api_build_pr_build]
 
   pr_build:
       jobs:
