@@ -30,7 +30,7 @@ workflows:
       - workspace_cleanup:
           name: workspace_cleanup
 
-  pr_build:
+  docker_build_experiment:
       jobs:
         - cancel_redundant_builds:
             name: cancel_previous_jobs
@@ -38,6 +38,7 @@ workflows:
 
         - use-my-lpa/docker_build_api_app_multistage:
             name: app_api_build_pr_build
+            docker_build_stage: production
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/codecov_upload:
@@ -729,11 +730,11 @@ orbs:
           - run:
               name: Build
               command: |
-                docker build --file service-api/docker/app/Dockerfile --tag api-app:latest .
-          - run:
-              name: Build
-              command: |
-                docker build --file service-api/docker/app/Dockerfile --tag api-app:latest .
+                docker build --target << parameters.docker_build_stage >> --file service-api/docker/app/Dockerfile.multistage --tag api-app:latest .
+          # - run:
+          #     name: Build
+          #     command: |
+          #       docker build --target development --file service-api/docker/app/Dockerfile.multistage --tag api-app:latest .
           - run:
               name: Run unit tests
               command: |
