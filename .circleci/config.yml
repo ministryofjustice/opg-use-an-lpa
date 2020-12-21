@@ -38,7 +38,6 @@ workflows:
 
         - use-my-lpa/docker_build_api_app_multistage:
             name: app_api_build_pr_build
-            docker_build_stage: production
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/codecov_upload:
@@ -717,9 +716,6 @@ orbs:
           container_repo_url:
             type: string
             default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api_app
-          docker_build_stage:
-            type: string
-            default: production
         steps:
           - checkout
           - install_aws_cli
@@ -768,7 +764,7 @@ orbs:
           - run:
               name: Docker Build Production Target
               command: |
-                docker build --target << parameters.docker_build_stage >> --file service-api/docker/app/Dockerfile.multistage --tag api-app:latest .
+                docker build --target production --file service-api/docker/app/Dockerfile.multistage --tag api-app:latest .
           - ecr_login
           - run:
               name: Push container
