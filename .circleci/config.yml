@@ -728,7 +728,7 @@ orbs:
               docker_layer_caching: false
           - dockerhub_login
           - run:
-              name: Build
+              name: Docker Build Development Target
               command: |
                 docker build --target development --file service-api/docker/app/Dockerfile.multistage --tag api-app:latest .
           - run:
@@ -766,7 +766,7 @@ orbs:
                 - service-api/
               when: always
           - run:
-              name: Build
+              name: Docker Build Production Target
               command: |
                 docker build --target << parameters.docker_build_stage >> --file service-api/docker/app/Dockerfile.multistage --tag api-app:latest .
           - ecr_login
