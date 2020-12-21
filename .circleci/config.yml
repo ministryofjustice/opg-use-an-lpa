@@ -730,11 +730,7 @@ orbs:
           - run:
               name: Build
               command: |
-                docker build --target << parameters.docker_build_stage >> --file service-api/docker/app/Dockerfile.multistage --tag api-app:latest .
-          # - run:
-          #     name: Build
-          #     command: |
-          #       docker build --target development --file service-api/docker/app/Dockerfile.multistage --tag api-app:latest .
+                docker build --target development --file service-api/docker/app/Dockerfile.multistage --tag api-app:latest .
           - run:
               name: Run unit tests
               command: |
@@ -769,6 +765,10 @@ orbs:
               paths:
                 - service-api/
               when: always
+          - run:
+              name: Build
+              command: |
+                docker build --target << parameters.docker_build_stage >> --file service-api/docker/app/Dockerfile.multistage --tag api-app:latest .
           - ecr_login
           - run:
               name: Push container
