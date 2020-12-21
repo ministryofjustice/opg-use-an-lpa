@@ -37,61 +37,61 @@ workflows:
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/lint_terraform:
-            name: lint_terraform_pr_build
+            name: lint_terraform
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/node_test_web:
-            name: test_web_pr_build
+            name: test_web
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/node_build_web:
-            name: build_web_pr_build
+            name: build_web
             filters: { branches: { ignore: [master] } }
-            requires: [test_web_pr_build]
+            requires: [test_web]
 
         - use-my-lpa/node_test_service_pdf:
-            name: test_pdf_pr_build
+            name: test_pdf
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/docker_build_front_app:
-            name: app_front_build_pr_build
+            name: app_front_build
             filters: { branches: { ignore: [master] } }
-            requires: [build_web_pr_build]
+            requires: [build_web]
 
         - use-my-lpa/docker_build_front_web:
-            name: web_front_build_pr_build
+            name: web_front_build
             filters: { branches: { ignore: [master] } }
-            requires: [build_web_pr_build]
+            requires: [build_web]
 
         - use-my-lpa/docker_build_api_app:
-            name: app_api_build_pr_build
+            name: app_api_build
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/docker_build_api_web:
-            name: web_api_build_pr_build
+            name: web_api_build
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/docker_build_pdf:
-            name: pdf_build_pr_build
+            name: pdf_build
             filters: { branches: { ignore: [master] } }
-            requires: [test_pdf_pr_build]
+            requires: [test_pdf]
 
         - use-my-lpa/codecov_upload:
-            name: codecov_upload_pr_build
+            name: codecov_upload
             filters: { branches: { ignore: [master] } }
             requires:
               [
-                app_front_build_pr_build,
-                app_api_build_pr_build,
-                test_web_pr_build,
-                test_pdf_pr_build,
+                app_front_build,
+                app_api_build,
+                test_web,
+                test_pdf,
               ]
 
             # Provision and test development
         - use-my-lpa/plan_shared_terraform:
             name: dev_plan_shared_terraform
             filters: { branches: { ignore: [master] } }
-            requires: [cancel_previous_jobs,lint_terraform_pr_build]
+            requires: [cancel_previous_jobs,lint_terraform]
 
         - use-my-lpa/apply_environment_terraform:
             name: dev_apply_environment_terraform
@@ -100,11 +100,11 @@ workflows:
               [
                 cancel_previous_jobs,
                 dev_plan_shared_terraform,
-                app_front_build_pr_build,
-                web_front_build_pr_build,
-                web_api_build_pr_build,
-                app_api_build_pr_build,
-                pdf_build_pr_build,
+                app_front_build,
+                web_front_build,
+                web_api_build,
+                app_api_build,
+                pdf_build,
               ]
 
         - ecr_scan_results:
@@ -112,11 +112,11 @@ workflows:
             filters: { branches: { ignore: [master] } }
             requires:
               [
-                app_front_build_pr_build,
-                web_front_build_pr_build,
-                web_api_build_pr_build,
-                app_api_build_pr_build,
-                pdf_build_pr_build,
+                app_front_build,
+                web_front_build,
+                web_api_build,
+                app_api_build,
+                pdf_build,
                 dev_apply_environment_terraform,
               ]
 
@@ -139,61 +139,61 @@ workflows:
       jobs:
         # Common tasks
         - use-my-lpa/node_test_web:
-            name: test_web_path_to_live
+            name: test_web
             filters: { branches: { only: [master] } }
 
         - use-my-lpa/node_build_web:
-            name: build_web_path_to_live
+            name: build_web
             filters: { branches: { only: [master] } }
-            requires: [test_web_path_to_live]
+            requires: [test_web]
 
         - use-my-lpa/node_test_service_pdf:
-            name: test_pdf_path_to_live
+            name: test_pdf
             filters: { branches: { only: [master] } }
 
         - use-my-lpa/docker_build_front_app:
-            name: app_front_build_path_to_live
+            name: app_front_build
             filters: { branches: { only: [master] } }
-            requires: [build_web_path_to_live]
+            requires: [build_web]
 
         - use-my-lpa/docker_build_front_web:
-            name: web_front_build_path_to_live
+            name: web_front_build
             filters: { branches: { only: [master] } }
-            requires: [build_web_path_to_live]
+            requires: [build_web]
 
         - use-my-lpa/docker_build_api_app:
-            name: app_api_build_path_to_live
+            name: app_api_build
             filters: { branches: { only: [master] } }
 
         - use-my-lpa/docker_build_api_web:
-            name: web_api_build_path_to_live
+            name: web_api_build
             filters: { branches: { only: [master] } }
 
         - use-my-lpa/docker_build_pdf:
-            name: pdf_build_path_to_live
+            name: pdf_build
             filters: { branches: { only: [master] } }
-            requires: [test_pdf_path_to_live]
+            requires: [test_pdf]
 
         - use-my-lpa/coveralls_upload:
-            name: coveralls_upload_path_to_live
+            name: coveralls_upload
             filters: { branches: { only: [master] } }
             requires:
               [
-                app_front_build_path_to_live,
-                app_api_build_path_to_live,
-                test_web_path_to_live,
-                test_pdf_path_to_live,
+                app_front_build,
+                app_api_build,
+                test_web,
+                test_pdf,
               ]
 
         - use-my-lpa/codecov_upload:
-            name: codecov_upload_path_to_live
+            name: codecov_upload
             filters: { branches: { only: [master] } }
             requires:
               [
-                app_front_build_path_to_live,
-                app_api_build_path_to_live,
-                test_web_path_to_live,
-                test_pdf_path_to_live,
+                app_front_build,
+                app_api_build,
+                test_web,
+                test_pdf,
               ]
 
         # Provision and test preproduction
@@ -218,11 +218,11 @@ workflows:
             requires:
               [
                 preprod_apply_shared_terraform,
-                app_front_build_path_to_live,
-                web_front_build_path_to_live,
-                web_api_build_path_to_live,
-                app_api_build_path_to_live,
-                pdf_build_path_to_live,
+                app_front_build,
+                web_front_build,
+                web_api_build,
+                app_api_build,
+                pdf_build,
               ]
 
         - ecr_scan_results:
@@ -230,11 +230,11 @@ workflows:
             filters: { branches: { only: [master] } }
             requires:
               [
-                app_front_build_path_to_live,
-                web_front_build_path_to_live,
-                web_api_build_path_to_live,
-                app_api_build_path_to_live,
-                pdf_build_path_to_live,
+                app_front_build,
+                web_front_build,
+                web_api_build,
+                app_api_build,
+                pdf_build,
                 preprod_apply_environment_terraform,
               ]
 
@@ -263,11 +263,11 @@ workflows:
             requires:
               [
                 production_apply_shared_terraform,
-                app_front_build_path_to_live,
-                web_front_build_path_to_live,
-                web_api_build_path_to_live,
-                app_api_build_path_to_live,
-                pdf_build_path_to_live,
+                app_front_build,
+                web_front_build,
+                web_api_build,
+                app_api_build,
+                pdf_build,
               ]
 
         - use-my-lpa/run_healthcheck_test:
