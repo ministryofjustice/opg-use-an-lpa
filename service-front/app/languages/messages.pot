@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2020-12-18T13:35:28+00:00\n"
+"POT-Creation-Date: 2020-12-29T14:38:11+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -201,6 +201,7 @@ msgid "Please <a href=\"%link%\" class=\"govuk-link\">sign in</a>"
 msgstr ""
 
 #: src/Actor/templates/actor/create-account.html.twig:29
+#: src/Actor/templates/actor/login-not-found.html.twig:24
 msgid "Create an account"
 msgstr ""
 
@@ -226,6 +227,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
 #: src/Actor/templates/actor/check-lpa.html.twig:68
+#: src/Actor/templates/actor/check-your-answers.html.twig:82
 #: src/Actor/templates/actor/create-account.html.twig:59
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:245
@@ -269,7 +271,7 @@ msgstr ""
 msgid "at least one number"
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:39
+#: src/Actor/templates/actor/login.html.twig:45
 #: src/Actor/templates/actor/password-reset.html.twig:49
 #: src/Actor/templates/actor/your-details.html.twig:37
 msgid "Password"
@@ -618,11 +620,13 @@ msgstr ""
 msgid "The donor"
 msgstr ""
 
+#: src/Actor/templates/actor/check-your-answers.html.twig:40
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:135
 #: src/Common/templates/partials/full-lpa-display.html.twig:162
 msgid "Name"
 msgstr ""
 
+#: src/Actor/templates/actor/check-your-answers.html.twig:53
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:139
 #: src/Common/templates/partials/full-lpa-display.html.twig:166
 msgid "Date of birth"
@@ -1193,7 +1197,7 @@ msgstr ""
 msgid "Enter your email address below. If there's an account associated with the address, we'll send you a link to reset your password."
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:37
+#: src/Actor/templates/actor/login.html.twig:43
 #: src/Actor/templates/actor/password-reset-request.html.twig:34
 #: src/Actor/templates/actor/your-details.html.twig:24
 msgid "Email address"
@@ -1249,7 +1253,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:17
 #: src/Actor/templates/actor/email-reset-not-found.html.twig:22
-#: src/Actor/templates/actor/login.html.twig:41
+#: src/Actor/templates/actor/login.html.twig:47
 msgid "Sign in"
 msgstr ""
 
@@ -1470,12 +1474,6 @@ msgstr ""
 #: src/Actor/templates/actor/form-error-messages.html.twig:26
 msgctxt "error"
 msgid "Security validation failed. Please try again."
-msgstr ""
-
-#. Login
-#: src/Actor/templates/actor/form-error-messages.html.twig:27
-msgctxt "error"
-msgid "We cannot find an account with that email address and password"
 msgstr ""
 
 #. Add LPA
@@ -1715,6 +1713,7 @@ msgid ""
 "                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm."
 msgstr ""
 
+#: src/Actor/templates/actor/login-not-found.html.twig:22
 #: src/Actor/templates/actor/lpa-not-found.html.twig:49
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:21
 msgid "Try again"
@@ -1728,7 +1727,7 @@ msgstr ""
 msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to <a href=\"%link%\" class=\"govuk-link\">create an account</a> to use this service."
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:47
+#: src/Actor/templates/actor/login.html.twig:53
 msgid "Forgotten your password?"
 msgstr ""
 
@@ -1808,6 +1807,7 @@ msgstr ""
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:44
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:61
 #: src/Actor/templates/actor/check-lpa.html.twig:93
+#: src/Actor/templates/actor/check-your-answers.html.twig:91
 #: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-add.html.twig:91
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:68
@@ -3526,6 +3526,7 @@ msgstr ""
 msgid "Find out what to do if you've <a href=\"%link%\" class=\"govuk-link\">changed address and not told us</a>."
 msgstr ""
 
+#: src/Actor/templates/actor/check-your-answers.html.twig:27
 #: src/Actor/templates/actor/request-activation-key.html.twig:34
 msgid "OPG reference number"
 msgstr ""
@@ -3542,6 +3543,7 @@ msgstr ""
 msgid "Last name"
 msgstr ""
 
+#: src/Actor/templates/actor/check-your-answers.html.twig:66
 #: src/Actor/templates/actor/request-activation-key.html.twig:59
 msgid "Postcode"
 msgstr ""
@@ -3560,4 +3562,44 @@ msgstr ""
 #: src/Viewer/templates/viewer/form-error-messages.html.twig:9
 msgctxt "error"
 msgid "The LPA access code you entered is too short"
+msgstr ""
+
+#: src/Actor/templates/actor/check-your-answers.html.twig:34
+msgid "Change<span class=\"govuk-visually-hidden\"> reference number</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/check-your-answers.html.twig:47
+msgid "Change<span class=\"govuk-visually-hidden\"> name</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/check-your-answers.html.twig:60
+msgid "Change<span class=\"govuk-visually-hidden\"> dob</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/check-your-answers.html.twig:73
+msgid "Change<span class=\"govuk-visually-hidden\"> postcode</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/check-your-answers.html.twig:83
+msgid "Check all the details you entered are correct before continuing"
+msgstr ""
+
+#: src/Actor/templates/actor/login-not-found.html.twig:14
+msgid "We could not find an account with that email and password"
+msgstr ""
+
+#: src/Actor/templates/actor/login-not-found.html.twig:16
+msgid "If you’re sure you have a Use a lasting power of attorney account, you can try to sign in again"
+msgstr ""
+
+#: src/Actor/templates/actor/login-not-found.html.twig:18
+msgid "If you made an LPA online"
+msgstr ""
+
+#: src/Actor/templates/actor/login-not-found.html.twig:20
+msgid "If you made an LPA online, you cannot sign in using your Make a lasting power of attorney details. You need to create a separate account to use an LPA online"
+msgstr ""
+
+#: src/Actor/templates/actor/login.html.twig:37
+msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to <a href=\"%link%\" class=\"govuk-link\">create a seperate account</a> to use this service."
 msgstr ""

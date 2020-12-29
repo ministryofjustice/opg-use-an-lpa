@@ -165,7 +165,7 @@ class AccountContext implements Context
      */
     public function iAmToldMyCredentialsAreIncorrect()
     {
-        $this->ui->assertPageContainsText('We cannot find an account with that email address and password');
+        $this->ui->assertPageContainsText('We could not find an account with that email and password');
     }
 
     /**
@@ -2567,7 +2567,7 @@ class AccountContext implements Context
     public function myOldAccountIsNotFound()
     {
         $this->ui->assertPageAddress('/login');
-        $this->ui->assertPageContainsText('We cannot find an account with that email address and password');
+        $this->ui->assertPageContainsText('We could not find an account with that email and password');
     }
 
     /**
