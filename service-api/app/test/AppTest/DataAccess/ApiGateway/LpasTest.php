@@ -19,6 +19,9 @@ use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\StreamInterface;
 
+/**
+ * @backupGlobals enabled
+ */
 class LpasTest extends TestCase
 {
     private string $apiUrl;
@@ -34,6 +37,10 @@ class LpasTest extends TestCase
         $this->dataSanitiserStrategy = $this->prophesize(DataSanitiserStrategy::class);
         $this->apiUrl = 'http://test';
         $this->traceId = '1234-12-12-12-1234';
+
+        putenv('AWS_ACCESS_KEY_ID=testkey');
+        putenv('AWS_SECRET_ACCESS_KEY=secretkey');
+        putenv('AWS_SESSION_TOKEN=sessiontoken');
     }
 
     private function getLpas(): Lpas
