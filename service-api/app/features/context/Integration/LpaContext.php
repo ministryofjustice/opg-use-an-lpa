@@ -958,13 +958,6 @@ class LpaContext extends BaseIntegrationContext
         $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
         $this->userLpaActorToken = '13579';
 
-//        $this->pactGetInteraction(
-//            $this->apiGatewayPactProvider,
-//            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-//            StatusCodeInterface::STATUS_OK,
-//            $this->lpa
-//        );
-
         // UserLpaActorMap::create
         $this->awsFixtures->append(
             new Result(
