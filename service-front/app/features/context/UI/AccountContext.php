@@ -2831,6 +2831,8 @@ class AccountContext implements Context
             $this->ui->assertPageAddress('/your-details');
         } elseif ($page == 'add a lpa') {
             $this->ui->assertPageAddress('/lpa/add-details');
+        } elseif ($page == 'add by code') {
+            $this->ui->assertPageAddress('/lpa/add-by-code');
         }
     }
 
@@ -3958,5 +3960,22 @@ class AccountContext implements Context
         $this->ui->assertFieldContains('dob[month]', '02');
         $this->ui->assertFieldContains('dob[year]', '1998');
         $this->ui->assertFieldContains('postcode', 'ABC123');
+    }
+
+    /**
+     * @When /^I say I do not have an activation key$/
+     */
+    public function iSayIDoNotHaveAnActivationKey()
+    {
+        $this->ui->fillField('activation_key_triage', 'No');
+    }
+
+    /**
+     * @When /^I am shown content explaining why I can not use this service$/
+     */
+    public function iAmShownContentExplainingWhyICannotUseThisService()
+    {
+        $this->ui->assertPageAddress('/lpa/add');
+        $this->ui->assertPageContainsText('If the LPA was registered before this date, you need to use the paper LPA with people and organisations.');
     }
 }

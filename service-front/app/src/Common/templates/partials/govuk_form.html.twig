@@ -84,20 +84,36 @@
 {%- endblock form_input_checkbox -%}
 
 {%- block form_input_radio -%}
+    {%- set hasConditional = false -%}
+    {%- for option in value_options -%}
+        {%- if option.conditionalContent is defined -%}
+            {% set hasConditional = true %}
+        {%- endif -%}
+    {%- endfor -%}
+
     <div class="govuk-form-group {% if element.getMessages() is not empty %}govuk-form-group--error{% endif %}">
-        {%  for option in value_options %}
-            <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="{{ element.getName() }}-{{ loop.index }}" name="{{ element.getName() }}" type="radio" value="{{ option.value }}" {% if option.value == element.getValue() %}checked="checked"{% endif %} >
-                <label class="govuk-label govuk-radios__label" for="{{ element.getName() }}-{{ loop.index }}">
-                    {{ option.label }}
-                </label>
-                {% if option.hint is defined %}
-                    <span id="{{ element.getName() }}-{{ loop.index }}" class="govuk-hint govuk-radios__hint">
-                        {{ option.hint }}
-                    </span>
-                {% endif %}
-            </div>
-        {% endfor %}
+        <div class="govuk-radios {% if hasConditional %}govuk-radios--conditional{% endif %}" data-module="govuk-radios">
+            {%-  for option in value_options -%}
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="{{ element.getName() }}-{{ loop.index }}" name="{{ element.getName() }}" type="radio" value="{{ option.value }}" {% if option.value == element.getValue() %}checked="checked"{% endif %} {% if option.conditionalContent is defined %}data-aria-controls="conditional-{{ element.getName() }}-{{ loop.index }}"{% endif %}>
+                    <label class="govuk-label govuk-radios__label" for="{{ element.getName() }}-{{ loop.index }}">
+                        {{ option.label }}
+                    </label>
+                    {%- if option.hint is defined -%}
+                        <span id="{{ element.getName() }}-{{ loop.index }}" class="govuk-hint govuk-radios__hint">
+                            {{ option.hint }}
+                        </span>
+                    {%- endif -%}
+                </div>
+                {%- if option.conditionalContent is defined -%}
+                    <div class="govuk-radios__item govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-{{ element.getName() }}-{{ loop.index }}">
+                        {%-  for content in option.conditionalContent -%}
+                            <p class="govuk-body">{{ content }}</p>
+                        {%- endfor -%}
+                    </div>
+                {%- endif -%}
+            {%- endfor -%}
+        </div>
     </div>
 {%- endblock form_input_radio -%}
 

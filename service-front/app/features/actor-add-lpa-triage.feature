@@ -31,3 +31,15 @@ Feature: Add an LPA triage page
     Given I am on the add an LPA triage page
     When I do not select an option for whether I have an activation key
     Then I will be told that I must select whether I have an activation key
+
+  @ui
+  Scenario: Check cancel button on add an LPA triage page
+    Given I am on the add an LPA triage page
+    When I click the Cancel link on the page
+    Then I should be taken to the <dashboard> page
+
+  @ui
+  Scenario: The user is shown additional content if they do not have an activation key
+    Given I am on the add an LPA triage page
+    When I say I do not have an activation key
+    Then I am shown content explaining why I can not use this service
