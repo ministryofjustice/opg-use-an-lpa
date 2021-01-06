@@ -105,6 +105,9 @@ class GovUKLaminasFormExtension extends AbstractExtension
             $element->setLabel($options['label']);
         }
 
+       // var_dump("I am here");
+        //die;
+
         return $template->renderBlock(
             $elementBlock,
             array_merge(
