@@ -20,10 +20,12 @@ class PactActorCodesFactory
             throw new \Exception('Actor codes API Gateway endpoint is not set');
         }
 
+        $apiHost = parse_url($config['codes_api']['endpoint'], PHP_URL_HOST);
+
         return new ActorCodes(
             new HttpClient(),
             $container->get(RequestSigner::class),
-            $config['codes_api']['endpoint'],
+            $apiHost,
             $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );
     }

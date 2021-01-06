@@ -1324,8 +1324,8 @@ class AccountContext implements Context
                     json_encode([
                             0 => [
                                 'SiriusUid' => $this->lpa->uId,
-                                'Added' => '2020-01-01T23:59:59+00:00',
-                                'Expires' => '2021-01-01T23:59:59+00:00',
+                                'Added' => (new \DateTime('yesterday'))->format('c'),
+                                'Expires' => (new \DateTime('+1 month'))->setTime(23, 59, 59)->format('c'),
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
                                 'ViewerCode' => $this->accessCode,

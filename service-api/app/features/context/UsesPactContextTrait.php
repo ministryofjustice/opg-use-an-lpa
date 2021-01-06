@@ -8,6 +8,8 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use PhpPact\Exception\ConnectionException;
 use SmartGamma\Behat\PactExtension\Context\PactContext;
+use SmartGamma\Behat\PactExtension\Exception\NoConsumerRequestDefined;
+use stdClass;
 
 trait UsesPactContextTrait
 {
@@ -26,25 +28,24 @@ trait UsesPactContextTrait
     /**
      * @param string $providerName
      * @param string $uri
-     * @param array $requestBody
+     * @param array|stdClass $requestBody
      * @param int $responseStatus
-     * @param array $responseBody
+     * @param array|stdClass $responseBody
      * @throws ConnectionException
-     * @throws \SmartGamma\Behat\PactExtension\Exception\NoConsumerRequestDefined
      */
     protected function pactPostInteraction(
         string $providerName,
         string $uri,
-        array $requestBody,
+        $requestBody,
         int $responseStatus,
-        array $responseBody
+        $responseBody = []
     ): void {
         // Create request expectation
         $success = $this->pact->requestToWithParameters(
             $providerName,
             'POST',
             $uri,
-            $this->createTableNode($requestBody)
+            is_array($requestBody) ? $this->createTableNode($requestBody) : $requestBody
         );
 
         if (!$success) {
@@ -52,10 +53,39 @@ trait UsesPactContextTrait
         }
 
         // and the associated response
-        $this->pact->theProviderRequestShouldReturnResponseWithAndBody(
+        try {
+            $this->pact->theProviderRequestShouldReturnResponseWithAndBody(
+                $providerName,
+                $responseStatus,
+                is_array($responseBody) ? $this->createTableNode($responseBody) : $responseBody
+            );
+        } catch (NoConsumerRequestDefined $ex) {
+            throw new ConnectionException('Unable to create response expectation');
+        }
+    }
+
+    /**
+     * @param string $providerName The name of the pact provider to access
+     * @param string $uri The url of the request to make
+     * @param ?string $query A query string to attach to the url
+     * @param int $responseStatus The response code of the mocked response
+     * @param array|stdClass $responseBody The response body of the mocked response, either a JSON
+     *                                   string or an associative array
+     */
+    protected function pactGetInteraction(
+        string $providerName,
+        string $uri,
+        int $responseStatus,
+        $responseBody = [],
+        string $query = ''
+    ): void {
+        $this->pact->registerInteractionWithQueryAndBody(
             $providerName,
+            'GET',
+            $uri,
+            $query,
             $responseStatus,
-            $this->createTableNode($responseBody)
+            is_array($responseBody) ? $this->createTableNode($responseBody) : $responseBody
         );
     }
 

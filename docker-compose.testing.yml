@@ -39,7 +39,23 @@ services:
         - --provider
         - lpa-codes
 
+  api-gateway-pact-mock:
+    image: pactfoundation/pact-cli:latest
+    command:
+      - mock-service
+      - -p
+      - "80"
+      - --host
+      - "0.0.0.0"
+      - --pact-dir
+      - /tmp/pacts
+      - --consumer
+      - use_a_lasting_power_of_attorney
+      - --provider
+      - api-gateway
+
   api-app:
     image: api-app
     depends_on:
       - lpa-codes-pact-mock
+      - api-gateway-pact-mock

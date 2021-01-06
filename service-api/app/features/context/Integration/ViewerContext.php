@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use App\Exception\GoneException;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\LpaService;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use BehatTest\Context\SetupEnv;
+use BehatTest\Context\UsesPactContextTrait;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Psr7\Response;
-use JSHayes\FakeRequests\MockHandler;
 
 /**
  * Class ViewerContext
@@ -26,26 +26,23 @@ use JSHayes\FakeRequests\MockHandler;
 class ViewerContext extends BaseIntegrationContext
 {
     use SetupEnv;
+    use UsesPactContextTrait;
 
-    /** @var MockHandler */
-    private $apiFixtures;
-
-    /** @var AwsMockHandler */
-    private $awsFixtures;
-
-    /** @var LpaService */
-    private $lpaService;
+    private AwsMockHandler $awsFixtures;
+    private LpaService $lpaService;
+    private string $apiGatewayPactProvider;
 
     protected function prepareContext(): void
     {
         // This is populated into the container using a Middleware which these integration
         // tests wouldn't normally touch but the container expects
         $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
-
-        $this->apiFixtures = $this->container->get(MockHandler::class);
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
 
         $this->lpaService = $this->lpaService = $this->container->get(LpaService::class);
+
+        $config = $this->container->get('config');
+        $this->apiGatewayPactProvider = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);
     }
 
     /**
@@ -57,8 +54,7 @@ class ViewerContext extends BaseIntegrationContext
         $this->donorSurname = 'Deputy';
         $this->lpaViewedBy = 'Santander';
         $this->lpa = json_decode(
-            file_get_contents(__DIR__ . '../../../../test/fixtures/example_lpa.json'),
-            true
+            file_get_contents(__DIR__ . '../../../../test/fixtures/example_lpa.json')
         );
     }
 
@@ -68,7 +64,7 @@ class ViewerContext extends BaseIntegrationContext
     public function iHaveBeenGivenAccessToUseACancelledLPAViaShareCode()
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaShareCode();
-        $this->lpa['status'] = 'Cancelled';
+        $this->lpa->status = 'Cancelled';
     }
 
     /**
@@ -93,7 +89,7 @@ class ViewerContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'ViewerCode' => $this->viewerCode,
-                            'SiriusUid'  => $this->lpa['uId'],
+                            'SiriusUid'  => $this->lpa->uId,
                             'Added'      => (new \DateTime('now'))->format('c'),
                             'Expires'    => $lpaExpiry
                         ]
@@ -103,13 +99,17 @@ class ViewerContext extends BaseIntegrationContext
         );
 
         // Lpas::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa['uId'])
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpa->uId,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
 
         // organisation parameter is null when doing a summary check
         $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, null);
 
-        assertEquals($this->lpa, $lpaData['lpa']);
+        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
         assertEquals($lpaExpiry, $lpaData['expires']);
     }
 
@@ -119,7 +119,7 @@ class ViewerContext extends BaseIntegrationContext
     public function iGiveAShareCodeThatHasBeenCancelled()
     {
         $lpaExpiry = (new \DateTime('+20 days'))->format('c');
-        $this->lpaData['status'] = 'Cancelled';
+        $this->lpa->status = 'Cancelled';
 
         // ViewerCodes::get
         $this->awsFixtures->append(
@@ -128,7 +128,7 @@ class ViewerContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'ViewerCode' => $this->viewerCode,
-                            'SiriusUid'  => $this->lpa['uId'],
+                            'SiriusUid'  => $this->lpa->uId,
                             'Added'      => (new \DateTime('now'))->format('c'),
                             'Expires'    => $lpaExpiry,
                             'Cancelled'  => (new \DateTime('now'))->format('c'),
@@ -139,12 +139,21 @@ class ViewerContext extends BaseIntegrationContext
         );
 
         // Lpas::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa['uId'])
-            ->respondWith(new Response(StatusCodeInterface::STATUS_GONE, [], json_encode($this->lpa)));
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpa->uId,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
 
         // organisation parameter is null when doing a summary check
-        $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, null);
-        assertEquals(null, $lpaData);
+        try {
+            $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, null);
+        } catch (GoneException $gox) {
+            return;
+        }
+
+        throw new \Exception('GoneException not thrown when it should be');
     }
 
     /**
@@ -161,7 +170,7 @@ class ViewerContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'ViewerCode' => $this->viewerCode,
-                            'SiriusUid'  => $this->lpa['uId'],
+                            'SiriusUid'  => $this->lpa->uId,
                             'Added'      => (new \DateTime('now'))->format('c'),
                             'Expires'    => $lpaExpiry
                         ]
@@ -170,17 +179,13 @@ class ViewerContext extends BaseIntegrationContext
             )
         );
 
-        // Lpas::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa['uId'])
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         // ViewerCodeActivity::recordSuccessfulLookupActivity
         $this->awsFixtures->append(new Result([]));
 
         // organisation parameter is a string when doing a full check
         $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, $this->lpaViewedBy);
 
-        assertEquals($this->lpa, $lpaData['lpa']);
+        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
         assertEquals($lpaExpiry, $lpaData['expires']);
     }
 
