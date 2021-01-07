@@ -548,7 +548,8 @@ orbs:
               command: |
                 mkdir -p service-front/app/assets/stylesheets \
                   && cp -R ~/project/service-front/web/dist/stylesheets/pdf.css service-front/app/assets/stylesheets/pdf.css
-                docker build --target production --file service-front/docker/app/Dockerfile --tag front-app:latest .
+                docker build --file service-front/docker/app/Dockerfile --tag front-app:latest .
+                # docker build --target production --file service-front/docker/app/Dockerfile --tag front-app:latest .
           - ecr_login
           - run:
               name: Push container
