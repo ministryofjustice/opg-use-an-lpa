@@ -8,7 +8,7 @@ use App\DataAccess\Repository\{LpasInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
-use App\Exception\{GoneException, NotFoundException};
+use App\Exception\{ApiException, GoneException, NotFoundException};
 use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -228,6 +228,41 @@ class LpaService
         return $lpaData;
     }
 
+    /**
+     * Provides the capability to request a letter be sent to the registered
+     * address of the specified actor with a new one-time-use registration code.
+     * This will allow them to add the LPA to their UaLPA account.
+     *
+     * @param string $uid Sirius uId for an LPA
+     * @param string $actorUid uId of an actor on that LPA
+     */
+    public function requestAccessByLetter(string $uid, string $actorUid): void
+    {
+        $uidInt = (int) $uid;
+        $actorUidInt = (int) $actorUid;
+
+        $this->logger->info(
+            'Requesting new access code letter for attorney {attorney} on LPA {lpa}',
+            [
+                'attorney' => $actorUidInt,
+                'lpa' => $uidInt
+            ]
+        );
+
+        try {
+            $this->lpaRepository->requestLetter($uidInt, $actorUidInt);
+        } catch (ApiException $apiException) {
+            $this->logger->notice(
+                'Failed to request access code letter for attorney {attorney} on LPA {lpa}',
+                [
+                    'attorney' => $actorUidInt,
+                    'lpa' => $uidInt
+                ]
+            );
+
+            throw $apiException;
+        }
+    }
 
     /**
      * Given an LPA and an Actor ID, this returns the actor's details, and what type of actor they are.

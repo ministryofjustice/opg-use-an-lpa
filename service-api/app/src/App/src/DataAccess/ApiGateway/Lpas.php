@@ -7,11 +7,15 @@ namespace App\DataAccess\ApiGateway;
 use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response;
+use App\Exception\ApiException;
 use App\Service\Log\RequestTracing;
 use Aws\Credentials\CredentialProvider as AwsCredentialProvider;
 use Aws\Signature\SignatureV4 as AwsSignatureV4;
 use DateTime;
+use Exception;
+use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
 
@@ -48,7 +52,7 @@ class Lpas implements LpasInterface
      *
      * @param string $uid
      * @return Response\LpaInterface|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function get(string $uid): ?Response\LpaInterface
     {
@@ -61,7 +65,7 @@ class Lpas implements LpasInterface
      *
      * @param array $uids
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function lookup(array $uids): array
     {
@@ -126,6 +130,45 @@ class Lpas implements LpasInterface
         }
 
         return $results;
+    }
+
+    /**
+     * Contacts the api gateway and requests that Sirius send a new actor-code letter to the
+     * $actorId that is attached to the LPA $caseId
+     *
+     * @link https://github.com/ministryofjustice/opg-data-lpa/blob/master/lambda_functions/v1/openapi/lpa-openapi.yml#L334
+     *
+     * @param int $caseId The Sirius uId of an LPA
+     * @param int $actorId The uId of an actor as found attached to an LPA
+     * @throws Exception An error was encountered whilst enqueing a letter for delivery
+     */
+    public function requestLetter(int $caseId, int $actorId): void
+    {
+        $provider = AwsCredentialProvider::defaultProvider();
+        $credentials = $provider()->wait();
+
+        // request payload
+        $body = json_encode(
+            [
+                'case_uid' => $caseId,
+                'actor_uid' => $actorId
+            ]
+        );
+
+        // construct request for API gateway
+        $url = $this->apiBaseUri . '/v1/use-an-lpa/lpas/requestCode';
+        $request = new Request('POST', $url, $this->buildHeaders(), $body);
+        $request = $this->awsSignature->signRequest($request, $credentials);
+
+        try {
+            $response = $this->httpClient->send($request);
+        } catch (GuzzleException $ge) {
+            throw ApiException::create('Error whilst communicating with api gateway', null, $ge);
+        }
+
+        if ($response->getStatusCode() !== StatusCodeInterface::STATUS_NO_CONTENT) {
+            throw ApiException::create('Letter request not successfully precessed by api gateway', $response);
+        }
     }
 
     private function buildHeaders(): array

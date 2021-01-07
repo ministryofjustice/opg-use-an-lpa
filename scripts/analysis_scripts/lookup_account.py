@@ -75,7 +75,7 @@ class AccountLookup:
         with open(csv_filename, 'w', newline='') as csv_file:
             writer = csv.writer(
                 csv_file, quoting=csv.QUOTE_NONNUMERIC)
-            writer.writerow(["email", "last_login_datetime","lpas_added"])
+            writer.writerow(["email","activation_status", "last_login_datetime","lpas_added"])
             actor_users = self.get_actor_users()
 
             for item in actor_users:
@@ -84,8 +84,11 @@ class AccountLookup:
                     last_login = 'Never logged in'
                     if 'LastLogin' in item:
                         last_login = item['LastLogin']['S']
+                    activation_status = 'Activated'
+                    if 'ActivationToken' in item:
+                        activation_status = 'Pending Activation'
                     lpas = self.get_lpas(item['Id']['S'])
-                    writer.writerow([str(email), "Last Login: {}".format(last_login), lpas])
+                    writer.writerow([str(email),activation_status, last_login, lpas])
                     count += 1
             print("Done! Collected {} records".format(count))
 
@@ -97,9 +100,14 @@ class AccountLookup:
         for item in actor_users:
             if item['Email']['S'] in email_address:
                 email = item['Email']['S']
-                last_login = item['LastLogin']['S']
+                last_login = 'Never logged in'
+                if 'LastLogin' in item:
+                    last_login = item['LastLogin']['S']
+                activation_status = 'Activated'
+                if 'ActivationToken' in item:
+                    activation_status = 'Pending Activation'
                 lpas = self.get_lpas(item['Id']['S'])
-                print(str(email), "Last Login: {}".format(last_login))
+                print(str(email),"\nActivation Status: {}".format(activation_status), "\nLast Login: {}".format(last_login))
                 print(lpas)
                 count += 1
         print("Done! Record Count: {}".format(count))
