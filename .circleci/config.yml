@@ -641,13 +641,20 @@ orbs:
               command: |
                 ~/project/scripts/pipeline/set_environment_variables/set_pact.sh
                 docker run -d --rm --name lpa-codes-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-                  --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes-pact-mock
-                export DOCKER_REMOTE_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
-                docker run -d --name inttests --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_PACT_IP api-app:latest
+                  --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
+                docker run -d --rm --name api-gateway-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
+                  --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider api-gateway
+
+                export DOCKER_REMOTE_LPA_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
+                export DOCKER_REMOTE_API_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' api-gateway-pact-mock)"
+
+                docker run -d --name inttests --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_LPA_PACT_IP --add-host api-gateway-pact-mock:$DOCKER_REMOTE_API_PACT_IP api-app:latest
                 docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
                 docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 \
                   /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
+
                 docker stop lpa-codes-pact-mock
+                docker stop api-gateway-pact-mock
           - run:
               name: Fetch test results
               command: |

@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\Exception\BadRequestException;
 use App\Service\Lpa\LpaService;
-use Laminas\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class LpasCollectionHandler
+ * Class LpasActionHandler
  * @package App\Handler
  * @codeCoverageIgnore
  */
-class LpasCollectionHandler implements RequestHandlerInterface
+class LpasActionsHandler implements RequestHandlerInterface
 {
     /**
      * @var LpaService
@@ -33,10 +34,18 @@ class LpasCollectionHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $request->getAttribute('actor-id');
+        $requestData = $request->getParsedBody();
 
-        $result = $this->lpaService->getAllForUser($user);
+        if (!isset($requestData['lpa-id'])) {
+            throw new BadRequestException("'lpa-id' missing.");
+        }
 
-        return new JsonResponse($result);
+        if (!isset($requestData['actor-id'])) {
+            throw new BadRequestException("'actor-id' missing.");
+        }
+
+        $this->lpaService->requestAccessByLetter($requestData['lpa-id'], $requestData['actor-id']);
+
+        return new EmptyResponse();
     }
 }
