@@ -36,11 +36,11 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/healthcheck', App\Handler\HealthcheckHandler::class, 'healthcheck');
 
     $app->get('/v1/lpas', App\Handler\LpasCollectionHandler::class, 'lpa.collection');
-    $app->post(
-        '/v1/check-lpa-match/',
-        App\Handler\CheckLPAMatchHandler::class,
-        'lpa.checklpamatch'
-    );
+//    $app->post(
+//        '/v1/check-lpa-match/',
+//        App\Handler\CheckLPAMatchHandler::class,
+//        'lpa.checklpamatch'
+//    );
     $app->put(
         '/v1/lpas/request-letter',
         App\Handler\LpasActionsHandler::class,

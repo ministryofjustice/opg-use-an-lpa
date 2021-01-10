@@ -8,10 +8,11 @@ use App\DataAccess\Repository\{LpasInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
-use App\Exception\{ApiException, GoneException, NotFoundException};
+use App\Exception\{ApiException, BadRequestException, GoneException, NotFoundException};
 use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\ref;
 
 /**
  * Class LpaService
@@ -420,5 +421,73 @@ class LpaService
             }
         }
         return $viewerCodes;
+    }
+
+    /**
+     * Get an LPA using the lpa reference number.
+     *
+     * @param array $dataToMatch
+     * @return ?array A structure that contains processed LPA
+     */
+    public function checkLPAMatch(array $dataToMatch): ?array
+    {
+        $expectedRegistrationDate = '2019-09-01';
+
+        // Cleanse user data
+        $dataToMatch['reference_number'] = trim($dataToMatch['reference_number']);
+        $dataToMatch['dob'] = $dataToMatch['dob']->format('d/m/Y');
+        $dataToMatch['first_names'] = strtolower(explode(' ',trim($dataToMatch['first_names']))[0]);
+        $dataToMatch['last_name'] = strtolower(trim($dataToMatch['last_name']));
+        $dataToMatch['postcode'] = strtolower(str_replace(' ', '', $dataToMatch['postcode']));
+
+        //Get LPA by reference number
+        $lpaMatchResponse = $this->getByUid($dataToMatch['reference_number']);
+
+        if (!is_null($lpaMatchResponse)) {
+
+            //Check if lpa registration date falls after 01-09-2019, else cannot send activation key
+            if (
+                $lpaMatchResponse->getData()['status'] != 'Registered' or
+                $lpaMatchResponse->getData()['registrationDate'] <= $expectedRegistrationDate
+            ) {
+                $this->logger->notice(
+                    'User entered LPA {uId} not eligible for requesting activation key',
+                    [
+                        'uId' => $dataToMatch['reference_number']
+                    ]
+                );
+                throw new BadRequestException('LPA not eligible');
+            }
+
+            // Check if activation key already exist for LPA
+
+            //Get relevant lpa data to match
+            $donorDoB = $lpaMatchResponse->getData()['donor']['dob']->format('d/m/Y');
+            $donorFirstName = strtolower($lpaMatchResponse->Data()get['donor']['firstname']);
+            $donorSurname = strtolower($lpaMatchResponse->getData()['donor']['surname']);
+            $postCode = strtolower(str_replace(' ', '', $lpaMatchResponse->getData()['donor']['addresses']['postcode']));
+
+            //Check if user provided data matches retrieved lpa data
+            if (
+                $donorDoB === $dataToMatch['dob'] and
+                $donorFirstName === $dataToMatch['first_names'] and
+                $donorSurname === $dataToMatch['last_name'] and
+                $postCode === $dataToMatch['postcode']
+            ) {
+                $this->logger->info(
+                    'User entered data matches for LPA {uId}',
+                    [
+                        'uId' => $dataToMatch['reference_number']
+                    ]
+                );
+
+                $lpaMatchResponse = [
+                    'lpa-id' => $dataToMatch['reference_number'],
+                    'actor-id' => $lpaMatchResponse->getData()['donor']['uId'],
+                ];
+                return $lpaMatchResponse;
+            }
+        }
+        throw new NotFoundException('LPA not found');
     }
 }

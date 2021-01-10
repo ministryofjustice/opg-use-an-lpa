@@ -426,10 +426,10 @@ class LpaService
      *
      * @param array @data
      * @param string @identity
-     * @return ArrayObject|null
+     * @return string|null
      * @throws Exception
      */
-    public function checkLPAMatchAndRequestLetter(string $identity, array $data): ?ArrayObject
+    public function checkLPAMatchAndRequestLetter(string $identity, array $data): ?string
     {
         $this->apiClient->setUserTokenHeader($identity);
 

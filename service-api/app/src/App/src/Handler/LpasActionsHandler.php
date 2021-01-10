@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
+use App\Exception\NotFoundException;
 use App\Service\Lpa\LpaService;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -31,37 +32,33 @@ class LpasActionsHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
 
-        $lpaReferenceNumber
+        if (
+            !isset($requestData['reference_number']) ||
+            !isset($requestData['dob']) ||
+            !isset($requestData['first_names']) ||
+            !isset($requestData['last_name']) ||
+            !isset($requestData['postcode'])
+        ) {
+            throw new RuntimeException("Required data missing!");
+        }
+        // Check LPA with user provided reference number
+        $lpaMatchResponse = $this->lpaService->checkLPAMatch($requestData);
 
-        // Check LPA match
-        $lpaMatchResponse = $this->lpaService->getByUid($requestData['reference_number']);
+        if (is_null($lpaMatchResponse)) {
+            throw new NotFoundException('LPA not found');
+        }
 
-        //check lpa donor details matches with user provided first name, last name, dob, postcode
-
-
-//        if (!is_null($lpaMatchResponse)) {
-//            // Check if date LPA registered is not after Sep 2019
-//            $expectedRegistrationDate = '2019-09-01';
-//            if (($lpaDataMatchCheck->getRegistrationDate()) <= $expectedRegistrationDate) {
-//                // UML - 1163 -> Cannot send an activation key for that LPA
-//                return new HtmlResponse($this->renderer->render('cannot-send-activation-key'));
-//            }
-//
-//            // If the correct data is entered then a letter should be requested from Sirius
-
-
-
-
-        if (!isset($requestData['lpa-id'])) {
+        if (!isset($lpaMatchResponse['lpa-id'])) {
             throw new BadRequestException("'lpa-id' missing.");
         }
 
-        if (!isset($requestData['actor-id'])) {
+        if (!isset($lpaMatchResponse['actor-id'])) {
             throw new BadRequestException("'actor-id' missing.");
         }
 
