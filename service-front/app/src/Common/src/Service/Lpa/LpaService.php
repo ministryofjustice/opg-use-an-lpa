@@ -420,4 +420,55 @@ class LpaService
 
         return new ArrayObject($data, ArrayObject::ARRAY_AS_PROPS);
     }
+
+    /**
+     * Check an LPA match
+     *
+     * @param array @data
+     * @param string @identity
+     * @return ArrayObject|null
+     * @throws Exception
+     */
+    public function checkLPAMatchAndRequestLetter(string $identity, array $data): ?ArrayObject
+    {
+        $this->apiClient->setUserTokenHeader($identity);
+
+        try {
+            $matchResponse = $this->apiClient->httpPut(
+                '/v1/lpas/request-letter',
+                $data
+            );
+        } catch (ApiException $apiEx) {
+            switch ($apiEx->getCode()) {
+                case StatusCodeInterface::STATUS_BAD_REQUEST:
+                    if ($apiEx->getMessage() === 'LPA not eligible') {
+                        $this->logger->notice(
+                            'LPA with reference number {uId} not eligible to request activation key',
+                            [
+                                'uId' => $data['reference_number'],
+                            ]
+                        );
+                    } else {
+                        $this->logger->notice(
+                            'LPA with reference number {uId} already added',
+                            [
+                                'uId' => $data['reference_number'],
+                            ]
+                        );
+                    }
+                    break;
+
+                case StatusCodeInterface::STATUS_NOT_FOUND:
+                    $this->logger->notice(
+                        'LPA with reference number {uId} not found',
+                        [
+                            // attach an code for brute force checking
+                            'event_code' => EventCodes::LPA_NOT_FOUND,
+                            'uId' => $data['reference_number']
+                        ]
+                    );
+
+            }
+        }
+    }
 }

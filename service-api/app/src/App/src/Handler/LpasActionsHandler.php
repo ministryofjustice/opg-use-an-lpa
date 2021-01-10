@@ -36,6 +36,27 @@ class LpasActionsHandler implements RequestHandlerInterface
     {
         $requestData = $request->getParsedBody();
 
+        $lpaReferenceNumber
+
+        // Check LPA match
+        $lpaMatchResponse = $this->lpaService->getByUid($requestData['reference_number']);
+
+        //check lpa donor details matches with user provided first name, last name, dob, postcode
+
+
+//        if (!is_null($lpaMatchResponse)) {
+//            // Check if date LPA registered is not after Sep 2019
+//            $expectedRegistrationDate = '2019-09-01';
+//            if (($lpaDataMatchCheck->getRegistrationDate()) <= $expectedRegistrationDate) {
+//                // UML - 1163 -> Cannot send an activation key for that LPA
+//                return new HtmlResponse($this->renderer->render('cannot-send-activation-key'));
+//            }
+//
+//            // If the correct data is entered then a letter should be requested from Sirius
+
+
+
+
         if (!isset($requestData['lpa-id'])) {
             throw new BadRequestException("'lpa-id' missing.");
         }

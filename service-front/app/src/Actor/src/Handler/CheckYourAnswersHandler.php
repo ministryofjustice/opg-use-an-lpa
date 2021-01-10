@@ -11,6 +11,7 @@ use Common\Handler\{AbstractHandler,
     UserAware,
     Traits\Session as SessionTrait};
 use Actor\Form\CheckYourAnswers;
+use Common\Exception\ApiException;
 use Common\Middleware\Session\SessionTimeoutException;
 use DateTime;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -19,6 +20,8 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Common\Service\Lpa\LpaService;
+use Fig\Http\Message\StatusCodeInterface;
 
 /**
  * Class CheckYourAnswersHandler
@@ -35,15 +38,19 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     private ?SessionInterface $session;
     private ?UserInterface $user;
     private array $data;
+    private LpaService $lpaService;
+    private ?string $identity;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper
+        UrlHelper $urlHelper,
+        LpaService $lpaService
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
+        $this->lpaService = $lpaService;
     }
 
     /**
@@ -55,6 +62,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         $this->form = new CheckYourAnswers($this->getCsrfGuard($request));
         $this->user = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
+        $this->identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
 
         if (
             is_null($this->session)
@@ -86,7 +94,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
         switch ($request->getMethod()) {
             case 'POST':
-                return $this->handlePost($request);
+                return $this->handlePost($request, $this->data);
             default:
                 return $this->handleGet($request);
         }
@@ -101,12 +109,42 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         ]));
     }
 
-    public function handlePost(ServerRequestInterface $request): ResponseInterface
-    {
+    public function handlePost(
+        ServerRequestInterface $request,
+        array $data
+    ): ResponseInterface {
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            // TODO UML-1161 / 1162 / 1157
+            // TODO UML-1216
+            if (isset($data)) {
+                try {
+                    $response = $this->lpaService->checkLPAMatchAndRequestLetter(
+                        $this->identity,
+                        $data
+                    );
+                } catch (ApiException $apiEx) {
+                    if ($apiEx->getCode() == StatusCodeInterface::STATUS_BAD_REQUEST) {
+                        if ($apiEx->getMessage() === 'LPA not eligible') {
+                            return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
+                        } else {
+                            //lpa already added message
+                            return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
+                        }
+                    }
+                    if ($apiEx->getCode() == StatusCodeInterface::STATUS_BAD_REQUEST) {
+                        if ($apiEx->getMessage() === 'LPA not found') {
+                            return new HtmlResponse($this->renderer->render('actor::cannot-find-lpa'));
+                        }
+                    }
+                }
+
+                //LPA check match and letter request sent
+                $twoWeeksFromNowdate = (new DateTime())->modify('+2 week');
+                return new HtmlResponse($this->renderer->render('actor::send-activation-key-confirmation', [
+                    'date' => $twoWeeksFromNowdate,
+                ]));
+            }
         }
     }
 }
