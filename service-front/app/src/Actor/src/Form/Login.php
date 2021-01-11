@@ -18,17 +18,10 @@ class Login extends AbstractForm implements InputFilterProviderInterface
     const FORM_NAME = 'login';
 
     /**
-     * Error codes
-     * @const string
-     */
-    const INVALID_LOGIN = 'invalidLogin';
-
-    /**
      * Error messages
      * @var array
      */
     protected array $messageTemplates = [
-        self::INVALID_LOGIN => 'We cannot find an account with that email address and password',
         self::NOT_SAME => 'Security validation failed. Please try again.'
     ];
 

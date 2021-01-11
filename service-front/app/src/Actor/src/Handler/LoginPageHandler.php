@@ -93,9 +93,8 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                         return $this->redirectToRoute('lpa.dashboard');
                     }
                 }
-                // adding an element name allows the form to link the error message to a field. In this case we'll
-                // link to the email field to allow the user to correct their mistake.
-                $form->addErrorMessage(Login::INVALID_LOGIN, 'email');
+
+                return new HtmlResponse($this->renderer->render('actor::login-not-found'));
             } catch (ApiException $e) {
                //401 denotes in this case that we hve not activated,
                // redirect to correct success page with correct data
