@@ -30,7 +30,13 @@
                             </h1>
                         </legend>
 
-                        <p class="govuk-body">{% trans with {'%link%': path('create-account')} %}If you made an <abbr title="lasting power of attorney"> LPA </abbr> online, you'll still need to <a href="%link%" class="govuk-link">create an account</a> to use this service.{% endtrans %}</p>
+                        <div class="govuk-warning-text govuk-!-margin-top-4">
+                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                            <strong class="govuk-warning-text__text">
+                                <span class="govuk-warning-text__assistive">Warning</span>
+                                {% trans with {'%link%': path('create-account')} %}If you made an <abbr title="lasting power of attorney"> LPA </abbr> online, you'll still need to <a href="%link%" class="govuk-link">create a seperate account</a> to use this service.{% endtrans %}
+                            </strong>
+                        </div>
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
