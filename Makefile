@@ -48,8 +48,8 @@ destroy:
 .PHONY: destroy
 
 destroy_all:
-	$(COMPOSE) down -v --rmi all --remove-orphans
 	$(MAKE) destroy --directory=../opg-data-lpa/
+	$(COMPOSE) down -v --rmi all --remove-orphans
 .PHONY: destroy_all
 
 ps:
