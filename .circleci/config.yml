@@ -44,6 +44,7 @@ workflows:
             name: redeploy_demo
             environment: demo
             filters: { branches: { ignore: [master] } }
+            requires: [demo_apply_environment_terraform]
         - slack_environment_redeploy:
             name: post_production_release_message
             environment: demo
