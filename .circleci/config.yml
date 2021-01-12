@@ -14,16 +14,13 @@ workflows:
           name: demo_apply_environment_terraform
           workspace: demo
           image_tag_input: latest
-          filters: { branches: { ignore: [master] } }
       - use-my-lpa/redeploy_latest:
           name: redeploy_demo
           environment: demo
-          filters: { branches: { ignore: [master] } }
           requires: [demo_apply_environment_terraform]
       - slack_environment_redeploy:
           name: post_production_release_message
           environment: demo
-          filters: { branches: { ignore: [master] } }
           requires: [redeploy_demo]
 
   workspace_cleanup:
