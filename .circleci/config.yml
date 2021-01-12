@@ -925,7 +925,7 @@ orbs:
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 ~/project/scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE
-                if [ " <<parameters.image_tag_input>>" == "latest" ]; then
+                if [ "<<parameters.image_tag_input>>" == "latest" ]; then
                   export IMAGE_TAG="latest"
                 else
                   export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh <<parameters.image_tag_input>>) >> $BASH_ENV
