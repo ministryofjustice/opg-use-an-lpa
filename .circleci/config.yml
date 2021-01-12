@@ -925,7 +925,11 @@ orbs:
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 ~/project/scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE
-                export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh <<parameters.image_tag_input>>) >> $BASH_ENV
+                if [ " <<parameters.image_tag_input>>" == "latest" ]; then
+                  export IMAGE_TAG="latest"
+                else
+                  export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh <<parameters.image_tag_input>>) >> $BASH_ENV
+                fi
                 echo $IMAGE_TAG
                 terraform apply -lock-timeout=300s --auto-approve -var container_version=${IMAGE_TAG}
                 mv cluster_config.json /tmp/
