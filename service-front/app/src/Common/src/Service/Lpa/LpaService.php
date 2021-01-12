@@ -429,17 +429,9 @@ class LpaService
      * @return string|null
      * @throws Exception
      */
-    public function checkLPAMatchAndRequestLetter(string $identity, array $data): ?string
+    public function checkLPAMatchAndRequestLetter(string $userToken, array $data): ?string
     {
-        $this->apiClient->setUserTokenHeader($identity);
-
-        $requestData = [
-            'reference_number'  => $data['reference_number'],
-            'dob'               => $data['dob'],
-            'first_names'       => $data['first_names'],
-            'last_name'         => $data['last_name'],
-            'postcode'          => $data['postcode']
-        ];
+        $this->apiClient->setUserTokenHeader($userToken);
 
         try {
             $matchResponse = $this->apiClient->httpPut(
@@ -453,6 +445,7 @@ class LpaService
                         $this->logger->notice(
                             'LPA with reference number {uId} not eligible to request activation key',
                             [
+                                'event_code' => EventCodes::LPA_NOT_ELIGIBLE,
                                 'uId' => $data['reference_number'],
                             ]
                         );
@@ -460,6 +453,7 @@ class LpaService
                         $this->logger->notice(
                             'LPA with reference number {uId} already has an activation key',
                             [
+                                'event_code' => EventCodes::LPA_HAS_ACTIVATION_KEY,
                                 'uId' => $data['reference_number'],
                             ]
                         );

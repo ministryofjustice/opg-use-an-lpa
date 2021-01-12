@@ -134,8 +134,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             );
                             return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
                         } else {
-                            //lpa already added message
-                            //add logs
                             $this->getLogger()->info(
                                 'LPA with reference number {uId} already has an activation key.',
                                 [

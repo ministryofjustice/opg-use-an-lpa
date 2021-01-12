@@ -3978,4 +3978,13 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/lpa/add');
         $this->ui->assertPageContainsText('If the LPA was registered before this date, you need to use the paper LPA with people and organisations.');
     }
+
+    /**
+     * @Then /^I am taken to page to ask for an activation key$/
+     */
+    public function iAmTakenToPageToAskForAnActivationKey()
+    {
+        $this->ui->pressButton('Continue');
+        $this->ui->assertPageAddress('/lpa/add-by-paper');
+    }
 }

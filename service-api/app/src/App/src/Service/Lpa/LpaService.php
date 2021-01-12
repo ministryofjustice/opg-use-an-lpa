@@ -439,6 +439,7 @@ class LpaService
 
         // Cleanse user data
         $dataToMatch['reference_number'] = trim($dataToMatch['reference_number']);
+        //TO DO: convert date string to date time object
         $dataToMatch['dob'] = $dataToMatch['dob']->format('d/m/Y');
         $dataToMatch['first_names'] = strtolower(explode(' ', trim($dataToMatch['first_names']))[0]);
         $dataToMatch['last_name'] = strtolower(trim($dataToMatch['last_name']));
@@ -451,6 +452,9 @@ class LpaService
             //Check if lpa registration date falls after 01-09-2019, else cannot send activation key
             if (
                 $lpaMatchResponse->getData()['status'] != 'Registered' and
+                //TO DO: compare date properly - convert to date time object
+                // Check with Sarah the status check
+                //log appropriate so we know which condition failed for user
                 $lpaMatchResponse->getData()['registrationDate'] <= $expectedRegistrationDate
             ) {
                 $this->logger->notice(
@@ -473,7 +477,7 @@ class LpaService
 
             //Check if user provided data matches retrieved lpa data
             if (
-                $donorDoB === $dataToMatch['dob'] and
+                $donorDoB === $dataToMatch['dob'] and //turn to date time object before comparing
                 $donorFirstName === $dataToMatch['first_names'] and
                 $donorSurname === $dataToMatch['last_name'] and
                 $postCode === $dataToMatch['postcode']
@@ -486,6 +490,7 @@ class LpaService
                 );
 
                 //QUESTION -> is the actor-id the donor uid or attorney uid?
+                //figure out actor id of who is making the request
                 $lpaMatchResponse = [
                     'lpa-id' => $dataToMatch['reference_number'],
                     'actor-id' => $lpaMatchResponse->getData()['donor']['uId'],
@@ -496,3 +501,9 @@ class LpaService
         throw new NotFoundException('LPA not found');
     }
 }
+
+//get actor id and
+//check if code exists
+//check registration date < 1 sep 2019
+//compare actor data with lpa data
+//request letter
