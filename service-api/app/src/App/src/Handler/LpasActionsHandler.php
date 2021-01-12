@@ -37,8 +37,10 @@ class LpasActionsHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
+        $actorId = $request->getAttribute('actor-id');
 
         if (
+            !isset($actorId) ||
             !isset($requestData['reference_number']) ||
             !isset($requestData['dob']) ||
             !isset($requestData['first_names']) ||
@@ -48,7 +50,7 @@ class LpasActionsHandler implements RequestHandlerInterface
             throw new BadRequestException("Required data missing!");
         }
         // Check LPA with user provided reference number
-        $lpaMatchResponse = $this->lpaService->checkLPAMatch($requestData);
+        $lpaMatchResponse = $this->lpaService->checkLPAMatch($requestData, $actorId);
 
         if (is_null($lpaMatchResponse)) {
             throw new NotFoundException('LPA not found');

@@ -431,9 +431,10 @@ class LpaService
      * Get an LPA using the lpa reference number.
      *
      * @param array $dataToMatch
+     * @param string $actorId
      * @return ?array A structure that contains processed LPA
      */
-    public function checkLPAMatch(array $dataToMatch): ?array
+    public function checkLPAMatch(array $dataToMatch, string $actorId): ?array
     {
         $expectedRegistrationDate = '2019-09-01';
 
