@@ -14,3 +14,12 @@ Feature: Add an older LPA
     When I provide the details from a valid paper document
     And I confirm that those details are correct
     Then a letter is requested containing a one time use code
+
+  @integration
+  Scenario: The user cannot add an old LPA to their account as it does not exist
+    Given I am on the add an older LPA page
+    When I provide the details from the paper document but does not exist
+    Then The old LPA is not found
+    And I am shown the LPA not found message
+
+

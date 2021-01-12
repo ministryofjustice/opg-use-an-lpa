@@ -1678,14 +1678,14 @@ class LpaContext implements Context
                         $this->marshalAwsResultData(
                             [
                                 [
-                                'Viewed' => '2020-10-01T23:59:59+00:00',
-                                'ViewerCode' => $this->accessCode,
-                                'ViewedBy' => 'organisation1'
+                                    'Viewed' => '2020-10-01T23:59:59+00:00',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy' => 'organisation1'
                                 ],
                                 [
-                                'Viewed' => '2020-10-01T23:59:59+00:00',
-                                'ViewerCode' => $this->accessCode,
-                                'ViewedBy' => 'organisation2'
+                                    'Viewed' => '2020-10-01T23:59:59+00:00',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy' => 'organisation2'
                                 ]
                             ]
                         ),
@@ -1746,11 +1746,11 @@ class LpaContext implements Context
         // userLpaActorMapRepository::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'Id'            => $actorToken,
-                'SiriusUid'     => $siriusUid,
-                'Added'         => $added,
-                'ActorId'       => $actorId,
-                'UserId'        => $userId
+                'Id' => $actorToken,
+                'SiriusUid' => $siriusUid,
+                'Added' => $added,
+                'ActorId' => $actorId,
+                'UserId' => $userId
             ])
         ]));
 
@@ -1761,11 +1761,11 @@ class LpaContext implements Context
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id'            => '1',
-                                'ViewerCode'    => '123ABCD6789',
-                                'SiriusUid'     => '700000055554',
-                                'Added'         => '2021-01-01 00:00:00',
-                                'Expires'       => '2021-02-01 00:00:00',
+                                'Id' => '1',
+                                'ViewerCode' => '123ABCD6789',
+                                'SiriusUid' => '700000055554',
+                                'Added' => '2021-01-01 00:00:00',
+                                'Expires' => '2021-02-01 00:00:00',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
                             ]
@@ -1799,5 +1799,13 @@ class LpaContext implements Context
         $this->awsFixtures->append(new Result([]));
 
         $this->apiDelete('/v1/lpas/' . $actorToken);
+    }
+
+    /**
+     * @Given /^I am on the add an older LPA page$/
+     */
+    public function iAmOnTheAddAnOlderLPAPage()
+    {
+        // Not needed for this context
     }
 }

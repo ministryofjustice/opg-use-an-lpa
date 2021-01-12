@@ -45,7 +45,7 @@ class LpasActionsHandler implements RequestHandlerInterface
             !isset($requestData['last_name']) ||
             !isset($requestData['postcode'])
         ) {
-            throw new RuntimeException("Required data missing!");
+            throw new BadRequestException("Required data missing!");
         }
         // Check LPA with user provided reference number
         $lpaMatchResponse = $this->lpaService->checkLPAMatch($requestData);
@@ -62,7 +62,7 @@ class LpasActionsHandler implements RequestHandlerInterface
             throw new BadRequestException("'actor-id' missing.");
         }
 
-        $this->lpaService->requestAccessByLetter($requestData['lpa-id'], $requestData['actor-id']);
+        $this->lpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
 
         return new EmptyResponse();
     }

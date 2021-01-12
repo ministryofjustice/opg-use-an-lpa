@@ -8,10 +8,9 @@ use App\DataAccess\Repository\{LpasInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
-use App\Exception\{ApiException, BadRequestException, GoneException, NotFoundException};
+use App\Exception\{ApiException, BadRequestException, GoneException, NotFoundException, RuntimeException};
 use DateTime;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\ref;
 
 /**
@@ -424,6 +423,11 @@ class LpaService
     }
 
     /**
+     * @param array $dataToMatch
+     * @return array|null
+     * @throws Exception
+     */
+    /**
      * Get an LPA using the lpa reference number.
      *
      * @param array $dataToMatch
@@ -436,7 +440,7 @@ class LpaService
         // Cleanse user data
         $dataToMatch['reference_number'] = trim($dataToMatch['reference_number']);
         $dataToMatch['dob'] = $dataToMatch['dob']->format('d/m/Y');
-        $dataToMatch['first_names'] = strtolower(explode(' ',trim($dataToMatch['first_names']))[0]);
+        $dataToMatch['first_names'] = strtolower(explode(' ', trim($dataToMatch['first_names']))[0]);
         $dataToMatch['last_name'] = strtolower(trim($dataToMatch['last_name']));
         $dataToMatch['postcode'] = strtolower(str_replace(' ', '', $dataToMatch['postcode']));
 
@@ -444,10 +448,9 @@ class LpaService
         $lpaMatchResponse = $this->getByUid($dataToMatch['reference_number']);
 
         if (!is_null($lpaMatchResponse)) {
-
             //Check if lpa registration date falls after 01-09-2019, else cannot send activation key
             if (
-                $lpaMatchResponse->getData()['status'] != 'Registered' or
+                $lpaMatchResponse->getData()['status'] != 'Registered' and
                 $lpaMatchResponse->getData()['registrationDate'] <= $expectedRegistrationDate
             ) {
                 $this->logger->notice(
@@ -460,10 +463,11 @@ class LpaService
             }
 
             // Check if activation key already exist for LPA
+            //TO DO - UML 1217
 
             //Get relevant lpa data to match
             $donorDoB = $lpaMatchResponse->getData()['donor']['dob']->format('d/m/Y');
-            $donorFirstName = strtolower($lpaMatchResponse->Data()get['donor']['firstname']);
+            $donorFirstName = strtolower($lpaMatchResponse->getData()['donor']['firstname']);
             $donorSurname = strtolower($lpaMatchResponse->getData()['donor']['surname']);
             $postCode = strtolower(str_replace(' ', '', $lpaMatchResponse->getData()['donor']['addresses']['postcode']));
 
@@ -481,6 +485,7 @@ class LpaService
                     ]
                 );
 
+                //QUESTION -> is the actor-id the donor uid or attorney uid?
                 $lpaMatchResponse = [
                     'lpa-id' => $dataToMatch['reference_number'],
                     'actor-id' => $lpaMatchResponse->getData()['donor']['uId'],

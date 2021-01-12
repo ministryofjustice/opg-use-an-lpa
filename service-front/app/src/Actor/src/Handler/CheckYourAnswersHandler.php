@@ -124,25 +124,44 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         $data
                     );
                 } catch (ApiException $apiEx) {
-                    if ($apiEx->getCode() == StatusCodeInterface::STATUS_BAD_REQUEST) {
+                    if ($apiEx->getCode() === StatusCodeInterface::STATUS_BAD_REQUEST) {
                         if ($apiEx->getMessage() === 'LPA not eligible') {
+                            $this->getLogger()->info(
+                                'LPA with reference number {uId} not eligible for activation key.',
+                                [
+                                    'uId' => $data['reference_number'],
+                                ]
+                            );
                             return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
                         } else {
                             //lpa already added message
-                            return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
+                            //add logs
+                            $this->getLogger()->info(
+                                'LPA with reference number {uId} already has an activation key.',
+                                [
+                                    'uId' => $data['reference_number'],
+                                ]
+                            );
+                            return new HtmlResponse($this->renderer->render('actor::already-have-activation-key'));
                         }
                     }
-                    if ($apiEx->getCode() == StatusCodeInterface::STATUS_BAD_REQUEST) {
+                    if ($apiEx->getCode() === StatusCodeInterface::STATUS_NOT_FOUND) {
                         if ($apiEx->getMessage() === 'LPA not found') {
+                            $this->getLogger()->info(
+                                'LPA with reference number {uID} not found in Sirius',
+                                [
+                                    'uId' => $data['reference_number'],
+                                ]
+                            );
                             return new HtmlResponse($this->renderer->render('actor::cannot-find-lpa'));
                         }
                     }
                 }
 
                 //LPA check match and letter request sent
-                $twoWeeksFromNowdate = (new DateTime())->modify('+2 week');
+                $twoWeeksFromNowDate = (new DateTime())->modify('+2 week');
                 return new HtmlResponse($this->renderer->render('actor::send-activation-key-confirmation', [
-                    'date' => $twoWeeksFromNowdate,
+                    'date' => $twoWeeksFromNowDate,
                 ]));
             }
         }

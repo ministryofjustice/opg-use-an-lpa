@@ -718,7 +718,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I request to add an LPA with valid details$/
      */
-    public function iRequestToAddAnLPAWithValidDetails()
+    public function tiRequestToAddAnLPAWithValidDetails()
     {
         // The underlying SmartGamma library has a very naive match processor for
         // passed in response values and will assume lpaUid's and actorLpaId's are integers.
@@ -1404,6 +1404,67 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideTheDetailsFromAValidPaperDocument()
     {
+        $data = [
+            'reference_number'  => '700000000054',
+            'dob'               => '1975-10-05',
+            'postcode'          => 'string',
+            'first_names'       => 'Ian Deputy',
+            'last_name'         => 'Deputy',
+        ];
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $lpaService = $this->container->get(LpaService::class);
+
+        $lpaMatchResponse = $lpaService->checkLPAMatch($data);
+        assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
+    }
+
+    /**
+     * @Then /^The old LPA is not found$/
+     */
+    public function theOldLpaIsNotFound()
+    {
         // Not needed for this context
     }
+
+    /**
+     * @Then /^I am shown the LPA not found message$/
+     */
+    public function iAmShownTheLpaNotFoundMessage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I provide the details from a valid paper document$/
+     */
+    public function iProvideTheDetailsFromThePaperDocumentButDoesNotExist()
+    {
+        $data = [
+            'reference_number'  => '700000000055',
+            'dob'               => '1975-10-05',
+            'postcode'          => 'string',
+            'first_names'       => 'Ian Deputy',
+            'last_name'         => 'Deputy',
+        ];
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_NOT_FOUND,
+            []
+        );
+
+        $lpaService = $this->container->get(LpaService::class);
+
+        $lpaMatchResponse = $lpaService->checkLPAMatch($data);
+        assertNull($lpaMatchResponse);
+    }
+
 }

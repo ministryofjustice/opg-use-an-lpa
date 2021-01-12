@@ -433,6 +433,14 @@ class LpaService
     {
         $this->apiClient->setUserTokenHeader($identity);
 
+        $requestData = [
+            'reference_number'  => $data['reference_number'],
+            'dob'               => $data['dob'],
+            'first_names'       => $data['first_names'],
+            'last_name'         => $data['last_name'],
+            'postcode'          => $data['postcode']
+        ];
+
         try {
             $matchResponse = $this->apiClient->httpPut(
                 '/v1/lpas/request-letter',
@@ -450,7 +458,7 @@ class LpaService
                         );
                     } else {
                         $this->logger->notice(
-                            'LPA with reference number {uId} already added',
+                            'LPA with reference number {uId} already has an activation key',
                             [
                                 'uId' => $data['reference_number'],
                             ]
@@ -467,7 +475,6 @@ class LpaService
                             'uId' => $data['reference_number']
                         ]
                     );
-
             }
         }
     }
