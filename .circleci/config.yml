@@ -1,7 +1,7 @@
 version: 2.1
 
 workflows:
-  scheduled_jobs:
+  keep_demo_environment_up_to_date:
     triggers:
       - schedule:
           cron: "0 8 * * *"
@@ -10,9 +10,14 @@ workflows:
               only:
                 - master
     jobs:
+      - use-my-lpa/apply_environment_terraform:
+          name: demo_apply_environment_terraform
+          workspace: demo
+          image_tag_input: latest
       - use-my-lpa/redeploy_latest:
           name: redeploy_demo
           environment: demo
+          requires: [demo_apply_environment_terraform]
       - slack_environment_redeploy:
           name: post_production_release_message
           environment: demo
@@ -901,6 +906,10 @@ orbs:
             description: Terraform workspace name
             type: string
             default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
+          image_tag_input:
+            description: Inputs to use for setting image tags
+            type: string
+            default: "${CIRCLE_BRANCH} ${CIRCLE_SHA1}"
         steps:
           - checkout
           - run:
@@ -912,7 +921,11 @@ orbs:
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 ~/project/scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE
-                export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                if [ "<<parameters.image_tag_input>>" == "latest" ]; then
+                  export IMAGE_TAG="latest"
+                else
+                  export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh <<parameters.image_tag_input>>) >> $BASH_ENV
+                fi
                 echo $IMAGE_TAG
                 terraform apply -lock-timeout=300s --auto-approve -var container_version=${IMAGE_TAG}
                 mv cluster_config.json /tmp/
