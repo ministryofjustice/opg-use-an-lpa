@@ -38,8 +38,8 @@ down:
 .PHONY: down
 
 down_all:
-	$(COMPOSE) down
 	$(MAKE) down --directory=../opg-data-lpa/
+	$(COMPOSE) down
 .PHONY: down_all
 
 destroy:
