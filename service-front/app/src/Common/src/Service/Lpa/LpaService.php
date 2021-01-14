@@ -424,9 +424,9 @@ class LpaService
     /**
      * Check an LPA match
      *
-     * @param array @data
      * @param string @identity
-     * @return string|null
+     * @param array @data
+     * @return null|string
      * @throws Exception
      */
     public function checkLPAMatchAndRequestLetter(string $userToken, array $data): ?string
@@ -434,10 +434,7 @@ class LpaService
         $this->apiClient->setUserTokenHeader($userToken);
 
         try {
-            $matchResponse = $this->apiClient->httpPut(
-                '/v1/lpas/request-letter',
-                $data
-            );
+            $matchResponse = $this->apiClient->httpPatch('/v1/lpas/request-letter', $data);
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_BAD_REQUEST:

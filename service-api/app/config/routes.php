@@ -36,7 +36,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/healthcheck', App\Handler\HealthcheckHandler::class, 'healthcheck');
 
     $app->get('/v1/lpas', App\Handler\LpasCollectionHandler::class, 'lpa.collection');
-    $app->put(
+    $app->patch(
         '/v1/lpas/request-letter',
         App\Handler\LpasActionsHandler::class,
         'lpa.requestletter'

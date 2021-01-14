@@ -38,10 +38,10 @@ class LpasActionsHandler implements RequestHandlerInterface
      * @return ResponseInterface
      * @throws \Exception
      */
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    public function handlePatch(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
-        $actorId = $request->getAttribute('actor-id');
+        $userId = $request->getAttribute('user-id');
 
         if (
             !isset($actorId) ||
@@ -54,7 +54,7 @@ class LpasActionsHandler implements RequestHandlerInterface
             throw new BadRequestException("Required data missing!");
         }
         // Check LPA with user provided reference number
-        $lpaMatchResponse = $this->lpaService->checkLPAMatch($requestData, $actorId);
+        $lpaMatchResponse = $this->lpaService->checkLPAMatchAndGetActorDetails($requestData);
         // Checks if the actor already has an active activation key
         // TODO: I've had to hardcode the actor id being passed in for the
         //  time being since we have not retrieved the correct actor Id yet.
