@@ -3,6 +3,7 @@ import boto3
 import json
 from passlib.hash import sha256_crypt
 import datetime
+import pytz
 
 if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
     # For local development
@@ -40,11 +41,18 @@ else:
 
 viewerCodesTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_VIEWER_CODES'])
 
+now = datetime.datetime.now()
+timezone = pytz.timezone("Europe/London")
+endOfToday = timezone.localize(now.replace(hour=23, minute=59, second=59, microsecond=0))
+
+lastWeek = endOfToday - datetime.timedelta(days=7)
+nextWeek = endOfToday + datetime.timedelta(days=7)
+
 viewerCodes = [
     {
         'ViewerCode': "P9H8A6MLD3AM",
         'SiriusUid': "700000000138",
-        'Expires': "2021-09-12T12:34:56+00:00",
+        'Expires': nextWeek.isoformat(),
         'Added': "2019-01-01T12:34:56.123456Z",
         'Organisation': "Test Organisation",
         'UserLpaActor': "806f3720-5b43-49ce-ac66-c670860bf4ee",
@@ -52,15 +60,16 @@ viewerCodes = [
     {
         'ViewerCode': "JLUPAHNXNKFP",
         'SiriusUid': "700000000138",
-        'Expires': "2021-01-01T12:34:56+00:00",
+        'Expires': nextWeek.isoformat(),
         'Added': "2019-01-01T12:34:56.123456Z",
-        'Organisation': "Test Organisation",
+        'Cancelled': lastWeek.isoformat(),
+        'Organisation': "Second Test Organisation",
         'UserLpaActor': "806f3720-5b43-49ce-ac66-c670860bf4ee",
     },
     {
         'ViewerCode': "N4KBEBEZMNJF",
         'SiriusUid': "700000000138",
-        'Expires': "2020-01-01T12:34:56+00:00",
+        'Expires': lastWeek.isoformat(),
         'Added': "2019-01-01T12:34:56.123456Z",
         'Organisation': "Test Organisation",
         'UserLpaActor': "806f3720-5b43-49ce-ac66-c670860bf4ee",
