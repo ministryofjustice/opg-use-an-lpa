@@ -46,8 +46,6 @@ class UserIdentificationService
                     : $header;
         }
 
-        $this->logger->debug('Identity of incoming request built', $headersToHash);
-
         $this->logger->debug(
             'Identity of incoming request built',
             ['prehash_id' => implode('', $headersToHash)]
