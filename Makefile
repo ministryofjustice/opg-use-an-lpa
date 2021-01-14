@@ -5,11 +5,11 @@ COMPOSE := $(COMPOSE) -f docker-compose.override.yml
 endif
 
 up:
-	$(COMPOSE) up -d $(c)
+	$(COMPOSE) up -d $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: up
 
 exec:
-	$(COMPOSE) exec $(c)
+	$(COMPOSE) exec $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: exec
 
 # Starts the application and seeds initial data.
@@ -17,7 +17,7 @@ up_all: | up_dependencies up_services seed
 .PHONY: up_all
 
 build:
-	$(COMPOSE) build
+	$(COMPOSE) build $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: build
 
 build_all: build
@@ -34,12 +34,12 @@ rebuild:
 .PHONY: rebuild
 
 down:
-	$(COMPOSE) down $(c)
+	$(COMPOSE) down
 .PHONY: down
 
 down_all:
-	$(COMPOSE) down
 	$(MAKE) down --directory=../opg-data-lpa/
+	$(COMPOSE) down
 .PHONY: down_all
 
 destroy:
@@ -56,7 +56,7 @@ ps:
 .PHONY: ps
 
 logs:
-	$(COMPOSE) logs -f $(c)
+	$(COMPOSE) logs -f $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: logs
 
 up_dependencies:
@@ -110,3 +110,7 @@ clear_config_cache:
 smoke_tests:
 	$(COMPOSE) -f docker-compose.testing.yml run smoke-tests composer behat
 .PHONY: smoke_tests
+
+# empty target to stop additional arguments from calling
+%:
+	@true

@@ -61,11 +61,6 @@ resource "aws_route53_record" "viewer-use-my-lpa" {
   }
 }
 
-output "viewer-use-an-lpa-domain" {
-  value = "https://${aws_route53_record.viewer-use-my-lpa.fqdn}"
-}
-
-
 
 //-------------------------------------------------------------
 // Use
@@ -107,8 +102,4 @@ resource "aws_route53_record" "actor-use-my-lpa" {
   lifecycle {
     create_before_destroy = true
   }
-}
-
-output "actor-use-an-lpa-domain" {
-  value = "https://${aws_route53_record.actor-use-my-lpa.fqdn}"
 }

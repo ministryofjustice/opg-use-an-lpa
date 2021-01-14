@@ -7,10 +7,10 @@
   "scripts": {
     "test": "CI=true jest --coverage",
     "test:watch": "jest --watch",
-    "build:pdf": "webpack -p --progress --config webpack.pdf.development.js",
+    "build:pdf": "webpack --progress --config webpack.pdf.development.js",
     "build:pdf_production": "npm run build-scss && webpack --progress --config webpack.pdf.production.js",
     "build": "npm run build-scss && webpack --progress --config webpack.production.js",
-    "watch": "webpack -p --progress --watch --config webpack.development.js",
+    "watch": "webpack --progress --watch --config webpack.development.js",
     "accessibility-check": "node ./pa11y.js",
     "build-scss": "npm rebuild node-sass && node-sass --omit-source-map-url src/gds.scss dist/stylesheets/gds.css"
   },
