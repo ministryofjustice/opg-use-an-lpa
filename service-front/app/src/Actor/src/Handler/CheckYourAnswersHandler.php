@@ -109,6 +109,12 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         ]));
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @param array $data
+     * @return ResponseInterface
+     * @throws ApiException
+     */
     public function handlePost(
         ServerRequestInterface $request,
         array $data
@@ -119,10 +125,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
             // TODO UML-1216
             if (isset($data)) {
                 try {
-                    $response = $this->lpaService->checkLPAMatchAndRequestLetter(
-                        $this->identity,
-                        $data
-                    );
+                    $this->lpaService->checkLPAMatchAndRequestLetter($data);
                 } catch (ApiException $apiEx) {
                     if ($apiEx->getCode() === StatusCodeInterface::STATUS_BAD_REQUEST) {
                         if ($apiEx->getMessage() === 'LPA not eligible') {
