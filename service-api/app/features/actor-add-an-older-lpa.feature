@@ -21,11 +21,10 @@ Feature: Add an older LPA
     When I provide the details from a valid paper document
     And I confirm that those details are correct
     And I already have a valid activation key for my LPA
-    Then I am shown the LPA not found message
+    Then I am told that I have an activation key for this LPA and where to find it
 
   @integration
   Scenario: The user cannot add an old LPA to their account as it does not exist
     Given I am on the add an older LPA page
-    When I provide the details from the paper document but does not exist
-    Then The old LPA is not found
-    And I am shown the LPA not found message
+    When I provide details that do not match the paper document
+    Then I am informed that an LPA could not be found with these details

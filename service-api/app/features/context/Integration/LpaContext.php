@@ -6,6 +6,7 @@ namespace BehatTest\Context\Integration;
 
 use App\DataAccess\DynamoDb\UserLpaActorMap;
 use App\DataAccess\DynamoDb\ViewerCodeActivity;
+use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\LpaService;
@@ -19,6 +20,7 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
+use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Class LpaContext
@@ -621,7 +623,7 @@ class LpaContext extends BaseIntegrationContext
         $codeData = $viewerCodeService->cancelCode($this->userLpaActorToken, $this->userId, $this->accessCode);
 
         assertEmpty($codeData);
-}
+    }
 
     /**
      * @When /^I do not confirm cancellation of the chosen viewer code/
@@ -955,7 +957,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function theLPAIsSuccessfullyAdded()
     {
-        $now = (new DateTime)->format('Y-m-d\TH:i:s.u\Z');
+        $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
         $this->userLpaActorToken = '13579';
 
         // UserLpaActorMap::create
@@ -1426,48 +1428,6 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^The old LPA is not found$/
-     */
-    public function theOldLpaIsNotFound()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Then /^I am shown the LPA not found message$/
-     */
-    public function iAmShownTheLpaNotFoundMessage()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @When /^I provide the details from a valid paper document$/
-     */
-    public function iProvideTheDetailsFromThePaperDocumentButDoesNotExist()
-    {
-        $data = [
-            'reference_number'  => '700000000055',
-            'dob'               => '1975-10-05',
-            'postcode'          => 'string',
-            'first_names'       => 'Ian Deputy',
-            'last_name'         => 'Deputy',
-        ];
-
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_NOT_FOUND,
-            []
-        );
-
-        $lpaService = $this->container->get(LpaService::class);
-
-        $lpaMatchResponse = $lpaService->checkLPAMatch($data);
-        assertNull($lpaMatchResponse);
-    }
-
-    /**
      * @Given /^I already have a valid activation key for my LPA$/
      */
     public function iAlreadyHaveAValidActivationKeyForMyLPA()
@@ -1492,4 +1452,51 @@ class LpaContext extends BaseIntegrationContext
         assertTrue($response);
     }
 
+    /**
+     * @Then /^I am told that I have an activation key for this LPA and where to find it$/
+     */
+    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I provide details that do not match the paper document$/
+     */
+    public function iProvideDetailsThatDoNotMatchThePaperDocument()
+    {
+        $data = [
+            'reference_number'  => '700000000055',
+            'dob'               => '1975-10-05',
+            'postcode'          => 'string',
+            'first_names'       => 'Ian Deputy',
+            'last_name'         => 'Deputy',
+        ];
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_NOT_FOUND,
+            []
+        );
+
+        $lpaService = $this->container->get(LpaService::class);
+
+        try {
+            $lpaService->checkLPAMatch($data, $this->actorLpaId);
+        } catch (NotFoundException $ex) {
+            assertEquals(404, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('LPA should not have been found');
+    }
+
+    /**
+     * @Then /^I am informed that an LPA could not be found with these details$/
+     */
+    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
+    {
+        // Not needed for this context
+    }
 }
