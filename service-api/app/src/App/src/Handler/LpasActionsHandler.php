@@ -38,12 +38,12 @@ class LpasActionsHandler implements RequestHandlerInterface
      * @return ResponseInterface
      * @throws \Exception
      */
-    public function handlePatch(ServerRequestInterface $request): ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
+        $userId = $request->getAttribute('user-id');
 
         if (
-            !isset($actorId) ||
             !isset($requestData['reference_number']) ||
             !isset($requestData['dob']) ||
             !isset($requestData['first_names']) ||

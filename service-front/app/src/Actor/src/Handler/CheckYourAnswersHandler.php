@@ -125,7 +125,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
             // TODO UML-1216
             if (isset($data)) {
                 try {
-                    $this->lpaService->checkLPAMatchAndRequestLetter($data);
+                     $this->lpaService->checkLPAMatchAndRequestLetter(
+                         $this->identity,
+                         $data
+                     );
                 } catch (ApiException $apiEx) {
                     if ($apiEx->getCode() === StatusCodeInterface::STATUS_BAD_REQUEST) {
                         if ($apiEx->getMessage() === 'LPA not eligible') {
