@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\ActorCodes;
 
-use App\DataAccess\{Repository\ActorCodesInterface,
+use App\DataAccess\{ApiGateway\ActorCodes,
+    Repository\ActorCodesInterface,
     Repository\KeyCollisionException,
     Repository\UserLpaActorMapInterface};
 use App\Exception\{ActorCodeMarkAsUsedException, ActorCodeValidationException};
@@ -24,6 +25,8 @@ class ActorCodeService
 
     private LoggerInterface $logger;
 
+    private ActorCodes $actorCodes;
+
     /**
      * ActorCodeService constructor.
      *
@@ -32,19 +35,22 @@ class ActorCodeService
      * @param UserLpaActorMapInterface $userLpaActorMapRepository
      * @param LpaService $lpaService
      * @param LoggerInterface $logger
+     * @param ActorCodes $actorCodes
      */
     public function __construct(
         CodeValidationStrategyInterface $codeValidator,
         ActorCodesInterface $actorCodesRepository,
         UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaService $lpaService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ActorCodes $actorCodes
     ) {
         $this->codeValidator = $codeValidator;
         $this->lpaService = $lpaService;
         $this->actorCodesRepository = $actorCodesRepository;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
         $this->logger = $logger;
+        $this->actorCodes = $actorCodes;
     }
 
 
@@ -133,5 +139,17 @@ class ActorCodeService
         }
 
         return $id;
+    }
+
+    /**
+     * @param string $lpaId
+     * @param string $actorId
+     * @return bool
+     */
+    public function hasActivationCode(string $lpaId, string $actorId): bool
+    {
+        $response = $this->actorCodes->checkActorHasCode($lpaId, $actorId);
+
+        return is_null($response->getData()['Created']) ? false : true;
     }
 }
