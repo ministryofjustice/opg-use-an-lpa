@@ -41,7 +41,6 @@ class LpasActionsHandler implements RequestHandlerInterface
     public function handlePatch(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
-        $userId = $request->getAttribute('user-id');
 
         if (
             !isset($actorId) ||

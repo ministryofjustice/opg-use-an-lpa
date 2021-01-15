@@ -429,10 +429,8 @@ class LpaService
      * @return null|string
      * @throws Exception
      */
-    public function checkLPAMatchAndRequestLetter(string $userToken, array $data): ?string
+    public function checkLPAMatchAndRequestLetter(array $data): ?string
     {
-        $this->apiClient->setUserTokenHeader($userToken);
-
         try {
             $matchResponse = $this->apiClient->httpPatch('/v1/lpas/request-letter', $data);
         } catch (ApiException $apiEx) {
