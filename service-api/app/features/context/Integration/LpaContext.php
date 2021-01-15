@@ -1467,4 +1467,29 @@ class LpaContext extends BaseIntegrationContext
         assertNull($lpaMatchResponse);
     }
 
+    /**
+     * @Given /^I already have a valid activation key for my LPA$/
+     */
+    public function iAlreadyHaveAValidActivationKeyForMyLPA()
+    {
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/exists',
+            [
+                'lpa'   => $this->lpaUid,
+                'actor' => $this->actorLpaId
+            ],
+            StatusCodeInterface::STATUS_OK,
+            [
+                'Created' => '2020-09-10'
+            ],
+        );
+
+        $actorCodeService = $this->container->get(ActorCodeService::class);
+
+        $response = $actorCodeService->hasActivationCode($this->lpaUid, $this->actorLpaId);
+
+        assertTrue($response);
+    }
+
 }
