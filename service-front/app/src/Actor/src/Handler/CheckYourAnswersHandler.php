@@ -6,19 +6,23 @@ namespace Actor\Handler;
 
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
+    LoggerAware,
     Traits\CsrfGuard,
+    Traits\Logger,
     Traits\User,
     UserAware,
     Traits\Session as SessionTrait};
 use Actor\Form\CheckYourAnswers;
 use Common\Exception\ApiException;
 use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Log\EventCodes;
 use DateTime;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Common\Service\Lpa\LpaService;
 use Fig\Http\Message\StatusCodeInterface;
@@ -28,11 +32,12 @@ use Fig\Http\Message\StatusCodeInterface;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class CheckYourAnswersHandler extends AbstractHandler implements UserAware, CsrfGuardAware
+class CheckYourAnswersHandler extends AbstractHandler implements UserAware, CsrfGuardAware, LoggerAware
 {
     use User;
     use CsrfGuard;
     use SessionTrait;
+    use Logger;
 
     private CheckYourAnswers $form;
     private ?SessionInterface $session;
@@ -45,9 +50,11 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        LpaService $lpaService
+        LpaService $lpaService,
+        LoggerInterface $logger
+
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
         $this->lpaService = $lpaService;
@@ -125,16 +132,33 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
             // TODO UML-1216
             if (isset($data)) {
                 try {
-                     $this->lpaService->checkLPAMatchAndRequestLetter(
+                     $response = $this->lpaService->checkLPAMatchAndRequestLetter(
                          $this->identity,
                          $data
                      );
+
+                    $this->getLogger()->info(
+                        'Account with Id {id} has added an old LPA with Id {uId} to their account',
+                        [
+                            'id' => $this->identity,
+                            'uId' => $data['reference_number']
+                        ]
+                    );
                 } catch (ApiException $apiEx) {
                     if ($apiEx->getCode() === StatusCodeInterface::STATUS_BAD_REQUEST) {
                         if ($apiEx->getMessage() === 'LPA not eligible') {
                             $this->getLogger()->info(
                                 'LPA with reference number {uId} not eligible for activation key.',
                                 [
+                                    'uId' => $data['reference_number'],
+                                ]
+                            );
+                            return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
+                        } elseif ($apiEx->getMessage() === 'LPA details does not match') {
+                            $this->logger->notice(
+                                'LPA with reference number {uId} does not match with user provided data',
+                                [
+                                    'event_code' => EventCodes::LPA_NOT_ELIGIBLE,
                                     'uId' => $data['reference_number'],
                                 ]
                             );

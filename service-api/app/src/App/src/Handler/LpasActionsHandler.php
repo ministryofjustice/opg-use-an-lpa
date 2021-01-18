@@ -40,6 +40,7 @@ class LpasActionsHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $lpaMatchResponse = null;
         $requestData = $request->getParsedBody();
         $userId = $request->getAttribute('user-id');
 
@@ -72,8 +73,8 @@ class LpasActionsHandler implements RequestHandlerInterface
             throw new BadRequestException("'actor-id' missing.");
         }
 
-        $this->lpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
+       $this->lpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
 
-        return new EmptyResponse();
+       return new EmptyResponse();
     }
 }

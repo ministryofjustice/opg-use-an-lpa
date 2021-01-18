@@ -424,8 +424,8 @@ class LpaService
     /**
      * Check an LPA match
      *
-     * @param string @identity
-     * @param array @data
+     * @param string $userToken
+     * @param array $data
      * @return null|string
      * @throws Exception
      */
@@ -446,6 +446,14 @@ class LpaService
                                 'uId' => $data['reference_number'],
                             ]
                         );
+                    } elseif ($apiEx->getMessage() === 'LPA details does not match') {
+                            $this->logger->notice(
+                                'LPA with reference number {uId} does not match with user provided data',
+                                [
+                                    'event_code' => EventCodes::LPA_NOT_ELIGIBLE,
+                                    'uId' => $data['reference_number'],
+                                ]
+                            );
                     } else {
                         $this->logger->notice(
                             'LPA with reference number {uId} already has an activation key',
@@ -467,6 +475,18 @@ class LpaService
                         ]
                     );
             }
+            // still throw the exception up to the caller since handling of the issue will be done there
+            throw $apiEx;
         }
+        if (!null($matchResponse)) {
+            $this->logger->info(
+                'Account with Id {id} added LPA with Id {uId} to account by passcode',
+                [
+                    'id'  => $userToken,
+                    'uId' => $data['reference_number']
+                ]
+            );
+        }
+        return $matchResponse;
     }
 }
