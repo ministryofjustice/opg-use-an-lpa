@@ -6,6 +6,7 @@ namespace BehatTest\Context\Integration;
 
 use App\DataAccess\DynamoDb\UserLpaActorMap;
 use App\DataAccess\DynamoDb\ViewerCodeActivity;
+use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Log\RequestTracing;
@@ -1380,7 +1381,7 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_NO_CONTENT
         );
 
-        $lpaService = $this->container->get(\App\Service\Lpa\LpaService::class);
+        $lpaService = $this->container->get(LpaService::class);
 
         $lpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId);
     }
@@ -1407,11 +1408,11 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideTheDetailsFromAValidPaperDocument()
     {
         $data = [
-            'reference_number'  => '700000000054',
-            'dob'               => '1975-10-05',
-            'postcode'          => 'string',
-            'first_names'       => 'Ian Deputy',
-            'last_name'         => 'Deputy',
+            'reference_number'  => $this->lpaUid,
+            'dob'               => $this->userDob,
+            'postcode'          => $this->userPostCode,
+            'first_names'       => $this->userFirstname,
+            'last_name'         => $this->userSurname,
         ];
 
         $this->pactGetInteraction(
@@ -1423,7 +1424,7 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaService = $this->container->get(LpaService::class);
 
-        $lpaMatchResponse = $lpaService->checkLPAMatch($data);
+        $lpaMatchResponse = $lpaService->checkLPAMatch($data, $this->actorLpaId);
         assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
     }
 
@@ -1461,16 +1462,16 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I provide details that do not match the paper document$/
+     * @When /^I provide details (.*) (.*) (.*) (.*) (.*) that do not match the paper document$/
      */
-    public function iProvideDetailsThatDoNotMatchThePaperDocument()
+    public function iProvideDetailsThatDoNotMatchThePaperDocument($reference_number, $dob, $postcode, $first_names, $last_name)
     {
         $data = [
-            'reference_number'  => '700000000055',
-            'dob'               => '1975-10-05',
-            'postcode'          => 'string',
-            'first_names'       => 'Ian Deputy',
-            'last_name'         => 'Deputy',
+            'reference_number'  => $reference_number,
+            'dob'               => $dob,
+            'postcode'          => $postcode,
+            'first_names'       => $first_names,
+            'last_name'         => $last_name
         ];
 
         $this->pactGetInteraction(
@@ -1496,6 +1497,48 @@ class LpaContext extends BaseIntegrationContext
      * @Then /^I am informed that an LPA could not be found with these details$/
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I provide details from an LPA registered before Sept (\d+)$/
+     */
+    public function iProvideDetailsFromAnLPARegisteredBeforeSeptOn($arg1)
+    {
+        $this->lpa->registrationDate = '2019-08-31';
+
+        $data = [
+            'reference_number'  => $this->lpaUid,
+            'dob'               => $this->userDob,
+            'postcode'          => $this->userPostCode,
+            'first_names'       => $this->userFirstname,
+            'last_name'         => $this->userSurname,
+        ];
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $lpaService = $this->container->get(LpaService::class);
+
+        try {
+            $lpaService->checkLPAMatch($data, $this->actorLpaId);
+        } catch (BadRequestException $ex) {
+            assertEquals(400, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('LPA registration date should not have been eligible');
+    }
+
+    /**
+     * @Then /^I am told that I cannot request an activation key$/
+     */
+    public function iAmToldThatICannotRequestAnActivationKey()
     {
         // Not needed for this context
     }
