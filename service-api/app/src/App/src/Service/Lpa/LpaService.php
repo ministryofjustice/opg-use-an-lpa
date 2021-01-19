@@ -468,36 +468,23 @@ class LpaService
         $actorId =  null;
         $lpaUid =  null;
 
-        // Determine if the actor is a primary attorney
-//        if (isset($lpaRetrieved['original_attorneys']) && is_array($lpaRetrieved['original_attorneys'])) {
-//            foreach ($lpaRetrieved['original_attorneys'] as $attorney) {
-//                $actorMatchResponse = $this->checkDataMatch($attorney, $userDataToMatch);
-//
-//                if (!null($actorMatchResponse)) {
-//                    switch ($this->attorneyStatus($attorney)) {
-//                        case self::ACTIVE_ATTORNEY:
-//                            $actorId = $actorMatchResponse['uId'];
-//                            $lpaUid = $userDataToMatch['reference_number'];
-//                            break;
-//
-//                        case self::GHOST_ATTORNEY:
-//                            $this->logger->info('Looked up attorney {id} but is a ghost', ['id' => $attorney['id']]);
-//                            break;
-//
-//                        case self::INACTIVE_ATTORNEY:
-//                            $this->logger->info('Looked up attorney {id} but is inactive', ['id' => $attorney['id']]);
-//                            break;
-//                    }
-//                }
-//            }
-//        } else
         if (isset($lpaRetrieved['attorneys']) and is_array($lpaRetrieved['attorneys'])) {
             foreach ($lpaRetrieved['attorneys'] as $attorney) {
 
-                $actorMatchResponse = $this->checkDataMatch($attorney, $userDataToMatch);
+                if ($this->attorneyStatus($attorney) === self::ACTIVE_ATTORNEY) {
+                    $actorMatchResponse = $this->checkDataMatch($attorney, $userDataToMatch);
 
-                $actorId = $actorMatchResponse['uId'];
-                $lpaUid = $userDataToMatch['reference_number'];
+                    $actorId = $actorMatchResponse['uId'];
+                    $lpaUid = $userDataToMatch['reference_number'];
+                }
+                $this->logger->info(
+                    'Actor {id} status appears INACTIVE for LPA {uId}',
+                    [
+                        'uId' => $userDataToMatch['reference_number'],
+                        'id'  => $actorId
+                    ]
+                );
+
             }
         }
         // If not an attorney, check if they're the donor.
