@@ -17,6 +17,7 @@ integration:
       contexts:
         - BehatTest\Context\Integration\AccountContext
         - BehatTest\Context\Integration\ViewerContext
+        - BehatTest\Context\Integration\LpaContext
       filters:
         tags: "@integration"
 
