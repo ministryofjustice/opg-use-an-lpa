@@ -426,10 +426,9 @@ class LpaService
      *
      * @param string $userToken
      * @param array $data
-     * @return null|string
-     * @throws Exception
+     * @throws ApiException
      */
-    public function checkLPAMatchAndRequestLetter(string $userToken, array $data): ?string
+    public function checkLPAMatchAndRequestLetter(string $userToken, array $data): void
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
@@ -475,18 +474,17 @@ class LpaService
                         ]
                     );
             }
+
             // still throw the exception up to the caller since handling of the issue will be done there
             throw $apiEx;
         }
-        if (!null($matchResponse)) {
-            $this->logger->info(
-                'Account with Id {id} added LPA with Id {uId} to account by passcode',
-                [
-                    'id'  => $userToken,
-                    'uId' => $data['reference_number']
-                ]
-            );
-        }
-        return $matchResponse;
+
+        $this->logger->info(
+            'Account with Id {id} added LPA with Id {uId} to account by passcode',
+            [
+                'id'  => $userToken,
+                'uId' => $data['reference_number']
+            ]
+        );
     }
 }

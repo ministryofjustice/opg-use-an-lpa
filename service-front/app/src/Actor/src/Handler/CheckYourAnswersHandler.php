@@ -4,28 +4,28 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Actor\Form\CheckYourAnswers;
+use Common\Exception\ApiException;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
     LoggerAware,
     Traits\CsrfGuard,
     Traits\Logger,
+    Traits\Session as SessionTrait,
     Traits\User,
-    UserAware,
-    Traits\Session as SessionTrait};
-use Actor\Form\CheckYourAnswers;
-use Common\Exception\ApiException;
+    UserAware};
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Log\EventCodes;
+use Common\Service\Lpa\LpaService;
 use DateTime;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
-use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
-use Common\Service\Lpa\LpaService;
-use Fig\Http\Message\StatusCodeInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class CheckYourAnswersHandler
@@ -132,7 +132,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
             // TODO UML-1216
             if (isset($data)) {
                 try {
-                     $response = $this->lpaService->checkLPAMatchAndRequestLetter(
+                     $this->lpaService->checkLPAMatchAndRequestLetter(
                          $this->identity,
                          $data
                      );
