@@ -11,6 +11,7 @@ use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTime;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
@@ -49,6 +50,14 @@ class LpaContext extends BaseIntegrationContext
     private $viewerCodeService;
 
     /**
+     * @Then /^a letter is requested containing a one time use code$/
+     */
+    public function aLetterIsRequestedContainingAOneTimeUseCode()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @Then /^I am given a unique access code$/
      */
     public function iAmGivenAUniqueAccessCode()
@@ -70,6 +79,14 @@ class LpaContext extends BaseIntegrationContext
      * @Given /^I am on the add an LPA page$/
      */
     public function iAmOnTheAddAnLPAPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I am on the add an older LPA page$/
+     */
+    public function iAmOnTheAddAnOlderLPAPage()
     {
         // Not needed for this context
     }
@@ -596,6 +613,41 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @Given /^I confirm that those details are correct$/
+     */
+    public function iConfirmThatThoseDetailsAreCorrect()
+    {
+        $data = [
+            'reference_number' => $this->referenceNo,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
+        ];
+
+        // API call for getLpaById call happens inside of the check access codes handler
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $lpaService = $this->container->get(LpaService::class);
+
+        try {
+            $lpaService->checkLPAMatchAndRequestLetter(
+                $this->userIdentity,
+                $data
+            );
+        } catch (ApiException $e) {
+            throw new Exception('Failed to correctly approve older LPA addition request', $e);
+        }
+    }
+
+    /**
      * @When /^I do not confirm cancellation of the chosen viewer code/
      */
     public function iDoNotConfirmCancellationOfTheChosenViewerCode()
@@ -707,6 +759,14 @@ class LpaContext extends BaseIntegrationContext
      * @When /^I have shared the access code with organisations to view my LPA$/
      */
     public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I provide the details from a valid paper document$/
+     */
+    public function iProvideTheDetailsFromAValidPaperDocument()
     {
         // Not needed for this context
     }
