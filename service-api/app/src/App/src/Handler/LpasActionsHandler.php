@@ -55,11 +55,6 @@ class LpasActionsHandler implements RequestHandlerInterface
         }
         // Check LPA with user provided reference number
         $lpaMatchResponse = $this->lpaService->checkLPAMatchAndGetActorDetails($requestData);
-        // Checks if the actor already has an active activation key
-        // TODO: I've had to hardcode the actor id being passed in for the
-        //  time being since we have not retrieved the correct actor Id yet.
-        //  Please update this once completed
-        $hasActivationCode = $this->actorCodeService->hasActivationCode($requestData['reference_number'], '700000116322');
 
         if (is_null($lpaMatchResponse)) {
             throw new NotFoundException('LPA not found');
@@ -73,7 +68,14 @@ class LpasActionsHandler implements RequestHandlerInterface
             throw new BadRequestException("'actor-id' missing.");
         }
 
-       $this->lpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
+        // Checks if the actor already has an active activation key is_null(abc):true
+        $hasActivationCode = $this->actorCodeService->hasActivationCode($requestData['reference_number'], $lpaMatchResponse['actor-id']);
+        if (!$hasActivationCode) {
+            throw new BadRequestException("LPA not eligible");
+        }
+
+        //If all criteria pass, request letter with activation key
+        $this->lpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
 
        return new EmptyResponse();
     }

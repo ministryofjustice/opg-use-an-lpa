@@ -615,7 +615,6 @@ class LpaService
         }
 
         // Check if activation key already exist for LPA
-        //TO DO - UML 1217
 
         return $lpaAndActorMatchResponse;
 
