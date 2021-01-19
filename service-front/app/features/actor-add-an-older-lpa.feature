@@ -9,21 +9,21 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @integration
+  @acceptance
   Scenario: The user can access the appropriate triage page
     Given I am on the dashboard page
     When I choose to add an LPA
     And I do not have an activation key
     Then I am asked for details from a paper LPA document
 
-  @integration
+  @acceptance
   Scenario: The user can review their answers and can choose to change them
     Given I have chosen to add an LPA without an activation key
     When I provide the details from a valid paper document
     Then I am asked to check my answers are correct
     And I can decide to change my details
 
-  @wip @integration
+  @integration
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document
