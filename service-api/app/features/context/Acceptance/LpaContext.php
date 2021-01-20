@@ -6,6 +6,7 @@ namespace BehatTest\Context\Acceptance;
 
 use Aws\Result;
 use Behat\Behat\Context\Context;
+use Behat\Mink\Exception\ExpectationException;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use DateTime;
@@ -23,11 +24,27 @@ use GuzzleHttp\Psr7\Response;
  * @property string userLpaActorToken
  * @property string organisation
  * @property string accessCode
+ * @property string userPostCode
+ * @property string userSurname
+ * @property string userFirstnames
  */
 class LpaContext implements Context
 {
     use BaseAcceptanceContextTrait;
     use SetupEnv;
+
+    /**
+     * @Given /^I have been given access to use an LPA via a paper document$/
+     */
+    public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument()
+    {
+        $this->userPostCode = 'string';
+        $this->userFirstnames = 'Ian Deputy';
+        $this->userSurname = 'Deputy';
+
+        // sets up the normal properties needed for an lpa
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+    }
 
     /**
      * @Given /^A malformed confirm request is sent which is missing actor code$/
@@ -1805,6 +1822,245 @@ class LpaContext implements Context
      * @Given /^I am on the add an older LPA page$/
      */
     public function iAmOnTheAddAnOlderLPAPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^a letter is requested containing a one time use code$/
+     */
+    public function aLetterIsRequestedContainingAOneTimeUseCode()
+    {
+        // request a code to be generated and letter to be sent
+        $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    []
+                )
+            );
+
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/lpas/request-letter',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
+    }
+
+    /**
+     * @Given /^I confirm that those details are correct$/
+     */
+    public function iConfirmThatThoseDetailsAreCorrect()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I provide the details from a valid paper document$/
+     */
+    public function iProvideTheDetailsFromAValidPaperDocument()
+    {
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // check if actor has a code
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
+    }
+
+    /**
+     * @When /^I provide details of an LPA that does not exist$/
+     */
+    public function iProvideDetailsOfAnLPAThatDoesNotExist()
+    {
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/lpas/request-letter',
+            [
+                'reference_number'  => '700000004321',
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
+    }
+
+    /**
+     * @When /^I provide details (.*) (.*) (.*) (.*) that do not match the paper document$/
+     * @param $dob
+     * @param $postcode
+     * @param $first_names
+     * @param $last_name
+     * @throws ExpectationException
+     */
+    public function iProvideDetailsThatDoNotMatchThePaperDocument($dob, $postcode, $first_names, $last_name)
+    {
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/lpas/request-letter',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $first_names,
+                'last_name'         => $last_name,
+                'dob'               => $dob,
+                'postcode'          => $postcode
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @Then /^I am informed that an LPA could not be found with these details$/
+     */
+    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I provide details from an LPA registered before Sept (\d+)$/
+     */
+    public function iProvideDetailsFromAnLPARegisteredBeforeSeptOn($arg1)
+    {
+        $this->lpa->registrationDate = '2019-08-31';
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/lpas/request-letter',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @Then /^I am told that I cannot request an activation key$/
+     */
+    public function iAmToldThatICannotRequestAnActivationKey()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I provide the details from a valid paper document which already has an activation key$/
+     */
+    public function iProvideTheDetailsFromAValidPaperDocumentWhichAlreadyHasAnActivationKey()
+    {
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // check if actor has a code
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => '2021-01-01'])));
+
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/lpas/request-letter',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode
+            ]
+        );
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @Then /^I am told that I have an activation key for this LPA and where to find it$/
+     */
+    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^A malformed request is sent which is missing the (.*) (.*) (.*) (.*) (.*)$/
+     */
+    public function aMalformedRequestIsSentWhichIsMissingThe($reference_no, $dob, $postcode, $first_names, $last_name)
+    {
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/lpas/request-letter',
+            [
+                'reference_number'  => $reference_no,
+                'first_names'       => $first_names,
+                'last_name'         => $last_name,
+                'dob'               => $dob,
+                'postcode'          => $postcode
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @Then /^I am told that something went wrong$/
+     */
+    public function iAmToldThatSomethingWentWrong()
     {
         // Not needed for this context
     }

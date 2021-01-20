@@ -1407,6 +1407,8 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideTheDetailsFromAValidPaperDocument()
     {
+        $this->lpa->registrationDate = '2020-01-01';
+
         $data = [
             'reference_number'  => $this->lpaUid,
             'dob'               => $this->userDob,
@@ -1415,6 +1417,7 @@ class LpaContext extends BaseIntegrationContext
             'last_name'         => $this->userSurname,
         ];
 
+        // LpaRepository::get
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/' . $this->lpaUid,
@@ -1424,15 +1427,9 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaService = $this->container->get(LpaService::class);
 
-        $lpaMatchResponse = $lpaService->checkLPAMatch($data, $this->actorLpaId);
+        $lpaMatchResponse = $lpaService->checkLPAMatchAndGetActorDetails($data);
         assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
-    }
 
-    /**
-     * @Given /^I already have a valid activation key for my LPA$/
-     */
-    public function iAlreadyHaveAValidActivationKeyForMyLPA()
-    {
         $this->pactPostInteraction(
             $this->codesApiPactProvider,
             '/v1/exists',
@@ -1442,16 +1439,41 @@ class LpaContext extends BaseIntegrationContext
             ],
             StatusCodeInterface::STATUS_OK,
             [
-                'Created' => '2020-09-10'
+                'Created' => null
             ],
         );
 
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
-        $response = $actorCodeService->hasActivationCode($this->lpaUid, $this->actorLpaId);
+        $hasActivationKey = $actorCodeService->hasActivationCode($this->lpaUid, $this->actorLpaId);
 
-        assertTrue($response);
+        assertFalse($hasActivationKey);
     }
+
+//    /**
+//     * @Given /^I already have a valid activation key for my LPA$/
+//     */
+//    public function iAlreadyHaveAValidActivationKeyForMyLPA()
+//    {
+//        $this->pactPostInteraction(
+//            $this->codesApiPactProvider,
+//            '/v1/exists',
+//            [
+//                'lpa'   => $this->lpaUid,
+//                'actor' => $this->actorLpaId
+//            ],
+//            StatusCodeInterface::STATUS_OK,
+//            [
+//                'Created' => '2020-09-10'
+//            ],
+//        );
+//
+//        $actorCodeService = $this->container->get(ActorCodeService::class);
+//
+//        $response = $actorCodeService->hasActivationCode($this->lpaUid, $this->actorLpaId);
+//
+//        assertTrue($response);
+//    }
 
     /**
      * @Then /^I am told that I have an activation key for this LPA and where to find it$/
@@ -1484,7 +1506,39 @@ class LpaContext extends BaseIntegrationContext
         $lpaService = $this->container->get(LpaService::class);
 
         try {
-            $lpaService->checkLPAMatch($data, $this->actorLpaId);
+            $lpaService->checkLPAMatchAndGetActorDetails($data);
+        } catch (NotFoundException $ex) {
+            assertEquals(404, $ex->getCode());
+            return;
+        }
+
+        throw new ExpectationFailedException('LPA should not have matched data provided');
+    }
+
+    /**
+     * @When /^I provide details of an LPA that does not exist$/
+     */
+    public function iProvideDetailsOfAnLPAThatDoesNotExist()
+    {
+        $data = [
+            'reference_number'  => $this->lpaUid,
+            'dob'               => $this->userDob,
+            'postcode'          => $this->userPostCode,
+            'first_names'       => $this->userFirstname,
+            'last_name'         => $this->userSurname,
+        ];
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . '700000004321',
+            StatusCodeInterface::STATUS_NOT_FOUND,
+            []
+        );
+
+        $lpaService = $this->container->get(LpaService::class);
+
+        try {
+            $lpaService->checkLPAMatchAndGetActorDetails($data);
         } catch (NotFoundException $ex) {
             assertEquals(404, $ex->getCode());
             return;
@@ -1526,13 +1580,63 @@ class LpaContext extends BaseIntegrationContext
         $lpaService = $this->container->get(LpaService::class);
 
         try {
-            $lpaService->checkLPAMatch($data, $this->actorLpaId);
+            $lpaService->checkLPAMatchAndGetActorDetails($data);
         } catch (BadRequestException $ex) {
             assertEquals(400, $ex->getCode());
             return;
         }
 
         throw new ExpectationFailedException('LPA registration date should not have been eligible');
+    }
+
+    /**
+     * @When /^I provide the details from a valid paper document which already has an activation key$/
+     */
+    public function iProvideTheDetailsFromAValidPaperDocumentWhichAlreadyHasAnActivationKey()
+    {
+        $this->lpa->registrationDate = '2019-09-03';
+
+        $data = [
+            'reference_number'  => $this->lpaUid,
+            'dob'               => $this->userDob,
+            'postcode'          => $this->userPostCode,
+            'first_names'       => $this->userFirstname,
+            'last_name'         => $this->userSurname,
+        ];
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $lpaService = $this->container->get(LpaService::class);
+
+        $lpaMatchResponse = $lpaService->checkLPAMatchAndGetActorDetails($data);
+        assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
+
+//        $this->pactPostInteraction(
+//            $this->codesApiPactProvider,
+//            '/v1/exists',
+//            [
+//                'lpa'   => $lpaMatchResponse['lpa-id'],
+//                'actor' => $lpaMatchResponse['actor-id']
+//            ],
+//            StatusCodeInterface::STATUS_OK,
+//            [
+//                'Created' => (new DateTime('-1 week'))->format('Y-m-d')
+//            ],
+//        );
+//
+//        $actorCodeService = $this->container->get(ActorCodeService::class);
+//
+//        $hasActivationKey = $actorCodeService->hasActivationCode(
+//            $lpaMatchResponse['lpa-id'],
+//            $lpaMatchResponse['actor-id']
+//        );
+//
+//        assertTrue($hasActivationKey);
     }
 
     /**
