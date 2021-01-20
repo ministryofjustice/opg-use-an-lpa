@@ -2,9 +2,15 @@ FROM composer AS composer
 
 COPY service-front/app/composer.json service-front/app/composer.lock /app/
 
-RUN composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
+RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
 
-FROM php:7-fpm-alpine3.12
+FROM composer AS composer-dev
+
+COPY service-front/app/composer.json service-front/app/composer.lock /app/
+
+RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
+
+FROM php:7-fpm-alpine3.12 AS production
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
@@ -20,6 +26,12 @@ COPY service-front/docker/app/app-php.ini /usr/local/etc/php/conf.d/
 COPY service-front/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.conf
 
 WORKDIR /app
+
+CMD php-fpm
+
+FROM production as development
+
+COPY --from=composer-dev /app/vendor /app/vendor
 
 CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
   && php-fpm
