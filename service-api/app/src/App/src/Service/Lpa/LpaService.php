@@ -441,7 +441,7 @@ class LpaService
     {
         //cleanse lpa actor data
         $actorDOB = (new DateTime($actorDetail['dob']))->format('d/m/Y');
-        $actorDOB = \DateTime::createFromFormat('d/m/Y', $actorDOB)->format('d/m/Y');;
+        $actorDOB = \DateTime::createFromFormat('d/m/Y', $actorDOB)->format('d/m/Y');
         $actorFirstname = strtolower(explode(' ', trim($actorDetail['firstname']))[0]);
         $actorSurname = strtolower(trim($actorDetail['surname']));
         $actorPostcode = strtolower(str_replace(' ', '', $actorDetail['addresses'][0]['postcode']));
