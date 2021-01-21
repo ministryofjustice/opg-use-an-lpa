@@ -74,8 +74,8 @@ class LpasActionsHandler implements RequestHandlerInterface
             $lpaMatchResponse['actor-id']
         );
 
-        if (!$hasActivationCode) {
-            throw new BadRequestException("LPA not eligible");
+        if ($hasActivationCode) {
+            throw new BadRequestException("LPA not eligible as an activation key already exists");
         }
 
         //If all criteria pass, request letter with activation key
