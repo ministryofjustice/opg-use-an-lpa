@@ -30,3 +30,11 @@ updates:
       interval: "daily"
     versioning-strategy: lockfile-only
     open-pull-requests-limit: 1
+
+    # Enable version updates for smoke tests composer
+  - package-ecosystem: "composer"
+    directory: "/tests/smoke"
+    schedule:
+      interval: "daily"
+    versioning-strategy: lockfile-only
+    open-pull-requests-limit: 1
