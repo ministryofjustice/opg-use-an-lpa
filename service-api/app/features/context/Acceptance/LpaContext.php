@@ -38,12 +38,15 @@ class LpaContext implements Context
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument()
     {
+        // sets up the normal properties needed for an lpa
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+
         $this->userPostCode = 'string';
         $this->userFirstnames = 'Ian Deputy';
         $this->userSurname = 'Deputy';
-
-        // sets up the normal properties needed for an lpa
-        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+        // users dob is in this format when passed up from service-front
+        $this->userDob = '05/10/1975';
+        $this->lpa->registrationDate = '2019-09-01';
     }
 
     /**
@@ -1849,6 +1852,9 @@ class LpaContext implements Context
                 'last_name'         => $this->userSurname,
                 'dob'               => $this->userDob,
                 'postcode'          => $this->userPostCode
+            ],
+            [
+                'user-token' => $this->userId,
             ]
         );
 
@@ -1907,6 +1913,9 @@ class LpaContext implements Context
                 'last_name'         => $this->userSurname,
                 'dob'               => $this->userDob,
                 'postcode'          => $this->userPostCode
+            ],
+            [
+                'user-token' => $this->userId,
             ]
         );
 
@@ -1914,14 +1923,9 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I provide details (.*) (.*) (.*) (.*) that do not match the paper document$/
-     * @param $dob
-     * @param $postcode
-     * @param $first_names
-     * @param $last_name
-     * @throws ExpectationException
+     * @When /^I provide details "([^"]*)" "([^"]*)" "([^"]*)" "([^"]*)" that do not match the paper document$/
      */
-    public function iProvideDetailsThatDoNotMatchThePaperDocument($dob, $postcode, $first_names, $last_name)
+    public function iProvideDetailsThatDoNotMatchThePaperDocument($firstnames, $lastname, $postcode, $dob)
     {
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
@@ -1938,10 +1942,13 @@ class LpaContext implements Context
             '/v1/lpas/request-letter',
             [
                 'reference_number'  => $this->lpaUid,
-                'first_names'       => $first_names,
-                'last_name'         => $last_name,
+                'first_names'       => $firstnames,
+                'last_name'         => $lastname,
                 'dob'               => $dob,
                 'postcode'          => $postcode
+            ],
+            [
+                'user-token' => $this->userId,
             ]
         );
 
@@ -1957,9 +1964,9 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I provide details from an LPA registered before Sept (\d+)$/
+     * @When /^I provide details from an LPA registered before Sept 2019$/
      */
-    public function iProvideDetailsFromAnLPARegisteredBeforeSeptOn($arg1)
+    public function iProvideDetailsFromAnLPARegisteredBeforeSept2019()
     {
         $this->lpa->registrationDate = '2019-08-31';
 
@@ -1982,6 +1989,9 @@ class LpaContext implements Context
                 'last_name'         => $this->userSurname,
                 'dob'               => $this->userDob,
                 'postcode'          => $this->userPostCode
+            ],
+            [
+                'user-token' => $this->userId,
             ]
         );
 
@@ -2024,6 +2034,9 @@ class LpaContext implements Context
                 'last_name'         => $this->userSurname,
                 'dob'               => $this->userDob,
                 'postcode'          => $this->userPostCode
+            ],
+            [
+                'user-token' => $this->userId,
             ]
         );
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -2038,23 +2051,32 @@ class LpaContext implements Context
     }
 
     /**
-     * @Given /^A malformed request is sent which is missing the (.*) (.*) (.*) (.*) (.*)$/
+     * @Given /^A malformed request is sent which is missing the a data attribute$/
      */
-    public function aMalformedRequestIsSentWhichIsMissingThe($reference_no, $dob, $postcode, $first_names, $last_name)
+    public function aMalformedRequestIsSentWhichIsMissingTheADataAttribute()
     {
-        // API call to request an activation key
-        $this->apiPatch(
-            '/v1/lpas/request-letter',
-            [
-                'reference_number'  => $reference_no,
-                'first_names'       => $first_names,
-                'last_name'         => $last_name,
-                'dob'               => $dob,
-                'postcode'          => $postcode
-            ]
-        );
+        $dataAttributes = [
+            'reference_number'  => $this->lpaUid,
+            'first_names'       => $this->userFirstnames,
+            'last_name'         => $this->userSurname,
+            'dob'               => $this->userDob,
+            'postcode'          => $this->userPostCode
+        ];
 
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+        foreach ($dataAttributes as $name => $value) {
+            $dataAttributes[$name] = null;
+
+            // API call to request an activation key
+            $this->apiPatch(
+                '/v1/lpas/request-letter',
+                $dataAttributes,
+                [
+                    'user-token' => $this->userId,
+                ]
+            );
+
+            $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+        }
     }
 
     /**
