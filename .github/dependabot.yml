@@ -1,0 +1,32 @@
+version: 2
+updates:
+  # Enable version updates for service-front npm
+  - package-ecosystem: "npm"
+    directory: "/service-front/web/package.json"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: lockfile-only
+    open-pull-requests-limit: 1
+  # Enable version updates for service-pdf npm
+  - package-ecosystem: "npm"
+    directory: "/service-pdf/app/package.json"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: lockfile-only
+    open-pull-requests-limit: 1
+
+  # Enable version updates for service-front composer
+  - package-ecosystem: "composer"
+    directory: "/service-front/app/composer.json"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: lockfile-only
+    open-pull-requests-limit: 1
+
+  # Enable version updates for service-api composer
+  - package-ecosystem: "composer"
+    directory: "/service-api/app/composer.json"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: lockfile-only
+    open-pull-requests-limit: 1
