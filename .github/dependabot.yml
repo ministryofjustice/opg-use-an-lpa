@@ -13,7 +13,7 @@ updates:
     schedule:
       interval: "weekly"
     versioning-strategy: lockfile-only
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 0
 
   # Enable version updates for service-front composer
   - package-ecosystem: "composer"
@@ -21,7 +21,7 @@ updates:
     schedule:
       interval: "weekly"
     versioning-strategy: lockfile-only
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 0
 
   # Enable version updates for service-api composer
   - package-ecosystem: "composer"
@@ -29,4 +29,4 @@ updates:
     schedule:
       interval: "weekly"
     versioning-strategy: lockfile-only
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 0
