@@ -8,10 +8,10 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @integration @acceptance @pact
+  @integration @acceptance @pact @runMe
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
-    When I provide the details from a valid paper document
+    When I provide the details from a valid paper LPA document
     And I confirm that those details are correct
     Then a letter is requested containing a one time use code
 
@@ -47,13 +47,13 @@ Feature: Add an older LPA
   @integration @acceptance @pact
   Scenario: The user cannot add an older LPA to their account if they have an activation key
     Given I am on the add an older LPA page
-    When I provide the details from a valid paper document which already has an activation key
+    When I provide the details from a valid paper document that already has an activation key
     And I confirm that those details are correct
     Then I am told that I have an activation key for this LPA and where to find it
 
   @acceptance
   Scenario: The user cannot add an older LPA to their account due to missing data in request
     Given I am on the add an older LPA page
-    When I provide the details from a valid paper document
+    When I provide the details from a valid paper LPA document
     And A malformed request is sent which is missing the a data attribute
     Then I am told that something went wrong

@@ -1870,9 +1870,9 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I provide the details from a valid paper document$/
+     * @When /^I provide the details from a valid paper LPA document$/
      */
-    public function iProvideTheDetailsFromAValidPaperDocument()
+    public function iProvideTheDetailsFromAValidPaperLPADocument()
     {
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
@@ -2007,9 +2007,9 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I provide the details from a valid paper document which already has an activation key$/
+     * @When /^I provide the details from a valid paper document that already has an activation key$/
      */
-    public function iProvideTheDetailsFromAValidPaperDocumentWhichAlreadyHasAnActivationKey()
+    public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
     {
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)

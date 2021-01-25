@@ -1406,9 +1406,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I provide the details from a valid paper document$/
+     * @When /^I provide the details from a valid paper LPA document$/
      */
-    public function iProvideTheDetailsFromAValidPaperDocument()
+    public function iProvideTheDetailsFromAValidPaperLPADocument()
     {
         $data = [
             'reference_number'  => $this->lpaUid,
@@ -1440,7 +1440,7 @@ class LpaContext extends BaseIntegrationContext
             ],
             StatusCodeInterface::STATUS_OK,
             [
-                'Created' => ''
+                'Created' => null
             ],
         );
 
@@ -1568,9 +1568,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I provide the details from a valid paper document which already has an activation key$/
+     * @When /^I provide the details from a valid paper document that already has an activation key$/
      */
-    public function iProvideTheDetailsFromAValidPaperDocumentWhichAlreadyHasAnActivationKey()
+    public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
     {
         $data = [
             'reference_number'  => $this->lpaUid,
