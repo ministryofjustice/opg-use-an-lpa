@@ -1435,8 +1435,8 @@ class LpaContext extends BaseIntegrationContext
             $this->codesApiPactProvider,
             '/v1/exists',
             [
-                'lpa'   => $this->lpaUid,
-                'actor' => $this->actorLpaId
+                'lpa'   => $lpaMatchResponse['lpa-id'],
+                'actor' => $lpaMatchResponse['actor-id']
             ],
             StatusCodeInterface::STATUS_OK,
             [
@@ -1446,7 +1446,7 @@ class LpaContext extends BaseIntegrationContext
 
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
-        $hasActivationKey = $actorCodeService->hasActivationCode($this->lpaUid, $this->actorLpaId);
+        $hasActivationKey = $actorCodeService->hasActivationCode($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
 
         assertFalse($hasActivationKey);
     }
