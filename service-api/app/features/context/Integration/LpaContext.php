@@ -1601,7 +1601,7 @@ class LpaContext extends BaseIntegrationContext
             ],
             StatusCodeInterface::STATUS_OK,
             [
-                'Created' => (new DateTime('-1 week'))->format('Y-m-d')
+                'Created' => '2021-01-15'
             ],
         );
 
