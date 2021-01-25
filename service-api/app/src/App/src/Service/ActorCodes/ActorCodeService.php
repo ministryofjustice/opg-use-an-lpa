@@ -142,6 +142,8 @@ class ActorCodeService
     }
 
     /**
+     * Checks if an actor already has an active activation key
+     *
      * @param string $lpaId
      * @param string $actorId
      * @return bool
@@ -150,6 +152,18 @@ class ActorCodeService
     {
         $response = $this->actorCodes->checkActorHasCode($lpaId, $actorId);
 
-        return is_null($response->getData()['Created']) ? false : true;
+        if (is_null($response->getData()['Created'])) {
+            return false;
+        }
+
+        $this->logger->notice(
+            'Activation key request denied for actor {actorId} on LPA {lpaId} as they have an active activation key',
+            [
+                'actorId' => $actorId,
+                'lpaId'   => $lpaId
+            ]
+        );
+
+        return true;
     }
 }

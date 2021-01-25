@@ -8,9 +8,10 @@ use App\DataAccess\Repository\{LpasInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
-use App\Exception\{ApiException, BadRequestException, GoneException, NotFoundException, RuntimeException};
+use App\Exception\{ApiException, BadRequestException, GoneException, NotFoundException};
 use DateTime;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\ref;
 
@@ -425,26 +426,22 @@ class LpaService
 
 
     /**
-     * Given an LPA and an Actor ID, this returns the actor's details.
+     * Compares LPA data retrieved from Sirius to the data provided by
+     * the user to check if it matches
      *
-     * This function is used by code that checks if a matching Sirius uId's is found and compares lpa data
-     * against user provided data to find active actor details.
-     *
-     * TODO: Confirm if we need to look in Trust Corporations, or if an active Trust Corporation would appear
-     *       in `attorneys`.
-     *
-     * @param array $lpaRetrieved An LPA data structure retrieved
-     * @param array $userDataToMatch The actors Database ID or Sirius UId to search for within the $lpa data structure
-     * @return ?array A data structure containing details of the active actor and lpa id
+     * @param array $actor The actor details being compared against
+     * @param array $userDataToMatch The user provided data we're searching for a match against
+     * @return ?array A data structure containing the matched actor id and lpa id
+     * @throws \Exception
      */
 
-    public function checkDataMatch(array $actorDetail, array $userDataToMatch): ?array
+    public function checkDataMatch(array $actor, array $userDataToMatch): ?array
     {
         //cleanse lpa actor data
-        $actorDOB = new DateTime($actorDetail['dob']);
-        $actorFirstname = strtolower(explode(' ', trim($actorDetail['firstname']))[0]);
-        $actorSurname = strtolower(trim($actorDetail['surname']));
-        $actorPostcode = strtolower(str_replace(' ', '', $actorDetail['addresses'][0]['postcode']));
+        $actorDOB = new DateTime($actor['dob']);
+        $actorFirstname = strtolower(explode(' ', trim($actor['firstname']))[0]);
+        $actorSurname = strtolower(trim($actor['surname']));
+        $actorPostcode = strtolower(str_replace(' ', '', $actor['addresses'][0]['postcode']));
 
         if (
             $userDataToMatch['dob'] == $actorDOB &&
@@ -458,18 +455,18 @@ class LpaService
                     'uId' => $userDataToMatch['reference_number']
                 ]
             );
-            return $actorDetail;
+            return $actor;
         }
         return null;
     }
 
-    public function compareAndLookupActiveActorInLpa($lpaRetrieved, array $userDataToMatch): ?array
+    private function compareAndLookupActiveActorInLpa(array $lpa, array $userDataToMatch): ?array
     {
         $actorId = null;
-        $lpaId = $lpaRetrieved['uId'];
+        $lpaId = $lpa['uId'];
 
-        if (isset($lpaRetrieved['attorneys']) && is_array($lpaRetrieved['attorneys'])) {
-            foreach ($lpaRetrieved['attorneys'] as $attorney) {
+        if (isset($lpa['attorneys']) && is_array($lpa['attorneys'])) {
+            foreach ($lpa['attorneys'] as $attorney) {
                 if ($this->attorneyStatus($attorney) === self::ACTIVE_ATTORNEY) {
                     $actorMatchResponse = $this->checkDataMatch($attorney, $userDataToMatch);
                     // if not null, an actor match has been found
@@ -490,8 +487,8 @@ class LpaService
         }
 
         // If not an attorney, check if they're the donor.
-        if (is_null($actorId) && isset($lpaRetrieved['donor']) && is_array($lpaRetrieved['donor'])) {
-            $donorMatchResponse = $this->checkDataMatch($lpaRetrieved['donor'], $userDataToMatch);
+        if (is_null($actorId) && isset($lpa['donor']) && is_array($lpa['donor'])) {
+            $donorMatchResponse = $this->checkDataMatch($lpa['donor'], $userDataToMatch);
 
             if (!is_null($donorMatchResponse)) {
                 $actorId = $donorMatchResponse['uId'];
@@ -523,39 +520,38 @@ class LpaService
     }
 
     /**
-     * @param array $dataToMatch
+     * @param array $data
      * @return array
-     *
      */
-    public function cleanseUserData(array $dataToMatch): ?array
+    public function cleanseUserData(array $data): ?array
     {
-        $dataToMatch['reference_number'] = trim($dataToMatch['reference_number']);
-        $dataToMatch['dob'] = DateTime::createFromFormat('d/m/Y|', $dataToMatch['dob']);
-        $dataToMatch['first_names'] = strtolower(explode(' ', trim($dataToMatch['first_names']))[0]);
-        $dataToMatch['last_name'] = strtolower(trim($dataToMatch['last_name']));
-        $dataToMatch['postcode'] = strtolower(str_replace(' ', '', $dataToMatch['postcode']));
-        return $dataToMatch;
+        $data['dob'] = DateTime::createFromFormat('d/m/Y|', $data['dob']);
+        $data['first_names'] = strtolower(explode(' ', $data['first_names'])[0]);
+        $data['last_name'] = strtolower($data['last_name']);
+        $data['postcode'] = strtolower(str_replace(' ', '', $data['postcode']));
+        return $data;
     }
 
     /**
-     * @param string $lpaReferenceNumber
-     * @param string $lpaStatus
-     * @param string $lpaRegistrationDate
-     * @return bool|null
+     * Checks whether an LPA was registered before Sept 1st 2019
+     * and has status Registered
      *
+     * @param array $lpa
+     * @return bool
+     * @throws \Exception
      */
-    public function checkLpaRegistrationDetails(array $lpaRetrieved): ?bool
+    private function checkLpaRegistrationDetails(array $lpa): bool
     {
         $expectedRegistrationDate = new DateTime('2019-09-01');
 
-        $lpaRegistrationDate = new DateTime($lpaRetrieved['registrationDate']);
+        $lpaRegistrationDate = new DateTime($lpa['registrationDate']);
 
         //check if lpa status is Registered and registration date falls after 1 Sep 2019
-        if ($lpaRetrieved['status'] !== 'Registered') {
+        if ($lpa['status'] !== 'Registered') {
             $this->logger->notice(
                 'User entered LPA {uId} does not have the required status',
                 [
-                    'uId' => $lpaRetrieved['uId'],
+                    'uId' => $lpa['uId'],
                 ]
             );
             return false;
@@ -564,7 +560,7 @@ class LpaService
             $this->logger->notice(
                 'User entered LPA {uId} has a registration date before 1 September 2019',
                 [
-                    'uId' => $lpaRetrieved['uId'],
+                    'uId' => $lpa['uId'],
                 ]
             );
             return false;
@@ -576,9 +572,9 @@ class LpaService
      * Gets LPA by Uid, checks registration date and identifies the actor
      *
      * @param array $dataToMatch
-     * @return array|null
+     * @return array
      */
-    public function checkLPAMatchAndGetActorDetails(array $dataToMatch): ?array
+    public function checkLPAMatchAndGetActorDetails(array $dataToMatch): array
     {
         // Cleanse user provided data
         $dataToMatch = $this->cleanseUserData($dataToMatch);
@@ -622,8 +618,6 @@ class LpaService
             );
             throw new BadRequestException('LPA details does not match');
         }
-
-        // Check if activation key already exist for LPA
 
         return $lpaAndActorMatchResponse;
     }

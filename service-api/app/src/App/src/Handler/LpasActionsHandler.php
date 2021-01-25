@@ -56,10 +56,6 @@ class LpasActionsHandler implements RequestHandlerInterface
         // Check LPA with user provided reference number
         $lpaMatchResponse = $this->lpaService->checkLPAMatchAndGetActorDetails($requestData);
 
-        if (is_null($lpaMatchResponse)) {
-            throw new NotFoundException('LPA not found');
-        }
-
         if (!isset($lpaMatchResponse['lpa-id'])) {
             throw new BadRequestException("'lpa-id' missing.");
         }
@@ -68,9 +64,9 @@ class LpasActionsHandler implements RequestHandlerInterface
             throw new BadRequestException("'actor-id' missing.");
         }
 
-        // Checks if the actor already has an active activation key is_null(abc):true
+        // Checks if the actor already has an active activation key
         $hasActivationCode = $this->actorCodeService->hasActivationCode(
-            $requestData['reference_number'],
+            $lpaMatchResponse['lpa-id'],
             $lpaMatchResponse['actor-id']
         );
 
