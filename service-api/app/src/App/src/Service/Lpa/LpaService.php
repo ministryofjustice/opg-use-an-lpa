@@ -437,6 +437,17 @@ class LpaService
 
     public function checkDataMatch(array $actor, array $userDataToMatch): ?array
     {
+        // Check if the actor has more than one address
+        if (count($actor['addresses']) > 1) {
+            $this->logger->info(
+                'Data match failed for actor {id} as more than 1 address found',
+                [
+                    'id' => $actor['uId']
+                ]
+            );
+            return null;
+        }
+
         //cleanse lpa actor data
         $actorDOB = new DateTime($actor['dob']);
         $actorFirstname = strtolower(explode(' ', trim($actor['firstname']))[0]);
