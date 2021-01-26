@@ -724,7 +724,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I request to add an LPA with valid details$/
      */
-    public function tiRequestToAddAnLPAWithValidDetails()
+    public function iRequestToAddAnLPAWithValidDetails()
     {
         // The underlying SmartGamma library has a very naive match processor for
         // passed in response values and will assume lpaUid's and actorLpaId's are integers.
@@ -1431,6 +1431,9 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $lpaService->checkLPAMatchAndGetActorDetails($data);
         assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
 
+        $codeExists = new \stdClass();
+        $codeExists->Created = null;
+
         $this->pactPostInteraction(
             $this->codesApiPactProvider,
             '/v1/exists',
@@ -1439,9 +1442,7 @@ class LpaContext extends BaseIntegrationContext
                 'actor' => $lpaMatchResponse['actor-id']
             ],
             StatusCodeInterface::STATUS_OK,
-            [
-                'Created' => null
-            ],
+            $codeExists
         );
 
         $actorCodeService = $this->container->get(ActorCodeService::class);
@@ -1592,6 +1593,9 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $lpaService->checkLPAMatchAndGetActorDetails($data);
         assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
 
+        $codeExists = new \stdClass();
+        $codeExists->Created = '2021-01-15';
+
         $this->pactPostInteraction(
             $this->codesApiPactProvider,
             '/v1/exists',
@@ -1600,9 +1604,7 @@ class LpaContext extends BaseIntegrationContext
                 'actor' => $lpaMatchResponse['actor-id']
             ],
             StatusCodeInterface::STATUS_OK,
-            [
-                'Created' => '2021-01-15'
-            ],
+            $codeExists
         );
 
         $actorCodeService = $this->container->get(ActorCodeService::class);
