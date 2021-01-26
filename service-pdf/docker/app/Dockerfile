@@ -4,7 +4,7 @@
 # https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-in-docker
 # https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md#running-on-alpine
 
-FROM node:lts-alpine3.12
+FROM node:lts-alpine3.12 AS production
 
 RUN apk add --no-cache \
       chromium \
@@ -29,8 +29,12 @@ WORKDIR /src/app
 COPY service-pdf/app/package.json ./package.json
 COPY service-pdf/app .
 
-RUN npm install
+RUN npm install --only=production
 
 EXPOSE 80
 
 CMD [ "node", "-r", "esm", "src/server.js"]
+
+FROM production AS development
+
+RUN npm install
