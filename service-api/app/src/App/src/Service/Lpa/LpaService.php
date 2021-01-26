@@ -532,7 +532,7 @@ class LpaService
 
     /**
      * @param array $data
-     * @return array
+     * @return array|null
      */
     public function cleanseUserData(array $data): ?array
     {
@@ -557,7 +557,6 @@ class LpaService
 
         $lpaRegistrationDate = new DateTime($lpa['registrationDate']);
 
-        //check if lpa status is Registered and registration date falls after 1 Sep 2019
         if ($lpa['status'] !== 'Registered') {
             $this->logger->notice(
                 'User entered LPA {uId} does not have the required status',
@@ -584,6 +583,7 @@ class LpaService
      *
      * @param array $dataToMatch
      * @return array
+     * @throws \Exception
      */
     public function checkLPAMatchAndGetActorDetails(array $dataToMatch): array
     {
