@@ -50,8 +50,6 @@ class StatisticsCollector:
         self.dynamodb_scan_paginator = self.aws_dynamodb_client.get_paginator("scan")
 
         self.format_dates(startdate, enddate)
-        self.collate_sums()
-        self.produce_json()
 
     def set_iam_role_session(self, aws_account_id):
         role_arn = 'arn:aws:iam::{}:role/breakglass'.format(
@@ -238,21 +236,26 @@ def main():
     parser.add_argument("--text", dest="plaintext_output", action="store_const",
                         const=True, default=False,
                         help="Output stats as a plaintext statement")
+    parser.add_argument("--test", dest="test_with_file", action="store_const",
+                        const=True, default=False,
+                        help="Run script using an input file previously generated")
 
     args = parser.parse_args()
     work = StatisticsCollector(
         args.environment, args.startdate, args.enddate)
-
-    if args.plaintext_output :
-        work.print_plaintext()
+    if args.test_with_file :
+        with open('output.json') as json_file:
+            work.statistics = json.load(json_file,)
+            if args.plaintext_output :
+                work.print_plaintext()
+            else:
+                work.print_json()
     else:
-        work.print_json()
-
-    # with open('output.json') as json_file:
-    #     work.json = json.load(json_file,)
-    #     if args.plaintext_output :
-    #         work.print_plaintext()
-    #     else:
-    #         work.print_json()
+        work.collate_sums()
+        work.produce_json()
+        if args.plaintext_output :
+            work.print_plaintext()
+        else:
+            work.print_json()
 if __name__ == "__main__":
     main()
