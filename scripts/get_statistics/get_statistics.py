@@ -1,7 +1,6 @@
 import argparse
 import datetime
 import json
-from os import access
 import boto3
 from dateutil.relativedelta import relativedelta
 
