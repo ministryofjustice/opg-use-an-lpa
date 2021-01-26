@@ -17,8 +17,6 @@ class ActorCodeService
 {
     private CodeValidationStrategyInterface $codeValidator;
 
-    private ActorCodesInterface $actorCodesRepository;
-
     private UserLpaActorMapInterface $userLpaActorMapRepository;
 
     private LpaService $lpaService;
@@ -31,7 +29,6 @@ class ActorCodeService
      * ActorCodeService constructor.
      *
      * @param CodeValidationStrategyInterface $codeValidator
-     * @param ActorCodesInterface $actorCodesRepository
      * @param UserLpaActorMapInterface $userLpaActorMapRepository
      * @param LpaService $lpaService
      * @param LoggerInterface $logger
@@ -39,7 +36,6 @@ class ActorCodeService
      */
     public function __construct(
         CodeValidationStrategyInterface $codeValidator,
-        ActorCodesInterface $actorCodesRepository,
         UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaService $lpaService,
         LoggerInterface $logger,
@@ -47,7 +43,6 @@ class ActorCodeService
     ) {
         $this->codeValidator = $codeValidator;
         $this->lpaService = $lpaService;
-        $this->actorCodesRepository = $actorCodesRepository;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
         $this->logger = $logger;
         $this->actorCodes = $actorCodes;

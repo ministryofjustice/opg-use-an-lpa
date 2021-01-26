@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
+use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\Repository;
 use App\DataAccess\Repository\ActorCodesInterface;
 use App\DataAccess\Repository\KeyCollisionException;
@@ -21,9 +22,9 @@ use Psr\Log\LoggerInterface;
 class ActorCodeServiceTest extends TestCase
 {
     /**
-     * @var ActorCodesInterface|ObjectProphecy
+     * @var ActorCodes|ObjectProphecy
      */
-    private $actorCodesInterfaceProphecy;
+    private $actorCodes;
 
     /**
      * @var CodeValidationStrategyInterface|ObjectProphecy
@@ -49,7 +50,7 @@ class ActorCodeServiceTest extends TestCase
     {
         $this->codeValidatorProphecy = $this->prophesize(CodeValidationStrategyInterface::class);
         $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
-        $this->actorCodesInterfaceProphecy = $this->prophesize(ActorCodesInterface::class);
+        $this->actorCodes = $this->prophesize(ActorCodes::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
@@ -217,10 +218,10 @@ class ActorCodeServiceTest extends TestCase
     {
         return new ActorCodeService(
             $this->codeValidatorProphecy->reveal(),
-            $this->actorCodesInterfaceProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
+            $this->actorCodes->reveal()
         );
     }
 
