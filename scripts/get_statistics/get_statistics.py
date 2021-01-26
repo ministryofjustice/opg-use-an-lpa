@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import json
+from os import access
 import boto3
 from dateutil.relativedelta import relativedelta
 
@@ -20,6 +21,7 @@ class StatisticsCollector:
     viewer_codes_created_total = 0
     viewer_codes_viewed_monthly_totals = {}
     viewer_codes_viewed_total = 0
+    statistics = {}
 
     def __init__(self, environment, startdate, enddate):
         aws_account_ids = {
@@ -49,6 +51,8 @@ class StatisticsCollector:
         self.dynamodb_scan_paginator = self.aws_dynamodb_client.get_paginator("scan")
 
         self.format_dates(startdate, enddate)
+        self.collate_sums()
+        self.produce_json()
 
     def set_iam_role_session(self, aws_account_id):
         role_arn = 'arn:aws:iam::{}:role/breakglass'.format(
@@ -174,15 +178,16 @@ class StatisticsCollector:
 
         return running_sum
 
-    def produce_json(self):
+    def collate_sums(self):
         self.sum_lpas_added_count()
         self.sum_viewer_codes_created_count()
         self.sum_viewer_codes_viewed_count()
         self.sum_account_created_metrics()
 
-        statistics = {}
-        statistics['statistics'] = {}
-        stats=statistics['statistics']
+    def produce_json(self):
+        self.statistics = {}
+        self.statistics['statistics'] = {}
+        stats=self.statistics['statistics']
 
         stats['accounts_created'] = {}
         stats['accounts_created']['total'] = self.account_created_total
@@ -203,7 +208,20 @@ class StatisticsCollector:
             self.viewer_codes_viewed_monthly_totals.values())
         stats['viewer_codes_viewed']['monthly'] = self.viewer_codes_viewed_monthly_totals
 
-        print(json.dumps(statistics))
+    def print_json(self):
+        print(json.dumps(self.statistics))
+
+    def print_plaintext(self):
+        plaintext = ""
+        for statistic in self.statistics["statistics"]:
+            plaintext += "{0}\n".format(statistic).upper()
+            plaintext += "Total for reporting period: {0}\n".format(self.statistics["statistics"][statistic]["total"])
+            plaintext += "Monthly Breakdown\n"
+            for key, value in self.statistics["statistics"][statistic]["monthly"].items():
+                plaintext += "{0} {1} \n".format(key, str(value))
+            plaintext += "\n"
+
+        print(plaintext)
 
 
 def main():
@@ -218,12 +236,24 @@ def main():
     parser.add_argument("--enddate",
                         default="",
                         help="Where to end metric summing, defaults to today")
+    parser.add_argument("--text", dest="plaintext_output", action="store_const",
+                        const=True, default=False,
+                        help="Output stats as a plaintext statement")
 
     args = parser.parse_args()
     work = StatisticsCollector(
         args.environment, args.startdate, args.enddate)
-    work.produce_json()
 
+    if args.plaintext_output :
+        work.print_plaintext()
+    else:
+        work.print_json()
 
+    # with open('output.json') as json_file:
+    #     work.json = json.load(json_file,)
+    #     if args.plaintext_output :
+    #         work.print_plaintext()
+    #     else:
+    #         work.print_json()
 if __name__ == "__main__":
     main()
