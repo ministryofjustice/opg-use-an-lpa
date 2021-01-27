@@ -824,4 +824,128 @@ class LpaServiceTest extends TestCase
 
         $this->assertEquals($userLpaToken, $lpaAdded);
     }
+
+    /**
+     * @test
+     * @covers \Common\Service\Lpa\LpaService::checkLPAMatchAndRequestLetter
+     */
+    public function it_matches_an_lpa_and_requests_letter(): void
+    {
+        $userLpaToken = '01234567-01234-01234-01234';
+        $data = [
+            'reference_number'  => '123456789012',
+            'first_names'       => 'John',
+            'last_name'         => 'Smith',
+            'dob'               => '1974-08-13',
+            'postcode'          => 'EX4 MPL'
+        ];
+
+        $this->apiClientProphecy->httpPatch('/v1/lpas/request-letter', $data)
+            ->willReturn([]);
+        $this->apiClientProphecy->setUserTokenHeader($userLpaToken)->shouldBeCalled();
+
+        $response = $this->lpaService->checkLPAMatchAndRequestLetter($userLpaToken, $data);
+
+        // No exception thrown and no data means it was successful.
+    }
+
+    /**
+     * @test
+     * @covers \Common\Service\Lpa\LpaService::checkLPAMatchAndRequestLetter
+     */
+    public function it_fails_to_match_an_lpa_by_id(): void
+    {
+        $userLpaToken = '01234567-01234-01234-01234';
+        $data = [
+            'reference_number'  => '123456789012',
+            'first_names'       => 'John',
+            'last_name'         => 'Smith',
+            'dob'               => '1974-08-13',
+            'postcode'          => 'EX4 MPL'
+        ];
+
+        $this->apiClientProphecy->httpPatch('/v1/lpas/request-letter', $data)
+            ->willThrow(new ApiException('LPA not found', StatusCodeInterface::STATUS_NOT_FOUND));
+        $this->apiClientProphecy->setUserTokenHeader($userLpaToken)->shouldBeCalled();
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+        $this->expectExceptionMessage('LPA not found');
+        $response = $this->lpaService->checkLPAMatchAndRequestLetter($userLpaToken, $data);
+    }
+
+    /**
+     * @test
+     * @covers \Common\Service\Lpa\LpaService::checkLPAMatchAndRequestLetter
+     */
+    public function it_fails_to_match_an_ineligible_lpa(): void
+    {
+        $userLpaToken = '01234567-01234-01234-01234';
+        $data = [
+            'reference_number'  => '123456789012',
+            'first_names'       => 'John',
+            'last_name'         => 'Smith',
+            'dob'               => '1974-08-13',
+            'postcode'          => 'EX4 MPL'
+        ];
+
+        $this->apiClientProphecy->httpPatch('/v1/lpas/request-letter', $data)
+            ->willThrow(new ApiException('LPA not eligible', StatusCodeInterface::STATUS_BAD_REQUEST));
+        $this->apiClientProphecy->setUserTokenHeader($userLpaToken)->shouldBeCalled();
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->expectExceptionMessage('LPA not eligible');
+        $response = $this->lpaService->checkLPAMatchAndRequestLetter($userLpaToken, $data);
+    }
+
+    /**
+     * @test
+     * @covers \Common\Service\Lpa\LpaService::checkLPAMatchAndRequestLetter
+     */
+    public function it_fails_to_match_an_lpa_using_details(): void
+    {
+        $userLpaToken = '01234567-01234-01234-01234';
+        $data = [
+            'reference_number'  => '123456789012',
+            'first_names'       => 'John',
+            'last_name'         => 'Smith',
+            'dob'               => '1974-08-13',
+            'postcode'          => 'EX4 MPL'
+        ];
+
+        $this->apiClientProphecy->httpPatch('/v1/lpas/request-letter', $data)
+            ->willThrow(new ApiException('LPA details does not match', StatusCodeInterface::STATUS_BAD_REQUEST));
+        $this->apiClientProphecy->setUserTokenHeader($userLpaToken)->shouldBeCalled();
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->expectExceptionMessage('LPA details does not match');
+        $response = $this->lpaService->checkLPAMatchAndRequestLetter($userLpaToken, $data);
+    }
+
+    /**
+     * @test
+     * @covers \Common\Service\Lpa\LpaService::checkLPAMatchAndRequestLetter
+     */
+    public function it_fails_to_match_an_lpa_key_already_exists(): void
+    {
+        $userLpaToken = '01234567-01234-01234-01234';
+        $data = [
+            'reference_number'  => '123456789012',
+            'first_names'       => 'John',
+            'last_name'         => 'Smith',
+            'dob'               => '1974-08-13',
+            'postcode'          => 'EX4 MPL'
+        ];
+
+        $this->apiClientProphecy->httpPatch('/v1/lpas/request-letter', $data)
+            ->willThrow(new ApiException('LPA already has key', StatusCodeInterface::STATUS_BAD_REQUEST));
+        $this->apiClientProphecy->setUserTokenHeader($userLpaToken)->shouldBeCalled();
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->expectExceptionMessage('LPA already has key');
+        $response = $this->lpaService->checkLPAMatchAndRequestLetter($userLpaToken, $data);
+    }
 }
