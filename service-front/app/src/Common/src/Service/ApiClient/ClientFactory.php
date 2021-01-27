@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Common\Service\ApiClient;
 
 use Common\Service\Log\RequestTracing;
-use DI\Factory\RequestedEntry;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
@@ -16,7 +15,7 @@ use RuntimeException;
  */
 class ClientFactory
 {
-    public function __invoke(ContainerInterface $container, RequestedEntry $entityClass)
+    public function __invoke(ContainerInterface $container)
     {
         $config = $container->get('config');
 
