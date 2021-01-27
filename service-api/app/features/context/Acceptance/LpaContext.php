@@ -2063,7 +2063,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @Given /^A malformed request is sent which is missing the a data attribute$/
+     * @Given /^A malformed request is sent which is missing a data attribute$/
      */
     public function aMalformedRequestIsSentWhichIsMissingTheADataAttribute()
     {
