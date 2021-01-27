@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\DataAccess\{Repository,
-    Repository\Response\Lpa,
+use App\DataAccess\{ApiGateway\ActorCodes,
+    Repository,
     Repository\UserLpaActorMapInterface,
     Repository\ViewerCodesInterface};
+use App\DataAccess\Repository\Response\{ActorCode, Lpa};
 use App\Exception\ApiException;
+use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\LpaService;
 use App\Service\ViewerCodes\ViewerCodeService;
@@ -46,6 +48,11 @@ class LpaServiceTest extends TestCase
      */
     private $loggerProphecy;
 
+    /**
+     * @var ActorCodes
+     */
+    public $actorCodesProphecy;
+
     public function setUp()
     {
         $this->viewerCodesInterfaceProphecy = $this->prophesize(Repository\ViewerCodesInterface::class);
@@ -53,6 +60,7 @@ class LpaServiceTest extends TestCase
         $this->lpasInterfaceProphecy = $this->prophesize(Repository\LpasInterface::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(Repository\UserLpaActorMapInterface::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->actorCodesProphecy = $this->prophesize(ActorCodes::class);
     }
 
     //-------------------------------------------------------------------------
@@ -65,7 +73,8 @@ class LpaServiceTest extends TestCase
             $this->viewerCodeActivityInterfaceProphecy->reveal(),
             $this->lpasInterfaceProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
+            $this->actorCodesProphecy->reveal()
         );
     }
 
@@ -318,7 +327,7 @@ class LpaServiceTest extends TestCase
 
         $this->assertEquals($map['Id'], $result['user-lpa-actor-token']);
         $this->assertEquals($lpa->getLookupTime()->getTimestamp(), strtotime($result['date']));
-        $this->assertEquals(null, $result['actor']);    // We expexting not actor to have been found
+        $this->assertEquals(null, $result['actor']);    // We're expecting no actor to have been found
         $this->assertEquals($lpa->getData(), $result['lpa']);
     }
 
@@ -433,7 +442,7 @@ class LpaServiceTest extends TestCase
             'donor' => [
                 'surname' => $t->DonorSurname,
             ]
-        ], new DateTime);
+        ], new DateTime());
 
 
         $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn([
@@ -1003,5 +1012,551 @@ class LpaServiceTest extends TestCase
 
         $this->expectException(ApiException::class);
         $service->requestAccessByLetter($caseUid, $actorUid);
+    }
+
+    /** @test */
+    public function returns_true_if_a_code_exists_for_an_actor()
+    {
+        $actorUid = '700000055554';
+        $lpaId = '700000012345';
+
+        $lpaCodesResponse = new ActorCode(
+            [
+                'Created' => '2021-01-01'
+            ],
+            new DateTime('now')
+        );
+
+        $this->actorCodesProphecy
+            ->checkActorHasCode($lpaId, $actorUid)
+            ->willReturn($lpaCodesResponse);
+
+        $service = $this->getLpaService();
+
+        $codeExists = $service->hasActivationCode($lpaId, $actorUid);
+        $this->assertTrue($codeExists);
+    }
+
+    /** @test */
+    public function returns_false_if_a_code_does_not_exist_for_an_actor()
+    {
+        $actorUid = '700000055554';
+        $lpaId = '700000012345';
+
+        $lpaCodesResponse = new ActorCode(
+            [
+                'Created' => null
+            ],
+            new DateTime()
+        );
+
+        $this->actorCodesProphecy
+            ->checkActorHasCode($lpaId, $actorUid)
+            ->willReturn($lpaCodesResponse);
+
+        $service = $this->getLpaService();
+
+        $codeExists = $service->hasActivationCode($lpaId, $actorUid);
+        $this->assertFalse($codeExists);
+    }
+
+    /**
+     * @test
+     * @dataProvider registeredDataProvider
+     * @param array $lpa
+     * @param bool $isValid
+     * @throws \Exception
+     */
+    public function checks_whether_the_lpa_was_registered_after_1st_Sept_2019(array $lpa, bool $isValid)
+    {
+        $service = $this->getLpaService();
+
+        $registrationValid = $service->checkLpaRegistrationDetails($lpa);
+        $this->assertEquals($isValid, $registrationValid);
+    }
+
+    public function registeredDataProvider(): array
+    {
+        return [
+            [
+                [
+                    'status' => 'Registered',
+                    'registrationDate' => '2021-01-01'
+                ],
+                true
+            ],
+            [
+                [
+                    'status' => 'Cancelled',
+                    'registrationDate' => '2021-01-01'
+                ],
+                false
+            ],
+            [
+                [
+                    'status' => 'Registered',
+                    'registrationDate' => '2019-09-01'
+                ],
+                true
+            ],
+            [
+                [
+                    'status' => 'Registered',
+                    'registrationDate' => '2019-08-31'
+                ],
+                false
+            ]
+        ];
+    }
+
+    /** @test */
+    public function returns_data_in_correct_format_after_cleansing()
+    {
+        $data = [
+          'dob'         => '01/03/1980',
+          'first_names' => 'Test Tester',
+          'last_name'   => 'Testing',
+          'postcode'    => 'Ab1 2Cd'
+        ];
+
+        $service = $this->getLpaService();
+
+        $cleansedData = $service->cleanseUserData($data);
+        $this->assertInstanceOf(DateTime::class, $cleansedData['dob']);
+        $this->assertEquals(new DateTime('1980-03-01'), $cleansedData['dob']);
+        $this->assertEquals('test', $cleansedData['first_names']);
+        $this->assertEquals('testing', $cleansedData['last_name']);
+        $this->assertEquals('ab12cd', $cleansedData['postcode']);
+    }
+
+    /** @test */
+    public function returns_the_actor_if_user_data_matches_the_actor_data()
+    {
+        $actor = [
+            'dob'       => '1980-03-01',
+            'firstname' => 'Test',
+            'surname'   => 'Testing',
+            'addresses' => [
+                ['postcode' => 'Ab1 2Cd']
+            ]
+        ];
+
+        $userData = [
+            'dob'         => '01/03/1980',
+            'first_names' => 'Test Tester',
+            'last_name'   => 'Testing',
+            'postcode'    => 'Ab1 2Cd'
+        ];
+
+        $service = $this->getLpaService();
+
+        $userData = $service->cleanseUserData($userData);
+
+        $actorMatch = $service->checkDataMatch($actor, $userData);
+        $this->assertEquals($actor, $actorMatch);
+    }
+
+    /** @test */
+    public function returns_null_if_actor_has_more_than_one_address()
+    {
+        $actor = [
+          'addresses' => [
+              ['postcode' => 'ab1 2cd'],
+              ['postcode' => 'gw1 9hp']
+          ]
+        ];
+
+        $service = $this->getLpaService();
+
+        $dataMatch = $service->checkDataMatch($actor, []);
+        $this->assertNull($dataMatch);
+    }
+
+    /**
+     * @test
+     * @dataProvider actorLookupDataProvider
+     * @param array|null $expectedResponse
+     * @param array $userData
+     */
+    public function returns_actor_and_lpa_id_if_match_found_in_lookup(?array $expectedResponse, array $userData)
+    {
+        $lpaId = '700000009999';
+
+        $lpa = [
+            'uId' => $lpaId,
+            'donor' => [
+                'uId' => '700000001111',
+                'dob' => '1975-10-05',
+                'firstname' => 'Donor',
+                'surname'   => 'Person',
+                'addresses' => [
+                    [
+                        'postcode' => 'PY1 3Kd'
+                    ]
+                ]
+            ],
+            'attorneys' => [
+                [
+                    'uId' => '700000002222',
+                    'dob' => '1977-11-21',
+                    'firstname' => 'Attorneyone',
+                    'surname'   => 'Person',
+                    'addresses' => [
+                        [
+                            'postcode' => 'Gg1 2ff'
+                        ]
+                    ],
+                    'systemStatus' => false,
+                ],
+                [
+                    'uId' => '700000003333',
+                    'dob' => '1960-05-05',
+                    'firstname' => '', // ghost attorney
+                    'surname'   => '',
+                    'addresses' => [
+                        [
+                            'postcode' => 'BB1 9ee'
+                        ]
+                    ],
+                    'systemStatus' => true,
+                ],
+                [
+                    'uId' => '700000001234',
+                    'dob' => '1980-03-01',
+                    'firstname' => 'Test',
+                    'surname'   => 'Testing',
+                    'addresses' => [
+                        [
+                            'postcode' => 'Ab1 2Cd'
+                        ]
+                    ],
+                    'systemStatus' => true,
+                ]
+            ]
+        ];
+
+        $service = $this->getLpaService();
+
+        $userData = $service->cleanseUserData($userData);
+
+        $actorMatch = $service->compareAndLookupActiveActorInLpa($lpa, $userData);
+        $this->assertEquals($expectedResponse, $actorMatch);
+    }
+
+    public function actorLookupDataProvider(): array
+    {
+        return [
+            [
+                [
+                    'actor-id' => '700000001234', // successful match for attorney
+                    'lpa-id'   => '700000009999'
+                ],
+                [
+                    'dob'         => '01/03/1980',
+                    'first_names' => 'Test Tester',
+                    'last_name'   => 'Testing',
+                    'postcode'    => 'Ab1 2Cd'
+                ],
+            ],
+            [
+                [
+                    'actor-id' => '700000001111', // successful match for donor
+                    'lpa-id'   => '700000009999'
+                ],
+                [
+                    'dob'         => '05/10/1975',
+                    'first_names' => 'Donor',
+                    'last_name'   => 'Person',
+                    'postcode'    => 'PY1 3Kd'
+                ],
+            ],
+            [
+                null,
+                [
+                    'dob'         => '20/01/1980', // dob will not match
+                    'first_names' => 'Test Tester',
+                    'last_name'   => 'Testing',
+                    'postcode'    => 'Ab1 2Cd'
+                ],
+            ],
+            [
+                null,
+                [
+                    'dob'         => '01/03/1980',
+                    'first_names' => 'Wrong', // firstname will not match
+                    'last_name'   => 'Testing',
+                    'postcode'    => 'Ab1 2Cd'
+                ],
+            ],
+            [
+                null,
+                [
+                    'dob'         => '01/03/1980',
+                    'first_names' => 'Test Tester',
+                    'last_name'   => 'Incorrect', // surname will not match
+                    'postcode'    => 'Ab1 2Cd'
+                ],
+            ],
+            [
+                null,
+                [
+                    'dob'         => '01/03/1980',
+                    'first_names' => 'Test Tester',
+                    'last_name'   => 'Testing',
+                    'postcode'    => 'WR0 NG1' // postcode will not match
+                ],
+            ],
+            [
+                null, // will not find a match as this attorney is inactive
+                [
+                    'dob'         => '21/11/1977',
+                    'first_names' => 'Attorneyone',
+                    'last_name'   => 'Person',
+                    'postcode'    => 'Gg1 2ff'
+                ],
+            ],
+            [
+                null, // will not find a match as this attorney is a ghost
+                [
+                    'dob'         => '05/05/1960',
+                    'first_names' => 'Attorneytwo',
+                    'last_name'   => 'Person',
+                    'postcode'    => 'BB1 9ee'
+                ],
+            ]
+        ];
+    }
+
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function older_lpa_lookup_throws_an_exception_if_lpa_not_found()
+    {
+        $lpaId = '700000004321';
+
+        $dataToMatch = [
+            'reference_number' => $lpaId,
+            'dob'              => '01/03/1980',
+            'first_names'      => 'Test Tester',
+            'last_name'        => 'Testing',
+            'postcode'         => 'Ab1 2Cd'
+        ];
+
+        $service = $this->getLpaService();
+
+        $this->lpasInterfaceProphecy
+            ->get($lpaId)
+            ->willReturn(null);
+
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionCode(404);
+        $this->expectExceptionMessage('LPA not found');
+
+        $service->checkLPAMatchAndGetActorDetails($dataToMatch);
+    }
+
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function older_lpa_lookup_throws_an_exception_if_lpa_registration_not_valid()
+    {
+        $lpaId = '700000004321';
+
+        $dataToMatch = [
+            'reference_number' => $lpaId,
+            'dob'              => '01/03/1980',
+            'first_names'      => 'Test Tester',
+            'last_name'        => 'Testing',
+            'postcode'         => 'Ab1 2Cd'
+        ];
+
+        $service = $this->getLpaService();
+
+        $this->lpasInterfaceProphecy
+            ->get($lpaId)
+            ->willReturn(
+                new Lpa(
+                    [
+                        'uId' => $lpaId,
+                        'registrationDate' => '2019-08-31',
+                        'status' => 'Registered',
+                    ],
+                    new DateTime()
+                )
+            );
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('LPA not eligible due to registration date');
+
+        $service->checkLPAMatchAndGetActorDetails($dataToMatch);
+    }
+
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function older_lpa_lookup_throws_an_exception_if_user_data_doesnt_match_lpa()
+    {
+        $lpaId = '700000004321';
+
+        $dataToMatch = [
+            'reference_number' => $lpaId,
+            'dob'              => '08/08/1970',
+            'first_names'      => 'Wrong Name',
+            'last_name'        => 'Incorrect',
+            'postcode'         => 'wR0 nG1'
+        ];
+
+        $service = $this->getLpaService();
+
+        $lpa = $this->older_lpa_get_by_uid_response();
+
+        $this->lpasInterfaceProphecy
+            ->get($lpaId)
+            ->willReturn($lpa);
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('LPA details does not match');
+
+        $service->checkLPAMatchAndGetActorDetails($dataToMatch);
+    }
+
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function older_lpa_lookup_throws_an_exception_if_actor_has_activation_key()
+    {
+        $lpaId = '700000004321';
+        $actorId = '700000004444';
+
+        $dataToMatch = [
+            'reference_number' => $lpaId,
+            'dob'              => '01/03/1980',
+            'first_names'      => 'Test Tester',
+            'last_name'        => 'Testing',
+            'postcode'         => 'Ab1 2Cd'
+        ];
+
+        $service = $this->getLpaService();
+
+        $lpa = $this->older_lpa_get_by_uid_response();
+
+        $this->lpasInterfaceProphecy
+            ->get($lpaId)
+            ->willReturn($lpa);
+
+        $this->actorCodesProphecy
+            ->checkActorHasCode($lpaId, $actorId)
+            ->willReturn(new ActorCode(
+                [
+                    'Created' => (new DateTime('-1 week'))->format('Y-m-d')
+                ],
+                new DateTime()
+            ));
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('LPA not eligible as an activation key already exists');
+
+        $service->checkLPAMatchAndGetActorDetails($dataToMatch);
+    }
+
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function returns_matched_actorId_and_lpaId_when_passing_all_older_lpa_criteria()
+    {
+        $lpaId = '700000004321';
+        $actorId = '700000004444';
+
+        $dataToMatch = [
+            'reference_number' => $lpaId,
+            'dob'              => '01/03/1980',
+            'first_names'      => 'Test Tester',
+            'last_name'        => 'Testing',
+            'postcode'         => 'Ab1 2Cd'
+        ];
+
+        $service = $this->getLpaService();
+
+        $lpa = $this->older_lpa_get_by_uid_response();
+
+        $this->lpasInterfaceProphecy
+            ->get($lpaId)
+            ->willReturn($lpa);
+
+        $this->actorCodesProphecy
+            ->checkActorHasCode($lpaId, $actorId)
+            ->willReturn(new ActorCode(
+                [
+                    'Created' => null
+                ],
+                new DateTime()
+            ));
+
+        $response = $service->checkLPAMatchAndGetActorDetails($dataToMatch);
+
+        $this->assertEquals($actorId, $response['actor-id']);
+        $this->assertEquals($lpaId, $response['lpa-id']);
+    }
+
+    /**
+     * Returns the lpa data needed for checking in the older LPA journey
+     *
+     * @return Lpa
+     */
+    public function older_lpa_get_by_uid_response(): Lpa
+    {
+        return new Lpa(
+            [
+                'uId' => '700000004321',
+                'registrationDate' => '2021-01-01',
+                'status' => 'Registered',
+                'donor' => [
+                    'uId' => '700000001111',
+                    'dob' => '1975-10-05',
+                    'firstname' => 'Donor',
+                    'surname'   => 'Person',
+                    'addresses' => [
+                        [
+                            'postcode' => 'PY1 3Kd'
+                        ]
+                    ]
+                ],
+                'attorneys' => [
+                    [
+                        'uId' => '700000002222',
+                        'dob' => '1977-11-21',
+                        'firstname' => 'Attorneyone',
+                        'surname'   => 'Person',
+                        'addresses' => [
+                            [
+                                'postcode' => 'Gg1 2ff'
+                            ]
+                        ],
+                        'systemStatus' => false,
+                    ],
+                    [
+                        'uId' => '700000004444',
+                        'dob' => '1980-03-01',
+                        'firstname' => 'Test',
+                        'surname'   => 'Testing',
+                        'addresses' => [
+                            [
+                                'postcode' => 'Ab1 2Cd'
+                            ]
+                        ],
+                        'systemStatus' => true,
+                    ]
+                ]
+            ],
+            new DateTime()
+        );
     }
 }

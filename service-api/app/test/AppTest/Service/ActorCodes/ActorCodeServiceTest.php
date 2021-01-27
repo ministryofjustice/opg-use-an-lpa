@@ -22,11 +22,6 @@ use Psr\Log\LoggerInterface;
 class ActorCodeServiceTest extends TestCase
 {
     /**
-     * @var ActorCodes|ObjectProphecy
-     */
-    private $actorCodes;
-
-    /**
      * @var CodeValidationStrategyInterface|ObjectProphecy
      */
     private $codeValidatorProphecy;
@@ -50,7 +45,6 @@ class ActorCodeServiceTest extends TestCase
     {
         $this->codeValidatorProphecy = $this->prophesize(CodeValidationStrategyInterface::class);
         $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
-        $this->actorCodes = $this->prophesize(ActorCodes::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
@@ -220,8 +214,7 @@ class ActorCodeServiceTest extends TestCase
             $this->codeValidatorProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
-            $this->loggerProphecy->reveal(),
-            $this->actorCodes->reveal()
+            $this->loggerProphecy->reveal()
         );
     }
 
