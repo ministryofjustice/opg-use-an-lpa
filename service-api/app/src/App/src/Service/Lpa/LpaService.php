@@ -672,7 +672,7 @@ class LpaService
         );
 
         if ($hasActivationCode) {
-            throw new BadRequestException("LPA not eligible as an activation key already exists");
+            throw new BadRequestException('LPA not eligible as an activation key already exists');
         }
 
         return $lpaAndActorMatchResponse;

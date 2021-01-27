@@ -43,17 +43,17 @@ class LpasActionsHandler implements RequestHandlerInterface
             !isset($requestData['last_name']) ||
             !isset($requestData['postcode'])
         ) {
-            throw new BadRequestException("Required data missing to request an activation key");
+            throw new BadRequestException('Required data missing to request an activation key');
         }
         // Check LPA with user provided reference number
         $lpaMatchResponse = $this->lpaService->checkLPAMatchAndGetActorDetails($requestData);
 
         if (!isset($lpaMatchResponse['lpa-id'])) {
-            throw new BadRequestException("The lpa-id is missing from the data match response");
+            throw new BadRequestException('The lpa-id is missing from the data match response');
         }
 
         if (!isset($lpaMatchResponse['actor-id'])) {
-            throw new BadRequestException("The actor-id is missing from the data match response");
+            throw new BadRequestException('The actor-id is missing from the data match response');
         }
 
         //If all criteria pass, request letter with activation key
