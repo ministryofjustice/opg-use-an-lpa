@@ -43,3 +43,9 @@ Feature: Add an LPA triage page
     Given I am on the add an LPA triage page
     When I say I do not have an activation key
     Then I am shown content explaining why I can not use this service
+
+  @ui
+  Scenario: The user is taken to request activation key
+    Given I am on the add an LPA triage page
+    When I say I do not have an activation key
+    Then I am taken to page to ask for an activation key

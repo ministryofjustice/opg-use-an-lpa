@@ -2,16 +2,19 @@
 
 namespace App\Service\Lpa;
 
+use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\Repository\{LpasInterface,
     Response\Lpa,
     Response\LpaInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
-use App\Exception\{ApiException, GoneException, NotFoundException};
+use App\Exception\{ApiException, BadRequestException, GoneException, NotFoundException};
 use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+
+use function Symfony\Component\DependencyInjection\Loader\Configurator\ref;
 
 /**
  * Class LpaService
@@ -28,19 +31,22 @@ class LpaService
     private LpasInterface $lpaRepository;
     private UserLpaActorMapInterface $userLpaActorMapRepository;
     private LoggerInterface $logger;
+    private ActorCodes $actorCodes;
 
     public function __construct(
         ViewerCodesInterface $viewerCodesRepository,
         ViewerCodeActivityInterface $viewerCodeActivityRepository,
         LpasInterface $lpaRepository,
         UserLpaActorMapInterface $userLpaActorMapRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ActorCodes $actorCodes
     ) {
         $this->viewerCodesRepository = $viewerCodesRepository;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
         $this->lpaRepository = $lpaRepository;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
         $this->logger = $logger;
+        $this->actorCodes = $actorCodes;
     }
 
     /**
@@ -420,5 +426,255 @@ class LpaService
             }
         }
         return $viewerCodes;
+    }
+
+
+    /**
+     * Compares LPA data retrieved from Sirius to the data provided by
+     * the user to check if it matches
+     *
+     * @param array $actor The actor details being compared against
+     * @param array $userDataToMatch The user provided data we're searching for a match against
+     * @return ?array A data structure containing the matched actor id and lpa id
+     * @throws \Exception
+     */
+
+    public function checkDataMatch(array $actor, array $userDataToMatch): ?array
+    {
+        // Check if the actor has more than one address
+        if (count($actor['addresses']) > 1) {
+            $this->logger->info(
+                'Data match failed for actor {id} as more than 1 address found',
+                [
+                    'id' => $actor['uId']
+                ]
+            );
+            return null;
+        }
+
+        //cleanse lpa actor data
+        $actorDOB = new DateTime($actor['dob']);
+        $actorFirstname = strtolower(explode(' ', trim($actor['firstname']))[0]);
+        $actorSurname = strtolower(trim($actor['surname']));
+        $actorPostcode = strtolower(str_replace(' ', '', $actor['addresses'][0]['postcode']));
+
+        if (
+            $userDataToMatch['dob'] == $actorDOB &&
+            $actorFirstname === $userDataToMatch['first_names'] &&
+            $actorSurname === $userDataToMatch['last_name'] &&
+            $actorPostcode === $userDataToMatch['postcode']
+        ) {
+            $this->logger->info(
+                'User entered data matches for LPA {uId}',
+                [
+                    'uId' => $userDataToMatch['reference_number']
+                ]
+            );
+            return $actor;
+        }
+        return null;
+    }
+
+    public function compareAndLookupActiveActorInLpa(array $lpa, array $userDataToMatch): ?array
+    {
+        $actorId = null;
+        $lpaId = $lpa['uId'];
+
+        if (isset($lpa['attorneys']) && is_array($lpa['attorneys'])) {
+            foreach ($lpa['attorneys'] as $attorney) {
+                if ($this->attorneyStatus($attorney) === self::ACTIVE_ATTORNEY) {
+                    $actorMatchResponse = $this->checkDataMatch($attorney, $userDataToMatch);
+                    // if not null, an actor match has been found
+                    if (!is_null($actorMatchResponse)) {
+                        $actorId = $actorMatchResponse['uId'];
+                        break;
+                    }
+                } else {
+                    $this->logger->info(
+                        'Actor {id} status is not active for LPA {uId}',
+                        [
+                            'id'  => $attorney['uId'],
+                            'uId' => $lpaId
+                        ]
+                    );
+                }
+            }
+        }
+
+        // If not an attorney, check if they're the donor.
+        if (is_null($actorId) && isset($lpa['donor']) && is_array($lpa['donor'])) {
+            $donorMatchResponse = $this->checkDataMatch($lpa['donor'], $userDataToMatch);
+
+            if (!is_null($donorMatchResponse)) {
+                $actorId = $donorMatchResponse['uId'];
+
+                $this->logger->info(
+                    'Actor match found with id {id} for LPA {uId} identified as role Attorney',
+                    [
+                        'id'  => $actorId,
+                        'uId' => $lpaId
+                    ]
+                );
+            }
+        }
+
+        if (is_null($actorId)) {
+            $this->logger->info(
+                'Actor match NOT found for LPA {uId} with the details provided',
+                [
+                    'uId' => $lpaId
+                ]
+            );
+            return null;
+        }
+
+        return [
+            'actor-id' => $actorId,
+            'lpa-id' => $lpaId
+        ];
+    }
+
+    /**
+     * TODO: Refactor - this function should be refactored to be reused by the LPA
+     *  data retrieved from line 456. Note: the format of the dob passed up from the
+     *  front is d/m/Y whereas the dob from the LPA is Y-m-d. The reference number
+     *  is not in this data cleanse as it is already done so in the form filter
+     *
+     * @param array $data
+     * @return array|null
+     */
+    public function cleanseUserData(array $data): ?array
+    {
+        $data['dob'] = DateTime::createFromFormat('d/m/Y|', $data['dob']);
+        $data['first_names'] = strtolower(explode(' ', $data['first_names'])[0]);
+        $data['last_name'] = strtolower($data['last_name']);
+        $data['postcode'] = strtolower(str_replace(' ', '', $data['postcode']));
+        return $data;
+    }
+
+    /**
+     * Checks whether an LPA was registered before Sept 1st 2019
+     * and has status Registered
+     *
+     * @param array $lpa
+     * @return bool
+     * @throws \Exception
+     */
+    public function checkLpaRegistrationDetails(array $lpa): bool
+    {
+        $expectedRegistrationDate = new DateTime('2019-09-01');
+
+        $lpaRegistrationDate = new DateTime($lpa['registrationDate']);
+
+        if ($lpa['status'] !== 'Registered') {
+            $this->logger->notice(
+                'User entered LPA {uId} does not have the required status',
+                [
+                    'uId' => $lpa['uId'],
+                ]
+            );
+            return false;
+        }
+        if ($lpaRegistrationDate < $expectedRegistrationDate) {
+            $this->logger->notice(
+                'User entered LPA {uId} has a registration date before 1 September 2019',
+                [
+                    'uId' => $lpa['uId'],
+                ]
+            );
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Checks if an actor already has an active activation key
+     *
+     * @param string $lpaId
+     * @param string $actorId
+     * @return bool
+     */
+    public function hasActivationCode(string $lpaId, string $actorId): bool
+    {
+        $response = $this->actorCodes->checkActorHasCode($lpaId, $actorId);
+
+        if (is_null($response->getData()['Created'])) {
+            return false;
+        }
+
+        $this->logger->notice(
+            'Activation key request denied for actor {actorId} on LPA {lpaId} as they have an active activation key',
+            [
+                'actorId' => $actorId,
+                'lpaId'   => $lpaId
+            ]
+        );
+
+        return true;
+    }
+
+    /**
+     * Gets LPA by Uid, checks registration date and identifies the actor
+     *
+     * @param array $dataToMatch
+     * @return array
+     * @throws \Exception
+     */
+    public function checkLPAMatchAndGetActorDetails(array $dataToMatch): array
+    {
+        // Cleanse user provided data
+        $dataToMatch = $this->cleanseUserData($dataToMatch);
+
+        //Get LPA by reference number
+        $lpaMatchResponse = $this->getByUid($dataToMatch['reference_number']);
+
+        if (is_null($lpaMatchResponse)) {
+            $this->logger->info(
+                'The LPA {uId} entered by user is not found in Sirius',
+                [
+                    'uId' => $dataToMatch['reference_number']
+                ]
+            );
+
+            throw new NotFoundException('LPA not found');
+        }
+
+        // Check if lpa registration date falls after 01-09-2019
+        $registrationDetailsCheckResponse = $this->checkLpaRegistrationDetails($lpaMatchResponse->getData());
+
+        if (!$registrationDetailsCheckResponse) {
+            $this->logger->info(
+                'Lpa {uId} has a registration date before 1 September 2019',
+                [
+                    'uId' => $dataToMatch['reference_number']
+                ]
+            );
+            throw new BadRequestException('LPA not eligible due to registration date');
+        }
+
+        //Check and compare user provided data with lpa data and return actor details
+        $lpaAndActorMatchResponse = $this->compareAndLookupActiveActorInLpa($lpaMatchResponse->getData(), $dataToMatch);
+
+        if (is_null($lpaAndActorMatchResponse)) {
+            $this->logger->info(
+                'Actor details for LPA {uId} not found',
+                [
+                    'uId' => $dataToMatch['reference_number']
+                ]
+            );
+            throw new BadRequestException('LPA details does not match');
+        }
+
+        // Checks if the actor already has an active activation key
+        $hasActivationCode = $this->hasActivationCode(
+            $lpaAndActorMatchResponse['lpa-id'],
+            $lpaAndActorMatchResponse['actor-id']
+        );
+
+        if ($hasActivationCode) {
+            throw new BadRequestException('LPA not eligible as an activation key already exists');
+        }
+
+        return $lpaAndActorMatchResponse;
     }
 }

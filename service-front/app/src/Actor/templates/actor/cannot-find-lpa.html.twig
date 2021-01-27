@@ -1,0 +1,62 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Cannot find LPA {% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-l">{% trans %}We could not find an LPA with the details you entered{% endtrans %}</h1>
+
+                    <p class="govuk-body">{% trans %}This could be because the information you entered does not match the information we hold about the LPA.{% endtrans %}</p>
+
+                    <h2 class="govuk-heading-m">{% trans %}Let us know if your details have changed{% endtrans %}</h2>
+                    <p class="govuk-body">{% trans %}It's important that we hold up-to-date information about donors and attorneys. This is because the first time you show an LPA to an organisation, they might ask you to confirm that your name and address match what’s on the LPA.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}You should contact us if:{% endtrans %}</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}you've moved house{% endtrans %}</li>
+                        <li>{% trans %}you've changed your name by marriage or deed poll{% endtrans %}</li>
+                        <li>{% trans %}your name or address on the LPA is misspelt{% endtrans %}</li>
+                        <li>{% trans %}your date of birth is wrong on the LPA{% endtrans %}</li>
+                    </ul>
+
+                    <h2 class="govuk-heading-m">{% trans %}How to let us know{% endtrans %}</h2>
+                    <h3 class="govuk-heading-s">{% trans %}Telephone{% endtrans %}</h3>
+                    <p class="govuk-body">{% trans %}When you get in touch, quote the LPA reference number.{% endtrans %}</p>
+                    <ul class="govuk-list">
+                        <li>{% trans %}Telephone: 0300 456 0300{% endtrans %}</li>
+                        <li>{% trans %}Monday to Friday 9.30am to 5pm, except Wednesday, 10am to 5pm.{% endtrans %}</li>
+                        <li><a class="govuk-link" href="https://www.gov.uk/call-charges">{% trans %}Find out about call charges{% endtrans %}</a></li>
+                    </ul>
+
+                    <h3 class="govuk-heading-s">{% trans %}Email{% endtrans %}</h3>
+                    <ul class="govuk-list">
+                        <li><a class="govuk-link" href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a></li>
+                    </ul>
+
+                    <h3 class="govuk-heading-s">{% trans %}Address{% endtrans %}</h3>
+                    <p class="govuk-body">
+                        {% trans %}Office of the Public Guardian<br>
+                            PO Box 16185<br>
+                            Birmingham<br>
+                            B2 2WH{% endtrans %}
+                    </p>
+
+                    <a href="{{ path('lpa.dashboard') }}"  draggable="false" class="govuk-button">{% trans %}Back to LPAs{% endtrans %}</a>
+                    <a class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" href="{{ path('logout') }}">
+                        {% trans %}Sign out{% endtrans %}
+                    </a>
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}

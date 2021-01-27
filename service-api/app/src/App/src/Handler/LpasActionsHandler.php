@@ -7,8 +7,7 @@ namespace App\Handler;
 use App\Exception\BadRequestException;
 use App\Service\Lpa\LpaService;
 use Laminas\Diactoros\Response\EmptyResponse;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
@@ -31,20 +30,34 @@ class LpasActionsHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
 
-        if (!isset($requestData['lpa-id'])) {
-            throw new BadRequestException("'lpa-id' missing.");
+        if (
+            !isset($requestData['reference_number']) ||
+            !isset($requestData['dob']) ||
+            !isset($requestData['first_names']) ||
+            !isset($requestData['last_name']) ||
+            !isset($requestData['postcode'])
+        ) {
+            throw new BadRequestException('Required data missing to request an activation key');
+        }
+        // Check LPA with user provided reference number
+        $lpaMatchResponse = $this->lpaService->checkLPAMatchAndGetActorDetails($requestData);
+
+        if (!isset($lpaMatchResponse['lpa-id'])) {
+            throw new BadRequestException('The lpa-id is missing from the data match response');
         }
 
-        if (!isset($requestData['actor-id'])) {
-            throw new BadRequestException("'actor-id' missing.");
+        if (!isset($lpaMatchResponse['actor-id'])) {
+            throw new BadRequestException('The actor-id is missing from the data match response');
         }
 
-        $this->lpaService->requestAccessByLetter($requestData['lpa-id'], $requestData['actor-id']);
+        //If all criteria pass, request letter with activation key
+        $this->lpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
 
         return new EmptyResponse();
     }

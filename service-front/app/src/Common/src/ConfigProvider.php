@@ -76,6 +76,8 @@ class ConfigProvider
                 \Aws\Kms\KmsClient::class => Service\Aws\KmsFactory::class,
                 \Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
 
+                \Http\Adapter\Guzzle6\Client::class => Service\ApiClient\GuzzleClientFactory::class,
+
                 // Middleware
                 \Mezzio\Session\SessionMiddleware::class => \Mezzio\Session\SessionMiddlewareFactory::class,
                 Middleware\I18n\SetLocaleMiddleware::class => Middleware\I18n\SetLocaleMiddlewareFactory::class,

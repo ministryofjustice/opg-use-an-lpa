@@ -1,0 +1,32 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Cannot send an activation key {% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-l">{% trans %}You have an activation key for this LPA{% endtrans %}</h1>
+
+                    <p class="govuk-body">{% trans %}We sent you an activation key in the letter that told you the LPA had been registered. The activation key is at the top of the letter with the LPA reference number.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans with {'%link%': path('contact-us')} %}If you check the letter and still cannot find your activation key, please <a href="%link%" class="govuk-link">contact us</a>.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}The donor and each attorney will have their own unique activation key.{% endtrans %}</p>
+
+                    <a href="{{ path('lpa.add') }}"  draggable="false" class="govuk-button">{% trans %}Add another LPA{% endtrans %}</a>
+                    <a class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" href="{{ path('logout') }}">
+                        {% trans %}Sign out{% endtrans %}
+                    </a>
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}

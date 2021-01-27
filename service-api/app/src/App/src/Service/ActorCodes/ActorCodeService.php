@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\ActorCodes;
 
-use App\DataAccess\{Repository\ActorCodesInterface,
+use App\DataAccess\{ApiGateway\ActorCodes,
+    Repository\ActorCodesInterface,
     Repository\KeyCollisionException,
     Repository\UserLpaActorMapInterface};
 use App\Exception\{ActorCodeMarkAsUsedException, ActorCodeValidationException};
@@ -16,8 +17,6 @@ class ActorCodeService
 {
     private CodeValidationStrategyInterface $codeValidator;
 
-    private ActorCodesInterface $actorCodesRepository;
-
     private UserLpaActorMapInterface $userLpaActorMapRepository;
 
     private LpaService $lpaService;
@@ -28,21 +27,18 @@ class ActorCodeService
      * ActorCodeService constructor.
      *
      * @param CodeValidationStrategyInterface $codeValidator
-     * @param ActorCodesInterface $actorCodesRepository
      * @param UserLpaActorMapInterface $userLpaActorMapRepository
      * @param LpaService $lpaService
      * @param LoggerInterface $logger
      */
     public function __construct(
         CodeValidationStrategyInterface $codeValidator,
-        ActorCodesInterface $actorCodesRepository,
         UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaService $lpaService,
         LoggerInterface $logger
     ) {
         $this->codeValidator = $codeValidator;
         $this->lpaService = $lpaService;
-        $this->actorCodesRepository = $actorCodesRepository;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
         $this->logger = $logger;
     }

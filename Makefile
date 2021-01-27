@@ -20,12 +20,13 @@ build:
 	$(COMPOSE) build $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: build
 
-build_all: build
+build_all:
 ifeq (, $(shell which go))
 	$(error "No golang in PATH, consider doing brew install go")
 endif
 	@echo "Installing go dependencies..."
 	go get -u github.com/aws/aws-sdk-go/...
+	$(COMPOSE) build
 	$(MAKE) build --directory=../opg-data-lpa/
 .PHONY: build_all
 
@@ -47,8 +48,8 @@ destroy:
 .PHONY: destroy
 
 destroy_all:
-	$(COMPOSE) down -v --rmi all --remove-orphans
 	$(MAKE) destroy --directory=../opg-data-lpa/
+	$(COMPOSE) down -v --rmi all --remove-orphans
 .PHONY: destroy_all
 
 ps:

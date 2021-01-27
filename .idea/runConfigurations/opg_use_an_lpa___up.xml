@@ -1,7 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="opg-use-an-lpa - up" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile">
-    <makefile filename="$PROJECT_DIR$/Makefile" target="up_all" workingDirectory="" arguments="">
-      <envs />
+    <makefile filename="$PROJECT_DIR$/Makefile" target="up_all" workingDirectory="$PROJECT_DIR$" arguments="">
+      <envs>
+        <env name="PATH" value="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" />
+      </envs>
     </makefile>
     <method v="2" />
   </configuration>

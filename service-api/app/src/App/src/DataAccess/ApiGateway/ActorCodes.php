@@ -80,6 +80,27 @@ class ActorCodes
     }
 
     /**
+     * @param string $lpaId
+     * @param string $actorId
+     * @return ActorCode
+     */
+    public function checkActorHasCode(string $lpaId, string $actorId): ActorCode
+    {
+        $response = $this->makePostRequest(
+            'v1/exists',
+            [
+                'lpa'    => $lpaId,
+                'actor'  => $actorId
+            ]
+        );
+
+        return new ActorCode(
+            json_decode((string) $response->getBody(), true),
+            new DateTime($response->getHeaderLine('Date'))
+        );
+    }
+
+    /**
      * @param string $url
      * @param array $body
      * @return ResponseInterface

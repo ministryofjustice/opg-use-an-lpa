@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace Common\Service\ApiClient;
 
-use Common\Service\Log\RequestTracing;
+use Http\Adapter\Guzzle6\Client as GuzzleClient;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
 
 /**
  * Class ClientFactory
- * @package Common\Service\ApiClient
+ *
+ * Builds a Guzzle Client instance configured with appropriate settings
+ *
+ * @package Common\Service\ApiClient\Guzzle
  */
-class ClientFactory
+class GuzzleClientFactory
 {
-    public function __invoke(ContainerInterface $container): Client
+    public function __invoke(ContainerInterface $container): ClientInterface
     {
         $config = $container->get('config');
 
@@ -27,10 +30,11 @@ class ClientFactory
             throw new RuntimeException('Missing API configuration: uri');
         }
 
-        return new Client(
-            $container->get(ClientInterface::class),
-            $config['api']['uri'],
-            $container->get(RequestTracing::TRACE_PARAMETER_NAME)
+        return GuzzleClient::createWithConfig(
+            [
+                'base_url' => $config['api']['uri'],
+                'http_errors' => false
+            ]
         );
     }
 }

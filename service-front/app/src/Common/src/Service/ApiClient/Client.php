@@ -269,6 +269,11 @@ class Client
      */
     private function handleResponse(ResponseInterface $response)
     {
+        // handle intentionally empty bodies
+        if ($response->getStatusCode() === StatusCodeInterface::STATUS_NO_CONTENT) {
+            return [];
+        }
+
         $body = json_decode($response->getBody()->getContents(), true);
 
         //  If the body isn't an array now then it wasn't JSON before

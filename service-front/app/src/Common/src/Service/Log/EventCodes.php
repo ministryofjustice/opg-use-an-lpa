@@ -38,4 +38,19 @@ class EventCodes
      * A share code has been attempted and not found
      */
     public const SHARE_CODE_NOT_FOUND = 'SHARE_CODE_NOT_FOUND';
+
+    /**
+     * LPA not found
+     */
+    public const LPA_NOT_FOUND = 'LPA_NOT_FOUND';
+
+    /**
+     * LPA not eligible
+     */
+    public const LPA_NOT_ELIGIBLE = 'LPA_NOT_ELIGIBLE';
+
+    /**
+     * LPA has activation key
+     */
+    public const LPA_HAS_ACTIVATION_KEY = 'LPA_HAS_ACTIVATION_KEY';
 }
