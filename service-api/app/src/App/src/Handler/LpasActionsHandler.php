@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
-use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Lpa\LpaService;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -23,12 +22,9 @@ class LpasActionsHandler implements RequestHandlerInterface
      */
     private $lpaService;
 
-    private ActorCodeService $actorCodeService;
-
-    public function __construct(LpaService $lpaService, ActorCodeService $actorCodeService)
+    public function __construct(LpaService $lpaService)
     {
         $this->lpaService = $lpaService;
-        $this->actorCodeService = $actorCodeService;
     }
 
     /**
@@ -58,16 +54,6 @@ class LpasActionsHandler implements RequestHandlerInterface
 
         if (!isset($lpaMatchResponse['actor-id'])) {
             throw new BadRequestException("The actor-id is missing from the data match response");
-        }
-
-        // Checks if the actor already has an active activation key
-        $hasActivationCode = $this->actorCodeService->hasActivationCode(
-            $lpaMatchResponse['lpa-id'],
-            $lpaMatchResponse['actor-id']
-        );
-
-        if ($hasActivationCode) {
-            throw new BadRequestException("LPA not eligible as an activation key already exists");
         }
 
         //If all criteria pass, request letter with activation key

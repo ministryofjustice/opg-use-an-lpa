@@ -23,8 +23,6 @@ class ActorCodeService
 
     private LoggerInterface $logger;
 
-    private ActorCodes $actorCodes;
-
     /**
      * ActorCodeService constructor.
      *
@@ -32,20 +30,17 @@ class ActorCodeService
      * @param UserLpaActorMapInterface $userLpaActorMapRepository
      * @param LpaService $lpaService
      * @param LoggerInterface $logger
-     * @param ActorCodes $actorCodes
      */
     public function __construct(
         CodeValidationStrategyInterface $codeValidator,
         UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaService $lpaService,
-        LoggerInterface $logger,
-        ActorCodes $actorCodes
+        LoggerInterface $logger
     ) {
         $this->codeValidator = $codeValidator;
         $this->lpaService = $lpaService;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
         $this->logger = $logger;
-        $this->actorCodes = $actorCodes;
     }
 
 
@@ -134,31 +129,5 @@ class ActorCodeService
         }
 
         return $id;
-    }
-
-    /**
-     * Checks if an actor already has an active activation key
-     *
-     * @param string $lpaId
-     * @param string $actorId
-     * @return bool
-     */
-    public function hasActivationCode(string $lpaId, string $actorId): bool
-    {
-        $response = $this->actorCodes->checkActorHasCode($lpaId, $actorId);
-
-        if (is_null($response->getData()['Created'])) {
-            return false;
-        }
-
-        $this->logger->notice(
-            'Activation key request denied for actor {actorId} on LPA {lpaId} as they have an active activation key',
-            [
-                'actorId' => $actorId,
-                'lpaId'   => $lpaId
-            ]
-        );
-
-        return true;
     }
 }

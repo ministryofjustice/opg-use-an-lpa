@@ -2,6 +2,7 @@
 
 namespace App\Service\Lpa;
 
+use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\Repository\{LpasInterface,
     Response\Lpa,
     Response\LpaInterface,
@@ -30,19 +31,22 @@ class LpaService
     private LpasInterface $lpaRepository;
     private UserLpaActorMapInterface $userLpaActorMapRepository;
     private LoggerInterface $logger;
+    private ActorCodes $actorCodes;
 
     public function __construct(
         ViewerCodesInterface $viewerCodesRepository,
         ViewerCodeActivityInterface $viewerCodeActivityRepository,
         LpasInterface $lpaRepository,
         UserLpaActorMapInterface $userLpaActorMapRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ActorCodes $actorCodes
     ) {
         $this->viewerCodesRepository = $viewerCodesRepository;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
         $this->lpaRepository = $lpaRepository;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
         $this->logger = $logger;
+        $this->actorCodes = $actorCodes;
     }
 
     /**
@@ -471,7 +475,7 @@ class LpaService
         return null;
     }
 
-    private function compareAndLookupActiveActorInLpa(array $lpa, array $userDataToMatch): ?array
+    public function compareAndLookupActiveActorInLpa(array $lpa, array $userDataToMatch): ?array
     {
         $actorId = null;
         $lpaId = $lpa['uId'];
@@ -551,7 +555,7 @@ class LpaService
      * @return bool
      * @throws \Exception
      */
-    private function checkLpaRegistrationDetails(array $lpa): bool
+    public function checkLpaRegistrationDetails(array $lpa): bool
     {
         $expectedRegistrationDate = new DateTime('2019-09-01');
 
@@ -575,6 +579,32 @@ class LpaService
             );
             return false;
         }
+        return true;
+    }
+
+    /**
+     * Checks if an actor already has an active activation key
+     *
+     * @param string $lpaId
+     * @param string $actorId
+     * @return bool
+     */
+    public function hasActivationCode(string $lpaId, string $actorId): bool
+    {
+        $response = $this->actorCodes->checkActorHasCode($lpaId, $actorId);
+
+        if (is_null($response->getData()['Created'])) {
+            return false;
+        }
+
+        $this->logger->notice(
+            'Activation key request denied for actor {actorId} on LPA {lpaId} as they have an active activation key',
+            [
+                'actorId' => $actorId,
+                'lpaId'   => $lpaId
+            ]
+        );
+
         return true;
     }
 
@@ -628,6 +658,16 @@ class LpaService
                 ]
             );
             throw new BadRequestException('LPA details does not match');
+        }
+
+        // Checks if the actor already has an active activation key
+        $hasActivationCode = $this->hasActivationCode(
+            $lpaAndActorMatchResponse['lpa-id'],
+            $lpaAndActorMatchResponse['actor-id']
+        );
+
+        if ($hasActivationCode) {
+            throw new BadRequestException("LPA not eligible as an activation key already exists");
         }
 
         return $lpaAndActorMatchResponse;
