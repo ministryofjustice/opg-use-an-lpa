@@ -76,7 +76,7 @@ class HealthcheckHandler implements RequestHandlerInterface
     {
         return new JsonResponse([
             "version" => $this->version,
-            "api" => $this->checkApiEndpoint(),
+            "sirius_api" => $this->checkApiEndpoint(),
             "dynamo" => $this->checkDynamoEndpoint(),
             "lpa_codes_api" => $this->checkLpaCodesApiEndpoint(),
             "healthy" => $this->isHealthy()
@@ -96,22 +96,24 @@ class HealthcheckHandler implements RequestHandlerInterface
 
         $start = microtime(true);
 
-        try {
-            $data = $this->lpaInterface->get("700000000000");
+        $url  = sprintf("%s/v1/healthcheck", $this->apiBaseUri);
 
-            // when $data == null a 404 has been returned from the api
-            if (is_null($data)) {
+        $request = new Request('GET', $url);
+        $request = $this->awsSignature->sign($request);
+
+        try {
+            $response = $this->httpClient->send($request);
+
+            if ($response->getStatusCode() === 200) {
                 $data['healthy'] = true;
             } else {
                 $data['healthy'] = false;
             }
-        } catch (Exception $e) {
+        } catch (GuzzleException $ge) {
             $data['healthy'] = false;
-            $data['message'] = $e->getMessage();
         }
 
         $data['response_time'] = round(microtime(true) - $start, 3);
-
         return $data;
     }
 
