@@ -535,6 +535,11 @@ class LpaService
     }
 
     /**
+     * TODO: Refactor - this function should be refactored to be reused by the LPA
+     *  data retrieved from line 456. Note: the format of the dob passed up from the
+     *  front is d/m/Y whereas the dob from the LPA is Y-m-d. The reference number
+     *  is not in this data cleanse as it is already done so in the form filter
+     *
      * @param array $data
      * @return array|null
      */
