@@ -15,6 +15,7 @@ use App\Exception\NotFoundException;
 use App\Service\Lpa\LpaService;
 use App\Service\ViewerCodes\ViewerCodeService;
 use DateTime;
+use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
@@ -1350,7 +1351,7 @@ class LpaServiceTest extends TestCase
             ->willReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionCode(404);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
         $this->expectExceptionMessage('LPA not found');
 
         $service->checkLPAMatchAndGetActorDetails($dataToMatch);
@@ -1388,7 +1389,7 @@ class LpaServiceTest extends TestCase
             );
 
         $this->expectException(BadRequestException::class);
-        $this->expectExceptionCode(400);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->expectExceptionMessage('LPA not eligible due to registration date');
 
         $service->checkLPAMatchAndGetActorDetails($dataToMatch);
@@ -1419,7 +1420,7 @@ class LpaServiceTest extends TestCase
             ->willReturn($lpa);
 
         $this->expectException(BadRequestException::class);
-        $this->expectExceptionCode(400);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->expectExceptionMessage('LPA details does not match');
 
         $service->checkLPAMatchAndGetActorDetails($dataToMatch);
@@ -1460,7 +1461,7 @@ class LpaServiceTest extends TestCase
             ));
 
         $this->expectException(BadRequestException::class);
-        $this->expectExceptionCode(400);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->expectExceptionMessage('LPA not eligible as an activation key already exists');
 
         $service->checkLPAMatchAndGetActorDetails($dataToMatch);

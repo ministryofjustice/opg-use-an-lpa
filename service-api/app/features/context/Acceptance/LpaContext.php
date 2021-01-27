@@ -1834,6 +1834,30 @@ class LpaContext implements Context
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // check if actor has a code
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Created' => null
+                        ]
+                    )
+                )
+            );
+
         // request a code to be generated and letter to be sent
         $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
             ->respondWith(
@@ -1874,19 +1898,7 @@ class LpaContext implements Context
      */
     public function iProvideTheDetailsFromAValidPaperLPADocument()
     {
-        // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
-
-        // check if actor has a code
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
+        // Not needed for this context
     }
 
     /**

@@ -1481,7 +1481,7 @@ class LpaContext extends BaseIntegrationContext
         try {
             $lpaService->checkLPAMatchAndGetActorDetails($data);
         } catch (BadRequestException $ex) {
-            assertEquals(400, $ex->getCode());
+            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals("LPA details does not match", $ex->getMessage());
             return;
         }
@@ -1516,7 +1516,7 @@ class LpaContext extends BaseIntegrationContext
         try {
             $lpaService->checkLPAMatchAndGetActorDetails($data);
         } catch (NotFoundException $ex) {
-            assertEquals(404, $ex->getCode());
+            assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
             assertEquals("LPA not found", $ex->getMessage());
             return;
         }
@@ -1559,7 +1559,7 @@ class LpaContext extends BaseIntegrationContext
         try {
             $lpaService->checkLPAMatchAndGetActorDetails($data);
         } catch (BadRequestException $ex) {
-            assertEquals(400, $ex->getCode());
+            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals("LPA not eligible due to registration date", $ex->getMessage());
             return;
         }
@@ -1606,7 +1606,7 @@ class LpaContext extends BaseIntegrationContext
         try {
             $lpaService->checkLPAMatchAndGetActorDetails($data);
         } catch (BadRequestException $ex) {
-            assertEquals(400, $ex->getCode());
+            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals("LPA not eligible as an activation key already exists", $ex->getMessage());
             return;
         }
