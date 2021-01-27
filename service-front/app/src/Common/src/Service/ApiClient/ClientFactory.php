@@ -15,7 +15,7 @@ use RuntimeException;
  */
 class ClientFactory
 {
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): Client
     {
         $config = $container->get('config');
 
