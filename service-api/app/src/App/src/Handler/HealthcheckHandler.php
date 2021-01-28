@@ -6,6 +6,7 @@ namespace App\Handler;
 
 use App\DataAccess\ApiGateway\RequestSigner;
 use Exception;
+use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client as HttpClient;
@@ -96,7 +97,7 @@ class HealthcheckHandler implements RequestHandlerInterface
         try {
             $response = $this->httpClient->send($request);
 
-            if ($response->getStatusCode() === 200) {
+            if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
                 $data['healthy'] = true;
             } else {
                 $data['healthy'] = false;
@@ -151,7 +152,7 @@ class HealthcheckHandler implements RequestHandlerInterface
         try {
             $response = $this->httpClient->send($request);
 
-            if ($response->getStatusCode() === 200) {
+            if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
                 $data['healthy'] = true;
             } else {
                 $data['healthy'] = false;
