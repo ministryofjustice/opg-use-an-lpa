@@ -101,7 +101,7 @@ class HealthcheckHandler implements RequestHandlerInterface
             } else {
                 $data['healthy'] = false;
             }
-        } catch (GuzzleException $ge) {
+        } catch (Exception $e) {
             $data['healthy'] = false;
         }
 
