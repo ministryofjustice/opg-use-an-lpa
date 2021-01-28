@@ -13,7 +13,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Laminas\Diactoros\Response\JsonResponse;
-use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\ActorUsersInterface;
 
 /**
@@ -33,11 +32,6 @@ class HealthcheckHandler implements RequestHandlerInterface
     private $actorUsers;
 
     /**
-     * @var LpasInterface
-     */
-    private $lpaInterface;
-
-    /**
      * @var string
      */
     private string $apiBaseUri;
@@ -54,14 +48,12 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     public function __construct(
         string $version,
-        LpasInterface $lpaInterface,
         ActorUsersInterface $actorUsers,
         HttpClient $httpClient,
         RequestSigner $awsSignature,
         string $apiUrl
     ) {
         $this->version = $version;
-        $this->lpaInterface = $lpaInterface;
         $this->actorUsers = $actorUsers;
         $this->httpClient = $httpClient;
         $this->awsSignature = $awsSignature;
