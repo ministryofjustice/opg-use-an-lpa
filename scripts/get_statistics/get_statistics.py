@@ -2,6 +2,7 @@ import argparse
 import datetime
 import json
 import boto3
+import os
 from dateutil.relativedelta import relativedelta
 
 
@@ -52,8 +53,12 @@ class StatisticsCollector:
         self.format_dates(startdate, enddate)
 
     def set_iam_role_session(self, aws_account_id):
-        role_arn = 'arn:aws:iam::{}:role/breakglass'.format(
-            aws_account_id)
+        if os.getenv('CI'):
+            role_arn = 'arn:aws:iam::{}:role/opg-use-an-lpa-ci'.format(
+                aws_account_id)
+        else:
+            role_arn = 'arn:aws:iam::{}:role/breakglass'.format(
+                aws_account_id)
 
         sts = boto3.client(
             'sts',
