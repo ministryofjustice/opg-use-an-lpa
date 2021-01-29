@@ -4,7 +4,7 @@ workflows:
   keep_demo_environment_up_to_date:
     triggers:
       - schedule:
-          cron: "0 8 * * *"
+          cron: "0 8 * * *" # Every 8am
           filters:
             branches:
               only:
@@ -34,6 +34,18 @@ workflows:
     jobs:
       - workspace_cleanup:
           name: workspace_cleanup
+
+  post_statistics:
+    triggers:
+      - schedule:
+          cron: "0 9 * * 1" # 9am every Monday
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - slack_notify_stats:
+          name: slack_notify_stats
 
   post_stats:
       jobs:
