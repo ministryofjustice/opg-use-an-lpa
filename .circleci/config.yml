@@ -1149,7 +1149,8 @@ jobs:
       - run:
           name: Get Stats
           command: |
-            ~/project/scripts/get_statistics/get_statistics.py --text > ./output.txt
+            sudo pip3 install -r scripts/pipeline/requirements.txt
+            python ~/project/scripts/get_statistics/get_statistics.py --text > ./output.txt
             cat ./output.txt
       # - slack/notify:
       #     title: "Use a Lasting Power of Attorney Production Release Successful"
