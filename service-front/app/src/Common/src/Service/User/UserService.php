@@ -69,7 +69,7 @@ class UserService implements UserRepositoryInterface
             'password' => $password->getString()
         ]);
 
-        $this->logger->info('Account with Id {id} created using email hash {email}', [
+        $this->logger->notice('Account with Id {id} created using email hash {email}', [
             'event_code' => EventCodes::ACCOUNT_CREATED,
             'id'         => $data['Id'],
             'email'      => new Email($email)
