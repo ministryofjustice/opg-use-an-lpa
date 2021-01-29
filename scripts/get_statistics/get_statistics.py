@@ -216,9 +216,9 @@ class StatisticsCollector:
     def print_plaintext(self):
         plaintext = ""
         for statistic in self.statistics["statistics"]:
-            plaintext += "{0}\n".format(statistic).upper()
-            plaintext += "Total for reporting period: {0}\n".format(self.statistics["statistics"][statistic]["total"])
-            plaintext += "Monthly Breakdown\n"
+            plaintext += "**{0}**\n".format(statistic).upper()
+            plaintext += "**Total for this reporting period:** {0}\n".format(self.statistics["statistics"][statistic]["total"])
+            plaintext += "**Monthly Breakdown**\n"
             for key, value in self.statistics["statistics"][statistic]["monthly"].items():
                 plaintext += "{0} {1} \n".format(key, str(value))
             plaintext += "\n"
