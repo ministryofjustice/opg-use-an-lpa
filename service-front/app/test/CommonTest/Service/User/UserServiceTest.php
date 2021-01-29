@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\User;
 
-use App\Exception\BadRequestException;
-use App\Exception\ForbiddenException;
-use App\Exception\GoneException;
 use Common\Entity\User;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
 use Common\Service\User\UserService;
 use DateTime;
-use DI\NotFoundException;
 use Fig\Http\Message\StatusCodeInterface;
 use ParagonIE\HiddenString\HiddenString;
-use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -557,7 +552,7 @@ class UserServiceTest extends TestCase
         $this->assertEquals('12345', $data['Id']);
         $this->assertEquals('old@email.com', $data['Email']);
         $this->assertEquals('new@email.com', $data['NewEmail']);
-        $this->assertEquals($password, $data['Password']);
+        $this->assertEquals($password->getString(), $data['Password']);
         $this->assertEquals('t0ken12345', $data['EmailResetToken']);
         $this->assertArrayHasKey('EmailResetExpiry', $data);
     }

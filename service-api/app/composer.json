@@ -36,7 +36,7 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.4",
         "aws/aws-sdk-php": "^3.93",
         "elie29/zend-phpdi-config": "^3.0",
         "guzzlehttp/guzzle": "^6.3",
