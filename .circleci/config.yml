@@ -1152,12 +1152,12 @@ jobs:
             sudo pip3 install -r scripts/pipeline/requirements.txt
             python ~/project/scripts/get_statistics/get_statistics.py --text > ./output.txt
             cat ./output.txt
-      # - slack/notify:
-      #     title: "Use a Lasting Power of Attorney Production Release Successful"
-      #     color: "#9933ff"
-      #     message: $(cat ./output.txt)
-      #     webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
-      #     footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+      - slack/notify:
+          title: "Service Statistics - Use a Lasting Power of Attorney Production"
+          color: "#9933ff"
+          message: $(cat ./output.txt)
+          # webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
+          footer: ""
 
   ecr_scan_results:
     docker:
