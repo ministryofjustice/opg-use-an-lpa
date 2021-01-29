@@ -219,9 +219,10 @@ class StatisticsCollector:
             plaintext += "*{0}*\n".format(statistic).upper()
             plaintext += "*Total for this reporting period:* {0}\n".format(self.statistics["statistics"][statistic]["total"])
             plaintext += "*Monthly Breakdown*\n"
+            plaintext += "```\n"
             for key, value in self.statistics["statistics"][statistic]["monthly"].items():
-                plaintext += "```{0} {1} \n".format(key, str(value))
-            plaintext += "\n```"
+                plaintext += "{0} {1} \n".format(key, str(value))
+            plaintext += "```\n"
 
         print(plaintext)
 
