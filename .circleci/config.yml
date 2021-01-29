@@ -46,12 +46,7 @@ workflows:
     jobs:
       - slack_notify_stats:
           name: slack_notify_stats
-
-  post_stats:
-      jobs:
-        - slack_notify_stats:
-            name: slack_notify_stats
-            filters: { branches: { ignore: [master] } }
+          filters: { branches: { ignore: [master] } }
 
   pr_build:
       jobs:
