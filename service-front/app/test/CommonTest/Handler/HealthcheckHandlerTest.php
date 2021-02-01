@@ -14,7 +14,7 @@ class HealthcheckHandlerTest extends TestCase
     public function testReturnsExpectedJsonResponse()
     {
         $healthyResponse = [
-            'sirius_api' => ['healthy' => true],
+            'lpa_api' => ['healthy' => true],
             'dynamo' => ['healthy' => true],
             'lpa_codes_api' => ['healthy' => true],
             'healthy' => true
@@ -41,7 +41,7 @@ class HealthcheckHandlerTest extends TestCase
 
         $dependencies = $json['dependencies'];
 
-        $api = $dependencies['sirius_api'];
+        $api = $dependencies['lpa_api'];
         $this->assertArrayHasKey('healthy', $api);
         $this->assertTrue($api['healthy']);
 

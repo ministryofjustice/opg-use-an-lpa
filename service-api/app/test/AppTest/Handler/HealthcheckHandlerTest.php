@@ -78,11 +78,11 @@ class HealthcheckHandlerTest extends TestCase
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertArrayHasKey('healthy', $json);
 
-        $this->assertArrayHasKey('sirius_api', $json);
+        $this->assertArrayHasKey('lpa_api', $json);
         $this->assertArrayHasKey('dynamo', $json);
         $this->assertArrayHasKey('lpa_codes_api', $json);
 
-        $this->assertTrue($json['sirius_api']['healthy']);
+        $this->assertTrue($json['lpa_api']['healthy']);
         $this->assertTrue($json['dynamo']['healthy']);
         $this->assertTrue($json['lpa_codes_api']['healthy']);
         $this->assertTrue($json['healthy']);

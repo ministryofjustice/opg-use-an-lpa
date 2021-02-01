@@ -69,7 +69,7 @@ class HealthcheckHandler implements RequestHandlerInterface
     {
         return new JsonResponse([
             "version" => $this->version,
-            "sirius_api" => $this->checkApiEndpoint(),
+            "lpa_api" => $this->checkApiEndpoint(),
             "dynamo" => $this->checkDynamoEndpoint(),
             "lpa_codes_api" => $this->checkLpaCodesApiEndpoint(),
             "healthy" => $this->isHealthy()
