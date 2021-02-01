@@ -77,7 +77,7 @@ Making the calls to AWS services to collect data can take a while, so while work
 
 Redirect the output of the get_statistics.py script to a json file, then use the `--test` argument to read from the file.
 
-```
+```bash
 aws-vault exec identity -- python ./get_statistics.py > output.json
 aws-vault exec identity -- python ./get_statistics.py --test
 aws-vault exec identity -- python ./get_statistics.py --text --test
