@@ -48,12 +48,6 @@ workflows:
           name: slack_notify_stats
           filters: { branches: { ignore: [master] } }
 
-  slack_notify_stats:
-      jobs:
-        - slack_notify_stats:
-            name: slack_notify_stats
-            filters: { branches: { ignore: [master] } }
-
   pr_build:
       jobs:
         - cancel_redundant_builds:
