@@ -1163,7 +1163,7 @@ jobs:
           title: "Service Statistics - Use a Lasting Power of Attorney Production"
           color: "#9933ff"
           message: $(cat ./output.txt)
-          # webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
+          webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: ""
 
   ecr_scan_results:
