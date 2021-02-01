@@ -2065,7 +2065,7 @@ class LpaContext implements Context
     /**
      * @Given /^A malformed request is sent which is missing a data attribute$/
      */
-    public function aMalformedRequestIsSentWhichIsMissingTheADataAttribute()
+    public function aMalformedRequestIsSentWhichIsMissingADataAttribute()
     {
         $dataAttributes = [
             'reference_number'  => $this->lpaUid,

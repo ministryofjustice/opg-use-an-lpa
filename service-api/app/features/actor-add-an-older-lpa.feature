@@ -55,5 +55,5 @@ Feature: Add an older LPA
   Scenario: The user cannot add an older LPA to their account due to missing data in request
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA document
-    And A malformed request is sent which is missing the a data attribute
+    And A malformed request is sent which is missing a data attribute
     Then I am told that something went wrong
