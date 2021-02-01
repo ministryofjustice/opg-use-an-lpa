@@ -70,3 +70,15 @@ optional arguments:
                         service
   --enddate ENDDATE     Where to end metric summing, defaults to today
 ```
+
+## Testing
+
+Making the calls to AWS services to collect data can take a while, so while working on the output of the script, a json file can be used instead.
+
+Redirect the output of the get_statistics.py script to a json file, then use the `--test` argument to read from the file.
+
+```bash
+aws-vault exec identity -- python ./get_statistics.py > output.json
+aws-vault exec identity -- python ./get_statistics.py --test
+aws-vault exec identity -- python ./get_statistics.py --text --test
+```

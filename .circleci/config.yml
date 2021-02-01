@@ -4,7 +4,7 @@ workflows:
   keep_demo_environment_up_to_date:
     triggers:
       - schedule:
-          cron: "0 8 * * *"
+          cron: "0 8 * * *" # Every 8am
           filters:
             branches:
               only:
@@ -34,6 +34,19 @@ workflows:
     jobs:
       - workspace_cleanup:
           name: workspace_cleanup
+
+  post_statistics:
+    triggers:
+      - schedule:
+          cron: "0 9 * * 1" # 9am every Monday
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - slack_notify_stats:
+          name: slack_notify_stats
+          filters: { branches: { ignore: [master] } }
 
   pr_build:
       jobs:
@@ -1128,6 +1141,30 @@ jobs:
           message: "User: $CIRCLE_USERNAME \nview url: https://$PUBLIC_FACING_VIEW_DOMAIN/home \nuse url: https://$PUBLIC_FACING_USE_DOMAIN/home"
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+
+  slack_notify_stats:
+    docker:
+      - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Get Stats
+          command: |
+            sudo pip3 install -r scripts/pipeline/requirements.txt
+            python ~/project/scripts/get_statistics/get_statistics.py --text > ./output.txt
+            cat ./output.txt
+      - slack/notify:
+          title: "Service Statistics - Use a Lasting Power of Attorney Production"
+          color: "#9933ff"
+          message: $(cat ./output.txt)
+          webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
+          footer: ""
 
   ecr_scan_results:
     docker:
