@@ -9,21 +9,54 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @acceptance
-  Scenario: The user can access the appropriate triage page
+  @ui
+  Scenario: The user is taken to the add lpa triage page from the dashboard
     Given I am on the dashboard page
-    When I choose to add an LPA
-    And I do not have an activation key
-    Then I am asked for details from a paper LPA document
+    When I select to add an LPA
+    Then I am on the add an LPA triage page
 
-  @acceptance
-  Scenario: The user can review their answers and can choose to change them
-    Given I have chosen to add an LPA without an activation key
-    When I provide the details from a valid paper document
-    Then I am asked to check my answers are correct
-    And I can decide to change my details
+  @ui
+  Scenario Outline: A user with an activation key is taken to the add an LPA page
+    Given I am on the add an LPA triage page
+    When I select <option> whether I have an activation key
+    Then I will be taken to the appropriate <page> to add an lpa
 
-  @integration
+    Examples:
+      | option | page                             |
+      | Yes    | Add a lasting power of attorney  |
+      | No     | Ask for an activation key        |
+
+  @ui
+  Scenario: The user is shown an error message if they do not select either option
+    Given I am on the add an LPA triage page
+    When I do not select an option for whether I have an activation key
+    Then I will be told that I must select whether I have an activation key
+
+  @ui
+  Scenario: Check cancel button on add an LPA triage page
+    Given I am on the add an LPA triage page
+    When I click the Cancel link on the page
+    Then I should be taken to the <dashboard> page
+
+  @ui
+  Scenario: The user is shown additional content if they do not have an activation key
+    Given I am on the add an LPA triage page
+    When I say I do not have an activation key
+    Then I am shown content explaining why I can not use this service
+
+  @ui
+  Scenario: The user is taken to request activation key
+    Given I am on the add an LPA triage page
+    When I say I do not have an activation key
+    Then I am taken to page to ask for an activation key
+
+  @ui
+  Scenario: The user can go back and change their answers
+    Given I have requested an activation key with valid details
+    When I request to go back and change my answers
+    Then I am taken back to previous page where I can see my answers and change them
+
+  @ui @integration
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document
