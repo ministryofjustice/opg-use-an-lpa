@@ -21,7 +21,7 @@ class PopulateLpaMetadata
 
     /**
      * @param ViewerCodeService $viewerCodeService
-     * @codCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function __construct(ViewerCodeService $viewerCodeService)
     {
