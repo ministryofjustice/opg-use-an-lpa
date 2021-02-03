@@ -19,6 +19,10 @@ class ParseLpaData
     /** @var LpaFactory */
     private LpaFactory $lpaFactory;
 
+    /**
+     * @param LpaFactory $lpaFactory
+     * @codeCoverageIgnore
+     */
     public function __construct(LpaFactory $lpaFactory)
     {
         $this->lpaFactory = $lpaFactory;
