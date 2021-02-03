@@ -90,6 +90,44 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
+    public function it_gets_a_list_of_sorted_lpas_for_a_user()
+    {
+        $token = '01234567-01234-01234-01234-012345678901';
+
+        $lpaData = [
+            '0123-01-01-01-012345' => [
+                'lpa' => [
+                    'uId' => '123456789012',
+                    'donor' => [
+                        'uId' => '123456789012',
+                        'dob' => '1980-01-01'
+                    ]
+                ]
+            ]
+        ];
+
+        $parsedLpaData = new ArrayObject(
+            [
+                '0123-01-01-01-012345' => new ArrayObject(), // data content doesn't matter for this test
+            ],
+            ArrayObject::ARRAY_AS_PROPS
+        );
+
+        $this->apiClientProphecy->httpGet('/v1/lpas')->willReturn($lpaData);
+        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
+
+        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
+        $this->populateLpaMetadata->__invoke($parsedLpaData, $token)->willReturn($parsedLpaData);
+        $this->sortLpas->__invoke($parsedLpaData)->willReturn($parsedLpaData);
+        $this->groupLpas->__invoke($parsedLpaData)->willReturn($parsedLpaData);
+
+        $lpas = $this->lpaService->getLpas($token, true);
+
+        $this->assertInstanceOf(ArrayObject::class, $lpas);
+        $this->assertArrayHasKey('0123-01-01-01-012345', $lpas);
+    }
+
+    /** @test */
     public function it_gets_an_lpa_by_passcode_and_surname_for_summary()
     {
         $lpaData = [
