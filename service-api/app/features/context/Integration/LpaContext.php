@@ -95,8 +95,6 @@ class LpaContext extends BaseIntegrationContext
         $this->userPostCode = 'string';
         $this->userFirstname = 'Ian Deputy';
         $this->userSurname = 'Deputy';
-        // users dob is in this format when passed up from service-front
-        $this->userDob = '05/10/1975';
         $this->lpa->registrationDate = '2019-09-01';
     }
 
