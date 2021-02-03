@@ -252,11 +252,6 @@ class LpaService
         return null;
     }
 
-    public function sortLpasInOrder(ArrayObject $lpas): ArrayObject
-    {
-        return ($this->groupLpas)(($this->sortLpas)($lpas));
-    }
-
     /**
      * Confirm the addition of an LPA to an actors UaLPA account
      *
