@@ -24,10 +24,7 @@ use PHPUnit\Framework\TestCase;
  */
 class PopulateLpaMetadataTest extends TestCase
 {
-    /**
-     * @before
-     */
-    public function setupFixtures(): void
+    public function setUp(): void
     {
         $this->userToken = '12-1-1-1-1234';
         $this->actorToken = '34-3-3-3-3456';

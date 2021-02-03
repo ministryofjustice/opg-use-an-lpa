@@ -19,6 +19,10 @@ class PopulateLpaMetadata
     /** @var ViewerCodeService */
     private ViewerCodeService $viewerCodeService;
 
+    /**
+     * @param ViewerCodeService $viewerCodeService
+     * @codCoverageIgnore
+     */
     public function __construct(ViewerCodeService $viewerCodeService)
     {
         $this->viewerCodeService = $viewerCodeService;
