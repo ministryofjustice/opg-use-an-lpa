@@ -44,8 +44,6 @@ class LpaContext implements Context
         $this->userPostCode = 'string';
         $this->userFirstnames = 'Ian Deputy';
         $this->userSurname = 'Deputy';
-        // users dob is in this format when passed up from service-front
-        $this->userDob = '05/10/1975';
         $this->lpa->registrationDate = '2019-09-01';
     }
 
@@ -2065,7 +2063,7 @@ class LpaContext implements Context
     /**
      * @Given /^A malformed request is sent which is missing a data attribute$/
      */
-    public function aMalformedRequestIsSentWhichIsMissingTheADataAttribute()
+    public function aMalformedRequestIsSentWhichIsMissingADataAttribute()
     {
         $dataAttributes = [
             'reference_number'  => $this->lpaUid,
