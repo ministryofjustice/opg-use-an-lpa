@@ -34,6 +34,7 @@ use Psr\Http\Message\RequestInterface;
  * @property $userSurname
  * @property $userDob
  * @property $passcode
+ * @property $lpaUid
  */
 class LpaContext implements Context
 {
@@ -65,6 +66,7 @@ class LpaContext implements Context
 
         $this->userLpaActorToken = '987654321';
         $this->actorId = 9;
+        $this->lpaUid = '700000000054';
 
         $this->lpaData = [
             'user-lpa-actor-token' => $this->userLpaActorToken,
@@ -117,7 +119,7 @@ class LpaContext implements Context
      */
     public function iProvideTheDetailsFromAValidPaperDocument()
     {
-        $this->ui->fillField('opg_reference_number', '700000000054');
+        $this->ui->fillField('opg_reference_number', $this->lpaUid);
         $this->ui->fillField('first_names', $this->userFirstname);
         $this->ui->fillField('last_name', $this->userSurname);
         $this->ui->fillField('postcode', $this->userPostCode);
@@ -125,13 +127,7 @@ class LpaContext implements Context
         $this->ui->fillField('dob[month]', '10');
         $this->ui->fillField('dob[year]', '1975');
         $this->ui->pressButton('Continue');
-    }
 
-    /**
-     * @Given /^I confirm that those details are correct$/
-     */
-    public function iConfirmThatThoseDetailsAreCorrect()
-    {
         $this->apiFixtures->patch('/v1/lpas/request-letter')
             ->respondWith(
                 new Response(
@@ -140,9 +136,69 @@ class LpaContext implements Context
                     ''
                 )
             );
+    }
 
+    /**
+     * @When /^I provide details containing an incorrect LPA id$/
+     */
+    public function iProvideDetailsContainingAnIncorrectLPAId()
+    {
+        $this->ui->fillField('opg_reference_number', '700000001111');
+        $this->ui->fillField('first_names', $this->userFirstname);
+        $this->ui->fillField('last_name', $this->userSurname);
+        $this->ui->fillField('postcode', $this->userPostCode);
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Not Found',
+                            'details' => 'LPA not found',
+                            'data' => '',
+                        ]
+                    )
+                )
+            );
+    }
+
+    /**
+     * @Given /^I already have a valid activation key for my LPA$/
+     */
+    public function iAlreadyHaveAValidActivationKeyForMyLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I am told that I have an activation key for this LPA and where to find it$/
+     */
+    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
+    {
+        $this->ui->assertPageContainsText('You have an activation key for this LPA');
+    }
+
+    /**
+     * @Given /^I confirm that those details are correct$/
+     */
+    public function iConfirmThatThoseDetailsAreCorrect()
+    {
         $this->ui->assertPageContainsText('Check your answers');
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I am informed that an LPA could not be found with these details$/
+     */
+    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
+    {
+        $this->ui->assertPageContainsText('We could not find an LPA with the details you entered');
     }
 
     /**
@@ -151,6 +207,66 @@ class LpaContext implements Context
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
         $this->ui->assertPageContainsText('We\'re sending you an activation key');
+    }
+
+    /**
+     * @When /^I provide details that do not match a valid paper document$/
+     */
+    public function iProvideDetailsThatDoNotMatchAValidPaperDocument()
+    {
+        $this->ui->fillField('opg_reference_number', $this->lpaUid);
+        $this->ui->fillField('first_names', 'Will Not');
+        $this->ui->fillField('last_name', 'Match');
+        $this->ui->fillField('postcode', 'Wr0 NG1');
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Bad Request',
+                            'details' => 'LPA details does not match',
+                            'data' => '',
+                        ]
+                    )
+                )
+            );
+    }
+
+    /**
+     * @When /^I provide details from a valid LPA which I already have an activation key for$/
+     */
+    public function iProvideDetailsFromAValidLPAWhichIAlreadyHaveAnActivationKeyFor()
+    {
+        $this->ui->fillField('opg_reference_number', $this->lpaUid);
+        $this->ui->fillField('first_names', $this->userFirstname);
+        $this->ui->fillField('last_name', $this->userSurname);
+        $this->ui->fillField('postcode', $this->userPostCode);
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->pressButton('Continue');
+
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Bad Request',
+                            'details' => 'LPA not eligible as an activation key already exists',
+                            'data' => '',
+                        ]
+                    )
+                )
+            );
     }
 
     /**

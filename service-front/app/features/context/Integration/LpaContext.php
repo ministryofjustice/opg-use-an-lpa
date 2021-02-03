@@ -6,6 +6,7 @@ namespace BehatTest\Context\Integration;
 
 use BehatTest\Context\ActorContextTrait;
 use Common\Exception\ApiException;
+use Common\Service\Log\EventCodes;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
@@ -62,30 +63,12 @@ class LpaContext extends BaseIntegrationContext
             'last_name' => $this->userSurname,
         ];
 
-        // API call for getLpaById call happens inside of the check access codes handler
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
-                    [],
-                    ''
-                )
-            );
+        $response = $this->lpaService->checkLPAMatchAndRequestLetter(
+            $this->userIdentity,
+            $data
+        );
 
-        $lpaService = $this->container->get(LpaService::class);
-
-        try {
-            $lpaService->checkLPAMatchAndRequestLetter(
-                $this->userIdentity,
-                $data
-            );
-        } catch (ApiException $e) {
-            throw new Exception(
-                'Failed to correctly approve older LPA addition request: ' . $e->getMessage(),
-                $e->getCode(),
-                $e
-            );
-        }
+        assertEquals(EventCodes::LETTER_REQUESTED, $response);
     }
 
     /**
@@ -115,44 +98,48 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I am informed that an LPA could not be found with these details$/
+     * @When /^I provide details containing an incorrect LPA id$/
      */
-    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
+    public function iProvideDetailsContainingAnIncorrectLPAId()
     {
-        $data = [
-            'reference_number' => $this->referenceNo,
-            'dob' => $this->userDob,
-            'postcode' => $this->userPostCode,
-            'first_names' => 'Not',
-            'last_name' => 'Matching',
-        ];
-
         // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->patch('/v1/lpas/request-letter')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_NOT_FOUND,
                     [],
-                    ''
+                    json_encode(
+                        [
+                            'title' => 'Not Found',
+                            'details' => 'LPA not found',
+                            'data' => '',
+                        ]
+                    )
                 )
             );
 
-        $lpaService = $this->container->get(LpaService::class);
+        $data = [
+            'reference_number' => '700000001111',
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
+        ];
 
-        try {
-            $lpaService->checkLPAMatchAndRequestLetter(
-                $this->userIdentity,
-                $data
-            );
-        } catch (ApiException $e) {
-            if ($e->getCode() === StatusCodeInterface::STATUS_NOT_FOUND) {
-                return;
-            }
-        }
-
-        throw new Exception(
-            'Failed to not find LPA with incorrect details'
+        $response = $this->lpaService->checkLPAMatchAndRequestLetter(
+            $this->userIdentity,
+            $data
         );
+
+        assertEquals(EventCodes::LPA_NOT_FOUND, $response);
+    }
+
+    /**
+     * @Then /^I am informed that an LPA could not be found with these details$/
+     */
+    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
+    {
+        // Not needed for this context
     }
 
     /**
@@ -193,82 +180,19 @@ class LpaContext extends BaseIntegrationContext
                     json_encode(
                         [
                             'title' => 'Bad Request',
-                            'details' => 'LPA not eligible',
+                            'details' => 'LPA not eligible due to registration date',
                             'data' => '',
                         ]
                     )
                 )
             );
 
-        $lpaService = $this->container->get(LpaService::class);
-
-        try {
-            $lpaService->checkLPAMatchAndRequestLetter(
-                $this->userIdentity,
-                $data
-            );
-        } catch (ApiException $e) {
-            if (
-                $e->getCode() === StatusCodeInterface::STATUS_BAD_REQUEST &&
-                $e->getMessage() === 'LPA not eligible'
-            ) {
-                return;
-            }
-        }
-
-        throw new Exception(
-            'Did not return expected exception'
+        $response = $this->lpaService->checkLPAMatchAndRequestLetter(
+            $this->userIdentity,
+            $data
         );
-    }
 
-    /**
-     * @Then /^I am told that I have an activation key for this LPA and where to find it$/
-     */
-    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
-    {
-        $data = [
-            'reference_number' => $this->referenceNo,
-            'dob' => $this->userDob,
-            'postcode' => $this->userPostCode,
-            'first_names' => $this->userFirstname,
-            'last_name' => $this->userSurname,
-        ];
-
-        // API call for getLpaById call happens inside of the check access codes handler
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Bad Request',
-                            'details' => 'LPA not eligible as an activation key already exists',
-                            'data' => '',
-                        ]
-                    )
-                )
-            );
-
-        $lpaService = $this->container->get(LpaService::class);
-
-        try {
-            $lpaService->checkLPAMatchAndRequestLetter(
-                $this->userIdentity,
-                $data
-            );
-        } catch (ApiException $e) {
-            if (
-                $e->getCode() === StatusCodeInterface::STATUS_BAD_REQUEST &&
-                $e->getMessage() === 'LPA not eligible as an activation key already exists'
-            ) {
-                return;
-            }
-        }
-
-        throw new Exception(
-            'Did not return expected exception'
-        );
+        assertEquals(EventCodes::LPA_NOT_ELIGIBLE, $response);
     }
 
     /**
@@ -931,7 +855,36 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideDetailsThatDoNotMatchAValidPaperDocument()
     {
-        // Not needed for this context
+        // API call for getLpaById call happens inside of the check access codes handler
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Bad Request',
+                            'details' => 'LPA details does not match',
+                            'data' => '',
+                        ]
+                    )
+                )
+            );
+
+        $data = [
+            'reference_number' => $this->referenceNo,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => 'Will Not',
+            'last_name' => 'Match',
+        ];
+
+        $response = $this->lpaService->checkLPAMatchAndRequestLetter(
+            $this->userIdentity,
+            $data
+        );
+
+        assertEquals(EventCodes::DATA_DID_NOT_MATCH_LPA, $response);
     }
 
     /**
@@ -939,7 +892,15 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideTheDetailsFromAValidPaperDocument()
     {
-        // Not needed for this context
+        // API call for requesting an activation key
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    [],
+                    ''
+                )
+            );
     }
 
     /**
@@ -1267,6 +1228,49 @@ class LpaContext extends BaseIntegrationContext
         );
 
         assertNotNull($actorCode);
+    }
+
+    /**
+     * @When /^I provide details from a valid LPA which I already have an activation key for$/
+     */
+    public function iProvideDetailsFromAValidLPAWhichIAlreadyHaveAnActivationKeyFor()
+    {
+        // API call for getLpaById call happens inside of the check access codes handler
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Bad Request',
+                            'details' => 'LPA not eligible as an activation key already exists',
+                            'data' => '',
+                        ]
+                    )
+                )
+            );
+    }
+
+    /**
+     * @Then /^I am told that I have an activation key for this LPA and where to find it$/
+     */
+    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
+    {
+        $data = [
+            'reference_number' => $this->referenceNo,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname
+        ];
+
+        $response = $this->lpaService->checkLPAMatchAndRequestLetter(
+            $this->userIdentity,
+            $data
+        );
+
+        assertEquals(EventCodes::LPA_HAS_ACTIVATION_KEY, $response);
     }
 
     protected function prepareContext(): void
