@@ -44,7 +44,7 @@ class LpaContext implements Context
         $this->userFirstnames = 'Ian Deputy';
         $this->userSurname = 'Deputy';
         $this->lpa->registrationDate = '2019-09-01';
-        $this->userDob = ['date' => '1975-10-05'];
+        $this->userDob = '05/10/1975';
     }
 
     /**
@@ -1954,7 +1954,7 @@ class LpaContext implements Context
                 'reference_number'  => $this->lpaUid,
                 'first_names'       => $firstnames,
                 'last_name'         => $lastname,
-                'dob'               => ['date' => $dob],
+                'dob'               => $dob,
                 'postcode'          => $postcode
             ],
             [

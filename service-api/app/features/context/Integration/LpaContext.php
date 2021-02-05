@@ -104,7 +104,7 @@ class LpaContext extends BaseIntegrationContext
         $this->userFirstname = 'Ian Deputy';
         $this->userSurname = 'Deputy';
         $this->lpa->registrationDate = '2019-09-01';
-        $this->userDob = ['date' => '1975-10-05'];
+        $this->userDob = '05/10/1975';
     }
 
     /**
@@ -1451,7 +1451,7 @@ class LpaContext extends BaseIntegrationContext
     {
         $data = [
             'reference_number'  => $this->lpaUid,
-            'dob'               => ['date' => $dob],
+            'dob'               => $dob,
             'postcode'          => $postcode,
             'first_names'       => $firstnames,
             'last_name'         => $lastname
