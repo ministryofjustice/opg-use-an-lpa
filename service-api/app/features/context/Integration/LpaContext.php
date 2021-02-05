@@ -10,6 +10,7 @@ use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Log\RequestTracing;
+use App\Service\Lpa\DeleteLpa;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
 use Aws\MockHandler as AwsMockHandler;
@@ -53,6 +54,7 @@ class LpaContext extends BaseIntegrationContext
     private AwsMockHandler $awsFixtures;
     private OlderLpaService $olderLpaService;
     private LpaService $lpaService;
+    private DeleteLpa $deleteLpa;
     private string $codesApiPactProvider;
     private string $apiGatewayPactProvider;
 
@@ -66,6 +68,7 @@ class LpaContext extends BaseIntegrationContext
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
         $this->olderLpaService = $this->container->get(OlderLpaService::class);
         $this->lpaService = $this->container->get(LpaService::class);
+        $this->deleteLpa = $this->container->get(DeleteLpa::class);
 
         $config = $this->container->get('config');
         $this->codesApiPactProvider = parse_url($config['codes_api']['endpoint'], PHP_URL_HOST);
@@ -1352,7 +1355,7 @@ class LpaContext extends BaseIntegrationContext
 
         $this->awsFixtures->append(new Result());
 
-        $lpaRemoveResponse = $this->lpaService->removeLpaFromUserLpaActorMap($this->userId, $this->userLpaActorToken);
+        $lpaRemoveResponse = ($this->deleteLpa)($this->userId, $this->userLpaActorToken);
 
         assertEmpty($lpaRemoveResponse);
     }
