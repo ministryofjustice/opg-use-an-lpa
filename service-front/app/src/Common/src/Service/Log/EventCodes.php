@@ -45,7 +45,7 @@ class EventCodes
     public const LPA_NOT_FOUND = 'LPA_NOT_FOUND';
 
     /**
-     * LPA not eligible due to registration date or status
+     * LPA not eligible
      */
     public const LPA_NOT_ELIGIBLE = 'LPA_NOT_ELIGIBLE';
 
@@ -53,14 +53,4 @@ class EventCodes
      * LPA has activation key
      */
     public const LPA_HAS_ACTIVATION_KEY = 'LPA_HAS_ACTIVATION_KEY';
-
-    /**
-     * User data did not match LPA
-     */
-    public const DATA_DID_NOT_MATCH_LPA = 'DATA_DID_NOT_MATCH_LPA';
-
-    /**
-     * A letter containing a new activation key has been requested
-     */
-    public const LETTER_REQUESTED = 'LETTER_REQUESTED';
 }

@@ -7,7 +7,6 @@ use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
-use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
@@ -427,19 +426,18 @@ class LpaService
      *
      * @param string $userToken
      * @param array $data
-     * @return EventCodes string
      * @throws ApiException
      */
-    public function checkLPAMatchAndRequestLetter(string $userToken, array $data): string
+    public function checkLPAMatchAndRequestLetter(string $userToken, array $data): void
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
         try {
-            $this->apiClient->httpPatch('/v1/lpas/request-letter', $data);
+            $matchResponse = $this->apiClient->httpPatch('/v1/lpas/request-letter', $data);
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_BAD_REQUEST:
-                    if ($apiEx->getMessage() === 'LPA not eligible due to registration date') {
+                    if ($apiEx->getMessage() === 'LPA not eligible') {
                         $this->logger->notice(
                             'LPA with reference number {uId} not eligible to request activation key',
                             [
@@ -447,17 +445,15 @@ class LpaService
                                 'uId' => $data['reference_number'],
                             ]
                         );
-                        return EventCodes::LPA_NOT_ELIGIBLE;
                     } elseif ($apiEx->getMessage() === 'LPA details does not match') {
-                        $this->logger->notice(
-                            'LPA with reference number {uId} does not match with user provided data',
-                            [
-                                'event_code' => EventCodes::DATA_DID_NOT_MATCH_LPA,
-                                'uId' => $data['reference_number'],
-                            ]
-                        );
-                        return EventCodes::DATA_DID_NOT_MATCH_LPA;
-                    } elseif ($apiEx->getMessage() === 'LPA not eligible as an activation key already exists') {
+                            $this->logger->notice(
+                                'LPA with reference number {uId} does not match with user provided data',
+                                [
+                                    'event_code' => EventCodes::LPA_NOT_ELIGIBLE,
+                                    'uId' => $data['reference_number'],
+                                ]
+                            );
+                    } else {
                         $this->logger->notice(
                             'LPA with reference number {uId} already has an activation key',
                             [
@@ -465,7 +461,6 @@ class LpaService
                                 'uId' => $data['reference_number'],
                             ]
                         );
-                        return EventCodes::LPA_HAS_ACTIVATION_KEY;
                     }
                     break;
 
@@ -478,18 +473,18 @@ class LpaService
                             'uId' => $data['reference_number']
                         ]
                     );
-                    return EventCodes::LPA_NOT_FOUND;
             }
+
+            // still throw the exception up to the caller since handling of the issue will be done there
+            throw $apiEx;
         }
 
         $this->logger->info(
-            'Account {id} successfully requested an activation key for LPA {uId}',
+            'Account with Id {id} added LPA with Id {uId} to account by passcode',
             [
                 'id'  => $userToken,
                 'uId' => $data['reference_number']
             ]
         );
-
-        return EventCodes::LETTER_REQUESTED;
     }
 }

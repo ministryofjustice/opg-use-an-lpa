@@ -9,21 +9,14 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @ui @integration
+  @integration
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document
     And I confirm that those details are correct
     Then a letter is requested containing a one time use code
 
-  @ui @integration
-  Scenario: The user cannot add an old LPA to their account with an incorrect LPA id
-    Given I am on the add an older LPA page
-    When I provide details containing an incorrect LPA id
-    And I confirm that those details are correct
-    Then I am informed that an LPA could not be found with these details
-
-  @ui @integration
+  @integration
   Scenario: The user cannot add an old LPA to their account as the data does not match
     Given I am on the add an older LPA page
     When I provide details that do not match a valid paper document
@@ -37,9 +30,10 @@ Feature: Add an older LPA
     And I confirm that those details are correct
     Then I am told that I cannot request an activation key
 
-  @ui @integration
+  @integration
   Scenario: The user cannot add an older LPA to their account if they have an activation key
     Given I am on the add an older LPA page
-    When I provide details from a valid LPA which I already have an activation key for
+    And I already have a valid activation key for my LPA
+    When I provide the details from a valid paper document
     And I confirm that those details are correct
     Then I am told that I have an activation key for this LPA and where to find it

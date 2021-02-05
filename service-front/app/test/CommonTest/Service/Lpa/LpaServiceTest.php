@@ -9,7 +9,6 @@ use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
-use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
 use Fig\Http\Message\StatusCodeInterface;
@@ -869,9 +868,10 @@ class LpaServiceTest extends TestCase
             ->willThrow(new ApiException('LPA not found', StatusCodeInterface::STATUS_NOT_FOUND));
         $this->apiClientProphecy->setUserTokenHeader($userLpaToken)->shouldBeCalled();
 
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+        $this->expectExceptionMessage('LPA not found');
         $response = $this->lpaService->checkLPAMatchAndRequestLetter($userLpaToken, $data);
-
-        $this->assertEquals(EventCodes::LPA_NOT_FOUND, $response);
     }
 
     /**
@@ -890,18 +890,13 @@ class LpaServiceTest extends TestCase
         ];
 
         $this->apiClientProphecy->httpPatch('/v1/lpas/request-letter', $data)
-            ->willThrow(
-                new ApiException(
-                    'LPA not eligible due to registration date',
-                    StatusCodeInterface::STATUS_BAD_REQUEST
-                )
-            )
-        ;
+            ->willThrow(new ApiException('LPA not eligible', StatusCodeInterface::STATUS_BAD_REQUEST));
         $this->apiClientProphecy->setUserTokenHeader($userLpaToken)->shouldBeCalled();
 
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->expectExceptionMessage('LPA not eligible');
         $response = $this->lpaService->checkLPAMatchAndRequestLetter($userLpaToken, $data);
-
-        $this->assertEquals(EventCodes::LPA_NOT_ELIGIBLE, $response);
     }
 
     /**
@@ -923,8 +918,10 @@ class LpaServiceTest extends TestCase
             ->willThrow(new ApiException('LPA details does not match', StatusCodeInterface::STATUS_BAD_REQUEST));
         $this->apiClientProphecy->setUserTokenHeader($userLpaToken)->shouldBeCalled();
 
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->expectExceptionMessage('LPA details does not match');
         $response = $this->lpaService->checkLPAMatchAndRequestLetter($userLpaToken, $data);
-        $this->assertEquals(EventCodes::DATA_DID_NOT_MATCH_LPA, $response);
     }
 
     /**
@@ -943,17 +940,12 @@ class LpaServiceTest extends TestCase
         ];
 
         $this->apiClientProphecy->httpPatch('/v1/lpas/request-letter', $data)
-            ->willThrow(
-                new ApiException(
-                    'LPA not eligible as an activation key already exists',
-                    StatusCodeInterface::STATUS_BAD_REQUEST
-                )
-            )
-        ;
+            ->willThrow(new ApiException('LPA already has key', StatusCodeInterface::STATUS_BAD_REQUEST));
         $this->apiClientProphecy->setUserTokenHeader($userLpaToken)->shouldBeCalled();
 
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->expectExceptionMessage('LPA already has key');
         $response = $this->lpaService->checkLPAMatchAndRequestLetter($userLpaToken, $data);
-
-        $this->assertEquals(EventCodes::LPA_HAS_ACTIVATION_KEY, $response);
     }
 }
