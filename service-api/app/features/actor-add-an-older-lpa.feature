@@ -31,10 +31,10 @@ Feature: Add an older LPA
 
     Examples:
       | firstnames  | lastname  | postcode |    dob      |
-      | Ian Deputy  | Deputy    |  string  | 1975-12-03  |
-      | Ian Deputy  | Deputy    |  WR0NG1  | 1980-10-10  |
-      | Wrong name  | Deputy    |  string  | 1980-10-10  |
-      | Ian Deputy  | Incorrect |  string  | 1980-10-10  |
+      | Ian Deputy  | Deputy    |  string  | 03/12/1975  |
+      | Ian Deputy  | Deputy    |  WR0NG1  | 10/10/1980  |
+      | Wrong name  | Deputy    |  string  | 10/10/1980  |
+      | Ian Deputy  | Incorrect |  string  | 10/10/1980  |
 
 
   @integration @acceptance @pact
