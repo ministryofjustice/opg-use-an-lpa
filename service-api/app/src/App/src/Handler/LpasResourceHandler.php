@@ -6,6 +6,7 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use App\Service\Lpa\DeleteLpa;
 use App\Service\Lpa\LpaService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,9 +26,15 @@ class LpasResourceHandler implements RequestHandlerInterface
      */
     private $lpaService;
 
-    public function __construct(LpaService $lpaService)
+    /**
+     * @var DeleteLpa
+     */
+    private $deleteLpa;
+
+    public function __construct(LpaService $lpaService, DeleteLpa $deleteLpa)
     {
         $this->lpaService = $lpaService;
+        $this->deleteLpa = $deleteLpa;
     }
 
     /**
@@ -85,7 +92,7 @@ class LpasResourceHandler implements RequestHandlerInterface
             throw new BadRequestException('User actor LPA token must be provided for lpa removal');
         }
 
-        $lpaRemoveResponse = $this->lpaService->removeLpaFromUserLpaActorMap($userToken, $actorLpaToken);
+        $lpaRemoveResponse = ($this->deleteLpa)($userToken, $actorLpaToken);
 
         return new JsonResponse($lpaRemoveResponse);
     }

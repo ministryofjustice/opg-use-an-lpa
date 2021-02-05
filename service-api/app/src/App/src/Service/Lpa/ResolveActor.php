@@ -9,8 +9,6 @@ use Psr\Log\LoggerInterface;
 class ResolveActor
 {
     private const ACTIVE_ATTORNEY = 0;
-    private const GHOST_ATTORNEY = 1;
-    private const INACTIVE_ATTORNEY = 2;
 
     private LoggerInterface $logger;
     private GetAttorneyStatus $getAttorneyStatus;
