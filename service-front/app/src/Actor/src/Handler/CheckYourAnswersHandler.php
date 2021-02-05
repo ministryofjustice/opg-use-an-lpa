@@ -15,7 +15,6 @@ use Common\Handler\{AbstractHandler,
     Traits\User,
     UserAware};
 use Common\Middleware\Session\SessionTimeoutException;
-use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\LpaService;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
@@ -101,7 +100,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
         switch ($request->getMethod()) {
             case 'POST':
-                return $this->handlePost($request, $this->data);
+                return $this->handlePost($request);
             default:
                 return $this->handleGet($request);
         }
@@ -116,82 +115,38 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         ]));
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param array $data
-     * @return ResponseInterface
-     * @throws ApiException
-     */
-    public function handlePost(
-        ServerRequestInterface $request,
-        array $data
-    ): ResponseInterface {
+    public function handlePost(ServerRequestInterface $request): ResponseInterface
+    {
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            // TODO UML-1216
-            if (isset($data)) {
-                try {
-                     $this->lpaService->checkLPAMatchAndRequestLetter(
-                         $this->identity,
-                         $data
-                     );
-
-                    $this->getLogger()->info(
-                        'Account with Id {id} has added an old LPA with Id {uId} to their account',
-                        [
-                            'id' => $this->identity,
-                            'uId' => $data['reference_number']
-                        ]
-                    );
-                } catch (ApiException $apiEx) {
-                    if ($apiEx->getCode() === StatusCodeInterface::STATUS_BAD_REQUEST) {
-                        if ($apiEx->getMessage() === 'LPA not eligible') {
-                            $this->getLogger()->info(
-                                'LPA with reference number {uId} not eligible for activation key.',
-                                [
-                                    'uId' => $data['reference_number'],
-                                ]
-                            );
-                            return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
-                        } elseif ($apiEx->getMessage() === 'LPA details does not match') {
-                            $this->logger->notice(
-                                'LPA with reference number {uId} does not match with user provided data',
-                                [
-                                    'event_code' => EventCodes::LPA_NOT_ELIGIBLE,
-                                    'uId' => $data['reference_number'],
-                                ]
-                            );
-                            return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
-                        } else {
-                            $this->getLogger()->info(
-                                'LPA with reference number {uId} already has an activation key.',
-                                [
-                                    'uId' => $data['reference_number'],
-                                ]
-                            );
-                            return new HtmlResponse($this->renderer->render('actor::already-have-activation-key'));
-                        }
-                    }
-                    if ($apiEx->getCode() === StatusCodeInterface::STATUS_NOT_FOUND) {
-                        if ($apiEx->getMessage() === 'LPA not found') {
-                            $this->getLogger()->info(
-                                'LPA with reference number {uID} not found in Sirius',
-                                [
-                                    'uId' => $data['reference_number'],
-                                ]
-                            );
-                            return new HtmlResponse($this->renderer->render('actor::cannot-find-lpa'));
-                        }
+            try {
+                 $this->lpaService->checkLPAMatchAndRequestLetter(
+                     $this->identity,
+                     $this->data
+                 );
+            } catch (ApiException $apiEx) {
+                if ($apiEx->getCode() === StatusCodeInterface::STATUS_BAD_REQUEST) {
+                    if ($apiEx->getMessage() === 'LPA not eligible') {
+                        return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
+                    } elseif ($apiEx->getMessage() === 'LPA details does not match') {
+                        return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
+                    } else {
+                        return new HtmlResponse($this->renderer->render('actor::already-have-activation-key'));
                     }
                 }
-
-                //LPA check match and letter request sent
-                $twoWeeksFromNowDate = (new DateTime())->modify('+2 week');
-                return new HtmlResponse($this->renderer->render('actor::send-activation-key-confirmation', [
-                    'date' => $twoWeeksFromNowDate,
-                ]));
+                if ($apiEx->getCode() === StatusCodeInterface::STATUS_NOT_FOUND) {
+                    if ($apiEx->getMessage() === 'LPA not found') {
+                        return new HtmlResponse($this->renderer->render('actor::cannot-find-lpa'));
+                    }
+                }
             }
+
+            //LPA check match and letter request sent
+            $twoWeeksFromNowDate = (new DateTime())->modify('+2 week');
+            return new HtmlResponse($this->renderer->render('actor::send-activation-key-confirmation', [
+                'date' => $twoWeeksFromNowDate,
+            ]));
         }
     }
 }
