@@ -228,7 +228,7 @@ class OlderLpaServiceTest extends TestCase
         ];
 
         $userData = [
-            'dob'         => ['date' => '1980-03-01'],
+            'dob'         => '01/03/1980',
             'first_names' => 'Test Tester',
             'last_name'   => 'Testing',
             'postcode'    => 'Ab1 2Cd'
@@ -383,7 +383,7 @@ class OlderLpaServiceTest extends TestCase
                     'lpa-id'   => '700000009999'
                 ],
                 [
-                    'dob'         => ['date' => '1980-03-01'],
+                    'dob'         => '01/03/1980',
                     'first_names' => 'Test Tester',
                     'last_name'   => 'Testing',
                     'postcode'    => 'Ab1 2Cd'
@@ -395,7 +395,7 @@ class OlderLpaServiceTest extends TestCase
                     'lpa-id'   => '700000009999'
                 ],
                 [
-                    'dob'         => ['date' => '1975-10-05'],
+                    'dob'         => '05/10/1975',
                     'first_names' => 'Donor',
                     'last_name'   => 'Person',
                     'postcode'    => 'PY1 3Kd'
@@ -404,7 +404,7 @@ class OlderLpaServiceTest extends TestCase
             [
                 null,
                 [
-                    'dob'         => ['date' => '1980-01-20'], // dob will not match
+                    'dob'         => '20/01/1982', // dob will not match
                     'first_names' => 'Test Tester',
                     'last_name'   => 'Testing',
                     'postcode'    => 'Ab1 2Cd'
@@ -413,7 +413,7 @@ class OlderLpaServiceTest extends TestCase
             [
                 null,
                 [
-                    'dob'         => ['date' => '1980-03-01'],
+                    'dob'         => '01/03/1980',
                     'first_names' => 'Wrong', // firstname will not match
                     'last_name'   => 'Testing',
                     'postcode'    => 'Ab1 2Cd'
@@ -422,7 +422,7 @@ class OlderLpaServiceTest extends TestCase
             [
                 null,
                 [
-                    'dob'         => ['date' => '1980-03-01'],
+                    'dob'         => '01/03/1980',
                     'first_names' => 'Test Tester',
                     'last_name'   => 'Incorrect', // surname will not match
                     'postcode'    => 'Ab1 2Cd'
@@ -431,7 +431,7 @@ class OlderLpaServiceTest extends TestCase
             [
                 null,
                 [
-                    'dob'         => ['date' => '1980-03-01'],
+                    'dob'         => '01/03/1980',
                     'first_names' => 'Test Tester',
                     'last_name'   => 'Testing',
                     'postcode'    => 'WR0 NG1' // postcode will not match
@@ -440,7 +440,7 @@ class OlderLpaServiceTest extends TestCase
             [
                 null, // will not find a match as this attorney is inactive
                 [
-                    'dob'         => ['date' => '1977-11-21'],
+                    'dob'         => '21/11/1977',
                     'first_names' => 'Attorneyone',
                     'last_name'   => 'Person',
                     'postcode'    => 'Gg1 2ff'
@@ -449,7 +449,7 @@ class OlderLpaServiceTest extends TestCase
             [
                 null, // will not find a match as this attorney is a ghost
                 [
-                    'dob'         => ['date' => '1960-05-05'],
+                    'dob'         => '05/05/1960',
                     'first_names' => 'Attorneytwo',
                     'last_name'   => 'Person',
                     'postcode'    => 'BB1 9ee'
@@ -468,7 +468,7 @@ class OlderLpaServiceTest extends TestCase
 
         $dataToMatch = [
             'reference_number' => $lpaId,
-            'dob'              => ['date' => '1980-03-01'],
+            'dob'              => '01/03/1980',
             'first_names'      => 'Test Tester',
             'last_name'        => 'Testing',
             'postcode'         => 'Ab1 2Cd'
@@ -497,7 +497,7 @@ class OlderLpaServiceTest extends TestCase
 
         $dataToMatch = [
             'reference_number' => $lpaId,
-            'dob'              => ['date' => '1980-03-01'],
+            'dob'              => '01/03/1980',
             'first_names'      => 'Test Tester',
             'last_name'        => 'Testing',
             'postcode'         => 'Ab1 2Cd'
@@ -535,7 +535,7 @@ class OlderLpaServiceTest extends TestCase
 
         $dataToMatch = [
             'reference_number' => $lpaId,
-            'dob'              => ['date' => '1980-03-01'],
+            'dob'              => '01/03/1980',
             'first_names'      => 'Wrong Name',
             'last_name'        => 'Incorrect',
             'postcode'         => 'wR0 nG1'
@@ -567,7 +567,7 @@ class OlderLpaServiceTest extends TestCase
 
         $dataToMatch = [
             'reference_number' => $lpaId,
-            'dob'              => ['date' => '1980-03-01'],
+            'dob'              => '01/03/1980',
             'first_names'      => 'Test Tester',
             'last_name'        => 'Testing',
             'postcode'         => 'Ab1 2Cd'
@@ -608,7 +608,7 @@ class OlderLpaServiceTest extends TestCase
 
         $dataToMatch = [
             'reference_number' => $lpaId,
-            'dob'              => ['date' => '1980-03-01'],
+            'dob'              => '01/03/1980',
             'first_names'      => 'Test Tester',
             'last_name'        => 'Testing',
             'postcode'         => 'Ab1 2Cd'
