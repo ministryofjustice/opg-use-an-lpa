@@ -19,7 +19,6 @@ use Laminas\Diactoros\Response\JsonResponse;
  */
 class ActorCodeSummaryHandler implements RequestHandlerInterface
 {
-
     /**
      * @var ActorCodeService
      */

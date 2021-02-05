@@ -8,6 +8,7 @@ use App\DataAccess\ApiGateway\ActorCodes;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\CodeValidationStrategyInterface;
+use App\Service\Lpa\ResolveActor;
 use App\Service\Lpa\LpaService;
 use ParagonIE\HiddenString\HiddenString;
 use Psr\Log\LoggerInterface;
@@ -20,14 +21,18 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
 
     private LpaService $lpaService;
 
+    private ResolveActor $resolveActor;
+
     public function __construct(
         ActorCodes $actorCodesApi,
         LpaService $lpaService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ResolveActor $resolveActor
     ) {
         $this->actorCodesApi = $actorCodesApi;
         $this->lpaService = $lpaService;
         $this->logger = $logger;
+        $this->resolveActor = $resolveActor;
     }
 
     /**
@@ -114,7 +119,7 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
             throw new ActorCodeValidationException('LPA not found');
         }
 
-        $actor = $this->lpaService->lookupActiveActorInLpa($lpa->getData(), $actorUid);
+        $actor = ($this->resolveActor)($lpa->getData(), $actorUid);
 
         if ($actor === null) {
             $this->logger->error(

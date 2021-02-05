@@ -6,6 +6,7 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Service\Lpa\LpaService;
+use App\Service\Lpa\OlderLpaService;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
@@ -17,14 +18,11 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class LpasActionsHandler implements RequestHandlerInterface
 {
-    /**
-     * @var LpaService
-     */
-    private $lpaService;
+    private OlderLpaService $olderLpaService;
 
-    public function __construct(LpaService $lpaService)
+    public function __construct(OlderLpaService $olderLpaService)
     {
-        $this->lpaService = $lpaService;
+        $this->olderLpaService = $olderLpaService;
     }
 
     /**
@@ -46,7 +44,7 @@ class LpasActionsHandler implements RequestHandlerInterface
             throw new BadRequestException('Required data missing to request an activation key');
         }
         // Check LPA with user provided reference number
-        $lpaMatchResponse = $this->lpaService->checkLPAMatchAndGetActorDetails($requestData);
+        $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($requestData);
 
         if (!isset($lpaMatchResponse['lpa-id'])) {
             throw new BadRequestException('The lpa-id is missing from the data match response');
@@ -57,7 +55,7 @@ class LpasActionsHandler implements RequestHandlerInterface
         }
 
         //If all criteria pass, request letter with activation key
-        $this->lpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
+        $this->olderLpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
 
         return new EmptyResponse();
     }

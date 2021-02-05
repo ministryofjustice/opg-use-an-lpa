@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service\ActorCodes;
 
-use App\DataAccess\{ApiGateway\ActorCodes,
-    Repository\ActorCodesInterface,
-    Repository\KeyCollisionException,
-    Repository\UserLpaActorMapInterface};
+use App\DataAccess\{Repository\KeyCollisionException, Repository\UserLpaActorMapInterface};
 use App\Exception\{ActorCodeMarkAsUsedException, ActorCodeValidationException};
 use App\Service\Lpa\LpaService;
+use App\Service\Lpa\ResolveActor;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -23,6 +21,8 @@ class ActorCodeService
 
     private LoggerInterface $logger;
 
+    private ResolveActor $resolveActor;
+
     /**
      * ActorCodeService constructor.
      *
@@ -30,19 +30,21 @@ class ActorCodeService
      * @param UserLpaActorMapInterface $userLpaActorMapRepository
      * @param LpaService $lpaService
      * @param LoggerInterface $logger
+     * @param ResolveActor $resolveActor
      */
     public function __construct(
         CodeValidationStrategyInterface $codeValidator,
         UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaService $lpaService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ResolveActor $resolveActor
     ) {
         $this->codeValidator = $codeValidator;
         $this->lpaService = $lpaService;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
         $this->logger = $logger;
+        $this->resolveActor = $resolveActor;
     }
-
 
     /**
      * @param string $code
@@ -57,7 +59,7 @@ class ActorCodeService
 
             $lpa = $this->lpaService->getByUid($uid);
 
-            $actor = $this->lpaService->lookupActiveActorInLpa($lpa->getData(), $actorUid);
+            $actor = ($this->resolveActor)($lpa->getData(), $actorUid);
 
             $lpaData = $lpa->getData();
             unset($lpaData['original_attorneys']);
