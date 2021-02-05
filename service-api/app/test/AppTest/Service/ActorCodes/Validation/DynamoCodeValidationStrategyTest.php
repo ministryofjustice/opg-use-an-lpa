@@ -10,6 +10,7 @@ use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\Validation\DynamoCodeValidationStrategy;
 use App\Service\Lpa\LpaService;
+use App\Service\Lpa\ResolveActor;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
@@ -25,11 +26,15 @@ class DynamoCodeValidationStrategyTest extends TestCase
     /** @var ObjectProphecy|LpaService */
     private ObjectProphecy $lpaServiceProphecy;
 
+    /** @var ObjectProphecy|ResolveActor */
+    private ObjectProphecy $resolveActorProphecy;
+
     public function initDependencies(): void
     {
         $this->actorCodeRepositoryProphecy = $this->prophesize(ActorCodesInterface::class);
         $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
     }
 
     /** @test */
@@ -58,8 +63,7 @@ class DynamoCodeValidationStrategyTest extends TestCase
             ->getByUid('lpa-uid')
             ->willReturn($lpa);
 
-        $this->lpaServiceProphecy
-            ->lookupActiveActorInLpa($lpa->getData(), 'actor-lpa-id')
+        $this->resolveActorProphecy->__invoke($lpa->getData(), 'actor-lpa-id')
             ->willReturn(
                 [
                     'details' => [
@@ -72,7 +76,8 @@ class DynamoCodeValidationStrategyTest extends TestCase
         $strategy = new DynamoCodeValidationStrategy(
             $this->actorCodeRepositoryProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
+            $this->resolveActorProphecy->reveal()
         );
 
         $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
@@ -88,7 +93,8 @@ class DynamoCodeValidationStrategyTest extends TestCase
         $strategy = new DynamoCodeValidationStrategy(
             $this->actorCodeRepositoryProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
+            $this->resolveActorProphecy->reveal()
         );
 
         $this->expectException(ActorCodeValidationException::class);
@@ -111,7 +117,8 @@ class DynamoCodeValidationStrategyTest extends TestCase
         $strategy = new DynamoCodeValidationStrategy(
             $this->actorCodeRepositoryProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
+            $this->resolveActorProphecy->reveal()
         );
 
         $this->expectException(ActorCodeValidationException::class);
@@ -136,7 +143,8 @@ class DynamoCodeValidationStrategyTest extends TestCase
         $strategy = new DynamoCodeValidationStrategy(
             $this->actorCodeRepositoryProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
+            $this->resolveActorProphecy->reveal()
         );
 
         $this->expectException(ActorCodeValidationException::class);
@@ -165,7 +173,8 @@ class DynamoCodeValidationStrategyTest extends TestCase
         $strategy = new DynamoCodeValidationStrategy(
             $this->actorCodeRepositoryProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
+            $this->resolveActorProphecy->reveal()
         );
 
         $this->expectException(ActorCodeValidationException::class);
@@ -198,14 +207,14 @@ class DynamoCodeValidationStrategyTest extends TestCase
             ->getByUid('lpa-uid')
             ->willReturn($lpa);
 
-        $this->lpaServiceProphecy
-            ->lookupActiveActorInLpa($lpa->getData(), 'actor-lpa-id')
+        $this->resolveActorProphecy->__invoke($lpa->getData(), 'actor-lpa-id')
             ->willReturn(null);
 
         $strategy = new DynamoCodeValidationStrategy(
             $this->actorCodeRepositoryProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
+            $this->resolveActorProphecy->reveal()
         );
 
         $this->expectException(ActorCodeValidationException::class);
@@ -238,8 +247,7 @@ class DynamoCodeValidationStrategyTest extends TestCase
             ->getByUid('lpa-uid')
             ->willReturn($lpa);
 
-        $this->lpaServiceProphecy
-            ->lookupActiveActorInLpa($lpa->getData(), 'actor-lpa-id')
+        $this->resolveActorProphecy->__invoke($lpa->getData(), 'actor-lpa-id')
             ->willReturn(
                 [
                     'details' => [
@@ -252,7 +260,8 @@ class DynamoCodeValidationStrategyTest extends TestCase
         $strategy = new DynamoCodeValidationStrategy(
             $this->actorCodeRepositoryProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
+            $this->resolveActorProphecy->reveal()
         );
 
         $this->expectException(ActorCodeValidationException::class);
@@ -271,7 +280,8 @@ class DynamoCodeValidationStrategyTest extends TestCase
         $strategy = new DynamoCodeValidationStrategy(
             $this->actorCodeRepositoryProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
+            $this->resolveActorProphecy->reveal()
         );
 
         $strategy->flagCodeAsUsed('actor-code');
@@ -289,7 +299,8 @@ class DynamoCodeValidationStrategyTest extends TestCase
         $strategy = new DynamoCodeValidationStrategy(
             $this->actorCodeRepositoryProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
+            $this->resolveActorProphecy->reveal()
         );
 
         $this->expectException(ActorCodeMarkAsUsedException::class);
