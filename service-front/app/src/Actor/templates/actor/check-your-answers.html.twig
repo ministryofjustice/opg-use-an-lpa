@@ -53,7 +53,7 @@
                                 {% trans %}Date of birth{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ data.dob }}
+                                {{ data.dob.format('d/m/Y') }}
                             </dd>
                             <dd class="govuk-summary-list__actions">
                                 <a class="govuk-link" href="{{ path('lpa.add-by-paper') }}">

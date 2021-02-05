@@ -6,7 +6,6 @@ namespace BehatTest\Context\Acceptance;
 
 use Aws\Result;
 use Behat\Behat\Context\Context;
-use Behat\Mink\Exception\ExpectationException;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use DateTime;
@@ -45,6 +44,7 @@ class LpaContext implements Context
         $this->userFirstnames = 'Ian Deputy';
         $this->userSurname = 'Deputy';
         $this->lpa->registrationDate = '2019-09-01';
+        $this->userDob = ['date' => '1975-10-05'];
     }
 
     /**
@@ -1954,7 +1954,7 @@ class LpaContext implements Context
                 'reference_number'  => $this->lpaUid,
                 'first_names'       => $firstnames,
                 'last_name'         => $lastname,
-                'dob'               => $dob,
+                'dob'               => ['date' => $dob],
                 'postcode'          => $postcode
             ],
             [
