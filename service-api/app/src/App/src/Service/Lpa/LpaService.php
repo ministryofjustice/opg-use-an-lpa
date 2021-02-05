@@ -14,8 +14,6 @@ use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-use function Symfony\Component\DependencyInjection\Loader\Configurator\ref;
-
 /**
  * Class LpaService
  * @package App\Service\Lpa
@@ -662,7 +660,7 @@ class LpaService
                     'uId' => $dataToMatch['reference_number']
                 ]
             );
-            throw new BadRequestException('LPA details does not match');
+            throw new BadRequestException('LPA details do not match');
         }
 
         // Checks if the actor already has an active activation key
