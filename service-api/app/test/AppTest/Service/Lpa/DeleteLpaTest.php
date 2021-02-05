@@ -10,7 +10,7 @@ use DateTime;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class DeleteLpaFromAccountTest extends TestCase
+class DeleteLpaTest extends TestCase
 {
     /**
      * @var LoggerInterface
@@ -139,7 +139,7 @@ class DeleteLpaFromAccountTest extends TestCase
         $this->expectException(NotFoundException::class);
 
         $deleteLpa = $this->deleteLpa();
-        $result = ($deleteLpa)('1234', '2345Token0123');
+        ($deleteLpa)('1234', '2345Token0123');
     }
 
     /** @test */
@@ -162,6 +162,6 @@ class DeleteLpaFromAccountTest extends TestCase
         $this->expectException(NotFoundException::class);
 
         $deleteLpa = $this->deleteLpa();
-        $result = ($deleteLpa)('1234', '2345Token0123');
+        ($deleteLpa)('1234', '2345Token0123');
     }
 }
