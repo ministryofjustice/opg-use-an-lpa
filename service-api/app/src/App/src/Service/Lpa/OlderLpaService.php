@@ -28,8 +28,7 @@ class OlderLpaService
         LoggerInterface $logger,
         ActorCodes $actorCodes,
         GetAttorneyStatus $getAttorneyStatus
-    )
-    {
+    ) {
         $this->lpaService = $lpaService;
         $this->lpaRepository = $lpaRepository;
         $this->logger = $logger;
@@ -82,7 +81,7 @@ class OlderLpaService
         ]);
 
         if (
-            new DateTime($actor['dob']) == new DateTime($userDataToMatch['dob']['date']) &&
+            new DateTime($actor['dob']) == DateTime::createFromFormat('d/m/Y|', $userDataToMatch['dob']) &&
             $actorData['first_names'] === $userDataToMatch['first_names'] &&
             $actorData['last_name'] === $userDataToMatch['last_name'] &&
             $actorData['postcode'] === $userDataToMatch['postcode']

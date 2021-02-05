@@ -146,14 +146,16 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     );
                 } catch (ApiException $apiEx) {
                     if ($apiEx->getCode() === StatusCodeInterface::STATUS_BAD_REQUEST) {
-                        if ($apiEx->getMessage() === 'LPA not eligible') {
+                        if ($apiEx->getMessage() === 'LPA not eligible due to registration date') {
                             $this->getLogger()->info(
                                 'LPA with reference number {uId} not eligible for activation key.',
                                 [
                                     'uId' => $data['reference_number'],
                                 ]
                             );
-                            return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
+                            return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key', [
+                                'user' => $this->user
+                            ]));
                         } elseif ($apiEx->getMessage() === 'LPA details does not match') {
                             $this->logger->notice(
                                 'LPA with reference number {uId} does not match with user provided data',
@@ -162,7 +164,9 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                                     'uId' => $data['reference_number'],
                                 ]
                             );
-                            return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
+                            return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key', [
+                                'user' => $this->user
+                            ]));
                         } else {
                             $this->getLogger()->info(
                                 'LPA with reference number {uId} already has an activation key.',
@@ -170,7 +174,9 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                                     'uId' => $data['reference_number'],
                                 ]
                             );
-                            return new HtmlResponse($this->renderer->render('actor::already-have-activation-key'));
+                            return new HtmlResponse($this->renderer->render('actor::already-have-activation-key', [
+                                'user' => $this->user
+                            ]));
                         }
                     }
                     if ($apiEx->getCode() === StatusCodeInterface::STATUS_NOT_FOUND) {
@@ -181,7 +187,9 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                                     'uId' => $data['reference_number'],
                                 ]
                             );
-                            return new HtmlResponse($this->renderer->render('actor::cannot-find-lpa'));
+                            return new HtmlResponse($this->renderer->render('actor::cannot-find-lpa', [
+                                'user' => $this->user
+                            ]));
                         }
                     }
                 }
@@ -189,6 +197,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 //LPA check match and letter request sent
                 $twoWeeksFromNowDate = (new DateTime())->modify('+2 week');
                 return new HtmlResponse($this->renderer->render('actor::send-activation-key-confirmation', [
+                    'user' => $this->user,
                     'date' => $twoWeeksFromNowDate,
                 ]));
             }

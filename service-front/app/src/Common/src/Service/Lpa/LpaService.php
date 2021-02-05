@@ -433,11 +433,11 @@ class LpaService
         $this->apiClient->setUserTokenHeader($userToken);
 
         try {
-            $matchResponse = $this->apiClient->httpPatch('/v1/lpas/request-letter', $data);
+            $this->apiClient->httpPatch('/v1/lpas/request-letter', $data);
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_BAD_REQUEST:
-                    if ($apiEx->getMessage() === 'LPA not eligible') {
+                    if ($apiEx->getMessage() === 'LPA not eligible due to registration date') {
                         $this->logger->notice(
                             'LPA with reference number {uId} not eligible to request activation key',
                             [
