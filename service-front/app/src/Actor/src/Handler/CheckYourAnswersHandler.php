@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\CheckYourAnswers;
-use Common\Exception\ApiException;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
     LoggerAware,
@@ -15,9 +14,8 @@ use Common\Handler\{AbstractHandler,
     Traits\User,
     UserAware};
 use Common\Middleware\Session\SessionTimeoutException;
-use Common\Service\Lpa\LpaService;
+use Common\Service\Lpa\AddOlderLpa;
 use DateTime;
-use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
 use Mezzio\Helper\UrlHelper;
@@ -38,25 +36,24 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     use SessionTrait;
     use Logger;
 
+    private AddOlderLpa $addOlderLpa;
     private CheckYourAnswers $form;
     private ?SessionInterface $session;
     private ?UserInterface $user;
     private array $data;
-    private LpaService $lpaService;
     private ?string $identity;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        LpaService $lpaService,
+        AddOlderLpa $addOlderLpa,
         LoggerInterface $logger
-
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
-        $this->lpaService = $lpaService;
+        $this->addOlderLpa = $addOlderLpa;
     }
 
     /**
@@ -120,33 +117,33 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            try {
-                 $this->lpaService->checkLPAMatchAndRequestLetter(
-                     $this->identity,
-                     $this->data
-                 );
-            } catch (ApiException $apiEx) {
-                if ($apiEx->getCode() === StatusCodeInterface::STATUS_BAD_REQUEST) {
-                    if ($apiEx->getMessage() === 'LPA not eligible') {
-                        return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
-                    } elseif ($apiEx->getMessage() === 'LPA details does not match') {
-                        return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
-                    } else {
-                        return new HtmlResponse($this->renderer->render('actor::already-have-activation-key'));
-                    }
-                }
-                if ($apiEx->getCode() === StatusCodeInterface::STATUS_NOT_FOUND) {
-                    if ($apiEx->getMessage() === 'LPA not found') {
-                        return new HtmlResponse($this->renderer->render('actor::cannot-find-lpa'));
-                    }
-                }
-            }
+            $result = ($this->addOlderLpa)(
+                $this->identity,
+                intval($this->data['reference_number']),
+                $this->data['first_names'],
+                $this->data['last_name'],
+                DateTime::createFromFormat('d/m/Y', $this->data['dob']),
+                $this->data['postcode'],
+            );
 
-            //LPA check match and letter request sent
-            $twoWeeksFromNowDate = (new DateTime())->modify('+2 week');
-            return new HtmlResponse($this->renderer->render('actor::send-activation-key-confirmation', [
-                'date' => $twoWeeksFromNowDate,
-            ]));
+            switch ($result) {
+                case AddOlderLpa::NOT_ELIGIBLE:
+                case AddOlderLpa::DOES_NOT_MATCH:
+                    return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
+                case AddOlderLpa::HAS_ACTIVATION_KEY:
+                    return new HtmlResponse($this->renderer->render('actor::already-have-activation-key'));
+                case AddOlderLpa::NOT_FOUND:
+                    return new HtmlResponse($this->renderer->render('actor::cannot-find-lpa'));
+                case AddOlderLpa::SUCCESS:
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::send-activation-key-confirmation',
+                            [
+                                'date' => (new DateTime())->modify('+2 week'),
+                            ]
+                        )
+                    );
+            }
         }
     }
 }
