@@ -1482,7 +1482,7 @@ class LpaContext extends BaseIntegrationContext
             $lpaService->checkLPAMatchAndGetActorDetails($data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals("LPA details does not match", $ex->getMessage());
+            assertEquals("LPA details do not match", $ex->getMessage());
             return;
         }
 
