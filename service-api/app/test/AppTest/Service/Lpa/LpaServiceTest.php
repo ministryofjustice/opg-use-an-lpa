@@ -1421,7 +1421,7 @@ class LpaServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
-        $this->expectExceptionMessage('LPA details does not match');
+        $this->expectExceptionMessage('LPA details do not match');
 
         $service->checkLPAMatchAndGetActorDetails($dataToMatch);
     }
