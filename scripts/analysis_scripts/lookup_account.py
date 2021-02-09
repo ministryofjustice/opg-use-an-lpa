@@ -53,6 +53,14 @@ class AccountLookup:
                 ):
             yield from page["Items"]
 
+    def get_lpas(self):
+        paginator = self.aws_dynamodb_client.get_paginator("scan")
+        for page in paginator.paginate(
+                TableName='{}-UserLpaActorMap'.format(self.environment),
+                FilterExpression="attribute_exists(SiriusUid)",
+                ):
+            yield from page["Items"]
+
     def get_lpas_by_user_id(self, user_id):
         response = self.aws_dynamodb_client.query(
             IndexName='UserIndex',
@@ -66,6 +74,39 @@ class AccountLookup:
         for lpa in response['Items']:
             lpas.update({lpa['SiriusUid']['S']:lpa['Added']['S']})
         return lpas
+
+    def get_users_by_id(self, user_id):
+        response = self.aws_dynamodb_client.query(
+            TableName='{}-ActorUsers'.format(self.environment),
+            KeyConditionExpression='Id = :user_id',
+            ExpressionAttributeValues={
+                ':user_id': {'S': user_id}
+            }
+        )
+        if response['Items']:
+            return response['Items'][0]
+
+    def get_by_lpa(self, lpa_id):
+        print('Collecting data...')
+        count = 0
+        lpas = self.get_lpas()
+
+        for item in lpas:
+            if item['SiriusUid']['S'] in lpa_id:
+                user = self.get_users_by_id(item['UserId']['S'])
+                if user:
+                  email = user['Email']['S']
+                  last_login = 'Never logged in'
+                  if 'LastLogin' in user:
+                      last_login = user['LastLogin']['S']
+                  activation_status = 'Activated'
+                  if 'ActivationToken' in user:
+                      activation_status = 'Pending Activation'
+                  lpas = self.get_lpas_by_user_id(item['UserId']['S'])
+                  print(str(email),"\nActivation Status: {}".format(activation_status), "\nLast Login: {}".format(last_login))
+                  print(lpas)
+                  count += 1
+        print("Done! Record Count: {}".format(count))
 
     def get_by_email(self,email_address):
         print('Collecting data...')
@@ -113,7 +154,7 @@ def main():
     if args.email_address:
         work.get_by_email(args.email_address.lower())
     if args.lpa_id:
-        print("LPA ID results {}".format(args.lpa_id))
+        print(work.get_by_lpa(args.lpa_id))
 
 
 if __name__ == "__main__":
