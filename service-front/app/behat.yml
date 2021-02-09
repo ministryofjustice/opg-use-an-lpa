@@ -29,6 +29,7 @@ acceptance:
         - BehatTest\Context\UI\BaseUiContext
         - BehatTest\Context\UI\AccountContext
         - BehatTest\Context\UI\CommonContext
+        - BehatTest\Context\UI\LpaContext
       filters:
         tags: "@actor&&@ui"
     viewer:

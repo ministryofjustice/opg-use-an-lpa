@@ -68,14 +68,14 @@ Feature: Account creation
     Given I am not a user of the lpa application
     And I want to create a new account
     And I access the account creation page
-    When I have provided required information for account creation such as <email1> <password> <terms>
-    Then An account is created using <email1> <password> <terms>
+    When I have provided required information for account creation such as <email> <password> <terms>
+    Then An account is created using <email> <password> <terms>
 
     Examples:
-      | email1               | password  | terms |
-      | TEST@example.com     | Password1 |   1   |
-      | test@EXAMPLE.com     | Password1 |   1   |
-      |'   TEST@EXAMPLE.COM '| Password1 |   1   |
+      | email                | password  | terms |
+      | TEST@example.com     | Password1 | 1     |
+      | test@EXAMPLE.com     | Password1 | 1     |
+      |'   TEST@EXAMPLE.COM '| Password1 | 1     |
 
   @ui @integration
   Scenario: The user account cannot create an account with an email address that has been requested for reset
