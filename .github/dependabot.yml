@@ -1,5 +1,5 @@
-# https://docs.github.com/en/github/administering-a-repository/configuration-options-for-dependency-updates
 version: 2
+# https://docs.github.com/en/github/administering-a-repository/configuration-options-for-dependency-updates
 updates:
   # Enable version updates for service-front npm
   - package-ecosystem: "npm"
