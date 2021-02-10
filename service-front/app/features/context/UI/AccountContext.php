@@ -1733,8 +1733,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I should be told my request was successful and an email is sent to the chosen email address to warn the
-     *       user$/
+     * @Then /^I should be told my request was successful and an email is sent to the chosen email address to warn the user$/
      */
     public function iShouldBeToldMyRequestWasSuccessfulAndAnEmailIsSentToTheChosenEmailAddressToWarnTheUser()
     {
