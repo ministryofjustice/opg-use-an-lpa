@@ -280,6 +280,19 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/check-answers');
 
         $this->ui->assertElementContainsText('h1', 'We cannot send an activation key for that LPA');
+
+        $dashboardButton = $this->ui->getSession()->getPage()->findAll(
+            'css',
+            'main a.govuk-button[href^="/lpa/dashboard"]'
+        );
+        if (count($dashboardButton) !== 1) {
+            throw new AssertionFailedError('Did not find button to navigate to dashboard');
+        }
+
+        $logoutButton = $this->ui->getSession()->getPage()->findAll('css', 'main a.govuk-button[href^="/logout"]');
+        if (count($logoutButton) !== 1) {
+            throw new AssertionFailedError('Did not find button to logout');
+        }
     }
 
     /**
