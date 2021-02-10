@@ -24,6 +24,7 @@ use Psr\Http\Message\RequestInterface;
  * @property string userFirstName
  * @property int    userId
  * @property string userSurname
+ * @property string activationCode
  */
 class LpaContext implements Context
 {
@@ -31,11 +32,29 @@ class LpaContext implements Context
     use BaseUiContextTrait;
 
     /**
+     * @Then /^a letter is requested containing a one time use code$/
+     */
+    public function aLetterIsRequestedContainingAOneTimeUseCode()
+    {
+        $this->ui->assertPageAddress('/lpa/check-answers');
+
+        $this->ui->assertElementContainsText('h1', 'We\'re sending you an activation key');
+    }
+
+    /**
      * @Given /^an attorney can be removed from acting on a particular LPA$/
      */
     public function anAttorneyCanBeRemovedFromActingOnAParticularLpa()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @Given I already have a valid activation key for my LPA
+     */
+    public function iAlreadyHaveAValidActivationKeyForMyLpa()
+    {
+        $this->activationCode = 'ACTVATIONCOD';
     }
 
     /**
@@ -67,6 +86,16 @@ class LpaContext implements Context
     public function iAmInactiveAgainstTheLpaOnMyAccount()
     {
         $this->lpaData['actor']['details']['systemStatus'] = false;
+    }
+
+    /**
+     * @Then I am informed that an LPA could not be found with these details
+     */
+    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
+    {
+        $this->ui->assertPageAddress('/lpa/check-answers');
+
+        $this->ui->assertElementContainsText('h1', 'We could not find an LPA with the details you entered');
     }
 
     /**
@@ -174,6 +203,7 @@ class LpaContext implements Context
 
     /**
      * @Given /^I am on the request an activation key page$/
+     * @Given /^I am on the add an older LPA page$/
      */
     public function iAmOnTheRequestAnActivationKeyPage()
     {
@@ -240,6 +270,26 @@ class LpaContext implements Context
     {
         $this->lpaData['actor']['type'] = 'donor';
         unset($this->lpaData['actor']['details']['systemStatus']);
+    }
+
+    /**
+     * @Then I am told that I cannot request an activation key
+     */
+    public function iAmToldThatICannotRequestAnActivationKey()
+    {
+        $this->ui->assertPageAddress('/lpa/check-answers');
+
+        $this->ui->assertElementContainsText('h1', 'We cannot send an activation key for that LPA');
+    }
+
+    /**
+     * @Then I am told that I have an activation key for this LPA and where to find it
+     */
+    public function iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt()
+    {
+        $this->ui->assertPageAddress('/lpa/check-answers');
+
+        $this->ui->assertElementContainsText('h1', 'You have an activation key for this LPA');
     }
 
     /**
@@ -1044,7 +1094,16 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I do not confirm cancellation of the chosen viewer code/
+     * @When /^I confirm that those details are correct$/
+     */
+    public function iConfirmThatThoseDetailsAreCorrect()
+    {
+        $this->ui->assertPageAddress('/lpa/check-answers');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I do not confirm cancellation of the chosen viewer code$/
      */
     public function iDoNotConfirmCancellationOfTheChosenViewerCode()
     {
@@ -1175,8 +1234,9 @@ class LpaContext implements Context
     }
 
     /**
-     * @Given /^I have been given access to use an LPA via credentials$/
-     * @Given /^I have added an LPA to my account$/
+     * @Given I have been given access to use an LPA via credentials
+     * @Given I have added an LPA to my account
+     * @Given I have been given access to use an LPA via a paper document
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
@@ -1346,6 +1406,93 @@ class LpaContext implements Context
             );
 
         $this->ui->visit('lpa/view-lpa?lpa=' . $this->userLpaActorToken);
+    }
+
+    /**
+     * @When I provide details from an LPA registered before Sept 2019
+     */
+    public function iProvideDetailsFromAnLpaRegisteredBeforeSept2019()
+    {
+        $this->fillAndSubmitOlderLpaForm();
+
+        // Setup fixture for success response
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'LPA not eligible due to registration date',
+                            'details' => 'LPA not eligible due to registration date',
+                            'data' => [],
+                        ]
+                    )
+                )
+            );
+    }
+
+    /**
+     * @When I provide details that do not match a valid paper document
+     */
+    public function iProvideDetailsThatDoNotMatchAValidPaperDocument()
+    {
+        $this->fillAndSubmitOlderLpaForm();
+
+        // Setup fixture for success response
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'LPA details do not match',
+                            'details' => 'LPA details do not match',
+                            'data' => [],
+                        ]
+                    )
+                )
+            );
+    }
+
+    /**
+     * @When I provide the details from a valid paper document
+     */
+    public function iProvideTheDetailsFromAValidPaperDocument()
+    {
+        $this->fillAndSubmitOlderLpaForm();
+
+        /**
+         * This step definition needs to behave differently dependant on some prior context step
+         */
+        if ($this->activationCode === null) {
+            // Setup fixture for success response
+            $this->apiFixtures->patch('/v1/lpas/request-letter')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_NO_CONTENT,
+                        [],
+                        ''
+                    )
+                );
+        } else {
+            // Setup fixture for activation key already existing
+            $this->apiFixtures->patch('/v1/lpas/request-letter')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_BAD_REQUEST,
+                        [],
+                        json_encode(
+                            [
+                                'title' => 'LPA not eligible as an activation key already exists',
+                                'details' => 'LPA not eligible as an activation key already exists',
+                                'data' => [],
+                            ]
+                        )
+                    )
+                );
+        }
     }
 
     /**
@@ -2163,5 +2310,24 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->assertPageContainsText('Ian Deputy Deputy');
         $this->ui->assertPageContainsText('Health and welfare');
+    }
+
+    protected function fillAndSubmitOlderLpaForm()
+    {
+        $this->ui->fillField('opg_reference_number', $this->lpa->uId);
+        $this->ui->fillField(
+            'first_names',
+            $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames
+        );
+        $this->ui->fillField('last_name', $this->lpa->donor->surname);
+
+        $date = new DateTime($this->lpa->donor->dob);
+        $this->ui->fillField('dob[day]', $date->format('d'));
+        $this->ui->fillField('dob[month]', $date->format('m'));
+        $this->ui->fillField('dob[year]', $date->format('Y'));
+
+        $this->ui->fillField('postcode', ($this->lpa->donor->addresses[0])->postcode);
+
+        $this->ui->pressButton('Continue');
     }
 }
