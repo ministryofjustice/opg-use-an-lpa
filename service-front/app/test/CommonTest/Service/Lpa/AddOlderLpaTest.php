@@ -46,6 +46,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
+     * @covers ::__construct
      * @covers ::__invoke
      */
     public function it_will_successfully_add_an_lpa(): void
@@ -82,6 +83,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
+     * @covers ::__construct
      * @covers ::__invoke
      * @covers ::badRequestReturned
      */
@@ -119,6 +121,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
+     * @covers ::__construct
      * @covers ::__invoke
      * @covers ::badRequestReturned
      */
@@ -156,6 +159,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
+     * @covers ::__construct
      * @covers ::__invoke
      * @covers ::badRequestReturned
      */
@@ -193,6 +197,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
+     * @covers ::__construct
      * @covers ::__invoke
      * @covers ::notFoundReturned
      */
@@ -230,6 +235,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
+     * @covers ::__construct
      * @covers ::__invoke
      */
     public function it_will_fail_to_add_due_to_an_api_exception(): void
@@ -268,6 +274,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
+     * @covers ::__construct
      * @covers ::__invoke
      * @covers ::badRequestReturned
      */
