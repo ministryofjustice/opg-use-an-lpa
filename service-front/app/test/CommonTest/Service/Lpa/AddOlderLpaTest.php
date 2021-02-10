@@ -83,6 +83,7 @@ class AddOlderLpaTest extends TestCase
     /**
      * @test
      * @covers ::__invoke
+     * @covers ::badRequestReturned
      */
     public function it_will_fail_to_add_an_ineligible_lpa(): void
     {
@@ -119,6 +120,7 @@ class AddOlderLpaTest extends TestCase
     /**
      * @test
      * @covers ::__invoke
+     * @covers ::badRequestReturned
      */
     public function it_will_fail_to_add_due_to_a_bad_data_match(): void
     {
@@ -155,6 +157,7 @@ class AddOlderLpaTest extends TestCase
     /**
      * @test
      * @covers ::__invoke
+     * @covers ::badRequestReturned
      */
     public function it_will_fail_to_add_due_to_active_activation_key(): void
     {
@@ -191,6 +194,7 @@ class AddOlderLpaTest extends TestCase
     /**
      * @test
      * @covers ::__invoke
+     * @covers ::notFoundReturned
      */
     public function it_will_fail_to_add_due_to_not_finding_the_lpa(): void
     {
@@ -265,6 +269,7 @@ class AddOlderLpaTest extends TestCase
     /**
      * @test
      * @covers ::__invoke
+     * @covers ::badRequestReturned
      */
     public function it_will_fail_to_add_due_to_an_unknown_request_exception(): void
     {
