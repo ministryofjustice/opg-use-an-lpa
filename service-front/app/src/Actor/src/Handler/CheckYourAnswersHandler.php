@@ -128,18 +128,28 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
             switch ($result) {
                 case AddOlderLpa::NOT_ELIGIBLE:
-                case AddOlderLpa::DOES_NOT_MATCH:
-                    return new HtmlResponse($this->renderer->render('actor::cannot-send-activation-key'));
+                    return new HtmlResponse($this->renderer->render(
+                        'actor::cannot-send-activation-key',
+                        ['user'  => $this->user]
+                    ));
                 case AddOlderLpa::HAS_ACTIVATION_KEY:
-                    return new HtmlResponse($this->renderer->render('actor::already-have-activation-key'));
+                    return new HtmlResponse($this->renderer->render(
+                        'actor::already-have-activation-key',
+                        ['user'  => $this->user]
+                    ));
+                case AddOlderLpa::DOES_NOT_MATCH:
                 case AddOlderLpa::NOT_FOUND:
-                    return new HtmlResponse($this->renderer->render('actor::cannot-find-lpa'));
+                    return new HtmlResponse($this->renderer->render(
+                        'actor::cannot-find-lpa',
+                        ['user'  => $this->user]
+                    ));
                 case AddOlderLpa::SUCCESS:
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::send-activation-key-confirmation',
                             [
                                 'date' => (new DateTime())->modify('+2 week'),
+                                'user'  => $this->user
                             ]
                         )
                     );
