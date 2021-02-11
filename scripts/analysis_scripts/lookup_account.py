@@ -1,9 +1,6 @@
 import argparse
-import csv
-from datetime import date
-from dateutil import parser
-import boto3
 import json
+import boto3
 
 class AccountLookup:
     aws_account_id = ''
@@ -163,6 +160,7 @@ def main():
         work.get_by_email(args.email_address.lower())
     if args.lpa_id:
         work.get_by_lpa(args.lpa_id)
+
     if args.output_json:
         print(json.dumps(work.output_json))
     else:
