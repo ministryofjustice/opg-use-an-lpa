@@ -16,7 +16,6 @@ use App\Service\Lpa\OlderLpaService;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 
 class OlderLpaServiceTest extends TestCase
@@ -551,7 +550,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
-        $this->expectExceptionMessage('LPA details does not match');
+        $this->expectExceptionMessage('LPA details do not match');
 
         $service->checkLPAMatchAndGetActorDetails($dataToMatch);
     }

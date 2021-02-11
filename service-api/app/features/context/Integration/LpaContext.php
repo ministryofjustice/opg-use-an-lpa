@@ -13,6 +13,7 @@ use App\Service\Log\RequestTracing;
 use App\Service\Lpa\DeleteLpa;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
+use App\Service\ViewerCodes\ViewerCodeService;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use BehatTest\Context\SetupEnv;
@@ -24,6 +25,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
 use PHPUnit\Framework\ExpectationFailedException;
+use stdClass;
 
 /**
  * Class LpaContext
@@ -80,7 +82,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAmGivenAUniqueAccessCode()
     {
-        $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
+        $viewerCodeService = $this->container->get(ViewerCodeService::class);
         $codeData = $viewerCodeService->addCode($this->userLpaActorToken, $this->userId, $this->organisation);
 
         $codeExpiry = (new DateTime($codeData['expires']))->format('Y-m-d');
@@ -239,7 +241,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
+        $viewerCodeService = $this->container->get(ViewerCodeService::class);
         $codes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
         assertCount(2, $codes);
@@ -361,7 +363,7 @@ class LpaContext extends BaseIntegrationContext
         // ViewerCodesRepository::getCodesByLpaId
         $this->awsFixtures->append(new Result());
 
-        $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
+        $viewerCodeService = $this->container->get(ViewerCodeService::class);
         $codes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
         assertEmpty($codes);
@@ -454,7 +456,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
+        $viewerCodeService = $this->container->get(ViewerCodeService::class);
 
         $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
@@ -565,7 +567,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
+        $viewerCodeService = $this->container->get(ViewerCodeService::class);
 
         // actor id  does not match the userId returned
 
@@ -624,7 +626,7 @@ class LpaContext extends BaseIntegrationContext
 
         $this->awsFixtures->append(new Result());
 
-        $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
+        $viewerCodeService = $this->container->get(ViewerCodeService::class);
         $codeData = $viewerCodeService->cancelCode($this->userLpaActorToken, $this->userId, $this->accessCode);
 
         assertEmpty($codeData);
@@ -762,8 +764,8 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
     {
-        $this->organisation = "TestOrg";
-        $this->accessCode = "XYZ321ABC987";
+        $this->organisation = 'TestOrg';
+        $this->accessCode = 'XYZ321ABC987';
 
         // UserLpaActorMap::get
         $this->awsFixtures->append(
@@ -827,7 +829,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         // LpaService::getLpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken, ['user-token' => $this->userId])
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
@@ -1104,7 +1106,7 @@ class LpaContext extends BaseIntegrationContext
                 ]
             )
         );
-        $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
+        $viewerCodeService = $this->container->get(ViewerCodeService::class);
 
         // actor id  does not match the userId returned
         $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
@@ -1248,7 +1250,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $viewerCodeService = $this->container->get(\App\Service\ViewerCodes\ViewerCodeService::class);
+        $viewerCodeService = $this->container->get(ViewerCodeService::class);
         $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
         assertArrayHasKey('ViewerCode', $accessCodes[0]);
@@ -1416,7 +1418,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $codeExists = new \stdClass();
+        $codeExists = new stdClass();
         $codeExists->Created = null;
 
         $this->pactPostInteraction(
@@ -1468,7 +1470,7 @@ class LpaContext extends BaseIntegrationContext
             $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals("LPA details do not match", $ex->getMessage());
+            assertEquals('LPA details do not match', $ex->getMessage());
             return;
         }
 
@@ -1501,7 +1503,7 @@ class LpaContext extends BaseIntegrationContext
             $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
         } catch (NotFoundException $ex) {
             assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
-            assertEquals("LPA not found", $ex->getMessage());
+            assertEquals('LPA not found', $ex->getMessage());
             return;
         }
 
@@ -1542,7 +1544,7 @@ class LpaContext extends BaseIntegrationContext
             $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals("LPA not eligible due to registration date", $ex->getMessage());
+            assertEquals('LPA not eligible due to registration date', $ex->getMessage());
             return;
         }
 
@@ -1569,7 +1571,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $codeExists = new \stdClass();
+        $codeExists = new stdClass();
         $codeExists->Created = '2021-01-15';
 
         $this->pactPostInteraction(

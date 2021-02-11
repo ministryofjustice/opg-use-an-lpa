@@ -266,7 +266,7 @@ class OlderLpaService
                     'uId' => $dataToMatch['reference_number']
                 ]
             );
-            throw new BadRequestException('LPA details does not match');
+            throw new BadRequestException('LPA details do not match');
         }
 
         // Checks if the actor already has an active activation key
