@@ -30,8 +30,12 @@ class AccountLookup:
             aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
 
     def set_iam_role_session(self):
-        role_arn = 'arn:aws:iam::{}:role/read-only-db'.format(
-            self.aws_account_id)
+        if self.environment == "production":
+            role_arn = 'arn:aws:iam::{}:role/read-only-db'.format(
+                self.aws_account_id)
+        else:
+            role_arn = 'arn:aws:iam::{}:role/operator'.format(
+                self.aws_account_id)
 
         sts = boto3.client(
             'sts',
@@ -109,7 +113,7 @@ class AccountLookup:
                 str(account['email']),
                 "\nActivation Status: {}".format(account['activation_status']),
                 "\nLast Login: {}".format(account['last_login']),
-                "\nLPAs: {}".format(account['lpas']),
+                "\nLPAs: {}".format(json.dumps(account['lpas'], indent=2)),
                 "\n"
             )
 
