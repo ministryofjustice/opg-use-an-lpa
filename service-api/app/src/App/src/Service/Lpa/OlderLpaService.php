@@ -226,6 +226,11 @@ class OlderLpaService
      */
     public function checkLPAMatchAndGetActorDetails(array $dataToMatch): array
     {
+        $this->logger->debug(
+            'Older LPA data to check',
+            $dataToMatch
+        );
+
         // Cleanse user provided data
         $dataToMatch = $this->cleanseUserData($dataToMatch);
 
