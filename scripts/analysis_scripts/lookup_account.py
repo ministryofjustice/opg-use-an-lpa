@@ -86,6 +86,17 @@ class AccountLookup:
         if response['Items']:
             return response['Items'][0]
 
+    def get_structured_account_data(self, user):
+        email = user['Email']['S']
+        last_login = 'Never logged in'
+        if 'LastLogin' in user:
+            last_login = user['LastLogin']['S']
+        activation_status = 'Activated'
+        if 'ActivationToken' in user:
+            activation_status = 'Pending Activation'
+
+        print(str(email),"\nActivation Status: {}".format(activation_status), "\nLast Login: {}".format(last_login))
+
     def get_by_lpa(self, lpa_id):
         print('Collecting data...')
         count = 0
@@ -95,15 +106,8 @@ class AccountLookup:
             if item['SiriusUid']['S'] in lpa_id:
                 user = self.get_users_by_id(item['UserId']['S'])
                 if user:
-                  email = user['Email']['S']
-                  last_login = 'Never logged in'
-                  if 'LastLogin' in user:
-                      last_login = user['LastLogin']['S']
-                  activation_status = 'Activated'
-                  if 'ActivationToken' in user:
-                      activation_status = 'Pending Activation'
+                  self.get_structured_account_data(user)
                   lpas = self.get_lpas_by_user_id(item['UserId']['S'])
-                  print(str(email),"\nActivation Status: {}".format(activation_status), "\nLast Login: {}".format(last_login))
                   print(lpas)
                   count += 1
         print("Done! Record Count: {}".format(count))
@@ -115,15 +119,8 @@ class AccountLookup:
 
         for item in actor_users:
             if item['Email']['S'] in email_address:
-                email = item['Email']['S']
-                last_login = 'Never logged in'
-                if 'LastLogin' in item:
-                    last_login = item['LastLogin']['S']
-                activation_status = 'Activated'
-                if 'ActivationToken' in item:
-                    activation_status = 'Pending Activation'
+                self.get_structured_account_data(item)
                 lpas = self.get_lpas_by_user_id(item['Id']['S'])
-                print(str(email),"\nActivation Status: {}".format(activation_status), "\nLast Login: {}".format(last_login))
                 print(lpas)
                 count += 1
         print("Done! Record Count: {}".format(count))
