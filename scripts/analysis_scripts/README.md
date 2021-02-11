@@ -2,6 +2,18 @@
 
 Returns plaintext or json data of accounts matching either an LPA ID or a user's email address.
 
+## Prerequisites
+
+This script will use your AWS credentials to assume the operator role in non-production accounts and the read-only-db role in production. Ensure you have permission to assume these roles before running.
+
+Install pip modules
+
+```bash
+pip install ../pipeline/requirements.txt
+```
+
+## Running the script
+
 ```bash
 aws-vault exec identity -- python ./lookup_account.py --environment demo --lpa_id 700112345678
 
