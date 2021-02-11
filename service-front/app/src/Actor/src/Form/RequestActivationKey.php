@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Actor\Form;
 
+use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
 use Common\Form\Fieldset\{Date, DatePrefixFilter, DateTrimFilter};
 use Common\Validator\DobValidator;
 use Laminas\Filter\StringToUpper;
-use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\{NotEmpty, Regex, StringLength};
+use Mezzio\Csrf\CsrfGuardInterface;
 
 /**
  * Class RequestActivationKey
@@ -61,6 +62,7 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
             'opg_reference_number' => [
                 'filters'  => [
                     ['name' => StringTrim::class],
+                    ['name' => StripSpacesAndHyphens::class]
                 ],
                 'validators' => [
                     [
