@@ -44,8 +44,10 @@ class AddOlderLpa
 
     /**
      * AddOlderLpa constructor.
-     * @param ApiClient $apiClient
+     *
+     * @param ApiClient       $apiClient
      * @param LoggerInterface $logger
+     *
      * @codeCoverageIgnore
      */
     public function __construct(ApiClient $apiClient, LoggerInterface $logger)
@@ -87,7 +89,7 @@ class AddOlderLpa
         }
 
         $this->logger->info(
-            'Account with Id {id} requested older LPA addition of Id {uId}',
+            'Account with Id {id} added LPA with Id {uId} to account by passcode',
             [
                 'id'  => $userToken,
                 'uId' => $lpaUid
