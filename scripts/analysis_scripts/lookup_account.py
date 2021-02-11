@@ -142,7 +142,7 @@ def main():
 
     arguments.add_argument("--lpa_id",
                         default="",
-                        help="Email address to look up")
+                        help="Sirius LPA ID to look up")
 
     arguments.add_argument('--csv', dest='make_csv_file', action='store_const',
                         const=True, default=False,
