@@ -36,6 +36,7 @@ abstract class BaseIntegrationContext implements Context, Psr11AwareContext
      * what datatype things are. This function creates that data structure.
      *
      * @param array $input
+     *
      * @return array
      */
     protected function marshalAwsResultData(array $input): array

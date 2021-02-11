@@ -34,18 +34,18 @@ use stdClass;
  *
  * @package BehatTest\Context\Integration
  *
- * @property mixed lpa
- * @property string oneTimeCode
- * @property string lpaUid
- * @property string userLpaActorToken
+ * @property mixed        lpa
+ * @property string       oneTimeCode
+ * @property string       lpaUid
+ * @property string       userLpaActorToken
  * @property string|array $userDob
- * @property string actorLpaId
- * @property string userId
- * @property string organisation
- * @property string accessCode
- * @property string userPostCode
- * @property string userSurname
- * @property string userFirstname
+ * @property string       actorLpaId
+ * @property string       userId
+ * @property string       organisation
+ * @property string       accessCode
+ * @property string       userPostCode
+ * @property string       userSurname
+ * @property string       userFirstname
  */
 class LpaContext extends BaseIntegrationContext
 {
@@ -53,28 +53,38 @@ class LpaContext extends BaseIntegrationContext
     use UsesPactContextTrait;
 
     private MockHandler $apiFixtures;
-    private AwsMockHandler $awsFixtures;
-    private OlderLpaService $olderLpaService;
-    private LpaService $lpaService;
-    private DeleteLpa $deleteLpa;
-    private string $codesApiPactProvider;
     private string $apiGatewayPactProvider;
+    private AwsMockHandler $awsFixtures;
+    private string $codesApiPactProvider;
+    private DeleteLpa $deleteLpa;
+    private LpaService $lpaService;
+    private OlderLpaService $olderLpaService;
 
-    protected function prepareContext(): void
+    /**
+     * @Then /^a letter is requested containing a one time use code$/
+     */
+    public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
-        // This is populated into the container using a Middleware which these integration
-        // tests wouldn't normally touch but the container expects
-        $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
+        // Lpas::requestLetter
+        $this->pactPostInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/requestCode',
+            [
+                'case_uid' => (int)$this->lpaUid,
+                'actor_uid' => (int)$this->actorLpaId,
+            ],
+            StatusCodeInterface::STATUS_NO_CONTENT
+        );
 
-        $this->apiFixtures = $this->container->get(MockHandler::class);
-        $this->awsFixtures = $this->container->get(AwsMockHandler::class);
-        $this->olderLpaService = $this->container->get(OlderLpaService::class);
-        $this->lpaService = $this->container->get(LpaService::class);
-        $this->deleteLpa = $this->container->get(DeleteLpa::class);
+        $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId);
+    }
 
-        $config = $this->container->get('config');
-        $this->codesApiPactProvider = parse_url($config['codes_api']['endpoint'], PHP_URL_HOST);
-        $this->apiGatewayPactProvider = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);
+    /**
+     * @Given /^Co\-actors have also created access codes for the same LPA$/
+     */
+    public function coActorsHaveAlsoCreatedAccessCodesForTheSameLPA()
+    {
+        // Not needed for this context
     }
 
     /**
@@ -95,18 +105,11 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I have been given access to use an LPA via a paper document$/
+     * @Then /^I am informed that an LPA could not be found with these details$/
      */
-    public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument()
+    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
-        // sets up the normal properties needed for an lpa
-        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
-
-        $this->userPostCode = 'string';
-        $this->userFirstname = 'Ian Deputy';
-        $this->userSurname = 'Deputy';
-        $this->lpa->registrationDate = '2019-09-01';
-        $this->userDob = '05/10/1975';
+        // Not needed for this context
     }
 
     /**
@@ -118,6 +121,30 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @Given /^I am on the add an older LPA page$/
+     */
+    public function iAmOnTheAddAnOlderLPAPage()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I am told that I cannot request an activation key$/
+     */
+    public function iAmToldThatICannotRequestAnActivationKey()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I am told that I have an activation key for this LPA and where to find it$/
+     */
+    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @When /^I attempt to add the same LPA again$/
      */
     public function iAttemptToAddTheSameLPAAgain()
@@ -126,13 +153,13 @@ class LpaContext extends BaseIntegrationContext
             $this->codesApiPactProvider,
             '/v1/validate',
             [
-                'lpa'  => $this->lpaUid,
-                'dob'  => $this->userDob,
-                'code' => $this->oneTimeCode
+                'lpa' => $this->lpaUid,
+                'dob' => $this->userDob,
+                'code' => $this->oneTimeCode,
             ],
             StatusCodeInterface::STATUS_OK,
             [
-                'actor' => ''
+                'actor' => '',
             ],
         );
 
@@ -147,6 +174,14 @@ class LpaContext extends BaseIntegrationContext
      * @Then /^I can see all of my access codes and their details$/
      */
     public function iCanSeeAllOfMyAccessCodesAndTheirDetails()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I can see all of the access codes and their details$/
+     */
+    public function iCanSeeAllOfTheAccessCodesAndTheirDetails()
     {
         // Not needed for this context
     }
@@ -370,6 +405,14 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @Then /^I can see the name of the organisation that viewed the LPA$/
+     */
+    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @When /^I cancel the organisation access code/
      */
     public function iCancelTheOrganisationAccessCode()
@@ -458,6 +501,95 @@ class LpaContext extends BaseIntegrationContext
 
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
 
+        $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
+
+        assertArrayHasKey('ViewerCode', $accessCodes[0]);
+        assertArrayHasKey('Expires', $accessCodes[0]);
+        assertEquals($accessCodes[0]['Organisation'], $this->organisation);
+        assertEquals($accessCodes[0]['SiriusUid'], $this->lpaUid);
+        assertEquals($accessCodes[0]['UserLpaActor'], $this->userLpaActorToken);
+        assertEquals($accessCodes[0]['Expires'], '2021-01-05 12:34:56');
+    }
+
+    /**
+     * @When /^I click to check my access codes that is used to view LPA/
+     */
+    public function iClickToCheckMyAccessCodeThatIsUsedToViewLPA()
+    {
+        //Get the LPA
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
+
+        assertArrayHasKey('date', $lpaData);
+        assertArrayHasKey('actor', $lpaData);
+        assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
+        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+        assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
+
+        // Get the share codes
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // ViewerCodes::getCodesByUserLpaActorId
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => '2020-01-05 12:34:56',
+                                'Expires' => '2021-01-05 12:34:56',
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => $this->organisation,
+                                'ViewerCode' => $this->accessCode,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        $viewerCodeService = $this->container->get(ViewerCodeService::class);
         $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
         assertArrayHasKey('ViewerCode', $accessCodes[0]);
@@ -582,6 +714,138 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @When /^I click to check the access codes$/
+     */
+    public function iClickToCheckTheAccessCodes()
+    {
+        //Get the LPA
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
+
+        assertArrayHasKey('date', $lpaData);
+        assertArrayHasKey('actor', $lpaData);
+        assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
+        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+        assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
+
+        // Get the share codes
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // ViewerCodes::getCodesByLpaId
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => '2021-01-05 12:34:56',
+                                'Expires' => '2022-01-05 12:34:56',
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => $this->organisation,
+                                'ViewerCode' => $this->accessCode,
+                                'Viewed' => [
+                                    0 => [
+                                        'Viewed' => '2020-10-01T23:59:59+00:00',
+                                        'ViewerCode' => $this->accessCode,
+                                        'ViewedBy' => 'organisation1',
+                                    ],
+                                    1 => [
+                                        'Viewed' => '2020-10-20T23:59:59+00:00',
+                                        'ViewerCode' => $this->accessCode,
+                                        'ViewedBy' => 'organisation2',
+                                    ],
+                                ],
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+        $viewerCodeService = $this->container->get(ViewerCodeService::class);
+
+        // actor id  does not match the userId returned
+        $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
+
+        // ViewerCodeActivity::getStatusesForViewerCodes
+        $this->awsFixtures->append(new Result());
+        $viewerCodeService = $this->container->get(ViewerCodeActivity::class);
+        $codesWithStatuses = $viewerCodeService->getStatusesForViewerCodes($accessCodes);
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        foreach ($codesWithStatuses as $key => $viewerCode) {
+            if (!empty($viewerCode['UserLpaActor'])) {
+                $userLpaActorMap = $this->container->get(UserLpaActorMap::class);
+                $codeOwner = $userLpaActorMap->get($viewerCode['UserLpaActor']);
+                $codesWithStatuses[$key]['ActorId'] = $codeOwner['ActorId'];
+            }
+        }
+
+        assertEquals($codesWithStatuses[0]['Organisation'], $this->organisation);
+        assertEquals($codesWithStatuses[0]['SiriusUid'], $this->lpaUid);
+        assertEquals($codesWithStatuses[0]['UserLpaActor'], $this->userLpaActorToken);
+        assertEquals($codesWithStatuses[0]['ViewerCode'], $this->accessCode);
+        assertEquals($codesWithStatuses[0]['ActorId'], $lpaData['actor']['details']['uId']);
+    }
+
+    /**
      * @When /^I confirm cancellation of the chosen viewer code/
      */
     public function iConfirmCancellationOfTheChosenViewerCode()
@@ -633,6 +897,14 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @Given /^I confirm that those details are correct$/
+     */
+    public function iConfirmThatThoseDetailsAreCorrect()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @When /^I do not confirm cancellation of the chosen viewer code/
      * @When /^I request to return to the dashboard page/
      */
@@ -667,6 +939,21 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->iHaveCreatedAnAccessCode();
         $this->iHaveCreatedAnAccessCode();
+    }
+
+    /**
+     * @Given /^I have been given access to use an LPA via a paper document$/
+     */
+    public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument()
+    {
+        // sets up the normal properties needed for an lpa
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+
+        $this->userPostCode = 'string';
+        $this->userFirstname = 'Ian Deputy';
+        $this->userSurname = 'Deputy';
+        $this->lpa->registrationDate = '2019-09-01';
+        $this->userDob = '05/10/1975';
     }
 
     /**
@@ -705,6 +992,197 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @Given /^I have shared the access code with organisations to view my LPA$/
+     */
+    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I provide details from an LPA registered before Sept 2019$/
+     */
+    public function iProvideDetailsFromAnLPARegisteredBeforeSept2019()
+    {
+        $this->lpa->registrationDate = '2019-08-31';
+
+        $data = [
+            'reference_number' => $this->lpaUid,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
+        ];
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        try {
+            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
+        } catch (BadRequestException $ex) {
+            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            assertEquals('LPA not eligible due to registration date', $ex->getMessage());
+            return;
+        }
+
+        throw new ExpectationFailedException('LPA registration date should not have been eligible');
+    }
+
+    /**
+     * @When /^I provide details of an LPA that does not exist$/
+     */
+    public function iProvideDetailsOfAnLPAThatDoesNotExist()
+    {
+        $invalidLpaId = '700000004321';
+
+        $data = [
+            'reference_number' => $invalidLpaId,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
+        ];
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $invalidLpaId,
+            StatusCodeInterface::STATUS_NOT_FOUND,
+            []
+        );
+
+        try {
+            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
+        } catch (NotFoundException $ex) {
+            assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
+            assertEquals('LPA not found', $ex->getMessage());
+            return;
+        }
+
+        throw new ExpectationFailedException('LPA should not have been found');
+    }
+
+    /**
+     * @When /^I provide details "([^"]*)" "([^"]*)" "([^"]*)" "([^"]*)" that do not match the paper document$/
+     */
+    public function iProvideDetailsThatDoNotMatchThePaperDocument($firstnames, $lastname, $postcode, $dob)
+    {
+        $data = [
+            'reference_number' => $this->lpaUid,
+            'dob' => $dob,
+            'postcode' => $postcode,
+            'first_names' => $firstnames,
+            'last_name' => $lastname,
+        ];
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        try {
+            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
+        } catch (BadRequestException $ex) {
+            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            assertEquals('LPA details do not match', $ex->getMessage());
+            return;
+        }
+
+        throw new ExpectationFailedException('LPA should not have matched data provided');
+    }
+
+    /**
+     * @When /^I provide the details from a valid paper document that already has an activation key$/
+     */
+    public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
+    {
+        $data = [
+            'reference_number' => $this->lpaUid,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
+        ];
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $codeExists = new stdClass();
+        $codeExists->Created = '2021-01-15';
+
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/exists',
+            [
+                'lpa' => $this->lpaUid,
+                'actor' => $this->actorLpaId,
+            ],
+            StatusCodeInterface::STATUS_OK,
+            $codeExists
+        );
+
+        try {
+            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
+        } catch (BadRequestException $ex) {
+            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            assertEquals("LPA not eligible as an activation key already exists", $ex->getMessage());
+            return;
+        }
+
+        throw new ExpectationFailedException('LPA registration date should not have been eligible');
+    }
+
+    /**
+     * @When /^I provide the details from a valid paper LPA document$/
+     */
+    public function iProvideTheDetailsFromAValidPaperLPADocument()
+    {
+        $data = [
+            'reference_number' => $this->lpaUid,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
+        ];
+
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $codeExists = new stdClass();
+        $codeExists->Created = null;
+
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/exists',
+            [
+                'lpa' => $this->lpaUid,
+                'actor' => $this->actorLpaId,
+            ],
+            StatusCodeInterface::STATUS_OK,
+            $codeExists
+        );
+
+        $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
+
+        assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
+        assertEquals($lpaMatchResponse['actor-id'], $this->actorLpaId);
+    }
+
+    /**
      * @When /^I request to add an LPA that does not exist$/
      */
     public function iRequestToAddAnLPAThatDoesNotExist()
@@ -713,13 +1191,13 @@ class LpaContext extends BaseIntegrationContext
             $this->codesApiPactProvider,
             '/v1/validate',
             [
-                'lpa'  => $this->lpaUid,
-                'dob'  => $this->userDob,
-                'code' => $this->oneTimeCode
+                'lpa' => $this->lpaUid,
+                'dob' => $this->userDob,
+                'code' => $this->oneTimeCode,
             ],
             StatusCodeInterface::STATUS_OK,
             [
-                'actor' => ''
+                'actor' => '',
             ],
         );
     }
@@ -735,13 +1213,13 @@ class LpaContext extends BaseIntegrationContext
             $this->codesApiPactProvider,
             '/v1/validate',
             [
-                'lpa'  => $this->lpaUid,
-                'dob'  => $this->userDob,
-                'code' => $this->oneTimeCode
+                'lpa' => $this->lpaUid,
+                'dob' => $this->userDob,
+                'code' => $this->oneTimeCode,
             ],
             StatusCodeInterface::STATUS_OK,
             [
-                'actor' => $this->actorLpaId
+                'actor' => $this->actorLpaId,
             ],
         );
 
@@ -956,320 +1434,6 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^The LPA is successfully added$/
-     */
-    public function theLPAIsSuccessfullyAdded()
-    {
-        $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
-        $this->userLpaActorToken = '13579';
-
-        // UserLpaActorMap::create
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => [
-                        $this->marshalAwsResultData(
-                            [
-                                'Id' => $this->userLpaActorToken,
-                                'UserId' => $this->userId,
-                                'SiriusUid' => $this->lpaUid,
-                                'ActorId' => $this->actorLpaId,
-                                'Added' => $now,
-                            ]
-                        ),
-                    ],
-                ]
-            )
-        );
-
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/revoke',
-            [
-                'code' => $this->oneTimeCode
-            ],
-            StatusCodeInterface::STATUS_OK,
-            [],
-        );
-
-        $actorCodeService = $this->container->get(ActorCodeService::class);
-
-        try {
-            $response = $actorCodeService->confirmDetails(
-                $this->oneTimeCode,
-                $this->lpaUid,
-                $this->userDob,
-                (string)$this->actorLpaId
-            );
-        } catch (Exception $ex) {
-            throw new Exception('Lpa confirmation unsuccessful');
-        }
-
-        assertNotNull($response);
-    }
-
-    /**
-     * @Then /^The LPA should not be found$/
-     */
-    public function theLPAShouldNotBeFound()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @When /^I click to check the access codes$/
-     */
-    public function iClickToCheckTheAccessCodes()
-    {
-        //Get the LPA
-
-        // UserLpaActorMap::get
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
-                        ]
-                    ),
-                ]
-            )
-        );
-
-        // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
-        $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
-
-        assertArrayHasKey('date', $lpaData);
-        assertArrayHasKey('actor', $lpaData);
-        assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
-
-        // Get the share codes
-
-        // UserLpaActorMap::get
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
-                        ]
-                    ),
-                ]
-            )
-        );
-
-        // ViewerCodes::getCodesByLpaId
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Items' => [
-                        $this->marshalAwsResultData(
-                            [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added' => '2021-01-05 12:34:56',
-                                'Expires' => '2022-01-05 12:34:56',
-                                'UserLpaActor' => $this->userLpaActorToken,
-                                'Organisation' => $this->organisation,
-                                'ViewerCode' => $this->accessCode,
-                                'Viewed' => [
-                                    0 => [
-                                        'Viewed' => '2020-10-01T23:59:59+00:00',
-                                        'ViewerCode' => $this->accessCode,
-                                        'ViewedBy' => 'organisation1'
-                                    ],
-                                    1 => [
-                                        'Viewed' => '2020-10-20T23:59:59+00:00',
-                                        'ViewerCode' => $this->accessCode,
-                                        'ViewedBy' => 'organisation2'
-                                    ],
-                                ]
-                            ]
-                        ),
-                    ],
-                ]
-            )
-        );
-        $viewerCodeService = $this->container->get(ViewerCodeService::class);
-
-        // actor id  does not match the userId returned
-        $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
-
-        // ViewerCodeActivity::getStatusesForViewerCodes
-        $this->awsFixtures->append(new Result());
-        $viewerCodeService = $this->container->get(ViewerCodeActivity::class);
-        $codesWithStatuses = $viewerCodeService->getStatusesForViewerCodes($accessCodes);
-
-        // UserLpaActorMap::get
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
-                        ]
-                    ),
-                ]
-            )
-        );
-
-        foreach ($codesWithStatuses as $key => $viewerCode) {
-            if (!empty($viewerCode['UserLpaActor'])) {
-                $userLpaActorMap = $this->container->get(UserLpaActorMap::class);
-                $codeOwner = $userLpaActorMap->get($viewerCode['UserLpaActor']);
-                $codesWithStatuses[$key]['ActorId'] = $codeOwner['ActorId'];
-            }
-        }
-
-        assertEquals($codesWithStatuses[0]['Organisation'], $this->organisation);
-        assertEquals($codesWithStatuses[0]['SiriusUid'], $this->lpaUid);
-        assertEquals($codesWithStatuses[0]['UserLpaActor'], $this->userLpaActorToken);
-        assertEquals($codesWithStatuses[0]['ViewerCode'], $this->accessCode);
-        assertEquals($codesWithStatuses[0]['ActorId'], $lpaData['actor']['details']['uId']);
-    }
-
-    /**
-     * @Given /^Co\-actors have also created access codes for the same LPA$/
-     */
-    public function coActorsHaveAlsoCreatedAccessCodesForTheSameLPA()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Then /^I can see all of the access codes and their details$/
-     */
-    public function iCanSeeAllOfTheAccessCodesAndTheirDetails()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Given /^I have shared the access code with organisations to view my LPA$/
-     */
-    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @When /^I click to check my access codes that is used to view LPA/
-     */
-    public function iClickToCheckMyAccessCodeThatIsUsedToViewLPA()
-    {
-        //Get the LPA
-        // UserLpaActorMap::get
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
-                        ]
-                    ),
-                ]
-            )
-        );
-
-        // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
-        $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
-
-        assertArrayHasKey('date', $lpaData);
-        assertArrayHasKey('actor', $lpaData);
-        assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
-
-        // Get the share codes
-
-        // UserLpaActorMap::get
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
-                        ]
-                    ),
-                ]
-            )
-        );
-
-        // ViewerCodes::getCodesByUserLpaActorId
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Items' => [
-                        $this->marshalAwsResultData(
-                            [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added' => '2020-01-05 12:34:56',
-                                'Expires' => '2021-01-05 12:34:56',
-                                'UserLpaActor' => $this->userLpaActorToken,
-                                'Organisation' => $this->organisation,
-                                'ViewerCode' => $this->accessCode,
-                            ]
-                        ),
-                    ],
-                ]
-            )
-        );
-
-        $viewerCodeService = $this->container->get(ViewerCodeService::class);
-        $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
-
-        assertArrayHasKey('ViewerCode', $accessCodes[0]);
-        assertArrayHasKey('Expires', $accessCodes[0]);
-        assertEquals($accessCodes[0]['Organisation'], $this->organisation);
-        assertEquals($accessCodes[0]['SiriusUid'], $this->lpaUid);
-        assertEquals($accessCodes[0]['UserLpaActor'], $this->userLpaActorToken);
-        assertEquals($accessCodes[0]['Expires'], '2021-01-05 12:34:56');
-    }
-
-    /**
-     * @Then /^I can see the name of the organisation that viewed the LPA$/
-     */
-    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @Then /^The LPA is removed/
      */
     public function theLPAIsRemoved()
@@ -1298,11 +1462,11 @@ class LpaContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id'            => '1',
-                                'ViewerCode'    => '123ABCD6789',
-                                'SiriusUid'     => '700000055554',
-                                'Added'         => '2021-01-01 00:00:00',
-                                'Expires'       => '2021-02-01 00:00:00',
+                                'Id' => '1',
+                                'ViewerCode' => '123ABCD6789',
+                                'SiriusUid' => '700000055554',
+                                'Added' => '2021-01-01 00:00:00',
+                                'Expires' => '2021-02-01 00:00:00',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
                             ]
@@ -1347,7 +1511,7 @@ class LpaContext extends BaseIntegrationContext
                                 'SiriusUid' => $this->lpaUid,
                                 'Added' => '2021-01-05 12:34:56',
                                 'ActorId' => $this->actorLpaId,
-                                'UserId' => $this->userId
+                                'UserId' => $this->userId,
                             ]
                         ),
                     ],
@@ -1363,244 +1527,80 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^a letter is requested containing a one time use code$/
+     * @Given /^The LPA is successfully added$/
      */
-    public function aLetterIsRequestedContainingAOneTimeUseCode()
+    public function theLPAIsSuccessfullyAdded()
     {
-        // Lpas::requestLetter
-        $this->pactPostInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/requestCode',
-            [
-                'case_uid' => (int) $this->lpaUid,
-                'actor_uid' => (int) $this->actorLpaId
-            ],
-            StatusCodeInterface::STATUS_NO_CONTENT
+        $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
+        $this->userLpaActorToken = '13579';
+
+        // UserLpaActorMap::create
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'Id' => $this->userLpaActorToken,
+                                'UserId' => $this->userId,
+                                'SiriusUid' => $this->lpaUid,
+                                'ActorId' => $this->actorLpaId,
+                                'Added' => $now,
+                            ]
+                        ),
+                    ],
+                ]
+            )
         );
-
-        $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId);
-    }
-
-    /**
-     * @Given /^I am on the add an older LPA page$/
-     */
-    public function iAmOnTheAddAnOlderLPAPage()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Given /^I confirm that those details are correct$/
-     */
-    public function iConfirmThatThoseDetailsAreCorrect()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @When /^I provide the details from a valid paper LPA document$/
-     */
-    public function iProvideTheDetailsFromAValidPaperLPADocument()
-    {
-        $data = [
-            'reference_number'  => $this->lpaUid,
-            'dob'               => $this->userDob,
-            'postcode'          => $this->userPostCode,
-            'first_names'       => $this->userFirstname,
-            'last_name'         => $this->userSurname,
-        ];
-
-        // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
-        $codeExists = new stdClass();
-        $codeExists->Created = null;
 
         $this->pactPostInteraction(
             $this->codesApiPactProvider,
-            '/v1/exists',
+            '/v1/revoke',
             [
-                'lpa'   => $this->lpaUid,
-                'actor' => $this->actorLpaId
+                'code' => $this->oneTimeCode,
             ],
             StatusCodeInterface::STATUS_OK,
-            $codeExists
+            [],
         );
 
-        $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
+        $actorCodeService = $this->container->get(ActorCodeService::class);
 
-        assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
-        assertEquals($lpaMatchResponse['actor-id'], $this->actorLpaId);
+        try {
+            $response = $actorCodeService->confirmDetails(
+                $this->oneTimeCode,
+                $this->lpaUid,
+                $this->userDob,
+                (string)$this->actorLpaId
+            );
+        } catch (Exception $ex) {
+            throw new Exception('Lpa confirmation unsuccessful');
+        }
+
+        assertNotNull($response);
     }
 
     /**
-     * @Then /^I am told that I have an activation key for this LPA and where to find it$/
+     * @Then /^The LPA should not be found$/
      */
-    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
+    public function theLPAShouldNotBeFound()
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I provide details "([^"]*)" "([^"]*)" "([^"]*)" "([^"]*)" that do not match the paper document$/
-     */
-    public function iProvideDetailsThatDoNotMatchThePaperDocument($firstnames, $lastname, $postcode, $dob)
+    protected function prepareContext(): void
     {
-        $data = [
-            'reference_number'  => $this->lpaUid,
-            'dob'               => $dob,
-            'postcode'          => $postcode,
-            'first_names'       => $firstnames,
-            'last_name'         => $lastname
-        ];
+        // This is populated into the container using a Middleware which these integration
+        // tests wouldn't normally touch but the container expects
+        $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
 
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
+        $this->apiFixtures = $this->container->get(MockHandler::class);
+        $this->awsFixtures = $this->container->get(AwsMockHandler::class);
+        $this->olderLpaService = $this->container->get(OlderLpaService::class);
+        $this->lpaService = $this->container->get(LpaService::class);
+        $this->deleteLpa = $this->container->get(DeleteLpa::class);
 
-        try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
-        } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA details do not match', $ex->getMessage());
-            return;
-        }
-
-        throw new ExpectationFailedException('LPA should not have matched data provided');
-    }
-
-    /**
-     * @When /^I provide details of an LPA that does not exist$/
-     */
-    public function iProvideDetailsOfAnLPAThatDoesNotExist()
-    {
-        $invalidLpaId = '700000004321';
-
-        $data = [
-            'reference_number'  => $invalidLpaId,
-            'dob'               => $this->userDob,
-            'postcode'          => $this->userPostCode,
-            'first_names'       => $this->userFirstname,
-            'last_name'         => $this->userSurname,
-        ];
-
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $invalidLpaId,
-            StatusCodeInterface::STATUS_NOT_FOUND,
-            []
-        );
-
-        try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
-        } catch (NotFoundException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
-            assertEquals('LPA not found', $ex->getMessage());
-            return;
-        }
-
-        throw new ExpectationFailedException('LPA should not have been found');
-    }
-
-    /**
-     * @Then /^I am informed that an LPA could not be found with these details$/
-     */
-    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @When /^I provide details from an LPA registered before Sept 2019$/
-     */
-    public function iProvideDetailsFromAnLPARegisteredBeforeSept2019()
-    {
-        $this->lpa->registrationDate = '2019-08-31';
-
-        $data = [
-            'reference_number'  => $this->lpaUid,
-            'dob'               => $this->userDob,
-            'postcode'          => $this->userPostCode,
-            'first_names'       => $this->userFirstname,
-            'last_name'         => $this->userSurname,
-        ];
-
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
-        try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
-        } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA not eligible due to registration date', $ex->getMessage());
-            return;
-        }
-
-        throw new ExpectationFailedException('LPA registration date should not have been eligible');
-    }
-
-    /**
-     * @When /^I provide the details from a valid paper document that already has an activation key$/
-     */
-    public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
-    {
-        $data = [
-            'reference_number'  => $this->lpaUid,
-            'dob'               => $this->userDob,
-            'postcode'          => $this->userPostCode,
-            'first_names'       => $this->userFirstname,
-            'last_name'         => $this->userSurname,
-        ];
-
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
-        $codeExists = new stdClass();
-        $codeExists->Created = '2021-01-15';
-
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/exists',
-            [
-                'lpa'   => $this->lpaUid,
-                'actor' => $this->actorLpaId
-            ],
-            StatusCodeInterface::STATUS_OK,
-            $codeExists
-        );
-
-        try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
-        } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals("LPA not eligible as an activation key already exists", $ex->getMessage());
-            return;
-        }
-
-        throw new ExpectationFailedException('LPA registration date should not have been eligible');
-    }
-
-    /**
-     * @Then /^I am told that I cannot request an activation key$/
-     */
-    public function iAmToldThatICannotRequestAnActivationKey()
-    {
-        // Not needed for this context
+        $config = $this->container->get('config');
+        $this->codesApiPactProvider = parse_url($config['codes_api']['endpoint'], PHP_URL_HOST);
+        $this->apiGatewayPactProvider = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);
     }
 }
