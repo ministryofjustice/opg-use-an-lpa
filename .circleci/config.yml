@@ -364,7 +364,7 @@ orbs:
         resource_class: small
       node-browsers:
         docker:
-          - image: circleci/node:14.0-browsers
+          - image: circleci/node:14.15.5-browsers
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
