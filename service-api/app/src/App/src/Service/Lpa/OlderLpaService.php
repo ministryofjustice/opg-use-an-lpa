@@ -65,7 +65,7 @@ class OlderLpaService
     {
         // Check if the actor has more than one address
         if (count($actor['addresses']) > 1) {
-            $this->logger->info(
+            $this->logger->notice(
                 'Data match failed for actor {id} as more than 1 address found',
                 [
                     'id' => $actor['uId']
@@ -81,7 +81,8 @@ class OlderLpaService
         ]);
 
         if (
-            new DateTime($actor['dob']) == DateTime::createFromFormat('d/m/Y|', $userDataToMatch['dob']) &&
+            DateTime::createFromFormat('Y-m-d|', $actor['dob'])
+                == DateTime::createFromFormat('Y-m-d|', $userDataToMatch['dob']) &&
             $actorData['first_names'] === $userDataToMatch['first_names'] &&
             $actorData['last_name'] === $userDataToMatch['last_name'] &&
             $actorData['postcode'] === $userDataToMatch['postcode']
