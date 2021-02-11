@@ -143,7 +143,7 @@ def main():
         description="Look up an account by email address.")
     arguments.add_argument("--environment",
                         default="production",
-                        help="The environment to target")
+                        help="The environment to target. Defaults to production")
 
     arguments.add_argument("--email_address",
                         default="",
