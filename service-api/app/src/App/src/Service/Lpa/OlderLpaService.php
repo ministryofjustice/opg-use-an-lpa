@@ -48,6 +48,7 @@ class OlderLpaService
         $data['first_names'] = strtolower(explode(' ', $data['first_names'])[0]);
         $data['last_name'] = strtolower($data['last_name']);
         $data['postcode'] = strtolower(str_replace(' ', '', $data['postcode']));
+
         return $data;
     }
 
@@ -79,6 +80,15 @@ class OlderLpaService
             'last_name' => $actor['surname'],
             'postcode' => $actor['addresses'][0]['postcode'],
         ]);
+
+        $this->logger->debug(
+            'Doing actor data comparison against actor with id {actor_id}',
+            [
+                'actor_id' => $actor['uId'],
+                'to_match' => $userDataToMatch,
+                'actor_data' => array_merge($actorData, ['dob' => $actor['dob']])
+            ]
+        );
 
         if (
             $actor['dob'] === $userDataToMatch['dob'] &&
@@ -226,11 +236,6 @@ class OlderLpaService
      */
     public function checkLPAMatchAndGetActorDetails(array $dataToMatch): array
     {
-        $this->logger->debug(
-            'Older LPA data to check',
-            $dataToMatch
-        );
-
         // Cleanse user provided data
         $dataToMatch = $this->cleanseUserData($dataToMatch);
 

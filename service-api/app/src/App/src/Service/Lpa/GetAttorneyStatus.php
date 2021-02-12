@@ -22,12 +22,12 @@ class GetAttorneyStatus
     public function __invoke(array $attorney): int
     {
         if (empty($attorney['firstname']) && empty($attorney['surname'])) {
-            $this->logger->info('Looked up attorney {id} but is a ghost', ['id' => $attorney['id']]);
+            $this->logger->info('Looked up attorney {id} but is a ghost', ['id' => $attorney['uId']]);
             return self::GHOST_ATTORNEY;
         }
 
         if (!$attorney['systemStatus']) {
-            $this->logger->info('Looked up attorney {id} but is inactive', ['id' => $attorney['id']]);
+            $this->logger->info('Looked up attorney {id} but is inactive', ['id' => $attorney['uId']]);
             return self::INACTIVE_ATTORNEY;
         }
 
