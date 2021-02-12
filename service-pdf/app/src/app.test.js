@@ -15,7 +15,7 @@ describe("Given the app gets an api request to an endpoint", () => {
       expect(response.headers["content-disposition"]).toBe(
         "attachment; filename=download.pdf"
       );
-      expect(response.body).toBeInstanceOf(Uint8Array);
+      expect(response.body).toBeInstanceOf(Buffer);
     });
   });
 });
