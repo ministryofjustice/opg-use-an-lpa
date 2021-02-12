@@ -44,7 +44,7 @@ class LpaContext implements Context
         $this->userFirstnames = 'Ian Deputy';
         $this->userSurname = 'Deputy';
         $this->lpa->registrationDate = '2019-09-01';
-        $this->userDob = '05/10/1975';
+        $this->userDob = '1975-10-05';
     }
 
     /**

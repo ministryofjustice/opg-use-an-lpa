@@ -81,8 +81,7 @@ class OlderLpaService
         ]);
 
         if (
-            DateTime::createFromFormat('Y-m-d|', $actor['dob'])
-                == DateTime::createFromFormat('Y-m-d|', $userDataToMatch['dob']) &&
+            $actor['dob'] === $userDataToMatch['dob'] &&
             $actorData['first_names'] === $userDataToMatch['first_names'] &&
             $actorData['last_name'] === $userDataToMatch['last_name'] &&
             $actorData['postcode'] === $userDataToMatch['postcode']
@@ -236,7 +235,7 @@ class OlderLpaService
         $dataToMatch = $this->cleanseUserData($dataToMatch);
 
         //Get LPA by reference number
-        $lpaMatchResponse = $this->lpaService->getByUid($dataToMatch['reference_number']);
+        $lpaMatchResponse = $this->lpaService->getByUid((string) $dataToMatch['reference_number']);
 
         if (is_null($lpaMatchResponse)) {
             $this->logger->info(
