@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\CheckYourAnswers;
+use Carbon\Carbon;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
     LoggerAware,
@@ -15,7 +16,6 @@ use Common\Handler\{AbstractHandler,
     UserAware};
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\AddOlderLpa;
-use DateTime;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
 use Mezzio\Helper\UrlHelper;
@@ -80,18 +80,16 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
             throw new SessionTimeoutException();
         }
 
-        $dobString = sprintf(
-            '%s/%s/%s',
-            $this->session->get('dob')['day'],
-            $this->session->get('dob')['month'],
-            $this->session->get('dob')['year']
-        );
-
         $this->data = [
-            'reference_number'  => $this->session->get('opg_reference_number'),
+            'reference_number'  => (int) $this->session->get('opg_reference_number'),
             'first_names'       => $this->session->get('first_names'),
             'last_name'         => $this->session->get('last_name'),
-            'dob'               => $dobString,
+            'dob'               =>
+                Carbon::create(
+                    $this->session->get('dob')['year'],
+                    $this->session->get('dob')['month'],
+                    $this->session->get('dob')['day']
+                )->toImmutable(),
             'postcode'          => $this->session->get('postcode')
         ];
 
@@ -119,10 +117,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         if ($this->form->isValid()) {
             $result = ($this->addOlderLpa)(
                 $this->identity,
-                intval($this->data['reference_number']),
+                $this->data['reference_number'],
                 $this->data['first_names'],
                 $this->data['last_name'],
-                DateTime::createFromFormat('d/m/Y', $this->data['dob']),
+                $this->data['dob'],
                 $this->data['postcode'],
             );
 
@@ -148,7 +146,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         $this->renderer->render(
                             'actor::send-activation-key-confirmation',
                             [
-                                'date' => (new DateTime())->modify('+2 week'),
+                                'date' => (new Carbon())->addWeeks(2),
                                 'user'  => $this->user
                             ]
                         )

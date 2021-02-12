@@ -66,7 +66,7 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('Check your answers');
         $this->ui->assertPageContainsText('700000000001');
         $this->ui->assertPageContainsText('The Attorney Person');
-        $this->ui->assertPageContainsText('09/02/1998');
+        $this->ui->assertPageContainsText('9 February 1998');
         $this->ui->assertPageContainsText('ABC123');
     }
 
