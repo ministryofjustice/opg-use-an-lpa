@@ -137,4 +137,17 @@ class ApiExceptionTest extends TestCase
         $this->assertEquals('HTTP: 500 - Unexpected API response', $instance->getMessage());
         $this->assertEquals(ApiException::DEFAULT_ERROR, $instance->getCode());
     }
+
+    /** @test */
+    public function can_function_when_lacking_an_associated_response_object()
+    {
+        $instance = ApiException::create('This is an exception', null);
+
+        $this->assertInstanceOf(ApiException::class, $instance);
+        $this->assertInstanceOf(AbstractApiException::class, $instance);
+
+        $this->assertEquals('This is an exception', $instance->getMessage());
+        $this->assertEquals(ApiException::DEFAULT_ERROR, $instance->getCode());
+        $this->assertIsArray($instance->getAdditionalData());
+    }
 }
