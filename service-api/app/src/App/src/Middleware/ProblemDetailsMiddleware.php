@@ -3,12 +3,13 @@
 namespace App\Middleware;
 
 use App\Exception\AbstractApiException;
+use Exception;
+use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as DelegateInterface;
 use Psr\Log\LoggerInterface;
-use Laminas\Diactoros\Response\JsonResponse;
 
 /**
  * Class ProblemDetailsMiddleware
@@ -46,7 +47,18 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
                 'data' => $ex->getAdditionalData(),
             ];
 
-            $this->logger->notice($ex->getMessage(), $ex->getAdditionalData());
+            $this->logger->info($ex->getMessage(), $ex->getAdditionalData());
+
+            $previous = $ex->getPrevious();
+            if ($previous instanceof Exception) {
+                $this->logger->debug(
+                    $ex->getMessage(),
+                    [
+                        'previous' => $previous->getMessage(),
+                        'trace' => $previous->getTrace()
+                    ]
+                );
+            }
 
             return new JsonResponse(
                 $problem,
