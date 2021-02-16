@@ -31,6 +31,7 @@
         "ext-apcu": "*",
         "ext-redis": "*",
         "ext-intl": "*",
+        "ext-json": "*",
         "alphagov/notifications-php-client": "^3.0",
         "aws/aws-sdk-php": "^3.91",
         "cooperaj/better-twig-i18n": "^1.1",

@@ -61,12 +61,12 @@ logs:
 .PHONY: logs
 
 up_dependencies:
-	$(COMPOSE) up -d localstack codes-gateway redis kms
+	$(COMPOSE) up -d --remove-orphans localstack codes-gateway redis kms
 	$(MAKE) up-bridge-ual create_secrets --directory=../opg-data-lpa/
 .PHONY: up_dependencies
 
 up_services:
-	$(COMPOSE) up -d webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
+	$(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
 .PHONY: up_services
 
 seed:
