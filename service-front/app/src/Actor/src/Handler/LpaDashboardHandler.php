@@ -8,16 +8,15 @@ use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
+use Common\Service\Lpa\ViewerCodeService;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Flash\FlashMessagesInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Laminas\Diactoros\Response\RedirectResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Laminas\Diactoros\Response\HtmlResponse;
-use Common\Service\Lpa\ViewerCodeService;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class LpaDashboardHandler
@@ -64,7 +63,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
         $user = $this->getUser($request);
         $identity = (!is_null($user)) ? $user->getIdentity() : null;
 
-        $lpas = $this->lpaService->getLpas($identity);
+        $lpas = $this->lpaService->getLpas($identity, true);
 
         if (count($lpas) === 0) {
             return new HtmlResponse($this->renderer->render('actor::lpa-blank-dashboard', [
@@ -72,31 +71,18 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
             ]));
         }
 
-        $totalCodes = 0;
-        foreach ($lpas as $lpaKey => $lpaData) {
-            $actorToken = $lpaData['user-lpa-actor-token'];
-
-            $shareCodes = $this->viewerCodeService->getShareCodes(
-                $identity,
-                $actorToken,
-                true
-            );
-
-            $lpas[$lpaKey]['activeCodeCount'] = $shareCodes['activeCodeCount'];
-            $totalCodes += $shareCodes['activeCodeCount'];
-            $lpas[$lpaKey]['actorActive'] = $lpaData['actor']['type'] === 'donor' || $lpaData['actor']['details']->getSystemStatus();
-        }
-
-        $lpas = $this->lpaService->sortLpasInOrder($lpas);
+        $hasActiveCodes = array_reduce($lpas->getArrayCopy(), function ($hasCodes, $lpa) {
+            return $hasCodes ? true : array_shift($lpa)->activeCodeCount > 0;
+        }, false);
 
         /** @var FlashMessagesInterface $flash */
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
-            'user'                      => $user,
-            'lpas'                      => $lpas,
-            'active_access_codes_count' => $totalCodes,
-            'flash'                     => $flash
+            'user'             => $user,
+            'lpas'             => $lpas,
+            'has_active_codes' => $hasActiveCodes,
+            'flash'            => $flash
         ]));
     }
 }

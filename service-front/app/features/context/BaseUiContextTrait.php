@@ -89,4 +89,19 @@ trait BaseUiContextTrait
     {
         return $this->base->lastApiRequest;
     }
+
+    /**
+     * Verifies a Javascript accordion element is open
+     *
+     * @param string $searchStr
+     *
+     * @return bool
+     */
+    public function elementisOpen(string $searchStr)
+    {
+        $page = $this->ui->getSession()->getPage();
+        $element = $page->find('css', $searchStr);
+        $elementHtml = $element->getOuterHtml();
+        return str_contains($elementHtml, ' open');
+    }
 }
