@@ -42,6 +42,12 @@ class AddOlderLpa
     /** @var LoggerInterface */
     private LoggerInterface $logger;
 
+    /**
+     * AddOlderLpa constructor.
+     * @param ApiClient $apiClient
+     * @param LoggerInterface $logger
+     * @codeCoverageIgnore
+     */
     public function __construct(ApiClient $apiClient, LoggerInterface $logger)
     {
         $this->apiClient = $apiClient;
