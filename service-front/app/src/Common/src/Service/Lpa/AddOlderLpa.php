@@ -87,7 +87,7 @@ class AddOlderLpa
         }
 
         $this->logger->info(
-            'Account with Id {id} added LPA with Id {uId} to account by passcode',
+            'Account with Id {id} requested older LPA addition of Id {uId}',
             [
                 'id'  => $userToken,
                 'uId' => $lpaUid
