@@ -119,6 +119,13 @@ class OlderLpaService
                     // if not null, an actor match has been found
                     if (!is_null($actorMatchResponse)) {
                         $actorId = $actorMatchResponse['uId'];
+                        $this->logger->info(
+                            'Actor match found with id {id} for LPA {uId} identified as role Attorney',
+                            [
+                                'id' => $actorId,
+                                'uId' => $lpaId
+                            ]
+                        );
                         break;
                     }
                 } else {
@@ -141,7 +148,7 @@ class OlderLpaService
                 $actorId = $donorMatchResponse['uId'];
 
                 $this->logger->info(
-                    'Actor match found with id {id} for LPA {uId} identified as role Attorney',
+                    'Actor match found with id {id} for LPA {uId} identified as role Donor',
                     [
                         'id' => $actorId,
                         'uId' => $lpaId
