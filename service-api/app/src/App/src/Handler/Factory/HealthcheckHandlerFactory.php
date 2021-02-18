@@ -9,7 +9,6 @@ use App\DataAccess\Repository\ActorUsersInterface;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Container\ContainerInterface;
 use App\Handler\HealthcheckHandler;
-use App\DataAccess\Repository\LpasInterface;
 
 class HealthcheckHandlerFactory
 {
@@ -19,7 +18,6 @@ class HealthcheckHandlerFactory
 
         return new HealthcheckHandler(
             $config['version'],
-            $container->get(LpasInterface::class),
             $container->get(ActorUsersInterface::class),
             $container->get(HttpClient::class),
             $container->get(RequestSigner::class),
