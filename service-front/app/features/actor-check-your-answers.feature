@@ -1,4 +1,5 @@
 @actor @checkYourAnswers
+
 Feature: Check your answers before requesting an activation key
   As a user
   I want to be able to check my answers for requesting an activation key

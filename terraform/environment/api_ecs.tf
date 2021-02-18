@@ -154,7 +154,10 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:Invoke",
     ]
 
-    resources = ["arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/GET/use-an-lpa/*"]
+    resources = [
+      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/GET/use-an-lpa/*",
+      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/POST/use-an-lpa/lpas/requestCode"
+    ]
   }
 
   statement {

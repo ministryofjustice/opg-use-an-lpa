@@ -9,6 +9,7 @@ use App\DataAccess\Repository\ActorCodesInterface;
 use App\Service\ActorCodes\Validation\CodesApiValidationStrategy;
 use App\Service\ActorCodes\Validation\DynamoCodeValidationStrategy;
 use App\Service\Lpa\LpaService;
+use App\Service\Lpa\ResolveActor;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -43,6 +44,10 @@ class CodeValidationStrategyFactoryTest extends TestCase
             ->get(LoggerInterface::class)
             ->willReturn($this->prophesize(LoggerInterface::class)->reveal());
 
+        $container
+            ->get(ResolveActor::class)
+            ->willReturn($this->prophesize(ResolveActor::class)->reveal());
+
         $factory = new CodeValidationStrategyFactory();
 
         $strategy = $factory($container->reveal());
@@ -76,6 +81,10 @@ class CodeValidationStrategyFactoryTest extends TestCase
         $container
             ->get(LoggerInterface::class)
             ->willReturn($this->prophesize(LoggerInterface::class)->reveal());
+
+        $container
+            ->get(ResolveActor::class)
+            ->willReturn($this->prophesize(ResolveActor::class)->reveal());
 
         $factory = new CodeValidationStrategyFactory();
 

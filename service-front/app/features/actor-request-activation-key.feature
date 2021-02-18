@@ -9,12 +9,6 @@ Feature: Ask for an activation key
     And I am currently signed in
 
   @ui
-  Scenario: The user is taken to check their answers when they request an activation key with valid details
-    Given I am on the request an activation key page
-    When I request an activation key with valid details
-    Then I am asked to check my answers before requesting an activation key
-
-  @ui
   Scenario Outline: The user cannot request an activation key with an invalid LPA reference number
     Given I am on the request an activation key page
     When I request an activation key with an invalid lpa reference number format of "<reference number>"
@@ -57,3 +51,9 @@ Feature: Ask for an activation key
       | 10  | 05    | 3000 | Date of birth must be in the past                                                           |
       |     |       |      | Enter your date of birth                                                                    |
       | 05  | 12    | 2020 | Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18 |
+
+  @ui
+  Scenario: The user is taken to check their answers when they request an activation key with valid details
+    Given I am on the request an activation key page
+    When I request an activation key with valid details
+    Then I am asked to check my answers before requesting an activation key

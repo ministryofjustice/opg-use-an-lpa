@@ -8,6 +8,7 @@ use App\DataAccess\Repository\ActorCodesInterface;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\CodeValidationStrategyInterface;
+use App\Service\Lpa\ResolveActor;
 use App\Service\Lpa\LpaService;
 use Psr\Log\LoggerInterface;
 
@@ -19,14 +20,18 @@ class DynamoCodeValidationStrategy implements CodeValidationStrategyInterface
 
     private LpaService $lpaService;
 
+    private ResolveActor $resolveActor;
+
     public function __construct(
         ActorCodesInterface $actorCodesRepository,
         LpaService $lpaService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ResolveActor $resolveActor
     ) {
         $this->actorCodesRepository = $actorCodesRepository;
         $this->lpaService = $lpaService;
         $this->logger = $logger;
+        $this->resolveActor = $resolveActor;
     }
 
     /**
@@ -70,7 +75,7 @@ class DynamoCodeValidationStrategy implements CodeValidationStrategyInterface
             throw new ActorCodeValidationException('LPA not found');
         }
 
-        $actor = $this->lpaService->lookupActiveActorInLpa($lpa->getData(), (string)$details['ActorLpaId']);
+        $actor = ($this->resolveActor)($lpa->getData(), (string)$details['ActorLpaId']);
 
         if (is_null($actor)) {
             $this->logger->error(

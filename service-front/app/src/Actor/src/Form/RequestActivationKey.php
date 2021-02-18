@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Actor\Form;
 
+use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
 use Common\Form\Fieldset\{Date, DatePrefixFilter, DateTrimFilter};
 use Common\Validator\DobValidator;
 use Laminas\Filter\StringToUpper;
-use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
-use Laminas\Validator\{NotEmpty, Regex, StringLength};
+use Laminas\Validator\{Digits, NotEmpty, StringLength};
+use Mezzio\Csrf\CsrfGuardInterface;
 
 /**
  * Class RequestActivationKey
@@ -19,7 +20,7 @@ use Laminas\Validator\{NotEmpty, Regex, StringLength};
  */
 class RequestActivationKey extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'request_activation_key';
+    public const FORM_NAME = 'request_activation_key';
 
     /**
      * RequestActivationKey constructor.
@@ -61,6 +62,7 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
             'opg_reference_number' => [
                 'filters'  => [
                     ['name' => StringTrim::class],
+                    ['name' => StripSpacesAndHyphens::class]
                 ],
                 'validators' => [
                     [
@@ -72,10 +74,11 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
                     ],
                     [
                         'name'    => StringLength::class,
+                        'break_chain_on_failure' => true,
                         'options' => [
                             'encoding' => 'UTF-8',
                             'min'      => 12,
-                            'max'      => 14,
+                            'max'      => 12,
                             'messages'  => [
                                 StringLength::TOO_LONG => 'The OPG reference number you entered is too long',
                                 StringLength::TOO_SHORT => 'The OPG reference number you entered is too short'
@@ -83,10 +86,11 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
                         ],
                     ],
                     [
-                        'name'    => Regex::class,
+                        'name'    => Digits::class,
                         'options' => [
-                            'pattern' => '/^(\d{4}(?\'dash\' |-|)\d{4}(\g{dash})\d{4})$/',
-                            'message' => 'Enter the 12 numbers of the OPG reference number. Do not include letters or other characters'
+                            'message' =>
+                                'Enter the 12 numbers of the OPG reference number. ' .
+                                'Do not include letters or other characters'
                         ],
                     ],
                 ]

@@ -40,7 +40,7 @@ Feature: The user is able to see correct information on their dashboard
     Then I am taken back to the dashboard page
 
   @acceptance @integration
-  Scenario: As a user I no more see the removed LPA details on the dashboard
+  Scenario: As a user I do not see a removed LPA on my dashboard
     Given I am on the dashboard page
     When I request to remove the added LPA
     And I confirm removal of the LPA

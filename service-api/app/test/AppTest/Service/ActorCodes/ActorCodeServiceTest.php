@@ -14,6 +14,7 @@ use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\ActorCodes\CodeValidationStrategyInterface;
 use App\Service\Lpa\LpaService;
+use App\Service\Lpa\ResolveActor;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -41,12 +42,18 @@ class ActorCodeServiceTest extends TestCase
      */
     private $loggerProphecy;
 
+    /**
+     * @var ResolveActor|ObjectProphecy
+     */
+    private $resolveActorProphecy;
+
     public function setUp(): void
     {
         $this->codeValidatorProphecy = $this->prophesize(CodeValidationStrategyInterface::class);
         $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
     }
 
     /** @test */
@@ -214,7 +221,8 @@ class ActorCodeServiceTest extends TestCase
             $this->codeValidatorProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
+            $this->resolveActorProphecy->reveal()
         );
     }
 
@@ -246,7 +254,8 @@ class ActorCodeServiceTest extends TestCase
             new Repository\Response\Lpa($mockLpa, null)
         )->shouldBeCalled();
 
-        $this->lpaServiceProphecy->lookupActiveActorInLpa(Argument::type('array'), Argument::type('string'))
+        $this->resolveActorProphecy
+            ->__invoke(Argument::type('array'), Argument::type('string'))
             ->willReturn($mockActor)
             ->shouldBeCalled();
 

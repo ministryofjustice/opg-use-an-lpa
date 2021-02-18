@@ -7,6 +7,7 @@ namespace Common\Service\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
+use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -44,8 +45,10 @@ class AddOlderLpa
 
     /**
      * AddOlderLpa constructor.
-     * @param ApiClient $apiClient
+     *
+     * @param ApiClient       $apiClient
      * @param LoggerInterface $logger
+     *
      * @codeCoverageIgnore
      */
     public function __construct(ApiClient $apiClient, LoggerInterface $logger)
@@ -59,11 +62,11 @@ class AddOlderLpa
         int $lpaUid,
         string $firstnames,
         string $lastname,
-        \DateTime $dob,
+        DateTimeInterface $dob,
         string $postcode
     ): string {
         $data = [
-            'reference_number'  => (string) $lpaUid,
+            'reference_number'  => $lpaUid,
             'first_names'       => $firstnames,
             'last_name'         => $lastname,
             'dob'               => $dob->format('Y-m-d'),
@@ -87,7 +90,7 @@ class AddOlderLpa
         }
 
         $this->logger->info(
-            'Account with Id {id} requested older LPA addition of Id {uId}',
+            'Account with Id {id} requested older LPA addition of reference number {uId}',
             [
                 'id'  => $userToken,
                 'uId' => $lpaUid

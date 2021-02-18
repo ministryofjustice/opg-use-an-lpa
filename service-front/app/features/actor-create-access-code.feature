@@ -17,7 +17,6 @@ Feature: The user is able to create access codes for organisations
     Then I should be told that I have not created any access codes yet
     And I should be able to click a link to go and create the access codes
 
-
   @ui
   Scenario Outline: As a user I to be shown the mistakes I make while creating an access code for an organisation
     Given I am on the dashboard page
