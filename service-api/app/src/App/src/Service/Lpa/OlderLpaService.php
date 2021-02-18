@@ -59,7 +59,6 @@ class OlderLpaService
      * @param array $actor The actor details being compared against
      * @param array $userDataToMatch The user provided data we're searching for a match against
      * @return ?array A data structure containing the matched actor id and lpa id
-     * @throws \Exception
      */
 
     public function checkDataMatch(array $actor, array $userDataToMatch): ?array
