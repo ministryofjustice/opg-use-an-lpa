@@ -14,7 +14,7 @@ use App\Service\User\UserService;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use BehatTest\Context\SetupEnv;
-use JSHayes\FakeRequests\MockHandler;
+use Exception;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\ExpectationFailedException;
 
@@ -38,18 +38,7 @@ class AccountContext extends BaseIntegrationContext
 {
     use SetupEnv;
 
-    private MockHandler $apiFixtures;
     private AwsMockHandler $awsFixtures;
-
-    protected function prepareContext(): void
-    {
-        // This is populated into the container using a Middleware which these integration
-        // tests wouldn't normally touch but the container expects
-        $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
-
-        $this->apiFixtures = $this->container->get(MockHandler::class);
-        $this->awsFixtures = $this->container->get(AwsMockHandler::class);
-    }
 
     /**
      * @Given /^I access the login form$/
@@ -381,7 +370,11 @@ class AccountContext extends BaseIntegrationContext
 
         $us = $this->container->get(UserService::class);
 
-        $us->completeChangePassword($this->userAccountId, new HiddenString($failedPassword), new HiddenString($newPassword));
+        $us->completeChangePassword(
+            $this->userAccountId,
+            new HiddenString($failedPassword),
+            new HiddenString($newPassword)
+        );
 
         $command = $this->awsFixtures->getLastCommand();
 
@@ -453,7 +446,7 @@ class AccountContext extends BaseIntegrationContext
             return;
         }
 
-        throw new ExpectationFailedException();
+        throw new ExpectationFailedException('');
     }
 
     /**
@@ -610,7 +603,7 @@ class AccountContext extends BaseIntegrationContext
             return;
         }
 
-        throw new ExpectationFailedException();
+        throw new ExpectationFailedException('');
     }
 
     /**
@@ -670,70 +663,7 @@ class AccountContext extends BaseIntegrationContext
         )['ActivationToken'];
     }
 
-
     /**
-     * @When I create an account using duplicate details not yet activated
-     */
-    public function iCreateAnAccountUsingDuplicateDetailsNotActivated()
-    {
-        $userAccountCreateData = [
-            'Id' => '1234567890abcdef',
-            'ActivationToken' => 'activate1234567890',
-            'ExpiresTTL' => '232424232244',
-            'Email' => 'test@test.com',
-            'Password' => 'Pa33w0rd'
-        ];
-
-        // ActorUsers::getByEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
-                    'ActivationToken' => $userAccountCreateData['ActivationToken'],
-                    'Email' => $userAccountCreateData['Email'],
-                    'Password' => $userAccountCreateData['Password'],
-                    'Id' => $userAccountCreateData['Id'],
-                    'ExpiresTTL' => $userAccountCreateData['ExpiresTTL'],
-                ])
-            ]
-        ]));
-
-        // ActorUsers::getByEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
-                    'ActivationToken' => $userAccountCreateData['ActivationToken'],
-                    'ExpiresTTL' => $userAccountCreateData['ExpiresTTL'],
-                    'Email' => $userAccountCreateData['Email'],
-                    'Password' => $userAccountCreateData['Password'],
-                    'Id' => $userAccountCreateData['Id'],
-                ])
-            ]
-        ]));
-
-        // ActorUsers::resetActivationDetails
-        $this->awsFixtures->append(new Result([
-            'Item' =>
-                $this->marshalAwsResultData([
-                    'ActivationToken' => $userAccountCreateData['ActivationToken'],
-                    'Email' => $userAccountCreateData['Email'],
-                    'Password' => $userAccountCreateData['Password'],
-                    'Id' => $userAccountCreateData['Id'],
-                ])
-        ]));
-
-        $us = $this->container->get(UserService::class);
-
-
-        $result = $us->add(
-            [
-                'email' => $userAccountCreateData['Email'],
-                'password' => new HiddenString($userAccountCreateData['Password']),
-            ]
-        );
-        assertEquals($result['Email'], $userAccountCreateData['Email']);
-    }
-
-        /**
      * @When I create an account using duplicate details
      */
     public function iCreateAnAccountUsingDuplicateDetails()
@@ -769,7 +699,7 @@ class AccountContext extends BaseIntegrationContext
                             [
                                 'Email' => $userAccountCreateData['email'],
                                 'Password' => $userAccountCreateData['password'],
-                                "Id" => $id,
+                                'Id' => $id,
                             ]
                         ),
                     ],
@@ -786,9 +716,88 @@ class AccountContext extends BaseIntegrationContext
             return;
         }
 
-        throw new ExpectationFailedException();
+        throw new ExpectationFailedException('');
     }
 
+    /**
+     * @When I create an account using duplicate details not yet activated
+     */
+    public function iCreateAnAccountUsingDuplicateDetailsNotActivated()
+    {
+        $userAccountCreateData = [
+            'Id' => '1234567890abcdef',
+            'ActivationToken' => 'activate1234567890',
+            'ExpiresTTL' => '232424232244',
+            'Email' => 'test@test.com',
+            'Password' => 'Pa33w0rd',
+        ];
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'ActivationToken' => $userAccountCreateData['ActivationToken'],
+                                'Email' => $userAccountCreateData['Email'],
+                                'Password' => $userAccountCreateData['Password'],
+                                'Id' => $userAccountCreateData['Id'],
+                                'ExpiresTTL' => $userAccountCreateData['ExpiresTTL'],
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // ActorUsers::getByEmail
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'ActivationToken' => $userAccountCreateData['ActivationToken'],
+                                'ExpiresTTL' => $userAccountCreateData['ExpiresTTL'],
+                                'Email' => $userAccountCreateData['Email'],
+                                'Password' => $userAccountCreateData['Password'],
+                                'Id' => $userAccountCreateData['Id'],
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // ActorUsers::resetActivationDetails
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' =>
+                        $this->marshalAwsResultData(
+                            [
+                                'ActivationToken' => $userAccountCreateData['ActivationToken'],
+                                'Email' => $userAccountCreateData['Email'],
+                                'Password' => $userAccountCreateData['Password'],
+                                'Id' => $userAccountCreateData['Id'],
+                            ]
+                        ),
+                ]
+            )
+        );
+
+        $us = $this->container->get(UserService::class);
+
+
+        $result = $us->add(
+            [
+                'email' => $userAccountCreateData['Email'],
+                'password' => new HiddenString($userAccountCreateData['Password']),
+            ]
+        );
+        assertEquals($result['Email'], $userAccountCreateData['Email']);
+    }
 
     /**
      * @When /^I create an account using with an email address that has been requested for reset$/
@@ -841,7 +850,7 @@ class AccountContext extends BaseIntegrationContext
             return;
         }
 
-        throw new ExpectationFailedException();
+        throw new ExpectationFailedException('');
     }
 
     /**
@@ -900,8 +909,8 @@ class AccountContext extends BaseIntegrationContext
 
         $us = $this->container->get(UserService::class);
         try {
-            $userData = $us->activate($this->actorAccountCreateData['ActivationToken']);
-        } catch (\Exception $ex) {
+            $us->activate($this->actorAccountCreateData['ActivationToken']);
+        } catch (Exception $ex) {
             assertEquals('User not found for token', $ex->getMessage());
         }
     }
@@ -945,7 +954,7 @@ class AccountContext extends BaseIntegrationContext
         $us = $this->container->get(UserService::class);
 
         try {
-            $userId = $us->canResetPassword($this->passwordResetData['PasswordResetToken']);
+            $us->canResetPassword($this->passwordResetData['PasswordResetToken']);
         } catch (GoneException $gex) {
             assertEquals('Reset token not found', $gex->getMessage());
         }
@@ -1123,7 +1132,11 @@ class AccountContext extends BaseIntegrationContext
 
         $us = $this->container->get(UserService::class);
 
-        $us->completeChangePassword($this->userAccountId, new HiddenString($this->userAccountPassword), new HiddenString($newPassword));
+        $us->completeChangePassword(
+            $this->userAccountId,
+            new HiddenString($this->userAccountPassword),
+            new HiddenString($newPassword)
+        );
 
         $command = $this->awsFixtures->getLastCommand();
 
@@ -1308,13 +1321,17 @@ class AccountContext extends BaseIntegrationContext
         $userService = $this->container->get(UserService::class);
 
         try {
-            $userService->requestChangeEmail($this->userAccountId, $this->newEmail, new HiddenString($this->userAccountPassword));
+            $userService->requestChangeEmail(
+                $this->userAccountId,
+                $this->newEmail,
+                new HiddenString($this->userAccountPassword)
+            );
         } catch (ConflictException $ex) {
             assertEquals(409, $ex->getCode());
             return;
         }
 
-        throw new ExpectationFailedException("Conflict exception was not thrown");
+        throw new ExpectationFailedException('Conflict exception was not thrown');
     }
 
     /**
@@ -1356,13 +1373,17 @@ class AccountContext extends BaseIntegrationContext
         $userService = $this->container->get(UserService::class);
 
         try {
-            $userService->requestChangeEmail($this->userAccountId, $this->newEmail, new HiddenString($this->userAccountPassword));
+            $userService->requestChangeEmail(
+                $this->userAccountId,
+                $this->newEmail,
+                new HiddenString($this->userAccountPassword)
+            );
         } catch (ConflictException $ex) {
             assertEquals(409, $ex->getCode());
             return;
         }
 
-        throw new ExpectationFailedException("Conflict exception was not thrown");
+        throw new ExpectationFailedException('Conflict exception was not thrown');
     }
 
     /**
@@ -1395,7 +1416,7 @@ class AccountContext extends BaseIntegrationContext
             return;
         }
 
-        throw new ExpectationFailedException("Forbidden exception was not thrown for incorrect password");
+        throw new ExpectationFailedException('Forbidden exception was not thrown for incorrect password');
     }
 
     /**
@@ -1456,7 +1477,11 @@ class AccountContext extends BaseIntegrationContext
     public function iShouldBeToldThatMyRequestWasSuccessful()
     {
         $userService = $this->container->get(UserService::class);
-        $response = $userService->requestChangeEmail($this->userAccountId, $this->newEmail, new HiddenString($this->userAccountPassword));
+        $response = $userService->requestChangeEmail(
+            $this->userAccountId,
+            $this->newEmail,
+            new HiddenString($this->userAccountPassword)
+        );
 
         assertEquals($this->userAccountId, $response['Id']);
         assertEquals($this->userAccountEmail, $response['Email']);
@@ -1573,5 +1598,14 @@ class AccountContext extends BaseIntegrationContext
         assertEquals('actor-users', $command['TableName']);
         assertEquals($this->userAccountId, $command['Key']['Id']['S']);
         assertEquals('UpdateItem', $command->getName());
+    }
+
+    protected function prepareContext(): void
+    {
+        // This is populated into the container using a Middleware which these integration
+        // tests wouldn't normally touch but the container expects
+        $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
+
+        $this->awsFixtures = $this->container->get(AwsMockHandler::class);
     }
 }

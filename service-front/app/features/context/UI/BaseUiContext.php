@@ -30,25 +30,10 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
 {
     use RuntimeMinkContext;
 
-    /**
-     * @var ContainerInterface
-     */
-    public $container;
-
-    /**
-     * @var MockHandler
-     */
-    public $apiFixtures;
-
-    /**
-     * @var AwsMockHandler
-     */
-    public $awsFixtures;
-
-    /**
-     * @var MinkContext
-     */
-    public $ui;
+    public ContainerInterface $container;
+    public MockHandler $apiFixtures;
+    public AwsMockHandler $awsFixtures;
+    public MinkContext $ui;
 
     public function setContainer(ContainerInterface $container): void
     {

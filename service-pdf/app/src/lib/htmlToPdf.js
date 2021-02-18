@@ -16,7 +16,7 @@ const htmlToPdf = async (html, options) => {
 
   try {
     const page = await browser.newPage();
-    await page.emulateMedia("screen");
+    await page.emulateMediaType("screen");
 
     await page.setContent(html, options);
     pdf = await page.pdf({
@@ -25,11 +25,10 @@ const htmlToPdf = async (html, options) => {
       height: 2000
     });
     await browser.close();
-  } catch (error) {
+  } finally {
     await browser.close();
-    throw new Error("PDF Generation Error", error);
   }
-  return pdf;
+  return pdf ? pdf.buffer : null;
 };
 
 export default htmlToPdf;

@@ -1,7 +1,5 @@
 import argparse
-import csv
-from datetime import date
-from dateutil import parser
+import json
 import boto3
 
 class AccountLookup:
@@ -9,6 +7,7 @@ class AccountLookup:
     aws_iam_session = ''
     aws_dynamodb_client = ''
     environment = ''
+    output_json = []
 
     def __init__(self, environment):
         aws_account_ids = {
@@ -31,8 +30,12 @@ class AccountLookup:
             aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
 
     def set_iam_role_session(self):
-        role_arn = 'arn:aws:iam::{}:role/read-only-db'.format(
-            self.aws_account_id)
+        if self.environment == "production":
+            role_arn = 'arn:aws:iam::{}:role/read-only-db'.format(
+                self.aws_account_id)
+        else:
+            role_arn = 'arn:aws:iam::{}:role/operator'.format(
+                self.aws_account_id)
 
         sts = boto3.client(
             'sts',
@@ -53,7 +56,15 @@ class AccountLookup:
                 ):
             yield from page["Items"]
 
-    def get_lpas(self, user_id):
+    def get_lpas(self):
+        paginator = self.aws_dynamodb_client.get_paginator("scan")
+        for page in paginator.paginate(
+                TableName='{}-UserLpaActorMap'.format(self.environment),
+                FilterExpression="attribute_exists(SiriusUid)",
+                ):
+            yield from page["Items"]
+
+    def get_lpas_by_user_id(self, user_id):
         response = self.aws_dynamodb_client.query(
             IndexName='UserIndex',
             TableName='{}-UserLpaActorMap'.format(self.environment),
@@ -64,53 +75,67 @@ class AccountLookup:
         )
         lpas = {}
         for lpa in response['Items']:
-            lpas.update({lpa['SiriusUid']['S']:str(parser.isoparse(lpa['Added']['S']).date())})
+            lpas.update({lpa['SiriusUid']['S']:lpa['Added']['S']})
         return lpas
 
-    def write_csv(self,email_address):
-        print('Collecting data and writing CSV...')
-        count = 0
-        csv_filename = "account-lookup-{}.csv".format((date.today()))
+    def get_users_by_id(self, user_id):
+        response = self.aws_dynamodb_client.query(
+            TableName='{}-ActorUsers'.format(self.environment),
+            KeyConditionExpression='Id = :user_id',
+            ExpressionAttributeValues={
+                ':user_id': {'S': user_id}
+            }
+        )
+        if response['Items']:
+            return response['Items'][0]
 
-        with open(csv_filename, 'w', newline='') as csv_file:
-            writer = csv.writer(
-                csv_file, quoting=csv.QUOTE_NONNUMERIC)
-            writer.writerow(["email","activation_status", "last_login_datetime","lpas_added"])
-            actor_users = self.get_actor_users()
+    def get_structured_account_data(self, user, lpas):
+        email = user['Email']['S']
+        last_login = 'Never logged in'
+        if 'LastLogin' in user:
+            last_login = user['LastLogin']['S']
+        activation_status = 'Activated'
+        if 'ActivationToken' in user:
+            activation_status = 'Pending Activation'
 
-            for item in actor_users:
-                if item['Email']['S'] in email_address:
-                    email = item['Email']['S']
-                    last_login = 'Never logged in'
-                    if 'LastLogin' in item:
-                        last_login = item['LastLogin']['S']
-                    activation_status = 'Activated'
-                    if 'ActivationToken' in item:
-                        activation_status = 'Pending Activation'
-                    lpas = self.get_lpas(item['Id']['S'])
-                    writer.writerow([str(email),activation_status, last_login, lpas])
-                    count += 1
-            print("Done! Collected {} records".format(count))
+        account_data = {
+          "email": email,
+          "last_login": last_login,
+          "activation_status": activation_status,
+          "lpas": [lpas]
+        }
 
-    def print_results(self,email_address):
-        print('Collecting data...')
-        count = 0
+        return account_data
+
+    def print_plaintext(self):
+        for account in self.output_json:
+            print(
+                str(account['email']),
+                "\nActivation Status: {}".format(account['activation_status']),
+                "\nLast Login: {}".format(account['last_login']),
+                "\nLPAs: {}".format(json.dumps(account['lpas'], indent=2)),
+                "\n"
+            )
+
+    def get_by_lpa(self, lpa_id):
+        lpas = self.get_lpas()
+
+        for item in lpas:
+            if item['SiriusUid']['S'] in lpa_id:
+                user = self.get_users_by_id(item['UserId']['S'])
+                if user:
+                    lpas = self.get_lpas_by_user_id(item['UserId']['S'])
+                    account_data = self.get_structured_account_data(user,lpas)
+                    self.output_json.append(account_data)
+
+    def get_by_email(self,email_address):
         actor_users = self.get_actor_users()
 
-        for item in actor_users:
-            if item['Email']['S'] in email_address:
-                email = item['Email']['S']
-                last_login = 'Never logged in'
-                if 'LastLogin' in item:
-                    last_login = item['LastLogin']['S']
-                activation_status = 'Activated'
-                if 'ActivationToken' in item:
-                    activation_status = 'Pending Activation'
-                lpas = self.get_lpas(item['Id']['S'])
-                print(str(email),"\nActivation Status: {}".format(activation_status), "\nLast Login: {}".format(last_login))
-                print(lpas)
-                count += 1
-        print("Done! Record Count: {}".format(count))
+        for user in actor_users:
+            if user['Email']['S'] in email_address:
+                lpas = self.get_lpas_by_user_id(user['Id']['S'])
+                account_data = self.get_structured_account_data(user,lpas)
+                self.output_json.append(account_data)
 
 
 def main():
@@ -118,23 +143,32 @@ def main():
         description="Look up an account by email address.")
     arguments.add_argument("--environment",
                         default="production",
-                        help="The environment to target")
+                        help="The environment to target. Defaults to production")
 
     arguments.add_argument("--email_address",
                         default="",
                         help="Email address to look up")
 
-    arguments.add_argument('--csv', dest='make_csv_file', action='store_const',
+    arguments.add_argument("--lpa_id",
+                        default="",
+                        help="Sirius LPA ID to look up")
+
+    arguments.add_argument('--json', dest='output_json', action='store_const',
                         const=True, default=False,
-                        help='Write a csv file instead of printing to terminal')
+                        help='Output json data instead of plaintext to terminal')
 
     args = arguments.parse_args()
     work = AccountLookup(args.environment)
 
-    if args.make_csv_file:
-        work.write_csv(args.email_address.lower())
+    if args.email_address:
+        work.get_by_email(args.email_address.lower())
+    if args.lpa_id:
+        work.get_by_lpa(args.lpa_id)
+
+    if args.output_json:
+        print(json.dumps(work.output_json))
     else:
-        work.print_results(args.email_address.lower())
+        work.print_plaintext()
 
 
 if __name__ == "__main__":

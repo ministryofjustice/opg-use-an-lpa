@@ -31,6 +31,7 @@
         "ext-apcu": "*",
         "ext-redis": "*",
         "ext-intl": "*",
+        "ext-json": "*",
         "alphagov/notifications-php-client": "^3.0",
         "aws/aws-sdk-php": "^3.91",
         "cooperaj/better-twig-i18n": "^1.1",
@@ -52,6 +53,7 @@
         "mezzio/mezzio-helpers": "^5.0",
         "mezzio/mezzio-session": "^1.3",
         "mezzio/mezzio-twigrenderer": "^2.3",
+        "nesbot/carbon": "^2.45.1",
         "paragonie/halite": "^4.5",
         "php-http/guzzle6-adapter": "^2.0",
         "wshafer/psr11-monolog": "^3.0"

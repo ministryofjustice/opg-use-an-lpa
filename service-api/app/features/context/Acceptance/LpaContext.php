@@ -6,7 +6,6 @@ namespace BehatTest\Context\Acceptance;
 
 use Aws\Result;
 use Behat\Behat\Context\Context;
-use Behat\Mink\Exception\ExpectationException;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use DateTime;
@@ -44,9 +43,8 @@ class LpaContext implements Context
         $this->userPostCode = 'string';
         $this->userFirstnames = 'Ian Deputy';
         $this->userSurname = 'Deputy';
-        // users dob is in this format when passed up from service-front
-        $this->userDob = '05/10/1975';
         $this->lpa->registrationDate = '2019-09-01';
+        $this->userDob = '1975-10-05';
     }
 
     /**

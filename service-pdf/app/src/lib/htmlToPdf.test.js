@@ -6,8 +6,8 @@ describe("Given you pass HTML to be returned into PDF", () => {
   describe("Given a PDF is not generated correctly due to an error", () => {
     test("it should return null and throw an error", () => {
       return expect(
-        htmlToPdf(testHtml, { waitUntil: "loads" })
-      ).rejects.toThrow("PDF Generation Error");
+          htmlToPdf(testHtml, { waitUntil: "loads", pageHeight: 2000, pageWidth: 1100 })
+      ).rejects.toThrow("Unknown value for options.waitUntil: loads");
     });
   });
   describe("Given a PDF is valid and to be generated", () => {
@@ -15,7 +15,7 @@ describe("Given you pass HTML to be returned into PDF", () => {
       const pdf = await htmlToPdf(testHtml, { waitUntil: "load" });
 
       expect(pdf).not.toBeNull();
-      expect(pdf).toBeInstanceOf(Uint8Array);
+      expect(pdf).toBeInstanceOf(ArrayBuffer);
     });
   });
 });

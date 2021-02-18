@@ -45,6 +45,11 @@ class EventCodes
     public const LPA_NOT_FOUND = 'LPA_NOT_FOUND';
 
     /**
+     * LPA does not match
+     */
+    public const LPA_DOES_NOT_MATCH = 'LPA_DOES_NOT_MATCH';
+
+    /**
      * LPA not eligible
      */
     public const LPA_NOT_ELIGIBLE = 'LPA_NOT_ELIGIBLE';

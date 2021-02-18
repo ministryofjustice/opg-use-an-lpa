@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Exception;
 
-use App\Exception\AbstractApiException;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -47,7 +46,7 @@ class ApiException extends AbstractApiException
         parent::__construct(self::DEFAULT_TITLE, $message, null, $previous);
     }
 
-    public function getResponse(): ResponseInterface
+    public function getResponse(): ?ResponseInterface
     {
         return $this->response;
     }
@@ -60,7 +59,9 @@ class ApiException extends AbstractApiException
      */
     public function getAdditionalData(): array
     {
-        return json_decode($this->getResponse()->getBody()->getContents(), true);
+        return $this->getResponse() !== null
+            ? json_decode($this->getResponse()->getBody()->getContents(), true)
+            : [];
     }
 
     public static function create(string $message = null, ResponseInterface $response = null, Throwable $previous = null): ApiException

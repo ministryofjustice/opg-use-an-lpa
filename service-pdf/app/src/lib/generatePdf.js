@@ -9,7 +9,7 @@ const generatePdf = async (html, options) => {
   }
   const pdf = await htmlToPdf(html, { waitUntil: "load" });
 
-  const pdfDoc = await PDFDocument.load(pdf.buffer);
+  const pdfDoc = await PDFDocument.load(pdf);
 
   pdfDoc.setTitle("View LPA - View a lasting power of attorney");
   const pdfBytes = await pdfDoc.save();
