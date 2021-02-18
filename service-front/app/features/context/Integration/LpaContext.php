@@ -197,7 +197,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
     {
-        // API call for getLpaById call happens inside of the check access codes handler
+        // API call for requesting activation code
         $this->apiFixtures->patch('/v1/lpas/request-letter')
             ->respondWith(
                 new Response(
@@ -1223,6 +1223,49 @@ class LpaContext extends BaseIntegrationContext
         );
 
         assertNotNull($actorCode);
+    }
+
+    /**
+     * @When /^I request an activation key again within 14 calendar days$/
+     */
+    public function iRequestAnActivationKeyAgainWithin14CalendarDays()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I will be told that I have already requested this and the date I should receive the letter by$/
+     */
+    public function iWillBeToldThatIHaveAlreadyRequestedThisAndTheDateIShouldReceiveTheLetterBy()
+    {
+        // API call for requesting activation code
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Bad Request',
+                            'details' => 'Activation key requested less than 14 days ago',
+                            'data' => '',
+                        ]
+                    )
+                )
+            );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        $result = $addOlderLpa(
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+        );
+
+        assertEquals(AddOlderLpa::ACTIVATION_KEY_WITHIN_14_DAYS, $result);
     }
 
     protected function prepareContext(): void

@@ -2343,4 +2343,37 @@ class LpaContext implements Context
 
         $this->ui->pressButton('Continue');
     }
+
+    /**
+     * @When /^I request an activation key again within 14 calendar days$/
+     */
+    public function iRequestAnActivationKeyAgainWithin14CalendarDays()
+    {
+        // Setup fixture for activation key already existing
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Activation key requested less than 14 days ago',
+                            'details' => 'Activation key requested less than 14 days ago',
+                            'data' => [],
+                        ]
+                    )
+                )
+            );
+
+        $this->fillAndSubmitOlderLpaForm();
+        $this->iConfirmThatThoseDetailsAreCorrect();
+    }
+
+    /**
+     * @Then /^I will be told that I have already requested this and the date I should receive the letter by$/
+     */
+    public function iWillBeToldThatIHaveAlreadyRequestedThisAndTheDateIShouldReceiveTheLetterBy()
+    {
+        $this->ui->assertPageContainsText('You\'ve already asked for an activation key for this LPA');
+    }
 }
