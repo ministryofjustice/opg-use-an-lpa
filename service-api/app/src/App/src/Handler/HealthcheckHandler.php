@@ -6,6 +6,7 @@ namespace App\Handler;
 
 use App\DataAccess\ApiGateway\RequestSigner;
 use Exception;
+use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client as HttpClient;
@@ -13,7 +14,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Laminas\Diactoros\Response\JsonResponse;
-use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\ActorUsersInterface;
 
 /**
@@ -33,11 +33,6 @@ class HealthcheckHandler implements RequestHandlerInterface
     private $actorUsers;
 
     /**
-     * @var LpasInterface
-     */
-    private $lpaInterface;
-
-    /**
      * @var string
      */
     private string $apiBaseUri;
@@ -54,14 +49,12 @@ class HealthcheckHandler implements RequestHandlerInterface
 
     public function __construct(
         string $version,
-        LpasInterface $lpaInterface,
         ActorUsersInterface $actorUsers,
         HttpClient $httpClient,
         RequestSigner $awsSignature,
         string $apiUrl
     ) {
         $this->version = $version;
-        $this->lpaInterface = $lpaInterface;
         $this->actorUsers = $actorUsers;
         $this->httpClient = $httpClient;
         $this->awsSignature = $awsSignature;
@@ -76,7 +69,7 @@ class HealthcheckHandler implements RequestHandlerInterface
     {
         return new JsonResponse([
             "version" => $this->version,
-            "api" => $this->checkApiEndpoint(),
+            "lpa_api" => $this->checkApiEndpoint(),
             "dynamo" => $this->checkDynamoEndpoint(),
             "lpa_codes_api" => $this->checkLpaCodesApiEndpoint(),
             "healthy" => $this->isHealthy()
@@ -96,22 +89,24 @@ class HealthcheckHandler implements RequestHandlerInterface
 
         $start = microtime(true);
 
-        try {
-            $data = $this->lpaInterface->get("700000000000");
+        $url  = sprintf("%s/v1/healthcheck", $this->apiBaseUri);
 
-            // when $data == null a 404 has been returned from the api
-            if (is_null($data)) {
+        $request = new Request('GET', $url);
+        $request = $this->awsSignature->sign($request);
+
+        try {
+            $response = $this->httpClient->send($request);
+
+            if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
                 $data['healthy'] = true;
             } else {
                 $data['healthy'] = false;
             }
         } catch (Exception $e) {
             $data['healthy'] = false;
-            $data['message'] = $e->getMessage();
         }
 
         $data['response_time'] = round(microtime(true) - $start, 3);
-
         return $data;
     }
 
@@ -157,7 +152,7 @@ class HealthcheckHandler implements RequestHandlerInterface
         try {
             $response = $this->httpClient->send($request);
 
-            if ($response->getStatusCode() === 200) {
+            if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
                 $data['healthy'] = true;
             } else {
                 $data['healthy'] = false;

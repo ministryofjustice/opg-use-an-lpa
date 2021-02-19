@@ -6,7 +6,6 @@ namespace AppTest\Handler;
 
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\Repository\ActorUsersInterface;
-use App\DataAccess\Repository\LpasInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client as HttpClient;
 use PHPUnit\Framework\TestCase;
@@ -21,8 +20,6 @@ class HealthcheckHandlerTest extends TestCase
 {
     private $actorUsersProphecy;
 
-    private $lpaInterface;
-
     private $httpClientProphecy;
 
     private $requestSignerProphecy;
@@ -35,7 +32,6 @@ class HealthcheckHandlerTest extends TestCase
     {
         $this->version = 'dev';
         $this->actorUsersProphecy = $this->prophesize(ActorUsersInterface::class);
-        $this->lpaInterface = $this->prophesize(LpasInterface::class);
         $this->httpClientProphecy = $this->prophesize(HttpClient::class);
         $this->requestSignerProphecy = $this->prophesize(RequestSigner::class);
         $this->apiUrl = 'localhost';
@@ -43,9 +39,6 @@ class HealthcheckHandlerTest extends TestCase
 
     public function testReturnsExpectedJsonResponse()
     {
-        $this->lpaInterface->get("700000000000")
-            ->willReturn(null);
-
         $this->actorUsersProphecy->get('XXXXXXXXXXXX')
             ->willReturn([]);
 
@@ -69,7 +62,6 @@ class HealthcheckHandlerTest extends TestCase
 
         $healthcheck = new HealthcheckHandler(
             $this->version,
-            $this->lpaInterface->reveal(),
             $this->actorUsersProphecy->reveal(),
             $this->httpClientProphecy->reveal(),
             $this->requestSignerProphecy->reveal(),
@@ -86,11 +78,11 @@ class HealthcheckHandlerTest extends TestCase
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertArrayHasKey('healthy', $json);
 
-        $this->assertArrayHasKey('api', $json);
+        $this->assertArrayHasKey('lpa_api', $json);
         $this->assertArrayHasKey('dynamo', $json);
         $this->assertArrayHasKey('lpa_codes_api', $json);
 
-        $this->assertTrue($json['api']['healthy']);
+        $this->assertTrue($json['lpa_api']['healthy']);
         $this->assertTrue($json['dynamo']['healthy']);
         $this->assertTrue($json['lpa_codes_api']['healthy']);
         $this->assertTrue($json['healthy']);
