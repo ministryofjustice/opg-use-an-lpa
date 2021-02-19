@@ -13,42 +13,36 @@ use App\Exception\NotFoundException;
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
+use App\Service\Lpa\ValidateOlderLpaRequirements;
 use DateTime;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class OlderLpaServiceTest extends TestCase
 {
-    /**
-     * @var LpaService
-     */
+    /** @var ObjectProphecy|LpaService */
     private $lpaServiceProphecy;
 
-    /**
-     * @var LpasInterface
-     */
+    /** @var ObjectProphecy|LpasInterface */
     private $lpasInterfaceProphecy;
 
-    /**
-     * @var UserLpaActorMapInterface
-     */
+    /** @var ObjectProphecy|UserLpaActorMapInterface */
     private $userLpaActorMapInterfaceProphecy;
 
-    /**
-     * @var LoggerInterface
-     */
+    /** @var ObjectProphecy|LoggerInterface */
     private $loggerProphecy;
 
-    /**
-     * @var ActorCodes
-     */
+    /** @var ObjectProphecy|ActorCodes */
     public $actorCodesProphecy;
 
-    /**
-     * @var GetAttorneyStatus
-     */
+    /** @var ObjectProphecy|GetAttorneyStatus */
     private $getAttorneyStatusProphecy;
+
+    /** @var ObjectProphecy|ValidateOlderLpaRequirements */
+    private $validateOlderLpaRequirements;
 
     public function setUp()
     {
@@ -58,6 +52,7 @@ class OlderLpaServiceTest extends TestCase
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->actorCodesProphecy = $this->prophesize(ActorCodes::class);
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
+        $this->validateOlderLpaRequirements = $this->prophesize(ValidateOlderLpaRequirements::class);
     }
 
     private function getOlderLpaService(): OlderLpaService
@@ -67,7 +62,8 @@ class OlderLpaServiceTest extends TestCase
             $this->lpasInterfaceProphecy->reveal(),
             $this->loggerProphecy->reveal(),
             $this->actorCodesProphecy->reveal(),
-            $this->getAttorneyStatusProphecy->reveal()
+            $this->getAttorneyStatusProphecy->reveal(),
+            $this->validateOlderLpaRequirements->reveal()
         );
     }
 
@@ -145,55 +141,6 @@ class OlderLpaServiceTest extends TestCase
 
         $codeExists = $service->hasActivationCode($lpaId, $actorUid);
         $this->assertFalse($codeExists);
-    }
-
-    /**
-     * @test
-     * @dataProvider registeredDataProvider
-     * @param array $lpa
-     * @param bool $isValid
-     * @throws \Exception
-     */
-    public function checks_whether_the_lpa_was_registered_after_1st_Sept_2019(array $lpa, bool $isValid)
-    {
-        $service = $this->getOlderLpaService();
-
-        $registrationValid = $service->checkLpaRegistrationDetails($lpa);
-        $this->assertEquals($isValid, $registrationValid);
-    }
-
-    public function registeredDataProvider(): array
-    {
-        return [
-            [
-                [
-                    'status' => 'Registered',
-                    'registrationDate' => '2021-01-01'
-                ],
-                true
-            ],
-            [
-                [
-                    'status' => 'Cancelled',
-                    'registrationDate' => '2021-01-01'
-                ],
-                false
-            ],
-            [
-                [
-                    'status' => 'Registered',
-                    'registrationDate' => '2019-09-01'
-                ],
-                true
-            ],
-            [
-                [
-                    'status' => 'Registered',
-                    'registrationDate' => '2019-08-31'
-                ],
-                false
-            ]
-        ];
     }
 
     /** @test */
@@ -459,7 +406,7 @@ class OlderLpaServiceTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
+     * @throws Exception
      */
     public function older_lpa_lookup_throws_an_exception_if_lpa_not_found()
     {
@@ -488,11 +435,20 @@ class OlderLpaServiceTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
+     * @throws Exception
      */
     public function older_lpa_lookup_throws_an_exception_if_lpa_registration_not_valid()
     {
         $lpaId = '700000004321';
+
+        $lpa = new Lpa(
+            [
+                'uId' => $lpaId,
+                'registrationDate' => '2019-08-31',
+                'status' => 'Registered',
+            ],
+            new DateTime()
+        );
 
         $dataToMatch = [
             'reference_number' => $lpaId,
@@ -506,16 +462,11 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpaServiceProphecy
             ->getByUid($lpaId)
-            ->willReturn(
-                new Lpa(
-                    [
-                        'uId' => $lpaId,
-                        'registrationDate' => '2019-08-31',
-                        'status' => 'Registered',
-                    ],
-                    new DateTime()
-                )
-            );
+            ->willReturn($lpa);
+
+        $this->validateOlderLpaRequirements
+            ->__invoke($lpa->getData())
+            ->willReturn(false);
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -526,7 +477,7 @@ class OlderLpaServiceTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
+     * @throws Exception
      */
     public function older_lpa_lookup_throws_an_exception_if_user_data_doesnt_match_lpa()
     {
@@ -548,6 +499,10 @@ class OlderLpaServiceTest extends TestCase
             ->getByUid($lpaId)
             ->willReturn($lpa);
 
+        $this->validateOlderLpaRequirements
+            ->__invoke($lpa->getData())
+            ->willReturn(true);
+
         $this->expectException(BadRequestException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->expectExceptionMessage('LPA details do not match');
@@ -557,7 +512,7 @@ class OlderLpaServiceTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
+     * @throws Exception
      */
     public function older_lpa_lookup_throws_an_exception_if_actor_has_activation_key()
     {
@@ -580,6 +535,10 @@ class OlderLpaServiceTest extends TestCase
             ->getByUid($lpaId)
             ->willReturn($lpa);
 
+        $this->validateOlderLpaRequirements
+            ->__invoke($lpa->getData())
+            ->willReturn(true);
+
         $this->actorCodesProphecy
             ->checkActorHasCode($lpaId, $actorId)
             ->willReturn(new ActorCode(
@@ -598,7 +557,7 @@ class OlderLpaServiceTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
+     * @throws Exception
      */
     public function returns_matched_actorId_and_lpaId_when_passing_all_older_lpa_criteria()
     {
@@ -620,6 +579,10 @@ class OlderLpaServiceTest extends TestCase
         $this->lpaServiceProphecy
             ->getByUid($lpaId)
             ->willReturn($lpa);
+
+        $this->validateOlderLpaRequirements
+            ->__invoke($lpa->getData())
+            ->willReturn(true);
 
         $this->actorCodesProphecy
             ->checkActorHasCode($lpaId, $actorId)

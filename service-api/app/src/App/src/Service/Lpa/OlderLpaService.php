@@ -9,31 +9,31 @@ use App\DataAccess\Repository\LpasInterface;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
-use DateTime;
 use Psr\Log\LoggerInterface;
 
 class OlderLpaService
 {
-    protected const ACTIVE_ATTORNEY = 0;
-
     private LpaService $lpaService;
     private LpasInterface $lpaRepository;
     private LoggerInterface $logger;
     private ActorCodes $actorCodes;
     private GetAttorneyStatus $getAttorneyStatus;
+    private ValidateOlderLpaRequirements $validateLpaRequirements;
 
     public function __construct(
         LpaService $lpaService,
         LpasInterface $lpaRepository,
         LoggerInterface $logger,
         ActorCodes $actorCodes,
-        GetAttorneyStatus $getAttorneyStatus
+        GetAttorneyStatus $getAttorneyStatus,
+        ValidateOlderLpaRequirements $validateLpaRequirements
     ) {
         $this->lpaService = $lpaService;
         $this->lpaRepository = $lpaRepository;
         $this->logger = $logger;
         $this->actorCodes = $actorCodes;
         $this->getAttorneyStatus = $getAttorneyStatus;
+        $this->validateLpaRequirements = $validateLpaRequirements;
     }
 
     /**
@@ -59,7 +59,6 @@ class OlderLpaService
      * @param array $actor The actor details being compared against
      * @param array $userDataToMatch The user provided data we're searching for a match against
      * @return ?array A data structure containing the matched actor id and lpa id
-     * @throws \Exception
      */
 
     public function checkDataMatch(array $actor, array $userDataToMatch): ?array
@@ -114,7 +113,7 @@ class OlderLpaService
 
         if (isset($lpa['attorneys']) && is_array($lpa['attorneys'])) {
             foreach ($lpa['attorneys'] as $attorney) {
-                if (($this->getAttorneyStatus)($attorney) === self::ACTIVE_ATTORNEY) {
+                if (($this->getAttorneyStatus)($attorney) === GetAttorneyStatus::ACTIVE_ATTORNEY) {
                     $actorMatchResponse = $this->checkDataMatch($attorney, $userDataToMatch);
                     // if not null, an actor match has been found
                     if (!is_null($actorMatchResponse)) {
@@ -143,12 +142,6 @@ class OlderLpaService
         }
 
         if (is_null($actorId)) {
-            $this->logger->info(
-                'Actor match NOT found for LPA {uId} with the details provided',
-                [
-                    'uId' => $lpaId
-                ]
-            );
             return null;
         }
 
@@ -156,41 +149,6 @@ class OlderLpaService
             'actor-id' => $actorId,
             'lpa-id' => $lpaId
         ];
-    }
-
-    /**
-     * Checks whether an LPA was registered before Sept 1st 2019
-     * and has status Registered
-     *
-     * @param array $lpa
-     * @return bool
-     * @throws \Exception
-     */
-    public function checkLpaRegistrationDetails(array $lpa): bool
-    {
-        $expectedRegistrationDate = new DateTime('2019-09-01');
-
-        $lpaRegistrationDate = new DateTime($lpa['registrationDate']);
-
-        if ($lpa['status'] !== 'Registered') {
-            $this->logger->notice(
-                'User entered LPA {uId} does not have the required status',
-                [
-                    'uId' => $lpa['uId'],
-                ]
-            );
-            return false;
-        }
-        if ($lpaRegistrationDate < $expectedRegistrationDate) {
-            $this->logger->notice(
-                'User entered LPA {uId} has a registration date before 1 September 2019',
-                [
-                    'uId' => $lpa['uId'],
-                ]
-            );
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -245,16 +203,7 @@ class OlderLpaService
             throw new NotFoundException('LPA not found');
         }
 
-        // Check if lpa registration date falls after 01-09-2019
-        $registrationDetailsCheckResponse = $this->checkLpaRegistrationDetails($lpaMatchResponse->getData());
-
-        if (!$registrationDetailsCheckResponse) {
-            $this->logger->info(
-                'Lpa {uId} has a registration date before 1 September 2019',
-                [
-                    'uId' => $dataToMatch['reference_number']
-                ]
-            );
+        if (! ($this->validateLpaRequirements)($lpaMatchResponse->getData())) {
             throw new BadRequestException('LPA not eligible due to registration date');
         }
 
