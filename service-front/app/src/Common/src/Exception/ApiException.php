@@ -31,19 +31,31 @@ class ApiException extends AbstractApiException
     protected $response;
 
     /**
+     * @var array|null
+     */
+    protected $additionalData;
+
+    /**
      * ApiException constructor
      *
-     * @param string $message
-     * @param int $code
+     * @param string                 $message
+     * @param int                    $code
      * @param ResponseInterface|null $response
-     * @param Throwable|null $previous
+     * @param array|null             $additionalData
+     * @param Throwable|null         $previous
      */
-    public function __construct(string $message, int $code = self::DEFAULT_ERROR, ResponseInterface $response = null, Throwable $previous = null)
-    {
+    public function __construct(
+        string $message,
+        int $code = self::DEFAULT_ERROR,
+        ResponseInterface $response = null,
+        array $additionalData = [],
+        Throwable $previous = null
+    ) {
         $this->response = $response;
         $this->code = $code;
+        $this->additionalData = $additionalData;
 
-        parent::__construct(self::DEFAULT_TITLE, $message, null, $previous);
+        parent::__construct(self::DEFAULT_TITLE, $message, $additionalData, $previous);
     }
 
     public function getResponse(): ResponseInterface
@@ -59,7 +71,7 @@ class ApiException extends AbstractApiException
      */
     public function getAdditionalData(): array
     {
-        return json_decode($this->getResponse()->getBody(), true);
+        return $this->additionalData;
     }
 
     public static function create(string $message = null, ResponseInterface $response = null, Throwable $previous = null): ApiException
@@ -69,6 +81,7 @@ class ApiException extends AbstractApiException
         if (! is_null($response)) {
             $body = json_decode($response->getBody()->getContents(), true);
             $code = $response->getStatusCode();
+            $additionalData = $body['data'];
 
             //  If no message was provided create one from the response data
             if (is_null($message)) {
@@ -88,6 +101,6 @@ class ApiException extends AbstractApiException
             }
         }
 
-        return new self($message, $code, $response, $previous);
+        return new self($message, $code, $response, $additionalData, $previous);
     }
 }
