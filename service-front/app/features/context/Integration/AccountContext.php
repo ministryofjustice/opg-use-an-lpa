@@ -334,7 +334,13 @@ class AccountContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_GONE,
                     [],
-                    json_encode([])
+                    json_encode(
+                        [
+                            'title' => 'Gone',
+                            'details' => 'Email reset token has expired',
+                            'data' => [],
+                        ]
+                    )
                 )
             );
 
@@ -397,7 +403,20 @@ class AccountContext extends BaseIntegrationContext
 
         // API call for creating an account
         $this->apiFixtures->post('/v1/user')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_CONFLICT,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Conflict',
+                            'details' => 'Account creation email conflict - another user has ' .
+                                         'requested to change their email to ' . $this->userEmail,
+                            'data' => ['email' => $this->userEmail]
+                        ]
+                    )
+                )
+            );
 
         try {
             $this->userService->create($this->userEmail, new HiddenString($this->userPassword));
@@ -443,7 +462,19 @@ class AccountContext extends BaseIntegrationContext
     public function iFollowMyUniqueExpiredInstructionsOnHowToResetMyPassword()
     {
         $this->apiFixtures->get('/v1/can-password-reset')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_GONE))
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_GONE,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Gone',
+                            'details' => 'Password reset token not found',
+                            'data' => [],
+                        ]
+                    )
+                )
+            )
             ->inspectRequest(
                 function (RequestInterface $request, array $options) {
                     $query = $request->getUri()->getQuery();
@@ -728,7 +759,17 @@ class AccountContext extends BaseIntegrationContext
     {
         $this->apiFixtures->patch('/v1/request-change-email')
             ->respondWith(
-                new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([]))
+                new Response(
+                    StatusCodeInterface::STATUS_CONFLICT,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Conflict',
+                            'details' => 'User already exists with email address ' . $this->userEmail,
+                            'data' => ['email' => $this->userEmail],
+                        ]
+                    )
+                )
             )->inspectRequest(
                 function (RequestInterface $request, array $options) {
                     $params = json_decode($request->getBody()->getContents(), true);
@@ -760,7 +801,17 @@ class AccountContext extends BaseIntegrationContext
     {
         $this->apiFixtures->patch('/v1/request-change-email')
             ->respondWith(
-                new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([]))
+                new Response(
+                    StatusCodeInterface::STATUS_FORBIDDEN,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Forbidden',
+                            'details' => 'Authentication failed for user ID ' . $this->userIdentity,
+                            'data' => ['userId' => $this->userIdentity]
+                        ]
+                    )
+                )
             )->inspectRequest(
                 function (RequestInterface $request, array $options) {
                     $params = json_decode($request->getBody()->getContents(), true);

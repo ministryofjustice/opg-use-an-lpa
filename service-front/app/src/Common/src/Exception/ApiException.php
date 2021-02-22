@@ -81,7 +81,7 @@ class ApiException extends AbstractApiException
         if (! is_null($response)) {
             $body = json_decode($response->getBody()->getContents(), true);
             $code = $response->getStatusCode();
-            $additionalData = $body['data'];
+            $additionalData = isset($body['data']) ? $body['data'] : [];
 
             //  If no message was provided create one from the response data
             if (is_null($message)) {

@@ -122,7 +122,13 @@ class LpaContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_NOT_FOUND,
                     [],
-                    ''
+                    json_encode(
+                        [
+                            'title' => 'Not found',
+                            'details' => '',
+                            'data' => []
+                        ]
+                    )
                 )
             );
 
@@ -171,7 +177,7 @@ class LpaContext extends BaseIntegrationContext
                         [
                             'title' => 'Bad Request',
                             'details' => 'LPA not eligible due to registration date',
-                            'data' => '',
+                            'data' => [],
                         ]
                     )
                 )
@@ -206,7 +212,7 @@ class LpaContext extends BaseIntegrationContext
                         [
                             'title' => 'Bad Request',
                             'details' => 'LPA not eligible as an activation key already exists',
-                            'data' => '',
+                            'data' => [],
                         ]
                     )
                 )
@@ -1180,7 +1186,15 @@ class LpaContext extends BaseIntegrationContext
         $this->apiFixtures->post('/v1/actor-codes/summary')
             ->respondWith(
                 new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Not found',
+                            'details' => '',
+                            'data' => []
+                        ]
+                    )
                 )
             );
 
