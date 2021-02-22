@@ -24,6 +24,7 @@ use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
+use DateTime;
 
 /**
  * Class CheckYourAnswersHandler
@@ -152,6 +153,14 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             ]
                         )
                     );
+                case (DateTime::createFromFormat('Y-m-d', $result) instanceof DateTime):
+                    return new HtmlResponse($this->renderer->render(
+                        'actor::already-requested-activation-key',
+                        [
+                            'user'  => $this->user,
+                            'arrival_date' => DateTime::createFromFormat('Y-m-d', $result)->modify('+2 weeks')
+                        ]
+                    ));
             }
         }
     }
