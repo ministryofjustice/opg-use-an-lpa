@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 
 /**
+ * @coversDefaultClass \Common\Service\Lpa\ParseLpaData
+ *
  * @property array     lpaData
  * @property string    actorToken
  * @property string    lpaId
