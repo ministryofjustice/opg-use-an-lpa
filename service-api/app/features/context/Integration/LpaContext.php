@@ -1211,7 +1211,8 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $codeExists = new stdClass();
-        $codeExists->Created = (new DateTime())->modify('-1 day')->format('Y-m-d');
+        $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
+        $codeExists->Created = $createdDate;
 
         $this->pactPostInteraction(
             $this->codesApiPactProvider,
@@ -1228,7 +1229,8 @@ class LpaContext extends BaseIntegrationContext
             $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('Activation key requested less than 14 days ago', $ex->getMessage());
+            assertEquals('LPA not eligible as an activation was already requested within 14 days', $ex->getMessage());
+            assertEquals(['activation_key_created' => $createdDate], $ex->getAdditionalData());
             return;
         }
 

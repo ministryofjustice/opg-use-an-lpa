@@ -984,6 +984,8 @@ class LpaContext implements Context
      */
     public function iRequestAnActivationKeyAgainWithin14CalendarDays()
     {
+        $createdDate = (new DateTime())->modify('-1 day')->format('Y-m-d');
+
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
@@ -1002,7 +1004,7 @@ class LpaContext implements Context
                     [],
                     json_encode(
                         [
-                            'Created' => (new DateTime())->modify('-1 day')->format('Y-m-d')
+                            'Created' => $createdDate
                         ]
                     )
                 )
@@ -1023,7 +1025,11 @@ class LpaContext implements Context
             ]
         );
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-        $this->ui->assertSession()->responseContains('Activation key requested less than 14 days ago');
+        $this->ui->assertSession()->responseContains('activation_key_created');
+        $this->ui->assertSession()->responseContains($createdDate);
+        $this->ui->assertSession()->responseContains(
+            'LPA not eligible as a recently created activation key already exists'
+        );
     }
 
     /**
