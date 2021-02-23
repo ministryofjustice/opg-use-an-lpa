@@ -9,7 +9,6 @@ use App\DataAccess\Repository\LpasInterface;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
-use App\Middleware\ProblemDetailsMiddleware;
 use DateTime;
 use Psr\Log\LoggerInterface;
 
@@ -243,14 +242,13 @@ class OlderLpaService
         if ($hasActivationCode instanceof DateTime) {
             if ((int) $hasActivationCode->diff(new DateTime(), true)->format('%a') <= 14) {
                 throw new BadRequestException(
-                    'Activation key created less than 2 weeks ago already exists',
+                    'LPA not eligible as an activation was already requested within 14 days',
                     [
                         'activation_key_created' => $hasActivationCode->format('Y-m-d')
                     ]
                 );
-            } else {
-                throw new BadRequestException('LPA not eligible as an activation key already exists');
             }
+            throw new BadRequestException('LPA not eligible as an activation key already exists');
         }
 
         return $lpaAndActorMatchResponse;

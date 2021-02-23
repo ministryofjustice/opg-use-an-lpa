@@ -26,6 +26,7 @@ class AddOlderLpa
     private const LPA_NOT_ELIGIBLE       = 'LPA not eligible due to registration date';
     private const LPA_DOES_NOT_MATCH     = 'LPA details do not match';
     private const LPA_HAS_ACTIVATION_KEY = 'LPA not eligible as an activation key already exists';
+    private const LPA_HAS_ACTIVATION_KEY_WITHIN_14_DAYS = 'LPA not eligible as an activation was already requested within 14 days';
 
     /** @var ApiClient */
     private ApiClient $apiClient;
@@ -116,6 +117,14 @@ class AddOlderLpa
             case self::LPA_HAS_ACTIVATION_KEY:
                 $code = EventCodes::LPA_HAS_ACTIVATION_KEY;
                 $response = new OlderLpaApiResponse(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $additionalData);
+                break;
+
+            case self::LPA_HAS_ACTIVATION_KEY_WITHIN_14_DAYS:
+                $code = EventCodes::LPA_HAS_ACTIVATION_KEY_WITHIN_14_DAYS;
+                $response = new OlderLpaApiResponse(
+                    OlderLpaApiResponse::HAS_ACTIVATION_KEY_WITHIN_14_DAYS,
+                    $additionalData
+                );
                 break;
 
             default:

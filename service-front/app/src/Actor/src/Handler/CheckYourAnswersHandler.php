@@ -153,12 +153,15 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             ]
                         )
                     );
-                case (DateTime::createFromFormat('Y-m-d', $result) instanceof DateTime):
+                case OlderLpaApiResponse::HAS_ACTIVATION_KEY_WITHIN_14_DAYS:
                     return new HtmlResponse($this->renderer->render(
                         'actor::already-requested-activation-key',
                         [
                             'user'  => $this->user,
-                            'arrival_date' => DateTime::createFromFormat('Y-m-d', $result)->modify('+2 weeks')
+                            'arrival_date' => DateTime::createFromFormat(
+                                'Y-m-d',
+                                $result->getData()['activation_key_created']
+                            )->modify('+2 weeks')
                         ]
                     ));
             }
