@@ -47,13 +47,12 @@ class ApiException extends AbstractApiException
     public function __construct(
         string $message,
         int $code = self::DEFAULT_ERROR,
-        ResponseInterface $response = null,
-        array $additionalData = [],
+        ?ResponseInterface $response = null,
+        ?array $additionalData,
         Throwable $previous = null
     ) {
         $this->response = $response;
         $this->code = $code;
-        $this->additionalData = $additionalData;
 
         parent::__construct(self::DEFAULT_TITLE, $message, $additionalData, $previous);
     }
@@ -63,17 +62,6 @@ class ApiException extends AbstractApiException
         return $this->response;
     }
 
-    /**
-     * Returns the body content of the response decoded from JSON into an
-     * associative array.
-     *
-     * @return array
-     */
-    public function getAdditionalData(): array
-    {
-        return $this->additionalData;
-    }
-
     public static function create(string $message = null, ResponseInterface $response = null, Throwable $previous = null): ApiException
     {
         $code = self::DEFAULT_ERROR;
@@ -81,7 +69,9 @@ class ApiException extends AbstractApiException
         if (! is_null($response)) {
             $body = json_decode($response->getBody()->getContents(), true);
             $code = $response->getStatusCode();
-            $additionalData = isset($body['data']) ? $body['data'] : [];
+            if (isset($body['data'])) {
+                $additionalData = $body['data'];
+            }
 
             //  If no message was provided create one from the response data
             if (is_null($message)) {

@@ -22,17 +22,6 @@ use RuntimeException;
  */
 class AddOlderLpa
 {
-    /** @var string The LPA was successfully added */
-    public const SUCCESS            = 'SUCCESS';
-    /** @var string The LPA reference number was not found */
-    public const NOT_FOUND          = 'NOT_FOUND';
-    /** @var string The LPA is not eligible to be added */
-    public const NOT_ELIGIBLE       = 'NOT_ELIGIBLE';
-    /** @var string The details provided do not match our records */
-    public const DOES_NOT_MATCH     = 'NOT_MATCH';
-    /** @var string There is already an activation key available/in-flight */
-    public const HAS_ACTIVATION_KEY = 'HAS_ACTIVATION_KEY';
-
     // Exception messages returned from the API layer
     private const LPA_NOT_ELIGIBLE       = 'LPA not eligible due to registration date';
     private const LPA_DOES_NOT_MATCH     = 'LPA details do not match';
@@ -64,7 +53,7 @@ class AddOlderLpa
         string $lastname,
         DateTimeInterface $dob,
         string $postcode
-    ): string {
+    ): OlderLpaApiResponse {
         $data = [
             'reference_number'  => $lpaUid,
             'first_names'       => $firstnames,
@@ -80,9 +69,9 @@ class AddOlderLpa
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_BAD_REQUEST:
-                    return $this->badRequestReturned($lpaUid, $apiEx->getMessage());
+                    return $this->badRequestReturned($lpaUid, $apiEx->getMessage(), $apiEx->getAdditionalData());
                 case StatusCodeInterface::STATUS_NOT_FOUND:
-                    return $this->notFoundReturned($lpaUid);
+                    return $this->notFoundReturned($lpaUid, $apiEx->getAdditionalData());
                 default:
                     // An API exception that we don't want to handle has been caught, pass it up the stack
                     throw $apiEx;
@@ -97,7 +86,7 @@ class AddOlderLpa
             ]
         );
 
-        return self::SUCCESS;
+        return new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
     }
 
     /**
@@ -106,26 +95,27 @@ class AddOlderLpa
      *
      * @param int    $lpaUid
      * @param string $message
+     * @param array  $additionalData
      *
-     * @return string
+     * @return OlderLpaApiResponse
      * @throws RuntimeException
      */
-    private function badRequestReturned(int $lpaUid, string $message): string
+    private function badRequestReturned(int $lpaUid, string $message, array $additionalData): OlderLpaApiResponse
     {
         switch ($message) {
             case self::LPA_NOT_ELIGIBLE:
                 $code = EventCodes::LPA_NOT_ELIGIBLE;
-                $action = self::NOT_ELIGIBLE;
+                $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_ELIGIBLE, $additionalData);
                 break;
 
             case self::LPA_DOES_NOT_MATCH:
                 $code = EventCodes::LPA_DOES_NOT_MATCH;
-                $action = self::DOES_NOT_MATCH;
+                $response = new OlderLpaApiResponse(OlderLpaApiResponse::DOES_NOT_MATCH, $additionalData);
                 break;
 
             case self::LPA_HAS_ACTIVATION_KEY:
                 $code = EventCodes::LPA_HAS_ACTIVATION_KEY;
-                $action = self::HAS_ACTIVATION_KEY;
+                $response = new OlderLpaApiResponse(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $additionalData);
                 break;
 
             default:
@@ -144,17 +134,19 @@ class AddOlderLpa
             ]
         );
 
-        return $action;
+        return $response;
     }
 
     /**
      * Translates a 'Not Found' response from our API into an appropriate const value and also logs the result
      *
-     * @param int $lpaUid
+     * @param int   $lpaUid
+     * @param array $additionalData
      *
-     * @return string
+     * @return OlderLpaApiResponse
+     * @throws RuntimeException
      */
-    private function notFoundReturned(int $lpaUid): string
+    private function notFoundReturned(int $lpaUid, array $additionalData): OlderLpaApiResponse
     {
         $this->logger->notice(
             'LPA with reference number {uId} not found',
@@ -165,6 +157,6 @@ class AddOlderLpa
             ]
         );
 
-        return self::NOT_FOUND;
+        return new OlderLpaApiResponse(OlderLpaApiResponse::NOT_FOUND, $additionalData);
     }
 }
