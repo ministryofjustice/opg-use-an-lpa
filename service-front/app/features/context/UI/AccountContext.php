@@ -795,13 +795,7 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_GONE,
                     [],
-                    json_encode(
-                        [
-                            'title' => 'Gone',
-                            'details' => 'Email reset token has expired',
-                            'data' => [],
-                        ]
-                    )
+                    json_encode([])
                 )
             );
 
@@ -890,9 +884,8 @@ class AccountContext implements Context
                     [],
                     json_encode(
                         [
-                            'title' => 'Conflict',
-                            'details' => 'User already exists with email address ' . $this->email,
-                            'data' => ['email' => $this->email],
+                            'Email' => $this->email,
+                            'ActivationToken' => $this->activationToken,
                         ]
                     )
                 )
@@ -926,10 +919,7 @@ class AccountContext implements Context
                     [],
                     json_encode(
                         [
-                            'title' => 'Conflict',
-                            'details' => 'Account creation email conflict - another user has requested' .
-                                         'to change their email to ' . $this->userEmail,
-                            'data' => ['email' => $this->email],
+                            'message' => 'Another user has requested to change their email to ' . $this->userEmail,
                         ]
                     )
                 )
@@ -1014,20 +1004,7 @@ class AccountContext implements Context
         } else {
             // API call for authentication
             $this->apiFixtures->patch('/v1/auth')
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_UNAUTHORIZED,
-                        [],
-                        json_encode(
-                            [
-                                'title' => 'Unauthorized',
-                                'details' => 'Authentication attempted against inactive account with Id ' .
-                                    $this->userId,
-                                'data' => ['id' => $this->userId],
-                            ]
-                        )
-                    )
-                );
+                ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
         }
 
         $this->ui->pressButton('Sign in');
@@ -1107,19 +1084,7 @@ class AccountContext implements Context
 
         // API call for authentication
         $this->apiFixtures->patch('/v1/auth')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Not found',
-                            'details' => 'User not found for email ' . $this->userEmail,
-                            'data' => [],
-                        ]
-                    )
-                )
-            );
+            ->respondWith(new Response(StatusCodeInterface::STATUS_NOT_FOUND, [], json_encode([])));
 
         $this->ui->pressButton('Sign in');
     }
@@ -1134,19 +1099,7 @@ class AccountContext implements Context
 
         // API call for authentication
         $this->apiFixtures->patch('/v1/auth')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_FORBIDDEN,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Forbidden',
-                            'details' => 'Authentication failed for email ' . $this->userEmail,
-                            'data' => ['email' => $this->userEmail],
-                        ]
-                    )
-                )
-            );
+            ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])));
 
         $this->ui->pressButton('Sign in');
     }
@@ -1159,19 +1112,7 @@ class AccountContext implements Context
         // remove successful reset token and add failure state
         $this->apiFixtures->getHandlers()->pop();
         $this->apiFixtures->get('/v1/can-password-reset')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_GONE,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Gone',
-                            'details' => 'Password reset token has expired for account with Id ' . $this->userId,
-                            'data' => ['id' => $this->userId],
-                        ]
-                    )
-                )
-            );
+            ->respondWith(new Response(StatusCodeInterface::STATUS_GONE));
 
         $this->ui->visit('/forgot-password/123456');
     }
@@ -1183,19 +1124,7 @@ class AccountContext implements Context
     {
         // remove successful reset token and add failure state
         $this->apiFixtures->patch('/v1/user-activation')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Not found',
-                            'details' => 'User not found for token',
-                            'data' => [],
-                        ]
-                    )
-                )
-            );
+            ->respondWith(new Response(StatusCodeInterface::STATUS_NOT_FOUND));
 
         $this->ui->visit('/activate-account/' . $this->activationToken);
     }
@@ -1480,13 +1409,7 @@ class AccountContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_FORBIDDEN,
                     [],
-                    json_encode(
-                        [
-                            'title' => 'Forbidden',
-                            'details' => 'Authentication failed for user ID ' . $this->userId,
-                            'data' => ['userId' => $this->userId],
-                        ]
-                    )
+                    json_encode([])
                 )
             );
 
@@ -1543,20 +1466,7 @@ class AccountContext implements Context
 
         // API call for authentication
         $this->apiFixtures->patch('/v1/auth')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Not found',
-                            'details' => 'User not found for email' . $this->userEmail,
-                            'data' => ['email' => $this->userEmail]
-,
-                        ]
-                    )
-                )
-            );
+            ->respondWith(new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([])));
 
         $this->ui->pressButton('Sign in');
     }
@@ -1633,17 +1543,7 @@ class AccountContext implements Context
     {
         $this->apiFixtures->patch('/v1/request-change-email')
             ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_CONFLICT,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Conflict',
-                            'details' => 'User already exists with email address ' . $this->userEmail,
-                            'data' => ['email' => $this->userEmail],
-                        ]
-                    )
-                )
+                new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([]))
             )->inspectRequest(
                 function (RequestInterface $request) {
                     $params = json_decode($request->getBody()->getContents(), true);
@@ -1698,17 +1598,7 @@ class AccountContext implements Context
     {
         $this->apiFixtures->patch('/v1/request-change-email')
             ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_FORBIDDEN,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Forbidden',
-                            'details' => 'Authentication failed for user ID ' . $this->userId,
-                            'data' => ['userId' => $this->userId],
-                        ]
-                    )
-                )
+                new Response(StatusCodeInterface::STATUS_FORBIDDEN, [], json_encode([]))
             )->inspectRequest(
                 function (RequestInterface $request) {
                     $params = json_decode($request->getBody()->getContents(), true);

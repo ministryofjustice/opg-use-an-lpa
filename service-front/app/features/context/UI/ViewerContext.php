@@ -602,15 +602,7 @@ class ViewerContext implements Context
         $this->apiFixtures->post('/v1/viewer-codes/summary')
             ->respondWith(
                 new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Not found',
-                            'details' => '',
-                            'data' => [],
-                        ]
-                    )
+                    StatusCodeInterface::STATUS_NOT_FOUND
                 )
             );
 

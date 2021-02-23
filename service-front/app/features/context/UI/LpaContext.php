@@ -1380,13 +1380,7 @@ class LpaContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_NOT_FOUND,
                     [],
-                    json_encode(
-                        [
-                            'title' => 'Not found',
-                            'details' => '',
-                            'data' => [],
-                        ]
-                    )
+                    json_encode([])
                 )
             );
 
@@ -1403,13 +1397,7 @@ class LpaContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_NOT_FOUND,
                     [],
-                    json_encode(
-                        [
-                            'title' => 'Not found',
-                            'details' => '',
-                            'data' => [],
-                        ]
-                    )
+                    json_encode([])
                 )
             );
 
@@ -1426,13 +1414,7 @@ class LpaContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_NOT_FOUND,
                     [],
-                    json_encode(
-                        [
-                            'title' => 'Not found',
-                            'details' => '',
-                            'data' => [],
-                        ]
-                    )
+                    json_encode([])
                 )
             );
 
@@ -1586,15 +1568,7 @@ class LpaContext implements Context
         $this->apiFixtures->post('/v1/actor-codes/summary')
             ->respondWith(
                 new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode(
-                        [
-                            'title' => '',
-                            'details' => '',
-                            'data' => [],
-                        ]
-                    )
+                    StatusCodeInterface::STATUS_NOT_FOUND
                 )
             );
 

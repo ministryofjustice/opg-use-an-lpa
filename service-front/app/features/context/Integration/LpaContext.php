@@ -123,13 +123,7 @@ class LpaContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_NOT_FOUND,
                     [],
-                    json_encode(
-                        [
-                            'title' => 'Not found',
-                            'details' => '',
-                            'data' => []
-                        ]
-                    )
+                    ''
                 )
             );
 
@@ -1187,15 +1181,7 @@ class LpaContext extends BaseIntegrationContext
         $this->apiFixtures->post('/v1/actor-codes/summary')
             ->respondWith(
                 new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Not found',
-                            'details' => '',
-                            'data' => []
-                        ]
-                    )
+                    StatusCodeInterface::STATUS_NOT_FOUND
                 )
             );
 
