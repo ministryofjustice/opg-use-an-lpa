@@ -62,5 +62,5 @@ class EventCodes
     /**
      * LPA has activation key created in the last 14 days
      */
-    public const LPA_HAS_ACTIVATION_KEY_WITHIN_14_DAYS = 'LPA_HAS_ACTIVATION_KEY_WITHIN_14_DAYS';
+    public const LPA_HAS_RECENT_ACTIVATION_KEY = 'LPA_HAS_RECENT_ACTIVATION_KEY';
 }

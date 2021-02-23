@@ -153,7 +153,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             ]
                         )
                     );
-                case OlderLpaApiResponse::HAS_ACTIVATION_KEY_WITHIN_14_DAYS:
+                case OlderLpaApiResponse::HAS_RECENT_ACTIVATION_KEY:
                     return new HtmlResponse($this->renderer->render(
                         'actor::already-requested-activation-key',
                         [
