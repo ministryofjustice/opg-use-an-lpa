@@ -7,6 +7,7 @@ namespace CommonTest\Service\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Lpa\AddOlderLpa;
+use Common\Service\Lpa\OlderLpaApiResponse;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
@@ -77,7 +78,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode']
         );
 
-        $this->assertEquals(AddOlderLpa::SUCCESS, $result);
+        $this->assertEquals(OlderLpaApiResponse::SUCCESS, $result->getResponse());
     }
 
     /**
@@ -114,7 +115,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode']
         );
 
-        $this->assertEquals(AddOlderLpa::NOT_ELIGIBLE, $result);
+        $this->assertEquals(OlderLpaApiResponse::NOT_ELIGIBLE, $result->getResponse());
     }
 
     /**
@@ -151,7 +152,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode']
         );
 
-        $this->assertEquals(AddOlderLpa::DOES_NOT_MATCH, $result);
+        $this->assertEquals(OlderLpaApiResponse::DOES_NOT_MATCH, $result->getResponse());
     }
 
     /**
@@ -188,7 +189,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode']
         );
 
-        $this->assertEquals(AddOlderLpa::HAS_ACTIVATION_KEY, $result);
+        $this->assertEquals(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $result->getResponse());
     }
 
     /**
@@ -225,7 +226,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode']
         );
 
-        $this->assertEquals(AddOlderLpa::NOT_FOUND, $result);
+        $this->assertEquals(OlderLpaApiResponse::NOT_FOUND, $result->getResponse());
     }
 
     /**

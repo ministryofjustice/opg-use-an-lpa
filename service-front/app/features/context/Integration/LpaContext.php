@@ -10,6 +10,7 @@ use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
+use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTime;
 use Exception;
@@ -143,7 +144,7 @@ class LpaContext extends BaseIntegrationContext
             $this->userPostCode,
         );
 
-        assertEquals(AddOlderLpa::NOT_FOUND, $result);
+        assertEquals(OlderLpaApiResponse::NOT_FOUND, $result->getResponse());
     }
 
     /**
@@ -194,7 +195,7 @@ class LpaContext extends BaseIntegrationContext
             $this->userPostCode,
         );
 
-        assertEquals(AddOlderLpa::NOT_ELIGIBLE, $result);
+        assertEquals(OlderLpaApiResponse::NOT_ELIGIBLE, $result->getResponse());
     }
 
     /**
@@ -229,7 +230,7 @@ class LpaContext extends BaseIntegrationContext
             $this->userPostCode,
         );
 
-        assertEquals(AddOlderLpa::HAS_ACTIVATION_KEY, $result);
+        assertEquals(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $result->getResponse());
     }
 
     /**

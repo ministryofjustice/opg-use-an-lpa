@@ -48,7 +48,7 @@ class ApiException extends AbstractApiException
         string $message,
         int $code = self::DEFAULT_ERROR,
         ?ResponseInterface $response = null,
-        ?array $additionalData,
+        ?array $additionalData = null,
         Throwable $previous = null
     ) {
         $this->response = $response;
