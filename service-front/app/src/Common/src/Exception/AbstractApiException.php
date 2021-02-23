@@ -32,24 +32,28 @@ abstract class AbstractApiException extends RuntimeException
      *
      * @param string $title
      * @param string|null $message
-     * @param array $additionalData
+     * @param array|null $additionalData
      * @param Throwable|null $previous
      */
-    public function __construct(string $title, ?string $message = null, ?array $additionalData = [], ?Throwable $previous = null)
-    {
-        //  Ensure the the required data is set in the extending exception classes
+    public function __construct(
+        string $title,
+        ?string $message = null,
+        ?array $additionalData = null,
+        ?Throwable $previous = null
+    ) {
+        // Ensure the the required data is set in the extending exception classes
         if (!is_numeric($this->getCode())) {
             throw new RuntimeException('A numeric code must be set for API exceptions');
         }
 
-        //  If no message has been provided make it equal the title
-        if (empty($message)) {
+        // If no message has been provided make it equal the title
+        if ($message === null) {
             $message = $title;
         }
 
         //  Set the remaining data for the exception
         $this->title = $title;
-        $this->additionalData = $additionalData;
+        $this->additionalData = $additionalData ?? [];
 
         parent::__construct($message, $this->getCode(), $previous);
     }

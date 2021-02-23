@@ -78,7 +78,16 @@ class ClientTest extends TestCase
     public function correctly_processeses_a_non_200_response_to_a_get_request()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
+            ->willReturn(
+                $this->setupResponse(
+                    json_encode([
+                        'title' => 'Not found',
+                        'details' => '',
+                        'data' => [],
+                    ]),
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )->reveal()
+            );
 
         $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
@@ -92,7 +101,16 @@ class ClientTest extends TestCase
     {
         $exceptionProphecy = $this->prophesize(HttpException::class);
         $exceptionProphecy->getResponse()
-            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)->reveal());
+            ->willReturn(
+                $this->setupResponse(
+                    json_encode([
+                        'title' => 'An API exception has occurred',
+                        'details' => '',
+                        'data' => [],
+                    ]),
+                    StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+                )->reveal()
+            );
 
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
@@ -128,7 +146,16 @@ class ClientTest extends TestCase
     public function correctly_processes_a_non_2xx_response_to_a_post_request()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
+            ->willReturn(
+                $this->setupResponse(
+                    json_encode([
+                        'title' => 'An API exception has occurred',
+                        'details' => '',
+                        'data' => [],
+                    ]),
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )->reveal()
+            );
 
         $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
@@ -142,7 +169,16 @@ class ClientTest extends TestCase
     {
         $exceptionProphecy = $this->prophesize(HttpException::class);
         $exceptionProphecy->getResponse()
-            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)->reveal());
+            ->willReturn(
+                $this->setupResponse(
+                    json_encode([
+                        'title' => 'An API exception has occurred',
+                        'details' => '',
+                        'data' => [],
+                    ]),
+                    StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+                )->reveal()
+            );
 
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
@@ -178,7 +214,16 @@ class ClientTest extends TestCase
     public function correctly_processes_a_non_2xx_response_to_a_put_request()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
+            ->willReturn(
+                $this->setupResponse(
+                    json_encode([
+                        'title' => 'Not found',
+                        'details' => '',
+                        'data' => [],
+                    ]),
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )->reveal()
+            );
 
         $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
@@ -192,7 +237,17 @@ class ClientTest extends TestCase
     {
         $exceptionProphecy = $this->prophesize(HttpException::class);
         $exceptionProphecy->getResponse()
-            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)->reveal());
+            ->willReturn(
+                $this->setupResponse(
+                    json_encode([
+                        'title' => 'An API exception has occurred',
+                        'details' => '',
+                        'data' => [],
+                    ]),
+                    StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+                )->reveal()
+            )
+        ;
 
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
@@ -228,7 +283,16 @@ class ClientTest extends TestCase
     public function correctly_processes_a_non_2xx_response_to_a_patch_request()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
+            ->willReturn(
+                $this->setupResponse(
+                    json_encode([
+                        'title' => 'Not found',
+                        'details' => '',
+                        'data' => [],
+                    ]),
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )->reveal()
+            );
 
         $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
@@ -242,7 +306,16 @@ class ClientTest extends TestCase
     {
         $exceptionProphecy = $this->prophesize(HttpException::class);
         $exceptionProphecy->getResponse()
-            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)->reveal());
+            ->willReturn(
+                $this->setupResponse(
+                    json_encode([
+                        'title' => 'An API exception has occurred',
+                        'details' => '',
+                        'data' => [],
+                    ]),
+                    StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+                )->reveal()
+            );
 
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
@@ -278,7 +351,16 @@ class ClientTest extends TestCase
     public function correctly_processes_a_non_2xx_response_to_a_delete_request()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
+            ->willReturn(
+                $this->setupResponse(
+                    json_encode([
+                        'title' => 'Not found',
+                        'details' => '',
+                        'data' => [],
+                    ]),
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )->reveal()
+            );
 
         $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
@@ -292,7 +374,16 @@ class ClientTest extends TestCase
     {
         $exceptionProphecy = $this->prophesize(HttpException::class);
         $exceptionProphecy->getResponse()
-            ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)->reveal());
+            ->willReturn(
+                $this->setupResponse(
+                    json_encode([
+                        'title' => 'An API exception has occurred',
+                        'details' => '',
+                        'data' => [],
+                    ]),
+                    StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+                )->reveal()
+            );
 
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
@@ -314,7 +405,7 @@ class ClientTest extends TestCase
     /** @test */
     public function sets_appropriate_request_headers_for_request()
     {
-        $this->apiClient->sendRequest(Argument::that(function($request) {
+        $this->apiClient->sendRequest(Argument::that(function ($request) {
             $this->assertInstanceOf(RequestInterface::class, $request);
 
             $headers = $request->getHeaders();
@@ -347,7 +438,7 @@ class ClientTest extends TestCase
     /** @test */
     public function sets_token_in_header_if_supplied()
     {
-        $this->apiClient->sendRequest(Argument::that(function($request) {
+        $this->apiClient->sendRequest(Argument::that(function ($request) {
             $this->assertInstanceOf(RequestInterface::class, $request);
 
             $headers = $request->getHeaders();
@@ -379,7 +470,7 @@ class ClientTest extends TestCase
     /** @test */
     public function sets_trace_id_in_header_if_supplied()
     {
-        $this->apiClient->sendRequest(Argument::that(function($request) {
+        $this->apiClient->sendRequest(Argument::that(function ($request) {
             $this->assertInstanceOf(RequestInterface::class, $request);
 
             $headers = $request->getHeaders();
@@ -451,7 +542,8 @@ class ClientTest extends TestCase
      * Provides expected valid response codes that we know our methods should handle.
      * @return array
      */
-    public function validStatusCodes(): array {
+    public function validStatusCodes(): array
+    {
         return [
             [ StatusCodeInterface::STATUS_OK ],
             [ StatusCodeInterface::STATUS_CREATED ],
