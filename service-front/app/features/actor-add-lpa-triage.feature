@@ -40,12 +40,6 @@ Feature: Add an LPA triage page
     Then I should be taken to the <dashboard> page
 
   @ui
-  Scenario: The user is shown additional content if they do not have an activation key
-    Given I am on the add an LPA triage page
-    When I say I do not have an activation key
-    Then I am shown content explaining why I can not use this service
-
-  @ui
   Scenario: The user is taken to request activation key
     Given I am on the add an LPA triage page
     When I say I do not have an activation key

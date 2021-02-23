@@ -233,17 +233,6 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I am shown content explaining why I can not use this service$/
-     */
-    public function iAmShownContentExplainingWhyICannotUseThisService()
-    {
-        $this->ui->assertPageAddress('/lpa/add');
-        $this->ui->assertPageContainsText(
-            'If the LPA was registered before this date, you need to use the paper LPA with people and organisations.'
-        );
-    }
-
-    /**
      * @Then /^I am taken back to previous page where I can see my answers and change them$/
      */
     public function iAmTakenBackToPreviousPageWhereICanSeeMyAnswersAndChangeThem()
