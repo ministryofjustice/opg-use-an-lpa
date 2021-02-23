@@ -195,6 +195,51 @@ class AddOlderLpaTest extends TestCase
     /**
      * @test
      * @covers ::__invoke
+     * @covers ::badRequestReturned
+     */
+    public function it_will_fail_to_add_due_to_recently_created_active_activation_key(): void
+    {
+        $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
+        $this->apiClientProphecy
+            ->httpPatch(
+                '/v1/lpas/request-letter',
+                [
+                    'reference_number' => (string) $this->olderLpa['reference_number'],
+                    'first_names' => $this->olderLpa['first_names'],
+                    'last_name' => $this->olderLpa['last_name'],
+                    'dob' => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode' => $this->olderLpa['postcode'],
+                ]
+            )->willThrow(
+                new ApiException(
+                    'LPA not eligible as a recently created activation key already exists',
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    null,
+                    ['activation_key_created' => $createdDate]
+                )
+            );
+
+        $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
+        $result  = $sut(
+            '12-1-1-1-1234',
+            $this->olderLpa['reference_number'],
+            $this->olderLpa['first_names'],
+            $this->olderLpa['last_name'],
+            $this->olderLpa['dob'],
+            $this->olderLpa['postcode']
+        );
+
+        $response = new OlderLpaApiResponse(
+            OlderLpaApiResponse::HAS_RECENT_ACTIVATION_KEY,
+            ['activation_key_created' => $createdDate]
+        );
+
+        $this->assertEquals($response, $result);
+    }
+
+    /**
+     * @test
+     * @covers ::__invoke
      * @covers ::notFoundReturned
      */
     public function it_will_fail_to_add_due_to_not_finding_the_lpa(): void
