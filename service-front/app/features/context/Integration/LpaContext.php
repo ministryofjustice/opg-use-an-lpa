@@ -138,7 +138,9 @@ class LpaContext extends BaseIntegrationContext
             $this->userPostCode,
         );
 
-        assertEquals(OlderLpaApiResponse::NOT_FOUND, $result->getResponse());
+        $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_FOUND, []);
+
+        assertEquals($response, $result);
     }
 
     /**
@@ -189,7 +191,9 @@ class LpaContext extends BaseIntegrationContext
             $this->userPostCode,
         );
 
-        assertEquals(OlderLpaApiResponse::NOT_ELIGIBLE, $result->getResponse());
+        $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_ELIGIBLE, []);
+
+        assertEquals($response, $result);
     }
 
     /**
@@ -224,7 +228,9 @@ class LpaContext extends BaseIntegrationContext
             $this->userPostCode,
         );
 
-        assertEquals(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $result->getResponse());
+        $response = new OlderLpaApiResponse(OlderLpaApiResponse::HAS_ACTIVATION_KEY, []);
+
+        assertEquals($response, $result);
     }
 
     /**
@@ -1226,18 +1232,12 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request an activation key again within 14 calendar days$/
-     */
-    public function iRequestAnActivationKeyAgainWithin14CalendarDays()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @Then /^I will be told that I have already requested this and the date I should receive the letter by$/
      */
     public function iWillBeToldThatIHaveAlreadyRequestedThisAndTheDateIShouldReceiveTheLetterBy()
     {
+        $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
+
         // API call for requesting activation code
         $this->apiFixtures->patch('/v1/lpas/request-letter')
             ->respondWith(
@@ -1247,8 +1247,8 @@ class LpaContext extends BaseIntegrationContext
                     json_encode(
                         [
                             'title' => 'Bad Request',
-                            'details' => 'Activation key requested less than 14 days ago',
-                            'data' => '',
+                            'details' => 'LPA not eligible as a recently created activation key already exists',
+                            'data' => ['activation_key_created' => $createdDate],
                         ]
                     )
                 )
@@ -1265,7 +1265,20 @@ class LpaContext extends BaseIntegrationContext
             $this->userPostCode,
         );
 
-        assertEquals(AddOlderLpa::ACTIVATION_KEY_WITHIN_14_DAYS, $result);
+        $response = new OlderLpaApiResponse(
+            OlderLpaApiResponse::HAS_RECENT_ACTIVATION_KEY,
+            ['activation_key_created' => $createdDate]
+        );
+
+        assertEquals($response, $result);
+    }
+
+    /**
+     * @Given /^I requested an activation key within the last 14 days$/
+     */
+    public function iRequestedAnActivationKeyWithinTheLast14Days()
+    {
+        // Not needed for this context
     }
 
     protected function prepareContext(): void

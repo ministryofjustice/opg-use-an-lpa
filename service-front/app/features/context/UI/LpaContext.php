@@ -25,6 +25,7 @@ use Psr\Http\Message\RequestInterface;
  * @property int    userId
  * @property string userSurname
  * @property string activationCode
+ * @property DateTime codeCreatedDate
  */
 class LpaContext implements Context
 {
@@ -55,6 +56,7 @@ class LpaContext implements Context
     public function iAlreadyHaveAValidActivationKeyForMyLpa()
     {
         $this->activationCode = 'ACTVATIONCOD';
+        $this->codeCreatedDate = (new DateTime())->modify('-15 days');
     }
 
     /**
@@ -1490,19 +1492,27 @@ class LpaContext implements Context
                     )
                 );
         } else {
+            if ((int) $this->codeCreatedDate->diff(new DateTime(), true)->format('%a') <= 14) {
+                $responseData = [
+                    'title' => 'Bad request',
+                    'details' => 'LPA not eligible as a recently created activation key already exists',
+                    'data' => ['activation_key_created' => $this->codeCreatedDate->format('Y-m-d')],
+                ];
+            } else {
+                $responseData = [
+                    'title' => 'LPA not eligible as an activation key already exists',
+                    'details' => 'LPA not eligible as an activation key already exists',
+                    'data' => [],
+                ];
+            }
+
             // Setup fixture for activation key already existing
             $this->apiFixtures->patch('/v1/lpas/request-letter')
                 ->respondWith(
                     new Response(
                         StatusCodeInterface::STATUS_BAD_REQUEST,
                         [],
-                        json_encode(
-                            [
-                                'title' => 'LPA not eligible as an activation key already exists',
-                                'details' => 'LPA not eligible as an activation key already exists',
-                                'data' => [],
-                            ]
-                        )
+                        json_encode($responseData)
                     )
                 );
         }
@@ -1964,6 +1974,14 @@ class LpaContext implements Context
     }
 
     /**
+     * @Given /^I requested an activation key within the last 14 days$/
+     */
+    public function iRequestedAnActivationKeyWithinTheLast14Days()
+    {
+        $this->codeCreatedDate = (new DateTime())->modify('-14 days');
+    }
+
+    /**
      * @When /^I say I do not have an activation key$/
      */
     public function iSayIDoNotHaveAnActivationKey()
@@ -2342,31 +2360,6 @@ class LpaContext implements Context
         $this->ui->fillField('postcode', ($this->lpa->donor->addresses[0])->postcode);
 
         $this->ui->pressButton('Continue');
-    }
-
-    /**
-     * @When /^I request an activation key again within 14 calendar days$/
-     */
-    public function iRequestAnActivationKeyAgainWithin14CalendarDays()
-    {
-        // Setup fixture for activation key already existing
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Activation key requested less than 14 days ago',
-                            'details' => 'Activation key requested less than 14 days ago',
-                            'data' => [],
-                        ]
-                    )
-                )
-            );
-
-        $this->fillAndSubmitOlderLpaForm();
-        $this->iConfirmThatThoseDetailsAreCorrect();
     }
 
     /**

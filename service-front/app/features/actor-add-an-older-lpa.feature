@@ -41,6 +41,8 @@ Feature: Add an older LPA
   @ui @integration
   Scenario: The user is told if they have already requested an activation key within the last 14 days
     Given I already have a valid activation key for my LPA
+    And I requested an activation key within the last 14 days
     And I am on the add an older LPA page
-    When I request an activation key again within 14 calendar days
+    When I provide the details from a valid paper document
+    And I confirm that those details are correct
     Then I will be told that I have already requested this and the date I should receive the letter by
