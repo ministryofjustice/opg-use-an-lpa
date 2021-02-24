@@ -16,6 +16,7 @@ use Common\Handler\{AbstractHandler,
     UserAware};
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\AddOlderLpa;
+use Common\Service\Lpa\OlderLpaApiResponse;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
 use Mezzio\Helper\UrlHelper;
@@ -124,24 +125,24 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 $this->data['postcode'],
             );
 
-            switch ($result) {
-                case AddOlderLpa::NOT_ELIGIBLE:
+            switch ($result->getResponse()) {
+                case OlderLpaApiResponse::NOT_ELIGIBLE:
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-send-activation-key',
                         ['user'  => $this->user]
                     ));
-                case AddOlderLpa::HAS_ACTIVATION_KEY:
+                case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
                     return new HtmlResponse($this->renderer->render(
                         'actor::already-have-activation-key',
                         ['user'  => $this->user]
                     ));
-                case AddOlderLpa::DOES_NOT_MATCH:
-                case AddOlderLpa::NOT_FOUND:
+                case OlderLpaApiResponse::DOES_NOT_MATCH:
+                case OlderLpaApiResponse::NOT_FOUND:
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-find-lpa',
                         ['user'  => $this->user]
                     ));
-                case AddOlderLpa::SUCCESS:
+                case OlderLpaApiResponse::SUCCESS:
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::send-activation-key-confirmation',
