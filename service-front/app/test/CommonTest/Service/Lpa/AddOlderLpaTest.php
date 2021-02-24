@@ -175,7 +175,11 @@ class AddOlderLpaTest extends TestCase
             )->willThrow(
                 new ApiException(
                     'LPA not eligible as an activation key already exists',
-                    StatusCodeInterface::STATUS_BAD_REQUEST
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    null,
+                    [
+                        'activation_key_created' => (new DateTime())->modify('-14 days')->format('Y-m-d')
+                    ]
                 )
             );
 
