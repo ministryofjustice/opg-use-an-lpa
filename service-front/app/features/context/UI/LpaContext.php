@@ -2362,5 +2362,10 @@ class LpaContext implements Context
     public function iWillBeToldThatIHaveAlreadyRequestedThisAndTheDateIShouldReceiveTheLetterBy()
     {
         $this->ui->assertPageContainsText('You\'ve already asked for an activation key for this LPA');
+        $expectedArrival = DateTime::createFromFormat(
+            'Y-m-d',
+            $this->codeCreatedDate
+        )->modify('+2 weeks')->format('d F Y');
+        $this->ui->assertPageContainsText($expectedArrival);
     }
 }
