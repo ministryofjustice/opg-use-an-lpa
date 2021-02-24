@@ -37,6 +37,7 @@ use JSHayes\FakeRequests\MockHandler;
  * @property string userPostCode
  * @property string userFirstname
  * @property string userSurname
+ * @property string codeCreatedDate
  */
 class LpaContext extends BaseIntegrationContext
 {
@@ -92,6 +93,7 @@ class LpaContext extends BaseIntegrationContext
     public function iAlreadyHaveAValidActivationKeyForMyLPA()
     {
         $this->passcode = 'XYUPHWQRECHV';
+        $this->codeCreatedDate = (new DateTime())->modify('-15 days')->format('Y-m-d');
     }
 
     /**
@@ -138,7 +140,9 @@ class LpaContext extends BaseIntegrationContext
             $this->userPostCode,
         );
 
-        assertEquals(OlderLpaApiResponse::NOT_FOUND, $result->getResponse());
+        $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_FOUND, []);
+
+        assertEquals($response, $result);
     }
 
     /**
@@ -189,15 +193,18 @@ class LpaContext extends BaseIntegrationContext
             $this->userPostCode,
         );
 
-        assertEquals(OlderLpaApiResponse::NOT_ELIGIBLE, $result->getResponse());
+        $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_ELIGIBLE, []);
+
+        assertEquals($response, $result);
     }
 
     /**
      * @Then /^I am told that I have an activation key for this LPA and where to find it$/
+     * @Then /^I will be told that I have already requested this and the date I should receive the letter by$/
      */
     public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
     {
-        // API call for getLpaById call happens inside of the check access codes handler
+        // API call for requesting activation code
         $this->apiFixtures->patch('/v1/lpas/request-letter')
             ->respondWith(
                 new Response(
@@ -207,7 +214,9 @@ class LpaContext extends BaseIntegrationContext
                         [
                             'title' => 'Bad Request',
                             'details' => 'LPA not eligible as an activation key already exists',
-                            'data' => [],
+                            'data' => [
+                                'activation_key_created' => $this->codeCreatedDate
+                            ],
                         ]
                     )
                 )
@@ -224,7 +233,12 @@ class LpaContext extends BaseIntegrationContext
             $this->userPostCode,
         );
 
-        assertEquals(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $result->getResponse());
+        $response = new OlderLpaApiResponse(
+            OlderLpaApiResponse::HAS_ACTIVATION_KEY,
+            ['activation_key_created' => $this->codeCreatedDate]
+        );
+
+        assertEquals($response, $result);
     }
 
     /**
@@ -1223,6 +1237,14 @@ class LpaContext extends BaseIntegrationContext
         );
 
         assertNotNull($actorCode);
+    }
+
+    /**
+     * @Given /^I requested an activation key within the last 14 days$/
+     */
+    public function iRequestedAnActivationKeyWithinTheLast14Days()
+    {
+        $this->codeCreatedDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
     }
 
     protected function prepareContext(): void

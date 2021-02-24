@@ -1,0 +1,28 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}You've already asked for an activation key for this LPA{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}You've already asked for an activation key for this LPA{% endtrans %}</h1>
+
+                    <p class="govuk-body">{% trans with {'%date%': code_date(arrival_date)} %}You should get the activation key in the post by %date%. If it does not arrive by that date, please contact us.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans with {'%link%': path('lpa.change-details')} %}We're sending the key to the address we have for you on our records. <a href="%link%" class="govuk-link">Let us know if you've moved house.</a>{% endtrans %}</p>
+
+                    <a href="{{ path('lpa.dashboard') }}" draggable="false" class="govuk-button">{% trans %}Back to your LPAs{% endtrans %}</a>
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}

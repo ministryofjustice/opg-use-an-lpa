@@ -33,6 +33,14 @@ class LpaContext implements Context
     use SetupEnv;
 
     /**
+     * @Given /^I have already requested an activation key$/
+     */
+    public function iHaveAlreadyRequestedAnActivationKey()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @Given /^I have been given access to use an LPA via a paper document$/
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument()
@@ -972,6 +980,59 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I request an activation key again within 14 calendar days$/
+     */
+    public function iRequestAnActivationKeyAgainWithin14CalendarDays()
+    {
+        $createdDate = (new DateTime())->modify('-1 day')->format('Y-m-d');
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // check if actor has a code
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Created' => $createdDate
+                        ]
+                    )
+                )
+            );
+
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/lpas/request-letter',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->ui->assertSession()->responseContains('activation_key_created');
+        $this->ui->assertSession()->responseContains($createdDate);
+        $this->ui->assertSession()->responseContains(
+            'LPA not eligible as an activation key already exists'
+        );
+    }
+
+    /**
      * @When /^I request to add an LPA that does not exist$/
      */
     public function iRequestToAddAnLPAThatDoesNotExist()
@@ -1288,6 +1349,14 @@ class LpaContext implements Context
      * @Then /^I want to see the option to cancel the code$/
      */
     public function iWantToSeeTheOptionToCancelTheCode()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I will be told that I have already requested this and the date I should receive the letter by$/
+     */
+    public function iWillBeToldThatIHaveAlreadyRequestedThisAndTheDateIShouldReceiveTheLetterBy()
     {
         // Not needed for this context
     }
@@ -2021,6 +2090,8 @@ class LpaContext implements Context
      */
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
     {
+        $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
+
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
@@ -2033,7 +2104,7 @@ class LpaContext implements Context
 
         // check if actor has a code
         $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => '2021-01-01'])));
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => $createdDate])));
 
         // API call to request an activation key
         $this->apiPatch(
@@ -2049,7 +2120,11 @@ class LpaContext implements Context
                 'user-token' => $this->userId,
             ]
         );
+
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->ui->assertSession()->responseContains('LPA not eligible as an activation key already exists');
+        $this->ui->assertSession()->responseContains('activation_key_created');
+        $this->ui->assertSession()->responseContains($createdDate);
     }
 
     /**
