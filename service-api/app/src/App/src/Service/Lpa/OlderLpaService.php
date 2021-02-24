@@ -240,15 +240,12 @@ class OlderLpaService
         );
 
         if ($hasActivationCode instanceof DateTime) {
-            if ((int) $hasActivationCode->diff(new DateTime(), true)->format('%a') <= 14) {
-                throw new BadRequestException(
-                    'LPA not eligible as a recently created activation key already exists',
-                    [
-                        'activation_key_created' => $hasActivationCode->format('Y-m-d')
-                    ]
-                );
-            }
-            throw new BadRequestException('LPA not eligible as an activation key already exists');
+            throw new BadRequestException(
+                'LPA not eligible as an activation key already exists',
+                [
+                      'activation_key_created' => $hasActivationCode->format('Y-m-d')
+                ]
+            );
         }
 
         return $lpaAndActorMatchResponse;

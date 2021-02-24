@@ -16,8 +16,6 @@ class OlderLpaApiResponse
     public const DOES_NOT_MATCH     = 'NOT_MATCH';
     /** @var string There is already an activation key available/in-flight */
     public const HAS_ACTIVATION_KEY = 'HAS_ACTIVATION_KEY';
-    /** @var string There is a recently created activation key available/in-flight */
-    public const HAS_RECENT_ACTIVATION_KEY = 'HAS_RECENT_ACTIVATION_KEY';
 
     private array $data;
     private string $response;
@@ -55,7 +53,6 @@ class OlderLpaApiResponse
             self::DOES_NOT_MATCH,
             self::NOT_ELIGIBLE,
             self::HAS_ACTIVATION_KEY,
-            self::HAS_RECENT_ACTIVATION_KEY
         ];
 
         if (in_array($response, $allowedResponses)) {

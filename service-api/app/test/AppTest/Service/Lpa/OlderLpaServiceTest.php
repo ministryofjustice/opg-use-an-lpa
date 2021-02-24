@@ -17,6 +17,7 @@ use App\Service\Lpa\ValidateOlderLpaRequirements;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
@@ -515,7 +516,7 @@ class OlderLpaServiceTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function throws_exception_with_date_if_actor_has_activation_key_created_within_14_days()
+    public function throws_exception_with_date_if_actor_has_active_activation_key()
     {
         $lpaId = '700000004321';
         $actorId = '700000004444';
@@ -554,8 +555,12 @@ class OlderLpaServiceTest extends TestCase
             $service->checkLPAMatchAndGetActorDetails($dataToMatch);
         } catch (BadRequestException $ex) {
             $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            $this->assertEquals('LPA not eligible as an activation key already exists', $ex->getMessage());
             $this->assertEquals(['activation_key_created' => $createdDate], $ex->getAdditionalData());
+            return;
         }
+
+        throw new ExpectationFailedException('Expected an activation key to already exist for actor');
     }
 
     /**

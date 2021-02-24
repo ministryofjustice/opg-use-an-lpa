@@ -25,7 +25,7 @@ use Psr\Http\Message\RequestInterface;
  * @property int    userId
  * @property string userSurname
  * @property string activationCode
- * @property DateTime codeCreatedDate
+ * @property string codeCreatedDate
  */
 class LpaContext implements Context
 {
@@ -56,7 +56,7 @@ class LpaContext implements Context
     public function iAlreadyHaveAValidActivationKeyForMyLpa()
     {
         $this->activationCode = 'ACTVATIONCOD';
-        $this->codeCreatedDate = (new DateTime())->modify('-15 days');
+        $this->codeCreatedDate = (new DateTime())->modify('-15 days')->format('Y-m-d');
     }
 
     /**
@@ -1492,27 +1492,21 @@ class LpaContext implements Context
                     )
                 );
         } else {
-            if ((int) $this->codeCreatedDate->diff(new DateTime(), true)->format('%a') <= 14) {
-                $responseData = [
-                    'title' => 'Bad request',
-                    'details' => 'LPA not eligible as a recently created activation key already exists',
-                    'data' => ['activation_key_created' => $this->codeCreatedDate->format('Y-m-d')],
-                ];
-            } else {
-                $responseData = [
-                    'title' => 'LPA not eligible as an activation key already exists',
-                    'details' => 'LPA not eligible as an activation key already exists',
-                    'data' => [],
-                ];
-            }
-
             // Setup fixture for activation key already existing
             $this->apiFixtures->patch('/v1/lpas/request-letter')
                 ->respondWith(
                     new Response(
                         StatusCodeInterface::STATUS_BAD_REQUEST,
                         [],
-                        json_encode($responseData)
+                        json_encode(
+                            [
+                                'title' => 'Bad request',
+                                'details' => 'LPA not eligible as an activation key already exists',
+                                'data' => [
+                                    'activation_key_created' => $this->codeCreatedDate
+                                ],
+                            ]
+                        )
                     )
                 );
         }
@@ -1978,7 +1972,7 @@ class LpaContext implements Context
      */
     public function iRequestedAnActivationKeyWithinTheLast14Days()
     {
-        $this->codeCreatedDate = (new DateTime())->modify('-14 days');
+        $this->codeCreatedDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
     }
 
     /**
