@@ -12,7 +12,7 @@ class FeatureEnabledFactory
     {
         $config = $container->get('config');
 
-        if (!isset($config['feature_flags']) && !is_array($config['feature_flags'])) {
+        if (!isset($config['feature_flags']) || !is_array($config['feature_flags'])) {
             throw new \UnexpectedValueException('Missing feature flags configuration');
         }
 
