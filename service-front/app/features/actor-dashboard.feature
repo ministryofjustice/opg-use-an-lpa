@@ -31,7 +31,7 @@ Feature: The user is able to see correct information on their dashboard
   Scenario: As a user I can see the message on instructions and preferences
     Given I have added an LPA to my account
     When I am on the dashboard page
-    Then I can see the message Important: This lpa has instructions or preferences
+    Then I can see the message Important: This LPA has instructions or preferences
 
   @ui
   Scenario: As a user I can see the read more link in the message on instructions and preferences

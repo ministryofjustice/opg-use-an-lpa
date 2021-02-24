@@ -458,7 +458,7 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
 
-        $this->ui->assertPageContainsText('Important: This lpa has instructions or preferences');
+        $this->ui->assertPageContainsText('Important: This LPA has instructions or preferences');
 
         $session = $this->ui->getSession();
         $page = $session->getPage();
@@ -576,7 +576,7 @@ class LpaContext implements Context
 
     /**
      * @Then /^I can see the message (.*)$/
-     * <Important: This lpa has instructions or preferences>
+     * <Important: This LPA has instructions or preferences>
      */
     public function iCanSeeTheMessage($message)
     {
