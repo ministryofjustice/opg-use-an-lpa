@@ -1105,51 +1105,6 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I provide the details from a valid paper document that already has an activation key$/
-     */
-    public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
-    {
-        $data = [
-            'reference_number' => $this->lpaUid,
-            'dob' => $this->userDob,
-            'postcode' => $this->userPostCode,
-            'first_names' => $this->userFirstname,
-            'last_name' => $this->userSurname,
-        ];
-
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
-        $codeExists = new stdClass();
-        $codeExists->Created = '2021-01-15';
-
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/exists',
-            [
-                'lpa' => $this->lpaUid,
-                'actor' => $this->actorLpaId,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            $codeExists
-        );
-
-        try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
-        } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA not eligible as an activation key already exists', $ex->getMessage());
-            return;
-        }
-
-        throw new ExpectationFailedException('LPA registration date should not have been eligible');
-    }
-
-    /**
      * @When /^I provide the details from a valid paper LPA document$/
      */
     public function iProvideTheDetailsFromAValidPaperLPADocument()
@@ -1192,6 +1147,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @When /^I request an activation key again within 14 calendar days$/
+     * @When /^I provide the details from a valid paper document that already has an activation key$/
      */
     public function iRequestAnActivationKeyAgainWithin14CalendarDays()
     {
@@ -1229,12 +1185,12 @@ class LpaContext extends BaseIntegrationContext
             $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA not eligible as an activation was already requested within 14 days', $ex->getMessage());
+            assertEquals('LPA not eligible as an activation key already exists', $ex->getMessage());
             assertEquals(['activation_key_created' => $createdDate], $ex->getAdditionalData());
             return;
         }
 
-        throw new ExpectationFailedException('Activation key should have already been requested less than 14 days ago');
+        throw new ExpectationFailedException('Activation key should have already been requested');
     }
 
     /**
