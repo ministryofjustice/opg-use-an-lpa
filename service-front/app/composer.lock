@@ -65,16 +65,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.173.11",
+            "version": "3.173.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "539d5235443368a34e98b8f0f434f2146a8ddb32"
+                "reference": "8d9fd59b9a25fe5b615bd94ced9c1539340452f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/539d5235443368a34e98b8f0f434f2146a8ddb32",
-                "reference": "539d5235443368a34e98b8f0f434f2146a8ddb32",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8d9fd59b9a25fe5b615bd94ced9c1539340452f6",
+                "reference": "8d9fd59b9a25fe5b615bd94ced9c1539340452f6",
                 "shasum": ""
             },
             "require": {
@@ -149,9 +149,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.173.11"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.173.15"
             },
-            "time": "2021-02-17T19:12:46+00:00"
+            "time": "2021-02-23T19:13:28+00:00"
         },
         {
             "name": "brick/varexporter",
