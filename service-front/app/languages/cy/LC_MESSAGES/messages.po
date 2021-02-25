@@ -4268,7 +4268,6 @@ msgid "Enter the LPA reference number"
 msgstr "Nodwch y cyfeirnod LPA"
 
 #: src/Actor/templates/actor/create-account.html.twig:64
-#, fuzzy
 msgid ""
 "I agree to the <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel="
 "\"noreferrer noopener\">terms of use (opens in new tab)</a>"
@@ -4277,7 +4276,6 @@ msgstr ""
 "agor mewn tab newydd)</a>"
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:58
-#, fuzzy
 msgid ""
 "By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class="
 "\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>."
