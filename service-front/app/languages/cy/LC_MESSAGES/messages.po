@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-02-24T18:54:44+00:00\n"
+"POT-Creation-Date: 2021-02-25T11:49:04+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -5402,9 +5402,5 @@ msgid ""
 msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:24
-msgid "We’ve found"
-msgstr "Rydym wedi dod o hyd"
-
-#: src/Viewer/templates/viewer/check-code-found.html.twig:24
-msgid "'s LPA"
-msgstr "'s LPA"
+msgid "We’ve found %firstname% %surname%'s LPA"
+msgstr "Rydym wedi dod o hyd %firstname% %surname%’s LPA"
