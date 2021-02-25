@@ -51,6 +51,13 @@ Feature: Add an older LPA
     And I confirm that those details are correct
     Then I am told that I have an activation key for this LPA and where to find it
 
+  @integration @acceptance @pact
+  Scenario: The user is told if they have already requested an activation key within the last 14 days
+    Given I have already requested an activation key
+    And I am on the add an older LPA page
+    When I request an activation key again within 14 calendar days
+    Then I will be told that I have already requested this and the date I should receive the letter by
+
   @acceptance
   Scenario: The user cannot add an older LPA to their account due to missing data in request
     Given I am on the add an older LPA page

@@ -24,6 +24,7 @@ use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
+use DateTime;
 
 /**
  * Class CheckYourAnswersHandler
@@ -132,10 +133,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ['user'  => $this->user]
                     ));
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
-                    return new HtmlResponse($this->renderer->render(
-                        'actor::already-have-activation-key',
-                        ['user'  => $this->user]
-                    ));
+                    return $this->checkActivationKeyCreatedDate($result->getData()['activation_key_created']);
                 case OlderLpaApiResponse::DOES_NOT_MATCH:
                 case OlderLpaApiResponse::NOT_FOUND:
                     return new HtmlResponse($this->renderer->render(
@@ -154,5 +152,26 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     );
             }
         }
+    }
+
+    private function checkActivationKeyCreatedDate(string $createdDate): ResponseInterface
+    {
+        $createdDate = DateTime::createFromFormat('Y-m-d', $createdDate);
+
+        if ((int) $createdDate->diff(new DateTime(), true)->format('%a') <= 14) {
+            return new HtmlResponse($this->renderer->render(
+                'actor::already-requested-activation-key',
+                [
+                    'user'  => $this->user,
+                    'arrival_date' => $createdDate->modify('+2 weeks')
+                ]
+            ));
+        }
+        return new HtmlResponse($this->renderer->render(
+            'actor::already-have-activation-key',
+            [
+                'user'  => $this->user
+            ]
+        ));
     }
 }

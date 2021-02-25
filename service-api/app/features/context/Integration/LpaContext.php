@@ -942,6 +942,14 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @Given /^I have already requested an activation key$/
+     */
+    public function iHaveAlreadyRequestedAnActivationKey()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @Given /^I have been given access to use an LPA via a paper document$/
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument()
@@ -1097,51 +1105,6 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I provide the details from a valid paper document that already has an activation key$/
-     */
-    public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
-    {
-        $data = [
-            'reference_number' => $this->lpaUid,
-            'dob' => $this->userDob,
-            'postcode' => $this->userPostCode,
-            'first_names' => $this->userFirstname,
-            'last_name' => $this->userSurname,
-        ];
-
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
-        $codeExists = new stdClass();
-        $codeExists->Created = '2021-01-15';
-
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/exists',
-            [
-                'lpa' => $this->lpaUid,
-                'actor' => $this->actorLpaId,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            $codeExists
-        );
-
-        try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
-        } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals("LPA not eligible as an activation key already exists", $ex->getMessage());
-            return;
-        }
-
-        throw new ExpectationFailedException('LPA registration date should not have been eligible');
-    }
-
-    /**
      * @When /^I provide the details from a valid paper LPA document$/
      */
     public function iProvideTheDetailsFromAValidPaperLPADocument()
@@ -1180,6 +1143,54 @@ class LpaContext extends BaseIntegrationContext
 
         assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
         assertEquals($lpaMatchResponse['actor-id'], $this->actorLpaId);
+    }
+
+    /**
+     * @When /^I request an activation key again within 14 calendar days$/
+     * @When /^I provide the details from a valid paper document that already has an activation key$/
+     */
+    public function iRequestAnActivationKeyAgainWithin14CalendarDays()
+    {
+        $data = [
+            'reference_number' => $this->lpaUid,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
+        ];
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $codeExists = new stdClass();
+        $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
+        $codeExists->Created = $createdDate;
+
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/exists',
+            [
+                'lpa' => $this->lpaUid,
+                'actor' => $this->actorLpaId,
+            ],
+            StatusCodeInterface::STATUS_OK,
+            $codeExists
+        );
+
+        try {
+            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
+        } catch (BadRequestException $ex) {
+            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            assertEquals('LPA not eligible as an activation key already exists', $ex->getMessage());
+            assertEquals(['activation_key_created' => $createdDate], $ex->getAdditionalData());
+            return;
+        }
+
+        throw new ExpectationFailedException('Activation key should have already been requested');
     }
 
     /**
@@ -1383,6 +1394,14 @@ class LpaContext extends BaseIntegrationContext
      * @Then /^I want to see the option to cancel the code$/
      */
     public function iWantToSeeTheOptionToCancelTheCode()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I will be told that I have already requested this and the date I should receive the letter by$/
+     */
+    public function iWillBeToldThatIHaveAlreadyRequestedThisAndTheDateIShouldReceiveTheLetterBy()
     {
         // Not needed for this context
     }
