@@ -17,6 +17,7 @@ use App\Service\Lpa\ValidateOlderLpaRequirements;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
@@ -98,14 +99,15 @@ class OlderLpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function returns_true_if_a_code_exists_for_an_actor()
+    public function returns_code_created_date_if_code_exists_for_actor()
     {
         $actorUid = '700000055554';
         $lpaId = '700000012345';
+        $createdDate = (new DateTime('now'))->modify('-15 days')->format('Y-m-d');
 
         $lpaCodesResponse = new ActorCode(
             [
-                'Created' => '2021-01-01'
+                'Created' => $createdDate
             ],
             new DateTime('now')
         );
@@ -116,12 +118,12 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
 
-        $codeExists = $service->hasActivationCode($lpaId, $actorUid);
-        $this->assertTrue($codeExists);
+        $codeCreated = $service->hasActivationCode($lpaId, $actorUid);
+        $this->assertEquals(DateTime::createFromFormat('Y-m-d', $createdDate), $codeCreated);
     }
 
     /** @test */
-    public function returns_false_if_a_code_does_not_exist_for_an_actor()
+    public function returns_null_if_a_code_does_not_exist_for_an_actor()
     {
         $actorUid = '700000055554';
         $lpaId = '700000012345';
@@ -140,7 +142,7 @@ class OlderLpaServiceTest extends TestCase
         $service = $this->getOlderLpaService();
 
         $codeExists = $service->hasActivationCode($lpaId, $actorUid);
-        $this->assertFalse($codeExists);
+        $this->assertNull($codeExists);
     }
 
     /** @test */
@@ -514,10 +516,11 @@ class OlderLpaServiceTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function older_lpa_lookup_throws_an_exception_if_actor_has_activation_key()
+    public function throws_exception_with_date_if_actor_has_active_activation_key()
     {
         $lpaId = '700000004321';
         $actorId = '700000004444';
+        $createdDate = (new DateTime('-2 weeks'))->format('Y-m-d');
 
         $dataToMatch = [
             'reference_number' => $lpaId,
@@ -543,16 +546,21 @@ class OlderLpaServiceTest extends TestCase
             ->checkActorHasCode($lpaId, $actorId)
             ->willReturn(new ActorCode(
                 [
-                    'Created' => (new DateTime('-1 week'))->format('Y-m-d')
+                    'Created' => $createdDate
                 ],
                 new DateTime()
             ));
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
-        $this->expectExceptionMessage('LPA not eligible as an activation key already exists');
+        try {
+            $service->checkLPAMatchAndGetActorDetails($dataToMatch);
+        } catch (BadRequestException $ex) {
+            $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            $this->assertEquals('LPA not eligible as an activation key already exists', $ex->getMessage());
+            $this->assertEquals(['activation_key_created' => $createdDate], $ex->getAdditionalData());
+            return;
+        }
 
-        $service->checkLPAMatchAndGetActorDetails($dataToMatch);
+        throw new ExpectationFailedException('Expected an activation key to already exist for actor');
     }
 
     /**

@@ -9,6 +9,7 @@ use App\DataAccess\Repository\LpasInterface;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use DateTime;
 use Psr\Log\LoggerInterface;
 
 class OlderLpaService
@@ -156,25 +157,37 @@ class OlderLpaService
      *
      * @param string $lpaId
      * @param string $actorId
-     * @return bool
+     * @return DateTime|null
      */
-    public function hasActivationCode(string $lpaId, string $actorId): bool
+    public function hasActivationCode(string $lpaId, string $actorId): ?DateTime
     {
         $response = $this->actorCodes->checkActorHasCode($lpaId, $actorId);
 
         if (is_null($response->getData()['Created'])) {
-            return false;
+            return null;
         }
 
-        $this->logger->notice(
-            'Activation key request denied for actor {actorId} on LPA {lpaId} as they have an active activation key',
-            [
-                'actorId' => $actorId,
-                'lpaId' => $lpaId
-            ]
-        );
+        $createdDate = DateTime::createFromFormat('Y-m-d', $response->getData()['Created']);
 
-        return true;
+        if ((int) $createdDate->diff(new DateTime(), true)->format('%a') <= 14) {
+            $this->logger->notice(
+                'Activation key created within the last 14 days already exists for actor {actorId} on LPA {lpaId}',
+                [
+                    'actorId' => $actorId,
+                    'lpaId' => $lpaId
+                ]
+            );
+        } else {
+            $this->logger->notice(
+                'Activation key request denied for actor {actorId} on LPA {lpaId}' .
+                'as they have an active activation key',
+                [
+                    'actorId' => $actorId,
+                    'lpaId' => $lpaId
+                ]
+            );
+        }
+        return $createdDate;
     }
 
     /**
@@ -226,8 +239,13 @@ class OlderLpaService
             $lpaAndActorMatchResponse['actor-id']
         );
 
-        if ($hasActivationCode) {
-            throw new BadRequestException('LPA not eligible as an activation key already exists');
+        if ($hasActivationCode instanceof DateTime) {
+            throw new BadRequestException(
+                'LPA not eligible as an activation key already exists',
+                [
+                      'activation_key_created' => $hasActivationCode->format('Y-m-d')
+                ]
+            );
         }
 
         return $lpaAndActorMatchResponse;

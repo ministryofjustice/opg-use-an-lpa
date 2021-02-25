@@ -51,8 +51,8 @@ class OlderLpaApiResponse
             self::SUCCESS,
             self::NOT_FOUND,
             self::DOES_NOT_MATCH,
+            self::NOT_ELIGIBLE,
             self::HAS_ACTIVATION_KEY,
-            self::NOT_ELIGIBLE
         ];
 
         if (in_array($response, $allowedResponses)) {
