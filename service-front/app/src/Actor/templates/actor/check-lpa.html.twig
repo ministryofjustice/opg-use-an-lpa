@@ -9,7 +9,7 @@
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('lpa.add') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+            <a href="{{ path('lpa.add-by-code') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -92,7 +92,7 @@
 
                     <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
 
-                    <a href="{{ path('lpa.add') }}" role="button" class="govuk-button govuk-button--secondary">
+                    <a href="{{ path('lpa.dashboard') }}" role="button" class="govuk-button govuk-button--secondary">
                         {% trans %}Cancel{% endtrans %}
                     </a>
 
