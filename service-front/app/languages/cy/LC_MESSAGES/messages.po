@@ -2651,7 +2651,7 @@ msgid "Why is this?"
 msgstr "Pam?"
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:50
-msgid "<strong>Important: </strong>This lpa has instructions or preferences."
+msgid "<strong>Important: </strong>This LPA has instructions or preferences."
 msgstr ""
 "<strong>Pwysig:</strong> Mae gan yr LPA hon gyfarwyddiadau neu ddymuniadau."
 
