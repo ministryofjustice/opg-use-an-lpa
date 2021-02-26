@@ -9,13 +9,13 @@ Feature: View an LPA via share code
     Given I access the viewer service insecurely
     Then the viewer service homepage should be shown securely
 
-#  @integration @acceptance @smoke
-#  Scenario: View an LPA
-#    Given I have been given access to an LPA via share code
-#    And I access the viewer service
-#    And I give a valid LPA share code
-#    When I enter an organisation name and confirm the LPA is correct
-#    Then I can see the full details of the valid LPA
+  @integration @acceptance @smoke
+  Scenario: View an LPA
+    Given I have been given access to an LPA via share code
+    And I access the viewer service
+    And I give a valid LPA share code
+    When I enter an organisation name and confirm the LPA is correct
+    Then I can see the full details of the valid LPA
 
   @integration @acceptance
   Scenario: View a cancelled LPA
