@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-02-25T15:49:25+00:00\n"
+"POT-Creation-Date: 2021-02-26T13:03:27+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -3439,23 +3439,23 @@ msgstr ""
 msgid "You can <a class=\"govuk-link\" href=\"%link%\">contact us</a> if you have any questions."
 msgstr ""
 
-#: src/Common/templates/error/404.html.twig:10
+#: src/Common/templates/error/404.html.twig:22
 msgid "Page not found"
 msgstr ""
 
-#: src/Common/templates/error/404.html.twig:12
+#: src/Common/templates/error/404.html.twig:24
 msgid "We could not find the page you're looking for."
 msgstr ""
 
-#: src/Common/templates/error/404.html.twig:15
+#: src/Common/templates/error/404.html.twig:27
 msgid "If you entered a web address, check it's correct."
 msgstr ""
 
-#: src/Common/templates/error/404.html.twig:18
+#: src/Common/templates/error/404.html.twig:30
 msgid "You can <a class=\"govuk-link\" href=\"https://www.gov.uk/\">return to GOV.UK</a> or start again."
 msgstr ""
 
-#: src/Common/templates/error/404.html.twig:23
+#: src/Common/templates/error/404.html.twig:35
 msgid "<a href=\"%link%\" draggable=\"false\" class=\"govuk-button\">Start again</a>"
 msgstr ""
 
@@ -3757,4 +3757,8 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:24
 msgid "We’ve found %firstname% %surname%'s LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:43
+msgid "on %date%"
 msgstr ""
