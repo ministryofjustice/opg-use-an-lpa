@@ -16,7 +16,7 @@
     "esm": "^3.2.25",
     "pdf-lib": "^1.16.0",
     "polka": "^0.5.2",
-    "puppeteer": "^7.0.4"
+    "puppeteer": "^7.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

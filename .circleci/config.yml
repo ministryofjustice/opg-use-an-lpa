@@ -767,7 +767,7 @@ orbs:
           - run:
               name: Build
               command: |
-                docker build --target production --file service-pdf/docker/app/Dockerfile --tag pdf:latest .
+                docker build --no-cache --target production --file service-pdf/docker/app/Dockerfile --tag pdf:latest .
           - ecr_login
           - run:
               name: Push container

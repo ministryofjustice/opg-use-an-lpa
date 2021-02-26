@@ -1,4 +1,4 @@
-FROM buildkite/puppeteer:5.2.1 AS production
+FROM buildkite/puppeteer:7.1.0 AS production
 
 WORKDIR /src/app
 COPY service-pdf/app/package.json ./package.json
