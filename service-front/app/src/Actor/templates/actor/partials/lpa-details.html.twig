@@ -47,7 +47,7 @@
 {%  endif %}
 {% if actorActive and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
     <div class="lpa-inactive-notice" >
-    <p class="govuk-body govuk-!-padding-2 govuk-!-margin-left-2 govuk-!-margin-bottom-0">{% trans %}<strong>Important: </strong>This lpa has instructions or preferences.{% endtrans %}
+    <p class="govuk-body govuk-!-padding-2 govuk-!-margin-left-2 govuk-!-margin-bottom-0">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
         <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.instructions-preferences') }}"> {% trans %}Read more{% endtrans %}</a>
     </p>
     </div>

@@ -25,6 +25,7 @@ use Psr\Http\Message\RequestInterface;
  * @property int    userId
  * @property string userSurname
  * @property string activationCode
+ * @property string codeCreatedDate
  */
 class LpaContext implements Context
 {
@@ -55,6 +56,7 @@ class LpaContext implements Context
     public function iAlreadyHaveAValidActivationKeyForMyLpa()
     {
         $this->activationCode = 'ACTVATIONCOD';
+        $this->codeCreatedDate = (new DateTime())->modify('-15 days')->format('Y-m-d');
     }
 
     /**
@@ -458,7 +460,7 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
 
-        $this->ui->assertPageContainsText('Important: This lpa has instructions or preferences');
+        $this->ui->assertPageContainsText('Important: This LPA has instructions or preferences');
 
         $session = $this->ui->getSession();
         $page = $session->getPage();
@@ -576,7 +578,7 @@ class LpaContext implements Context
 
     /**
      * @Then /^I can see the message (.*)$/
-     * <Important: This lpa has instructions or preferences>
+     * <Important: This LPA has instructions or preferences>
      */
     public function iCanSeeTheMessage($message)
     {
@@ -1498,9 +1500,11 @@ class LpaContext implements Context
                         [],
                         json_encode(
                             [
-                                'title' => 'LPA not eligible as an activation key already exists',
+                                'title' => 'Bad request',
                                 'details' => 'LPA not eligible as an activation key already exists',
-                                'data' => [],
+                                'data' => [
+                                    'activation_key_created' => $this->codeCreatedDate
+                                ],
                             ]
                         )
                     )
@@ -1964,6 +1968,14 @@ class LpaContext implements Context
     }
 
     /**
+     * @Given /^I requested an activation key within the last 14 days$/
+     */
+    public function iRequestedAnActivationKeyWithinTheLast14Days()
+    {
+        $this->codeCreatedDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
+    }
+
+    /**
      * @When /^I say I do not have an activation key$/
      */
     public function iSayIDoNotHaveAnActivationKey()
@@ -2342,5 +2354,18 @@ class LpaContext implements Context
         $this->ui->fillField('postcode', ($this->lpa->donor->addresses[0])->postcode);
 
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I will be told that I have already requested this and the date I should receive the letter by$/
+     */
+    public function iWillBeToldThatIHaveAlreadyRequestedThisAndTheDateIShouldReceiveTheLetterBy()
+    {
+        $this->ui->assertPageContainsText('You\'ve already asked for an activation key for this LPA');
+        $expectedArrival = DateTime::createFromFormat(
+            'Y-m-d',
+            $this->codeCreatedDate
+        )->modify('+2 weeks')->format('d F Y');
+        $this->ui->assertPageContainsText($expectedArrival);
     }
 }
