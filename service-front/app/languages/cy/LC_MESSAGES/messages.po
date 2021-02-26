@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-02-25T18:54:14+00:00\n"
+"POT-Creation-Date: 2021-02-26T03:21:19+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2702,16 +2702,6 @@ msgstr "WEDI DOD I BEN"
 msgid "CANCELLED"
 msgstr "DILËWYD"
 
-#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:8
-msgid ""
-"You can only use this service if we've sent you a letter or email with an "
-"activation key. Only LPAs registered after 16 July 2020 have an activation key."
-msgstr ""
-"I ddefnyddio’r gwasanaeth hwn, mae’n rhaid i chi fod wedi derbyn llythyr neu e-"
-"bost yn cynnwys allwedd cadarnhau cyfrif i wneud y cyfrif yn weithredol. Dim "
-"ond <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> a gofrestrwyd ar ôl yr "
-"16 Gorffennaf 2020 sydd ag allwedd cadarnhau cyfrif."
-
 #: src/Actor/templates/actor/partials/new-use-service.html.twig:4
 msgid "beta"
 msgstr "beta"
@@ -5339,3 +5329,4 @@ msgid ""
 "You can only use this service if your LPA was registered after 1 September "
 "2019."
 msgstr "Dim ond ar ôl 1 Medi 2019 y gallwch chi ddefnyddio’r gwasanaeth hwn."
+
