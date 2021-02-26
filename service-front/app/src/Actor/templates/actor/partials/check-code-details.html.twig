@@ -40,7 +40,6 @@
                         {% else %}
                             {% for code in code.Viewed %}
                                 {% if code.ViewedBy is not empty %}
-{#                                    {{ code.ViewedBy }} {% trans with {'%date%': code_date(code.Viewed, 'Y-m-d\\TH:i:s.u\\Z')} %}on %date%{% endtrans %}<br>#}
                                     {% trans with {'%organisation%': code.ViewedBy, '%date%': code_date(code.Viewed, 'Y-m-d\\TH:i:s.u\\Z')} %}%organisation% on %date%{% endtrans %}<br>
                                 {% endif %}
                             {% endfor %}
