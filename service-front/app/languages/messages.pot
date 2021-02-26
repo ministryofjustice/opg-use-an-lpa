@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-02-26T13:03:27+00:00\n"
+"POT-Creation-Date: 2021-02-26T16:50:53+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1955,27 +1955,27 @@ msgstr ""
 msgid "Viewed"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:49
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:50
 msgid "Not viewed"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:56
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:57
 msgid "Expires"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:59
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:60
 msgid "Expired"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:75
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:76
 msgid "Status"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:77
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:78
 msgid "EXPIRED"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:70
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:71
 msgid "CANCELLED"
 msgstr ""
 
@@ -3439,23 +3439,23 @@ msgstr ""
 msgid "You can <a class=\"govuk-link\" href=\"%link%\">contact us</a> if you have any questions."
 msgstr ""
 
-#: src/Common/templates/error/404.html.twig:22
+#: src/Common/templates/error/404.html.twig:10
 msgid "Page not found"
 msgstr ""
 
-#: src/Common/templates/error/404.html.twig:24
+#: src/Common/templates/error/404.html.twig:12
 msgid "We could not find the page you're looking for."
 msgstr ""
 
-#: src/Common/templates/error/404.html.twig:27
+#: src/Common/templates/error/404.html.twig:15
 msgid "If you entered a web address, check it's correct."
 msgstr ""
 
-#: src/Common/templates/error/404.html.twig:30
+#: src/Common/templates/error/404.html.twig:18
 msgid "You can <a class=\"govuk-link\" href=\"https://www.gov.uk/\">return to GOV.UK</a> or start again."
 msgstr ""
 
-#: src/Common/templates/error/404.html.twig:35
+#: src/Common/templates/error/404.html.twig:23
 msgid "<a href=\"%link%\" draggable=\"false\" class=\"govuk-button\">Start again</a>"
 msgstr ""
 
@@ -3759,6 +3759,6 @@ msgstr ""
 msgid "We’ve found %firstname% %surname%'s LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:43
-msgid "on %date%"
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:44
+msgid "%organisation% on %date%"
 msgstr ""
