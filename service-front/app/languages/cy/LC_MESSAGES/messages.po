@@ -4913,11 +4913,11 @@ msgstr ""
 
 #: src/Common/templates/error/error.html.twig:10
 msgid "Sorry, there is a problem with the service"
-msgstr ""
+msgstr "Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth"
 
 #: src/Common/templates/error/error.html.twig:11
 msgid "Try again later."
-msgstr ""
+msgstr "Rhowch gynnig arall arni yn nes ymlaen."
 
 #: src/Common/templates/error/error.html.twig:13
 msgid ""
@@ -4925,35 +4925,42 @@ msgid ""
 "                        you’ll have to <a href=\"%link%\" class=\"govuk-link"
 "\">start again.</a>"
 msgstr ""
+"Nid ydym wedi cadw unrhyw wybodaeth a roddwyd gennych. Pan fydd y gwasanaeth \n"
+"                        ar gael, bydd rhaid ichi <a href=\"%link%\" class="
+"\"govuk-link\">gychwyn eto.</a>"
 
 #: src/Common/templates/error/error.html.twig:19
 msgid ""
 "You can <a class=\"govuk-link\" href=\"%link%\">contact us</a> if you have any "
 "questions."
 msgstr ""
+"Gallwch <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a> os oes gennych "
+"unrhyw gwestiynau."
 
 #: src/Common/templates/error/404.html.twig:10
 msgid "Page not found"
-msgstr ""
+msgstr "Ni ellir dod o hyd i’r dudalen"
 
 #: src/Common/templates/error/404.html.twig:12
 msgid "We could not find the page you're looking for."
-msgstr ""
+msgstr "Nid oedd modd inni ddod o hyd i’r dudalen yr ydych yn chwilio amdani."
 
 #: src/Common/templates/error/404.html.twig:15
 msgid "If you entered a web address, check it's correct."
-msgstr ""
+msgstr "Os bu ichi nodi cyfeiriad gwe, gwiriwch eich bod wedi’i nodi’n gywir."
 
 #: src/Common/templates/error/404.html.twig:18
 msgid ""
 "You can <a class=\"govuk-link\" href=\"https://www.gov.uk/\">return to GOV.UK</"
 "a> or start again."
 msgstr ""
+"Gallwch ddychwelyd i <a class=\"govuk-link\" href=\"https://www.gov.uk/\">GOV.UK</"
+"a> neu gychwyn eto."
 
 #: src/Common/templates/error/404.html.twig:23
 msgid ""
 "<a href=\"%link%\" draggable=\"false\" class=\"govuk-button\">Start again</a>"
-msgstr ""
+msgstr "<a href=\"%link%\" draggable=\"false\" class=\"govuk-button\">Cychwyn eto</a>"
 
 #. Cancelling viewer code
 #: src/Actor/templates/actor/flash-messages.html.twig:7
