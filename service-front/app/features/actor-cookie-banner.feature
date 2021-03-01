@@ -19,7 +19,7 @@ Feature: Cookie consent
   @ui
   Scenario: Cookie banner disappears  when I accept all cookies
     Given I have seen the cookie banner
-    When I click on Accept all cookies button
+    When I click on Accept all cookies
     Then I should not see a cookie banner
 
   @ui
