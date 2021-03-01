@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-02-24T11:19:44+00:00\n"
+"POT-Creation-Date: 2021-02-25T15:49:25+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -11,6 +11,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:14
 #: src/Actor/templates/actor/check-access-codes.html.twig:15
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:22
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:36
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:14
 msgid "Back to your LPAs"
@@ -2487,7 +2488,7 @@ msgstr ""
 msgid "Stay signed in"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:24
+#: src/Viewer/templates/viewer/check-code-found.html.twig:3
 msgid "We’ve found this LPA"
 msgstr ""
 
@@ -3740,4 +3741,20 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:50
 msgid "<strong>Important: </strong>This LPA has instructions or preferences."
+msgstr ""
+
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:17
+msgid "You've already asked for an activation key for this LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:19
+msgid "You should get the activation key in the post by %date%. If it does not arrive by that date, please contact us."
+msgstr ""
+
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:20
+msgid "We're sending the key to the address we have for you on our records. <a href=\"%link%\" class=\"govuk-link\">Let us know if you've moved house.</a>"
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-found.html.twig:24
+msgid "We’ve found %firstname% %surname%'s LPA"
 msgstr ""

@@ -21,7 +21,7 @@
 
                     {{ govuk_form_open(form) }}
 
-                    <h1 class="govuk-heading-xl">{% trans %}We’ve found this LPA{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl">{% trans with {'%firstname%': lpa.donor.firstname, '%surname%': lpa.donor.surname} %}We’ve found %firstname% %surname%'s LPA{% endtrans %}</h1>
                     <table id="confirmation-table" class="govuk-table">
                         <tbody class="govuk-table__body">
                         <tr class="govuk-table__row">
