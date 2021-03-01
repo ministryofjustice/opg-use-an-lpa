@@ -2365,7 +2365,7 @@ class LpaContext implements Context
         $expectedArrival = DateTime::createFromFormat(
             'Y-m-d',
             $this->codeCreatedDate
-        )->modify('+2 weeks')->format('d F Y');
+        )->modify('+2 weeks')->format('j F Y');
         $this->ui->assertPageContainsText($expectedArrival);
     }
 }
