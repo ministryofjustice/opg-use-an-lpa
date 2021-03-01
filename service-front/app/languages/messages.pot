@@ -3756,5 +3756,5 @@ msgid "We’ve found %firstname% %surname%'s LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:8
-msgid "You can only use this service if your LPA was registered after 1 September 2019."
+msgid "You can only use this service if your LPA was registered on or after 1 September 2019."
 msgstr ""
