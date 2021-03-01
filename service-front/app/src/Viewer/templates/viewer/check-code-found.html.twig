@@ -21,7 +21,7 @@
 
                     {{ govuk_form_open(form) }}
 
-                    <h1 class="govuk-heading-xl">{% trans %}We’ve found this LPA{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl">{% trans with {'%firstname%': lpa.donor.firstname, '%surname%': lpa.donor.surname} %}We’ve found %firstname% %surname%'s LPA{% endtrans %}</h1>
                     <table id="confirmation-table" class="govuk-table">
                         <tbody class="govuk-table__body">
                         <tr class="govuk-table__row">
@@ -43,14 +43,10 @@
                         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                         <strong class="govuk-warning-text__text">
                             <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                            {% trans %}Check that these details are correct before continuing{% endtrans %}
+                            {% trans %}If this is not the right LPA, ask the donor or attorney to check the access code.{% endtrans %}
                         </strong>
                     </div>
-
-                    <div class="govuk-body">
-                        <p class="govuk-body">{% trans %}If this is not the right LPA, ask the donor or attorney to check the access code.{% endtrans %}</p>
-                    </div>
-
+                    
                     <details class="govuk-details" role="group">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">

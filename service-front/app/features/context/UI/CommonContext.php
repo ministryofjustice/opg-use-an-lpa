@@ -192,9 +192,17 @@ class CommonContext implements Context
         $this->ui->assertPageContainsText($button);
         if ($button === 'Set cookie preferences') {
             $this->ui->clickLink($button);
-        } else {
-            $this->ui->pressButton($button);
         }
+    }
+
+    /**
+     * @When /^I click on Accept all cookies$/
+     */
+    public function iClickOnAcceptAllCookies()
+    {
+        // Not needed for this context
+        //Accept all cookies is <button type="button">, which means there is no associated action, meant to be handled with a JS event listener
+        // Given that BrowserKitDriver does not run the JS, it does not support such button.
     }
 
     /**
