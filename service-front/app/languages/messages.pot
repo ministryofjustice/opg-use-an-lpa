@@ -1979,10 +1979,6 @@ msgstr ""
 msgid "CANCELLED"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:8
-msgid "You can only use this service if we've sent you a letter or email with an activation key. Only LPAs registered after 16 July 2020 have an activation key."
-msgstr ""
-
 #: src/Actor/templates/actor/partials/new-use-service.html.twig:4
 msgid "beta"
 msgstr ""
@@ -3757,6 +3753,10 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:24
 msgid "We’ve found %firstname% %surname%'s LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:8
+msgid "You can only use this service if your LPA was registered on or after 1 September 2019."
 msgstr ""
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:44

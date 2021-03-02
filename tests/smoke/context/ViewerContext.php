@@ -48,7 +48,6 @@ class ViewerContext implements Context
     public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect()
     {
         $this->ui->assertPageAddress('/check-code');
-
         $this->ui->assertPageContainsText('We’ve found Babara Gilson\'s LPA');
         $this->ui->assertPageContainsText('Babara Gilson');
         $this->ui->fillField('organisation', $this->organisation);
