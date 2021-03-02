@@ -42,7 +42,13 @@
 
                         {{ govuk_form_element(form.get('email'), { 'label': 'Email address' | trans, 'attr': { 'class': 'govuk-!-width-three-quarters' } })  }}
 
-                        {{ govuk_form_element(form.get('password'), { 'label': 'Password' | trans, 'attr': { 'class': 'govuk-!-width-three-quarters', 'auto-complete': 'current-password' } })  }}
+                        <div class="js-showhidepassword">
+                            {{ govuk_form_element(form.get('password'), {
+                                'label': 'Password' | trans,
+                                'attr': { 'class': 'govuk-input--width-20 govuk-input moj-password-reveal__input', 'auto-complete': 'current-password' }
+                            })
+                            }}
+                        </div>
 
                         <button data-prevent-double-click="true" name="sign-in" type="submit" class="govuk-button">{% trans %}Sign in{% endtrans %}</button>
 

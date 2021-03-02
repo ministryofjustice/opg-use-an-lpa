@@ -35,7 +35,11 @@
 
         {% endif %}
 
-        {{- block('form_input') -}}
+        {%- if attr is defined and attr['class'] is defined and 'moj-password-reveal__input' in attr['class'] -%}
+            {{- block('input_show_hide_password') -}}
+        {% else %}
+            {{- block('form_input') -}}
+        {% endif %}
 
     </div>
 {%- endblock form_element_simple -%}
@@ -217,24 +221,21 @@
     {% endif %}
 {%- endblock input_hint -%}
 
-{%- block form_input -%}
-    {% if element.getName() == 'show_hide_password' %}
-        <div class="moj-password-reveal">
-    {% endif %}
+{%- block input_show_hide_password -%}
+    <div class="moj-password-reveal">
+        {{- block('form_input') -}}
+        <button class="govuk-button govuk-button--secondary moj-password-reveal__button" data-module="govuk-button" type="button"
+                data-showpassword="{% trans %}Show{% notes %}Show password label{% endtrans%}"
+                data-hidepassword="{% trans %}Hide{% notes %}Hide password label{% endtrans %}">
+        </button>
+    </div>
+{%- endblock input_show_hide_password -%}
 
+{%- block form_input -%}
     <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
            id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}"
             {% if inputmode is defined and inputmode is not empty %}inputmode="{{ inputmode }}"{% endif %}
             {% if pattern is defined and pattern is not empty %}pattern="{{ pattern }}"{% endif %}
             {% if spellcheck is defined and spellcheck is not empty %}spellcheck="{{ spellcheck }}"{% endif %}
-            {% if autocomplete is defined and autocomplete is not empty %}autocomplete="{{ autocomplete }}"{% endif %} />
-
-    {% if element.getName() == 'show_hide_password' %}
-        <button class="govuk-button govuk-button--secondary moj-password-reveal__button" data-module="govuk-button" type="button"
-                data-showpassword="{% trans %}Show{% notes %}Show password label{% endtrans%}"
-                data-hidepassword="{% trans %}Hide{% notes %}Hide password label{% endtrans %}">
-        </button>
-        </div>
-    {% endif %}
-
+            {% if autocomplete is defined and autocomplete is not empty %}autocomplete="{{ autocomplete }}"{% endif %}/>
 {%- endblock form_input -%}
