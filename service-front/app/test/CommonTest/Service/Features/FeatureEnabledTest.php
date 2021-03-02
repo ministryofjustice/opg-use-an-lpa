@@ -56,12 +56,12 @@ class FeatureEnabledTest extends TestCase
     public function it_throws_an_exception_when_not_finding_badly_configured_feature_value(): void
     {
         $flags = [
-            'feature_name' => 'True'
+            'feature_name' => 'Yes'
         ];
 
         $sut = new FeatureEnabled($flags);
 
         $this->expectException(RuntimeException::class);
-        $enabled = $sut('other_feature_name');
+        $enabled = $sut('feature_name');
     }
 }
