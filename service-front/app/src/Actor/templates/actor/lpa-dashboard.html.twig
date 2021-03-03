@@ -52,6 +52,10 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
 
+                <h2 class="govuk-heading-m count-lpas-added">
+                    {% trans count lpas | length %}You have %count% LPA in your account | You have %count% LPAs in your account{% endtrans %}
+                </h2>
+
                 {% for donorName, token in lpas %}
 
                     <span class="govuk-heading-l govuk-!-margin-top-5 govuk-!-margin-bottom-3">{{ donor_name_with_dob_removed(donorName) }}</span>
