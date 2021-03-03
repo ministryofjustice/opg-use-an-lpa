@@ -8,12 +8,13 @@ use RuntimeException;
 
 class FeatureEnabled
 {
+    /** @var array<string, mixed> */
     private array $featureFlags;
 
     /**
      * FeatureEnabled constructor.
      *
-     * @param array $featureFlags An key value map of feature names to boolean values
+     * @param array<string, mixed> $featureFlags An key value map of feature names to boolean values
      *
      * @codeCoverageIgnore
      */

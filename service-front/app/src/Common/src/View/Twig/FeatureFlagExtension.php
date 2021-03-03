@@ -12,13 +12,20 @@ class FeatureFlagExtension extends AbstractExtension
 {
     private FeatureEnabled $featureEnabled;
 
+    /**
+     * FeatureFlagExtension constructor.
+     *
+     * @param FeatureEnabled $featureEnabled
+     *
+     * @codeCoverageIgnore
+     */
     public function __construct(FeatureEnabled $featureEnabled)
     {
         $this->featureEnabled = $featureEnabled;
     }
 
     /**
-     * @return array
+     * @return array<TwigFunction>
      */
     public function getFunctions(): array
     {
@@ -27,6 +34,13 @@ class FeatureFlagExtension extends AbstractExtension
         ];
     }
 
+    /**
+     * Returns the enabled state of a feature
+     *
+     * @param string $featureName The name of a feature configured in features.php
+     *
+     * @return bool
+     */
     public function featureEnabled(string $featureName): bool
     {
         return ($this->featureEnabled)($featureName);
