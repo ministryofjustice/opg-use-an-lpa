@@ -20,7 +20,7 @@ class FeatureFlagExtensionTest extends TestCase
 {
     /**
      * @test
-     * @covers ::featureEnabled
+     * @covers ::getFunctions
      */
     public function it_returns_an_array_of_exported_twig_functions(): void
     {
