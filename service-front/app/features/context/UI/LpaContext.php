@@ -14,6 +14,8 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\RequestInterface;
 
+use function DI\string;
+
 /**
  * @property mixed  lpa
  * @property string userLpaActorToken
@@ -305,6 +307,53 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/check-answers');
 
         $this->ui->assertElementContainsText('h1', 'You have an activation key for this LPA');
+    }
+
+    /**
+     * @Then /^I am told that I have (.*) LPAs in my account$/
+     */
+    public function iAmToldThatIHaveLPAsInMyAccount($count)
+    {
+        if ($count > 1) {
+            $this->ui->assertPageContainsText('You have ' . $count . ' LPAs in your account');
+        } else {
+            $this->ui->assertPageContainsText('You have 1 LPA in your account');
+        }
+    }
+
+    /**
+     * @Given /^I have added (.*) LPAs to my account$/
+     */
+    public function iHaveAddedLPAsToMyAccount($count)
+    {
+        $lpas = [];
+
+        for ($x = 0; $x < $count; $x++) {
+            //API call for getting each LPAs share codes
+            $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode([])
+                    )
+                );
+
+            // change the token within the LPA data to match as it changes
+            $this->lpaData['user-lpa-actor-token'] = $this->userLpaActorToken;
+            $lpas[$this->userLpaActorToken] = $this->lpaData;
+            $this->userLpaActorToken = (string) (intval($this->userLpaActorToken) + 1);
+        }
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($lpas)
+                )
+            );
     }
 
     /**
