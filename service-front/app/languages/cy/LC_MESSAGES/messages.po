@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-03-03T16:11:27+00:00\n"
+"POT-Creation-Date: 2021-03-04T17:04:12+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -31,7 +31,7 @@ msgstr "Yn ôl i’ch LPAs"
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-already-added.html.twig:37
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:68
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:70
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
@@ -43,7 +43,7 @@ msgstr "Eiddo ac arian"
 #: src/Actor/templates/actor/check-lpa.html.twig:31
 #: src/Actor/templates/actor/lpa-already-added.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:68
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:70
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:26
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
@@ -5161,7 +5161,7 @@ msgstr ""
 "mae angen ichi <a href=\"%link%\" class=\"govuk-link\">greu cyfrif ar wahân</"
 "a> i ddefnyddio’r gwasanaeth hwn yr un fath."
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:56
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:58
 msgid "You have %count% LPA in your account"
 msgid_plural "You have %count% LPAs in your account"
 msgstr[0] "Mae gennych %count% LPA ar eich cyfrif"
