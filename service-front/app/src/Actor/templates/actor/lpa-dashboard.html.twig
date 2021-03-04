@@ -52,8 +52,10 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
 
+                {% set totalLpas = total_lpas %}
+
                 <h2 class="govuk-heading-m count-lpas-added">
-                    {% trans count lpas | length %}You have %count% LPA in your account | You have %count% LPAs in your account{% endtrans %}
+                    {% trans count totalLpas %}You have %count% LPA in your account | You have %count% LPAs in your account{% endtrans %}
                 </h2>
 
                 {% for donorName, token in lpas %}
