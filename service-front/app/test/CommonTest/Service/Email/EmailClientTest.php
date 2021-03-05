@@ -327,7 +327,7 @@ class EmailClientTest extends TestCase
         $recipient = 'a@b.com';
         $referenceNumber = "700000000138";
         $postCode = "HS8 2YB";
-        $letterExpectedDate = (new Carbon())->addWeeks(2)->format('d M Y');
+        $letterExpectedDate = (new Carbon())->addWeeks(2)->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
@@ -351,7 +351,7 @@ class EmailClientTest extends TestCase
         $recipient = 'a@b.com';
         $referenceNumber = "700000000138";
         $postCode = "HS8 2YB";
-        $letterExpectedDate = (new Carbon())->addWeeks(2)->format('d M Y');
+        $letterExpectedDate = (new Carbon())->addWeeks(2)->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
