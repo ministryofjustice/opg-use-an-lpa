@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CommonTest\Service\Email;
 
 use Alphagov\Notifications\Client as NotifyClient;
+use Carbon\Carbon;
 use Common\Service\Email\EmailClient;
 use PHPUnit\Framework\TestCase;
 
@@ -317,5 +318,54 @@ class EmailClientTest extends TestCase
         $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
 
         $emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($recipient);
+    }
+
+    /** @test */
+    public function can_send_account_activation_key_request_confirmation_email_if_locale_is_cy()
+    {
+        $this->locale = "cy";
+        $recipient = 'a@b.com';
+        $referenceNumber = "700000000138";
+        $postCode = "HS8 2YB";
+        $letterExpectedDate = (new Carbon())->addWeeks(2)->format('d M Y');
+
+        $this->notifyClientProphecy->sendEmail(
+            $recipient,
+            EmailClient::WELSH_TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION,
+            [
+                'reference_number' => $referenceNumber,
+                'postcode'         => $postCode,
+                'date'             => $letterExpectedDate
+            ]
+        )
+            ->shouldBeCalledOnce();
+
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
+
+        $emailClient->sendActivationKeyRequestConfirmationEmail($recipient, $referenceNumber, $postCode, $letterExpectedDate);
+    }
+
+    /** @test */
+    public function can_send_account_activation_key_request_confirmation_email()
+    {
+        $recipient = 'a@b.com';
+        $referenceNumber = "700000000138";
+        $postCode = "HS8 2YB";
+        $letterExpectedDate = (new Carbon())->addWeeks(2)->format('d M Y');
+
+        $this->notifyClientProphecy->sendEmail(
+            $recipient,
+            EmailClient::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION,
+            [
+                'reference_number' => $referenceNumber,
+                'postcode'         => $postCode,
+                'date'             => $letterExpectedDate
+            ]
+        )
+            ->shouldBeCalledOnce();
+
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
+
+        $emailClient->sendActivationKeyRequestConfirmationEmail($recipient, $referenceNumber, $postCode, $letterExpectedDate);
     }
 }
