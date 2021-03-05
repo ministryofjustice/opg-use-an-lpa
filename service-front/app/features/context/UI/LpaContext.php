@@ -14,8 +14,6 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\RequestInterface;
 
-use function DI\string;
-
 /**
  * @property mixed  lpa
  * @property string userLpaActorToken
