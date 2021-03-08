@@ -81,7 +81,7 @@ class LpaCodesSeeder:
         )
         return response
 
-    def match_actor_codes(self):
+    def deactivate_actor_codes(self):
         actor_codes = self.get_actor_codes()
         with open(self.input_json_path) as f:
             lpas = json.load(f)
@@ -96,14 +96,14 @@ def main():
         description="Put actor codes into the lpa-codes API service.")
     parser.add_argument("-e", type=str, default="integration",
                         help="The environment to push actor codes to.")
-    parser.add_argument("-f", nargs='?', default="./lpa_cases_to_reset_activation_on.json", type=str,
+    parser.add_argument("-f", nargs='?', default="./lpa_cases_to_deactivate_actor_codes_on.json", type=str,
                         help="Path to the json file of data to put.")
     parser.add_argument("-r", nargs='?', default="operator", type=str,
                         help="IAM role to assume when pushing actor codes.")
     args = parser.parse_args()
 
     work = LpaCodesSeeder(args.f, args.e, args.r)
-    work.match_actor_codes()
+    work.deactivate_actor_codes()
 
 
 if __name__ == "__main__":
