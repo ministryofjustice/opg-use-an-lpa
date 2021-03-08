@@ -1,8 +1,6 @@
 import argparse
-import os
 import boto3
 import json
-import datetime
 
 
 class LpaCodesSeeder:
