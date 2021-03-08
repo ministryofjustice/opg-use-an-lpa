@@ -22,6 +22,13 @@ The script will print the before and after status of the data.
 
 If no matches are made, nothing is printed.
 
+If Dynamodb update_item conditions are not met, the update will print a ConditionalCheckFailedException message and the script will move on to the next item.
+
+Conditions are;
+
+- The code is currently active
+- The status of the code is "Generated"
+
 ```bash
 aws-vault exec identity -- python ./deactivate_actor_codes.py
 
