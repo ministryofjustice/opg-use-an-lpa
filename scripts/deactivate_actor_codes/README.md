@@ -110,7 +110,7 @@ aws-vault exec identity -- python ./deactivate_actor_codes.py
 aws-vault exec identity -- python ./deactivate_actor_codes.py -h
 usage: deactivate_actor_codes.py [-h] [-e E] [-f F] [-r R]
 
-Put actor codes into the lpa-codes API service.
+Deactivate actor codes in the lpa-codes API service.
 
 optional arguments:
   -h, --help  show this help message and exit

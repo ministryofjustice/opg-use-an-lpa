@@ -108,7 +108,7 @@ class LpaCodesSeeder:
 
 def main():
   parser = argparse.ArgumentParser(
-    description="Put actor codes into the lpa-codes API service.")
+    description="Deactivate actor codes in the lpa-codes API service.")
   parser.add_argument("-e", type=str, default="integration",
                       help="The environment to dactive actor codes in.")
   parser.add_argument("-f", default="./lpa_cases_to_deactivate_actor_codes_on.json", type=str,
