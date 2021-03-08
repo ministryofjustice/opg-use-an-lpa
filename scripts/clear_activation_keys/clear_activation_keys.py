@@ -11,9 +11,9 @@ class LpaCodesSeeder:
     lpa_codes_table = ''
     aws_dynamodb_client = ''
 
-    def __init__(self, input_json, environment, docker_mode, iam_role_name):
+    def __init__(self, input_json, environment, iam_role_name):
         self.input_json_path = input_json
-        self.environment = environment
+        self.environment = environment.lower()
         self.lpa_codes_table = 'lpa-codes-{}'.format(self.environment)
 
         self.set_account_id()
@@ -58,25 +58,38 @@ class LpaCodesSeeder:
     def get_actor_code_item(self, item):
         response = self.aws_dynamodb_client.get_item(
             TableName=self.lpa_codes_table,
-            Key={"code": {"S": item}}
+            Key={'code': {'S': item}}
         )
         return response
 
     def delete_actor_code_item(self, item):
         response = self.aws_dynamodb_client.delete_item(
             TableName=self.lpa_codes_table,
-            Key={"code": {"S": item}}
+            Key={'code': {'S': item}}
+        )
+        return response
+
+    def update_actor_code_item(self, item):
+        response = self.aws_dynamodb_client.update_item(
+            TableName=self.lpa_codes_table,
+            Key={'code': {'S': item}},
+            UpdateExpression = "set active = :val",
+            ExpressionAttributeValues={
+                ":val": {"BOOL": False}
+            },
+            ReturnValues='ALL_NEW'
         )
         return response
 
     def match_actor_codes(self):
         actor_codes = self.get_actor_codes()
         with open(self.input_json_path) as f:
-            actorLpaCodes = json.load(f)
+            lpas = json.load(f)
 
         for code in actor_codes:
-            if code['lpa']['S'] in actorLpaCodes:
+            if code['lpa']['S'] in lpas:
                 print(json.dumps(self.get_actor_code_item(code['code']['S']), indent=4))
+                print(json.dumps(self.update_actor_code_item(code['code']['S']), indent=4))
 
 def main():
     parser = argparse.ArgumentParser(
@@ -87,11 +100,9 @@ def main():
                         help="Path to the json file of data to put.")
     parser.add_argument("-r", nargs='?', default="operator", type=str,
                         help="IAM role to assume when pushing actor codes.")
-    parser.add_argument("-d", action='store_true', default=False,
-                        help="Set to true if running inside a Docker container.")
     args = parser.parse_args()
 
-    work = LpaCodesSeeder(args.f, args.e, args.d, args.r)
+    work = LpaCodesSeeder(args.f, args.e, args.r)
     work.match_actor_codes()
 
 
