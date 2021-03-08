@@ -3610,7 +3610,7 @@ msgid "If you made an LPA online, you cannot sign in using your Make a lasting p
 msgstr ""
 
 #: src/Actor/templates/actor/login.html.twig:37
-msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to <a href=\"%link%\" class=\"govuk-link\">create a seperate account</a> to use this service."
+msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to <a href=\"%link%\" class=\"govuk-link\">create a separate account</a> to use this service."
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:55
