@@ -12,6 +12,7 @@ variable "accounts" {
       is_production          = bool
       retention_in_days      = number
       pagerduty_service_name = string
+      has_metrics_queue      = bool
     })
   )
 }
