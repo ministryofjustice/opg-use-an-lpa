@@ -1,6 +1,7 @@
 import argparse
 import boto3
 from botocore.exceptions import ClientError
+from datetime import date
 import json
 
 
@@ -64,6 +65,7 @@ class LpaCodesSeeder:
     return response
 
   def update_actor_code_item(self, item):
+    today = str(date.today())
     try:
       response = self.aws_dynamodb_client.update_item(
         TableName=self.lpa_codes_table,
@@ -74,7 +76,7 @@ class LpaCodesSeeder:
           ":condactive": {"BOOL": True},
           ":condstatus": {"S": "Generated"},
           ":active": {"BOOL": False},
-          ":date": {"S": "2021-03-08"},
+          ":date": {"S": today},
           ":status": {"S": "Deactivated"}
         },
         ReturnValues='ALL_NEW'
