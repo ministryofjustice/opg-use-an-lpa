@@ -1,5 +1,6 @@
 import argparse
 import boto3
+from botocore.exceptions import ClientError
 import json
 
 
@@ -62,24 +63,26 @@ class LpaCodesSeeder:
     )
     return response
 
-  def delete_actor_code_item(self, item):
-    response = self.aws_dynamodb_client.delete_item(
-      TableName=self.lpa_codes_table,
-      Key={'code': {'S': item}}
-    )
-    return response
-
   def update_actor_code_item(self, item):
-    response = self.aws_dynamodb_client.update_item(
-      TableName=self.lpa_codes_table,
-      Key={'code': {'S': item}},
-      UpdateExpression = "set active = :val",
-      ExpressionAttributeValues={
-        ":val": {"BOOL": False}
-      },
-      ReturnValues='ALL_NEW'
-    )
-    return response
+    try:
+      response = self.aws_dynamodb_client.update_item(
+        TableName=self.lpa_codes_table,
+        Key = {'code': {'S': item}},
+        ConditionExpression = "active = :condactive AND status_details = :condstatus",
+        UpdateExpression = "set active = :active, last_updated_date = :date, status_details = :status",
+        ExpressionAttributeValues={
+          ":condactive": {"BOOL": True},
+          ":condstatus": {"S": "Generated"},
+          ":active": {"BOOL": False},
+          ":date": {"S": "2021-03-08"},
+          ":status": {"S": "Deactivated"}
+        },
+        ReturnValues='ALL_NEW'
+      )
+      return response
+    except ClientError as e:
+      if e.response['Error']['Code']=='ConditionalCheckFailedException':
+          print(e.response['Error'])
 
   def deactivate_actor_codes(self):
     actor_codes = self.get_actor_codes()
