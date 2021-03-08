@@ -105,11 +105,11 @@ def main():
   parser = argparse.ArgumentParser(
     description="Put actor codes into the lpa-codes API service.")
   parser.add_argument("-e", type=str, default="integration",
-                      help="The environment to push actor codes to.")
-  parser.add_argument("-f", nargs='?', default="./lpa_cases_to_deactivate_actor_codes_on.json", type=str,
-                      help="Path to the json file of data to put.")
-  parser.add_argument("-r", nargs='?', default="operator", type=str,
-                      help="IAM role to assume when pushing actor codes.")
+                      help="The environment to dactive actor codes in.")
+  parser.add_argument("-f", default="./lpa_cases_to_deactivate_actor_codes_on.json", type=str,
+                      help="Path to the json file listing LPAs.")
+  parser.add_argument("-r", default="operator", type=str,
+                      help="IAM role name to assume when pushing actor codes.")
   args = parser.parse_args()
 
   work = LpaCodesSeeder(args.f, args.e, args.r)
