@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-03-04T17:04:12+00:00\n"
+"POT-Creation-Date: 2021-03-05T10:58:12+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -21,7 +21,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-already-added.html.twig:37
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:70
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:64
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
@@ -33,7 +33,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:31
 #: src/Actor/templates/actor/lpa-already-added.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:70
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:64
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:26
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
@@ -3610,7 +3610,7 @@ msgid "If you made an LPA online, you cannot sign in using your Make a lasting p
 msgstr ""
 
 #: src/Actor/templates/actor/login.html.twig:37
-msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to <a href=\"%link%\" class=\"govuk-link\">create a seperate account</a> to use this service."
+msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to <a href=\"%link%\" class=\"govuk-link\">create a separate account</a> to use this service."
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:55
@@ -3760,8 +3760,3 @@ msgstr ""
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:43
 msgid "%organisation% on %date%"
 msgstr ""
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:58
-msgid "You have %count% LPA in your account"
-msgid_plural "You have %count% LPAs in your account"
-msgstr[0] ""

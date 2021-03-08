@@ -161,7 +161,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     ], 'lpa.death-notification');
 
     // Older LPA journey
-    if ($container->get('config')['feature_flags']['use_older_lpa_journey']) {
+    if (($container->get(Common\Service\Features\FeatureEnabled::class))('use_older_lpa_journey')) {
         // if flag true, send user to triage page as entry point
         $app->route('/lpa/add', [
             Mezzio\Authentication\AuthenticationMiddleware::class,

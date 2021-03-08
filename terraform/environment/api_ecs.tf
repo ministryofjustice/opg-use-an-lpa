@@ -247,6 +247,11 @@ EOF
             "awslogs-stream-prefix": "${local.environment}.api-app.use-an-lpa"
         }
     },
+    "secrets" : [
+    {
+      "name": "NOTIFY_API_KEY",
+      "valueFrom": "${data.aws_secretsmanager_secret.notify_api_key.arn}"
+    }],
     "environment": [
     {
       "name": "DYNAMODB_TABLE_ACTOR_CODES",

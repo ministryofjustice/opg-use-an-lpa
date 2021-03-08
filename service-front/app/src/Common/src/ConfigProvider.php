@@ -71,6 +71,7 @@ class ConfigProvider
                 Service\Session\KeyManager\KmsManager::class => Service\Session\KeyManager\KmsManagerFactory::class,
                 Service\Email\EmailClient::class => Service\Email\EmailClientFactory::class,
                 Service\User\UserService::class => Service\User\UserServiceFactory::class,
+                Service\Features\FeatureEnabled::class => Service\Features\FeatureEnabledFactory::class,
 
                 \Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 \Aws\Kms\KmsClient::class => Service\Aws\KmsFactory::class,
@@ -134,7 +135,8 @@ class ConfigProvider
                 View\Twig\GovUKLaminasFormExtension::class,
                 View\Twig\JavascriptVariablesExtension::class,
                 View\Twig\GenericGlobalVariableExtension::class,
-                View\Twig\TranslationSwitchExtension::class
+                View\Twig\TranslationSwitchExtension::class,
+                View\Twig\FeatureFlagExtension::class
             ]
         ];
     }
