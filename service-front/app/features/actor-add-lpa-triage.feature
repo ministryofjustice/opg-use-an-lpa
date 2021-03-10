@@ -40,7 +40,13 @@ Feature: Add an LPA triage page
     Then I should be taken to the <dashboard> page
 
   @ui
-  Scenario: The user is taken to request activation key
+  Scenario: The user is taken to information about requesting an activation key
     Given I am on the add an LPA triage page
     When I say I do not have an activation key
-    Then I am taken to page to ask for an activation key
+    Then I am taken to page giving me information about asking for an activation key
+
+  @ui
+  Scenario: The user is able to continue after reading information about requesting an activation key
+    Given I am on the activation key information page
+    When I click the Continue link
+    Then I am taken to request an activation key form
