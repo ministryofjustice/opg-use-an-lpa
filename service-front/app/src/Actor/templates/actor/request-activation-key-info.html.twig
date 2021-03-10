@@ -1,0 +1,76 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Ask for an activation key{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.add') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}Ask for an activation key{% endtrans %}</h1>
+
+                    <h2 class="govuk-heading-m">{% trans %}You can only ask for an activation key if:{% endtrans %}</h2>
+
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}your LPA was registered on or after 1 September 2019{% endtrans %}</li>
+                        <li>{% trans %}you're a donor or an attorney on the LPA (not a replacement attorney){% endtrans %}</li>
+                        <li>{% trans %}you live in the UK{% endtrans %}</li>
+                    </ul>
+
+                    <details class="govuk-details govuk-!-margin-bottom-2" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                {% trans %}Where to find the LPA registration date{% endtrans %}
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p>{% trans %}You can find the registration date on the letter that told you the LPA had been registered, or on the stamp on the first page of the paper LPA.{% endtrans %}</p>
+                            <p>{% trans %}If you’re not sure when the LPA was registered, you can continue and we’ll check for you.{% endtrans %}</p>
+                        </div>
+                    </details>
+
+                    <details class="govuk-details" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                {% trans %}LPAs registered before 1 September 2019{% endtrans %}
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            {% trans %}If the LPA was registered before 1 September 2019, you cannot get an activation key for it. If organisations want to see the LPA, show them the paper copy.{% endtrans %}
+                        </div>
+                    </details>
+
+                    <h2 class="govuk-heading-m">{% trans %}Let us know if your details have changed{% endtrans %}</h2>
+
+                    <p class="govuk-body">{% trans %}If we do not have your correct details, you will not be able to get an activation key.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans with {'%link%': path('lpa.change-details')} %}<a class="govuk-link" href="%link%">Let us know if your details have changed</a> and you’ve not told us.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}We need to know if:{% endtrans %}</p>
+
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}you’ve moved house - so we can post the key to the right address{% endtrans %}</li>
+                        <li>{% trans %}you’ve changed your name{% endtrans %}</li>
+                        <li>{% trans %}your name or address is spelt wrong on the LPA{% endtrans %}</li>
+                        <li>{% trans %}your date of birth is wrong on the LPA{% endtrans %}</li>
+                    </ul>
+
+                    <a href="{{ path('lpa.add-by-paper') }}" class="govuk-button">{% trans %}Continue{% endtrans %}</a>
+
+                    <a href="{{ path('lpa.dashboard') }}" draggable="false" class="govuk-button govuk-button--secondary">{% trans %}Cancel{% endtrans %}</a>
+
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}
