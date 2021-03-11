@@ -308,25 +308,21 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^I am told that I have (.*) LPAs in my account$/
+     * @Then /^I am told that I have 2 LPAs in my account$/
      */
-    public function iAmToldThatIHaveLPAsInMyAccount($count)
+    public function iAmToldThatIHave2LPAsInMyAccount()
     {
-        if ($count > 1) {
-            $this->ui->assertPageContainsText('You have ' . $count . ' LPAs in your account');
-        } else {
-            $this->ui->assertPageContainsText('You have 1 LPA in your account');
-        }
+        $this->ui->assertPageContainsText('You have 2 LPAs in your account');
     }
 
     /**
-     * @Given /^I have added (.*) LPAs to my account$/
+     * @Given /^I have added 2 LPAs to my account$/
      */
-    public function iHaveAddedLPAsToMyAccount($count)
+    public function iHaveAdded2LPAsToMyAccount()
     {
         $lpas = [];
 
-        for ($x = 0; $x < $count; $x++) {
+        for ($x = 0; $x < 2; $x++) {
             //API call for getting each LPAs share codes
             $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
                 ->respondWith(

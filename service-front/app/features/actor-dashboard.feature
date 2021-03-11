@@ -66,13 +66,7 @@ Feature: The user is able to see correct information on their dashboard
     Then I should be taken to the <dashboard> page
 
   @ui
-  Scenario Outline: As a user I am shown how many LPAs are in my account
-    Given I have added <count> LPAs to my account
+  Scenario: As a user I am shown how many LPAs are in my account
+    Given I have added 2 LPAs to my account
     When I am on the dashboard page
-    Then I am told that I have <count> LPAs in my account
-
-    Examples:
-    | count |
-    |   1   |
-    |   3   |
-    |   5   |
+    Then I am told that I have 2 LPAs in my account
