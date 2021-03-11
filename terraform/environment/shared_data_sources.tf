@@ -103,3 +103,12 @@ data "aws_elasticache_replication_group" "brute_force_cache_replication_group" {
 data "aws_iam_role" "ecs_autoscaling_service_role" {
   name = "AWSServiceRoleForApplicationAutoScaling_ECSService"
 }
+
+
+data "aws_sqs_queue" "ship_to_opg_metrics" {
+  count = local.account.ship_metrics_queue_enabled == true ? 1 : 0
+  name  = "${local.account_name}-ship-to-opg-metrics"
+}
+data "aws_lambda_function" "clsf_to_sqs" {
+  function_name = "clsf_to_sqs"
+}
