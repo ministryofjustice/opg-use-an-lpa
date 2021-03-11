@@ -3,7 +3,7 @@ import base64
 import boto3
 import os
 
-def Handler(event, context):
+def handler(event, context):
     encoded_zipped_data = event['awslogs']['data']
     zipped_data = base64.b64decode(encoded_zipped_data)
     log_message = gzip.decompress(zipped_data)
