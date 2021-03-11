@@ -71,6 +71,7 @@
 
 {%- block form_input_checkbox -%}
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
+        {{ govuk_error(element) }}
         <div class="govuk-checkboxes">
             <div class="govuk-checkboxes__item">
 
@@ -78,8 +79,6 @@
 
                 <label class="govuk-label govuk-checkboxes__label" for="{{ element.getName() }}">
                     {{ label | raw }}
-
-                    {{ govuk_error(element) }}
                 </label>
 
             </div>
@@ -96,6 +95,7 @@
     {%- endfor -%}
 
     <div class="govuk-form-group {% if element.getMessages() is not empty %}govuk-form-group--error{% endif %}">
+        {{ govuk_error(element) }}
         <div class="govuk-radios {% if hasConditional %}govuk-radios--conditional{% endif %}" data-module="govuk-radios">
             {%-  for option in value_options -%}
                 <div class="govuk-radios__item">
