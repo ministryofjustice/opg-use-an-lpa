@@ -1,23 +1,13 @@
-resource "aws_cloudwatch_event_target" "ship_to_metrics_queue" {
-  count     = local.account.ship_metrics_queue_enabled == true ? 1 : 0
-  target_id = "ship-to-metrics-queue"
-  rule      = aws_cloudwatch_event_rule.event_code_cloudwatch_logs[0].name
-  arn       = data.aws_sqs_queue.ship_to_opg_metrics[0].arn
+locals {
+  clsf_event_codes = [
+    "ACCOUNT_CREATED",
+    "ACCOUNT_DELETED",
+  ]
 }
-
-resource "aws_cloudwatch_event_rule" "event_code_cloudwatch_logs" {
-  count       = local.account.ship_metrics_queue_enabled == true ? 1 : 0
-  name        = "capture-event-code-logs"
-  description = "Capture all Account Created events"
-
-  event_pattern = <<PATTERN
-{
-  "source": [
-    "aws.logs"
-  ],
-  "detail": {
-    "$.context.event_code": [ { "exists": true  } ]
-  }
-}
-PATTERN
+resource "aws_cloudwatch_log_subscription_filter" "events" {
+  for_each        = toset(local.clsf_event_codes)
+  name            = "${local.environment}_clsf_to_sqs_${lower(each.value)}"
+  log_group_name  = aws_cloudwatch_log_group.application_logs.name
+  filter_pattern  = "{$.context.event_code = ${each.value}}"
+  destination_arn = data.aws_lambda_function.clsf_to_sqs.arn
 }
