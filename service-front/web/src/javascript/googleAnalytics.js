@@ -33,6 +33,7 @@ export default class GoogleAnalytics {
             'page_path': `${location.pathname.split('?')[0]}`
         });
         this._trackExternalLinks();
+        this._trackFormValidationErrors();
 
         PerformanceAnalytics();
         ErrorAnalytics();
@@ -73,6 +74,15 @@ export default class GoogleAnalytics {
             externalLinkSelector[i].addEventListener("click", function (e) {
                 _this.trackEvent('click', 'outbound', this.href);
             });
+        }
+    }
+
+    _trackFormValidationErrors()
+    {
+        let errors = document.getElementsByClassName('govuk-error-message');
+        for (let i = 0, len = errors.length; i < len; i++) {
+            let errorMessage = errors[i].textContent.replace("Error:", "").trim();
+            this.trackEvent('Form validation error', 'Form error', errorMessage);
         }
     }
 }
