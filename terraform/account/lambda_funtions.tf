@@ -6,7 +6,7 @@ module "clsf-to-sqs" {
   environment_variables = {
     "QUEUE_URL" : aws_sqs_queue.ship_to_opg_metrics[0].id
   }
-  image_uri                   = "${aws_ecr_repository.lambda["development/cslf_to_sqs"].repository_url}/${local.environment}/cslf_to_sqs:latest"
+  image_uri                   = "${aws_ecr_repository.lambda["development/cslf_to_sqs"].repository_url}:latest"
   lambda_role_policy_document = data.aws_iam_policy_document.lambda.json
   tags                        = local.default_tags
 }
