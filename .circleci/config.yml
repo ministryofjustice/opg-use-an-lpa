@@ -817,7 +817,7 @@ orbs:
         parameters:
           account_id:
             type: string
-            default: 367815980639
+            default: "367815980639"
           container_repo_account:
             type: string
             default: development
