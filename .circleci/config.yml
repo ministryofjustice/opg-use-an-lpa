@@ -815,9 +815,9 @@ orbs:
         #
         executor: python
         parameters:
-          container_repo_url:
+          account_id:
             type: string
-            default: 367815980639.dkr.ecr.eu-west-1.amazonaws.com
+            default: 367815980639
           container_repo_account:
             type: string
             default: development
@@ -825,7 +825,7 @@ orbs:
             type: string
             default: cslf_to_sqs
         environment:
-            ECR_URL: << parameters.container_repo_url >>/<< parameters.container_repo_account >>/<< parameters.container_repo_lambda_name >>
+            ECR_URL: << parameters.account_id >>.dkr.ecr.eu-west-1.amazonaws.com/<< parameters.container_repo_account >>/<< parameters.container_repo_lambda_name >>
         steps:
           - checkout
           - install_aws_cli
@@ -839,8 +839,8 @@ orbs:
                 echo $ECR_URL
                 docker build --file terraform/account/lambda/clsf-to-sqs/Dockerfile --tag ${ECR_URL}:latest .
           - ecr_login_ecr:
-              ecr: << parameters.container_repo_url >>
-              account_id: 367815980639
+              ecr: << parameters.account_id >>.dkr.ecr.eu-west-1.amazonaws.com
+              account_id: << parameters.account_id >>
           - run:
               name: Push container
               command: |
