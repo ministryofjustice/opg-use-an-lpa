@@ -351,11 +351,13 @@ orbs:
         parameters:
           ecr:
             type: string
+          account_id:
+            type: string
         steps:
           - run:
               name: Login to ECR
               command: |
-                temp_role=$(aws sts assume-role --role-arn arn:aws:iam::311462405659:role/opg-use-an-lpa-ci --role-session-name ci)
+                temp_role=$(aws sts assume-role --role-arn arn:aws:iam::<< parameters.account_id >>:role/opg-use-an-lpa-ci --role-session-name ci)
                 export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
@@ -838,6 +840,7 @@ orbs:
                 docker build --file terraform/account/lambda/clsf-to-sqs/Dockerfile --tag ${ECR_URL}:latest .
           - ecr_login_ecr:
               ecr: << parameters.container_repo_url >>
+              account_id: 367815980639
           - run:
               name: Push container
               command: |
