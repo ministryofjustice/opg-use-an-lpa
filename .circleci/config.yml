@@ -47,12 +47,6 @@ workflows:
       - slack_notify_stats:
           name: slack_notify_stats
 
-  # lambda_build:
-  #     jobs:
-  #       - use-my-lpa/docker_build_clsf_to_sqs_lambda:
-  #           name: build_clsf_to_sqs_lambda
-  #           filters: { branches: { ignore: [master] } }
-
   pr_build:
       jobs:
         - cancel_redundant_builds:
