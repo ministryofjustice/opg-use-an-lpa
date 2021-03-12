@@ -61,8 +61,11 @@ workflows:
             name: test_web
             filters: { branches: { ignore: [master] } }
 
-        - use-my-lpa/docker_build_clsf_to_sqs_lambda:
-            name: build_clsf_to_sqs_lambda
+        - use-my-lpa/docker_build_lambda_image:
+            name: build_clsf_to_sqs_lambda_image
+            account_id: "367815980639"
+            container_repo_account: development
+            container_repo_lambda_name: cslf_to_sqs
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/node_build_web:
@@ -803,21 +806,18 @@ orbs:
                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
 
-      docker_build_clsf_to_sqs_lambda:
+      docker_build_lambda_image:
         #
-        # Build Docker container for CLSF-To-SQS Lambda
+        # Build Docker container for AWS Lambda
         #
         executor: python
         parameters:
           account_id:
             type: string
-            default: "367815980639"
           container_repo_account:
             type: string
-            default: development
           container_repo_lambda_name:
             type: string
-            default: cslf_to_sqs
         environment:
             ECR_URL: << parameters.account_id >>.dkr.ecr.eu-west-1.amazonaws.com/<< parameters.container_repo_account >>/<< parameters.container_repo_lambda_name >>
         steps:
