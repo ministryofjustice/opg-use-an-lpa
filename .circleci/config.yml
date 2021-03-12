@@ -65,7 +65,7 @@ workflows:
             name: build_clsf_to_sqs_lambda_image
             account_id: "367815980639"
             container_repo_account: development
-            container_repo_lambda_name: cslf_to_sqs
+            container_repo_lambda_name: clsf_to_sqs
             filters: { branches: { ignore: [master] } }
 
         - use-my-lpa/node_build_web:
