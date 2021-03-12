@@ -347,6 +347,19 @@ orbs:
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
                 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 311462405659.dkr.ecr.eu-west-1.amazonaws.com
+      ecr_login_ecr:
+        parameters:
+          ecr:
+            type: string
+        steps:
+          - run:
+              name: Login to ECR
+              command: |
+                temp_role=$(aws sts assume-role --role-arn arn:aws:iam::311462405659:role/opg-use-an-lpa-ci --role-session-name ci)
+                export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
+                export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
+                export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
+                aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin << parameters.ecr >>
 
 
     executors:
@@ -821,16 +834,15 @@ orbs:
           - run:
               name: Build
               command: |
-                # export ECR_URL=<< parameters.container_repo_url >>/<< parameters.container_repo_account >>/<< parameters.container_repo_lambda_name >>  >> $BASH_ENV
                 echo $ECR_URL
                 docker build --file terraform/account/lambda/clsf-to-sqs/Dockerfile --tag ${ECR_URL}:latest .
-          - ecr_login
+          - ecr_login_ecr
+              ecr: << parameters.container_repo_url >>
           - run:
               name: Push container
               command: |
                 export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
-                # export ECR_URL=<< parameters.container_repo_url >>/<< parameters.container_repo_account >>/<< parameters.container_repo_lambda_name >>
                 echo $ECR_URL
                 docker tag ${ECR_URL}:latest ${ECR_URL}:${IMAGE_TAG}
                 docker push ${ECR_URL}
