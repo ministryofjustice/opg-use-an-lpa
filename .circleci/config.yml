@@ -796,7 +796,13 @@ orbs:
         parameters:
           container_repo_url:
             type: string
-            default: 367815980639.dkr.ecr.eu-west-1.amazonaws.com/development/cslf_to_sqs
+            default: 367815980639.dkr.ecr.eu-west-1.amazonaws.com
+          container_repo_account:
+            type: string
+            default: development
+          container_repo_lambda_name:
+            type: string
+            default: cslf_to_sqs
         steps:
           - checkout
           - install_aws_cli
@@ -807,20 +813,24 @@ orbs:
           - run:
               name: Build
               command: |
-                docker build --file terraform/account/lambda/clsf-to-sqs/Dockerfile --tag << parameters.container_repo_url >>:latest .
+                export ECR_URL=<< parameters.container_repo_url >>/<< parameters.container_repo_account >>/<< parameters.container_repo_lambda_name >>  >> $BASH_ENV
+                echo $ECR_URL
+                docker build --file terraform/account/lambda/clsf-to-sqs/Dockerfile --tag ${ECR_URL}:latest .
           - ecr_login
           - run:
               name: Push container
               command: |
                 export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
-                docker tag << parameters.container_repo_url >>:latest << parameters.container_repo_url >>:${IMAGE_TAG}
-                docker push << parameters.container_repo_url >>
+                # export ECR_URL=<< parameters.container_repo_url >>/<< parameters.container_repo_account >>/<< parameters.container_repo_lambda_name >>
+                # echo $ECR_URL
+                docker tag ${ECR_URL}:latest ${ECR_URL}:${IMAGE_TAG}
+                docker push ${ECR_URL}
                 # if [ "${CIRCLE_BRANCH}" == "master" ]; then
                 #   # We want all of the tags pushed
-                #   docker push << parameters.container_repo_url >>
+                #   docker push ${ECR_URL}
                 # else
-                #   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
+                #   docker push ${ECR_URL}:${IMAGE_TAG}
                 # fi
 
 
