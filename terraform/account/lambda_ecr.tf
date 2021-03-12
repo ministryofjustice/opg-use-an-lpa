@@ -1,6 +1,6 @@
 locals {
   images = [
-    "${local.environment}/cslf_to_sqs",
+    "${local.environment}/clsf_to_sqs",
     "${local.environment}/ship_to_opg_metrics",
   ]
 }
