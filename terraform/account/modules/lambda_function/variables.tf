@@ -21,11 +21,6 @@ variable "entry_point" {
   default     = [""]
 }
 
-variable "environment" {
-  description = "Environment name"
-  type        = string
-}
-
 variable "environment_variables" {
   description = "A map that defines environment variables for the Lambda Function."
   type        = map(string)
