@@ -17,20 +17,5 @@ resource "aws_lambda_function" "lambda_function" {
       variables = var.environment_variables
     }
   }
-
-  depends_on = [aws_cloudwatch_log_group.lambda]
-  tags       = var.tags
-}
-
-# resource "aws_lambda_permission" "lambda_permission" {
-#   statement_id  = "AllowCloudWatchEventInvoke_${var.environment}"
-#   action        = "lambda:InvokeFunction"
-#   function_name = aws_lambda_function.lambda_function.function_name
-#   principal     = "events.amazonaws.com"
-#   source_arn    = aws_cloudwatch_event_rule.event.arn
-# }
-
-resource "aws_cloudwatch_log_group" "lambda" {
-  name = "/aws/lambda/${var.lambda_name}"
   tags = var.tags
 }

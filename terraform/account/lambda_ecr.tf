@@ -15,7 +15,7 @@ resource "aws_ecr_repository" "lambda" {
 
 resource "aws_ecr_repository_policy" "lambda" {
   for_each   = toset(values(aws_ecr_repository.lambda)[*].name)
-  policy     = data.aws_iam_policy_document.lambda.json
+  policy     = data.aws_iam_policy_document.lambda_ecr_access.json
   repository = each.value
 }
 
@@ -71,7 +71,7 @@ EOF
 }
 
 
-data "aws_iam_policy_document" "lambda" {
+data "aws_iam_policy_document" "lambda_ecr_access" {
   statement {
     sid    = "UseAnLPALambdaAccountAccess"
     effect = "Allow"
