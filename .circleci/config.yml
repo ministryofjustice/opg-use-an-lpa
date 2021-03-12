@@ -836,7 +836,7 @@ orbs:
               command: |
                 echo $ECR_URL
                 docker build --file terraform/account/lambda/clsf-to-sqs/Dockerfile --tag ${ECR_URL}:latest .
-          - ecr_login_ecr
+          - ecr_login_ecr:
               ecr: << parameters.container_repo_url >>
           - run:
               name: Push container
