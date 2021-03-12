@@ -809,6 +809,8 @@ orbs:
           container_repo_lambda_name:
             type: string
             default: cslf_to_sqs
+        environment:
+            ECR_URL: << parameters.container_repo_url >>/<< parameters.container_repo_account >>/<< parameters.container_repo_lambda_name >>
         steps:
           - checkout
           - install_aws_cli
@@ -819,7 +821,7 @@ orbs:
           - run:
               name: Build
               command: |
-                export ECR_URL=<< parameters.container_repo_url >>/<< parameters.container_repo_account >>/<< parameters.container_repo_lambda_name >>  >> $BASH_ENV
+                # export ECR_URL=<< parameters.container_repo_url >>/<< parameters.container_repo_account >>/<< parameters.container_repo_lambda_name >>  >> $BASH_ENV
                 echo $ECR_URL
                 docker build --file terraform/account/lambda/clsf-to-sqs/Dockerfile --tag ${ECR_URL}:latest .
           - ecr_login
@@ -829,7 +831,7 @@ orbs:
                 export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
                 # export ECR_URL=<< parameters.container_repo_url >>/<< parameters.container_repo_account >>/<< parameters.container_repo_lambda_name >>
-                # echo $ECR_URL
+                echo $ECR_URL
                 docker tag ${ECR_URL}:latest ${ECR_URL}:${IMAGE_TAG}
                 docker push ${ECR_URL}
                 # if [ "${CIRCLE_BRANCH}" == "master" ]; then
