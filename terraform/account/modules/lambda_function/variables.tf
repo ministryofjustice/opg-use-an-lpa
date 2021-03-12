@@ -12,13 +12,13 @@ variable "lambda_role_policy_document" {
 variable "command" {
   description = "The CMD for the docker image."
   type        = list(string)
-  default     = [""]
+  default     = null
 }
 
 variable "entry_point" {
   description = "The ENTRYPOINT for the docker image."
   type        = list(string)
-  default     = [""]
+  default     = null
 }
 
 variable "environment_variables" {

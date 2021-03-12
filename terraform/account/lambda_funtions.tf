@@ -1,7 +1,8 @@
 module "clsf-to-sqs" {
-  source      = "./modules/lambda_function"
-  lambda_name = "cslf-to-sqs"
-  description = "Function to take Cloudwatch Logs Subscription Filters and send them to SQS"
+  source            = "./modules/lambda_function"
+  lambda_name       = "cslf-to-sqs"
+  description       = "Function to take Cloudwatch Logs Subscription Filters and send them to SQS"
+  working_directory = "/var/task"
   environment_variables = {
     "QUEUE_URL" : aws_sqs_queue.ship_to_opg_metrics[0].id
   }

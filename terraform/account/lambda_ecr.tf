@@ -94,4 +94,24 @@ data "aws_iam_policy_document" "lambda_ecr_access" {
     }
   }
 
+  statement {
+    sid    = "LambdaECRImageRetrievalPolicy"
+    effect = "Allow"
+
+    actions = [
+      "ecr:BatchGetImage",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:SetRepositoryPolicy",
+      "ecr:DeleteRepositoryPolicy",
+      "ecr:GetRepositoryPolicy",
+    ]
+
+    principals {
+      identifiers = [
+        "lambda.amazonaws.com",
+      ]
+
+      type = "Service"
+    }
+  }
 }
