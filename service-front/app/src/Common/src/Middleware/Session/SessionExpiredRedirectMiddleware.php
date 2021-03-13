@@ -42,11 +42,16 @@ class SessionExpiredRedirectMiddleware implements MiddlewareInterface
             $currentDate = intval((new DateTime())->format('Ymd'));
             $expiredDate = intval((new DateTime("@$sessionExpiredDatetime"))->format('Ymd'));
 
+            //  to compare time elapsed
+            $currentEpochTime = $epoch = time();
+            $expiredEpochTime = $sessionExpiredDatetime;
+            $timeElapsed = ($currentEpochTime - $expiredEpochTime) / 60;
+
             $session->unset(EncryptedCookiePersistence::SESSION_EXPIRED_KEY);
-            if ($currentDate > $expiredDate) {
-                $uri = new Uri($this->helper->generate('home'));
-            } else {
+            if ($currentDate == $expiredDate and $timeElapsed >= 20) {
                 $uri = new Uri($this->helper->generate('session-expired'));
+            } else {
+                $uri = new Uri($this->helper->generate('home'));
             }
             return new RedirectResponse($uri);
         } else {

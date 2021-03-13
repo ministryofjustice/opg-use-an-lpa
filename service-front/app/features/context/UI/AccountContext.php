@@ -1906,4 +1906,21 @@ class AccountContext implements Context
 
         assertEquals(true, $this->apiFixtures->isEmpty());
     }
+
+    /**
+     * @Then /^I am taken to the home page$/
+     */
+    public function iAmTakenToTheHomePage()
+    {
+        $this->ui->assertPageAddress('/home');
+        $this->ui->assertPageContainsText('Do you have a Use a lasting power of attorney account?');
+    }
+
+    /**
+     * @Then /^on the next day$/
+     */
+    public function onTheNextday()
+    {
+       //Not needed for this context
+    }
 }
