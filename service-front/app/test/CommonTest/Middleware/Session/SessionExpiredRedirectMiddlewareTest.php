@@ -87,6 +87,7 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
         ];
 
         $uri = 'https://localhost:9002/session-expired';
+        $uriHome = 'https://localhost:9002/home';
 
         $sessionProphecy = $this->prophesize(Session::class);
         $helperProphecy = $this->prophesize(UrlHelper::class);
@@ -114,6 +115,10 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
 
         $helperProphecy
             ->generate('session-expired')
+            ->willReturn($uri);
+
+        $helperProphecy
+            ->generate('home')
             ->willReturn($uri);
 
         $request = new SessionExpiredRedirectMiddleware(
