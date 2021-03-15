@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-03-08T10:06:59+00:00\n"
+"POT-Creation-Date: 2021-03-15T10:01:03+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2656,6 +2656,11 @@ msgstr ""
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:44
 msgid "Why is this?"
 msgstr "Pam?"
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:50
+msgid "<strong>Important: </strong>This LPA has instructions or preferences."
+msgstr ""
+"<strong>Pwysig:</strong> Mae gan yr LPA hon gyfarwyddiadau neu ddymuniadau."
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:51
 msgid "Read more"
