@@ -324,6 +324,49 @@ class LpaContext implements Context
     }
 
     /**
+     * @Then /^I am told that I have 2 LPAs in my account$/
+     */
+    public function iAmToldThatIHave2LPAsInMyAccount()
+    {
+        $this->ui->assertPageContainsText('You have 2 LPAs in your account');
+    }
+
+    /**
+     * @Given /^I have added 2 LPAs to my account$/
+     */
+    public function iHaveAdded2LPAsToMyAccount()
+    {
+        $lpas = [];
+
+        for ($x = 0; $x < 2; $x++) {
+            //API call for getting each LPAs share codes
+            $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode([])
+                    )
+                );
+
+            // change the token within the LPA data to match as it changes
+            $this->lpaData['user-lpa-actor-token'] = $this->userLpaActorToken;
+            $lpas[$this->userLpaActorToken] = $this->lpaData;
+            $this->userLpaActorToken = (string) (intval($this->userLpaActorToken) + 1);
+        }
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($lpas)
+                )
+            );
+    }
+
+    /**
      * @Then /^I am told that my input is invalid because (.*)$/
      */
     public function iAmToldThatMyInputIsInvalidBecause($reason)
