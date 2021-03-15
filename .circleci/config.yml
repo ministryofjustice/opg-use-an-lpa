@@ -68,6 +68,13 @@ workflows:
             lambda_name: clsf-to-sqs
             filters: { branches: { ignore: [master] } }
 
+        - use-my-lpa/docker_build_lambda_image:
+            name: build_clsf_to_sqs_lambda_image
+            account_id: "367815980639"
+            container_repo_account: development
+            lambda_name: ship-to-opg-metrics
+            filters: { branches: { ignore: [master] } }
+
         - use-my-lpa/node_build_web:
             name: build_web
             filters: { branches: { ignore: [master] } }
