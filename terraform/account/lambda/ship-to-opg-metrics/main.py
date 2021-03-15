@@ -3,8 +3,8 @@ import requests
 from requests_aws4auth import AWS4Auth
 
 def handler(event, context):
-    log_message = event['awslogs']['data']
-    call_api_gateway(str(log_message))
+    for message in event['Records']:
+      call_api_gateway(str(message))
 
 def call_api_gateway(self, json_data):
     url = os.getenv('OPG_METRICS_URL')
