@@ -19,3 +19,8 @@ resource "aws_lambda_function" "lambda_function" {
   }
   tags = var.tags
 }
+
+resource "aws_cloudwatch_log_group" "lambda_function" {
+  name = "/aws/lambda/${var.lambda_name}"
+  tags = var.tags
+}

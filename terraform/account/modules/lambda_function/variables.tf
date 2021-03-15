@@ -5,8 +5,9 @@ variable "description" {
 }
 
 variable "lambda_role_policy_document" {
-  description = "The inline policy document for the lambda IAM role. This is a JSON formatted string."
+  description = "The policy JSON for the lambda IAM role. This policy JSON is merged with Logging and ECR access included in the module."
   type        = string
+  default     = null
 }
 
 variable "command" {
@@ -28,7 +29,12 @@ variable "environment_variables" {
 }
 
 variable "image_uri" {
-  description = "The URI for the coontainer image to use"
+  description = "The URI for the container image to use"
+  type        = string
+  default     = null
+}
+variable "ecr_arn" {
+  description = "The ARN for the ECR Repository"
   type        = string
   default     = null
 }
