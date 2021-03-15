@@ -16,17 +16,17 @@ use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * @property mixed  lpa
- * @property string userLpaActorToken
- * @property int    actorId
- * @property array  lpaData
- * @property string organisation
- * @property string accessCode
- * @property string userFirstName
- * @property int    userId
- * @property string userSurname
- * @property string activationCode
- * @property string codeCreatedDate
+ * @property mixed  $lpa
+ * @property string $userLpaActorToken
+ * @property int    $actorId
+ * @property array  $lpaData
+ * @property string $organisation
+ * @property string $accessCode
+ * @property string $userFirstName
+ * @property int    $userId
+ * @property string $userSurname
+ * @property string $activationCode
+ * @property string $codeCreatedDate
  */
 class LpaContext implements Context
 {
@@ -40,7 +40,6 @@ class LpaContext implements Context
     public function iReceiveAnEmailConfirmingActivationKeyRequest()
     {
         //Not needed for this context
-
     }
 
     /**
@@ -118,6 +117,15 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/instructions-preferences');
         $this->ui->assertPageContainsText('Instructions and preferences');
+    }
+
+    /**
+     * @Given /^I am on the activation key information page$/
+     */
+    public function iAmOnTheActivationKeyInformationPage()
+    {
+        $this->ui->visit('/lpa/add-by-paper-information');
+        $this->ui->assertPageContainsText('Ask for an activation key');
     }
 
     /**
@@ -233,17 +241,6 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I am shown content explaining why I can not use this service$/
-     */
-    public function iAmShownContentExplainingWhyICannotUseThisService()
-    {
-        $this->ui->assertPageAddress('/lpa/add');
-        $this->ui->assertPageContainsText(
-            'If the LPA was registered before this date, you need to use the paper LPA with people and organisations.'
-        );
-    }
-
-    /**
      * @Then /^I am taken back to previous page where I can see my answers and change them$/
      */
     public function iAmTakenBackToPreviousPageWhereICanSeeMyAnswersAndChangeThem()
@@ -259,12 +256,20 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^I am taken to page to ask for an activation key$/
+     * @Then /^I am taken to page giving me information about asking for an activation key$/
      */
     public function iAmTakenToPageToAskForAnActivationKey()
     {
+        $this->ui->assertPageAddress('/lpa/add-by-paper-information');
+    }
+
+    /**
+     * @Then /^I am taken to request an activation key form$/
+     */
+    public function iAmTakenToRequestAnActivationKeyForm()
+    {
         $this->ui->pressButton('Continue');
-        $this->ui->assertPageAddress('/lpa/add-by-paper');
+        $this->ui->assertPageContainsText('Ask for an activation key');
     }
 
     /**
@@ -856,6 +861,14 @@ class LpaContext implements Context
             );
 
         $this->ui->clickLink('Check access codes');
+    }
+
+    /**
+     * @When /^I click the Continue link$/
+     */
+    public function iClickTheContinueLink()
+    {
+        $this->ui->clickLink('Continue');
     }
 
     /**
@@ -1557,7 +1570,7 @@ class LpaContext implements Context
                                 'title' => 'Bad request',
                                 'details' => 'LPA not eligible as an activation key already exists',
                                 'data' => [
-                                    'activation_key_created' => $this->codeCreatedDate
+                                    'activation_key_created' => $this->codeCreatedDate,
                                 ],
                             ]
                         )
@@ -1738,7 +1751,8 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I request to add an LPA with the code "([^"]*)" that is for "([^"]*)" "([^"]*)" and I will have an Id of ([^"]*)$/
+     * @When /^I request to add an LPA with the code "([^"]*)" that is for "([^"]*)" "([^"]*)" \
+     *       and I will have an Id of ([^"]*)$/
      */
     public function iRequestToAddAnLPAWithTheCodeThatIsForAndIWillHaveAnIdOf(
         $passcode,
@@ -2048,6 +2062,7 @@ class LpaContext implements Context
     public function iSayIDoNotHaveAnActivationKey()
     {
         $this->ui->fillField('activation_key_triage', 'No');
+        $this->ui->pressButton('Continue');
     }
 
     /**
@@ -2264,6 +2279,19 @@ class LpaContext implements Context
     }
 
     /**
+     * @Then /^I will be told that I have already requested this and the date I should receive the letter by$/
+     */
+    public function iWillBeToldThatIHaveAlreadyRequestedThisAndTheDateIShouldReceiveTheLetterBy()
+    {
+        $this->ui->assertPageContainsText('You\'ve already asked for an activation key for this LPA');
+        $expectedArrival = DateTime::createFromFormat(
+            'Y-m-d',
+            $this->codeCreatedDate
+        )->modify('+2 weeks')->format('j F Y');
+        $this->ui->assertPageContainsText($expectedArrival);
+    }
+
+    /**
      * @Then /^I will be told that I must select whether I have an activation key$/
      */
     public function iWillBeToldThatIMustSelectWhetherIHaveAnActivationKey()
@@ -2421,18 +2449,5 @@ class LpaContext implements Context
         $this->ui->fillField('postcode', ($this->lpa->donor->addresses[0])->postcode);
 
         $this->ui->pressButton('Continue');
-    }
-
-    /**
-     * @Then /^I will be told that I have already requested this and the date I should receive the letter by$/
-     */
-    public function iWillBeToldThatIHaveAlreadyRequestedThisAndTheDateIShouldReceiveTheLetterBy()
-    {
-        $this->ui->assertPageContainsText('You\'ve already asked for an activation key for this LPA');
-        $expectedArrival = DateTime::createFromFormat(
-            'Y-m-d',
-            $this->codeCreatedDate
-        )->modify('+2 weeks')->format('j F Y');
-        $this->ui->assertPageContainsText($expectedArrival);
     }
 }
