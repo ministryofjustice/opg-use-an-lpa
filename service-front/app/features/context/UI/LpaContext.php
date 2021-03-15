@@ -40,7 +40,6 @@ class LpaContext implements Context
     public function iReceiveAnEmailConfirmingActivationKeyRequest()
     {
         //Not needed for this context
-
     }
 
     /**

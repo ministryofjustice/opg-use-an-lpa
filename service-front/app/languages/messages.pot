@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-03-10T16:10:14+00:00\n"
+"POT-Creation-Date: 2021-03-15T10:38:18+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -3526,7 +3526,6 @@ msgctxt "error"
 msgid "The activation key you entered is too short"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key-info.html.twig:21
 #: src/Actor/templates/actor/request-activation-key.html.twig:21
 msgid "Ask for an activation key"
 msgstr ""
@@ -3825,4 +3824,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:63
 msgid "your name or address is spelt wrong on the LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key-info.html.twig:21
+msgid "Check if you can ask for an activation key"
 msgstr ""
