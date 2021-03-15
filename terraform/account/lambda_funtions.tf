@@ -6,7 +6,7 @@ module "clsf_to_sqs" {
   environment_variables = {
     "QUEUE_URL" : aws_sqs_queue.ship_to_opg_metrics[0].id
   }
-  image_uri                   = "${aws_ecr_repository.lambda["development/clsf-to-sqs"].repository_url}:latest"
+  image_uri                   = "${aws_ecr_repository.lambda["development/clsf-to-sqs"].repository_url}:${var.lambda_container_version}"
   ecr_arn                     = aws_ecr_repository.lambda["development/clsf-to-sqs"].arn
   lambda_role_policy_document = data.aws_iam_policy_document.clsf_to_sqs_lambda_function_policy.json
   tags                        = local.default_tags
@@ -33,7 +33,7 @@ module "ship_to_opg_metrics" {
   environment_variables = {
     "OPG_METRICS_URL" : aws_sqs_queue.ship_to_opg_metrics[0].id
   }
-  image_uri                   = "${aws_ecr_repository.lambda["development/ship-to-opg-metrics"].repository_url}:latest"
+  image_uri                   = "${aws_ecr_repository.lambda["development/ship-to-opg-metrics"].repository_url}:${var.lambda_container_version}"
   ecr_arn                     = aws_ecr_repository.lambda["development/ship-to-opg-metrics"].arn
   lambda_role_policy_document = data.aws_iam_policy_document.ship_to_opg_metrics_lambda_function_policy.json
   tags                        = local.default_tags
