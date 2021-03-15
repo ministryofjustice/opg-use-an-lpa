@@ -81,13 +81,14 @@ export default class GoogleAnalytics {
     {
         let errorFields = document.getElementsByClassName('govuk-form-group--error');
         for (let i = 0, len = errorFields.length; i < len; i++) {
-            let fieldLabel = (errorFields[i].getElementsByTagName('label')[0].textContent).trim();
-            let inputId = (errorFields[i].getElementsByTagName('input')[0].getAttribute('id'));
+            let labelElement = errorFields[i].getElementsByTagName('label')[0];
+            let label = labelElement.textContent.trim();
+            let inputId = labelElement.getAttribute('for');
             // there can be more than one error message per field eg password rules
             let errorMessages = (errorFields[i].querySelectorAll('.govuk-error-message'));
             for (let x = 0, len = errorMessages.length; x < len; x++) {
                 let errorMessage = errorMessages[x].textContent.replace("Error:", "").trim();
-                this.trackEvent(fieldLabel, 'Form errors', ('#' + inputId + ' - ' + errorMessage));
+                this.trackEvent(label, 'Form errors', ('#' + inputId + ' - ' + errorMessage));
             }
         }
     }
