@@ -951,6 +951,8 @@ orbs:
           - run:
               name: Plan Shared Terraform
               command: |
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
                 terraform --version
                 cd ~/project/terraform/account
                 terraform init -lock-timeout=300s
