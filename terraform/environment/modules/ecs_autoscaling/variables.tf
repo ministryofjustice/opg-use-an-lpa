@@ -8,6 +8,11 @@ variable "aws_ecs_service_name" {
   type        = string
 }
 
+variable "max_scaling_alarm_actions" {
+  description = "List of alarm actions for maximum autoscaling being reached."
+  type        = list(string)
+}
+
 variable "ecs_autoscaling_service_role_arn" {
   description = "The ARN of the IAM role that allows Application AutoScaling to modify your scalable target on your behalf."
   type        = string

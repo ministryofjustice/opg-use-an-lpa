@@ -15,6 +15,7 @@ use Common\Handler\{AbstractHandler,
     Traits\User,
     UserAware};
 use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\OlderLpaApiResponse;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -45,17 +46,22 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     private array $data;
     private ?string $identity;
 
+    /** @var EmailClient */
+    private $emailClient;
+
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
         AddOlderLpa $addOlderLpa,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EmailClient $emailClient
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
         $this->addOlderLpa = $addOlderLpa;
+        $this->emailClient = $emailClient;
     }
 
     /**
@@ -141,11 +147,21 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ['user'  => $this->user]
                     ));
                 case OlderLpaApiResponse::SUCCESS:
+
+                    $letterExpectedDate = (new Carbon())->addWeeks(2);
+
+                    $this->emailClient->sendActivationKeyRequestConfirmationEmail(
+                        $this->user->getDetails()['Email'],
+                        (string)$this->data['reference_number'],
+                        $this->data['postcode'],
+                        $letterExpectedDate->format('j F Y')
+                    );
+
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::send-activation-key-confirmation',
                             [
-                                'date' => (new Carbon())->addWeeks(2),
+                                'date' => $letterExpectedDate,
                                 'user'  => $this->user
                             ]
                         )

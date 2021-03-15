@@ -9,7 +9,7 @@ This script will use your AWS credentials to assume the operator role in non-pro
 Install pip modules
 
 ```bash
-pip install ../pipeline/requirements.txt
+pip install -r ../pipeline/requirements.txt
 ```
 
 ## Running the script

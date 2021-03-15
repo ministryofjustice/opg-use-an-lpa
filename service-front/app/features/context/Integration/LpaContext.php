@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use Alphagov\Notifications\Client;
 use BehatTest\Context\ActorContextTrait;
+use Carbon\Carbon;
 use Common\Exception\ApiException;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\AddOlderLpa;
@@ -17,6 +19,7 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * A behat context that encapsulates user account steps
@@ -1261,4 +1264,13 @@ class LpaContext extends BaseIntegrationContext
         // The user is signed in for all actions of this context
         $this->userIdentity = '123';
     }
+
+    /**
+     * @Then /^I receive an email confirming activation key request$/
+     */
+    public function iReceiveAnEmailConfirmingActivationKeyRequest()
+    {
+        // Not needed for this context
+    }
 }
+

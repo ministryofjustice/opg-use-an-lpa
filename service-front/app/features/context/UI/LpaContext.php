@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
+use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
@@ -31,6 +32,16 @@ class LpaContext implements Context
 {
     use ActorContext;
     use BaseUiContextTrait;
+
+
+    /**
+     * @Then /^I receive an email confirming activation key request$/
+     */
+    public function iReceiveAnEmailConfirmingActivationKeyRequest()
+    {
+        //Not needed for this context
+
+    }
 
     /**
      * @Then /^a letter is requested containing a one time use code$/
@@ -1553,6 +1564,19 @@ class LpaContext implements Context
                     )
                 );
         }
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                    assertArrayHasKey('personalisation', $params);
+                }
+            );
     }
 
     /**
