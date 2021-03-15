@@ -87,7 +87,7 @@ export default class GoogleAnalytics {
             let errorMessages = (errorFields[i].querySelectorAll('.govuk-error-message'));
             for (let x = 0, len = errorMessages.length; x < len; x++) {
                 let errorMessage = errorMessages[x].textContent.replace("Error:", "").trim();
-                this.trackEvent(fieldLabel, 'Form errors', ('#id-' + inputId + ' - ' + errorMessage));
+                this.trackEvent(fieldLabel, 'Form errors', ('#' + inputId + ' - ' + errorMessage));
             }
         }
     }
