@@ -174,14 +174,14 @@ workflows:
             account_id: "367815980639"
             container_repo_account: development
             lambda_name: clsf-to-sqs
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { only: [master] } }
 
         - use-my-lpa/docker_build_lambda_image:
             name: build_ship_to_opg_metrics_lambda_image
             account_id: "367815980639"
             container_repo_account: development
             lambda_name: ship-to-opg-metrics
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { only: [master] } }
 
         - use-my-lpa/node_test_web:
             name: test_web
