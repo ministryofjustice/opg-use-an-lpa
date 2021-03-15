@@ -6,6 +6,32 @@ import googleAnalytics from './googleAnalytics';
         <a href="http://localhost">HTTP URL</a>
         <a href="https://localhost">HTTPS URL</a>
     </div>
+    <form name="create_account" method="post" novalidate="" action="/create-account">
+        <fieldset class="govuk-fieldset">
+
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                <h1 class="govuk-fieldset__heading">Create an account</h1>
+            </legend>
+
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="email">
+                    Enter your email address
+                </label>
+                <input class="govuk-input" id="email" name="email" type="email" value="" inputmode="email" spellcheck="false" autocomplete="email">
+            </div>
+
+
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="show_hide_password">
+                    Create a password
+                </label>
+                <input class="govuk-input govuk-input moj-password-reveal__input govuk-input--width-20" id="show_hide_password" name="show_hide_password" type="password" value="">
+                <button class="govuk-button govuk-button--secondary moj-password-reveal__button" data-module="govuk-button" type="button" data-showpassword="Show" data-hidepassword="Hide">Show</button>
+            </div>
+
+            <button data-prevent-double-click="true" type="submit" class="govuk-button">Create account</button>
+        </fieldset>
+    </form>
     `;
 
 describe('given Google Analytics datalayer is not setup', () => {
