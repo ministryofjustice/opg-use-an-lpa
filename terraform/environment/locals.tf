@@ -57,6 +57,7 @@ variable "accounts" {
           maximum = number
         })
       })
+      ship_metrics_queue_enabled = bool
     })
   )
 }
