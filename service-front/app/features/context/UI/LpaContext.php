@@ -1709,7 +1709,8 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I request to add an LPA with the code "([^"]*)" that is for "([^"]*)" "([^"]*)" and I will have an Id of ([^"]*)$/
+     * @When /^I request to add an LPA with the code "([^"]*)" that is for "([^"]*)" "([^"]*)" \
+     *       and I will have an Id of ([^"]*)$/
      */
     public function iRequestToAddAnLPAWithTheCodeThatIsForAndIWillHaveAnIdOf(
         $passcode,
