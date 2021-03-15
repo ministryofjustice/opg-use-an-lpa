@@ -955,7 +955,7 @@ orbs:
                 terraform --version
                 cd ~/project/terraform/account
                 terraform init -lock-timeout=300s
-                terraform plan -lock-timeout=300s
+                terraform plan -lock-timeout=300s -var lambda_container_version=${IMAGE_TAG}
 
       apply_shared_terraform:
         #
@@ -975,10 +975,13 @@ orbs:
           - run:
               name: Apply Shared Terraform
               command: |
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
                 terraform --version
                 cd ~/project/terraform/account
                 terraform init -lock-timeout=300s
-                terraform apply -lock-timeout=300s --auto-approve
+                terraform apply -lock-timeout=300s --auto-approve -var lambda_container_version=${IMAGE_TAG}
+
       apply_environment_terraform:
         #
         # Apply the environment terraform configuration. This:
