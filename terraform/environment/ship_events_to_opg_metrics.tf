@@ -4,6 +4,16 @@ locals {
     "ACCOUNT_DELETED",
   ]
 }
+
+data "aws_sqs_queue" "ship_to_opg_metrics" {
+  count = local.account.ship_metrics_queue_enabled == true ? 1 : 0
+  name  = "${local.account_name}-ship-to-opg-metrics"
+}
+data "aws_lambda_function" "clsf_to_sqs" {
+  count         = local.account.ship_metrics_queue_enabled == true ? 1 : 0
+  function_name = "clsf-to-sqs"
+}
+
 resource "aws_cloudwatch_log_subscription_filter" "events" {
   for_each        = local.account.ship_metrics_queue_enabled == true ? toset(local.clsf_event_codes) : []
   name            = "${local.environment}-clsf-to-sqs-${lower(each.value)}"
