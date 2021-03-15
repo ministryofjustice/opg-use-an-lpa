@@ -15,6 +15,7 @@ Feature: Add an older LPA
     When I provide the details from a valid paper document
     And I confirm that those details are correct
     Then a letter is requested containing a one time use code
+    And I receive an email confirming activation key request
 
   @ui @integration
   Scenario: The user cannot add an old LPA to their account as the data does not match

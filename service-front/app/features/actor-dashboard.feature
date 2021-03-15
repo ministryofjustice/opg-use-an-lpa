@@ -64,3 +64,9 @@ Feature: The user is able to see correct information on their dashboard
     When I am on the instructions and preferences page
     And I click the Back to your LPAs link on the page
     Then I should be taken to the <dashboard> page
+
+  @ui
+  Scenario: As a user I am shown how many LPAs are in my account
+    Given I have added 2 LPAs to my account
+    When I am on the dashboard page
+    Then I am told that I have 2 LPAs in my account
