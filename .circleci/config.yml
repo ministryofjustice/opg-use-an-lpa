@@ -344,7 +344,7 @@ orbs:
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
                 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 311462405659.dkr.ecr.eu-west-1.amazonaws.com
-      ecr_login_ecr:
+      ecr_login_lambda:
         parameters:
           ecr:
             type: string
@@ -832,7 +832,7 @@ orbs:
               command: |
                 echo $ECR_URL
                 docker build --file terraform/account/lambda/clsf-to-sqs/Dockerfile --tag ${ECR_URL}:latest .
-          - ecr_login_ecr:
+          - ecr_login_lambda:
               ecr: << parameters.account_id >>.dkr.ecr.eu-west-1.amazonaws.com
               account_id: << parameters.account_id >>
           - run:
