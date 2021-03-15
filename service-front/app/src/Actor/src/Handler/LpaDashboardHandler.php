@@ -75,6 +75,8 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
             return $hasCodes ? true : array_shift($lpa)->activeCodeCount > 0;
         }, false);
 
+        $totalLpas = array_sum(array_map('count', $lpas->getArrayCopy()));
+
         /** @var FlashMessagesInterface $flash */
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
@@ -82,7 +84,8 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
             'user'             => $user,
             'lpas'             => $lpas,
             'has_active_codes' => $hasActiveCodes,
-            'flash'            => $flash
+            'flash'            => $flash,
+            'total_lpas'       => $totalLpas
         ]));
     }
 }
