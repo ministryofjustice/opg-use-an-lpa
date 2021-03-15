@@ -48,6 +48,7 @@ data "aws_iam_policy_document" "ship_to_opg_metrics_lambda_function_policy" {
       "sqs:SendMessage",
       "sqs:ReceiveMessage",
       "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes",
     ]
   }
 }

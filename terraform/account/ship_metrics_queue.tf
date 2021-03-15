@@ -1,4 +1,3 @@
-
 resource "aws_sqs_queue" "ship_to_opg_metrics" {
   count                     = local.account.ship_metrics_queue_enabled == true ? 1 : 0
   name                      = "${local.environment}-ship-to-opg-metrics"
@@ -34,4 +33,9 @@ data "aws_iam_policy_document" "ship_to_opg_metrics_queue_policy" {
       identifiers = [local.account.account_id]
     }
   }
+}
+
+resource "aws_lambda_event_source_mapping" "ship_to_opg_metrics" {
+  event_source_arn = aws_sqs_queue.ship_to_opg_metrics[0].arn
+  function_name    = module.ship_to_opg_metrics.lambda_function.arn
 }
