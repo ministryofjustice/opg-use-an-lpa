@@ -849,13 +849,12 @@ orbs:
                 echo $IMAGE_TAG
                 echo $ECR_URL
                 docker tag ${ECR_URL}:latest ${ECR_URL}:${IMAGE_TAG}
-                docker push ${ECR_URL}
-                # if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                #   # We want all of the tags pushed
-                #   docker push ${ECR_URL}
-                # else
-                #   docker push ${ECR_URL}:${IMAGE_TAG}
-                # fi
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  # We want all of the tags pushed
+                  docker push ${ECR_URL}
+                else
+                  docker push ${ECR_URL}:${IMAGE_TAG}
+                fi
 
 
 
