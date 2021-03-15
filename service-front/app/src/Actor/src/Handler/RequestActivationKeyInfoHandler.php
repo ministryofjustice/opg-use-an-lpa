@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
-use Actor\Form\RequestActivationKey;
 use Common\Handler\{AbstractHandler, UserAware};
 use Common\Handler\Traits\User;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -23,7 +22,6 @@ class RequestActivationKeyInfoHandler extends AbstractHandler implements UserAwa
 {
     use User;
 
-    private RequestActivationKey $form;
     private ?SessionInterface $session;
 
     public function __construct(
