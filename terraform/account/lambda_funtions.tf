@@ -31,7 +31,7 @@ module "ship_to_opg_metrics" {
   description       = "Function to take metrics from SQS and PUT them to OPG Metrics"
   working_directory = "/var/task"
   environment_variables = {
-    "OPG_METRICS_URL" : aws_sqs_queue.ship_to_opg_metrics[0].id
+    "OPG_METRICS_URL" : ""
   }
   image_uri                   = "${aws_ecr_repository.lambda["development/ship-to-opg-metrics"].repository_url}:${var.lambda_container_version}"
   ecr_arn                     = aws_ecr_repository.lambda["development/ship-to-opg-metrics"].arn
