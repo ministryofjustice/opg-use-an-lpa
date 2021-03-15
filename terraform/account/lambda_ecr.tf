@@ -11,6 +11,7 @@ resource "aws_ecr_repository" "lambda" {
   image_scanning_configuration {
     scan_on_push = true
   }
+  tags = local.default_tags
 }
 
 resource "aws_ecr_repository_policy" "lambda" {
