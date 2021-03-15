@@ -240,7 +240,7 @@ describe('given a form has reported validation errors', () => {
     let useAnalytics;
     beforeEach(() => {
         document.body.innerHTML = formErrors;
-        useAnalytics = new googleAnalytics('UA-54321');
+        useAnalytics = new googleAnalytics('UA-12345');
     });
 
     /**
@@ -256,28 +256,28 @@ describe('given a form has reported validation errors', () => {
             }
      */
     test('it should fire off form error events correctly', () => {
-        expect(global.dataLayer[2][1]).toBe('Enter your email address');
-        expect(global.dataLayer[2][2].event_category).not.toBeUndefined();
-        expect(global.dataLayer[2][2].event_category).toBe('Form errors');
-        expect(global.dataLayer[2][2].event_label).not.toBeUndefined();
-        expect(global.dataLayer[2][2].event_label).toBe('#id-email - Enter an email address in the correct format, like [sanitised]');
-
-        expect(global.dataLayer[3][1]).toBe('Create a password');
-        expect(global.dataLayer[3][2].event_category).not.toBeUndefined();
-        expect(global.dataLayer[3][2].event_category).toBe('Form errors');
-        expect(global.dataLayer[3][2].event_label).not.toBeUndefined();
-        expect(global.dataLayer[3][2].event_label).toBe('#id-show_hide_password - Password must be 8 characters or more');
-
-        expect(global.dataLayer[4][1]).toBe('Create a password');
+        expect(global.dataLayer[4][1]).toBe('Enter your email address');
         expect(global.dataLayer[4][2].event_category).not.toBeUndefined();
         expect(global.dataLayer[4][2].event_category).toBe('Form errors');
         expect(global.dataLayer[4][2].event_label).not.toBeUndefined();
-        expect(global.dataLayer[4][2].event_label).toBe('#id-show_hide_password - Password must include a number');
+        expect(global.dataLayer[4][2].event_label).toBe('#id-email - Enter an email address in the correct format, like [sanitised]');
 
         expect(global.dataLayer[5][1]).toBe('Create a password');
         expect(global.dataLayer[5][2].event_category).not.toBeUndefined();
         expect(global.dataLayer[5][2].event_category).toBe('Form errors');
         expect(global.dataLayer[5][2].event_label).not.toBeUndefined();
-        expect(global.dataLayer[5][2].event_label).toBe('#id-show_hide_password - Password must include a capital letter');
+        expect(global.dataLayer[5][2].event_label).toBe('#id-show_hide_password - Password must be 8 characters or more');
+
+        expect(global.dataLayer[6][1]).toBe('Create a password');
+        expect(global.dataLayer[6][2].event_category).not.toBeUndefined();
+        expect(global.dataLayer[6][2].event_category).toBe('Form errors');
+        expect(global.dataLayer[6][2].event_label).not.toBeUndefined();
+        expect(global.dataLayer[6][2].event_label).toBe('#id-show_hide_password - Password must include a number');
+
+        expect(global.dataLayer[7][1]).toBe('Create a password');
+        expect(global.dataLayer[7][2].event_category).not.toBeUndefined();
+        expect(global.dataLayer[7][2].event_category).toBe('Form errors');
+        expect(global.dataLayer[7][2].event_label).not.toBeUndefined();
+        expect(global.dataLayer[7][2].event_label).toBe('#id-show_hide_password - Password must include a capital letter');
     });
 });
