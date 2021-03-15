@@ -9,11 +9,12 @@ module "clsf_to_sqs" {
   }
   image_uri                   = "${aws_ecr_repository.lambda["${local.environment}/clsf-to-sqs"].repository_url}:${var.lambda_container_version}"
   ecr_arn                     = aws_ecr_repository.lambda["${local.environment}/clsf-to-sqs"].arn
-  lambda_role_policy_document = data.aws_iam_policy_document.clsf_to_sqs_lambda_function_policy.json
+  lambda_role_policy_document = data.aws_iam_policy_document.clsf_to_sqs_lambda_function_policy[0].json
   tags                        = local.default_tags
 }
 
 data "aws_iam_policy_document" "clsf_to_sqs_lambda_function_policy" {
+  count = local.account.ship_metrics_queue_enabled == true ? 1 : 0
   statement {
     sid       = "AllowSQSAccess"
     effect    = "Allow"
@@ -37,11 +38,12 @@ module "ship_to_opg_metrics" {
   }
   image_uri                   = "${aws_ecr_repository.lambda["${local.environment}/ship-to-opg-metrics"].repository_url}:${var.lambda_container_version}"
   ecr_arn                     = aws_ecr_repository.lambda["${local.environment}/ship-to-opg-metrics"].arn
-  lambda_role_policy_document = data.aws_iam_policy_document.ship_to_opg_metrics_lambda_function_policy.json
+  lambda_role_policy_document = data.aws_iam_policy_document.ship_to_opg_metrics_lambda_function_policy[0].json
   tags                        = local.default_tags
 }
 
 data "aws_iam_policy_document" "ship_to_opg_metrics_lambda_function_policy" {
+  count = local.account.ship_metrics_queue_enabled == true ? 1 : 0
   statement {
     sid       = "AllowSQSAccess"
     effect    = "Allow"
