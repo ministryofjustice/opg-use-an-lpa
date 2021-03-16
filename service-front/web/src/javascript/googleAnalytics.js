@@ -33,6 +33,7 @@ export default class GoogleAnalytics {
             'page_path': `${location.pathname.split('?')[0]}`
         });
         this._trackExternalLinks();
+        this._trackFormValidationErrors();
 
         PerformanceAnalytics();
         ErrorAnalytics();
@@ -73,6 +74,22 @@ export default class GoogleAnalytics {
             externalLinkSelector[i].addEventListener("click", function (e) {
                 _this.trackEvent('click', 'outbound', this.href);
             });
+        }
+    }
+
+    _trackFormValidationErrors()
+    {
+        let errorFields = document.getElementsByClassName('govuk-form-group--error');
+        for (let i = 0, len = errorFields.length; i < len; i++) {
+            let labelElement = errorFields[i].getElementsByTagName('label')[0];
+            let label = labelElement.textContent.trim();
+            let inputId = labelElement.getAttribute('for');
+            // there can be more than one error message per field eg password rules
+            let errorMessages = (errorFields[i].querySelectorAll('.govuk-error-message'));
+            for (let x = 0, len = errorMessages.length; x < len; x++) {
+                let errorMessage = errorMessages[x].textContent.replace("Error:", "").trim();
+                this.trackEvent(label, 'Form errors', ('#' + inputId + ' - ' + errorMessage));
+            }
         }
     }
 }
