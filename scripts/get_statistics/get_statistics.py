@@ -124,7 +124,6 @@ class StatisticsCollector:
                 month_start), self.format_month(month_end), event)
 
             sum_value = int(sum(each['Sum'] for each in datapoints if each))
-
             monthly_sum[str(month_start)] = sum_value
             total = total + sum_value
         data = {}
@@ -162,7 +161,13 @@ class StatisticsCollector:
         event_codes = [
           'account_activated',
           'account_created',
-          'account_deleted'
+          'account_deleted',
+          'share_code_not_found',
+          'older_lpa_success',
+          'older_lpa_not_found',
+          'older_lpa_does_not_match',
+          'older_lpa_not_eligible',
+          'older_lpa_has_activation_key'
         ]
 
         for event in event_codes:
@@ -222,7 +227,7 @@ def main():
     args = parser.parse_args()
     work = StatisticsCollector(
         args.environment, args.startdate, args.enddate)
-    # work.collate_sums()
+
     work.produce_json()
     if args.plaintext_output :
         work.print_plaintext()
