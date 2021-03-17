@@ -13,14 +13,6 @@ class StatisticsCollector:
     environment = ''
     startdate = ''
     enddate = ''
-    account_created_monthly_totals = {}
-    account_created_total = 0
-    lpas_added_monthly_totals = {}
-    lpas_added_total = 0
-    viewer_codes_created_monthly_totals = {}
-    viewer_codes_created_total = 0
-    viewer_codes_viewed_monthly_totals = {}
-    viewer_codes_viewed_total = 0
     statistics = {}
 
     def __init__(self, environment, startdate, enddate):
@@ -83,30 +75,6 @@ class StatisticsCollector:
     def format_month(self, date):
         return datetime.datetime.combine(date, datetime.datetime.min.time())
 
-    def sum_metrics(self, event, monthly_sum, total):
-        for month_start in self.iterate_months():
-            month_end = month_start + relativedelta(months=1)
-            datapoints = self.get_metric_statistic(self.format_month(
-                month_start), self.format_month(month_end), event)
-
-            sum_value = int(sum(each['Sum'] for each in datapoints if each))
-
-            monthly_sum[str(month_start)] = sum_value
-            total = total + sum_value
-
-
-    def sum_dynamodb_counts(self, table_name, filter_expression, monthly_sum):
-        for month_start in self.iterate_months():
-            month_end = month_start + relativedelta(months=1)
-            sum_value = self.pagintated_get_total_counts_by_month(
-                self.format_month(month_start),
-                self.format_month(month_end),
-                table_name=table_name,
-                filter_exp=filter_expression,
-            )
-            monthly_sum[str(
-                month_start)] = sum_value
-
     def iterate_months(self):
         year = self.startdate.year
         month = self.startdate.month
@@ -147,56 +115,76 @@ class StatisticsCollector:
 
         return running_sum
 
-    def collate_sums(self):
-        # LPAs Added
-        self.sum_dynamodb_counts(
-          table_name='{}-UserLpaActorMap'.format(self.environment),
-          filter_expression='Added BETWEEN :fromdate AND :todate',
-          monthly_sum=self.lpas_added_monthly_totals
-        )
+    def sum_metrics(self, event):
+        monthly_sum = {}
+        total = 0
+        for month_start in self.iterate_months():
+            month_end = month_start + relativedelta(months=1)
+            datapoints = self.get_metric_statistic(self.format_month(
+                month_start), self.format_month(month_end), event)
 
-        # Viewer Codes Created
-        self.sum_dynamodb_counts(
-          table_name='{}-ViewerCodes'.format(self.environment),
-          filter_expression='Added BETWEEN :fromdate AND :todate',
-          monthly_sum=self.viewer_codes_created_monthly_totals
-          )
-        # Viewer Codes Viewed
-        self.sum_dynamodb_counts(
-          table_name='{}-ViewerActivity'.format(self.environment),
-          filter_expression='Viewed BETWEEN :fromdate AND :todate',
-          monthly_sum=self.viewer_codes_viewed_monthly_totals
-          )
+            sum_value = int(sum(each['Sum'] for each in datapoints if each))
 
-        self.sum_metrics(
-          'account_created_event',
-          self.account_created_monthly_totals,
-          self.account_created_total
-          )
+            monthly_sum[str(month_start)] = sum_value
+            total = total + sum_value
+        data = {}
+        data['total'] = total
+        data['monthly'] = monthly_sum
+
+        return data
+
+    def sum_dynamodb_counts(self, table_name, filter_expression):
+        monthly_sum = {}
+        for month_start in self.iterate_months():
+            month_end = month_start + relativedelta(months=1)
+            sum_value = self.pagintated_get_total_counts_by_month(
+                self.format_month(month_start),
+                self.format_month(month_end),
+                table_name=table_name,
+                filter_exp=filter_expression,
+            )
+            monthly_sum[str(
+                month_start)] = sum_value
+        data = {}
+        data['total'] = sum(monthly_sum.values())
+        data['monthly'] = monthly_sum
+
+        return data
+
 
     def produce_json(self):
         self.statistics = {}
         self.statistics['statistics'] = {}
         stats=self.statistics['statistics']
 
-        stats['accounts_created'] = {}
-        stats['accounts_created']['total'] = self.account_created_total
-        stats['accounts_created']['monthly'] = self.account_created_monthly_totals
+        # Get statistics from Cloudwatch metric statistics
 
-        stats['lpas_added'] = {}
-        stats['lpas_added']['total'] = sum(
-            self.lpas_added_monthly_totals.values())
-        stats['lpas_added']['monthly'] = self.lpas_added_monthly_totals
+        event_codes = [
+          'account_activated',
+          'account_created',
+          'account_deleted'
+        ]
 
-        stats['viewer_codes_created'] = {}
-        stats['viewer_codes_created']['total'] = sum(
-            self.viewer_codes_created_monthly_totals.values())
-        stats['viewer_codes_created']['monthly'] = self.viewer_codes_created_monthly_totals
+        for event in event_codes:
+          stats[event] = self.sum_metrics('{}_event'.format(event))
 
-        stats['viewer_codes_viewed'] = {}
-        stats['viewer_codes_viewed']['total'] = sum(
-            self.viewer_codes_viewed_monthly_totals.values())
-        stats['viewer_codes_viewed']['monthly'] = self.viewer_codes_viewed_monthly_totals
+        # Get statistics from Dynamodb counts
+
+        stats['lpas_added'] = self.sum_dynamodb_counts(
+          table_name='{}-UserLpaActorMap'.format(self.environment),
+          filter_expression='Added BETWEEN :fromdate AND :todate'
+        )
+
+        stats['viewer_codes_created'] = self.sum_dynamodb_counts(
+          table_name='{}-ViewerCodes'.format(self.environment),
+          filter_expression='Added BETWEEN :fromdate AND :todate'
+          )
+
+        stats['viewer_codes_viewed'] = self.sum_dynamodb_counts(
+          table_name='{}-ViewerActivity'.format(self.environment),
+          filter_expression='Viewed BETWEEN :fromdate AND :todate'
+          )
+
 
     def print_json(self):
         print(json.dumps(self.statistics))
@@ -230,26 +218,15 @@ def main():
     parser.add_argument("--text", dest="plaintext_output", action="store_const",
                         const=True, default=False,
                         help="Output stats as a plaintext statement")
-    parser.add_argument("--test", dest="test_with_file", action="store_const",
-                        const=True, default=False,
-                        help="Run script using an input file previously generated")
 
     args = parser.parse_args()
     work = StatisticsCollector(
         args.environment, args.startdate, args.enddate)
-    if args.test_with_file :
-        with open('output.json') as json_file:
-            work.statistics = json.load(json_file,)
-            if args.plaintext_output :
-                work.print_plaintext()
-            else:
-                work.print_json()
+    # work.collate_sums()
+    work.produce_json()
+    if args.plaintext_output :
+        work.print_plaintext()
     else:
-        work.collate_sums()
-        work.produce_json()
-        if args.plaintext_output :
-            work.print_plaintext()
-        else:
-            work.print_json()
+        work.print_json()
 if __name__ == "__main__":
     main()
