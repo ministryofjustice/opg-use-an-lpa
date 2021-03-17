@@ -83,16 +83,16 @@ class StatisticsCollector:
     def format_month(self, date):
         return datetime.datetime.combine(date, datetime.datetime.min.time())
 
-    def sum_account_created_metrics(self):
+    def sum_metrics(self, event, monthly_sum, total):
         for month_start in self.iterate_months():
             month_end = month_start + relativedelta(months=1)
-            datapoints = self.get_account_created_metric_statistic(self.format_month(
-                month_start), self.format_month(month_end))
+            datapoints = self.get_metric_statistic(self.format_month(
+                month_start), self.format_month(month_end), event)
 
             sum_value = int(sum(each['Sum'] for each in datapoints if each))
 
-            self.account_created_monthly_totals[str(month_start)] = sum_value
-            self.account_created_total = self.account_created_total + sum_value
+            monthly_sum[str(month_start)] = sum_value
+            total = total + sum_value
 
     def sum_lpas_added_count(self):
         for month_start in self.iterate_months():
@@ -153,10 +153,10 @@ class StatisticsCollector:
                 if month == 1:
                     year += 1
 
-    def get_account_created_metric_statistic(self, month_start, month_end):
+    def get_metric_statistic(self, month_start, month_end, metric_name):
         response = self.aws_cloudwatch_client.get_metric_statistics(
             Namespace='{}_events'.format(self.environment),
-            MetricName='account_created_event',
+            MetricName=metric_name,
             StartTime=month_start,
             EndTime=month_end,
             Period=3600,
@@ -184,7 +184,7 @@ class StatisticsCollector:
         self.sum_lpas_added_count()
         self.sum_viewer_codes_created_count()
         self.sum_viewer_codes_viewed_count()
-        self.sum_account_created_metrics()
+        self.sum_metrics('account_created_event', self.account_created_monthly_totals, self.account_created_total)
 
     def produce_json(self):
         self.statistics = {}
