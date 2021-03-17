@@ -94,50 +94,17 @@ class StatisticsCollector:
             monthly_sum[str(month_start)] = sum_value
             total = total + sum_value
 
-    def sum_lpas_added_count(self):
-        for month_start in self.iterate_months():
-            month_end = month_start + relativedelta(months=1)
-            sum_value = self.pagintated_get_total_counts_by_month(
-                self.format_month(month_start),
-                self.format_month(month_end),
-                table_name='{}-UserLpaActorMap'.format(self.environment),
-                filter_exp='Added BETWEEN :fromdate AND :todate'
-            )
-            self.lpas_added_monthly_totals[str(month_start)] = sum_value
 
-    def sum_lpas_added_count(self):
+    def sum_dynamodb_counts(self, table_name, filter_expression, monthly_sum):
         for month_start in self.iterate_months():
             month_end = month_start + relativedelta(months=1)
             sum_value = self.pagintated_get_total_counts_by_month(
                 self.format_month(month_start),
                 self.format_month(month_end),
-                table_name='{}-UserLpaActorMap'.format(self.environment),
-                filter_exp='Added BETWEEN :fromdate AND :todate'
+                table_name=table_name,
+                filter_exp=filter_expression,
             )
-            self.lpas_added_monthly_totals[str(month_start)] = sum_value
-
-    def sum_viewer_codes_created_count(self):
-        for month_start in self.iterate_months():
-            month_end = month_start + relativedelta(months=1)
-            sum_value = self.pagintated_get_total_counts_by_month(
-                self.format_month(month_start),
-                self.format_month(month_end),
-                table_name='{}-ViewerCodes'.format(self.environment),
-                filter_exp='Added BETWEEN :fromdate AND :todate',
-            )
-            self.viewer_codes_created_monthly_totals[str(
-                month_start)] = sum_value
-
-    def sum_viewer_codes_viewed_count(self):
-        for month_start in self.iterate_months():
-            month_end = month_start + relativedelta(months=1)
-            sum_value = self.pagintated_get_total_counts_by_month(
-                self.format_month(month_start),
-                self.format_month(month_end),
-                table_name='{}-ViewerActivity'.format(self.environment),
-                filter_exp='Viewed BETWEEN :fromdate AND :todate',
-            )
-            self.viewer_codes_viewed_monthly_totals[str(
+            monthly_sum[str(
                 month_start)] = sum_value
 
     def iterate_months(self):
@@ -181,10 +148,31 @@ class StatisticsCollector:
         return running_sum
 
     def collate_sums(self):
-        self.sum_lpas_added_count()
-        self.sum_viewer_codes_created_count()
-        self.sum_viewer_codes_viewed_count()
-        self.sum_metrics('account_created_event', self.account_created_monthly_totals, self.account_created_total)
+        # LPAs Added
+        self.sum_dynamodb_counts(
+          table_name='{}-UserLpaActorMap'.format(self.environment),
+          filter_expression='Added BETWEEN :fromdate AND :todate',
+          monthly_sum=self.lpas_added_monthly_totals
+        )
+
+        # Viewer Codes Created
+        self.sum_dynamodb_counts(
+          table_name='{}-ViewerCodes'.format(self.environment),
+          filter_expression='Added BETWEEN :fromdate AND :todate',
+          monthly_sum=self.viewer_codes_created_monthly_totals
+          )
+        # Viewer Codes Viewed
+        self.sum_dynamodb_counts(
+          table_name='{}-ViewerActivity'.format(self.environment),
+          filter_expression='Viewed BETWEEN :fromdate AND :todate',
+          monthly_sum=self.viewer_codes_viewed_monthly_totals
+          )
+
+        self.sum_metrics(
+          'account_created_event',
+          self.account_created_monthly_totals,
+          self.account_created_total
+          )
 
     def produce_json(self):
         self.statistics = {}
