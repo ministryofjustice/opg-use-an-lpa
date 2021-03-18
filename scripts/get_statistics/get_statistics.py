@@ -45,7 +45,7 @@ class StatisticsCollector:
 
         self.format_dates(startdate, enddate)
 
-        self.list_metrics_for_environment()
+        self.metrics_list = self.list_metrics_for_environment()
 
     def set_iam_role_session(self, aws_account_id):
         if os.getenv('CI'):
@@ -136,11 +136,13 @@ class StatisticsCollector:
         return data
 
     def list_metrics_for_environment(self):
+        metrics_list = []
         response = self.aws_cloudwatch_client.list_metrics(
             Namespace='{}_events'.format(self.environment)
         )
         for metric in response['Metrics']:
-            self.metrics_list.append(metric['MetricName'])
+            metrics_list.append(metric['MetricName'])
+        return metrics_list
 
     def sum_dynamodb_counts(self, table_name, filter_expression):
         monthly_sum = {}
