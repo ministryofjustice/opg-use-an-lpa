@@ -1,6 +1,8 @@
 FROM buildkite/puppeteer:7.1.0 AS production
 
 RUN apt-get update && apt-get upgrade -y
+RUN apt-get full-upgrade -y && apt autoremove -y
+RUN apt-get update && apt-get upgrade -y
 
 WORKDIR /src/app
 COPY service-pdf/app/package.json ./package.json
