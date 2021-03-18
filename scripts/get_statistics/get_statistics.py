@@ -1,8 +1,8 @@
 import argparse
 import datetime
 import json
-import boto3
 import os
+import boto3
 from dateutil.relativedelta import relativedelta
 
 
@@ -136,11 +136,11 @@ class StatisticsCollector:
         return data
 
     def list_metrics_for_environment(self):
-      response = self.aws_cloudwatch_client.list_metrics(
-        Namespace='{}_events'.format(self.environment)
-      )
-      for metric in response['Metrics']:
-        self.metrics_list.append(metric['MetricName'])
+        response = self.aws_cloudwatch_client.list_metrics(
+            Namespace='{}_events'.format(self.environment)
+        )
+        for metric in response['Metrics']:
+            self.metrics_list.append(metric['MetricName'])
 
     def sum_dynamodb_counts(self, table_name, filter_expression):
         monthly_sum = {}
@@ -168,23 +168,23 @@ class StatisticsCollector:
 
         # Get statistics from Cloudwatch metric statistics
         for metric in self.metrics_list:
-          stats[metric] = self.sum_metrics(metric)
+            stats[metric] = self.sum_metrics(metric)
 
         # Get statistics from Dynamodb counts
         stats['lpas_added'] = self.sum_dynamodb_counts(
-          table_name='{}-UserLpaActorMap'.format(self.environment),
-          filter_expression='Added BETWEEN :fromdate AND :todate'
+            table_name='{}-UserLpaActorMap'.format(self.environment),
+            filter_expression='Added BETWEEN :fromdate AND :todate'
         )
 
         stats['viewer_codes_created'] = self.sum_dynamodb_counts(
-          table_name='{}-ViewerCodes'.format(self.environment),
-          filter_expression='Added BETWEEN :fromdate AND :todate'
-          )
+            table_name='{}-ViewerCodes'.format(self.environment),
+            filter_expression='Added BETWEEN :fromdate AND :todate'
+            )
 
         stats['viewer_codes_viewed'] = self.sum_dynamodb_counts(
-          table_name='{}-ViewerActivity'.format(self.environment),
-          filter_expression='Viewed BETWEEN :fromdate AND :todate'
-          )
+            table_name='{}-ViewerActivity'.format(self.environment),
+            filter_expression='Viewed BETWEEN :fromdate AND :todate'
+            )
 
     def print_json(self):
         print(json.dumps(self.statistics))
@@ -193,7 +193,9 @@ class StatisticsCollector:
         plaintext = ""
         for statistic in self.statistics["statistics"]:
             plaintext += "*{0}*\n".format(statistic).upper()
-            plaintext += "*Total for this reporting period:* {0}\n".format(self.statistics["statistics"][statistic]["total"])
+            plaintext += "*Total for this reporting period:* {0}\n".format(
+                self.statistics["statistics"][statistic]["total"]
+                )
             plaintext += "*Monthly Breakdown*\n"
             plaintext += "```\n"
             for key, value in self.statistics["statistics"][statistic]["monthly"].items():
@@ -224,7 +226,8 @@ def main():
         args.environment, args.startdate, args.enddate)
 
     work.produce_json()
-    if args.plaintext_output :
+
+    if args.plaintext_output:
         work.print_plaintext()
     else:
         work.print_json()
