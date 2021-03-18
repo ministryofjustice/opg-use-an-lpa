@@ -13,6 +13,7 @@ class StatisticsCollector:
     environment = ''
     startdate = ''
     enddate = ''
+    metrics_list = []
     statistics = {}
 
     def __init__(self, environment, startdate, enddate):
@@ -43,6 +44,8 @@ class StatisticsCollector:
         self.dynamodb_scan_paginator = self.aws_dynamodb_client.get_paginator("scan")
 
         self.format_dates(startdate, enddate)
+
+        self.list_metrics_for_environment()
 
     def set_iam_role_session(self, aws_account_id):
         if os.getenv('CI'):
@@ -132,6 +135,13 @@ class StatisticsCollector:
 
         return data
 
+    def list_metrics_for_environment(self):
+      response = self.aws_cloudwatch_client.list_metrics(
+        Namespace='{}_events'.format(self.environment)
+      )
+      for metric in response['Metrics']:
+        self.metrics_list.append(metric['MetricName'])
+
     def sum_dynamodb_counts(self, table_name, filter_expression):
         monthly_sum = {}
         for month_start in self.iterate_months():
@@ -157,24 +167,10 @@ class StatisticsCollector:
         stats=self.statistics['statistics']
 
         # Get statistics from Cloudwatch metric statistics
-
-        event_codes = [
-          'account_activated',
-          'account_created',
-          'account_deleted',
-          'share_code_not_found',
-          'older_lpa_success',
-          'older_lpa_not_found',
-          'older_lpa_does_not_match',
-          'older_lpa_not_eligible',
-          'older_lpa_has_activation_key'
-        ]
-
-        for event in event_codes:
-          stats[event] = self.sum_metrics('{}_event'.format(event))
+        for metric in self.metrics_list:
+          stats[metric] = self.sum_metrics(metric)
 
         # Get statistics from Dynamodb counts
-
         stats['lpas_added'] = self.sum_dynamodb_counts(
           table_name='{}-UserLpaActorMap'.format(self.environment),
           filter_expression='Added BETWEEN :fromdate AND :todate'
@@ -189,7 +185,6 @@ class StatisticsCollector:
           table_name='{}-ViewerActivity'.format(self.environment),
           filter_expression='Viewed BETWEEN :fromdate AND :todate'
           )
-
 
     def print_json(self):
         print(json.dumps(self.statistics))
@@ -233,5 +228,6 @@ def main():
         work.print_plaintext()
     else:
         work.print_json()
+
 if __name__ == "__main__":
     main()
