@@ -291,10 +291,11 @@ class LpaService
     /**
      * @param string $referenceNumber
      * @param string $identity
-     * @return bool|string
+     *
+     * @return ArrayObject|null
      * @throws Exception
      */
-    public function isLpaAlreadyAdded(string $referenceNumber, string $identity)
+    public function isLpaAlreadyAdded(string $referenceNumber, string $identity): ?ArrayObject
     {
         $lpasAdded = $this->getLpas($identity);
 
@@ -307,9 +308,9 @@ class LpaService
                         'uId' => $referenceNumber
                     ]
                 );
-                return $userLpaActorToken;
+                return $lpasAdded[$userLpaActorToken];
             }
         }
-        return false;
+        return null;
     }
 }
