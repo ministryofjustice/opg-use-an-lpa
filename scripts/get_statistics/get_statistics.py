@@ -170,7 +170,7 @@ class StatisticsCollector:
 
         return statistics
 
-    def print_plaintext(self, statistics):
+    def produce_plaintext(self, statistics):
         plaintext = ""
         for statistic in statistics["statistics"]:
             plaintext += "*{0}*\n".format(statistic).upper()
@@ -208,7 +208,7 @@ def main():
     statistics = work.produce_json()
 
     if args.plaintext_output:
-        print(work.print_plaintext(statistics))
+        print(work.produce_plaintext(statistics))
     else:
         print(json.dumps(statistics))
 
