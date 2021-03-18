@@ -381,16 +381,6 @@ class LpaContext implements Context
     {
         $this->iAmOnTheAddAnLPAPage();
 
-        // API call for checking LPA
-        $this->apiFixtures->post('/v1/actor-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpaData)
-                )
-            );
-
         //API call for getting all the users added LPAs
         $this->apiFixtures->get('/v1/lpas')
             ->respondWith(
@@ -398,6 +388,16 @@ class LpaContext implements Context
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        // API call for checking LPA
+        $this->apiFixtures->post('/v1/actor-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpaData)
                 )
             );
 
@@ -1648,6 +1648,17 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/add-by-code');
 
+        //API call for getting all the users added LPAs
+        //to check if they have already added this LPA
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
             ->respondWith(
@@ -1673,6 +1684,17 @@ class LpaContext implements Context
 
         $this->ui->assertPageAddress('/lpa/add-by-code');
 
+        // API call for getting all the users added LPAs
+        // to check if they have already added the LPA
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
             ->respondWith(
@@ -1687,17 +1709,6 @@ class LpaContext implements Context
                     $params = json_decode($request->getBody()->getContents(), true);
                     assertEquals('XYUPHWQRECHV', $params['actor-code']);
                 }
-            );
-
-        // API call for getting all the users added LPAs
-        // to check if they have already added the LPA
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
             );
 
         $this->ui->fillField('passcode', $code);
@@ -1838,6 +1849,17 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/add-by-code');
 
+        // API call for getting all the users added LPAs
+        // to check if they have already added the LPA
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
         // API call for checking LPA
         $this->apiFixtures->post('/v1/actor-codes/summary')
             ->respondWith(
@@ -1853,17 +1875,6 @@ class LpaContext implements Context
 
                     assertEquals($storedCode, $params['actor-code']);
                 }
-            );
-
-        // API call for getting all the users added LPAs
-        // to check if they have already added the LPA
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
             );
 
         $this->ui->fillField('passcode', $code);

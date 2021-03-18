@@ -445,7 +445,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_false_if_an_lpa_is_not_already_added()
+    public function it_returns_null_if_an_lpa_is_not_already_added()
     {
         $token = '01234567-01234-01234-01234-012345678901';
 
@@ -470,7 +470,7 @@ class LpaServiceTest extends TestCase
 
         $lpaAdded = $this->lpaService->isLpaAlreadyAdded('333333333333', $token);
 
-        $this->assertFalse($lpaAdded);
+        $this->assertNull($lpaAdded);
     }
 
     /** @test */
@@ -478,16 +478,25 @@ class LpaServiceTest extends TestCase
     {
         $token = '01234567-01234-01234-01234-012345678901';
 
-        $lpaData = [
-            '0123-01-01-01-012345' => []
-        ];
-
         $lpa = new Lpa();
         $lpa->setUId('123456789012');
 
+        $lpaData = [
+            '0123-01-01-01-012345' => [
+                'user-lpa-actor-token' => '0123-01-01-01-012345',
+                'lpa' => $lpa
+            ]
+        ];
+
         $parsedLpaData = new ArrayObject(
             [
-                '0123-01-01-01-012345' => new ArrayObject(['lpa' => $lpa], ArrayObject::ARRAY_AS_PROPS),
+                '0123-01-01-01-012345' =>  new ArrayObject(
+                    [
+                        'user-lpa-actor-token' => '0123-01-01-01-012345',
+                        'lpa' => $lpa,
+                    ],
+                    ArrayObject::ARRAY_AS_PROPS
+                ),
             ],
             ArrayObject::ARRAY_AS_PROPS
         );
@@ -499,6 +508,9 @@ class LpaServiceTest extends TestCase
 
         $lpaAdded = $this->lpaService->isLpaAlreadyAdded('123456789012', $token);
 
-        $this->assertEquals(array_key_first($lpaData), $lpaAdded);
+        $this->assertArrayHasKey('user-lpa-actor-token', $lpaAdded);
+        $this->assertArrayHasKey('lpa', $lpaAdded);
+        $this->assertEquals('0123-01-01-01-012345', $lpaAdded['user-lpa-actor-token']);
+        $this->assertEquals($lpa, $lpaAdded['lpa']);
     }
 }
