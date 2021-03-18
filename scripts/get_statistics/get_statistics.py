@@ -57,13 +57,11 @@ class StatisticsCollector:
 
         sts = boto3.client(
             'sts',
-            region_name='eu-west-1',
-        )
+            region_name='eu-west-1')
         session = sts.assume_role(
             RoleArn=role_arn,
             RoleSessionName='getting_service_statistics',
-            DurationSeconds=900
-        )
+            DurationSeconds=900)
         return session
 
     def format_dates(self, startdate, enddate):
@@ -98,8 +96,7 @@ class StatisticsCollector:
             StartTime=month_start,
             EndTime=month_end,
             Period=3600,
-            Statistics=['Sum'],
-        )
+            Statistics=['Sum'])
         return response['Datapoints']
 
 
@@ -111,9 +108,7 @@ class StatisticsCollector:
           FilterExpression=filter_exp,
           ExpressionAttributeValues={
             ':fromdate': {'S': str(month_start)},
-            ':todate': {'S': str(month_end)}
-            }
-          ):
+            ':todate': {'S': str(month_end)}}):
             running_sum += page['Count']
 
         return running_sum
@@ -138,8 +133,7 @@ class StatisticsCollector:
     def list_metrics_for_environment(self):
         metrics_list = []
         response = self.aws_cloudwatch_client.list_metrics(
-            Namespace='{}_events'.format(self.environment)
-        )
+            Namespace='{}_events'.format(self.environment))
         for metric in response['Metrics']:
             metrics_list.append(metric['MetricName'])
         return metrics_list
@@ -152,10 +146,8 @@ class StatisticsCollector:
                 self.format_month(month_start),
                 self.format_month(month_end),
                 table_name=table_name,
-                filter_exp=filter_expression,
-            )
-            monthly_sum[str(
-                month_start)] = sum_value
+                filter_exp=filter_expression)
+            monthly_sum[str(month_start)] = sum_value
         data = {}
         data['total'] = sum(monthly_sum.values())
         data['monthly'] = monthly_sum
@@ -175,18 +167,15 @@ class StatisticsCollector:
         # Get statistics from Dynamodb counts
         stats['lpas_added'] = self.sum_dynamodb_counts(
             table_name='{}-UserLpaActorMap'.format(self.environment),
-            filter_expression='Added BETWEEN :fromdate AND :todate'
-        )
+            filter_expression='Added BETWEEN :fromdate AND :todate')
 
         stats['viewer_codes_created'] = self.sum_dynamodb_counts(
             table_name='{}-ViewerCodes'.format(self.environment),
-            filter_expression='Added BETWEEN :fromdate AND :todate'
-            )
+            filter_expression='Added BETWEEN :fromdate AND :todate')
 
         stats['viewer_codes_viewed'] = self.sum_dynamodb_counts(
             table_name='{}-ViewerActivity'.format(self.environment),
-            filter_expression='Viewed BETWEEN :fromdate AND :todate'
-            )
+            filter_expression='Viewed BETWEEN :fromdate AND :todate')
 
     def print_json(self):
         print(json.dumps(self.statistics))
@@ -196,8 +185,7 @@ class StatisticsCollector:
         for statistic in self.statistics["statistics"]:
             plaintext += "*{0}*\n".format(statistic).upper()
             plaintext += "*Total for this reporting period:* {0}\n".format(
-                self.statistics["statistics"][statistic]["total"]
-                )
+                self.statistics["statistics"][statistic]["total"])
             plaintext += "*Monthly Breakdown*\n"
             plaintext += "```\n"
             for key, value in self.statistics["statistics"][statistic]["monthly"].items():
