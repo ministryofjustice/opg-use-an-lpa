@@ -14,7 +14,6 @@ class StatisticsCollector:
     startdate = ''
     enddate = ''
     metrics_list = []
-    statistics = {}
 
     def __init__(self, environment, startdate, enddate):
         aws_account_ids = {
@@ -44,8 +43,6 @@ class StatisticsCollector:
         self.dynamodb_scan_paginator = self.aws_dynamodb_client.get_paginator("scan")
 
         self.format_dates(startdate, enddate)
-
-        self.metrics_list = self.list_metrics_for_environment()
 
     def set_iam_role_session(self, aws_account_id):
         if os.getenv('CI'):
@@ -110,7 +107,6 @@ class StatisticsCollector:
             ':fromdate': {'S': str(month_start)},
             ':todate': {'S': str(month_end)}}):
             running_sum += page['Count']
-
         return running_sum
 
     def sum_metrics(self, event):
@@ -127,7 +123,6 @@ class StatisticsCollector:
         data = {}
         data['total'] = total
         data['monthly'] = monthly_sum
-
         return data
 
     def list_metrics_for_environment(self):
@@ -151,48 +146,43 @@ class StatisticsCollector:
         data = {}
         data['total'] = sum(monthly_sum.values())
         data['monthly'] = monthly_sum
-
         return data
 
 
     def produce_json(self):
-        self.statistics = {}
-        self.statistics['statistics'] = {}
-        stats=self.statistics['statistics']
-
+        statistics = {}
+        statistics['statistics'] = {}
         # Get statistics from Cloudwatch metric statistics
-        for metric in self.metrics_list:
-            stats[metric] = self.sum_metrics(metric)
-
+        for metric in self.list_metrics_for_environment():
+            statistics['statistics'][metric] = self.sum_metrics(metric)
         # Get statistics from Dynamodb counts
-        stats['lpas_added'] = self.sum_dynamodb_counts(
+        statistics['statistics']['lpas_added'] = self.sum_dynamodb_counts(
             table_name='{}-UserLpaActorMap'.format(self.environment),
             filter_expression='Added BETWEEN :fromdate AND :todate')
 
-        stats['viewer_codes_created'] = self.sum_dynamodb_counts(
+        statistics['statistics']['viewer_codes_created'] = self.sum_dynamodb_counts(
             table_name='{}-ViewerCodes'.format(self.environment),
             filter_expression='Added BETWEEN :fromdate AND :todate')
 
-        stats['viewer_codes_viewed'] = self.sum_dynamodb_counts(
+        statistics['statistics']['viewer_codes_viewed'] = self.sum_dynamodb_counts(
             table_name='{}-ViewerActivity'.format(self.environment),
             filter_expression='Viewed BETWEEN :fromdate AND :todate')
 
-    def print_json(self):
-        print(json.dumps(self.statistics))
+        return statistics
 
-    def print_plaintext(self):
+    def print_plaintext(self, statistics):
         plaintext = ""
-        for statistic in self.statistics["statistics"]:
+        for statistic in statistics["statistics"]:
             plaintext += "*{0}*\n".format(statistic).upper()
             plaintext += "*Total for this reporting period:* {0}\n".format(
-                self.statistics["statistics"][statistic]["total"])
+                statistics["statistics"][statistic]["total"])
             plaintext += "*Monthly Breakdown*\n"
             plaintext += "```\n"
-            for key, value in self.statistics["statistics"][statistic]["monthly"].items():
+            for key, value in statistics["statistics"][statistic]["monthly"].items():
                 plaintext += "{0} {1} \n".format(key, str(value))
             plaintext += "```\n"
 
-        print(plaintext)
+        return plaintext
 
 
 def main():
@@ -215,12 +205,12 @@ def main():
     work = StatisticsCollector(
         args.environment, args.startdate, args.enddate)
 
-    work.produce_json()
+    statistics = work.produce_json()
 
     if args.plaintext_output:
-        work.print_plaintext()
+        print(work.print_plaintext(statistics))
     else:
-        work.print_json()
+        print(json.dumps(statistics))
 
 if __name__ == "__main__":
     main()
