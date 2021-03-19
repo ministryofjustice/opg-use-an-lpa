@@ -63,7 +63,7 @@ class AccountLookup:
         for lpa_map in lpa_actor_maps:
             list_of_userids.append(lpa_map['UserId']['S'])
             indicator += 1
-            if indicator % 1000 == 0:
+            if indicator % 10000 == 0:
                 print("Maps processed: ", indicator)
 
         actor_users_map_ids_series = pd.Series(list_of_userids)
