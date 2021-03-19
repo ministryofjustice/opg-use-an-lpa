@@ -74,8 +74,8 @@ def main():
     arguments = argparse.ArgumentParser(
         description="Look up an account by email address.")
     arguments.add_argument("--environment",
-                        default="demo",
-                        help="The environment to target. Defaults to demo")
+                        default="production",
+                        help="The environment to target. Defaults to production")
 
     args = arguments.parse_args()
     work = AccountLookup(args.environment)
