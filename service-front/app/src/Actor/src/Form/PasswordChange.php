@@ -51,11 +51,6 @@ class PasswordChange extends AbstractForm implements InputFilterProviderInterfac
             'name' => 'new_password',
             'type' => 'Password',
         ]);
-
-        $this->add([
-            'name' => 'new_password_confirm',
-            'type' => 'Password',
-        ]);
     }
 
     /**
@@ -101,33 +96,10 @@ class PasswordChange extends AbstractForm implements InputFilterProviderInterfac
                         ],
                     ],
                     [
-                        'name'    => Identical::class,
-                        'options' => [
-                            'token'    => 'new_password_confirm',
-                            'messages' => [
-                                Identical::NOT_SAME => 'New password and confirm new password do not match',
-                            ],
-                        ],
-                    ],
-                    [
                         'name' => PasswordValidator::class,
                     ],
                 ],
-            ],
-            'new_password_confirm' => [
-                'required'   => true,
-                'validators' => [
-                    [
-                        'name'                   => NotEmpty::class,
-                        'break_chain_on_failure' => true,
-                        'options'                => [
-                            'messages' => [
-                                NotEmpty::IS_EMPTY => 'Enter your password again to confirm it',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
+            ]
         ];
     }
 }
