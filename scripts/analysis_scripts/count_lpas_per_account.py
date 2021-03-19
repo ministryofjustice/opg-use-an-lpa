@@ -1,5 +1,4 @@
 import argparse
-import csv
 import boto3
 import pandas as pd
 
@@ -61,18 +60,15 @@ class AccountLookup:
         indicator = 0
         lpa_actor_maps = self.get_lpa_actor_maps()
 
-        try:
-          for lpa_map in lpa_actor_maps:
+        for lpa_map in lpa_actor_maps:
             list_of_userids.append(lpa_map['UserId']['S'])
             indicator += 1
             if indicator % 1000 == 0:
                 print("Maps processed: ", indicator)
-        except:
-          print("An exception occurred")
 
-        lpa_counts_series = pd.Series(list_of_userids)
-        s = lpa_counts_series.value_counts()
-        print(s.value_counts())
+        actor_users_map_ids_series = pd.Series(list_of_userids)
+        lpas_per_account_series = actor_users_map_ids_series.value_counts()
+        print(lpas_per_account_series.value_counts())
 
 def main():
     arguments = argparse.ArgumentParser(
