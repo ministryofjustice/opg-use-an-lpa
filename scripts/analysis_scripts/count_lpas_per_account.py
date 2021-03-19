@@ -68,6 +68,7 @@ class AccountLookup:
 
         actor_users_map_ids_series = pd.Series(list_of_userids)
         lpas_per_account_series = actor_users_map_ids_series.value_counts()
+        print("Maps processed: ", indicator)
         print(lpas_per_account_series.value_counts())
 
 def main():
