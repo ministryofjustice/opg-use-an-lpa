@@ -1655,7 +1655,7 @@ class LpaContext implements Context
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                    json_encode([])
                 )
             );
 

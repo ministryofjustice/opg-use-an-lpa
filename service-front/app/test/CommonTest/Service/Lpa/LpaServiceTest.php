@@ -474,7 +474,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_userLpaToken_if_an_lpa_is_already_added()
+    public function it_returns_lpa_data_if_an_lpa_is_already_added()
     {
         $token = '01234567-01234-01234-01234-012345678901';
 
