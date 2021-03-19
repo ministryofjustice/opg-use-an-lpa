@@ -1,5 +1,4 @@
 import argparse
-import json
 import csv
 import boto3
 
@@ -8,7 +7,6 @@ class AccountLookup:
     aws_iam_session = ''
     aws_dynamodb_client = ''
     environment = ''
-    output_json = []
 
     def __init__(self, environment):
         aws_account_ids = {
@@ -72,9 +70,9 @@ class AccountLookup:
         return lpas
 
     def count_by_user(self):
-        with open('lpas_per_account.csv', 'w', newline='') as f:
+        with open('lpas_per_account.csv', 'w', newline='') as file:
             writer = csv.writer(
-                f, quoting=csv.QUOTE_NONNUMERIC)
+                file, quoting=csv.QUOTE_NONNUMERIC)
             writer.writerow(["lpas_in_account_{}".format(self.environment)])
 
             actor_users = self.get_actor_users()
