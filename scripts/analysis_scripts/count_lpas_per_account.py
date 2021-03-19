@@ -1,6 +1,8 @@
 import argparse
 import csv
 import boto3
+import numpy as np
+import pandas as pd
 
 class AccountLookup:
     aws_account_id = ''
@@ -70,6 +72,7 @@ class AccountLookup:
         return lpas
 
     def count_by_user(self):
+        list_of_counts = []
         with open('lpas_per_account.csv', 'w', newline='') as file:
             writer = csv.writer(
                 file, quoting=csv.QUOTE_NONNUMERIC)
@@ -80,7 +83,12 @@ class AccountLookup:
             for user in actor_users:
                 lpas = self.get_lpas_by_user_id(user['Id']['S'])
                 count = len(lpas)
+                print(count)
+                list_of_counts.append(count)
                 writer.writerow([str(count)])
+
+        lpa_counts_series = pd.Series(list_of_counts)
+        print(lpa_counts_series.value_counts())
 
 
 def main():
