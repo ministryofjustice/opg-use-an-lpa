@@ -57,14 +57,6 @@ class AccountLookup:
                 ):
             yield from page["Items"]
 
-    def get_lpas(self):
-        paginator = self.aws_dynamodb_client.get_paginator("scan")
-        for page in paginator.paginate(
-                TableName='{}-UserLpaActorMap'.format(self.environment),
-                FilterExpression="attribute_exists(SiriusUid)",
-                ):
-            yield from page["Items"]
-
     def get_lpas_by_user_id(self, user_id):
         response = self.aws_dynamodb_client.query(
             IndexName='UserIndex',
@@ -78,19 +70,6 @@ class AccountLookup:
         for lpa in response['Items']:
             lpas.update({lpa['SiriusUid']['S']:lpa['Added']['S']})
         return lpas
-
-    def get_users_by_id(self, user_id):
-        response = self.aws_dynamodb_client.query(
-            TableName='{}-ActorUsers'.format(self.environment),
-            KeyConditionExpression='Id = :user_id',
-            ExpressionAttributeValues={
-                ':user_id': {'S': user_id}
-            }
-        )
-        if response['Items']:
-            return response['Items'][0]
-
-
 
     def count_by_user(self):
         with open('lpas_per_account.csv', 'w', newline='') as f:
@@ -112,10 +91,6 @@ def main():
     arguments.add_argument("--environment",
                         default="demo",
                         help="The environment to target. Defaults to production")
-
-    arguments.add_argument('--json', dest='output_json', action='store_const',
-                        const=True, default=False,
-                        help='Output json data instead of plaintext to terminal')
 
     args = arguments.parse_args()
     work = AccountLookup(args.environment)
