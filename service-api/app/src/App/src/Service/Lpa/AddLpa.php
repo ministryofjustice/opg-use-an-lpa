@@ -8,7 +8,7 @@ use App\Exception\BadRequestException;
 use App\Service\ActorCodes\ActorCodeService;
 use Psr\Log\LoggerInterface;
 
-class AddLpa implements User
+class AddLpa
 {
     private LoggerInterface $logger;
     private ActorCodeService $actorCodeService;
@@ -31,7 +31,7 @@ class AddLpa implements User
     {
         // is LPA already added?
         if (null !== $lpaAddedData = ($this->lpaAlreadyAdded)($userId, $data['uid'])) {
-            throw new BadRequestException('LPA already added', $lpaAddedData->getArrayCopy());
+            throw new BadRequestException('LPA already added', $lpaAddedData);
         }
 
         // try get by passcode

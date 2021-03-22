@@ -10,8 +10,9 @@ use App\Service\Lpa\AddLpa;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class AddLpaVerificationHandler
+class AddLpaVerificationHandler implements RequestHandlerInterface
 {
     private AddLpa $addLpa;
 
@@ -26,7 +27,7 @@ class AddLpaVerificationHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $userId = $request->getAttribute('actor-id');
+        $userId = $request->getHeader('user-token')[0];
         $data = $request->getParsedBody();
 
         if (
