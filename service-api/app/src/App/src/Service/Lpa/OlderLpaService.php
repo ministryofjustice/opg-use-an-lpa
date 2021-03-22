@@ -268,7 +268,6 @@ class OlderLpaService
         $this->logger->info(
             'Requesting new access code letter for attorney {attorney} on LPA {lpa}',
             [
-                'event_code' => EventCodes::OLDER_LPA_SUCCESS,
                 'attorney' => $actorUidInt,
                 'lpa' => $uidInt
             ]
