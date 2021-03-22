@@ -42,20 +42,26 @@ class EventCodes
     /**
      * LPA not found
      */
-    public const LPA_NOT_FOUND = 'LPA_NOT_FOUND';
+    public const OLDER_LPA_NOT_FOUND = 'OLDER_LPA_NOT_FOUND';
 
     /**
      * LPA does not match
      */
-    public const LPA_DOES_NOT_MATCH = 'LPA_DOES_NOT_MATCH';
+    public const OLDER_LPA_DOES_NOT_MATCH = 'OLDER_LPA_DOES_NOT_MATCH';
 
     /**
      * LPA not eligible
      */
-    public const LPA_NOT_ELIGIBLE = 'LPA_NOT_ELIGIBLE';
+    public const OLDER_LPA_NOT_ELIGIBLE = 'OLDER_LPA_NOT_ELIGIBLE';
 
     /**
      * LPA has activation key
      */
-    public const LPA_HAS_ACTIVATION_KEY = 'LPA_HAS_ACTIVATION_KEY';
+    public const OLDER_LPA_HAS_ACTIVATION_KEY = 'OLDER_LPA_HAS_ACTIVATION_KEY';
+
+    /**
+     * Older LPA match
+     */
+    public const OLDER_LPA_SUCCESS = 'OLDER_LPA_SUCCESS';
+
 }

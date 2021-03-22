@@ -9,6 +9,7 @@ use App\DataAccess\Repository\LpasInterface;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use Common\Service\Log\EventCodes;
 use DateTime;
 use Psr\Log\LoggerInterface;
 
@@ -274,6 +275,16 @@ class OlderLpaService
 
         try {
             $this->lpaRepository->requestLetter($uidInt, $actorUidInt);
+
+            $this->logger->notice(
+                'Request for access code letter for attorney {attorney} on LPA {lpa} made',
+                [
+                    'event_code' => EventCodes::OLDER_LPA_SUCCESS,
+                    'attorney' => $actorUidInt,
+                    'lpa' => $uidInt
+                ]
+            );
+
         } catch (ApiException $apiException) {
             $this->logger->notice(
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa}',
