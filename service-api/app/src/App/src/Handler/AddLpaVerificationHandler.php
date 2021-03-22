@@ -26,6 +26,7 @@ class AddLpaVerificationHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $userId = $request->getAttribute('actor-id');
         $data = $request->getParsedBody();
 
         if (
@@ -36,7 +37,7 @@ class AddLpaVerificationHandler
             throw new BadRequestException("'actor-code', 'uid' and 'dob' are required fields");
         }
 
-        $response = $this->addLpa->validateAddLpaData($data);
+        $response = $this->addLpa->validateAddLpaData($data, $userId);
 
         // We deliberately don't return details of why the (validated) code was not found.
         if (!is_array($response)) {
