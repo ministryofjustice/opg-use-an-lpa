@@ -78,9 +78,10 @@ class AddOlderLpa
             }
         }
 
-        $this->logger->info(
-            'Account with Id {id} requested older LPA addition of reference number {uId}',
+        $this->logger->notice(
+            'Successfully matched LPA {uId} and sending activation letter for account with Id {id} ',
             [
+                'event_code' => EventCodes::OLDER_LPA_SUCCESS,
                 'id'  => $userToken,
                 'uId' => $lpaUid
             ]
