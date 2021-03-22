@@ -268,6 +268,7 @@ class OlderLpaService
         $this->logger->info(
             'Requesting new access code letter for attorney {attorney} on LPA {lpa}',
             [
+                'event_code' => EventCodes::OLDER_LPA_SUCCESS,
                 'attorney' => $actorUidInt,
                 'lpa' => $uidInt
             ]
@@ -275,16 +276,6 @@ class OlderLpaService
 
         try {
             $this->lpaRepository->requestLetter($uidInt, $actorUidInt);
-
-            $this->logger->notice(
-                'Request for access code letter for attorney {attorney} on LPA {lpa} made',
-                [
-                    'event_code' => EventCodes::OLDER_LPA_SUCCESS,
-                    'attorney' => $actorUidInt,
-                    'lpa' => $uidInt
-                ]
-            );
-
         } catch (ApiException $apiException) {
             $this->logger->notice(
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa}',
