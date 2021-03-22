@@ -3,20 +3,20 @@ import json
 
 
 def count_by_maps(actors_json_path, maps_json_path):
+    list_of_userids = []
+    indicator = 0
+    actors = []
+    maps = []
+
     with open(maps_json_path) as f:
         maps_data = json.load(f)
 
         with open(actors_json_path) as f:
             actors_data = json.load(f)
 
-            list_of_userids = []
-            indicator = 0
-
-            actors = []
             for value in actors_data['Items']:
                 actors.append(value['Id']['S'])
 
-            maps = []
             for value in maps_data['Items']:
                 maps.append(value['UserId']['S'])
 
