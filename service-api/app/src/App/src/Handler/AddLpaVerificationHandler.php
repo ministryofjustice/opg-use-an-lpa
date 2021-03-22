@@ -36,7 +36,7 @@ class AddLpaVerificationHandler
             throw new BadRequestException("'actor-code', 'uid' and 'dob' are required fields");
         }
 
-        $response = $this->addLpa->validateLpaDetails($data);
+        $response = $this->addLpa->validateAddLpaData($data);
 
         // We deliberately don't return details of why the (validated) code was not found.
         if (!is_array($response)) {

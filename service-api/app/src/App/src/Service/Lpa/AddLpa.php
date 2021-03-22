@@ -23,7 +23,7 @@ class AddLpa
         $this->lpaService = $lpaService;
     }
 
-    public function validateLpaDetails(array $data): array
+    public function validateAddLpaData(array $data): array
     {
     }
 }
