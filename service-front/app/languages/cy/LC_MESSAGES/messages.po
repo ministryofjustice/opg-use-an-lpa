@@ -3230,7 +3230,6 @@ msgstr ""
 # Should be:
 # life-sustaining treatment
 #: src/Common/templates/partials/full-lpa-display.html.twig:225
-#, fuzzy
 msgid "Life-sustaining<br>treatment"
 msgstr "Triniaeth <br>cynnal bywyd"
 
@@ -4623,7 +4622,6 @@ msgstr "Cynnwys nad yw o fewn cwmpas y rheoliadau hygyrchedd"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:159
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:109
-#, fuzzy
 msgid "Preparation of this accessibility statement"
 msgstr "Paratoi’r datganiad hygyrchedd hwn"
 
@@ -4667,9 +4665,7 @@ msgstr ""
 msgid "Compliance status"
 msgstr "Statws cydymffurfio"
 
-# Welsh is missing the ‘AA standard’ bit
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:106
-#, fuzzy
 msgid ""
 "This service is fully compliant with the <a class=\"govuk-link\" href="
 "\"https://www.w3.org/TR/WCAG21/\">Web Content Accessibility Guidelines version "
@@ -5087,13 +5083,11 @@ msgstr ""
 # English needs to change to LPA reference number
 #: src/Actor/templates/actor/check-your-answers.html.twig:27
 #: src/Actor/templates/actor/request-activation-key.html.twig:34
-#, fuzzy
 msgid "OPG reference number"
 msgstr "Cyfeirnod LPA"
 
 # English needs to change to LPA reference number
 #: src/Actor/templates/actor/request-activation-key.html.twig:35
-#, fuzzy
 msgid "OPG reference numbers are 12 numbers long.<br/>For example, 700000000000"
 msgstr "Mae cyfeirnodau LPA yn cynnwys 12 rhif.<br/>Er enghraifft, 700000000000"
 
@@ -5112,7 +5106,6 @@ msgstr "Cod post"
 
 # Should be ‘The LPA reference number (also called OPG reference…’
 #: src/Common/templates/partials/govuk_form.html.twig:19
-#, fuzzy
 msgid ""
 "The OPG reference number (also called LPA reference number) is on the first "
 "page of the paper LPA and printed on any letter you get from the Office of the "
@@ -5207,7 +5200,6 @@ msgstr ""
 
 # Translation different: ‘We cannot send a code for that LPA’
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:3
-#, fuzzy
 msgid "Cannot send an activation key"
 msgstr "Ni allwn anfon cod ar gyfer yr LPA honno"
 
@@ -5256,7 +5248,6 @@ msgstr ""
 # Welsh says ‘Please let us know if a donor or attorney's details change’
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:21
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:54
-#, fuzzy
 #| msgid "Let us know if a donor or attorney's details change"
 msgid "Let us know if your details have changed"
 msgstr "Rhowch wybod inni os bydd manylion rhoddwr neu atwrnai yn newid"
@@ -5279,7 +5270,6 @@ msgstr "rydych wedi symud i dŷ arall"
 
 # The Welsh says ‘the donor or an attorney has changed their name’
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:26
-#, fuzzy
 #| msgid ""
 #| "the donor or an attorney has changed their name by marriage or deed poll"
 msgid "you've changed your name by marriage or deed poll"
@@ -5289,7 +5279,6 @@ msgstr ""
 
 # as above
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:27
-#, fuzzy
 #| msgid "the donor's or an attorney's name or address is misspelt"
 msgid "your name or address on the LPA is misspelt"
 msgstr "os yw enw neu gyfeiriad y rhoddwr neu atwrnai wedi ei gamsillafu"
@@ -5297,7 +5286,6 @@ msgstr "os yw enw neu gyfeiriad y rhoddwr neu atwrnai wedi ei gamsillafu"
 # as above
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:28
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:64
-#, fuzzy
 #| msgid "a date of birth is wrong"
 msgid "your date of birth is wrong on the LPA"
 msgstr "os yw dyddiad geni rhywun yn anghywir"
@@ -5325,13 +5313,6 @@ msgid ""
 msgstr ""
 "Os yw’r LPA papur wedi’i cholli neu ei dinistrio, gallwch ofyn i’r OPG am gopi "
 "swyddfa drwy ffonio 0300 456 0300 - mae copi swyddfa o LPA yn costio £35."
-
-# The English should be ‘Back to your LPAs’
-#: src/Actor/templates/actor/cannot-send-activation-key.html.twig:23
-#, fuzzy
-#| msgid "Back to your LPAs"
-msgid "Back to LPAs"
-msgstr "Yn ôl i’ch LPAs"
 
 # This appears twice in the po file but only once in the service
 #: src/Actor/templates/actor/request-activation-key.html.twig:23
@@ -5365,7 +5346,6 @@ msgstr ""
 
 # Need to switch OPG & LPA in the translation
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:27
-#, fuzzy
 msgid ""
 "If you do not get the letter by %date%, please contact us. When you get in "
 "touch, quote the LPA reference number (also called OPG reference number)."
@@ -5420,7 +5400,6 @@ msgstr ""
 
 # Welsh says ‘we’ve found this lpa’
 #: src/Viewer/templates/viewer/check-code-found.html.twig:24
-#, fuzzy
 #| msgid "We’ve found this LPA"
 msgid "We’ve found %firstname% %surname%'s LPA"
 msgstr "Rydym wedi dod o hyd i’r LPA hwn"
@@ -5475,7 +5454,6 @@ msgstr ""
 
 # Haven’t got a translation for this. Welsh provided says ‘If the LPA was registered before 1 Sept’ which will do for now
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:46
-#, fuzzy
 msgid "LPAs registered before 1 September 2019"
 msgstr "Os cofrestrwyd yr LPA cyn 1 Medi 2019"
 
