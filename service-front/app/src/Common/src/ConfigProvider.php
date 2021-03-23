@@ -35,8 +35,9 @@ class ConfigProvider
         return [
 
             'aliases' => [
-
                 \Psr\Http\Client\ClientInterface::class => \Http\Adapter\Guzzle6\Client::class,
+                Service\Session\Encryption\EncryptInterface::class
+                    => Service\Session\Encryption\KmsEncryptedCookie::class,
                 \Mezzio\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookiePersistence::class,
 
                 // Custom Guard factory to handle multiple forms per page
@@ -62,7 +63,6 @@ class ConfigProvider
             ],
 
             'factories'  => [
-
                 // Services
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
                 Service\Pdf\PdfService::class => Service\Pdf\PdfServiceFactory::class,
