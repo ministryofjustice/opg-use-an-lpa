@@ -2660,11 +2660,6 @@ msgstr ""
 msgid "Why is this?"
 msgstr "Pam?"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:50
-msgid "<strong>Important: </strong>This LPA has instructions or preferences."
-msgstr ""
-"<strong>Pwysig:</strong> Mae gan yr LPA hon gyfarwyddiadau neu ddymuniadau."
-
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:51
 msgid "Read more"
 msgstr "Darllen mwy"
@@ -5236,7 +5231,7 @@ msgid ""
 "href=\"%link%\" class=\"govuk-link\">contact us</a>."
 msgstr ""
 "Os edrychwch y llythyr ac na allwch ddod o hyd i’ch allwedd cadarnhau cyfrif, "
-"<a href=“%link%” class=“govuk-link”>cysylltwch â ni</a>."
+"<a href=\"%link%\" class=\"govuk-link\">cysylltwch â ni</a>."
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:21
 msgid "The donor and each attorney will have their own unique activation key."
@@ -5421,7 +5416,7 @@ msgid ""
 "\"%link%\" class=\"govuk-link\">Let us know if you've moved house.</a>"
 msgstr ""
 "Rydym yn anfon yr allwedd i’r cyfeiriad sydd gennym ar ein cofnodion. <a "
-"href=“%link%” class=“govuk-link”>Rhowch wybod inni os ydych wedi symud tŷ.</a>"
+"href=\"%link%\" class=\"govuk-link\">Rhowch wybod inni os ydych wedi symud tŷ.</a>"
 
 # Welsh says ‘we’ve found this lpa’
 #: src/Viewer/templates/viewer/check-code-found.html.twig:24
@@ -5506,7 +5501,7 @@ msgid ""
 "<a class=\"govuk-link\" href=\"%link%\">Let us know if your details have "
 "changed</a> and you’ve not told us."
 msgstr ""
-"<a class=“govuk-link” href=“%link%”>Rhowch wybod inni os yw eich manylion wedi "
+"<a class=\"govuk-link\" href=\"%link%\">Rhowch wybod inni os yw eich manylion wedi "
 "newid</a> ac nad ydych wedi dweud wrthym."
 
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:58
