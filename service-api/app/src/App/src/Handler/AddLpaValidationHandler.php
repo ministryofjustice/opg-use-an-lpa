@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
-use App\Exception\NotFoundException;
 use App\Service\Lpa\AddLpa;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class AddLpaVerificationHandler implements RequestHandlerInterface
+class AddLpaValidationHandler implements RequestHandlerInterface
 {
     private AddLpa $addLpa;
 
