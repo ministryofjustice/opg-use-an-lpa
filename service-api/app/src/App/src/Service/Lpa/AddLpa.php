@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\Exception\BadRequestException;
+use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use Psr\Log\LoggerInterface;
 
@@ -29,19 +30,20 @@ class AddLpa
 
     public function validateAddLpaData(array $data, string $userId): array
     {
-        // is LPA already added?
         if (null !== $lpaAddedData = ($this->lpaAlreadyAdded)($userId, $data['uid'])) {
             throw new BadRequestException('LPA already added', $lpaAddedData);
         }
 
-        // try get by passcode
-            // catch exception & throw not found
-            // set rate limit identifier
+        $lpaData = $this->actorCodeService->validateDetails($data['actor-code'], $data['uid'], $data['dob']);
 
-        // check LPA is 'status: Registered'
-            // if not, throw bad request exception
+        if (!is_array($lpaData)) {
+            throw new NotFoundException('Code validation failed');
+        }
 
-        // figure out whether actor is donor or attorney
-            // return required data
+        if (!is_null($lpaData['lpa']) && (strtolower($lpaData['lpa']['status']) === 'registered')) {
+            return $lpaData;
+        }
+
+        throw new BadRequestException('LPA status is not registered');
     }
 }

@@ -40,11 +40,6 @@ class AddLpaVerificationHandler implements RequestHandlerInterface
 
         $response = $this->addLpa->validateAddLpaData($data, $userId);
 
-        // We deliberately don't return details of why the (validated) code was not found.
-        if (!is_array($response)) {
-            throw new NotFoundException();
-        }
-
         return new JsonResponse($response, 200);
     }
 }
