@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Common\Middleware\Session;
 
 use Common\Service\Session\EncryptedCookiePersistence;
-use Laminas\Diactoros\Uri;
+use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
@@ -13,9 +13,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Laminas\Diactoros\Response\RedirectResponse;
-use DateTime;
 
+/**
+ * Class SessionExpiredRedirectMiddleware
+ *
+ * Responsible for redirecting to an appropriate page when the session is loaded as expired. Determination
+ * of the expiry of a session is made in the EncryptedCookiePersistence class and attached as data into the session.
+ *
+ * @package Common\Middleware\Session
+ */
 class SessionExpiredRedirectMiddleware implements MiddlewareInterface
 {
     /**
@@ -33,22 +39,9 @@ class SessionExpiredRedirectMiddleware implements MiddlewareInterface
         /** @var SessionInterface $session */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
 
+        // We've already determined that the session has expired at this point.
         if ($session !== null && $session->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)) {
-
-            $sessionExpiredDatetime = $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY);
-
-            // extracting the dates alone to do a date comparison to check if expire date was the previous day
-            // converting the Date string format to int to reaffirm comparison
-            $currentDate = intval((new DateTime())->format('Ymd'));
-            $expiredDate = intval((new DateTime("@$sessionExpiredDatetime"))->format('Ymd'));
-
-            $session->unset(EncryptedCookiePersistence::SESSION_EXPIRED_KEY);
-            if ($currentDate > $expiredDate) {
-                $uri = new Uri($this->helper->generate('home'));
-            } else {
-                $uri = new Uri($this->helper->generate('session-expired'));
-            }
-            return new RedirectResponse($uri);
+            return new RedirectResponse($this->helper->generate('session-expired'));
         } else {
             return $handler->handle($request);
         }
