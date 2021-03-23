@@ -25,10 +25,12 @@ use Psr\Log\LoggerInterface;
  */
 class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
 {
-    protected const ALLOWLIST = [
+    /**
+     * An array of allowed session keys that can persist across session expiry
+     */
+    public const ALLOWLIST = [
         UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE,
-        EncryptedCookiePersistence::SESSION_TIME_KEY,
-        EncryptedCookiePersistence::SESSION_EXPIRED_KEY
+        EncryptedCookiePersistence::SESSION_EXPIRED_KEY,
     ];
 
     private LoggerInterface $logger;
@@ -40,11 +42,17 @@ class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        // Process the request as normal
+        $response = $handler->handle($request);
+
+        // Ensure that we strip out any session information that shouldn't be in there
+        // if the session has expired.
         /** @var SessionInterface $session */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
-        if ($session !== null && $session->get(EncryptedCookiePersistence::SESSION_EXPIRED_KEY) !== null) {
+        if ($session !== null && $session->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)) {
             $this->stripSession($session);
 
+            // TODO logs incorrect time value as seconds should equal time() - TIME_KEY + Session Length
             $this->logger->info(
                 'User session expired approx {seconds} seconds ago',
                 [
@@ -53,7 +61,7 @@ class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
             );
         }
 
-        return $handler->handle($request);
+        return $response;
     }
 
     private function stripSession(SessionInterface $session)
