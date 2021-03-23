@@ -10,6 +10,5 @@ Feature: Retain a copy of the shared LPA summary
     And I access the viewer service
     And I give a valid LPA share code
     And I enter an organisation name and confirm the LPA is correct
-    And I can see the full details of the valid LPA
     When I click Download this LPA summary
     Then I am given a PDF file of the summary
