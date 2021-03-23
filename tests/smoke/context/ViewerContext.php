@@ -76,4 +76,14 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('This health and welfare LPA is valid');
         $this->ui->clickLink('Download this LPA summary');
     }
+
+    /**
+     * @Then I am given a PDF file of the summary
+     */
+    public function IAmGivenAPDFFileOfTheSummary(): void
+    {
+        $this->ui->assertPageAddress('/download-lpa');
+
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+    }
 }

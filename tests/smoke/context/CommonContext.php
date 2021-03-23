@@ -217,14 +217,4 @@ class CommonContext implements Context
         assertContains('nofollow', $xrobotstag);
         assertContains('noindex', $xrobotstag);
     }
-
-    /**
-     * @I am given a PDF file of the summary
-     */
-    public function IAmGivenAPDFFileOfTheSummary(): void
-    {
-        $this->ui->assertPageAddress('/download-lpa');
-
-        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
-    }
 }
