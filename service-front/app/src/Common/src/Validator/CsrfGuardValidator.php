@@ -19,7 +19,7 @@ class CsrfGuardValidator extends LaminasCsrf
      * @var array
      */
     protected array $messageTemplates = [
-        self::NOT_SAME => 'As you have not used this service for over 20 minutes, the page has ' .
+        parent::NOT_SAME => 'As you have not used this service for over 20 minutes, the page has ' .
             'timed out. We\'ve now refreshed the page - please try to sign in again'
     ];
 
