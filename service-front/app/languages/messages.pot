@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-03-15T10:38:18+00:00\n"
+"POT-Creation-Date: 2021-03-24T11:53:30+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -9,6 +9,7 @@ msgid "Your new access code"
 msgstr ""
 
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:22
+#: src/Actor/templates/actor/cannot-send-activation-key.html.twig:23
 #: src/Actor/templates/actor/check-access-codes.html.twig:15
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:14
@@ -2359,15 +2360,15 @@ msgstr ""
 msgid "I want to check another LPA"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:144
+#: src/Common/templates/partials/govuk_form.html.twig:145
 msgid "Day"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:154
+#: src/Common/templates/partials/govuk_form.html.twig:155
 msgid "Month"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:164
+#: src/Common/templates/partials/govuk_form.html.twig:165
 msgid "Year"
 msgstr ""
 
@@ -2991,7 +2992,7 @@ msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
-#: src/Actor/src/Handler/CheckLpaHandler.php:279
+#: src/Actor/src/Handler/CheckLpaHandler.php:280
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr ""
@@ -3001,12 +3002,12 @@ msgid "Cancelled on %cancellationDate%"
 msgstr ""
 
 #. Show password label
-#: src/Common/templates/partials/govuk_form.html.twig:228
+#: src/Common/templates/partials/govuk_form.html.twig:229
 msgid "Show"
 msgstr ""
 
 #. Hide password label
-#: src/Common/templates/partials/govuk_form.html.twig:229
+#: src/Common/templates/partials/govuk_form.html.twig:230
 msgid "Hide"
 msgstr ""
 
@@ -3766,11 +3767,14 @@ msgstr ""
 msgid "%organisation% on %date%"
 msgstr ""
 
-
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:58
 msgid "You have %count% LPA in your account"
 msgid_plural "You have %count% LPAs in your account"
 msgstr[0] ""
+
+#: src/Actor/templates/actor/request-activation-key-info.html.twig:21
+msgid "Check if you can ask for an activation key"
+msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:23
 msgid "You can only ask for an activation key if:"
@@ -3830,8 +3834,4 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:63
 msgid "your name or address is spelt wrong on the LPA"
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key-info.html.twig:21
-msgid "Check if you can ask for an activation key"
 msgstr ""

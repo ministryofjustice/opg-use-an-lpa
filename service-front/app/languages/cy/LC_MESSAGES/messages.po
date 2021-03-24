@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-03-15T10:01:03+00:00\n"
+"POT-Creation-Date: 2021-03-24T11:53:30+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -19,6 +19,7 @@ msgid "Your new access code"
 msgstr "Eich cod mynediad yr LPA newydd"
 
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:22
+#: src/Actor/templates/actor/cannot-send-activation-key.html.twig:23
 #: src/Actor/templates/actor/check-access-codes.html.twig:15
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:14
@@ -2505,7 +2506,7 @@ msgstr ""
 "bob dydd Mercher 10am tan 5pm."
 
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:44
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:65
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:61
 #: src/Actor/templates/actor/check-lpa.html.twig:93
 #: src/Actor/templates/actor/check-your-answers.html.twig:91
 #: src/Actor/templates/actor/home-page.html.twig:46
@@ -2517,7 +2518,7 @@ msgstr ""
 msgid "Continue"
 msgstr "Parhau"
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:67
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:63
 #: src/Actor/templates/actor/check-lpa.html.twig:96
 #: src/Actor/templates/actor/lpa-add.html.twig:93
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:69
@@ -3245,15 +3246,15 @@ msgstr "Y Dyddiad y llofnododd y rhoddwr yr LPA"
 msgid "I want to check another LPA"
 msgstr "Rwyf am wirio LPA arall"
 
-#: src/Common/templates/partials/govuk_form.html.twig:144
+#: src/Common/templates/partials/govuk_form.html.twig:145
 msgid "Day"
 msgstr "Dydd"
 
-#: src/Common/templates/partials/govuk_form.html.twig:154
+#: src/Common/templates/partials/govuk_form.html.twig:155
 msgid "Month"
 msgstr "Mis"
 
-#: src/Common/templates/partials/govuk_form.html.twig:164
+#: src/Common/templates/partials/govuk_form.html.twig:165
 msgid "Year"
 msgstr "Blwyddyn"
 
@@ -4264,21 +4265,21 @@ msgid ""
 "I agree to the <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel="
 "\"noreferrer noopener\">terms of use (opens in new tab)</a>"
 msgstr ""
-"Rwy’n cytuno i’r <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" "
-"rel=\"noreferrer noopener\">telerau defnyddio (yn agor mewn tab newydd)</a>"
+"Rwy’n cytuno i’r <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel="
+"\"noreferrer noopener\">telerau defnyddio (yn agor mewn tab newydd)</a>"
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:58
 msgid ""
 "By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class="
 "\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>."
 msgstr ""
-"Drwy barhau rydych yn derbyn ein <a href=\"%link%\" target=\"_blank\" class=\"govuk-"
-"link\" rel=\"noreferrer noopener\">telerau defnyddio (yn agor mewn tab newydd)</"
-"a>."
+"Drwy barhau rydych yn derbyn ein <a href=\"%link%\" target=\"_blank\" class="
+"\"govuk-link\" rel=\"noreferrer noopener\">telerau defnyddio (yn agor mewn tab "
+"newydd)</a>."
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
-#: src/Actor/src/Handler/CheckLpaHandler.php:279
+#: src/Actor/src/Handler/CheckLpaHandler.php:280
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi ychwanegu atwrneiaeth arhosol %lpaType% %donor%"
@@ -4288,12 +4289,12 @@ msgid "Cancelled on %cancellationDate%"
 msgstr "Diddymwyd ar %cancellationDate%"
 
 #. Show password label
-#: src/Common/templates/partials/govuk_form.html.twig:228
+#: src/Common/templates/partials/govuk_form.html.twig:229
 msgid "Show"
 msgstr "Dangos"
 
 #. Hide password label
-#: src/Common/templates/partials/govuk_form.html.twig:229
+#: src/Common/templates/partials/govuk_form.html.twig:230
 msgid "Hide"
 msgstr "Cuddio"
 
@@ -4879,7 +4880,7 @@ msgid ""
 "class=\"govuk-link\">to make decisions</a>."
 msgstr ""
 "Canfod mwy am <a href=\"https://www.gov.uk/atwrneiaeth-arhosol\" class=\"govuk-"
-"link\">rôl atwrnai</a>"
+"link\">rôl atwrnai</a>."
 
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:29
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:32
@@ -4963,7 +4964,8 @@ msgstr ""
 #: src/Common/templates/error/404.html.twig:23
 msgid ""
 "<a href=\"%link%\" draggable=\"false\" class=\"govuk-button\">Start again</a>"
-msgstr "<a href=\"%link%\" draggable=\"false\" class=\"govuk-button\">Dechrau eto</a>"
+msgstr ""
+"<a href=\"%link%\" draggable=\"false\" class=\"govuk-button\">Dechrau eto</a>"
 
 #. Cancelling viewer code
 #: src/Actor/templates/actor/flash-messages.html.twig:7
@@ -5058,7 +5060,6 @@ msgctxt "error"
 msgid "The activation key you entered is too short"
 msgstr "Mae’r allwedd cadarnhau cyfrif rydych wedi’i nodi yn rhy fyr"
 
-#: src/Actor/templates/actor/request-activation-key-info.html.twig:21
 #: src/Actor/templates/actor/request-activation-key.html.twig:21
 msgid "Ask for an activation key"
 msgstr "Gofyn am allwedd cadarnhau cyfrif"
@@ -5248,7 +5249,6 @@ msgstr ""
 # Welsh says ‘Please let us know if a donor or attorney's details change’
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:21
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:54
-#| msgid "Let us know if a donor or attorney's details change"
 msgid "Let us know if your details have changed"
 msgstr "Rhowch wybod inni os bydd manylion rhoddwr neu atwrnai yn newid"
 
@@ -5270,25 +5270,19 @@ msgstr "rydych wedi symud i dŷ arall"
 
 # The Welsh says ‘the donor or an attorney has changed their name’
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:26
-#| msgid ""
-#| "the donor or an attorney has changed their name by marriage or deed poll"
 msgid "you've changed your name by marriage or deed poll"
-msgstr ""
-"os yw’r rhoddwr neu atwrnai wedi newid ei enw drwy briodas neu weithred newid "
-"enw"
+msgstr "rydych wedi newid eich enw trwy briodas neu weithred newid enw"
 
 # as above
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:27
-#| msgid "the donor's or an attorney's name or address is misspelt"
 msgid "your name or address on the LPA is misspelt"
-msgstr "os yw enw neu gyfeiriad y rhoddwr neu atwrnai wedi ei gamsillafu"
+msgstr "camsillafwyd eich enw neu eich cyfeiriad ar yr LPA"
 
 # as above
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:28
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:64
-#| msgid "a date of birth is wrong"
 msgid "your date of birth is wrong on the LPA"
-msgstr "os yw dyddiad geni rhywun yn anghywir"
+msgstr "yw eich dyddiad geni ar yr LPA yn anghywir"
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:17
 msgid "We cannot send an activation key for that LPA"
@@ -5395,12 +5389,11 @@ msgid ""
 "We're sending the key to the address we have for you on our records. <a href="
 "\"%link%\" class=\"govuk-link\">Let us know if you've moved house.</a>"
 msgstr ""
-"Rydym yn anfon yr allwedd i’r cyfeiriad sydd gennym ar ein cofnodion. <a "
-"href=\"%link%\" class=\"govuk-link\">Rhowch wybod inni os ydych wedi symud tŷ.</a>"
+"Rydym yn anfon yr allwedd i’r cyfeiriad sydd gennym ar ein cofnodion. <a href="
+"\"%link%\" class=\"govuk-link\">Rhowch wybod inni os ydych wedi symud tŷ.</a>"
 
 # Welsh says ‘we’ve found this lpa’
 #: src/Viewer/templates/viewer/check-code-found.html.twig:24
-#| msgid "We’ve found this LPA"
 msgid "We’ve found %firstname% %surname%'s LPA"
 msgstr "Rydym wedi dod o hyd i’r LPA hwn"
 
@@ -5415,6 +5408,21 @@ msgstr ""
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:43
 msgid "%organisation% on %date%"
 msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:58
+msgid "You have %count% LPA in your account"
+msgid_plural "You have %count% LPAs in your account"
+msgstr[0] "Mae gennych %count% LPA ar eich cyfrif"
+msgstr[1] "Mae gennych %count% LPA ar eich cyfrif"
+msgstr[2] "Mae gennych %count% LPA ar eich cyfrif"
+msgstr[3] "Mae gennych %count% LPA ar eich cyfrif"
+msgstr[4] "Mae gennych %count% LPA ar eich cyfrif"
+msgstr[5] "Mae gennych %count% LPA ar eich cyfrif"
+
+# Welsh is currently: Ask for an activation key
+#: src/Actor/templates/actor/request-activation-key-info.html.twig:21
+msgid "Check if you can ask for an activation key"
+msgstr "Gofyn am allwedd cadarnhau cyfrif"
 
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:23
 msgid "You can only ask for an activation key if:"
@@ -5479,8 +5487,8 @@ msgid ""
 "<a class=\"govuk-link\" href=\"%link%\">Let us know if your details have "
 "changed</a> and you’ve not told us."
 msgstr ""
-"<a class=\"govuk-link\" href=\"%link%\">Rhowch wybod inni os yw eich manylion wedi "
-"newid</a> ac nad ydych wedi dweud wrthym."
+"<a class=\"govuk-link\" href=\"%link%\">Rhowch wybod inni os yw eich manylion "
+"wedi newid</a> ac nad ydych wedi dweud wrthym."
 
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:58
 msgid "We need to know if:"
@@ -5499,23 +5507,3 @@ msgstr "os ydych wedi newid eich enw"
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:63
 msgid "your name or address is spelt wrong on the LPA"
 msgstr "os cafodd eich enw neu’ch cyfeiriad eu sillafu yn anghywir ar yr LPA"
-
-#~ msgid ""
-#~ "You can only use this service if we've sent you a letter or email with an "
-#~ "activation key. Only LPAs registered after 16 July 2020 have an activation "
-#~ "key."
-#~ msgstr ""
-#~ "I ddefnyddio’r gwasanaeth hwn, mae’n rhaid i chi fod wedi derbyn llythyr "
-#~ "neu e-bost yn cynnwys allwedd cadarnhau cyfrif i wneud y cyfrif yn "
-#~ "weithredol. Dim ond <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> a "
-#~ "gofrestrwyd ar ôl yr 16 Gorffennaf 2020 sydd ag allwedd cadarnhau cyfrif."
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:58
-msgid "You have %count% LPA in your account"
-msgid_plural "You have %count% LPAs in your account"
-msgstr[0] "Mae gennych %count% LPA ar eich cyfrif"
-msgstr[1] "Mae gennych %count% LPA ar eich cyfrif"
-msgstr[2] "Mae gennych %count% LPA ar eich cyfrif"
-msgstr[3] "Mae gennych %count% LPA ar eich cyfrif"
-msgstr[4] "Mae gennych %count% LPA ar eich cyfrif"
-msgstr[5] "Mae gennych %count% LPA ar eich cyfrif"
