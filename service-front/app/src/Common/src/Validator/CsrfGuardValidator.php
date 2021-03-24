@@ -2,9 +2,9 @@
 
 namespace Common\Validator;
 
-use Mezzio\Csrf\CsrfGuardInterface;
-use Laminas\Validator\Csrf as LaminasCsrf;
 use InvalidArgumentException;
+use Laminas\Validator\Csrf as LaminasCsrf;
+use Mezzio\Csrf\CsrfGuardInterface;
 
 /**
  * Simplified CSRF validator that relies on a passed secret
@@ -15,16 +15,25 @@ use InvalidArgumentException;
 class CsrfGuardValidator extends LaminasCsrf
 {
     /**
+     * Error messages
+     * @var array
+     */
+    protected array $messageTemplates = [
+        self::NOT_SAME => 'As you have not used this service for over 20 minutes, the page has ' .
+            'timed out. We\'ve now refreshed the page - please try to sign in again'
+    ];
+
+    /**
      * Set to null in order to force the user to manually set it
      *
      * @var null|string
      */
-    protected $name = null;
+    protected ?string $name = null;
 
     /**
      * @var CsrfGuardInterface
      */
-    protected $guard = null;
+    protected ?CsrfGuardInterface $guard = null;
 
     /**
      * Csrf constructor
