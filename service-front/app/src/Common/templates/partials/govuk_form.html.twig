@@ -35,7 +35,7 @@
 
         {% endif %}
 
-        {%- if attr is defined and attr['class'] is defined and 'moj-password-reveal__input' in attr['class'] -%}
+        {%- if attr is defined and attr['class'] is defined and 'moj-password-reveal' in attr['class'] -%}
             {{- block('input_show_hide_password') -}}
         {% else %}
             {{- block('form_input') -}}
@@ -225,7 +225,7 @@
 {%- block input_show_hide_password -%}
     <div class="moj-password-reveal">
         {{- block('form_input') -}}
-        <button class="govuk-button govuk-button--secondary moj-password-reveal__button" data-module="govuk-button" type="button"
+        <button class="govuk-button govuk-button--secondary moj-password-reveal__button govuk-!-margin-bottom-0" type="button"
                 data-showpassword="{% trans %}Show{% notes %}Show password label{% endtrans %}"
                 data-hidepassword="{% trans %}Hide{% notes %}Hide password label{% endtrans %}">
         </button>

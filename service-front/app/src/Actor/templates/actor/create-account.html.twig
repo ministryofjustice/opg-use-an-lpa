@@ -44,14 +44,12 @@
                                 })
                                 }}
 
-                                <div class="js-showhidepassword">
-                                    {{ govuk_form_element(form.get('show_hide_password'), {
-                                        'label': 'Create a password'| trans,
-                                        'hint': 'Your password needs to have: <ul class="govuk-list--bullet"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>'| trans,
-                                        'attr': { 'class': 'govuk-input moj-password-reveal__input govuk-input--width-20' }
-                                    })
-                                    }}
-                                </div>
+                                {{ govuk_form_element(form.get('show_hide_password'), {
+                                    'label': 'Create a password'| trans,
+                                    'hint': 'Your password needs to have: <ul class="govuk-list--bullet"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>'| trans,
+                                    'attr': { 'class': 'govuk-input moj-password-reveal__input govuk-input--width-20' }
+                                })
+                                }}
 
                                 <div class="govuk-warning-text">
                                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>

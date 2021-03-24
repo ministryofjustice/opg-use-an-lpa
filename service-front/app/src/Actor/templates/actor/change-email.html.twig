@@ -6,7 +6,6 @@
     <div class="govuk-width-container">
         {{ include('@actor/partials/new-use-service.html.twig') }}
         {{ include('@partials/account-bar.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
@@ -33,7 +32,11 @@
                                     'hint': 'Check that your email address is spelt correctly' | trans
                                     })
                                 }}
-                                {{ govuk_form_element(form.get('current_password'), { 'label': 'Confirm your password' | trans }) }}
+                                {{ govuk_form_element(form.get('current_password'), {
+                                    'label': 'Confirm your password'| trans,
+                                    'attr': { 'class': 'govuk-input moj-password-reveal__input' }
+                                })
+                                }}
 
                                 <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Save new email address{% endtrans %}</button>
                             </div>
