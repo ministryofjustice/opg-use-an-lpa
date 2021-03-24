@@ -64,4 +64,16 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('Babara Gilson');
         $this->ui->assertPageContainsText('This health and welfare LPA is valid');
     }
+
+    /**
+     * @When I click Download this LPA summary
+     */
+    public function IClickDownloadThisLPASummary(): void
+    {
+        $this->ui->assertPageAddress('/view-lpa');
+
+        $this->ui->assertPageContainsText('Babara Gilson');
+        $this->ui->assertPageContainsText('This health and welfare LPA is valid');
+        $this->ui->clickLink('Download this LPA summary');
+    }
 }
