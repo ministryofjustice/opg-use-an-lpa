@@ -34,8 +34,7 @@ class PasswordChangeTest extends TestCase implements TestsLaminasForm
         return [
             '__csrf' => Csrf::class,
             'current_password' => Password::class,
-            'new_password' => Password::class,
-            'new_password_confirm' => Password::class
+            'new_password' => Password::class
         ];
     }
 

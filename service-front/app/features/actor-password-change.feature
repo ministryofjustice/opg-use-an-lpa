@@ -34,5 +34,3 @@ Feature: Authenticated Account Password Change
       | TinyTrexArms  | a number              |
       | t1nytr3xarms  | a capital letter    |
       | T1NYTR3XARMS  | a lower case letter |
-
-

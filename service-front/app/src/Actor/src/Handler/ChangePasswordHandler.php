@@ -102,6 +102,7 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
         }
 
         return new HtmlResponse($this->renderer->render('actor::password-change', [
+            'user' => $user,
             'form' => $form->prepare()
         ]));
     }
