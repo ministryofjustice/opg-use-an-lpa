@@ -11,6 +11,8 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 abstract class AbstractForm extends Form
 {
+    public const NOT_SAME = 'notSame';
+
     /**
      * Error messages templates
      */
