@@ -1,6 +1,6 @@
-import boto3
 import datetime
 import argparse
+import boto3
 
 class DynamoDBExporter:
     aws_dynamodb_client = ''
