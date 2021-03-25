@@ -82,8 +82,9 @@ S3 Bucket Name: use-a-lpa-dynamodb-exports-development
          COMPLETED /demo-UserLpaActorMap/AWSDynamoDB/01616672949780-0dfc333e/data/
 ```
 
+Once the exports are completed you can pull the S3 objects using AWS CLI and the S3 Sync command.
 
-Command to pull s3 data
+To pull s3 objects locally run
 
 ```shell
 aws-vault exec ual-dev -- aws s3 sync s3://use-a-lpa-dynamodb-exports-development/ ./s3_objects
@@ -91,4 +92,6 @@ aws-vault exec ual-dev -- aws s3 sync s3://use-a-lpa-dynamodb-exports-developmen
 
 ## Pandas and JSON Line Data
 
-The load_s3_exports.py script reads the dynamodb data which is in gzipped JSON Lines (JSON Lines <https://jsonlines.org/>) format
+The load_s3_exports.py script reads the dynamodb data which is in gzipped JSON Lines format. More info at <https://jsonlines.org/>.
+
+At this time, the data is loaded into a Pandas dataframe.
