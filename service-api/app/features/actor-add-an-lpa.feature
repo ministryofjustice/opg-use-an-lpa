@@ -75,9 +75,29 @@ Feature: Add an LPA
     When I confirmed to add an LPA to my account
     And A malformed confirm request is sent which is missing user id
 
+    # the following scenarios will replace the current ones once the new API handler is hooked up to the front
+
   @integration @acceptance @pact
   Scenario: The user can add an LPA to their account
     Given I am on the add an LPA page
     When I request to add an LPA with valid details REFACTORED
     Then The correct LPA is found and I can confirm to add it
     And The LPA is successfully added
+
+  @integration @acceptance @pact
+  Scenario: The user is told when attempting to add the same LPA twice
+    Given I have added an LPA to my account
+    When I attempt to add the same LPA again REFACTORED
+    Then I should be told that I have already added this LPA
+
+  @integration @acceptance @pact
+  Scenario: The user is told the LPA couldn't be found if its status is not registered
+    Given I am on the add an LPA page
+    When I request to add an LPA which has a status other than registered
+    Then The LPA should not be found
+
+  @integration @acceptance @pact
+  Scenario: The user cannot add an LPA to their account as it does not exist
+    Given I am on the add an LPA page
+    When I request to add an LPA that does not exist REFACTORED
+    Then The LPA should not be found
