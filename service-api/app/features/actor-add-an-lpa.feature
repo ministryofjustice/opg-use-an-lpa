@@ -74,3 +74,10 @@ Feature: Add an LPA
     Given I am on the add an LPA page
     When I confirmed to add an LPA to my account
     And A malformed confirm request is sent which is missing user id
+
+  @integration @acceptance @pact
+  Scenario: The user can add an LPA to their account
+    Given I am on the add an LPA page
+    When I request to add an LPA with valid details REFACTORED
+    Then The correct LPA is found and I can confirm to add it
+    And The LPA is successfully added

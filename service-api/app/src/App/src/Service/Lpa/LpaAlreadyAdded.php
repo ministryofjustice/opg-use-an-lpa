@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
-use ArrayObject;
 use Psr\Log\LoggerInterface;
 
 class LpaAlreadyAdded
@@ -16,8 +15,9 @@ class LpaAlreadyAdded
     /**
      * LpaAlreadyAdded constructor.
      *
-     * @param LpaService $lpaService
-     * @param LoggerInterface $logger
+     * @param LpaService               $lpaService
+     * @param LoggerInterface          $logger
+     *
      * @codeCoverageIgnore
      */
     public function __construct(
@@ -36,7 +36,6 @@ class LpaAlreadyAdded
      */
     public function __invoke(string $userId, string $lpaUid): ?array
     {
-        // TODO: Would it be better to create a query with a filter rather than this method?
         $lpasAdded = $this->lpaService->getAllForUser($userId);
 
         foreach ($lpasAdded as $userLpaActorToken => $lpaData) {

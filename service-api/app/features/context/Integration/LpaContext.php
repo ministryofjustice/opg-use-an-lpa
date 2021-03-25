@@ -10,6 +10,7 @@ use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Log\RequestTracing;
+use App\Service\Lpa\AddLpa;
 use App\Service\Lpa\DeleteLpa;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
@@ -1245,6 +1246,55 @@ class LpaContext extends BaseIntegrationContext
 
         $validatedLpa = $actorCodeService->validateDetails($this->oneTimeCode, $this->lpaUid, $this->userDob);
 
+        assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
+    }
+
+    /**
+     * @When /^I request to add an LPA with valid details REFACTORED$/
+     */
+    public function iRequestToAddAnLPAWithValidDetailsREFACTORED()
+    {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // The underlying SmartGamma library has a very naive match processor for
+        // passed in response values and will assume lpaUid's and actorLpaId's are integers.
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/validate',
+            [
+                'lpa' => $this->lpaUid,
+                'dob' => $this->userDob,
+                'code' => $this->oneTimeCode,
+            ],
+            StatusCodeInterface::STATUS_OK,
+            [
+                'actor' => $this->actorLpaId,
+            ],
+        );
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $addLpaService = $this->container->get(AddLpa::class);
+
+        $validatedLpa = $addLpaService->validateAddLpaData(
+            [
+                'actor-code' => $this->oneTimeCode,
+                'uid' => $this->lpaUid,
+                'dob' => $this->userDob,
+            ],
+            $this->userId
+        );
+
+        assertArrayHasKey('actor', $validatedLpa);
+        assertArrayHasKey('lpa', $validatedLpa);
         assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
     }
 

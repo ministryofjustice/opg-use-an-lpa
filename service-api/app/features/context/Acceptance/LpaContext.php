@@ -1157,6 +1157,46 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I request to add an LPA with valid details REFACTORED$/
+     */
+    public function iRequestToAddAnLPAWithValidDetailsREFACTORED()
+    {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // codes api service call
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        $this->apiPost(
+            '/v1/add-lpa/validate',
+            [
+                'actor-code' => $this->oneTimeCode,
+                'uid' => $this->lpaUid,
+                'dob' => $this->userDob,
+            ],
+            [
+                'user-token' => $this->userLpaActorToken,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+        assertArrayHasKey('actor', $response);
+        assertArrayHasKey('lpa', $response);
+        assertEquals($this->lpaUid, $response['lpa']['uId']);
+    }
+
+    /**
      * @When /^I request to give an organisation access to one of my LPAs$/
      */
     public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
