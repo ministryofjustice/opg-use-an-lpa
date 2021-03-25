@@ -25,15 +25,10 @@ class CsrfGuardValidator extends LaminasCsrf
 
     /**
      * Set to null in order to force the user to manually set it
-     *
-     * @var null|string
      */
     protected ?string $name = null;
 
-    /**
-     * @var CsrfGuardInterface
-     */
-    protected ?CsrfGuardInterface $guard = null;
+    protected CsrfGuardInterface $guard;
 
     /**
      * Csrf constructor
