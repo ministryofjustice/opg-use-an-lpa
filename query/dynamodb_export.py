@@ -13,7 +13,6 @@ class DynamoDBExporter:
         self.export_time = datetime.datetime.now()
 
         self.environment_details = self.set_environment_details(environment)
-        print(self.environment_details)
 
         aws_iam_session = self.set_iam_role_session()
 
@@ -104,18 +103,23 @@ class DynamoDBExporter:
               self.environment_details['name'],
               table)
               )
-            print(table_arn)
+            bucket_name = 'use-a-lpa-dynamodb-exports-{}'.format(
+                        self.environment_details['account_name'])
+            s3_prefix = '{}-{}'.format(
+                        self.environment_details['name'],
+                        table)
+            print('\n')
+            print('DynamoDB Table ARN:',table_arn)
+            print('S3 Bucket Name:', bucket_name)
+
             if check_only == False:
                 print("exporting tables")
                 response = self.aws_dynamodb_client.export_table_to_point_in_time(
                     TableArn=table_arn,
                     ExportTime=self.export_time,
-                    S3Bucket='use-a-lpa-dynamodb-exports-{}'.format(
-                        self.environment_details['account_name']),
+                    S3Bucket=bucket_name,
                     S3BucketOwner=self.environment_details['account_id'],
-                    S3Prefix='{}-{}'.format(
-                        self.environment_details['name'],
-                        table),
+                    S3Prefix=s3_prefix,
                     S3SseAlgorithm='KMS',
                     S3SseKmsKeyId=self.kms_key_id,
                     ExportFormat='DYNAMODB_JSON'
@@ -127,7 +131,11 @@ class DynamoDBExporter:
             )
             for export in response['ExportSummaries']:
                 export_arn_hash = export['ExportArn'].rsplit('/', 1)[-1]
-                print('\t', export['ExportStatus'], export_arn_hash)
+                s3_path = '/{}/AWSDynamoDB/{}/data/'.format(
+                    s3_prefix,
+                    export_arn_hash
+                )
+                print('\t', export['ExportStatus'], s3_path)
 
     def get_table_arn(self, table_name):
         response = self.aws_dynamodb_client.describe_table(
