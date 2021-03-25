@@ -127,7 +127,7 @@ class DynamoDBExporter:
 
             response = self.aws_dynamodb_client.list_exports(
             TableArn=table_arn,
-            MaxResults=3
+            MaxResults=1
             )
             for export in response['ExportSummaries']:
                 export_arn_hash = export['ExportArn'].rsplit('/', 1)[-1]
