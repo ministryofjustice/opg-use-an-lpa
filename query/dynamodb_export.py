@@ -7,31 +7,26 @@ class DynamoDBExporter:
     aws_kms_client = ''
     environment_details = ''
     export_time = ''
-    tables = ''
 
     def __init__(self, environment):
         self.export_time = datetime.datetime.now()
 
-        self.tables = [
-            "ActorCodes",
-            "ActorUsers",
-            "ViewerCodes",
-            "ViewerActivity",
-            "UserLpaActorMap",
-        ]
-
         self.environment_details = self.set_environment_details(environment)
-        print(self.environment_details)
-
-        # self.kms_key_id = self.get_kms_key_id(
-        #   'dynamodb-exports-{}'.format(
-        #     self.environment_details['account_name'])
-        #   )
 
         aws_iam_session = self.set_iam_role_session()
 
-        self.aws_dynamodb_client = self.get_aws_client('dynamodb', aws_iam_session)
-        self.aws_kms_client = self.get_aws_client('kms', aws_iam_session)
+        self.aws_dynamodb_client = self.get_aws_client(
+          'dynamodb',
+          aws_iam_session)
+
+        self.aws_kms_client = self.get_aws_client(
+          'kms',
+          aws_iam_session)
+
+        self.kms_key_id = self.get_kms_key_id(
+          'dynamodb-exports-{}'.format(
+            self.environment_details['account_name'])
+          )
 
     def get_aws_client(self, client_type, aws_iam_session, region="eu-west-1"):
         client = boto3.client(
@@ -40,9 +35,7 @@ class DynamoDBExporter:
             aws_access_key_id=aws_iam_session['Credentials']['AccessKeyId'],
             aws_secret_access_key=aws_iam_session['Credentials']['SecretAccessKey'],
             aws_session_token=aws_iam_session['Credentials']['SessionToken'])
-
         return client
-
 
     def set_environment_details(self, environment):
         aws_account_ids = {
@@ -60,8 +53,8 @@ class DynamoDBExporter:
             account_name = 'development'
 
         response = {
-            'name': environment,
-            'account_name': account_name,
+            'name': environment.lower(),
+            'account_name': account_name.lower(),
             'account_id': aws_account_id,
         }
 
@@ -94,29 +87,41 @@ class DynamoDBExporter:
         return response['KeyMetadata']['KeyId']
 
     def export_table_to_point_in_time(self):
-        print(self.export_time)
-        for table in self.tables:
+        tables = [
+            "ActorCodes",
+            "ActorUsers",
+            "ViewerCodes",
+            "ViewerActivity",
+            "UserLpaActorMap",
+        ]
+
+        for table in tables:
             table_arn = self.get_table_arn('{}-{}'.format(
               self.environment_details['name'],
               table)
               )
             print(table_arn)
 
-            # response = self.aws_dynamodb_client.export_table_to_point_in_time(
-            #     TableArn=table_arn,
-            #     ExportTime=self.export_time,
-            #     # ClientToken='string',
-            #     S3Bucket='use-a-lpa-dynamodb-exports-{}'.format(
-            #         self.environment_details['account_name']),
-            #     S3BucketOwner=self.environment_details['account_id'],
-            #     S3Prefix='{}-{}'.format(
-            #         self.export_time,
-            #         table),
-            #     S3SseAlgorithm='KMS',
-            #     S3SseKmsKeyId=self.kms_key_id,
-            #     ExportFormat='DYNAMODB_JSON'
-            # )
-            # print(response)
+            response = self.aws_dynamodb_client.export_table_to_point_in_time(
+                TableArn=table_arn,
+                ExportTime=self.export_time,
+                S3Bucket='use-a-lpa-dynamodb-exports-{}'.format(
+                    self.environment_details['account_name']),
+                S3BucketOwner=self.environment_details['account_id'],
+                S3Prefix='{}-{}'.format(
+                    self.environment_details['name'],
+                    table),
+                S3SseAlgorithm='KMS',
+                S3SseKmsKeyId=self.kms_key_id,
+                ExportFormat='DYNAMODB_JSON'
+            )
+            response = self.aws_dynamodb_client.list_exports(
+            TableArn=table_arn,
+            MaxResults=3
+            )
+            for export in response['ExportSummaries']:
+                export_arn_hash = export['ExportArn'].rsplit('/', 1)[-1]
+                print('\t', export['ExportStatus'], export_arn_hash)
 
     def get_table_arn(self, table_name):
         response = self.aws_dynamodb_client.describe_table(
