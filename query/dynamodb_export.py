@@ -1,17 +1,11 @@
 import boto3
 import datetime
 import argparse
-import os
-import json
 
 class DynamoDBExporter:
-    aws_account_id = ''
-    aws_iam_session = ''
     aws_dynamodb_client = ''
     aws_kms_client = ''
     environment_details = ''
-    environment = ''
-    account_name = ''
     export_time = ''
     tables = ''
 
@@ -34,21 +28,21 @@ class DynamoDBExporter:
         #     self.environment_details['account_name'])
         #   )
 
-        self.aws_iam_session = self.set_iam_role_session()
+        aws_iam_session = self.set_iam_role_session()
 
-        self.aws_dynamodb_client = boto3.client(
-            'dynamodb',
-            region_name='eu-west-1',
-            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
-            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
-            aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+        self.aws_dynamodb_client = self.get_aws_client('dynamodb', aws_iam_session)
+        self.aws_kms_client = self.get_aws_client('kms', aws_iam_session)
 
-        self.aws_kms_client = boto3.client(
-            'kms',
-            region_name='eu-west-1',
-            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
-            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
-            aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+    def get_aws_client(self, client_type, aws_iam_session, region="eu-west-1"):
+        client = boto3.client(
+            client_type,
+            region_name=region,
+            aws_access_key_id=aws_iam_session['Credentials']['AccessKeyId'],
+            aws_secret_access_key=aws_iam_session['Credentials']['SecretAccessKey'],
+            aws_session_token=aws_iam_session['Credentials']['SessionToken'])
+
+        return client
+
 
     def set_environment_details(self, environment):
         aws_account_ids = {
@@ -73,12 +67,6 @@ class DynamoDBExporter:
 
         return response
 
-    def get_kms_key_id(self, kms_key_alias):
-        response = self.aws_kms_client.describe_key(
-            KeyId='alias/{}'.format(kms_key_alias),
-        )
-        return response['KeyMetadata']['KeyId']
-
     def set_iam_role_session(self):
         if self.environment_details['name'] == "production":
             role_arn = 'arn:aws:iam::{}:role/read-only-db'.format(
@@ -98,6 +86,12 @@ class DynamoDBExporter:
             DurationSeconds=900
         )
         return session
+
+    def get_kms_key_id(self, kms_key_alias):
+        response = self.aws_kms_client.describe_key(
+            KeyId='alias/{}'.format(kms_key_alias),
+        )
+        return response['KeyMetadata']['KeyId']
 
     def export_table_to_point_in_time(self):
         print(self.export_time)
