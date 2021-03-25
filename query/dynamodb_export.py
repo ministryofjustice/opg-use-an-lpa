@@ -2,6 +2,7 @@ import datetime
 import argparse
 import boto3
 
+
 class DynamoDBExporter:
     aws_dynamodb_client = ''
     aws_kms_client = ''
@@ -12,6 +13,7 @@ class DynamoDBExporter:
         self.export_time = datetime.datetime.now()
 
         self.environment_details = self.set_environment_details(environment)
+        print(self.environment_details)
 
         aws_iam_session = self.set_iam_role_session()
 
@@ -28,7 +30,8 @@ class DynamoDBExporter:
             self.environment_details['account_name'])
           )
 
-    def get_aws_client(self, client_type, aws_iam_session, region="eu-west-1"):
+    @staticmethod
+    def get_aws_client(client_type, aws_iam_session, region="eu-west-1"):
         client = boto3.client(
             client_type,
             region_name=region,
@@ -37,7 +40,8 @@ class DynamoDBExporter:
             aws_session_token=aws_iam_session['Credentials']['SessionToken'])
         return client
 
-    def set_environment_details(self, environment):
+    @staticmethod
+    def set_environment_details(environment):
         aws_account_ids = {
             'production': "690083044361",
             'preproduction': "888228022356",
@@ -86,7 +90,7 @@ class DynamoDBExporter:
         )
         return response['KeyMetadata']['KeyId']
 
-    def export_table_to_point_in_time(self):
+    def export_table_to_point_in_time(self, check_only):
         tables = [
             "ActorCodes",
             "ActorUsers",
@@ -101,20 +105,22 @@ class DynamoDBExporter:
               table)
               )
             print(table_arn)
+            if check_only == False:
+                print("exporting tables")
+                response = self.aws_dynamodb_client.export_table_to_point_in_time(
+                    TableArn=table_arn,
+                    ExportTime=self.export_time,
+                    S3Bucket='use-a-lpa-dynamodb-exports-{}'.format(
+                        self.environment_details['account_name']),
+                    S3BucketOwner=self.environment_details['account_id'],
+                    S3Prefix='{}-{}'.format(
+                        self.environment_details['name'],
+                        table),
+                    S3SseAlgorithm='KMS',
+                    S3SseKmsKeyId=self.kms_key_id,
+                    ExportFormat='DYNAMODB_JSON'
+                )
 
-            response = self.aws_dynamodb_client.export_table_to_point_in_time(
-                TableArn=table_arn,
-                ExportTime=self.export_time,
-                S3Bucket='use-a-lpa-dynamodb-exports-{}'.format(
-                    self.environment_details['account_name']),
-                S3BucketOwner=self.environment_details['account_id'],
-                S3Prefix='{}-{}'.format(
-                    self.environment_details['name'],
-                    table),
-                S3SseAlgorithm='KMS',
-                S3SseKmsKeyId=self.kms_key_id,
-                ExportFormat='DYNAMODB_JSON'
-            )
             response = self.aws_dynamodb_client.list_exports(
             TableArn=table_arn,
             MaxResults=3
@@ -136,12 +142,15 @@ def main():
         description="Exports DynamoDB tables to S3.")
     parser.add_argument("--environment",
                         default="demo",
-                        help="The environment to get organistion names for")
+                        help="The environment to export DynamoDB data for")
+    parser.add_argument('--check_exports', dest='check_only', action='store_const',
+                        const=True, default=False,
+                        help='Output json data instead of plaintext to terminal')
 
     args = parser.parse_args()
     work = DynamoDBExporter(
         args.environment)
-    work.export_table_to_point_in_time()
+    work.export_table_to_point_in_time(args.check_only)
 
 
 if __name__ == "__main__":
