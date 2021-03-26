@@ -1,5 +1,5 @@
 const showHidePassword = () => {
-    let elements = document.querySelectorAll(".js-showhidepassword");
+    let elements = document.querySelectorAll(".moj-password-reveal");
 
     for (let i = 0; i < elements.length; i++) {
         let element = elements[i];
