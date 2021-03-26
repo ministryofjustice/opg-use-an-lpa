@@ -55,13 +55,10 @@
                 {% set totalLpas = total_lpas %}
 
                 <h2 class="govuk-heading-m count-lpas-added">
-                    {% trans count totalLpas %}You have %count% LPA in your account | You have %count% LPAs in your account{% endtrans %}
+                    {% trans count totalLpas %}You have %count% LPA in your account | You have %count% LPAs in your account{% endtrans %}<br>
                 </h2>
 
                 {% for donorName, token in lpas %}
-
-                    <span class="govuk-heading-l govuk-!-margin-top-5 govuk-!-margin-bottom-3">{{ donor_name_with_dob_removed(donorName) }}</span>
-
                     {% for lpaData in token %}
                         {% set lpa = lpaData['lpa'] %}
                         {% set actorToken = lpaData['user-lpa-actor-token'] %}
@@ -71,7 +68,28 @@
                         {% set applicationHasRestrictions = lpa.applicationHasRestrictions %}
                         {% set applicationHasGuidance = lpa.applicationHasGuidance %}
 
-                        {{ include('@actor/partials/lpa-details.html.twig') }}
+                        {% if lpa.status != 'Cancelled' and actorActive %}
+                            <article class="moj-ticket-panel" aria-label="Sub navigation 1">
+                                <section class="moj-ticket-panel__content" aria-label="Section 1"> <h2 class="govuk-heading-m govuk-!-margin-bottom-2">{{ donor_name_with_dob_removed(donorName) }}</h2>
+                                    <p class="govuk-body">
+                                        {{ include('@actor/partials/lpa-details.html.twig') }}
+                                </section>
+                            </article>
+                        {% elseif lpa.status == 'Cancelled'%}
+                            <article class="moj-ticket-panel" aria-label="Sub navigation 1">
+                                <section class="moj-ticket-panel__content moj-ticket-panel__content--red" aria-label="Section 1"> <h2 class="govuk-heading-m govuk-!-margin-bottom-2">{{ donor_name_with_dob_removed(donorName) }}</h2>
+                                    <p class="govuk-body">
+                                        {{ include('@actor/partials/lpa-details.html.twig') }}
+                                </section>
+                            </article>
+                        {% elseif not actorActive %}
+                            <article class="moj-ticket-panel" aria-label="Sub navigation 1">
+                                <section class="moj-ticket-panel__content moj-ticket-panel__content--green" aria-label="Section 1"> <h2 class="govuk-heading-m govuk-!-margin-bottom-2">{{ donor_name_with_dob_removed(donorName) }}</h2>
+                                    <p class="govuk-body">
+                                        {{ include('@actor/partials/lpa-details.html.twig') }}
+                                </section>
+                            </article>
+                        {% endif %}
                     {% endfor %}
                 {% endfor %}
 
