@@ -29,10 +29,6 @@
                             <td class="govuk-table__cell">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans  }}</td>
                         </tr>
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="row">{% trans %}Donor name{% endtrans %}</th>
-                            <td class="govuk-table__cell">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}</td>
-                        </tr>
-                        <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="row">{% trans %}Code expires{% endtrans %}</th>
                             <td class="govuk-table__cell">{% trans count days_remaining_to_expiry(expires) with {'%date%': lpa_date(expires)} %}in %count% day, on %date%|in %count% days, on %date%{% endtrans %}</td>
                         </tr>
