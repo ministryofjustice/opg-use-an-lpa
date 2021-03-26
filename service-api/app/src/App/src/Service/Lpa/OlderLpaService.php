@@ -9,7 +9,6 @@ use App\DataAccess\Repository\LpasInterface;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
-use Common\Service\Log\EventCodes;
 use DateTime;
 use Psr\Log\LoggerInterface;
 
