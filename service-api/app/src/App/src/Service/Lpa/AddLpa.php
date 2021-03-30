@@ -40,7 +40,7 @@ class AddLpa
             throw new NotFoundException('Code validation failed');
         }
 
-        if (!is_null($lpaData['lpa']) && (strtolower($lpaData['lpa']['status']) === 'registered')) {
+        if (strtolower($lpaData['lpa']['status']) === 'registered') {
             return $lpaData;
         }
 

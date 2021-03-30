@@ -11,6 +11,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/**
+ * Class AddLpaValidationHandler
+ * @package App\Handler
+ * @codeCoverageIgnore
+ */
 class AddLpaValidationHandler implements RequestHandlerInterface
 {
     private AddLpa $addLpa;

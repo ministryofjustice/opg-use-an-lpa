@@ -1218,12 +1218,50 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I request to add an LPA with a missing actor code REFACTORED$/
+     */
+    public function iRequestToAddAnLPAWithAMissingActorCodeREFACTORED()
+    {
+        $this->apiPost(
+            '/v1/add-lpa/validate',
+            [
+                'actor-code' => null,
+                'uid' => $this->lpaUid,
+                'dob' => $this->userDob,
+            ],
+            [
+                'user-token' => $this->userLpaActorToken,
+            ]
+        );
+    }
+
+    /**
      * @When /^I request to add an LPA with a missing date of birth$/
      */
     public function iRequestToAddAnLPAWithAMissingDateOfBirth()
     {
         $this->apiPost(
             '/v1/actor-codes/summary',
+            [
+                'actor-code' => $this->oneTimeCode,
+                'uid' => $this->lpaUid,
+                'dob' => null,
+            ],
+            [
+                'user-token' => $this->userLpaActorToken,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @When /^I request to add an LPA with a missing date of birth REFACTORED$/
+     */
+    public function iRequestToAddAnLPAWithAMissingDateOfBirthREFACTORED()
+    {
+        $this->apiPost(
+            '/v1/add-lpa/validate',
             [
                 'actor-code' => $this->oneTimeCode,
                 'uid' => $this->lpaUid,
@@ -1255,6 +1293,24 @@ class LpaContext implements Context
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @When /^I request to add an LPA with a missing user id REFACTORED$/
+     */
+    public function iRequestToAddAnLPAWithAMissingUserIdREFACTORED()
+    {
+        $this->apiPost(
+            '/v1/add-lpa/validate',
+            [
+                'actor-code' => $this->oneTimeCode,
+                'uid' => null,
+                'dob' => $this->userDob,
+            ],
+            [
+                'user-token' => $this->userLpaActorToken,
+            ]
+        );
     }
 
     /**
