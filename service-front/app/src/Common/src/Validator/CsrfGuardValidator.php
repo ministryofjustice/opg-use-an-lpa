@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Common\Validator;
 
 use InvalidArgumentException;
@@ -15,26 +17,21 @@ use Mezzio\Csrf\CsrfGuardInterface;
 class CsrfGuardValidator extends LaminasCsrf
 {
     /**
-     * Error messages
-     * @var array
+     * @var string[]
      */
-    protected array $messageTemplates = [
+    protected $messageTemplates = [
         parent::NOT_SAME => 'As you have not used this service for over 20 minutes, the page has ' .
             'timed out. We\'ve now refreshed the page - please try to sign in again'
     ];
 
     /**
      * Set to null in order to force the user to manually set it
+     * @var ?string
      */
-    protected ?string $name = null;
+    protected $name = null;
 
     protected CsrfGuardInterface $guard;
 
-    /**
-     * Csrf constructor
-     *
-     * @param array $options
-     */
     public function __construct($options = [])
     {
         // turns out Zend does some magic initialisation of properties from the options array so
