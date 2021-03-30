@@ -17,8 +17,6 @@ class LpaAlreadyAdded
      *
      * @param LpaService               $lpaService
      * @param LoggerInterface          $logger
-     *
-     * @codeCoverageIgnore
      */
     public function __construct(
         LpaService $lpaService,

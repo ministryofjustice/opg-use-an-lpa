@@ -9,6 +9,10 @@ use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class AddLpa
+ * @package App\Service\Lpa
+ */
 class AddLpa
 {
     private LoggerInterface $logger;
@@ -28,6 +32,12 @@ class AddLpa
         $this->lpaAlreadyAdded = $lpaAlreadyAdded;
     }
 
+    /**
+     * @param array  $data
+     * @param string $userId
+     *
+     * @return array
+     */
     public function validateAddLpaData(array $data, string $userId): array
     {
         if (null !== $lpaAddedData = ($this->lpaAlreadyAdded)($userId, $data['uid'])) {
