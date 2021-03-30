@@ -5,18 +5,16 @@ updates:
   - package-ecosystem: "npm"
     directory: "/service-front/web"
     schedule:
-      # Check for updates weekly on wednesday at 10am UTC
-      interval: "weekly"
-      day: "wednesday"
+      # Check for updates on the first of each month at 10am UTC
+      interval: "monthly"
       time: "10:00"
     versioning-strategy: lockfile-only
   # Enable version updates for service-pdf npm
   - package-ecosystem: "npm"
     directory: "/service-pdf/app"
     schedule:
-      # Check for updates weekly on wednesday at 10am UTC
-      interval: "weekly"
-      day: "wednesday"
+      # Check for updates on the first of each month at 10am UTC
+      interval: "monthly"
       time: "10:00"
     versioning-strategy: lockfile-only
 
@@ -24,9 +22,8 @@ updates:
   - package-ecosystem: "composer"
     directory: "/service-front/app"
     schedule:
-      # Check for updates weekly on wednesday at 10am UTC
-      interval: "weekly"
-      day: "wednesday"
+      # Check for updates on the first of each month at 10am UTC
+      interval: "monthly"
       time: "10:00"
     versioning-strategy: lockfile-only
 
@@ -34,9 +31,8 @@ updates:
   - package-ecosystem: "composer"
     directory: "/service-api/app"
     schedule:
-      # Check for updates weekly on wednesday at 10am UTC
-      interval: "weekly"
-      day: "wednesday"
+      # Check for updates on the first of each month at 10am UTC
+      interval: "monthly"
       time: "10:00"
     versioning-strategy: lockfile-only
 
@@ -44,8 +40,7 @@ updates:
   - package-ecosystem: "composer"
     directory: "/tests/smoke"
     schedule:
-      # Check for updates weekly on wednesday at 10am UTC
-      interval: "weekly"
-      day: "wednesday"
+      # Check for updates on the first of each month at 10am UTC
+      interval: "monthly"
       time: "10:00"
     versioning-strategy: lockfile-only
