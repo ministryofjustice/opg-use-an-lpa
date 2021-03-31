@@ -64,3 +64,18 @@ WITH SERDEPROPERTIES (
 LOCATION 's3://use-a-lpa-dynamodb-exports-development/demo-ViewerCodes/AWSDynamoDB/01616672353584-6ff1f666/data/'
 TBLPROPERTIES ('has_encrypted_data'='true');
 ```
+
+An example Select Query for Athena
+
+```SQL
+-- issues SELECT query
+
+SELECT
+    Item.ViewerCode.S as viewercode,
+    Item.Added.S as added,
+    Item.Expires.S as expires,
+    Item.Organisation.S as organisation,
+    Item.SiriusUid.S as siriusuid,
+    Item.UserLpaActor.S as userlpaactor
+FROM viewer_codes
+```
