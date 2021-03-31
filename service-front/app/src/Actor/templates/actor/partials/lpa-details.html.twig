@@ -26,7 +26,7 @@
             {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions govuk-!-width-one-third">
-            {% if lpa.status != 'Cancelled' %}
+            {% if lpa.status|lower == 'cancelled' %}
                 {% if actorActive == false %}
                     <span class="moj-badge moj-badge--grey">{% trans %}Access revoked{% endtrans %}</span>
                 {% elseif activeCodeCount >= 1 %}
