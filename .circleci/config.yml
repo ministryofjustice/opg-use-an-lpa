@@ -118,53 +118,53 @@ workflows:
                 test_pdf,
               ]
 
-            # Provision and test development
-        - use-my-lpa/plan_shared_terraform:
-            name: dev_plan_shared_terraform
-            filters: { branches: { only: [/dependabot\/.*/] } }
-            requires: [cancel_previous_jobs,lint_terraform]
+        #     # Provision and test development
+        # - use-my-lpa/plan_shared_terraform:
+        #     name: dev_plan_shared_terraform
+        #     filters: { branches: { only: [/dependabot\/.*/] } }
+        #     requires: [cancel_previous_jobs,lint_terraform]
 
-        - use-my-lpa/apply_environment_terraform:
-            name: dev_apply_environment_terraform
-            filters: { branches: { only: [/dependabot\/.*/] } }
-            requires:
-              [
-                cancel_previous_jobs,
-                dev_plan_shared_terraform,
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
-                pdf_build,
-              ]
+        # - use-my-lpa/apply_environment_terraform:
+        #     name: dev_apply_environment_terraform
+        #     filters: { branches: { only: [/dependabot\/.*/] } }
+        #     requires:
+        #       [
+        #         cancel_previous_jobs,
+        #         dev_plan_shared_terraform,
+        #         app_front_build,
+        #         web_front_build,
+        #         web_api_build,
+        #         app_api_build,
+        #         pdf_build,
+        #       ]
 
-        - ecr_scan_results:
-            name: ecr_scan_results
-            filters: { branches: { only: [/dependabot\/.*/] } }
-            requires:
-              [
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
-                pdf_build,
-                dev_apply_environment_terraform,
-              ]
+        # - ecr_scan_results:
+        #     name: ecr_scan_results
+        #     filters: { branches: { only: [/dependabot\/.*/] } }
+        #     requires:
+        #       [
+        #         app_front_build,
+        #         web_front_build,
+        #         web_api_build,
+        #         app_api_build,
+        #         pdf_build,
+        #         dev_apply_environment_terraform,
+        #       ]
 
-        - use-my-lpa/seed_database:
-            name: dev_seed_database
-            filters: { branches: { only: [/dependabot\/.*/] } }
-            requires: [dev_apply_environment_terraform]
+        # - use-my-lpa/seed_database:
+        #     name: dev_seed_database
+        #     filters: { branches: { only: [/dependabot\/.*/] } }
+        #     requires: [dev_apply_environment_terraform]
 
-        - use-my-lpa/run_behat_suite:
-            name: dev_run_behat_tests
-            filters: { branches: { only: [/dependabot\/.*/] } }
-            requires: [dev_seed_database]
+        # - use-my-lpa/run_behat_suite:
+        #     name: dev_run_behat_tests
+        #     filters: { branches: { only: [/dependabot\/.*/] } }
+        #     requires: [dev_seed_database]
 
-        - slack_notify_domain:
-            name: post_environment_domains
-            filters: { branches: { only: [/dependabot\/.*/] } }
-            requires: [dev_run_behat_tests]
+        # - slack_notify_domain:
+        #     name: post_environment_domains
+        #     filters: { branches: { only: [/dependabot\/.*/] } }
+        #     requires: [dev_run_behat_tests]
 
   pr_build:
       jobs:
