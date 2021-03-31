@@ -61,20 +61,6 @@ workflows:
             name: test_web
             filters: { branches: { only: [/dependabot\/.*/] } }
 
-        - use-my-lpa/docker_build_lambda_image:
-            name: build_clsf_to_sqs_lambda_image
-            account_id: "367815980639"
-            container_repo_account: development
-            lambda_name: clsf-to-sqs
-            filters: { branches: { only: [/dependabot\/.*/] } }
-
-        - use-my-lpa/docker_build_lambda_image:
-            name: build_ship_to_opg_metrics_lambda_image
-            account_id: "367815980639"
-            container_repo_account: development
-            lambda_name: ship-to-opg-metrics
-            filters: { branches: { only: [/dependabot\/.*/] } }
-
         - use-my-lpa/node_build_web:
             name: build_web
             filters: { branches: { only: [/dependabot\/.*/] } }
