@@ -23,9 +23,9 @@ use RuntimeException;
 class AddOlderLpa
 {
     // Exception messages returned from the API layer
-    private const LPA_NOT_ELIGIBLE       = 'LPA not eligible due to registration date';
-    private const LPA_DOES_NOT_MATCH     = 'LPA details do not match';
-    private const LPA_HAS_ACTIVATION_KEY = 'LPA not eligible as an activation key already exists';
+    private const OLDER_LPA_NOT_ELIGIBLE = 'LPA not eligible due to registration date';
+    private const OLDER_LPA_DOES_NOT_MATCH     = 'LPA details do not match';
+    private const OLDER_LPA_HAS_ACTIVATION_KEY = 'LPA not eligible as an activation key already exists';
 
     /** @var ApiClient */
     private ApiClient $apiClient;
@@ -78,9 +78,10 @@ class AddOlderLpa
             }
         }
 
-        $this->logger->info(
-            'Account with Id {id} requested older LPA addition of reference number {uId}',
+        $this->logger->notice(
+            'Successfully matched LPA {uId} and sending activation letter for account with Id {id} ',
             [
+                'event_code' => EventCodes::OLDER_LPA_SUCCESS,
                 'id'  => $userToken,
                 'uId' => $lpaUid
             ]
@@ -103,18 +104,18 @@ class AddOlderLpa
     private function badRequestReturned(int $lpaUid, string $message, array $additionalData): OlderLpaApiResponse
     {
         switch ($message) {
-            case self::LPA_NOT_ELIGIBLE:
-                $code = EventCodes::LPA_NOT_ELIGIBLE;
+            case self::OLDER_LPA_NOT_ELIGIBLE:
+                $code = EventCodes::OLDER_LPA_NOT_ELIGIBLE;
                 $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_ELIGIBLE, $additionalData);
                 break;
 
-            case self::LPA_DOES_NOT_MATCH:
-                $code = EventCodes::LPA_DOES_NOT_MATCH;
+            case self::OLDER_LPA_DOES_NOT_MATCH:
+                $code = EventCodes::OLDER_LPA_DOES_NOT_MATCH;
                 $response = new OlderLpaApiResponse(OlderLpaApiResponse::DOES_NOT_MATCH, $additionalData);
                 break;
 
-            case self::LPA_HAS_ACTIVATION_KEY:
-                $code = EventCodes::LPA_HAS_ACTIVATION_KEY;
+            case self::OLDER_LPA_HAS_ACTIVATION_KEY:
+                $code = EventCodes::OLDER_LPA_HAS_ACTIVATION_KEY;
                 $response = new OlderLpaApiResponse(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $additionalData);
                 break;
 
@@ -152,7 +153,7 @@ class AddOlderLpa
             'LPA with reference number {uId} not found',
             [
                 // attach an code for brute force checking
-                'event_code' => EventCodes::LPA_NOT_FOUND,
+                'event_code' => EventCodes::OLDER_LPA_NOT_FOUND,
                 'uId' => $lpaUid
             ]
         );

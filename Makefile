@@ -95,11 +95,11 @@ development_mode:
 .PHONY: development_mode
 
 run_front_composer:
-	$(COMPOSE) run front-composer composer install
+	$(COMPOSE) run front-composer composer install --ignore-platform-reqs
 .PHONY: run_front_composer
 
 run_api_composer:
-	$(COMPOSE) run api-composer composer install
+	$(COMPOSE) run api-composer composer install --ignore-platform-reqs
 .PHONY: run_api_composer
 
 clear_config_cache:

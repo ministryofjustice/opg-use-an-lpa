@@ -38,17 +38,10 @@ class EmailClient
     public const WELSH_TEMPLATE_ID_ACCOUNT_ACTIVATED_CONFIRMATION          = '1be4d491-28df-4dfe-b90c-b285eafba05b';
     public const WELSH_TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION     = '712625ce-241f-45d9-bb51-13b89f6c7748';
 
-    /**
-     * @var NotifyClient
-     */
-    private $notifyClient;
+    private NotifyClient $notifyClient;
 
-    private $locale;
+    private string $locale;
 
-    /**
-     * EmailClient constructor.
-     * @param NotifyClient $notifyClient
-     */
     public function __construct(NotifyClient $notifyClient, string $locale)
     {
         $this->notifyClient = $notifyClient;
@@ -63,7 +56,7 @@ class EmailClient
      */
     public function sendAccountActivationEmail(string $recipient, string $activateAccountUrl)
     {
-        if ($this->locale === "cy") {
+        if ($this->locale === 'cy') {
             $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_ACCOUNT_ACTIVATION, [
                 'activate-account-url' => $activateAccountUrl,
             ]);
@@ -82,7 +75,7 @@ class EmailClient
      */
     public function sendAccountActivatedConfirmationEmail(string $recipient, string $signInLink)
     {
-        if ($this->locale === "cy") {
+        if ($this->locale === 'cy') {
             $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_ACCOUNT_ACTIVATED_CONFIRMATION, [
                 'sign-in-url' => $signInLink,
             ]);
@@ -100,7 +93,7 @@ class EmailClient
      */
     public function sendAlreadyRegisteredEmail(string $recipient)
     {
-        if ($this->locale === "cy") {
+        if ($this->locale === 'cy') {
             $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED);
         } else {
             $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED);
@@ -115,7 +108,7 @@ class EmailClient
      */
     public function sendPasswordResetEmail(string $recipient, string $passwordResetUrl)
     {
-        if ($this->locale === "cy") {
+        if ($this->locale === 'cy') {
             $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_PASSWORD_RESET, [
                 'password-reset-url' => $passwordResetUrl,
             ]);
@@ -133,7 +126,7 @@ class EmailClient
      */
     public function sendPasswordChangedEmail(string $recipient)
     {
-        if ($this->locale === "cy") {
+        if ($this->locale === 'cy') {
             $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_PASSWORD_CHANGE);
         } else {
             $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_PASSWORD_CHANGE);
@@ -148,7 +141,7 @@ class EmailClient
      */
     public function sendRequestChangeEmailToCurrentEmail(string $recipient, string $newEmailAddress)
     {
-        if ($this->locale === "cy") {
+        if ($this->locale === 'cy') {
             $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL, [
                 'new-email-address' => $newEmailAddress,
             ]);
@@ -167,7 +160,7 @@ class EmailClient
      */
     public function sendRequestChangeEmailToNewEmail(string $recipient, string $completeEmailChangeUrl)
     {
-        if ($this->locale === "cy") {
+        if ($this->locale === 'cy') {
             $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL, [
                 'verify-new-email-url' => $completeEmailChangeUrl,
             ]);
@@ -185,7 +178,7 @@ class EmailClient
      */
     public function sendSomeoneTriedToUseYourEmailInEmailResetRequest(string $recipient)
     {
-        if ($this->locale === "cy") {
+        if ($this->locale === 'cy') {
             $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE);
         } else {
             $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE);
@@ -205,8 +198,8 @@ class EmailClient
         string $referenceNumber,
         string $postCode,
         string $letterExpectedDate
-    ){
-        if ($this->locale === "cy") {
+    ) {
+        if ($this->locale === 'cy') {
             $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION, [
                 'reference_number' => $referenceNumber,
                 'postcode'         => $postCode,
