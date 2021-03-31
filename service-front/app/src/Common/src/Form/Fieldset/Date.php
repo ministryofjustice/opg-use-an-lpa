@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Common\Form\Fieldset;
 
 use Laminas\Form\Fieldset;
@@ -14,12 +16,7 @@ use Laminas\Form\Fieldset;
  */
 class Date extends Fieldset
 {
-    /**
-     * Date constructor.
-     * @param null $name
-     * @param array $options
-     */
-    public function __construct($name = null, $options = [])
+    public function __construct(?string $name = null, array $options = [])
     {
         parent::__construct($name, $options);
 
