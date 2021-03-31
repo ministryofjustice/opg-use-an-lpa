@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Common\Validator;
 
 use Laminas\Validator\AbstractValidator;
@@ -7,10 +9,13 @@ use Laminas\Validator\Regex;
 
 class PasswordValidator extends AbstractValidator
 {
-    const MUST_INCLUDE_DIGIT      = 'mustIncludeDigit';
-    const MUST_INCLUDE_LOWER_CASE = 'mustIncludeLowerCase';
-    const MUST_INCLUDE_UPPER_CASE = 'mustIncludeUpperCase';
+    public const MUST_INCLUDE_DIGIT      = 'mustIncludeDigit';
+    public const MUST_INCLUDE_LOWER_CASE = 'mustIncludeLowerCase';
+    public const MUST_INCLUDE_UPPER_CASE = 'mustIncludeUpperCase';
 
+    /**
+     * @var string[]
+     */
     protected $messageTemplates = [
         self::MUST_INCLUDE_DIGIT      => 'Password must include a number',
         self::MUST_INCLUDE_LOWER_CASE => 'Password must include a lower case letter',
