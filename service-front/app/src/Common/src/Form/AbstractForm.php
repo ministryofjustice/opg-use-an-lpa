@@ -5,24 +5,18 @@ declare(strict_types=1);
 namespace Common\Form;
 
 use Common\Form\Element\Csrf;
-use Common\Validator\CsrfGuardValidator;
-use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Form\Exception\InvalidArgumentException;
 use Laminas\Form\Form;
+use Mezzio\Csrf\CsrfGuardInterface;
 
 abstract class AbstractForm extends Form
 {
+    public const NOT_SAME = 'notSame';
 
-
-    public const NOT_SAME = CSRFGuardValidator::NOT_SAME;
     /**
-     * Error messages
-     * @var array
+     * Error messages templates
      */
-    protected array $messageTemplates = [
-        self::NOT_SAME=> "As you have not used this service for over 20 minutes," .
-            "the page has timed out. We've now refreshed the page - please try to sign in again."
-    ];
+    protected array $messageTemplates = [];
 
     /**
      * @var array This, and its associated functions below allow form level error messages not attached to
@@ -30,10 +24,7 @@ abstract class AbstractForm extends Form
      */
     protected array $errorMessages = [];
 
-    public function __construct(
-        string $formName, CsrfGuardInterface
-        $csrfGuard
-    )
+    public function __construct(string $formName, CsrfGuardInterface $csrfGuard)
     {
         parent::__construct($formName);
 
@@ -43,9 +34,6 @@ abstract class AbstractForm extends Form
                 [
                     'csrf_options' => [
                         'guard' => $csrfGuard,
-                        'messageTemplates' => [
-                            CsrfGuardValidator::NOT_SAME => $this->messageTemplates[self::NOT_SAME]
-                        ],
                     ],
                 ]
             )
@@ -59,13 +47,13 @@ abstract class AbstractForm extends Form
      * @param string $messageKey The key to a message stored in the messageTemplates array of the form
      * @param string $elementName An optional field name to link the error message to
      */
-    public function addErrorMessage(string $messageKey, string $elementName = ""): void
+    public function addErrorMessage(string $messageKey, string $elementName = ''): void
     {
         if (! isset($this->messageTemplates[$messageKey])) {
             throw new InvalidArgumentException("No message template exists for key '$messageKey'");
         }
 
-        if ($elementName !== "" && ! $this->has($elementName)) {
+        if ($elementName !== '' && ! $this->has($elementName)) {
             throw new InvalidArgumentException("No form element named '$elementName' found");
         }
 
@@ -92,6 +80,7 @@ abstract class AbstractForm extends Form
         } else {
             $messages = array_merge($this->getErrorMessages(), parent::getMessages($elementName));
         }
+
         return $messages;
     }
 }

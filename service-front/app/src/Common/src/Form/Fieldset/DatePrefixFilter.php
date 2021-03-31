@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Common\Form\Fieldset;
 
 use Laminas\Filter\AbstractFilter;
@@ -34,8 +36,8 @@ class DatePrefixFilter extends AbstractFilter
      */
     protected function formatWithLeadingZero($value): array
     {
-        $value['day'] = str_pad($value['day'], 2, 0, STR_PAD_LEFT);
-        $value['month'] = str_pad($value['month'], 2, 0, STR_PAD_LEFT);
+        $value['day'] = str_pad($value['day'], 2, '0', STR_PAD_LEFT);
+        $value['month'] = str_pad($value['month'], 2, '0', STR_PAD_LEFT);
 
         return $value;
     }

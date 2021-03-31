@@ -72,19 +72,19 @@ Feature: A user of the system is able to login
   Scenario: A hacker attempts to forge the full CSRF value
     Given I access the login form
     When I hack the CSRF value with 'ipwnedthissiterequest'
-    Then I should see relevant Security validation failed. Please try again. message
+    Then I should see relevant As you have not used this service for over 20 minutes, the page has timed out. We've now refreshed the page - please try to sign in again message
 
   @ui @security
   Scenario: A hacker attempts to forge the request id from CSRF value
     Given I access the login form
     When I hack the request id of the CSRF value
-    Then I should see relevant Security validation failed. Please try again. message
+    Then I should see relevant As you have not used this service for over 20 minutes, the page has timed out. We've now refreshed the page - please try to sign in again message
 
   @ui @security
   Scenario: A hacker attempts to forge the token from CSRF value
     Given I access the login form
     When I hack the token of the CSRF value
-    Then I should see relevant Security validation failed. Please try again. message
+    Then I should see relevant As you have not used this service for over 20 minutes, the page has timed out. We've now refreshed the page - please try to sign in again message
 
   @ui @security
   Scenario: A hacker cannot access the site with an empty CSRF value

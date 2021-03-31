@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Actor\Handler;
-
 
 use Common\Handler\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
