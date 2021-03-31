@@ -18,6 +18,8 @@ use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\OlderLpaApiResponse;
+use DateTime;
+use IntlDateFormatter;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
 use Mezzio\Helper\UrlHelper;
@@ -25,7 +27,6 @@ use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
-use DateTime;
 
 /**
  * Class CheckYourAnswersHandler
@@ -147,14 +148,13 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ['user'  => $this->user]
                     ));
                 case OlderLpaApiResponse::SUCCESS:
-
                     $letterExpectedDate = (new Carbon())->addWeeks(2);
 
                     $this->emailClient->sendActivationKeyRequestConfirmationEmail(
                         $this->user->getDetails()['Email'],
                         (string)$this->data['reference_number'],
                         $this->data['postcode'],
-                        $letterExpectedDate->format('j F Y')
+                        $this->localisedLetterExpectedDate($letterExpectedDate)
                     );
 
                     return new HtmlResponse(
@@ -189,5 +189,28 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 'user'  => $this->user
             ]
         ));
+    }
+
+    /**
+     * Uses duplicated code from the LpaExtension class to ensure that the date we send out in the
+     * letters if correctly localised.
+     *
+     * Violation of DRY so TODO: https://opgtransform.atlassian.net/browse/UML-1370
+     *
+     * @param \DateTimeInterface $date
+     *
+     * @return string
+     */
+    private function localisedLetterExpectedDate(\DateTimeInterface $date): string
+    {
+        $formatter = IntlDateFormatter::create(
+            \Locale::getDefault(),
+            IntlDateFormatter::LONG,
+            IntlDateFormatter::NONE,
+            'Europe/London',
+            IntlDateFormatter::GREGORIAN
+        );
+
+        return $formatter->format($date);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * The majority of this class is taken from mezzio-session-cache.
  * It's been modified to used the cookie for the encrypted session data, rather than the cache id.
@@ -9,8 +11,6 @@
  * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
  * @license   https://github.com/mezzio/mezzio-session-cache/blob/master/LICENSE.md New BSD License
  */
-
-declare(strict_types=1);
 
 namespace Common\Service\Session;
 

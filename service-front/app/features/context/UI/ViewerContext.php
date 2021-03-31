@@ -618,9 +618,8 @@ class ViewerContext implements Context
     {
         $this->iAmTakenBackToTheEnterCodePage();
         $this->ui->assertPageContainsText(
-            'Do you want to continue?' .
-            ' You have not used this service for 30 minutes.' .
-            ' Click continue to use any details you entered'
+            'As you have not used this service for over 20 minutes, the page has timed out. We\'ve now ' .
+                'refreshed the page - please try to sign in again'
         );
     }
 
