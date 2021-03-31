@@ -5,8 +5,8 @@ Creating the viewer activity Table
 
 ```SQL
 CREATE EXTERNAL TABLE IF NOT EXISTS viewer_activity (
-         `viewer_code` string,
-         `viewed` timestamp
+    Item struct <ViewerCode:struct<S:string>,
+                 Viewed:struct<S:date>>
 )
 ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
 WITH SERDEPROPERTIES (
@@ -19,12 +19,12 @@ Creating the viewer codes Table
 
 ```SQL
 CREATE EXTERNAL TABLE IF NOT EXISTS viewer_codes (
-         `viewer_code` string,
-         `added` timestamp,
-         `expires` timestamp,
-         `organisation` string,
-         `SiriusUid` string,
-         `UserLpaActor` string
+    Item struct <ViewerCode:struct<S:string>,
+                  Added:struct<S:date>,
+                  Expires:struct<S:date>,
+                  Organisation:struct<S:string>,
+                  SiriusUid:struct<S:string>,
+                  UserLpaActor:struct<S:string>>
 )
 ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
 WITH SERDEPROPERTIES (
@@ -37,9 +37,9 @@ Creating the actor users Table
 
 ```SQL
 CREATE EXTERNAL TABLE IF NOT EXISTS actor_users (
-         `Id` string,
-         `Email` string,
-         `LastLogin` timestamp
+    Item struct <Id:struct<S:string>,
+                  Email:struct<S:string>,
+                  LastLogin:struct<S:date>>
 )
 ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
 WITH SERDEPROPERTIES (
@@ -52,11 +52,11 @@ Creating the user-lpa-actor map Table
 
 ```SQL
 CREATE EXTERNAL TABLE IF NOT EXISTS user_lpa_actor_map (
-         `Id` string,
-         `ActorId` string,
-         `Added` timestamp,
-         `SiriusUid` string,
-         `UserId` string
+    Item struct <Id:struct<S:string>,
+                ActorId:struct<S:string>,
+                Added:struct<S:date>,
+                SiriusUid:struct<S:string>,
+                UserId:struct<S:string>>
 )
 ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
 WITH SERDEPROPERTIES (
