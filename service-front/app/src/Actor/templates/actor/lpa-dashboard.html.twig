@@ -63,7 +63,7 @@
                         {% set lpa = lpaData['lpa'] %}
                         {% set actorToken = lpaData['user-lpa-actor-token'] %}
                         {% set actorActive = lpaData['actorActive'] %}
-                        {% set activeCodeCount = lpaData['activeCodeCount'] %}
+                        {% set activeCodeCount = 0 %}
                         {% set caseSubtype = lpa.caseSubtype == 'pfa' ? 'Property and finance'| trans : 'Health and welfare'| trans %}
                         {% set applicationHasRestrictions = lpa.applicationHasRestrictions %}
                         {% set applicationHasGuidance = lpa.applicationHasGuidance %}
