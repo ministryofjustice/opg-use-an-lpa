@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-03-15T10:38:18+00:00\n"
+"POT-Creation-Date: 2021-03-24T17:14:57+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -9,6 +9,7 @@ msgid "Your new access code"
 msgstr ""
 
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:22
+#: src/Actor/templates/actor/cannot-send-activation-key.html.twig:23
 #: src/Actor/templates/actor/check-access-codes.html.twig:15
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:14
@@ -1516,95 +1517,89 @@ msgstr ""
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:37
 msgctxt "error"
-msgid "Date of birth value must be provided in an array"
+msgid "Enter your date of birth"
 msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:38
 msgctxt "error"
-msgid "Enter your date of birth"
+msgid "Date of birth must be a real date"
 msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:39
 msgctxt "error"
-msgid "Date of birth must be a real date"
+msgid "Date of birth must include a day"
 msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:40
 msgctxt "error"
-msgid "Date of birth must include a day"
+msgid "Date of birth must include a month"
 msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:41
 msgctxt "error"
-msgid "Date of birth must include a month"
+msgid "Date of birth must include a year"
 msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:42
 msgctxt "error"
-msgid "Date of birth must include a year"
+msgid "Date of birth must be in the past"
 msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:43
 msgctxt "error"
-msgid "Date of birth must be in the past"
-msgstr ""
-
-#. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:44
-msgctxt "error"
 msgid "Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18"
 msgstr ""
 
 #. Create viewer code
-#: src/Actor/templates/actor/form-error-messages.html.twig:47
+#: src/Actor/templates/actor/form-error-messages.html.twig:55
 msgctxt "error"
 msgid "Enter an organisation name"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:50
+#: src/Actor/templates/actor/form-error-messages.html.twig:58
 msgctxt "error"
 msgid "Enter your current password"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:51
+#: src/Actor/templates/actor/form-error-messages.html.twig:59
 msgctxt "error"
 msgid "Current password is incorrect"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:52
+#: src/Actor/templates/actor/form-error-messages.html.twig:60
 msgctxt "error"
 msgid "Enter your new password"
 msgstr ""
 
 #. Change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:53
+#: src/Actor/templates/actor/form-error-messages.html.twig:61
 msgctxt "error"
 msgid "New password and confirm new password do not match"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:54
+#: src/Actor/templates/actor/form-error-messages.html.twig:62
 msgctxt "error"
 msgid "Enter your password again to confirm it"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:57
+#: src/Actor/templates/actor/form-error-messages.html.twig:65
 msgctxt "error"
 msgid "Confirm your email address"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:58
+#: src/Actor/templates/actor/form-error-messages.html.twig:66
 msgctxt "error"
 msgid "The emails did not match"
 msgstr ""
@@ -2359,15 +2354,15 @@ msgstr ""
 msgid "I want to check another LPA"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:144
+#: src/Common/templates/partials/govuk_form.html.twig:145
 msgid "Day"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:154
+#: src/Common/templates/partials/govuk_form.html.twig:155
 msgid "Month"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:164
+#: src/Common/templates/partials/govuk_form.html.twig:165
 msgid "Year"
 msgstr ""
 
@@ -2991,7 +2986,7 @@ msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
-#: src/Actor/src/Handler/CheckLpaHandler.php:279
+#: src/Actor/src/Handler/CheckLpaHandler.php:280
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr ""
@@ -3001,12 +2996,12 @@ msgid "Cancelled on %cancellationDate%"
 msgstr ""
 
 #. Show password label
-#: src/Common/templates/partials/govuk_form.html.twig:228
+#: src/Common/templates/partials/govuk_form.html.twig:229
 msgid "Show"
 msgstr ""
 
 #. Hide password label
-#: src/Common/templates/partials/govuk_form.html.twig:229
+#: src/Common/templates/partials/govuk_form.html.twig:230
 msgid "Hide"
 msgstr ""
 
@@ -3698,10 +3693,6 @@ msgstr ""
 msgid "If the paper LPA has been lost or destroyed, you can ask OPG for an office copy by calling 0300 456 0300 - office copies cost £35."
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-send-activation-key.html.twig:23
-msgid "Back to LPAs"
-msgstr ""
-
 #: src/Actor/templates/actor/request-activation-key.html.twig:23
 msgid "To add an LPA to your account, you need an activation key. We'll send an activation key by post to the address we have for you on our records."
 msgstr ""
@@ -3766,11 +3757,14 @@ msgstr ""
 msgid "%organisation% on %date%"
 msgstr ""
 
-
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:58
 msgid "You have %count% LPA in your account"
 msgid_plural "You have %count% LPAs in your account"
 msgstr[0] ""
+
+#: src/Actor/templates/actor/request-activation-key-info.html.twig:21
+msgid "Check if you can ask for an activation key"
+msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:23
 msgid "You can only ask for an activation key if:"
@@ -3832,6 +3826,44 @@ msgstr ""
 msgid "your name or address is spelt wrong on the LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key-info.html.twig:21
-msgid "Check if you can ask for an activation key"
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:46
+msgctxt "error"
+msgid "Enter the OPG reference number"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:47
+msgctxt "error"
+msgid "The OPG reference number you entered is too long"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:48
+msgctxt "error"
+msgid "The OPG reference number you entered is too short"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:49
+msgctxt "error"
+msgid "Enter the 12 numbers of the OPG reference number. Do not include letters or other characters"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:50
+msgctxt "error"
+msgid "Enter your first names"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:51
+msgctxt "error"
+msgid "Enter your last name"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:52
+msgctxt "error"
+msgid "Enter your postcode"
 msgstr ""

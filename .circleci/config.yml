@@ -47,69 +47,171 @@ workflows:
       - slack_notify_stats:
           name: slack_notify_stats
 
+  dependabot_build:
+      jobs:
+        - cancel_redundant_builds:
+            name: cancel_previous_jobs
+            filters: { branches: { only: [/dependabot\/.*/] } }
+
+        - use-my-lpa/lint_terraform:
+            name: lint_terraform
+            filters: { branches: { only: [/dependabot\/.*/] } }
+
+        - use-my-lpa/node_test_web:
+            name: test_web
+            filters: { branches: { only: [/dependabot\/.*/] } }
+
+        - use-my-lpa/node_build_web:
+            name: build_web
+            filters: { branches: { only: [/dependabot\/.*/] } }
+            requires: [test_web]
+
+        - use-my-lpa/node_test_service_pdf:
+            name: test_pdf
+            filters: { branches: { only: [/dependabot\/.*/] } }
+
+        - use-my-lpa/docker_build_front_app:
+            name: app_front_build
+            filters: { branches: { only: [/dependabot\/.*/] } }
+            requires: [build_web]
+
+        - use-my-lpa/docker_build_front_web:
+            name: web_front_build
+            filters: { branches: { only: [/dependabot\/.*/] } }
+            requires: [build_web]
+
+        - use-my-lpa/docker_build_api_app:
+            name: app_api_build
+            filters: { branches: { only: [/dependabot\/.*/] } }
+
+        - use-my-lpa/docker_build_api_web:
+            name: web_api_build
+            filters: { branches: { only: [/dependabot\/.*/] } }
+
+        - use-my-lpa/docker_build_pdf:
+            name: pdf_build
+            filters: { branches: { only: [/dependabot\/.*/] } }
+            requires: [test_pdf]
+
+        - use-my-lpa/codecov_upload:
+            name: codecov_upload
+            filters: { branches: { only: [/dependabot\/.*/] } }
+            requires:
+              [
+                app_front_build,
+                app_api_build,
+                test_web,
+                test_pdf,
+              ]
+
+        # Required end of workflow job
+        - use-my-lpa/end_of_workflow:
+            name: end_of_workflow
+            requires: [codecov_upload]
+
+
   pr_build:
       jobs:
         - cancel_redundant_builds:
             name: cancel_previous_jobs
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
 
         - use-my-lpa/lint_terraform:
             name: lint_terraform
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
 
         - use-my-lpa/node_test_web:
             name: test_web
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
 
         - use-my-lpa/docker_build_lambda_image:
             name: build_clsf_to_sqs_lambda_image
             account_id: "367815980639"
             container_repo_account: development
             lambda_name: clsf-to-sqs
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
 
         - use-my-lpa/docker_build_lambda_image:
             name: build_ship_to_opg_metrics_lambda_image
             account_id: "367815980639"
             container_repo_account: development
             lambda_name: ship-to-opg-metrics
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
 
         - use-my-lpa/node_build_web:
             name: build_web
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
             requires: [test_web]
 
         - use-my-lpa/node_test_service_pdf:
             name: test_pdf
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
 
         - use-my-lpa/docker_build_front_app:
             name: app_front_build
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
             requires: [build_web]
 
         - use-my-lpa/docker_build_front_web:
             name: web_front_build
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
             requires: [build_web]
 
         - use-my-lpa/docker_build_api_app:
             name: app_api_build
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
 
         - use-my-lpa/docker_build_api_web:
             name: web_api_build
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
 
         - use-my-lpa/docker_build_pdf:
             name: pdf_build
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
             requires: [test_pdf]
 
         - use-my-lpa/codecov_upload:
             name: codecov_upload
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
             requires:
               [
                 app_front_build,
@@ -121,12 +223,18 @@ workflows:
             # Provision and test development
         - use-my-lpa/plan_shared_terraform:
             name: dev_plan_shared_terraform
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
             requires: [cancel_previous_jobs,lint_terraform]
 
         - use-my-lpa/apply_environment_terraform:
             name: dev_apply_environment_terraform
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
             requires:
               [
                 cancel_previous_jobs,
@@ -140,7 +248,10 @@ workflows:
 
         - ecr_scan_results:
             name: ecr_scan_results
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
             requires:
               [
                 app_front_build,
@@ -153,18 +264,32 @@ workflows:
 
         - use-my-lpa/seed_database:
             name: dev_seed_database
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
             requires: [dev_apply_environment_terraform]
 
         - use-my-lpa/run_behat_suite:
             name: dev_run_behat_tests
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
             requires: [dev_seed_database]
 
         - slack_notify_domain:
             name: post_environment_domains
-            filters: { branches: { ignore: [master] } }
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
             requires: [dev_run_behat_tests]
+
+        # Required end of workflow job
+        - use-my-lpa/end_of_workflow:
+            name: end_of_workflow
+            requires: [post_environment_domains]
 
   path_to_live:
       jobs:
@@ -329,6 +454,8 @@ workflows:
             name: post_production_release_message
             filters: { branches: { only: [master] } }
             requires: [prod_run_healthcheck_test]
+
+
 
 
 orbs:
@@ -1171,6 +1298,17 @@ orbs:
                 actor_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
                 actor_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$actor_fqdn/healthcheck)
                 [[ $actor_response == 200 ]] || (echo "Error with actor health check. HTTP status: ${actor_response}" && exit 1)
+
+      end_of_workflow:
+        #
+        # creates a common ending for all PR workflows
+        #
+        executor: python
+        steps:
+          - run:
+              name: End of Workflow
+              command: |
+                echo "end of workflow"
 
 jobs:
   slack_environment_redeploy:

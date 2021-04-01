@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Common\Form\Fieldset;
 
 use Laminas\Filter\AbstractFilter;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Common\Validator;
 
 use DateTime;
@@ -10,9 +12,12 @@ use DateTime;
  */
 class DobValidator extends DateValidator
 {
-    const AGE_NEGATIVE = 'ageNegative';
-    const AGE_TOO_YOUNG = 'ageTooYoung';
+    public const AGE_NEGATIVE = 'ageNegative';
+    public const AGE_TOO_YOUNG = 'ageTooYoung';
 
+    /**
+     * @var string[]
+     */
     protected $messageTemplates = [
         //  From parent
         self::DATE_INVALID_FORMAT => 'Date of birth value must be provided in an array',

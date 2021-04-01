@@ -309,7 +309,7 @@ class LpaContext implements Context
         $code1 = [
             'SiriusUid' => $this->lpaUid,
             'Added' => '2020-01-01T00:00:00Z',
-            'Expires' => $code1Expiry,
+            'Expires' => (new DateTime())->modify($code1Expiry)->format('Y-m-d'),
             'UserLpaActor' => $this->userLpaActorToken,
             'Organisation' => $this->organisation,
             'ViewerCode' => $this->accessCode,
@@ -318,7 +318,7 @@ class LpaContext implements Context
         $code2 = [
             'SiriusUid' => $this->lpaUid,
             'Added' => '2020-01-01T00:00:00Z',
-            'Expires' => $code2Expiry,
+            'Expires' => (new DateTime())->modify($code2Expiry)->format('Y-m-d'),
             'UserLpaActor' => '123456789',
             'Organisation' => 'HSBC',
             'ViewerCode' => 'XYZABC12345',
@@ -463,14 +463,14 @@ class LpaContext implements Context
         assertEquals($response[0]['Organisation'], $this->organisation);
         assertEquals($response[0]['ViewerCode'], $this->accessCode);
         assertEquals($response[0]['ActorId'], $this->actorId);
-        assertEquals($response[0]['Expires'], $code1Expiry);
+        assertEquals($response[0]['Expires'], (new DateTime())->modify($code1Expiry)->format('Y-m-d'));
 
         assertEquals($response[1]['SiriusUid'], $this->lpaUid);
         assertEquals($response[1]['UserLpaActor'], '123456789');
         assertEquals($response[1]['Organisation'], 'HSBC');
         assertEquals($response[1]['ViewerCode'], 'XYZABC12345');
         assertEquals($response[1]['ActorId'], 23);
-        assertEquals($response[1]['Expires'], $code2Expiry);
+        assertEquals($response[1]['Expires'], (new DateTime())->modify($code2Expiry)->format('Y-m-d'));
     }
 
     /**

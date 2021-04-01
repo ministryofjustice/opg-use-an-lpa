@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Common\Validator;
 
 use Laminas\Validator\EmailAddress as LaminasEmailAddressValidator;

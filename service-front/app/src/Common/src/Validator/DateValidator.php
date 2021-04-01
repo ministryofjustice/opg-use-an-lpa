@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Common\Validator;
 
+use DateTime;
 use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\Regex;
-use DateTime;
 
 /**
  * Class DateValidator
@@ -12,13 +14,16 @@ use DateTime;
  */
 class DateValidator extends AbstractValidator
 {
-    const DATE_INVALID_FORMAT = 'dateInvalidFormat';
-    const DATE_EMPTY          = 'dateEmpty';
-    const DATE_INVALID        = 'dateInvalid';
-    const DAY_INCOMPLETE      = 'dayIncomplete';
-    const MONTH_INCOMPLETE    = 'monthIncomplete';
-    const YEAR_INCOMPLETE     = 'yearIncomplete';
+    public const DATE_INVALID_FORMAT = 'dateInvalidFormat';
+    public const DATE_EMPTY          = 'dateEmpty';
+    public const DATE_INVALID        = 'dateInvalid';
+    public const DAY_INCOMPLETE      = 'dayIncomplete';
+    public const MONTH_INCOMPLETE    = 'monthIncomplete';
+    public const YEAR_INCOMPLETE     = 'yearIncomplete';
 
+    /**
+     * @var string[]
+     */
     protected $messageTemplates = [
         self::DATE_INVALID_FORMAT => 'Date value must be provided in an array',
         self::DATE_EMPTY          => 'Enter a date',

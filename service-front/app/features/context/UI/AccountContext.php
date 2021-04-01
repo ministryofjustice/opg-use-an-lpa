@@ -734,7 +734,6 @@ class AccountContext implements Context
 
         $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->fillField('new_password', $password);
-        $this->ui->fillField('new_password_confirm', $password);
 
         $this->ui->pressButton('Change password');
     }
@@ -1391,7 +1390,6 @@ class AccountContext implements Context
 
         $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->fillField('new_password', $newPassword);
-        $this->ui->fillField('new_password_confirm', $newPassword);
 
         $this->ui->pressButton('Change password');
     }
@@ -1415,7 +1413,6 @@ class AccountContext implements Context
 
         $this->ui->fillField('current_password', 'wrongPassword');
         $this->ui->fillField('new_password', $newPassword);
-        $this->ui->fillField('new_password_confirm', $newPassword);
 
         $this->ui->pressButton('Change password');
     }
