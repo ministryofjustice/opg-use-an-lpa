@@ -16,10 +16,10 @@ Feature: The user is able to see correct information on their dashboard
     Then I can see that my LPA has <noActiveCodes> with expiry dates <code1Expiry> <code2Expiry>
 
     Examples:
-      | noActiveCodes                | code1Expiry                | code2Expiry               |
-      | 2 active codes               |  2041-04-01T23:59:59+01:00 | 2041-04-01T23:59:59+01:00 |
-      | 1 active code                |  2019-01-05T23:59:59+00:00 | 2022-01-05T23:59:59+00:00 |
-      | No organisations have access |  2019-01-05T23:59:59+00:00 | 2019-01-05T23:59:59+00:00 |
+      | noActiveCodes                | code1Expiry | code2Expiry |
+      | 2 active codes               |  +3weeks    | +3weeks     |
+      | 1 active code                |  -1week     | +3weeks     |
+      | No organisations have access |  -1day      | -1week      |
 
   @integration @ui
   Scenario: As a user I can see the number of active access codes an LPA has
