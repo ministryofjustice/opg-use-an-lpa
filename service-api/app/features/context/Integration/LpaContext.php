@@ -194,7 +194,7 @@ class LpaContext extends BaseIntegrationContext
         $code1 = [
             'SiriusUid' => $this->lpaUid,
             'Added' => '2020-01-01T00:00:00Z',
-            'Expires' => $code1Expiry,
+            'Expires' => (new DateTime())->modify($code1Expiry)->format('Y-m-d'),
             'UserLpaActor' => $this->userLpaActorToken,
             'Organisation' => $this->organisation,
             'ViewerCode' => $this->accessCode,
@@ -203,7 +203,7 @@ class LpaContext extends BaseIntegrationContext
         $code2 = [
             'SiriusUid' => $this->lpaUid,
             'Added' => '2020-01-01T00:00:00Z',
-            'Expires' => $code2Expiry,
+            'Expires' => (new DateTime())->modify($code2Expiry)->format('Y-m-d'),
             'UserLpaActor' => $this->userLpaActorToken,
             'Organisation' => $this->organisation,
             'ViewerCode' => $this->accessCode,
@@ -303,9 +303,15 @@ class LpaContext extends BaseIntegrationContext
             assertEquals($codesWithStatuses[$i]['ViewerCode'], $this->accessCode);
 
             if ($i == 0) {
-                assertEquals($codesWithStatuses[$i]['Expires'], $code1Expiry);
+                assertEquals(
+                    $codesWithStatuses[$i]['Expires'],
+                    (new DateTime())->modify($code1Expiry)->format('Y-m-d')
+                );
             } else {
-                assertEquals($codesWithStatuses[$i]['Expires'], $code2Expiry);
+                assertEquals(
+                    $codesWithStatuses[$i]['Expires'],
+                    (new DateTime())->modify($code2Expiry)->format('Y-m-d')
+                );
             }
         }
 
