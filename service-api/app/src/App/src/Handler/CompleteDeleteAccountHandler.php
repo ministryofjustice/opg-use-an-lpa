@@ -14,7 +14,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 /**
  * Class CompleteDeleteAccountHandler
  * @package App\Handler
- * @codCoverageIgnore
+ * @codeCoverageIgnore
  */
 class CompleteDeleteAccountHandler implements RequestHandlerInterface
 {

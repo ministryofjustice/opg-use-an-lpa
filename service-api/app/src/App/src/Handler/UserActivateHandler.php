@@ -14,6 +14,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 /**
  * Class UserActivateHandler
  * @package App\Handler
+ * @codeCoverageIgnore
  */
 class UserActivateHandler implements RequestHandlerInterface
 {
