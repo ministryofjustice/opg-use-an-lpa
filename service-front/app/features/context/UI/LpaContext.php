@@ -544,7 +544,7 @@ class LpaContext implements Context
             'Organisation' => $this->organisation,
             'UserLpaActor' => $this->userLpaActorToken,
             'ViewerCode' => $this->accessCode,
-            'Expires' => $code1Expiry,
+            'Expires' => (new DateTime())->modify($code1Expiry)->format('Y-m-d'),
             'Viewed' => false,
             'ActorId' => $this->actorId,
         ];
@@ -555,7 +555,7 @@ class LpaContext implements Context
             'Organisation' => $this->organisation,
             'UserLpaActor' => $this->userLpaActorToken,
             'ViewerCode' => $this->accessCode,
-            'Expires' => $code2Expiry,
+            'Expires' => (new DateTime())->modify($code2Expiry)->format('Y-m-d'),
             'Viewed' => false,
             'ActorId' => $this->actorId,
         ];
