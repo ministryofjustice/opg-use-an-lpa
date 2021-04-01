@@ -10,6 +10,7 @@ use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Log\RequestTracing;
+use App\Service\Lpa\AddLpa;
 use App\Service\Lpa\DeleteLpa;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
@@ -171,6 +172,174 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @When /^I attempt to add the same LPA again REFACTORED$/
+     */
+    public function iAttemptToAddTheSameLPAAgainREFACTORED()
+    {
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $addLpaService = $this->container->get(AddLpa::class);
+
+        try {
+            $addLpaService->validateAddLpaData(
+                [
+                    'actor-code' => $this->oneTimeCode,
+                    'uid' => $this->lpaUid,
+                    'dob' => $this->userDob,
+                ],
+                $this->userId
+            );
+        } catch (BadRequestException $ex) {
+            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            assertEquals('LPA already added', $ex->getMessage());
+            assertArrayHasKey('lpa', $ex->getAdditionalData());
+            assertArrayHasKey('actor', $ex->getAdditionalData());
+            assertArrayHasKey('user-lpa-actor-token', $ex->getAdditionalData());
+            return;
+        }
+
+        throw new ExpectationFailedException('LPA already added exception should have been thrown');
+    }
+
+    /**
+     * @When /^I request to add an LPA which has a status other than registered$/
+     */
+    public function iRequestToAddAnLPAWhichHasAStatusOtherThanRegistered()
+    {
+        $this->lpa->status = 'Cancelled';
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // The underlying SmartGamma library has a very naive match processor for
+        // passed in response values and will assume lpaUid's and actorLpaId's are integers.
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/validate',
+            [
+                'lpa' => $this->lpaUid,
+                'dob' => $this->userDob,
+                'code' => $this->oneTimeCode,
+            ],
+            StatusCodeInterface::STATUS_OK,
+            [
+                'actor' => $this->actorLpaId,
+            ],
+        );
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $addLpaService = $this->container->get(AddLpa::class);
+
+        try {
+            $addLpaService->validateAddLpaData(
+                [
+                    'actor-code' => $this->oneTimeCode,
+                    'uid' => $this->lpaUid,
+                    'dob' => $this->userDob,
+                ],
+                $this->userId
+            );
+        } catch (BadRequestException $ex) {
+            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            assertEquals('LPA status is not registered', $ex->getMessage());
+            return;
+        }
+        throw new ExpectationFailedException('Exception should have been thrown due to invalid LPA status');
+    }
+
+    /**
+     * @When /^I request to add an LPA that does not exist REFACTORED$/
+     */
+    public function iRequestToAddAnLPAThatDoesNotExistREFACTORED()
+    {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // The underlying SmartGamma library has a very naive match processor for
+        // passed in response values and will assume lpaUid's and actorLpaId's are integers.
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/validate',
+            [
+                'lpa' => $this->lpaUid,
+                'dob' => $this->userDob,
+                'code' => $this->oneTimeCode,
+            ],
+            StatusCodeInterface::STATUS_OK,
+            [
+                'actor' => $this->actorLpaId,
+            ],
+        );
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_NOT_FOUND,
+        );
+
+        $addLpaService = $this->container->get(AddLpa::class);
+
+        try {
+            $addLpaService->validateAddLpaData(
+                [
+                    'actor-code' => $this->oneTimeCode,
+                    'uid' => $this->lpaUid,
+                    'dob' => $this->userDob,
+                ],
+                $this->userId
+            );
+        } catch (NotFoundException $ex) {
+            assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
+            assertEquals('Code validation failed', $ex->getMessage());
+            return;
+        }
+        throw new ExpectationFailedException('LPA should not have been found');
+    }
+
+    /**
+     * @Then /^I should be told that I have already added this LPA$/
+     */
+    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @Then /^I can see all of my access codes and their details$/
      */
     public function iCanSeeAllOfMyAccessCodesAndTheirDetails()
@@ -194,7 +363,7 @@ class LpaContext extends BaseIntegrationContext
         $code1 = [
             'SiriusUid' => $this->lpaUid,
             'Added' => '2020-01-01T00:00:00Z',
-            'Expires' => $code1Expiry,
+            'Expires' => (new DateTime())->modify($code1Expiry)->format('Y-m-d'),
             'UserLpaActor' => $this->userLpaActorToken,
             'Organisation' => $this->organisation,
             'ViewerCode' => $this->accessCode,
@@ -203,7 +372,7 @@ class LpaContext extends BaseIntegrationContext
         $code2 = [
             'SiriusUid' => $this->lpaUid,
             'Added' => '2020-01-01T00:00:00Z',
-            'Expires' => $code2Expiry,
+            'Expires' => (new DateTime())->modify($code2Expiry)->format('Y-m-d'),
             'UserLpaActor' => $this->userLpaActorToken,
             'Organisation' => $this->organisation,
             'ViewerCode' => $this->accessCode,
@@ -303,9 +472,15 @@ class LpaContext extends BaseIntegrationContext
             assertEquals($codesWithStatuses[$i]['ViewerCode'], $this->accessCode);
 
             if ($i == 0) {
-                assertEquals($codesWithStatuses[$i]['Expires'], $code1Expiry);
+                assertEquals(
+                    $codesWithStatuses[$i]['Expires'],
+                    (new DateTime())->modify($code1Expiry)->format('Y-m-d')
+                );
             } else {
-                assertEquals($codesWithStatuses[$i]['Expires'], $code2Expiry);
+                assertEquals(
+                    $codesWithStatuses[$i]['Expires'],
+                    (new DateTime())->modify($code2Expiry)->format('Y-m-d')
+                );
             }
         }
 
@@ -1245,6 +1420,55 @@ class LpaContext extends BaseIntegrationContext
 
         $validatedLpa = $actorCodeService->validateDetails($this->oneTimeCode, $this->lpaUid, $this->userDob);
 
+        assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
+    }
+
+    /**
+     * @When /^I request to add an LPA with valid details REFACTORED$/
+     */
+    public function iRequestToAddAnLPAWithValidDetailsREFACTORED()
+    {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // The underlying SmartGamma library has a very naive match processor for
+        // passed in response values and will assume lpaUid's and actorLpaId's are integers.
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/validate',
+            [
+                'lpa' => $this->lpaUid,
+                'dob' => $this->userDob,
+                'code' => $this->oneTimeCode,
+            ],
+            StatusCodeInterface::STATUS_OK,
+            [
+                'actor' => $this->actorLpaId,
+            ],
+        );
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $addLpaService = $this->container->get(AddLpa::class);
+
+        $validatedLpa = $addLpaService->validateAddLpaData(
+            [
+                'actor-code' => $this->oneTimeCode,
+                'uid' => $this->lpaUid,
+                'dob' => $this->userDob,
+            ],
+            $this->userId
+        );
+
+        assertArrayHasKey('actor', $validatedLpa);
+        assertArrayHasKey('lpa', $validatedLpa);
         assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
     }
 

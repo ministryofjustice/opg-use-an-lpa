@@ -59,6 +59,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         'lpa.cancel.code'
     );
 
+    $app->post('/v1/add-lpa/validate', App\Handler\AddLpaValidationHandler::class, 'lpa.add.validate');
+
     $app->post('/v1/actor-codes/summary', App\Handler\ActorCodeSummaryHandler::class, 'lpa.actor-code.summary');
     $app->post('/v1/actor-codes/confirm', App\Handler\ActorCodeConfirmHandler::class, 'lpa.actor-code.confirm');
 
