@@ -61,20 +61,6 @@ workflows:
             name: test_web
             filters: { branches: { only: [/dependabot\/.*/] } }
 
-        - use-my-lpa/docker_build_lambda_image:
-            name: build_clsf_to_sqs_lambda_image
-            account_id: "367815980639"
-            container_repo_account: development
-            lambda_name: clsf-to-sqs
-            filters: { branches: { only: [/dependabot\/.*/] } }
-
-        - use-my-lpa/docker_build_lambda_image:
-            name: build_ship_to_opg_metrics_lambda_image
-            account_id: "367815980639"
-            container_repo_account: development
-            lambda_name: ship-to-opg-metrics
-            filters: { branches: { only: [/dependabot\/.*/] } }
-
         - use-my-lpa/node_build_web:
             name: build_web
             filters: { branches: { only: [/dependabot\/.*/] } }
@@ -118,53 +104,11 @@ workflows:
                 test_pdf,
               ]
 
-            # Provision and test development
-        - use-my-lpa/plan_shared_terraform:
-            name: dev_plan_shared_terraform
-            filters: { branches: { only: [/dependabot\/.*/] } }
-            requires: [cancel_previous_jobs,lint_terraform]
+        # Required end of workflow job
+        - use-my-lpa/end_of_workflow:
+            name: end_of_workflow
+            requires: [codecov_upload]
 
-        - use-my-lpa/apply_environment_terraform:
-            name: dev_apply_environment_terraform
-            filters: { branches: { only: [/dependabot\/.*/] } }
-            requires:
-              [
-                cancel_previous_jobs,
-                dev_plan_shared_terraform,
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
-                pdf_build,
-              ]
-
-        - ecr_scan_results:
-            name: ecr_scan_results
-            filters: { branches: { only: [/dependabot\/.*/] } }
-            requires:
-              [
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
-                pdf_build,
-                dev_apply_environment_terraform,
-              ]
-
-        - use-my-lpa/seed_database:
-            name: dev_seed_database
-            filters: { branches: { only: [/dependabot\/.*/] } }
-            requires: [dev_apply_environment_terraform]
-
-        - use-my-lpa/run_behat_suite:
-            name: dev_run_behat_tests
-            filters: { branches: { only: [/dependabot\/.*/] } }
-            requires: [dev_seed_database]
-
-        - slack_notify_domain:
-            name: post_environment_domains
-            filters: { branches: { only: [/dependabot\/.*/] } }
-            requires: [dev_run_behat_tests]
 
   pr_build:
       jobs:
@@ -342,6 +286,11 @@ workflows:
               ] } }
             requires: [dev_run_behat_tests]
 
+        # Required end of workflow job
+        - use-my-lpa/end_of_workflow:
+            name: end_of_workflow
+            requires: [post_environment_domains]
+
   path_to_live:
       jobs:
         # Common tasks
@@ -505,6 +454,8 @@ workflows:
             name: post_production_release_message
             filters: { branches: { only: [master] } }
             requires: [prod_run_healthcheck_test]
+
+
 
 
 orbs:
@@ -1347,6 +1298,17 @@ orbs:
                 actor_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
                 actor_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$actor_fqdn/healthcheck)
                 [[ $actor_response == 200 ]] || (echo "Error with actor health check. HTTP status: ${actor_response}" && exit 1)
+
+      end_of_workflow:
+        #
+        # creates a common ending for all PR workflows
+        #
+        executor: python
+        steps:
+          - run:
+              name: End of Workflow
+              command: |
+                echo "end of workflow"
 
 jobs:
   slack_environment_redeploy:
