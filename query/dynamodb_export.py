@@ -128,7 +128,8 @@ class DynamoDBExporter:
             )
             for export in response['ExportSummaries']:
                 export_arn_hash = export['ExportArn'].rsplit('/', 1)[-1]
-                s3_path = '/{}/AWSDynamoDB/{}/data/'.format(
+                s3_path = 's3://{}/{}/AWSDynamoDB/{}/data/'.format(
+                    bucket_name,
                     s3_prefix,
                     export_arn_hash
                 )
