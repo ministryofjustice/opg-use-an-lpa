@@ -10,8 +10,6 @@ class DynamoDBExporter:
     export_time = ''
 
     def __init__(self, environment):
-        self.export_time = datetime.datetime.now()
-
         self.environment_details = self.set_environment_details(environment)
 
         aws_iam_session = self.set_iam_role_session()
@@ -116,7 +114,6 @@ class DynamoDBExporter:
                 print("exporting tables")
                 response = self.aws_dynamodb_client.export_table_to_point_in_time(
                     TableArn=table_arn,
-                    ExportTime=self.export_time,
                     S3Bucket=bucket_name,
                     S3BucketOwner=self.environment_details['account_id'],
                     S3Prefix=s3_prefix,
