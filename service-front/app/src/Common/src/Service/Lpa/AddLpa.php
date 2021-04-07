@@ -8,7 +8,7 @@ use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
 use Fig\Http\Message\StatusCodeInterface;
-use Mezzio\Session\SessionInterface;
+use ArrayObject;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
@@ -22,15 +22,18 @@ class AddLpa
     private LpaService $lpaService;
     private LoggerInterface $logger;
     private ApiClient $apiClient;
+    private ParseLpaData $parseLpaData;
 
     public function __construct(
         ApiClient $apiClient,
         LpaService $lpaService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ParseLpaData $parseLpaData
     ) {
         $this->apiClient = $apiClient;
         $this->lpaService = $lpaService;
         $this->logger = $logger;
+        $this->parseLpaData = $parseLpaData;
     }
 
     public function validateAddLpaData(
@@ -52,9 +55,16 @@ class AddLpa
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_BAD_REQUEST:
-                    return $this->badRequestReturned($lpaUid, $apiEx->getMessage(), $apiEx->getAdditionalData());
+                    return $this->badRequestReturned(
+                        $lpaUid,
+                        $apiEx->getMessage(),
+                        ($this->parseLpaData)($apiEx->getAdditionalData())
+                    );
                 case StatusCodeInterface::STATUS_NOT_FOUND:
-                    return $this->notFoundReturned($lpaUid, $apiEx->getAdditionalData());
+                    return $this->notFoundReturned(
+                        $lpaUid,
+                        ($this->parseLpaData)($apiEx->getAdditionalData())
+                    );
                 default:
                     // An API exception that we don't want to handle has been caught, pass it up the stack
                     throw $apiEx;
@@ -68,6 +78,8 @@ class AddLpa
                 'uId' => $lpaUid
             ]
         );
+
+        $lpaData = ($this->parseLpaData)($lpaData);
 
         return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_FOUND, $lpaData);
     }
@@ -83,7 +95,7 @@ class AddLpa
      * @return OlderLpaApiResponse
      * @throws RuntimeException
      */
-    private function badRequestReturned(int $lpaUid, string $message, array $additionalData): AddLpaApiResponse
+    private function badRequestReturned(int $lpaUid, string $message, ArrayObject $additionalData): AddLpaApiResponse
     {
         switch ($message) {
             case self::ADD_LPA_NOT_ELIGIBLE:
@@ -124,7 +136,7 @@ class AddLpa
      * @return OlderLpaApiResponse
      * @throws RuntimeException
      */
-    private function notFoundReturned(int $lpaUid, array $additionalData): AddLpaApiResponse
+    private function notFoundReturned(int $lpaUid, ArrayObject $additionalData): AddLpaApiResponse
     {
         $this->logger->notice(
             'Validation failed on the details provided to add the LPA {uId}',

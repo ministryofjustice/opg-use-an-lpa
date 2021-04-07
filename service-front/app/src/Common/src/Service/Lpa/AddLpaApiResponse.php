@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Common\Service\Lpa;
 
+use ArrayObject;
+
 class AddLpaApiResponse
 {
     /** @var string The LPA was successfully found */
@@ -15,10 +17,10 @@ class AddLpaApiResponse
     /** @var string The LPA could not be added as it already has been */
     public const ADD_LPA_ALREADY_ADDED = 'ADD_LPA_ALREADY_ADDED';
 
-    private array $data;
+    private ArrayObject $data;
     private string $response;
 
-    public function __construct(string $response, array $data)
+    public function __construct(string $response, ArrayObject $data)
     {
         if (!$this->validateResponseType($response)) {
             throw new \RuntimeException('Incorrect response type when creating ' . __CLASS__);
@@ -28,9 +30,9 @@ class AddLpaApiResponse
     }
 
     /**
-     * @return array
+     * @return ArrayObject
      */
-    public function getData(): array
+    public function getData(): ArrayObject
     {
         return $this->data;
     }

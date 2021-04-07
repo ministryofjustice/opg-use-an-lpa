@@ -148,7 +148,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
         switch ($result->getResponse()) {
             case AddLpaApiResponse::ADD_LPA_ALREADY_ADDED:
-                $lpaAddedData = ($this->parseLpaData)($result->getData());
+                $lpaAddedData = $result->getData();
 
                 return new HtmlResponse(
                     $this->renderer->render(
@@ -178,7 +178,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     )
                 );
             case AddLpaApiResponse::ADD_LPA_FOUND:
-                $lpaData = ($this->parseLpaData)($result->getData());
+                $lpaData = $result->getData();
                 $lpa = $lpaData['lpa'];
                 $actor = $lpaData['actor']['details'];
 
