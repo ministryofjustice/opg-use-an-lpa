@@ -38,13 +38,18 @@ class ActorCodeConfirmHandler implements RequestHandlerInterface
     {
         $data = $request->getParsedBody();
 
-        $actorId = $request->getAttribute('actor-id');
+        $actorId = $request->getHeader('user-token')[0];
 
         if (!isset($data['actor-code']) || !isset($data['uid']) || !isset($data['dob'])) {
             throw new BadRequestException("'actor-code', 'uid' and 'dob' are required fields");
         }
 
-        $response = $this->actorCodeService->confirmDetails($data['actor-code'], $data['uid'], $data['dob'], $actorId);
+        $response = $this->actorCodeService->confirmDetails(
+            $data['actor-code'],
+            (string) $data['uid'],
+            $data['dob'],
+            $actorId
+        );
 
         // We deliberately don't return details of why the (validated) code was not found.
         if (!is_string($response)) {

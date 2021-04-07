@@ -51,7 +51,7 @@ class AddLpa
             throw new BadRequestException('LPA already added', $lpaAddedData);
         }
 
-        $lpaData = $this->actorCodeService->validateDetails($data['actor-code'], (string) $data['uid'], $data['dob']);
+        $lpaData = $this->actorCodeService->validateDetails($data['actor-code'], $data['uid'], $data['dob']);
 
         if (!is_array($lpaData)) {
             $this->logger->notice(

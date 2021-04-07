@@ -28,16 +28,16 @@ class LpaAlreadyAdded
 
     /**
      * @param string $userId
-     * @param int $lpaUid
+     * @param string $lpaUid
      *
      * @return array|null
      */
-    public function __invoke(string $userId, int $lpaUid): ?array
+    public function __invoke(string $userId, string $lpaUid): ?array
     {
         $lpasAdded = $this->lpaService->getAllForUser($userId);
 
         foreach ($lpasAdded as $userLpaActorToken => $lpaData) {
-            if ((int) $lpaData['lpa']['uId'] === $lpaUid) {
+            if ($lpaData['lpa']['uId'] === $lpaUid) {
                 $this->logger->info(
                     'Account with Id {id} has attempted to add LPA {uId} which already exists in their account',
                     [
