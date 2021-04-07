@@ -1694,7 +1694,7 @@ class LpaContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->apiPost(
-            '/v1/actor-codes/confirm',
+            '/v1/add-lpa/confirm',
             [
                 'actor-code' => $this->oneTimeCode,
                 'uid' => $this->lpaUid,
