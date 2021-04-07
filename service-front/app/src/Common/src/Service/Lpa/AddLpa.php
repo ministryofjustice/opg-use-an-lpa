@@ -84,7 +84,7 @@ class AddLpa
         return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_FOUND, $lpaData);
     }
 
-    public function confirmAddingLpa(
+    public function confirmLpaAddition(
         string $userToken,
         string $passcode,
         string $lpaUid,

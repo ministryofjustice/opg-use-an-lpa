@@ -238,7 +238,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $result = $this->addLpa->confirmAddingLpa(
+            $result = $this->addLpa->confirmLpaAddition(
                 $this->identity,
                 $passcode,
                 $referenceNumber,

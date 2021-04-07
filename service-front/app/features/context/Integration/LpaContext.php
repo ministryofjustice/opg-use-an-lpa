@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
-use Alphagov\Notifications\Client;
 use BehatTest\Context\ActorContextTrait;
-use Carbon\Carbon;
 use Common\Exception\ApiException;
 use Common\Service\Log\RequestTracing;
+use Common\Service\Lpa\AddLpa;
+use Common\Service\Lpa\AddLpaApiResponse;
 use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
@@ -19,7 +19,6 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
-use Psr\Http\Message\RequestInterface;
 
 /**
  * A behat context that encapsulates user account steps
@@ -929,7 +928,7 @@ class LpaContext extends BaseIntegrationContext
     public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode)
     {
         // API call for checking LPA
-        $this->apiFixtures->post('/v1/actor-codes/summary')
+        $this->apiFixtures->post('/v1/add-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
@@ -938,14 +937,17 @@ class LpaContext extends BaseIntegrationContext
                 )
             );
 
-        $lpaData = $this->lpaService->getLpaByPasscode(
+        $addLpa = $this->container->get(AddLpa::class);
+        $lpaData = $addLpa->validateAddLpaData(
             $this->userIdentity,
             $storedCode,
             $this->referenceNo,
             $this->userDob
         );
 
-        assertEquals(($lpaData['lpa'])->getUId(), $this->lpa['uId']);
+        assertInstanceOf(AddLpaApiResponse::class, $lpaData);
+        assertEquals(AddLpaApiResponse::ADD_LPA_FOUND, $lpaData->getResponse());
+        assertEquals(($lpaData->getData()['lpa'])->getUId(), $this->lpa['uId']);
     }
 
     /**
@@ -1195,23 +1197,31 @@ class LpaContext extends BaseIntegrationContext
     public function theLPAIsNotFound()
     {
         // API call for checking LPA
-        $this->apiFixtures->post('/v1/actor-codes/summary')
+        $this->apiFixtures->post('/v1/add-lpa/validate')
             ->respondWith(
                 new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Not found',
+                            'details' => 'Code validation failed',
+                            'data' => [],
+                        ]
+                    )
                 )
             );
 
-        try {
-            $this->lpaService->getLpaByPasscode(
-                $this->userIdentity,
-                $this->passcode,
-                $this->referenceNo,
-                $this->userDob
-            );
-        } catch (ApiException $aex) {
-            assertEquals($aex->getCode(), 404);
-        }
+        $addLpa = $this->container->get(AddLpa::class);
+
+        $response = $addLpa->validateAddLpaData(
+            $this->userIdentity,
+            $this->passcode,
+            $this->referenceNo,
+            $this->userDob
+        );
+
+        assertEquals(AddLpaApiResponse::ADD_LPA_NOT_FOUND, $response->getResponse());
     }
 
     /**
@@ -1223,7 +1233,7 @@ class LpaContext extends BaseIntegrationContext
         $this->actorId = 9;
 
         // API call for adding an LPA
-        $this->apiFixtures->post('/v1/actor-codes/confirm')
+        $this->apiFixtures->post('/v1/add-lpa/confirm')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_CREATED,
@@ -1232,14 +1242,15 @@ class LpaContext extends BaseIntegrationContext
                 )
             );
 
-        $actorCode = $this->lpaService->confirmLpaAddition(
+        $addLpa = $this->container->get(AddLpa::class);
+        $response = $addLpa->confirmLpaAddition(
             $this->userIdentity,
             $this->passcode,
             $this->referenceNo,
             $this->userDob
         );
 
-        assertNotNull($actorCode);
+        assertEquals(AddLpaApiResponse::ADD_LPA_SUCCESS, $response->getResponse());
     }
 
     /**
@@ -1273,4 +1284,3 @@ class LpaContext extends BaseIntegrationContext
         // Not needed for this context
     }
 }
-
