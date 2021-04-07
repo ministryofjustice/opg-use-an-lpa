@@ -57,6 +57,7 @@ class EventCodes
     /**
      * LPA has activation key
      */
+
     public const OLDER_LPA_HAS_ACTIVATION_KEY = 'OLDER_LPA_HAS_ACTIVATION_KEY';
 
     /**
@@ -64,4 +65,33 @@ class EventCodes
      */
     public const OLDER_LPA_SUCCESS = 'OLDER_LPA_SUCCESS';
 
+    /**
+     * An LPA was found when requesting to add an LPA
+     */
+    public const ADD_LPA_FOUND = 'ADD_LPA_FOUND';
+
+    /**
+     * Request to add an LPA failed with the details provided
+     */
+    public const ADD_LPA_NOT_FOUND = 'ADD_LPA_NOT_FOUND';
+
+    /**
+     * Request to add an LPA failed as the LPA is not registered
+     */
+    public const ADD_LPA_NOT_ELIGIBLE = 'ADD_LPA_NOT_ELIGIBLE';
+
+    /**
+     * Request to add an LPA failed as the LPA has already been added
+     */
+    public const ADD_LPA_ALREADY_ADDED = 'ADD_LPA_ALREADY_ADDED';
+
+    /**
+     * An LPA has been added successfully
+     */
+    public const ADD_LPA_SUCCESS = 'ADD_LPA_SUCCESS';
+
+    /**
+     * An LPA failed to be added
+     */
+    public const ADD_LPA_FAILURE = 'ADD_LPA_FAILURE';
 }
