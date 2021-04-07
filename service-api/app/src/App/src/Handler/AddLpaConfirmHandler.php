@@ -13,13 +13,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 
 /**
- * Class ActorCodePreviewHandler
+ * Class AddLpaConfirmHandler
  * @package App\Handler
  * @codeCoverageIgnore
  */
-class ActorCodeConfirmHandler implements RequestHandlerInterface
+class AddLpaConfirmHandler implements RequestHandlerInterface
 {
-
     /**
      * @var ActorCodeService
      */

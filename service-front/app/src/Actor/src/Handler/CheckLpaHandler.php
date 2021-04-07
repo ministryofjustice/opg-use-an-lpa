@@ -110,7 +110,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         $this->identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
 
         $passcode = $this->session->get('passcode');
-        $referenceNumber = (int) $this->session->get('reference_number');
+        $referenceNumber = $this->session->get('reference_number');
         $dob = $this->session->get('dob');
 
         if (
@@ -136,7 +136,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     public function handleGet(
         ServerRequestInterface $request,
         string $passcode,
-        int $referenceNumber,
+        string $referenceNumber,
         string $dob
     ): ResponseInterface {
         $result = $this->addLpa->validateAddLpaData(
@@ -223,55 +223,49 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
     /**
      * @param ServerRequestInterface $request
-     * @param string $passcode
-     * @param string $referenceNumber
-     * @param string $dob
+     * @param string                 $passcode
+     * @param string                 $referenceNumber
+     * @param string                 $dob
+     *
      * @return ResponseInterface
-     * @throws ApiException
      */
     public function handlePost(
         ServerRequestInterface $request,
         string $passcode,
-        int $referenceNumber,
+        string $referenceNumber,
         string $dob
     ): ResponseInterface {
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $actorCode = $this->lpaService->confirmLpaAddition(
+            $result = $this->addLpa->confirmAddingLpa(
                 $this->identity,
                 $passcode,
                 $referenceNumber,
                 $dob
             );
 
-            $this->getLogger()->info(
-                'Account with Id {id} has added LPA with Id {uId} to their account',
-                [
-                    'id' => $this->identity,
-                    'uId' => $referenceNumber
-                ]
-            );
+            switch ($result->getResponse()) {
+                case AddLpaApiResponse::ADD_LPA_SUCCESS:
+                    /** @var FlashMessagesInterface $flash */
+                    $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+                    $donor = $this->session->get('donor_name');
+                    $lpaType = $this->session->get('lpa_type');
 
-            if (!is_null($actorCode)) {
+                    $message = $this->translator->translate(
+                        "You've added %donor%'s %lpaType% LPA",
+                        [
+                            '%donor%' => $donor,
+                            '%lpaType%' => $lpaType
+                        ],
+                        null,
+                        'flashMessage'
+                    );
+                    $flash->flash(self::ADD_LPA_FLASH_MSG, $message);
 
-                /** @var FlashMessagesInterface $flash */
-                $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
-                $donor = $this->session->get('donor_name');
-                $lpaType = $this->session->get('lpa_type');
-
-                $message = $this->translator->translate(
-                    "You've added %donor%'s %lpaType% LPA",
-                    [
-                        '%donor%' => $donor,
-                        '%lpaType%' => $lpaType
-                    ],
-                    null,
-                    'flashMessage'
-                );
-                $flash->flash(self::ADD_LPA_FLASH_MSG, $message);
-
-                return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
+                    return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
+                case AddLpaApiResponse::ADD_LPA_FAILURE:
+                    break;
             }
         }
 

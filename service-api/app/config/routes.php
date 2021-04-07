@@ -60,9 +60,9 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     );
 
     $app->post('/v1/add-lpa/validate', App\Handler\AddLpaValidationHandler::class, 'lpa.add.validate');
+    $app->post('/v1/add-lpa/confirm', App\Handler\AddLpaConfirmHandler::class, 'lpa.add.confirm');
 
     $app->post('/v1/actor-codes/summary', App\Handler\ActorCodeSummaryHandler::class, 'lpa.actor-code.summary');
-    $app->post('/v1/actor-codes/confirm', App\Handler\ActorCodeConfirmHandler::class, 'lpa.actor-code.confirm');
 
     $app->post('/v1/viewer-codes/summary', App\Handler\ViewerCodeSummaryHandler::class, 'lpa.viewer-code.summary');
     $app->post('/v1/viewer-codes/full', App\Handler\ViewerCodeFullHandler::class, 'lpa.viewer-code.full');

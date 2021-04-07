@@ -16,6 +16,10 @@ class AddLpaApiResponse
     public const ADD_LPA_NOT_ELIGIBLE  = 'ADD_LPA_NOT_ELIGIBLE';
     /** @var string The LPA could not be added as it already has been */
     public const ADD_LPA_ALREADY_ADDED = 'ADD_LPA_ALREADY_ADDED';
+    /** @var string The LPA has been successfully added */
+    public const ADD_LPA_SUCCESS = 'ADD_LPA_SUCCESS';
+    /** @var string The LPA failed to be added */
+    public const ADD_LPA_FAILURE = 'ADD_LPA_FAILURE';
 
     private ArrayObject $data;
     private string $response;
@@ -51,7 +55,9 @@ class AddLpaApiResponse
             self::ADD_LPA_FOUND,
             self::ADD_LPA_NOT_FOUND,
             self::ADD_LPA_NOT_ELIGIBLE,
-            self::ADD_LPA_ALREADY_ADDED
+            self::ADD_LPA_ALREADY_ADDED,
+            self::ADD_LPA_SUCCESS,
+            self::ADD_LPA_FAILURE
         ];
 
         if (in_array($response, $allowedResponses)) {

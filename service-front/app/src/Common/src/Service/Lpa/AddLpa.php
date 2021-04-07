@@ -39,9 +39,9 @@ class AddLpa
     public function validateAddLpaData(
         string $userToken,
         string $passcode,
-        int $lpaUid,
+        string $lpaUid,
         string $dob
-    ) {
+    ): AddLpaApiResponse {
         $data = [
             'actor-code' => $passcode,
             'uid' => $lpaUid,
@@ -84,18 +84,46 @@ class AddLpa
         return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_FOUND, $lpaData);
     }
 
+    public function confirmAddingLpa(
+        string $userToken,
+        string $passcode,
+        string $lpaUid,
+        string $dob
+    ): AddLpaApiResponse {
+        $this->apiClient->setUserTokenHeader($userToken);
+
+        $lpaData = $this->apiClient->httpPost('/v1/add-lpa/confirm', [
+            'actor-code' => $passcode,
+            'uid'        => $lpaUid,
+            'dob'        => $dob,
+        ]);
+
+        if (isset($lpaData['user-lpa-actor-token'])) {
+            $this->logger->notice(
+                'Account with Id {id} added LPA with Id {uId} to their account',
+                [
+                    'id'  => $userToken,
+                    'uId' => $lpaUid
+                ]
+            );
+
+            return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_SUCCESS, new ArrayObject());
+        }
+
+        return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_FAILURE, new ArrayObject());
+    }
+
     /**
      * Translates an exception message returned from the API into a const string that we can use, as well
      * as logging the result
      *
-     * @param int    $lpaUid
-     * @param string $message
-     * @param array  $additionalData
+     * @param string      $lpaUid
+     * @param string      $message
+     * @param ArrayObject $additionalData
      *
-     * @return OlderLpaApiResponse
-     * @throws RuntimeException
+     * @return AddLpaApiResponse
      */
-    private function badRequestReturned(int $lpaUid, string $message, ArrayObject $additionalData): AddLpaApiResponse
+    private function badRequestReturned(string $lpaUid, string $message, ArrayObject $additionalData): AddLpaApiResponse
     {
         switch ($message) {
             case self::ADD_LPA_NOT_ELIGIBLE:
@@ -130,13 +158,12 @@ class AddLpa
     /**
      * Translates a 'Not Found' response from our API into an appropriate const value and also logs the result
      *
-     * @param int   $lpaUid
-     * @param array $additionalData
+     * @param string      $lpaUid
+     * @param ArrayObject $additionalData
      *
-     * @return OlderLpaApiResponse
-     * @throws RuntimeException
+     * @return AddLpaApiResponse
      */
-    private function notFoundReturned(int $lpaUid, ArrayObject $additionalData): AddLpaApiResponse
+    private function notFoundReturned(string $lpaUid, ArrayObject $additionalData): AddLpaApiResponse
     {
         $this->logger->notice(
             'Validation failed on the details provided to add the LPA {uId}',
