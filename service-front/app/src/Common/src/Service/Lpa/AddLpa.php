@@ -19,19 +19,16 @@ class AddLpa
     private const ADD_LPA_NOT_ELIGIBLE  = 'LPA status is not registered';
     private const ADD_LPA_ALREADY_ADDED = 'LPA already added';
 
-    private LpaService $lpaService;
     private LoggerInterface $logger;
     private ApiClient $apiClient;
     private ParseLpaData $parseLpaData;
 
     public function __construct(
         ApiClient $apiClient,
-        LpaService $lpaService,
         LoggerInterface $logger,
         ParseLpaData $parseLpaData
     ) {
         $this->apiClient = $apiClient;
-        $this->lpaService = $lpaService;
         $this->logger = $logger;
         $this->parseLpaData = $parseLpaData;
     }

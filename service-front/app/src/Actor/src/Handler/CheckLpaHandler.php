@@ -6,7 +6,6 @@ namespace Actor\Handler;
 
 use Acpr\I18n\TranslatorInterface;
 use Actor\Form\LpaConfirm;
-use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\LoggerAware;
@@ -20,7 +19,6 @@ use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResponse;
 use Common\Service\Lpa\LpaService;
-use Common\Service\Lpa\ParseLpaData;
 use Common\Service\Security\RateLimitService;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
@@ -59,7 +57,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     private TranslatorInterface $translator;
     private ?UserInterface $user;
     private AddLpa $addLpa;
-    private ParseLpaData $parseLpaData;
 
     /**
      * LpaAddHandler constructor.
@@ -72,7 +69,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
      * @param RateLimitService          $rateLimitService
      * @param TranslatorInterface       $translator
      * @param AddLpa                    $addLpa
-     * @param ParseLpaData              $parseLpaData
      */
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -82,8 +78,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         LoggerInterface $logger,
         RateLimitService $rateLimitService,
         TranslatorInterface $translator,
-        AddLpa $addLpa,
-        ParseLpaData $parseLpaData
+        AddLpa $addLpa
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
@@ -92,7 +87,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         $this->rateLimitService = $rateLimitService;
         $this->translator = $translator;
         $this->addLpa = $addLpa;
-        $this->parseLpaData = $parseLpaData;
     }
 
     /**
