@@ -362,10 +362,12 @@ class LpaServiceTest extends TestCase
 
         $t->lpaResults = [
             'uid-1' => new Lpa([
-                'uId' => 'uid-1'
+                'uId'       => 'uid-1',
+                'status'    => 'Registered',
             ], new DateTime()),
             'uid-2' => new Lpa([
-                'uId' => 'uid-2'
+                'uId'       => 'uid-2',
+                'status'    => 'Registered',
             ], new DateTime()),
         ];
 
@@ -444,15 +446,17 @@ class LpaServiceTest extends TestCase
         ];
 
         $lpa1 = new Lpa([
-            'uId' => 'uid-1',
-            'donor' => [
+            'uId'       => 'uid-1',
+            'status'    => 'Registered',
+            'donor'     => [
                 'linked' => [['id' => 1, 'uId' => 'person-1']]
             ],
         ], new DateTime());
 
         $lpa2 = new Lpa([
-            'uId' => 'uid-2',
-            'donor' => [
+            'uId'       => 'uid-2',
+            'status'    => 'Registered',
+            'donor'     => [
                 'linked' => [['id' => 2, 'uId' => 'person-2']]
             ],
         ], new DateTime());
