@@ -126,7 +126,6 @@ class LpaService
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMapRepository->getUsersLpas($userId);
-
         $lpaUids = array_column($lpaActorMaps, 'SiriusUid');
 
         if (empty($lpaUids)) {
@@ -146,15 +145,19 @@ class LpaService
             $added = $item['Added']->format('Y-m-d H:i:s');
             unset($lpaData['original_attorneys']);
 
-            $result[$item['Id']] = [
-                'user-lpa-actor-token' => $item['Id'],
-                'date' => $lpa->getLookupTime()->format('c'),
-                'actor' => $actor,
-                'lpa' => $lpaData,
-                'added' => $added
-            ];
-        }
+            //Extract and return only LPA's where status is Registered or Cancelled
+            if (strtolower($lpaData['status']) === 'registered' ||
+                strtolower($lpaData['status']) === 'cancelled') {
 
+                $result[$item['Id']] = [
+                    'user-lpa-actor-token' => $item['Id'],
+                    'date' => $lpa->getLookupTime()->format('c'),
+                    'actor' => $actor,
+                    'lpa' => $lpaData,
+                    'added' => $added
+                ];
+            }
+        }
         return $result;
     }
 
