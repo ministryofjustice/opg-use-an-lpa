@@ -155,6 +155,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the dashboard page$/
      * @Given /^I am on the user dashboard page$/
+     * @Then /^I cannot see the added LPA$/
      */
     public function iAmOnTheDashboardPage()
     {
@@ -2254,5 +2255,56 @@ class LpaContext implements Context
     public function iAmToldThatSomethingWentWrong()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @Given /^The status of the LPA changed from Registered to Suspended$/
+     */
+    public function theStatusOfTheLPAChangedFromRegisteredToSuspended()
+    {
+        $this->lpa->status = 'Suspended';
+
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorId,
+                                'UserId' => $this->userId,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // LpaService::getLpas
+        $this->apiGet(
+            '/v1/lpas',
+            [
+                'user-token' => $this->userLpaActorToken,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        assertEmpty($response);
     }
 }

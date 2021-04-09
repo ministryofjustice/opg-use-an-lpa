@@ -154,6 +154,7 @@ class AccountContext extends BaseIntegrationContext
     /**
      * @Given /^I am on the dashboard page$/
      * @Given /^I am on the user dashboard page$/
+     * @Then /^I cannot see the added LPA$/
      */
     public function iAmOnTheDashboardPage()
     {

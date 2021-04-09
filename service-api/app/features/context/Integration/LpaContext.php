@@ -1765,4 +1765,45 @@ class LpaContext extends BaseIntegrationContext
         $this->codesApiPactProvider = parse_url($config['codes_api']['endpoint'], PHP_URL_HOST);
         $this->apiGatewayPactProvider = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);
     }
+
+    /**
+     * @Given /^The status of the LPA changed from Registered to Suspended$/
+     */
+    public function theStatusOfTheLPAChangedFromRegisteredToSuspended()
+    {
+        $this->lpa->status = 'Cancelled';
+
+        // LpaService:getLpas
+
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $lpa = $this->lpaService->getAllForUser($this->userId);
+
+        assertEmpty($lpa);
+    }
 }
