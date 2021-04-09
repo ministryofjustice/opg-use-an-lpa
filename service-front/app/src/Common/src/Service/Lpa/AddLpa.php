@@ -141,7 +141,7 @@ class AddLpa
         }
 
         $this->logger->notice(
-            'LPA with reference number {uId} not added because "{reason}"',
+            'LPA with reference number {uId} was not added because "{reason}"',
             [
                 'event_code' => $code,
                 'uId' => $lpaUid,
