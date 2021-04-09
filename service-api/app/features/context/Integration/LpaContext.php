@@ -1771,7 +1771,12 @@ class LpaContext extends BaseIntegrationContext
      */
     public function theStatusOfTheLPAChangedFromRegisteredToSuspended()
     {
-        $this->lpa->status = 'Cancelled';
+        $this->lpa->status = 'Suspended';
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
 
         // LpaService:getLpas
 
