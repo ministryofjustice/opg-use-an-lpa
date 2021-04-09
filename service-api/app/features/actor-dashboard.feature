@@ -48,7 +48,7 @@ Feature: The user is able to see correct information on their dashboard
     And The removed LPA will not be displayed on the dashboard
     And I can see a flash message for the removed LPA
 
-  @acceptance @integration
+  @acceptance
   Scenario: As a user I cannot see the LPA whose status is not either registered or cancelled
     Given The status of the LPA changed from Registered to Suspended
     When I am on the dashboard page
