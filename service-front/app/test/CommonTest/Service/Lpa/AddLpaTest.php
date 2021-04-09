@@ -8,7 +8,6 @@ use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResponse;
-use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Lpa\ParseLpaData;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
@@ -97,8 +96,8 @@ class AddLpaTest extends TestCase
             ->httpPost(
                 '/v1/add-lpa/validate',
                 [
-                    'uid' => $this->data['uid'],
                     'actor-code' => $this->data['actor-code'],
+                    'uid' => $this->data['uid'],
                     'dob' => $this->data['dob']
                 ]
             )->willReturn($this->lpaArrayData);
@@ -125,8 +124,8 @@ class AddLpaTest extends TestCase
             ->httpPost(
                 '/v1/add-lpa/validate',
                 [
-                    'uid' => $this->data['uid'],
                     'actor-code' => $this->data['actor-code'],
+                    'uid' => $this->data['uid'],
                     'dob' => $this->data['dob']
                 ]
             )->willThrow(
@@ -160,8 +159,8 @@ class AddLpaTest extends TestCase
             ->httpPost(
                 '/v1/add-lpa/validate',
                 [
-                    'uid' => $this->data['uid'],
                     'actor-code' => $this->data['actor-code'],
+                    'uid' => $this->data['uid'],
                     'dob' => $this->data['dob']
                 ]
             )->willThrow(
@@ -195,8 +194,8 @@ class AddLpaTest extends TestCase
             ->httpPost(
                 '/v1/add-lpa/validate',
                 [
-                    'uid' => $this->data['uid'],
                     'actor-code' => $this->data['actor-code'],
+                    'uid' => $this->data['uid'],
                     'dob' => $this->data['dob']
                 ]
             )->willThrow(
@@ -230,8 +229,8 @@ class AddLpaTest extends TestCase
             ->httpPost(
                 '/v1/add-lpa/validate',
                 [
-                    'uid' => $this->data['uid'],
                     'actor-code' => $this->data['actor-code'],
+                    'uid' => $this->data['uid'],
                     'dob' => $this->data['dob']
                 ]
             )->willThrow(
@@ -259,8 +258,8 @@ class AddLpaTest extends TestCase
             ->httpPost(
                 '/v1/add-lpa/validate',
                 [
-                    'uid' => $this->data['uid'],
                     'actor-code' => $this->data['actor-code'],
+                    'uid' => $this->data['uid'],
                     'dob' => $this->data['dob']
                 ]
             )->willThrow(
@@ -281,5 +280,54 @@ class AddLpaTest extends TestCase
             $this->data['uid'],
             $this->data['dob']
         );
+    }
+
+    /** @test */
+    public function it_will_confirm_adding_the_lpa(): void
+    {
+        // this verifies the lpa was added successfully
+        $this->lpaArrayData['user-lpa-actor-token'] = '1234-abcd';
+
+        $this->apiClientProphecy
+            ->httpPost(
+                '/v1/add-lpa/confirm',
+                [
+                    'actor-code' => $this->data['actor-code'],
+                    'uid' => $this->data['uid'],
+                    'dob' => $this->data['dob']
+                ]
+            )->willReturn($this->lpaArrayData);
+
+        $result = $this->addLpa->confirmLpaAddition(
+            '12-1-1-1-1234',
+            $this->data['actor-code'],
+            $this->data['uid'],
+            $this->data['dob']
+        );
+
+        $this->assertEquals(AddLpaApiResponse::ADD_LPA_SUCCESS, $result->getResponse());
+    }
+
+    /** @test */
+    public function it_will_return_failed_event_code_if_failed_when_adding_the_lpa(): void
+    {
+        $this->apiClientProphecy
+            ->httpPost(
+                '/v1/add-lpa/confirm',
+                [
+                    'actor-code' => $this->data['actor-code'],
+                    'uid' => $this->data['uid'],
+                    'dob' => $this->data['dob']
+                ]
+            )->willReturn($this->lpaArrayData);
+
+        $result = $this->addLpa->confirmLpaAddition(
+            '12-1-1-1-1234',
+            $this->data['actor-code'],
+            $this->data['uid'],
+            $this->data['dob']
+        );
+
+        $this->assertEquals(AddLpaApiResponse::ADD_LPA_FAILURE, $result->getResponse());
     }
 }
