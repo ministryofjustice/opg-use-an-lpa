@@ -65,7 +65,7 @@ class AddLpa
 
         if (strtolower($lpaData['lpa']['status']) === 'registered') {
             $this->logger->notice(
-                'User {id} has found their LPA with Id {uId} using their activation key',
+                'User {id} has found an LPA with Id {uId} using their activation key',
                 [
                     'id' => $userId,
                     'uId' => $data['uid']

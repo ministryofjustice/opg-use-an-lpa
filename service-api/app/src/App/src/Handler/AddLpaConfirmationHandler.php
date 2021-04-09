@@ -45,7 +45,7 @@ class AddLpaConfirmationHandler implements RequestHandlerInterface
 
         $response = $this->actorCodeService->confirmDetails(
             $data['actor-code'],
-            (string) $data['uid'],
+            $data['uid'],
             $data['dob'],
             $actorId
         );
