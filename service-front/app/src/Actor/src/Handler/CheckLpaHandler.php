@@ -32,6 +32,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use ArrayObject;
 
 /**
  * Class CheckLpaHandler
@@ -127,6 +128,15 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         }
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @param string                 $passcode
+     * @param string                 $referenceNumber
+     * @param string                 $dob
+     *
+     * @return ResponseInterface
+     * @throws \Common\Exception\RateLimitExceededException
+     */
     public function handleGet(
         ServerRequestInterface $request,
         string $passcode,
@@ -143,7 +153,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         switch ($result->getResponse()) {
             case AddLpaApiResponse::ADD_LPA_ALREADY_ADDED:
                 $lpaAddedData = $result->getData();
-
                 return new HtmlResponse(
                     $this->renderer->render(
                         'actor::lpa-already-added',
@@ -158,8 +167,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             case AddLpaApiResponse::ADD_LPA_NOT_FOUND:
                 $this->rateLimitService->
                 limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
-
-                //  Show LPA not found page
                 return new HtmlResponse(
                     $this->renderer->render(
                         'actor::lpa-not-found',
@@ -173,22 +180,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 );
             case AddLpaApiResponse::ADD_LPA_FOUND:
                 $lpaData = $result->getData();
+                $actorRole = $this->identifyActorRole($lpaData);
                 $lpa = $lpaData['lpa'];
                 $actor = $lpaData['actor']['details'];
-
-                // Are we displaying Donor or Attorney user role
-                $actorRole = (array_search($actor->getId(), $lpa->getDonor()->getIds()) !== false)
-                    ? 'Donor'
-                    : 'Attorney';
-
-                $this->getLogger()->debug(
-                    'Account with Id {id} identified as Role {role} on LPA with Id {uId}',
-                    [
-                        'id' => $this->identity,
-                        'role' => $actorRole,
-                        'uId' => $referenceNumber,
-                    ]
-                );
 
                 // data to be used in flash message
                 $this->session->set(
@@ -211,7 +205,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         ]
                     )
                 );
-
         }
     }
 
@@ -269,5 +262,31 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             'referenceNumber'   => $referenceNumber,
             'passcode'          => $passcode
         ]));
+    }
+
+    /**
+     * @param ArrayObject $lpaData
+     *
+     * @return string
+     */
+    private function identifyActorRole(ArrayObject $lpaData): string
+    {
+        $lpa = $lpaData['lpa'];
+        $actor = $lpaData['actor']['details'];
+
+        // Are we displaying Donor or Attorney user role
+        $actorRole = (array_search($actor->getId(), $lpa->getDonor()->getIds()) !== false)
+            ? 'Donor'
+            : 'Attorney';
+
+        $this->getLogger()->debug(
+            'Account with Id {id} identified as Role {role} on LPA with Id {uId}',
+            [
+                'id' => $this->identity,
+                'role' => $actorRole,
+                'uId' => $lpa->getUId(),
+            ]
+        );
+        return $actorRole;
     }
 }
