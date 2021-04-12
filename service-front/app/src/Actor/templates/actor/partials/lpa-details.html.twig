@@ -26,20 +26,15 @@
             {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions govuk-!-width-one-third">
-            {% if lpa.status|lower != 'cancelled' %}
-                {% if actorActive == false %}
-                    <span class="moj-badge moj-badge--grey">{% trans %}Access revoked{% endtrans %}</span>
-                {% elseif activeCodeCount >= 1 %}
-                    <span class="moj-badge moj-badge--blue">
-                        {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
-                    </span>
-                {% else %}
-                <span class="moj-badge moj-badge--blue">{% trans %}No organisations have access{% endtrans %}</span>
-                {% endif %}
+            {% if actorActive == false %}
+                <span class="moj-badge moj-badge--red">{% trans %}Access revoked{% endtrans %}</span>
+            {% elseif activeCodeCount >= 1 %}
+                <span class="moj-badge moj-badge--green">
+                    {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
+                </span>
             {% else %}
-                <span class="moj-badge moj-badge--red">{% trans %}cancelled{% endtrans %}</span>
+                <span class="moj-badge moj-badge--grey">{% trans %}No organisations have access{% endtrans %}</span>
             {% endif %}
-
         </dd>
     </div>
 </dl>
@@ -52,7 +47,7 @@
 {%  endif %}
 {% if actorActive and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
     <div class="lpa-inactive-notice" >
-    <p class="govuk-body govuk-!-padding-2 govuk-!-margin-bottom-0">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
+    <p class="govuk-body govuk-!-padding-2 govuk-!-margin-left-2 govuk-!-margin-bottom-0">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
         <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.instructions-preferences') }}"> {% trans %}Read more{% endtrans %}</a>
     </p>
     </div>
