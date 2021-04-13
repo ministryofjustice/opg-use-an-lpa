@@ -1979,24 +1979,43 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('View LPA summary');
         $this->lpa->status = $status;
 
-        // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
+        if($status == 'Revoked'){
+            // API call for get LpaById
+            $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode(
+                            [
+                                'user-lpa-actor-token' => $this->userLpaActorToken,
+                                'date' => 'date',
+                                'lpa' => [],
+                                'actor' => $this->lpaData['actor'],
+                            ]
+                        )
                     )
-                )
-            );
+                );
 
-        $this->ui->clickLink('View LPA summary');
+        } else {
+            // API call for get LpaById
+            $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode(
+                            [
+                                'user-lpa-actor-token' => $this->userLpaActorToken,
+                                'date' => 'date',
+                                'lpa' => $this->lpa,
+                                'actor' => $this->lpaData['actor'],
+                            ]
+                        )
+                    )
+                );
+            $this->ui->clickLink('View LPA summary');
+        }
     }
 
     /**
@@ -2378,6 +2397,15 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/view-lpa');
         $this->ui->assertPageContainsText($message);
+    }
+
+    /**
+     * @Then /^The (.*) LPA details and (.*) are not displayed$/
+     */
+    public function theRevokedLPADetailsAndMessageAreNotDisplayed($status, $message)
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageNotContainsText($message);
     }
 
     /**

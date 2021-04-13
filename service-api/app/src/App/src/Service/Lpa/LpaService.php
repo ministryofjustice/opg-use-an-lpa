@@ -108,12 +108,19 @@ class LpaService
             return null;
         }
 
-        return [
-            'user-lpa-actor-token' => $map['Id'],
-            'date' => $lpa->getLookupTime()->format('c'),
-            'actor' => $actor,
-            'lpa' => $lpaData,
-        ];
+        $result = [];
+        //Extract and return only LPA's where status is Registered or Cancelled
+        if (strtolower($lpaData['status']) === 'registered' ||
+            strtolower($lpaData['status']) === 'cancelled') {
+            $result = [
+                'user-lpa-actor-token' => $map['Id'],
+                'date' => $lpa->getLookupTime()->format('c'),
+                'actor' => $actor,
+                'lpa' => $lpaData,
+            ];
+        }
+
+        return $result;
     }
 
     /**

@@ -1015,23 +1015,41 @@ class LpaContext extends BaseIntegrationContext
     public function iRequestToViewAnLPAWhichStatusIs($status)
     {
         $this->lpa['status'] = $status;
-
-        // API call for getting the LPA by id
-        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->actorLpaToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
+        if ($status == "Revoked") {
+            // API call for getting the LPA by id
+            $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode(
+                            [
+                                'user-lpa-actor-token' => $this->actorLpaToken,
+                                'date' => 'date',
+                                'lpa' => [],
+                                'actor' => $this->lpaData['actor'],
+                            ]
+                        )
                     )
-                )
-            );
+                );
+        } else {
+            // API call for getting the LPA by id
+            $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode(
+                            [
+                                'user-lpa-actor-token' => $this->actorLpaToken,
+                                'date' => 'date',
+                                'lpa' => $this->lpa,
+                                'actor' => $this->lpaData['actor'],
+                            ]
+                        )
+                    )
+                );
+        }
     }
 
     /**

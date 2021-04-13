@@ -19,4 +19,12 @@ Feature: View an LPA that I have added to my account
       | status | message |
       | Registered | This LPA is registered |
       | Cancelled | This LPA has been cancelled |
-      | Revoked   | This LPA has been cancelled |
+
+  @integration @acceptance
+  Scenario Outline: The user can view an LPA added to their account
+    Given I am on the dashboard page
+    When I request to view an LPA which status is "<status>"
+    Then I am taken back to the dashboard page
+    Examples:
+      | status    |
+      | Revoked   |

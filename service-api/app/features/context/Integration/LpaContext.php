@@ -1472,9 +1472,13 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
 
-        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        assertEquals($this->lpa->id, $lpaData['lpa']['id']);
-        assertEquals($this->lpa->status, $lpaData['lpa']['status']);
+        if($status == "Revoked"){
+            assertEmpty($lpaData);
+        } else {
+            assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+            assertEquals($this->lpa->id, $lpaData['lpa']['id']);
+            assertEquals($this->lpa->status, $lpaData['lpa']['status']);
+        }
     }
 
     /**

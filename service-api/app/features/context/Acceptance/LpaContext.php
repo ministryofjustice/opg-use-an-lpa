@@ -1327,9 +1327,14 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertEquals($this->userLpaActorToken, $response['user-lpa-actor-token']);
-        assertEquals($this->lpaUid, $response['lpa']['uId']);
-        assertEquals($status, $response['lpa']['status']);
+        if($status == "Revoked"){
+            assertEmpty($response);
+        }
+        else {
+            assertEquals($this->userLpaActorToken, $response['user-lpa-actor-token']);
+            assertEquals($this->lpaUid, $response['lpa']['uId']);
+            assertEquals($status, $response['lpa']['status']);
+        }
     }
 
     /**
