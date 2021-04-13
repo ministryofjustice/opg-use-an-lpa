@@ -183,6 +183,7 @@ class LpaServiceTest extends TestCase
         $t->Lpa = new Lpa(
             [
                 'uId' => $t->SiriusUid,
+                'status' => 'Registered',
                 'attorneys' => [
                     [
                         'id' => $t->ActorId,
