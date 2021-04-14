@@ -520,17 +520,13 @@ class LpaServiceTest extends TestCase
         ]);
 
         //check valid lpa
-        $this->resolveActorProphecy->__invoke(
+        $this->isValidLpaProphecy->__invoke(
+            $lpa1->getData(),
+        )->willReturn(true);
+
+        $this->isValidLpaProphecy->__invoke(
             $lpa2->getData(),
-            '2'
-        )->willReturn([
-                          'type' => 'donor',
-                          'details' => [
-                              'linked' => [['id' => 2, 'uId' => 'person-2']]
-                          ],
-                      ]);
-
-
+        )->willReturn(true);
 
         return $t;
     }
