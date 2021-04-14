@@ -13,6 +13,7 @@ use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\GetAttorneyStatus;
+use App\Service\Lpa\IsValidLpa;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
 use App\Service\ViewerCodes\ViewerCodeService;
@@ -66,6 +67,11 @@ class LpaServiceTest extends TestCase
      */
     private $getAttorneyStatusProphecy;
 
+    /**
+     * @var IsValidLpa
+     */
+    private $isValidLpaProphecy;
+
     public function setUp()
     {
         $this->viewerCodesInterfaceProphecy = $this->prophesize(Repository\ViewerCodesInterface::class);
@@ -76,6 +82,7 @@ class LpaServiceTest extends TestCase
         $this->actorCodesProphecy = $this->prophesize(ActorCodes::class);
         $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
+        $this->isValidLpaProphecy = $this->prophesize(IsValidLpa::class);
     }
 
     //-------------------------------------------------------------------------
@@ -91,7 +98,8 @@ class LpaServiceTest extends TestCase
             $this->loggerProphecy->reveal(),
             $this->actorCodesProphecy->reveal(),
             $this->resolveActorProphecy->reveal(),
-            $this->getAttorneyStatusProphecy->reveal()
+            $this->getAttorneyStatusProphecy->reveal(),
+            $this->isValidLpaProphecy->reveal(),
         );
     }
 
@@ -209,6 +217,7 @@ class LpaServiceTest extends TestCase
         $this->resolveActorProphecy
             ->__invoke([
                 'uId' => $t->SiriusUid,
+                'status' => 'Registered',
                 'attorneys' => [
                     [
                         'id' => $t->ActorId,
@@ -235,6 +244,12 @@ class LpaServiceTest extends TestCase
                     'systemStatus' => true
                 ]
             ]);
+
+        // check valid lpa
+        $this->isValidLpaProphecy->__invoke(
+            $t->Lpa->getData()
+        )->willReturn(true);
+        //
 
         // attorney status is active
         $this->getAttorneyStatusProphecy->__invoke([
@@ -275,6 +290,7 @@ class LpaServiceTest extends TestCase
         ], $result['actor']);
         $this->assertEquals([
             'uId' => $t->SiriusUid,
+            'status' => 'Registered',
             'attorneys' => [
                 [
                     'id' => $t->ActorId,
@@ -375,6 +391,16 @@ class LpaServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->getUsersLpas($t->UserId)->willReturn($t->mapResults);
 
         $this->lpasInterfaceProphecy->lookup(array_column($t->mapResults, 'SiriusUid'))->willReturn($t->lpaResults);
+
+        // check valid lpa
+        $this->isValidLpaProphecy->__invoke(
+            $t->lpaResults['uid-1']->getData()
+        )->willReturn(true);
+
+        // check valid lpa
+        $this->isValidLpaProphecy->__invoke(
+            $t->lpaResults['uid-2']->getData()
+        )->willReturn(true);
 
         return $t;
     }
@@ -492,6 +518,19 @@ class LpaServiceTest extends TestCase
                 'linked' => [['id' => 2, 'uId' => 'person-2']]
             ],
         ]);
+
+        //check valid lpa
+        $this->resolveActorProphecy->__invoke(
+            $lpa2->getData(),
+            '2'
+        )->willReturn([
+                          'type' => 'donor',
+                          'details' => [
+                              'linked' => [['id' => 2, 'uId' => 'person-2']]
+                          ],
+                      ]);
+
+
 
         return $t;
     }

@@ -31,6 +31,7 @@ class LpaService
     private ActorCodes $actorCodes;
     private ResolveActor $resolveActor;
     private GetAttorneyStatus $getAttorneyStatus;
+    private IsValidLpa $isValidLpa;
 
     public function __construct(
         ViewerCodesInterface $viewerCodesRepository,
@@ -40,7 +41,8 @@ class LpaService
         LoggerInterface $logger,
         ActorCodes $actorCodes,
         ResolveActor $resolveActor,
-        GetAttorneyStatus $getAttorneyStatus
+        GetAttorneyStatus $getAttorneyStatus,
+        IsValidLpa $isValidLpa
     ) {
         $this->viewerCodesRepository = $viewerCodesRepository;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
@@ -50,6 +52,7 @@ class LpaService
         $this->actorCodes = $actorCodes;
         $this->resolveActor = $resolveActor;
         $this->getAttorneyStatus = $getAttorneyStatus;
+        $this->isValidLpa = $isValidLpa;
     }
 
     /**
@@ -101,6 +104,7 @@ class LpaService
 
         $lpaData = $lpa->getData();
         $actor = ($this->resolveActor)($lpaData, $map['ActorId']);
+
         unset($lpaData['original_attorneys']);
 
         // If an active attorney is not found then we should not return an lpa
@@ -108,11 +112,9 @@ class LpaService
             return null;
         }
 
-        $result = [];
         //Extract and return only LPA's where status is Registered or Cancelled
-        if (strtolower($lpaData['status']) === 'registered' ||
-            strtolower($lpaData['status']) === 'cancelled') {
-            $result = [
+        if (($this->isValidLpa)($lpaData)) {
+            return [
                 'user-lpa-actor-token' => $map['Id'],
                 'date' => $lpa->getLookupTime()->format('c'),
                 'actor' => $actor,
@@ -120,7 +122,7 @@ class LpaService
             ];
         }
 
-        return $result;
+        return [];
     }
 
     /**
@@ -149,13 +151,12 @@ class LpaService
             $lpa = $lpas[$item['SiriusUid']];
             $lpaData = $lpa->getData();
             $actor = ($this->resolveActor)($lpaData, $item['ActorId']);
+
             $added = $item['Added']->format('Y-m-d H:i:s');
             unset($lpaData['original_attorneys']);
 
             //Extract and return only LPA's where status is Registered or Cancelled
-            if (strtolower($lpaData['status']) === 'registered' ||
-                strtolower($lpaData['status']) === 'cancelled') {
-
+            if (($this->isValidLpa)($lpaData)) {
                 $result[$item['Id']] = [
                     'user-lpa-actor-token' => $item['Id'],
                     'date' => $lpa->getLookupTime()->format('c'),
