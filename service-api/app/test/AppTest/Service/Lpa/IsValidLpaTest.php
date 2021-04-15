@@ -4,7 +4,6 @@ namespace AppTest\Service\Lpa;
 
 use PHPUnit\Framework\TestCase;
 use App\Service\Lpa\IsValidLpa;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class IsValidLpaTest extends TestCase
@@ -13,12 +12,6 @@ class IsValidLpaTest extends TestCase
      * @var LoggerInterface
      */
     private $loggerProphecy;
-
-    /**
-     * @var ObjectProphecy
-     */
-    private $isValidLpaProphecy;
-
 
     public function setUp()
     {
@@ -29,8 +22,7 @@ class IsValidLpaTest extends TestCase
     private function isValidLpaResolver(): IsValidLpa
     {
         return new IsValidLpa(
-            $this->loggerProphecy->reveal(),
-            $this->isValidLpaProphecy->reveal()
+            $this->loggerProphecy->reveal()
         );
     }
 
@@ -46,7 +38,7 @@ class IsValidLpaTest extends TestCase
 
         $resolver = $this->isValidLpaResolver();
         $result = $resolver($lpa);
-        $this->assertEquals(true, $result);
+        $this->assertTrue($result);
     }
 
     /** @test */
@@ -61,7 +53,7 @@ class IsValidLpaTest extends TestCase
 
         $resolver = $this->isValidLpaResolver();
         $result = $resolver($lpa);
-        $this->assertEquals(true, $result);
+        $this->assertTrue($result);
     }
 
     /** @test */
@@ -76,6 +68,6 @@ class IsValidLpaTest extends TestCase
 
         $resolver = $this->isValidLpaResolver();
         $result = $resolver($lpa);
-        $this->assertEquals(false, $result);
+        $this->assertFalse($result);
     }
 }

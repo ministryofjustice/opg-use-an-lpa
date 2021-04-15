@@ -1010,12 +1010,13 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request to view an LPA which status is "([^"]*)"$/
+     * @When /^I request to view an LPA which status is (.*)$/
      */
     public function iRequestToViewAnLPAWhichStatusIs($status)
     {
         $this->lpa['status'] = $status;
-        if ($status == "Revoked") {
+
+        if ($status === "Revoked") {
             // API call for getting the LPA by id
             $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
                 ->respondWith(

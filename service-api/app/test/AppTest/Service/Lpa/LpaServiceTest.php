@@ -249,7 +249,6 @@ class LpaServiceTest extends TestCase
         $this->isValidLpaProphecy->__invoke(
             $t->Lpa->getData()
         )->willReturn(true);
-        //
 
         // attorney status is active
         $this->getAttorneyStatusProphecy->__invoke([

@@ -31,13 +31,6 @@ class IsValidLpa
      */
     public function __invoke(array $lpa): ?bool
     {
-        if (
-            strtolower($lpa['status']) === self::LPA_REGISTERED ||
-            strtolower($lpa['status']) === self::LPA_CANCELLED
-        ) {
-            return true;
-        }
-
-        return false;
+        return strtolower($lpa['status']) === self::LPA_REGISTERED || strtolower($lpa['status']) === self::LPA_CANCELLED;
     }
 }

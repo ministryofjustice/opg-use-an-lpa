@@ -1037,4 +1037,12 @@ class AccountContext extends BaseIntegrationContext
         $this->lpaFactory = $this->container->get(LpaFactory::class);
         $this->viewerCodeService = $this->container->get(ViewerCodeService::class);
     }
+
+    /**
+     * @Then /^The (.*) LPA details and (.*) message are not displayed$/
+     */
+    public function theRevokedLPADetailsAndMessageAreNotDisplayed($status, $message)
+    {
+        // Not needed for this context
+    }
 }

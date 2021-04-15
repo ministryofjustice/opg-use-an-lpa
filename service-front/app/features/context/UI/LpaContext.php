@@ -1972,14 +1972,14 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I request to view an LPA which status is "([^"]*)"$/
+     * @When /^I request to view an LPA which status is (.*)$/
      */
     public function iRequestToViewAnLPAWhichStatusIs($status)
     {
         $this->ui->assertPageContainsText('View LPA summary');
         $this->lpa->status = $status;
 
-        if($status == 'Revoked'){
+        if($status === 'Revoked'){
             // API call for get LpaById
             $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
                 ->respondWith(
@@ -1996,7 +1996,6 @@ class LpaContext implements Context
                         )
                     )
                 );
-
         } else {
             // API call for get LpaById
             $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
@@ -2400,7 +2399,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^The (.*) LPA details and (.*) are not displayed$/
+     * @Then /^The (.*) LPA details and (.*) message are not displayed$/
      */
     public function theRevokedLPADetailsAndMessageAreNotDisplayed($status, $message)
     {
