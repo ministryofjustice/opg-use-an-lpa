@@ -6,6 +6,7 @@ namespace Actor\Handler;
 
 use Acpr\I18n\TranslatorInterface;
 use Actor\Form\LpaConfirm;
+use Common\Exception\RateLimitExceededException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\LoggerAware;
@@ -135,7 +136,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
      * @param string                 $dob
      *
      * @return ResponseInterface
-     * @throws \Common\Exception\RateLimitExceededException
+     * @throws RateLimitExceededException
      */
     public function handleGet(
         ServerRequestInterface $request,
@@ -180,9 +181,18 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 );
             case AddLpaApiResponse::ADD_LPA_FOUND:
                 $lpaData = $result->getData();
-                $actorRole = $this->identifyActorRole($lpaData);
                 $lpa = $lpaData['lpa'];
                 $actor = $lpaData['actor']['details'];
+                $actorRole = ($lpaData['actor']['type'] === 'donor') ? 'Donor' : 'Attorney';
+
+                $this->logger->debug(
+                    'Account with Id {id} identified as Role {role} on LPA with Id {uId}',
+                    [
+                        'id' => $this->identity,
+                        'role' => $actorRole,
+                        'uId' => $lpa->getUId(),
+                    ]
+                );
 
                 // data to be used in flash message
                 $this->session->set(
@@ -262,31 +272,5 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             'referenceNumber'   => $referenceNumber,
             'passcode'          => $passcode
         ]));
-    }
-
-    /**
-     * @param ArrayObject $lpaData
-     *
-     * @return string
-     */
-    private function identifyActorRole(ArrayObject $lpaData): string
-    {
-        $lpa = $lpaData['lpa'];
-        $actor = $lpaData['actor']['details'];
-
-        // Are we displaying Donor or Attorney user role
-        $actorRole = (array_search($actor->getId(), $lpa->getDonor()->getIds()) !== false)
-            ? 'Donor'
-            : 'Attorney';
-
-        $this->getLogger()->debug(
-            'Account with Id {id} identified as Role {role} on LPA with Id {uId}',
-            [
-                'id' => $this->identity,
-                'role' => $actorRole,
-                'uId' => $lpa->getUId(),
-            ]
-        );
-        return $actorRole;
     }
 }
