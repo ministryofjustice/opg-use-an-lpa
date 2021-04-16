@@ -1,13 +1,17 @@
 .govuk-button {
   &__copy {
-    position: absolute;
-    z-index: 1;
-    top: govuk-spacing(2);
-    right: govuk-spacing(2);
+    position: relative;
+    float: right;
     min-width: 110px;
     border: 1px solid govuk-colour("green");
     color: govuk-colour("green");
     background-color: govuk-colour("white");
     box-shadow: 0 2px 0 0 govuk-colour("green");
+  }
+
+  &__position {
+    position: relative;
+    height: 45px;
+    width: 100%;
   }
 }
