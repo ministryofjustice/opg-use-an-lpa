@@ -33,7 +33,7 @@ class AddLpa
         $this->parseLpaData = $parseLpaData;
     }
 
-    public function validateAddLpaData(
+    public function validate(
         string $userToken,
         string $passcode,
         string $lpaUid,
@@ -81,7 +81,7 @@ class AddLpa
         return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_FOUND, $lpaData);
     }
 
-    public function confirmLpaAddition(
+    public function confirm(
         string $userToken,
         string $passcode,
         string $lpaUid,

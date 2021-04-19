@@ -938,7 +938,7 @@ class LpaContext extends BaseIntegrationContext
             );
 
         $addLpa = $this->container->get(AddLpa::class);
-        $lpaData = $addLpa->validateAddLpaData(
+        $lpaData = $addLpa->validate(
             $this->userIdentity,
             $storedCode,
             $this->referenceNo,
@@ -1214,7 +1214,7 @@ class LpaContext extends BaseIntegrationContext
 
         $addLpa = $this->container->get(AddLpa::class);
 
-        $response = $addLpa->validateAddLpaData(
+        $response = $addLpa->validate(
             $this->userIdentity,
             $this->passcode,
             $this->referenceNo,
@@ -1243,7 +1243,7 @@ class LpaContext extends BaseIntegrationContext
             );
 
         $addLpa = $this->container->get(AddLpa::class);
-        $response = $addLpa->confirmLpaAddition(
+        $response = $addLpa->confirm(
             $this->userIdentity,
             $this->passcode,
             $this->referenceNo,

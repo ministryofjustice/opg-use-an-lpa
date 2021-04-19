@@ -144,7 +144,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         string $referenceNumber,
         string $dob
     ): ResponseInterface {
-        $result = $this->addLpa->validateAddLpaData(
+        $result = $this->addLpa->validate(
             $this->identity,
             $passcode,
             $referenceNumber,
@@ -235,7 +235,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $result = $this->addLpa->confirmLpaAddition(
+            $result = $this->addLpa->confirm(
                 $this->identity,
                 $passcode,
                 $referenceNumber,

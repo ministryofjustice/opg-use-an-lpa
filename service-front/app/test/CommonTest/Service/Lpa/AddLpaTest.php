@@ -106,7 +106,7 @@ class AddLpaTest extends TestCase
             ->__invoke($this->lpaArrayData)
             ->willReturn($this->lpaParsedData);
 
-        $result = $this->addLpa->validateAddLpaData(
+        $result = $this->addLpa->validate(
             '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
@@ -141,7 +141,7 @@ class AddLpaTest extends TestCase
             ->__invoke($this->lpaArrayData)
             ->willReturn($this->lpaParsedData);
 
-        $result = $this->addLpa->validateAddLpaData(
+        $result = $this->addLpa->validate(
             '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
@@ -176,7 +176,7 @@ class AddLpaTest extends TestCase
             ->__invoke([])
             ->willReturn(new ArrayObject());
 
-        $result = $this->addLpa->validateAddLpaData(
+        $result = $this->addLpa->validate(
             '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
@@ -211,7 +211,7 @@ class AddLpaTest extends TestCase
             ->__invoke([])
             ->willReturn(new ArrayObject());
 
-        $result = $this->addLpa->validateAddLpaData(
+        $result = $this->addLpa->validate(
             '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
@@ -243,7 +243,7 @@ class AddLpaTest extends TestCase
         $this->expectException(ApiException::class);
         $this->expectExceptionMessage('Service Error');
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
-        $this->addLpa->validateAddLpaData(
+        $this->addLpa->validate(
             '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
@@ -274,7 +274,7 @@ class AddLpaTest extends TestCase
             ->willReturn(new ArrayObject());
 
         $this->expectException(RuntimeException::class);
-        $this->addLpa->validateAddLpaData(
+        $this->addLpa->validate(
             '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
@@ -298,7 +298,7 @@ class AddLpaTest extends TestCase
                 ]
             )->willReturn($this->lpaArrayData);
 
-        $result = $this->addLpa->confirmLpaAddition(
+        $result = $this->addLpa->confirm(
             '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
@@ -321,7 +321,7 @@ class AddLpaTest extends TestCase
                 ]
             )->willReturn($this->lpaArrayData);
 
-        $result = $this->addLpa->confirmLpaAddition(
+        $result = $this->addLpa->confirm(
             '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
