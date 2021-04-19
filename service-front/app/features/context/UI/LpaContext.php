@@ -381,23 +381,19 @@ class LpaContext implements Context
     {
         $this->iAmOnTheAddAnLPAPage();
 
-        //API call for getting all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
+        // API call for checking add LPA data
+        $this->apiFixtures->post('/v1/add-lpa/validate')
             ->respondWith(
                 new Response(
-                    StatusCodeInterface::STATUS_OK,
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
                     [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
-
-        // API call for checking LPA
-        $this->apiFixtures->post('/v1/actor-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpaData)
+                    json_encode(
+                        [
+                            'title' => 'Bad Request',
+                            'details' => 'LPA already added',
+                            'data' => $this->lpaData,
+                        ]
+                    )
                 )
             );
 
@@ -406,7 +402,6 @@ class LpaContext implements Context
         $this->ui->fillField('dob[day]', '05');
         $this->ui->fillField('dob[month]', '10');
         $this->ui->fillField('dob[year]', '1975');
-
         $this->ui->pressButton('Continue');
     }
 
@@ -1648,22 +1643,19 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/add-by-code');
 
-        //API call for getting all the users added LPAs
-        //to check if they have already added this LPA
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
-
         // API call for checking LPA
-        $this->apiFixtures->post('/v1/actor-codes/summary')
+        $this->apiFixtures->post('/v1/add-lpa/validate')
             ->respondWith(
                 new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Not found',
+                            'details' => 'Code validation failed',
+                            'data' => [],
+                        ]
+                    )
                 )
             );
 
@@ -1684,24 +1676,19 @@ class LpaContext implements Context
 
         $this->ui->assertPageAddress('/lpa/add-by-code');
 
-        // API call for getting all the users added LPAs
-        // to check if they have already added the LPA
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
-
         // API call for checking LPA
-        $this->apiFixtures->post('/v1/actor-codes/summary')
+        $this->apiFixtures->post('/v1/add-lpa/validate')
             ->respondWith(
                 new Response(
-                    StatusCodeInterface::STATUS_OK,
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
                     [],
-                    json_encode($this->lpaData)
+                    json_encode(
+                        [
+                            'title' => 'Bad Request',
+                            'details' => 'LPA status is not registered',
+                            'data' => [],
+                        ]
+                    )
                 )
             )
             ->inspectRequest(
@@ -1814,23 +1801,12 @@ class LpaContext implements Context
         ];
 
         // API call for checking LPA
-        $this->apiFixtures->post('/v1/actor-codes/summary')
+        $this->apiFixtures->post('/v1/add-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
                     json_encode($this->lpaData)
-                )
-            );
-
-        // API call for getting all the users added LPAs
-        // to check if they have already added the LPA
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
                 )
             );
 
@@ -1849,19 +1825,8 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/add-by-code');
 
-        // API call for getting all the users added LPAs
-        // to check if they have already added the LPA
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
-
         // API call for checking LPA
-        $this->apiFixtures->post('/v1/actor-codes/summary')
+        $this->apiFixtures->post('/v1/add-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
@@ -2316,7 +2281,7 @@ class LpaContext implements Context
     public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
     {
         // API call for adding an LPA
-        $this->apiFixtures->post('/v1/actor-codes/confirm')
+        $this->apiFixtures->post('/v1/add-lpa/confirm')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_CREATED,
@@ -2359,7 +2324,7 @@ class LpaContext implements Context
     public function theCorrectLPAIsFoundAndICanSeeTheCorrectNameWhichWillHaveARoleOf($role)
     {
         // API call for adding an LPA
-        $this->apiFixtures->post('/v1/actor-codes/confirm')
+        $this->apiFixtures->post('/v1/add-lpa/confirm')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_CREATED,

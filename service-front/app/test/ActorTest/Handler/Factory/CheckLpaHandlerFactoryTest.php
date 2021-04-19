@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ActorTest\Handler\Factory;
 
+use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitService;
 use Common\Service\Security\RateLimitServiceFactory;
@@ -17,7 +18,7 @@ use Actor\Handler\Factory\CheckLpaHandlerFactory;
 use Psr\Log\LoggerInterface;
 use Acpr\I18n\TranslatorInterface;
 
-class CheckLPAHandlerFactoryTest extends TestCase
+class CheckLpaHandlerFactoryTest extends TestCase
 {
     /** @test */
     public function it_creates_a_correctly_configured_instance()
@@ -50,6 +51,9 @@ class CheckLPAHandlerFactoryTest extends TestCase
         $containerProphecy
             ->get(RateLimitServiceFactory::class)
             ->willReturn($rlsfProphecy->reveal());
+        $containerProphecy
+            ->get(AddLpa::class)
+            ->willReturn($this->prophesize(AddLpa::class)->reveal());
 
         $factory = new CheckLpaHandlerFactory();
 

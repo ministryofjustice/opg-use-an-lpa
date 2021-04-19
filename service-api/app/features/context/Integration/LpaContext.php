@@ -150,32 +150,6 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAttemptToAddTheSameLPAAgain()
     {
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/validate',
-            [
-                'lpa' => $this->lpaUid,
-                'dob' => $this->userDob,
-                'code' => $this->oneTimeCode,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            [
-                'actor' => '',
-            ],
-        );
-
-        $actorCodeService = $this->container->get(ActorCodeService::class);
-
-        $response = $actorCodeService->validateDetails($this->oneTimeCode, $this->lpaUid, $this->userDob);
-
-        assertNull($response);
-    }
-
-    /**
-     * @When /^I attempt to add the same LPA again REFACTORED$/
-     */
-    public function iAttemptToAddTheSameLPAAgainREFACTORED()
-    {
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(
             new Result(
@@ -281,9 +255,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request to add an LPA that does not exist REFACTORED$/
+     * @When /^I request to add an LPA that does not exist$/
      */
-    public function iRequestToAddAnLPAThatDoesNotExistREFACTORED()
+    public function iRequestToAddAnLPAThatDoesNotExist()
     {
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -1369,64 +1343,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request to add an LPA that does not exist$/
-     */
-    public function iRequestToAddAnLPAThatDoesNotExist()
-    {
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/validate',
-            [
-                'lpa' => $this->lpaUid,
-                'dob' => $this->userDob,
-                'code' => $this->oneTimeCode,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            [
-                'actor' => '',
-            ],
-        );
-    }
-
-    /**
      * @When /^I request to add an LPA with valid details$/
      */
     public function iRequestToAddAnLPAWithValidDetails()
-    {
-        // The underlying SmartGamma library has a very naive match processor for
-        // passed in response values and will assume lpaUid's and actorLpaId's are integers.
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/validate',
-            [
-                'lpa' => $this->lpaUid,
-                'dob' => $this->userDob,
-                'code' => $this->oneTimeCode,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            [
-                'actor' => $this->actorLpaId,
-            ],
-        );
-
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
-        $actorCodeService = $this->container->get(ActorCodeService::class);
-
-        $validatedLpa = $actorCodeService->validateDetails($this->oneTimeCode, $this->lpaUid, $this->userDob);
-
-        assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
-    }
-
-    /**
-     * @When /^I request to add an LPA with valid details REFACTORED$/
-     */
-    public function iRequestToAddAnLPAWithValidDetailsREFACTORED()
     {
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
