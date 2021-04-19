@@ -34,6 +34,7 @@ export default class GoogleAnalytics {
         });
         this._trackExternalLinks();
         this._trackFormValidationErrors();
+        this._trackLpaDownload();
 
         PerformanceAnalytics();
         ErrorAnalytics();
@@ -90,6 +91,17 @@ export default class GoogleAnalytics {
                 let errorMessage = errorMessages[x].textContent.replace("Error:", "").trim();
                 this.trackEvent(label, 'Form errors', ('#' + inputId + ' - ' + errorMessage));
             }
+        }
+    }
+
+    _trackLpaDownload()
+    {
+        const _this = this;
+        let downloadLinkSelector = document.querySelector('a[href$="/download-lpa"]');
+        if (downloadLinkSelector) {
+            downloadLinkSelector.addEventListener('click', function (e) {
+                _this.trackEvent('Download', 'LPA summary', 'Download this LPA summary');
+            });
         }
     }
 }
