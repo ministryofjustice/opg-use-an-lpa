@@ -64,4 +64,9 @@ class EventCodes
      */
     public const OLDER_LPA_SUCCESS = 'OLDER_LPA_SUCCESS';
 
+    /**
+     * Lpa summary has been downloaded
+     */
+    public const DOWNLOAD_SUMMARY = 'DOWNLOAD_SUMMARY';
+
 }
