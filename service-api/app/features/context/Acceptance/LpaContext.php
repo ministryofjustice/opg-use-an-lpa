@@ -174,31 +174,6 @@ class LpaContext implements Context
      */
     public function iAttemptToAddTheSameLPAAgain()
     {
-        // codes api service call
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => ''])));
-
-        // LpaService::getLpaById
-        $this->apiPost(
-            '/v1/actor-codes/summary',
-            [
-                'actor-code' => $this->oneTimeCode,
-                'uid' => $this->lpaUid,
-                'dob' => $this->userDob,
-            ],
-            [
-                'user-token' => $this->base->userAccountId,
-            ]
-        );
-
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
-    }
-
-    /**
-     * @When /^I attempt to add the same LPA again REFACTORED$/
-     */
-    public function iAttemptToAddTheSameLPAAgainREFACTORED()
-    {
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result(
@@ -1136,35 +1111,6 @@ class LpaContext implements Context
      */
     public function iRequestToAddAnLPAThatDoesNotExist()
     {
-        // codes api service call
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => ''])));
-
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND
-                )
-            );
-
-        $this->apiPost(
-            '/v1/actor-codes/summary',
-            [
-                'actor-code' => $this->oneTimeCode,
-                'uid' => $this->lpaUid,
-                'dob' => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
-            ]
-        );
-    }
-
-    /**
-     * @When /^I request to add an LPA that does not exist REFACTORED$/
-     */
-    public function iRequestToAddAnLPAThatDoesNotExistREFACTORED()
-    {
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -1203,26 +1149,6 @@ class LpaContext implements Context
     public function iRequestToAddAnLPAWithAMissingActorCode()
     {
         $this->apiPost(
-            '/v1/actor-codes/summary',
-            [
-                'actor-code' => null,
-                'uid' => $this->lpaUid,
-                'dob' => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
-            ]
-        );
-
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-    }
-
-    /**
-     * @When /^I request to add an LPA with a missing actor code REFACTORED$/
-     */
-    public function iRequestToAddAnLPAWithAMissingActorCodeREFACTORED()
-    {
-        $this->apiPost(
             '/v1/add-lpa/validate',
             [
                 'actor-code' => null,
@@ -1239,26 +1165,6 @@ class LpaContext implements Context
      * @When /^I request to add an LPA with a missing date of birth$/
      */
     public function iRequestToAddAnLPAWithAMissingDateOfBirth()
-    {
-        $this->apiPost(
-            '/v1/actor-codes/summary',
-            [
-                'actor-code' => $this->oneTimeCode,
-                'uid' => $this->lpaUid,
-                'dob' => null,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
-            ]
-        );
-
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-    }
-
-    /**
-     * @When /^I request to add an LPA with a missing date of birth REFACTORED$/
-     */
-    public function iRequestToAddAnLPAWithAMissingDateOfBirthREFACTORED()
     {
         $this->apiPost(
             '/v1/add-lpa/validate',
@@ -1281,26 +1187,6 @@ class LpaContext implements Context
     public function iRequestToAddAnLPAWithAMissingUserId()
     {
         $this->apiPost(
-            '/v1/actor-codes/summary',
-            [
-                'actor-code' => $this->oneTimeCode,
-                'uid' => null,
-                'dob' => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
-            ]
-        );
-
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-    }
-
-    /**
-     * @When /^I request to add an LPA with a missing user id REFACTORED$/
-     */
-    public function iRequestToAddAnLPAWithAMissingUserIdREFACTORED()
-    {
-        $this->apiPost(
             '/v1/add-lpa/validate',
             [
                 'actor-code' => $this->oneTimeCode,
@@ -1318,40 +1204,6 @@ class LpaContext implements Context
      * @When /^I confirmed to add an LPA to my account$/
      */
     public function iRequestToAddAnLPAWithValidDetails()
-    {
-        // codes api service call
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
-
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        // called twice
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        $this->apiPost(
-            '/v1/actor-codes/summary',
-            [
-                'actor-code' => $this->oneTimeCode,
-                'uid' => $this->lpaUid,
-                'dob' => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
-            ]
-        );
-
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
-
-        $response = $this->getResponseAsJson();
-        assertEquals($this->lpaUid, $response['lpa']['uId']);
-    }
-
-    /**
-     * @When /^I request to add an LPA with valid details REFACTORED$/
-     */
-    public function iRequestToAddAnLPAWithValidDetailsREFACTORED()
     {
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -1694,7 +1546,7 @@ class LpaContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->apiPost(
-            '/v1/actor-codes/confirm',
+            '/v1/add-lpa/confirm',
             [
                 'actor-code' => $this->oneTimeCode,
                 'uid' => $this->lpaUid,

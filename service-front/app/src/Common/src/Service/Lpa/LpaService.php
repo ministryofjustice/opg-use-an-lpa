@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Common\Service\Lpa;
 
 use ArrayObject;
-use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
@@ -213,106 +212,5 @@ class LpaService
         }
 
         return $lpaData;
-    }
-
-    /**
-     * Get an LPA using a users supplied one time passcode, LPA uid and the actors DoB
-     *
-     * Used when an actor adds an LPA to their UaLPA account
-     *
-     * @param string $userToken
-     * @param string $passcode
-     * @param string $referenceNumber
-     * @param string $dob
-     * @return Lpa|null
-     * @throws Exception
-     */
-    public function getLpaByPasscode(string $userToken, string $passcode, string $referenceNumber, string $dob): ?ArrayObject
-    {
-        $data = [
-            'actor-code' => $passcode,
-            'uid'        => $referenceNumber,
-            'dob'        => $dob,
-        ];
-
-        $this->apiClient->setUserTokenHeader($userToken);
-        $lpaData = $this->apiClient->httpPost('/v1/actor-codes/summary', $data);
-
-        if (isset($lpaData['lpa'])) {
-            $lpaData = ($this->parseLpaData)($lpaData);
-
-            $this->logger->info(
-                'Account with Id {id} fetched LPA with Id {uId} by passcode',
-                [
-                    'id'  => $userToken,
-                    'uId' => ($lpaData->lpa)->getUId()
-                ]
-            );
-            return $lpaData;
-        }
-
-        return null;
-    }
-
-    /**
-     * Confirm the addition of an LPA to an actors UaLPA account
-     *
-     * @param string $userToken
-     * @param string $passcode
-     * @param string $referenceNumber
-     * @param string $dob
-     * @return string|null The unique actor token that links an actor record and lpa together
-     */
-    public function confirmLpaAddition(string $userToken, string $passcode, string $referenceNumber, string $dob): ?string
-    {
-        $data = [
-            'actor-code' => $passcode,
-            'uid'        => $referenceNumber,
-            'dob'        => $dob,
-        ];
-
-        $this->apiClient->setUserTokenHeader($userToken);
-
-        $lpaData = $this->apiClient->httpPost('/v1/actor-codes/confirm', $data);
-
-        if (isset($lpaData['user-lpa-actor-token'])) {
-            $this->logger->info(
-                'Account with Id {id} added LPA with Id {uId} to account by passcode',
-                [
-                    'id'  => $userToken,
-                    'uId' => $referenceNumber
-                ]
-            );
-
-            return $lpaData['user-lpa-actor-token'];
-        }
-
-        return null;
-    }
-
-    /**
-     * @param string $referenceNumber
-     * @param string $identity
-     *
-     * @return ArrayObject|null
-     * @throws Exception
-     */
-    public function isLpaAlreadyAdded(string $referenceNumber, string $identity): ?ArrayObject
-    {
-        $lpasAdded = $this->getLpas($identity);
-
-        foreach ($lpasAdded as $userLpaActorToken => $lpaData) {
-            if ($lpaData['lpa']->getUId() === $referenceNumber) {
-                $this->logger->info(
-                    'Account with Id {id} has attempted to add LPA {uId} which already exists in their account',
-                    [
-                        'id' => $identity,
-                        'uId' => $referenceNumber
-                    ]
-                );
-                return $lpasAdded[$userLpaActorToken];
-            }
-        }
-        return null;
     }
 }
