@@ -49,6 +49,19 @@ import googleAnalytics from './googleAnalytics';
     </form>
     `;
 
+    const lpaSummary = `
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <nav class="moj-sub-navigation" aria-label="Sub navigation">
+                <ul class="moj-sub-navigation__list">
+                    <li class="moj-sub-navigation__item">
+                        <a class="govuk-link moj-sub-navigation__link moj-sub-navigation__link--underline"
+                           href="https://localhost:9001/download-lpa">Download this LPA summary</a>
+                    </li>
+                </ul>
+            </nav>
+        </main>
+    `;
+
 describe('given Google Analytics datalayer is not setup', () => {
     let useAnalytics;
     beforeEach(() => {
@@ -279,5 +292,36 @@ describe('given a form has reported validation errors', () => {
         expect(global.dataLayer[7][2].event_category).toBe('Form errors');
         expect(global.dataLayer[7][2].event_label).not.toBeUndefined();
         expect(global.dataLayer[7][2].event_label).toBe('#show_hide_password - Password must include a capital letter');
+    });
+});
+
+describe('given I am viewing the LPA summary', () => {
+    let useAnalytics;
+    beforeEach(() => {
+        document.body.innerHTML = lpaSummary;
+        useAnalytics = new googleAnalytics('UA-12345');
+    });
+
+    /**
+     * Description of data layer 2 and 3 in gtag
+     * [Arguments] {
+      '0': 'event',
+      '1': 'event',
+      '2': {
+            event_category: 'event_category',
+            event_label: 'event_label',
+            value: 'value'
+         }
+        }
+     */
+    test('it should fire an event when I click to download my lpa summary', () => {
+        const linkSelector = document.querySelector('a[href$="/download-lpa"]');
+        linkSelector.click();
+
+        expect(global.dataLayer[11][1]).toBe('Download');
+        expect(global.dataLayer[11][2].event_category).not.toBeUndefined();
+        expect(global.dataLayer[11][2].event_category).toBe('LPA summary');
+        expect(global.dataLayer[11][2].event_label).not.toBeUndefined();
+        expect(global.dataLayer[11][2].event_label).toBe('Download this LPA summary');
     });
 });
