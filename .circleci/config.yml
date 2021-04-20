@@ -344,17 +344,6 @@ workflows:
             filters: { branches: { only: [master] } }
             requires: [test_pdf]
 
-        - use-my-lpa/coveralls_upload:
-            name: coveralls_upload
-            filters: { branches: { only: [master] } }
-            requires:
-              [
-                app_front_build,
-                app_api_build,
-                test_web,
-                test_pdf,
-              ]
-
         - use-my-lpa/codecov_upload:
             name: codecov_upload
             filters: { branches: { only: [master] } }
