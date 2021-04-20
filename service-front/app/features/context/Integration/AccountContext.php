@@ -1039,9 +1039,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^The (.*) LPA details and (.*) message are not displayed$/
+     * @Then /^The Revoked LPA details are not displayed$/
      */
-    public function theRevokedLPADetailsAndMessageAreNotDisplayed($status, $message)
+    public function theRevokedLPADetailsAreNotDisplayed()
     {
         // Not needed for this context
     }

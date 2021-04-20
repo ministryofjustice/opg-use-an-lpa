@@ -1972,7 +1972,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I request to view an LPA which status is (.*)$/
+     * @When /^I request to view an LPA which status is "([^"]*)"$/
      */
     public function iRequestToViewAnLPAWhichStatusIs($status)
     {
@@ -2399,12 +2399,12 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^The (.*) LPA details and (.*) message are not displayed$/
+     * @Then /^The Revoked LPA details are not displayed$/
      */
-    public function theRevokedLPADetailsAndMessageAreNotDisplayed($status, $message)
+    public function theRevokedLPADetailsAreNotDisplayed()
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->assertPageNotContainsText($message);
+        $this->ui->assertPageNotContainsText($this->lpa->donor->salutation . ' ' . $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames . ' ' . $this->lpa->donor->surname);
     }
 
     /**

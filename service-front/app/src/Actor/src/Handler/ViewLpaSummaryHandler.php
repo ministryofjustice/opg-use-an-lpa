@@ -21,6 +21,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
 /**
  * Class ViewLpaSummaryHandler
  * @package Actor\Handler
+ * @codeCoverageIgnore
  */
 class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
 {
@@ -61,6 +62,7 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
 
         //UML-1394 TO BE REMOVED IN FUTURE TO SHOW PAGE NOT FOUND WITH APPROPRIATE CONTENT
         $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
+
         if (count($lpaData) === 0) {
             return $this->redirectToRoute('lpa.dashboard');
         }

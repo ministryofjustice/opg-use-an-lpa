@@ -13,7 +13,7 @@ Feature: View an LPA that I have added to my account
   @integration @ui
   Scenario Outline: The user can view an LPA added to their account
     Given I am on the dashboard page
-    When I request to view an LPA which status is <status>
+    When I request to view an LPA which status is "<status>"
     Then The full LPA is displayed with the correct <message>
     Examples:
       | status | message |
@@ -23,7 +23,7 @@ Feature: View an LPA that I have added to my account
    @integration @ui
    Scenario: The user cannot view an LPA added to their account whose status has changed Revoked
      Given I am on the dashboard page
-     When I request to view an LPA which status is Revoked
+     When I request to view an LPA which status is "Revoked"
      Then I am taken back to the dashboard page
-     And The Revoked LPA details and This LPA is revoked message are not displayed
+     And The Revoked LPA details are not displayed
      
