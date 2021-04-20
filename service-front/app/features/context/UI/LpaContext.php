@@ -49,7 +49,7 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/check-answers');
 
-        $this->ui->assertElementContainsText('h1', 'We\'re posting you an activation key');
+        $this->ui->assertElementContainsText('h1', 'We’re posting you an activation key');
     }
 
     /**
