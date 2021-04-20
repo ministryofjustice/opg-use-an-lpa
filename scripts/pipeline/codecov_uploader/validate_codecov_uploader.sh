@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 
-# curl -s https://codecov.io/env > env;
 curl -s https://codecov.io/bash > codecov;
 VERSION=$(grep 'VERSION=\"[0-9\.]*\"' codecov | cut -d'"' -f2);
 echo $VERSION
