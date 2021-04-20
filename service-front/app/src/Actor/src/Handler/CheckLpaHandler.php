@@ -6,7 +6,7 @@ namespace Actor\Handler;
 
 use Acpr\I18n\TranslatorInterface;
 use Actor\Form\LpaConfirm;
-use Common\Exception\ApiException;
+use Common\Exception\RateLimitExceededException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\LoggerAware;
@@ -17,9 +17,10 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Lpa\AddLpa;
+use Common\Service\Lpa\AddLpaApiResponse;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitService;
-use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -32,6 +33,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use ArrayObject;
 
 /**
  * Class CheckLpaHandler
@@ -56,16 +58,19 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     private ?SessionInterface $session;
     private TranslatorInterface $translator;
     private ?UserInterface $user;
+    private AddLpa $addLpa;
 
     /**
      * LpaAddHandler constructor.
+     *
      * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param AuthenticationInterface $authenticator
-     * @param LpaService $lpaService
-     * @param LoggerInterface $logger
-     * @param RateLimitService $rateLimitService
-     * @param TranslatorInterface $translator
+     * @param UrlHelper                 $urlHelper
+     * @param AuthenticationInterface   $authenticator
+     * @param LpaService                $lpaService
+     * @param LoggerInterface           $logger
+     * @param RateLimitService          $rateLimitService
+     * @param TranslatorInterface       $translator
+     * @param AddLpa                    $addLpa
      */
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -74,7 +79,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         LpaService $lpaService,
         LoggerInterface $logger,
         RateLimitService $rateLimitService,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        AddLpa $addLpa
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
@@ -82,6 +88,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         $this->lpaService = $lpaService;
         $this->rateLimitService = $rateLimitService;
         $this->translator = $translator;
+        $this->addLpa = $addLpa;
     }
 
     /**
@@ -122,56 +129,68 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         }
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @param string                 $passcode
+     * @param string                 $referenceNumber
+     * @param string                 $dob
+     *
+     * @return ResponseInterface
+     * @throws RateLimitExceededException
+     */
     public function handleGet(
         ServerRequestInterface $request,
         string $passcode,
         string $referenceNumber,
         string $dob
     ): ResponseInterface {
-        try {
-            $lpaAddedData = $this->lpaService->isLpaAlreadyAdded($referenceNumber, $this->identity);
-            if (!is_null($lpaAddedData)) {
+        $result = $this->addLpa->validate(
+            $this->identity,
+            $passcode,
+            $referenceNumber,
+            $dob
+        );
+
+        switch ($result->getResponse()) {
+            case AddLpaApiResponse::ADD_LPA_ALREADY_ADDED:
+                $lpaAddedData = $result->getData();
                 return new HtmlResponse(
                     $this->renderer->render(
                         'actor::lpa-already-added',
                         [
+                            'user' => $this->user,
                             'lpa' => $lpaAddedData['lpa'],
                             'actorToken' => $lpaAddedData['user-lpa-actor-token']
                         ]
                     )
                 );
-            }
+            case AddLpaApiResponse::ADD_LPA_NOT_ELIGIBLE:
+            case AddLpaApiResponse::ADD_LPA_NOT_FOUND:
+                $this->rateLimitService->
+                limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
+                return new HtmlResponse(
+                    $this->renderer->render(
+                        'actor::lpa-not-found',
+                        [
+                            'user' => $this->user,
+                            'dob' => $dob,
+                            'referenceNumber' => $referenceNumber,
+                            'passcode' => $passcode
+                        ]
+                    )
+                );
+            case AddLpaApiResponse::ADD_LPA_FOUND:
+                $lpaData = $result->getData();
+                $lpa = $lpaData['lpa'];
+                $actor = $lpaData['actor']['details'];
+                $actorRole = ($lpaData['actor']['type'] === 'donor') ? 'Donor' : 'Attorney';
 
-            $lpaData = $this->lpaService->getLpaByPasscode(
-                $this->identity,
-                $passcode,
-                $referenceNumber,
-                $dob
-            );
-
-            $lpa = $lpaData['lpa'];
-            $actor = $lpaData['actor']['details'];
-
-            $this->getLogger()->debug(
-                'Account with Id {id} has found an LPA with Id {uId} using their passcode',
-                [
-                    'id'  => $this->identity,
-                    'uId' => $referenceNumber,
-                ]
-            );
-
-            if (!is_null($lpa) && (strtolower($lpa->getStatus()) === 'registered')) {
-                // Are we displaying Donor or Attorney user role
-                $actorRole = (array_search($actor->getId(), $lpa->getDonor()->getIds()) !== false)
-                    ? 'Donor'
-                    : 'Attorney';
-
-                $this->getLogger()->debug(
+                $this->logger->debug(
                     'Account with Id {id} identified as Role {role} on LPA with Id {uId}',
                     [
-                        'id'   => $this->identity,
+                        'id' => $this->identity,
                         'role' => $actorRole,
-                        'uId'  => $referenceNumber,
+                        'uId' => $lpa->getUId(),
                     ]
                 );
 
@@ -196,55 +215,16 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         ]
                     )
                 );
-
-            } else {
-                $this->getLogger()->debug(
-                    'LPA with Id {uId} has {status} status and hence cannot be added',
-                    [
-                        'uId' => $referenceNumber,
-                        'status' => $lpaData['lpa']->getStatus()
-                    ]
-                );
-
-                //  Show LPA not found page
-                return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                    'user'              => $this->user,
-                    'dob'               => $dob,
-                    'referenceNumber'   => $referenceNumber,
-                    'passcode'          => $passcode
-                ]));
-            }
-        } catch (ApiException $aex) {
-            if ($aex->getCode() === StatusCodeInterface::STATUS_NOT_FOUND) {
-                $this->getLogger()->info(
-                    'Account with Id {id} has failed to add an LPA to their account',
-                    [
-                        'id' => $this->identity,
-                    ]
-                );
-
-                $this->rateLimitService->
-                    limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
-                //  Show LPA not found page
-                return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                    'user'              => $this->user,
-                    'dob'               => $dob,
-                    'referenceNumber'   => $referenceNumber,
-                    'passcode'          => $passcode
-                ]));
-            }
-
-            throw $aex;
         }
     }
 
     /**
      * @param ServerRequestInterface $request
-     * @param string $passcode
-     * @param string $referenceNumber
-     * @param string $dob
+     * @param string                 $passcode
+     * @param string                 $referenceNumber
+     * @param string                 $dob
+     *
      * @return ResponseInterface
-     * @throws ApiException
      */
     public function handlePost(
         ServerRequestInterface $request,
@@ -255,40 +235,34 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $actorCode = $this->lpaService->confirmLpaAddition(
+            $result = $this->addLpa->confirm(
                 $this->identity,
                 $passcode,
                 $referenceNumber,
                 $dob
             );
 
-            $this->getLogger()->info(
-                'Account with Id {id} has added LPA with Id {uId} to their account',
-                [
-                    'id' => $this->identity,
-                    'uId' => $referenceNumber
-                ]
-            );
+            switch ($result->getResponse()) {
+                case AddLpaApiResponse::ADD_LPA_SUCCESS:
+                    /** @var FlashMessagesInterface $flash */
+                    $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+                    $donor = $this->session->get('donor_name');
+                    $lpaType = $this->session->get('lpa_type');
 
-            if (!is_null($actorCode)) {
+                    $message = $this->translator->translate(
+                        "You've added %donor%'s %lpaType% LPA",
+                        [
+                            '%donor%' => $donor,
+                            '%lpaType%' => $lpaType
+                        ],
+                        null,
+                        'flashMessage'
+                    );
+                    $flash->flash(self::ADD_LPA_FLASH_MSG, $message);
 
-                /** @var FlashMessagesInterface $flash */
-                $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
-                $donor = $this->session->get('donor_name');
-                $lpaType = $this->session->get('lpa_type');
-
-                $message = $this->translator->translate(
-                    "You've added %donor%'s %lpaType% LPA",
-                    [
-                        '%donor%' => $donor,
-                        '%lpaType%' => $lpaType
-                    ],
-                    null,
-                    'flashMessage'
-                );
-                $flash->flash(self::ADD_LPA_FLASH_MSG, $message);
-
-                return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
+                    return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
+                case AddLpaApiResponse::ADD_LPA_FAILURE:
+                    break;
             }
         }
 

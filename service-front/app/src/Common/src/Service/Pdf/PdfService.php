@@ -6,6 +6,7 @@ namespace Common\Service\Pdf;
 
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
+use Common\Service\Log\EventCodes;
 use Common\Service\Log\RequestTracing;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Request;
@@ -112,9 +113,10 @@ class PdfService
 
             switch ($response->getStatusCode()) {
                 case StatusCodeInterface::STATUS_OK:
-                    $this->logger->info(
+                    $this->logger->notice(
                         'Successfully generated PDF and presented for download {code}',
                         [
+                            'event_code' => EventCodes::DOWNLOAD_SUMMARY,
                             'code' => $response->getStatusCode()
                         ]
                     );

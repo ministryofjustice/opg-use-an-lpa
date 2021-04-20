@@ -13,11 +13,11 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 
 /**
- * Class ActorCodePreviewHandler
+ * Class AddLpaConfirmationHandler
  * @package App\Handler
  * @codeCoverageIgnore
  */
-class ActorCodeSummaryHandler implements RequestHandlerInterface
+class AddLpaConfirmationHandler implements RequestHandlerInterface
 {
     /**
      * @var ActorCodeService
@@ -37,17 +37,26 @@ class ActorCodeSummaryHandler implements RequestHandlerInterface
     {
         $data = $request->getParsedBody();
 
+        $actorId = $request->getHeader('user-token')[0];
+
         if (!isset($data['actor-code']) || !isset($data['uid']) || !isset($data['dob'])) {
             throw new BadRequestException("'actor-code', 'uid' and 'dob' are required fields");
         }
 
-        $response = $this->actorCodeService->validateDetails($data['actor-code'], $data['uid'], $data['dob']);
+        $response = $this->actorCodeService->confirmDetails(
+            $data['actor-code'],
+            $data['uid'],
+            $data['dob'],
+            $actorId
+        );
 
         // We deliberately don't return details of why the (validated) code was not found.
-        if (!is_array($response)) {
+        if (!is_string($response)) {
             throw new NotFoundException();
         }
 
-        return new JsonResponse($response, 200);
+        return new JsonResponse([
+            'user-lpa-actor-token' => $response
+        ], 201);
     }
 }
