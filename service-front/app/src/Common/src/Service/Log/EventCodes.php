@@ -66,6 +66,11 @@ class EventCodes
     public const OLDER_LPA_SUCCESS = 'OLDER_LPA_SUCCESS';
 
     /**
+     * Lpa summary has been downloaded
+     */
+    public const DOWNLOAD_SUMMARY = 'DOWNLOAD_SUMMARY';
+
+    /**
      * An LPA was found when requesting to add an LPA
      */
     public const ADD_LPA_FOUND = 'ADD_LPA_FOUND';
