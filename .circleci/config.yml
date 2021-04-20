@@ -1006,7 +1006,7 @@ orbs:
           - attach_workspace:
               at: build
           - run:
-              name: Validate Codecov
+              name: Get and Validate Codecov App
               command: bash ~/project/scripts/pipeline/codecov_uploader/validate_codecov_uploader.sh
           - run:
               name: Upload to Codecov
