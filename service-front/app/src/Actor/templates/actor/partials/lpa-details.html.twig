@@ -27,7 +27,7 @@
         </dd>
         <dd class="govuk-summary-list__actions govuk-!-width-one-third">
             {% if actorActive == false %}
-                <span class="moj-badge moj-badge--red">{% trans %}Access revoked{% endtrans %}</span>
+                <span class="moj-badge moj-badge--grey">{% trans %}Access revoked{% endtrans %}</span>
             {% elseif activeCodeCount >= 1 %}
                 <span class="moj-badge moj-badge--green">
                     {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
@@ -39,15 +39,15 @@
     </div>
 </dl>
 {%  if not actorActive %}
-    <div class="lpa-inactive-notice" >
-        <p class="govuk-body govuk-!-padding-2 govuk-!-margin-left-2 govuk-!-margin-bottom-0">{% trans %}You no longer have access to this <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
+    <div>
+        <p class="govuk-body">{% trans %}You no longer have access to this <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
             <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.removed') }}"> {% trans %}Why is this?{% endtrans %}</a>
         </p>
     </div>
 {%  endif %}
 {% if actorActive and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
-    <div class="lpa-inactive-notice" >
-    <p class="govuk-body govuk-!-padding-2 govuk-!-margin-left-2 govuk-!-margin-bottom-0">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
+    <div>
+    <p class="govuk-body">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
         <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.instructions-preferences') }}"> {% trans %}Read more{% endtrans %}</a>
     </p>
     </div>
