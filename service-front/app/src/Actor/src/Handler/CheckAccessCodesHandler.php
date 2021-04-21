@@ -72,6 +72,11 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
 
         $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
+        //UML-1394 TO BE REMOVED IN FUTURE TO SHOW PAGE NOT FOUND WITH APPROPRIATE CONTENT
+        if (count($lpaData) === 0) {
+            return $this->redirectToRoute('lpa.dashboard');
+        }
+
         $shareCodes = $this->viewerCodeService->getShareCodes(
             $identity,
             $actorLpaToken,

@@ -103,6 +103,11 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
 
         $lpaData = $this->lpaService->getLpaById($identity, $form->get('lpa_token')->getValue());
 
+        //UML-1394 TO BE REMOVED IN FUTURE TO SHOW PAGE NOT FOUND WITH APPROPRIATE CONTENT
+        if (count($lpaData) === 0) {
+            return $this->redirectToRoute('lpa.dashboard');
+        }
+
         return new HtmlResponse($this->renderer->render('actor::lpa-create-viewercode', [
             'user'       => $user,
             'lpa'        => $lpaData->lpa,
