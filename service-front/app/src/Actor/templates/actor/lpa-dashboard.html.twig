@@ -59,6 +59,9 @@
                 </h2>
 
                 {% for donorName, token in lpas %}
+
+                    <span class="govuk-heading-l govuk-!-margin-top-5 govuk-!-margin-bottom-3">{{ donor_name_with_dob_removed(donorName) }}</span>
+
                     {% for lpaData in token %}
                         {% set lpa = lpaData['lpa'] %}
                         {% set actorToken = lpaData['user-lpa-actor-token'] %}
@@ -70,28 +73,19 @@
 
                 <article class="moj-ticket-panel" aria-label="Added lpa list">
                     {% if actorActive %}
-                        <span class="govuk-heading-l govuk-!-margin-top-5 govuk-!-margin-bottom-3">{{ donor_name_with_dob_removed(donorName) }}</span>
 
                         {% if lpa.status|lower == 'registered' %}
                             <section class="moj-ticket-panel__content" aria-label="Registered lpa section">
-                             <p class="govuk-body">
                                  {{ include('@actor/partials/lpa-details.html.twig') }}
-                             </p>
-                        </section>
+                            </section>
                         {% elseif lpa.status|lower == 'cancelled' %}
                             <section class="moj-ticket-panel__content moj-ticket-panel__content--red" aria-label="Cancelled lpa section">
-                                <p class="govuk-body">
                                     {{ include('@actor/partials/lpa-details.html.twig') }}
-                                </p>
                             </section>
                         {% endif %}
                     {% else %}
-                        <span class="govuk-heading-l govuk-!-margin-top-5 govuk-!-margin-bottom-3">{{ donor_name_with_dob_removed(donorName) }}</span>
-
-                        <section class="moj-ticket-panel__content moj-ticket-panel__content--green" aria-label="Inactive actor on lpa section">
-                            <p class="govuk-body">
+                        <section class="moj-ticket-panel__content moj-ticket-panel__content--grey" aria-label="Inactive actor on lpa section">
                                 {{ include('@actor/partials/lpa-details.html.twig') }}
-                            </p>
                         </section>
                     {% endif %}
                 </article>
