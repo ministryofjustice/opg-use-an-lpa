@@ -1006,8 +1006,11 @@ orbs:
           - attach_workspace:
               at: build
           - run:
+              name: Get and Validate Codecov App
+              command: bash ~/project/scripts/pipeline/codecov_uploader/validate_codecov_uploader.sh
+          - run:
               name: Upload to Codecov
-              command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN || echo 'Codecov upload failed'
+              command: bash ~/project/codecov -t $CODECOV_TOKEN || echo 'Codecov upload failed'
 
       #----------------------------------------------------
       # Terraform
