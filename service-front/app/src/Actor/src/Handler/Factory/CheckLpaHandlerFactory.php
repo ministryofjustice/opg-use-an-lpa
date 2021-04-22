@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler\Factory;
 
 use Actor\Handler\CheckLpaHandler;
+use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitServiceFactory;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -27,7 +28,8 @@ class CheckLpaHandlerFactory
             $container->get(LpaService::class),
             $container->get(LoggerInterface::class),
             $rateLimitFactory->factory('actor_code_failure'),
-            $container->get(TranslatorInterface::class)
+            $container->get(TranslatorInterface::class),
+            $container->get(AddLpa::class)
         );
     }
 }

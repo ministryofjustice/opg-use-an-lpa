@@ -344,17 +344,6 @@ workflows:
             filters: { branches: { only: [master] } }
             requires: [test_pdf]
 
-        - use-my-lpa/coveralls_upload:
-            name: coveralls_upload
-            filters: { branches: { only: [master] } }
-            requires:
-              [
-                app_front_build,
-                app_api_build,
-                test_web,
-                test_pdf,
-              ]
-
         - use-my-lpa/codecov_upload:
             name: codecov_upload
             filters: { branches: { only: [master] } }
@@ -1017,31 +1006,11 @@ orbs:
           - attach_workspace:
               at: build
           - run:
+              name: Get and Validate Codecov App
+              command: bash ~/project/scripts/pipeline/codecov_uploader/validate_codecov_uploader.sh
+          - run:
               name: Upload to Codecov
-              command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN || echo 'Codecov upload failed'
-      coveralls_upload:
-        executor: php
-        steps:
-          - checkout
-          - attach_workspace:
-              at: build
-          - run:
-              name: Install coveralls upload tool
-              command: |
-                wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.2.0/php-coveralls.phar
-                chmod +x php-coveralls.phar
-          - run:
-              name: Fix coverage report paths
-              command: |
-                sed 's_/app/src/_/home/circleci/project/service-api/app/src/_' <build/service-api/phpunit/coverage.xml > build/service-api/phpunit/coverage-fixed.xml
-                sed 's_/app/src/_/home/circleci/project/service-front/app/src/_' <build/service-front/phpunit/coverage.xml > build/service-front/phpunit/coverage-fixed.xml
-          - run:
-              name: Upload report
-              command: |
-                ./php-coveralls.phar -v \
-                  --json_path build/coveralls-upload.json \
-                  --coverage_clover build/service-api/phpunit/coverage-fixed.xml \
-                  --coverage_clover build/service-front/phpunit/coverage-fixed.xml
+              command: bash ~/project/codecov -t $CODECOV_TOKEN || echo 'Codecov upload failed'
 
       #----------------------------------------------------
       # Terraform
