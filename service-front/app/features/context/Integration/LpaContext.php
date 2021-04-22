@@ -1010,7 +1010,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request to view an LPA which status is (.*)$/
+     * @When /^I request to view an LPA which status is "([^"]*)"$/
      */
     public function iRequestToViewAnLPAWhichStatusIs($status)
     {
