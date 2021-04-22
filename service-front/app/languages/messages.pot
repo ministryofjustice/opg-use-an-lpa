@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-03-24T17:14:57+00:00\n"
+"POT-Creation-Date: 2021-04-22T13:50:28+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -20,7 +20,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:26
 #: src/Actor/templates/actor/check-lpa.html.twig:29
-#: src/Actor/templates/actor/lpa-already-added.html.twig:37
+#: src/Actor/templates/actor/lpa-already-added.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:70
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
@@ -32,7 +32,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:28
 #: src/Actor/templates/actor/check-lpa.html.twig:31
-#: src/Actor/templates/actor/lpa-already-added.html.twig:39
+#: src/Actor/templates/actor/lpa-already-added.html.twig:41
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:70
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
@@ -142,7 +142,7 @@ msgstr ""
 #: src/Actor/templates/actor/activate-account.html.twig:12
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:14
 #: src/Actor/templates/actor/change-details.html.twig:20
-#: src/Actor/templates/actor/change-email.html.twig:13
+#: src/Actor/templates/actor/change-email.html.twig:12
 #: src/Actor/templates/actor/check-lpa.html.twig:12
 #: src/Actor/templates/actor/check-your-answers.html.twig:15
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:13
@@ -151,7 +151,7 @@ msgstr ""
 #: src/Actor/templates/actor/death-notification.html.twig:20
 #: src/Actor/templates/actor/login.html.twig:12
 #: src/Actor/templates/actor/lpa-add.html.twig:14
-#: src/Actor/templates/actor/lpa-already-added.html.twig:12
+#: src/Actor/templates/actor/lpa-already-added.html.twig:14
 #: src/Actor/templates/actor/lpa-removed.html.twig:15
 #: src/Actor/templates/actor/password-change.html.twig:13
 #: src/Actor/templates/actor/password-reset-not-found.html.twig:12
@@ -217,11 +217,11 @@ msgstr ""
 msgid "Enter your email address"
 msgstr ""
 
-#: src/Actor/templates/actor/create-account.html.twig:49
+#: src/Actor/templates/actor/create-account.html.twig:48
 msgid "Create a password"
 msgstr ""
 
-#: src/Actor/templates/actor/create-account.html.twig:50
+#: src/Actor/templates/actor/create-account.html.twig:49
 msgid "Your password needs to have: <ul class=\"govuk-list--bullet\"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>"
 msgstr ""
 
@@ -232,21 +232,21 @@ msgstr ""
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
 #: src/Actor/templates/actor/check-lpa.html.twig:68
 #: src/Actor/templates/actor/check-your-answers.html.twig:82
-#: src/Actor/templates/actor/create-account.html.twig:59
+#: src/Actor/templates/actor/create-account.html.twig:57
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:245
-#: src/Viewer/templates/viewer/check-code-found.html.twig:45
+#: src/Viewer/templates/viewer/check-code-found.html.twig:41
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:45
 msgid "Warning"
 msgstr ""
 
-#: src/Actor/templates/actor/create-account.html.twig:60
+#: src/Actor/templates/actor/create-account.html.twig:58
 #: src/Actor/templates/actor/password-change.html.twig:38
 #: src/Actor/templates/actor/password-reset.html.twig:47
 msgid "Never share your password with anyone."
 msgstr ""
 
-#: src/Actor/templates/actor/create-account.html.twig:66
+#: src/Actor/templates/actor/create-account.html.twig:64
 msgid "Create account"
 msgstr ""
 
@@ -275,7 +275,7 @@ msgstr ""
 msgid "at least one number"
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:47
+#: src/Actor/templates/actor/login.html.twig:46
 #: src/Actor/templates/actor/password-reset.html.twig:49
 #: src/Actor/templates/actor/your-details.html.twig:37
 msgid "Password"
@@ -285,7 +285,7 @@ msgstr ""
 msgid "Confirm Password"
 msgstr ""
 
-#: src/Actor/templates/actor/password-change.html.twig:44
+#: src/Actor/templates/actor/password-change.html.twig:51
 #: src/Actor/templates/actor/password-reset.html.twig:53
 msgid "Change password"
 msgstr ""
@@ -556,11 +556,11 @@ msgid ""
 "                        You’ll agree to any changes if you continue to use the service after the terms of use have been updated."
 msgstr ""
 
-#: src/Actor/templates/actor/password-change.html.twig:40
+#: src/Actor/templates/actor/password-change.html.twig:41
 msgid "Current password"
 msgstr ""
 
-#: src/Actor/templates/actor/password-change.html.twig:41
+#: src/Actor/templates/actor/password-change.html.twig:46
 msgid "New password"
 msgstr ""
 
@@ -1182,15 +1182,15 @@ msgstr ""
 msgid "Activate your account"
 msgstr ""
 
-#: src/Actor/templates/actor/change-email.html.twig:25
+#: src/Actor/templates/actor/change-email.html.twig:24
 msgid "Change your email address"
 msgstr ""
 
-#: src/Actor/templates/actor/change-email.html.twig:32
+#: src/Actor/templates/actor/change-email.html.twig:31
 msgid "New email address"
 msgstr ""
 
-#: src/Actor/templates/actor/change-email.html.twig:38
+#: src/Actor/templates/actor/change-email.html.twig:41
 msgid "Save new email address"
 msgstr ""
 
@@ -1258,7 +1258,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:17
 #: src/Actor/templates/actor/email-reset-not-found.html.twig:22
-#: src/Actor/templates/actor/login.html.twig:52
+#: src/Actor/templates/actor/login.html.twig:50
 msgid "Sign in"
 msgstr ""
 
@@ -1731,7 +1731,7 @@ msgstr ""
 msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to <a href=\"%link%\" class=\"govuk-link\">create an account</a> to use this service."
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:58
+#: src/Actor/templates/actor/login.html.twig:56
 msgid "Forgotten your password?"
 msgstr ""
 
@@ -1764,14 +1764,13 @@ msgid "Is this the LPA you want to add?"
 msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:25
-#: src/Actor/templates/actor/lpa-already-added.html.twig:33
+#: src/Actor/templates/actor/lpa-already-added.html.twig:35
 #: src/Viewer/templates/viewer/check-code-found.html.twig:28
 msgid "Type of LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:37
-#: src/Actor/templates/actor/lpa-already-added.html.twig:25
-#: src/Viewer/templates/viewer/check-code-found.html.twig:32
+#: src/Actor/templates/actor/lpa-already-added.html.twig:27
 msgid "Donor name"
 msgstr ""
 
@@ -2485,44 +2484,44 @@ msgstr ""
 msgid "We’ve found this LPA"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:36
+#: src/Viewer/templates/viewer/check-code-found.html.twig:32
 msgid "Code expires"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:37
+#: src/Viewer/templates/viewer/check-code-found.html.twig:33
 msgid "in %count% day, on %date%"
 msgid_plural "in %count% days, on %date%"
 msgstr[0] ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:46
+#: src/Viewer/templates/viewer/check-code-found.html.twig:42
 msgid "If this is not the right LPA, ask the donor or attorney to check the access code."
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:53
+#: src/Viewer/templates/viewer/check-code-found.html.twig:49
 msgid "If you need to see this <abbr title=\"lasting power of attorney\">LPA</abbr> after %date%"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:58
+#: src/Viewer/templates/viewer/check-code-found.html.twig:54
 msgid "You can see an online summary of this <abbr title='lasting power of attorney'> LPA </abbr>until %date%. After this date, the access code will expire."
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:60
+#: src/Viewer/templates/viewer/check-code-found.html.twig:56
 msgid "Ask the donor or attorney for a new access code if your organisation:"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:62
+#: src/Viewer/templates/viewer/check-code-found.html.twig:58
 msgid "needs more time to process this LPA"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:63
+#: src/Viewer/templates/viewer/check-code-found.html.twig:59
 msgid "need to see this LPA at a later date"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:78
+#: src/Viewer/templates/viewer/check-code-found.html.twig:74
 msgid "View this LPA"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:81
+#: src/Viewer/templates/viewer/check-code-found.html.twig:77
 msgid "Try another access code"
 msgstr ""
 
@@ -2976,7 +2975,7 @@ msgctxt "error"
 msgid "Enter the LPA reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/create-account.html.twig:64
+#: src/Actor/templates/actor/create-account.html.twig:62
 msgid "I agree to the <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>"
 msgstr ""
 
@@ -2986,7 +2985,7 @@ msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
-#: src/Actor/src/Handler/CheckLpaHandler.php:280
+#: src/Actor/src/Handler/CheckLpaHandler.php:252
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr ""
@@ -3330,7 +3329,7 @@ msgstr ""
 msgid "Back to GOV.UK"
 msgstr ""
 
-#: src/Actor/templates/actor/change-email.html.twig:33
+#: src/Actor/templates/actor/change-email.html.twig:32
 #: src/Actor/templates/actor/create-account.html.twig:43
 msgid "Check that your email address is spelt correctly"
 msgstr ""
@@ -3373,11 +3372,11 @@ msgstr ""
 msgid "If you're named on more than one <abbr title=\"lasting power of attorney\">LPA</abbr>, you can add all those <abbr title=\"lasting powers of attorney\">LPAs</abbr> to your account"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:73
+#: src/Viewer/templates/viewer/check-code-found.html.twig:69
 msgid "Your organisation name"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-found.html.twig:74
+#: src/Viewer/templates/viewer/check-code-found.html.twig:70
 msgid "This will be displayed to the attorneys and donor on the LPA"
 msgstr ""
 
@@ -3469,11 +3468,11 @@ msgstr ""
 msgid "inactive code details"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-already-added.html.twig:20
+#: src/Actor/templates/actor/lpa-already-added.html.twig:22
 msgid "You've already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-already-added.html.twig:46
+#: src/Actor/templates/actor/lpa-already-added.html.twig:48
 msgid "You can <a href=\"%view-lpa%\" class=\"govuk-link\">see this LPA</a> now or <a href=\"%add-lpa%\" class=\"govuk-link\">add another LPA</a> to your account."
 msgstr ""
 
@@ -3866,4 +3865,8 @@ msgstr ""
 #: src/Actor/templates/actor/form-error-messages.html.twig:52
 msgctxt "error"
 msgid "Enter your postcode"
+msgstr ""
+
+#: src/Actor/templates/actor/check-your-answers.html.twig:83
+msgid "These details must match the information we have about you on our records."
 msgstr ""
