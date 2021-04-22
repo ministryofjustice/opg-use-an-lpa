@@ -352,7 +352,7 @@ class LpaContext implements Context
             // change the token within the LPA data to match as it changes
             $this->lpaData['user-lpa-actor-token'] = $this->userLpaActorToken;
             $lpas[$this->userLpaActorToken] = $this->lpaData;
-            $this->userLpaActorToken = (string) (intval($this->userLpaActorToken) + 1);
+            $this->userLpaActorToken = (string)(intval($this->userLpaActorToken) + 1);
         }
 
         //API call for getting all the users added LPAs
@@ -1979,7 +1979,7 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('View LPA summary');
         $this->lpa->status = $status;
 
-        if($status === 'Revoked'){
+        if ($status === 'Revoked') {
             // API call for get LpaById
             $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
                 ->respondWith(
@@ -2404,7 +2404,9 @@ class LpaContext implements Context
     public function theRevokedLPADetailsAreNotDisplayed()
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->assertPageNotContainsText($this->lpa->donor->salutation . ' ' . $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames . ' ' . $this->lpa->donor->surname);
+        $this->ui->assertPageNotContainsText(
+            $this->lpa->donor->salutation . ' ' . $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames . ' ' . $this->lpa->donor->surname
+        );
     }
 
     /**
@@ -2453,4 +2455,64 @@ class LpaContext implements Context
 
         $this->ui->pressButton('Continue');
     }
+
+    /**
+     * @When /^I check access codes of the status changed LPA$/
+     */
+    public function iCheckAccessCodesOfTheStatusChangedLpa()
+    {
+        $this->lpa->status = "Revoked";
+
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'user-lpa-actor-token' => $this->userLpaActorToken,
+                            'date' => 'date',
+                            'lpa' => [],
+                            'actor' => $this->lpaData['actor'],
+                        ]
+                    )
+                )
+            );
+    }
+
+    /**
+     * @When /^The status of the LPA got Revoked$/
+     * @Then /^I cannot see my access codes and their details$/
+     */
+    public function theStatusOfTheLpaGotRevoked()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I request to give an organisation access to the LPA whose status changed to Revoked$/
+     */
+    public function iRequestToGiveAnOrganisationAccessToTheLPAWhoseStatusChangedToRevoked()
+    {
+        $this->lpa->status = "Revoked";
+
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'user-lpa-actor-token' => $this->userLpaActorToken,
+                            'date' => 'date',
+                            'lpa' => [],
+                            'actor' => $this->lpaData['actor'],
+                        ]
+                    )
+                )
+            );
+    }
 }
+

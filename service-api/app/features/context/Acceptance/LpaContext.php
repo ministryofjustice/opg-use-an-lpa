@@ -164,6 +164,7 @@ class LpaContext implements Context
 
     /**
      * @Then /^I am taken back to the dashboard page$/
+     * @Then /^I cannot see my access codes and their details$/
      */
     public function iAmTakenBackToTheDashboardPage()
     {
@@ -2311,5 +2312,64 @@ class LpaContext implements Context
         $response = $this->getResponseAsJson();
 
         assertEmpty($response);
+    }
+
+    /**
+     * @When /^I check my access codes of the status changed LPA$/
+     * @When /^I request to give an organisation access to the LPA whose status changed to Revoked$/
+     */
+    public function iCheckMyAccessCodesOfTheStatusChangedLpa()
+    {
+        $this->lpa->status = "Revoked";
+
+        // Get the LPA
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // API call to get lpa
+        $this->apiGet(
+            '/v1/lpas/' . $this->userLpaActorToken,
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        assertEmpty($response);
+    }
+
+    /**
+     * @When /^The status of the LPA got Revoked$/
+     */
+    public function theStatusOfTheLpaGotRevoked(){
+        // Not needed for this context
     }
 }

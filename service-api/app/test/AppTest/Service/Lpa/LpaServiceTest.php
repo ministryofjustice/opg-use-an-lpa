@@ -775,4 +775,21 @@ class LpaServiceTest extends TestCase
 
         $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
     }
+
+    /** @test */
+    public function will_return_empty_lpa_array_when_status_invalid()
+    {
+        $t = $this->init_valid_user_token_test();
+
+        // check valid lpa and returns false
+        $this->isValidLpaProphecy->__invoke(
+            $t->Lpa->getData()
+        )->willReturn(false);
+
+        $service = $this->getLpaService();
+
+        $result = $service->getByUserLpaActorToken($t->Token, $t->SiriusUid);
+
+        $this->assertEmpty($result);
+    }
 }

@@ -9,8 +9,6 @@ use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
-use Mezzio\Flash\FlashMessageMiddleware;
-use Mezzio\Flash\FlashMessagesInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -63,7 +61,7 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
         //UML-1394 TO BE REMOVED IN FUTURE TO SHOW PAGE NOT FOUND WITH APPROPRIATE CONTENT
         $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
-        if (count($lpaData) === 0) {
+        if (is_null($lpaData)) {
             return $this->redirectToRoute('lpa.dashboard');
         }
 

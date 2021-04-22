@@ -53,3 +53,12 @@ Feature: The user is able to check the access codes they have created
     And I have shared the access code with organisations to view my LPA
     When I click to check my access codes
     Then I can see the code has not been used to view the LPA
+
+  @ui
+  Scenario: As a user I cannot see the access codes if the status of the LPA has changed to Revoked
+    Given I have created an access code
+    And I am on the dashboard page
+    And The status of the LPA got Revoked
+    When I check access codes of the status changed LPA
+    Then I cannot see my access codes and their details
+    And I am taken back to the dashboard page

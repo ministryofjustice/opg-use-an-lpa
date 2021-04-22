@@ -171,6 +171,7 @@ class AccountContext extends BaseIntegrationContext
 
     /**
      * @Then /^I am taken back to the dashboard page$/
+     * @Then /^I cannot see my access codes and their details$/
      */
     public function iAmTakenBackToTheDashboardPage()
     {
