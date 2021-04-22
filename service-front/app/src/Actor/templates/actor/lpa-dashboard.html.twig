@@ -65,36 +65,13 @@
                     {% for lpaData in token %}
                         {% set lpa = lpaData['lpa'] %}
                         {% set actorToken = lpaData['user-lpa-actor-token'] %}
-{#                        {% set actorActive = lpaData['actorActive'] %}#}
-                        {% set actorActive = 0 %}
+                        {% set actorActive = lpaData['actorActive'] %}
                         {% set activeCodeCount = lpaData['activeCodeCount'] %}
                         {% set caseSubtype = lpa.caseSubtype == 'pfa' ? 'Property and finance'| trans : 'Health and welfare'| trans %}
                         {% set applicationHasRestrictions = lpa.applicationHasRestrictions %}
                         {% set applicationHasGuidance = lpa.applicationHasGuidance %}
 
-                <article class="moj-ticket-panel" aria-label="Added lpa list">
-                    {% if actorActive %}
-                        {% if lpa.status|lower == 'registered' %}
-                            <section class="moj-ticket-panel__content" aria-label="Registered lpa section">
-                                {{ include('@actor/partials/lpa-details.html.twig') }}
-                            </section>
-                        {% elseif lpa.status|lower == 'cancelled' %}
-                            <section class="moj-ticket-panel__content moj-ticket-panel__content--red"
-                                     aria-label="Cancelled lpa section">
-                                <p class="govuk-body">
-                                    {{ include('@actor/partials/lpa-details.html.twig') }}
-                                </p>
-                            </section>
-                        {% endif %}
-                    {% else %}
-                        <section class="moj-ticket-panel__content moj-ticket-panel__content--grey"
-                                 aria-label="Inactive actor on lpa section">
-                            <p class="govuk-body">
-                                {{ include('@actor/partials/lpa-details.html.twig') }}
-                            </p>
-                        </section>
-                    {% endif %}
-                </article>
+                        {{ include('@actor/partials/lpa-details.html.twig') }}
                     {% endfor %}
                 {% endfor %}
 
