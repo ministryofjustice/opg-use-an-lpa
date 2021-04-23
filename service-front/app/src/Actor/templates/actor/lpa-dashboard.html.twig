@@ -75,7 +75,7 @@
                     {% if actorActive %}
 
                         {% if lpa.status|lower == 'registered' %}
-                            <section class="moj-ticket-panel__content" aria-label="Registered lpa section">
+                            <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Registered lpa section">
                                  {{ include('@actor/partials/lpa-details.html.twig') }}
                             </section>
                         {% elseif lpa.status|lower == 'cancelled' %}

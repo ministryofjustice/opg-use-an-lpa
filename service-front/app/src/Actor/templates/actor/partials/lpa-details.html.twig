@@ -7,7 +7,7 @@
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0 lpa-secondary-text-colour">{{ caseSubtype }}</h2>
             {% endif %}
         </dt>
-        <dd class="govuk-summary-list  govuk-!-padding-top-0 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+        <dd class="govuk-summary-list__value govuk-!-padding-top- govuk-!-padding-bottom-4 govuk-!-margin-bottom-0">
             {% if actorActive %}
                 <p class="govuk-!-margin-top-0">
                     <a class="govuk-link" href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">{% trans %}Give an organisation access{% endtrans %}</a><br>
