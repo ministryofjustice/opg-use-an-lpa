@@ -126,7 +126,7 @@ userLpaActorMap = [
         'ActorId': '59',
         'Added': '2020-08-20T14:37:49.522828Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
-    }
+    },
     {
         'Id': '085b6474-d61e-41a4-9778-acb5870c5084',
         'SiriusUid': '700000000047',
