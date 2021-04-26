@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-04-22T14:30:13+00:00\n"
+"POT-Creation-Date: 2021-04-26T12:08:17+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -42,19 +42,19 @@ msgstr ""
 msgid "Health and welfare"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:33
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:42
 msgid "Give this access code to %organisation%"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:38
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:47
 msgid "This code expires in 30 days, on %date%."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:42
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:37
 msgid "Copy code"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:43
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:38
 msgid "Code copied"
 msgstr ""
 
@@ -70,7 +70,7 @@ msgstr ""
 msgid "When %organisation% have the access code, they should go to <br> www.gov.uk/view-lpa to see a summary of the LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:58
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:60
 msgid "Give another organisation access"
 msgstr ""
 
@@ -3401,11 +3401,11 @@ msgstr ""
 msgid "Use this service to:"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:53
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:55
 msgid "What to do next"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:55
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:57
 msgid "Give %organisation% this access code. They should go to www.gov.uk/view-lpa to enter the access code and see a summary of the <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
 
@@ -3885,4 +3885,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:27
 msgid "If you do not get it by this date, please contact us. You'll need to give us the LPA reference number when you call."
+msgstr ""
+
+#: src/Actor/templates/actor/check-your-answers.html.twig:83
+msgid "These details must match the information we have about you on our records."
 msgstr ""
