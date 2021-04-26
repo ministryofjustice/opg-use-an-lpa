@@ -20,10 +20,6 @@
 
                     <h1 class="govuk-heading-xl">{% trans %}Ask for an activation key{% endtrans %}</h1>
 
-                    <p class="govuk-body">{% trans %}To add an LPA to your account, you need an activation key. We'll send an activation key by post to the address we have for you on our records.{% endtrans %}</p>
-
-                    <p class="govuk-body">{% trans with {'%link%': path('lpa.change-details')} %}Find out what to do if you've <a href="%link%" class="govuk-link">changed address and not told us</a>.{% endtrans %}</p>
-
                     {{ govuk_error_summary(form) }}
 
                     {{ govuk_form_open(form) }}
@@ -31,8 +27,8 @@
                         {{ govuk_form_element(form.get('__csrf')) }}
 
                         {{ govuk_form_element(form.get('opg_reference_number'), {
-                            'label': 'OPG reference number'| trans,
-                            'hint': 'OPG reference numbers are 12 numbers long.<br/>For example, 700000000000'| trans,
+                            'label': 'LPA reference number'| trans,
+                            'hint': 'LPA reference numbers are 12 numbers long <br/>For example, 7000-0000-0000'| trans,
                             'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-!-font-weight-bold govuk-!-margin-bottom-4'},
                             'inputmode': 'numeric',
                             'pattern': '[0-9 -]*'
@@ -57,6 +53,7 @@
 
                         {{ govuk_form_element(form.get('postcode'), {
                             'label': 'Postcode'| trans,
+                            'hint': 'This must be your current postcode and match the one we have on our records. The activation key will be posted to this address. <a href="/lpa/change-details">Let us know if you have moved.</a>'| trans,
                             'label_attr': {'class': 'govuk-!-font-weight-bold'},
                             'attr' : {'class': 'govuk-input--width-10', 'label_class': 'govuk-!-font-weight-bold'}
                         }) }}
