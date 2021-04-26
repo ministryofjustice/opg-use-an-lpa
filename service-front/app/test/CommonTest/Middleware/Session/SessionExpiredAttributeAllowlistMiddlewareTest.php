@@ -45,9 +45,9 @@ class SessionExpiredAttributeAllowlistMiddlewareTest extends TestCase
     {
         $sessionProphecy = $this->prophesize(Session::class);
         $sessionProphecy
-            ->get(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
+            ->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
             ->shouldBeCalled()
-            ->willReturn(null);
+            ->willReturn(false);
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy
@@ -81,7 +81,7 @@ class SessionExpiredAttributeAllowlistMiddlewareTest extends TestCase
 
         $sessionProphecy = $this->prophesize(Session::class);
         $sessionProphecy
-            ->get(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
+            ->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
             ->shouldBeCalled()
             ->willReturn(true);
         $sessionProphecy
@@ -94,7 +94,7 @@ class SessionExpiredAttributeAllowlistMiddlewareTest extends TestCase
             ->willReturn($sessionData);
         $sessionProphecy
             ->unset(Argument::type('string'))
-            ->shouldBeCalledTimes(3); // SESSION_TIME_KEY is allowed
+            ->shouldBeCalledTimes(4); // SESSION_TIME_KEY is allowed
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy

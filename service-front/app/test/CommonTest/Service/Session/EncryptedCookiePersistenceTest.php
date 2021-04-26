@@ -20,11 +20,10 @@ declare(strict_types=1);
 namespace CommonTest\Service\Session;
 
 use Common\Service\Session\EncryptedCookiePersistence;
+use Common\Service\Session\Encryption\EncryptInterface;
 use Common\Service\Session\KeyManager\Key;
-use Common\Service\Session\KeyManager\KeyManagerInterface;
 use Laminas\Crypt\BlockCipher;
 use Mezzio\Session\Session;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
@@ -57,9 +56,9 @@ class EncryptedCookiePersistenceTest extends TestCase
     private const COOKIE_EXPIRES = 600;
 
     /**
-     * @var ObjectProphecy|KeyManagerInterface
+     * @var ObjectProphecy|EncryptInterface
      */
-    private $keyManagerProphecy;
+    private $encrypterProphecy;
 
     /**
      * @var Key
@@ -72,18 +71,18 @@ class EncryptedCookiePersistenceTest extends TestCase
         // A real key used within the tests. It doesn't matter what it is.
         $this->testKey = new Key('test-id', new EncryptionKey(new HiddenString(random_bytes(32))));
 
-        $this->keyManagerProphecy = $this->prophesize(KeyManagerInterface::class);
+        $this->encrypterProphecy = $this->prophesize(EncryptInterface::class);
 
         // Setup the key manager mock
-        $this->keyManagerProphecy->getEncryptionKey()->willReturn($this->testKey);
-        $this->keyManagerProphecy->getDecryptionKey($this->testKey->getId())->willReturn($this->testKey);
+        //$this->keyManagerProphecy->getEncryptionKey()->willReturn($this->testKey);
+        //$this->keyManagerProphecy->getDecryptionKey($this->testKey->getId())->willReturn($this->testKey);
     }
 
     /** @test */
     public function it_can_be_instantiated()
     {
         $cp = new EncryptedCookiePersistence(
-            $this->keyManagerProphecy->reveal(),
+            $this->encrypterProphecy->reveal(),
             self::COOKIE_NAME,
             self::COOKIE_PATH,
             'nocache',
@@ -121,10 +120,12 @@ class EncryptedCookiePersistenceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($uriProphecy->reveal());
 
+        $this->encrypterProphecy->decodeCookieValue('')->willReturn([]);
+
         //---
 
         $cp = new EncryptedCookiePersistence(
-            $this->keyManagerProphecy->reveal(),
+            $this->encrypterProphecy->reveal(),
             self::COOKIE_NAME,
             self::COOKIE_PATH,
             'nocache',
@@ -169,7 +170,6 @@ class EncryptedCookiePersistenceTest extends TestCase
         $responseProphecy->hasHeader('Pragma')->willReturn(false);
         $responseProphecy->getHeader('Set-Cookie')->willReturn([]);
 
-
         // Test the specific response
         $responseProphecy->withoutHeader('Set-Cookie')->willReturn($responseProphecy->reveal())->shouldBeCalled();
         $responseProphecy->withHeader('Pragma', 'no-cache')->willReturn($responseProphecy->reveal())->shouldBeCalled();
@@ -179,6 +179,7 @@ class EncryptedCookiePersistenceTest extends TestCase
             ->willReturn($responseProphecy->reveal())->shouldBeCalled();
 
         // Dig into the detail around the cookie that was set
+        // Essentially a test that the FigCookies library works. Not sure we need it
         $responseProphecy->withAddedHeader(
             'Set-Cookie',
             Argument::that(
@@ -208,28 +209,8 @@ class EncryptedCookiePersistenceTest extends TestCase
                     // Decompose the value into the key id, and the data
                     [$keyId, $payload] = explode('.', $matches[1], 2);
 
-                    $this->assertEquals($this->testKey->getId(), $keyId);
-
-                    $ciphertext = Base64UrlSafe::decode($payload);
-
-                    $plaintext = $this->getBlockCipher()->setKey($this->testKey->getKeyMaterial())->decrypt(
-                        $ciphertext
-                    );
-
-                    $value = json_decode($plaintext, true);
-
-                    $this->assertArrayHasKey('int', $value);
-                    $this->assertArrayHasKey('string', $value);
-                    $this->assertArrayHasKey('bool', $value);
-                    $this->assertArrayHasKey('float', $value);
-                    $this->assertArrayHasKey(EncryptedCookiePersistence::SESSION_TIME_KEY, $value);
-
-                    $this->assertEquals($testData['int'], $value['int']);
-                    $this->assertEquals($testData['string'], $value['string']);
-                    $this->assertEquals($testData['float'], $value['float']);
-                    $this->assertEquals($testData['bool'], $value['bool']);
-
-                    $this->assertEquals(time(), $value[EncryptedCookiePersistence::SESSION_TIME_KEY], '', 3);
+                    $this->assertEquals('ENCRYPTED', $keyId);
+                    $this->assertEquals('CIPHER_TEXT', $payload);
 
                     //--------
                     // Extract the Expires time
@@ -246,8 +227,27 @@ class EncryptedCookiePersistenceTest extends TestCase
             )
         )->willReturn($responseProphecy->reveal())->shouldBeCalled();
 
+        $this->encrypterProphecy->encodeCookieValue(
+            Argument::that(function($input) use ($testData) {
+                $this->assertArrayHasKey('int', $input);
+                $this->assertArrayHasKey('string', $input);
+                $this->assertArrayHasKey('bool', $input);
+                $this->assertArrayHasKey('float', $input);
+                $this->assertArrayHasKey(EncryptedCookiePersistence::SESSION_TIME_KEY, $input);
+
+                $this->assertEquals($testData['int'], $input['int']);
+                $this->assertEquals($testData['string'], $input['string']);
+                $this->assertEquals($testData['float'], $input['float']);
+                $this->assertEquals($testData['bool'], $input['bool']);
+
+                $this->assertEquals(time(), $input[EncryptedCookiePersistence::SESSION_TIME_KEY], '', 3);
+
+                return true;
+            })
+        )->willReturn('ENCRYPTED.CIPHER_TEXT');
+
         $cp = new EncryptedCookiePersistence(
-            $this->keyManagerProphecy->reveal(),
+            $this->encrypterProphecy->reveal(),
             self::COOKIE_NAME,
             self::COOKIE_PATH,
             'nocache',
@@ -308,24 +308,26 @@ class EncryptedCookiePersistenceTest extends TestCase
                     // Decompose the value into the key id, and the data
                     [$keyId, $payload] = explode('.', $matches[1], 2);
 
-                    $this->assertEquals($this->testKey->getId(), $keyId);
-
-                    $ciphertext = Base64UrlSafe::decode($payload);
-                    $plaintext = $this->getBlockCipher()->setKey($this->testKey->getKeyMaterial())->decrypt(
-                        $ciphertext
-                    );
-                    $cookieData = json_decode($plaintext, true);
-
-                    // All cookies, even ones with empty session data will have a time
-                    $this->assertEquals(time(), $cookieData[EncryptedCookiePersistence::SESSION_TIME_KEY], '', 3);
+                    $this->assertEquals('ENCRYPTED', $keyId);
+                    $this->assertEquals('CIPHER_TEXT', $payload);
 
                     return true;
                 }
             )
         )->willReturn($responseProphecy->reveal())->shouldBeCalled();
 
+        $this->encrypterProphecy->encodeCookieValue(
+            Argument::that(function($input) {
+                $this->assertArrayHasKey(EncryptedCookiePersistence::SESSION_TIME_KEY, $input);
+
+                $this->assertEquals(time(), $input[EncryptedCookiePersistence::SESSION_TIME_KEY], '', 3);
+
+                return true;
+            })
+        )->willReturn('ENCRYPTED.CIPHER_TEXT');
+
         $cp = new EncryptedCookiePersistence(
-            $this->keyManagerProphecy->reveal(),
+            $this->encrypterProphecy->reveal(),
             self::COOKIE_NAME,
             self::COOKIE_PATH,
             'nocache',
@@ -369,9 +371,9 @@ class EncryptedCookiePersistenceTest extends TestCase
             // 1 second after is should expire
         ];
 
-        $plaintext = json_encode($testData);
-        $ciphertext = $this->getBlockCipher()->setKey($this->testKey->getKeyMaterial())->encrypt($plaintext);
-        $value = $this->testKey->getId() . '.' . Base64UrlSafe::encode($ciphertext);
+        $value = 'ENCRYPTED.CIPHER_TEXT';
+
+        $this->encrypterProphecy->decodeCookieValue($value)->willReturn($testData);
 
         $testCookieValue =
             'test-cookie-name=' . $value . '; Path=/; Expires=Wed, 08 May 2019 15:34:49 GMT; Secure; HttpOnly';
@@ -383,7 +385,7 @@ class EncryptedCookiePersistenceTest extends TestCase
         //---
 
         $cp = new EncryptedCookiePersistence(
-            $this->keyManagerProphecy->reveal(),
+            $this->encrypterProphecy->reveal(),
             self::COOKIE_NAME,
             self::COOKIE_PATH,
             'nocache',
@@ -413,8 +415,9 @@ class EncryptedCookiePersistenceTest extends TestCase
      * When cookie data is present along with a valid time, we expect the included data to be returned in the session.
      *
      * Note: We never rely on the `Expires` field in the cookie. This is for the browser, not for us.
+     * @test
      */
-    public function testReadingSessionDataDirectFromTheHeaderWithTime()
+    public function a_valid_session_unexpired_session_cookie_will_contain_data()
     {
         $testData = [
             'bool' => true,
@@ -424,9 +427,9 @@ class EncryptedCookiePersistenceTest extends TestCase
             EncryptedCookiePersistence::SESSION_TIME_KEY => time(),
         ];
 
-        $plaintext = json_encode($testData);
-        $ciphertext = $this->getBlockCipher()->setKey($this->testKey->getKeyMaterial())->encrypt($plaintext);
-        $value = $this->testKey->getId() . '.' . Base64UrlSafe::encode($ciphertext);
+        $value = 'ENCRYPTED.CIPHER_TEXT';
+
+        $this->encrypterProphecy->decodeCookieValue($value)->willReturn($testData);
 
         $testCookieValue =
             'test-cookie-name=' . $value . '; Path=/; Expires=Wed, 08 May 2019 15:34:49 GMT; Secure; HttpOnly';
@@ -437,7 +440,7 @@ class EncryptedCookiePersistenceTest extends TestCase
 
 
         $cp = new EncryptedCookiePersistence(
-            $this->keyManagerProphecy->reveal(),
+            $this->encrypterProphecy->reveal(),
             self::COOKIE_NAME,
             self::COOKIE_PATH,
             'nocache',

@@ -28,7 +28,7 @@ class UserIdentificationServiceTest extends TestCase
 
         $id = $service->id($requestProphecy->reveal());
 
-        $this->assertEquals('224fb6e8b478de4a0d10bbeb92a07ffe095df3f9e1b1b50197d88f4c48192025', $id);
+        $this->assertEquals('d3b534a6cf6e6e4f5bb7ba3442ef239f3d632a11d0f1a50a42bf0f271ffce331', $id);
     }
 
     /**
@@ -57,11 +57,11 @@ class UserIdentificationServiceTest extends TestCase
     public function headerCombinations(): array
     {
         return [
-            [ # the realistic bare minimum unique thing to track
+            'the realistic bare minimum unique thing to track' => [
                 ['x-forwarded-for'],
-                'c6f41b7d23a875f6b1ba03cea0207c8340563e2df9fc43cb1b331717b999d099'
+                '597967406e7009e87bfa34db426f795fc9248dd12af70290385fded6e46443a9'
             ],
-            [ # the complete set
+            'the complete set' => [
                 [
                     'accept',
                     'accept-encoding',
@@ -69,24 +69,24 @@ class UserIdentificationServiceTest extends TestCase
                     'user-agent',
                     'x-forwarded-for'
                 ],
-                '3afdc96b35e60a6c3d98fc06ca8647ad5a106c862503cb64f982d260928c7285'
+                '92e7dd7306dbdd412c8d6b626b7c808f0c3fc692c9297aedf047ae918b11be58'
             ],
-            [ # not a complete set
+            'not a complete set' => [
                 [
                     'accept',
                     'user-agent',
                     'x-forwarded-for'
                 ],
-                'f2978681b9f61976090c88df4dfce164513606996cf4d5c4203121a14eec13f9'
+                '833dccbeb6f8d0fea36924bafa0e3eaa8c4d565a36ed8742321e39bc5981ab61'
             ],
-            [ # only use specified headers
+            'only use specified headers' => [
                 [
                     'accept',
                     'user-agent',
                     'not-a-real-header',
                     'x-forwarded-for'
                 ],
-                'f2978681b9f61976090c88df4dfce164513606996cf4d5c4203121a14eec13f9'
+                '833dccbeb6f8d0fea36924bafa0e3eaa8c4d565a36ed8742321e39bc5981ab61'
             ],
         ];
     }
