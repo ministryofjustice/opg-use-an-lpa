@@ -33,9 +33,12 @@ class IsValidLpa
     {
         if (!(strtolower($lpa['status']) === self::LPA_REGISTERED || strtolower($lpa['status']) === self::LPA_CANCELLED)) {
 
-            $this->logger->info(
-                'The status of the LPA is  - {status}',
-                ['status' => $lpa['status']]
+            $this->logger->notice(
+                'LPA with id {lpaUid} has an invalid status of {status}',
+                [
+                    'status' => $lpa['status'],
+                    'lpaUid' => $lpa['uId']
+                ]
             );
             return false;
         }
