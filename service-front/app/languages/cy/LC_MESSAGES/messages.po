@@ -5291,8 +5291,6 @@ msgid "Sending an activation key"
 msgstr "Teipiwch eich allwedd cadarnhau cyfrif"
 
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:18
-#, fuzzy
-#| msgid "We're sending you an activation key"
 msgid "We're sending you an activation key"
 msgstr "Rydym yn anfon allwedd cadarnhau cyfrif atoch"
 
@@ -5310,10 +5308,6 @@ msgstr ""
 
 # Need to switch OPG & LPA in the translation
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:27
-#, fuzzy
-#| msgid ""
-#| "If you do not get the letter by %date%, please contact us. When you get in "
-#| "touch, quote the LPA reference number (also called OPG reference number)."
 msgid ""
 "If you do not get the letter by %date%, please contact us. When you get in "
 "touch, quote the LPA reference number (also called OPG reference number)."
@@ -5590,3 +5584,5 @@ msgstr ""
 "Mae’r cyfeirnod LPA (a elwir hefyd yn gyfeirnod OPG) ar dudalen gyntaf yr LPA "
 "papur ac wedi’i argraffu ar unrhyw lythyr a gewch gan Swyddfa’r Gwarcheidwad "
 "Cyhoeddus."
+
+
