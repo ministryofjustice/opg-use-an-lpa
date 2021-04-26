@@ -31,6 +31,14 @@ class IsValidLpa
      */
     public function __invoke(array $lpa): ?bool
     {
-        return strtolower($lpa['status']) === self::LPA_REGISTERED || strtolower($lpa['status']) === self::LPA_CANCELLED;
+        if (!(strtolower($lpa['status']) === self::LPA_REGISTERED || strtolower($lpa['status']) === self::LPA_CANCELLED)) {
+
+            $this->logger->info(
+                'The status of the LPA is  - {status}',
+                ['status' => $lpa['status']]
+            );
+            return false;
+        }
+        return true;
     }
 }
