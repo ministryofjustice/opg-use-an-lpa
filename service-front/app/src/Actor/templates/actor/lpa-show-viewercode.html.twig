@@ -27,8 +27,17 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
-                    <div class="moj-banner moj-banner--success govuk-panel--fixButton">
+                    <div class="moj-banner moj-banner--success">
                         <div class="moj-banner__message govuk-panel govuk-!-padding-1">
+                            <div class="js-accesscodecopy govuk-button__position govuk-!-display-inline-block">
+                                <label>
+                                    <input readonly type="text" value="{{ add_hyphen_to_viewer_code(code) }}" class="js-accesscodecopy-value offscreen" aria-hidden="true" tabindex="-1">
+                                </label>
+                                <button class="js-accesscodecopy-button govuk-button govuk-button__copy">
+                                    <span class="js-accesscodecopy-default">{% trans %}Copy code{% endtrans %}</span>
+                                    <span class="js-accesscodecopy-success hide">{% trans %}Code copied{% endtrans %}</span>
+                                </button>
+                            </div>
                             <h1 class="govuk-panel__body govuk-!-margin-top-0 govuk-!-margin-bottom-2">
                                 {% trans with {'%organisation%': organisation } %}Give this access code to %organisation%{% endtrans %}
                             </h1>
@@ -36,13 +45,6 @@
                                 {{ add_hyphen_to_viewer_code(code) }}
                             </span>
                             <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-3">{% trans with {'%date%': lpa_date(expires)} %}This code expires in 30 days, on %date%.{% endtrans %}</p>
-                            <div class="js-accesscodecopy">
-                                <input readonly type="text" value="{{ add_hyphen_to_viewer_code(code) }}" class="js-accesscodecopy-value offscreen" aria-hidden="true">
-                                <button class="js-accesscodecopy-button govuk-button govuk-button__copy">
-                                    <span class="js-accesscodecopy-default">{% trans %}Copy code{% endtrans %}</span>
-                                    <span class="js-accesscodecopy-success hide">{% trans %}Code copied{% endtrans %}</span>
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
