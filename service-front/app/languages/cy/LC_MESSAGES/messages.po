@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-04-22T14:30:13+00:00\n"
+"POT-Creation-Date: 2021-04-26T12:08:17+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -52,19 +52,19 @@ msgstr "Eiddo ac arian"
 msgid "Health and welfare"
 msgstr "Iechyd a lles"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:33
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:42
 msgid "Give this access code to %organisation%"
 msgstr "Rhowch y cod mynediad hwn i %organisation%"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:38
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:47
 msgid "This code expires in 30 days, on %date%."
 msgstr "Daw’r cod hwn i ben ymhen 30 diwrnod, ar yr %date%."
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:42
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:37
 msgid "Copy code"
 msgstr "Cod copi"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:43
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:38
 msgid "Code copied"
 msgstr "Cod wedi ei gopïo"
 
@@ -88,7 +88,7 @@ msgstr ""
 "Pan fydd %organisation% wedi cael y cod mynediad, dylent fynd i <br> www.gov."
 "uk/gweld-atwrneiaeth-arhosol i weld crynodeb o’r LPA."
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:58
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:60
 msgid "Give another organisation access"
 msgstr "Rhoi mynediad i sefydliad arall"
 
@@ -4883,11 +4883,11 @@ msgstr "Beth alla’i wneud gyda’r gwasanaeth hwn?"
 msgid "Use this service to:"
 msgstr "Trwy ddefnyddio’r gwasanaeth hwn rydych yn:"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:53
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:55
 msgid "What to do next"
 msgstr "Beth i’w wneud nesaf"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:55
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:57
 msgid ""
 "Give %organisation% this access code. They should go to www.gov.uk/view-lpa to "
 "enter the access code and see a summary of the <abbr title=\"lasting power of "
@@ -5574,3 +5574,10 @@ msgid ""
 msgstr ""
 "Os nad yw’n cyrraedd erbyn y dyddiad hwn, cysylltwch â ni. Bydd angen ichi roi "
 "cyfeirnod yr LPA inni pan fyddwch yn ffonio."
+
+#: src/Actor/templates/actor/check-your-answers.html.twig:83
+msgid ""
+"These details must match the information we have about you on our records."
+msgstr ""
+"Rhaid i’r manylion hyn gyfateb i’r wybodaeth sydd gennym amdanoch ar ein "
+"cofnodion."
