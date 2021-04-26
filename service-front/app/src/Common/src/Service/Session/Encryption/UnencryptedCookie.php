@@ -5,9 +5,17 @@ declare(strict_types=1);
 namespace Common\Service\Session\Encryption;
 
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use Psr\Log\LoggerInterface;
 
 class UnencryptedCookie implements EncryptInterface
 {
+    public function __construct(LoggerInterface $logger)
+    {
+        $logger->critical(
+            '----- WARNING ----- Service is currently operating with unencrypted cookies ----- WARNING -----'
+        );
+    }
+
     /**
      * @inheritDoc
      */
