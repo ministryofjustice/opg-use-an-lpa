@@ -1347,11 +1347,11 @@ jobs:
           name: Get URLs
           command: |
             ~/project/scripts/pipeline/set_environment_variables/set_slack_message_values.sh ~/project/scripts/pipeline/set_environment_variables/test_cluster_config.json
-            echo $SET_VIEW_DOMAIN
-            echo $SET_USE_DOMAIN
-            echo $SET_PUBLIC_FACING_VIEW_DOMAIN
-            echo $SET_PUBLIC_FACING_USE_DOMAIN
-            echo $SET_COMMIT_MESSAGE
+            echo $VIEW_DOMAIN
+            echo $USE_DOMAIN
+            echo $PUBLIC_FACING_VIEW_DOMAIN
+            echo $PUBLIC_FACING_USE_DOMAIN
+            echo $COMMIT_MESSAGE
       - slack/notify:
           title: "Use a Lasting Power of Attorney Production Release Successful"
           color: "#9933ff"
