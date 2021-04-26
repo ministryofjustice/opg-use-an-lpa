@@ -1980,6 +1980,8 @@ class LpaContext implements Context
         $this->lpa->status = $status;
 
         if ($status === 'Revoked') {
+           // $this->lpa->status = "Revoked";
+
             // API call for get LpaById
             $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
                 ->respondWith(
@@ -2404,7 +2406,7 @@ class LpaContext implements Context
     public function theRevokedLPADetailsAreNotDisplayed()
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->assertPageNotContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames . ' ' . $this->lpa->donor->surname);
+        $this->ui->assertPageNotContainsText($this->lpa->donor->firstname . '' . $this->lpa->donor->middlenames . ' ' . $this->lpa->donor->surname);
     }
 
     /**
@@ -2490,10 +2492,15 @@ class LpaContext implements Context
 
     /**
      * @Then /^I request to give an organisation access to the LPA whose status changed to Revoked$/
+     * @When /^I request to view an LPA whose status changed to Revoked$/
      */
     public function iRequestToGiveAnOrganisationAccessToTheLPAWhoseStatusChangedToRevoked()
     {
         $this->lpa->status = "Revoked";
+        $this->lpa->donor->firstname = "abc";
+        $this->lpa->donor->middlenames = "efg";
+        $this->lpa->donor->surname = "xyz";
+
 
         // API call for get LpaById
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
