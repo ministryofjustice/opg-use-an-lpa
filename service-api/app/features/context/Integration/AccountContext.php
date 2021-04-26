@@ -154,6 +154,7 @@ class AccountContext extends BaseIntegrationContext
     /**
      * @Given /^I am on the dashboard page$/
      * @Given /^I am on the user dashboard page$/
+     * @Then /^I cannot see the added LPA$/
      */
     public function iAmOnTheDashboardPage()
     {
@@ -170,6 +171,7 @@ class AccountContext extends BaseIntegrationContext
 
     /**
      * @Then /^I am taken back to the dashboard page$/
+     * @Then /^I cannot see my access codes and their details$/
      */
     public function iAmTakenBackToTheDashboardPage()
     {

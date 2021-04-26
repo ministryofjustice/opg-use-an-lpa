@@ -19,6 +19,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
 /**
  * Class ViewLpaSummaryHandler
  * @package Actor\Handler
+ * @codeCoverageIgnore
  */
 class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
 {
@@ -57,13 +58,23 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
         $user = $this->getUser($request);
         $identity = (!is_null($user)) ? $user->getIdentity() : null;
 
+        //UML-1394 TO BE REMOVED IN FUTURE TO SHOW PAGE NOT FOUND WITH APPROPRIATE CONTENT
         $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
-        return new HtmlResponse($this->renderer->render('actor::view-lpa-summary', [
-            'actorToken'    => $actorLpaToken,
-            'user'          => $user,
-            'lpa'           => $lpaData->lpa,
-            'actor'         => $lpaData->actor,
-        ]));
+        if (is_null($lpaData)) {
+            return $this->redirectToRoute('lpa.dashboard');
+        }
+
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::view-lpa-summary',
+                [
+                    'actorToken' => $actorLpaToken,
+                    'user' => $user,
+                    'lpa' => $lpaData->lpa,
+                    'actor' => $lpaData->actor,
+                ]
+            )
+        );
     }
 }

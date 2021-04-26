@@ -42,3 +42,12 @@ Feature: The user is able to create access codes for organisations
     Given I am on the dashboard page
     When I request to give an organisation access to one of my LPAs
     Then I am given a unique access code
+
+  @ui @integration
+  Scenario: As a user I wouldn't be able to create a viewer code if  the status of LPA has changed  to Revoked
+    Given I have added an LPA to my account
+    And I am on the dashboard page
+    And The status of the LPA got Revoked
+    When I request to give an organisation access to the LPA whose status changed to Revoked
+    Then I am taken back to the dashboard page
+
