@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-04-22T13:50:28+00:00\n"
+"POT-Creation-Date: 2021-04-22T14:30:13+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -24,7 +24,7 @@ msgstr "Eich cod mynediad yr LPA newydd"
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:14
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:14
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:36
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:34
 msgid "Back to your LPAs"
 msgstr "Yn ôl i’ch LPAs"
 
@@ -5011,7 +5011,7 @@ msgstr ""
 # Translation is OK. Doesn’t need a ‘?’
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:29
 msgid "Where can I find my activation key?"
-msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
+msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif?"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:33
 msgid ""
@@ -5354,7 +5354,7 @@ msgstr ""
 "Pan fydd gennych allwedd cadarnhau cyfrif, gallwch ei ddefnyddio i ychwanegu "
 "LPA at eich cyfrif ar-lein. Yna gellir ddefnyddio’r LPA ar-lein pan fydd angen."
 
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:34
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:32
 msgid "Request another activation key"
 msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
 
@@ -5544,9 +5544,33 @@ msgctxt "error"
 msgid "Enter your postcode"
 msgstr "Nodwch eich cod post"
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:83
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:18
+msgid "We're posting you an activation key"
+msgstr "Rydym yn anfon allwedd cadarnhau cyfrif atoch drwy’r post"
+
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:24
 msgid ""
-"These details must match the information we have about you on our records."
+"We'll send you a letter with the activation key. We'll post it to the address "
+"we have for you. You'll then be able to use the key to add the LPA to your "
+"account."
 msgstr ""
-"Rhaid i’r manylion hyn gyfateb i’r wybodaeth sydd gennym amdanoch ar ein "
-"cofnodion."
+"Byddwn yn anfon llythyr gyda’r allwedd cadarnhau atoch. Byddwn yn ei bostio "
+"i’r cyfeiriad sydd gennym ar eich cyfer. Yna fe allwch ddefnyddio’r allwedd i "
+"ychwanegu’r LPA at eich cyfrif."
+
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:25
+msgid "We've sent you an email to confirm all these details."
+msgstr "Rydym wedi anfon e-bost atoch yn cadarnhau’r holl fanylion hyn."
+
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:26
+msgid "You should get the letter by %date%"
+msgstr "Dylech gael y llythyr erbyn %date%"
+
+# Need to switch OPG & LPA in the translation
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:27
+msgid ""
+"If you do not get it by this date, please contact us. You'll need to give us "
+"the LPA reference number when you call."
+msgstr ""
+"Os nad yw’n cyrraedd erbyn y dyddiad hwn, cysylltwch â ni. Bydd angen ichi roi "
+"cyfeirnod yr LPA inni pan fyddwch yn ffonio."
