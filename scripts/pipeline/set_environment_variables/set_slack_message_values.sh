@@ -20,8 +20,8 @@ export SET_PUBLIC_FACING_VIEW_DOMAIN="$(jq -r .public_facing_view_fqdn $config_p
 export SET_PUBLIC_FACING_USE_DOMAIN="$(jq -r .public_facing_use_fqdn $config_path)"
 export SET_COMMIT_MESSAGE="$(git log -1 --pretty=%B)"
 
-# echo $SET_VIEW_DOMAIN
-# echo $SET_USE_DOMAIN
-# echo $SET_PUBLIC_FACING_VIEW_DOMAIN
-# echo $SET_PUBLIC_FACING_USE_DOMAIN
+echo $SET_VIEW_DOMAIN
+echo $SET_USE_DOMAIN
+echo $SET_PUBLIC_FACING_VIEW_DOMAIN
+echo $SET_PUBLIC_FACING_USE_DOMAIN
 echo $SET_COMMIT_MESSAGE
