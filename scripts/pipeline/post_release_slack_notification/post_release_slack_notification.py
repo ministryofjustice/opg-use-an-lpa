@@ -15,18 +15,70 @@ class PostReleaseNotifier:
             config = json.load(json_file)
             return config
 
-    def make_post_release_message(self):
-        # title = "Use a Lasting Power of Attorney Production Release Successful"
-        # user = "User: {}".format(
-        #   os.getenv('CIRCLE_USERNAME', ""),
-        # )
-        # links = "view url: https://{0}/home \nuse url: https://{1}/home".format(
-        #   self.config.public_facing_view_fqdn
-        # )
-        # commit_message = "Commit Message: \n"
+    def make_post_release_message(self, commit_message):
+        block_kit_message = {
+          # "text": ":star: Use a Lasting Power of Attorney Production Release Successful :star:",
+          "blocks": [
+            {
+              "type": "header",
+              "text": {
+                "type": "plain_text",
+                "text": ":star: Use a Lasting Power of Attorney Production Release Successful :star:"
+              }
+            },
+            {
+              "type": "context",
+              "elements": [
+                {
+                  "text": str(os.getenv('CIRCLE_USERNAME', "circleci username")),
+                  "type": "mrkdwn"
+                }
+              ]
+            },
+            {
+              "type": "divider"
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*links* "
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*use* https://{}/home".format(
+                  self.config['public_facing_use_fqdn']
+                )
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*view* https://{}/home".format(
+                  self.config['public_facing_view_fqdn']
+                )
+              }
+            },
+            {
+              "type": "divider"
+            },
+            {
+              "type": "section",
+              "fields": [
+                {
+                  "type": "mrkdwn",
+                  "text": commit_message
+                }
+              ]
+            }
+          ]
+        }
 
-
-        post_release_message = json.dumps({"text": "Test message by Andrew."})
+        post_release_message = json.dumps(block_kit_message)
         return post_release_message
 
 
@@ -49,17 +101,21 @@ def main():
         description="Add or remove your host's IP address to the viewer and actor loadbalancer ingress rules.")
 
     parser.add_argument("--config_file_path", type=str,
-                        default="./test_cluster_config.json",
+                        default="./cluster_config.json",
                         help="Path to config file produced by terraform")
     parser.add_argument("--slack_webhook", type=str,
                         default=os.getenv('SLACK_WEBHOOK'),
                         help="Webhook to use, determines what channel to post to")
+    parser.add_argument("--commit_message", type=str,
+                        default="",
+                        help="Commit message to include in slack notification")
 
     args = parser.parse_args()
 
     work = PostReleaseNotifier(args.config_file_path)
-    message = work.make_post_release_message()
-    work.post_to_slack(args.slack_webhook, message)
+    message = work.make_post_release_message(args.commit_message)
+    print(message)
+    # work.post_to_slack(args.slack_webhook, message)
 
 
 
