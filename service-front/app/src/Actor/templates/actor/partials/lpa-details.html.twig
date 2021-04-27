@@ -29,7 +29,7 @@
             {% if actorActive == false %}
                 <span class="moj-badge moj-badge--grey">{% trans %}Access revoked{% endtrans %}</span>
             {% elseif activeCodeCount >= 1 %}
-                <span class="moj-badge moj-badge--green">
+                <span class="moj-badge moj-badge--blue">
                     {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
                 </span>
             {% else %}
