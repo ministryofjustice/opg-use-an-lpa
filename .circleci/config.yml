@@ -1346,15 +1346,14 @@ jobs:
       - run:
           name: Get URLs
           command: |
-            ~/project/scripts/pipeline/set_environment_variables/set_slack_message_values.sh \
-            ~/project/scripts/pipeline/post_release_slack_notification/test_cluster_config.json \
-            >> $BASH_ENV
-      - run:
-          name: notify slack
-          command: |
-            python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
-            --config_file_path ~/project/scripts/pipeline/post_release_slack_notification/test_cluster_config.json \
-            --commit_message $COMMIT_MESSAGE
+            ~/project/scripts/pipeline/set_environment_variables/set_slack_message_values.sh >> $BASH_ENV
+      - slack/notify:
+          title: "Use a Lasting Power of Attorney Production Release Successful"
+          color: "#9933ff"
+          message: "User: $CIRCLE_USERNAME \nview url: https://$PUBLIC_FACING_VIEW_DOMAIN/home \nuse url: https://$PUBLIC_FACING_USE_DOMAIN/home"
+          webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
+          footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+
 
   python_slack_notify_production_release:
     docker:
@@ -1370,11 +1369,15 @@ jobs:
       - run:
           name: Get URLs
           command: |
-            ~/project/scripts/pipeline/set_environment_variables/set_slack_message_values.sh >> $BASH_ENV
+            ~/project/scripts/pipeline/set_environment_variables/set_slack_message_values.sh \
+            ~/project/scripts/pipeline/post_release_slack_notification/test_cluster_config.json \
+            >> $BASH_ENV
       - run:
-          name: Post to Slack
+          name: Notify Slack
           command: |
-            python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py
+            python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
+            --config_file_path ~/project/scripts/pipeline/post_release_slack_notification/test_cluster_config.json \
+            --commit_message $COMMIT_MESSAGE
 
   slack_notify_stats:
     docker:
