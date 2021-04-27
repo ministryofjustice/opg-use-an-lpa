@@ -56,7 +56,7 @@ def main():
         description="Post-release Slack notifications.")
 
     parser.add_argument("--config_file_path", type=str,
-                        default="./cluster_config.json",
+                        default="/tmp/cluster_config.json",
                         help="Path to config file produced by terraform")
     parser.add_argument("--slack_webhook", type=str,
                         default=os.getenv('SLACK_WEBHOOK'),
