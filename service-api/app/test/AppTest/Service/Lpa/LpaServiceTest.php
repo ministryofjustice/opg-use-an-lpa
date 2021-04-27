@@ -13,6 +13,7 @@ use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\GetAttorneyStatus;
+use App\Service\Lpa\IsValidLpa;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
 use App\Service\ViewerCodes\ViewerCodeService;
@@ -66,6 +67,11 @@ class LpaServiceTest extends TestCase
      */
     private $getAttorneyStatusProphecy;
 
+    /**
+     * @var IsValidLpa
+     */
+    private $isValidLpaProphecy;
+
     public function setUp()
     {
         $this->viewerCodesInterfaceProphecy = $this->prophesize(Repository\ViewerCodesInterface::class);
@@ -76,6 +82,7 @@ class LpaServiceTest extends TestCase
         $this->actorCodesProphecy = $this->prophesize(ActorCodes::class);
         $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
+        $this->isValidLpaProphecy = $this->prophesize(IsValidLpa::class);
     }
 
     //-------------------------------------------------------------------------
@@ -91,7 +98,8 @@ class LpaServiceTest extends TestCase
             $this->loggerProphecy->reveal(),
             $this->actorCodesProphecy->reveal(),
             $this->resolveActorProphecy->reveal(),
-            $this->getAttorneyStatusProphecy->reveal()
+            $this->getAttorneyStatusProphecy->reveal(),
+            $this->isValidLpaProphecy->reveal(),
         );
     }
 
@@ -183,6 +191,7 @@ class LpaServiceTest extends TestCase
         $t->Lpa = new Lpa(
             [
                 'uId' => $t->SiriusUid,
+                'status' => 'Registered',
                 'attorneys' => [
                     [
                         'id' => $t->ActorId,
@@ -208,6 +217,7 @@ class LpaServiceTest extends TestCase
         $this->resolveActorProphecy
             ->__invoke([
                 'uId' => $t->SiriusUid,
+                'status' => 'Registered',
                 'attorneys' => [
                     [
                         'id' => $t->ActorId,
@@ -234,6 +244,11 @@ class LpaServiceTest extends TestCase
                     'systemStatus' => true
                 ]
             ]);
+
+        // check valid lpa
+        $this->isValidLpaProphecy->__invoke(
+            $t->Lpa->getData()
+        )->willReturn(true);
 
         // attorney status is active
         $this->getAttorneyStatusProphecy->__invoke([
@@ -274,6 +289,7 @@ class LpaServiceTest extends TestCase
         ], $result['actor']);
         $this->assertEquals([
             'uId' => $t->SiriusUid,
+            'status' => 'Registered',
             'attorneys' => [
                 [
                     'id' => $t->ActorId,
@@ -362,16 +378,28 @@ class LpaServiceTest extends TestCase
 
         $t->lpaResults = [
             'uid-1' => new Lpa([
-                'uId' => 'uid-1'
+                'uId'       => 'uid-1',
+                'status'    => 'Registered',
             ], new DateTime()),
             'uid-2' => new Lpa([
-                'uId' => 'uid-2'
+                'uId'       => 'uid-2',
+                'status'    => 'Registered',
             ], new DateTime()),
         ];
 
         $this->userLpaActorMapInterfaceProphecy->getUsersLpas($t->UserId)->willReturn($t->mapResults);
 
         $this->lpasInterfaceProphecy->lookup(array_column($t->mapResults, 'SiriusUid'))->willReturn($t->lpaResults);
+
+        // check valid lpa
+        $this->isValidLpaProphecy->__invoke(
+            $t->lpaResults['uid-1']->getData()
+        )->willReturn(true);
+
+        // check valid lpa
+        $this->isValidLpaProphecy->__invoke(
+            $t->lpaResults['uid-2']->getData()
+        )->willReturn(true);
 
         return $t;
     }
@@ -444,15 +472,17 @@ class LpaServiceTest extends TestCase
         ];
 
         $lpa1 = new Lpa([
-            'uId' => 'uid-1',
-            'donor' => [
+            'uId'       => 'uid-1',
+            'status'    => 'Registered',
+            'donor'     => [
                 'linked' => [['id' => 1, 'uId' => 'person-1']]
             ],
         ], new DateTime());
 
         $lpa2 = new Lpa([
-            'uId' => 'uid-2',
-            'donor' => [
+            'uId'       => 'uid-2',
+            'status'    => 'Registered',
+            'donor'     => [
                 'linked' => [['id' => 2, 'uId' => 'person-2']]
             ],
         ], new DateTime());
@@ -487,6 +517,15 @@ class LpaServiceTest extends TestCase
                 'linked' => [['id' => 2, 'uId' => 'person-2']]
             ],
         ]);
+
+        //check valid lpa
+        $this->isValidLpaProphecy->__invoke(
+            $lpa1->getData(),
+        )->willReturn(true);
+
+        $this->isValidLpaProphecy->__invoke(
+            $lpa2->getData(),
+        )->willReturn(true);
 
         return $t;
     }
@@ -735,5 +774,22 @@ class LpaServiceTest extends TestCase
         $this->expectExceptionMessage("Share code expired");
 
         $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
+    }
+
+    /** @test */
+    public function will_return_empty_lpa_array_when_status_invalid()
+    {
+        $t = $this->init_valid_user_token_test();
+
+        // check valid lpa and returns false
+        $this->isValidLpaProphecy->__invoke(
+            $t->Lpa->getData()
+        )->willReturn(false);
+
+        $service = $this->getLpaService();
+
+        $result = $service->getByUserLpaActorToken($t->Token, $t->SiriusUid);
+
+        $this->assertEmpty($result);
     }
 }

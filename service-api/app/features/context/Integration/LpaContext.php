@@ -1472,9 +1472,13 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
 
-        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        assertEquals($this->lpa->id, $lpaData['lpa']['id']);
-        assertEquals($this->lpa->status, $lpaData['lpa']['status']);
+        if($status == "Revoked"){
+            assertEmpty($lpaData);
+        } else {
+            assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+            assertEquals($this->lpa->id, $lpaData['lpa']['id']);
+            assertEquals($this->lpa->status, $lpaData['lpa']['status']);
+        }
     }
 
     /**
@@ -1764,5 +1768,98 @@ class LpaContext extends BaseIntegrationContext
         $config = $this->container->get('config');
         $this->codesApiPactProvider = parse_url($config['codes_api']['endpoint'], PHP_URL_HOST);
         $this->apiGatewayPactProvider = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);
+    }
+
+    /**
+     * @Given /^The status of the LPA changed from Registered to Suspended$/
+     */
+    public function theStatusOfTheLPAChangedFromRegisteredToSuspended()
+    {
+        $this->lpa->status = 'Suspended';
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // LpaService:getLpas
+
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $lpa = $this->lpaService->getAllForUser($this->userId);
+
+        assertEmpty($lpa);
+    }
+
+    /**
+     * @When /^The status of the LPA got Revoked$/
+     */
+    public function theStatusOfTheLpaGotRevoked(){
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I check my access codes of the status changed LPA$/
+     * @When /^I request to give an organisation access to the LPA whose status changed to Revoked$/
+     */
+    public function iCheckMyAccessCodesOfTheStatusChangedLpa()
+    {
+        $this->lpa->status = "Revoked";
+
+        //Get the LPA
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
+
+        assertEmpty($lpaData);
     }
 }
