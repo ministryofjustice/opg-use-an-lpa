@@ -16,8 +16,24 @@ class PostReleaseNotifier:
             return config
 
     def make_post_release_message(self, commit_message):
+        title = ":star: Use a Lasting Power of Attorney Production Release Successful :star:"
+        username = "user: {0}".format(
+          str(os.getenv(
+            'CIRCLE_USERNAME', "circleci username")))
+        links = "*links:* \n*use:* https://{0}/home \n*view:* https://{1}/home".format(
+          self.config['public_facing_view_fqdn'],
+          self.config['public_facing_view_fqdn']
+          )
+        commit_text = commit_message
+
+        text_message = {"text":"{0}\n\n{1}\n\n{2}\n\n{3}\n".format(
+          title,
+          username,
+          links,
+          commit_text
+        )}
         block_kit_message = {
-          # "text": ":star: Use a Lasting Power of Attorney Production Release Successful :star:",
+          "text": commit_message,
           "blocks": [
             {
               "type": "header",
@@ -49,7 +65,7 @@ class PostReleaseNotifier:
               "type": "section",
               "text": {
                 "type": "mrkdwn",
-                "text": "*use* https://{}/home".format(
+                "text": "*use:* https://{}/home".format(
                   self.config['public_facing_use_fqdn']
                 )
               }
@@ -58,7 +74,7 @@ class PostReleaseNotifier:
               "type": "section",
               "text": {
                 "type": "mrkdwn",
-                "text": "*view* https://{}/home".format(
+                "text": "*view:* https://{}/home".format(
                   self.config['public_facing_view_fqdn']
                 )
               }
@@ -78,7 +94,8 @@ class PostReleaseNotifier:
           ]
         }
 
-        post_release_message = json.dumps(block_kit_message)
+        post_release_message = json.dumps(text_message)
+        # post_release_message = json.dumps(block_kit_message)
         return post_release_message
 
 
@@ -93,8 +110,6 @@ class PostReleaseNotifier:
                     'Request to slack returned an error %s, the response is:\n%s'
                     % (response.status_code, response.text)
                 )
-            else:
-                print(response)
 
 def main():
     parser = argparse.ArgumentParser(
@@ -115,7 +130,7 @@ def main():
     work = PostReleaseNotifier(args.config_file_path)
     message = work.make_post_release_message(args.commit_message)
     print(message)
-    # work.post_to_slack(args.slack_webhook, message)
+    work.post_to_slack(args.slack_webhook, message)
 
 
 
