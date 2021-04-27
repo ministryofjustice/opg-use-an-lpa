@@ -1354,7 +1354,6 @@ jobs:
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
 
-
   python_slack_notify_production_release:
     docker:
       - image: circleci/python

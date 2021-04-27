@@ -70,6 +70,7 @@ def main():
     work = MessageGenerator(args.config_file_path)
 
     message = work.generate_text_message(args.commit_message)
+    print(message)
 
     post_to_slack(args.slack_webhook, message)
 
