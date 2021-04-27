@@ -2953,14 +2953,6 @@ msgstr "Ychwanegu eich LPA cyntaf"
 msgid "Add a lasting power of attorney"
 msgstr "Ychwanegu atwrneiaeth arhosol"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:27
-msgid ""
-"You'll need the details from the letter we sent you when the <abbr title="
-"\"lasting power of attorney\">LPA</abbr> was registered."
-msgstr ""
-"Byddwch angen y manylion sydd yn y llythyr a anfonwyd atoch pan gofnodwyd yr "
-"<abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
-
 #: src/Actor/templates/actor/lpa-add.html.twig:35
 #: src/Common/templates/partials/full-lpa-display.html.twig:249
 msgid "LPA reference number"
