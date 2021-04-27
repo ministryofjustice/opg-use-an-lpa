@@ -69,7 +69,7 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message'  => 'Enter the OPG reference number',
+                            'message'  => 'Enter the LPA reference number',
                         ],
                     ],
                     [
@@ -80,8 +80,8 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
                             'min'      => 12,
                             'max'      => 12,
                             'messages'  => [
-                                StringLength::TOO_LONG => 'The OPG reference number you entered is too long',
-                                StringLength::TOO_SHORT => 'The OPG reference number you entered is too short'
+                                StringLength::TOO_LONG => 'The LPA reference number you entered is too long',
+                                StringLength::TOO_SHORT => 'The LPA reference number you entered is too short'
                             ],
                         ],
                     ],
