@@ -1354,12 +1354,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp
-      # - run:
-      #     name: Get URLs
-      #     command: |
-      #       ~/project/scripts/pipeline/set_environment_variables/set_slack_message_values.sh \
-      #       ~/project/scripts/pipeline/post_release_slack_notification/test_cluster_config.json \
-      #       >> $BASH_ENV
       - run:
           name: Notify Slack
           command: |
