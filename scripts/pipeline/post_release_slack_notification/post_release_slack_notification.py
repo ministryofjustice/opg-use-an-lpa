@@ -1,119 +1,59 @@
 import argparse
-import requests
 import json
 import os
+import requests
 
 
-class PostReleaseNotifier:
+@staticmethod
+def post_to_slack(slack_webhook, message):
+
+    response = requests.post(
+        slack_webhook, data=message,
+        headers={'Content-Type': 'application/json'}
+    )
+    if response.status_code != 200:
+        raise ValueError(
+            'Request to slack returned an error %s, the response is:\n%s'
+            % (response.status_code, response.text)
+            )
+class MessageGenerator:
     config = ''
 
     def __init__(self, config_file):
         self.config = self.read_parameters_from_file(config_file)
 
-    def read_parameters_from_file(self, config_file):
+    @staticmethod
+    def read_parameters_from_file(config_file):
         with open(config_file) as json_file:
             config = json.load(json_file)
             return config
 
-    def make_post_release_message(self, commit_message):
+    def generate_text_message(self, commit_message):
         title = ":star: Use a Lasting Power of Attorney Production Release Successful :star:"
         username = "user: {0}".format(
-          str(os.getenv(
-            'CIRCLE_USERNAME', "circleci username")))
+            str(os.getenv(
+                'CIRCLE_USERNAME', "circleci username")))
         links = "*links:* \n*use:* https://{0}/home \n*view:* https://{1}/home".format(
-          self.config['public_facing_view_fqdn'],
-          self.config['public_facing_view_fqdn']
+            self.config['public_facing_view_fqdn'],
+            self.config['public_facing_view_fqdn']
           )
-        commit_text = commit_message
 
-        text_message = {"text":"{0}\n\n{1}\n\n{2}\n\n{3}\n".format(
-          title,
-          username,
-          links,
-          commit_text
-        )}
-        block_kit_message = {
-          "text": commit_message,
-          "blocks": [
-            {
-              "type": "header",
-              "text": {
-                "type": "plain_text",
-                "text": ":star: Use a Lasting Power of Attorney Production Release Successful :star:"
-              }
-            },
-            {
-              "type": "context",
-              "elements": [
-                {
-                  "text": str(os.getenv('CIRCLE_USERNAME', "circleci username")),
-                  "type": "mrkdwn"
-                }
-              ]
-            },
-            {
-              "type": "divider"
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "*links* "
-              }
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "*use:* https://{}/home".format(
-                  self.config['public_facing_use_fqdn']
-                )
-              }
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "*view:* https://{}/home".format(
-                  self.config['public_facing_view_fqdn']
-                )
-              }
-            },
-            {
-              "type": "divider"
-            },
-            {
-              "type": "section",
-              "fields": [
-                {
-                  "type": "mrkdwn",
-                  "text": commit_message
-                }
-              ]
-            }
-          ]
+        text_message = {
+            "text":"{0}\n\n{1}\n\n{2}\n\n{3}\n".format(
+                title,
+                username,
+                links,
+                commit_message
+            ),
         }
 
         post_release_message = json.dumps(text_message)
-        # post_release_message = json.dumps(block_kit_message)
         return post_release_message
 
 
-    def post_to_slack(self, slack_webhook, message):
-
-            response = requests.post(
-                slack_webhook, data=message,
-                headers={'Content-Type': 'application/json'}
-            )
-            if response.status_code != 200:
-                raise ValueError(
-                    'Request to slack returned an error %s, the response is:\n%s'
-                    % (response.status_code, response.text)
-                )
-
 def main():
     parser = argparse.ArgumentParser(
-        description="Add or remove your host's IP address to the viewer and actor loadbalancer ingress rules.")
+        description="Post-release Slack notifications.")
 
     parser.add_argument("--config_file_path", type=str,
                         default="./cluster_config.json",
@@ -127,10 +67,11 @@ def main():
 
     args = parser.parse_args()
 
-    work = PostReleaseNotifier(args.config_file_path)
-    message = work.make_post_release_message(args.commit_message)
-    print(message)
-    work.post_to_slack(args.slack_webhook, message)
+    work = MessageGenerator(args.config_file_path)
+
+    message = work.generate_text_message(args.commit_message)
+
+    post_to_slack(args.slack_webhook, message)
 
 
 
