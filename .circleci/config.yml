@@ -1377,7 +1377,7 @@ jobs:
             python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
             --config_file_path ~/project/scripts/pipeline/post_release_slack_notification/test_cluster_config.json \
             --commit_message $COMMIT_MESSAGE
-            --slack_webhook = $PROD_RELEASE_SLACK_WEBHOOK
+
 
   slack_notify_stats:
     docker:
