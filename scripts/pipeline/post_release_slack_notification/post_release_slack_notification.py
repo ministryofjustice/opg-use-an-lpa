@@ -29,21 +29,24 @@ class MessageGenerator:
 
     def generate_text_message(self, commit_message):
         title = ":star: *Use a Lasting Power of Attorney Production Release Successful* :star:"
-        username = "*user:* {0}".format(
+        username = "*User:* {0}".format(
             str(os.getenv(
                 'CIRCLE_USERNAME', "circleci username")))
-        links = "*links* \n\t\t*use:* https://{0}/home \n\t\t*view:* https://{1}/home \n\t\t*circleci build url:* {2}".format(
+        links = "*Links* \n\t\t*Use frontend:* https://{0}/home \n\t\t*View frontend:* https://{1}/home \n\t\t*CircleCI build url:* {2}".format(
             self.config['public_facing_use_fqdn'],
             self.config['public_facing_view_fqdn'],
             str(os.getenv(
                 'CIRCLE_BUILD_URL', "build url no included"))
+          )
+        commit_text = "*Commit message:* {}".format(
+          commit_message
           )
         text_message = {
             "text":"{0}\n\n{1}\n\n{2}\n\n{3}\n".format(
                 title,
                 username,
                 links,
-                commit_message
+                commit_text
             ),
         }
 
