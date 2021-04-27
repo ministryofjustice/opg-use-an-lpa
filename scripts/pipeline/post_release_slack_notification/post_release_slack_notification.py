@@ -33,7 +33,7 @@ class MessageGenerator:
             str(os.getenv(
                 'CIRCLE_USERNAME', "circleci username")))
         links = "*links:* \n*use:* https://{0}/home \n*view:* https://{1}/home \n*circleci build url:* {2}".format(
-            self.config['public_facing_view_fqdn'],
+            self.config['public_facing_use_fqdn'],
             self.config['public_facing_view_fqdn'],
             str(os.getenv(
                 'CIRCLE_BUILD_URL', "build url no included"))
