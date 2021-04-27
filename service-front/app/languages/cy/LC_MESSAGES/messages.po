@@ -5493,10 +5493,10 @@ msgstr "Mae’r cyfeirnod OPG y bu i chi ei nodi yn rhy fyr"
 #: src/Actor/templates/actor/form-error-messages.html.twig:49
 msgctxt "error"
 msgid ""
-"Enter the 12 numbers of the OPG reference number. Do not include letters or "
+"Enter the 12 numbers of the LPA reference number. Do not include letters or "
 "other characters"
 msgstr ""
-"Nodwch 12 rhif y cyfernod OPG. Peidiwch â chynnwys llythrennau neu nodau eraill"
+"Nodwch 12 rhif y cyfernod LPA. Peidiwch â chynnwys llythrennau neu nodau eraill"
 
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:50
