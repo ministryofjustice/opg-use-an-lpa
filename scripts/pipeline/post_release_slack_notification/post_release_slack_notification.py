@@ -32,7 +32,7 @@ class MessageGenerator:
         username = "user: {0}".format(
             str(os.getenv(
                 'CIRCLE_USERNAME', "circleci username")))
-        links = "*links:* \n  *use:* https://{0}/home \n  *view:* https://{1}/home \n*  circleci build url:* {2}".format(
+        links = "*links:* \n\t*use:* https://{0}/home \n\t*view:* https://{1}/home \n\t*circleci build url:* {2}".format(
             self.config['public_facing_use_fqdn'],
             self.config['public_facing_view_fqdn'],
             str(os.getenv(
