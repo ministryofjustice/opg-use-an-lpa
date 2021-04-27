@@ -89,7 +89,7 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
                         'name'    => Digits::class,
                         'options' => [
                             'message' =>
-                                'Enter the 12 numbers of the OPG reference number. ' .
+                                'Enter the 12 numbers of the LPA reference number. ' .
                                 'Do not include letters or other characters'
                         ],
                     ],
