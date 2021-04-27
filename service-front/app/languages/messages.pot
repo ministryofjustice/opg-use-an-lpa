@@ -3529,10 +3529,6 @@ msgstr ""
 msgid "OPG reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key.html.twig:35
-msgid "OPG reference numbers are 12 numbers long.<br/>For example, 700000000000"
-msgstr ""
-
 #: src/Actor/templates/actor/request-activation-key.html.twig:40
 msgid "First names"
 msgstr ""

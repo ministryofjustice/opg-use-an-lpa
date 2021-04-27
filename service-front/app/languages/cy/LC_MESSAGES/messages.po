@@ -5066,11 +5066,6 @@ msgstr ""
 msgid "OPG reference number"
 msgstr "Cyfeirnod LPA"
 
-# English needs to change to LPA reference number
-#: src/Actor/templates/actor/request-activation-key.html.twig:35
-msgid "OPG reference numbers are 12 numbers long.<br/>For example, 700000000000"
-msgstr "Mae cyfeirnodau LPA yn cynnwys 12 rhif.<br/>Er enghraifft, 700000000000"
-
 #: src/Actor/templates/actor/request-activation-key.html.twig:40
 msgid "First names"
 msgstr "Enwau cyntaf"
