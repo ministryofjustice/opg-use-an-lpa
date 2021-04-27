@@ -4,7 +4,6 @@ import os
 import requests
 
 
-@staticmethod
 def post_to_slack(slack_webhook, message):
 
     response = requests.post(
