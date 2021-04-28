@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Common\Exception\InvalidRequestException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
@@ -15,6 +16,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class ConfirmRemoveLpaHandler
+ *
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class ConfirmRemoveLpaHandler extends AbstractHandler implements UserAware
 {
     use User;
@@ -37,9 +44,15 @@ class ConfirmRemoveLpaHandler extends AbstractHandler implements UserAware
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->getUser($request);
+        $actorLpaToken = $request->getQueryParams()['lpa'];
+
+        if (is_null($actorLpaToken)) {
+            throw new InvalidRequestException('No actor-lpa token specified');
+        }
 
         return new HtmlResponse($this->renderer->render('actor::confirm-remove-lpa', [
-            'user' => $user
+            'user' => $user,
+            'actorToken' => $actorLpaToken
         ]));
     }
 }
