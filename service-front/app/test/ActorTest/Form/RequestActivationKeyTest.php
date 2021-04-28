@@ -11,8 +11,7 @@ use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 
-class
-RequestActivationKeyTest extends TestCase implements TestsLaminasForm
+class RequestActivationKeyTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
 

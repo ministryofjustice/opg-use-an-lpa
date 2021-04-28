@@ -75,18 +75,18 @@ Feature: Add an LPA
       |                         | Enter your activation key                      |
 
 #  @ui
-  Scenario Outline: The user cannot add an LPA with an invalid reference number
-    Given I am on the add an LPA page
-    When I request to add an LPA with an invalid reference number format of "<referenceNo>"
-    Then I am told that my input is invalid because <reason>
-
-    Examples:
-      | referenceNo     | reason                                               |
-      | 7000-0000-ABC!  | Enter the LPA reference number in the correct format |
-      | 7000-0000 00    | The LPA reference number you entered is too short    |
-      | 7000-0000-00011 | The LPA reference number you entered is too long     |
-      | 70000000000     | The LPA reference number you entered is too short    |
-      |                 | Enter the LPA reference number                       |
+#  Scenario Outline: The user cannot add an LPA with an invalid reference number
+#    Given I am on the add an LPA page
+#    When I request to add an LPA with an invalid reference number format of "<referenceNo>"
+#    Then I am told that my input is invalid because <reason>
+#
+#    Examples:
+#      | referenceNo     | reason                                               |
+#      | 7000-0000-ABC!  | Enter the LPA reference number in the correct format |
+#      | 7000-0000 00    | The LPA reference number you entered is too short    |
+#      | 7000-0000-00011 | The LPA reference number you entered is too long     |
+#      | 70000000000     | The LPA reference number you entered is too short    |
+#      |                 | Enter the LPA reference number                       |
 
   @ui
   Scenario Outline: The user cannot add an LPA with an invalid DOB

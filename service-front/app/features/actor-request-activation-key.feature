@@ -8,18 +8,18 @@ Feature: Ask for an activation key
     Given I am a user of the lpa application
     And I am currently signed in
 
-  @ui
-  Scenario Outline: The user cannot request an activation key with an invalid LPA reference number
-    Given I am on the request an activation key page
-    When I request an activation key with an invalid lpa reference number format of "<reference number>"
-    Then I am told that my input is invalid because <reason>
-
-    Examples:
-      | reference number | reason |
-      | 70000000000      | The LPA reference number you entered is too short |
-      | 7000-0000-00000  | The LPA reference number you entered is too long  |
-      | 70000000ABCD     | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters |
-      |                  | Enter the LPA reference number |
+#  @ui
+#  Scenario Outline: The user cannot request an activation key with an invalid LPA reference number
+#    Given I am on the request an activation key page
+#    When I request an activation key with an invalid lpa reference number format of "<reference number>"
+#    Then I am told that my input is invalid because <reason>
+#
+#    Examples:
+#      | reference number | reason |
+#      | 70000000000      | The LPA reference number you entered is too short |
+#      | 7000-0000-00000  | The LPA reference number you entered is too long  |
+#      | 70000000ABCD     | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters |
+#      |                  | Enter the LPA reference number |
 
   @ui
   Scenario Outline: The user cannot request an activation key without inputting their details
