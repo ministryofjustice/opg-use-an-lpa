@@ -1358,7 +1358,6 @@ jobs:
           name: Notify Slack
           command: |
             python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
-            --config_file_path ~/project/scripts/pipeline/post_release_slack_notification/test_cluster_config.json \
             --slack_webhook $PROD_RELEASE_SLACK_WEBHOOK \
             --commit_message "$(git log -1 --pretty=%B)"
 
