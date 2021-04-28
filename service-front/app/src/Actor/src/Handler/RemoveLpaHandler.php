@@ -55,7 +55,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
-        ($this->removeLpa)($user, $actorLpaToken);
+        $removedLpaData = ($this->removeLpa)($user, $actorLpaToken);
         return $this->redirectToRoute('lpa.dashboard');
     }
 }

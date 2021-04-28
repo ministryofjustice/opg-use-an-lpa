@@ -92,8 +92,8 @@ class LpasResourceHandler implements RequestHandlerInterface
             throw new BadRequestException('User actor LPA token must be provided for lpa removal');
         }
 
-        $lpaRemoveResponse = ($this->deleteLpa)($userToken, $actorLpaToken);
+        $removedLpaData = ($this->deleteLpa)($userToken, $actorLpaToken);
 
-        return new JsonResponse($lpaRemoveResponse);
+        return new JsonResponse($removedLpaData);
     }
 }

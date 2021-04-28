@@ -14,15 +14,19 @@ class DeleteLpa
     private LoggerInterface $logger;
     private UserLpaActorMapInterface $userLpaActorMapRepository;
     private ViewerCodesInterface $viewerCodesRepository;
+    private LpaService $lpaService;
 
     public function __construct(
         LoggerInterface $logger,
         UserLpaActorMapInterface $userLpaActorMapRepository,
-        ViewerCodesInterface $viewerCodesRepository
+        ViewerCodesInterface $viewerCodesRepository,
+        LpaService $lpaService
+
     ) {
         $this->logger = $logger;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
         $this->viewerCodesRepository = $viewerCodesRepository;
+        $this->lpaService = $lpaService;
     }
 
     /**
@@ -38,10 +42,10 @@ class DeleteLpa
 
         if (is_null($userActorLpa)) {
             $this->logger->notice(
-                'User actor lpa record  not found for actor token {Id}',
+                'User actor lpa record not found for actor token {Id}',
                 ['Id' => $token]
             );
-            throw new NotFoundException('User actor lpa record  not found for actor token - ' . $token);
+            throw new NotFoundException('User actor lpa record not found for actor token - ' . $token);
         }
 
         // Ensure the passed userId matches the passed token
@@ -65,7 +69,11 @@ class DeleteLpa
             }
         }
 
-        return $this->userLpaActorMapRepository->delete($token);
+        $lpaRemovedData = $this->lpaService->getByUserLpaActorToken($token, $userId);
+
+        $this->userLpaActorMapRepository->delete($token);
+
+        return $lpaRemovedData;
     }
 
     private function getListOfViewerCodesToBeUpdated(array $userActorLpa): ?array

@@ -35,16 +35,14 @@ class RemoveLpa
         $this->apiClient->setUserTokenHeader($userToken);
 
         try {
-            $lpaActorData = $this->apiClient->httpDelete('/v1/lpas/' . $actorLpaToken);
-            if (isset($lpaActorData)) {
-                $this->logger->notice(
-                    'Successfully removed LPA for user lpa actor {token}',
-                    [
-                        'event_code' => EventCodes::LPA_REMOVED,
-                        'token' => $actorLpaToken,
-                    ]
-                );
-            }
+            $removedLpaData = $this->apiClient->httpDelete('/v1/lpas/' . $actorLpaToken);
+            $this->logger->notice(
+                'Successfully removed LPA for user lpa actor {token}',
+                [
+                    'event_code' => EventCodes::LPA_REMOVED,
+                    'token' => $actorLpaToken,
+                ]
+            );
         } catch (ApiException $ex) {
             $this->logger->notice(
                 'Failed to remove LPA for user lpa actor {token}',
@@ -55,6 +53,6 @@ class RemoveLpa
             throw $ex;
         }
 
-        return (!is_null($lpaActorData) ? $lpaActorData : null);
+        return $removedLpaData;
     }
 }
