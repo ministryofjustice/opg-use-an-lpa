@@ -99,4 +99,9 @@ class EventCodes
      * An LPA failed to be added
      */
     public const ADD_LPA_FAILURE = 'ADD_LPA_FAILURE';
+
+    /**
+     * An LPA was removed from a users account
+     */
+    public const LPA_REMOVED = 'LPA_REMOVED';
 }
