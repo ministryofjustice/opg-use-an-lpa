@@ -8,11 +8,11 @@ use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\DeleteLpa;
 use App\Service\Lpa\LpaService;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\JsonResponse;
-use RuntimeException;
 
 /**
  * Class LpaSearchHandler

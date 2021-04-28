@@ -235,6 +235,10 @@ locals {
         {
           name  = "USE_OLDER_LPA_JOURNEY",
           value = tostring(local.account.use_older_lpa_journey)
+        },
+        {
+          name  = "DELETE_LPA_FEATURE",
+          value = tostring(local.account.delete_lpa_feature)
         }
       ]
   })

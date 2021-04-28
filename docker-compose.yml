@@ -119,6 +119,7 @@ services:
       KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
 
       USE_OLDER_LPA_JOURNEY: "true"
+      DELETE_LPA_FEATURE: "true"
 
       # Local only
       API_SERVICE_URL: http://api-web

@@ -194,6 +194,13 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Actor\Handler\LpaAddHandler::class
         ], ['GET', 'POST'], 'lpa.add');
     }
+
+    if (($container->get(Common\Service\Features\FeatureEnabled::class))('delete_lpa_feature')) {
+        $app->get('/lpa/confirm-remove-lpa', [
+            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Actor\Handler\ConfirmRemoveLpaHandler::class
+        ], 'lpa.confirm-remove-lpa');
+    }
 };
 
 switch (getenv('CONTEXT')) {
