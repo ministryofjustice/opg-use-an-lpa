@@ -47,6 +47,7 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function getInputFilterSpecification()
     {
