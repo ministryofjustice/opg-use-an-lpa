@@ -15,19 +15,24 @@ class RemoveLpa
     private $apiClient;
     /** @var LoggerInterface */
     private $logger;
+    /** @var ParseLpaData */
+    private $parseLpaData;
 
     /**
      * @param ApiClient       $apiClient
      * @param LoggerInterface $logger
+     * @param ParseLpaData    $parseLpaData
      *
      * @codeCoverageIgnore
      */
     public function __construct(
         ApiClient $apiClient,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ParseLpaData $parseLpaData
     ) {
         $this->apiClient = $apiClient;
         $this->logger = $logger;
+        $this->parseLpaData = $parseLpaData;
     }
 
     public function __invoke(string $userToken, string $actorLpaToken)
@@ -53,6 +58,7 @@ class RemoveLpa
             throw $ex;
         }
 
-        return $removedLpaData;
+        // what if theyre inactive actor or status not registered? Will LPA data come back?
+        return ($this->parseLpaData)($removedLpaData);
     }
 }
