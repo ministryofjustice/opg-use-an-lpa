@@ -107,6 +107,7 @@ resource "aws_route53_record" "actor-use-my-lpa" {
 
 resource "aws_route53_record" "admin-use-my-lpa" {
   # admin.lastingpowerofattorney.opg.service.justice.gov.uk
+  count    = local.account.build_admin == true ? 1 : 0
   provider = aws.management
   zone_id  = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
   name     = "${local.dns_namespace_env}admin.lastingpowerofattorney"
@@ -114,8 +115,8 @@ resource "aws_route53_record" "admin-use-my-lpa" {
 
   alias {
     evaluate_target_health = false
-    name                   = aws_lb.admin.dns_name
-    zone_id                = aws_lb.admin.zone_id
+    name                   = aws_lb.admin[0].dns_name
+    zone_id                = aws_lb.admin[0].zone_id
   }
 
   lifecycle {
