@@ -7,7 +7,7 @@
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0 lpa-secondary-text-colour">{{ caseSubtype }}</h2>
             {% endif %}
         </dt>
-        <dd class="govuk-summary-list__value govuk-!-padding-top- govuk-!-padding-bottom-4 govuk-!-margin-bottom-0">
+        <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-4 govuk-!-margin-bottom-0">
             {% if actorActive %}
                 <p class="govuk-!-margin-top-0">
                     <a class="govuk-link" href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">{% trans %}Give an organisation access{% endtrans %}</a><br>
@@ -39,14 +39,14 @@
     </div>
 </dl>
 {%  if not actorActive %}
-    <div class="lpa-inactive-notice" >
+    <div>
         <p class="govuk-body govuk-!-padding-top-0 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">{% trans %}You no longer have access to this <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
             <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.removed') }}"> {% trans %}Why is this?{% endtrans %}</a>
         </p>
     </div>
 {%  endif %}
 {% if actorActive and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
-    <div class="lpa-inactive-notice">
+    <div>
     <p class="govuk-body govuk-!-padding-top-0 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
         <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.instructions-preferences') }}"> {% trans %}Read more{% endtrans %}</a>
     </p>
