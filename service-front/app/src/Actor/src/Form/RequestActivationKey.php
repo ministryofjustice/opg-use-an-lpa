@@ -55,6 +55,7 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
 
     /**
      * @return array
+     * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array
     {
