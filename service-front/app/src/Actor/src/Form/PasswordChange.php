@@ -55,6 +55,7 @@ class PasswordChange extends AbstractForm implements InputFilterProviderInterfac
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function getInputFilterSpecification()
     {
