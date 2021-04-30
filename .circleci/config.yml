@@ -19,7 +19,7 @@ workflows:
           environment: demo
           requires: [demo_apply_environment_terraform]
       - slack_environment_redeploy:
-          name: post_production_release_message
+          name: post_demo_release_message
           environment: demo
           requires: [redeploy_demo]
 
@@ -108,7 +108,6 @@ workflows:
         - use-my-lpa/end_of_workflow:
             name: end_of_workflow
             requires: [codecov_upload]
-
 
   pr_build:
       jobs:
@@ -439,7 +438,7 @@ workflows:
             filters: { branches: { only: [master] } }
             requires: [production_apply_environment_terraform]
 
-        - slack_notify_production_release:
+        - python_slack_notify_production_release:
             name: post_production_release_message
             filters: { branches: { only: [master] } }
             requires: [prod_run_healthcheck_test]
@@ -1343,6 +1342,25 @@ jobs:
           message: "User: $CIRCLE_USERNAME \nview url: https://$PUBLIC_FACING_VIEW_DOMAIN/home \nuse url: https://$PUBLIC_FACING_USE_DOMAIN/home"
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+
+  python_slack_notify_production_release:
+    docker:
+      - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Notify Slack
+          command: |
+            python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
+            --slack_webhook $PROD_RELEASE_SLACK_WEBHOOK \
+            --commit_message "$(git log -1 --pretty=%B)"
+
 
   slack_notify_stats:
     docker:
