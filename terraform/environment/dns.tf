@@ -123,7 +123,3 @@ resource "aws_route53_record" "admin-use-my-lpa" {
     create_before_destroy = true
   }
 }
-
-output "internal_facing_admin_domain" {
-  value = "https://${aws_route53_record.admin-use-my-lpa[0].fqdn}"
-}
