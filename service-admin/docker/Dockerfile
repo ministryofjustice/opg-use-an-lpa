@@ -14,7 +14,11 @@
 
 FROM golang:1.14 as build-env
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/admin
+COPY service-admin/app /app
+
+WORKDIR /app
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /go/bin/admin
 
 FROM alpine:3.12 as production
 
