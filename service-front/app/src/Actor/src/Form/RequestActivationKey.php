@@ -55,6 +55,7 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
 
     /**
      * @return array
+     * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array
     {
@@ -69,7 +70,7 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message'  => 'Enter the OPG reference number',
+                            'message'  => 'Enter the LPA reference number',
                         ],
                     ],
                     [
@@ -80,8 +81,8 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
                             'min'      => 12,
                             'max'      => 12,
                             'messages'  => [
-                                StringLength::TOO_LONG => 'The OPG reference number you entered is too long',
-                                StringLength::TOO_SHORT => 'The OPG reference number you entered is too short'
+                                StringLength::TOO_LONG => 'The LPA reference number you entered is too long',
+                                StringLength::TOO_SHORT => 'The LPA reference number you entered is too short'
                             ],
                         ],
                     ],
@@ -89,7 +90,7 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
                         'name'    => Digits::class,
                         'options' => [
                             'message' =>
-                                'Enter the 12 numbers of the OPG reference number. ' .
+                                'Enter the 12 numbers of the LPA reference number. ' .
                                 'Do not include letters or other characters'
                         ],
                     ],
