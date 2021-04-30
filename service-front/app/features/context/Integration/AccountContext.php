@@ -1056,6 +1056,7 @@ class AccountContext extends BaseIntegrationContext
 
     /**
      * @Then /^I request to give an organisation access to the LPA whose status changed to Revoked$/
+     * @Then /^I request to view an LPA whose status changed to Revoked$/
      */
     public function iRequestToGiveAnOrganisationAccessToTheLPAWhoseStatusChangedToRevoked()
     {

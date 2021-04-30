@@ -16,10 +16,10 @@ Feature: Ask for an activation key
 
     Examples:
       | reference number | reason |
-      | 70000000000      | The OPG reference number you entered is too short |
-      | 7000-0000-00000  | The OPG reference number you entered is too long  |
-      | 70000000ABCD     | Enter the 12 numbers of the OPG reference number. Do not include letters or other characters |
-      |                  | Enter the OPG reference number |
+      | 70000000000      | The LPA reference number you entered is too short |
+      | 7000-0000-00000  | The LPA reference number you entered is too long  |
+      | 70000000ABCD     | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters |
+      |                  | Enter the LPA reference number |
 
   @ui
   Scenario Outline: The user cannot request an activation key without inputting their details
