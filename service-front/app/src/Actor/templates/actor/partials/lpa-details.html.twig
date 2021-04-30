@@ -1,5 +1,5 @@
-<dl class="govuk-summary-list govuk-!-margin-bottom-0">
-    <div class="govuk-summary-list__row govuk-!-margin-bottom-0 govuk-!-margin-top-4">
+<dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-0">
+    <div class="govuk-summary-list__row govuk-!-margin-bottom-0 govuk-!-margin-top-0">
         <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-width-one-third">
             {% if actorActive %}
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0">{{ caseSubtype }}</h2>
@@ -7,7 +7,7 @@
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0 lpa-secondary-text-colour">{{ caseSubtype }}</h2>
             {% endif %}
         </dt>
-        <dd class="govuk-summary-list__value govuk-!-padding-top-4 govuk-!-padding-bottom-4 govuk-!-margin-bottom-0">
+        <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-4 govuk-!-margin-bottom-0">
             {% if actorActive %}
                 <p class="govuk-!-margin-top-0">
                     <a class="govuk-link" href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">{% trans %}Give an organisation access{% endtrans %}</a><br>
@@ -27,9 +27,9 @@
         </dd>
         <dd class="govuk-summary-list__actions govuk-!-width-one-third">
             {% if actorActive == false %}
-                <span class="moj-badge moj-badge--red">{% trans %}Access revoked{% endtrans %}</span>
+                <span class="moj-badge moj-badge--grey">{% trans %}Access revoked{% endtrans %}</span>
             {% elseif activeCodeCount >= 1 %}
-                <span class="moj-badge moj-badge--green">
+                <span class="moj-badge moj-badge--blue">
                     {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
                 </span>
             {% else %}
@@ -39,15 +39,15 @@
     </div>
 </dl>
 {%  if not actorActive %}
-    <div class="lpa-inactive-notice" >
-        <p class="govuk-body govuk-!-padding-2 govuk-!-margin-left-2 govuk-!-margin-bottom-0">{% trans %}You no longer have access to this <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
+    <div>
+        <p class="govuk-body govuk-!-padding-top-0 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">{% trans %}You no longer have access to this <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
             <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.removed') }}"> {% trans %}Why is this?{% endtrans %}</a>
         </p>
     </div>
 {%  endif %}
 {% if actorActive and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
-    <div class="lpa-inactive-notice" >
-    <p class="govuk-body govuk-!-padding-2 govuk-!-margin-left-2 govuk-!-margin-bottom-0">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
+    <div>
+    <p class="govuk-body govuk-!-padding-top-0 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
         <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.instructions-preferences') }}"> {% trans %}Read more{% endtrans %}</a>
     </p>
     </div>
