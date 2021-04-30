@@ -71,7 +71,25 @@
                         {% set applicationHasRestrictions = lpa.applicationHasRestrictions %}
                         {% set applicationHasGuidance = lpa.applicationHasGuidance %}
 
-                        {{ include('@actor/partials/lpa-details.html.twig') }}
+                <article class="moj-ticket-panel" aria-label="Added lpa list">
+                    {% if actorActive %}
+
+                        {% if lpa.status|lower == 'registered' %}
+                            <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Registered lpa section">
+                                 {{ include('@actor/partials/lpa-details.html.twig') }}
+                            </section>
+                        {% elseif lpa.status|lower == 'cancelled' %}
+                            <section class="moj-ticket-panel__content moj-ticket-panel__content--red" aria-label="Cancelled lpa section">
+                                    {{ include('@actor/partials/lpa-details.html.twig') }}
+                            </section>
+                        {% endif %}
+                    {% else %}
+                        <section class="moj-ticket-panel__content moj-ticket-panel__content--grey" aria-label="Inactive actor on lpa section">
+                                {{ include('@actor/partials/lpa-details.html.twig') }}
+                        </section>
+                    {% endif %}
+                </article>
+
                     {% endfor %}
                 {% endfor %}
 
