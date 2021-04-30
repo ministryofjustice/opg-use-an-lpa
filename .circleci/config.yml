@@ -1045,7 +1045,7 @@ orbs:
                 echo $TF_WORKSPACE
                 export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
                 echo $IMAGE_TAG
-                terraform validate -var container_version=${IMAGE_TAG}
+                terraform validate
 
       plan_shared_terraform:
         #
