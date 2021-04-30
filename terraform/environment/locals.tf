@@ -21,24 +21,7 @@ output "workspace_name" {
 variable "accounts" {
   type = map(
     object({
-      account_id               = string
-      is_production            = bool
-      sirius_account_id        = string
-      lpas_collection_endpoint = string
-      lpa_codes_endpoint       = string
-      session_expires_view     = number
-      session_expires_use      = number
-      session_expiry_warning   = number
-      cookie_expires_view      = number
-      cookie_expires_use       = number
-      google_analytics_id_view = string
-      google_analytics_id_use  = string
-      logging_level            = number
-      pagerduty_service_name   = string
-      use_legacy_codes_service = bool
-      log_retention_in_days    = number
-      have_a_backup_plan       = bool
-      use_older_lpa_journey    = bool
+      account_id = string
       autoscaling = object({
         use = object({
           minimum = number
@@ -57,8 +40,25 @@ variable "accounts" {
           maximum = number
         })
       })
-      ship_metrics_queue_enabled = bool
       build_admin                = bool
+      cookie_expires_use         = number
+      cookie_expires_view        = number
+      google_analytics_id_use    = string
+      google_analytics_id_view   = string
+      have_a_backup_plan         = bool
+      is_production              = bool
+      log_retention_in_days      = number
+      logging_level              = number
+      lpa_codes_endpoint         = string
+      lpas_collection_endpoint   = string
+      pagerduty_service_name     = string
+      session_expires_use        = number
+      session_expires_view       = number
+      session_expiry_warning     = number
+      ship_metrics_queue_enabled = bool
+      sirius_account_id          = string
+      use_legacy_codes_service   = bool
+      use_older_lpa_journey      = bool
     })
   )
 }
