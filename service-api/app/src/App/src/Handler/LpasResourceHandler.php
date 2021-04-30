@@ -94,6 +94,6 @@ class LpasResourceHandler implements RequestHandlerInterface
 
         $removedLpaData = ($this->deleteLpa)($userToken, $actorLpaToken);
 
-        return new JsonResponse($removedLpaData);
+        return new JsonResponse(['lpa' => $removedLpaData]);
     }
 }

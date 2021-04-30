@@ -58,7 +58,6 @@ class RemoveLpa
             throw $ex;
         }
 
-        // what if theyre inactive actor or status not registered? Will LPA data come back?
         return ($this->parseLpaData)($removedLpaData);
     }
 }

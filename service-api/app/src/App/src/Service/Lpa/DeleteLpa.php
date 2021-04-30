@@ -69,7 +69,9 @@ class DeleteLpa
             }
         }
 
-        $lpaRemovedData = $this->lpaService->getByUserLpaActorToken($token, $userId);
+        // get the LPA to display the donor name and lpa type in the flash message
+        // we don't use getByUserLpaActorToken as it returns null if actor is inactive
+        $lpaRemovedData = $this->lpaService->getByUid($userActorLpa['SiriusUid'])->getData();
 
         $this->userLpaActorMapRepository->delete($token);
 
