@@ -5,6 +5,7 @@ namespace AppTest\Service\Lpa;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
 use App\Exception\NotFoundException;
+use App\Service\Lpa\LpaService;
 use App\Service\Lpa\RemoveLpa;
 use DateTime;
 use PHPUnit\Framework\TestCase;
@@ -27,11 +28,17 @@ class RemoveLpaTest extends TestCase
      */
     private $viewerCodesInterfaceProphecy;
 
+    /**
+     * @var LpaService
+     */
+    private $lpaServiceProphecy;
+
     public function setUp()
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $this->viewerCodesInterfaceProphecy = $this->prophesize(ViewerCodesInterface::class);
+        $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
     }
 
     private function deleteLpa(): RemoveLpa
@@ -39,7 +46,8 @@ class RemoveLpaTest extends TestCase
         return new RemoveLpa(
             $this->loggerProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
-            $this->viewerCodesInterfaceProphecy->reveal()
+            $this->viewerCodesInterfaceProphecy->reveal(),
+            $this->lpaServiceProphecy->reveal()
         );
     }
 
