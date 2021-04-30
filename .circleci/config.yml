@@ -540,7 +540,7 @@ orbs:
         resource_class: small
       terraform:
         docker:
-          - image: hashicorp/terraform:0.14.2
+          - image: hashicorp/terraform:0.14.11
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
@@ -1405,7 +1405,7 @@ jobs:
 
   workspace_cleanup:
     docker:
-      - image: hashicorp/terraform:0.14.2
+      - image: hashicorp/terraform:0.14.11
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
