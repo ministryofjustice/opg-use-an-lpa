@@ -94,7 +94,7 @@ workflows:
             requires: [test_pdf]
 
         - use-my-lpa/docker_build_admin:
-            name: admin_build
+            name: admin_app_build
             filters: { branches: { only: [/dependabot\/.*/] } }
 
         - use-my-lpa/codecov_upload:
