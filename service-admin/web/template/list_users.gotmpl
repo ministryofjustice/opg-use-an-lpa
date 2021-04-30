@@ -1,0 +1,24 @@
+{{ template "page" . }}
+
+{{ define "title" }}Users{{ end }}
+
+{{ define "main" }}
+  <form method="post">
+    <label>
+        Email
+        <input name="email" type="text" placeholder="example@example.com" value="{{ .Query }}"/>
+    </label>
+    <input type="submit" value="Search" />
+  </form>
+
+  <table>
+  <tr>
+    <th>Email</th>
+  </tr>
+  {{ range .Users }}
+    <tr>
+      <td>{{ .Email }}</td>
+    </tr>
+  {{ end }}
+  </table>
+{{ end }}

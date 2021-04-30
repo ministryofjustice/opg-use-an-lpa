@@ -1,0 +1,12 @@
+{{ define "page" }}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ block "title" . }}{{ end }}</title>
+  </head>
+  <body>
+    {{ block "main" . }}{{ end }}
+  </body>
+</html>
+{{ end }}
