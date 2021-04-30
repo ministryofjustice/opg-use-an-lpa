@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-04-28T13:54:56+00:00\n"
+"POT-Creation-Date: 2021-04-30T08:44:45+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -3842,11 +3842,6 @@ msgstr ""
 msgid "These details must match the information we have about you on our records."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:34
-#: src/Actor/templates/actor/request-activation-key.html.twig:31
-msgid "LPA reference numbers are 12 numbers long <br/>For example, 7000-0000-0000"
-msgstr ""
-
 #: src/Actor/templates/actor/request-activation-key.html.twig:56
 msgid "This must be your current postcode and match the one we have on our records. The activation key will be posted to this address. <a href=\"/lpa/change-details\">Let us know if you have moved.</a>"
 msgstr ""
@@ -3863,4 +3858,9 @@ msgstr ""
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:206
 msgid "Life-sustaining <br>treatment"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-add.html.twig:34
+#: src/Actor/templates/actor/request-activation-key.html.twig:31
+msgid "LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000"
 msgstr ""
