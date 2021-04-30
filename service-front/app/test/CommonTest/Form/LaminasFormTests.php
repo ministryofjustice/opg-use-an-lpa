@@ -47,11 +47,13 @@ trait LaminasFormTests
             $this->assertInstanceOf(InputFilter::class, $this->getForm()->getInputFilter());
 
             foreach ($this->getFormElements() as $elementName => $elementType) {
-                if ($elementName === '__csrf') { continue; }
-
+                if ($elementName === '__csrf') {
+                    continue;
+                }
                 $this->assertArrayHasKey($elementName, $this->getForm()->getInputFilterSpecification());
             }
+        } else {
+            $this->markTestSkipped('Form doesnt have an input filter. Test skipped');
         }
-        $this->markTestSkipped('Form doesnt have an input filter. Test skipped');
     }
 }
