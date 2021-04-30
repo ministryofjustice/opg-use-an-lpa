@@ -1,18 +1,18 @@
 
-# FROM node:14.13.1-alpine3.12 as asset-env
+FROM node:current-alpine as asset-env
 
-# WORKDIR /app
+WORKDIR /app
 
-# RUN mkdir -p web/static
+RUN mkdir -p web/assets
 
-# COPY web/assets web/assets
+COPY service-admin/web/assets web/assets
 # COPY webpack.config.js .
 # COPY package.json .
 # COPY yarn.lock .
 
 # RUN yarn && yarn build
 
-FROM golang:1.14 as build-env
+FROM golang:1.16.3 as build-env
 
 COPY service-admin/app /app
 
@@ -20,7 +20,7 @@ WORKDIR /app
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /go/bin/admin
 
-FROM alpine:3.12 as production
+FROM alpine:3.13 as production
 
 WORKDIR /go/bin
 
@@ -31,5 +31,5 @@ RUN apk --no-cache add tzdata
 
 COPY --from=build-env /go/bin/admin admin
 # COPY --from=build-env /app/web/template web/template
-# COPY --from=asset-env /app/web/static web/static
+COPY --from=asset-env /app/web/assets web/assets
 ENTRYPOINT ["./admin"]
