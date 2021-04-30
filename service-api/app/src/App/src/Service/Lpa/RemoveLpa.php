@@ -9,7 +9,7 @@ use App\DataAccess\Repository\ViewerCodesInterface;
 use App\Exception\NotFoundException;
 use Psr\Log\LoggerInterface;
 
-class DeleteLpa
+class RemoveLpa
 {
     private LoggerInterface $logger;
     private UserLpaActorMapInterface $userLpaActorMapRepository;
@@ -30,13 +30,15 @@ class DeleteLpa
     }
 
     /**
-     * Deletes an LPA from a users account
+     * Removes actor association from all viewer codes created by a user
+     * and removes an LPA from a users account
      *
      * @param string $userId The user account ID that must correlate to the $token
      * @param string $token UserLpaActorToken that map an LPA to a user account
-     * @return ?array A structure that contains processed LPA data and metadata
+     *
+     * @return array A structure that contains processed LPA data and metadata
      */
-    public function __invoke(string $userId, string $token): ?array
+    public function __invoke(string $userId, string $token): array
     {
         $userActorLpa = $this->userLpaActorMapRepository->get($token);
 

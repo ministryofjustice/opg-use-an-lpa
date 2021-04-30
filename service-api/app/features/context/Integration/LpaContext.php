@@ -11,7 +11,7 @@ use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\AddLpa;
-use App\Service\Lpa\DeleteLpa;
+use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
 use App\Service\ViewerCodes\ViewerCodeService;
@@ -57,7 +57,7 @@ class LpaContext extends BaseIntegrationContext
     private string $apiGatewayPactProvider;
     private AwsMockHandler $awsFixtures;
     private string $codesApiPactProvider;
-    private DeleteLpa $deleteLpa;
+    private RemoveLpa $deleteLpa;
     private LpaService $lpaService;
     private OlderLpaService $olderLpaService;
 
@@ -1763,7 +1763,7 @@ class LpaContext extends BaseIntegrationContext
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
         $this->olderLpaService = $this->container->get(OlderLpaService::class);
         $this->lpaService = $this->container->get(LpaService::class);
-        $this->deleteLpa = $this->container->get(DeleteLpa::class);
+        $this->deleteLpa = $this->container->get(RemoveLpa::class);
 
         $config = $this->container->get('config');
         $this->codesApiPactProvider = parse_url($config['codes_api']['endpoint'], PHP_URL_HOST);
