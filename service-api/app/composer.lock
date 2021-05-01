@@ -799,16 +799,16 @@
         },
         {
             "name": "laminas/laminas-httphandlerrunner",
-            "version": "1.3.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-httphandlerrunner.git",
-                "reference": "e8f850bd12cb82b268ff235fe74b2df906e8bfe8"
+                "reference": "6a2dd33e4166469ade07ad1283b45924383b224b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-httphandlerrunner/zipball/e8f850bd12cb82b268ff235fe74b2df906e8bfe8",
-                "reference": "e8f850bd12cb82b268ff235fe74b2df906e8bfe8",
+                "url": "https://api.github.com/repos/laminas/laminas-httphandlerrunner/zipball/6a2dd33e4166469ade07ad1283b45924383b224b",
+                "reference": "6a2dd33e4166469ade07ad1283b45924383b224b",
                 "shasum": ""
             },
             "require": {
@@ -824,7 +824,9 @@
             "require-dev": {
                 "laminas/laminas-coding-standard": "~1.0.0",
                 "laminas/laminas-diactoros": "^2.1.1",
-                "phpunit/phpunit": "^9.3"
+                "phpunit/phpunit": "^9.3",
+                "psalm/plugin-phpunit": "^0.15.1",
+                "vimeo/psalm": "^4.6"
             },
             "type": "library",
             "extra": {
@@ -864,7 +866,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2020-11-19T17:12:59+00:00"
+            "time": "2021-04-08T13:52:56+00:00"
         },
         {
             "name": "laminas/laminas-stdlib",
@@ -1072,16 +1074,16 @@
         },
         {
             "name": "mezzio/mezzio",
-            "version": "3.3.0",
+            "version": "3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mezzio/mezzio.git",
-                "reference": "3d18f3dbafd350b3620fe292f5b72ceccf59b54f"
+                "reference": "cd61b6e0852bd7c6b14cb54b6a2da00d3375b138"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mezzio/mezzio/zipball/3d18f3dbafd350b3620fe292f5b72ceccf59b54f",
-                "reference": "3d18f3dbafd350b3620fe292f5b72ceccf59b54f",
+                "url": "https://api.github.com/repos/mezzio/mezzio/zipball/cd61b6e0852bd7c6b14cb54b6a2da00d3375b138",
+                "reference": "cd61b6e0852bd7c6b14cb54b6a2da00d3375b138",
                 "shasum": ""
             },
             "require": {
@@ -1177,7 +1179,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-01-24T21:16:27+00:00"
+            "time": "2021-04-20T17:04:00+00:00"
         },
         {
             "name": "mezzio/mezzio-fastroute",
