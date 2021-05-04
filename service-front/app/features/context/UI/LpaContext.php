@@ -33,6 +33,15 @@ class LpaContext implements Context
     use ActorContext;
     use BaseUiContextTrait;
 
+    /**
+     * @Then /^I am taken to the remove an LPA confirmation page$/
+     */
+    public function iAmTakenToTheRemoveAnLPAConfirmationPage()
+    {
+        $this->ui->assertPageAddress('/lpa/confirm-remove-lpa');
+        $this->ui->assertPageContainsText('Are you sure you want to remove this LPA?');
+    }
+
 
     /**
      * @Then /^I receive an email confirming activation key request$/
@@ -1972,6 +1981,14 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I request to remove an LPA from my account$/
+     */
+    public function iRequestToRemoveAnLPAFromMyAccount()
+    {
+        $this->ui->clickLink('Remove LPA');
+    }
+
+    /**
      * @When /^I request to view an LPA which status is "([^"]*)"$/
      */
     public function iRequestToViewAnLPAWhichStatusIs($status)
@@ -2520,4 +2537,3 @@ class LpaContext implements Context
             );
     }
 }
-
