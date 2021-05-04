@@ -65,6 +65,7 @@ class ApiException extends AbstractApiException
     public static function create(string $message = null, ResponseInterface $response = null, Throwable $previous = null): ApiException
     {
         $code = self::DEFAULT_ERROR;
+        $additionalData = null;
 
         if (! is_null($response)) {
             $body = json_decode($response->getBody()->getContents(), true);
