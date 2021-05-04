@@ -42,6 +42,7 @@ class PasswordReset extends AbstractForm implements InputFilterProviderInterface
      * {@link Laminas\InputFilter\Factory::createInputFilter()}.
      *
      * @return array
+     * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array
     {
