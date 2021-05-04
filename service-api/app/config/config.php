@@ -12,7 +12,6 @@ $cacheConfig = ['config_cache_path' => '/tmp/config-cache.php'];
 
 $aggregator = new ConfigAggregator(
     [
-        \WShafer\PSR11MonoLog\ConfigProvider::class,
         \Laminas\HttpHandlerRunner\ConfigProvider::class,
         \Mezzio\Router\FastRouteRouter\ConfigProvider::class,
 
