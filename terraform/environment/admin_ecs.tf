@@ -2,15 +2,16 @@
 // admin ECS Service level config
 
 resource "aws_ecs_service" "admin" {
+  count            = local.account.build_admin == true ? 1 : 0
   name             = "admin"
   cluster          = aws_ecs_cluster.use-an-lpa.id
-  task_definition  = aws_ecs_task_definition.admin.arn
+  task_definition  = aws_ecs_task_definition.admin[0].arn
   desired_count    = 1
   launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
   network_configuration {
-    security_groups  = [aws_security_group.admin_ecs_service.id]
+    security_groups  = [aws_security_group.admin_ecs_service[0].id]
     subnets          = data.aws_subnet_ids.private.ids
     assign_public_ip = false
   }
@@ -28,6 +29,7 @@ resource "aws_ecs_service" "admin" {
 // The service's Security Groups
 
 resource "aws_security_group" "admin_ecs_service" {
+  count       = local.account.build_admin == true ? 1 : 0
   name_prefix = "${local.environment}-admin-ecs-service"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
@@ -35,35 +37,38 @@ resource "aws_security_group" "admin_ecs_service" {
 
 // 80 in from the ELB
 resource "aws_security_group_rule" "admin_ecs_service_ingress" {
+  count                    = local.account.build_admin == true ? 1 : 0
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.admin_ecs_service.id
+  security_group_id        = aws_security_group.admin_ecs_service[0].id
   source_security_group_id = aws_security_group.admin_loadbalancer[0].id
 }
 
 // Anything out
 resource "aws_security_group_rule" "admin_ecs_service_egress" {
+  count             = local.account.build_admin == true ? 1 : 0
   type              = "egress"
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.admin_ecs_service.id
+  security_group_id = aws_security_group.admin_ecs_service[0].id
 }
 
 //--------------------------------------
 // admin ECS Service Task level config
 
 resource "aws_ecs_task_definition" "admin" {
+  count                    = local.account.build_admin == true ? 1 : 0
   family                   = "${local.environment}-admin"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.admin_app}]"
-  task_role_arn            = aws_iam_role.admin_task_role.arn
+  task_role_arn            = aws_iam_role.admin_task_role[0].arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   tags                     = local.default_tags
 }
@@ -72,15 +77,17 @@ resource "aws_ecs_task_definition" "admin" {
 // Permissions
 
 resource "aws_iam_role" "admin_task_role" {
+  count              = local.account.build_admin == true ? 1 : 0
   name               = "${local.environment}-admin-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
   tags               = local.default_tags
 }
 
 resource "aws_iam_role_policy" "admin_permissions_role" {
+  count  = local.account.build_admin == true ? 1 : 0
   name   = "${local.environment}-adminApplicationPermissions"
   policy = data.aws_iam_policy_document.admin_permissions_role.json
-  role   = aws_iam_role.admin_task_role.id
+  role   = aws_iam_role.admin_task_role[0].id
 }
 
 /*
@@ -179,6 +186,6 @@ locals {
 
 }
 
-output "admin_app_deployed_version" {
-  value = "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}:${var.container_version}"
-}
+# output "admin_app_deployed_version" {
+#   value = "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}:${var.container_version}"
+# }
