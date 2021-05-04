@@ -78,6 +78,11 @@ data "aws_ecr_repository" "use_an_lpa_pdf" {
   name     = "use_an_lpa/pdf"
 }
 
+data "aws_ecr_repository" "use_an_lpa_admin_app" {
+  provider = aws.management
+  name     = "use_an_lpa/admin_app"
+}
+
 module "whitelist" {
   source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-whitelist.git"
 }
