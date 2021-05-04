@@ -1,25 +1,24 @@
 FROM composer:2.0.14 AS composer
 
-COPY service-api/app /app
+COPY service-api/app/composer.json service-api/app/composer.lock /app/
 
-RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader
+RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
 
 FROM composer:2.0.14 AS composer-dev
 
-COPY service-api/app /app
+COPY service-api/app/composer.json service-api/app/composer.lock /app/
 
-RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
 
-FROM php:7-fpm-alpine3.14 AS production
+FROM php:8-fpm-alpine3.14 AS production
 
-RUN apk add --update --no-cache fcgi \
-  && apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
-  && apk upgrade curl \
-  && pecl install xdebug \
-  && pecl install apcu \
-  && docker-php-ext-enable apcu \
-  && pecl clear-cache \
-  && apk del .build-dependencies
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+
+RUN set -xe \
+  && apk add --update --no-cache fcgi \
+  && apk upgrade --update --no-cache curl \
+  && install-php-extensions apcu xdebug \
+  && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 COPY service-api/app /app
 COPY --from=composer /app/vendor /app/vendor
