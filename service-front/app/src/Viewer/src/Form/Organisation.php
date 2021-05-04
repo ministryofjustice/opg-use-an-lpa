@@ -30,6 +30,10 @@ class Organisation extends AbstractForm implements InputFilterProviderInterface
         ]);
     }
 
+    /**
+     * @return array
+     * @codeCoverageIgnore
+     */
     public function getInputFilterSpecification(): array
     {
         return [
