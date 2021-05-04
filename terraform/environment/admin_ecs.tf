@@ -147,38 +147,37 @@ data "aws_iam_policy_document" "admin_permissions_role" {
 // admin ECS Service Task Container level config
 
 locals {
-  admin_app = <<EOF
-  {
-    "cpu": 1,
-    "essential": true,
-    "image": "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}:${var.container_version}",
-    "mountPoints": [],
-    "name": "app",
-    "portMappings": [
-        {
-            "containerPort": 9000,
-            "hostPort": 9000,
-            "protocol": "tcp"
-        }
-    ],
-    "volumesFrom": [],
-    "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-            "awslogs-group": "${aws_cloudwatch_log_group.application_logs.name}",
-            "awslogs-region": "eu-west-1",
-            "awslogs-stream-prefix": "${local.environment}.admin-app.use-an-lpa"
-        }
-    },
-    "environment": [
+  admin_app = jsonencode(
     {
-      "name": "LOGGING_LEVEL",
-      "value": "${local.account.logging_level}"
-    },
-    ]
-  }
-
-EOF
+      "cpu" : 1,
+      "essential" : true,
+      "image" : "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}:${var.container_version}",
+      "mountPoints" : [],
+      "name" : "app",
+      "portMappings" : [
+        {
+          "containerPort" : 9000,
+          "hostPort" : 9000,
+          "protocol" : "tcp"
+        }
+      ],
+      "volumesFrom" : [],
+      "logConfiguration" : {
+        "logDriver" : "awslogs",
+        "options" : {
+          "awslogs-group" : aws_cloudwatch_log_group.application_logs.name,
+          "awslogs-region" : "eu-west-1",
+          "awslogs-stream-prefix" : "${local.environment}.admin-app.use-an-lpa"
+        }
+      },
+      "environment" : [
+        {
+          "name" : "LOGGING_LEVEL",
+          "value" : local.account.logging_level
+        },
+      ]
+    }
+  )
 
 }
 
