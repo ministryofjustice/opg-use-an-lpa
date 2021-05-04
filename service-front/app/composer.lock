@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f46cff33bc382fb06bf78120865635e4",
+    "content-hash": "885459d79eb0eab3b8bf4634659e561b",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -203,6 +203,66 @@
                 "source": "https://github.com/aws/aws-sdk-php/tree/3.199.10"
             },
             "time": "2021-11-03T18:15:36+00:00"
+        },
+        {
+            "name": "blazon/psr11-monolog",
+            "version": "4.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.com/blazon/psr11-monolog.git",
+                "reference": "fcd0d2a31a36574bf99a9ac8f4fae05d1abdada3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.com/api/v4/projects/blazon%2Fpsr11-monolog/repository/archive.zip?sha=fcd0d2a31a36574bf99a9ac8f4fae05d1abdada3",
+                "reference": "fcd0d2a31a36574bf99a9ac8f4fae05d1abdada3",
+                "shasum": ""
+            },
+            "require": {
+                "monolog/monolog": "^2.2.0",
+                "php": "^7.3|^8.0",
+                "psr/container": "^1.0.0"
+            },
+            "require-dev": {
+                "aws/aws-sdk-php": "^3.31",
+                "doctrine/couchdb": "1.0.0-beta4",
+                "graylog2/gelf-php": "^1.6",
+                "mongodb/mongodb": "^1.1",
+                "php-amqplib/php-amqplib": "2.6.*",
+                "php-console/php-console": "^3.1",
+                "phpmd/phpmd": "@stable",
+                "phpstan/phpstan": "^0.12.64",
+                "phpunit/phpunit": "^9.5.2",
+                "predis/predis": "^1.1",
+                "ruflin/elastica": "^7.0.0",
+                "squizlabs/php_codesniffer": "^3.5.8",
+                "swiftmailer/swiftmailer": "^6.2",
+                "symfony/dependency-injection": "^3.3",
+                "vimeo/psalm": "^4.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Blazon\\PSR11MonoLog\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Westin Shafer",
+                    "email": "shafer_w2002@yahoo.com",
+                    "homepage": "https://github.com/wshafer"
+                }
+            ],
+            "description": "Monolog Factories for PSR-11",
+            "homepage": "https://gitlab.com/blazon/psr11-monolog",
+            "support": {
+                "issues": "https://gitlab.com/api/v4/projects/24109988/issues"
+            },
+            "time": "2021-02-18T09:07:17+00:00"
         },
         {
             "name": "brick/varexporter",
@@ -5862,74 +5922,6 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.9.1"
             },
             "time": "2020-07-08T17:02:28+00:00"
-        },
-        {
-            "name": "wshafer/psr11-monolog",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/wshafer/psr11-monolog.git",
-                "reference": "50cdc8c32ee59029fbd7567f4dfc910315bb3bff"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/wshafer/psr11-monolog/zipball/50cdc8c32ee59029fbd7567f4dfc910315bb3bff",
-                "reference": "50cdc8c32ee59029fbd7567f4dfc910315bb3bff",
-                "shasum": ""
-            },
-            "require": {
-                "monolog/monolog": "^2.0.1",
-                "php": "^7.2",
-                "psr/container": "^1.0.0"
-            },
-            "require-dev": {
-                "aws/aws-sdk-php": "^3.31",
-                "doctrine/couchdb": "1.0.0-beta4",
-                "graylog2/gelf-php": "^1.5",
-                "mongodb/mongodb": "^1.1",
-                "php-amqplib/php-amqplib": "2.6.*",
-                "php-console/php-console": "^3.1",
-                "phpmd/phpmd": "@stable",
-                "phpunit/phpunit": "^8.5.0",
-                "predis/predis": "^1.1",
-                "raven/raven": "^0.15.0",
-                "ruflin/elastica": "^5.2",
-                "satooshi/php-coveralls": "^2.2.0",
-                "squizlabs/php_codesniffer": "^3.5.3",
-                "swiftmailer/swiftmailer": "^6.0",
-                "symfony/dependency-injection": "^3.3"
-            },
-            "type": "library",
-            "extra": {
-                "zf": {
-                    "config-provider": "WShafer\\PSR11MonoLog\\ConfigProvider",
-                    "module": "WShafer\\PSR11MonoLog"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "WShafer\\PSR11MonoLog\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Westin Shafer",
-                    "email": "shafer_w2002@yahoo.com",
-                    "homepage": "https://github.com/wshafer"
-                }
-            ],
-            "description": "Monolog Facotories for PSR-11",
-            "homepage": "https://github.com/wshafer/psr11-monolog",
-            "support": {
-                "issues": "https://github.com/wshafer/psr11-monolog/issues",
-                "source": "https://github.com/wshafer/psr11-monolog/tree/3.0.0"
-            },
-            "abandoned": "blazon/psr11-monolog",
-            "time": "2019-12-18T22:56:10+00:00"
         }
     ],
     "packages-dev": [
