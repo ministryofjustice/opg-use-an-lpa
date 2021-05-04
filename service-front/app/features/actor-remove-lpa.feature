@@ -9,7 +9,7 @@ Feature: Remove an LPA from my account
     And I am currently signed in
     And I have added an LPA to my account
 
-  @integration @ui
+  @ui
   Scenario: The user is taken to a confirmation page when they request to remove an LPA
     Given I am on the dashboard page
     When I request to remove an LPA from my account

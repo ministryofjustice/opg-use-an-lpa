@@ -55,22 +55,6 @@ class LpaContext extends BaseIntegrationContext
     private $viewerCodeService;
 
     /**
-     * @Then /^I am taken to the remove an LPA confirmation page$/
-     */
-    public function iAmTakenToTheRemoveAnLPAConfirmationPage()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @When /^I request to remove an LPA from my account$/
-     */
-    public function iRequestToRemoveAnLPAFromMyAccount()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @Then /^a letter is requested containing a one time use code$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
