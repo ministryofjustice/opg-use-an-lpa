@@ -14,9 +14,8 @@ class DobPrefixFilterTest extends TestCase
      */
     private DatePrefixFilter $filter;
 
-    public function setUp()
-    {
-        $this->filter = new DatePrefixFilter();
+    public function setUp(): void
+    {    $this->filter = new DatePrefixFilter();
     }
 
     /**

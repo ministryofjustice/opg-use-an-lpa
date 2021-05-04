@@ -14,9 +14,8 @@ class DateValidatorTest extends TestCase
      */
     private $validator;
 
-    public function setUp()
-    {
-        $this->validator = new DateValidator();
+    public function setUp(): void
+    {    $this->validator = new DateValidator();
     }
 
     /**

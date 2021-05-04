@@ -20,9 +20,8 @@ class EmailClientTest extends TestCase
      */
     private $locale;
 
-    public function setUp()
-    {
-        $this->notifyClientProphecy = $this->prophesize(NotifyClient::class);
+    public function setUp(): void
+    {    $this->notifyClientProphecy = $this->prophesize(NotifyClient::class);
         $this->locale = "en_GB";
     }
 
