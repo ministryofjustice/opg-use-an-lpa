@@ -563,7 +563,7 @@ orbs:
         resource_class: small
       terraform:
         docker:
-          - image: hashicorp/terraform:0.14.2
+          - image: hashicorp/terraform:0.14.11
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
@@ -1105,9 +1105,7 @@ orbs:
                 terraform init -lock-timeout=300s
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-                echo $IMAGE_TAG
-                terraform validate -var container_version=${IMAGE_TAG}
+                terraform validate
 
       plan_shared_terraform:
         #
@@ -1467,7 +1465,7 @@ jobs:
 
   workspace_cleanup:
     docker:
-      - image: hashicorp/terraform:0.14.2
+      - image: hashicorp/terraform:0.14.11
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
