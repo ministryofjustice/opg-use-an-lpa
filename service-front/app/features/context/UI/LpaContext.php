@@ -42,6 +42,59 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('Are you sure you want to remove this LPA?');
     }
 
+    /**
+     * @Given /^I cannot see my LPA on the dashboard$/
+     */
+    public function iCannotSeeMyLPAOnTheDashboard()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageNotContainsText('Ian Deputy Deputy');
+    }
+
+    /**
+     * @Given /^I can see a flash message confirming that my LPA has been removed$/
+     */
+    public function iCanSeeAFlashMessageConfirmingThatMyLPAHasBeenRemoved()
+    {
+        $this->ui->assertPageContainsText("You've removed Ian Deputy's health and welfare LPA");
+    }
+
+    /**
+     * @Then /^The LPA is removed/
+     */
+    public function theLPAIsRemoved()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I confirm that I want to remove the LPA from my account$/
+     */
+    public function iConfirmThatIWantToRemoveTheLPAFromMyAccount()
+    {
+        // API call for removing an LPA from a users account
+        $this->apiFixtures->delete('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(['lpa' => $this->lpa])
+                )
+            );
+
+        //API call for getting all the users added LPAs on the dashboard
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $this->ui->clickLink('Yes, remove LPA');
+    }
+
 
     /**
      * @Then /^I receive an email confirming activation key request$/
@@ -1986,6 +2039,7 @@ class LpaContext implements Context
     public function iRequestToRemoveAnLPAFromMyAccount()
     {
         $this->ui->clickLink('Remove LPA');
+        $this->ui->assertPageAddress('/lpa/confirm-remove-lpa');
     }
 
     /**

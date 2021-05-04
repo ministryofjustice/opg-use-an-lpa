@@ -14,3 +14,13 @@ Feature: Remove an LPA from my account
     Given I am on the dashboard page
     When I request to remove an LPA from my account
     Then I am taken to the remove an LPA confirmation page
+
+  @ui @integration
+  Scenario: The user can remove their LPA from their account
+    Given I am on the dashboard page
+    When I request to remove an LPA from my account
+    And I confirm that I want to remove the LPA from my account
+    Then The LPA is removed
+    And I am taken back to the dashboard page
+    And I cannot see my LPA on the dashboard
+    And I can see a flash message confirming that my LPA has been removed

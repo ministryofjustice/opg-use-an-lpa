@@ -13,6 +13,7 @@ use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\OlderLpaApiResponse;
+use Common\Service\Lpa\RemoveLpa;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTime;
 use Exception;
@@ -53,6 +54,59 @@ class LpaContext extends BaseIntegrationContext
     private $lpaService;
     /** @var ViewerCodeService */
     private $viewerCodeService;
+
+    /**
+     * @Given /^I cannot see my LPA on the dashboard$/
+     */
+    public function iCannotSeeMyLPAOnTheDashboard()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I can see a flash message confirming that my LPA has been removed$/
+     */
+    public function iCanSeeAFlashMessageConfirmingThatMyLPAHasBeenRemoved()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^The LPA is removed/
+     */
+    public function theLPAIsRemoved()
+    {
+        $this->apiFixtures->delete('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(['lpa' => $this->lpa])
+                )
+            );
+
+        $removeLpa = $this->container->get(RemoveLpa::class);
+        $result = $removeLpa($this->userIdentity, $this->actorLpaToken);
+
+        assertArrayHasKey('lpa', $result);
+        assertEquals('700000000054', $result['lpa']->getUId());
+    }
+
+    /**
+     * @Given /^I confirm that I want to remove the LPA from my account$/
+     */
+    public function iConfirmThatIWantToRemoveTheLPAFromMyAccount()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to remove an LPA from my account$/
+     */
+    public function iRequestToRemoveAnLPAFromMyAccount()
+    {
+        // Not needed for this context
+    }
 
     /**
      * @Then /^a letter is requested containing a one time use code$/
