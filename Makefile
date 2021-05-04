@@ -102,6 +102,14 @@ run_api_composer:
 	$(COMPOSE) run api-composer composer install --ignore-platform-reqs
 .PHONY: run_api_composer
 
+run_front_composer_update:
+	$(COMPOSE) run front-composer composer update --ignore-platform-reqs
+.PHONY: run_front_composer_update
+
+run_api_composer_update:
+	$(COMPOSE) run api-composer composer update --ignore-platform-reqs
+.PHONY: run_api_composer_update
+
 clear_config_cache:
 	$(COMPOSE) exec viewer-app rm -f /tmp/config-cache.php
 	$(COMPOSE) exec actor-app rm -f /tmp/config-cache.php
