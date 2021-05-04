@@ -58,6 +58,7 @@ variable "accounts" {
         })
       })
       ship_metrics_queue_enabled = bool
+      build_admin                = bool
     })
   )
 }

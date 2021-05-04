@@ -19,7 +19,7 @@ workflows:
           environment: demo
           requires: [demo_apply_environment_terraform]
       - slack_environment_redeploy:
-          name: post_production_release_message
+          name: post_demo_release_message
           environment: demo
           requires: [redeploy_demo]
 
@@ -93,6 +93,10 @@ workflows:
             filters: { branches: { only: [/dependabot\/.*/] } }
             requires: [test_pdf]
 
+        - use-my-lpa/docker_build_admin:
+            name: admin_app_build
+            filters: { branches: { only: [/dependabot\/.*/] } }
+
         - use-my-lpa/codecov_upload:
             name: codecov_upload
             filters: { branches: { only: [/dependabot\/.*/] } }
@@ -102,13 +106,13 @@ workflows:
                 app_api_build,
                 test_web,
                 test_pdf,
+                admin_app_build,
               ]
 
         # Required end of workflow job
         - use-my-lpa/end_of_workflow:
             name: end_of_workflow
             requires: [codecov_upload]
-
 
   pr_build:
       jobs:
@@ -198,6 +202,13 @@ workflows:
               /dependabot\/.*/,
               ] } }
 
+        - use-my-lpa/docker_build_admin:
+            name: admin_app_build
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
+
         - use-my-lpa/docker_build_pdf:
             name: pdf_build
             filters: { branches: { ignore: [
@@ -218,6 +229,7 @@ workflows:
                 app_api_build,
                 test_web,
                 test_pdf,
+                admin_app_build,
               ]
 
             # Provision and test development
@@ -244,6 +256,7 @@ workflows:
                 web_api_build,
                 app_api_build,
                 pdf_build,
+                admin_app_build,
               ]
 
         - ecr_scan_results:
@@ -259,6 +272,7 @@ workflows:
                 web_api_build,
                 app_api_build,
                 pdf_build,
+                admin_app_build,
                 dev_apply_environment_terraform,
               ]
 
@@ -344,6 +358,10 @@ workflows:
             filters: { branches: { only: [master] } }
             requires: [test_pdf]
 
+        - use-my-lpa/docker_build_admin:
+            name: admin_app_build
+            filters: { branches: { only: [master] } }
+
         - use-my-lpa/codecov_upload:
             name: codecov_upload
             filters: { branches: { only: [master] } }
@@ -353,6 +371,7 @@ workflows:
                 app_api_build,
                 test_web,
                 test_pdf,
+                admin_app_build,
               ]
 
         # Provision and test preproduction
@@ -387,6 +406,7 @@ workflows:
                 web_api_build,
                 app_api_build,
                 pdf_build,
+                admin_app_build,
               ]
 
         - ecr_scan_results:
@@ -399,6 +419,7 @@ workflows:
                 web_api_build,
                 app_api_build,
                 pdf_build,
+                admin_app_build,
                 preprod_apply_environment_terraform,
               ]
 
@@ -432,6 +453,7 @@ workflows:
                 web_api_build,
                 app_api_build,
                 pdf_build,
+                admin_app_build,
               ]
 
         - use-my-lpa/run_healthcheck_test:
@@ -439,7 +461,7 @@ workflows:
             filters: { branches: { only: [master] } }
             requires: [production_apply_environment_terraform]
 
-        - slack_notify_production_release:
+        - python_slack_notify_production_release:
             name: post_production_release_message
             filters: { branches: { only: [master] } }
             requires: [prod_run_healthcheck_test]
@@ -541,7 +563,7 @@ orbs:
         resource_class: small
       terraform:
         docker:
-          - image: hashicorp/terraform:0.14.2
+          - image: hashicorp/terraform:0.14.11
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
@@ -992,6 +1014,45 @@ orbs:
                 fi
 
 
+      docker_build_admin:
+        #
+        # Build Docker container for Admin
+        #   and runs the Unit Tests.
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/admin_app
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 19.03.12
+              docker_layer_caching: false
+          - dockerhub_login
+          - run:
+              name: Build
+              command: |
+                docker build --target production --file service-admin/docker/Dockerfile --tag admin_app:latest .
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
+
+                docker tag admin_app:latest << parameters.container_repo_url >>:latest
+                docker tag admin_app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
+
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  # We want all of the tags pushed
+                  docker push << parameters.container_repo_url >>
+                else
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
+                fi
+
+
 
       # Code Coverage
 
@@ -1044,9 +1105,7 @@ orbs:
                 terraform init -lock-timeout=300s
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-                echo $IMAGE_TAG
-                terraform validate -var container_version=${IMAGE_TAG}
+                terraform validate
 
       plan_shared_terraform:
         #
@@ -1344,6 +1403,25 @@ jobs:
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
 
+  python_slack_notify_production_release:
+    docker:
+      - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Notify Slack
+          command: |
+            python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
+            --slack_webhook $PROD_RELEASE_SLACK_WEBHOOK \
+            --commit_message "$(git log -1 --pretty=%B)"
+
+
   slack_notify_stats:
     docker:
       - image: circleci/python
@@ -1387,7 +1465,7 @@ jobs:
 
   workspace_cleanup:
     docker:
-      - image: hashicorp/terraform:0.14.2
+      - image: hashicorp/terraform:0.14.11
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN

@@ -203,6 +203,35 @@ services:
       XDEBUG_MODE: develop,debug,coverage
       XDEBUG_TRIGGER: "true"
 
+  admin-app:
+    container_name: admin-app
+    image: admin-app
+    build:
+      context: .
+      dockerfile: service-admin/docker/Dockerfile
+    volumes:
+      - ./service-admin/app:/app
+    networks:
+      - default
+      - lpas-collection
+    environment:
+      DYNAMODB_TABLE_ACTOR_CODES: "ActorCodes"
+      DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
+      DYNAMODB_TABLE_VIEWER_CODES: "ViewerCodes"
+      DYNAMODB_TABLE_VIEWER_ACTIVITY: "ViewerActivity"
+      DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
+
+      SIRIUS_API_ENDPOINT: "http://api_gateway:4343"
+      LPA_CODES_API_ENDPOINT: "http://codes-gateway:4343"
+
+      # Local only
+      AWS_ACCESS_KEY_ID: "-"
+      AWS_ENDPOINT_DYNAMODB: http://localstack:4566
+      AWS_SECRET_ACCESS_KEY: "-"
+      LPA_CODES_STATIC_AUTH_TOKEN: asdf1234567890
+      PACT_BROKER_PUBLISH: "false"
+      LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
+
   api-composer:
     image: composer:2.0.8
     volumes:
