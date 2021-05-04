@@ -1,16 +1,16 @@
-FROM composer AS composer
+FROM composer:2.0.13 AS composer
 
 COPY service-front/app/composer.json service-front/app/composer.lock /app/
 
 RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
 
-FROM composer AS composer-dev
+FROM composer:2.0.13 AS composer-dev
 
 COPY service-front/app/composer.json service-front/app/composer.lock /app/
 
 RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
 
-FROM php:8-fpm-alpine3.12 AS production
+FROM php:8-fpm-alpine3.13 AS production
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
