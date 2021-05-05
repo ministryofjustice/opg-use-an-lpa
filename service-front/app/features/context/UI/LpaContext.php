@@ -60,6 +60,14 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I request to remove an LPA from my account without the lpa actor token$/
+     */
+    public function iRequestToRemoveAnLPAFromMyAccountWithoutTheLpaActorToken()
+    {
+        $this->ui->visit('/lpa/confirm-remove-lpa');
+    }
+
+    /**
      * @Then /^The LPA is removed/
      */
     public function theLPAIsRemoved()

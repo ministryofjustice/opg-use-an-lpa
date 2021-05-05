@@ -24,3 +24,9 @@ Feature: Remove an LPA from my account
     And I am taken back to the dashboard page
     And I cannot see my LPA on the dashboard
     And I can see a flash message confirming that my LPA has been removed
+
+  @ui
+  Scenario: An error is thrown if the actor lpa token is not present when attempting to remove an LPA
+    Given I am on the dashboard page
+    When I request to remove an LPA from my account without the lpa actor token
+    Then I should be shown an error page
