@@ -154,31 +154,31 @@ data "aws_iam_policy_document" "admin_permissions_role" {
 locals {
   admin_app = jsonencode(
     {
-      "cpu" : 1,
-      "essential" : true,
-      "image" : "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}:${var.container_version}",
-      "mountPoints" : [],
-      "name" : "app",
-      "portMappings" : [
+      cpu         = 1,
+      essential   = true,
+      image       = "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}:${var.container_version}",
+      mountPoints = [],
+      name        = "app",
+      portMappings = [
         {
-          "containerPort" : 9000,
-          "hostPort" : 9000,
-          "protocol" : "tcp"
+          containerPort = 9000,
+          hostPort      = 9000,
+          protocol      = "tcp"
         }
       ],
-      "volumesFrom" : [],
-      "logConfiguration" : {
-        "logDriver" : "awslogs",
-        "options" : {
-          "awslogs-group" : aws_cloudwatch_log_group.application_logs.name,
-          "awslogs-region" : "eu-west-1",
-          "awslogs-stream-prefix" : "${local.environment}.admin-app.use-an-lpa"
+      volumesFrom = [],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "${local.environment}.admin-app.use-an-lpa"
         }
       },
-      "environment" : [
+      environment = [
         {
-          "name" : "LOGGING_LEVEL",
-          "value" : local.account.logging_level
+          name  = "LOGGING_LEVEL",
+          value = tostring(local.account.logging_level)
         },
       ]
     }
