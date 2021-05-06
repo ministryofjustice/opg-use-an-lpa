@@ -180,7 +180,6 @@ resource "aws_lb_listener_rule" "viewer_maintenance_welsh" {
 }
 
 
-
 resource "aws_security_group" "viewer_loadbalancer" {
   name        = "${local.environment}-viewer-loadbalancer"
   description = "Allow inbound traffic"
