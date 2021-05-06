@@ -130,3 +130,35 @@ resource "aws_acm_certificate" "certificate_public_facing_use" {
   domain_name       = "${local.dev_wildcard}${data.aws_route53_zone.live_service_use_lasting_power_of_attorney.name}"
   validation_method = "DNS"
 }
+
+
+//------------------------
+// Admin Certificates
+
+resource "aws_route53_record" "certificate_validation_admin" {
+  provider = aws.management
+  for_each = {
+    for dvo in aws_acm_certificate.certificate_admin.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
+}
+
+resource "aws_acm_certificate_validation" "certificate_validation_admin" {
+  certificate_arn         = aws_acm_certificate.certificate_admin.arn
+  validation_record_fqdns = [for record in aws_route53_record.certificate_validation_admin : record.fqdn]
+}
+
+resource "aws_acm_certificate" "certificate_admin" {
+  domain_name       = "${local.dev_wildcard}admin.lastingpowerofattorney.opg.service.justice.gov.uk"
+  validation_method = "DNS"
+}
