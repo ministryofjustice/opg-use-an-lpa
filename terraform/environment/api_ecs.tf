@@ -285,7 +285,7 @@ locals {
         },
         {
           name  = "USE_LEGACY_CODES_SERVICE",
-          value = local.account.use_legacy_codes_service
+          value = tostring(local.account.use_legacy_codes_service)
         },
         {
           name  = "LOGGING_LEVEL",
