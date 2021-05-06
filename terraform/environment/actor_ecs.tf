@@ -150,7 +150,7 @@ locals {
         },
         {
           name  = "CONTAINER_VERSION",
-          value = "${var.container_version}"
+          value = var.container_version
       }]
   })
 
