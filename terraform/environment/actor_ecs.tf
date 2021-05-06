@@ -115,7 +115,7 @@ locals {
   actor_web = jsonencode({
     cpu         = 1,
     essential   = true,
-    image       = "${data.aws_ecr_repository.use_an_lpa_front_web.repository_url}=${var.container_version}",
+    image       = "${data.aws_ecr_repository.use_an_lpa_front_web.repository_url}:${var.container_version}",
     mountPoints = [],
     name        = "web",
     portMappings = [{
@@ -218,7 +218,7 @@ locals {
       },
       {
         name  = "BRUTE_FORCE_CACHE_URL",
-        value = "tls=//${data.aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address}"
+        value = "tls://${data.aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address}"
       },
       {
         name  = "BRUTE_FORCE_CACHE_PORT",
