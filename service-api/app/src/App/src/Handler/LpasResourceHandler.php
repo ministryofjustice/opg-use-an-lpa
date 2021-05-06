@@ -15,7 +15,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 
 /**
- * Class LpaSearchHandler
+ * Class LpasResourceHandler
+ *
  * @package App\Handler
  * @codeCoverageIgnore
  */
