@@ -7,11 +7,11 @@ namespace ActorTest\Form;
 use Actor\Form\CreateAccount;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
-use PHPUnit\Framework\TestCase;
-use Mezzio\Csrf\CsrfGuardInterface;
-use Laminas\Form\Element\{Checkbox, Password};
 use Common\Form\Element\Email;
+use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
+use Laminas\Form\Element\{Checkbox, Password};
+use Mezzio\Csrf\CsrfGuardInterface;
+use PHPUnit\Framework\TestCase;
 
 class CreateAccountTest extends TestCase implements TestsLaminasForm
 {
@@ -40,7 +40,7 @@ class CreateAccountTest extends TestCase implements TestsLaminasForm
         ];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new CreateAccount($guardProphecy->reveal());

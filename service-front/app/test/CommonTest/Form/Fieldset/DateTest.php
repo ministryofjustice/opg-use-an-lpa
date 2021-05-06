@@ -15,9 +15,8 @@ class DateTest extends TestCase
      */
     private $fieldset;
 
-    public function setUp()
-    {
-        $this->fieldset = new Date('date');
+    public function setUp(): void
+    {    $this->fieldset = new Date('date');
     }
 
     public function testIsAForm()

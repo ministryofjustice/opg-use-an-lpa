@@ -14,6 +14,6 @@ class EmailTest extends TestCase
     {
         $email = new Email('test@test.com');
         $this->assertRegExp('/.*/', (string)$email);
-        $this->assertNotContains('test@test.com', (string)$email);
+        $this->assertStringNotContainsString('test@test.com', (string)$email);
     }
 }

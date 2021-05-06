@@ -7,10 +7,10 @@ namespace ActorTest\Form;
 use Actor\Form\PasswordChange;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
-use PHPUnit\Framework\TestCase;
-use Mezzio\Csrf\CsrfGuardInterface;
+use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Laminas\Form\Element\Password;
+use Mezzio\Csrf\CsrfGuardInterface;
+use PHPUnit\Framework\TestCase;
 
 class PasswordChangeTest extends TestCase implements TestsLaminasForm
 {
@@ -38,9 +38,8 @@ class PasswordChangeTest extends TestCase implements TestsLaminasForm
         ];
     }
 
-    public function setUp()
-    {
-        $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
+    public function setUp(): void
+    {    $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new PasswordChange($guardProphecy->reveal());
     }
 }

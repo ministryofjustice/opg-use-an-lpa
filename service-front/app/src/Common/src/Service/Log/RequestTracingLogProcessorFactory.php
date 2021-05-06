@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Common\Service\Log;
 
-use DI\NotFoundException;
+use Blazon\PSR11MonoLog\ContainerAwareInterface;
+use Blazon\PSR11MonoLog\FactoryInterface;
 use Psr\Container\ContainerInterface;
-use WShafer\PSR11MonoLog\ContainerAwareInterface;
-use WShafer\PSR11MonoLog\FactoryInterface;
 
 class RequestTracingLogProcessorFactory implements FactoryInterface, ContainerAwareInterface
 {

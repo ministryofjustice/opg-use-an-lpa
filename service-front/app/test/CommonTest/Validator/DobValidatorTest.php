@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace CommonTest\Validator;
 
 use Common\Validator\DobValidator;
-use PHPUnit\Framework\TestCase;
 use DateTime;
+use PHPUnit\Framework\TestCase;
 
 class DobValidatorTest extends TestCase
 {
@@ -15,9 +15,8 @@ class DobValidatorTest extends TestCase
      */
     private $validator;
 
-    public function setUp()
-    {
-        $this->validator = new DobValidator();
+    public function setUp(): void
+    {    $this->validator = new DobValidator();
     }
 
     /**

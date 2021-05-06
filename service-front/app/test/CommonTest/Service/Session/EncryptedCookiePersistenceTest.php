@@ -67,9 +67,8 @@ class EncryptedCookiePersistenceTest extends TestCase
     private $testKey;
 
 
-    public function setUp()
-    {
-        // A real key used within the tests. It doesn't matter what it is.
+    public function setUp(): void
+    {    // A real key used within the tests. It doesn't matter what it is.
         $this->testKey = new Key('test-id', new EncryptionKey(new HiddenString(random_bytes(32))));
 
         $this->keyManagerProphecy = $this->prophesize(KeyManagerInterface::class);
@@ -229,7 +228,7 @@ class EncryptedCookiePersistenceTest extends TestCase
                     $this->assertEquals($testData['float'], $value['float']);
                     $this->assertEquals($testData['bool'], $value['bool']);
 
-                    $this->assertEquals(time(), $value[EncryptedCookiePersistence::SESSION_TIME_KEY], '', 3);
+                    $this->assertEqualsWithDelta(time(), $value[EncryptedCookiePersistence::SESSION_TIME_KEY], 3);
 
                     //--------
                     // Extract the Expires time
@@ -239,7 +238,7 @@ class EncryptedCookiePersistenceTest extends TestCase
                     $time = strtotime($matches[1]);
 
                     // Check it
-                    $this->assertEquals(time() + self::COOKIE_EXPIRES, $time, '', 3);
+                    $this->assertEqualsWithDelta(time() + self::COOKIE_EXPIRES, $time, 3);
 
                     return true;
                 }
@@ -317,7 +316,7 @@ class EncryptedCookiePersistenceTest extends TestCase
                     $cookieData = json_decode($plaintext, true);
 
                     // All cookies, even ones with empty session data will have a time
-                    $this->assertEquals(time(), $cookieData[EncryptedCookiePersistence::SESSION_TIME_KEY], '', 3);
+                    $this->assertEqualsWithDelta(time(), $cookieData[EncryptedCookiePersistence::SESSION_TIME_KEY], 3);
 
                     return true;
                 }

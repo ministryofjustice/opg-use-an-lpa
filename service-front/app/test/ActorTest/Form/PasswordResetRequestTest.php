@@ -7,10 +7,10 @@ namespace ActorTest\Form;
 use Actor\Form\PasswordResetRequest;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
-use PHPUnit\Framework\TestCase;
-use Mezzio\Csrf\CsrfGuardInterface;
 use Common\Form\Element\Email;
+use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
+use Mezzio\Csrf\CsrfGuardInterface;
+use PHPUnit\Framework\TestCase;
 
 class PasswordResetRequestTest extends TestCase implements TestsLaminasForm
 {
@@ -38,9 +38,8 @@ class PasswordResetRequestTest extends TestCase implements TestsLaminasForm
         ];
     }
 
-    public function setUp()
-    {
-        $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
+    public function setUp(): void
+    {    $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new PasswordResetRequest($guardProphecy->reveal());
     }
 }

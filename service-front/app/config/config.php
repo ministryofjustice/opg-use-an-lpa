@@ -23,8 +23,6 @@ $aggregator = new ConfigAggregator([
     \Mezzio\Authentication\ConfigProvider::class,
     \Mezzio\Session\ConfigProvider::class,
     \Mezzio\Csrf\ConfigProvider::class,
-    \WShafer\PSR11MonoLog\ConfigProvider::class,
-
     \Laminas\HttpHandlerRunner\ConfigProvider::class,
     \Mezzio\Router\FastRouteRouter\ConfigProvider::class,
 

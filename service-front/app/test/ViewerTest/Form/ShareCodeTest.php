@@ -6,11 +6,11 @@ namespace ViewerTest\Form;
 
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use PHPUnit\Framework\TestCase;
-use Viewer\Form\ShareCode;
-use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Form\Element\Text;
 use Laminas\InputFilter\InputFilter;
+use Mezzio\Csrf\CsrfGuardInterface;
+use PHPUnit\Framework\TestCase;
+use Viewer\Form\ShareCode;
 
 class ShareCodeTest extends TestCase
 {
@@ -28,9 +28,8 @@ class ShareCodeTest extends TestCase
         'donor_surname' => Text::class,
     ];
 
-    public function setUp()
-    {
-        $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
+    public function setUp(): void
+    {    $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
 
         $this->form = new ShareCode($guardProphecy->reveal());
     }

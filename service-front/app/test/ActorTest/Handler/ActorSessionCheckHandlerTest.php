@@ -45,9 +45,8 @@ class ActorSessionCheckHandlerTest extends TestCase
      */
     private $userProphecy;
 
-    public function setup()
-    {
-        $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);
+    public function setUp(): void
+    {    $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);
         $this->authenticatorProphecy = $this->prophesize(AuthenticationInterface::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);

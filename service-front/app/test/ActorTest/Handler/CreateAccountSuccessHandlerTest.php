@@ -9,14 +9,14 @@ use Common\Exception\ApiException;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
-use PHPUnit\Framework\TestCase;
-use Prophecy\Argument\Token\CallbackToken;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Helper\ServerUrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
+use PHPUnit\Framework\TestCase;
+use Prophecy\Argument\Token\CallbackToken;
+use Psr\Http\Message\ServerRequestInterface;
 
 class CreateAccountSuccessHandlerTest extends TestCase
 {
@@ -50,9 +50,8 @@ class CreateAccountSuccessHandlerTest extends TestCase
      */
     private $requestProphecy;
 
-    public function setUp()
-    {
-        // Constructor Parameters
+    public function setUp(): void
+    {    // Constructor Parameters
         $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);
         $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);
         $this->userServiceProphecy = $this->prophesize(UserService::class);
