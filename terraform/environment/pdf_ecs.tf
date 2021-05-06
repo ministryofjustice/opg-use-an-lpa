@@ -107,33 +107,30 @@ resource "aws_iam_role" "pdf_task_role" {
 // pdf ECS Service Task Container level config
 
 locals {
-  pdf_app = <<EOF
-  {
-    "cpu": 1,
-    "essential": true,
-    "image": "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}:${var.container_version}",
-    "mountPoints": [],
-    "name": "pdf",
-    "portMappings": [
+  pdf_app = jsonencode(
+    {
+      "cpu" : 1,
+      "essential" : true,
+      "image" : "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}:${var.container_version}",
+      "mountPoints" : [],
+      "name" : "pdf",
+      "portMappings" : [
         {
-            "containerPort": 80,
-            "hostPort": 80,
-            "protocol": "tcp"
+          "containerPort" : 80,
+          "hostPort" : 80,
+          "protocol" : "tcp"
         }
-    ],
-    "volumesFrom": [],
-    "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-            "awslogs-group": "${aws_cloudwatch_log_group.application_logs.name}",
-            "awslogs-region": "eu-west-1",
-            "awslogs-stream-prefix": "${local.environment}.pdf-app.use-an-lpa"
+      ],
+      "volumesFrom" : [],
+      "logConfiguration" : {
+        "logDriver" : "awslogs",
+        "options" : {
+          "awslogs-group" : aws_cloudwatch_log_group.application_logs.name,
+          "awslogs-region" : "eu-west-1",
+          "awslogs-stream-prefix" : "${local.environment}.pdf-app.use-an-lpa"
         }
-    }
-  }
-
-EOF
-
+      }
+  })
 }
 
 output "pdf_app_deployed_version" {
