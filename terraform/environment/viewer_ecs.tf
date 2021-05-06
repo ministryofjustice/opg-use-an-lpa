@@ -112,120 +112,117 @@ data "aws_iam_policy_document" "viewer_permissions_role" {
 // Viewer ECS Service Task Container level config
 
 locals {
-  viewer_web = jsonencode(
-    {
-      cpu         = 1,
-      essential   = true,
-      image       = "${data.aws_ecr_repository.use_an_lpa_front_web.repository_url}:${var.container_version}",
-      mountPoints = [],
-      name        = "web",
-      portMappings = [
-        {
-          containerPort = 80,
-          hostPort      = 80,
-          protocol      = "tcp"
-        }
-      ],
-      volumesFrom = [],
-      logConfiguration = {
-        logDriver = "awslogs",
-        options = {
-          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment}.viewer-web.use-an-lpa"
-        }
+  viewer_web = jsonencode({
+    cpu         = 1,
+    essential   = true,
+    image       = "${data.aws_ecr_repository.use_an_lpa_front_web.repository_url}:${var.container_version}",
+    mountPoints = [],
+    name        = "web",
+    portMappings = [
+      {
+        containerPort = 80,
+        hostPort      = 80,
+        protocol      = "tcp"
+      }
+    ],
+    volumesFrom = [],
+    logConfiguration = {
+      logDriver = "awslogs",
+      options = {
+        awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+        awslogs-region        = "eu-west-1",
+        awslogs-stream-prefix = "${local.environment}.viewer-web.use-an-lpa"
+      }
+    },
+    environment = [
+      {
+        name  = "APP_HOST",
+        value = "127.0.0.1"
       },
-      environment = [
-        {
-          name  = "APP_HOST",
-          value = "127.0.0.1"
-        },
-        {
-          name  = "APP_PORT",
-          value = "9000"
-        },
-        {
-          name  = "TIMEOUT",
-          value = "60"
-        },
-        {
-          name  = "CONTAINER_VERSION",
-          value = var.container_version
-      }]
+      {
+        name  = "APP_PORT",
+        value = "9000"
+      },
+      {
+        name  = "TIMEOUT",
+        value = "60"
+      },
+      {
+        name  = "CONTAINER_VERSION",
+        value = var.container_version
+    }]
   })
 
-
-  viewer_app = jsonencode(
-    {
-      cpu         = 1,
-      essential   = true,
-      image       = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}:${var.container_version}",
-      mountPoints = [],
-      name        = "app",
-      portMappings = [
-        {
-          containerPort = 9000,
-          hostPort      = 9000,
-          protocol      = "tcp"
-        }
-      ],
-      volumesFrom = [],
-      logConfiguration = {
-        logDriver = "awslogs",
-        options = {
-          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment}.viewer-app.use-an-lpa"
-        }
+  viewer_app = jsonencode({
+    cpu         = 1,
+    essential   = true,
+    image       = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}:${var.container_version}",
+    mountPoints = [],
+    name        = "app",
+    portMappings = [
+      {
+        containerPort = 9000,
+        hostPort      = 9000,
+        protocol      = "tcp"
+      }
+    ],
+    volumesFrom = [],
+    logConfiguration = {
+      logDriver = "awslogs",
+      options = {
+        awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+        awslogs-region        = "eu-west-1",
+        awslogs-stream-prefix = "${local.environment}.viewer-app.use-an-lpa"
+      }
+    },
+    environment = [
+      {
+        name  = "CONTEXT",
+        value = "viewer"
       },
-      environment = [
-        {
-          name  = "CONTEXT",
-          value = "viewer"
-        },
-        {
-          name  = "KMS_SESSION_CMK_ALIAS",
-          value = data.aws_kms_alias.sessions_viewer.name
-        },
-        {
-          name  = "CONTAINER_VERSION",
-          value = var.container_version
-        },
-        {
-          name  = "API_SERVICE_URL",
-          value = "http://${local.api_service_fqdn}"
-        },
-        {
-          name  = "PDF_SERVICE_URL",
-          value = "http://${local.pdf_service_fqdn}"
-        },
-        {
-          name  = "SESSION_EXPIRES",
-          value = local.account.session_expires_view
-        },
-        {
-          name  = "COOKIE_EXPIRES",
-          value = local.account.cookie_expires_view
-        },
-        {
-          name  = "GOOGLE_ANALYTICS_ID",
-          value = local.account.google_analytics_id_view
-        },
-        {
-          name  = "LOGGING_LEVEL",
-          value = local.account.logging_level
-        },
-        {
-          name  = "BRUTE_FORCE_CACHE_URL",
-          value = "tls://${data.aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address}"
-        },
-        {
-          name  = "BRUTE_FORCE_CACHE_PORT",
-          value = data.aws_elasticache_replication_group.brute_force_cache_replication_group.port
-        },
-        {
-          name  = "BRUTE_FORCE_CACHE_TIMEOUT",
-          value = "60"
-      }]
+      {
+        name  = "KMS_SESSION_CMK_ALIAS",
+        value = data.aws_kms_alias.sessions_viewer.name
+      },
+      {
+        name  = "CONTAINER_VERSION",
+        value = var.container_version
+      },
+      {
+        name  = "API_SERVICE_URL",
+        value = "http://${local.api_service_fqdn}"
+      },
+      {
+        name  = "PDF_SERVICE_URL",
+        value = "http://${local.pdf_service_fqdn}"
+      },
+      {
+        name  = "SESSION_EXPIRES",
+        value = local.account.session_expires_view
+      },
+      {
+        name  = "COOKIE_EXPIRES",
+        value = local.account.cookie_expires_view
+      },
+      {
+        name  = "GOOGLE_ANALYTICS_ID",
+        value = local.account.google_analytics_id_view
+      },
+      {
+        name  = "LOGGING_LEVEL",
+        value = local.account.logging_level
+      },
+      {
+        name  = "BRUTE_FORCE_CACHE_URL",
+        value = "tls://${data.aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address}"
+      },
+      {
+        name  = "BRUTE_FORCE_CACHE_PORT",
+        value = data.aws_elasticache_replication_group.brute_force_cache_replication_group.port
+      },
+      {
+        name  = "BRUTE_FORCE_CACHE_TIMEOUT",
+        value = "60"
+    }]
   })
 }

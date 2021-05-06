@@ -151,7 +151,6 @@ locals {
     }]
   })
 
-
   actor_app = jsonencode({
     cpu         = 1,
     essential   = true,
