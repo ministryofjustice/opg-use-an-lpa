@@ -161,8 +161,8 @@ locals {
       name        = "app",
       portMappings = [
         {
-          containerPort = 9000,
-          hostPort      = 9000,
+          containerPort = 80,
+          hostPort      = 80,
           protocol      = "tcp"
         }
       ],
