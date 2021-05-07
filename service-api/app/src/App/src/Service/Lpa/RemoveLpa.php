@@ -7,6 +7,7 @@ namespace App\Service\Lpa;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
 use App\Exception\NotFoundException;
+use DateTime;
 use Psr\Log\LoggerInterface;
 
 class RemoveLpa
@@ -21,7 +22,6 @@ class RemoveLpa
         UserLpaActorMapInterface $userLpaActorMapRepository,
         ViewerCodesInterface $viewerCodesRepository,
         LpaService $lpaService
-
     ) {
         $this->logger = $logger;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
@@ -64,10 +64,11 @@ class RemoveLpa
         //Get list of viewer codes to be updated
         $viewerCodes = $this->getListOfViewerCodesToBeUpdated($userActorLpa);
 
-        //Update query to remove actor association in viewer code table
+        //Update query to remove actor association in viewer code table and cancel it
         if (!empty($viewerCodes)) {
-            foreach ($viewerCodes as $key => $viewerCode) {
+            foreach ($viewerCodes as $viewerCode) {
                 $this->viewerCodesRepository->removeActorAssociation($viewerCode);
+                $this->viewerCodesRepository->cancel($viewerCode, new DateTime());
             }
         }
 
@@ -86,7 +87,7 @@ class RemoveLpa
 
         //Lookup records in ViewerCodes table using siriusUid
         $viewerCodesData = $this->viewerCodesRepository->getCodesByLpaId($siriusUid);
-        foreach ($viewerCodesData as $key => $viewerCodeRecord) {
+        foreach ($viewerCodesData as $viewerCodeRecord) {
             if (
                 isset($viewerCodeRecord['UserLpaActor'])
                 && ($viewerCodeRecord['UserLpaActor'] === $userActorLpa['Id'])
@@ -94,6 +95,6 @@ class RemoveLpa
                 $viewerCodes[] = $viewerCodeRecord['ViewerCode'];
             }
         }
-        return $viewerCodes;
+        return ($viewerCodes ?? []);
     }
 }
