@@ -18,10 +18,15 @@
                 <dd class="govuk-summary-list__value">{{ add_hyphen_to_viewer_code(code.ViewerCode) }}</dd>
             </div>
 
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">{% trans %}Created by{% endtrans %}</dt>
-                <dd class="govuk-summary-list__value">{{ code.CreatedBy }}</dd>
-            </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">{% trans %}Created by{% endtrans %}</dt>
+                    {% if code.CreatedBy is defined %}
+                        <dd class="govuk-summary-list__value">{{ code.CreatedBy }}</dd>
+                    {% else %}
+                        {# this should only be the case where the user who created the code deleted their lpa, so we can't figure out who the code was created by #}
+                        <dd class="govuk-summary-list__value"></dd>
+                    {% endif %}
+                </div>
 
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">{% trans %}LPA viewed{% endtrans %}</dt>
