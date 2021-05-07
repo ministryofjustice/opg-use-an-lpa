@@ -1054,15 +1054,6 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I do not confirm cancellation of the chosen viewer code/
-     * @When /^I request to return to the dashboard page/
-     */
-    public function iDoNotConfirmCancellationOfTheChosenViewerCode()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @When /^I fill in the form and click the cancel button$/
      */
     public function iFillInTheFormAndClickTheCancelButton()
@@ -1610,7 +1601,7 @@ class LpaContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'SiriusUid' => '700000055554',
+                            'SiriusUid' => $this->lpaUid,
                             'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id' => $this->userLpaActorToken,
                             'ActorId' => $this->actorLpaId,
@@ -1630,7 +1621,7 @@ class LpaContext extends BaseIntegrationContext
                             [
                                 'Id' => '1',
                                 'ViewerCode' => '123ABCD6789',
-                                'SiriusUid' => '700000055554',
+                                'SiriusUid' => $this->lpaUid,
                                 'Added' => '2021-01-01 00:00:00',
                                 'Expires' => '2021-02-01 00:00:00',
                                 'UserLpaActor' => $this->userLpaActorToken,
@@ -1687,9 +1678,16 @@ class LpaContext extends BaseIntegrationContext
 
         $this->awsFixtures->append(new Result());
 
-        $lpaRemoveResponse = ($this->deleteLpa)($this->userId, $this->userLpaActorToken);
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
 
-        assertEmpty($lpaRemoveResponse);
+        $lpaRemoved = ($this->deleteLpa)($this->userId, $this->userLpaActorToken);
+
+        assertEquals($this->lpa->uId, $lpaRemoved['uId']);
     }
 
     /**
