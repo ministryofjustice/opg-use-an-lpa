@@ -83,14 +83,10 @@
                     </dd>
                 </div>
             {% endif %}
-
         </dl>
 
-        {% if not check_if_code_has_expired(code.Expires) %}
-            {% if not check_if_code_is_cancelled(code) %}
-                {{ include('@actor/partials/cancel-code-option.html.twig') }}
-            {% endif %}
+        {% if not check_if_code_has_expired(code.Expires) and not check_if_code_is_cancelled(code) %}
+            {{ include('@actor/partials/cancel-code-option.html.twig') }}
         {% endif %}
-
     </div>
 </div>
