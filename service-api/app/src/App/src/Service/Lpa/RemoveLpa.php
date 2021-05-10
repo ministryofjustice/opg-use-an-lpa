@@ -61,14 +61,18 @@ class RemoveLpa
             );
         }
 
-        //Get list of viewer codes to be updated
         $viewerCodes = $this->getListOfViewerCodesToBeUpdated($userActorLpa);
 
-        //Update query to remove actor association in viewer code table and cancel it
         if (!empty($viewerCodes)) {
-            foreach ($viewerCodes as $viewerCode) {
-                $this->viewerCodesRepository->removeActorAssociation($viewerCode);
-                $this->viewerCodesRepository->cancel($viewerCode, new DateTime());
+            foreach ($viewerCodes as $viewerCodeRecord) {
+                $this->viewerCodesRepository->removeActorAssociation($viewerCodeRecord['ViewerCode']);
+                if (
+                    // only cancel active codes
+                    !array_key_exists('Cancelled', $viewerCodeRecord) &&
+                    new DateTime($viewerCodeRecord['Expires']) >= new DateTime('now')
+                ) {
+                    $this->viewerCodesRepository->cancel($viewerCodeRecord['ViewerCode'], new DateTime());
+                }
             }
         }
 
@@ -92,7 +96,7 @@ class RemoveLpa
                 isset($viewerCodeRecord['UserLpaActor'])
                 && ($viewerCodeRecord['UserLpaActor'] === $userActorLpa['Id'])
             ) {
-                $viewerCodes[] = $viewerCodeRecord['ViewerCode'];
+                $viewerCodes[] = $viewerCodeRecord;
             }
         }
         return ($viewerCodes ?? []);
