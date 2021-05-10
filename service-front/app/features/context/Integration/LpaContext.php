@@ -93,6 +93,14 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @Given /^My active codes are cancelled$/
+     */
+    public function myActiveCodesAreCancelled()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @Given /^I confirm that I want to remove the LPA from my account$/
      */
     public function iConfirmThatIWantToRemoveTheLPAFromMyAccount()

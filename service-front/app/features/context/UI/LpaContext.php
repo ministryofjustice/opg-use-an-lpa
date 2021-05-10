@@ -68,6 +68,14 @@ class LpaContext implements Context
     }
 
     /**
+     * @Given /^My active codes are cancelled$/
+     */
+    public function myActiveCodesAreCancelled()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @Then /^The LPA is removed/
      */
     public function theLPAIsRemoved()
