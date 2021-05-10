@@ -2004,6 +2004,7 @@ class LpaContext implements Context
             )
         );
 
+        // API call to remove an LPA
         $this->apiDelete(
             '/v1/lpas/' . $this->userLpaActorToken,
             [
@@ -2015,6 +2016,7 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
+        assertArrayHasKey('lpa', $response);
         assertEquals($this->lpa->uId, $response['lpa']['uId']);
     }
 

@@ -22,15 +22,11 @@ use Laminas\Diactoros\Response\JsonResponse;
  */
 class LpasResourceHandler implements RequestHandlerInterface
 {
-    /**
-     * @var LpaService
-     */
-    private $lpaService;
+    /** @var LpaService */
+    private LpaService $lpaService;
 
-    /**
-     * @var RemoveLpa
-     */
-    private $removeLpa;
+    /** @var RemoveLpa */
+    private RemoveLpa $removeLpa;
 
     public function __construct(LpaService $lpaService, RemoveLpa $removeLpa)
     {
@@ -82,15 +78,19 @@ class LpasResourceHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Exception
      */
     public function handleDelete(ServerRequestInterface $request): ResponseInterface
     {
         $actorLpaToken = $request->getAttribute('user-lpa-actor-token');
         $userToken =  $request->getAttribute('actor-id');
 
-        if (!isset($actorLpaToken)) {
-            throw new BadRequestException('User actor LPA token must be provided for lpa removal');
+        if (is_null($actorLpaToken)) {
+            throw new BadRequestException('user-lpa-actor-token missing from lpa removal request');
+        }
+
+        if (is_null($userToken)) {
+            throw new BadRequestException('actor-id missing from lpa removal request');
         }
 
         $removedLpaData = ($this->removeLpa)($userToken, $actorLpaToken);
