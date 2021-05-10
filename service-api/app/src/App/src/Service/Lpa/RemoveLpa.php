@@ -8,6 +8,7 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
 use App\Exception\NotFoundException;
 use DateTime;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 class RemoveLpa
@@ -34,9 +35,10 @@ class RemoveLpa
      * and removes an LPA from a users account
      *
      * @param string $userId The user account ID that must correlate to the $token
-     * @param string $token UserLpaActorToken that map an LPA to a user account
+     * @param string $token  UserLpaActorToken that map an LPA to a user account
      *
      * @return array A structure that contains processed LPA data and metadata
+     * @throws Exception
      */
     public function __invoke(string $userId, string $token): array
     {
