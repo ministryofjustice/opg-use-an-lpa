@@ -9,11 +9,7 @@ use ArrayObject;
 
 class AddLpaApiResponseTest extends TestCase
 {
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::validateResponseType
-     */
+    /** @test */
     public function it_can_be_created_with_a_recognised_response_type(): void
     {
         $sut = new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_NOT_FOUND, new ArrayObject());
@@ -21,24 +17,14 @@ class AddLpaApiResponseTest extends TestCase
         $this->assertInstanceOf(AddLpaApiResponse::class, $sut);
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::validateResponseType
-     */
+    /** @test */
     public function it_throws_an_exception_with_an_unrecognised_response_type(): void
     {
         $this->expectException(RuntimeException::class);
-        $sut = new AddLpaApiResponse('BAD TYPE', new ArrayObject());
+        new AddLpaApiResponse('BAD TYPE', new ArrayObject());
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::validateResponseType
-     * @covers ::getResponse
-     * @covers ::getData
-     */
+    /** @test */
     public function it_makes_available_the_type_and_passed_in_additional_data(): void
     {
         $data = [
