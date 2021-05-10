@@ -11,6 +11,7 @@ use App\Service\Lpa\RemoveLpa;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
@@ -59,14 +60,33 @@ class RemoveLpaTest extends TestCase
         ];
 
         $this->viewerCodes = [
-            0 => [
+            0 => [ // this code is active
                 'Id' => '1',
-                'ViewerCode' => '123ABCD6789',
+                'ViewerCode' => '123ABCD6789R',
                 'SiriusUid' => $this->lpaUid,
                 'Added' => (new DateTime())->format('Y-m-d'),
                 'Expires' => (new DateTime())->modify('+1 month')->format('Y-m-d'),
                 'UserLpaActor' => $this->actorLpaToken,
                 'Organisation' => 'Some Organisation',
+            ],
+            1 => [ // this code has expired
+                'Id' => '2',
+                'ViewerCode' => 'YG41BCD693FH',
+                'SiriusUid' => $this->lpaUid,
+                'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                'Expires' => (new DateTime())->modify('-1 month')->format('Y-m-d'),
+                'UserLpaActor' => $this->actorLpaToken,
+                'Organisation' => 'Some Organisation 2',
+            ],
+            2 => [ // this code is already cancelled
+                'Id' => '3',
+                'ViewerCode' => 'RL2AD1936KV2',
+                'SiriusUid' => $this->lpaUid,
+                'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                'Expires' => (new DateTime())->modify('-1 month')->format('Y-m-d'),
+                'Cancelled' => (new DateTime())->modify('-2 months')->format('Y-m-d'),
+                'UserLpaActor' => $this->actorLpaToken,
+                'Organisation' => 'Some Organisation 3',
             ],
         ];
 
@@ -80,7 +100,7 @@ class RemoveLpaTest extends TestCase
     }
 
     /** @test */
-    public function it_can_remove_lpa_from_a_user_account_when_no_viewer_codes_to_update()
+    public function it_can_remove_lpa_from_a_user_account_with_no_viewer_codes_to_update()
     {
         $this->userLpaActorMapInterfaceProphecy
             ->get($this->actorLpaToken)
@@ -106,7 +126,7 @@ class RemoveLpaTest extends TestCase
     }
 
     /** @test */
-    public function it_removes_an_lpa_from_a_user_account_and_updates_their_codes()
+    public function it_removes_an_lpa_from_a_user_account_and_cancels_their_active_codes_only()
     {
         $this->userLpaActorMapInterfaceProphecy
             ->get($this->actorLpaToken)
@@ -119,7 +139,31 @@ class RemoveLpaTest extends TestCase
 
         $this->viewerCodesInterfaceProphecy
             ->removeActorAssociation($this->viewerCodes[0]['ViewerCode'])
-            ->willReturn(true);
+            ->willReturn(true)
+            ->shouldBeCalled();
+
+        $this->viewerCodesInterfaceProphecy
+            ->cancel($this->viewerCodes[0]['ViewerCode'], Argument::type('Datetime'))
+            ->willReturn(true)
+            ->shouldBeCalled();
+
+        $this->viewerCodesInterfaceProphecy
+            ->removeActorAssociation($this->viewerCodes[1]['ViewerCode'])
+            ->willReturn(true)
+            ->shouldBeCalled();
+
+        $this->viewerCodesInterfaceProphecy
+            ->cancel($this->viewerCodes[1]['ViewerCode'], Argument::type('Datetime'))
+            ->shouldNotBeCalled();
+
+        $this->viewerCodesInterfaceProphecy
+            ->removeActorAssociation($this->viewerCodes[2]['ViewerCode'])
+            ->willReturn(true)
+            ->shouldBeCalled();
+
+        $this->viewerCodesInterfaceProphecy
+            ->cancel($this->viewerCodes[2]['ViewerCode'], Argument::type('Datetime'))
+            ->shouldNotBeCalled();
 
         $this->lpaServiceProphecy
             ->getByUid($this->userActorLpa['SiriusUid'])
