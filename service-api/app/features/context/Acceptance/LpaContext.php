@@ -1901,51 +1901,108 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^The LPA is removed$/
+     * @Then /^The LPA is removed and my active codes are cancelled$/
      */
-    public function theLpaIsRemoved()
+    public function theLPAIsRemovedAndMyActiveCodesAreCancelled()
     {
-        // userLpaActorMapRepository::get
+        // UserLpaActorMap::get
         $this->awsFixtures->append(
             new Result(
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                        'Id' => $this->userLpaActorToken,
-                        'SiriusUid' => $this->lpaUid,
-                        'Added' => '2020-08-20',
-                        'ActorId' => $this->actorId,
-                        'UserId' => $this->userId
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
                         ]
-                    )
+                    ),
                 ]
             )
         );
 
-        //viewerCodesRepository::getCodesByLpaId
+        // ViewerCodes::getCodesByLpaId
         $this->awsFixtures->append(
             new Result(
                 [
                     'Items' => [
-                        $this->marshalAwsResultData(
+                        $this->marshalAwsResultData( // 1st code is active
                             [
+                                'Id' => '1',
+                                'ViewerCode' => '123ABCD6789',
                                 'SiriusUid' => $this->lpaUid,
-                                'Added' => '2021-01-01 00:00:00',
-                                'Expires' => (new DateTime())->modify('+1 week')->format('Y-m-d'),
+                                'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                                'Expires' => (new DateTime())->modify('+1 month')->format('Y-m-d'),
                                 'UserLpaActor' => $this->userLpaActorToken,
-                                'Organisation' => $this->organisation,
-                                'ViewerCode' => '123ABCD67891',
+                                'Organisation' => 'Some Organisation 1',
+                            ]
+                        ),
+                        $this->marshalAwsResultData( // 2nd code has expired
+                            [
+                                'Id' => '2',
+                                'ViewerCode' => 'YG41BCD693FH',
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                                'Expires' => (new DateTime())->modify('-1 month')->format('Y-m-d'),
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => 'Some Organisation 2',
+                            ]
+                        ),
+                        $this->marshalAwsResultData( // 3rd code has already been cancelled
+                            [
+                                'Id' => '3',
+                                'ViewerCode' => 'RL2AD1936KV2',
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                                'Expires' => (new DateTime())->modify('-1 month')->format('Y-m-d'),
+                                'Cancelled' => (new DateTime())->modify('-2 months')->format('Y-m-d'),
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => 'Some Organisation 3',
                             ]
                         ),
                     ],
                 ]
             )
         );
-        //viewerCodesRepository::removeActorAssociation
-        $this->awsFixtures->append(new Result([]));
 
-        // userLpaActorMapRepository::delete
-        $this->awsFixtures->append(new Result([]));
+        // viewerCodesRepository::removeActorAssociation
+        $this->awsFixtures->append(new Result());
+        // viewerCodesRepository::cancel
+        $this->awsFixtures->append(new Result()); // 1st code is active therefore is cancelled
+
+        // viewerCodesRepository::removeActorAssociation
+        $this->awsFixtures->append(new Result()); // 2nd code has expired therefore isn't cancelled
+
+        // viewerCodesRepository::removeActorAssociation
+        $this->awsFixtures->append(new Result()); // 3rd code has already been cancelled
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // UserLpaActorMap::delete
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime())->modify('-6 months')->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
 
         $this->apiDelete(
             '/v1/lpas/' . $this->userLpaActorToken,

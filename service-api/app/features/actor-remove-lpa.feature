@@ -14,7 +14,7 @@ Feature: Remove an LPA from my account
     Given I am on the dashboard page
     When I request to remove an LPA
     And I confirm that I want to remove the LPA
-    Then The LPA is removed
+    Then The LPA is removed and my active codes are cancelled
     And I am taken back to the dashboard page
     And I cannot see my LPA on the dashboard
     And I can see a flash message confirming that my LPA has been removed
