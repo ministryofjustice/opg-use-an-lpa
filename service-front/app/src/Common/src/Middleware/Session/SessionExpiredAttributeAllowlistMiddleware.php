@@ -52,7 +52,7 @@ class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
         if ($session !== null && $session->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)) {
             $this->stripSession($session);
 
-            // TODO logs incorrect time value as seconds should equal time() - TIME_KEY + Session Length
+            // TODO: UML-1449 logs incorrect time value as seconds should equal time() - TIME_KEY + Session Length
             $this->logger->info(
                 'User session expired approx {seconds} seconds ago',
                 [
