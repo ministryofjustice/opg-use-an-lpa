@@ -11,25 +11,13 @@ use ParagonIE\ConstantTime\Base64UrlSafe;
 
 class KmsEncryptedCookie implements EncryptInterface
 {
-    /** @var KeyManagerInterface */
     private KeyManagerInterface $keyManager;
+    private BlockCipher $blockCipher;
 
-    public function __construct(KeyManagerInterface $keyManager)
+    public function __construct(KeyManagerInterface $keyManager, BlockCipher $blockCipher)
     {
         $this->keyManager = $keyManager;
-    }
-
-    /**
-     * Returns the configured Block Cipher to be used within this class.
-     *
-     * @return BlockCipher
-     */
-    private function getBlockCipher(): BlockCipher
-    {
-        return BlockCipher::factory('openssl', [
-            'algo' => 'aes',
-            'mode' => 'gcm'
-        ])->setBinaryOutput(true);
+        $this->blockCipher = $blockCipher;
     }
 
     /**
@@ -45,7 +33,7 @@ class KmsEncryptedCookie implements EncryptInterface
 
         $key = $this->keyManager->getEncryptionKey();
 
-        $ciphertext = $this->getBlockCipher()
+        $ciphertext = $this->blockCipher
             ->setKey($key->getKeyMaterial())
             ->encrypt($plaintext);
 
@@ -69,7 +57,7 @@ class KmsEncryptedCookie implements EncryptInterface
 
             $ciphertext = Base64UrlSafe::decode($payload);
 
-            $plaintext = $this->getBlockCipher()
+            $plaintext = $this->blockCipher
                 ->setKey($key->getKeyMaterial())
                 ->decrypt($ciphertext);
 

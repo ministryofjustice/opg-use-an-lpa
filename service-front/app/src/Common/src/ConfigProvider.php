@@ -72,6 +72,8 @@ class ConfigProvider
                 Service\Email\EmailClient::class => Service\Email\EmailClientFactory::class,
                 Service\User\UserService::class => Service\User\UserServiceFactory::class,
                 Service\Features\FeatureEnabled::class => Service\Features\FeatureEnabledFactory::class,
+                Service\Session\Encryption\KmsEncryptedCookie::class
+                    => Service\Session\Encryption\KmsEncryptedCookieFactory::class,
 
                 \Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 \Aws\Kms\KmsClient::class => Service\Aws\KmsFactory::class,
