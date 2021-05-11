@@ -34,6 +34,10 @@ data "aws_acm_certificate" "certificate_use" {
   domain = "${local.dev_wildcard}use.lastingpowerofattorney.opg.service.justice.gov.uk"
 }
 
+data "aws_acm_certificate" "certificate_admin" {
+  domain = "${local.dev_wildcard}admin.lastingpowerofattorney.opg.service.justice.gov.uk"
+}
+
 data "aws_acm_certificate" "public_facing_certificate_view" {
   domain = "${local.dev_wildcard}view-lasting-power-of-attorney.service.gov.uk"
 }
@@ -76,6 +80,11 @@ data "aws_ecr_repository" "use_an_lpa_api_web" {
 data "aws_ecr_repository" "use_an_lpa_pdf" {
   provider = aws.management
   name     = "use_an_lpa/pdf"
+}
+
+data "aws_ecr_repository" "use_an_lpa_admin_app" {
+  provider = aws.management
+  name     = "use_an_lpa/admin_app"
 }
 
 module "whitelist" {
