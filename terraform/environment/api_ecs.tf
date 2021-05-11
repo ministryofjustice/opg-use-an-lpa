@@ -179,124 +179,119 @@ data "aws_iam_policy_document" "api_permissions_role" {
 // API ECS Service Task Container level config
 
 locals {
-  api_web = <<EOF
-  {
-    "cpu": 1,
-    "essential": true,
-    "image": "${data.aws_ecr_repository.use_an_lpa_api_web.repository_url}:${var.container_version}",
-    "mountPoints": [],
-    "name": "web",
-    "portMappings": [
+  api_web = jsonencode(
+    {
+      cpu         = 1,
+      essential   = true,
+      image       = "${data.aws_ecr_repository.use_an_lpa_api_web.repository_url}:${var.container_version}",
+      mountPoints = [],
+      name        = "web",
+      portMappings = [
         {
-            "containerPort": 80,
-            "hostPort": 80,
-            "protocol": "tcp"
+          containerPort = 80,
+          hostPort      = 80,
+          protocol      = "tcp"
         }
-    ],
-    "volumesFrom": [],
-    "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-            "awslogs-group": "${aws_cloudwatch_log_group.application_logs.name}",
-            "awslogs-region": "eu-west-1",
-            "awslogs-stream-prefix": "${local.environment}.api-web.use-an-lpa"
+      ],
+      volumesFrom = [],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "${local.environment}.api-web.use-an-lpa"
         }
-    },
-    "environment": [
-    {
-      "name": "APP_HOST",
-      "value": "127.0.0.1"
-    },
-    {
-      "name": "APP_PORT",
-      "value": "9000"
-    },
-    {
-      "name": "TIMEOUT",
-      "value": "60"
-    },
-    {
-      "name": "CONTAINER_VERSION",
-      "value": "${var.container_version}"
-    }]
-  }
-
-EOF
-
-
-  api_app = <<EOF
-  {
-    "cpu": 1,
-    "essential": true,
-    "image": "${data.aws_ecr_repository.use_an_lpa_api_app.repository_url}:${var.container_version}",
-    "mountPoints": [],
-    "name": "app",
-    "portMappings": [
+      },
+      environment = [
         {
-            "containerPort": 9000,
-            "hostPort": 9000,
-            "protocol": "tcp"
-        }
-    ],
-    "volumesFrom": [],
-    "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-            "awslogs-group": "${aws_cloudwatch_log_group.application_logs.name}",
-            "awslogs-region": "eu-west-1",
-            "awslogs-stream-prefix": "${local.environment}.api-app.use-an-lpa"
-        }
-    },
-    "secrets" : [
-    {
-      "name": "NOTIFY_API_KEY",
-      "valueFrom": "${data.aws_secretsmanager_secret.notify_api_key.arn}"
-    }],
-    "environment": [
-    {
-      "name": "DYNAMODB_TABLE_ACTOR_CODES",
-      "value": "${aws_dynamodb_table.actor_codes_table.name}"
-    },
-    {
-      "name": "DYNAMODB_TABLE_ACTOR_USERS",
-      "value": "${aws_dynamodb_table.actor_users_table.name}"
-    },
-    {
-      "name": "DYNAMODB_TABLE_VIEWER_CODES",
-      "value": "${aws_dynamodb_table.viewer_codes_table.name}"
-    },
-    {
-      "name": "DYNAMODB_TABLE_VIEWER_ACTIVITY",
-      "value": "${aws_dynamodb_table.viewer_activity_table.name}"
-    },
-    {
-      "name": "DYNAMODB_TABLE_USER_LPA_ACTOR_MAP",
-      "value": "${aws_dynamodb_table.user_lpa_actor_map.name}"
-    },
-    {
-      "name": "CONTAINER_VERSION",
-      "value": "${var.container_version}"
-    },
-    {
-      "name": "SIRIUS_API_ENDPOINT",
-      "value": "${local.account.lpas_collection_endpoint}"
-    },
-    {
-      "name": "LPA_CODES_API_ENDPOINT",
-      "value": "${local.account.lpa_codes_endpoint}"
-    },
-    {
-      "name": "USE_LEGACY_CODES_SERVICE",
-      "value": "${local.account.use_legacy_codes_service}"
-    },
-    {
-      "name": "LOGGING_LEVEL",
-      "value": "${local.account.logging_level}"
-    }]
-  }
+          name  = "APP_HOST",
+          value = "127.0.0.1"
+        },
+        {
+          name  = "APP_PORT",
+          value = "9000"
+        },
+        {
+          name  = "TIMEOUT",
+          value = "60"
+        },
+        {
+          name  = "CONTAINER_VERSION",
+          value = var.container_version
+      }]
+  })
 
-EOF
 
+  api_app = jsonencode(
+    {
+      cpu         = 1,
+      essential   = true,
+      image       = "${data.aws_ecr_repository.use_an_lpa_api_app.repository_url}:${var.container_version}",
+      mountPoints = [],
+      name        = "app",
+      portMappings = [
+        {
+          containerPort = 9000,
+          hostPort      = 9000,
+          protocol      = "tcp"
+        }
+      ],
+      volumesFrom = [],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "${local.environment}.api-app.use-an-lpa"
+        }
+      },
+      secrets = [
+        {
+          name      = "NOTIFY_API_KEY",
+          valueFrom = data.aws_secretsmanager_secret.notify_api_key.arn
+      }],
+      environment = [
+        {
+          name  = "DYNAMODB_TABLE_ACTOR_CODES",
+          value = aws_dynamodb_table.actor_codes_table.name
+        },
+        {
+          name  = "DYNAMODB_TABLE_ACTOR_USERS",
+          value = aws_dynamodb_table.actor_users_table.name
+        },
+        {
+          name  = "DYNAMODB_TABLE_VIEWER_CODES",
+          value = aws_dynamodb_table.viewer_codes_table.name
+        },
+        {
+          name  = "DYNAMODB_TABLE_VIEWER_ACTIVITY",
+          value = aws_dynamodb_table.viewer_activity_table.name
+        },
+        {
+          name  = "DYNAMODB_TABLE_USER_LPA_ACTOR_MAP",
+          value = aws_dynamodb_table.user_lpa_actor_map.name
+        },
+        {
+          name  = "CONTAINER_VERSION",
+          value = var.container_version
+        },
+        {
+          name  = "SIRIUS_API_ENDPOINT",
+          value = local.account.lpas_collection_endpoint
+        },
+        {
+          name  = "LPA_CODES_API_ENDPOINT",
+          value = local.account.lpa_codes_endpoint
+        },
+        {
+          name  = "USE_LEGACY_CODES_SERVICE",
+          value = tostring(local.account.use_legacy_codes_service)
+        },
+        {
+          name  = "LOGGING_LEVEL",
+          value = tostring(local.account.logging_level)
+      }]
+  })
 }
 
 output "api_web_deployed_version" {
