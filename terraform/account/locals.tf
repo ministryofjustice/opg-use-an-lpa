@@ -32,7 +32,7 @@ locals {
     business-unit    = "OPG"
     application      = "use-an-lpa"
     environment-name = local.environment
-    owner            = "Katie Gibbs: katie.gibbs@digital.justice.gov.uk"
+    owner            = "Sarah Mills: sarah.mills@digital.justice.gov.uk"
     is-production    = local.account.is_production
   }
 
