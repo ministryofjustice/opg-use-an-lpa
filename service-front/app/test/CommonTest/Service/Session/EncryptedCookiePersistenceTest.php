@@ -72,10 +72,6 @@ class EncryptedCookiePersistenceTest extends TestCase
         $this->testKey = new Key('test-id', new EncryptionKey(new HiddenString(random_bytes(32))));
 
         $this->encrypterProphecy = $this->prophesize(EncryptInterface::class);
-
-        // Setup the key manager mock
-        //$this->keyManagerProphecy->getEncryptionKey()->willReturn($this->testKey);
-        //$this->keyManagerProphecy->getDecryptionKey($this->testKey->getId())->willReturn($this->testKey);
     }
 
     /** @test */
