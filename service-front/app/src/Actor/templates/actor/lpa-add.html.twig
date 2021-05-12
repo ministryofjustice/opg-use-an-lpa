@@ -28,6 +28,37 @@
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
+                    <h2 class="govuk-heading-m">{% trans %}Your details{% endtrans %}</h2>
+
+                    <p class="govuk-body">{% trans %}The donor and each of the attorneys will have their own activation key. The activation key and date of birth must be for the same person.{% endtrans %}</p>
+
+                    {{ govuk_form_element(form.get('passcode'), {
+                        'label': 'Activation key'| trans,
+                        'hint': 'Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56'| trans,
+                        'attr' : {'class': 'govuk-input--width-10'} }) }}
+
+                    <details class="govuk-details" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                {% trans %}Where to find your activation key{% endtrans %}
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p>{% trans %}Your activation key is printed on the letter that told you the <abbr title="lasting power of attorney">LPA</abbr> had been registered. The donor and each attorney will have their own unique activation key.{% endtrans %}</p>
+                            <p>{% trans %}
+                                If you cannot find it, please call us:<br>
+                                Telephone: 0300 456 0300<br>
+                                Textphone: 0115 934 2778<br>
+                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm.
+                                {% endtrans %}</p>
+                        </div>
+                    </details>
+
+                    {{ govuk_form_fieldset(form.get('dob'), {
+                        'label': 'What is your date of birth?'| trans,
+                        'hint': 'For example, 31 03 1980'| trans,
+                        'attr': {'class': 'xyz'} }) }}
+
 
                     {{ govuk_form_element(form.get('reference_number'), {
                         'label': 'LPA reference number'| trans,
@@ -49,42 +80,8 @@
                                 <li>{% trans %}You can also find the reference number on the <abbr title="lasting power of attorney">LPA</abbr> or any related letters from the Office of the Public Guardian.{% endtrans %}</li>
                                 <li>{% trans %}It may be marked 'OPG reference number' or 'Our ref' or 'Case number'.{% endtrans %}</li>
                             </ul>
-
                         </div>
                     </details>
-
-                    <h2 class="govuk-heading-m">{% trans %}Your details{% endtrans %}</h2>
-
-                    <p class="govuk-body">{% trans %}The donor and each of the attorneys will have their own activation key. The activation key and date of birth must be for the same person.{% endtrans %}</p>
-
-                    {{ govuk_form_element(form.get('passcode'), {
-                        'label': 'Activation key'| trans,
-                        'hint': 'Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56'| trans,
-                        'input_prefix': 'C - ',
-                        'attr' : {'class': 'govuk-input--width-10'} }) }}
-
-                    <details class="govuk-details" data-module="govuk-details">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">
-                                {% trans %}Where to find your activation key{% endtrans %}
-                            </span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <p>{% trans %}Your activation key is printed on the letter that told you the <abbr title="lasting power of attorney">LPA</abbr> had been registered. The donor and each attorney will have their own unique activation key.{% endtrans %}</p>
-                            <p>{% trans %}
-                                If you cannot find it, please call us:<br>
-                                Telephone: 0300 456 0300<br>
-                                Textphone: 0115 934 2778<br>
-                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm.
-                                {% endtrans %}</p>
-                        </div>
-                    </details>
-
-
-                    {{ govuk_form_fieldset(form.get('dob'), {
-                        'label': 'What is your date of birth?'| trans,
-                        'hint': 'For example, 31 03 1980'| trans,
-                        'attr': {'class': 'xyz'} }) }}
 
                     <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
 
