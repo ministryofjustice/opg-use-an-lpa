@@ -14,19 +14,16 @@ declare(strict_types=1);
 
 namespace Common\Service\Session;
 
-use Common\Service\Session\KeyManager\KeyManagerInterface;
-use Common\Service\Session\KeyManager\KeyNotFoundException;
+use Common\Service\Session\Encryption\EncryptInterface;
 use DateInterval;
 use DateTimeImmutable;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
-use Laminas\Crypt\BlockCipher;
 use Mezzio\Session\Session;
 use Mezzio\Session\SessionCookiePersistenceInterface;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionPersistenceInterface;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -65,7 +62,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         'private_no_expire',
     ];
 
-    private KeyManagerInterface $keyManager;
+    private EncryptInterface $encrypter;
 
     private string $cookieName;
 
@@ -91,19 +88,20 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
     /**
      * EncryptedCookiePersistence constructor.
-     * @param KeyManagerInterface $keyManager
-     * @param string $cookieName
-     * @param string $cookiePath
-     * @param string $cacheLimiter
-     * @param int $sessionExpire
-     * @param int|null $lastModified
-     * @param int|null $cookieTtl
-     * @param string|null $cookieDomain
-     * @param bool $cookieSecure
-     * @param bool $cookieHttpOnly
+     *
+     * @param EncryptInterface $encrypter
+     * @param string           $cookieName
+     * @param string           $cookiePath
+     * @param string           $cacheLimiter
+     * @param int              $sessionExpire
+     * @param int|null         $lastModified
+     * @param int|null         $cookieTtl
+     * @param string|null      $cookieDomain
+     * @param bool             $cookieSecure
+     * @param bool             $cookieHttpOnly
      */
     public function __construct(
-        KeyManagerInterface $keyManager,
+        EncryptInterface $encrypter,
         string $cookieName,
         string $cookiePath,
         string $cacheLimiter,
@@ -114,7 +112,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         bool $cookieSecure,
         bool $cookieHttpOnly
     ) {
-        $this->keyManager = $keyManager;
+        $this->encrypter = $encrypter;
         $this->cookieName = $cookieName;
         $this->cookiePath = $cookiePath;
         $this->cacheLimiter = in_array($cacheLimiter, self::SUPPORTED_CACHE_LIMITERS, true)
@@ -133,108 +131,25 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         $this->requestPath = null;
     }
 
-
-    //------------------------------------------------------------------------------------------------------------
-    // Methods around securing the cookie
-
-    /**
-     * Returns the configured Block Cipher to be used within this class.
-     *
-     * @return BlockCipher
-     */
-    private function getBlockCipher(): BlockCipher
-    {
-        return BlockCipher::factory('openssl', [
-            'algo' => 'aes',
-            'mode' => 'gcm'
-        ])->setBinaryOutput(true);
-    }
-
-    //---
-
-    /**
-     * Encrypts the session payload with the current (latest) key.
-     *
-     *  The result is <keyId>.<ciphertextr>
-     *
-     * @param array $data
-     * @return string
-     */
-    protected function encodeCookieValue(array $data): string
-    {
-        if (empty($data)) {
-            return '';
-        }
-
-        $plaintext = json_encode($data);
-
-        $key = $this->keyManager->getEncryptionKey();
-
-        $ciphertext = $this->getBlockCipher()
-            ->setKey($key->getKeyMaterial())
-            ->encrypt($plaintext);
-
-        return $key->getId() . '.' . Base64UrlSafe::encode($ciphertext);
-    }
-
-    /**
-     * Decrypt the session value.
-     *
-     * @param string $data
-     * @return array
-     */
-    protected function decodeCookieValue(string $data): array
-    {
-        if (empty($data)) {
-            return [];
-        }
-
-        // Separate out the key ID and the data
-        [$keyId, $payload] = explode('.', $data, 2);
-
-        try {
-            $key = $this->keyManager->getDecryptionKey($keyId);
-
-            $ciphertext = Base64UrlSafe::decode($payload);
-
-            $plaintext = $this->getBlockCipher()
-                ->setKey($key->getKeyMaterial())
-                ->decrypt($ciphertext);
-
-            return json_decode($plaintext, true);
-        } catch (KeyNotFoundException $e) {
-            # TODO: add logging
-        }
-
-        // Something went wrong. Restart the session.
-        return [];
-    }
-
-
     //------------------------------------------------------------------------------------------------------------
     // Public methods for the actual starting and writing of the session
 
     public function initializeSessionFromRequest(ServerRequestInterface $request): SessionInterface
     {
         $sessionData = $this->getCookieFromRequest($request);
-        $data = $this->decodeCookieValue($sessionData);
+        $data = $this->encrypter->decodeCookieValue($sessionData);
 
         $this->originalSessionTime = $data[self::SESSION_TIME_KEY] ?: null;
         $this->requestPath = $request->getUri()->getPath();
 
         // responsible the for expiry of a users session
         if (isset($data[self::SESSION_TIME_KEY])) {
-            $expiresAt = $data[self::SESSION_TIME_KEY] + $this->sessionExpire;
-            if ($expiresAt > time()) {
-                return new Session($data);
-            }
-        }
+            $expiredOn = $data[self::SESSION_TIME_KEY] + $this->sessionExpire;
 
-        // if we have values in the session but are here then we have fallen into the gap where the session has expired
-        // but we're still within the cookieTtl amount of time. by setting an expired flag we'll be able to prompt with
-        // messages such as "You've been logged out due to inactivity" or allow access to PDF downloads
-        if ($sessionData != '') {
-            $data[self::SESSION_EXPIRED_KEY] = true;
+            if (time() > $expiredOn) {
+                // the session has expired and we're just learning about it.
+                $data[self::SESSION_EXPIRED_KEY] = true;
+            }
         }
 
         return new Session($data);
@@ -242,11 +157,15 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
     public function persistSession(SessionInterface $session, ResponseInterface $response): ResponseInterface
     {
-        // Record the set time
-        $session->set(self::SESSION_TIME_KEY, $this->sessionTime());
+        // Record the time if the session is not marked as expired
+        if ($session->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)) {
+            $session->unset(EncryptedCookiePersistence::SESSION_EXPIRED_KEY);
+        } else {
+            $session->set(self::SESSION_TIME_KEY, $this->sessionTime());
+        }
 
         // Encode to string
-        $sessionData = $this->encodeCookieValue($session->toArray());
+        $sessionData = $this->encrypter->encodeCookieValue($session->toArray());
 
         $sessionCookie = SetCookie::create($this->cookieName)
             ->withValue($sessionData)

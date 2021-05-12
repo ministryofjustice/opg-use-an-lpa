@@ -13,11 +13,11 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Session\EncryptedCookiePersistence;
 use Laminas\Diactoros\Response\JsonResponse;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -68,8 +68,7 @@ class ViewerSessionCheckHandler extends AbstractHandler implements UserAware, Se
             [
                 'session_warning' => $showSessionWarning,
                 'time_remaining'  => $timeRemaining
-            ],
-            201
+            ]
         );
     }
 }

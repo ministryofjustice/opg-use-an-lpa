@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Service\Session;
 
-use Common\Service\Session\KeyManager\KeyManagerInterface;
+use Common\Service\Session\Encryption\EncryptInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 
@@ -14,7 +14,7 @@ use RuntimeException;
  */
 class EncryptedCookiePersistenceFactory
 {
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): EncryptedCookiePersistence
     {
         $config = $container->get('config');
 
@@ -23,43 +23,43 @@ class EncryptedCookiePersistenceFactory
         }
 
         if (!array_key_exists('cookie_name', $config['session'])) {
-            throw new RuntimeException("Missing session configuration: cookie_name");
+            throw new RuntimeException('Missing session configuration: cookie_name');
         }
 
         if (!array_key_exists('cookie_path', $config['session'])) {
-            throw new RuntimeException("Missing session configuration: cookie_path");
+            throw new RuntimeException('Missing session configuration: cookie_path');
         }
 
         if (!array_key_exists('cache_limiter', $config['session'])) {
-            throw new RuntimeException("Missing session configuration: cache_limiter");
+            throw new RuntimeException('Missing session configuration: cache_limiter');
         }
 
         if (!array_key_exists('expires', $config['session'])) {
-            throw new RuntimeException("Missing session configuration: expires");
+            throw new RuntimeException('Missing session configuration: expires');
         }
 
         if (!array_key_exists('last_modified', $config['session'])) {
-            throw new RuntimeException("Missing session configuration: last_modified");
+            throw new RuntimeException('Missing session configuration: last_modified');
         }
 
         if (!array_key_exists('cookie_ttl', $config['session'])) {
-            throw new RuntimeException("Missing session configuration: cookie_ttl");
+            throw new RuntimeException('Missing session configuration: cookie_ttl');
         }
 
         if (!array_key_exists('cookie_domain', $config['session'])) {
-            throw new RuntimeException("Missing session configuration: cookie_domain");
+            throw new RuntimeException('Missing session configuration: cookie_domain');
         }
 
         if (!array_key_exists('cookie_secure', $config['session'])) {
-            throw new RuntimeException("Missing session configuration: cookie_secure");
+            throw new RuntimeException('Missing session configuration: cookie_secure');
         }
 
         if (!array_key_exists('cookie_http_only', $config['session'])) {
-            throw new RuntimeException("Missing session configuration: cookie_http_only");
+            throw new RuntimeException('Missing session configuration: cookie_http_only');
         }
 
         return new EncryptedCookiePersistence(
-            $container->get(KeyManagerInterface::class),
+            $container->get(EncryptInterface::class),
             $config['session']['cookie_name'],
             $config['session']['cookie_path'],
             $config['session']['cache_limiter'],

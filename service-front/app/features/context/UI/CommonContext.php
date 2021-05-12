@@ -438,8 +438,8 @@ class CommonContext implements Context
             new FactoryDefinitionHelper($container->get(SessionMiddlewareFactory::class))
         );
 
-        // wait 1 to ensure we expire
-        sleep(1);
+        // wait 2 seconds to ensure we expire
+        sleep(2);
     }
 
     /**

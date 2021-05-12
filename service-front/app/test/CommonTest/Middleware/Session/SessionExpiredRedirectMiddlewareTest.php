@@ -57,7 +57,7 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
             ->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE)
             ->shouldBeCalled()
             ->willReturn($sessionProphecy->reveal());
-        
+
         $sessionProphecy
             ->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
             ->shouldBeCalled()
@@ -99,72 +99,12 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
             ->willReturn($sessionProphecy->reveal());
 
         $sessionProphecy
-            ->get(EncryptedCookiePersistence::SESSION_TIME_KEY)
-            ->shouldBeCalled()
-            ->willReturn($sessionData[EncryptedCookiePersistence::SESSION_TIME_KEY]);
-
-        $sessionProphecy
             ->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
             ->shouldBeCalled()
             ->willReturn(true);
-
-        $sessionProphecy
-            ->unset(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
-            ->shouldBeCalled();
 
         $helperProphecy
             ->generate('session-expired')
-            ->willReturn($uri);
-
-        $request = new SessionExpiredRedirectMiddleware(
-            $helperProphecy->reveal()
-        );
-
-        $redirect = $request->process($requestProphecy->reveal(), $delegateProphecy->reveal());
-
-        $this->assertInstanceOf(RedirectResponse::class, $redirect);
-        $this->assertEquals($uri, $redirect->getHeader('location')[0]);
-    }
-
-    /** @test */
-    public function it_correctly_redirects_to_home_page_when_session_expires(): void
-    {
-        $sessionData = [
-            'string' => 'one',
-            'bool' => true,
-            'DateTime' => new DateTime(),
-            EncryptedCookiePersistence::SESSION_TIME_KEY => time() - 24*60*60, // session expired 1 day before current time ago
-            EncryptedCookiePersistence::SESSION_EXPIRED_KEY => true
-        ];
-
-        $uri = 'https://localhost:9002/home';
-
-        $sessionProphecy = $this->prophesize(Session::class);
-        $helperProphecy = $this->prophesize(UrlHelper::class);
-        $delegateProphecy = $this->prophesize(RequestHandlerInterface::class);
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-
-        $requestProphecy
-            ->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE)
-            ->shouldBeCalled()
-            ->willReturn($sessionProphecy->reveal());
-
-        $sessionProphecy
-            ->get(EncryptedCookiePersistence::SESSION_TIME_KEY)
-            ->shouldBeCalled()
-            ->willReturn($sessionData[EncryptedCookiePersistence::SESSION_TIME_KEY]);
-
-        $sessionProphecy
-            ->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
-            ->shouldBeCalled()
-            ->willReturn(true);
-
-        $sessionProphecy
-            ->unset(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)
-            ->shouldBeCalled();
-
-        $helperProphecy
-            ->generate('home')
             ->willReturn($uri);
 
         $request = new SessionExpiredRedirectMiddleware(

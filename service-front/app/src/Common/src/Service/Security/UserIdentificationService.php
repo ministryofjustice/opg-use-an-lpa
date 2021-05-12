@@ -31,7 +31,6 @@ class UserIdentificationService
     public function id(\Psr\Http\Message\ServerRequestInterface $request): string
     {
         $headersToHash = [
-            'accept' => '',
             'accept-encoding' => '',
             'accept-language' => '',
             'user-agent' => '',
