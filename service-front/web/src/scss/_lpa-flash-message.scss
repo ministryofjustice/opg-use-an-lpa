@@ -2,7 +2,12 @@
   &__box {
     border: govuk-spacing(1) solid govuk-colour('green');
     padding: 10px;
-    margin-bottom: 30px;
+    margin: 0 0 30px 0;
+  }
+
+  &__container {
+    display: flex;
+    flex-flow: row nowrap;
   }
 
   &__message {
