@@ -35,7 +35,7 @@
             {% else %}
                 <span class="moj-badge moj-badge--grey">{% trans %}No organisations have access{% endtrans %}</span>
             {% endif %}
-            {% if delete_lpa_env_var %}
+            {% if feature_enabled('delete_lpa_feature') %}
                 <br><br>
                 <a class="govuk-body lpa-account-delete" href="{{ path('lpa.confirm-remove-lpa', {}, {'lpa': actorToken }) }}">{% trans %}Remove LPA{% endtrans %}</a>
             {% endif %}

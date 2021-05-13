@@ -86,8 +86,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
             'lpas'             => $lpas,
             'has_active_codes' => $hasActiveCodes,
             'flash'            => $flash,
-            'total_lpas'       => $totalLpas,
-            'delete_lpa_env_var' => filter_var($_ENV['DELETE_LPA_FEATURE'], FILTER_VALIDATE_BOOL)
+            'total_lpas'       => $totalLpas
         ]));
     }
 }
