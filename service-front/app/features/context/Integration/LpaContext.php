@@ -89,7 +89,7 @@ class LpaContext extends BaseIntegrationContext
         $result = $removeLpa($this->userIdentity, $this->actorLpaToken);
 
         assertArrayHasKey('lpa', $result);
-        assertEquals('700000000054', $result['lpa']->getUId());
+        assertEquals($this->lpa['uId'], $result['lpa']->getUId());
     }
 
     /**
