@@ -27,6 +27,7 @@ return [
 
     'feature_flags' => [
         'use_older_lpa_journey' => true,
+        'delete_lpa_feature'    => true
     ],
 
     'notify' => [
