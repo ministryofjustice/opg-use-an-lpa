@@ -728,8 +728,7 @@ orbs:
               command: |
                 docker run -d --name inttests front-app:latest
                 docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
-                memory_limit=-1
-                docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 \
+                docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 -d memory_limit=-1\
                   /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
           - run:
               name: Fetch test results
