@@ -30,7 +30,7 @@ jobs:
           tools: vimeo/psalm
 
       - name: Run Psalm
-        run: vendor/bin/psalm
+        run: psalm
 
 
       - name: Upload Security Analysis results to GitHub
