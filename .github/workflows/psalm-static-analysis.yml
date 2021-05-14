@@ -18,10 +18,11 @@ jobs:
 
       - name: Check what's here
         run: ls -al
-        # working-directory: ./temp
+        working-directory: service-front
 
       - name: Psalm
         uses: docker://vimeo/psalm-github-actions
+
         with:
           # working-directory: /home/runner/work/opg-use-an-lpa/opg-use-an-lpa/service-front
           composer_require_dev: false
