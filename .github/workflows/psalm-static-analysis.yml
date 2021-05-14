@@ -29,10 +29,10 @@ jobs:
           php-version: '7.4'
           tools: vimeo/psalm
 
-      - name: Run Psalm
+      - name: Composer install
         run: composer install
 
-      - name: Run Psalm
+      - name: Run psalm
         run: psalm
 
 
