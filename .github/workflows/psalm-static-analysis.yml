@@ -26,7 +26,7 @@ jobs:
 
       - name: Psalm
         env:
-          GITHUB_WORKSPACE: github/workspace/service-front/app
+          GITHUB_WORKSPACE: /github/workspace/service-front/app
         uses: docker://vimeo/psalm-github-actions
         with:
           composer_require_dev: false
