@@ -1,7 +1,7 @@
 {% set route_name = get_route_name() %}
 
-<div class="trans-switch" role="navigation" aria-labelledby="language-switch">
-    <ul class="trans-switch__container" id="language-switch" aria-label="english-welsh-language-switch">
+<div role="navigation" aria-labelledby="language-switch">
+    <ul class="trans-switch" id="language-switch" aria-label="english-welsh-language-switch">
         <li class="govuk-list trans-switch__list govuk-body-s">
             {% if path() matches '/(^\\/cy.*)/' %}
                 {% if actorToken is defined and actorToken != 'null' %}

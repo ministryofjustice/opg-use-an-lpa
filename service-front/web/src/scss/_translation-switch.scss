@@ -1,5 +1,4 @@
 .trans-switch {
-  overflow: auto;
   &__list {
     display: inline;
   }
@@ -10,7 +9,5 @@
     margin-left: 10px;
   }
 
-  &__container {
-    float: right;
-  }
+  float: right;
 }
