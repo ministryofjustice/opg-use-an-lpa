@@ -22,7 +22,6 @@ jobs:
 
       - name: Check what's here
         run: ls -al
-        # working-directory: service-front/app
 
       - name: Setup PHP with tools
         uses: shivammathur/setup-php@v2
