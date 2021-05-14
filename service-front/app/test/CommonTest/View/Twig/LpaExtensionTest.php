@@ -24,16 +24,17 @@ class LpaExtensionTest extends TestCase
         $this->assertTrue(is_array($functions));
 
         $expectedFunctions = [
-            'actor_address'             => 'actorAddress',
-            'actor_name'                => 'actorName',
-            'lpa_date'                  => 'lpaDate',
-            'code_date'                 => 'formatDate',
-            'days_remaining_to_expiry'  => 'daysRemaining',
-            'check_if_code_has_expired' => 'hasCodeExpired',
-            'add_hyphen_to_viewer_code' => 'formatViewerCode',
-            'check_if_code_is_cancelled' => 'isCodeCancelled',
-            'is_lpa_cancelled'           => 'isLpaCancelled',
-            'donor_name_with_dob_removed' => 'donorNameWithDobRemoved'
+            'actor_address'                   => 'actorAddress',
+            'actor_name'                      => 'actorName',
+            'lpa_date'                        => 'lpaDate',
+            'code_date'                       => 'formatDate',
+            'days_remaining_to_expiry'        => 'daysRemaining',
+            'check_if_code_has_expired'       => 'hasCodeExpired',
+            'add_hyphen_to_viewer_code'       => 'formatViewerCode',
+            'check_if_code_is_cancelled'      => 'isCodeCancelled',
+            'is_lpa_cancelled'                => 'isLpaCancelled',
+            'donor_name_with_dob_removed'     => 'donorNameWithDobRemoved',
+            'is_donor_signature_date_too_old' => 'isDonorSignatureDateOld',
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
@@ -464,5 +465,22 @@ class LpaExtensionTest extends TestCase
         $donorName = $extension->donorNameWithDobRemoved($donorNameWithDob);
 
         $this->assertEquals('Harry Potter', $donorName);
+    }
+
+    /** @test */
+    public function it_checks_if_an_lpa_donor_signature_is_old_for_i_and_p(): void
+    {
+        $extension = new LpaExtension();
+        $lpa = new Lpa();
+
+        $lpa->setLpaDonorSignatureDate(new DateTime('2015-01-01'));
+        $status = $extension->isDonorSignatureDateOld($lpa);
+
+        $this->assertEquals(true, $status);
+
+        $lpa->setLpaDonorSignatureDate(new DateTime('2016-01-02'));
+        $status = $extension->isDonorSignatureDateOld($lpa);
+
+        $this->assertEquals(false, $status);
     }
 }

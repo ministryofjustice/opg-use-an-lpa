@@ -188,7 +188,9 @@
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
                         <dd class="govuk-summary-list__value">
-                            {% if lpa.applicationHasGuidance %}
+                            {% if is_donor_signature_date_too_old(lpa) %}
+                                {% trans %}Unknown{% endtrans %}
+                            {% elseif lpa.applicationHasGuidance %}
                                 {% trans %}Yes, the donor made preferences on their LPA.<br>To view these, ask to see the paper LPA{% endtrans %}
                             {% else %}
                                 {% trans %}No{% endtrans %}
@@ -199,7 +201,9 @@
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
                         <dd class="govuk-summary-list__value">
-                            {% if lpa.applicationHasRestrictions %}
+                            {% if is_donor_signature_date_too_old(lpa) %}
+                                {% trans %}Unknown{% endtrans %}
+                            {% elseif lpa.applicationHasRestrictions %}
                                 {% trans %}Yes, the donor set instructions on their LPA.<br>To view these, ask to see the paper LPA{% endtrans %}
                             {% else %}
                                 {% trans %}No{% endtrans %}
