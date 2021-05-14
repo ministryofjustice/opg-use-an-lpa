@@ -30,6 +30,9 @@ jobs:
           tools: vimeo/psalm
 
       - name: Run Psalm
+        run: composer install
+
+        - name: Run Psalm
         run: psalm
 
 
