@@ -24,11 +24,8 @@ jobs:
         run: ls -al
         working-directory: service-front/app
 
-      - name: Check what's in github workspace
-        run: ls -al
-        working-directory: /github/workspace
-
       - name: Psalm
+        working-directory: service-front/app
         uses: docker://vimeo/psalm-github-actions
         with:
           composer_require_dev: false
