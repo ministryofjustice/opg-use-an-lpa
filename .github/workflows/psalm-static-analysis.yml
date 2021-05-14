@@ -12,17 +12,18 @@ jobs:
   psalm:
     name: Psalm
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: /home/runner/work/opg-use-an-lpa/opg-use-an-lpa/service-front
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Check what's here
+        run: ls -al
+        # working-directory: ./temp
+
       - name: Psalm
         uses: docker://vimeo/psalm-github-actions
         with:
-          working-directory: /home/runner/work/opg-use-an-lpa/opg-use-an-lpa/service-front
+          # working-directory: /home/runner/work/opg-use-an-lpa/opg-use-an-lpa/service-front
           composer_require_dev: false
           composer_ignore_platform_reqs: false
           security_analysis: true
