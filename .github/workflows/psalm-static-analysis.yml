@@ -12,6 +12,10 @@ jobs:
   psalm:
     name: Psalm
     runs-on: ubuntu-latest
+    # defaults:
+    #   run:
+    #     shell: bash
+    #     working-directory: service-front/app
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -19,6 +23,10 @@ jobs:
       - name: Check what's here
         run: ls -al
         working-directory: service-front/app
+
+      - name: Check what's in github workspace
+        run: ls -al
+        working-directory: /github/workspace
 
       - name: Psalm
         uses: docker://vimeo/psalm-github-actions
