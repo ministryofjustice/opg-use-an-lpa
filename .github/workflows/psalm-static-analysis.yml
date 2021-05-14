@@ -12,20 +12,19 @@ jobs:
   psalm:
     name: Psalm
     runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     shell: bash
-    #     working-directory: service-front/app
+    defaults:
+      run:
+        # shell: bash
+        working-directory: service-front/app
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Check what's here
         run: ls -al
-        working-directory: service-front/app
+        # working-directory: service-front/app
 
       - name: Psalm
-        working-directory: service-front/app
         uses: docker://vimeo/psalm-github-actions
         with:
           composer_require_dev: false
