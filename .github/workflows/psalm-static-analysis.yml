@@ -27,6 +27,7 @@ jobs:
       - name: Psalm
         env:
           GITHUB_WORKSPACE: /github/workspace/opg-use-an-lpa/service-front/app
+          RUNNER_WORKSPACE: /github/workspace/opg-use-an-lpa/service-front/app
         uses: docker://vimeo/psalm-github-actions
         with:
           composer_require_dev: false
