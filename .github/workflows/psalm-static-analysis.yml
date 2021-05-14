@@ -25,6 +25,8 @@ jobs:
         # working-directory: service-front/app
 
       - name: Psalm
+        env:
+          HOME: service-front/app
         uses: docker://vimeo/psalm-github-actions
         with:
           composer_require_dev: false
