@@ -24,11 +24,14 @@ jobs:
         run: ls -al
         # working-directory: service-front/app
 
-      - name: Psalm Container
-        uses: docker://composer
-        run: |
-          composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
-          composer run psalm
+      - name: Setup PHP with tools
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: vimeo/psalm
+
+      - name: Run Psalm
+        run: composer run psalm
 
 
       - name: Upload Security Analysis results to GitHub
