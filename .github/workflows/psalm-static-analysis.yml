@@ -24,17 +24,37 @@ jobs:
         run: ls -al
         # working-directory: service-front/app
 
-      - name: Psalm
+      - name: Psalm Container
+        container: docker://vimeo/psalm-github-actions
         env:
-          GITHUB_WORKSPACE: /github/workspace/opg-use-an-lpa/service-front/app
-          RUNNER_WORKSPACE: /github/workspace/opg-use-an-lpa/service-front/app
-        uses: docker://vimeo/psalm-github-actions
-        with:
-          composer_require_dev: false
-          composer_ignore_platform_reqs: false
-          security_analysis: true
-          report_file: results.sarif
+          INPUT_COMPOSER_REQUIRE_DEV: false
+          INPUT_COMPOSER_IGNORE_PLATFORM_REQS: false
+          INPUT_SECURITY_ANALYSIS: true
+          INPUT_REPORT_FILE: results.sarif
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+          - /home/runner/work/_temp/_github_home:/github/home
+          - /home/runner/work/_temp/_github_workflow:/github/workflow
+          - /home/runner/work/_temp/_runner_file_commands:/github/file_commands
+          - /home/runner/work/opg-use-an-lpa/opg-use-an-lpa/service-front:/github/workspace
+
+
       - name: Upload Security Analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: results.sarif
+
+      # - name: Psalm
+      #   env:
+      #     GITHUB_WORKSPACE: /github/workspace/opg-use-an-lpa/service-front/app
+      #     RUNNER_WORKSPACE: /github/workspace/opg-use-an-lpa/service-front/app
+      #   uses: docker://vimeo/psalm-github-actions
+      #   with:
+      #     composer_require_dev: false
+      #     composer_ignore_platform_reqs: false
+      #     security_analysis: true
+      #     report_file: results.sarif
+      # - name: Upload Security Analysis results to GitHub
+      #   uses: github/codeql-action/upload-sarif@v1
+      #   with:
+      #     sarif_file: results.sarif
