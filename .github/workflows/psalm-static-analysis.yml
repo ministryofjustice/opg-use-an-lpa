@@ -1,16 +1,20 @@
-name: Psalm Static analysis
+name: Psalm Static analysis - Service
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ master ]
+    # paths:
+    # # only run when service-front is changed
+    #   - 'service-front/**'
 
 jobs:
   psalm:
     name: Psalm
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: service-front
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -18,8 +22,8 @@ jobs:
       - name: Psalm
         uses: docker://vimeo/psalm-github-actions
         with:
-          composer_require_dev: true
-          composer_ignore_platform_reqs: true
+          composer_require_dev: false
+          composer_ignore_platform_reqs: false
           security_analysis: true
           report_file: results.sarif
       - name: Upload Security Analysis results to GitHub
