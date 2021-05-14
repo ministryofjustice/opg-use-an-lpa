@@ -25,18 +25,10 @@ jobs:
         # working-directory: service-front/app
 
       - name: Psalm Container
-        container: docker://vimeo/psalm-github-actions
-        env:
-          INPUT_COMPOSER_REQUIRE_DEV: false
-          INPUT_COMPOSER_IGNORE_PLATFORM_REQS: false
-          INPUT_SECURITY_ANALYSIS: true
-          INPUT_REPORT_FILE: results.sarif
-        volumes:
-          - /var/run/docker.sock:/var/run/docker.sock
-          - /home/runner/work/_temp/_github_home:/github/home
-          - /home/runner/work/_temp/_github_workflow:/github/workflow
-          - /home/runner/work/_temp/_runner_file_commands:/github/file_commands
-          - /home/runner/work/opg-use-an-lpa/opg-use-an-lpa/service-front:/github/workspace
+        uses: docker://composer
+        run: |
+          composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
+          composer run psalm
 
 
       - name: Upload Security Analysis results to GitHub
