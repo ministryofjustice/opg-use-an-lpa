@@ -32,7 +32,7 @@ jobs:
       - name: Run Psalm
         run: composer install
 
-        - name: Run Psalm
+      - name: Run Psalm
         run: psalm
 
 
