@@ -22,7 +22,6 @@ jobs:
 
       - name: Psalm
         uses: docker://vimeo/psalm-github-actions
-        working-directory: service-front/app
         with:
           composer_require_dev: false
           composer_ignore_platform_reqs: false
