@@ -22,6 +22,7 @@ jobs:
       - name: Psalm
         uses: docker://vimeo/psalm-github-actions
         with:
+          working-directory: /home/runner/work/opg-use-an-lpa/opg-use-an-lpa/service-front
           composer_require_dev: false
           composer_ignore_platform_reqs: false
           security_analysis: true
