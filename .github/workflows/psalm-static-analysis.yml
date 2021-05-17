@@ -31,6 +31,9 @@ jobs:
       - name: Run psalm
         run: psalm --output-format=github --taint-analysis --report=results.sarif
 
+      - name: ls -al
+        run: ls -al
+
       - name: Upload Security Analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v1
         with:
