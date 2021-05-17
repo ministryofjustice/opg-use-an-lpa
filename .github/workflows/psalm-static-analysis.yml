@@ -1,8 +1,7 @@
-name: Psalm Static analysis - Service
+name: Psalm Static analysis - Service Front
 
 on:
   pull_request:
-    # The branches below must be a subset of the branches above
     branches: [ master ]
     # paths:
     # # only run when service-front is changed
@@ -20,9 +19,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Check what's here
-        run: ls -al
-
       - name: Setup PHP with tools
         uses: shivammathur/setup-php@v2
         with:
@@ -33,25 +29,9 @@ jobs:
         run: composer install
 
       - name: Run psalm
-        run: psalm
-
+        run: psalm --output-format=github --taint-analysis
 
       - name: Upload Security Analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: results.sarif
-
-      # - name: Psalm
-      #   env:
-      #     GITHUB_WORKSPACE: /github/workspace/opg-use-an-lpa/service-front/app
-      #     RUNNER_WORKSPACE: /github/workspace/opg-use-an-lpa/service-front/app
-      #   uses: docker://vimeo/psalm-github-actions
-      #   with:
-      #     composer_require_dev: false
-      #     composer_ignore_platform_reqs: false
-      #     security_analysis: true
-      #     report_file: results.sarif
-      # - name: Upload Security Analysis results to GitHub
-      #   uses: github/codeql-action/upload-sarif@v1
-      #   with:
-      #     sarif_file: results.sarif
