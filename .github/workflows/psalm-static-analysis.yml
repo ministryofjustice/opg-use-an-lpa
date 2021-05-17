@@ -37,4 +37,4 @@ jobs:
       - name: Upload Security Analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: results.sarif
+          sarif_file: ./service-front/app/results.sarif
