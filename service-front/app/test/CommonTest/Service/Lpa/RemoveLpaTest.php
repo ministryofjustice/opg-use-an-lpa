@@ -18,6 +18,7 @@ use Psr\Log\LoggerInterface;
  * Class RemoveLpaTest
  *
  * @package CommonTest\Service\Lpa
+ * @coversDefaultClass \Common\Service\Lpa\RemoveLpa
  */
 class RemoveLpaTest extends TestCase
 {
@@ -74,7 +75,10 @@ class RemoveLpaTest extends TestCase
         ];
     }
 
-    /** @test */
+    /**
+     * @test
+     * @covers ::__invoke
+     */
     public function it_returns_lpa_data_when_lpa_successfully_removed()
     {
         $this->apiClientProphecy
@@ -90,17 +94,20 @@ class RemoveLpaTest extends TestCase
         $this->assertContains($this->lpa->getUId(), $result->getArrayCopy()['lpa']->getUId());
     }
 
-    /** @test */
+    /**
+     * @test
+     * @covers ::__invoke
+     */
     public function it_will_fail_if_actor_lpa_token_not_found()
     {
         $this->apiClientProphecy
             ->httpDelete('/v1/lpas/' . $this->actorLpaToken)
-        ->willThrow(
-            new ApiException(
-                'User actor lpa record not found for actor token - ' . $this->actorLpaToken,
-                StatusCodeInterface::STATUS_NOT_FOUND
-            )
-        );
+            ->willThrow(
+                new ApiException(
+                    'User actor lpa record not found for actor token - ' . $this->actorLpaToken,
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )
+            );
 
         $this->expectException(ApiException::class);
         $this->expectExceptionMessage('User actor lpa record not found for actor token - ' . $this->actorLpaToken);
@@ -109,7 +116,10 @@ class RemoveLpaTest extends TestCase
         ($this->removeLpa)($this->userToken, $this->actorLpaToken);
     }
 
-    /** @test */
+    /**
+     * @test
+     * @covers ::__invoke
+     */
     public function it_will_fail_if_actor_lpa_token_does_not_match_user_id()
     {
         $this->apiClientProphecy
