@@ -33,7 +33,7 @@
                     {{ govuk_form_element(form.get('passcode'), {
                         'label': 'Your activation key'| trans,
                         'hint': 'Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56'| trans,
-                        'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-!-font-weight-bold'} }) }}
+                        'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-label--m'} }) }}
 
                     <details class="govuk-details" data-module="govuk-details">
                         <summary class="govuk-details__summary">
@@ -55,12 +55,12 @@
                     {{ govuk_form_fieldset(form.get('dob'), {
                         'label': 'Your date of birth?'| trans,
                         'hint': 'For example, 31 03 1980'| trans,
-                        'attr': {'class': 'xyz', 'label_class': 'govuk-!-font-weight-bold'} }) }}
+                        'attr': {'class': 'xyz', 'label_class': 'govuk-label--m'} }) }}
 
                 {{ govuk_form_element(form.get('reference_number'), {
                         'label': 'LPA reference number'| trans,
                         'hint': 'LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000'| trans,
-                        'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-!-font-weight-bold'},
+                        'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-label--m'},
                         'inputmode': 'numeric',
                         'pattern': '[0-9 -]*'
                     }) }}
