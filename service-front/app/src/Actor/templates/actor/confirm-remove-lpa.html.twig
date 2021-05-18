@@ -25,12 +25,19 @@
                         <li>{% trans %}you must contact us for a new activation key if you want to add the LPA back to your account{% endtrans %}</li>
                     </ul>
 
-                    <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
-                        {% trans %}Cancel{% endtrans %}
-                    </a>
-                    <a href="{{ path('lpa.remove-lpa', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button--warning" data-prevent-double-click="true">
-                        {% trans %}Yes, remove LPA{% endtrans %}
-                    </a>
+                    {{ govuk_form_open(form) }}
+                        {{ govuk_form_element(form.get('__csrf')) }}
+                        {{ govuk_form_element(form.get('actor_lpa_token')) }}
+
+                        <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
+                            {% trans %}Cancel{% endtrans %}
+                        </a>
+
+                        <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-button--warning govuk-!-margin-right-1 ">
+                            {% trans %}Remove LPA{% endtrans %}
+                        </button>
+
+                    {{ govuk_form_close() }}
                 </div>
             </div>
         </main>
