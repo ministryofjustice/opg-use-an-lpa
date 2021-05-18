@@ -36,7 +36,8 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('check_if_code_is_cancelled', [$this, 'isCodeCancelled']),
             new TwigFunction('is_lpa_cancelled', [$this, 'isLpaCancelled']),
             new TwigFunction('donor_name_with_dob_removed', [$this, 'donorNameWithDobRemoved']),
-            ];
+            new TwigFunction('is_donor_signature_date_too_old', [$this, 'isDonorSignatureDateOld']),
+        ];
     }
 
     /**
@@ -199,7 +200,7 @@ class LpaExtension extends AbstractExtension
         $viewerCodeParts = str_split($viewerCode, 4);
         array_unshift($viewerCodeParts, 'V');
 
-        return implode(" - ", $viewerCodeParts);
+        return implode(' - ', $viewerCodeParts);
     }
 
     /**
@@ -210,6 +211,16 @@ class LpaExtension extends AbstractExtension
     {
         $status = $lpa->getStatus();
         return ($status === 'Cancelled') || ($status === 'Revoked');
+    }
+
+    /**
+     * @param Lpa $lpa
+     *
+     * @return bool
+     */
+    public function isDonorSignatureDateOld(Lpa $lpa): bool
+    {
+        return $lpa->getLpaDonorSignatureDate() < new DateTime('2016-01-01');
     }
 
     /**
