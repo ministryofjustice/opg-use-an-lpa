@@ -5,7 +5,7 @@ on:
     branches: [ master ]
     paths:
     # only run when service-front is changed
-      - 'service-front/**'
+      - 'service-front/app/**'
 
 permissions:
   actions: read
