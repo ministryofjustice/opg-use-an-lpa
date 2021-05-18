@@ -5554,5 +5554,5 @@ msgid "Your activation key"
 msgstr "Eich allwedd cadarnhau cyfrif"
 
 #: src/Actor/templates/actor/lpa-add.html.twig:56
-msgid "Your date of birth?"
-msgstr "Eich dyddiad geni?"
+msgid "Your date of birth"
+msgstr "Eich dyddiad geni"

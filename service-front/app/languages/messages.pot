@@ -3868,5 +3868,5 @@ msgid "Your activation key"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-add.html.twig:56
-msgid "Your date of birth?"
+msgid "Your date of birth"
 msgstr ""
