@@ -13,17 +13,39 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">{% trans %}We’ve already sent you an activation key for this LPA{% endtrans %}</h1>
 
-                    <h1 class="govuk-heading-xl">{% trans %}You have an activation key for this LPA{% endtrans %}</h1>
+                    <dl class="govuk-summary-list govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-body govuk-summary-list__key">
+                                {% trans %}Donor name{% endtrans %}
+                            </dt>
+                            <dd class="govuk-body govuk-summary-list__value">
+                                {{ donorName }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-body govuk-summary-list__key">
+                                {% trans %}LPA type{% endtrans %}
+                            </dt>
+                            <dd class="govuk-body govuk-summary-list__value">
+                                {% if caseType|lower == "pfa" %}
+                                    {% trans %}Property and finance{% endtrans %}
+                                {% else %}
+                                    {% trans %}Health and welfare{% endtrans %}
+                                {% endif %}
+                            </dd>
+                        </div>
+                    </dl>
 
-                    <p class="govuk-body">{% trans %}We sent you an activation key in the letter that told you the LPA had been registered. The activation key is at the top of the letter with the LPA reference number.{% endtrans %}</p>
-                    <p class="govuk-body">{% trans with {'%link%': path('contact-us')} %}If you check the letter and still cannot find your activation key, please <a href="%link%" class="govuk-link">contact us</a>.{% endtrans %}</p>
-                    <p class="govuk-body">{% trans %}The donor and each attorney will have their own unique activation key.{% endtrans %}</p>
+                    <h2 class="govuk-heading-m">{% trans %}If you’ve not used this service to ask for a key before{% endtrans %}</h2>
+                    <p class="govuk-body">{% trans %}Your activation key is on the letter that told you the LPA had been registered or in an email we sent you.{% endtrans %}</p>
+                    <h2 class="govuk-heading-m">{% trans %}If you’ve already asked for an activation key through this service{% endtrans %}</h2>
+                    <p class="govuk-body">{% trans %}We have posted an activation key to you - it can take up to 10 working days to arrive.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}If you've lost the letter, you can ask for a new key. This will cancel the key we sent to you before.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}If the letter did not  arrive, check we have your correct address before you ask for a new key.{% endtrans %}</p>
 
-                    <a href="{{ path('lpa.add') }}"  draggable="false" class="govuk-button">{% trans %}Add another LPA{% endtrans %}</a>
-                    <a class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" href="{{ path('logout') }}">
-                        {% trans %}Sign out{% endtrans %}
-                    </a>
+                    <a href="{{ path('lpa.dashboard') }}" draggable="false" class="govuk-button">{% trans %}Back to your LPAs{% endtrans %}</a>
                 </div>
             </div>
         </main>
