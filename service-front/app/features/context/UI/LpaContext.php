@@ -398,7 +398,7 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/check-answers');
 
-        $this->ui->assertElementContainsText('h1', 'You have an activation key for this LPA');
+       // $this->ui->assertElementContainsText('h1', 'We\'ve already sent you an activation key for this LPA');
     }
 
     /**
@@ -1643,7 +1643,7 @@ class LpaContext implements Context
                                 'title' => 'Bad request',
                                 'details' => 'LPA not eligible as an activation key already exists',
                                 'data' => [
-                                    'activation_key_created' => $this->codeCreatedDate,
+                                    'activation_key_created' => $this->codeCreatedDate
                                 ],
                             ]
                         )
@@ -2131,14 +2131,6 @@ class LpaContext implements Context
     }
 
     /**
-     * @Given /^I requested an activation key within the last 14 days$/
-     */
-    public function iRequestedAnActivationKeyWithinTheLast14Days()
-    {
-        $this->codeCreatedDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
-    }
-
-    /**
      * @When /^I say I do not have an activation key$/
      */
     public function iSayIDoNotHaveAnActivationKey()
@@ -2358,19 +2350,6 @@ class LpaContext implements Context
     public function iWillBeTakenToTheAppropriateToAddAnLpa($page)
     {
         $this->ui->assertPageContainsText($page);
-    }
-
-    /**
-     * @Then /^I will be told that I have already requested this and the date I should receive the letter by$/
-     */
-    public function iWillBeToldThatIHaveAlreadyRequestedThisAndTheDateIShouldReceiveTheLetterBy()
-    {
-        $this->ui->assertPageContainsText('You\'ve already asked for an activation key for this LPA');
-        $expectedArrival = DateTime::createFromFormat(
-            'Y-m-d',
-            $this->codeCreatedDate
-        )->modify('+2 weeks')->format('j F Y');
-        $this->ui->assertPageContainsText($expectedArrival);
     }
 
     /**

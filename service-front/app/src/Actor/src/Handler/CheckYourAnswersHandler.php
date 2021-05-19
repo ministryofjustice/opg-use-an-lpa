@@ -142,8 +142,8 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
                     return $this->checkActivationKeyCreatedDate(
                         $result->getData()['activation_key_created'],
-                        $result->getData()['donorName'],
-                        $result->getData()['lpaType']
+                        $result->getData()['donor_name'],
+                        $result->getData()['lpa_type']
                     );
                 case OlderLpaApiResponse::DOES_NOT_MATCH:
                 case OlderLpaApiResponse::NOT_FOUND:

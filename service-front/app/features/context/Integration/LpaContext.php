@@ -264,7 +264,6 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^I am told that I have an activation key for this LPA and where to find it$/
-     * @Then /^I will be told that I have already requested this and the date I should receive the letter by$/
      */
     public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
     {
@@ -1332,14 +1331,6 @@ class LpaContext extends BaseIntegrationContext
         );
 
         assertEquals(AddLpaApiResponse::ADD_LPA_SUCCESS, $response->getResponse());
-    }
-
-    /**
-     * @Given /^I requested an activation key within the last 14 days$/
-     */
-    public function iRequestedAnActivationKeyWithinTheLast14Days()
-    {
-        $this->codeCreatedDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
     }
 
     protected function prepareContext(): void

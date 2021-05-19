@@ -1286,10 +1286,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request an activation key again within 14 calendar days$/
      * @When /^I provide the details from a valid paper document that already has an activation key$/
      */
-    public function iRequestAnActivationKeyAgainWithin14CalendarDays()
+    public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
     {
         $data = [
             'reference_number' => $this->lpaUid,
@@ -1326,7 +1325,7 @@ class LpaContext extends BaseIntegrationContext
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA not eligible as an activation key already exists', $ex->getMessage());
-            assertEquals(['activation_key_created' => $createdDate], $ex->getAdditionalData());
+            assertEquals(['activation_key_created' => $createdDate,'donor_name' => $this->userFirstname ." " . $this->userSurname ,'lpa_type' => "hw"], $ex->getAdditionalData());
             return;
         }
 
@@ -1532,14 +1531,6 @@ class LpaContext extends BaseIntegrationContext
      * @Then /^I want to see the option to cancel the code$/
      */
     public function iWantToSeeTheOptionToCancelTheCode()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Then /^I will be told that I have already requested this and the date I should receive the letter by$/
-     */
-    public function iWillBeToldThatIHaveAlreadyRequestedThisAndTheDateIShouldReceiveTheLetterBy()
     {
         // Not needed for this context
     }
