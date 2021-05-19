@@ -21,10 +21,17 @@ resource "aws_cognito_user_pool" "use_a_lasting_power_of_attorney_admin" {
     temporary_password_validity_days = 1
   }
 
-  # mfa_configuration = "ON"
+  mfa_configuration = "ON"
 
-  # software_token_mfa_configuration {
-  #   enabled = true
+  software_token_mfa_configuration {
+    enabled = true
+  }
+
+  # sms_authentication_message = "Your code is {####}"
+
+  # sms_configuration {
+  #   external_id    = "example"
+  #   sns_caller_arn = aws_iam_role.example.arn
   # }
 
   # account_recovery_setting {
@@ -33,6 +40,11 @@ resource "aws_cognito_user_pool" "use_a_lasting_power_of_attorney_admin" {
   #     priority = 1
   #   }
   # }
+}
+
+resource "aws_cognito_user_pool_domain" "use_a_lasting_power_of_attorney_admin" {
+  domain       = "login-admin-lastingpowerofattorney"
+  user_pool_id = aws_cognito_user_pool.use_a_lasting_power_of_attorney_admin.id
 }
 
 resource "aws_route53_record" "certificate_validation_login_admin" {
@@ -64,29 +76,4 @@ resource "aws_acm_certificate" "certificate_login_admin" {
   # provider          = aws.identity
   domain_name       = "login.admin.lastingpowerofattorney.opg.service.justice.gov.uk"
   validation_method = "DNS"
-}
-
-resource "aws_cognito_user_pool_domain" "use_a_lasting_power_of_attorney_admin" {
-  # provider        = aws.identity
-  domain          = "login.admin.lastingpowerofattorney.opg.service.justice.gov.uk"
-  certificate_arn = aws_acm_certificate.certificate_login_admin.arn
-  user_pool_id    = aws_cognito_user_pool.use_a_lasting_power_of_attorney_admin.id
-}
-
-# data "aws_route53_zone" "opg_service_justice_gov_uk" {
-#   provider = aws.management
-#   name     = "opg.service.justice.gov.uk"
-# }
-
-resource "aws_route53_record" "auth-cognito-A" {
-  provider = aws.management
-  name     = aws_cognito_user_pool_domain.use_a_lasting_power_of_attorney_admin.domain
-  type     = "A"
-  zone_id  = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
-  alias {
-    evaluate_target_health = false
-    name                   = aws_cognito_user_pool_domain.use_a_lasting_power_of_attorney_admin.cloudfront_distribution_arn
-    # This zone_id is fixed
-    zone_id = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
-  }
 }
