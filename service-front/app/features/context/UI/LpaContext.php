@@ -38,7 +38,7 @@ class LpaContext implements Context
      */
     public function iAmTakenToTheRemoveAnLPAConfirmationPage()
     {
-        $this->ui->assertPageAddress('/lpa/confirm-remove-lpa');
+        $this->ui->assertPageAddress('/lpa/remove-lpa');
         $this->ui->assertPageContainsText('Are you sure you want to remove this LPA?');
     }
 
@@ -64,7 +64,7 @@ class LpaContext implements Context
      */
     public function iRequestToRemoveAnLPAFromMyAccountWithoutTheLpaActorToken()
     {
-        $this->ui->visit('/lpa/confirm-remove-lpa');
+        $this->ui->visit('/lpa/remove-lpa');
     }
 
     /**
@@ -108,7 +108,7 @@ class LpaContext implements Context
                 )
             );
 
-        $this->ui->clickLink('Yes, remove LPA');
+        $this->ui->pressButton('Yes, remove LPA');
     }
 
 
@@ -2055,7 +2055,7 @@ class LpaContext implements Context
     public function iRequestToRemoveAnLPAFromMyAccount()
     {
         $this->ui->clickLink('Remove LPA');
-        $this->ui->assertPageAddress('/lpa/confirm-remove-lpa');
+        $this->ui->assertPageAddress('/lpa/remove-lpa');
     }
 
     /**
@@ -2067,7 +2067,6 @@ class LpaContext implements Context
         $this->lpa->status = $status;
 
         if ($status === 'Revoked') {
-           // $this->lpa->status = "Revoked";
 
             // API call for get LpaById
             $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)

@@ -15,7 +15,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
  */
 class RemoveLpa extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'remove_lpa';
+    public const FORM_NAME = 'remove_lpa';
 
     /**
      * RemoveLpa constructor.
