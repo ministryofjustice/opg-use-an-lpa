@@ -556,7 +556,9 @@ class OlderLpaServiceTest extends TestCase
         } catch (BadRequestException $ex) {
             $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             $this->assertEquals('LPA not eligible as an activation key already exists', $ex->getMessage());
-            $this->assertEquals(['activation_key_created' => $createdDate], $ex->getAdditionalData());
+            $this->assertEquals(['activation_key_created' => $createdDate,
+                                  'donorName' => $lpa->getData()['donor']['firstname'] . " " . $lpa->getData()['donor']['middlenames'] . " " . $lpa->getData()['donor']['surname'],
+                                  'lpaType' => $lpa->getData()['caseSubtype']], $ex->getAdditionalData());
             return;
         }
 
