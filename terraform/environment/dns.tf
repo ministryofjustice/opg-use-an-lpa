@@ -123,7 +123,3 @@ resource "aws_route53_record" "admin_use_my_lpa" {
     create_before_destroy = true
   }
 }
-
-output "admin_url" {
-  value = aws_route53_record.admin_use_my_lpa[0].fqdn
-}

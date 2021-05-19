@@ -5,12 +5,7 @@ resource "aws_cognito_user_pool" "use_a_lasting_power_of_attorney_admin" {
   admin_create_user_config {
     allow_admin_create_user_only = true
   }
-  alias_attributes         = ["email"]
   auto_verified_attributes = ["email"]
-
-  device_configuration {
-    challenge_required_on_new_device = true
-  }
 
   password_policy {
     minimum_length                   = 16
@@ -22,24 +17,28 @@ resource "aws_cognito_user_pool" "use_a_lasting_power_of_attorney_admin" {
   }
 
   mfa_configuration = "ON"
-
+  device_configuration {
+    challenge_required_on_new_device      = true
+    device_only_remembered_on_user_prompt = false
+  }
+  email_configuration {
+    email_sending_account = "COGNITO_DEFAULT"
+  }
   software_token_mfa_configuration {
     enabled = true
   }
 
-  # sms_authentication_message = "Your code is {####}"
+  # username_attributes =
+  username_configuration {
+    case_sensitive = false
+  }
 
-  # sms_configuration {
-  #   external_id    = "example"
-  #   sns_caller_arn = aws_iam_role.example.arn
-  # }
-
-  # account_recovery_setting {
-  #   recovery_mechanism {
-  #     name     = "verified_email"
-  #     priority = 1
-  #   }
-  # }
+  account_recovery_setting {
+    recovery_mechanism {
+      name     = "verified_email"
+      priority = 1
+    }
+  }
 }
 
 resource "aws_cognito_user_pool_domain" "use_a_lasting_power_of_attorney_admin" {
