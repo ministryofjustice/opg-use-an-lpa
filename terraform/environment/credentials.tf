@@ -27,10 +27,12 @@ terraform {
 }
 
 variable "default_role" {
+  type    = string
   default = "opg-use-an-lpa-ci"
 }
 
 variable "management_role" {
+  type    = string
   default = "opg-use-an-lpa-ci"
 }
 
