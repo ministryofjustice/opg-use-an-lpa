@@ -292,13 +292,21 @@ workflows:
               ] } }
             requires: [dev_seed_database]
 
+        - use-my-lpa/run_healthcheck_test:
+            name: dev_run_healthcheck_test
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
+            requires: [dev_run_behat_tests]
+
         - slack_notify_domain:
             name: post_environment_domains
             filters: { branches: { ignore: [
               master,
               /dependabot\/.*/,
               ] } }
-            requires: [dev_run_behat_tests]
+            requires: [dev_run_healthcheck_test]
 
         # Required end of workflow job
         - use-my-lpa/end_of_workflow:
