@@ -561,7 +561,7 @@ class OlderLpaServiceTest extends TestCase
                 [
                     'activation_key_created' => $createdDate,
                     'donor_name' => $lpa->getData()['donor']['firstname'] . " " . $lpa->getData()['donor']['middlenames'] . " " . $lpa->getData()['donor']['surname'],
-                    'lpa_type' => $lpa->getData()['caseSubtype'],
+                    'lpa_type' => $lpa->getData()['caseSubtype']
                 ],
                 $ex->getAdditionalData()
             );
