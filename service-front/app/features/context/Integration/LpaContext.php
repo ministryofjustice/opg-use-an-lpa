@@ -278,7 +278,9 @@ class LpaContext extends BaseIntegrationContext
                             'title' => 'Bad Request',
                             'details' => 'LPA not eligible as an activation key already exists',
                             'data' => [
-                                'activation_key_created' => $this->codeCreatedDate
+                                'activation_key_created' => $this->codeCreatedDate,
+                                'donor_name' => ' ',
+                                'lpa_type' => ' '
                             ],
                         ]
                     )
@@ -298,7 +300,11 @@ class LpaContext extends BaseIntegrationContext
 
         $response = new OlderLpaApiResponse(
             OlderLpaApiResponse::HAS_ACTIVATION_KEY,
-            ['activation_key_created' => $this->codeCreatedDate]
+            [
+                'activation_key_created' => $this->codeCreatedDate,
+                'donor_name' => ' ',
+                'lpa_type' => ' ',
+            ]
         );
 
         assertEquals($response, $result);

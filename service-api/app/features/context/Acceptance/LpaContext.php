@@ -2194,8 +2194,8 @@ class LpaContext implements Context
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA not eligible as an activation key already exists');
-        $this->ui->assertSession()->responseContains('activation_key_created');
         $this->ui->assertSession()->responseContains($createdDate);
+        $this->ui->assertSession()->responseContains('activation_key_created');
         $this->ui->assertSession()->responseContains('donor_name');
         $this->ui->assertSession()->responseContains('lpa_type');
     }
