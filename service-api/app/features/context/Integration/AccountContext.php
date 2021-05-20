@@ -610,8 +610,6 @@ class AccountContext extends BaseIntegrationContext
 
     /**
      * @Given /^I confirm that I want to delete my account$/
-     * @Then /^I am asked to confirm whether I am sure if I want to delete lpa$/
-     * @Given /^I am on the confirm lpa deletion page$/
      */
     public function iConfirmThatIWantToDeleteMyAccount()
     {
@@ -1050,6 +1048,15 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
+     * @When /^I do not confirm cancellation of the chosen viewer code/
+     * @When /^I request to return to the dashboard page/
+     */
+    public function iDoNotConfirmCancellationOfTheChosenViewerCode()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @Given I have asked for my password to be reset
      */
     public function iHaveAskedForMyPasswordToBeReset()
@@ -1423,10 +1430,10 @@ class AccountContext extends BaseIntegrationContext
 
     /**
      * @When /^I request to delete my account$/
-     * @When /^I request to remove the added LPA$/
-     * @Then /^The removed LPA will not be displayed on the dashboard$/
-     * @Then /^I can see a flash message for the removed LPA$/
-     * @Then /^I confirm removal of the LPA$/
+     * @When /^I request to remove an LPA$/
+     * @Then /^I cannot see my LPA on the dashboard$/
+     * @Then /^I can see a flash message confirming that my LPA has been removed$/
+     * @Then /^I confirm that I want to remove the LPA$/
      */
     public function iRequestToDeleteMyAccount()
     {

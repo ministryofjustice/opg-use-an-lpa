@@ -11,7 +11,7 @@ use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\AddLpa;
-use App\Service\Lpa\DeleteLpa;
+use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
 use App\Service\ViewerCodes\ViewerCodeService;
@@ -57,7 +57,7 @@ class LpaContext extends BaseIntegrationContext
     private string $apiGatewayPactProvider;
     private AwsMockHandler $awsFixtures;
     private string $codesApiPactProvider;
-    private DeleteLpa $deleteLpa;
+    private RemoveLpa $deleteLpa;
     private LpaService $lpaService;
     private OlderLpaService $olderLpaService;
 
@@ -1054,15 +1054,6 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I do not confirm cancellation of the chosen viewer code/
-     * @When /^I request to return to the dashboard page/
-     */
-    public function iDoNotConfirmCancellationOfTheChosenViewerCode()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @When /^I fill in the form and click the cancel button$/
      */
     public function iFillInTheFormAndClickTheCancelButton()
@@ -1600,9 +1591,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^The LPA is removed/
+     * @Then /^The LPA is removed and my active codes are cancelled$/
      */
-    public function theLPAIsRemoved()
+    public function theLPAIsRemovedAndMyActiveCodesAreCancelled()
     {
         // UserLpaActorMap::get
         $this->awsFixtures->append(
@@ -1610,7 +1601,7 @@ class LpaContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'SiriusUid' => '700000055554',
+                            'SiriusUid' => $this->lpaUid,
                             'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id' => $this->userLpaActorToken,
                             'ActorId' => $this->actorLpaId,
@@ -1626,70 +1617,83 @@ class LpaContext extends BaseIntegrationContext
             new Result(
                 [
                     'Items' => [
-                        $this->marshalAwsResultData(
+                        $this->marshalAwsResultData( // 1st code is active
                             [
                                 'Id' => '1',
                                 'ViewerCode' => '123ABCD6789',
-                                'SiriusUid' => '700000055554',
-                                'Added' => '2021-01-01 00:00:00',
-                                'Expires' => '2021-02-01 00:00:00',
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                                'Expires' => (new DateTime())->modify('+1 month')->format('Y-m-d'),
                                 'UserLpaActor' => $this->userLpaActorToken,
-                                'Organisation' => $this->organisation,
+                                'Organisation' => 'Some Organisation 1',
+                            ]
+                        ),
+                        $this->marshalAwsResultData( // 2nd code has expired
+                            [
+                                'Id' => '2',
+                                'ViewerCode' => 'YG41BCD693FH',
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                                'Expires' => (new DateTime())->modify('-1 month')->format('Y-m-d'),
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => 'Some Organisation 2',
+                            ]
+                        ),
+                        $this->marshalAwsResultData( // 3rd code has already been cancelled
+                            [
+                                'Id' => '3',
+                                'ViewerCode' => 'RL2AD1936KV2',
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                                'Expires' => (new DateTime())->modify('-1 month')->format('Y-m-d'),
+                                'Cancelled' => (new DateTime())->modify('-2 months')->format('Y-m-d'),
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => 'Some Organisation 3',
                             ]
                         ),
                     ],
                 ]
             )
         );
-
-        $this->awsFixtures->append(new Result());
 
         // viewerCodesRepository::removeActorAssociation
+        $this->awsFixtures->append(new Result());
+        // viewerCodesRepository::cancel
+        $this->awsFixtures->append(new Result()); // 1st code is active therefore is cancelled
+
+        // viewerCodesRepository::removeActorAssociation
+        $this->awsFixtures->append(new Result()); // 2nd code has expired therefore isn't cancelled
+
+        // viewerCodesRepository::removeActorAssociation
+        $this->awsFixtures->append(new Result()); // 3rd code has already been cancelled
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        // UserLpaActorMap::delete
         $this->awsFixtures->append(
             new Result(
                 [
-                    'Items' => [
-                        $this->marshalAwsResultData(
-                            [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added' => '2021-01-05 12:34:56',
-                                'Expires' => '2022-01-05 12:34:56',
-                                'UserLpaActor' => '',
-                                'Organisation' => $this->organisation,
-                                'ViewerCode' => '123ABCD6789',
-                                'Viewed' => false,
-                            ]
-                        ),
-                    ],
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime())->modify('-6 months')->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
                 ]
             )
         );
 
-        $this->awsFixtures->append(new Result());
+        $lpaRemoved = ($this->deleteLpa)($this->userId, $this->userLpaActorToken);
 
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Items' => [
-                        $this->marshalAwsResultData(
-                            [
-                                'Id' => '1',
-                                'SiriusUid' => $this->lpaUid,
-                                'Added' => '2021-01-05 12:34:56',
-                                'ActorId' => $this->actorLpaId,
-                                'UserId' => $this->userId,
-                            ]
-                        ),
-                    ],
-                ]
-            )
-        );
-
-        $this->awsFixtures->append(new Result());
-
-        $lpaRemoveResponse = ($this->deleteLpa)($this->userId, $this->userLpaActorToken);
-
-        assertEmpty($lpaRemoveResponse);
+        assertEquals($this->lpa->uId, $lpaRemoved['uId']);
     }
 
     /**
@@ -1763,7 +1767,7 @@ class LpaContext extends BaseIntegrationContext
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
         $this->olderLpaService = $this->container->get(OlderLpaService::class);
         $this->lpaService = $this->container->get(LpaService::class);
-        $this->deleteLpa = $this->container->get(DeleteLpa::class);
+        $this->deleteLpa = $this->container->get(RemoveLpa::class);
 
         $config = $this->container->get('config');
         $this->codesApiPactProvider = parse_url($config['codes_api']['endpoint'], PHP_URL_HOST);
