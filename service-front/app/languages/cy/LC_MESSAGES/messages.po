@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-05-19T10:40:49+00:00\n"
+"POT-Creation-Date: 2021-05-20T16:00:41+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,7 +18,7 @@ msgstr ""
 msgid "Your new access code"
 msgstr "Eich cod mynediad yr LPA newydd"
 
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:22
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:48
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:23
 #: src/Actor/templates/actor/check-access-codes.html.twig:15
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
@@ -28,6 +28,7 @@ msgstr "Eich cod mynediad yr LPA newydd"
 msgid "Back to your LPAs"
 msgstr "Yn ôl i’ch LPAs"
 
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:33
 #: src/Actor/templates/actor/check-access-codes.html.twig:26
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-already-added.html.twig:39
@@ -40,6 +41,7 @@ msgstr "Yn ôl i’ch LPAs"
 msgid "Property and finance"
 msgstr "Eiddo ac arian"
 
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:35
 #: src/Actor/templates/actor/check-access-codes.html.twig:28
 #: src/Actor/templates/actor/check-lpa.html.twig:31
 #: src/Actor/templates/actor/lpa-already-added.html.twig:41
@@ -2227,7 +2229,6 @@ msgstr ""
 "Bydd unrhyw atwrneiaeth arhosol (LPA) y byddwch yn ei hychwanegu at eich "
 "cyfrif yn ymddangos ar y dudalen hon."
 
-#: src/Actor/templates/actor/already-have-activation-key.html.twig:23
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:48
 msgid "Add another LPA"
 msgstr "Ychwanegu LPA arall"
@@ -2442,6 +2443,7 @@ msgstr "Ai hon yw’r LPA yr ydych eisiau ei hychwanegu?"
 msgid "Type of LPA"
 msgstr "Math o LPA"
 
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:21
 #: src/Actor/templates/actor/check-lpa.html.twig:37
 #: src/Actor/templates/actor/lpa-already-added.html.twig:27
 msgid "Donor name"
@@ -2631,7 +2633,7 @@ msgstr[5] "%count% codau i’w defnyddio"
 msgid "No organisations have access"
 msgstr "Nid oes gan unrhyw sefydliad fynediad"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:47
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:46
 msgid ""
 "You no longer have access to this <abbr title=\"lasting power of attorney"
 "\">LPA</abbr>."
@@ -2639,11 +2641,11 @@ msgstr ""
 "Nid oes gennych fynediad at yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> "
 "hon mwyach."
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:48
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:47
 msgid "Why is this?"
 msgstr "Pam?"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:55
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:54
 msgid "Read more"
 msgstr "Darllen mwy"
 
@@ -2655,35 +2657,35 @@ msgstr "Cod mynediad LPA"
 msgid "Created by"
 msgstr "Crëwyd gan"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:32
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:33
 msgid "LPA viewed"
 msgstr "Wedi gweld LPA"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:44
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:45
 msgid "Viewed"
 msgstr "Gweld"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:54
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:55
 msgid "Not viewed"
 msgstr "Heb weld LPA"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:61
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:62
 msgid "Expires"
 msgstr "Daw i ben"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:64
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:65
 msgid "Expired"
 msgstr "Wedi dod i ben"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:80
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:81
 msgid "Status"
 msgstr "Statws"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:82
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:83
 msgid "EXPIRED"
 msgstr "WEDI DOD I BEN"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:75
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:76
 msgid "CANCELLED"
 msgstr "DILËWYD"
 
@@ -3357,7 +3359,6 @@ msgstr "Erioed wedi mewngofnodi"
 msgid "Your LPAs"
 msgstr "Eich LPAs"
 
-#: src/Actor/templates/actor/already-have-activation-key.html.twig:25
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:55
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:25
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
@@ -5153,7 +5154,7 @@ msgstr ""
 msgid "Cannot send an activation key"
 msgstr "Ni allwn anfon cod ar gyfer yr LPA honno"
 
-#: src/Actor/templates/actor/already-have-activation-key.html.twig:17
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:3
 msgid "You have an activation key for this LPA"
 msgstr "Mae gennych god ar gyfer yr LPA hon"
 
@@ -5316,7 +5317,7 @@ msgstr ""
 msgid "Request another activation key"
 msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:54
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:53
 msgid "<strong>Important: </strong>This LPA has instructions or preferences."
 msgstr ""
 "<strong>Pwysig:</strong> Mae gan yr LPA hon gyfarwyddiadau neu ddymuniadau."
@@ -5354,7 +5355,7 @@ msgstr ""
 "Gallwch ond ddefnyddio’r gwasanaeth hwn os cafodd eich LPA ei chofrestru ar "
 "neu ar ôl 1 Medi 2019."
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:48
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:49
 msgid "%organisation% on %date%"
 msgstr ""
 
@@ -5589,7 +5590,7 @@ msgstr ""
 msgid "Yes, remove LPA"
 msgstr "Le, dileu LPA"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:40
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:39
 msgid "Remove LPA"
 msgstr "Dileu LPA"
 
@@ -5612,3 +5613,56 @@ msgstr "eiddo a materion ariannol"
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:16
+msgid "We've already sent you an activation key for this LPA"
+msgstr ""
+"Rydym eisoes wedi anfon allwedd cadarnhau cyfrif atoch ar gyfer yr atwrneiaeth "
+"arhosol hon"
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:29
+msgid "LPA type"
+msgstr "Math o atwrneiaeth arhosol"
+
+# Welsh is currently: Ask for an activation key
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:41
+msgid "If you’ve not asked for an activation key before"
+msgstr "Os nad ydych wedi gofyn am allwedd cadarnhau cyfrif o’r blaen"
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:42
+msgid ""
+"Your activation key is on the letter that told you the LPA had been registered "
+"or in an email we sent you."
+msgstr ""
+"Mae eich allwedd cadarnhau cyfrif ar y llythyr a oedd yn dweud wrthych fod yr "
+"atwrneiaeth arhosol wedi cael ei chofrestru, neu mewn e-bost a anfonwyd atoch. "
+"Os ydych wedi colli’r llythyr neu’r e-bost, gallwch ofyn am allwedd newydd."
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:43
+msgid "If you’ve already asked for an activation key through this service"
+msgstr ""
+"Os ydych eisoes wedi gofyn am allwedd cadarnhau cyfrif drwy’r gwasanaeth hwn"
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:44
+msgid ""
+"We have posted an activation key to you - it can take up to 10 working days to "
+"arrive."
+msgstr ""
+"Rydym wedi anfon allwedd cadarnhau cyfrif atoch - gall gymryd hyd at 10 "
+"diwrnod gwaith i gyrraedd."
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:45
+msgid ""
+"If you've lost the letter, you can ask for a new key. This will cancel the key "
+"we sent to you before."
+msgstr ""
+"Os ydych wedi colli’r llythyr, gallwch ofyn am allwedd newydd. Bydd hyn yn "
+"canslo’r allwedd a anfonwyd atoch o’r blaen."
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:46
+msgid ""
+"If the letter did not arrive, <a class=\"govuk-link\" href=\"%link%\">check we "
+"have your correct address</a> before you ask for a new key."
+msgstr ""
+"Os na chyrhaeddodd y llythyr, <a class=\"govuk-link\" href=\"%link%\">gwnewch "
+"yn siŵr bod eich cyfeiriad cywir gennym</a> cyn i chi ofyn am allwedd newydd."
