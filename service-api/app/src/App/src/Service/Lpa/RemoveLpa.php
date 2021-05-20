@@ -6,6 +6,7 @@ namespace App\Service\Lpa;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
+use App\Exception\ApiException;
 use App\Exception\NotFoundException;
 use DateTime;
 use Exception;
@@ -38,7 +39,7 @@ class RemoveLpa
      * @param string $token  UserLpaActorToken that map an LPA to a user account
      *
      * @return array A structure that contains processed LPA data and metadata
-     * @throws Exception
+     * @throws NotFoundException|Exception
      */
     public function __invoke(string $userId, string $token): array
     {
@@ -82,7 +83,21 @@ class RemoveLpa
         // we don't use getByUserLpaActorToken as it returns null if actor is inactive
         $lpaRemovedData = $this->lpaService->getByUid($userActorLpa['SiriusUid'])->getData();
 
-        $this->userLpaActorMapRepository->delete($token);
+        $deletedData = $this->userLpaActorMapRepository->delete($token);
+
+        if ($deletedData['Id'] !== $userActorLpa['Id']) {
+            $this->logger->notice(
+                'Incorrect data deleted from UserLpaActorMap. Expected deletion of LPA {expectedLpaUid} for user
+                with Id {expectedUserId}. Actual LPA {deletedLpaUid} deleted for user with Id {deletedUserId}',
+                [
+                    'expectedLpaUid' => $userActorLpa['SiriusUid'],
+                    'expectedUserId' => $userActorLpa['UserId'],
+                    'deletedLpaUid' => $deletedData['SiriusUid'],
+                    'deletedUserId' => $deletedData['UserId']
+                ]
+            );
+            throw new ApiException('Incorrect LPA data deleted from users account');
+        }
 
         return $lpaRemovedData;
     }

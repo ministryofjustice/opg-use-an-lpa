@@ -5,6 +5,7 @@ namespace AppTest\Service\Lpa;
 use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
+use App\Exception\ApiException;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\RemoveLpa;
@@ -91,7 +92,7 @@ class RemoveLpaTest extends TestCase
         ];
 
         $this->removedData = [
-            'Id' => '1',
+            'Id' => $this->actorLpaToken,
             'SiriusUid' => $this->lpaUid,
             'Added' => (new DateTime())->modify('-6 months')->format('Y-m-d'),
             'ActorId' => '1',
@@ -209,6 +210,35 @@ class RemoveLpaTest extends TestCase
             $this->actorLpaToken
         );
         ($this->deleteLpa())('wR0ng1D', $this->actorLpaToken);
+    }
+
+    /** @test */
+    public function it_throws_an_error_if_deleted_data_does_not_match_row_data()
+    {
+        $this->userLpaActorMapInterfaceProphecy
+            ->get($this->actorLpaToken)
+            ->willReturn($this->userActorLpa)
+            ->shouldBeCalled();
+
+        $this->viewerCodesInterfaceProphecy
+            ->getCodesByLpaId($this->userActorLpa['SiriusUid'])
+            ->willReturn([]);
+
+        $this->lpaServiceProphecy
+            ->getByUid($this->userActorLpa['SiriusUid'])
+            ->willReturn($this->lpa);
+
+        $this->removedData['Id'] = 'd1ffer3nt-Id-1234';
+
+        $this->userLpaActorMapInterfaceProphecy
+            ->delete($this->actorLpaToken)
+            ->willReturn($this->removedData);
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $this->expectExceptionMessage('Incorrect LPA data deleted from users account');
+
+        ($this->deleteLpa())($this->userId, $this->actorLpaToken);
     }
 
     private function deleteLpa(): RemoveLpa

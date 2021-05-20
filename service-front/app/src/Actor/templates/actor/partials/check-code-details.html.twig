@@ -24,6 +24,7 @@
                         <dd class="govuk-summary-list__value">{{ code.CreatedBy }}</dd>
                     {% else %}
                         {# this should only be the case where the user who created the code deleted their lpa, so we can't figure out who the code was created by #}
+                        {# this issue will be fixed by UML-1481 #}
                         <dd class="govuk-summary-list__value"></dd>
                     {% endif %}
                 </div>

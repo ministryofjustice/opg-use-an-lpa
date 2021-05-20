@@ -22,10 +22,7 @@ use Laminas\Diactoros\Response\JsonResponse;
  */
 class LpasResourceHandler implements RequestHandlerInterface
 {
-    /** @var LpaService */
     private LpaService $lpaService;
-
-    /** @var RemoveLpa */
     private RemoveLpa $removeLpa;
 
     public function __construct(LpaService $lpaService, RemoveLpa $removeLpa)
