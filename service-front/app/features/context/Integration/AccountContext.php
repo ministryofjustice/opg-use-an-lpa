@@ -1050,7 +1050,8 @@ class AccountContext extends BaseIntegrationContext
      * @When /^The status of the LPA got Revoked$/
      * @Then /^I cannot see my access codes and their details$/
      */
-    public function theStatusOfTheLpaGotRevoked(){
+    public function theStatusOfTheLpaGotRevoked()
+    {
         // Not needed for this context
     }
 

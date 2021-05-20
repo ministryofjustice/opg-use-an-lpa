@@ -1,0 +1,46 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Are you sure you want to remove this LPA?{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">{% trans %}Are you sure you want to remove this LPA?{% endtrans %}</h1>
+
+                    <p class="govuk-body">{% trans %}If you remove an LPA from your Use a lasting power of attorney account:{% endtrans %}</p>
+
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}all access codes you’ve created for that LPA will be cancelled{% endtrans %}</li>
+                        <li>{% trans %}you’ll not be able to see how the LPA is being used or has been used{% endtrans %}</li>
+                        <li>{% trans %}you must contact us for a new activation key if you want to add the LPA back to your account{% endtrans %}</li>
+                    </ul>
+
+                    {{ govuk_form_open(form) }}
+                        {{ govuk_form_element(form.get('__csrf')) }}
+                        {{ govuk_form_element(form.get('actor_lpa_token')) }}
+
+                        <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
+                            {% trans %}Cancel{% endtrans %}
+                        </a>
+
+                        <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-button--warning govuk-!-margin-right-1 ">
+                            {% trans %}Yes, remove LPA{% endtrans %}
+                        </button>
+
+                    {{ govuk_form_close() }}
+                </div>
+            </div>
+        </main>
+    </div>
+
+{% endblock %}

@@ -21,6 +21,8 @@ resource "aws_ecs_service" "actor" {
     container_port   = 80
   }
 
+  wait_for_steady_state = true
+
   depends_on = [aws_lb.actor]
 }
 
@@ -235,6 +237,10 @@ locals {
         {
           name  = "USE_OLDER_LPA_JOURNEY",
           value = tostring(local.account.use_older_lpa_journey)
+        },
+        {
+          name  = "DELETE_LPA_FEATURE",
+          value = tostring(local.account.delete_lpa_feature)
         }
       ]
   })

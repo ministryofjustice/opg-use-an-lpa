@@ -487,7 +487,8 @@ orbs:
               command: |
                 sudo apt update
                 sudo apt install python3 python3-pip
-                sudo pip3 install --no-cache pipenv poetry
+                sudo pip3 install --no-cache pipenv poetry boto3
+
                 cd /usr/local/bin
                 sudo ln -sf /usr/bin/pydoc3 pydoc
                 sudo ln -sf /usr/bin/python3 python
@@ -728,7 +729,7 @@ orbs:
               command: |
                 docker run -d --name inttests front-app:latest
                 docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
-                docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 \
+                docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 -d memory_limit=-1\
                   /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
           - run:
               name: Fetch test results
@@ -1259,11 +1260,6 @@ orbs:
           - attach_workspace:
               at: /tmp
           - run:
-              name: Wait for new tasks in services to be running
-              command: |
-                sudo pip3 install boto3 -q
-                python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
-          - run:
               name: Install and configure dependencies
               command: |
                 cd tests/smoke
@@ -1311,11 +1307,6 @@ orbs:
           - checkout
           - attach_workspace:
               at: /tmp
-          - run:
-              name: Wait for new tasks in services to be running
-              command: |
-                sudo pip3 install boto3
-                python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
           - run:
               name: Run test
               command: |
