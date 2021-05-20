@@ -1258,11 +1258,11 @@ orbs:
           - install_python
           - attach_workspace:
               at: /tmp
-          - run:
-              name: Wait for new tasks in services to be running
-              command: |
-                sudo pip3 install boto3 -q
-                python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
+          # - run:
+          #     name: Wait for new tasks in services to be running
+          #     command: |
+          #       sudo pip3 install boto3 -q
+          #       python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
           - run:
               name: Install and configure dependencies
               command: |
@@ -1311,11 +1311,11 @@ orbs:
           - checkout
           - attach_workspace:
               at: /tmp
-          - run:
-              name: Wait for new tasks in services to be running
-              command: |
-                sudo pip3 install boto3
-                python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
+          # - run:
+          #     name: Wait for new tasks in services to be running
+          #     command: |
+          #       sudo pip3 install boto3
+          #       python scripts/pipeline/aws_ecs_task/aws_ecs_task.py /tmp/cluster_config.json
           - run:
               name: Run test
               command: |
