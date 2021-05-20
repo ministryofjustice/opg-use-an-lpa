@@ -133,6 +133,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 $this->data['postcode'],
             );
 
+            var_dump("testing......");
+            var_dump($result);
+            die;
+
             switch ($result->getResponse()) {
                 case OlderLpaApiResponse::NOT_ELIGIBLE:
                     return new HtmlResponse($this->renderer->render(

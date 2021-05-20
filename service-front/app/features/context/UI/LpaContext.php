@@ -398,7 +398,7 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/check-answers');
 
-       // $this->ui->assertElementContainsText('h1', 'We\'ve already sent you an activation key for this LPA');
+        $this->ui->assertElementContainsText('h1', 'We\'ve already sent you an activation key for this LPA');
     }
 
     /**
@@ -1643,7 +1643,7 @@ class LpaContext implements Context
                                 'title' => 'Bad request',
                                 'details' => 'LPA not eligible as an activation key already exists',
                                 'data' => [
-                                    'activation_key_created' => $this->codeCreatedDate
+                                    'activation_key_created' => $this->codeCreatedDate,
                                 ],
                             ]
                         )
