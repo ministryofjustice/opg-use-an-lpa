@@ -1171,7 +1171,7 @@ orbs:
         #   - Updates per environment infrastructure; and
         #   - Triggers a deploy of the updated container (if changed)
         #
-        executor: terraform_0_14_11
+        executor: terraform
         parameters:
           workspace:
             description: Terraform workspace name
@@ -1463,7 +1463,7 @@ jobs:
 
   workspace_cleanup:
     docker:
-      - image: hashicorp/terraform:0.14.11
+      - image: hashicorp/terraform:0.15.4
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
