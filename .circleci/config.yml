@@ -1270,7 +1270,6 @@ orbs:
                 export TF_WORKSPACE=$(bash ~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 if [ "${TF_WORKSPACE}" != "production" ]; then
-                sudo pip3 install boto3 -q
                   python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json --add
                 fi
           - run:
