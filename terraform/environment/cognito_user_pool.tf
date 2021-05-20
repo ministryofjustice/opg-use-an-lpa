@@ -1,6 +1,5 @@
 
 resource "aws_cognito_user_pool" "use_a_lasting_power_of_attorney_admin" {
-  # provider = aws.identity
   name = "use-a-lasting-power-of-attorney-admin"
   admin_create_user_config {
     allow_admin_create_user_only = true
