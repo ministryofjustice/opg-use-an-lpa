@@ -397,7 +397,6 @@ class LpaContext implements Context
     public function iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt()
     {
         $this->ui->assertPageAddress('/lpa/check-answers');
-
         $this->ui->assertElementContainsText('h1', 'We\'ve already sent you an activation key for this LPA');
     }
 
@@ -1644,13 +1643,14 @@ class LpaContext implements Context
                                 'details' => 'LPA not eligible as an activation key already exists',
                                 'data' => [
                                     'activation_key_created' => $this->codeCreatedDate,
+                                    'donor_name' => ($this->lpaData['lpa'])->donor->firstname . " " . ($this->lpaData['lpa'])->donor->middlenames . " " . ($this->lpaData['lpa'])->donor->surname,
+                                    'lpa_type'   => $this->lpaData['lpa']->caseSubtype
                                 ],
                             ]
                         )
                     )
                 );
         }
-
         // API call for Notify
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))

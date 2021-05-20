@@ -178,6 +178,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     private function checkActivationKeyCreatedDate(string $createdDate, string $donorName, string $lpaType): ResponseInterface
     {
         $createdDate = DateTime::createFromFormat('Y-m-d', $createdDate);
+
         if (!empty((int) $createdDate)) {
             return new HtmlResponse(
                 $this->renderer->render(
