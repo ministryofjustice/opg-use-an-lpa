@@ -589,8 +589,7 @@ class LpaContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $this->ui->assertPageAddress('/lpa/dashboard');
 
-        $this->ui->assertPageContainsText('Access revoked');
-        $this->ui->assertPageContainsText('You no longer have access to this LPA.');
+        $this->ui->assertPageContainsText('You are not an attorney on this LPA anymore.');
     }
 
     /**
