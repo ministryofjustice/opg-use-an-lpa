@@ -1101,7 +1101,7 @@ orbs:
               command: |
                 terraform --version
                 cd ~/project/terraform/account
-                terraform init -lock-timeout=300s
+                terraform init
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 terraform validate
@@ -1110,7 +1110,7 @@ orbs:
               command: |
                 terraform --version
                 cd ~/project/terraform/environment
-                terraform init -lock-timeout=300s
+                terraform init
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 terraform validate
@@ -1137,7 +1137,7 @@ orbs:
                 echo $IMAGE_TAG
                 terraform --version
                 cd ~/project/terraform/account
-                terraform init -lock-timeout=300s
+                terraform init
                 terraform plan -lock-timeout=300s -var lambda_container_version=${IMAGE_TAG}
 
       apply_shared_terraform:
@@ -1162,7 +1162,7 @@ orbs:
                 echo $IMAGE_TAG
                 terraform --version
                 cd ~/project/terraform/account
-                terraform init -lock-timeout=300s
+                terraform init
                 terraform apply -lock-timeout=300s --auto-approve -var lambda_container_version=${IMAGE_TAG}
 
       apply_environment_terraform:
@@ -1188,7 +1188,7 @@ orbs:
               command: |
                 terraform --version
                 cd ~/project/terraform/environment
-                terraform init -lock-timeout=300s
+                terraform init
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 ~/project/scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE
@@ -1474,7 +1474,7 @@ jobs:
           name: Cleanup Workspaces
           command: |
             cd terraform/environment
-            terraform init -lock-timeout=300s
+            terraform init
             ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(../../scripts/pipeline/workspace_cleanup/get_workspaces_linux)
 
   cancel_redundant_builds:
