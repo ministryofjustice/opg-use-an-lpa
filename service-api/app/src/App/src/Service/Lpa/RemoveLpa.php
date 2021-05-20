@@ -87,13 +87,11 @@ class RemoveLpa
 
         if ($deletedData['Id'] !== $userActorLpa['Id']) {
             $this->logger->notice(
-                'Incorrect data deleted from UserLpaActorMap. Expected deletion of LPA {expectedLpaUid} for user
-                with Id {expectedUserId}. Actual LPA {deletedLpaUid} deleted for user with Id {deletedUserId}',
+                'Incorrect data deleted from UserLpaActorMap. Expected deletion of data
+                for UserLpaActorId {expectedId}, actual deletion of data for UserLpaActorId {deletedId}',
                 [
-                    'expectedLpaUid' => $userActorLpa['SiriusUid'],
-                    'expectedUserId' => $userActorLpa['UserId'],
-                    'deletedLpaUid' => $deletedData['SiriusUid'],
-                    'deletedUserId' => $deletedData['UserId']
+                    'expectedId' => $deletedData['Id'],
+                    'deletedId'  => $userActorLpa['Id']
                 ]
             );
             throw new ApiException('Incorrect LPA data deleted from users account');
