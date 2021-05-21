@@ -6,35 +6,29 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
-use App\Service\Lpa\DeleteLpa;
+use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\LpaService;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\JsonResponse;
-use RuntimeException;
 
 /**
- * Class LpaSearchHandler
+ * Class LpasResourceHandler
+ *
  * @package App\Handler
  * @codeCoverageIgnore
  */
 class LpasResourceHandler implements RequestHandlerInterface
 {
-    /**
-     * @var LpaService
-     */
-    private $lpaService;
+    private LpaService $lpaService;
+    private RemoveLpa $removeLpa;
 
-    /**
-     * @var DeleteLpa
-     */
-    private $deleteLpa;
-
-    public function __construct(LpaService $lpaService, DeleteLpa $deleteLpa)
+    public function __construct(LpaService $lpaService, RemoveLpa $removeLpa)
     {
         $this->lpaService = $lpaService;
-        $this->deleteLpa = $deleteLpa;
+        $this->removeLpa = $removeLpa;
     }
 
     /**
@@ -81,19 +75,23 @@ class LpasResourceHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Exception
      */
     public function handleDelete(ServerRequestInterface $request): ResponseInterface
     {
         $actorLpaToken = $request->getAttribute('user-lpa-actor-token');
         $userToken =  $request->getAttribute('actor-id');
 
-        if (!isset($actorLpaToken)) {
-            throw new BadRequestException('User actor LPA token must be provided for lpa removal');
+        if (is_null($actorLpaToken)) {
+            throw new BadRequestException('user-lpa-actor-token missing from lpa removal request');
         }
 
-        $lpaRemoveResponse = ($this->deleteLpa)($userToken, $actorLpaToken);
+        if (is_null($userToken)) {
+            throw new BadRequestException('actor-id missing from lpa removal request');
+        }
 
-        return new JsonResponse($lpaRemoveResponse);
+        $removedLpaData = ($this->removeLpa)($userToken, $actorLpaToken);
+
+        return new JsonResponse(['lpa' => $removedLpaData]);
     }
 }

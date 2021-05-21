@@ -21,6 +21,8 @@ resource "aws_ecs_service" "viewer" {
     container_port   = 80
   }
 
+  wait_for_steady_state = true
+
   depends_on = [aws_lb.viewer]
 }
 

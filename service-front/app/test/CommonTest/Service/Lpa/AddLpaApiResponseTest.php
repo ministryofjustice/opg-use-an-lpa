@@ -7,6 +7,12 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use ArrayObject;
 
+/**
+ * Class AddLpaApiResponseTest
+ *
+ * @package CommonTest\Service\Lpa
+ * @coversDefaultClass \Common\Service\Lpa\AddLpaApiResponse
+ */
 class AddLpaApiResponseTest extends TestCase
 {
     /**
@@ -29,15 +35,13 @@ class AddLpaApiResponseTest extends TestCase
     public function it_throws_an_exception_with_an_unrecognised_response_type(): void
     {
         $this->expectException(RuntimeException::class);
-        $sut = new AddLpaApiResponse('BAD TYPE', new ArrayObject());
+        new AddLpaApiResponse('BAD TYPE', new ArrayObject());
     }
 
     /**
      * @test
      * @covers ::__construct
      * @covers ::validateResponseType
-     * @covers ::getResponse
-     * @covers ::getData
      */
     public function it_makes_available_the_type_and_passed_in_additional_data(): void
     {

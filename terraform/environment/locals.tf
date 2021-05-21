@@ -1,4 +1,5 @@
 variable "pagerduty_token" {
+  type = string
 }
 
 variable "account_mapping" {
@@ -59,6 +60,7 @@ variable "accounts" {
       sirius_account_id          = string
       use_legacy_codes_service   = bool
       use_older_lpa_journey      = bool
+      delete_lpa_feature         = bool
     })
   )
 }
