@@ -236,9 +236,10 @@ class OlderLpaService
                 'LPA not eligible as an activation key already exists',
                 [
                     'activation_key_created' => $hasActivationCode->format('Y-m-d'),
-                    'donor_name' => $lpaMatchResponse->getData()['donor']['firstname'] . " " .
-                                   $lpaMatchResponse->getData()['donor']['middlenames'] . " " .
-                                   $lpaMatchResponse->getData()['donor']['surname'],
+                    'donor_name' => 
+                        $lpaMatchResponse->getData()['donor']['firstname'] . " "
+                        . $lpaMatchResponse->getData()['donor']['middlenames'] . " "
+                        . $lpaMatchResponse->getData()['donor']['surname'],
                     'lpa_type'   => $lpaMatchResponse->getData()['caseSubtype']
                 ]
             );
