@@ -234,11 +234,11 @@
                         <dt class="govuk-summary-list__key">{% trans %}<abbr title="lasting power of attorney">LPA</abbr> reference number{% endtrans %}</dt>
                         <dd class="govuk-summary-list__value">{{ lpa.uId }}</dd>
                     </div>
-
                 </dl>
+                <p class="govuk-body">
+                    <a class="govuk-link" href="{{ path('lpa.change-lpa-details') }}">{% trans %}Seen something incorrect in the LPA details?{% endtrans %}</a>
+                </p>
             </div>
-
-
         </div>
 
         {{ include('@partials/section-break.html.twig') }}
