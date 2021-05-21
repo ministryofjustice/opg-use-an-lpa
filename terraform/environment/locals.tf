@@ -1,4 +1,5 @@
 variable "pagerduty_token" {
+  type = string
 }
 
 variable "account_mapping" {
