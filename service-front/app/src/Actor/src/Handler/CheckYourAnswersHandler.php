@@ -140,11 +140,17 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ['user'  => $this->user]
                     ));
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
-                    return $this->checkActivationKeyCreatedDate(
-                        $result->getData()['activation_key_created'],
-                        $result->getData()['donor_name'],
-                        $result->getData()['lpa_type']
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::already-have-activation-key',
+                            [
+                                'user' => $this->user,
+                                'donorName' => $result->getData()['donor_name'],
+                                'caseType' => $result->getData()['lpa_type']
+                            ]
+                        )
                     );
+
                 case OlderLpaApiResponse::DOES_NOT_MATCH:
                 case OlderLpaApiResponse::NOT_FOUND:
 
@@ -172,24 +178,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         )
                     );
             }
-        }
-    }
-
-    private function checkActivationKeyCreatedDate(string $createdDate, string $donorName, string $lpaType): ResponseInterface
-    {
-        $createdDate = DateTime::createFromFormat('Y-m-d', $createdDate);
-
-        if (!empty((int) $createdDate)) {
-            return new HtmlResponse(
-                $this->renderer->render(
-                    'actor::already-have-activation-key',
-                    [
-                        'user' => $this->user,
-                        'donorName' => $donorName,
-                        'caseType' => $lpaType
-                    ]
-                )
-            );
         }
     }
 
