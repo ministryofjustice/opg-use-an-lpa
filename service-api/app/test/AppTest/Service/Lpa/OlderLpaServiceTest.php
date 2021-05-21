@@ -560,7 +560,10 @@ class OlderLpaServiceTest extends TestCase
             $this->assertEquals(
                 [
                     'activation_key_created' => $createdDate,
-                    'donor_name' => $lpa->getData()['donor']['firstname'] . " " . $lpa->getData()['donor']['middlenames'] . " " . $lpa->getData()['donor']['surname'],
+                    'donor_name' => 
+                        $lpa->getData()['donor']['firstname'] . " " 
+                        . $lpa->getData()['donor']['middlenames'] . " " 
+                        . $lpa->getData()['donor']['surname'],
                     'lpa_type' => $lpa->getData()['caseSubtype']
                 ],
                 $ex->getAdditionalData()
