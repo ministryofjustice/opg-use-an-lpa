@@ -389,4 +389,9 @@
       <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/service-front/app/vendor/autoload.php" phpunit_phar_path="" />
     </phpunit_settings>
   </component>
+  <component name="Psalm">
+    <Psalm_settings>
+      <PsalmConfiguration tool_path="$PROJECT_DIR$/service-front/app/vendor/bin/psalm" />
+    </Psalm_settings>
+  </component>
 </project>
