@@ -1643,7 +1643,10 @@ class LpaContext implements Context
                                 'details' => 'LPA not eligible as an activation key already exists',
                                 'data' => [
                                     'activation_key_created' => $this->codeCreatedDate,
-                                    'donor_name' => ($this->lpaData['lpa'])->donor->firstname . " " . ($this->lpaData['lpa'])->donor->middlenames . " " . ($this->lpaData['lpa'])->donor->surname,
+                                    'donor_name' => 
+                                        ($this->lpaData['lpa'])->donor->firstname . " ""
+                                        . ($this->lpaData['lpa'])->donor->middlenames . " " 
+                                        . ($this->lpaData['lpa'])->donor->surname,
                                     'lpa_type'   => $this->lpaData['lpa']->caseSubtype
                                 ],
                             ]
