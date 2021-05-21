@@ -187,12 +187,18 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\CheckYourAnswersHandler::class
         ], ['GET', 'POST'], 'lpa.check-answers');
-
     } else {
         $app->route('/lpa/add-details', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\LpaAddHandler::class
         ], ['GET', 'POST'], 'lpa.add');
+    }
+
+    if (($container->get(Common\Service\Features\FeatureEnabled::class))('delete_lpa_feature')) {
+        $app->route('/lpa/remove-lpa', [
+            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Actor\Handler\RemoveLpaHandler::class
+        ], ['GET', 'POST'], 'lpa.remove-lpa');
     }
 };
 

@@ -18,6 +18,8 @@ resource "aws_ecs_service" "pdf" {
   service_registries {
     registry_arn = aws_service_discovery_service.pdf.arn
   }
+
+  wait_for_steady_state = true
 }
 
 //-----------------------------------------------

@@ -120,6 +120,7 @@ trait BaseAcceptanceContextTrait
             'DELETE',
             $url,
             [],
+            [],
             $this->createServerParams($headers)
         );
     }

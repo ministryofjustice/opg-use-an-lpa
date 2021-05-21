@@ -363,6 +363,14 @@ class CommonContext implements Context
     }
 
     /**
+     * @Then /^I should be shown an error page$/
+     */
+    public function iShouldBeShownAnErrorPage()
+    {
+        $this->ui->assertPageContainsText('Sorry, there is a problem with the service');
+    }
+
+    /**
      * @When /^I should be shown an error page with details$/
      */
     public function iShouldBeShownAnErrorPageWithDetails()

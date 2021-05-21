@@ -33,6 +33,84 @@ class LpaContext implements Context
     use ActorContext;
     use BaseUiContextTrait;
 
+    /**
+     * @Then /^I am taken to the remove an LPA confirmation page$/
+     */
+    public function iAmTakenToTheRemoveAnLPAConfirmationPage()
+    {
+        $this->ui->assertPageAddress('/lpa/remove-lpa');
+        $this->ui->assertPageContainsText('Are you sure you want to remove this LPA?');
+    }
+
+    /**
+     * @Given /^I cannot see my LPA on the dashboard$/
+     */
+    public function iCannotSeeMyLPAOnTheDashboard()
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageNotContainsText('Ian Deputy Deputy');
+    }
+
+    /**
+     * @Given /^I can see a flash message confirming that my LPA has been removed$/
+     */
+    public function iCanSeeAFlashMessageConfirmingThatMyLPAHasBeenRemoved()
+    {
+        $this->ui->assertPageContainsText("You've removed Ian Deputy's health and welfare LPA");
+    }
+
+    /**
+     * @When /^I request to remove an LPA from my account without the lpa actor token$/
+     */
+    public function iRequestToRemoveAnLPAFromMyAccountWithoutTheLpaActorToken()
+    {
+        $this->ui->visit('/lpa/remove-lpa');
+    }
+
+    /**
+     * @Given /^My active codes are cancelled$/
+     */
+    public function myActiveCodesAreCancelled()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^The LPA is removed/
+     */
+    public function theLPAIsRemoved()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I confirm that I want to remove the LPA from my account$/
+     */
+    public function iConfirmThatIWantToRemoveTheLPAFromMyAccount()
+    {
+        // API call for removing an LPA from a users account
+        $this->apiFixtures->delete('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(['lpa' => $this->lpa])
+                )
+            );
+
+        //API call for getting all the users added LPAs on the dashboard
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        $this->ui->pressButton('Yes, remove LPA');
+    }
+
 
     /**
      * @Then /^I receive an email confirming activation key request$/
@@ -1972,6 +2050,15 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I request to remove an LPA from my account$/
+     */
+    public function iRequestToRemoveAnLPAFromMyAccount()
+    {
+        $this->ui->clickLink('Remove LPA');
+        $this->ui->assertPageAddress('/lpa/remove-lpa');
+    }
+
+    /**
      * @When /^I request to view an LPA which status is "([^"]*)"$/
      */
     public function iRequestToViewAnLPAWhichStatusIs($status)
@@ -1980,7 +2067,6 @@ class LpaContext implements Context
         $this->lpa->status = $status;
 
         if ($status === 'Revoked') {
-           // $this->lpa->status = "Revoked";
 
             // API call for get LpaById
             $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
@@ -2520,4 +2606,3 @@ class LpaContext implements Context
             );
     }
 }
-
