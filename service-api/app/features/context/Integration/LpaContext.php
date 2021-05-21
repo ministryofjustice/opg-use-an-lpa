@@ -1325,7 +1325,7 @@ class LpaContext extends BaseIntegrationContext
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA not eligible as an activation key already exists', $ex->getMessage());
-            assertEquals(['activation_key_created' => $createdDate,'donor_name' => $this->userFirstname ." " . $this->userSurname ,'lpa_type' => "hw"], $ex->getAdditionalData());
+            assertEquals(['activation_key_created' => $createdDate, 'donor_name' => $this->userFirstname . " " . $this->userSurname , 'lpa_type' => "hw"], $ex->getAdditionalData());
             return;
         }
 
