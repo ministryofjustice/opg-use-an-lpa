@@ -1,11 +1,11 @@
 data "aws_cognito_user_pools" "use_a_lasting_power_of_attorney_admin" {
-  # provider = aws.identity
-  name = "use-a-lasting-power-of-attorney-admin"
+  provider = aws.identity
+  name     = "use-a-lasting-power-of-attorney-admin"
 }
 
 # # I think I should create a client per environment in order to create the correct URLs
 resource "aws_cognito_user_pool_client" "use_a_lasting_power_of_attorney_admin" {
-  # provider                             = aws.identity
+  provider                             = aws.identity
   name                                 = "${local.environment}-admin-alb-auth"
   user_pool_id                         = tolist(data.aws_cognito_user_pools.use_a_lasting_power_of_attorney_admin.ids)[0]
   allowed_oauth_flows                  = ["code"]

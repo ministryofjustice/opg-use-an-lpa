@@ -46,6 +46,11 @@ resource "aws_lb_listener" "admin_loadbalancer_http_redirect" {
   }
 }
 
+data "aws_ssm_parameter" "use_a_lasting_power_of_attorney_admin_domain" {
+  provider = aws.identity
+  name     = "use_a_lasting_power_of_attorney_admin_domain"
+}
+
 resource "aws_lb_listener" "admin_loadbalancer" {
   count             = local.account.build_admin == true ? 1 : 0
   load_balancer_arn = aws_lb.admin[0].arn
@@ -60,7 +65,8 @@ resource "aws_lb_listener" "admin_loadbalancer" {
     authenticate_cognito {
       user_pool_arn       = tolist(data.aws_cognito_user_pools.use_a_lasting_power_of_attorney_admin.arns)[0]
       user_pool_client_id = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin.id
-      user_pool_domain    = aws_cognito_user_pool_domain.use_a_lasting_power_of_attorney_admin.domain
+      user_pool_domain    = data.aws_ssm_parameter.use_a_lasting_power_of_attorney_admin_domain.value
+      # user_pool_domain    = aws_cognito_user_pool_domain.use_a_lasting_power_of_attorney_admin.domain
     }
   }
 
