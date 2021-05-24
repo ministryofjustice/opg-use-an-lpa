@@ -1,8 +1,10 @@
 {% if flash.getFlash(constant(flash_key)) %}
-    <div class="govuk-grid-row lpa-flash__box">
-        <svg class="lpa-flash__icon" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg">
-            <path d="M25,6.2L8.7,23.2L0,14.1l4-4.2l4.7,4.9L21,2L25,6.2z"></path>
-        </svg>
-        <p class="lpa-flash__message govuk-body">{{ flash.getFlash(constant(flash_key)) }}</p>
+    <div class="govuk-grid-row lpa-flash__box govuk-!-margin-top-2">
+        <div class="lpa-flash__container">
+            <svg class="lpa-flash__icon" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg">
+                <path d="M25,6.2L8.7,23.2L0,14.1l4-4.2l4.7,4.9L21,2L25,6.2z"></path>
+            </svg>
+            <p class="lpa-flash__message govuk-body">{{ flash.getFlash(constant(flash_key)) }}</p>
+        </div>
     </div>
 {% endif %}
