@@ -29,3 +29,8 @@ resource "aws_cognito_user_pool_client" "use_a_lasting_power_of_attorney_admin" 
     "https://${aws_route53_record.admin_use_my_lpa[0].fqdn}/"
   ]
 }
+
+data "aws_ssm_parameter" "use_a_lasting_power_of_attorney_admin_domain" {
+  provider = aws.identity
+  name     = "use_a_lasting_power_of_attorney_admin_domain"
+}

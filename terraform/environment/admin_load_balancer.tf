@@ -46,11 +46,6 @@ resource "aws_lb_listener" "admin_loadbalancer_http_redirect" {
   }
 }
 
-data "aws_ssm_parameter" "use_a_lasting_power_of_attorney_admin_domain" {
-  provider = aws.identity
-  name     = "use_a_lasting_power_of_attorney_admin_domain"
-}
-
 resource "aws_lb_listener" "admin_loadbalancer" {
   count             = local.account.build_admin == true ? 1 : 0
   load_balancer_arn = aws_lb.admin[0].arn
