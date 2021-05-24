@@ -562,13 +562,6 @@ orbs:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
         resource_class: small
-      terraform_0_14_11:
-        docker:
-          - image: hashicorp/terraform:0.14.11
-            auth:
-              username: $DOCKER_USER
-              password: $DOCKER_ACCESS_TOKEN
-        resource_class: small
       terraform:
         docker:
           - image: hashicorp/terraform:0.15.4
@@ -1088,7 +1081,7 @@ orbs:
         #
         # Lint the Terraform
         #
-        executor: terraform_0_14_11
+        executor: terraform
         parameters:
           workspace:
             description: Terraform workspace name
@@ -1120,7 +1113,7 @@ orbs:
         # Plan the shared terraform configuration. This:
         #   - Updates the shared infrastructure;
         #
-        executor: terraform_0_14_11
+        executor: terraform
         parameters:
           workspace:
             description: Terraform workspace name
@@ -1145,7 +1138,7 @@ orbs:
         # Apply the shared terraform configuration. This:
         #   - Updates the shared infrastructure;
         #
-        executor: terraform_0_14_11
+        executor: terraform
         parameters:
           workspace:
             description: Terraform workspace name
