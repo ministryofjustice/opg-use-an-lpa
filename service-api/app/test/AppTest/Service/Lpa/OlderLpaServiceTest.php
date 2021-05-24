@@ -556,7 +556,22 @@ class OlderLpaServiceTest extends TestCase
         } catch (BadRequestException $ex) {
             $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             $this->assertEquals('LPA not eligible as an activation key already exists', $ex->getMessage());
-            $this->assertEquals(['activation_key_created' => $createdDate], $ex->getAdditionalData());
+
+            $this->assertEquals(
+                [
+                    'activation_key_created' => $createdDate,
+                    'donor_name' =>
+                        preg_replace(
+                            '/\s+/',
+                            ' ',
+                            $lpa->getData()['donor']['firstname'] . ' '
+                            . $lpa->getData()['donor']['middlenames'] . ' '
+                            . $lpa->getData()['donor']['surname']
+                        ),
+                    'lpa_type' => $lpa->getData()['caseSubtype'],
+                ],
+                $ex->getAdditionalData()
+            );
             return;
         }
 
@@ -653,6 +668,7 @@ class OlderLpaServiceTest extends TestCase
                 'uId' => '700000004321',
                 'registrationDate' => '2021-01-01',
                 'status' => 'Registered',
+                'caseSubtype' => 'pfa',
                 'donor' => [
                     'uId' => '700000001111',
                     'dob' => '1975-10-05',

@@ -39,6 +39,7 @@ use JSHayes\FakeRequests\MockHandler;
  * @property string accessCode
  * @property string userPostCode
  * @property string userFirstname
+ * @property string userMiddlenames
  * @property string userSurname
  * @property string codeCreatedDate
  */
@@ -264,7 +265,6 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^I am told that I have an activation key for this LPA and where to find it$/
-     * @Then /^I will be told that I have already requested this and the date I should receive the letter by$/
      */
     public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
     {
@@ -279,7 +279,15 @@ class LpaContext extends BaseIntegrationContext
                             'title' => 'Bad Request',
                             'details' => 'LPA not eligible as an activation key already exists',
                             'data' => [
-                                'activation_key_created' => $this->codeCreatedDate
+                                'activation_key_created' => $this->codeCreatedDate,
+                                'donor_name' => preg_replace(
+                                    '/\s+/',
+                                    ' ',
+                                    $this->userFirstname . ' '
+                                    . $this->userMiddlenames . ' '
+                                    . $this->userSurname
+                                ),
+                                'lpa_type' => ' '
                             ],
                         ]
                     )
@@ -299,7 +307,17 @@ class LpaContext extends BaseIntegrationContext
 
         $response = new OlderLpaApiResponse(
             OlderLpaApiResponse::HAS_ACTIVATION_KEY,
-            ['activation_key_created' => $this->codeCreatedDate]
+            [
+                'activation_key_created' => $this->codeCreatedDate,
+                'donor_name' => preg_replace(
+                    '/\s+/',
+                    ' ',
+                    $this->userFirstname . ' '
+                    . $this->userMiddlenames . ' '
+                    . $this->userSurname
+                ),
+                'lpa_type' => ' ',
+            ]
         );
 
         assertEquals($response, $result);
@@ -869,6 +887,7 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->userPostCode = 'string';
         $this->userFirstname = 'Ian Deputy';
+        $this->userMiddlenames  = '';
         $this->userSurname = 'Deputy';
 
         // sets up the normal properties needed for an lpa
@@ -1332,14 +1351,6 @@ class LpaContext extends BaseIntegrationContext
         );
 
         assertEquals(AddLpaApiResponse::ADD_LPA_SUCCESS, $response->getResponse());
-    }
-
-    /**
-     * @Given /^I requested an activation key within the last 14 days$/
-     */
-    public function iRequestedAnActivationKeyWithinTheLast14Days()
-    {
-        $this->codeCreatedDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
     }
 
     protected function prepareContext(): void

@@ -1,14 +1,14 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-05-19T10:40:49+00:00\n"
+"POT-Creation-Date: 2021-05-20T16:00:41+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
 msgid "Your new access code"
 msgstr ""
 
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:22
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:48
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:23
 #: src/Actor/templates/actor/check-access-codes.html.twig:15
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
@@ -18,6 +18,7 @@ msgstr ""
 msgid "Back to your LPAs"
 msgstr ""
 
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:33
 #: src/Actor/templates/actor/check-access-codes.html.twig:26
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-already-added.html.twig:39
@@ -30,6 +31,7 @@ msgstr ""
 msgid "Property and finance"
 msgstr ""
 
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:35
 #: src/Actor/templates/actor/check-access-codes.html.twig:28
 #: src/Actor/templates/actor/check-lpa.html.twig:31
 #: src/Actor/templates/actor/lpa-already-added.html.twig:41
@@ -1606,7 +1608,6 @@ msgstr ""
 msgid "Any lasting power of attorney (LPA) you add to your account will appear on this page."
 msgstr ""
 
-#: src/Actor/templates/actor/already-have-activation-key.html.twig:23
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:48
 msgid "Add another LPA"
 msgstr ""
@@ -1762,6 +1763,7 @@ msgstr ""
 msgid "Type of LPA"
 msgstr ""
 
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:21
 #: src/Actor/templates/actor/check-lpa.html.twig:37
 #: src/Actor/templates/actor/lpa-already-added.html.twig:27
 msgid "Donor name"
@@ -1917,15 +1919,15 @@ msgstr[0] ""
 msgid "No organisations have access"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:47
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:46
 msgid "You no longer have access to this <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:48
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:47
 msgid "Why is this?"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:55
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:54
 msgid "Read more"
 msgstr ""
 
@@ -1937,35 +1939,35 @@ msgstr ""
 msgid "Created by"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:32
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:33
 msgid "LPA viewed"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:44
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:45
 msgid "Viewed"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:54
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:55
 msgid "Not viewed"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:61
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:62
 msgid "Expires"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:64
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:65
 msgid "Expired"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:80
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:81
 msgid "Status"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:82
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:83
 msgid "EXPIRED"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:75
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:76
 msgid "CANCELLED"
 msgstr ""
 
@@ -2447,7 +2449,6 @@ msgstr ""
 msgid "Your LPAs"
 msgstr ""
 
-#: src/Actor/templates/actor/already-have-activation-key.html.twig:25
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:55
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:25
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
@@ -3596,7 +3597,7 @@ msgstr ""
 msgid "Cannot send an activation key"
 msgstr ""
 
-#: src/Actor/templates/actor/already-have-activation-key.html.twig:17
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:3
 msgid "You have an activation key for this LPA"
 msgstr ""
 
@@ -3702,7 +3703,7 @@ msgstr ""
 msgid "Request another activation key"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:54
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:53
 msgid "<strong>Important: </strong>This LPA has instructions or preferences."
 msgstr ""
 
@@ -3726,7 +3727,7 @@ msgstr ""
 msgid "You can only use this service if your LPA was registered on or after 1 September 2019."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:48
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:49
 msgid "%organisation% on %date%"
 msgstr ""
 
@@ -3896,7 +3897,7 @@ msgstr ""
 msgid "Yes, remove LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:40
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:39
 msgid "Remove LPA"
 msgstr ""
 
@@ -3918,4 +3919,36 @@ msgstr ""
 #: src/Actor/src/Handler/RemoveLpaHandler.php:126
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:16
+msgid "We've already sent you an activation key for this LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:29
+msgid "LPA type"
+msgstr ""
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:41
+msgid "If you’ve not asked for an activation key before"
+msgstr ""
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:42
+msgid "Your activation key is on the letter that told you the LPA had been registered or in an email we sent you."
+msgstr ""
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:43
+msgid "If you’ve already asked for an activation key through this service"
+msgstr ""
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:44
+msgid "We have posted an activation key to you - it can take up to 10 working days to arrive."
+msgstr ""
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:45
+msgid "If you've lost the letter, you can ask for a new key. This will cancel the key we sent to you before."
+msgstr ""
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:46
+msgid "If the letter did not arrive, <a class=\"govuk-link\" href=\"%link%\">check we have your correct address</a> before you ask for a new key."
 msgstr ""
