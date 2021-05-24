@@ -279,7 +279,13 @@ class LpaContext extends BaseIntegrationContext
                             'details' => 'LPA not eligible as an activation key already exists',
                             'data' => [
                                 'activation_key_created' => $this->codeCreatedDate,
-                                'donor_name' => ' ',
+                                'donor_name' => preg_replace(
+                                    '/\s+/',
+                                    ' ',
+                                    $this->userFirstname . ' '
+                                    . $this->userMiddlenames . ' '
+                                    . $this->userSurname
+                                ),
                                 'lpa_type' => ' '
                             ],
                         ]
@@ -874,6 +880,7 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->userPostCode = 'string';
         $this->userFirstname = 'Ian Deputy';
+        $this->userMiddlenames  = '';
         $this->userSurname = 'Deputy';
 
         // sets up the normal properties needed for an lpa

@@ -169,16 +169,15 @@ class OlderLpaService
 
         $createdDate = DateTime::createFromFormat('Y-m-d', $response->getData()['Created']);
 
-        if (!empty((int) $createdDate)) {
-            $this->logger->notice(
-                'Activation key request denied for actor {actorId} on LPA {lpaId}' .
-                'as they have an active activation key',
-                [
-                    'actorId' => $actorId,
-                    'lpaId' => $lpaId
-                ]
-            );
-        }
+        $this->logger->notice(
+            'Activation key request denied for actor {actorId} on LPA {lpaId}' .
+            'as they have an active activation key',
+            [
+                'actorId' => $actorId,
+                'lpaId' => $lpaId,
+            ]
+        );
+
         return $createdDate;
     }
 
@@ -236,11 +235,14 @@ class OlderLpaService
                 'LPA not eligible as an activation key already exists',
                 [
                     'activation_key_created' => $hasActivationCode->format('Y-m-d'),
-                    'donor_name' => 
-                        $lpaMatchResponse->getData()['donor']['firstname'] . " "
-                        . $lpaMatchResponse->getData()['donor']['middlenames'] . " "
-                        . $lpaMatchResponse->getData()['donor']['surname'],
-                    'lpa_type'   => $lpaMatchResponse->getData()['caseSubtype']
+                    'donor_name' => preg_replace(
+                        '/\s+/',
+                        ' ',
+                        $lpaMatchResponse->getData()['donor']['firstname'] . ' '
+                        . $lpaMatchResponse->getData()['donor']['middlenames'] . ' '
+                        . $lpaMatchResponse->getData()['donor']['surname']
+                    ),
+                    'lpa_type' => $lpaMatchResponse->getData()['caseSubtype'],
                 ]
             );
         }
