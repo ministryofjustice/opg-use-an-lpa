@@ -39,6 +39,7 @@ use JSHayes\FakeRequests\MockHandler;
  * @property string accessCode
  * @property string userPostCode
  * @property string userFirstname
+ * @property string userMiddlenames
  * @property string userSurname
  * @property string codeCreatedDate
  */
@@ -308,7 +309,13 @@ class LpaContext extends BaseIntegrationContext
             OlderLpaApiResponse::HAS_ACTIVATION_KEY,
             [
                 'activation_key_created' => $this->codeCreatedDate,
-                'donor_name' => ' ',
+                'donor_name' => preg_replace(
+                    '/\s+/',
+                    ' ',
+                    $this->userFirstname . ' '
+                    . $this->userMiddlenames . ' '
+                    . $this->userSurname
+                ),
                 'lpa_type' => ' ',
             ]
         );
