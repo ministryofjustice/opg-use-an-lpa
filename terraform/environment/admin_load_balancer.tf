@@ -58,10 +58,11 @@ resource "aws_lb_listener" "admin_loadbalancer" {
     type = "authenticate-cognito"
 
     authenticate_cognito {
-      user_pool_arn       = tolist(data.aws_cognito_user_pools.use_a_lasting_power_of_attorney_admin.arns)[0]
+      user_pool_arn = aws_cognito_user_pool.use_a_lasting_power_of_attorney_admin.arn
+      # user_pool_arn       = tolist(data.aws_cognito_user_pools.use_a_lasting_power_of_attorney_admin.arns)[0]
       user_pool_client_id = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin.id
-      user_pool_domain    = data.aws_ssm_parameter.use_a_lasting_power_of_attorney_admin_domain.value
-      # user_pool_domain    = aws_cognito_user_pool_domain.use_a_lasting_power_of_attorney_admin.domain
+      user_pool_domain    = aws_cognito_user_pool_domain.use_a_lasting_power_of_attorney_admin.domain
+      # user_pool_domain    = data.aws_ssm_parameter.use_a_lasting_power_of_attorney_admin_domain.value
     }
   }
 
