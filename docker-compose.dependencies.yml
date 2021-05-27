@@ -40,7 +40,6 @@ services:
 
   # ---------------------------
   # Cache service
-
   redis:
     image: redis:5
 
