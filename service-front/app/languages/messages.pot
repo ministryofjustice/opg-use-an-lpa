@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-05-20T16:00:41+00:00\n"
+"POT-Creation-Date: 2021-05-27T15:08:57+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1975,12 +1975,6 @@ msgstr ""
 msgid "beta"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/new-use-service.html.twig:7
-msgid ""
-"This is a new service – your\n"
-"            <a class=\"govuk-link\" href=\"https://www.surveymonkey.co.uk/r/Use-LPA\" target=\"_blank\">feedback</a> will help us to improve it."
-msgstr ""
-
 #: src/Actor/templates/actor/partials/cancel-code-option.html.twig:11
 msgid "Cancel organisation's access"
 msgstr ""
@@ -2254,6 +2248,7 @@ msgid ""
 "            or head back to <a href=\"%link%\" class=\"govuk-link\">Home</a>."
 msgstr ""
 
+#: src/Actor/templates/actor/partials/new-use-service.html.twig:7
 #: src/Viewer/templates/viewer/new-view-service.html.twig:7
 msgid "This is a new service – your <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">feedback</a> will help us to improve it."
 msgstr ""

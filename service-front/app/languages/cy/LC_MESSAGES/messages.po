@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-05-20T16:00:41+00:00\n"
+"POT-Creation-Date: 2021-05-27T15:08:57+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 2.4\n"
+"X-Generator: Poedit 2.4.3\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 
@@ -2693,16 +2693,6 @@ msgstr "DILËWYD"
 msgid "beta"
 msgstr "beta"
 
-#: src/Actor/templates/actor/partials/new-use-service.html.twig:7
-msgid ""
-"This is a new service – your\n"
-"            <a class=\"govuk-link\" href=\"https://www.surveymonkey.co.uk/r/"
-"Use-LPA\" target=\"_blank\">feedback</a> will help us to improve it."
-msgstr ""
-"Mae hwn yn wasanaeth newydd – bydd eich \n"
-"            <a class=\"govuk-link\" href=\"https://www.surveymonkey.co.uk/r/"
-"Use-LPA\" target=\"_blank\">adborth</a> yn ein helpu i’w wella."
-
 #: src/Actor/templates/actor/partials/cancel-code-option.html.twig:11
 msgid "Cancel organisation's access"
 msgstr "Canslo mynediad sefydliad"
@@ -3094,6 +3084,7 @@ msgstr ""
 "                neu ewch yn ôl i’r <a href=\"%link%\" class=\"govuk-link"
 "\">dudalen gartref</a>."
 
+#: src/Actor/templates/actor/partials/new-use-service.html.twig:7
 #: src/Viewer/templates/viewer/new-view-service.html.twig:7
 msgid ""
 "This is a new service – your <a class=\"govuk-link\" href=\"{link}\" target="
