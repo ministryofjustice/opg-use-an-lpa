@@ -1,7 +1,9 @@
-FROM node:14-alpine
+FROM node:15-alpine
 
 RUN apk add --no-cache \
       chromium \
+      python \
+      make g++ \
       nss \
       freetype \
       freetype-dev \
