@@ -101,8 +101,10 @@ class OlderLpaServiceTest extends TestCase
     /** @test */
     public function returns_code_created_date_if_code_exists_for_actor()
     {
-        $actorUid = '700000055554';
-        $lpaId = '700000012345';
+        $actorLpaDetails = [
+            'lpa-id' => '700000012345',
+            'actor-id' => '700000055554',
+        ];
         $createdDate = (new DateTime('now'))->modify('-15 days')->format('Y-m-d');
 
         $lpaCodesResponse = new ActorCode(
@@ -113,20 +115,22 @@ class OlderLpaServiceTest extends TestCase
         );
 
         $this->actorCodesProphecy
-            ->checkActorHasCode($lpaId, $actorUid)
+            ->checkActorHasCode($actorLpaDetails['lpa-id'], $actorLpaDetails['actor-id'])
             ->willReturn($lpaCodesResponse);
 
         $service = $this->getOlderLpaService();
 
-        $codeCreated = $service->hasActivationCode($lpaId, $actorUid);
+        $codeCreated = $service->hasActivationCode($actorLpaDetails);
         $this->assertEquals(DateTime::createFromFormat('Y-m-d', $createdDate), $codeCreated);
     }
 
     /** @test */
     public function returns_null_if_a_code_does_not_exist_for_an_actor()
     {
-        $actorUid = '700000055554';
-        $lpaId = '700000012345';
+        $actorLpaDetails = [
+            'lpa-id' => '700000012345',
+            'actor-id' => '700000055554',
+        ];
 
         $lpaCodesResponse = new ActorCode(
             [
@@ -136,12 +140,12 @@ class OlderLpaServiceTest extends TestCase
         );
 
         $this->actorCodesProphecy
-            ->checkActorHasCode($lpaId, $actorUid)
+            ->checkActorHasCode($actorLpaDetails['lpa-id'], $actorLpaDetails['actor-id'])
             ->willReturn($lpaCodesResponse);
 
         $service = $this->getOlderLpaService();
 
-        $codeExists = $service->hasActivationCode($lpaId, $actorUid);
+        $codeExists = $service->hasActivationCode($actorLpaDetails);
         $this->assertNull($codeExists);
     }
 
@@ -518,12 +522,14 @@ class OlderLpaServiceTest extends TestCase
      */
     public function throws_exception_with_date_if_actor_has_active_activation_key()
     {
-        $lpaId = '700000004321';
-        $actorId = '700000004444';
+        $actorLpaDetails = [
+            'lpa-id' => '700000004321',
+            'actor-id' => '700000004444',
+        ];
         $createdDate = (new DateTime('-2 weeks'))->format('Y-m-d');
 
         $dataToMatch = [
-            'reference_number' => $lpaId,
+            'reference_number' =>  $actorLpaDetails['lpa-id'],
             'dob'              => '1980-03-01',
             'first_names'      => 'Test Tester',
             'last_name'        => 'Testing',
@@ -535,7 +541,7 @@ class OlderLpaServiceTest extends TestCase
         $lpa = $this->older_lpa_get_by_uid_response();
 
         $this->lpaServiceProphecy
-            ->getByUid($lpaId)
+            ->getByUid($actorLpaDetails['lpa-id'])
             ->willReturn($lpa);
 
         $this->validateOlderLpaRequirements
@@ -543,7 +549,7 @@ class OlderLpaServiceTest extends TestCase
             ->willReturn(true);
 
         $this->actorCodesProphecy
-            ->checkActorHasCode($lpaId, $actorId)
+            ->checkActorHasCode($actorLpaDetails['lpa-id'], $actorLpaDetails['actor-id'])
             ->willReturn(new ActorCode(
                 [
                     'Created' => $createdDate
@@ -559,15 +565,11 @@ class OlderLpaServiceTest extends TestCase
 
             $this->assertEquals(
                 [
-                    'activation_key_created' => $createdDate,
-                    'donor_name' =>
-                        preg_replace(
-                            '/\s+/',
-                            ' ',
-                            $lpa->getData()['donor']['firstname'] . ' '
-                            . $lpa->getData()['donor']['middlenames'] . ' '
-                            . $lpa->getData()['donor']['surname']
-                        ),
+                    'donor_name' => [
+                            $lpa->getData()['donor']['firstname'],
+                            $lpa->getData()['donor']['middlenames'],
+                            $lpa->getData()['donor']['surname']
+                      ],
                     'lpa_type' => $lpa->getData()['caseSubtype'],
                 ],
                 $ex->getAdditionalData()
