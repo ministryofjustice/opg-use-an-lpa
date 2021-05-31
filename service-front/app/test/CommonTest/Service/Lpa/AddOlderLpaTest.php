@@ -174,7 +174,7 @@ class AddOlderLpaTest extends TestCase
                 ]
             )->willThrow(
                 new ApiException(
-                    'LPA not eligible as an activation key already exists',
+                    'LPA has an activation key already',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
                     null,
                     [

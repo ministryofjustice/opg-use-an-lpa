@@ -155,13 +155,12 @@ class OlderLpaService
     /**
      * Checks if an actor already has an active activation key
      *
-     * @param string $lpaId
-     * @param string $actorId
+     * @param array $actorlpaDetails
      * @return DateTime|null
      */
-    public function hasActivationCode(string $lpaId, string $actorId): ?DateTime
+    public function hasActivationCode(array $actorLpaDetails ): ?DateTime
     {
-        $response = $this->actorCodes->checkActorHasCode($lpaId, $actorId);
+        $response = $this->actorCodes->checkActorHasCode($actorLpaDetails['lpa-id'], $actorLpaDetails['actor-id']);
 
         if (is_null($response->getData()['Created'])) {
             return null;
@@ -170,11 +169,10 @@ class OlderLpaService
         $createdDate = DateTime::createFromFormat('Y-m-d', $response->getData()['Created']);
 
         $this->logger->notice(
-            'Activation key request denied for actor {actorId} on LPA {lpaId}' .
-            'as they have an active activation key',
+            'Activation key exits for actor {actorId} on LPA {lpaId}',
             [
-                'actorId' => $actorId,
-                'lpaId' => $lpaId,
+                'actorId' => $actorLpaDetails['actor-id'],
+                'lpaId' => $actorLpaDetails['lpa-id'],
             ]
         );
 
@@ -203,7 +201,6 @@ class OlderLpaService
                     'uId' => $dataToMatch['reference_number']
                 ]
             );
-
             throw new NotFoundException('LPA not found');
         }
 
@@ -224,28 +221,13 @@ class OlderLpaService
             throw new BadRequestException('LPA details do not match');
         }
 
-        // Checks if the actor already has an active activation key
-        $hasActivationCode = $this->hasActivationCode(
-            $lpaAndActorMatchResponse['lpa-id'],
-            $lpaAndActorMatchResponse['actor-id']
-        );
+        $lpaAndActorMatchResponse['donor_name'] = [
+                            $lpaMatchResponse->getData()['donor']['firstname'],
+                            $lpaMatchResponse->getData()['donor']['middlenames'],
+                            $lpaMatchResponse->getData()['donor']['surname']
+                            ];
+        $lpaAndActorMatchResponse['lpa_type'] = $lpaMatchResponse->getData()['caseSubtype'];
 
-        if ($hasActivationCode instanceof DateTime) {
-            throw new BadRequestException(
-                'LPA not eligible as an activation key already exists',
-                [
-                    'activation_key_created' => $hasActivationCode->format('Y-m-d'),
-                    'donor_name' => preg_replace(
-                        '/\s+/',
-                        ' ',
-                        $lpaMatchResponse->getData()['donor']['firstname'] . ' '
-                        . $lpaMatchResponse->getData()['donor']['middlenames'] . ' '
-                        . $lpaMatchResponse->getData()['donor']['surname']
-                    ),
-                    'lpa_type' => $lpaMatchResponse->getData()['caseSubtype'],
-                ]
-            );
-        }
 
         return $lpaAndActorMatchResponse;
     }

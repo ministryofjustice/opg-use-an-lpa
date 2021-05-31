@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\CheckYourAnswers;
+use Actor\Form\CreateNewkey;
 use Carbon\Carbon;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
@@ -122,16 +123,18 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $this->form->setData($request->getParsedBody());
+        $data =
+        [
+            'identity' => $this->identity,
+            'reference_number' => $this->data['reference_number'],
+            'first_names' => $this->data['first_names'],
+            'last_name' => $this->data['last_name'],
+            'dob' => $this->data['dob'],
+            'postcode' => $this->data['postcode'],
+        ];
 
-        if ($this->form->isValid()) {
-            $result = ($this->addOlderLpa)(
-                $this->identity,
-                $this->data['reference_number'],
-                $this->data['first_names'],
-                $this->data['last_name'],
-                $this->data['dob'],
-                $this->data['postcode'],
-            );
+          if ($this->form->isValid()) {
+            $result = ($this->addOlderLpa)($data);
 
             switch ($result->getResponse()) {
                 case OlderLpaApiResponse::NOT_ELIGIBLE:
@@ -140,13 +143,20 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ['user'  => $this->user]
                     ));
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
+                    $form = new CreateNewkey($this->getCsrfGuard($request));
+                    $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
+                    $data['force_activation_key'] = true;
+
+                    $form->setData($data);
+
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::already-have-activation-key',
                             [
                                 'user' => $this->user,
-                                'donorName' => $result->getData()['donor_name'],
-                                'caseType' => $result->getData()['lpa_type']
+                                'donorName' => implode(' ', array_filter(array_map('trim',$result->getData()['donor_name']))), //GET A NAME ARRAY AND CONCATENATE HERE
+                                'caseType' => $result->getData()['lpa_type'],
+                                'form' => $form
                             ]
                         )
                     );

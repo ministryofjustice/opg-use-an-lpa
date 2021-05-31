@@ -277,7 +277,7 @@ class LpaContext extends BaseIntegrationContext
                     json_encode(
                         [
                             'title' => 'Bad Request',
-                            'details' => 'LPA not eligible as an activation key already exists',
+                            'details' => 'LPA has an activation key already',
                             'data' => [
                                 'activation_key_created' => $this->codeCreatedDate,
                                 'donor_name' => preg_replace(

@@ -25,7 +25,7 @@ class AddOlderLpa
     // Exception messages returned from the API layer
     private const OLDER_LPA_NOT_ELIGIBLE = 'LPA not eligible due to registration date';
     private const OLDER_LPA_DOES_NOT_MATCH     = 'LPA details do not match';
-    private const OLDER_LPA_HAS_ACTIVATION_KEY = 'LPA not eligible as an activation key already exists';
+    private const OLDER_LPA_HAS_ACTIVATION_KEY = 'LPA has an activation key already';
 
     /** @var ApiClient */
     private ApiClient $apiClient;
@@ -47,31 +47,27 @@ class AddOlderLpa
     }
 
     public function __invoke(
-        string $userToken,
-        int $lpaUid,
-        string $firstnames,
-        string $lastname,
-        DateTimeInterface $dob,
-        string $postcode
+        array $userData
     ): OlderLpaApiResponse {
         $data = [
-            'reference_number'  => $lpaUid,
-            'first_names'       => $firstnames,
-            'last_name'         => $lastname,
-            'dob'               => $dob->format('Y-m-d'),
-            'postcode'          => $postcode,
+            'reference_number'     => $userData['reference_number'],
+            'first_names'          => $userData['first_names'],
+            'last_name'            => $userData['last_name'],
+            'dob'                  => $userData['dob']->format('Y-m-d'),
+            'postcode'             => $userData['postcode'],
+            'force_activation_key' => $userData['force_activation_key']
         ];
 
-        $this->apiClient->setUserTokenHeader($userToken);
+        $this->apiClient->setUserTokenHeader($userData['identity']);
 
         try {
             $this->apiClient->httpPatch('/v1/lpas/request-letter', $data);
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_BAD_REQUEST:
-                    return $this->badRequestReturned($lpaUid, $apiEx->getMessage(), $apiEx->getAdditionalData());
+                    return $this->badRequestReturned($userData['reference_number'], $apiEx->getMessage(), $apiEx->getAdditionalData());
                 case StatusCodeInterface::STATUS_NOT_FOUND:
-                    return $this->notFoundReturned($lpaUid, $apiEx->getAdditionalData());
+                    return $this->notFoundReturned($userData['reference_number'], $apiEx->getAdditionalData());
                 default:
                     // An API exception that we don't want to handle has been caught, pass it up the stack
                     throw $apiEx;
@@ -82,8 +78,8 @@ class AddOlderLpa
             'Successfully matched LPA {uId} and sending activation letter for account with Id {id} ',
             [
                 'event_code' => EventCodes::OLDER_LPA_SUCCESS,
-                'id'  => $userToken,
-                'uId' => $lpaUid
+                'id'  => $userData['identity'],
+                'uId' => $userData['reference_number']
             ]
         );
 
