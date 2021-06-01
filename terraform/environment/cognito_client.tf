@@ -9,14 +9,14 @@ data "aws_ssm_parameter" "use_a_lasting_power_of_attorney_admin_domain" {
 }
 
 locals {
-  user_pool_id          = tolist(data.aws_cognito_user_pools.use_a_lasting_power_of_attorney_admin.ids)[0]
-  user_pool_domain_name = "https://${data.aws_ssm_parameter.use_a_lasting_power_of_attorney_admin_domain.value}.auth.eu-west-1.amazoncognito.com"
+  admin_cognito_user_pool_id          = tolist(data.aws_cognito_user_pools.use_a_lasting_power_of_attorney_admin.ids)[0]
+  admin_cognito_user_pool_domain_name = "https://${data.aws_ssm_parameter.use_a_lasting_power_of_attorney_admin_domain.value}.auth.eu-west-1.amazoncognito.com"
 }
 
 resource "aws_cognito_user_pool_client" "use_a_lasting_power_of_attorney_admin" {
   provider                             = aws.identity
-  name                                 = "${local.environment}-admin-alb-auth"
-  user_pool_id                         = local.user_pool_id
+  name                                 = "${local.environment}-admin-auth"
+  user_pool_id                         = local.admin_cognito_user_pool_id
   allowed_oauth_flows                  = ["code"]
   allowed_oauth_scopes                 = ["openid"]
   supported_identity_providers         = ["COGNITO"]
