@@ -1296,6 +1296,7 @@ class LpaContext extends BaseIntegrationContext
             'postcode' => $this->userPostCode,
             'first_names' => $this->userFirstname,
             'last_name' => $this->userSurname,
+            'force_activation_key' => null
         ];
 
         $this->pactGetInteraction(
@@ -1320,27 +1321,8 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
-        } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA has an activation key already', $ex->getMessage());
-            assertEquals(
-                [
-                    'activation_key_created' => $createdDate,
-                    'donor_name' => preg_replace(
-                        '/\s+/',
-                        ' ',
-                        $this->userFirstname . " " . $this->userSurname
-                    ),
-                    'lpa_type' => "hw",
-                ],
-                $ex->getAdditionalData()
-            );
-            return;
-        }
+            $result = $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
 
-        throw new ExpectationFailedException('Activation key should have already been requested');
     }
 
     /**

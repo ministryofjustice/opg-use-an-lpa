@@ -134,15 +134,17 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
+        $data = [
+            'identity'          =>  $this->userIdentity,
+            'reference_number'  =>  intval($this->referenceNo),
+            'first_names'       =>  $this->userFirstname,
+            'last_name'         =>  $this->userSurname,
+            'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
+            'postcode'          =>  $this->userPostCode,
+        ];
+
         try {
-            $addOlderLpa(
-                $this->userIdentity,
-                intval($this->referenceNo),
-                $this->userFirstname,
-                $this->userSurname,
-                DateTime::createFromFormat('Y-m-d', $this->userDob),
-                $this->userPostCode,
-            );
+            $addOlderLpa($data);
         } catch (ApiException $e) {
             throw new Exception(
                 'Failed to correctly approve older LPA addition request: ' . $e->getMessage(),
@@ -196,14 +198,16 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        $result = $addOlderLpa(
-            $this->userIdentity,
-            intval($this->referenceNo),
-            $this->userFirstname,
-            $this->userSurname,
-            DateTime::createFromFormat('Y-m-d', $this->userDob),
-            $this->userPostCode,
-        );
+        $data = [
+            'identity'          =>  $this->userIdentity,
+            'reference_number'  =>  intval($this->referenceNo),
+            'first_names'       =>  $this->userFirstname,
+            'last_name'         =>  $this->userSurname,
+            'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
+            'postcode'          =>  $this->userPostCode,
+        ];
+
+        $result = $addOlderLpa($data);
 
         $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_FOUND, []);
 
@@ -249,14 +253,16 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        $result = $addOlderLpa(
-            $this->userIdentity,
-            intval($this->referenceNo),
-            $this->userFirstname,
-            $this->userSurname,
-            DateTime::createFromFormat('Y-m-d', $this->userDob),
-            $this->userPostCode,
-        );
+        $data = [
+            'identity'          =>  $this->userIdentity,
+            'reference_number'  =>  intval($this->referenceNo),
+            'first_names'       =>  $this->userFirstname,
+            'last_name'         =>  $this->userSurname,
+            'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
+            'postcode'          =>  $this->userPostCode,
+        ];
+
+        $result = $addOlderLpa($data);
 
         $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_ELIGIBLE, []);
 
@@ -279,14 +285,11 @@ class LpaContext extends BaseIntegrationContext
                             'title' => 'Bad Request',
                             'details' => 'LPA has an activation key already',
                             'data' => [
-                                'activation_key_created' => $this->codeCreatedDate,
-                                'donor_name' => preg_replace(
-                                    '/\s+/',
-                                    ' ',
-                                    $this->userFirstname . ' '
-                                    . $this->userMiddlenames . ' '
-                                    . $this->userSurname
-                                ),
+                                'donor_name' => [
+                                    $this->userFirstname,
+                                    $this->userMiddlenames,
+                                    $this->userSurname
+                                ],
                                 'lpa_type' => ' '
                             ],
                         ]
@@ -296,26 +299,25 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        $result = $addOlderLpa(
-            $this->userIdentity,
-            intval($this->referenceNo),
-            $this->userFirstname,
-            $this->userSurname,
-            DateTime::createFromFormat('Y-m-d', $this->userDob),
-            $this->userPostCode,
-        );
+        $data = [
+            'identity'          =>  $this->userIdentity,
+            'reference_number'  =>  intval($this->referenceNo),
+            'first_names'       =>  $this->userFirstname,
+            'last_name'         =>  $this->userSurname,
+            'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
+            'postcode'          =>  $this->userPostCode,
+        ];
+
+        $result = $addOlderLpa($data);
 
         $response = new OlderLpaApiResponse(
             OlderLpaApiResponse::HAS_ACTIVATION_KEY,
             [
-                'activation_key_created' => $this->codeCreatedDate,
-                'donor_name' => preg_replace(
-                    '/\s+/',
-                    ' ',
-                    $this->userFirstname . ' '
-                    . $this->userMiddlenames . ' '
-                    . $this->userSurname
-                ),
+                'donor_name' => [
+                    $this->userFirstname,
+                    $this->userMiddlenames,
+                    $this->userSurname
+                ],
                 'lpa_type' => ' ',
             ]
         );

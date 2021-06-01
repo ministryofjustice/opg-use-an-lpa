@@ -55,12 +55,12 @@ class AddOlderLpaTest extends TestCase
             ->httpPatch(
                 '/v1/lpas/request-letter',
                 [
-                    'reference_number' => (string) $this->olderLpa['reference_number'],
-                    'first_names' => $this->olderLpa['first_names'],
-                    'last_name' => $this->olderLpa['last_name'],
-                    'dob' => ($this->olderLpa['dob']),
-                    'postcode' => $this->olderLpa['postcode'],
-                    'force_activation_key' => null
+                    'reference_number'          => (string) $this->olderLpa['reference_number'],
+                    'first_names'               => $this->olderLpa['first_names'],
+                    'last_name'                 => $this->olderLpa['last_name'],
+                    'dob'                       => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode'                  => $this->olderLpa['postcode'],
+                    'force_activation_key'      => null
                 ]
             )->willReturn(
                 [
@@ -72,18 +72,16 @@ class AddOlderLpaTest extends TestCase
         $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
 
         $data = [
-            '12-1-1-1-1234',
-            $this->olderLpa['reference_number'],
-            $this->olderLpa['first_names'],
-            $this->olderLpa['last_name'],
-            $this->olderLpa['dob']->format('Y-m-d'),
-            $this->olderLpa['postcode'],
-            null
+            'identity'             =>  '12-1-1-1-1234',
+            'reference_number'     =>  $this->olderLpa['reference_number'],
+            'first_names'          =>  $this->olderLpa['first_names'],
+            'last_name'            =>  $this->olderLpa['last_name'],
+            'dob'                  =>  $this->olderLpa['dob'],
+            'postcode'             =>  $this->olderLpa['postcode'],
+            'force_activation_key' =>  null
         ];
+
         $result  = $sut($data);
-
-
-
 
         $this->assertEquals(OlderLpaApiResponse::SUCCESS, $result->getResponse());
     }
@@ -99,12 +97,12 @@ class AddOlderLpaTest extends TestCase
             ->httpPatch(
                 '/v1/lpas/request-letter',
                 [
-                    'reference_number' => (string) $this->olderLpa['reference_number'],
-                    'first_names' => $this->olderLpa['first_names'],
-                    'last_name' => $this->olderLpa['last_name'],
-                    'dob' => ($this->olderLpa['dob'])->format('Y-m-d'),
-                    'postcode' => $this->olderLpa['postcode'],
-                    'force_activation_key' => null
+                    'reference_number'          => (string) $this->olderLpa['reference_number'],
+                    'first_names'               => $this->olderLpa['first_names'],
+                    'last_name'                 => $this->olderLpa['last_name'],
+                    'dob'                       => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode'                  => $this->olderLpa['postcode'],
+                    'force_activation_key'      => null
                 ]
             )->willThrow(
                 new ApiException(
@@ -114,15 +112,17 @@ class AddOlderLpaTest extends TestCase
             );
 
         $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
+
         $data = [
-            '12-1-1-1-1234',
-            $this->olderLpa['reference_number'],
-            $this->olderLpa['first_names'],
-            $this->olderLpa['last_name'],
-            $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            null
+            'identity'             =>  '12-1-1-1-1234',
+            'reference_number'     =>  $this->olderLpa['reference_number'],
+            'first_names'          =>  $this->olderLpa['first_names'],
+            'last_name'            =>  $this->olderLpa['last_name'],
+            'dob'                  =>  $this->olderLpa['dob'],
+            'postcode'             =>  $this->olderLpa['postcode'],
+            'force_activation_key' =>  null
         ];
+
         $result  = $sut($data);
 
         $this->assertEquals(OlderLpaApiResponse::NOT_ELIGIBLE, $result->getResponse());
@@ -139,12 +139,12 @@ class AddOlderLpaTest extends TestCase
             ->httpPatch(
                 '/v1/lpas/request-letter',
                 [
-                    'reference_number' => (string) $this->olderLpa['reference_number'],
-                    'first_names' => $this->olderLpa['first_names'],
-                    'last_name' => $this->olderLpa['last_name'],
-                    'dob' => ($this->olderLpa['dob'])->format('Y-m-d'),
-                    'postcode' => $this->olderLpa['postcode'],
-                    'force_activation_key' => null
+                    'reference_number'          => (string) $this->olderLpa['reference_number'],
+                    'first_names'               => $this->olderLpa['first_names'],
+                    'last_name'                 => $this->olderLpa['last_name'],
+                    'dob'                       => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode'                  => $this->olderLpa['postcode'],
+                    'force_activation_key'      => null
 
                 ]
             )->willThrow(
@@ -156,13 +156,13 @@ class AddOlderLpaTest extends TestCase
 
         $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
         $data = [
-            '12-1-1-1-1234',
-            $this->olderLpa['reference_number'],
-            $this->olderLpa['first_names'],
-            $this->olderLpa['last_name'],
-            $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            null
+            'identity'             =>  '12-1-1-1-1234',
+            'reference_number'     =>  $this->olderLpa['reference_number'],
+            'first_names'          =>  $this->olderLpa['first_names'],
+            'last_name'            =>  $this->olderLpa['last_name'],
+            'dob'                  =>  $this->olderLpa['dob'],
+            'postcode'             =>  $this->olderLpa['postcode'],
+            'force_activation_key' =>  null
         ];
         $result  = $sut($data);
 
@@ -180,12 +180,12 @@ class AddOlderLpaTest extends TestCase
             ->httpPatch(
                 '/v1/lpas/request-letter',
                 [
-                    'reference_number' => (string) $this->olderLpa['reference_number'],
-                    'first_names' => $this->olderLpa['first_names'],
-                    'last_name' => $this->olderLpa['last_name'],
-                    'dob' => ($this->olderLpa['dob'])->format('Y-m-d'),
-                    'postcode' => $this->olderLpa['postcode'],
-                    'force_activation_key' => null
+                    'reference_number'      => (string) $this->olderLpa['reference_number'],
+                    'first_names'           => $this->olderLpa['first_names'],
+                    'last_name'             => $this->olderLpa['last_name'],
+                    'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode'              => $this->olderLpa['postcode'],
+                    'force_activation_key'  => null
                 ]
             )->willThrow(
                 new ApiException(
@@ -193,9 +193,8 @@ class AddOlderLpaTest extends TestCase
                     StatusCodeInterface::STATUS_BAD_REQUEST,
                     null,
                     [
-                        //'activation_key_created' => (new DateTime())->modify('-14 days')->format('Y-m-d')
-                        'lpa_type' => 'pfa',
-                        'donor_name' => ['abc','lmn','xyz']
+                        'lpa_type'      => 'pfa',
+                        'donor_name'    => ['abc','lmn','xyz']
                     ]
 
                 )
@@ -203,13 +202,13 @@ class AddOlderLpaTest extends TestCase
 
         $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
         $data = [
-            '12-1-1-1-1234',
-            $this->olderLpa['reference_number'],
-            $this->olderLpa['first_names'],
-            $this->olderLpa['last_name'],
-            $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            null
+            'identity'             =>  '12-1-1-1-1234',
+            'reference_number'     =>  $this->olderLpa['reference_number'],
+            'first_names'          =>  $this->olderLpa['first_names'],
+            'last_name'            =>  $this->olderLpa['last_name'],
+            'dob'                  =>  $this->olderLpa['dob'],
+            'postcode'             =>  $this->olderLpa['postcode'],
+            'force_activation_key' =>  null
         ];
         $result  = $sut($data);
 
@@ -227,12 +226,12 @@ class AddOlderLpaTest extends TestCase
             ->httpPatch(
                 '/v1/lpas/request-letter',
                 [
-                    'reference_number' => (string) $this->olderLpa['reference_number'],
-                    'first_names' => $this->olderLpa['first_names'],
-                    'last_name' => $this->olderLpa['last_name'],
-                    'dob' => ($this->olderLpa['dob'])->format('Y-m-d'),
-                    'postcode' => $this->olderLpa['postcode'],
-                    'force_activation_key' => null
+                    'reference_number'      => (string) $this->olderLpa['reference_number'],
+                    'first_names'           => $this->olderLpa['first_names'],
+                    'last_name'             => $this->olderLpa['last_name'],
+                    'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode'              => $this->olderLpa['postcode'],
+                    'force_activation_key'  => null
                 ]
             )->willThrow(
                 new ApiException(
@@ -243,13 +242,13 @@ class AddOlderLpaTest extends TestCase
 
         $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
         $data = [
-            '12-1-1-1-1234',
-            $this->olderLpa['reference_number'],
-            $this->olderLpa['first_names'],
-            $this->olderLpa['last_name'],
-            $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            null
+            'identity'             =>  '12-1-1-1-1234',
+            'reference_number'     =>  $this->olderLpa['reference_number'],
+            'first_names'          =>  $this->olderLpa['first_names'],
+            'last_name'            =>  $this->olderLpa['last_name'],
+            'dob'                  =>  $this->olderLpa['dob'],
+            'postcode'             =>  $this->olderLpa['postcode'],
+            'force_activation_key' =>  null
         ];
         $result  = $sut($data);
 
@@ -286,13 +285,13 @@ class AddOlderLpaTest extends TestCase
         $this->expectExceptionMessage('Service Error');
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $data = [
-            '12-1-1-1-1234',
-            $this->olderLpa['reference_number'],
-            $this->olderLpa['first_names'],
-            $this->olderLpa['last_name'],
-            $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            null
+            'identity'             =>  '12-1-1-1-1234',
+            'reference_number'     =>  $this->olderLpa['reference_number'],
+            'first_names'          =>  $this->olderLpa['first_names'],
+            'last_name'            =>  $this->olderLpa['last_name'],
+            'dob'                  =>  $this->olderLpa['dob'],
+            'postcode'             =>  $this->olderLpa['postcode'],
+            'force_activation_key' =>  null
         ];
         $result  = $sut($data);
     }
@@ -326,13 +325,13 @@ class AddOlderLpaTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $data = [
-            '12-1-1-1-1234',
-            $this->olderLpa['reference_number'],
-            $this->olderLpa['first_names'],
-            $this->olderLpa['last_name'],
-            $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            null
+            'identity'             =>  '12-1-1-1-1234',
+            'reference_number'     =>  $this->olderLpa['reference_number'],
+            'first_names'          =>  $this->olderLpa['first_names'],
+            'last_name'            =>  $this->olderLpa['last_name'],
+            'dob'                  =>  $this->olderLpa['dob'],
+            'postcode'             =>  $this->olderLpa['postcode'],
+            'force_activation_key' =>  null
         ];
         $result  = $sut($data);
     }

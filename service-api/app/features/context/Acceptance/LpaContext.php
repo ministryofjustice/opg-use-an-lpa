@@ -2185,7 +2185,8 @@ class LpaContext implements Context
                 'first_names'       => $this->userFirstnames,
                 'last_name'         => $this->userSurname,
                 'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode
+                'postcode'          => $this->userPostCode,
+                'force_activation_key' => null
             ],
             [
                 'user-token' => $this->userId,
@@ -2194,8 +2195,6 @@ class LpaContext implements Context
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA has an activation key already');
-        $this->ui->assertSession()->responseContains($createdDate);
-        $this->ui->assertSession()->responseContains('activation_key_created');
         $this->ui->assertSession()->responseContains('donor_name');
         $this->ui->assertSession()->responseContains('lpa_type');
     }
