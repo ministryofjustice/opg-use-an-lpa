@@ -54,15 +54,21 @@ resource "aws_lb_listener" "admin_loadbalancer" {
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
 
   certificate_arn = data.aws_acm_certificate.certificate_admin.arn
-  default_action {
-    type = "authenticate-cognito"
 
-    authenticate_cognito {
-      user_pool_arn = aws_cognito_user_pool.use_a_lasting_power_of_attorney_admin.arn
-      # user_pool_arn       = tolist(data.aws_cognito_user_pools.use_a_lasting_power_of_attorney_admin.arns)[0]
-      user_pool_client_id = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin.id
-      user_pool_domain    = aws_cognito_user_pool_domain.use_a_lasting_power_of_attorney_admin.domain
-      # user_pool_domain    = data.aws_ssm_parameter.use_a_lasting_power_of_attorney_admin_domain.value
+  default_action {
+    type = "authenticate-oidc"
+    authenticate_oidc {
+      authentication_request_extra_params = {}
+      authorization_endpoint              = "${local.user_pool_domain_name}/oauth2/authorize"
+      client_id                           = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin.id
+      client_secret                       = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin.client_secret
+      issuer                              = "https://cognito-idp.eu-west-1.amazonaws.com/${local.user_pool_id}"
+      on_unauthenticated_request          = "authenticate"
+      scope                               = "openid"
+      session_cookie_name                 = "AWSELBAuthSessionCookie"
+      session_timeout                     = 604800
+      token_endpoint                      = "${local.user_pool_domain_name}/oauth2/token"
+      user_info_endpoint                  = "${local.user_pool_domain_name}/oauth2/userInfo"
     }
   }
 
