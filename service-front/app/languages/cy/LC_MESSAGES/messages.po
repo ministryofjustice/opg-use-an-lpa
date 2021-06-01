@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-05-27T15:08:57+00:00\n"
+"POT-Creation-Date: 2021-06-01T09:48:12+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 2.4.3\n"
+"X-Generator: Poedit 2.4\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 
@@ -903,6 +903,7 @@ msgstr "Dyddiad geni"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:45
 #: src/Actor/templates/actor/change-details.html.twig:74
+#: src/Actor/templates/actor/change-lpa-details.html.twig:56
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:143
 #: src/Common/templates/partials/full-lpa-display.html.twig:170
 msgid "Address"
@@ -1865,6 +1866,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:23
 #: src/Actor/templates/actor/change-details.html.twig:34
+#: src/Actor/templates/actor/change-lpa-details.html.twig:23
 #: src/Actor/templates/actor/death-notification.html.twig:34
 msgid "You should contact us if:"
 msgstr "Dylech gysylltu â ni os bydd:"
@@ -1930,6 +1932,7 @@ msgstr "oes atwrneiod i gymryd eu lle"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:31
 #: src/Actor/templates/actor/change-details.html.twig:57
+#: src/Actor/templates/actor/change-lpa-details.html.twig:37
 #: src/Actor/templates/actor/death-notification.html.twig:60
 msgid "How to let us know"
 msgstr "Sut i roi gwybod i ni am newid"
@@ -1956,6 +1959,7 @@ msgstr "cyfeiriad dychwelyd ar gyfer anfon eich dogfennau’n ôl atoch"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:47
 #: src/Actor/templates/actor/change-details.html.twig:76
+#: src/Actor/templates/actor/change-lpa-details.html.twig:58
 #: src/Actor/templates/actor/death-notification.html.twig:71
 msgid ""
 "Office of the Public Guardian<br>\n"
@@ -2746,6 +2750,7 @@ msgid "the donor or an attorney dies"
 msgstr "rhoddwr neu atwrnai yn marw"
 
 #: src/Actor/templates/actor/change-details.html.twig:48
+#: src/Actor/templates/actor/change-lpa-details.html.twig:31
 msgid ""
 "We’ll update the online <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "summary and our records."
@@ -2754,6 +2759,7 @@ msgstr ""
 "abbr> ar-lein a’n cofnodion."
 
 #: src/Actor/templates/actor/change-details.html.twig:50
+#: src/Actor/templates/actor/change-lpa-details.html.twig:33
 msgid ""
 "Do not make any changes to the paper <abbr title=\"lasting power of attorney"
 "\">LPA</abbr> yourself.\n"
@@ -2784,12 +2790,14 @@ msgstr ""
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:67
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:32
 #: src/Actor/templates/actor/change-details.html.twig:59
+#: src/Actor/templates/actor/change-lpa-details.html.twig:39
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:71
 msgid "Telephone"
 msgstr "Ffonio"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:33
 #: src/Actor/templates/actor/change-details.html.twig:60
+#: src/Actor/templates/actor/change-lpa-details.html.twig:40
 msgid "When you get in touch, quote the LPA reference number."
 msgstr "Pan fyddwch yn cysylltu â ni, cofiwch ddyfynnu eich cyfeirnod LPA."
 
@@ -2805,6 +2813,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:37
 #: src/Actor/templates/actor/change-details.html.twig:66
+#: src/Actor/templates/actor/change-lpa-details.html.twig:48
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:30
 #: src/Common/templates/partials/contact-us.html.twig:36
 msgid "Find out about call charges"
@@ -2813,6 +2822,7 @@ msgstr "Gwybodaeth am brisiau galwadau"
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:61
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:40
 #: src/Actor/templates/actor/change-details.html.twig:69
+#: src/Actor/templates/actor/change-lpa-details.html.twig:51
 #: src/Common/templates/partials/contact-us.html.twig:40
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:65
 msgid "Email"
@@ -5657,3 +5667,38 @@ msgid ""
 msgstr ""
 "Os na chyrhaeddodd y llythyr, <a class=\"govuk-link\" href=\"%link%\">gwnewch "
 "yn siŵr bod eich cyfeiriad cywir gennym</a> cyn i chi ofyn am allwedd newydd."
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:19
+msgid "Let us know if something is incorrect on the LPA"
+msgstr "Gadewch i ni wybod os oes rhywbeth yn anghywir ar yr LPA"
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:21
+msgid "It's important that the information on the LPA summary is correct."
+msgstr "Mae’n bwysig bod yr wybodaeth ar y crynodeb o’r LPA yn gywir."
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:26
+msgid "information about preferences and instructions is incorrect"
+msgstr "gwybodaeth am ddymuniadau a chyfarwyddiadau yn anghywir"
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:27
+msgid "information about life-sustaining treatment is incorrect"
+msgstr "gwybodaeth am driniaeth cynnal bywyd yn anghywir"
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:28
+msgid "the registration date or the date the donor signed the LPA are incorrect"
+msgstr ""
+"y dyddiad cofrestru neu’r dyddiad y gwnaeth y rhoddwr lofnodi’r LPA yn anghywir"
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:42
+msgid ""
+"Telephone: 0300 456 0300<br>\n"
+"                            Monday to Friday, 9:30am to 5pm, except Wednesday, "
+"10am to 5pm"
+msgstr ""
+"Ffôn (yn Saesneg): 0300 456 0300<br>\n"
+"                      Dydd Llun i ddydd Gwener, 9:30am tan 5pm, heblaw bob "
+"dydd Mercher, 10am tan 5pm"
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:239
+msgid "Seen something incorrect in the LPA details?"
+msgstr "Ydych chi wedi gweld rhywbeth sy’n anghywir ym manylion yr LPA?"
