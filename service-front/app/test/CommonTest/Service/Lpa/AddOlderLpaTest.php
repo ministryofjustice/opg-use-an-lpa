@@ -38,7 +38,7 @@ class AddOlderLpaTest extends TestCase
             'reference_number' => 700000000000,
             'first_names' => 'Test',
             'last_name' => 'Example',
-            'dob' => new DateTime('1980-11-07'),
+            'dob' => (new DateTime('1980-11-07')),
             'postcode' => 'EX4 MPL',
         ];
 
@@ -58,7 +58,7 @@ class AddOlderLpaTest extends TestCase
                     'reference_number' => (string) $this->olderLpa['reference_number'],
                     'first_names' => $this->olderLpa['first_names'],
                     'last_name' => $this->olderLpa['last_name'],
-                    'dob' => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'dob' => ($this->olderLpa['dob']),
                     'postcode' => $this->olderLpa['postcode'],
                     'force_activation_key' => null
                 ]
@@ -76,11 +76,14 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
-            $this->olderLpa['dob'],
+            $this->olderLpa['dob']->format('Y-m-d'),
             $this->olderLpa['postcode'],
             null
         ];
         $result  = $sut($data);
+
+
+
 
         $this->assertEquals(OlderLpaApiResponse::SUCCESS, $result->getResponse());
     }
