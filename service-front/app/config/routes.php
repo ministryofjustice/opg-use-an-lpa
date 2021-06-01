@@ -159,6 +159,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\DeathNotificationHandler::class
     ], 'lpa.death-notification');
+    $app->get('/lpa/change-lpa-details', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\ChangeLpaDetailsHandler::class
+    ], 'lpa.change-lpa-details');
 
     // Older LPA journey
     if (($container->get(Common\Service\Features\FeatureEnabled::class))('use_older_lpa_journey')) {

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-05-27T15:08:57+00:00\n"
+"POT-Creation-Date: 2021-06-01T09:48:12+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -640,6 +640,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:45
 #: src/Actor/templates/actor/change-details.html.twig:74
+#: src/Actor/templates/actor/change-lpa-details.html.twig:56
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:143
 #: src/Common/templates/partials/full-lpa-display.html.twig:170
 msgid "Address"
@@ -1281,6 +1282,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:23
 #: src/Actor/templates/actor/change-details.html.twig:34
+#: src/Actor/templates/actor/change-lpa-details.html.twig:23
 #: src/Actor/templates/actor/death-notification.html.twig:34
 msgid "You should contact us if:"
 msgstr ""
@@ -1335,6 +1337,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:31
 #: src/Actor/templates/actor/change-details.html.twig:57
+#: src/Actor/templates/actor/change-lpa-details.html.twig:37
 #: src/Actor/templates/actor/death-notification.html.twig:60
 msgid "How to let us know"
 msgstr ""
@@ -1361,6 +1364,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:47
 #: src/Actor/templates/actor/change-details.html.twig:76
+#: src/Actor/templates/actor/change-lpa-details.html.twig:58
 #: src/Actor/templates/actor/death-notification.html.twig:71
 msgid ""
 "Office of the Public Guardian<br>\n"
@@ -2015,10 +2019,12 @@ msgid "the donor or an attorney dies"
 msgstr ""
 
 #: src/Actor/templates/actor/change-details.html.twig:48
+#: src/Actor/templates/actor/change-lpa-details.html.twig:31
 msgid "We’ll update the online <abbr title=\"lasting power of attorney\">LPA</abbr> summary and our records."
 msgstr ""
 
 #: src/Actor/templates/actor/change-details.html.twig:50
+#: src/Actor/templates/actor/change-lpa-details.html.twig:33
 msgid ""
 "Do not make any changes to the paper <abbr title=\"lasting power of attorney\">LPA</abbr> yourself.\n"
 "                        If you do, you’ll no longer be able to use the <abbr title=\"lasting power of attorney\">LPA</abbr>."
@@ -2035,12 +2041,14 @@ msgstr ""
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:67
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:32
 #: src/Actor/templates/actor/change-details.html.twig:59
+#: src/Actor/templates/actor/change-lpa-details.html.twig:39
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:71
 msgid "Telephone"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:33
 #: src/Actor/templates/actor/change-details.html.twig:60
+#: src/Actor/templates/actor/change-lpa-details.html.twig:40
 msgid "When you get in touch, quote the LPA reference number."
 msgstr ""
 
@@ -2052,6 +2060,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:37
 #: src/Actor/templates/actor/change-details.html.twig:66
+#: src/Actor/templates/actor/change-lpa-details.html.twig:48
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:30
 #: src/Common/templates/partials/contact-us.html.twig:36
 msgid "Find out about call charges"
@@ -2060,6 +2069,7 @@ msgstr ""
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:61
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:40
 #: src/Actor/templates/actor/change-details.html.twig:69
+#: src/Actor/templates/actor/change-lpa-details.html.twig:51
 #: src/Common/templates/partials/contact-us.html.twig:40
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:65
 msgid "Email"
@@ -3946,4 +3956,34 @@ msgstr ""
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:46
 msgid "If the letter did not arrive, <a class=\"govuk-link\" href=\"%link%\">check we have your correct address</a> before you ask for a new key."
+msgstr ""
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:19
+msgid "Let us know if something is incorrect on the LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:21
+msgid "It's important that the information on the LPA summary is correct."
+msgstr ""
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:26
+msgid "information about preferences and instructions is incorrect"
+msgstr ""
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:27
+msgid "information about life-sustaining treatment is incorrect"
+msgstr ""
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:28
+msgid "the registration date or the date the donor signed the LPA are incorrect"
+msgstr ""
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:42
+msgid ""
+"Telephone: 0300 456 0300<br>\n"
+"                            Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm"
+msgstr ""
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:239
+msgid "Seen something incorrect in the LPA details?"
 msgstr ""
