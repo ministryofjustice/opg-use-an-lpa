@@ -42,9 +42,12 @@ class ChangeLpaDetailsHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $actorLpaToken = !empty($request->getQueryParams()) ? $request->getQueryParams()['lpa'] : 'null';
+
         $user = $this->getUser($request);
 
         return new HtmlResponse($this->renderer->render('actor::change-lpa-details', [
+            'actorToken' => $actorLpaToken,
             'user' => $user
         ]));
     }

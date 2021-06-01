@@ -236,7 +236,7 @@
                     </div>
                 </dl>
                 <p class="govuk-body">
-                    <a class="govuk-link" href="{{ path('lpa.change-lpa-details') }}">{% trans %}Seen something incorrect in the LPA details?{% endtrans %}</a>
+                    <a class="govuk-link" href="{{ path('lpa.change-lpa-details', {}, {'lpa':  actorToken }) }}">{% trans %}Seen something incorrect in the LPA details?{% endtrans %}</a>
                 </p>
             </div>
         </div>
