@@ -14,6 +14,12 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Class ChangeLpaDetailsHandler
+ *
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 class ChangeLpaDetailsHandler extends AbstractHandler implements UserAware
 {
     use User;
