@@ -70,7 +70,8 @@ class AddOlderLpaTest extends TestCase
             );
 
         $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-        $result  = $sut(
+
+        $data = [
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -78,7 +79,8 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
             null
-        );
+        ];
+        $result  = $sut($data);
 
         $this->assertEquals(OlderLpaApiResponse::SUCCESS, $result->getResponse());
     }
@@ -109,7 +111,7 @@ class AddOlderLpaTest extends TestCase
             );
 
         $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-        $result  = $sut(
+        $data = [
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -117,7 +119,8 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
             null
-        );
+        ];
+        $result  = $sut($data);
 
         $this->assertEquals(OlderLpaApiResponse::NOT_ELIGIBLE, $result->getResponse());
     }
@@ -149,7 +152,7 @@ class AddOlderLpaTest extends TestCase
             );
 
         $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-        $result  = $sut(
+        $data = [
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -157,7 +160,8 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
             null
-        );
+        ];
+        $result  = $sut($data);
 
         $this->assertEquals(OlderLpaApiResponse::DOES_NOT_MATCH, $result->getResponse());
     }
@@ -186,13 +190,16 @@ class AddOlderLpaTest extends TestCase
                     StatusCodeInterface::STATUS_BAD_REQUEST,
                     null,
                     [
-                        'activation_key_created' => (new DateTime())->modify('-14 days')->format('Y-m-d')
+                        //'activation_key_created' => (new DateTime())->modify('-14 days')->format('Y-m-d')
+                        'lpa_type' => 'pfa',
+                        'donor_name' => ['abc','lmn','xyz']
                     ]
+
                 )
             );
 
         $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-        $result  = $sut(
+        $data = [
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -200,7 +207,8 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
             null
-        );
+        ];
+        $result  = $sut($data);
 
         $this->assertEquals(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $result->getResponse());
     }
@@ -231,7 +239,7 @@ class AddOlderLpaTest extends TestCase
             );
 
         $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-        $result  = $sut(
+        $data = [
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -239,7 +247,8 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
             null
-        );
+        ];
+        $result  = $sut($data);
 
         $this->assertEquals(OlderLpaApiResponse::NOT_FOUND, $result->getResponse());
     }
@@ -273,7 +282,7 @@ class AddOlderLpaTest extends TestCase
         $this->expectException(ApiException::class);
         $this->expectExceptionMessage('Service Error');
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
-        $result  = $sut(
+        $data = [
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -281,7 +290,8 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
             null
-        );
+        ];
+        $result  = $sut($data);
     }
 
     /**
@@ -312,7 +322,7 @@ class AddOlderLpaTest extends TestCase
         $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
 
         $this->expectException(RuntimeException::class);
-        $result  = $sut(
+        $data = [
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -320,6 +330,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
             null
-        );
+        ];
+        $result  = $sut($data);
     }
 }

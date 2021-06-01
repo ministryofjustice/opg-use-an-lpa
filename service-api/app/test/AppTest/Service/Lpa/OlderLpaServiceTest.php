@@ -563,7 +563,7 @@ class OlderLpaServiceTest extends TestCase
             $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             $this->assertEquals('LPA has an activation key already', $ex->getMessage());
 
-            $this->assertEquals(
+            $this->assertContains(
                 [
                     'donor_name' => [
                             $lpa->getData()['donor']['firstname'],
