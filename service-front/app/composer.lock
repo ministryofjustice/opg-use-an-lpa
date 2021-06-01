@@ -2537,22 +2537,22 @@
         },
         {
             "name": "mezzio/mezzio-csrf",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mezzio/mezzio-csrf.git",
-                "reference": "0ea0c191191d49d4395efd3d7323d324e10024d0"
+                "reference": "5f254e0fbe9fec77cc7aa9dc7e8fb8f94cb0055c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mezzio/mezzio-csrf/zipball/0ea0c191191d49d4395efd3d7323d324e10024d0",
-                "reference": "0ea0c191191d49d4395efd3d7323d324e10024d0",
+                "url": "https://api.github.com/repos/mezzio/mezzio-csrf/zipball/5f254e0fbe9fec77cc7aa9dc7e8fb8f94cb0055c",
+                "reference": "5f254e0fbe9fec77cc7aa9dc7e8fb8f94cb0055c",
                 "shasum": ""
             },
             "require": {
                 "laminas/laminas-zendframework-bridge": "^1.0",
                 "mezzio/mezzio-session": "^1.0",
-                "php": "^7.1",
+                "php": "^7.3 || ~8.0.0",
                 "psr/container": "^1.0",
                 "psr/http-server-middleware": "^1.0"
             },
@@ -2560,22 +2560,18 @@
                 "phpspec/prophecy": "<1.7.2"
             },
             "replace": {
-                "zendframework/zend-expressive-csrf": "self.version"
+                "zendframework/zend-expressive-csrf": "^1.0.1"
             },
             "require-dev": {
-                "laminas/laminas-coding-standard": "~1.0.0",
+                "laminas/laminas-coding-standard": "~2.1.0",
                 "mezzio/mezzio-flash": "^1.0",
-                "phpunit/phpunit": "^7.0.2"
+                "phpunit/phpunit": "^9.3"
             },
             "suggest": {
                 "mezzio/mezzio-flash": "^1.0.0alpha1 || ^1.0 To back CSRF tokens using flash messages"
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev",
-                    "dev-develop": "1.1.x-dev"
-                },
                 "laminas": {
                     "config-provider": "Mezzio\\Csrf\\ConfigProvider"
                 }
@@ -2608,7 +2604,13 @@
                 "rss": "https://github.com/mezzio/mezzio-csrf/releases.atom",
                 "source": "https://github.com/mezzio/mezzio-csrf"
             },
-            "time": "2019-12-31T15:43:40+00:00"
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2021-05-11T19:02:55+00:00"
         },
         {
             "name": "mezzio/mezzio-fastroute",
