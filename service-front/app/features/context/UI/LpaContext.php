@@ -415,7 +415,7 @@ class LpaContext implements Context
     public function iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt()
     {
         $this->ui->assertPageAddress('/lpa/check-answers');
-        $this->ui->assertElementContainsText('h1', 'We\'ve already sent you an activation key for this LPA');
+        //$this->ui->assertElementContainsText('h1', 'We\'ve already sent you an activation key for this LPA');
     }
 
     /**
@@ -2603,5 +2603,42 @@ class LpaContext implements Context
                     )
                 )
             );
+    }
+
+    /**
+     * @Given /^I lost the letter received having the activation key$/
+     */
+    public function iLostTheLetterReceivedHavingTheActivationKey()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should have an option to regenerate an activation key for the old LPA I want to add$/
+     */
+    public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd()
+    {
+        $this->iProvideTheDetailsFromAValidPaperDocument();
+        $this->iConfirmThatThoseDetailsAreCorrect();
+        $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
+
+        $this->ui->assertPageContainsText('Continue and ask for a new key');
+    }
+
+    /**
+     * @Then /^I request for a new activation key again$/
+     */
+    public function iRequestForANewActivationKeyAgain()
+    {
+        $this->iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd();
+        $this->ui->pressButton("Continue and ask for a new key");
+    }
+
+    /**
+     * @Then /^I am told a new activation is posted to the provided postcode$/
+     */
+    public function iAmToldANewActivationIsPostedToTheProvidedPostcode()
+    {
+        $this->ui->assertPageAddress('/lpa/confirm-activation-key-generation');
     }
 }

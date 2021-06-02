@@ -1377,4 +1377,67 @@ class LpaContext extends BaseIntegrationContext
     {
         // Not needed for this context
     }
+
+    /**
+     * @Given /^I lost the letter received having the activation key$/
+     */
+    public function iLostTheLetterReceivedHavingTheActivationKey()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should have an option to regenerate an activation key for the old LPA I want to add$/
+     */
+    public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request for a new activation key again$/
+     */
+    public function iRequestForANewActivationKeyAgain()
+    {
+        // API call for getLpaById call happens inside of the check access codes handler
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    [],
+                    ''
+                )
+            );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        $data = [
+            'identity'          =>  $this->userIdentity,
+            'reference_number'  =>  intval($this->referenceNo),
+            'first_names'       =>  $this->userFirstname,
+            'last_name'         =>  $this->userSurname,
+            'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
+            'postcode'          =>  $this->userPostCode,
+            'force_activation_key' => true,
+        ];
+
+        try {
+            $addOlderLpa($data);
+        } catch (ApiException $e) {
+            throw new Exception(
+                'Failed to correctly approve older LPA addition request: ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+    }
+
+    /**
+     * @Then /^I am told a new activation key is posted to the provided postcode$/
+     */
+    public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode()
+    {
+        // Not needed for this context
+    }
+
 }
