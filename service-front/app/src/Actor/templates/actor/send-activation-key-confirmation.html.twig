@@ -25,10 +25,9 @@
                     <p class="govuk-body">{% trans %}We've sent you an email to confirm all these details.{% endtrans %}</p>
                     <p class="govuk-body"><strong>{% trans with {'%date%': lpa_date(date)} %}You should get the letter by %date%{% endtrans %}</p>
                     <p class="govuk-body">{% trans %}If you do not get it by this date, please contact us. You'll need to give us the LPA reference number when you call.{% endtrans %}</p>
-                    <p class="govuk-body">{% trans %}Telephone: 0300 456 0300 <br> Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm{% endtrans %}</p>
-                    <p class="govuk-body">
-                        <a class="govuk-link" href="https://www.gov.uk/call-charges">{% trans %}Find out about call charges{% endtrans %}</a>
-                    </p>
+
+                    {{ include('@partials/contact-details.html.twig', {showAddress:false, showEmail:false}) }}
+
                     <a href="{{ path('lpa.add-by-paper') }}" draggable="false" class="govuk-button">{% trans %}Request another activation key{% endtrans %}</a>
                     <a class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" href="{{ path('lpa.dashboard') }}">
                         {% trans %}Back to your LPAs{% endtrans %}

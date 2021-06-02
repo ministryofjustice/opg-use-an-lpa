@@ -58,29 +58,7 @@
                         {% trans %}We’re always looking to improve the accessibility of this service. If you find any problems not listed on this page or think we’re not meeting accessibility requirements, please contact us.{% endtrans %}
                     </p>
 
-                    <h2 class="govuk-heading-s">{% trans %}Email{% endtrans %}</h2>
-
-                    <p class="govuk-body">
-                        <a href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a>
-                    </p>
-
-                    <h2 class="govuk-heading-s">{% trans %}Telephone{% endtrans %}</h2>
-
-                    <p class="govuk-body">
-                        0300 456 0300<br>
-                        {% trans %}Monday to Friday 9:30am to 5pm, except Wednesday.<br>
-                        Wednesday 10am to 5pm{% endtrans %}
-                    </p>
-
-                    <p class="govuk-body">
-                        {% trans %}<a class="govuk-link" href="https://www.gov.uk/call-charges">Find out about call charges</a>{% endtrans %}
-                    </p>
-
-                    <h2 class="govuk-heading-s">{% trans %}Textphone{% endtrans %}</h2>
-
-                    <p class="govuk-body">
-                        0115 934 2778
-                    </p>
+                    {{ include('@partials/contact-details.html.twig') }}
 
                     <h2 class="govuk-heading-m">{% trans %}Enforcement procedure{% endtrans %}</h2>
 

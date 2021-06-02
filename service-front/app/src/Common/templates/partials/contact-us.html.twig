@@ -25,24 +25,8 @@
                         {% trans %}If you need help with this service you can get in touch by telephone or email.{% endtrans %}
                     </p>
 
-                    <h2 class="govuk-heading-m">
-                        {% trans %}Telephone: {% endtrans %}
-                    </h2>
-                    <ul class="govuk-list">
-                        <li>{% trans %}Telephone: 0300 456 0300{% endtrans %}</li>
-                        <li>{% trans %}Monday to Friday 9.30am to 5pm, except Wednesday, 10am to 5pm.{% endtrans %}</li>
-                    </ul>
-                    <p class="govuk-body">
-                        <a class="govuk-link" href="https://www.gov.uk/call-charges">{% trans %}Find out about call charges{% endtrans %}</a>
-                    </p>
+                    {{ include("@partials/contact-details.html.twig", {showAddress:false}) }}
 
-                    <h2 class="govuk-heading-m">
-                        {% trans %}Email{% endtrans %}
-                    </h2>
-                    <ul class="govuk-list">
-                        <li><a class="govuk-link" href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a></li>
-                        <li>{% trans %}We’ll respond to emails within 10 working days.{% endtrans %}</li>
-                    </ul>
                 </div>
             </div>
         </main>

@@ -56,30 +56,9 @@
 
                     <h2 class="govuk-heading-m">{% trans %}How to let us know{% endtrans %}</h2>
 
-                    <h3 class="govuk-heading-s">{% trans %}Telephone{% endtrans %}</h3>
                     <p class="govuk-body">{% trans %}When you get in touch, quote the LPA reference number.{% endtrans %}</p>
-                    <p class="govuk-body">
-                        {% trans %}Telephone: 0300 456 0300<br>
-                      Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm{% endtrans %}
-                    </p>
-                    <p class="govuk-body">
-                      <a class="govuk-link" href="https://www.gov.uk/call-charges">{% trans %}Find out about call charges{% endtrans %}</a>
-                    </p>
 
-                    <h3 class="govuk-heading-s">{% trans %}Email{% endtrans %}</h3>
-                    <p class="govuk-body">
-                        <a class="govuk-link" href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a><br>
-                    </p>
-
-                    <h3 class="govuk-heading-s">{% trans %}Address{% endtrans %}</h3>
-                    <p class="govuk-body">
-                        {% trans %}
-                            Office of the Public Guardian<br>
-                            PO Box 16185<br>
-                            Birmingham<br>
-                            B2 2WH
-                        {% endtrans %}
-                    </p>
+                    {{ include('@partials/contact-details.html.twig') }}
 
                     {{ include('@partials/section-break.html.twig') }}
 

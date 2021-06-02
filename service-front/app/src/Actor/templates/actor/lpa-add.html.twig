@@ -43,12 +43,8 @@
                         </summary>
                         <div class="govuk-details__text">
                             <p>{% trans %}Your activation key is printed on the letter that told you the <abbr title="lasting power of attorney">LPA</abbr> had been registered. The donor and each attorney will have their own unique activation key.{% endtrans %}</p>
-                            <p>{% trans %}
-                                If you cannot find it, please call us:<br>
-                                Telephone: 0300 456 0300<br>
-                                Textphone: 0115 934 2778<br>
-                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm.
-                                {% endtrans %}</p>
+                            <p>{% trans %}If you cannot find it, please call us:{% endtrans %}</p>
+                            {{ include('@partials/contact-details.html.twig', {showAddress:false, showEmail:false}) }}
                         </div>
                     </details>
 
