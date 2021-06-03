@@ -2635,7 +2635,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^I am told a new activation is posted to the provided postcode$/
+     * @Then /^I am told a new activation key is posted to the provided postcode$/
      */
     public function iAmToldANewActivationIsPostedToTheProvidedPostcode()
     {

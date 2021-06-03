@@ -1422,7 +1422,7 @@ class LpaContext extends BaseIntegrationContext
         ];
 
         try {
-            $addOlderLpa($data);
+                $addOlderLpa($data);
         } catch (ApiException $e) {
             throw new Exception(
                 'Failed to correctly approve older LPA addition request: ' . $e->getMessage(),

@@ -174,7 +174,7 @@ class AddOlderLpaTest extends TestCase
      * @covers ::__invoke
      * @covers ::badRequestReturned
      */
-    public function it_will_fail_to_add_due_to_active_activation_key(): void
+    public function it_will_let_know_user_LPA_has_an_active_activation_key(): void
     {
         $this->apiClientProphecy
             ->httpPatch(

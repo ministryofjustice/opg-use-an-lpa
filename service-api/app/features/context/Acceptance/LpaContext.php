@@ -2354,4 +2354,93 @@ class LpaContext implements Context
     {
         // Not needed for this context
     }
+
+    /**
+     * @Given /^I already have a valid activation key for my LPA$/
+     */
+    public function iAlreadyHaveAValidActivationKeyForMyLPA()
+    {
+     // Not needed for this context
+    }
+
+    /**
+     * @Given /^I lost the letter received having the activation key$/
+     */
+    public function iLostTheLetterReceivedHavingTheActivationKey()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should have an option to regenerate an activation key for the old LPA I want to add$/
+     */
+    public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request for a new activation key again$/
+     */
+    public function iRequestForANewActivationKeyAgain()
+    {
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // check if actor has a code
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Created' => null
+                        ]
+                    )
+                )
+            );
+
+        // request a code to be generated and letter to be sent
+        $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    []
+                )
+            );
+
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/lpas/request-letter',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
+                'force_activation_key' => false,
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
+    }
+
+    /**
+     * @Then /^I am told a new activation key is posted to the provided postcode$/
+     */
+    public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode()
+    {
+        // Not needed for this context
+    }
 }
