@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	port := getEnv("PORT", "9004")
+	port := getEnv("PORT", "9005")
 
 	srv := &http.Server{
 		Handler:      server.NewServer(),

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"html/template"
+	"io/fs"
 	"net/http"
 	"path/filepath"
 
@@ -15,7 +16,7 @@ type Templates struct {
 	tmpls map[string]*template.Template
 }
 
-func AttachTemplates(next http.Handler, t *Templates) http.Handler {
+func WithTemplates(next http.Handler, t *Templates) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		ctx = context.WithValue(ctx, handlers.TemplateContextKey, t)
@@ -24,13 +25,13 @@ func AttachTemplates(next http.Handler, t *Templates) http.Handler {
 	})
 }
 
-func LoadTemplates(folder string) *Templates {
-	layouts, err := template.New("").ParseGlob(folder + "/layouts/*.gohtml")
+func LoadTemplates(folder fs.FS) *Templates {
+	layouts, err := template.New("").ParseFS(folder, "layouts/*.gohtml")
 	if err != nil {
 		log.Fatal().AnErr("error", err).Msg("unable to glob layout folder")
 	}
 
-	files, err := filepath.Glob(folder + "/*.gohtml")
+	files, err := fs.Glob(folder, "*.gohtml")
 	if err != nil {
 		log.Fatal().AnErr("error", err).Msg("unable to glob template folder")
 	}
@@ -40,7 +41,7 @@ func LoadTemplates(folder string) *Templates {
 	}
 
 	for _, file := range files {
-		t.tmpls[filepath.Base(file)] = template.Must(template.Must(layouts.Clone()).ParseFiles(file))
+		t.tmpls[filepath.Base(file)] = template.Must(template.Must(layouts.Clone()).ParseFS(folder, file))
 	}
 
 	return t

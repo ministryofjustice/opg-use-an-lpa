@@ -2,10 +2,12 @@ package server
 
 import (
 	"net/http"
+	"os"
 
 	ghndl "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
+	"github.com/rs/zerolog/log"
 )
 
 func NewServer() http.Handler {
@@ -15,11 +17,12 @@ func NewServer() http.Handler {
 	router.PathPrefix("/").Handler(handlers.StaticHandler("web/static"))
 
 	wrap := ghndl.RecoveryHandler()(
-		JsonLogging(
-			AttachTemplates(
+		WithJsonLogging(
+			WithTemplates(
 				router,
-				LoadTemplates("web/templates"),
+				LoadTemplates(os.DirFS("web/templates")),
 			),
+			log.Logger,
 		),
 	)
 

@@ -4,12 +4,12 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/hlog"
-	"github.com/rs/zerolog/log"
 )
 
-func JsonLogging(next http.Handler) http.Handler {
-	logger := hlog.NewHandler(log.Logger)
+func WithJsonLogging(next http.Handler, log zerolog.Logger) http.Handler {
+	logger := hlog.NewHandler(log)
 	access := hlog.AccessHandler(func(r *http.Request, status, size int, duration time.Duration) {
 		hlog.FromRequest(r).Info().
 			Str("method", r.Method).
@@ -28,7 +28,5 @@ func JsonLogging(next http.Handler) http.Handler {
 			remote(
 				userAgent(
 					referer(
-						http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-							next.ServeHTTP(w, r)
-						}))))))
+						next)))))
 }
