@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
-use Actor\Form\CreateNewkey;
+use Actor\Form\CreateNewActivationKey;
 use Carbon\Carbon;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
@@ -61,7 +61,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $form = new CreateNewkey($this->getCsrfGuard($request));
+        $form = new CreateNewActivationKey($this->getCsrfGuard($request));
         $user = $this->getUser($request);
 
         $form->setData($request->getParsedBody());

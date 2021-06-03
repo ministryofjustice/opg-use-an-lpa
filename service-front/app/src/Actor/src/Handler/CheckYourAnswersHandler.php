@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\CheckYourAnswers;
-use Actor\Form\CreateNewkey;
+use Actor\Form\CreateNewActivationKey;
 use Carbon\Carbon;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
@@ -143,7 +143,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ['user'  => $this->user]
                     ));
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
-                    $form = new CreateNewkey($this->getCsrfGuard($request));
+                    $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
                     $data['force_activation_key'] = true;
 

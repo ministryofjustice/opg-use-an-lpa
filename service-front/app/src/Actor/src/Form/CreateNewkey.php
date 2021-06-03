@@ -9,15 +9,15 @@ use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\InputFilter\InputFilterProviderInterface;
 
 /**
- * Class CreateNewkey
+ * Class CreateNewActivationKey
  * @package Actor\Form
  */
-class CreateNewkey extends AbstractForm implements InputFilterProviderInterface
+class CreateNewActivationKey extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'create_new_key';
+    const FORM_NAME = 'create_new_activation_key';
 
     /**
-     * CreateNewkey constructor.
+     * CreateNewActivationKey constructor.
      * @param CsrfGuardInterface $csrfGuard
      */
     public function __construct(CsrfGuardInterface $csrfGuard)
