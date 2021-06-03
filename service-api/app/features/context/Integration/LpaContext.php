@@ -1864,51 +1864,18 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @Then /^I should have an option to regenerate an activation key for the old LPA I want to add$/
+     */
+    public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @When /^I request for a new activation key again$/
      */
     public function iRequestForANewActivationKeyAgain()
     {
-//        $data = [
-//            'reference_number' => $this->lpaUid,
-//            'dob' => $this->userDob,
-//            'postcode' => $this->userPostCode,
-//            'first_names' => $this->userFirstname,
-//            'last_name' => $this->userSurname,
-//            'force_activation_key' => true,
-//        ];
-//
-//
-//        // LpaRepository::get
-//        $this->pactGetInteraction(
-//            $this->apiGatewayPactProvider,
-//            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-//            StatusCodeInterface::STATUS_OK,
-//            $this->lpa
-//        );
-//
-//        $codeExists = new stdClass();
-//
-//        $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
-//        $codeExists->Created = $createdDate;
-//
-//        $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
-//
-//        $this->pactPostInteraction(
-//            $this->codesApiPactProvider,
-//            '/v1/exists',
-//            [
-//                'lpa' => $this->lpaUid,
-//                'actor' => $this->actorLpaId,
-//            ],
-//            StatusCodeInterface::STATUS_OK,
-//            $codeExists
-//        );
-//
-//        $hasActivationCodeResponse = $this->olderLpaService->hasActivationCode($lpaMatchResponse);
-//
-//        assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
-//        assertEquals($lpaMatchResponse['actor-id'], $this->actorLpaId);
-
         $dob = (new DateTime($this->userDob));
 
         $data = [

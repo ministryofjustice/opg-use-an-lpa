@@ -415,7 +415,7 @@ class LpaContext implements Context
     public function iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt()
     {
         $this->ui->assertPageAddress('/lpa/check-answers');
-        //$this->ui->assertElementContainsText('h1', 'We\'ve already sent you an activation key for this LPA');
+        $this->ui->assertElementContainsText('h1', 'We\'ve already sent you an activation key for this LPA');
     }
 
     /**
@@ -2622,6 +2622,7 @@ class LpaContext implements Context
         $this->iConfirmThatThoseDetailsAreCorrect();
         $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
 
+        $this->ui->assertPageAddress('/lpa/check-answers');
         $this->ui->assertPageContainsText('Continue and ask for a new key');
     }
 
