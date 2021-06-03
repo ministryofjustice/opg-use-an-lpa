@@ -19,7 +19,7 @@ resource "aws_ecs_service" "admin" {
   load_balancer {
     target_group_arn = aws_lb_target_group.admin[0].arn
     container_name   = "app"
-    container_port   = 9004
+    container_port   = 80
   }
 
   wait_for_steady_state = true
@@ -163,8 +163,8 @@ locals {
       name        = "app",
       portMappings = [
         {
-          containerPort = 9004,
-          hostPort      = 9004,
+          containerPort = 80,
+          hostPort      = 80,
           protocol      = "tcp"
         }
       ],
@@ -182,6 +182,10 @@ locals {
           name  = "LOGGING_LEVEL",
           value = tostring(local.account.logging_level)
         },
+        {
+          name  = "PORT",
+          value = 80
+        }
       ]
     }
   )
