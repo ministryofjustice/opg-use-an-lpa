@@ -22,6 +22,8 @@ func main() {
 	}
 
 	go func() {
+		log.Info().Str("port", port).Msgf("server starting on address %s", srv.Addr)
+
 		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
 			log.Fatal().AnErr("error", err).Msg("server exited")
 		}
