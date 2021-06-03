@@ -1,0 +1,11 @@
+version: 3.8
+
+services:
+    webpack:
+        container_name: webpack
+        image: node:14.13.1-alpine3.12
+        working_dir: /web
+        entrypoint: >
+          sh -c "npm i && npm run watch"
+        volumes:
+          - .:/app:rw,delegated
