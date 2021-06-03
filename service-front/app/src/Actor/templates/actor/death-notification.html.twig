@@ -67,16 +67,10 @@
                         <li>{% trans %}a return address where your documents can be sent back to{% endtrans %}</li>
                     </ul>
                     <div class="govuk-inset-text">
-                        <p class="govuk-body">
-                            {% trans %}Office of the Public Guardian<br>
-                            PO Box 16185<br>
-                            Birmingham<br>
-                            B2 2WH{% endtrans %}
-                        </p>
+                        {{ include('@partials/contact-details.html.twig', {showTelephone:false, showEmail:false}) }}
                     </div>
                     <p class="govuk-body">
-                        <a class="govuk-link" href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a>
-                        <br>
+                        {{ include('@partials/contact-details.html.twig', {showTelephone:false, showAddress:false}) }}
                     </p>
                 </div>
             </div>

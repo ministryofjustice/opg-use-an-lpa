@@ -22,20 +22,20 @@
                     <ul class="list list-bullet">
                         <li>
                             <p class="govuk-body govuk-!-font-weight-bold">{% trans %}you already have an active account{% endtrans %}</p>
-                            <p class="govuk-body">{% trans with {'%link%': path('login') } %}<a href="%link%">Sign in to your account</a>{% endtrans %}</p>
+                            <p class="govuk-body">{% trans with {'%link%': path('login') } %}<a href="%link%" class="govuk-link">Sign in to your account</a>{% endtrans %}</p>
                         </li>
                         <li>
                             <p class="govuk-body govuk-!-font-weight-bold">{% trans %}the account activation link has expired{% endtrans %}</p>
-                            <p class="govuk-body">{% trans with {'%link%': path('create-account') } %}The link we sent you to activate your account lasts for 24 hours. If you did not use the link in that time, you'll need to <a href="%link%">create an account</a>.{% endtrans %}</p>
+                            <p class="govuk-body">{% trans with {'%link%': path('create-account') } %}The link we sent you to activate your account lasts for 24 hours. If you did not use the link in that time, you'll need to <a href="%link%" class="govuk-link">create an account</a>.{% endtrans %}</p>
                         </li>
                     </ul>
 
                     <p class="govuk-body govuk-!-margin-bottom-7">
-                        {% trans with {'%link%': "mailto:customerservices@publicguardian.gov.uk" } %}
-                            If you need help activating your account, email <a class="govuk-link" href="%link%">customerservices@publicguardian.gov.uk</a>.
+                        {% trans %}
+                            If you need help activating your account, email
                         {% endtrans %}
+                        {{ include('@partials/contact-details.html.twig', {showAddress:false, showTelephone:false}) }}
                     </p>
-
                     <p class="govuk-body">
                         {% trans %}If you're named on more than one <abbr title="lasting power of attorney">LPA</abbr>, you can add all those <abbr title="lasting powers of attorney">LPAs</abbr> to your account{% endtrans %}
                     </p>
