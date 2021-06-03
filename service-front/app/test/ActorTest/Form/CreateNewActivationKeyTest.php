@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ActorTest\Form;
 
-use Common\Form\CreateNewActivationKey;
+use Actor\Form\CreateNewActivationKey;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
