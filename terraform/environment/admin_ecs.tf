@@ -164,7 +164,7 @@ locals {
       portMappings = [
         {
           containerPort = 9004,
-          hostPort      = 80,
+          hostPort      = 9004,
           protocol      = "tcp"
         }
       ],
