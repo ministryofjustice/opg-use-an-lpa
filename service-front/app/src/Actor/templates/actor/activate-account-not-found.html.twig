@@ -30,16 +30,17 @@
                         </li>
                     </ul>
 
-                    <p class="govuk-body govuk-!-margin-bottom-7">
-                        {% trans %}
-                            If you need help activating your account, email
-                        {% endtrans %}
-                        {{ include('@partials/contact-details.html.twig', {showAddress:false, showTelephone:false}) }}
-                    </p>
                     <p class="govuk-body">
+                        {% trans %}
+                            If you need help activating your account, please contact us:
+                        {% endtrans %}
+                    </p>
+                    <div class="govuk-inset-text">
+                        {{ include('@partials/contact-details.html.twig', {showAddress:false}) }}
+                    </div>
+                    <p class="govuk-body govuk-!-margin-top-7">
                         {% trans %}If you're named on more than one <abbr title="lasting power of attorney">LPA</abbr>, you can add all those <abbr title="lasting powers of attorney">LPAs</abbr> to your account{% endtrans %}
                     </p>
-
                     <a href="{{ path('home') }}" draggable="false" class="govuk-button">
                         {% trans %}Continue{% endtrans %}
                     </a>
