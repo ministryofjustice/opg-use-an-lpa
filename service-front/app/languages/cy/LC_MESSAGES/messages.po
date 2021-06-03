@@ -5254,7 +5254,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:25
 msgid "<a href=\"%link%\" class=\"govuk-link\">Sign in to your account</a>"
-msgstr "<a href=\\”%link%\\ class=\"govuk-link\">Mewngofnodwch i’ch cyfrif</a>"
+msgstr "<a href=\"%link%\" class=\"govuk-link\">Mewngofnodwch i’ch cyfrif</a>"
 
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:29
 msgid ""
