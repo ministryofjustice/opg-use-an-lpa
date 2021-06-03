@@ -228,7 +228,6 @@ class OlderLpaService
                             ];
         $lpaAndActorMatchResponse['lpa_type'] = $lpaMatchResponse->getData()['caseSubtype'];
 
-
         return $lpaAndActorMatchResponse;
     }
 
