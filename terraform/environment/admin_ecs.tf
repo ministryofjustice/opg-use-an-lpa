@@ -184,7 +184,7 @@ locals {
         },
         {
           name  = "PORT",
-          value = 80
+          value = tostring(80)
         }
       ]
     }
