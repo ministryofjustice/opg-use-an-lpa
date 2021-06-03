@@ -38,7 +38,7 @@ class AddOlderLpaTest extends TestCase
             'reference_number' => 700000000000,
             'first_names' => 'Test',
             'last_name' => 'Example',
-            'dob' => (new DateTime('1980-11-07')),
+            'dob' => new DateTime('1980-11-07'),
             'postcode' => 'EX4 MPL',
         ];
 
@@ -334,5 +334,51 @@ class AddOlderLpaTest extends TestCase
             'force_activation_key' =>  null
         ];
         $result  = $sut($data);
+    }
+
+    /**
+     * @test
+     * @covers ::__invoke
+     * @covers ::badRequestReturned
+     */
+    public function allow_user_continue_to_generate_new_activation_key_even_if_actor_has_active_activation_key(): void
+    {
+        $this->apiClientProphecy
+            ->httpPatch(
+                '/v1/lpas/request-letter',
+                [
+                    'reference_number'      => (string) $this->olderLpa['reference_number'],
+                    'first_names'           => $this->olderLpa['first_names'],
+                    'last_name'             => $this->olderLpa['last_name'],
+                    'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode'              => $this->olderLpa['postcode'],
+                    'force_activation_key'  => true
+                ]
+            )->willThrow(
+                new ApiException(
+                    'LPA has an activation key already',
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    null,
+                    [
+                        'lpa_type'      => 'pfa',
+                        'donor_name'    => ['abc','lmn','xyz']
+                    ]
+
+                )
+            );
+
+        $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
+        $data = [
+            'identity'             =>  '12-1-1-1-1234',
+            'reference_number'     =>  $this->olderLpa['reference_number'],
+            'first_names'          =>  $this->olderLpa['first_names'],
+            'last_name'            =>  $this->olderLpa['last_name'],
+            'dob'                  =>  $this->olderLpa['dob'],
+            'postcode'             =>  $this->olderLpa['postcode'],
+            'force_activation_key' =>  true
+        ];
+        $result  = $sut($data);
+
+        $this->assertEquals(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $result->getResponse());
     }
 }

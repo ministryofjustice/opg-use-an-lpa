@@ -522,7 +522,7 @@ class OlderLpaServiceTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function lets_user_continue_if_actor_has_active_activation_key()
+    public function allow_user_continue_if_actor_has_active_activation_key()
     {
         $actorLpaDetails = [
             'lpa-id' => '700000004321',
@@ -574,6 +574,63 @@ class OlderLpaServiceTest extends TestCase
                             $lpa->getData()['donor']['middlenames'],
                             $lpa->getData()['donor']['surname']
                       ],
+                    'lpa_type' => $lpa->getData()['caseSubtype'],
+                ],
+                $ex->getAdditionalData()
+            );
+            return;
+        }
+
+        $this->assertEquals($actorLpaDetails['actor-id'], $result['actor-id']);
+        $this->assertEquals($actorLpaDetails['lpa-id'], $result['lpa-id']);
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function allow_user_continue_to_generate_new_activation_key_even_if_actor_has_active_activation_key()
+    {
+        $actorLpaDetails = [
+            'lpa-id' => '700000004321',
+            'actor-id' => '700000004444',
+        ];
+
+        $dataToMatch = [
+            'reference_number' =>  $actorLpaDetails['lpa-id'],
+            'dob'              => '1980-03-01',
+            'first_names'      => 'Test Tester',
+            'last_name'        => 'Testing',
+            'postcode'         => 'Ab1 2Cd',
+            'force_activation_key' => true
+        ];
+
+        $service = $this->getOlderLpaService();
+
+        $lpa = $this->older_lpa_get_by_uid_response();
+
+        $this->lpaServiceProphecy
+            ->getByUid($actorLpaDetails['lpa-id'])
+            ->willReturn($lpa);
+
+        $this->validateOlderLpaRequirements
+            ->__invoke($lpa->getData())
+            ->willReturn(true);
+
+        try {
+            $result = $service->checkLPAMatchAndGetActorDetails($dataToMatch);
+
+        } catch (BadRequestException $ex) {
+            $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            $this->assertEquals('LPA has an activation key already', $ex->getMessage());
+
+            $this->assertContains(
+                [
+                    'donor_name' => [
+                        $lpa->getData()['donor']['firstname'],
+                        $lpa->getData()['donor']['middlenames'],
+                        $lpa->getData()['donor']['surname']
+                    ],
                     'lpa_type' => $lpa->getData()['caseSubtype'],
                 ],
                 $ex->getAdditionalData()

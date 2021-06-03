@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
-use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Log\LoggerInterface;
 use DateTime;
 
 /**
@@ -21,12 +19,10 @@ use DateTime;
 class LpasActionsHandler implements RequestHandlerInterface
 {
     private OlderLpaService $olderLpaService;
-    private LoggerInterface $logger;
 
-    public function __construct(OlderLpaService $olderLpaService, LoggerInterface $logger)
+    public function __construct(OlderLpaService $olderLpaService)
     {
         $this->olderLpaService = $olderLpaService;
-        $this->logger = $logger;
     }
 
     /**
@@ -57,7 +53,6 @@ class LpasActionsHandler implements RequestHandlerInterface
         if (!isset($lpaMatchResponse['actor-id'])) {
             throw new BadRequestException('The actor-id is missing from the data match response');
         }
-
 
         // Checks if the actor already has an active activation key. If forced ignore
         if ($requestData['force_activation_key'] == false) {

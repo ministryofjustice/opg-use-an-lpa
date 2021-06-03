@@ -71,6 +71,3 @@ Feature: Add an older LPA
     And I lost the letter received having the activation key
     When I request for a new activation key again
     Then I am told a new activation key is posted to the provided postcode
-
-
-

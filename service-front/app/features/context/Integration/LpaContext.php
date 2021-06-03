@@ -1439,5 +1439,4 @@ class LpaContext extends BaseIntegrationContext
     {
         // Not needed for this context
     }
-
 }
