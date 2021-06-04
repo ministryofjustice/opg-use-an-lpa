@@ -1,11 +1,29 @@
-version: 3.8
+version: "3.6"
 
 services:
     webpack:
-        container_name: webpack
+        container_name: admin-webpack
         image: node:14.13.1-alpine3.12
-        working_dir: /web
-        entrypoint: >
-          sh -c "npm i && npm run watch"
+        working_dir: /app
+        entrypoint: |
+            sh -c "npm i && npm run watch"
         volumes:
-          - .:/app:rw,delegated
+            - .:/app:rw,delegated
+
+    # This definition runs a continuous build process that monitors
+    # golang files for changes and rebuilds/runs. This is disabled
+    # by default as the prefered way is to use your IDE to run it
+    # admin:
+    #     container_name: admin-app
+    #     image: golang:1.16.4
+    #     working_dir: /app
+    #     entrypoint: |
+    #         bash -c '\
+    #             go get github.com/cespare/reflex
+    #             go mod download
+    #             reflex -s -r "\.go" go run cmd/admin/main.go
+    #         '
+    #     volumes:
+    #         - .:/app
+    #     ports:
+    #         - 9005:9005
