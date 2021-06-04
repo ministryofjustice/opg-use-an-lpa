@@ -3209,11 +3209,6 @@ msgstr ""
 msgid "Telephone:"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:36
-#: src/Common/templates/partials/contact-us.html.twig:33
-msgid "Monday to Friday 9.30am to 5pm, except Wednesday, 10am to 5pm."
-msgstr ""
-
 #: src/Common/templates/partials/contact-us.html.twig:44
 msgid "We’ll respond to emails within 10 working days."
 msgstr ""
@@ -3907,7 +3902,7 @@ msgid "The link we sent you to activate your account lasts for 24 hours. If you 
 msgstr ""
 
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:34
-msgid "If you need help activating your account, email"
+msgid "If you need help activating your account, please contact us:"
 msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:81
