@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-06-03T11:07:42+00:00\n"
+"POT-Creation-Date: 2021-06-04T11:04:41+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -145,6 +145,7 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:14
 #: src/Actor/templates/actor/change-details.html.twig:20
 #: src/Actor/templates/actor/change-email.html.twig:12
+#: src/Actor/templates/actor/change-lpa-details.html.twig:20
 #: src/Actor/templates/actor/check-lpa.html.twig:12
 #: src/Actor/templates/actor/check-your-answers.html.twig:15
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:13
@@ -1280,6 +1281,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:23
 #: src/Actor/templates/actor/change-details.html.twig:34
+#: src/Actor/templates/actor/change-lpa-details.html.twig:32
 #: src/Actor/templates/actor/death-notification.html.twig:34
 msgid "You should contact us if:"
 msgstr ""
@@ -1334,6 +1336,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:31
 #: src/Actor/templates/actor/change-details.html.twig:57
+#: src/Actor/templates/actor/change-lpa-details.html.twig:46
 #: src/Actor/templates/actor/death-notification.html.twig:60
 msgid "How to let us know"
 msgstr ""
@@ -1360,6 +1363,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:47
 #: src/Actor/templates/actor/change-details.html.twig:76
+#: src/Actor/templates/actor/change-lpa-details.html.twig:58
 #: src/Actor/templates/actor/death-notification.html.twig:71
 msgid ""
 "Office of the Public Guardian<br>\n"
@@ -1784,7 +1788,7 @@ msgstr ""
 msgid "What to do if the details are wrong"
 msgstr ""
 
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:44
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:45
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:61
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/check-your-answers.html.twig:91
@@ -1998,10 +2002,12 @@ msgid "the donor or an attorney dies"
 msgstr ""
 
 #: src/Actor/templates/actor/change-details.html.twig:48
+#: src/Actor/templates/actor/change-lpa-details.html.twig:40
 msgid "We’ll update the online <abbr title=\"lasting power of attorney\">LPA</abbr> summary and our records."
 msgstr ""
 
 #: src/Actor/templates/actor/change-details.html.twig:50
+#: src/Actor/templates/actor/change-lpa-details.html.twig:42
 msgid ""
 "Do not make any changes to the paper <abbr title=\"lasting power of attorney\">LPA</abbr> yourself.\n"
 "                        If you do, you’ll no longer be able to use the <abbr title=\"lasting power of attorney\">LPA</abbr>."
@@ -2021,6 +2027,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:32
 #: src/Actor/templates/actor/change-details.html.twig:59
+#: src/Actor/templates/actor/change-lpa-details.html.twig:47
 msgid "When you get in touch, quote the LPA reference number."
 msgstr ""
 
@@ -3300,7 +3307,7 @@ msgstr ""
 msgid "The email should arrive in a few minutes. If it's not in your inbox, check your spam, bulk or junk email inbox. If you have not received the email, we can <a href=\"%link%\" class=\"govuk-link\">resend the activation email</a>."
 msgstr ""
 
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:40
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:42
 msgid "If you're named on more than one <abbr title=\"lasting power of attorney\">LPA</abbr>, you can add all those <abbr title=\"lasting powers of attorney\">LPAs</abbr> to your account"
 msgstr ""
 
@@ -3930,4 +3937,28 @@ msgid ""
 "            PO Box 16185<br>\n"
 "            Birmingham<br>\n"
 "            B2 2WH"
+msgstr ""
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:28
+msgid "Let us know if something is incorrect on the LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:30
+msgid "It's important that the information on the LPA summary is correct."
+msgstr ""
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:35
+msgid "information about preferences and instructions is incorrect"
+msgstr ""
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:36
+msgid "information about life-sustaining treatment is incorrect"
+msgstr ""
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:37
+msgid "the registration date or the date the donor signed the LPA are incorrect"
+msgstr ""
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:239
+msgid "Seen something incorrect in the LPA details?"
 msgstr ""

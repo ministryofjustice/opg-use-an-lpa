@@ -1864,6 +1864,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:23
 #: src/Actor/templates/actor/change-details.html.twig:34
+#: src/Actor/templates/actor/change-lpa-details.html.twig:23
 #: src/Actor/templates/actor/death-notification.html.twig:34
 msgid "You should contact us if:"
 msgstr "Dylech gysylltu â ni os bydd:"
@@ -1929,6 +1930,7 @@ msgstr "oes atwrneiod i gymryd eu lle"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:31
 #: src/Actor/templates/actor/change-details.html.twig:57
+#: src/Actor/templates/actor/change-lpa-details.html.twig:37
 #: src/Actor/templates/actor/death-notification.html.twig:60
 msgid "How to let us know"
 msgstr "Sut i roi gwybod i ni am newid"
@@ -1952,20 +1954,6 @@ msgstr "pob copi ardystiedig o’r LPA"
 #: src/Actor/templates/actor/death-notification.html.twig:67
 msgid "a return address where your documents can be sent back to"
 msgstr "cyfeiriad dychwelyd ar gyfer anfon eich dogfennau’n ôl atoch"
-
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:47
-#: src/Actor/templates/actor/change-details.html.twig:76
-#: src/Actor/templates/actor/death-notification.html.twig:71
-msgid ""
-"Office of the Public Guardian<br>\n"
-"                            PO Box 16185<br>\n"
-"                            Birmingham<br>\n"
-"                            B2 2WH"
-msgstr ""
-"Swyddfa’r Gwarcheidwad Cyhoeddus<br>\n"
-"                            Blwch Post 16185<br>\n"
-"                            Birmingham<br>\n"
-"                            B2 2WH"
 
 #: src/Actor/templates/actor/request-activation-key.html.twig:37
 #: src/Actor/templates/actor/your-details.html.twig:18
@@ -2716,6 +2704,7 @@ msgid "the donor or an attorney dies"
 msgstr "rhoddwr neu atwrnai yn marw"
 
 #: src/Actor/templates/actor/change-details.html.twig:48
+#: src/Actor/templates/actor/change-lpa-details.html.twig:31
 msgid ""
 "We’ll update the online <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "summary and our records."
@@ -2724,6 +2713,7 @@ msgstr ""
 "abbr> ar-lein a’n cofnodion."
 
 #: src/Actor/templates/actor/change-details.html.twig:50
+#: src/Actor/templates/actor/change-lpa-details.html.twig:33
 msgid ""
 "Do not make any changes to the paper <abbr title=\"lasting power of attorney"
 "\">LPA</abbr> yourself.\n"
@@ -2756,7 +2746,8 @@ msgid "Telephone"
 msgstr "Ffôn"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:32
-#: src/Actor/templates/actor/change-details.html.twig:59
+#: src/Actor/templates/actor/change-details.html.twig:60
+#: src/Actor/templates/actor/change-lpa-details.html.twig:40
 msgid "When you get in touch, quote the LPA reference number."
 msgstr "Pan fyddwch yn cysylltu â ni, cofiwch ddyfynnu eich cyfeirnod LPA."
 
@@ -5626,6 +5617,31 @@ msgstr ""
 "10am tan 5pm"
 
 #: src/Common/templates/partials/contact-details.html.twig:24
+#: src/Actor/templates/actor/change-lpa-details.html.twig:19
+msgid "Let us know if something is incorrect on the LPA"
+msgstr "Gadewch i ni wybod os oes rhywbeth yn anghywir ar yr LPA"
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:21
+msgid "It's important that the information on the LPA summary is correct."
+msgstr "Mae’n bwysig bod yr wybodaeth ar y crynodeb o’r LPA yn gywir."
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:26
+msgid "information about preferences and instructions is incorrect"
+msgstr "gwybodaeth am ddymuniadau a chyfarwyddiadau yn anghywir"
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:27
+msgid "information about life-sustaining treatment is incorrect"
+msgstr "gwybodaeth am driniaeth cynnal bywyd yn anghywir"
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:28
+msgid "the registration date or the date the donor signed the LPA are incorrect"
+msgstr ""
+"y dyddiad cofrestru neu’r dyddiad y gwnaeth y rhoddwr lofnodi’r LPA yn anghywir"
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:239
+msgid "Seen something incorrect in the LPA details?"
+msgstr "Ydych chi wedi gweld rhywbeth sy’n anghywir ym manylion yr LPA?"
+
 msgid ""
 "Office of the Public Guardian<br>\n"
 "            PO Box 16185<br>\n"
