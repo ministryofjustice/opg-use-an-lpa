@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-06-03T16:56:52+00:00\n"
+"POT-Creation-Date: 2021-06-07T15:02:13+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -294,7 +294,7 @@ msgid "Change password"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:13
-#: src/Common/templates/layout/default.html.twig:106
+#: src/Common/templates/layout/default.html.twig:108
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:15
 msgid "Terms of use"
 msgstr ""
@@ -771,7 +771,7 @@ msgid "Use a lasting power of attorney"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:14
-#: src/Common/templates/layout/default.html.twig:111
+#: src/Common/templates/layout/default.html.twig:113
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:14
 msgid "Privacy notice"
 msgstr ""
@@ -2368,7 +2368,7 @@ msgstr ""
 msgid "Error:"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:116
+#: src/Common/templates/layout/default.html.twig:118
 #: src/Common/templates/partials/cookies.html.twig:24
 msgid "Cookies"
 msgstr ""
@@ -2912,25 +2912,25 @@ msgstr ""
 msgid "Start again"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:41
+#: src/Common/templates/layout/default.html.twig:43
 msgid "Skip to main content"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:51
+#: src/Common/templates/layout/default.html.twig:53
 msgid "Tell us whether you accept cookies"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:52
+#: src/Common/templates/layout/default.html.twig:54
 msgid ""
 "GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us\n"
 "                    improve government digital services. Any data collected is anonymised."
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:57
+#: src/Common/templates/layout/default.html.twig:59
 msgid "Accept all cookies"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:60
+#: src/Common/templates/layout/default.html.twig:62
 msgid "Set cookie preferences"
 msgstr ""
 
@@ -2938,20 +2938,20 @@ msgstr ""
 msgid "GOV.UK"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:102
+#: src/Common/templates/layout/default.html.twig:104
 msgid "Support links"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:126
+#: src/Common/templates/layout/default.html.twig:128
 #: src/Common/templates/partials/contact-us.html.twig:23
 msgid "Contact us"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:131
+#: src/Common/templates/layout/default.html.twig:133
 msgid "Built by OPG Digital"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:141
+#: src/Common/templates/layout/default.html.twig:143
 msgid ""
 "All content is available under the\n"
 "                    <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\">\n"
@@ -2959,7 +2959,7 @@ msgid ""
 "                    </a>, except where otherwise stated"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:150
+#: src/Common/templates/layout/default.html.twig:152
 msgid "© Crown copyright"
 msgstr ""
 
@@ -2999,7 +2999,7 @@ msgid "Hide"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:3
-#: src/Common/templates/layout/default.html.twig:121
+#: src/Common/templates/layout/default.html.twig:123
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:3
 msgid "Accessibility statement"
 msgstr ""
