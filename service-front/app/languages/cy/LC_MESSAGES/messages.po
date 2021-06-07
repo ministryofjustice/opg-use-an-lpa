@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-06-03T16:56:52+00:00\n"
+"POT-Creation-Date: 2021-06-07T15:02:13+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 2.4\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 
@@ -349,7 +349,7 @@ msgid "Change password"
 msgstr "Newid eich cyfrinair"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:13
-#: src/Common/templates/layout/default.html.twig:106
+#: src/Common/templates/layout/default.html.twig:108
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:15
 msgid "Terms of use"
 msgstr "Telerau defnyddio"
@@ -1101,7 +1101,7 @@ msgid "Use a lasting power of attorney"
 msgstr "Defnyddio atwrneiaeth arhosol"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:14
-#: src/Common/templates/layout/default.html.twig:111
+#: src/Common/templates/layout/default.html.twig:113
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:14
 msgid "Privacy notice"
 msgstr "Hysbysiad preifatrwydd"
@@ -3241,7 +3241,7 @@ msgstr "Mae problem"
 msgid "Error:"
 msgstr "Gwall:"
 
-#: src/Common/templates/layout/default.html.twig:116
+#: src/Common/templates/layout/default.html.twig:118
 #: src/Common/templates/partials/cookies.html.twig:24
 msgid "Cookies"
 msgstr "Cwcis"
@@ -4163,15 +4163,15 @@ msgstr "I weld LPA, bydd yn rhaid ichi ddechrau eto."
 msgid "Start again"
 msgstr "Dechrau eto"
 
-#: src/Common/templates/layout/default.html.twig:41
+#: src/Common/templates/layout/default.html.twig:43
 msgid "Skip to main content"
 msgstr "Neidio i’r prif gynnwys"
 
-#: src/Common/templates/layout/default.html.twig:51
+#: src/Common/templates/layout/default.html.twig:53
 msgid "Tell us whether you accept cookies"
 msgstr "Dweud a ydych yn derbyn cwcis"
 
-#: src/Common/templates/layout/default.html.twig:52
+#: src/Common/templates/layout/default.html.twig:54
 msgid ""
 "GOV.UK uses cookies which are essential for the site to work. We also use non-"
 "essential cookies to help us\n"
@@ -4183,11 +4183,11 @@ msgstr ""
 "                    wella gwasanaethau digidol y Llywodraeth. Bydd unrhyw "
 "ddata a gesglir yn ddi-enw."
 
-#: src/Common/templates/layout/default.html.twig:57
+#: src/Common/templates/layout/default.html.twig:59
 msgid "Accept all cookies"
 msgstr "Derbyn yr holl gwcis"
 
-#: src/Common/templates/layout/default.html.twig:60
+#: src/Common/templates/layout/default.html.twig:62
 msgid "Set cookie preferences"
 msgstr "Gosod dewisiadau ar gyfer cwcis"
 
@@ -4195,20 +4195,20 @@ msgstr "Gosod dewisiadau ar gyfer cwcis"
 msgid "GOV.UK"
 msgstr "GOV.UK"
 
-#: src/Common/templates/layout/default.html.twig:102
+#: src/Common/templates/layout/default.html.twig:104
 msgid "Support links"
 msgstr "Dolenni cymorth"
 
-#: src/Common/templates/layout/default.html.twig:126
+#: src/Common/templates/layout/default.html.twig:128
 #: src/Common/templates/partials/contact-us.html.twig:23
 msgid "Contact us"
 msgstr "Cysylltwch â ni"
 
-#: src/Common/templates/layout/default.html.twig:131
+#: src/Common/templates/layout/default.html.twig:133
 msgid "Built by OPG Digital"
 msgstr "Adeiladwyd gan OPG Digidol"
 
-#: src/Common/templates/layout/default.html.twig:141
+#: src/Common/templates/layout/default.html.twig:143
 msgid ""
 "All content is available under the\n"
 "                    <a class=\"govuk-footer__link\" href=\"https://www."
@@ -4224,7 +4224,7 @@ msgstr ""
 "                        Trwydded Llywodraeth Agored v3.0\n"
 "                    </a>, oni nodir yn wahanol"
 
-#: src/Common/templates/layout/default.html.twig:150
+#: src/Common/templates/layout/default.html.twig:152
 msgid "© Crown copyright"
 msgstr "© Hawlfraint y goron"
 
@@ -4273,7 +4273,7 @@ msgid "Hide"
 msgstr "Cuddio"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:3
-#: src/Common/templates/layout/default.html.twig:121
+#: src/Common/templates/layout/default.html.twig:123
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:3
 msgid "Accessibility statement"
 msgstr "Datganiad hygyrchedd"
@@ -5709,5 +5709,5 @@ msgid ""
 "You are not an attorney on this <abbr title=\"lasting power of attorney\">LPA</"
 "abbr> anymore."
 msgstr ""
-"Nid ydych yn atwrnai ar yr <abbr title=\"lasting power of attorney\">LPA</abbr> "
-"hon mwyach."
+"Nid ydych yn atwrnai ar yr <abbr title=\"lasting power of attorney\">LPA</"
+"abbr> hon mwyach."
