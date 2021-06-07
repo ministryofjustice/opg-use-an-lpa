@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"html/template"
 	"io/fs"
@@ -15,6 +16,8 @@ import (
 type Templates struct {
 	tmpls map[string]*template.Template
 }
+
+var ErrTemplateNotFound = errors.New("template not found")
 
 func WithTemplates(next http.Handler, t *Templates) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -51,6 +54,6 @@ func (t *Templates) Get(name string) (*template.Template, error) {
 	if tmpl, isMapContains := t.tmpls[name]; isMapContains {
 		return tmpl, nil
 	} else {
-		return nil, fmt.Errorf("template \"%s\" not found", name)
+		return nil, fmt.Errorf("%w, \"%s\"", ErrTemplateNotFound, name)
 	}
 }

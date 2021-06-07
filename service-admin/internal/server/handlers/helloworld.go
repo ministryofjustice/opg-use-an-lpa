@@ -10,8 +10,8 @@ func HelloHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Ctx(r.Context()).Info().Msg("viewed the hello world page")
 
-		if err := GetTemplate(r.Context(), "helloworld.gohtml").ExecuteTemplate(w, "default", nil); err != nil {
-			log.Err(err).Msg("error whilst rendering template")
+		if err := RenderTemplate(w, r.Context(), "helloworld.gohtml", nil); err != nil {
+			log.Panic().Err(err).Msg("error rendering template")
 		}
 	}
 }

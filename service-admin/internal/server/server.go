@@ -14,10 +14,10 @@ func NewServer() http.Handler {
 	router := mux.NewRouter()
 
 	router.Handle("/", handlers.HelloHandler())
-	router.PathPrefix("/").Handler(handlers.StaticHandler("web/static"))
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("web/static")))
 
 	wrap := ghndl.RecoveryHandler()(
-		WithJsonLogging(
+		WithJSONLogging(
 			WithTemplates(
 				router,
 				LoadTemplates(os.DirFS("web/templates")),

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"os"
 	"os/signal"
@@ -24,19 +25,21 @@ func main() {
 	go func() {
 		log.Info().Str("port", port).Msgf("server starting on address %s", srv.Addr)
 
-		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+		if err := srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 			log.Fatal().AnErr("error", err).Msg("server exited")
 		}
 	}()
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
+
 	defer func() {
 		signal.Stop(c)
 	}()
 
 	sig := <-c
 	log.Info().Msgf("got %s signal. quitting.", sig)
+
 	tc, cnl := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cnl()
 
