@@ -45,6 +45,11 @@ Feature: Add an LPA
       | c - xyup - hwqr - echv | XYUPHWQRECHV |
       | c-CYUP HWQR ECHV       | CYUPHWQRECHV |
       | C-xyup hwqr echv       | XYUPHWQRECHV |
+      | c–cyup–HWQR–echv       | CYUPHWQRECHV |
+      | c—cyup—HWQR—echv       | CYUPHWQRECHV |
+      | c-cyup–HWQR—echv       | CYUPHWQRECHV |
+      | cyup–HWQR–echv         | CYUPHWQRECHV |
+      | cyup—HWQR—echv         | CYUPHWQRECHV |
 
   @integration @ui
   Scenario: The user cannot add an LPA to their account as it does not exist
