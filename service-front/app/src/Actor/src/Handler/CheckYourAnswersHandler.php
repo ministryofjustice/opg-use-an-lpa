@@ -154,7 +154,8 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             'actor::already-have-activation-key',
                             [
                                 'user' => $this->user,
-                                'donorName' => implode(' ', array_filter(array_map('trim',$result->getData()['donor_name']))),
+                                'donorName' => $result->getData()['donor_name'],
+                                'donorName' => (implode(' ', array_filter($result->getData()['donor_name']))),
                                 'caseType' => $result->getData()['lpa_type'],
                                 'form' => $form
                             ]
