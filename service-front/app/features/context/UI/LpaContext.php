@@ -444,6 +444,22 @@ class LpaContext implements Context
     }
 
     /**
+     * @Given I have not added any LPAs to my account
+     */
+    public function iHaveNotAddedAnyLPAsToMyAccount()
+    {
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+    }
+
+    /**
      * @Then /^I am told that my input is invalid because (.*)$/
      */
     public function iAmToldThatMyInputIsInvalidBecause($reason)
