@@ -55,7 +55,7 @@ class LpasActionsHandler implements RequestHandlerInterface
         }
 
         // Checks if the actor already has an active activation key. If forced ignore
-        if ($requestData['force_activation_key'] == false) {
+        if (!$requestData['force_activation_key']) {
             $hasActivationCode = $this->olderLpaService->hasActivationCode($lpaMatchResponse);
 
             if ($hasActivationCode instanceof DateTime) {
@@ -70,7 +70,7 @@ class LpasActionsHandler implements RequestHandlerInterface
         }
 
         //If all criteria pass, request letter with activation key
-        $this->olderLpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
+        $this->olderLpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id'], $requestData['force_activation_key']);
 
         return new EmptyResponse();
     }

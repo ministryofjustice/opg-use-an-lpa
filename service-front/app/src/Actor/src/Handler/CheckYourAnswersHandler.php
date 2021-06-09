@@ -77,6 +77,8 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         $this->session = $this->getSession($request, 'session');
         $this->identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
 
+        $forceActivationKey = false;
+
         if (
             is_null($this->session)
             || is_null($this->session->get('opg_reference_number'))
@@ -100,7 +102,8 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     $this->session->get('dob')['month'],
                     $this->session->get('dob')['day']
                 )->toImmutable(),
-            'postcode'          => $this->session->get('postcode')
+            'postcode'          => $this->session->get('postcode'),
+            'force_activation_key' => $forceActivationKey
         ];
 
         switch ($request->getMethod()) {
@@ -133,8 +136,16 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
             'postcode' => $this->data['postcode'],
         ];
 
-          if ($this->form->isValid()) {
-            $result = ($this->addOlderLpa)($data);
+        if ($this->form->isValid()) {
+            $result = ($this->addOlderLpa)(
+                $this->identity,
+                $this->data['reference_number'],
+                $this->data['first_names'],
+                $this->data['last_name'],
+                $this->data['dob'],
+                $this->data['postcode'],
+                $this->data['force_activation_key']
+            );
 
             switch ($result->getResponse()) {
                 case OlderLpaApiResponse::NOT_ELIGIBLE:
@@ -145,7 +156,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
-                    $data['force_activation_key'] = true;
 
                     $form->setData($data);
 

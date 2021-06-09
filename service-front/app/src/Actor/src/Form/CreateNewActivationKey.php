@@ -44,10 +44,6 @@ class CreateNewActivationKey extends AbstractForm implements InputFilterProvider
              'name' => 'postcode',
              'type' => 'Hidden',
         ]);
-        $this->add([
-             'name' => 'force_activation_key',
-             'type' => 'Hidden',
-        ]);
     }
 
     /**
@@ -72,10 +68,6 @@ class CreateNewActivationKey extends AbstractForm implements InputFilterProvider
             'postcode' => [
                 'required'   => true,
             ],
-            'force_activation_key' => [
-                'required'   => true,
-            ],
-
         ];
     }
 }
