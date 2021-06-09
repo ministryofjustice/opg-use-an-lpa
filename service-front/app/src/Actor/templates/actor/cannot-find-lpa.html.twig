@@ -31,7 +31,7 @@
                     <h2 class="govuk-heading-l">{% trans %}How to let us know{% endtrans %}</h2>
                     <p class="govuk-body">{% trans %}When you get in touch, quote the LPA reference number.{% endtrans %}</p>
 
-                    {{ include("@partials/contactdetails/contact-details.html.twig") }}
+                    {{ include("@partials/contact-details/contact-details.html.twig") }}
 
                     <a href="{{ path('lpa.add-by-paper') }}"  draggable="false" class="govuk-button">{% trans %}Try again{% endtrans %}</a>
                     <a class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" href="{{ path('logout') }}">

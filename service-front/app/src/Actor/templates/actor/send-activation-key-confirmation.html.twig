@@ -26,7 +26,7 @@
                     <p class="govuk-body"><strong>{% trans with {'%date%': lpa_date(date)} %}You should get the letter by %date%{% endtrans %}</p>
                     <p class="govuk-body">{% trans %}If you do not get it by this date, please contact us. You'll need to give us the LPA reference number when you call.{% endtrans %}</p>
 
-                    {{ include('@partials/contactdetails/telephone.html.twig') }}
+                    {{ include('@partials/contact-details/telephone.html.twig') }}
 
                     <a href="{{ path('lpa.add-by-paper') }}" draggable="false" class="govuk-button">{% trans %}Request another activation key{% endtrans %}</a>
                     <a class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" href="{{ path('lpa.dashboard') }}">
