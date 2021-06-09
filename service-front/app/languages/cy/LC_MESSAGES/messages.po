@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-06-03T11:07:42+00:00\n"
+"POT-Creation-Date: 2021-06-09T08:00:19+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 2.4.3\n"
+"X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 
@@ -175,6 +175,7 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:14
 #: src/Actor/templates/actor/change-details.html.twig:20
 #: src/Actor/templates/actor/change-email.html.twig:12
+#: src/Actor/templates/actor/change-lpa-details.html.twig:20
 #: src/Actor/templates/actor/check-lpa.html.twig:12
 #: src/Actor/templates/actor/check-your-answers.html.twig:15
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:13
@@ -902,7 +903,7 @@ msgid "Date of birth"
 msgstr "Dyddiad geni"
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:143
-#: src/Common/templates/partials/contact-details.html.twig:22
+#: src/Common/templates/partials/contactdetails/address.html.twig:1
 #: src/Common/templates/partials/full-lpa-display.html.twig:170
 msgid "Address"
 msgstr "Cyfeiriad"
@@ -1864,7 +1865,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:23
 #: src/Actor/templates/actor/change-details.html.twig:34
-#: src/Actor/templates/actor/change-lpa-details.html.twig:23
+#: src/Actor/templates/actor/change-lpa-details.html.twig:32
 #: src/Actor/templates/actor/death-notification.html.twig:34
 msgid "You should contact us if:"
 msgstr "Dylech gysylltu â ni os bydd:"
@@ -1930,7 +1931,7 @@ msgstr "oes atwrneiod i gymryd eu lle"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:31
 #: src/Actor/templates/actor/change-details.html.twig:57
-#: src/Actor/templates/actor/change-lpa-details.html.twig:37
+#: src/Actor/templates/actor/change-lpa-details.html.twig:46
 #: src/Actor/templates/actor/death-notification.html.twig:60
 msgid "How to let us know"
 msgstr "Sut i roi gwybod i ni am newid"
@@ -1954,6 +1955,21 @@ msgstr "pob copi ardystiedig o’r LPA"
 #: src/Actor/templates/actor/death-notification.html.twig:67
 msgid "a return address where your documents can be sent back to"
 msgstr "cyfeiriad dychwelyd ar gyfer anfon eich dogfennau’n ôl atoch"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:47
+#: src/Actor/templates/actor/change-details.html.twig:76
+#: src/Actor/templates/actor/change-lpa-details.html.twig:58
+#: src/Actor/templates/actor/death-notification.html.twig:71
+msgid ""
+"Office of the Public Guardian<br>\n"
+"                            PO Box 16185<br>\n"
+"                            Birmingham<br>\n"
+"                            B2 2WH"
+msgstr ""
+"Swyddfa’r Gwarcheidwad Cyhoeddus<br>\n"
+"            Blwch Post 16185<br>\n"
+"            Birmingham<br>\n"
+"            B2 2WH"
 
 #: src/Actor/templates/actor/request-activation-key.html.twig:37
 #: src/Actor/templates/actor/your-details.html.twig:18
@@ -2446,7 +2462,7 @@ msgstr "Gwiriwch fod y manylion hyn yn gywir cyn mynd ymlaen"
 msgid "What to do if the details are wrong"
 msgstr "Beth i’w wneud os yw’r manylion yn anghywir"
 
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:44
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:46
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:61
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/check-your-answers.html.twig:91
@@ -2704,7 +2720,7 @@ msgid "the donor or an attorney dies"
 msgstr "rhoddwr neu atwrnai yn marw"
 
 #: src/Actor/templates/actor/change-details.html.twig:48
-#: src/Actor/templates/actor/change-lpa-details.html.twig:31
+#: src/Actor/templates/actor/change-lpa-details.html.twig:40
 msgid ""
 "We’ll update the online <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "summary and our records."
@@ -2713,7 +2729,7 @@ msgstr ""
 "abbr> ar-lein a’n cofnodion."
 
 #: src/Actor/templates/actor/change-details.html.twig:50
-#: src/Actor/templates/actor/change-lpa-details.html.twig:33
+#: src/Actor/templates/actor/change-lpa-details.html.twig:42
 msgid ""
 "Do not make any changes to the paper <abbr title=\"lasting power of attorney"
 "\">LPA</abbr> yourself.\n"
@@ -2741,21 +2757,21 @@ msgstr ""
 "Os ydych yn atwrnai, gallwch ddweud wrthym am unrhyw newid i fanylion y "
 "rhoddwr a’ch manylion chi. Ni allwch ddiweddaru manylion atwrnai arall."
 
-#: src/Common/templates/partials/contact-details.html.twig:3
+#: src/Common/templates/partials/contactdetails/telephone.html.twig:1
 msgid "Telephone"
 msgstr "Ffôn"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:32
-#: src/Actor/templates/actor/change-details.html.twig:60
-#: src/Actor/templates/actor/change-lpa-details.html.twig:40
+#: src/Actor/templates/actor/change-details.html.twig:59
+#: src/Actor/templates/actor/change-lpa-details.html.twig:47
 msgid "When you get in touch, quote the LPA reference number."
 msgstr "Pan fyddwch yn cysylltu â ni, cofiwch ddyfynnu eich cyfeirnod LPA."
 
-#: src/Common/templates/partials/contact-details.html.twig:10
+#: src/Common/templates/partials/contactdetails/telephone.html.twig:8
 msgid "Find out about call charges"
 msgstr "Gwybodaeth am brisiau galwadau"
 
-#: src/Common/templates/partials/contact-details.html.twig:15
+#: src/Common/templates/partials/contactdetails/email.html.twig:1
 msgid "Email"
 msgstr "E-bost"
 
@@ -4350,12 +4366,12 @@ msgid "Textphone"
 msgstr "Ffôn testun"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:63
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:67
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:69
 msgid "Enforcement procedure"
 msgstr "Y weithdrefn orfodaeth"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:66
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:70
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:72
 msgid ""
 "The Equality and Human Rights Commission (EHRC) is responsible for enforcing "
 "the Public Sector Bodies (Websites and Mobile Applications)\n"
@@ -4373,12 +4389,12 @@ msgstr ""
 "\">cysylltwch â’r Gwasanaeth Cyngor a Chefnogaeth ar Gydraddoldeb (EASS)</a>."
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:71
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:75
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:77
 msgid "Technical information about this service’s accessibility"
 msgstr "Gwybodaeth dechnegol am hygyrchedd y gwasanaeth hwn"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:74
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:78
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:80
 msgid ""
 "The Office of the Public Guardian is committed to making its online services "
 "accessible, in accordance with the Public Sector Bodies (Websites and Mobile "
@@ -4512,17 +4528,17 @@ msgid "Content that’s not within the scope of the accessibility regulations"
 msgstr "Cynnwys nad yw o fewn cwmpas y rheoliadau hygyrchedd"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:137
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:87
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:89
 msgid "Preparation of this accessibility statement"
 msgstr "Paratoi’r datganiad hygyrchedd hwn"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:140
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:90
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:92
 msgid "This statement was prepared on %date%"
 msgstr "Paratowyd y datganiad hwn ar %date%"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:144
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:94
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:96
 msgid ""
 "This service was last tested on 4 June 2020. The test was carried out by "
 "Digital Accessibility Centre (DAC)."
@@ -4552,11 +4568,11 @@ msgstr ""
 "publications/lasting-power-of-attorney-valid-examples.cy\">wirio atwrneiaeth "
 "arhosol ar bapur</a>"
 
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:81
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:83
 msgid "Compliance status"
 msgstr "Statws cydymffurfio"
 
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:84
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:86
 msgid ""
 "This service is fully compliant with the <a class=\"govuk-link\" href="
 "\"https://www.w3.org/TR/WCAG21/\">Web Content Accessibility Guidelines version "
@@ -4610,19 +4626,6 @@ msgstr ""
 "Mae’r ddolen wnaethom ni ei hanfon atoch yn para am 24 awr. Os na wnaethoch "
 "chi ddefnyddio’r ddolen o fewn y cyfnod hwnnw, bydd rhaid i chi <a href=\"%link"
 "%\">greu cyfrif</a>."
-
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:34
-#, fuzzy
-#| msgid ""
-#| "If you need more help activating your account, email <a class=\"govuk-link"
-#| "\" href=\"%link%\">customerservices@publicguardian.gov.uk</a>."
-msgid ""
-"If you need help activating your account, email <a class=\"govuk-link\" href="
-"\"%link%\">customerservices@publicguardian.gov.uk</a>."
-msgstr ""
-"Os oes angen rhagor o gymorth arnoch wrth geisio cadarnhau eich cyfrif, "
-"anfonwch neges e-bost i <a href=\"%link%\">customerservices@publicguardian.gov."
-"uk</a>."
 
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:40
 msgid ""
@@ -4729,7 +4732,7 @@ msgstr ""
 "edrychwch yn y ffolder spam neu junk.Os nad ydych wedi cael yr e-bost, gallwn "
 "<a href=\"%link%\" class=\"govuk-link\">anfon yr e-bost cadarnhau eto</a>."
 
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:40
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:43
 msgid ""
 "If you're named on more than one <abbr title=\"lasting power of attorney"
 "\">LPA</abbr>, you can add all those <abbr title=\"lasting powers of attorney"
@@ -5603,37 +5606,23 @@ msgstr "Os na allwch ddod o hyd iddo, gallwch ein ffonio:"
 msgid "If you're sure you entered the right information, please call us:"
 msgstr "Os ydych yn sicr eich bod wedi rhoi’r wybodaeth gywir, cysylltwch â ni:"
 
-#: src/Common/templates/partials/contact-details.html.twig:5
-msgid ""
-"Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</"
-"a><br>\n"
-"            Textphone: 0115 934 2778 <br>\n"
-"            Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm"
-msgstr ""
-"Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\"> 0300 456 "
-"0300</a><br>\n"
-"            Ffôn testun: 0115 934 2778<br>\n"
-"            Dydd Llun i ddydd Gwener, 9.30am tan 5pm, heblaw bob dydd Mercher "
-"10am tan 5pm"
-
-#: src/Common/templates/partials/contact-details.html.twig:24
-#: src/Actor/templates/actor/change-lpa-details.html.twig:19
+#: src/Actor/templates/actor/change-lpa-details.html.twig:28
 msgid "Let us know if something is incorrect on the LPA"
 msgstr "Gadewch i ni wybod os oes rhywbeth yn anghywir ar yr LPA"
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:21
+#: src/Actor/templates/actor/change-lpa-details.html.twig:30
 msgid "It's important that the information on the LPA summary is correct."
 msgstr "Mae’n bwysig bod yr wybodaeth ar y crynodeb o’r LPA yn gywir."
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:26
+#: src/Actor/templates/actor/change-lpa-details.html.twig:35
 msgid "information about preferences and instructions is incorrect"
 msgstr "gwybodaeth am ddymuniadau a chyfarwyddiadau yn anghywir"
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:27
+#: src/Actor/templates/actor/change-lpa-details.html.twig:36
 msgid "information about life-sustaining treatment is incorrect"
 msgstr "gwybodaeth am driniaeth cynnal bywyd yn anghywir"
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:28
+#: src/Actor/templates/actor/change-lpa-details.html.twig:37
 msgid "the registration date or the date the donor signed the LPA are incorrect"
 msgstr ""
 "y dyddiad cofrestru neu’r dyddiad y gwnaeth y rhoddwr lofnodi’r LPA yn anghywir"
@@ -5642,13 +5631,27 @@ msgstr ""
 msgid "Seen something incorrect in the LPA details?"
 msgstr "Ydych chi wedi gweld rhywbeth sy’n anghywir ym manylion yr LPA?"
 
+#: src/Common/templates/partials/contactdetails/address.html.twig:3
 msgid ""
 "Office of the Public Guardian<br>\n"
-"            PO Box 16185<br>\n"
-"            Birmingham<br>\n"
-"            B2 2WH"
+"        PO Box 16185<br>\n"
+"        Birmingham<br>\n"
+"        B2 2WH"
 msgstr ""
 "Swyddfa’r Gwarcheidwad Cyhoeddus<br>\n"
 "            Blwch Post 16185<br>\n"
 "            Birmingham<br>\n"
 "            B2 2WH"
+
+#: src/Common/templates/partials/contactdetails/telephone.html.twig:3
+msgid ""
+"Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</"
+"a><br>\n"
+"        Textphone: 0115 934 2778 <br>\n"
+"        Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm"
+msgstr ""
+"Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\"> 0300 456 "
+"0300</a><br>\n"
+"            Ffôn testun: 0115 934 2778<br>\n"
+"            Dydd Llun i ddydd Gwener, 9.30am tan 5pm, heblaw bob dydd Mercher "
+"10am tan 5pm"

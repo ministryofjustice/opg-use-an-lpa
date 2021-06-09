@@ -36,7 +36,8 @@
                         {% endtrans %}
                     </p>
                     <div class="govuk-inset-text">
-                        {{ include('@partials/contact-details.html.twig', {showAddress:false}) }}
+                        {{ include('@partials/contactdetails/telephone.html.twig')}}
+                        {{ include('@partials/contactdetails/email.html.twig') }}
                     </div>
                     <p class="govuk-body govuk-!-margin-top-7">
                         {% trans %}If you're named on more than one <abbr title="lasting power of attorney">LPA</abbr>, you can add all those <abbr title="lasting powers of attorney">LPAs</abbr> to your account{% endtrans %}

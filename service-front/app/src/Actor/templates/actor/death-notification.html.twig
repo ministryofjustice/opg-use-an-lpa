@@ -67,10 +67,10 @@
                         <li>{% trans %}a return address where your documents can be sent back to{% endtrans %}</li>
                     </ul>
                     <div class="govuk-inset-text">
-                        {{ include('@partials/contact-details.html.twig', {showTelephone:false, showEmail:false}) }}
+                        {{ include('@partials/contactdetails/address.html.twig') }}
                     </div>
                     <p class="govuk-body">
-                        {{ include('@partials/contact-details.html.twig', {showTelephone:false, showAddress:false}) }}
+                        {{ include('@partials/contactdetails/email.html.twig') }}
                     </p>
                 </div>
             </div>

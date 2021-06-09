@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-06-04T11:04:41+00:00\n"
+"POT-Creation-Date: 2021-06-09T08:00:19+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -640,7 +640,7 @@ msgid "Date of birth"
 msgstr ""
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:143
-#: src/Common/templates/partials/contact-details.html.twig:22
+#: src/Common/templates/partials/contactdetails/address.html.twig:1
 #: src/Common/templates/partials/full-lpa-display.html.twig:170
 msgid "Address"
 msgstr ""
@@ -1788,7 +1788,7 @@ msgstr ""
 msgid "What to do if the details are wrong"
 msgstr ""
 
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:45
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:46
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:61
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/check-your-answers.html.twig:91
@@ -2021,7 +2021,7 @@ msgstr ""
 msgid "If you’re an attorney, you can tell us about changes to the donor’s details and your details. You cannot update another attorney’s details."
 msgstr ""
 
-#: src/Common/templates/partials/contact-details.html.twig:3
+#: src/Common/templates/partials/contactdetails/telephone.html.twig:1
 msgid "Telephone"
 msgstr ""
 
@@ -2031,11 +2031,11 @@ msgstr ""
 msgid "When you get in touch, quote the LPA reference number."
 msgstr ""
 
-#: src/Common/templates/partials/contact-details.html.twig:10
+#: src/Common/templates/partials/contactdetails/telephone.html.twig:8
 msgid "Find out about call charges"
 msgstr ""
 
-#: src/Common/templates/partials/contact-details.html.twig:15
+#: src/Common/templates/partials/contactdetails/email.html.twig:1
 msgid "Email"
 msgstr ""
 
@@ -3083,12 +3083,12 @@ msgid "Textphone"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:63
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:67
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:69
 msgid "Enforcement procedure"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:66
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:70
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:72
 msgid ""
 "The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications)\n"
 "                        (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’).\n"
@@ -3096,12 +3096,12 @@ msgid ""
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:71
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:75
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:77
 msgid "Technical information about this service’s accessibility"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:74
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:78
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:80
 msgid "The Office of the Public Guardian is committed to making its online services accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018."
 msgstr ""
 
@@ -3174,17 +3174,17 @@ msgid "Content that’s not within the scope of the accessibility regulations"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:137
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:87
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:89
 msgid "Preparation of this accessibility statement"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:140
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:90
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:92
 msgid "This statement was prepared on %date%"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:144
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:94
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:96
 msgid "This service was last tested on 4 June 2020. The test was carried out by Digital Accessibility Centre (DAC)."
 msgstr ""
 
@@ -3200,11 +3200,11 @@ msgstr ""
 msgid "Find out more about <a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/lasting-power-of-attorney-valid-examples\">checking a paper LPA</a>"
 msgstr ""
 
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:81
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:83
 msgid "Compliance status"
 msgstr ""
 
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:84
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:86
 msgid "This service is fully compliant with the <a class=\"govuk-link\" href=\"https://www.w3.org/TR/WCAG21/\">Web Content Accessibility Guidelines version 2.1</a> AA standard."
 msgstr ""
 
@@ -3307,7 +3307,7 @@ msgstr ""
 msgid "The email should arrive in a few minutes. If it's not in your inbox, check your spam, bulk or junk email inbox. If you have not received the email, we can <a href=\"%link%\" class=\"govuk-link\">resend the activation email</a>."
 msgstr ""
 
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:42
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:43
 msgid "If you're named on more than one <abbr title=\"lasting power of attorney\">LPA</abbr>, you can add all those <abbr title=\"lasting powers of attorney\">LPAs</abbr> to your account"
 msgstr ""
 
@@ -3924,21 +3924,6 @@ msgstr ""
 msgid "If you're sure you entered the right information, please call us:"
 msgstr ""
 
-#: src/Common/templates/partials/contact-details.html.twig:5
-msgid ""
-"Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br>\n"
-"            Textphone: 0115 934 2778 <br>\n"
-"            Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm"
-msgstr ""
-
-#: src/Common/templates/partials/contact-details.html.twig:24
-msgid ""
-"Office of the Public Guardian<br>\n"
-"            PO Box 16185<br>\n"
-"            Birmingham<br>\n"
-"            B2 2WH"
-msgstr ""
-
 #: src/Actor/templates/actor/change-lpa-details.html.twig:28
 msgid "Let us know if something is incorrect on the LPA"
 msgstr ""
@@ -3961,4 +3946,19 @@ msgstr ""
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:239
 msgid "Seen something incorrect in the LPA details?"
+msgstr ""
+
+#: src/Common/templates/partials/contactdetails/address.html.twig:3
+msgid ""
+"Office of the Public Guardian<br>\n"
+"        PO Box 16185<br>\n"
+"        Birmingham<br>\n"
+"        B2 2WH"
+msgstr ""
+
+#: src/Common/templates/partials/contactdetails/telephone.html.twig:3
+msgid ""
+"Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br>\n"
+"        Textphone: 0115 934 2778 <br>\n"
+"        Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm"
 msgstr ""
