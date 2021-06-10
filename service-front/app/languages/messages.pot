@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-06-09T08:00:19+00:00\n"
+"POT-Creation-Date: 2021-06-10T07:56:26+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -640,7 +640,7 @@ msgid "Date of birth"
 msgstr ""
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:143
-#: src/Common/templates/partials/contactdetails/address.html.twig:1
+#: src/Common/templates/partials/contact-details/address.html.twig:1
 #: src/Common/templates/partials/full-lpa-display.html.twig:170
 msgid "Address"
 msgstr ""
@@ -2021,7 +2021,7 @@ msgstr ""
 msgid "If you’re an attorney, you can tell us about changes to the donor’s details and your details. You cannot update another attorney’s details."
 msgstr ""
 
-#: src/Common/templates/partials/contactdetails/telephone.html.twig:1
+#: src/Common/templates/partials/contact-details/telephone.html.twig:1
 msgid "Telephone"
 msgstr ""
 
@@ -2031,11 +2031,11 @@ msgstr ""
 msgid "When you get in touch, quote the LPA reference number."
 msgstr ""
 
-#: src/Common/templates/partials/contactdetails/telephone.html.twig:8
+#: src/Common/templates/partials/contact-details/telephone.html.twig:8
 msgid "Find out about call charges"
 msgstr ""
 
-#: src/Common/templates/partials/contactdetails/email.html.twig:1
+#: src/Common/templates/partials/contact-details/email.html.twig:1
 msgid "Email"
 msgstr ""
 
@@ -3952,7 +3952,7 @@ msgstr ""
 msgid "You are not an attorney on this <abbr title=\"lasting power of attorney\">LPA</abbr> anymore."
 msgstr ""
 
-#: src/Common/templates/partials/contactdetails/address.html.twig:3
+#: src/Common/templates/partials/contact-details/address.html.twig:3
 msgid ""
 "Office of the Public Guardian<br>\n"
 "        PO Box 16185<br>\n"
@@ -3960,7 +3960,7 @@ msgid ""
 "        B2 2WH"
 msgstr ""
 
-#: src/Common/templates/partials/contactdetails/telephone.html.twig:3
+#: src/Common/templates/partials/contact-details/telephone.html.twig:3
 msgid ""
 "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br>\n"
 "        Textphone: 0115 934 2778 <br>\n"
