@@ -34,10 +34,11 @@ class MessageGenerator:
 
         mapping = {
           'user': str(os.getenv('CIRCLE_USERNAME', "circleci username")),
-          'use_url': self.config['public_facing_use_fqdn'] or "Use URL not provided",
-          'view_url': self.config['public_facing_view_fqdn'] or "View URL not provided",
-          'circleci_build_url': str(os.getenv('CIRCLE_BUILD_URL', "Build url not included")),
-          'commit_message': commit_message or "Commit message not provided"
+          'use_url':'https://{}/home'.format(self.config['public_facing_use_fqdn']) or 'Use URL not provided',
+          'view_url': 'https://{}/home'.format(self.config['public_facing_view_fqdn']) or 'View URL not provided',
+          'admin_url': 'Admin URL not provided',
+          'circleci_build_url': str(os.getenv('CIRCLE_BUILD_URL', 'Build url not included')),
+          'commit_message': commit_message or 'Commit message not provided'
           }
 
         message = Template(template_str)
@@ -64,7 +65,6 @@ def main():
                         default="",
                         help="Commit message to include in slack notification")
     parser.add_argument("--template_path", type=str,
-                        default="production_release.txt",
                         help="Commit message to include in slack notification")
 
     args = parser.parse_args()
