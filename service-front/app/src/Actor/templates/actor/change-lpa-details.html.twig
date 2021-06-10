@@ -1,0 +1,79 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Let us know if something is incorrect on the LPA{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        {% if actorToken != 'null' %}
+            {% set backLink = path('lpa.view', {}, {'lpa': actorToken}) %}
+        {% else %}
+            {% set backLink = path('lpa.dashboard', {}, {'lpa': actorToken}) %}
+        {% endif %}
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ backLink }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}Let us know if something is incorrect on the LPA{% endtrans %}</h1>
+
+                    <p class="govuk-body">{% trans %}It's important that the information on the LPA summary is correct.{% endtrans %}</p>
+
+                    <p class="govuk-body">{% trans %}You should contact us if:{% endtrans %}</p>
+
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}information about preferences and instructions is incorrect{% endtrans %}</li>
+                        <li>{% trans %}information about life-sustaining treatment is incorrect{% endtrans %}</li>
+                        <li>{% trans %}the registration date or the date the donor signed the LPA are incorrect{% endtrans %}</li>
+                    </ul>
+
+                    <p class="govuk-body">{% trans %}We’ll update the online <abbr title="lasting power of attorney">LPA</abbr> summary and our records.{% endtrans %}</p>
+
+                    <p class="govuk-body">{% trans %}Do not make any changes to the paper <abbr title="lasting power of attorney">LPA</abbr> yourself.
+                        If you do, you’ll no longer be able to use the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
+                    </p>
+
+                    <h2 class="govuk-heading-m">{% trans %}How to let us know{% endtrans %}</h2>
+
+                    <h3 class="govuk-heading-s">{% trans %}Telephone{% endtrans %}</h3>
+                    <p class="govuk-body">{% trans %}When you get in touch, quote the LPA reference number.{% endtrans %}</p>
+                    <p class="govuk-body">
+                        {% trans %}Telephone: 0300 456 0300<br>
+                            Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm
+                        {% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        <a class="govuk-link" href="https://www.gov.uk/call-charges">{% trans %}Find out about call charges{% endtrans %}</a>
+                    </p>
+
+                    <h3 class="govuk-heading-s">{% trans %}Email{% endtrans %}</h3>
+                    <p class="govuk-body">
+                        <a class="govuk-link" href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a><br>
+                    </p>
+
+                    <h3 class="govuk-heading-s">{% trans %}Address{% endtrans %}</h3>
+                    <p class="govuk-body">
+                        {% trans %}
+                            Office of the Public Guardian<br>
+                            PO Box 16185<br>
+                            Birmingham<br>
+                            B2 2WH
+                        {% endtrans %}
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+{% endblock %}

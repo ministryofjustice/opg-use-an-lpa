@@ -34,6 +34,15 @@ class LpaContext implements Context
     use BaseUiContextTrait;
 
     /**
+     * @Then /^I am taken to the change LPA details page$/
+     */
+    public function iAmTakenToTheChangeLPADetailsPage()
+    {
+        $this->ui->assertPageAddress('/lpa/change-lpa-details');
+        $this->ui->assertPageContainsText('Let us know if something is incorrect on the LPA');
+    }
+
+    /**
      * @Then /^I am taken to the remove an LPA confirmation page$/
      */
     public function iAmTakenToTheRemoveAnLPAConfirmationPage()
@@ -65,6 +74,15 @@ class LpaContext implements Context
     public function iRequestToRemoveAnLPAFromMyAccountWithoutTheLpaActorToken()
     {
         $this->ui->visit('/lpa/remove-lpa');
+    }
+
+    /**
+     * @When /^I select that I have seen something incorrect in the LPA details$/
+     */
+    public function iSelectThatIHaveSeenSomethingIncorrectInTheLPADetails()
+    {
+        $this->ui->assertPageAddress('/lpa/view-lpa');
+        $this->ui->clickLink('Seen something incorrect in the LPA details');
     }
 
     /**
@@ -587,8 +605,7 @@ class LpaContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $this->ui->assertPageAddress('/lpa/dashboard');
 
-        $this->ui->assertPageContainsText('Access revoked');
-        $this->ui->assertPageContainsText('You no longer have access to this LPA.');
+        $this->ui->assertPageContainsText('You are not an attorney on this LPA anymore.');
     }
 
     /**

@@ -14,8 +14,8 @@ class ActorViewerCodeFilter extends AbstractFilter
      */
     public function filter($code): string
     {
-        // Remove C- or V- from start of the code if present
-        $code = preg_replace('/^((v|c)(-| ))?/i', '', strtoupper($code));
+        // Remove C- (hyphen) or C– (en dash) or C— (em dash) or V- from start of the code if present
+        $code = preg_replace('/^((v|c)(–|—|-| ))?/i', '', strtoupper($code));
 
         return (new StripSpacesAndHyphens())->filter($code);
     }

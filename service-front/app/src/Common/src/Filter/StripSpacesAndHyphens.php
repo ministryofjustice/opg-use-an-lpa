@@ -16,6 +16,10 @@ class StripSpacesAndHyphens extends AbstractFilter
     {
         // strip out whitespace
         $value = str_replace(' ', '', $value);
+        // strip out en dash
+        $value = str_replace('–', '', $value);
+        // strip out em dash
+        $value = str_replace('—', '', $value);
         // strip out hyphens
         return str_replace('-', '', $value);
     }
