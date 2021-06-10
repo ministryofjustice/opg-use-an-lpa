@@ -5,4 +5,5 @@
     *View frontend:* ${view_url}
     *CircleCI build url:* $circleci_build_url
 
-*Commit message:* $commit_message
+*Commit message:*
+$commit_message
