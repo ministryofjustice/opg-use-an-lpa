@@ -1363,7 +1363,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:47
 #: src/Actor/templates/actor/change-details.html.twig:76
-#: src/Actor/templates/actor/change-lpa-details.html.twig:58
+#: src/Actor/templates/actor/change-lpa-details.html.twig:67
 #: src/Actor/templates/actor/death-notification.html.twig:71
 msgid ""
 "Office of the Public Guardian<br>\n"
@@ -1897,12 +1897,12 @@ msgstr ""
 msgid "Access revoked"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:33
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:25
 msgid "%count% active code"
 msgid_plural "%count% active codes"
 msgstr[0] ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:36
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:28
 msgid "No organisations have access"
 msgstr ""
 
@@ -1910,11 +1910,11 @@ msgstr ""
 msgid "You no longer have access to this <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:47
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:39
 msgid "Why is this?"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:54
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:46
 msgid "Read more"
 msgstr ""
 
@@ -3650,7 +3650,7 @@ msgstr ""
 msgid "Request another activation key"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:53
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:45
 msgid "<strong>Important: </strong>This LPA has instructions or preferences."
 msgstr ""
 
@@ -3844,7 +3844,7 @@ msgstr ""
 msgid "Yes, remove LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:39
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:31
 msgid "Remove LPA"
 msgstr ""
 
@@ -3946,6 +3946,10 @@ msgstr ""
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:239
 msgid "Seen something incorrect in the LPA details?"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:38
+msgid "You are not an attorney on this <abbr title=\"lasting power of attorney\">LPA</abbr> anymore."
 msgstr ""
 
 #: src/Common/templates/partials/contactdetails/address.html.twig:3

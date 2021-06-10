@@ -17,22 +17,14 @@
                     <a class="govuk-link" href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">{% trans %}View LPA summary{% endtrans %}</a>
                     <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype}}</span>
                 </p>
-            {% else %}
-                <p class="govuk-!-margin-top-0 lpa-secondary-text-colour">
-                    {% trans %}Give an organisation access<br>
-                    Check access codes<br>
-                    View LPA summary{% endtrans %}
-                </p>
             {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions govuk-!-width-one-third">
-            {% if actorActive == false %}
-                <span class="moj-badge moj-badge--grey">{% trans %}Access revoked{% endtrans %}</span>
-            {% elseif activeCodeCount >= 1 %}
+            {% if activeCodeCount >= 1 %}
                 <span class="moj-badge moj-badge--blue">
                     {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
                 </span>
-            {% else %}
+            {% elseif actorActive %}
                 <span class="moj-badge moj-badge--grey">{% trans %}No organisations have access{% endtrans %}</span>
             {% endif %}
             {% if feature_enabled('delete_lpa_feature') %}
@@ -43,7 +35,7 @@
 </dl>
 {%  if not actorActive %}
     <div>
-        <p class="govuk-body govuk-!-padding-top-2 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">{% trans %}You no longer have access to this <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
+        <p class="govuk-body govuk-!-padding-top-2 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">{% trans %}You are not an attorney on this <abbr title="lasting power of attorney">LPA</abbr> anymore.{% endtrans %}
             <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.removed') }}"> {% trans %}Why is this?{% endtrans %}</a>
         </p>
     </div>
