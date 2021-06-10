@@ -65,7 +65,7 @@ def main():
                         default="",
                         help="Commit message to include in slack notification")
     parser.add_argument("--template_path", type=str,
-                        help="Commit message to include in slack notification")
+                        help="Path to the template file to use for a slack notification")
 
     args = parser.parse_args()
 
@@ -74,7 +74,7 @@ def main():
     message = work.generate_text_message(args.commit_message, args.template_path)
     print(message)
 
-    # post_to_slack(args.slack_webhook, message)
+    post_to_slack(args.slack_webhook, message)
 
 
 
