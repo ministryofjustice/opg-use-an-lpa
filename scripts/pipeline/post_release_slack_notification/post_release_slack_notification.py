@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import requests
+from string import Template
 
 
 def post_to_slack(slack_webhook, message):
@@ -28,29 +29,21 @@ class MessageGenerator:
             return config
 
     def generate_text_message(self, commit_message):
-        title = ":star: *Use a Lasting Power of Attorney Production Release Successful* :star:"
-        username = "*User:* {0}".format(
-            str(os.getenv(
-                'CIRCLE_USERNAME', "circleci username")))
-        links = "*Links* \n"\
-            "\t\t*Use frontend:* https://{0}/home \n"\
-            "\t\t*View frontend:* https://{1}/home \n"\
-            "\t\t*CircleCI build url:* {2}".format(
-            self.config['public_facing_use_fqdn'],
-            self.config['public_facing_view_fqdn'],
-            str(os.getenv(
-                'CIRCLE_BUILD_URL', "build url no included"))
-          )
-        commit_text = "*Commit message:* {}".format(
-          commit_message
-          )
+        with open('production_release.txt', 'r') as file:
+            template_str = file.read()
+
+        mapping = {
+          'user': str(os.getenv('CIRCLE_USERNAME', "circleci username")),
+          'use_url': self.config['public_facing_use_fqdn'] or "Use URL not provided",
+          'view_url': self.config['public_facing_view_fqdn'] or "View URL not provided",
+          'circleci_build_url': str(os.getenv('CIRCLE_BUILD_URL', "Build url not included")),
+          'commit_message': commit_message or "Commit message not provided"
+          }
+
+        message = Template(template_str)
+
         text_message = {
-            "text":"{0}\n\n{1}\n\n{2}\n\n{3}\n".format(
-                title,
-                username,
-                links,
-                commit_text
-            ),
+            "text":message.substitute(**mapping)
         }
 
         post_release_message = json.dumps(text_message)
@@ -78,7 +71,7 @@ def main():
     message = work.generate_text_message(args.commit_message)
     print(message)
 
-    post_to_slack(args.slack_webhook, message)
+    # post_to_slack(args.slack_webhook, message)
 
 
 
