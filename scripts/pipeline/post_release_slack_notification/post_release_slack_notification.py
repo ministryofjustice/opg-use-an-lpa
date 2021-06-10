@@ -1,8 +1,8 @@
 import argparse
 import json
 import os
-import requests
 from string import Template
+import requests
 
 
 def post_to_slack(slack_webhook, message):
