@@ -28,8 +28,8 @@ class MessageGenerator:
             config = json.load(json_file)
             return config
 
-    def generate_text_message(self, commit_message):
-        with open('production_release.txt', 'r') as file:
+    def generate_text_message(self, commit_message, template_path):
+        with open(template_path, 'r') as file:
             template_str = file.read()
 
         mapping = {
@@ -63,12 +63,15 @@ def main():
     parser.add_argument("--commit_message", type=str,
                         default="",
                         help="Commit message to include in slack notification")
+    parser.add_argument("--template_path", type=str,
+                        default="production_release.txt",
+                        help="Commit message to include in slack notification")
 
     args = parser.parse_args()
 
     work = MessageGenerator(args.config_file_path)
 
-    message = work.generate_text_message(args.commit_message)
+    message = work.generate_text_message(args.commit_message, args.template_path)
     print(message)
 
     # post_to_slack(args.slack_webhook, message)
