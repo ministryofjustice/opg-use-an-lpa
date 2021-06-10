@@ -77,7 +77,7 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_NO_CONTENT
         );
 
-        $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId);
+        $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, false);
     }
 
     /**
@@ -1898,7 +1898,6 @@ class LpaContext extends BaseIntegrationContext
         $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
         $codeExists->Created = $createdDate;
 
-
         $result = $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
     }
 
@@ -1908,6 +1907,25 @@ class LpaContext extends BaseIntegrationContext
     public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @Then /^a letter is requested$/
+     */
+    public function aLetterIsRequested()
+    {
+        // Lpas::requestLetter
+        $this->pactPostInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/requestCode',
+            [
+                'case_uid' => (int)$this->lpaUid,
+                'actor_uid' => (int)$this->actorLpaId,
+            ],
+            StatusCodeInterface::STATUS_NO_CONTENT
+        );
+
+        $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, true);
     }
 
 }

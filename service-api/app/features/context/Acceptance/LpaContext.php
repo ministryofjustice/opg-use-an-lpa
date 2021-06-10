@@ -2013,7 +2013,8 @@ class LpaContext implements Context
                 'first_names'       => $this->userFirstnames,
                 'last_name'         => $this->userSurname,
                 'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode
+                'postcode'          => $this->userPostCode,
+                'force_activation_key' => false
             ],
             [
                 'user-token' => $this->userId,

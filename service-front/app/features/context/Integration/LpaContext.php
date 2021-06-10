@@ -21,6 +21,8 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
 
+use function Aws\boolean_value;
+
 /**
  * A behat context that encapsulates user account steps
  *
@@ -141,10 +143,19 @@ class LpaContext extends BaseIntegrationContext
             'last_name'         =>  $this->userSurname,
             'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
             'postcode'          =>  $this->userPostCode,
+            'force_activation_key' => false
         ];
 
         try {
-            $addOlderLpa($data);
+            $addOlderLpa(
+                $data['identity'],
+                intval($data['reference_number']),
+                $data['first_names'],
+                $data['last_name'],
+                $data['dob'],
+                $data['postcode'],
+                $data['force_activation_key']
+            );
         } catch (ApiException $e) {
             throw new Exception(
                 'Failed to correctly approve older LPA addition request: ' . $e->getMessage(),
@@ -205,9 +216,18 @@ class LpaContext extends BaseIntegrationContext
             'last_name'         =>  $this->userSurname,
             'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
             'postcode'          =>  $this->userPostCode,
+            'force_activation_key' => false
         ];
 
-        $result = $addOlderLpa($data);
+        $result = $addOlderLpa(
+            $data['identity'],
+            intval($data['reference_number']),
+            $data['first_names'],
+            $data['last_name'],
+            $data['dob'],
+            $data['postcode'],
+            $data['force_activation_key']
+        );
 
         $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_FOUND, []);
 
@@ -260,9 +280,18 @@ class LpaContext extends BaseIntegrationContext
             'last_name'         =>  $this->userSurname,
             'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
             'postcode'          =>  $this->userPostCode,
+            'force_activation_key' => false
         ];
 
-        $result = $addOlderLpa($data);
+        $result = $addOlderLpa(
+            $data['identity'],
+            intval($data['reference_number']),
+            $data['first_names'],
+            $data['last_name'],
+            $data['dob'],
+            $data['postcode'],
+            $data['force_activation_key']
+        );
 
         $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_ELIGIBLE, []);
 
@@ -306,9 +335,18 @@ class LpaContext extends BaseIntegrationContext
             'last_name'         =>  $this->userSurname,
             'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
             'postcode'          =>  $this->userPostCode,
+            'force_activation_key' => false
         ];
 
-        $result = $addOlderLpa($data);
+        $result = $addOlderLpa(
+            $data['identity'],
+            intval($data['reference_number']),
+            $data['first_names'],
+            $data['last_name'],
+            $data['dob'],
+            $data['postcode'],
+            $data['force_activation_key']
+        );
 
         $response = new OlderLpaApiResponse(
             OlderLpaApiResponse::HAS_ACTIVATION_KEY,
@@ -1422,7 +1460,15 @@ class LpaContext extends BaseIntegrationContext
         ];
 
         try {
-                $addOlderLpa($data);
+            $addOlderLpa(
+                $data['identity'],
+                intval($data['reference_number']),
+                $data['first_names'],
+                $data['last_name'],
+                $data['dob'],
+                $data['postcode'],
+                $data['force_activation_key']
+            );
         } catch (ApiException $e) {
             throw new Exception(
                 'Failed to correctly approve older LPA addition request: ' . $e->getMessage(),

@@ -79,7 +79,7 @@ class OlderLpaServiceTest extends TestCase
             ->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
-        $service->requestAccessByLetter($caseUid, $actorUid);
+        $service->requestAccessByLetter($caseUid, $actorUid, false);
     }
 
     /** @test */
@@ -95,7 +95,7 @@ class OlderLpaServiceTest extends TestCase
         $service = $this->getOlderLpaService();
 
         $this->expectException(ApiException::class);
-        $service->requestAccessByLetter($caseUid, $actorUid);
+        $service->requestAccessByLetter($caseUid, $actorUid, false);
     }
 
     /** @test */

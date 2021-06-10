@@ -78,10 +78,18 @@ class AddOlderLpaTest extends TestCase
             'last_name'            =>  $this->olderLpa['last_name'],
             'dob'                  =>  $this->olderLpa['dob'],
             'postcode'             =>  $this->olderLpa['postcode'],
-            'force_activation_key' =>  null
+            'force_activation_key' =>  false
         ];
 
-        $result  = $sut($data);
+        $result  = $sut(
+            $data['identity'],
+            (int)$data['reference_number'],
+            $data['first_names'],
+            $data['last_name'],
+            $data['dob'],
+            $data['postcode'],
+            $data['force_activation_key']
+        );
 
         $this->assertEquals(OlderLpaApiResponse::SUCCESS, $result->getResponse());
     }
@@ -102,7 +110,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name'                 => $this->olderLpa['last_name'],
                     'dob'                       => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode'                  => $this->olderLpa['postcode'],
-                    'force_activation_key'      => null
+                    'force_activation_key'      => false
                 ]
             )->willThrow(
                 new ApiException(
@@ -120,10 +128,18 @@ class AddOlderLpaTest extends TestCase
             'last_name'            =>  $this->olderLpa['last_name'],
             'dob'                  =>  $this->olderLpa['dob'],
             'postcode'             =>  $this->olderLpa['postcode'],
-            'force_activation_key' =>  null
+            'force_activation_key' =>  false
         ];
 
-        $result  = $sut($data);
+        $result  = $sut(
+            $data['identity'],
+            (int)$data['reference_number'],
+            $data['first_names'],
+            $data['last_name'],
+            $data['dob'],
+            $data['postcode'],
+            $data['force_activation_key']
+        );
 
         $this->assertEquals(OlderLpaApiResponse::NOT_ELIGIBLE, $result->getResponse());
     }
@@ -144,7 +160,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name'                 => $this->olderLpa['last_name'],
                     'dob'                       => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode'                  => $this->olderLpa['postcode'],
-                    'force_activation_key'      => null
+                    'force_activation_key'      => false
 
                 ]
             )->willThrow(
@@ -162,9 +178,17 @@ class AddOlderLpaTest extends TestCase
             'last_name'            =>  $this->olderLpa['last_name'],
             'dob'                  =>  $this->olderLpa['dob'],
             'postcode'             =>  $this->olderLpa['postcode'],
-            'force_activation_key' =>  null
+            'force_activation_key' =>  false
         ];
-        $result  = $sut($data);
+        $result  = $sut(
+            $data['identity'],
+            (int)$data['reference_number'],
+            $data['first_names'],
+            $data['last_name'],
+            $data['dob'],
+            $data['postcode'],
+            $data['force_activation_key']
+        );
 
         $this->assertEquals(OlderLpaApiResponse::DOES_NOT_MATCH, $result->getResponse());
     }
@@ -185,7 +209,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name'             => $this->olderLpa['last_name'],
                     'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode'              => $this->olderLpa['postcode'],
-                    'force_activation_key'  => null
+                    'force_activation_key'  => true
                 ]
             )->willThrow(
                 new ApiException(
@@ -208,9 +232,17 @@ class AddOlderLpaTest extends TestCase
             'last_name'            =>  $this->olderLpa['last_name'],
             'dob'                  =>  $this->olderLpa['dob'],
             'postcode'             =>  $this->olderLpa['postcode'],
-            'force_activation_key' =>  null
+            'force_activation_key' =>  true
         ];
-        $result  = $sut($data);
+        $result  = $sut(
+            $data['identity'],
+            (int)$data['reference_number'],
+            $data['first_names'],
+            $data['last_name'],
+            $data['dob'],
+            $data['postcode'],
+            $data['force_activation_key']
+        );
 
         $this->assertEquals(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $result->getResponse());
     }
@@ -231,7 +263,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name'             => $this->olderLpa['last_name'],
                     'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode'              => $this->olderLpa['postcode'],
-                    'force_activation_key'  => null
+                    'force_activation_key'  => false
                 ]
             )->willThrow(
                 new ApiException(
@@ -248,9 +280,17 @@ class AddOlderLpaTest extends TestCase
             'last_name'            =>  $this->olderLpa['last_name'],
             'dob'                  =>  $this->olderLpa['dob'],
             'postcode'             =>  $this->olderLpa['postcode'],
-            'force_activation_key' =>  null
+            'force_activation_key' =>  false
         ];
-        $result  = $sut($data);
+        $result  = $sut(
+            $data['identity'],
+            (int)$data['reference_number'],
+            $data['first_names'],
+            $data['last_name'],
+            $data['dob'],
+            $data['postcode'],
+            $data['force_activation_key']
+        );
 
         $this->assertEquals(OlderLpaApiResponse::NOT_FOUND, $result->getResponse());
     }
@@ -270,7 +310,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name' => $this->olderLpa['last_name'],
                     'dob' => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode' => $this->olderLpa['postcode'],
-                    'force_activation_key' => null
+                    'force_activation_key' => false
                 ]
             )->willThrow(
                 new ApiException(
@@ -291,9 +331,17 @@ class AddOlderLpaTest extends TestCase
             'last_name'            =>  $this->olderLpa['last_name'],
             'dob'                  =>  $this->olderLpa['dob'],
             'postcode'             =>  $this->olderLpa['postcode'],
-            'force_activation_key' =>  null
+            'force_activation_key' =>  false
         ];
-        $result  = $sut($data);
+        $result  = $sut(
+            $data['identity'],
+            (int)$data['reference_number'],
+            $data['first_names'],
+            $data['last_name'],
+            $data['dob'],
+            $data['postcode'],
+            $data['force_activation_key']
+        );
     }
 
     /**
@@ -312,7 +360,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name' => $this->olderLpa['last_name'],
                     'dob' => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode' => $this->olderLpa['postcode'],
-                    'force_activation_key' => null
+                    'force_activation_key' => false
                 ]
             )->willThrow(
                 new ApiException(
@@ -331,9 +379,17 @@ class AddOlderLpaTest extends TestCase
             'last_name'            =>  $this->olderLpa['last_name'],
             'dob'                  =>  $this->olderLpa['dob'],
             'postcode'             =>  $this->olderLpa['postcode'],
-            'force_activation_key' =>  null
+            'force_activation_key' =>  false
         ];
-        $result  = $sut($data);
+        $result  = $sut(
+            $data['identity'],
+            (int)$data['reference_number'],
+            $data['first_names'],
+            $data['last_name'],
+            $data['dob'],
+            $data['postcode'],
+            $data['force_activation_key']
+        );
     }
 
     /**
@@ -377,7 +433,15 @@ class AddOlderLpaTest extends TestCase
             'postcode'             =>  $this->olderLpa['postcode'],
             'force_activation_key' =>  true
         ];
-        $result  = $sut($data);
+        $result  = $sut(
+            $data['identity'],
+            (int)$data['reference_number'],
+            $data['first_names'],
+            $data['last_name'],
+            $data['dob'],
+            $data['postcode'],
+            $data['force_activation_key']
+        );
 
         $this->assertEquals(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $result->getResponse());
     }

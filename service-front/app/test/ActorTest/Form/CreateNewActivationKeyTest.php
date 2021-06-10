@@ -38,7 +38,6 @@ class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
             'last_name'             => Hidden::class,
             'dob'                   => Hidden::class,
             'postcode'              => Hidden::class,
-            'force_activation_key'  => Hidden::class,
         ];
     }
 
