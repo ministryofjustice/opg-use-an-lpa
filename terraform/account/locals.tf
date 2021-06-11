@@ -4,6 +4,7 @@ variable "pagerduty_token" {
 variable "account_mapping" {
   type = map(string)
 }
+
 variable "lambda_container_version" {
   type    = string
   default = "latest"
