@@ -58,6 +58,7 @@ func RenderTemplate(w http.ResponseWriter, ctx context.Context, name string, dat
 
 	if err = template.ExecuteTemplate(w, "default", data); err != nil {
 		log.Err(err).Msg("error whilst rendering template")
+		return err
 	}
 
 	return nil
