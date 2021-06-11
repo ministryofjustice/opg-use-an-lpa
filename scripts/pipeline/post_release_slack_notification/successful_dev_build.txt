@@ -1,9 +1,9 @@
 :star: *Use a Lasting Power of Attorney Development Environment Ready* :star:
-*User:* $user
+*User:* {{ user }}
 *Links*
-    *Use frontend:* ${use_url}
-    *View frontend:* ${view_url}
-    *CircleCI build url:* $circleci_build_url
+    *Use frontend:* https://{{ use_url}}/home
+    *View frontend:* https://{{ view_url}}/home
+    *CircleCI build url:* {{ circleci_build_url }}
 
 *Commit message:*
-$commit_message
+{{ commit_message }}

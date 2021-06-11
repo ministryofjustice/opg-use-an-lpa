@@ -1,7 +1,7 @@
 import argparse
 import json
 import os
-from string import Template
+from jinja2 import Template
 import requests
 
 
@@ -46,7 +46,7 @@ class MessageGenerator:
         message = Template(template_str)
 
         text_message = {
-            "text":message.substitute(**mapping)
+            "text":message.render(**mapping)
         }
 
         post_release_message = json.dumps(text_message)
@@ -76,7 +76,7 @@ def main():
     message = work.generate_text_message(args.commit_message, args.template_path)
     print(message)
 
-    post_to_slack(args.slack_webhook, message)
+    # post_to_slack(args.slack_webhook, message)
 
 
 
