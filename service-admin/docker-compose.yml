@@ -13,6 +13,7 @@ services:
     # This definition runs a continuous build process that monitors
     # golang files for changes and rebuilds/runs. This is disabled
     # by default as the prefered way is to use your IDE to run it
+    #
     # admin:
     #     container_name: admin-app
     #     image: golang:1.16.4
