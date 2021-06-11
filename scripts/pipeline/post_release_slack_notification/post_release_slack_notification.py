@@ -68,6 +68,9 @@ def main():
                         help='Commit message to include in slack notification')
     parser.add_argument('--template_path', type=str,
                         help='Path to the template file to use for a slack notification')
+    parser.add_argument('--test', dest='test_mode', action='store_const',
+                        const=True, default=False,
+                        help='Generate message bot do not post to slack')
 
     args = parser.parse_args()
 
@@ -76,7 +79,8 @@ def main():
     message = work.generate_text_message(args.commit_message, args.template_path)
     print(message)
 
-    post_to_slack(args.slack_webhook, message)
+    if not args.test_mode:
+        post_to_slack(args.slack_webhook, message)
 
 
 
