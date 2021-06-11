@@ -76,7 +76,7 @@ def main():
     message = work.generate_text_message(args.commit_message, args.template_path)
     print(message)
 
-    # post_to_slack(args.slack_webhook, message)
+    post_to_slack(args.slack_webhook, message)
 
 
 
