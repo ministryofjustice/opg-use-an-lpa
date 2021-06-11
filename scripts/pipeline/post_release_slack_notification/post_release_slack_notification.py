@@ -33,7 +33,7 @@ class MessageGenerator:
             template_str = file.read()
 
         mapping = {
-          'user': str(os.getenv('CIRCLE_USERNAME', "circleci username")),
+          'user': str(os.getenv('CIRCLE_USERNAME', 'circleci username')),
           'use_url':'https://{}/home'.format(
             self.config['public_facing_use_fqdn']) or 'Use URL not provided',
           'view_url': 'https://{}/home'.format(
@@ -46,7 +46,7 @@ class MessageGenerator:
         message = Template(template_str)
 
         text_message = {
-            "text":message.render(**mapping)
+            'text':message.render(**mapping)
         }
 
         post_release_message = json.dumps(text_message)
@@ -55,19 +55,19 @@ class MessageGenerator:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Post-release Slack notifications.")
+        description='Post-release Slack notifications.')
 
-    parser.add_argument("--config_file_path", type=str,
-                        default="/tmp/cluster_config.json",
-                        help="Path to config file produced by terraform")
-    parser.add_argument("--slack_webhook", type=str,
+    parser.add_argument('--config_file_path', type=str,
+                        default='/tmp/cluster_config.json',
+                        help='Path to config file produced by terraform')
+    parser.add_argument('--slack_webhook', type=str,
                         default=os.getenv('SLACK_WEBHOOK'),
-                        help="Webhook to use, determines what channel to post to")
-    parser.add_argument("--commit_message", type=str,
-                        default="",
-                        help="Commit message to include in slack notification")
-    parser.add_argument("--template_path", type=str,
-                        help="Path to the template file to use for a slack notification")
+                        help='Webhook to use, determines what channel to post to')
+    parser.add_argument('--commit_message', type=str,
+                        default='',
+                        help='Commit message to include in slack notification')
+    parser.add_argument('--template_path', type=str,
+                        help='Path to the template file to use for a slack notification')
 
     args = parser.parse_args()
 
@@ -80,5 +80,5 @@ def main():
 
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
