@@ -529,6 +529,13 @@ orbs:
 
 
     executors:
+      golang:
+        docker:
+          - image: circleci/golang:1.16
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
+        resource_class: small
       puppeteer:
         docker:
           - image: buildkite/puppeteer
@@ -1016,11 +1023,28 @@ orbs:
                   docker push ${ECR_URL}:${IMAGE_TAG}
                 fi
 
+      docker_test_admin:
+        #
+        # Run golang unit tests against admin
+        #
+        executor: golang
+        steps:
+          - checkout
+          - run:
+              name: Run tests and coverage
+              command: |
+                mkdir -p build/service-admin
+                cd service-admin/
+                go test -race -coverprofile=../build/service-admin/coverage.out -covermode=atomic ./...
+          - persist_to_workspace:
+              root: build
+              paths:
+                - service-admin/
+              when: always
 
       docker_build_admin:
         #
         # Build Docker container for Admin
-        #   and runs the Unit Tests.
         #
         executor: python
         parameters:
