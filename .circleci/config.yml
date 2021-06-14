@@ -93,6 +93,10 @@ workflows:
             filters: { branches: { only: [/dependabot\/.*/] } }
             requires: [test_pdf]
 
+        - use-my-lpa/docker_test_admin:
+            name: admin_app_test
+            filters: { branches: { only: [/dependabot\/.*/] } }
+
         - use-my-lpa/docker_build_admin:
             name: admin_app_build
             filters: { branches: { only: [/dependabot\/.*/] } }
@@ -106,7 +110,7 @@ workflows:
                 app_api_build,
                 test_web,
                 test_pdf,
-                admin_app_build,
+                admin_app_test,
               ]
 
         # Required end of workflow job
@@ -202,6 +206,13 @@ workflows:
               /dependabot\/.*/,
               ] } }
 
+        - use-my-lpa/docker_test_admin:
+            name: admin_app_test
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
+
         - use-my-lpa/docker_build_admin:
             name: admin_app_build
             filters: { branches: { ignore: [
@@ -229,7 +240,7 @@ workflows:
                 app_api_build,
                 test_web,
                 test_pdf,
-                admin_app_build,
+                admin_app_test,
               ]
 
             # Provision and test development
@@ -360,6 +371,10 @@ workflows:
             filters: { branches: { only: [master] } }
             requires: [test_pdf]
 
+        - use-my-lpa/docker_test_admin:
+            name: admin_app_test
+            filters: { branches: { only: [master] } }
+
         - use-my-lpa/docker_build_admin:
             name: admin_app_build
             filters: { branches: { only: [master] } }
@@ -373,7 +388,7 @@ workflows:
                 app_api_build,
                 test_web,
                 test_pdf,
-                admin_app_build,
+                admin_app_test,
               ]
 
         # Provision and test preproduction
