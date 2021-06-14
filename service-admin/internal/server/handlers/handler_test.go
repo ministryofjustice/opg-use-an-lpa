@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	. "github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
@@ -35,10 +36,15 @@ func mockTemplate() *template.Template {
 	return t
 }
 
+func TestMain(m *testing.M) {
+	// nop the logger so panic and exit calls (if any) don't do anything.
+	log.Logger = zerolog.Nop()
+
+	os.Exit(m.Run())
+}
+
 func TestGetTemplate(t *testing.T) {
 	t.Parallel()
-
-	log.Logger = zerolog.Nop()
 
 	type args struct {
 		ctx  context.Context
@@ -98,8 +104,6 @@ func TestGetTemplate(t *testing.T) {
 
 func TestRenderTemplate(t *testing.T) {
 	t.Parallel()
-
-	log.Logger = zerolog.Nop()
 
 	type args struct {
 		w    http.ResponseWriter
