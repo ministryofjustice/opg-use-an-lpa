@@ -31,7 +31,7 @@ func (t *Templates) Get(name string) (*template.Template, error) {
 func WithTemplates(next http.Handler, t *Templates) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
-		ctx = context.WithValue(ctx, handlers.TemplateContextKey, t)
+		ctx = context.WithValue(ctx, handlers.TemplateContextKey{}, t)
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})

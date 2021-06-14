@@ -60,7 +60,7 @@ func TestGetTemplate(t *testing.T) {
 		{
 			name: "it finds a named template",
 			args: args{
-				ctx:  context.WithValue(context.Background(), TemplateContextKey, &mockTemplates{}),
+				ctx:  context.WithValue(context.Background(), TemplateContextKey{}, &mockTemplates{}),
 				name: "test",
 			},
 			want:    mockTemplate(),
@@ -78,7 +78,7 @@ func TestGetTemplate(t *testing.T) {
 		{
 			name: "it errors when template not in context templates",
 			args: args{
-				ctx:  context.WithValue(context.Background(), TemplateContextKey, &mockTemplates{}),
+				ctx:  context.WithValue(context.Background(), TemplateContextKey{}, &mockTemplates{}),
 				name: "notfound",
 			},
 			want:    nil,
@@ -121,7 +121,7 @@ func TestRenderTemplate(t *testing.T) {
 			name: "it successfully renders a given template",
 			args: args{
 				w:    httptest.NewRecorder(),
-				ctx:  context.WithValue(context.Background(), TemplateContextKey, &mockTemplates{}),
+				ctx:  context.WithValue(context.Background(), TemplateContextKey{}, &mockTemplates{}),
 				name: "test",
 				data: nil,
 			},
@@ -131,7 +131,7 @@ func TestRenderTemplate(t *testing.T) {
 			name: "it errors when template not in context templates",
 			args: args{
 				w:    httptest.NewRecorder(),
-				ctx:  context.WithValue(context.Background(), TemplateContextKey, &mockTemplates{}),
+				ctx:  context.WithValue(context.Background(), TemplateContextKey{}, &mockTemplates{}),
 				name: "notfound",
 				data: nil,
 			},
@@ -141,7 +141,7 @@ func TestRenderTemplate(t *testing.T) {
 			name: "it errors when layout not in template",
 			args: args{
 				w:    httptest.NewRecorder(),
-				ctx:  context.WithValue(context.Background(), TemplateContextKey, &mockTemplates{}),
+				ctx:  context.WithValue(context.Background(), TemplateContextKey{}, &mockTemplates{}),
 				name: "badlayout",
 				data: nil,
 			},

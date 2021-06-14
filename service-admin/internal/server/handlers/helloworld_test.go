@@ -14,7 +14,7 @@ func TestHelloHandler(t *testing.T) {
 	rw := httptest.NewRecorder()
 
 	rq := httptest.NewRequest("", "/", nil)
-	rq = rq.WithContext(context.WithValue(context.Background(), TemplateContextKey, &mockTemplates{}))
+	rq = rq.WithContext(context.WithValue(context.Background(), TemplateContextKey{}, &mockTemplates{}))
 
 	handler := HelloHandler()
 

@@ -11,7 +11,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-type ContextKey string
+type TemplateContextKey struct{}
 
 type Template interface {
 	ExecuteTemplate(io.Writer, string, interface{}) error
@@ -21,15 +21,12 @@ type Templates interface {
 	Get(name string) (*template.Template, error)
 }
 
-// TemplateContextKey defines the key under which the Templates live in a request context.
-const TemplateContextKey ContextKey = "templates"
-
 // ErrTemplateNotFound provides a static error that can be wrapped when template
 // discovery fails.
 var ErrTemplateNotFound = errors.New("template not found")
 
 func GetTemplate(ctx context.Context, name string) (*template.Template, error) {
-	i := ctx.Value(TemplateContextKey)
+	i := ctx.Value(TemplateContextKey{})
 
 	t, is := i.(Templates)
 	if !is {
