@@ -88,9 +88,13 @@ func TestTemplates_Get(t *testing.T) {
 			t.Parallel()
 
 			got, err := tt.tmpls.Get(tt.tmplName)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Templates.Get() error = %v, wantErr %v", err, tt.wantErr)
-				return
+			if err != nil {
+				if !tt.wantErr {
+					t.Errorf("Templates.Get() error = %v, wantErr %v", err, tt.wantErr)
+					return
+				}
+
+				assert.ErrorIs(t, err, ErrTemplateNotFound, "Error is not \"ErrTemplateNotFound\"")
 			}
 
 			assert.IsType(t, &template.Template{}, got, "Templates.Get() = %v, want %v", got, &template.Template{})
@@ -99,6 +103,8 @@ func TestTemplates_Get(t *testing.T) {
 }
 
 func TestWithTemplates(t *testing.T) {
+	t.Parallel()
+
 	next := http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		// check templates have been attached to request context
 		v := r.Context().Value(handlers.TemplateContextKey{})
