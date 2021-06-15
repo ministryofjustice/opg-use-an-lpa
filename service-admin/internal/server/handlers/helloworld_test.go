@@ -1,23 +1,22 @@
 package handlers_test
 
 import (
-	"context"
-	"net/http/httptest"
+	"os"
 	"testing"
 
+	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
 	. "github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHelloHandler(t *testing.T) {
 	t.Parallel()
 
-	rw := httptest.NewRecorder()
+	handler := server.WithTemplates(
+		HelloHandler(),
+		server.LoadTemplates(os.DirFS("../../../web/templates")),
+	)
 
-	rq := httptest.NewRequest("", "/", nil)
-	rq = rq.WithContext(context.WithValue(context.Background(), TemplateContextKey{}, &mockTemplates{}))
-
-	handler := HelloHandler()
-
-	// will fail to find template in mockTemplates so tests failure case at this time
-	handler(rw, rq)
+	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/", nil)
+	assert.HTTPBodyContains(t, handler.ServeHTTP, "GET", "/", nil, "Hello World")
 }
