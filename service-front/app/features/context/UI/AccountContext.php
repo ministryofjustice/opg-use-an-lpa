@@ -621,22 +621,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I can see that the What I can do link is closed$/
-     */
-    public function iCanSeeThatTheWhatICanDoLinkIsClosed()
-    {
-        assertFalse($this->elementisOpen('.govuk-details'));
-    }
-
-    /**
-     * @Given /^I can see that the What I can do link is open$/
-     */
-    public function iCanSeeThatTheWhatICanDoLinkIsOpen()
-    {
-        assertTrue($this->elementisOpen('.govuk-details'));
-    }
-
-    /**
      * @Then /^I can see the accessibility statement for the Use service$/
      */
     public function iCanSeeTheAccessibilityStatementForTheUseService()
