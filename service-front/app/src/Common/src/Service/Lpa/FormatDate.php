@@ -10,8 +10,7 @@ use DateTime;
 class FormatDate
 {
     /**
-     * Uses duplicated code from the LpaExtension class to ensure that the date we send out in the
-     * letters if correctly localised.
+     * Ensure that the date we send out in the letters if correctly localised.
      *
      * Violation of DRY so TODO: https://opgtransform.atlassian.net/browse/UML-1370
      *
@@ -19,7 +18,6 @@ class FormatDate
      *
      * @return string
      */
-    //private function localisedLetterExpectedDate(\DateTimeInterface $date): string
     public function __invoke(\DateTimeInterface $date): string
     {
         $formatter = IntlDateFormatter::create(
