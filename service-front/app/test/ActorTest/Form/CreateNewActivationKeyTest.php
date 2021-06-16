@@ -10,7 +10,7 @@ use Common\Form\Element\Csrf;
 use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
 use PHPUnit\Framework\TestCase;
 use Mezzio\Csrf\CsrfGuardInterface;
-use Laminas\Form\Element\{Radio, Hidden};
+use Laminas\Form\Element\{Hidden};
 
 class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
 {

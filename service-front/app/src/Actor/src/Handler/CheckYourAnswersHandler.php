@@ -28,6 +28,7 @@ use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
+use Common\Service\Lpa\FormatDate;
 
 /**
  * Class CheckYourAnswersHandler
@@ -48,6 +49,9 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     private array $data;
     private ?string $identity;
 
+    /** @var FormatDate */
+    private $formatDate;
+
     /** @var EmailClient */
     private $emailClient;
 
@@ -57,13 +61,15 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         UrlHelper $urlHelper,
         AddOlderLpa $addOlderLpa,
         LoggerInterface $logger,
-        EmailClient $emailClient
+        EmailClient $emailClient,
+        FormatDate $formatDate
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
         $this->addOlderLpa = $addOlderLpa;
         $this->emailClient = $emailClient;
+        $this->formatDate = $formatDate;
     }
 
     /**
@@ -76,8 +82,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         $this->user = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
         $this->identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
-
-        $forceActivationKey = false;
 
         if (
             is_null($this->session)
@@ -102,8 +106,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     $this->session->get('dob')['month'],
                     $this->session->get('dob')['day']
                 )->toImmutable(),
-            'postcode'          => $this->session->get('postcode'),
-            'force_activation_key' => $forceActivationKey
+            'postcode'          => $this->session->get('postcode')
         ];
 
         switch ($request->getMethod()) {
@@ -126,16 +129,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $this->form->setData($request->getParsedBody());
-        $data =
-        [
-            'identity' => $this->identity,
-            'reference_number' => $this->data['reference_number'],
-            'first_names' => $this->data['first_names'],
-            'last_name' => $this->data['last_name'],
-            'dob' => $this->data['dob'],
-            'postcode' => $this->data['postcode'],
-        ];
-
         if ($this->form->isValid()) {
             $result = ($this->addOlderLpa)(
                 $this->identity,
@@ -143,8 +136,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 $this->data['first_names'],
                 $this->data['last_name'],
                 $this->data['dob'],
-                $this->data['postcode'],
-                $this->data['force_activation_key']
+                $this->data['postcode']
             );
 
             switch ($result->getResponse()) {
@@ -157,7 +149,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
 
-                    $form->setData($data);
+                    $form->setData($this->data);
 
                     return new HtmlResponse(
                         $this->renderer->render(
@@ -186,7 +178,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         $this->user->getDetails()['Email'],
                         (string)$this->data['reference_number'],
                         $this->data['postcode'],
-                        $this->localisedLetterExpectedDate($letterExpectedDate)
+                        ($this->formatDate)($letterExpectedDate)
                     );
 
                     return new HtmlResponse(
@@ -200,28 +192,5 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     );
             }
         }
-    }
-
-    /**
-     * Uses duplicated code from the LpaExtension class to ensure that the date we send out in the
-     * letters if correctly localised.
-     *
-     * Violation of DRY so TODO: https://opgtransform.atlassian.net/browse/UML-1370
-     *
-     * @param \DateTimeInterface $date
-     *
-     * @return string
-     */
-    private function localisedLetterExpectedDate(\DateTimeInterface $date): string
-    {
-        $formatter = IntlDateFormatter::create(
-            \Locale::getDefault(),
-            IntlDateFormatter::LONG,
-            IntlDateFormatter::NONE,
-            'Europe/London',
-            IntlDateFormatter::GREGORIAN
-        );
-
-        return $formatter->format($date);
     }
 }

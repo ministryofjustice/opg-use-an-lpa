@@ -1298,7 +1298,7 @@ class LpaContext extends BaseIntegrationContext
             'postcode' => $this->userPostCode,
             'first_names' => $this->userFirstname,
             'last_name' => $this->userSurname,
-            'force_activation_key' => null
+            'force_activation_key' => false
         ];
 
         $this->pactGetInteraction(

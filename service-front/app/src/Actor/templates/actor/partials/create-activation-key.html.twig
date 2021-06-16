@@ -1,22 +1,20 @@
-{% block content %}
-    <div class="govuk-grid-row">
-        {{ govuk_form_open(form) }}
-        <div class="govuk-grid-column-three-quarters">
-            {{ govuk_form_element(form.get('__csrf')) }}
-            {{ govuk_form_element(form.get('reference_number')) }}
-            {{ govuk_form_element(form.get('first_names')) }}
-            {{ govuk_form_element(form.get('last_name')) }}
-            {{ govuk_form_element(form.get('dob')) }}
-            {{ govuk_form_element(form.get('postcode')) }}
+<div class="govuk-grid-row">
+    {{ govuk_form_open(form) }}
+    <div class="govuk-grid-column-three-quarters">
+        {{ govuk_form_element(form.get('__csrf')) }}
+        {{ govuk_form_element(form.get('reference_number')) }}
+        {{ govuk_form_element(form.get('first_names')) }}
+        {{ govuk_form_element(form.get('last_name')) }}
+        {{ govuk_form_element(form.get('dob')) }}
+        {{ govuk_form_element(form.get('postcode')) }}
 
-            <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-button--primary">
-                {% trans %}Continue and ask for a new key{% endtrans %}
-            </button>
-            <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
-               class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
-                {% trans %}Back to your LPAs{% endtrans %}
-            </a>
-        </div>
-        {{ govuk_form_close() }}
+        <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-button--primary">
+            {% trans %}Continue and ask for a new key{% endtrans %}
+        </button>
+        <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+           class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
+            {% trans %}Back to your LPAs{% endtrans %}
+        </a>
     </div>
-{% endblock %}
+    {{ govuk_form_close() }}
+</div>

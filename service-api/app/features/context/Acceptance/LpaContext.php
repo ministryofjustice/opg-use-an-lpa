@@ -2187,7 +2187,7 @@ class LpaContext implements Context
                 'last_name'         => $this->userSurname,
                 'dob'               => $this->userDob,
                 'postcode'          => $this->userPostCode,
-                'force_activation_key' => null
+                'force_activation_key' => false
             ],
             [
                 'user-token' => $this->userId,
@@ -2427,7 +2427,7 @@ class LpaContext implements Context
                 'last_name'         => $this->userSurname,
                 'dob'               => $this->userDob,
                 'postcode'          => $this->userPostCode,
-                'force_activation_key' => false,
+                'force_activation_key' => true,
             ],
             [
                 'user-token' => $this->userId,
@@ -2441,6 +2441,14 @@ class LpaContext implements Context
      * @Then /^I am told a new activation key is posted to the provided postcode$/
      */
     public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^a letter is requested$/
+     */
+    public function aLetterIsRequested()
     {
         // Not needed for this context
     }

@@ -60,7 +60,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name'                 => $this->olderLpa['last_name'],
                     'dob'                       => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode'                  => $this->olderLpa['postcode'],
-                    'force_activation_key'      => null
+                    'force_activation_key'      => false
                 ]
             )->willReturn(
                 [
@@ -397,7 +397,7 @@ class AddOlderLpaTest extends TestCase
      * @covers ::__invoke
      * @covers ::badRequestReturned
      */
-    public function allow_user_continue_to_generate_new_activation_key_even_if_actor_has_active_activation_key(): void
+    public function generate_new_activation_key_again_for_user(): void
     {
         $this->apiClientProphecy
             ->httpPatch(

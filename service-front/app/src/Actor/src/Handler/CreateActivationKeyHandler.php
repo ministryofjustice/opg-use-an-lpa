@@ -8,7 +8,7 @@ use Actor\Form\CreateNewActivationKey;
 use Carbon\Carbon;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
-use Common\Service\{Lpa\LpaService, Lpa\AddOlderLpa};
+use Common\Service\{Lpa\AddOlderLpa};
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -18,6 +18,7 @@ use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Email\EmailClient;
 use IntlDateFormatter;
 use DateTime;
+use Common\Service\Lpa\FormatDate;
 
 
 /**
@@ -38,18 +39,24 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
     /** @var AddOlderLpa */
     private $addOlderLpa;
 
+    /** @var FormatDate */
+    private $formatDate;
+
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         AddOlderLpa $addOlderLpa,
         UrlHelper $urlHelper,
-        EmailClient $emailClient)
+        EmailClient $emailClient,
+        FormatDate $formatDate
+    )
     {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
         $this->addOlderLpa = $addOlderLpa;;
         $this->emailClient = $emailClient;
+        $this->formatDate = $formatDate;
     }
 
     /**
@@ -87,7 +94,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                     $user->getDetails()['Email'],
                     $data['reference_number'],
                     strtoupper($data['postcode']),
-                    $this->localisedLetterExpectedDate($letterExpectedDate)
+                    ($this->formatDate)($letterExpectedDate)
                 );
 
                 return new HtmlResponse(
@@ -103,28 +110,5 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
         }
 
         throw new InvalidRequestException('Invalid form');
-    }
-
-    /**
-     * Uses duplicated code from the LpaExtension class to ensure that the date we send out in the
-     * letters if correctly localised.
-     *
-     * Violation of DRY so TODO: https://opgtransform.atlassian.net/browse/UML-1370
-     *
-     * @param \DateTimeInterface $date
-     *
-     * @return string
-     */
-    private function localisedLetterExpectedDate(\DateTimeInterface $date): string
-    {
-        $formatter = IntlDateFormatter::create(
-            \Locale::getDefault(),
-            IntlDateFormatter::LONG,
-            IntlDateFormatter::NONE,
-            'Europe/London',
-            IntlDateFormatter::GREGORIAN
-        );
-
-        return $formatter->format($date);
     }
 }

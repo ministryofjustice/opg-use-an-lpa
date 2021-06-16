@@ -210,9 +210,9 @@ class OlderLpaService
         }
 
         //Check and compare user provided data with lpa data and return actor details
-        $lpaAndActorMatchResponse = $this->compareAndLookupActiveActorInLpa($lpaMatchResponse->getData(), $dataToMatch);
+        $actorMatch = $this->compareAndLookupActiveActorInLpa($lpaMatchResponse->getData(), $dataToMatch);
 
-        if (is_null($lpaAndActorMatchResponse)) {
+        if (is_null($actorMatch)) {
             $this->logger->info(
                 'Actor details for LPA {uId} not found',
                 [
@@ -222,14 +222,14 @@ class OlderLpaService
             throw new BadRequestException('LPA details do not match');
         }
 
-        $lpaAndActorMatchResponse['donor_name'] = [
+        $actorMatch['donor_name'] = [
                             $lpaMatchResponse->getData()['donor']['firstname'],
                             $lpaMatchResponse->getData()['donor']['middlenames'],
                             $lpaMatchResponse->getData()['donor']['surname']
                             ];
-        $lpaAndActorMatchResponse['lpa_type'] = $lpaMatchResponse->getData()['caseSubtype'];
+        $actorMatch['lpa_type'] = $lpaMatchResponse->getData()['caseSubtype'];
 
-        return $lpaAndActorMatchResponse;
+        return $actorMatch;
     }
 
     /**
@@ -259,7 +259,7 @@ class OlderLpaService
             $this->logger->notice(
                 'Requesting new access code letter for attorney {attorney} on LPA {lpa}',
                 [
-                    'event_code' => EventCodes::OLDER_LPA_NEW_ACTIVATION_KEY,
+                    'event_code' => EventCodes:: OLDER_LPA_NEW_ACTIVATION_KEY,
                     'attorney' => $actorUidInt,
                     'lpa' => $uidInt
                 ]

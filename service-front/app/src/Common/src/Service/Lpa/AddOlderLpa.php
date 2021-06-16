@@ -53,7 +53,7 @@ class AddOlderLpa
         string $lastname,
         DateTimeInterface $dob,
         string $postcode,
-        bool $forceActivationKey
+        bool $forceActivationKey = false
     ): OlderLpaApiResponse {
         $data = [
             'reference_number'  => $lpaUid,
@@ -129,7 +129,7 @@ class AddOlderLpa
         }
 
         $this->logger->notice(
-            'LPA with reference number {uId}, "{reason}"',
+            'LPA with reference number {uId} not added because "{reason}"',
             [
                 'event_code' => $code,
                 'uId' => $lpaUid,
