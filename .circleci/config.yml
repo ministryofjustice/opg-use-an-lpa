@@ -302,6 +302,16 @@ workflows:
               ] } }
             requires: [dev_run_behat_tests]
 
+        - python_templated_slack_notify:
+            name: post_prod_environment_domains
+            template: production_release.txt
+            webhook: $PROD_RELEASE_SLACK_WEBHOOK
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
+            requires: [dev_run_behat_tests]
+
         # Required end of workflow job
         - use-my-lpa/end_of_workflow:
             name: end_of_workflow
