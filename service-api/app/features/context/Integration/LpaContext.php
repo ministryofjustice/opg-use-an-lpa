@@ -63,8 +63,9 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^a letter is requested containing a one time use code$/
+     * @Then /^A letter is requested "(.*)" containing a one time use code$/
      */
-    public function aLetterIsRequestedContainingAOneTimeUseCode()
+    public function aLetterIsRequestedContainingAOneTimeUseCode($period=null)
     {
         // Lpas::requestLetter
         $this->pactPostInteraction(
@@ -77,7 +78,11 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_NO_CONTENT
         );
 
-        $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, false);
+        if ($period == "again") {
+            $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, true);
+        } else {
+            $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, false);
+        }
     }
 
     /**
@@ -1270,21 +1275,22 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
 
+        assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
+        assertEquals($lpaMatchResponse['actor-id'], $this->actorLpaId);
+
         $this->pactPostInteraction(
             $this->codesApiPactProvider,
             '/v1/exists',
             [
-                'lpa' => $this->lpaUid,
-                'actor' => $this->actorLpaId,
+                'lpa' => $lpaMatchResponse['lpa-id'],
+                'actor' => $lpaMatchResponse['actor-id'],
             ],
             StatusCodeInterface::STATUS_OK,
             $codeExists
         );
 
-        $hasActivationCodeResponse = $this->olderLpaService->hasActivationCode($lpaMatchResponse);
+        $hasActivationCodeResponse = $this->olderLpaService->hasActivationCode($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
 
-        assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
-        assertEquals($lpaMatchResponse['actor-id'], $this->actorLpaId);
     }
 
     /**
@@ -1326,7 +1332,7 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        $hasActivationCodeResult = $this->olderLpaService->hasActivationCode($result);
+        $hasActivationCodeResult = $this->olderLpaService->hasActivationCode($result['lpa-id'], $result['actor-id'] );
     }
 
     /**
@@ -1876,13 +1882,11 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iRequestForANewActivationKeyAgain()
     {
-        $dob = (new DateTime($this->userDob));
-
         $data = [
             'reference_number' => $this->lpaUid,
             'first_names' => $this->userFirstname,
             'last_name' => $this->userSurname,
-            'dob' => $dob->format('Y-m-d'),
+            'dob' => $this->userDob,
             'postcode' => $this->userPostCode,
             'force_activation_key' => true
         ];
@@ -1893,10 +1897,6 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_OK,
             $this->lpa
         );
-
-        $codeExists = new stdClass();
-        $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
-        $codeExists->Created = $createdDate;
 
         $result = $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
     }
@@ -1909,23 +1909,23 @@ class LpaContext extends BaseIntegrationContext
         // Not needed for this context
     }
 
-    /**
-     * @Then /^a letter is requested$/
-     */
-    public function aLetterIsRequested()
-    {
-        // Lpas::requestLetter
-        $this->pactPostInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/requestCode',
-            [
-                'case_uid' => (int)$this->lpaUid,
-                'actor_uid' => (int)$this->actorLpaId,
-            ],
-            StatusCodeInterface::STATUS_NO_CONTENT
-        );
-
-        $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, true);
-    }
+//    /**
+//     * @Then /^a letter is requested$/
+//     */
+//    public function aLetterIsRequested()
+//    {
+//        // Lpas::requestLetter
+//        $this->pactPostInteraction(
+//            $this->apiGatewayPactProvider,
+//            '/v1/use-an-lpa/lpas/requestCode',
+//            [
+//                'case_uid' => (int)$this->lpaUid,
+//                'actor_uid' => (int)$this->actorLpaId,
+//            ],
+//            StatusCodeInterface::STATUS_NO_CONTENT
+//        );
+//
+//        $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, true);
+//    }
 
 }

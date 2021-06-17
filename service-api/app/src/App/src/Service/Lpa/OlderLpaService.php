@@ -156,12 +156,14 @@ class OlderLpaService
     /**
      * Checks if an actor already has an active activation key
      *
-     * @param array $actorlpaDetails
+     * @param string $lpaId
+     * @param string $actorId
      * @return DateTime|null
      */
-    public function hasActivationCode(array $actorLpaDetails ): ?DateTime
+    public function hasActivationCode(string $lpaId, string $actorId): ?DateTime
     {
-        $response = $this->actorCodes->checkActorHasCode($actorLpaDetails['lpa-id'], $actorLpaDetails['actor-id']);
+        $response = $this->actorCodes->checkActorHasCode($lpaId, $actorId);
+
 
         if (is_null($response->getData()['Created'])) {
             return null;
@@ -170,10 +172,10 @@ class OlderLpaService
         $createdDate = DateTime::createFromFormat('Y-m-d', $response->getData()['Created']);
 
         $this->logger->notice(
-            'Activation key exits for actor {actorId} on LPA {lpaId}',
+            'Activation key exists for actor {actorId} on LPA {lpaId}',
             [
-                'actorId' => $actorLpaDetails['actor-id'],
-                'lpaId' => $actorLpaDetails['lpa-id'],
+                'actorId' => $lpaId,
+                'lpaId' => $actorId,
             ]
         );
 
@@ -210,6 +212,7 @@ class OlderLpaService
         }
 
         //Check and compare user provided data with lpa data and return actor details
+
         $actorMatch = $this->compareAndLookupActiveActorInLpa($lpaMatchResponse->getData(), $dataToMatch);
 
         if (is_null($actorMatch)) {
@@ -257,7 +260,7 @@ class OlderLpaService
             );
         } else {
             $this->logger->notice(
-                'Requesting new access code letter for attorney {attorney} on LPA {lpa}',
+                'Requesting an access code letter for attorney {attorney} on LPA {lpa}',
                 [
                     'event_code' => EventCodes:: OLDER_LPA_NEW_ACTIVATION_KEY,
                     'attorney' => $actorUidInt,

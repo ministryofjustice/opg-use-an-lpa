@@ -120,7 +120,7 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
 
-        $codeCreated = $service->hasActivationCode($actorLpaDetails);
+        $codeCreated = $service->hasActivationCode($actorLpaDetails['lpa-id'], $actorLpaDetails['actor-id']);
         $this->assertEquals(DateTime::createFromFormat('Y-m-d', $createdDate), $codeCreated);
     }
 
@@ -145,7 +145,7 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
 
-        $codeExists = $service->hasActivationCode($actorLpaDetails);
+        $codeExists = $service->hasActivationCode($actorLpaDetails['lpa-id'], $actorLpaDetails['actor-id']);
         $this->assertNull($codeExists);
     }
 

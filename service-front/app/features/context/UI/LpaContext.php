@@ -2632,7 +2632,7 @@ class LpaContext implements Context
     public function iRequestForANewActivationKeyAgain()
     {
         $this->iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd();
-        $this->ui->pressButton("Continue and ask for a new key");
+        $this->ui->pressButton('Continue and ask for a new key');
     }
 
     /**

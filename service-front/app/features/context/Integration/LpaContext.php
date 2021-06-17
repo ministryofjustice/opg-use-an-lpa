@@ -21,8 +21,6 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
 
-use function Aws\boolean_value;
-
 /**
  * A behat context that encapsulates user account steps
  *
@@ -1460,7 +1458,7 @@ class LpaContext extends BaseIntegrationContext
         ];
 
         try {
-            $addOlderLpa(
+            $result = $addOlderLpa(
                 $data['identity'],
                 intval($data['reference_number']),
                 $data['first_names'],
@@ -1476,6 +1474,10 @@ class LpaContext extends BaseIntegrationContext
                 $e
             );
         }
+
+        $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
+
+        assertEquals($response, $result);
     }
 
     /**

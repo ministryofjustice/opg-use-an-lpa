@@ -2395,20 +2395,6 @@ class LpaContext implements Context
                 )
             );
 
-        // check if actor has a code
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'Created' => null
-                        ]
-                    )
-                )
-            );
-
         // request a code to be generated and letter to be sent
         $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
             ->respondWith(
@@ -2446,9 +2432,9 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^a letter is requested$/
+     * @Then /^A letter is requested "(.*)" containing a one time use code$/
      */
-    public function aLetterIsRequested()
+    public function aLetterIsRequestedAgainContainingAOneTimeUseCode()
     {
         // Not needed for this context
     }

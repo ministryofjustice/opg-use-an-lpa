@@ -49,8 +49,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
         UrlHelper $urlHelper,
         EmailClient $emailClient,
         FormatDate $formatDate
-    )
-    {
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);

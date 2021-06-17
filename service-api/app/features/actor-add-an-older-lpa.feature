@@ -58,17 +58,10 @@ Feature: Add an older LPA
     And A malformed request is sent which is missing a data attribute
     Then I am told that something went wrong
 
-  @acceptance
-  Scenario: The user is given an option to generate a new key even if an activation key already exists
-    Given I am on the add an older LPA page
-    And I already have a valid activation key for my LPA
-    And I lost the letter received having the activation key
-    Then I should have an option to regenerate an activation key for the old LPA I want to add
-
   @acceptance @integration
   Scenario: The user is able to generate a new key even if an activation key already exists
     Given I am on the add an older LPA page
     And I lost the letter received having the activation key
     When I request for a new activation key again
-    Then a letter is requested
+    Then A letter is requested "again" containing a one time use code
     Then I am told a new activation key is posted to the provided postcode
