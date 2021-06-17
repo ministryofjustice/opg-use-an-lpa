@@ -302,16 +302,6 @@ workflows:
               ] } }
             requires: [dev_run_behat_tests]
 
-        - python_templated_slack_notify:
-            name: post_prod_environment_domains
-            template: production_release.txt
-            webhook: $PROD_RELEASE_SLACK_WEBHOOK
-            filters: { branches: { ignore: [
-              master,
-              /dependabot\/.*/,
-              ] } }
-            requires: [dev_run_behat_tests]
-
         # Required end of workflow job
         - use-my-lpa/end_of_workflow:
             name: end_of_workflow
@@ -473,12 +463,12 @@ workflows:
             filters: { branches: { only: [master] } }
             requires: [production_apply_environment_terraform]
 
-        - python_slack_notify_production_release:
+        - python_templated_slack_notify:
             name: post_production_release_message
+            template: production_release.txt
+            webhook: $PROD_RELEASE_SLACK_WEBHOOK
             filters: { branches: { only: [master] } }
             requires: [prod_run_healthcheck_test]
-
-
 
 
 orbs:
@@ -1363,48 +1353,6 @@ jobs:
           color: "#4287f5"
           message: "Scheduled update of <<parameters.environment>> environment complete"
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
-  slack_notify_domain:
-    docker:
-      - image: circleci/python
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
-    resource_class: small
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp
-      - run:
-          name: Get URLs
-          command: |
-            ~/project/scripts/pipeline/set_environment_variables/set_slack_message_values.sh >> $BASH_ENV
-      - slack/notify:
-          title: "Use a Lasting Power of Attorney Development Environment Ready"
-          color: "#9933ff"
-          message: "User: $CIRCLE_USERNAME \nview url: https://$PUBLIC_FACING_VIEW_DOMAIN/home \nuse url: https://$PUBLIC_FACING_USE_DOMAIN/home"
-          footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
-
-  slack_notify_production_release:
-    docker:
-      - image: circleci/python
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
-    resource_class: small
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp
-      - run:
-          name: Get URLs
-          command: |
-            ~/project/scripts/pipeline/set_environment_variables/set_slack_message_values.sh >> $BASH_ENV
-      - slack/notify:
-          title: "Use a Lasting Power of Attorney Production Release Successful"
-          color: "#9933ff"
-          message: "User: $CIRCLE_USERNAME \nview url: https://$PUBLIC_FACING_VIEW_DOMAIN/home \nuse url: https://$PUBLIC_FACING_USE_DOMAIN/home"
-          webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
-          footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
 
   python_templated_slack_notify:
     docker:
@@ -1431,26 +1379,6 @@ jobs:
             python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
             --slack_webhook <<parameters.webhook>> \
             --template_path ~/project/scripts/pipeline/post_release_slack_notification/<<parameters.template>> \
-            --commit_message "$(git log -1 --pretty=%B)"
-
-  python_slack_notify_production_release:
-    docker:
-      - image: circleci/python
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
-    resource_class: small
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp
-      - run:
-          name: Notify Slack
-          command: |
-            pip install -r ~/project/scripts/pipeline/requirements.txt
-            python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
-            --slack_webhook $PROD_RELEASE_SLACK_WEBHOOK \
-            --template_path ~/project/scripts/pipeline/post_release_slack_notification/production_release.txt \
             --commit_message "$(git log -1 --pretty=%B)"
 
 
