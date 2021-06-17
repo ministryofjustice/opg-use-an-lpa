@@ -292,8 +292,10 @@ workflows:
               ] } }
             requires: [dev_seed_database]
 
-        - slack_notify_domain:
+
+        - python_templated_slack_notify:
             name: post_environment_domains
+            template: successful_dev_build.txt
             filters: { branches: { ignore: [
               master,
               /dependabot\/.*/,
@@ -1394,6 +1396,29 @@ jobs:
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
 
+  python_templated_slack_notify:
+    docker:
+      - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    parameters:
+      template:
+        type: string
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Notify Slack
+          command: |
+            pip install -r ~/project/scripts/pipeline/requirements.txt
+            python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
+            --slack_webhook $SLACK_WEBHOOK \
+            --template_path ~/project/scripts/pipeline/post_release_slack_notification/<<parameters.template>> \
+            --commit_message "$(git log -1 --pretty=%B)"
+
   python_slack_notify_production_release:
     docker:
       - image: circleci/python
@@ -1410,6 +1435,7 @@ jobs:
           command: |
             python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
             --slack_webhook $PROD_RELEASE_SLACK_WEBHOOK \
+            --template_path ~/project/scripts/pipeline/post_release_slack_notification/production_release.txt \
             --commit_message "$(git log -1 --pretty=%B)"
 
 
