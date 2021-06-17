@@ -78,11 +78,9 @@
                         </summary>
                         <div class="govuk-details__text">
                             <p>
-                                {% trans %}If the information is wrong, or if a name is misspelt, please call us: <br>
-                                Telephone: 0300 456 0300<br>
-                                Textphone: 0115 934 2778<br>
-                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm.{% endtrans %}
+                                {% trans %}If the information is wrong, or if a name is misspelt, please call us:{% endtrans %}
                             </p>
+                            {{ include('@partials/contact-details/telephone.html.twig') }}
                         </div>
                     </details>
 
