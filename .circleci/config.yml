@@ -1433,6 +1433,7 @@ jobs:
       - run:
           name: Notify Slack
           command: |
+            pip install -r ~/project/scripts/pipeline/requirements.txt
             python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
             --slack_webhook $PROD_RELEASE_SLACK_WEBHOOK \
             --template_path ~/project/scripts/pipeline/post_release_slack_notification/production_release.txt \
