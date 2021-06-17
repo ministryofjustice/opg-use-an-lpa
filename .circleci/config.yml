@@ -1406,6 +1406,9 @@ jobs:
     parameters:
       template:
         type: string
+      webhook:
+        type: string
+        default: $SLACK_WEBHOOK
     steps:
       - checkout
       - attach_workspace:
@@ -1413,9 +1416,10 @@ jobs:
       - run:
           name: Notify Slack
           command: |
+
             pip install -r ~/project/scripts/pipeline/requirements.txt
             python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
-            --slack_webhook $SLACK_WEBHOOK \
+            --slack_webhook <<parameters.webhook>> \
             --template_path ~/project/scripts/pipeline/post_release_slack_notification/<<parameters.template>> \
             --commit_message "$(git log -1 --pretty=%B)"
 
