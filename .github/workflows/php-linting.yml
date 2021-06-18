@@ -2,6 +2,10 @@ name: "PHP Linting"
 on:
   pull_request:
     branches: [ master ]
+    # paths:
+    # # only run when service-admin is changed
+    #   - 'service-api/**'
+    #   - 'service-front/**'
 
 jobs:
   php-linting:
