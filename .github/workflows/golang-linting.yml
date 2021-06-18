@@ -2,9 +2,9 @@ name: golangci-lint
 on:
   pull_request:
     branches: [ master ]
-    paths:
-    # only run when service-front is changed
-      - 'service-admin/**'
+    # paths:
+    # # only run when service-front is changed
+    #   - 'service-admin/**'
 jobs:
   golangci:
     name: lint
