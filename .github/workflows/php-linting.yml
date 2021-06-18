@@ -7,6 +7,19 @@ on:
     #   - 'service-api/**'
     #   - 'service-front/**'
 
+permissions:
+  actions: read
+  checks: read
+  contents: none
+  deployments: none
+  issues: none
+  packages: none
+  pull-requests: read
+  repository-projects: none
+  security-events: none
+  statuses: none
+
+
 jobs:
   phpcs:
     name: Lint PHP
