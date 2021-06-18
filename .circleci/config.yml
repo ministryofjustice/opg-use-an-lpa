@@ -93,6 +93,10 @@ workflows:
             filters: { branches: { only: [/dependabot\/.*/] } }
             requires: [test_pdf]
 
+        - use-my-lpa/docker_test_admin:
+            name: admin_app_test
+            filters: { branches: { only: [/dependabot\/.*/] } }
+
         - use-my-lpa/docker_build_admin:
             name: admin_app_build
             filters: { branches: { only: [/dependabot\/.*/] } }
@@ -106,7 +110,7 @@ workflows:
                 app_api_build,
                 test_web,
                 test_pdf,
-                admin_app_build,
+                admin_app_test,
               ]
 
         # Required end of workflow job
@@ -202,6 +206,13 @@ workflows:
               /dependabot\/.*/,
               ] } }
 
+        - use-my-lpa/docker_test_admin:
+            name: admin_app_test
+            filters: { branches: { ignore: [
+              master,
+              /dependabot\/.*/,
+              ] } }
+
         - use-my-lpa/docker_build_admin:
             name: admin_app_build
             filters: { branches: { ignore: [
@@ -229,7 +240,7 @@ workflows:
                 app_api_build,
                 test_web,
                 test_pdf,
-                admin_app_build,
+                admin_app_test,
               ]
 
             # Provision and test development
@@ -360,6 +371,10 @@ workflows:
             filters: { branches: { only: [master] } }
             requires: [test_pdf]
 
+        - use-my-lpa/docker_test_admin:
+            name: admin_app_test
+            filters: { branches: { only: [master] } }
+
         - use-my-lpa/docker_build_admin:
             name: admin_app_build
             filters: { branches: { only: [master] } }
@@ -373,7 +388,7 @@ workflows:
                 app_api_build,
                 test_web,
                 test_pdf,
-                admin_app_build,
+                admin_app_test,
               ]
 
         # Provision and test preproduction
@@ -529,6 +544,13 @@ orbs:
 
 
     executors:
+      golang:
+        docker:
+          - image: circleci/golang:1.16
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
+        resource_class: small
       puppeteer:
         docker:
           - image: buildkite/puppeteer
@@ -1016,11 +1038,28 @@ orbs:
                   docker push ${ECR_URL}:${IMAGE_TAG}
                 fi
 
+      docker_test_admin:
+        #
+        # Run golang unit tests against admin
+        #
+        executor: golang
+        steps:
+          - checkout
+          - run:
+              name: Run tests and coverage
+              command: |
+                mkdir -p build/service-admin
+                cd service-admin/
+                go test -race -coverpkg ./... -coverprofile=../build/service-admin/coverage.out -covermode=atomic ./...
+          - persist_to_workspace:
+              root: build
+              paths:
+                - service-admin/
+              when: always
 
       docker_build_admin:
         #
         # Build Docker container for Admin
-        #   and runs the Unit Tests.
         #
         executor: python
         parameters:
@@ -1037,7 +1076,7 @@ orbs:
           - run:
               name: Build
               command: |
-                docker build --target production --file service-admin/docker/Dockerfile --tag admin_app:latest .
+                docker build --target production --file service-admin/Dockerfile --tag admin_app:latest service-admin/
           - ecr_login
           - run:
               name: Push container

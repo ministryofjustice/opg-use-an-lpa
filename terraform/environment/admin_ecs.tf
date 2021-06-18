@@ -182,6 +182,10 @@ locals {
           name  = "LOGGING_LEVEL",
           value = tostring(local.account.logging_level)
         },
+        {
+          name  = "PORT",
+          value = tostring(80)
+        }
       ]
     }
   )
