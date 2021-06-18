@@ -6,6 +6,10 @@ on:
     # # only run when service-admin is changed
     #   - 'service-api/**'
     #   - 'service-front/**'
+    paths:
+      - "**.php"
+      - "**/app/phpcs.xml.dist"
+      - ".github/workflows/php-linting.yml"
 
 permissions:
   actions: read
