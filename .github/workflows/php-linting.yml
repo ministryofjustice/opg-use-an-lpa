@@ -8,7 +8,7 @@ on:
     #   - 'service-front/**'
 
 jobs:
-  php-linting:
+  phpcs:
     name: Lint PHP
 
     strategy:
@@ -20,8 +20,18 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - name: change directory
-      run: cd ${{ matrix.service_path }}/app
+      with:
+        fetch-depth: 0 # important!
 
-    - name: PHP-Lint
-      uses: michaelw90/PHP-Lint@master
+    # we may use whatever way to install phpcs, just specify the path on the next step
+    # however, curl seems to be the fastest
+    - name: Install PHP_CodeSniffer
+      run: |
+        curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+        php phpcs.phar --version
+
+    - uses: tinovyatkin/action-php-codesniffer@v1
+      with:
+        files: "**.php" # you may customize glob as needed
+        phpcs_path: php phpcs.phar
+        standard: ${{ matrix.service_path }}/app/phpcs.xml.dist
