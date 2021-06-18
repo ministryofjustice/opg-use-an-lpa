@@ -11,8 +11,10 @@ jobs:
       matrix:
         service_path: [ 'service-front', 'service-api' ]
 
+    runs-on: ubuntu-latest
+
     defaults:
-        working-directory: ${{ matrix.service_path }}/app
+      working-directory: ${{ matrix.service_path }}/app
 
     steps:
     - name: Checkout repository
