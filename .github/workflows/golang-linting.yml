@@ -2,9 +2,9 @@ name: Golang Linting for Admin App
 on:
   pull_request:
     branches: [ master ]
-    # paths:
-    # # only run when service-front is changed
-    #   - 'service-admin/**'
+    paths:
+    # only run when service-front is changed
+      - 'service-admin/**'
 jobs:
   golangci:
     name: lint
@@ -18,5 +18,4 @@ jobs:
           # Optional: version of golangci-lint to use in form of v1.2 or v1.2.3 or `latest` to use the latest version
           version: v1.41.0
           working-directory: service-admin
-          # only-new-issues: true
-          # skip-go-installation: true
+          only-new-issues: true
