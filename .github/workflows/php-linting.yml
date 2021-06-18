@@ -1,0 +1,22 @@
+name: "PHP Linting"
+
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  php-linting:
+    name: Lint PHP
+
+    strategy:
+      matrix:
+        service_path: [ 'service-front', 'service-api' ]
+
+    defaults:
+        working-directory: ${{ matrix.service_path }}/app
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: PHP-Lint
+      uses: michaelw90/PHP-Lint@master
