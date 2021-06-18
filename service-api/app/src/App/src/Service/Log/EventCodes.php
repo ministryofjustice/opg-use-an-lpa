@@ -23,14 +23,4 @@ class EventCodes
      * The LPA was registered before 1 September 2019
      */
     public const OLDER_LPA_TOO_OLD = 'OLDER_LPA_TOO_OLD';
-
-    /**
-     * An LPA requesting new activation key
-     */
-    public const OLDER_LPA_NEW_ACTIVATION_KEY = 'OLDER_LPA_NEW_ACTIVATION_KEY';
-
-    /**
-     * An LPA force requesting another activation key again
-     */
-    public const OLDER_LPA_FORCE_ACTIVATION_KEY = 'OLDER_LPA_FORCE_ACTIVATION_KEY';
 }

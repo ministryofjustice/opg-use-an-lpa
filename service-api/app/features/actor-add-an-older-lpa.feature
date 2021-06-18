@@ -63,5 +63,5 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     And I lost the letter received having the activation key
     When I request for a new activation key again
-    Then A letter is requested "again" containing a one time use code
+    Then a letter is requested containing a one time use code
     Then I am told a new activation key is posted to the provided postcode

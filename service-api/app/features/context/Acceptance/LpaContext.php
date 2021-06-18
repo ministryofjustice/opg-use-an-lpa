@@ -2430,12 +2430,4 @@ class LpaContext implements Context
     {
         // Not needed for this context
     }
-
-    /**
-     * @Then /^A letter is requested "(.*)" containing a one time use code$/
-     */
-    public function aLetterIsRequestedAgainContainingAOneTimeUseCode()
-    {
-        // Not needed for this context
-    }
 }

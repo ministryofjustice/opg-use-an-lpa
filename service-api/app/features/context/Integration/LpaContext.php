@@ -63,7 +63,6 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^a letter is requested containing a one time use code$/
-     * @Then /^A letter is requested "(.*)" containing a one time use code$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode($period=null)
     {
@@ -78,11 +77,7 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_NO_CONTENT
         );
 
-        if ($period == "again") {
-            $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, true);
-        } else {
-            $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, false);
-        }
+        $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId);
     }
 
     /**
@@ -1908,24 +1903,4 @@ class LpaContext extends BaseIntegrationContext
     {
         // Not needed for this context
     }
-
-//    /**
-//     * @Then /^a letter is requested$/
-//     */
-//    public function aLetterIsRequested()
-//    {
-//        // Lpas::requestLetter
-//        $this->pactPostInteraction(
-//            $this->apiGatewayPactProvider,
-//            '/v1/use-an-lpa/lpas/requestCode',
-//            [
-//                'case_uid' => (int)$this->lpaUid,
-//                'actor_uid' => (int)$this->actorLpaId,
-//            ],
-//            StatusCodeInterface::STATUS_NO_CONTENT
-//        );
-//
-//        $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, true);
-//    }
-
 }

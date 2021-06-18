@@ -242,32 +242,19 @@ class OlderLpaService
      *
      * @param string $uid Sirius uId for an LPA
      * @param string $actorUid uId of an actor on that LPA
-     * @param bool $forceActivationKey flag that indicates repeated key generation for the LPA
      */
-    public function requestAccessByLetter(string $uid, string $actorUid, bool $forceActivationKey): void
+    public function requestAccessByLetter(string $uid, string $actorUid): void
     {
         $uidInt = (int)$uid;
         $actorUidInt = (int)$actorUid;
-
-        if ($forceActivationKey) {
-            $this->logger->notice(
-                'Requesting another access code letter for attorney {attorney} on LPA {lpa}',
-                [
-                    'event_code' => EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY,
-                    'attorney' => $actorUidInt,
-                    'lpa' => $uidInt
-                ]
-            );
-        } else {
-            $this->logger->notice(
-                'Requesting an access code letter for attorney {attorney} on LPA {lpa}',
-                [
-                    'event_code' => EventCodes:: OLDER_LPA_NEW_ACTIVATION_KEY,
-                    'attorney' => $actorUidInt,
-                    'lpa' => $uidInt
-                ]
-            );
-        }
+        
+        $this->logger->info(
+            'Requesting an access code letter for attorney {attorney} on LPA {lpa}',
+            [
+                'attorney' => $actorUidInt,
+                'lpa' => $uidInt
+            ]
+        );
 
         try {
             $this->lpaRepository->requestLetter($uidInt, $actorUidInt);

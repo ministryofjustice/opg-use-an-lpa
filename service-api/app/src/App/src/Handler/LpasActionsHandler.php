@@ -70,7 +70,7 @@ class LpasActionsHandler implements RequestHandlerInterface
         }
 
         //If all criteria pass, request letter with activation key
-        $this->olderLpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id'], $requestData['force_activation_key']);
+        $this->olderLpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
 
         return new EmptyResponse();
     }
