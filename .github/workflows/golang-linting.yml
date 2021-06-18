@@ -24,4 +24,4 @@ jobs:
           version: v1.29
           working-directory: service-admin
           # only-new-issues: true
-          # skip-go-installation: false
+          skip-go-installation: true
