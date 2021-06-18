@@ -1,4 +1,4 @@
-name: golangci-lint
+name: Golang Linting for Admin App
 on:
   pull_request:
     branches: [ master ]
