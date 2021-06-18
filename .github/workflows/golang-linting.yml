@@ -3,7 +3,7 @@ on:
   pull_request:
     branches: [ master ]
     paths:
-    # only run when service-front is changed
+    # only run when service-admin is changed
       - 'service-admin/**'
 jobs:
   golangci:
