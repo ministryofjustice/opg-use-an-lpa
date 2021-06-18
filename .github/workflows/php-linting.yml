@@ -13,12 +13,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    defaults:
-      working-directory: ${{ matrix.service_path }}/app
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+    - name: change directory
+      run: cd ${{ matrix.service_path }}/app
 
     - name: PHP-Lint
       uses: michaelw90/PHP-Lint@master
