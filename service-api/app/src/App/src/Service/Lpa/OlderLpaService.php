@@ -247,7 +247,7 @@ class OlderLpaService
     {
         $uidInt = (int)$uid;
         $actorUidInt = (int)$actorUid;
-        
+
         $this->logger->info(
             'Requesting an access code letter for attorney {attorney} on LPA {lpa}',
             [
