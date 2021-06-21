@@ -182,12 +182,13 @@ resource "aws_lb_listener_rule" "viewer_maintenance_welsh" {
 
 resource "aws_security_group" "viewer_loadbalancer" {
   name        = "${local.environment}-viewer-loadbalancer"
-  description = "Allow inbound traffic"
+  description = "View service application load balancer"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress_http" {
+  description       = "Port 80 ingress from the internet to the application load balancer"
   type              = "ingress"
   from_port         = 80
   to_port           = 80
@@ -197,6 +198,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress_http" {
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress" {
+  description       = "Port 443 ingress from the allow list to the application load balancer"
   type              = "ingress"
   from_port         = 443
   to_port           = 443
@@ -206,6 +208,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress" {
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress_production" {
+  description       = "Port 443 ingress for production from the internet to the application load balancer"
   count             = local.environment == "production" ? 1 : 0
   type              = "ingress"
   from_port         = 443
@@ -216,6 +219,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress_production" {
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_egress" {
+  description       = "Allow any egress from Use service load balancer"
   type              = "egress"
   from_port         = 0
   to_port           = 0
@@ -226,7 +230,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_egress" {
 
 resource "aws_security_group" "viewer_loadbalancer_route53" {
   name        = "${local.environment}-viewer-loadbalancer-route53"
-  description = "Allow Route53 healthchecks"
+  description = "View service Route53 healthchecks"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
 }

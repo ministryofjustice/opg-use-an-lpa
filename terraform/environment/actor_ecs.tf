@@ -38,7 +38,7 @@ resource "aws_security_group" "actor_ecs_service" {
 
 // 80 in from the ELB
 resource "aws_security_group_rule" "actor_ecs_service_ingress" {
-  description              = "Allow Port 80 ingress from the the applciation load balancer"
+  description              = "Allow Port 80 ingress from the application load balancer"
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
