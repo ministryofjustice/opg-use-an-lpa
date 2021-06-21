@@ -1,0 +1,47 @@
+name: TFSec Static analysis
+
+on:
+  pull_request:
+    branches: [ master ]
+    paths:
+    # only run when terraform is changed
+      - 'terraform/**'
+
+permissions:
+  actions: read
+  checks: read
+  contents: read
+  deployments: read
+  issues: read
+  packages: read
+  pull-requests: read
+  repository-projects: read
+  security-events: read
+  statuses: read
+
+jobs:
+  tfsec:
+    name: tfsec
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        terraform_path: [ 'terraform/account', 'terraform/environment' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Terraform security scan
+        uses: triat/terraform-security-scan@v2.2.3
+        with:
+          tfsec_actions_comment:  true
+          tfsec_actions_working_dir:  ${{ matrix.terraform_path }}
+          # tfsec_exclude:  Provide checks via , without space to exclude from run. No default
+          # tfsec_version:  Specify the version of tfsec to install. Defaults to the latest
+          # tfsec_output_format: sarif
+          # tfsec_output_file:  tfsec.sarif
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Upload Security Analysis results to GitHub
+      #   uses: github/codeql-action/upload-sarif@v1
+      #   with:
+      #     sarif_file: ./${{ matrix.terraform_path }}/results.sarif
