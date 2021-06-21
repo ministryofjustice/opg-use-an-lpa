@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-06-20T16:04:40+00:00\n"
+"POT-Creation-Date: 2021-06-21T15:08:25+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -334,6 +334,7 @@ msgid "at least one number"
 msgstr "o leiaf un rhif"
 
 #: src/Actor/templates/actor/login.html.twig:46
+#: src/Actor/templates/actor/password-reset.html.twig:50
 #: src/Actor/templates/actor/your-details.html.twig:37
 msgid "Password"
 msgstr "Cyfrinair"
@@ -791,7 +792,6 @@ msgid "Current password"
 msgstr "Cyfrinair presennol"
 
 #: src/Actor/templates/actor/password-change.html.twig:46
-#: src/Actor/templates/actor/password-reset.html.twig:50
 msgid "New password"
 msgstr "Cyfrinair newydd"
 
@@ -5750,6 +5750,3 @@ msgstr ""
 "        Ffôn testun: 0115 934 2778 <br>\n"
 "        Dydd Llun i ddydd Gwener, 9.30am tan 5pm, heblaw bob dydd Mercher 10am "
 "tan 5pm"
-
-#~ msgid "Confirm Password"
-#~ msgstr "Cadarnhau cyfrinair"
