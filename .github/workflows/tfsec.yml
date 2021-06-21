@@ -37,19 +37,7 @@ jobs:
           tfsec_actions_working_dir:  ${{ matrix.terraform_path }}
           # tfsec_exclude:  Provide checks via , without space to exclude from run. No default
           # tfsec_version:  Specify the version of tfsec to install. Defaults to the latest
-          tfsec_output_format: sarif
-          tfsec_output_file:  ./${{ matrix.terraform_path }}/results.sarif
+          # tfsec_output_format: sarif
+          # tfsec_output_file:  ./${{ matrix.terraform_path }}/results.sarif
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run ls
-        run: ls -al ${{ matrix.terraform_path }}
-      - name: Change Owner of sarif file
-        run: sudo chown -R runner:docker ./${{ matrix.terraform_path }}/results.sarif
-      - name: Run ls
-        run: ls -al ${{ matrix.terraform_path }}
-
-      - name: Upload Security Analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: ./${{ matrix.terraform_path }}/results.sarif
