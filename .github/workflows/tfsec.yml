@@ -8,16 +8,16 @@ on:
       - 'terraform/**'
 
 permissions:
-  actions: read
-  checks: read
-  contents: read
-  deployments: none
-  issues: none
-  packages: none
-  pull-requests: read
-  repository-projects: none
+  # actions: read
+  # checks: read
+  # contents: read
+  # deployments: none
+  # issues: none
+  # packages: none
+  # pull-requests: read
+  # repository-projects: none
   security-events: write
-  statuses: none
+  # statuses: none
 
 jobs:
   tfsec:
