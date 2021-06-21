@@ -33,6 +33,7 @@ resource "aws_ecs_service" "admin" {
 resource "aws_security_group" "admin_ecs_service" {
   count       = local.account.build_admin == true ? 1 : 0
   name_prefix = "${local.environment}-admin-ecs-service"
+  description = "Admin service security group"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
 }
@@ -40,6 +41,7 @@ resource "aws_security_group" "admin_ecs_service" {
 // 80 in from the ELB
 resource "aws_security_group_rule" "admin_ecs_service_ingress" {
   count                    = local.account.build_admin == true ? 1 : 0
+  description              = "Allow Port 80 ingress from the applciation load balancer"
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
@@ -51,6 +53,7 @@ resource "aws_security_group_rule" "admin_ecs_service_ingress" {
 // Anything out
 resource "aws_security_group_rule" "admin_ecs_service_egress" {
   count             = local.account.build_admin == true ? 1 : 0
+  description       = "Allow any egress from Use service"
   type              = "egress"
   from_port         = 0
   to_port           = 0

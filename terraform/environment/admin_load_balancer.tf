@@ -71,13 +71,14 @@ resource "aws_lb_listener_certificate" "admin_loadbalancer_live_service_certific
 resource "aws_security_group" "admin_loadbalancer" {
   count       = local.account.build_admin == true ? 1 : 0
   name        = "${local.environment}-admin-loadbalancer"
-  description = "Allow inbound traffic"
+  description = "Admin service application load balancer"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
 }
 
 resource "aws_security_group_rule" "admin_loadbalancer_ingress" {
   count             = local.account.build_admin == true ? 1 : 0
+  description       = "Port 443 ingress from the allow list to the application load balancer"
   type              = "ingress"
   from_port         = 443
   to_port           = 443
@@ -88,6 +89,7 @@ resource "aws_security_group_rule" "admin_loadbalancer_ingress" {
 
 resource "aws_security_group_rule" "admin_loadbalancer_egress" {
   count             = local.account.build_admin == true ? 1 : 0
+  description       = "Allow any egress from Use service load balancer"
   type              = "egress"
   from_port         = 0
   to_port           = 0

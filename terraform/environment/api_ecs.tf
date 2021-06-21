@@ -54,6 +54,7 @@ locals {
 
 resource "aws_security_group" "api_ecs_service" {
   name_prefix = "${local.environment}-api-ecs-service"
+  description = "API service security group"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
 }
@@ -62,6 +63,7 @@ resource "aws_security_group" "api_ecs_service" {
 // 80 in from Viewer ECS service
 
 resource "aws_security_group_rule" "api_ecs_service_viewer_ingress" {
+  description              = "Allow Port 80 ingress from the View service"
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
@@ -74,6 +76,7 @@ resource "aws_security_group_rule" "api_ecs_service_viewer_ingress" {
 // 80 in from Actor ECS service
 
 resource "aws_security_group_rule" "api_ecs_service_actor_ingress" {
+  description              = "Allow Port 80 ingress from the Use service"
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
@@ -85,6 +88,7 @@ resource "aws_security_group_rule" "api_ecs_service_actor_ingress" {
 //----------------------------------
 // Anything out
 resource "aws_security_group_rule" "api_ecs_service_egress" {
+  description       = "Allow any egress from API service"
   type              = "egress"
   from_port         = 0
   to_port           = 0
