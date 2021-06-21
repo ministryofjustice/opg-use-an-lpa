@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-06-16T13:34:24+00:00\n"
+"POT-Creation-Date: 2021-06-21T15:08:25+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -279,17 +279,13 @@ msgid "at least one number"
 msgstr ""
 
 #: src/Actor/templates/actor/login.html.twig:46
-#: src/Actor/templates/actor/password-reset.html.twig:49
+#: src/Actor/templates/actor/password-reset.html.twig:50
 #: src/Actor/templates/actor/your-details.html.twig:37
 msgid "Password"
 msgstr ""
 
-#: src/Actor/templates/actor/password-reset.html.twig:51
-msgid "Confirm Password"
-msgstr ""
-
 #: src/Actor/templates/actor/password-change.html.twig:51
-#: src/Actor/templates/actor/password-reset.html.twig:53
+#: src/Actor/templates/actor/password-reset.html.twig:55
 msgid "Change password"
 msgstr ""
 
@@ -1804,7 +1800,7 @@ msgid ""
 "                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm."
 msgstr ""
 
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:46
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:45
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:61
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/check-your-answers.html.twig:91
@@ -3347,7 +3343,7 @@ msgstr ""
 msgid "The email should arrive in a few minutes. If it's not in your inbox, check your spam, bulk or junk email inbox. If you have not received the email, we can <a href=\"%link%\" class=\"govuk-link\">resend the activation email</a>."
 msgstr ""
 
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:43
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:42
 msgid "If you're named on more than one <abbr title=\"lasting power of attorney\">LPA</abbr>, you can add all those <abbr title=\"lasting powers of attorney\">LPAs</abbr> to your account"
 msgstr ""
 
