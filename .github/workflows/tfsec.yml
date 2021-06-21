@@ -38,7 +38,7 @@ jobs:
           # tfsec_exclude:  Provide checks via , without space to exclude from run. No default
           # tfsec_version:  Specify the version of tfsec to install. Defaults to the latest
           tfsec_output_format: sarif
-          tfsec_output_file:  ./${{ matrix.terraform_path }}/tfsec.sarif
+          tfsec_output_file:  tfsec.sarif
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
