@@ -11,7 +11,7 @@ resource "aws_lb_target_group" "actor" {
 
 resource "aws_lb" "actor" {
   name               = "${local.environment}-actor"
-  internal           = false
+  internal           = false #tfsec:ignore:AWS005 - public alb
   load_balancer_type = "application"
   subnets            = data.aws_subnet_ids.public.ids
   tags               = local.default_tags
@@ -193,7 +193,7 @@ resource "aws_security_group_rule" "actor_loadbalancer_ingress_http" {
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS006 - open ingress for load balancers
   security_group_id = aws_security_group.actor_loadbalancer.id
 }
 
@@ -214,7 +214,7 @@ resource "aws_security_group_rule" "actor_loadbalancer_ingress_production" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS006 - open ingress for load balancers
   security_group_id = aws_security_group.actor_loadbalancer.id
 }
 
@@ -224,7 +224,7 @@ resource "aws_security_group_rule" "actor_loadbalancer_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for load balancers
   security_group_id = aws_security_group.actor_loadbalancer.id
 }
 
