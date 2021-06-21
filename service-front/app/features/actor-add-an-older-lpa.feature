@@ -31,7 +31,7 @@ Feature: Add an older LPA
     And I confirm that those details are correct
     Then I am told that I cannot request an activation key
 
-  @ui
+  @ui @integration
   Scenario: The user is informed when trying to add an older LPA to their account and it has an activation key
     Given I am on the add an older LPA page
     And I already have a valid activation key for my LPA
@@ -39,7 +39,7 @@ Feature: Add an older LPA
     And I confirm that those details are correct
     Then I am told that I have an activation key for this LPA and where to find it
 
-  @ui @integration
+  @ui
   Scenario: The user is given an option to  generate a new key even if an activation key already exists
     Given I am on the add an older LPA page
     And I already have a valid activation key for my LPA
