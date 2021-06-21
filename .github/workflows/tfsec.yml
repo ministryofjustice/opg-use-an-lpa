@@ -10,7 +10,7 @@ on:
 permissions:
   # actions: read
   # checks: read
-  contents: read
+  contents: write
   # deployments: none
   # issues: none
   # packages: none
@@ -28,21 +28,6 @@ jobs:
         terraform_path: [ 'terraform/environment' ]
         # terraform_path: [ 'terraform/account', 'terraform/environment' ]
     steps:
-
-      # - name: tfsec
-      #   uses: tfsec/tfsec-sarif-action@master
-      #   with:
-      #     working_directory: ${{ matrix.terraform_path }}
-      #     sarif_file: tfsec.sarif
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Upload SARIF file
-      #   uses: github/codeql-action/upload-sarif@v1
-      #   with:
-      #     # Path to SARIF file relative to the root of the repository
-      #     sarif_file: tfsec.sarif
-
-
       - name: Checkout
         uses: actions/checkout@v2
       - name: Terraform security scan
