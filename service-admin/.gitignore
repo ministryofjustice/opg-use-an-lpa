@@ -1,0 +1,6 @@
+__debug_bin
+node_modules/
+!.vscode/
+
+web/static/*
+!web/static/.gitkeep
