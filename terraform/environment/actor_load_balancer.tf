@@ -10,11 +10,12 @@ resource "aws_lb_target_group" "actor" {
 }
 
 resource "aws_lb" "actor" {
-  name               = "${local.environment}-actor"
-  internal           = false #tfsec:ignore:AWS005 - public alb
-  load_balancer_type = "application"
-  subnets            = data.aws_subnet_ids.public.ids
-  tags               = local.default_tags
+  name                       = "${local.environment}-actor"
+  internal                   = false #tfsec:ignore:AWS005 - public alb
+  load_balancer_type         = "application"
+  drop_invalid_header_fields = true
+  subnets                    = data.aws_subnet_ids.public.ids
+  tags                       = local.default_tags
 
   security_groups = [
     aws_security_group.actor_loadbalancer.id,
