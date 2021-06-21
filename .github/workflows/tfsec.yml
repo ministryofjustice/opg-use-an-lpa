@@ -7,17 +7,17 @@ on:
     # # only run when terraform is changed
     #   - 'terraform/**'
 
-permissions:
-  # actions: read
-  # checks: read
-  # contents: write
-  # deployments: none
-  # issues: none
-  # packages: none
-  pull-requests: write
-  # repository-projects: none
-  security-events: write
-  # statuses: none
+# permissions:
+#   # actions: read
+#   # checks: read
+#   # contents: write
+#   # deployments: none
+#   # issues: none
+#   # packages: none
+#   pull-requests: write
+#   # repository-projects: none
+#   security-events: write
+#   # statuses: none
 
 jobs:
   tfsec:
