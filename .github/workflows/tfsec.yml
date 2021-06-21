@@ -14,7 +14,7 @@ permissions:
   # deployments: none
   # issues: none
   # packages: none
-  # pull-requests: read
+  pull-requests: write
   # repository-projects: none
   security-events: write
   # statuses: none
