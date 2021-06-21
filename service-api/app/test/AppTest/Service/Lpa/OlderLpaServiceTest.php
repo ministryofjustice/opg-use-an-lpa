@@ -101,10 +101,9 @@ class OlderLpaServiceTest extends TestCase
     /** @test */
     public function returns_code_created_date_if_code_exists_for_actor()
     {
-        $actorLpaDetails = [
-            'lpa-id' => '700000012345',
-            'actor-id' => '700000055554',
-        ];
+        $lpaId = '700000012345';
+        $actorUid = '700000055554';
+
         $createdDate = (new DateTime('now'))->modify('-15 days')->format('Y-m-d');
 
         $lpaCodesResponse = new ActorCode(
@@ -115,22 +114,20 @@ class OlderLpaServiceTest extends TestCase
         );
 
         $this->actorCodesProphecy
-            ->checkActorHasCode($actorLpaDetails['lpa-id'], $actorLpaDetails['actor-id'])
+            ->checkActorHasCode($lpaId, $actorUid)
             ->willReturn($lpaCodesResponse);
 
         $service = $this->getOlderLpaService();
 
-        $codeCreated = $service->hasActivationCode($actorLpaDetails['lpa-id'], $actorLpaDetails['actor-id']);
+        $codeCreated = $service->hasActivationCode($lpaId, $actorUid);
         $this->assertEquals(DateTime::createFromFormat('Y-m-d', $createdDate), $codeCreated);
     }
 
     /** @test */
     public function returns_null_if_a_code_does_not_exist_for_an_actor()
     {
-        $actorLpaDetails = [
-            'lpa-id' => '700000012345',
-            'actor-id' => '700000055554',
-        ];
+        $lpaId = '700000012345';
+        $actorUid = '700000055554';
 
         $lpaCodesResponse = new ActorCode(
             [
@@ -140,12 +137,12 @@ class OlderLpaServiceTest extends TestCase
         );
 
         $this->actorCodesProphecy
-            ->checkActorHasCode($actorLpaDetails['lpa-id'], $actorLpaDetails['actor-id'])
+            ->checkActorHasCode($lpaId, $actorUid)
             ->willReturn($lpaCodesResponse);
 
         $service = $this->getOlderLpaService();
 
-        $codeExists = $service->hasActivationCode($actorLpaDetails['lpa-id'], $actorLpaDetails['actor-id']);
+        $codeExists = $service->hasActivationCode($lpaId, $actorUid);
         $this->assertNull($codeExists);
     }
 
@@ -436,7 +433,7 @@ class OlderLpaServiceTest extends TestCase
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
         $this->expectExceptionMessage('LPA not found');
 
-        $service->checkLPAMatchAndGetActorDetails($dataToMatch);
+        $actorMatch = $service->checkLPAMatchAndGetActorDetails($dataToMatch);
     }
 
     /**
@@ -524,19 +521,17 @@ class OlderLpaServiceTest extends TestCase
      */
     public function allow_user_continue_if_actor_has_active_activation_key()
     {
-        $actorLpaDetails = [
-            'lpa-id' => '700000004321',
-            'actor-id' => '700000004444',
-        ];
+        $lpaId = '700000004321';
+        $actorUid = '700000004444';
         $createdDate = (new DateTime('-2 weeks'))->format('Y-m-d');
 
         $dataToMatch = [
-            'reference_number' =>  $actorLpaDetails['lpa-id'],
-            'dob'              => '1980-03-01',
-            'first_names'      => 'Test Tester',
-            'last_name'        => 'Testing',
-            'postcode'         => 'Ab1 2Cd',
-            'force_activation_key' => false
+            'reference_number' => $lpaId,
+            'dob' => '1980-03-01',
+            'first_names' => 'Test Tester',
+            'last_name' => 'Testing',
+            'postcode' => 'Ab1 2Cd',
+            'force_activation_key' => false,
         ];
 
         $service = $this->getOlderLpaService();
@@ -544,7 +539,7 @@ class OlderLpaServiceTest extends TestCase
         $lpa = $this->older_lpa_get_by_uid_response();
 
         $this->lpaServiceProphecy
-            ->getByUid($actorLpaDetails['lpa-id'])
+            ->getByUid($lpaId)
             ->willReturn($lpa);
 
         $this->validateOlderLpaRequirements
@@ -552,37 +547,28 @@ class OlderLpaServiceTest extends TestCase
             ->willReturn(true);
 
         $this->actorCodesProphecy
-            ->checkActorHasCode($actorLpaDetails['lpa-id'], $actorLpaDetails['actor-id'])
-            ->willReturn(new ActorCode(
-                [
-                    'Created' => $createdDate
-                ],
-                new DateTime()
-            ));
-
-        try {
-            $result = $service->checkLPAMatchAndGetActorDetails($dataToMatch);
-
-        } catch (BadRequestException $ex) {
-            $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            $this->assertEquals('LPA has an activation key already', $ex->getMessage());
-
-            $this->assertContains(
-                [
-                    'donor_name' => [
-                            $lpa->getData()['donor']['firstname'],
-                            $lpa->getData()['donor']['middlenames'],
-                            $lpa->getData()['donor']['surname']
-                      ],
-                    'lpa_type' => $lpa->getData()['caseSubtype'],
-                ],
-                $ex->getAdditionalData()
+            ->checkActorHasCode($lpaId, $actorUid)
+            ->willReturn(
+                new ActorCode(
+                    [
+                        'Created' => $createdDate,
+                    ],
+                    new DateTime()
+                )
             );
-            return;
-        }
 
-        $this->assertEquals($actorLpaDetails['actor-id'], $result['actor-id']);
-        $this->assertEquals($actorLpaDetails['lpa-id'], $result['lpa-id']);
+        $result = $service->checkLPAMatchAndGetActorDetails($dataToMatch);
+
+        $donorName = [
+            $lpa->getData()['donor']['firstname'],
+            $lpa->getData()['donor']['middlenames'],
+            $lpa->getData()['donor']['surname'],
+        ];
+
+        $this->assertEquals($actorUid, $result['actor-id']);
+        $this->assertEquals($lpaId, $result['lpa-id']);
+        $this->assertEquals($donorName, $result['donor_name']);
+        $this->assertEquals($lpa->getData()['caseSubtype'], $result['lpa_type']);
     }
 
     /**
@@ -591,13 +577,11 @@ class OlderLpaServiceTest extends TestCase
      */
     public function allow_user_continue_to_generate_new_activation_key_even_if_actor_has_active_activation_key()
     {
-        $actorLpaDetails = [
-            'lpa-id' => '700000004321',
-            'actor-id' => '700000004444',
-        ];
+        $lpaId = '700000004321';
+        $actorUid = '700000004444';
 
         $dataToMatch = [
-            'reference_number' =>  $actorLpaDetails['lpa-id'],
+            'reference_number' =>  $lpaId,
             'dob'              => '1980-03-01',
             'first_names'      => 'Test Tester',
             'last_name'        => 'Testing',
@@ -610,36 +594,25 @@ class OlderLpaServiceTest extends TestCase
         $lpa = $this->older_lpa_get_by_uid_response();
 
         $this->lpaServiceProphecy
-            ->getByUid($actorLpaDetails['lpa-id'])
+            ->getByUid($lpaId)
             ->willReturn($lpa);
 
         $this->validateOlderLpaRequirements
             ->__invoke($lpa->getData())
             ->willReturn(true);
 
-        try {
-            $result = $service->checkLPAMatchAndGetActorDetails($dataToMatch);
+        $result = $service->checkLPAMatchAndGetActorDetails($dataToMatch);
 
-        } catch (BadRequestException $ex) {
-            $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            $this->assertEquals('LPA has an activation key already', $ex->getMessage());
+        $donorName = [
+            $lpa->getData()['donor']['firstname'],
+            $lpa->getData()['donor']['middlenames'],
+            $lpa->getData()['donor']['surname'],
+        ];
 
-            $this->assertContains(
-                [
-                    'donor_name' => [
-                        $lpa->getData()['donor']['firstname'],
-                        $lpa->getData()['donor']['middlenames'],
-                        $lpa->getData()['donor']['surname']
-                    ],
-                    'lpa_type' => $lpa->getData()['caseSubtype'],
-                ],
-                $ex->getAdditionalData()
-            );
-            return;
-        }
-
-        $this->assertEquals($actorLpaDetails['actor-id'], $result['actor-id']);
-        $this->assertEquals($actorLpaDetails['lpa-id'], $result['lpa-id']);
+        $this->assertEquals($actorUid, $result['actor-id']);
+        $this->assertEquals($lpaId, $result['lpa-id']);
+        $this->assertEquals($donorName, $result['donor_name']);
+        $this->assertEquals($lpa->getData()['caseSubtype'], $result['lpa_type']);
     }
 
     /**
@@ -649,7 +622,7 @@ class OlderLpaServiceTest extends TestCase
     public function returns_matched_actorId_and_lpaId_when_passing_all_older_lpa_criteria()
     {
         $lpaId = '700000004321';
-        $actorId = '700000004444';
+        $actorUid = '700000004444';
 
         $dataToMatch = [
             'reference_number' => $lpaId,
@@ -673,7 +646,7 @@ class OlderLpaServiceTest extends TestCase
             ->willReturn(true);
 
         $this->actorCodesProphecy
-            ->checkActorHasCode($lpaId, $actorId)
+            ->checkActorHasCode($lpaId, $actorUid)
             ->willReturn(new ActorCode(
                 [
                     'Created' => null
@@ -681,10 +654,18 @@ class OlderLpaServiceTest extends TestCase
                 new DateTime()
             ));
 
-        $response = $service->checkLPAMatchAndGetActorDetails($dataToMatch);
+        $result = $service->checkLPAMatchAndGetActorDetails($dataToMatch);
 
-        $this->assertEquals($actorId, $response['actor-id']);
-        $this->assertEquals($lpaId, $response['lpa-id']);
+        $donorName = [
+            $lpa->getData()['donor']['firstname'],
+            $lpa->getData()['donor']['middlenames'],
+            $lpa->getData()['donor']['surname'],
+        ];
+
+        $this->assertEquals($actorUid, $result['actor-id']);
+        $this->assertEquals($lpaId, $result['lpa-id']);
+        $this->assertEquals($donorName, $result['donor_name']);
+        $this->assertEquals($lpa->getData()['caseSubtype'], $result['lpa_type']);
     }
 
     /**

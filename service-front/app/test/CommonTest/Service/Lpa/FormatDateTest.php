@@ -7,14 +7,15 @@ namespace CommonTest\Service\Lpa;
 use ArrayObject;
 use Common\Service\Lpa\FormatDate;
 use DateTime;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Class SortLpasTest
+ * Class FormatDateTest
  *
  * @coversDefaultClass \Common\Service\Lpa\FormatDate
  * @package CommonTest\Service\Lpa
  */
-class FormatDateTest extends LpaFixtureTestCase
+class FormatDateTest extends TestCase
 {
     /**
      * @test

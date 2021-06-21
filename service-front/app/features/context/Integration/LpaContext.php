@@ -134,25 +134,15 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        $data = [
-            'identity'          =>  $this->userIdentity,
-            'reference_number'  =>  intval($this->referenceNo),
-            'first_names'       =>  $this->userFirstname,
-            'last_name'         =>  $this->userSurname,
-            'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
-            'postcode'          =>  $this->userPostCode,
-            'force_activation_key' => false
-        ];
-
         try {
             $addOlderLpa(
-                $data['identity'],
-                intval($data['reference_number']),
-                $data['first_names'],
-                $data['last_name'],
-                $data['dob'],
-                $data['postcode'],
-                $data['force_activation_key']
+                $this->userIdentity,
+                intval($this->referenceNo),
+                $this->userFirstname,
+                $this->userSurname,
+                DateTime::createFromFormat('Y-m-d', $this->userDob),
+                $this->userPostCode,
+                false
             );
         } catch (ApiException $e) {
             throw new Exception(
@@ -207,24 +197,14 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        $data = [
-            'identity'          =>  $this->userIdentity,
-            'reference_number'  =>  intval($this->referenceNo),
-            'first_names'       =>  $this->userFirstname,
-            'last_name'         =>  $this->userSurname,
-            'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
-            'postcode'          =>  $this->userPostCode,
-            'force_activation_key' => false
-        ];
-
         $result = $addOlderLpa(
-            $data['identity'],
-            intval($data['reference_number']),
-            $data['first_names'],
-            $data['last_name'],
-            $data['dob'],
-            $data['postcode'],
-            $data['force_activation_key']
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+            false
         );
 
         $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_FOUND, []);
@@ -271,92 +251,17 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        $data = [
-            'identity'          =>  $this->userIdentity,
-            'reference_number'  =>  intval($this->referenceNo),
-            'first_names'       =>  $this->userFirstname,
-            'last_name'         =>  $this->userSurname,
-            'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
-            'postcode'          =>  $this->userPostCode,
-            'force_activation_key' => false
-        ];
-
         $result = $addOlderLpa(
-            $data['identity'],
-            intval($data['reference_number']),
-            $data['first_names'],
-            $data['last_name'],
-            $data['dob'],
-            $data['postcode'],
-            $data['force_activation_key']
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+            false
         );
 
         $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_ELIGIBLE, []);
-
-        assertEquals($response, $result);
-    }
-
-    /**
-     * @Then /^I am told that I have an activation key for this LPA and where to find it$/
-     */
-    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
-    {
-        // API call for requesting activation code
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Bad Request',
-                            'details' => 'LPA has an activation key already',
-                            'data' => [
-                                'donor_name' => [
-                                    $this->userFirstname,
-                                    $this->userMiddlenames,
-                                    $this->userSurname
-                                ],
-                                'lpa_type' => ' '
-                            ],
-                        ]
-                    )
-                )
-            );
-
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
-
-        $data = [
-            'identity'          =>  $this->userIdentity,
-            'reference_number'  =>  intval($this->referenceNo),
-            'first_names'       =>  $this->userFirstname,
-            'last_name'         =>  $this->userSurname,
-            'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
-            'postcode'          =>  $this->userPostCode,
-            'force_activation_key' => false
-        ];
-
-        $result = $addOlderLpa(
-            $data['identity'],
-            intval($data['reference_number']),
-            $data['first_names'],
-            $data['last_name'],
-            $data['dob'],
-            $data['postcode'],
-            $data['force_activation_key']
-        );
-
-        $response = new OlderLpaApiResponse(
-            OlderLpaApiResponse::HAS_ACTIVATION_KEY,
-            [
-                'donor_name' => [
-                    $this->userFirstname,
-                    $this->userMiddlenames,
-                    $this->userSurname
-                ],
-                'lpa_type' => ' ',
-            ]
-        );
 
         assertEquals($response, $result);
     }
@@ -1447,25 +1352,15 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        $data = [
-            'identity'          =>  $this->userIdentity,
-            'reference_number'  =>  intval($this->referenceNo),
-            'first_names'       =>  $this->userFirstname,
-            'last_name'         =>  $this->userSurname,
-            'dob'               =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
-            'postcode'          =>  $this->userPostCode,
-            'force_activation_key' => true,
-        ];
-
         try {
             $result = $addOlderLpa(
-                $data['identity'],
-                intval($data['reference_number']),
-                $data['first_names'],
-                $data['last_name'],
-                $data['dob'],
-                $data['postcode'],
-                $data['force_activation_key']
+                $this->userIdentity,
+                intval($this->referenceNo),
+                $this->userFirstname,
+                $this->userSurname,
+                DateTime::createFromFormat('Y-m-d', $this->userDob),
+                $this->userPostCode,
+                true
             );
         } catch (ApiException $e) {
             throw new Exception(

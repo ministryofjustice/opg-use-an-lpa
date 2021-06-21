@@ -180,7 +180,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name'             => $this->olderLpa['last_name'],
                     'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode'              => $this->olderLpa['postcode'],
-                    'force_activation_key'  => true
+                    'force_activation_key'  => false
                 ]
             )->willThrow(
                 new ApiException(
@@ -203,7 +203,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
-            true
+            false
         );
 
         $this->assertEquals(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $result->getResponse());
@@ -338,25 +338,14 @@ class AddOlderLpaTest extends TestCase
             ->httpPatch(
                 '/v1/lpas/request-letter',
                 [
-                    'reference_number'      => (string) $this->olderLpa['reference_number'],
+                    'reference_number'      => (string)$this->olderLpa['reference_number'],
                     'first_names'           => $this->olderLpa['first_names'],
                     'last_name'             => $this->olderLpa['last_name'],
                     'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode'              => $this->olderLpa['postcode'],
-                    'force_activation_key'  => true
+                    'force_activation_key'  => true,
                 ]
-            )->willThrow(
-                new ApiException(
-                    'LPA has an activation key already',
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    null,
-                    [
-                        'lpa_type'      => 'pfa',
-                        'donor_name'    => ['abc','lmn','xyz']
-                    ]
-
-                )
-            );
+            )->willReturn([]);
 
         $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
         $result  = $sut(
@@ -369,6 +358,6 @@ class AddOlderLpaTest extends TestCase
             true
         );
 
-        $this->assertEquals(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $result->getResponse());
+        $this->assertEquals(OlderLpaApiResponse::SUCCESS, $result->getResponse());
     }
 }
