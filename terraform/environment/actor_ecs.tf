@@ -31,12 +31,14 @@ resource "aws_ecs_service" "actor" {
 
 resource "aws_security_group" "actor_ecs_service" {
   name_prefix = "${local.environment}-actor-ecs-service"
+  description = "Use service security group"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
 }
 
 // 80 in from the ELB
 resource "aws_security_group_rule" "actor_ecs_service_ingress" {
+  description              = "Allow Port 80 ingress from the the applciation load balancer"
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
@@ -47,6 +49,7 @@ resource "aws_security_group_rule" "actor_ecs_service_ingress" {
 
 // Anything out
 resource "aws_security_group_rule" "actor_ecs_service_egress" {
+  description       = "Allow any egress from Use service"
   type              = "egress"
   from_port         = 0
   to_port           = 0
@@ -56,6 +59,7 @@ resource "aws_security_group_rule" "actor_ecs_service_egress" {
 }
 
 resource "aws_security_group_rule" "actor_ecs_service_elasticache_ingress" {
+  description              = "Allow elasticache ingress for Use service"
   type                     = "ingress"
   from_port                = 0
   to_port                  = 6379
