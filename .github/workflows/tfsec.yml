@@ -45,7 +45,7 @@ jobs:
       - name: Run ls
         run: ls -al ${{ matrix.terraform_path }}
       - name: Change Owner of sarif file
-        run: chown -R runner:docker ./${{ matrix.terraform_path }}/results.sarif
+        run: sudo chown -R runner:docker ./${{ matrix.terraform_path }}/results.sarif
       - name: Run ls
         run: ls -al ${{ matrix.terraform_path }}
 
