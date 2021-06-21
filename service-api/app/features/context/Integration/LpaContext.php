@@ -64,7 +64,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^a letter is requested containing a one time use code$/
      */
-    public function aLetterIsRequestedContainingAOneTimeUseCode($period=null)
+    public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
         // Lpas::requestLetter
         $this->pactPostInteraction(

@@ -42,6 +42,7 @@ class OlderLpaService
      * Formats data attributes for comparison in the older lpa journey
      *
      * @param array $data
+     *
      * @return array|null
      * @throws \Exception
      */
@@ -58,8 +59,9 @@ class OlderLpaService
      * Compares LPA data retrieved from Sirius to the data provided by
      * the user to check if it matches
      *
-     * @param array $actor The actor details being compared against
+     * @param array $actor           The actor details being compared against
      * @param array $userDataToMatch The user provided data we're searching for a match against
+     *
      * @return ?array A data structure containing the matched actor id and lpa id
      */
 
@@ -70,24 +72,26 @@ class OlderLpaService
             $this->logger->notice(
                 'Data match failed for actor {id} as more than 1 address found',
                 [
-                    'id' => $actor['uId']
+                    'id' => $actor['uId'],
                 ]
             );
             return null;
         }
 
-        $actorData = $this->cleanseUserData([
-            'first_names' => $actor['firstname'],
-            'last_name' => $actor['surname'],
-            'postcode' => $actor['addresses'][0]['postcode'],
-        ]);
+        $actorData = $this->cleanseUserData(
+            [
+                'first_names' => $actor['firstname'],
+                'last_name' => $actor['surname'],
+                'postcode' => $actor['addresses'][0]['postcode'],
+            ]
+        );
 
         $this->logger->debug(
             'Doing actor data comparison against actor with id {actor_id}',
             [
                 'actor_id' => $actor['uId'],
                 'to_match' => $userDataToMatch,
-                'actor_data' => array_merge($actorData, ['dob' => $actor['dob']])
+                'actor_data' => array_merge($actorData, ['dob' => $actor['dob']]),
             ]
         );
 
@@ -100,7 +104,7 @@ class OlderLpaService
             $this->logger->info(
                 'User entered data matches for LPA {uId}',
                 [
-                    'uId' => $userDataToMatch['reference_number']
+                    'uId' => $userDataToMatch['reference_number'],
                 ]
             );
             return $actor;
@@ -127,7 +131,7 @@ class OlderLpaService
                         'Actor {id} status is not active for LPA {uId}',
                         [
                             'id' => $attorney['uId'],
-                            'uId' => $lpaId
+                            'uId' => $lpaId,
                         ]
                     );
                 }
@@ -149,7 +153,7 @@ class OlderLpaService
 
         return [
             'actor-id' => $actorId,
-            'lpa-id' => $lpaId
+            'lpa-id' => $lpaId,
         ];
     }
 
@@ -158,13 +162,13 @@ class OlderLpaService
      *
      * @param string $lpaId
      * @param string $actorId
+     *
      * @return DateTime|null
      */
     public function hasActivationCode(string $lpaId, string $actorId): ?DateTime
     {
         $response = $this->actorCodes->checkActorHasCode($lpaId, $actorId);
-
-
+        
         if (is_null($response->getData()['Created'])) {
             return null;
         }
@@ -186,6 +190,7 @@ class OlderLpaService
      * Gets LPA by Uid, checks registration date and identifies the actor
      *
      * @param array $dataToMatch
+     *
      * @return array
      * @throws \Exception
      */
@@ -195,19 +200,19 @@ class OlderLpaService
         $dataToMatch = $this->cleanseUserData($dataToMatch);
 
         //Get LPA by reference number
-        $lpaMatchResponse = $this->lpaService->getByUid((string) $dataToMatch['reference_number']);
+        $lpaMatchResponse = $this->lpaService->getByUid((string)$dataToMatch['reference_number']);
 
         if (is_null($lpaMatchResponse)) {
             $this->logger->info(
                 'The LPA {uId} entered by user is not found in Sirius',
                 [
-                    'uId' => $dataToMatch['reference_number']
+                    'uId' => $dataToMatch['reference_number'],
                 ]
             );
             throw new NotFoundException('LPA not found');
         }
 
-        if (! ($this->validateLpaRequirements)($lpaMatchResponse->getData())) {
+        if (!($this->validateLpaRequirements)($lpaMatchResponse->getData())) {
             throw new BadRequestException('LPA not eligible due to registration date');
         }
 
@@ -219,17 +224,17 @@ class OlderLpaService
             $this->logger->info(
                 'Actor details for LPA {uId} not found',
                 [
-                    'uId' => $dataToMatch['reference_number']
+                    'uId' => $dataToMatch['reference_number'],
                 ]
             );
             throw new BadRequestException('LPA details do not match');
         }
 
         $actorMatch['donor_name'] = [
-                            $lpaMatchResponse->getData()['donor']['firstname'],
-                            $lpaMatchResponse->getData()['donor']['middlenames'],
-                            $lpaMatchResponse->getData()['donor']['surname']
-                            ];
+            $lpaMatchResponse->getData()['donor']['firstname'],
+            $lpaMatchResponse->getData()['donor']['middlenames'],
+            $lpaMatchResponse->getData()['donor']['surname'],
+        ];
         $actorMatch['lpa_type'] = $lpaMatchResponse->getData()['caseSubtype'];
 
         return $actorMatch;
@@ -240,7 +245,7 @@ class OlderLpaService
      * address of the specified actor with a new one-time-use registration code.
      * This will allow them to add the LPA to their UaLPA account.
      *
-     * @param string $uid Sirius uId for an LPA
+     * @param string $uid      Sirius uId for an LPA
      * @param string $actorUid uId of an actor on that LPA
      */
     public function requestAccessByLetter(string $uid, string $actorUid): void
@@ -252,7 +257,7 @@ class OlderLpaService
             'Requesting an access code letter for attorney {attorney} on LPA {lpa}',
             [
                 'attorney' => $actorUidInt,
-                'lpa' => $uidInt
+                'lpa' => $uidInt,
             ]
         );
 
@@ -263,7 +268,7 @@ class OlderLpaService
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa}',
                 [
                     'attorney' => $actorUidInt,
-                    'lpa' => $uidInt
+                    'lpa' => $uidInt,
                 ]
             );
 

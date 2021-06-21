@@ -2373,14 +2373,6 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^I should have an option to regenerate an activation key for the old LPA I want to add$/
-     */
-    public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @When /^I request for a new activation key again$/
      */
     public function iRequestForANewActivationKeyAgain()
