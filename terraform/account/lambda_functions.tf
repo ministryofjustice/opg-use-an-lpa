@@ -43,7 +43,7 @@ module "ship_to_opg_metrics" {
   description       = "Function to take metrics from SQS and PUT them to OPG Metrics"
   working_directory = "/var/task"
   environment_variables = {
-    "OPG_METRICS_URL" : "https://1c370c6bbl.execute-api.eu-west-1.amazonaws.com"
+    "OPG_METRICS_URL" : "https://${local.dns_namespace_env}api.metrics.opg.service.justice.gov.uk"
   }
   image_uri                   = "${data.aws_ecr_repository.ship_to_opg_metrics.repository_url}:${var.lambda_container_version}"
   ecr_arn                     = data.aws_ecr_repository.ship_to_opg_metrics.arn
