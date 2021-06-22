@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   tfsec:
-    name: tfsec sarif report
+    name: TFSec Static analysis
     runs-on: ubuntu-latest
     strategy:
       matrix:
