@@ -52,7 +52,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
-        $this->addOlderLpa = $addOlderLpa;;
+        $this->addOlderLpa = $addOlderLpa;
         $this->emailClient = $emailClient;
         $this->localisedDate = $localisedDate;
     }

@@ -1284,8 +1284,10 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        $hasActivationCodeResponse = $this->olderLpaService->hasActivationCode($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
-
+        $hasActivationCodeResponse = $this->olderLpaService->hasActivationCode(
+            $lpaMatchResponse['lpa-id'],
+            $lpaMatchResponse['actor-id']
+        );
     }
 
     /**
@@ -1313,7 +1315,6 @@ class LpaContext extends BaseIntegrationContext
         $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
         $codeExists->Created = $createdDate;
 
-
         $result = $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
 
         $this->pactPostInteraction(
@@ -1326,7 +1327,6 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_OK,
             $codeExists
         );
-
         $hasActivationCodeResult = $this->olderLpaService->hasActivationCode($result['lpa-id'], $result['actor-id'] );
     }
 
@@ -1460,7 +1460,7 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
 
-        if($status == "Revoked"){
+        if ($status == "Revoked") {
             assertEmpty($lpaData);
         } else {
             assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
@@ -1812,7 +1812,8 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^The status of the LPA got Revoked$/
      */
-    public function theStatusOfTheLpaGotRevoked(){
+    public function theStatusOfTheLpaGotRevoked()
+    {
         // Not needed for this context
     }
 
