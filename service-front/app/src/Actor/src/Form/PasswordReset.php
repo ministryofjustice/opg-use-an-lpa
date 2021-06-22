@@ -30,11 +30,6 @@ class PasswordReset extends AbstractForm implements InputFilterProviderInterface
             'name' => 'password',
             'type' => 'Password',
         ]);
-
-        $this->add([
-            'name' => 'password_confirm',
-            'type' => 'Password',
-        ]);
     }
 
     /**
@@ -71,29 +66,6 @@ class PasswordReset extends AbstractForm implements InputFilterProviderInterface
                     ],
                     [
                         'name' => PasswordValidator::class,
-                    ],
-                    [
-                        'name'    => Identical::class,
-                        'options' => [
-                            'token'    => 'password_confirm',
-                            'messages' => [
-                                Identical::NOT_SAME => 'New password and confirm new password do not match',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'password_confirm' => [
-                'required'   => true,
-                'validators' => [
-                    [
-                        'name'                   => NotEmpty::class,
-                        'break_chain_on_failure' => true,
-                        'options'                => [
-                            'messages' => [
-                                NotEmpty::IS_EMPTY => 'Confirm your password',
-                            ],
-                        ],
                     ],
                 ],
             ],

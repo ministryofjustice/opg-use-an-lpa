@@ -668,7 +668,6 @@ class AccountContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Id' => '123456'])));
 
         $this->ui->fillField('password', $password);
-        $this->ui->fillField('password_confirm', $password);
         $this->ui->pressButton('Change password');
     }
 
@@ -697,7 +696,6 @@ class AccountContext implements Context
             );
 
         $this->ui->fillField('password', 'n3wPassWord');
-        $this->ui->fillField('password_confirm', 'n3wPassWord');
         $this->ui->pressButton('Change password');
     }
 
