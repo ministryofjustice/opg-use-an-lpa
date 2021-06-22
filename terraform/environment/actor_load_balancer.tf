@@ -11,7 +11,7 @@ resource "aws_lb_target_group" "actor" {
 
 resource "aws_lb" "actor" {
   name                       = "${local.environment}-actor"
-  internal                   = false #tfsec:ignore:AWS005 - public alb
+  internal                   = false
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
   subnets                    = data.aws_subnet_ids.public.ids
