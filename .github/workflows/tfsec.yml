@@ -52,7 +52,7 @@ jobs:
         uses: actions/checkout@master
 
       - name: tfsec
-        uses: tfsec/tfsec-sarif-action@main
+        uses: tfsec/tfsec-sarif-action@master
         with:
           working_directory: terraform/environment
           sarif_file: tfsec.sarif
