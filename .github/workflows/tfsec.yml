@@ -63,3 +63,8 @@ jobs:
         with:
           # Path to SARIF file relative to the root of the repository
           sarif_file: tfsec.sarif
+      - name: tfsec
+        uses: tfsec/tfsec-pr-commenter-action@main
+        with:
+          working_directory: terraform/environment
+          github_token: ${{ secrets.GITHUB_TOKEN }}
