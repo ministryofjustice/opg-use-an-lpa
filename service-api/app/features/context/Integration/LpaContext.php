@@ -1327,7 +1327,7 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_OK,
             $codeExists
         );
-        $hasActivationCodeResult = $this->olderLpaService->hasActivationCode($result['lpa-id'], $result['actor-id'] );
+        $hasActivationCodeResult = $this->olderLpaService->hasActivationCode($result['lpa-id'], $result['actor-id']);
     }
 
     /**

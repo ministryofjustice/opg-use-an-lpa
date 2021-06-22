@@ -168,7 +168,6 @@ class OlderLpaService
     public function hasActivationCode(string $lpaId, string $actorId): ?DateTime
     {
         $response = $this->actorCodes->checkActorHasCode($lpaId, $actorId);
-        
         if (is_null($response->getData()['Created'])) {
             return null;
         }
