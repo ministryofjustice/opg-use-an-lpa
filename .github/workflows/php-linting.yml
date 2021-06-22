@@ -1,4 +1,4 @@
-name: "PHP Linting"
+name: "PHP Linting with Code Sniffer"
 on:
   pull_request:
     branches: [ master ]
@@ -19,7 +19,6 @@ permissions:
   security-events: none
   statuses: none
 
-
 jobs:
   phpcs:
     name: Lint PHP
@@ -36,8 +35,6 @@ jobs:
       with:
         fetch-depth: 2
 
-    # we may use whatever way to install phpcs, just specify the path on the next step
-    # however, curl seems to be the fastest
     - name: Install PHP_CodeSniffer
       run: |
         curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
