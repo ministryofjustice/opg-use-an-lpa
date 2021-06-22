@@ -20,7 +20,6 @@ use IntlDateFormatter;
 use DateTime;
 use Common\Service\Lpa\LocalisedDate;
 
-
 /**
  * Class CreateActivationKeyHandler
  *
@@ -40,7 +39,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
     private $addOlderLpa;
 
     /** @var LocalisedDate */
-    private $formatDate;
+    private $localisedDate;
 
     public function __construct(
         TemplateRendererInterface $renderer,

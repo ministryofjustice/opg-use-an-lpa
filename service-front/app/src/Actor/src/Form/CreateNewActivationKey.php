@@ -50,7 +50,7 @@ class CreateNewActivationKey extends AbstractForm implements InputFilterProvider
      * @return array
      * @codeCoverageIgnore
      */
-    public function getInputFilterSpecification() : array
+    public function getInputFilterSpecification(): array
     {
         return [
             'reference_number' => [
