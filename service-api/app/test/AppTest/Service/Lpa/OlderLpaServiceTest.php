@@ -69,7 +69,7 @@ class OlderLpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function request_access_code_letter(): void
+    public function requestAccessCodeLetter(): void
     {
         $caseUid = '700000055554';
         $actorUid = '700000055554';
@@ -83,7 +83,7 @@ class OlderLpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function request_access_code_letter_api_call_fails(): void
+    public function requestAccessCodeLetterApiCallFails(): void
     {
         $caseUid = '700000055554';
         $actorUid = '700000055554';
@@ -99,7 +99,7 @@ class OlderLpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function returns_code_created_date_if_code_exists_for_actor()
+    public function returnsCodeCreatedDateIfCodeExistsForActor()
     {
         $lpaId = '700000012345';
         $actorUid = '700000055554';
@@ -124,7 +124,7 @@ class OlderLpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function returns_null_if_a_code_does_not_exist_for_an_actor()
+    public function returnsNullIfACodeDoesNotExistForAnActor()
     {
         $lpaId = '700000012345';
         $actorUid = '700000055554';
@@ -147,7 +147,7 @@ class OlderLpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function returns_data_in_correct_format_after_cleansing()
+    public function returnsDataInCorrectFormatAfterCleansing()
     {
         $data = [
             'dob'         => '1980-03-01',
@@ -165,7 +165,7 @@ class OlderLpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function returns_the_actor_if_user_data_matches_the_actor_data()
+    public function returnsTheActorIfUserDataMatchesTheActorData()
     {
         $actor = [
             'dob'       => '1980-03-01',
@@ -192,7 +192,7 @@ class OlderLpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function returns_null_if_actor_has_more_than_one_address()
+    public function returnsNullIfActorHasMoreThanOneAddress()
     {
         $actor = [
             'addresses' => [
@@ -213,7 +213,7 @@ class OlderLpaServiceTest extends TestCase
      * @param array|null $expectedResponse
      * @param array $userData
      */
-    public function returns_actor_and_lpa_id_if_match_found_in_lookup(?array $expectedResponse, array $userData)
+    public function returnsActorAndLpaIdIfMatchFoundInLookup(?array $expectedResponse, array $userData)
     {
         $lpaId = '700000009999';
 
@@ -411,7 +411,7 @@ class OlderLpaServiceTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function older_lpa_lookup_throws_an_exception_if_lpa_not_found()
+    public function olderLpaLookupThrowsAnExceptionIfLpaNotFound()
     {
         $lpaId = '700000004321';
 
@@ -440,7 +440,7 @@ class OlderLpaServiceTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function older_lpa_lookup_throws_an_exception_if_lpa_registration_not_valid()
+    public function olderLpaLookupThrowsAnExceptionIfLpaRegistrationNotValid()
     {
         $lpaId = '700000004321';
 
@@ -483,7 +483,7 @@ class OlderLpaServiceTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function older_lpa_lookup_throws_an_exception_if_user_data_doesnt_match_lpa()
+    public function olderLpaLookupThrowsAnExceptionIfUserDataDoesntMatchLpa()
     {
         $lpaId = '700000004321';
 
@@ -519,7 +519,7 @@ class OlderLpaServiceTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function allow_user_continue_if_actor_has_active_activation_key()
+    public function allowUserContinueIfActorHasActiveActivationKey()
     {
         $lpaId = '700000004321';
         $actorUid = '700000004444';
@@ -575,7 +575,7 @@ class OlderLpaServiceTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function allow_user_continue_to_generate_new_activation_key_even_if_actor_has_active_activation_key()
+    public function allowUserContinueToGenerateNewActivationKeyEvenIfActorHasActiveActivationKey()
     {
         $lpaId = '700000004321';
         $actorUid = '700000004444';
@@ -619,7 +619,7 @@ class OlderLpaServiceTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function returns_matched_actorId_and_lpaId_when_passing_all_older_lpa_criteria()
+    public function returnsMatchedActorIdAndLpaIdWhenPassingAllOlderLpaCriteria()
     {
         $lpaId = '700000004321';
         $actorUid = '700000004444';
@@ -673,7 +673,7 @@ class OlderLpaServiceTest extends TestCase
      *
      * @return Lpa
      */
-    public function older_lpa_get_by_uid_response(): Lpa
+    public function olderLpaGetByUidResponse(): Lpa
     {
         $attorney1 = [
             'uId'       => '700000002222',
