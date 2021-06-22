@@ -37,7 +37,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      with:
 
     # we may use whatever way to install phpcs, just specify the path on the next step
     # however, curl seems to be the fastest
