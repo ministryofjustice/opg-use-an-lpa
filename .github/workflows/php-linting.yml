@@ -49,6 +49,6 @@ jobs:
 
     - uses: tinovyatkin/action-php-codesniffer@v1
       with:
-        files: "**.php" # you may customize glob as needed
+        files: "${{ matrix.service_path }}/**.php" # you may customize glob as needed
         phpcs_path: php phpcs.phar
         standard: ${{ matrix.service_path }}/app/phpcs.xml.dist
