@@ -54,7 +54,9 @@ jobs:
       - name: tfsec
         uses: tfsec/tfsec-sarif-action@main
         with:
+          working_directory: terraform/environment
           sarif_file: tfsec.sarif
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
