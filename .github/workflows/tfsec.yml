@@ -44,4 +44,4 @@ jobs:
         uses: tfsec/tfsec-pr-commenter-action@main
         with:
           working_directory: ${{ matrix.terraform_path }}
-          github_token: ${{secret.GITHUB_TOKEN}}
+          github_token: ${{secrets.GITHUB_TOKEN}}
