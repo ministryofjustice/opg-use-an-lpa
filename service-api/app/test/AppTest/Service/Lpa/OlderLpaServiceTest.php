@@ -220,8 +220,8 @@ class OlderLpaServiceTest extends TestCase
         $lpa = [
             'uId' => $lpaId,
             'donor' => [
-                'uId' => '700000001111',
-                'dob' => '1975-10-05',
+                'uId'       => '700000001111',
+                'dob'       => '1975-10-05',
                 'firstname' => 'Donor',
                 'surname'   => 'Person',
                 'addresses' => [
@@ -232,8 +232,8 @@ class OlderLpaServiceTest extends TestCase
             ],
             'attorneys' => [
                 [
-                    'uId' => '700000002222',
-                    'dob' => '1977-11-21',
+                    'uId'       => '700000002222',
+                    'dob'       => '1977-11-21',
                     'firstname' => 'Attorneyone',
                     'surname'   => 'Person',
                     'addresses' => [
@@ -244,8 +244,8 @@ class OlderLpaServiceTest extends TestCase
                     'systemStatus' => false,
                 ],
                 [
-                    'uId' => '700000003333',
-                    'dob' => '1960-05-05',
+                    'uId'       => '700000003333',
+                    'dob'       => '1960-05-05',
                     'firstname' => '', // ghost attorney
                     'surname'   => '',
                     'addresses' => [
@@ -256,8 +256,8 @@ class OlderLpaServiceTest extends TestCase
                     'systemStatus' => true,
                 ],
                 [
-                    'uId' => '700000001234',
-                    'dob' => '1980-03-01',
+                    'uId'       => '700000001234',
+                    'dob'       => '1980-03-01',
                     'firstname' => 'Test',
                     'surname'   => 'Testing',
                     'addresses' => [
@@ -272,8 +272,8 @@ class OlderLpaServiceTest extends TestCase
 
         $this->getAttorneyStatusProphecy
             ->__invoke([
-                'uId' => '700000002222',
-                'dob' => '1977-11-21',
+                'uId'       => '700000002222',
+                'dob'       => '1977-11-21',
                 'firstname' => 'Attorneyone',
                 'surname'   => 'Person',
                 'addresses' => [
@@ -287,8 +287,8 @@ class OlderLpaServiceTest extends TestCase
 
         $this->getAttorneyStatusProphecy
             ->__invoke([
-                'uId' => '700000003333',
-                'dob' => '1960-05-05',
+                'uId'       => '700000003333',
+                'dob'       => '1960-05-05',
                 'firstname' => '', // ghost attorney
                 'surname'   => '',
                 'addresses' => [
@@ -302,8 +302,8 @@ class OlderLpaServiceTest extends TestCase
 
         $this->getAttorneyStatusProphecy
             ->__invoke([
-                'uId' => '700000001234',
-                'dob' => '1980-03-01',
+                'uId'       => '700000001234',
+                'dob'       => '1980-03-01',
                 'firstname' => 'Test',
                 'surname'   => 'Testing',
                 'addresses' => [
@@ -446,20 +446,20 @@ class OlderLpaServiceTest extends TestCase
 
         $lpa = new Lpa(
             [
-                'uId' => $lpaId,
-                'registrationDate' => '2019-08-31',
-                'status' => 'Registered',
+                'uId'               => $lpaId,
+                'registrationDate'  => '2019-08-31',
+                'status'            => 'Registered',
             ],
             new DateTime()
         );
 
         $dataToMatch = [
-            'reference_number' => $lpaId,
-            'dob'              => '1980-03-01',
-            'first_names'      => 'Test Tester',
-            'last_name'        => 'Testing',
-            'postcode'         => 'Ab1 2Cd',
-            'force_activation_key' => false,
+            'reference_number'      => $lpaId,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester',
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => false,
         ];
 
         $service = $this->getOlderLpaService();
@@ -488,12 +488,12 @@ class OlderLpaServiceTest extends TestCase
         $lpaId = '700000004321';
 
         $dataToMatch = [
-            'reference_number' => $lpaId,
-            'dob'              => '1980-03-01',
-            'first_names'      => 'Wrong Name',
-            'last_name'        => 'Incorrect',
-            'postcode'         => 'wR0 nG1',
-            'force_activation_key' => false,
+            'reference_number'      => $lpaId,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Wrong Name',
+            'last_name'             => 'Incorrect',
+            'postcode'              => 'wR0 nG1',
+            'force_activation_key'  => false,
         ];
 
         $service = $this->getOlderLpaService();
@@ -526,12 +526,12 @@ class OlderLpaServiceTest extends TestCase
         $createdDate = (new DateTime('-2 weeks'))->format('Y-m-d');
 
         $dataToMatch = [
-            'reference_number' => $lpaId,
-            'dob' => '1980-03-01',
-            'first_names' => 'Test Tester',
-            'last_name' => 'Testing',
-            'postcode' => 'Ab1 2Cd',
-            'force_activation_key' => false,
+            'reference_number'      => $lpaId,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester',
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => false,
         ];
 
         $service = $this->getOlderLpaService();
@@ -581,12 +581,12 @@ class OlderLpaServiceTest extends TestCase
         $actorUid = '700000004444';
 
         $dataToMatch = [
-            'reference_number' =>  $lpaId,
-            'dob'              => '1980-03-01',
-            'first_names'      => 'Test Tester',
-            'last_name'        => 'Testing',
-            'postcode'         => 'Ab1 2Cd',
-            'force_activation_key' => true
+            'reference_number'      =>  $lpaId,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester',
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => true
         ];
 
         $service = $this->getOlderLpaService();
@@ -625,12 +625,12 @@ class OlderLpaServiceTest extends TestCase
         $actorUid = '700000004444';
 
         $dataToMatch = [
-            'reference_number' => $lpaId,
-            'dob'              => '1980-03-01',
-            'first_names'      => 'Test Tester',
-            'last_name'        => 'Testing',
-            'postcode'         => 'Ab1 2Cd',
-            'force_activation_key' => false,
+            'reference_number'      => $lpaId,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester',
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => false,
         ];
 
         $service = $this->getOlderLpaService();
@@ -676,8 +676,8 @@ class OlderLpaServiceTest extends TestCase
     public function older_lpa_get_by_uid_response(): Lpa
     {
         $attorney1 = [
-            'uId' => '700000002222',
-            'dob' => '1977-11-21',
+            'uId'       => '700000002222',
+            'dob'       => '1977-11-21',
             'firstname' => 'Attorneyone',
             'surname'   => 'Person',
             'addresses' => [
@@ -689,8 +689,8 @@ class OlderLpaServiceTest extends TestCase
         ];
 
         $attorney2 = [
-            'uId' => '700000004444',
-            'dob' => '1980-03-01',
+            'uId'       => '700000004444',
+            'dob'       => '1980-03-01',
             'firstname' => 'Test',
             'surname'   => 'Testing',
             'addresses' => [
@@ -711,13 +711,13 @@ class OlderLpaServiceTest extends TestCase
 
         return new Lpa(
             [
-                'uId' => '700000004321',
-                'registrationDate' => '2021-01-01',
-                'status' => 'Registered',
-                'caseSubtype' => 'pfa',
+                'uId'               => '700000004321',
+                'registrationDate'  => '2021-01-01',
+                'status'            => 'Registered',
+                'caseSubtype'       => 'pfa',
                 'donor' => [
-                    'uId' => '700000001111',
-                    'dob' => '1975-10-05',
+                    'uId'       => '700000001111',
+                    'dob'       => '1975-10-05',
                     'firstname' => 'Donor',
                     'surname'   => 'Person',
                     'addresses' => [

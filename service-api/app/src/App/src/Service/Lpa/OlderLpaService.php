@@ -80,18 +80,18 @@ class OlderLpaService
 
         $actorData = $this->cleanseUserData(
             [
-                'first_names' => $actor['firstname'],
-                'last_name' => $actor['surname'],
-                'postcode' => $actor['addresses'][0]['postcode'],
+                'first_names'   => $actor['firstname'],
+                'last_name'     => $actor['surname'],
+                'postcode'      => $actor['addresses'][0]['postcode'],
             ]
         );
 
         $this->logger->debug(
             'Doing actor data comparison against actor with id {actor_id}',
             [
-                'actor_id' => $actor['uId'],
-                'to_match' => $userDataToMatch,
-                'actor_data' => array_merge($actorData, ['dob' => $actor['dob']]),
+                'actor_id'      => $actor['uId'],
+                'to_match'      => $userDataToMatch,
+                'actor_data'    => array_merge($actorData, ['dob' => $actor['dob']]),
             ]
         );
 
@@ -178,8 +178,8 @@ class OlderLpaService
         $this->logger->notice(
             'Activation key exists for actor {actorId} on LPA {lpaId}',
             [
-                'actorId' => $lpaId,
-                'lpaId' => $actorId,
+                'actorId'   => $lpaId,
+                'lpaId'     => $actorId,
             ]
         );
 
@@ -267,8 +267,8 @@ class OlderLpaService
             $this->logger->notice(
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa}',
                 [
-                    'attorney' => $actorUidInt,
-                    'lpa' => $uidInt,
+                    'attorney'  => $actorUidInt,
+                    'lpa'       => $uidInt,
                 ]
             );
 
