@@ -1,7 +1,6 @@
 name: "PHP Linting with Code Sniffer"
 on:
   pull_request:
-    branches: [ master ]
     paths:
       - "**.php"
       - "**/app/phpcs.xml.dist"
