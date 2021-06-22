@@ -7,15 +7,11 @@ namespace Common\Service\Lpa;
 use IntlDateFormatter;
 use DateTime;
 
-class FormatDate
+class LocalisedDate
 {
     /**
      * Ensure that the date we send out in the letters if correctly localised.
-     *
-     * Violation of DRY so TODO: https://opgtransform.atlassian.net/browse/UML-1370
-     *
      * @param \DateTimeInterface $date
-     *
      * @return string
      */
     public function __invoke(\DateTimeInterface $date): string

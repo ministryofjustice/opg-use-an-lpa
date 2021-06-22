@@ -18,7 +18,7 @@ use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Email\EmailClient;
 use IntlDateFormatter;
 use DateTime;
-use Common\Service\Lpa\FormatDate;
+use Common\Service\Lpa\LocalisedDate;
 
 
 /**
@@ -39,7 +39,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
     /** @var AddOlderLpa */
     private $addOlderLpa;
 
-    /** @var FormatDate */
+    /** @var LocalisedDate */
     private $formatDate;
 
     public function __construct(
@@ -48,14 +48,14 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
         AddOlderLpa $addOlderLpa,
         UrlHelper $urlHelper,
         EmailClient $emailClient,
-        FormatDate $formatDate
+        LocalisedDate $localisedDate
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
         $this->addOlderLpa = $addOlderLpa;;
         $this->emailClient = $emailClient;
-        $this->formatDate = $formatDate;
+        $this->localisedDate = $localisedDate;
     }
 
     /**
@@ -93,7 +93,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                     $user->getDetails()['Email'],
                     $data['reference_number'],
                     strtoupper($data['postcode']),
-                    ($this->formatDate)($letterExpectedDate)
+                    ($this->localisedDate)($letterExpectedDate)
                 );
 
                 return new HtmlResponse(

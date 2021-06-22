@@ -56,12 +56,12 @@ class AddOlderLpa
         bool $forceActivationKey = false
     ): OlderLpaApiResponse {
         $data = [
-            'reference_number'  => $lpaUid,
-            'first_names'       => $firstnames,
-            'last_name'         => $lastname,
-            'dob'               => $dob->format('Y-m-d'),
-            'postcode'          => $postcode,
-            'force_activation_key' => $forceActivationKey
+            'reference_number'      => $lpaUid,
+            'first_names'           => $firstnames,
+            'last_name'             => $lastname,
+            'dob'                   => $dob->format('Y-m-d'),
+            'postcode'              => $postcode,
+            'force_activation_key'  => $forceActivationKey
         ];
 
         $this->apiClient->setUserTokenHeader($userToken);

@@ -40,7 +40,7 @@ Feature: Add an older LPA
     Then I am told that I have an activation key for this LPA and where to find it
 
   @ui
-  Scenario: The user is given an option to  generate a new key even if an activation key already exists
+  Scenario: The user is given an option to generate a new key even if an activation key already exists
     Given I am on the add an older LPA page
     And I already have a valid activation key for my LPA
     And I lost the letter received having the activation key

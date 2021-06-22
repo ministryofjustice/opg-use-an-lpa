@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace CommonTest\Service\Lpa;
 
 use ArrayObject;
-use Common\Service\Lpa\FormatDate;
+use Common\Service\Lpa\LocalisedDate;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class FormatDateTest
+ * Class LocalisedDateTest
  *
- * @coversDefaultClass \Common\Service\Lpa\FormatDate
+ * @coversDefaultClass \Common\Service\Lpa\LocalisedDate
  * @package CommonTest\Service\Lpa
  */
-class FormatDateTest extends TestCase
+class LocalisedDateTest extends TestCase
 {
     /**
      * @test
@@ -27,7 +27,7 @@ class FormatDateTest extends TestCase
      */
     public function it_correctly_formats_date_for_letter($date, $locale, $expected)
     {
-        $dateFormatter = new FormatDate();
+        $dateFormatter = new LocalisedDate();
 
         // retain the current locale
         $originalLocale = \Locale::getDefault();

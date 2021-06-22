@@ -19,7 +19,6 @@ use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\OlderLpaApiResponse;
-use DateTime;
 use IntlDateFormatter;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
@@ -28,7 +27,7 @@ use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
-use Common\Service\Lpa\FormatDate;
+use Common\Service\Lpa\LocalisedDate;
 
 /**
  * Class CheckYourAnswersHandler
@@ -49,8 +48,8 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     private array $data;
     private ?string $identity;
 
-    /** @var FormatDate */
-    private $formatDate;
+    /** @var LocalisedDate */
+    private $localisedDate;
 
     /** @var EmailClient */
     private $emailClient;
@@ -62,14 +61,14 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         AddOlderLpa $addOlderLpa,
         LoggerInterface $logger,
         EmailClient $emailClient,
-        FormatDate $formatDate
+        LocalisedDate $localisedDate
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
         $this->addOlderLpa = $addOlderLpa;
         $this->emailClient = $emailClient;
-        $this->formatDate = $formatDate;
+        $this->localisedDate = $localisedDate;
     }
 
     /**
@@ -157,6 +156,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             [
                                 'user' => $this->user,
                                 'donorName' => $result->getData()['donor_name'],
+                                // TODO to move the name creation to a Twig function as a part of the template.
                                 'donorName' => (implode(' ', array_filter($result->getData()['donor_name']))),
                                 'caseType' => $result->getData()['lpa_type'],
                                 'form' => $form
@@ -178,7 +178,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         $this->user->getDetails()['Email'],
                         (string)$this->data['reference_number'],
                         $this->data['postcode'],
-                        ($this->formatDate)($letterExpectedDate)
+                        ($this->localisedDate)($letterExpectedDate)
                     );
 
                     return new HtmlResponse(
