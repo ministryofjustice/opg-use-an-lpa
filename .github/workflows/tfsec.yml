@@ -27,8 +27,9 @@ jobs:
       matrix:
         terraform_path: [ 'terraform/environment' ]
     steps:
-      - name: Clone repo
-        uses: actions/checkout@master
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 2
 
       - name: tfsec
         uses: tfsec/tfsec-sarif-action@master
