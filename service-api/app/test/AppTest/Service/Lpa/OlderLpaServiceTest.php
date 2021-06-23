@@ -498,7 +498,7 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
 
-        $lpa = $this->olderLpaGetByUidResponse();
+        $lpa = $this->older_lpa_get_by_uid_response();
 
         $this->lpaServiceProphecy
             ->getByUid($lpaId)
@@ -536,7 +536,7 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
 
-        $lpa = $this->olderLpaGetByUidResponse();
+        $lpa = $this->older_lpa_get_by_uid_response();
 
         $this->lpaServiceProphecy
             ->getByUid($lpaId)
@@ -591,7 +591,7 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
 
-        $lpa = $this->olderLpaGetByUidResponse();
+        $lpa = $this->older_lpa_get_by_uid_response();
 
         $this->lpaServiceProphecy
             ->getByUid($lpaId)
@@ -635,7 +635,7 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
 
-        $lpa = $this->olderLpaGetByUidResponse();
+        $lpa = $this->older_lpa_get_by_uid_response();
 
         $this->lpaServiceProphecy
             ->getByUid($lpaId)
