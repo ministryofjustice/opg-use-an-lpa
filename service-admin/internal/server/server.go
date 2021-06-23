@@ -41,6 +41,7 @@ func NewServer() http.Handler {
 	router := mux.NewRouter()
 
 	router.Handle("/helloworld", handlers.HelloHandler())
+	router.Handle("/", handlers.SearchHandler())
 	router.PathPrefix("/").Handler(handlers.StaticHandler(os.DirFS("web/static")))
 
 	wrap := WithJSONLogging(
