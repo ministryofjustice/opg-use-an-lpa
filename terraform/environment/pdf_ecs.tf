@@ -57,6 +57,9 @@ resource "aws_security_group" "pdf_ecs_service" {
   description = "PDF generator service security group"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //----------------------------------
@@ -70,6 +73,9 @@ resource "aws_security_group_rule" "pdf_ecs_service_viewer_ingress" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.pdf_ecs_service.id
   source_security_group_id = aws_security_group.viewer_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //----------------------------------
@@ -82,6 +88,9 @@ resource "aws_security_group_rule" "pdf_ecs_service_egress" {
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for ECR access
   security_group_id = aws_security_group.pdf_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //--------------------------------------

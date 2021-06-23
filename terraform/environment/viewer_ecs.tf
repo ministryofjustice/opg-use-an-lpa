@@ -34,6 +34,9 @@ resource "aws_security_group" "viewer_ecs_service" {
   description = "Use service security group"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 // 80 in from the ELB
@@ -45,6 +48,9 @@ resource "aws_security_group_rule" "viewer_ecs_service_ingress" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.viewer_ecs_service.id
   source_security_group_id = aws_security_group.viewer_loadbalancer.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 // Anything out
@@ -56,6 +62,9 @@ resource "aws_security_group_rule" "viewer_ecs_service_egress" {
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for ECR access
   security_group_id = aws_security_group.viewer_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "viewer_ecs_service_elasticache_ingress" {
@@ -66,6 +75,9 @@ resource "aws_security_group_rule" "viewer_ecs_service_elasticache_ingress" {
   protocol                 = "tcp"
   security_group_id        = data.aws_security_group.brute_force_cache_service.id
   source_security_group_id = aws_security_group.viewer_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //--------------------------------------

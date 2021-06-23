@@ -186,6 +186,9 @@ resource "aws_security_group" "actor_loadbalancer" {
   description = "Use service application load balancer"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress_http" {
@@ -196,6 +199,9 @@ resource "aws_security_group_rule" "actor_loadbalancer_ingress_http" {
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS006 - open ingress for load balancers
   security_group_id = aws_security_group.actor_loadbalancer.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress" {
@@ -206,6 +212,9 @@ resource "aws_security_group_rule" "actor_loadbalancer_ingress" {
   protocol          = "tcp"
   cidr_blocks       = module.whitelist.moj_sites
   security_group_id = aws_security_group.actor_loadbalancer.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress_production" {
@@ -217,6 +226,9 @@ resource "aws_security_group_rule" "actor_loadbalancer_ingress_production" {
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS006 - open ingress for load balancers
   security_group_id = aws_security_group.actor_loadbalancer.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_egress" {
@@ -227,6 +239,9 @@ resource "aws_security_group_rule" "actor_loadbalancer_egress" {
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for load balancers
   security_group_id = aws_security_group.actor_loadbalancer.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group" "actor_loadbalancer_route53" {
@@ -234,14 +249,20 @@ resource "aws_security_group" "actor_loadbalancer_route53" {
   description = "Use service Route53 healthchecks"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress_route53_healthchecks" {
+  description       = "Loadbalancer ingresss from Route53 healthchecks"
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "443"
   to_port           = "443"
   cidr_blocks       = data.aws_ip_ranges.route53_healthchecks.cidr_blocks
   security_group_id = aws_security_group.actor_loadbalancer_route53.id
-  description       = "Loadbalancer ingresss from Route53 healthchecks"
+  lifecycle {
+    create_before_destroy = true
+  }
 }

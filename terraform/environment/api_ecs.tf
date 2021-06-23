@@ -57,6 +57,9 @@ resource "aws_security_group" "api_ecs_service" {
   description = "API service security group"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //----------------------------------
@@ -70,6 +73,9 @@ resource "aws_security_group_rule" "api_ecs_service_viewer_ingress" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.api_ecs_service.id
   source_security_group_id = aws_security_group.viewer_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //----------------------------------
@@ -83,6 +89,9 @@ resource "aws_security_group_rule" "api_ecs_service_actor_ingress" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.api_ecs_service.id
   source_security_group_id = aws_security_group.actor_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //----------------------------------
@@ -95,6 +104,9 @@ resource "aws_security_group_rule" "api_ecs_service_egress" {
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for ECR access
   security_group_id = aws_security_group.api_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //--------------------------------------
@@ -110,6 +122,7 @@ resource "aws_ecs_task_definition" "api" {
   task_role_arn            = aws_iam_role.api_task_role.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   tags                     = local.default_tags
+
 }
 
 //----------------
