@@ -134,7 +134,7 @@ msgid "The following codes will no longer work."
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:88
-msgid "If an organisation asks to see this <abbr title=\"lasting power of attorney\">LPA</abbr> again, you can <a href=\"%create-code-link%\">make them a new code</a>."
+msgid "If an organisation asks to see this <abbr title=\"lasting power of attorney\">LPA</abbr> again, you can <a href=\"%create-code-link%\" class=\"govuk-link\">make them a new code</a>."
 msgstr ""
 
 #: src/Actor/templates/actor/request-email-change-success.html.twig:3
