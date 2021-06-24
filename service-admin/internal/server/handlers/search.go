@@ -1,20 +1,32 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
+	"regexp"
+	"strings"
 
 	validation "github.com/go-ozzo/ozzo-validation"
+	"github.com/go-ozzo/ozzo-validation/is"
 	"github.com/rs/zerolog/log"
 )
 
 type search struct {
-	Query  string
-	Errors map[string]error
+	Query   string
+	Results map[string]interface{}
+	Errors  validation.Errors
 }
+
+var (
+	ErrIsNotEmailOrCode  error          = errors.New("Enter an email address or activation code") //nolint:stylecheck // actual message shown to users
+	activationCodeRegexp *regexp.Regexp = regexp.MustCompile(`(?i)^C?(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}$`)
+)
 
 func (s *search) Validate() error {
 	e := validation.ValidateStruct(s,
-		validation.Field(&s.Query, validation.Required.Error("Enter a search query")),
+		validation.Field(&s.Query,
+			validation.Required.Error("Enter a search query"),
+			validation.By(checkEmailOrCode)),
 	)
 
 	if errs, ok := e.(validation.Errors); ok {
@@ -22,6 +34,18 @@ func (s *search) Validate() error {
 	}
 
 	return e
+}
+
+func checkEmailOrCode(value interface{}) error {
+	isEmail := is.Email.Validate(value)
+
+	isCode := validation.Match(activationCodeRegexp).Validate(value)
+
+	if isEmail != nil && isCode != nil {
+		return ErrIsNotEmailOrCode
+	}
+
+	return nil
 }
 
 func SearchHandler() http.HandlerFunc {
@@ -36,7 +60,7 @@ func SearchHandler() http.HandlerFunc {
 				log.Error().Err(err).Msg("failed to parse form input")
 			}
 
-			s.Query = r.PostFormValue("query")
+			s.Query = strings.ReplaceAll(r.PostFormValue("query"), " ", "")
 
 			err = s.Validate()
 			if err != nil {
