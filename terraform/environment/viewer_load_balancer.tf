@@ -213,6 +213,9 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress" {
   protocol          = "tcp"
   cidr_blocks       = module.whitelist.moj_sites
   security_group_id = aws_security_group.viewer_loadbalancer.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress_production" {
@@ -231,7 +234,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress_production" {
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_egress" {
-  description       = "Allow any egress from Use service load balancer"
+  description       = "Allow any egress from View service load balancer"
   type              = "egress"
   from_port         = 0
   to_port           = 0
