@@ -14,7 +14,7 @@ use Laminas\InputFilter\InputFilterProviderInterface;
  */
 class CreateNewActivationKey extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'create_new_activation_key';
+    public const FORM_NAME = 'create_new_activation_key';
 
     /**
      * CreateNewActivationKey constructor.
