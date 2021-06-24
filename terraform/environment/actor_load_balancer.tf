@@ -10,12 +10,11 @@ resource "aws_lb_target_group" "actor" {
 }
 
 resource "aws_lb" "actor" {
-  name                       = "${local.environment}-actor"
-  internal                   = false #tfsec:ignore:AWS005 - public alb
-  load_balancer_type         = "application"
-  drop_invalid_header_fields = true
-  subnets                    = data.aws_subnet_ids.public.ids
-  tags                       = local.default_tags
+  name               = "${local.environment}-actor"
+  internal           = false
+  load_balancer_type = "application"
+  subnets            = data.aws_subnet_ids.public.ids
+  tags               = local.default_tags
 
   security_groups = [
     aws_security_group.actor_loadbalancer.id,
@@ -183,80 +182,61 @@ resource "aws_lb_listener_rule" "actor_maintenance_welsh" {
 
 resource "aws_security_group" "actor_loadbalancer" {
   name        = "${local.environment}-actor-loadbalancer"
-  description = "Use service application load balancer"
+  description = "Allow inbound traffic"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress_http" {
-  description       = "Port 80 ingress from the internet to the application load balancer"
   type              = "ingress"
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS006 - open ingress for load balancers
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.actor_loadbalancer.id
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress" {
-  description       = "Port 443 ingress from the allow list to the application load balancer"
   type              = "ingress"
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
   cidr_blocks       = module.whitelist.moj_sites
   security_group_id = aws_security_group.actor_loadbalancer.id
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress_production" {
-  description       = "Port 443 ingress for production from the internet to the application load balancer"
   count             = local.environment == "production" ? 1 : 0
   type              = "ingress"
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS006 - open ingress for load balancers
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.actor_loadbalancer.id
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_egress" {
-  description       = "Allow any egress from Use service load balancer"
   type              = "egress"
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for load balancers
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.actor_loadbalancer.id
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_security_group" "actor_loadbalancer_route53" {
   name        = "${local.environment}-actor-loadbalancer-route53"
-  description = "Use service Route53 healthchecks"
+  description = "Allow Route53 healthchecks"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress_route53_healthchecks" {
-  description       = "Loadbalancer ingresss from Route53 healthchecks"
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "443"
   to_port           = "443"
   cidr_blocks       = data.aws_ip_ranges.route53_healthchecks.cidr_blocks
   security_group_id = aws_security_group.actor_loadbalancer_route53.id
-  lifecycle {
-    create_before_destroy = true
-  }
+  description       = "Loadbalancer ingresss from Route53 healthchecks"
 }
