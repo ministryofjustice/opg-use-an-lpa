@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-06-21T15:08:25+00:00\n"
+"POT-Creation-Date: 2021-06-23T11:36:19+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -33,7 +33,7 @@ msgstr "Yn ôl i’ch LPAs"
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-already-added.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:72
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:73
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
@@ -46,7 +46,7 @@ msgstr "Eiddo ac arian"
 #: src/Actor/templates/actor/check-lpa.html.twig:31
 #: src/Actor/templates/actor/lpa-already-added.html.twig:41
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:72
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:73
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:26
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
@@ -2228,7 +2228,7 @@ msgstr ""
 "Bydd unrhyw atwrneiaeth arhosol (LPA) y byddwch yn ei hychwanegu at eich "
 "cyfrif yn ymddangos ar y dudalen hon."
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:48
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:49
 msgid "Add another LPA"
 msgstr "Ychwanegu LPA arall"
 
@@ -2920,7 +2920,7 @@ msgstr ""
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr "gweld crynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:46
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:47
 msgid "Add your first LPA"
 msgstr "Ychwanegu eich LPA cyntaf"
 
@@ -5342,7 +5342,7 @@ msgstr ""
 msgid "%organisation% on %date%"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:60
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:61
 msgid "You have %count% LPA in your account"
 msgid_plural "You have %count% LPAs in your account"
 msgstr[0] "Mae gennych %count% LPA ar eich cyfrif"
@@ -5750,3 +5750,8 @@ msgstr ""
 "        Ffôn testun: 0115 934 2778 <br>\n"
 "        Dydd Llun i ddydd Gwener, 9.30am tan 5pm, heblaw bob dydd Mercher 10am "
 "tan 5pm"
+
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:41
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:43
+msgid "ask for an activation key if you have not been given one"
+msgstr "gofynnwch am allwedd cadarnhau cyfrif os nad ydych wedi cael un"
