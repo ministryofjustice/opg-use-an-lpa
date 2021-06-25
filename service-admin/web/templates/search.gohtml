@@ -31,4 +31,29 @@
       </form>
     </div>
   </div>
+
+  {{ if and .Query (not .Results) (not .Errors) }}
+  <div class="govuk-grid-row govuk-!-margin-top-6">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-body">There are no accounts with those details: &#8220;<strong>{{ .Query }}</strong>&#8221;</p>
+    </div>
+  </div>
+  {{ else if .Results }}
+  <div class="govuk-grid-row govuk-!-margin-top-6">
+    <div class="govuk-grid-column-two-thirds">
+      <dl class="govuk-summary-list">
+        {{ range $k, $v := .Results }}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            {{ $k }}
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ $v }}
+          </dd>
+        </div>
+        {{ end }}
+      </dl>
+    </div>
+  </div>
+  {{ end }}
 {{ end }}
