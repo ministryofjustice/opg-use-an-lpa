@@ -28,7 +28,7 @@
 
                 <p class="govuk-body-m">{% trans %}Find out about <a href="https://www.gov.uk/lasting-power-attorney-duties" class="govuk-link">the role of an attorney</a> and how to support the donor <a href="https://www.gov.uk/make-decisions-for-someone/making-decisions" class="govuk-link">to make decisions</a>.{% endtrans %}</p>
 
-                <details class="govuk-details" data-module="govuk-details" {% if not has_active_codes %} open {% endif %} >
+                <details class="govuk-details" data-module="govuk-details">
                     <summary class="govuk-details__summary" role="button">
                         <span class="govuk-details__summary-text">
                           {% trans %}What can I do with this service?{% endtrans %}
@@ -40,6 +40,7 @@
                             <li>{% trans %}give organisations access to an online summary of an <abbr title="lasting power of attorney">LPA</abbr> by making a secure access code{% endtrans %}</li>
                             <li>{% trans %}keep track of the organisations that have online access to an <abbr title="lasting power of attorney">LPA</abbr>{% endtrans %}</li>
                             <li>{% trans %}view an <abbr title="lasting power of attorney">LPA</abbr> summary{% endtrans %}</li>
+                            <li>{% trans %}ask for an activation key if you have not been given one{% endtrans %}</li>
                         </ul>
                     </div>
                 </details>

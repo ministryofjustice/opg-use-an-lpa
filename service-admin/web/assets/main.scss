@@ -1,0 +1,6 @@
+$govuk-include-default-font-face: false;
+$govuk-page-width: 1220px;
+$moj-page-width: 1220px;
+
+@import "node_modules/govuk-frontend/govuk/all";
+@import "node_modules/@ministryofjustice/frontend/moj/all";

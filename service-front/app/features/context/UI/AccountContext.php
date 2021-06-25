@@ -621,22 +621,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I can see that the What I can do link is closed$/
-     */
-    public function iCanSeeThatTheWhatICanDoLinkIsClosed()
-    {
-        assertFalse($this->elementisOpen('.govuk-details'));
-    }
-
-    /**
-     * @Given /^I can see that the What I can do link is open$/
-     */
-    public function iCanSeeThatTheWhatICanDoLinkIsOpen()
-    {
-        assertTrue($this->elementisOpen('.govuk-details'));
-    }
-
-    /**
      * @Then /^I can see the accessibility statement for the Use service$/
      */
     public function iCanSeeTheAccessibilityStatementForTheUseService()
@@ -684,7 +668,6 @@ class AccountContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Id' => '123456'])));
 
         $this->ui->fillField('password', $password);
-        $this->ui->fillField('password_confirm', $password);
         $this->ui->pressButton('Change password');
     }
 
@@ -713,7 +696,6 @@ class AccountContext implements Context
             );
 
         $this->ui->fillField('password', 'n3wPassWord');
-        $this->ui->fillField('password_confirm', 'n3wPassWord');
         $this->ui->pressButton('Change password');
     }
 

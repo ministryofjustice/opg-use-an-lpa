@@ -1,0 +1,26 @@
+linters:
+  enable:
+    - paralleltest
+    - goerr113
+    - wsl
+    - stylecheck
+  fast: false
+
+linters-settings:
+  staticcheck:
+    checks: ["all"]
+  stylecheck:
+    checks: ["all"]
+
+issues:
+  exclude-rules:
+    # False positive: https://github.com/kunwardeep/paralleltest/issues/8.
+    - linters:
+      - paralleltest
+      text: "does not use range value in test Run"
+
+    # Making up exceptions in test files is fine (unless)
+    - linters:
+      - goerr113
+      path: _test\.go
+      text: "do not define dynamic errors, use wrapped static errors instead"

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-06-07T15:02:13+00:00\n"
+"POT-Creation-Date: 2021-06-23T11:36:19+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -14,7 +14,7 @@ msgstr ""
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:14
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:14
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:34
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:33
 msgid "Back to your LPAs"
 msgstr ""
 
@@ -23,7 +23,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-already-added.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:72
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:73
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
@@ -36,7 +36,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:31
 #: src/Actor/templates/actor/lpa-already-added.html.twig:41
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:72
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:73
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:26
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
@@ -279,17 +279,13 @@ msgid "at least one number"
 msgstr ""
 
 #: src/Actor/templates/actor/login.html.twig:46
-#: src/Actor/templates/actor/password-reset.html.twig:49
+#: src/Actor/templates/actor/password-reset.html.twig:50
 #: src/Actor/templates/actor/your-details.html.twig:37
 msgid "Password"
 msgstr ""
 
-#: src/Actor/templates/actor/password-reset.html.twig:51
-msgid "Confirm Password"
-msgstr ""
-
 #: src/Actor/templates/actor/password-change.html.twig:51
-#: src/Actor/templates/actor/password-reset.html.twig:53
+#: src/Actor/templates/actor/password-reset.html.twig:55
 msgid "Change password"
 msgstr ""
 
@@ -639,10 +635,8 @@ msgstr ""
 msgid "Date of birth"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:45
-#: src/Actor/templates/actor/change-details.html.twig:74
-#: src/Actor/templates/actor/change-lpa-details.html.twig:65
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:143
+#: src/Common/templates/partials/contact-details/address.html.twig:1
 #: src/Common/templates/partials/full-lpa-display.html.twig:170
 msgid "Address"
 msgstr ""
@@ -1270,7 +1264,7 @@ msgstr ""
 msgid "Death Notification"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:86
+#: src/Actor/templates/actor/change-details.html.twig:65
 #: src/Actor/templates/actor/death-notification.html.twig:28
 msgid "Let us know if a donor or attorney dies"
 msgstr ""
@@ -1613,7 +1607,7 @@ msgstr ""
 msgid "Any lasting power of attorney (LPA) you add to your account will appear on this page."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:48
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:49
 msgid "Add another LPA"
 msgstr ""
 
@@ -1715,9 +1709,9 @@ msgid ""
 "                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm."
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:53
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:36
 #: src/Actor/templates/actor/login-not-found.html.twig:22
-#: src/Actor/templates/actor/lpa-not-found.html.twig:49
+#: src/Actor/templates/actor/lpa-not-found.html.twig:46
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:21
 msgid "Try again"
 msgstr ""
@@ -1806,12 +1800,12 @@ msgid ""
 "                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm."
 msgstr ""
 
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:44
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:45
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:61
-#: src/Actor/templates/actor/check-lpa.html.twig:93
+#: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/check-your-answers.html.twig:91
 #: src/Actor/templates/actor/home-page.html.twig:46
-#: src/Actor/templates/actor/lpa-add.html.twig:83
+#: src/Actor/templates/actor/lpa-add.html.twig:79
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:68
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:67
 #: src/Actor/templates/actor/request-activation-key.html.twig:61
@@ -1820,9 +1814,9 @@ msgid "Continue"
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:63
-#: src/Actor/templates/actor/check-lpa.html.twig:96
+#: src/Actor/templates/actor/check-lpa.html.twig:94
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:33
-#: src/Actor/templates/actor/lpa-add.html.twig:85
+#: src/Actor/templates/actor/lpa-add.html.twig:81
 #: src/Actor/templates/actor/request-activation-key-info.html.twig:69
 msgid "Cancel"
 msgstr ""
@@ -2039,17 +2033,13 @@ msgstr ""
 msgid "If you’re an attorney, you can tell us about changes to the donor’s details and your details. You cannot update another attorney’s details."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:67
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:32
-#: src/Actor/templates/actor/change-details.html.twig:59
-#: src/Actor/templates/actor/change-lpa-details.html.twig:48
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:71
+#: src/Common/templates/partials/contact-details/telephone.html.twig:1
 msgid "Telephone"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:33
-#: src/Actor/templates/actor/change-details.html.twig:60
-#: src/Actor/templates/actor/change-lpa-details.html.twig:49
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:32
+#: src/Actor/templates/actor/change-details.html.twig:59
+#: src/Actor/templates/actor/change-lpa-details.html.twig:47
 msgid "When you get in touch, quote the LPA reference number."
 msgstr ""
 
@@ -2059,30 +2049,21 @@ msgid ""
 "                      Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:37
-#: src/Actor/templates/actor/change-details.html.twig:66
-#: src/Actor/templates/actor/change-lpa-details.html.twig:57
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:30
-#: src/Common/templates/partials/contact-us.html.twig:36
+#: src/Common/templates/partials/contact-details/telephone.html.twig:8
 msgid "Find out about call charges"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:61
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:40
-#: src/Actor/templates/actor/change-details.html.twig:69
-#: src/Actor/templates/actor/change-lpa-details.html.twig:60
-#: src/Common/templates/partials/contact-us.html.twig:40
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:65
+#: src/Common/templates/partials/contact-details/email.html.twig:1
 msgid "Email"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:88
+#: src/Actor/templates/actor/change-details.html.twig:67
 msgid ""
 "It's important that we hold up-to-date information about donors and attorneys.\n"
 "                        This is because an LPA will end when the donor dies, and can end if an attorney dies."
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:95
+#: src/Actor/templates/actor/change-details.html.twig:74
 msgid "Find out more about what to do if <a class=\"govuk-link\" href=\"%link%\"> the donor or an attorney dies</a>"
 msgstr ""
 
@@ -2145,7 +2126,7 @@ msgstr ""
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:46
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:47
 msgid "Add your first LPA"
 msgstr ""
 
@@ -2154,25 +2135,25 @@ msgid "Add a lasting power of attorney"
 msgstr ""
 
 #: src/Actor/templates/actor/check-your-answers.html.twig:27
-#: src/Actor/templates/actor/lpa-add.html.twig:61
+#: src/Actor/templates/actor/lpa-add.html.twig:57
 #: src/Actor/templates/actor/request-activation-key.html.twig:30
 #: src/Common/templates/partials/full-lpa-display.html.twig:253
 msgid "LPA reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:71
+#: src/Actor/templates/actor/lpa-add.html.twig:67
 msgid "Where to find the reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:76
+#: src/Actor/templates/actor/lpa-add.html.twig:72
 msgid "The reference number is printed on the letter that told you the <abbr title=\"lasting power of attorney\">LPA</abbr> had been registered."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:77
+#: src/Actor/templates/actor/lpa-add.html.twig:73
 msgid "You can also find the reference number on the <abbr title=\"lasting power of attorney\">LPA</abbr> or any related letters from the Office of the Public Guardian."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:78
+#: src/Actor/templates/actor/lpa-add.html.twig:74
 msgid "It may be marked 'OPG reference number' or 'Our ref' or 'Case number'."
 msgstr ""
 
@@ -2208,7 +2189,7 @@ msgstr ""
 msgid "What is your date of birth?"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:57
+#: src/Actor/templates/actor/lpa-add.html.twig:53
 #: src/Actor/templates/actor/request-activation-key.html.twig:51
 msgid "For example, 31 03 1980"
 msgstr ""
@@ -2455,7 +2436,7 @@ msgstr ""
 msgid "Your LPAs"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:55
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:38
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:25
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
 #: src/Common/templates/partials/account-bar.html.twig:13
@@ -3127,109 +3108,109 @@ msgstr ""
 msgid "Textphone"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:85
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:89
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:63
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:69
 msgid "Enforcement procedure"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:88
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:92
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:66
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:72
 msgid ""
 "The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications)\n"
 "                        (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’).\n"
 "                        If you’re not happy with how we respond to your complaint, <a class=\"govuk-link\" href=\"https://www.equalityadvisoryservice.com/\">contact the Equality Advisory and Support Service (EASS)</a>."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:93
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:97
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:71
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:77
 msgid "Technical information about this service’s accessibility"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:96
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:100
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:74
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:80
 msgid "The Office of the Public Guardian is committed to making its online services accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:100
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:78
 msgid "This service is partially compliant with the <a class=\"govuk-link\" href=\"https://www.w3.org/TR/WCAG21/\">Web Content Accessibility Guidelines version 2.1</a> AA standard, due to the non-compliances listed below."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:103
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:81
 msgid "Non-accessible content"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:106
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:84
 msgid "The content listed below is non-accessible for the following reasons."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:109
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:87
 msgid "Non compliance with the accessibility regulations"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:112
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:90
 msgid "Some page titles do not have a unique and helpful title that indicates the purpose of the page. This fails WCAG 2.1 success criteria 2.4.2 (Page Titled)."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:116
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:94
 msgid "Some list elements are not correctly associated with parent elements.  This fails WCAG 2.1 success criteria 1.3.1 (Info and Relationships) and 4.1.1 (Parsing)."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:120
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:98
 msgid "There is an incorrect aria attribute value. This fails WCAG 2.1 success criteria 4.1.2 (Name, Role, Value) and 4.1.1 (Parsing)."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:124
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:102
 msgid "Some mark-up is not implemented according to element specification. This fails WCAG 2.1 success criteria 4.1.1 (Parsing) and 4.1.2 (Name, Role, Value)."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:128
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:106
 msgid "Some semantic elements were implemented in a way that did not convey the relationships within the page. This fails WCAG 2.1 success criteria 1.3.1 (Info and Relationships)."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:132
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:110
 msgid "The purpose of some links could not be determined from the link text. This fails WCAG 2.1 success criteria 2.4.4 (Link Purpose (In Context)) and 2.4.9 (Link Purpose (Link Only))"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:136
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:114
 msgid "The role of some components was not correctly determinable. This fails WCAG 2.1 success criteria 4.1.2 (Name, Role, Value) and 1.3.1 (Info and Relationships)."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:140
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:118
 msgid "Some users can not zoom in on content without needing to scroll or without causing poor experience This fails WCAG 2.1 success criteria 1.4.10 (Reflow)."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:144
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:122
 msgid "Some labels were implemented that did not clearly describe the topic or purpose. This fails WCAG 2.1 success criteria 2.4.6 (Headings and Labels)."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:148
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:126
 msgid "We’ll fix all the accessibility issues we’ve found by December 2020."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:151
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:129
 msgid "Disproportionate burden"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:157
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:135
 msgid "Not applicable"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:155
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:133
 msgid "Content that’s not within the scope of the accessibility regulations"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:159
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:109
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:137
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:89
 msgid "Preparation of this accessibility statement"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:162
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:112
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:140
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:92
 msgid "This statement was prepared on %date%"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:166
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:116
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:144
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:96
 msgid "This service was last tested on 4 June 2020. The test was carried out by Digital Accessibility Centre (DAC)."
 msgstr ""
 
@@ -3245,11 +3226,11 @@ msgstr ""
 msgid "Find out more about <a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/lasting-power-of-attorney-valid-examples\">checking a paper LPA</a>"
 msgstr ""
 
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:103
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:83
 msgid "Compliance status"
 msgstr ""
 
-#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:106
+#: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:86
 msgid "This service is fully compliant with the <a class=\"govuk-link\" href=\"https://www.w3.org/TR/WCAG21/\">Web Content Accessibility Guidelines version 2.1</a> AA standard."
 msgstr ""
 
@@ -3362,7 +3343,7 @@ msgstr ""
 msgid "The email should arrive in a few minutes. If it's not in your inbox, check your spam, bulk or junk email inbox. If you have not received the email, we can <a href=\"%link%\" class=\"govuk-link\">resend the activation email</a>."
 msgstr ""
 
-#: src/Actor/templates/actor/activate-account-not-found.html.twig:40
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:42
 msgid "If you're named on more than one <abbr title=\"lasting power of attorney\">LPA</abbr>, you can add all those <abbr title=\"lasting powers of attorney\">LPAs</abbr> to your account"
 msgstr ""
 
@@ -3705,7 +3686,7 @@ msgstr ""
 msgid "When you have your activation key, you can use it to add an LPA to your online account. You can then use the LPA online when you need to."
 msgstr ""
 
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:32
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:31
 msgid "Request another activation key"
 msgstr ""
 
@@ -3737,7 +3718,7 @@ msgstr ""
 msgid "%organisation% on %date%"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:60
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:61
 msgid "You have %count% LPA in your account"
 msgid_plural "You have %count% LPAs in your account"
 msgstr[0] ""
@@ -3866,7 +3847,7 @@ msgstr ""
 msgid "Life-sustaining <br>treatment"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:62
+#: src/Actor/templates/actor/lpa-add.html.twig:58
 #: src/Actor/templates/actor/request-activation-key.html.twig:31
 msgid "LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000"
 msgstr ""
@@ -3875,7 +3856,7 @@ msgstr ""
 msgid "Your activation key"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:56
+#: src/Actor/templates/actor/lpa-add.html.twig:52
 msgid "Your date of birth"
 msgstr ""
 
@@ -3991,4 +3972,48 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:38
 msgid "You are not an attorney on this <abbr title=\"lasting power of attorney\">LPA</abbr> anymore."
+msgstr ""
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:25
+msgid "<a href=\"%link%\" class=\"govuk-link\">Sign in to your account</a>"
+msgstr ""
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:29
+msgid "The link we sent you to activate your account lasts for 24 hours. If you did not use the link in that time, you'll need to <a href=\"%link%\" class=\"govuk-link\">create an account</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/activate-account-not-found.html.twig:34
+msgid "If you need help activating your account, please contact us:"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:81
+msgid "If the information is wrong, or if a name is misspelt, please call us:"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-add.html.twig:46
+msgid "If you cannot find it, please call us:"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:39
+msgid "If you're sure you entered the right information, please call us:"
+msgstr ""
+
+#: src/Common/templates/partials/contact-details/address.html.twig:3
+msgid ""
+"Office of the Public Guardian<br>\n"
+"        PO Box 16185<br>\n"
+"        Birmingham<br>\n"
+"        B2 2WH"
+msgstr ""
+
+#: src/Common/templates/partials/contact-details/telephone.html.twig:3
+msgid ""
+"Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br>\n"
+"        Textphone: 0115 934 2778 <br>\n"
+"        Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:41
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:43
+msgid "ask for an activation key if you have not been given one"
 msgstr ""
