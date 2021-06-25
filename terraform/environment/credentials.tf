@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.14, <= 0.15.4"
+  required_version = ">= 0.14, <= 1.0.1"
 
   backend "s3" {
     bucket         = "opg.terraform.state"
