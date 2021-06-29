@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
-use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
+use DateTime;
 
 /**
  * Class LpasActionHandler
@@ -52,6 +52,24 @@ class LpasActionsHandler implements RequestHandlerInterface
 
         if (!isset($lpaMatchResponse['actor-id'])) {
             throw new BadRequestException('The actor-id is missing from the data match response');
+        }
+
+        // Checks if the actor already has an active activation key. If forced ignore
+        if (!$requestData['force_activation_key']) {
+            $hasActivationCode = $this->olderLpaService->hasActivationCode(
+                $lpaMatchResponse['lpa-id'],
+                $lpaMatchResponse['actor-id']
+            );
+
+            if ($hasActivationCode instanceof DateTime) {
+                throw new BadRequestException(
+                    'LPA has an activation key already',
+                    [
+                        'lpa_type'   => $lpaMatchResponse['lpa_type'],
+                        'donor_name' => $lpaMatchResponse['donor_name']
+                    ]
+                );
+            }
         }
 
         //If all criteria pass, request letter with activation key

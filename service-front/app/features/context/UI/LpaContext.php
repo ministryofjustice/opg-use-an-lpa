@@ -1657,16 +1657,13 @@ class LpaContext implements Context
                         json_encode(
                             [
                                 'title' => 'Bad request',
-                                'details' => 'LPA not eligible as an activation key already exists',
+                                'details' => 'LPA has an activation key already',
                                 'data' => [
-                                    'activation_key_created' => $this->codeCreatedDate,
-                                    'donor_name' => preg_replace(
-                                        '/\s+/',
-                                        ' ',
-                                        ($this->lpaData['lpa'])->donor->firstname . ' '
-                                        . ($this->lpaData['lpa'])->donor->middlenames . ' '
-                                        . ($this->lpaData['lpa'])->donor->surname
-                                    ),
+                                    'donor_name' => [
+                                        ($this->lpaData['lpa'])->donor->firstname,
+                                        ($this->lpaData['lpa'])->donor->middlenames,
+                                        ($this->lpaData['lpa'])->donor->surname
+                                    ],
                                     'lpa_type'   => $this->lpaData['lpa']->caseSubtype
                                 ],
                             ]
@@ -2606,5 +2603,43 @@ class LpaContext implements Context
                     )
                 )
             );
+    }
+
+    /**
+     * @Given /^I lost the letter received having the activation key$/
+     */
+    public function iLostTheLetterReceivedHavingTheActivationKey()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I should have an option to regenerate an activation key for the old LPA I want to add$/
+     */
+    public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd()
+    {
+        $this->iProvideTheDetailsFromAValidPaperDocument();
+        $this->iConfirmThatThoseDetailsAreCorrect();
+        $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
+
+        $this->ui->assertPageAddress('/lpa/check-answers');
+        $this->ui->assertPageContainsText('Continue and ask for a new key');
+    }
+
+    /**
+     * @Then /^I request for a new activation key again$/
+     */
+    public function iRequestForANewActivationKeyAgain()
+    {
+        $this->iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd();
+        $this->ui->pressButton('Continue and ask for a new key');
+    }
+
+    /**
+     * @Then /^I am told a new activation key is posted to the provided postcode$/
+     */
+    public function iAmToldANewActivationIsPostedToTheProvidedPostcode()
+    {
+        $this->ui->assertPageAddress('/lpa/confirm-activation-key-generation');
     }
 }
