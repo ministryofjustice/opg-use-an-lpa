@@ -2013,7 +2013,8 @@ class LpaContext implements Context
                 'first_names'       => $this->userFirstnames,
                 'last_name'         => $this->userSurname,
                 'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode
+                'postcode'          => $this->userPostCode,
+                'force_activation_key' => false
             ],
             [
                 'user-token' => $this->userId,
@@ -2185,7 +2186,8 @@ class LpaContext implements Context
                 'first_names'       => $this->userFirstnames,
                 'last_name'         => $this->userSurname,
                 'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode
+                'postcode'          => $this->userPostCode,
+                'force_activation_key' => false
             ],
             [
                 'user-token' => $this->userId,
@@ -2193,9 +2195,7 @@ class LpaContext implements Context
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-        $this->ui->assertSession()->responseContains('LPA not eligible as an activation key already exists');
-        $this->ui->assertSession()->responseContains($createdDate);
-        $this->ui->assertSession()->responseContains('activation_key_created');
+        $this->ui->assertSession()->responseContains('LPA has an activation key already');
         $this->ui->assertSession()->responseContains('donor_name');
         $this->ui->assertSession()->responseContains('lpa_type');
     }
@@ -2352,6 +2352,73 @@ class LpaContext implements Context
      * @When /^The status of the LPA got Revoked$/
      */
     public function theStatusOfTheLpaGotRevoked()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Given /^I already have a valid activation key for my LPA$/
+     */
+    public function iAlreadyHaveAValidActivationKeyForMyLPA()
+    {
+     // Not needed for this context
+    }
+
+    /**
+     * @Given /^I lost the letter received having the activation key$/
+     */
+    public function iLostTheLetterReceivedHavingTheActivationKey()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request for a new activation key again$/
+     */
+    public function iRequestForANewActivationKeyAgain()
+    {
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // request a code to be generated and letter to be sent
+        $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    []
+                )
+            );
+
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/lpas/request-letter',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
+                'force_activation_key' => true,
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
+    }
+
+    /**
+     * @Then /^I am told a new activation key is posted to the provided postcode$/
+     */
+    public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode()
     {
         // Not needed for this context
     }
