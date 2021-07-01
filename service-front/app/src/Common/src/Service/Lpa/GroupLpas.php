@@ -37,7 +37,7 @@ class GroupLpas
                         $lpa->lpa->getDonor()->getMiddlenames(),
                         $lpa->lpa->getDonor()->getSurname(),
                         // prevents different donors with same name from being grouped together
-                        $lpa->lpa->getDonor()->getDob()->format('Y-m-d')
+                        $lpa->lpa->getDonor()->getDob() ? $lpa->lpa->getDonor()->getDob()->format('Y-m-d') : '0-0-0'
                     ]
                 )
             );
