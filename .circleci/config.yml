@@ -1050,7 +1050,7 @@ orbs:
               command: |
                 mkdir -p build/service-admin
                 cd service-admin/
-                go get -u github.com/dave/courtney
+                go get -u github.com/dave/courtney@master
                 courtney -o ../build/service-admin/coverage.out
           - persist_to_workspace:
               root: build
