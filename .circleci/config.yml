@@ -1051,12 +1051,14 @@ orbs:
                 mkdir -p build/service-admin
                 cd service-admin/
                 go get -u github.com/dave/courtney@master
-                courtney -o ../build/service-admin/coverage.out
-          - persist_to_workspace:
-              root: build
-              paths:
-                - service-admin/
-              when: always
+                go test -race -coverpkg ./... -coverprofile=../build/service-admin/coverage.out -covermode=atomic ./...
+                courtney -o ../build/service-admin/courtney_coverage.out
+                courtney -i ../build/service-admin/coverage.out
+          # - persist_to_workspace:
+          #     root: build
+          #     paths:
+          #       - service-admin/
+          #     when: always
 
       docker_build_admin:
         #
