@@ -1,0 +1,44 @@
+{{ define "result_actor" }}
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Status
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ if .ActivationToken }}
+        <strong class="govuk-tag govuk-tag--grey">not activated</strong>
+        {{ else }}
+        <strong class="govuk-tag">activated</strong>
+        {{ end }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Last Login
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ if .LastLogin }}
+          {{ readableDateTime .LastLogin }}
+        {{ else }}
+          Never
+        {{ end }}
+      </dd>
+    </div>
+
+    {{ if .LPAs }}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        LPAs
+      </dt>
+      <dd class="govuk-summary-list__value">
+        <ul class="govuk-list">
+        {{ range .LPAs }}
+          <li>{{ .SiriusUID }}</li>
+        {{ end }}
+        </ul>
+      </dd>
+    </div>
+    {{ end }}
+  </dl>
+{{ end }}
