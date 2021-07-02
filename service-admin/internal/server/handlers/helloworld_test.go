@@ -27,9 +27,9 @@ func TestHelloHandler_WithBadTemplate(t *testing.T) {
 
 	memfs := afero.NewMemMapFs()
 
-	err := memfs.MkdirAll("layouts", 0755)
+	err := afero.WriteFile(memfs, "test.page.gohtml", []byte(""), 0644)
 	if err != nil {
-		t.Errorf("unable to create in memory template filesystem, %w", err)
+		t.Fatalf("%v", err)
 	}
 
 	fs := afero.NewIOFS(memfs)
