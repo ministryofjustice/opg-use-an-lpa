@@ -98,7 +98,7 @@ func doSearch(db dynamodbiface.DynamoDBAPI, t queryType, q string) interface{} {
 			return nil
 		}
 
-		r.LPAs, err = data.GetLpasByUserId(db, r.ID)
+		r.LPAs, err = data.GetLpasByUserID(db, r.ID)
 		if err != nil && !errors.Is(err, data.ErrUserLpaActorMapNotFound) {
 			return nil
 		}
