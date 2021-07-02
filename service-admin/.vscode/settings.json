@@ -4,5 +4,8 @@
         "dlvLoadConfig": {
             "maxStringLen": 128,
         },
+    },
+    "emmet.includeLanguages": {
+        "gohtml": "html",
     }
 }
