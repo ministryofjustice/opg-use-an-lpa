@@ -1051,11 +1051,11 @@ orbs:
                 mkdir -p build/service-admin
                 cd service-admin/
                 go test -race -coverpkg ./... -coverprofile=../build/service-admin/coverage.out -covermode=atomic ./...
-          - persist_to_workspace:
-              root: build
-              paths:
-                - service-admin/
-              when: always
+          # - persist_to_workspace:
+          #     root: build
+          #     paths:
+          #       - service-admin/
+          #     when: always
 
       docker_build_admin:
         #
