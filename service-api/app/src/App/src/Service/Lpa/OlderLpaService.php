@@ -67,18 +67,6 @@ class OlderLpaService
 
     public function checkDataMatch(array $actor, array $userDataToMatch): ?array
     {
-        //check if actor has a valid dob
-        if (!isset($actor['dob'])) {
-            $this->logger->notice(
-                'The actor {id} for the LPA {uId} does not have a DOB in sirius',
-                [
-                    'id' => $actor['uId'],
-                    'uId' => $userDataToMatch['reference_number'],
-                ]
-            );
-            return null;
-        }
-
         // Check if the actor has more than one address
         if (count($actor['addresses']) > 1) {
             $this->logger->notice(
@@ -224,12 +212,6 @@ class OlderLpaService
         }
 
         if (!($this->validateLpaRequirements)($lpaMatchResponse->getData())) {
-            $this->logger->info(
-                'The LPA {uId} entered by user is not eligible due to registration date',
-                [
-                    'uId' => $dataToMatch['reference_number'],
-                ]
-            );
             throw new BadRequestException('LPA not eligible due to registration date');
         }
 

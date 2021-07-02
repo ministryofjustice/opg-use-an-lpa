@@ -734,21 +734,4 @@ class OlderLpaServiceTest extends TestCase
             new DateTime()
         );
     }
-
-    /** @test */
-    public function returns_null_if_actor_has_no_dob()
-    {
-        $actor = [
-            'donor' => [
-                'uId' => '700000001111',
-                'dob' => null,
-                'firstname' => 'Donor',
-                'surname' => 'Person',
-            ],
-        ];
-
-        $service = $this->getOlderLpaService();
-        $dataMatch = $service->checkDataMatch($actor, []);
-        $this->assertNull($dataMatch);
-    }
 }
