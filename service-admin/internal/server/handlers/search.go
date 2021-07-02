@@ -6,8 +6,10 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
+	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
 	"github.com/rs/zerolog/log"
 )
 
@@ -26,10 +28,10 @@ var (
 type queryType int
 
 type search struct {
-	Query   string
-	Type    queryType
-	Results map[string]interface{}
-	Errors  validation.Errors
+	Query  string
+	Type   queryType
+	Result interface{}
+	Errors validation.Errors
 }
 
 func (s *search) Validate() error {
@@ -62,7 +64,7 @@ func (s *search) checkEmailOrCode(value interface{}) error {
 	return ErrNotEmailOrCode
 }
 
-func SearchHandler() http.HandlerFunc {
+func SearchHandler(db dynamodbiface.DynamoDBAPI) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s := &search{}
 
@@ -79,19 +81,30 @@ func SearchHandler() http.HandlerFunc {
 				log.Debug().AnErr("form-error", err).Msg("")
 			}
 
-			s.Results = doSearch(s.Type, s.Query)
+			s.Result = doSearch(db, s.Type, s.Query)
 		}
 
-		if err := RenderTemplate(w, r.Context(), "search", s); err != nil {
+		if err := RenderTemplate(w, r.Context(), "search.page.gohtml", s); err != nil {
 			log.Panic().Err(err).Msg(err.Error())
 		}
 	}
 }
 
-func doSearch(t queryType, q string) map[string]interface{} {
+func doSearch(db dynamodbiface.DynamoDBAPI, t queryType, q string) interface{} {
 	switch t {
 	case EmailQuery:
-		return nil
+		r, err := data.GetActorUserByEmail(db, q)
+		if err != nil {
+			return nil
+		}
+
+		r.LPAs, err = data.GetLpasByUserId(db, r.ID)
+		if err != nil && !errors.Is(err, data.ErrUserLpaActorMapNotFound) {
+			return nil
+		}
+
+		return r
+
 	case ActivationCodeQuery:
 		return map[string]interface{}{
 			"Activation key": q,
