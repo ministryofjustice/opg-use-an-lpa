@@ -9,6 +9,7 @@ use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResponse;
 use Common\Service\Lpa\ParseLpaData;
+use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 use Common\Service\Lpa\Response\Transformer\LpaAlreadyAddedResponseTransformer;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
@@ -125,6 +126,12 @@ class AddLpaTest extends TestCase
     /** @test */
     public function it_will_fail_to_add_an_lpa_which_has_already_been_added(): void
     {
+        $response = [
+            'donorName' => 'Another Person',
+            'caseSubtype' => 'hw',
+            'lpaActorToken' => 'wxyz-4321'
+        ];
+
         $this->apiClientProphecy
             ->httpPost(
                 '/v1/add-lpa/validate',
@@ -138,13 +145,18 @@ class AddLpaTest extends TestCase
                     'LPA already added',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
                     null,
-                    $this->lpaArrayData
+                    $response
                 )
             );
 
-        $this->parseLpaDataProphecy
-            ->__invoke($this->lpaArrayData)
-            ->willReturn($this->lpaParsedData);
+        $dto = new LpaAlreadyAddedResponse();
+        $dto->setDonorName($response['donorName']);
+        $dto->setCaseSubtype($response['caseSubtype']);
+        $dto->setLpaActorToken($response['lpaActorToken']);
+
+        $this->alreadyAddedTransformerProphecy
+            ->__invoke($response)
+            ->willReturn($dto);
 
         $result = $this->addLpa->validate(
             '12-1-1-1-1234',
@@ -154,7 +166,7 @@ class AddLpaTest extends TestCase
         );
 
         $this->assertEquals(AddLpaApiResponse::ADD_LPA_ALREADY_ADDED, $result->getResponse());
-        $this->assertEquals($this->lpaParsedData, $result->getData());
+        $this->assertEquals($dto, $result->getData());
     }
 
     /** @test */
@@ -189,7 +201,7 @@ class AddLpaTest extends TestCase
         );
 
         $this->assertEquals(AddLpaApiResponse::ADD_LPA_NOT_ELIGIBLE, $result->getResponse());
-        $this->assertEquals(new ArrayObject(), $result->getData());
+        $this->assertEquals([], $result->getData());
     }
 
     /** @test */
@@ -224,7 +236,7 @@ class AddLpaTest extends TestCase
         );
 
         $this->assertEquals(AddLpaApiResponse::ADD_LPA_NOT_FOUND, $result->getResponse());
-        $this->assertEquals(new ArrayObject(), $result->getData());
+        $this->assertEquals([], $result->getData());
     }
 
     /** @test */

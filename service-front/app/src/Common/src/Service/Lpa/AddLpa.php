@@ -108,10 +108,10 @@ class AddLpa
                 ]
             );
 
-            return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_SUCCESS, new ArrayObject());
+            return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_SUCCESS, []);
         }
 
-        return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_FAILURE, new ArrayObject());
+        return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_FAILURE, []);
     }
 
     /**
