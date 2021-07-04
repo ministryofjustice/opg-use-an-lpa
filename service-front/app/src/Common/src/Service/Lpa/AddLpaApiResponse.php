@@ -40,7 +40,7 @@ class AddLpaApiResponse
     }
 
     /**
-     * @return mixed
+     * @return array|ArrayObject|LpaAlreadyAddedResponse
      */
     public function getData()
     {

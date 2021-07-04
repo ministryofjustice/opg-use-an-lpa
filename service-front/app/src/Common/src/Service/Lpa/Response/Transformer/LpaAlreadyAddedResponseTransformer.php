@@ -21,10 +21,10 @@ class LpaAlreadyAddedResponseTransformer
             );
         }
 
-        $lpaAlreadyAddedData = new LpaAlreadyAddedResponse();
-        $lpaAlreadyAddedData->setDonorName($data['donorName']);
-        $lpaAlreadyAddedData->setCaseSubtype($data['caseSubtype']);
-        $lpaAlreadyAddedData->setLpaActorToken($data['lpaActorToken']);
-        return $lpaAlreadyAddedData;
+        $response = new LpaAlreadyAddedResponse();
+        $response->setDonorName($data['donorName']);
+        $response->setCaseSubtype($data['caseSubtype']);
+        $response->setLpaActorToken($data['lpaActorToken']);
+        return $response;
     }
 }

@@ -134,9 +134,11 @@ class AddLpa
                 break;
 
             case self::ADD_LPA_ALREADY_ADDED:
-                $lpaAlreadyAdded = ($this->lpaAlreadyAddedResponseTransformer)($additionalData);
                 $code = EventCodes::ADD_LPA_ALREADY_ADDED;
-                $response = new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_ALREADY_ADDED, $lpaAlreadyAdded);
+                $response = new AddLpaApiResponse(
+                    AddLpaApiResponse::ADD_LPA_ALREADY_ADDED,
+                    ($this->lpaAlreadyAddedResponseTransformer)($additionalData)
+                );
                 break;
 
             default:
