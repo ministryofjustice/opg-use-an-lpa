@@ -219,8 +219,11 @@ class LpaContext implements Context
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('Lpa already added');
-        $this->ui->assertSession()->responseContains('actor');
-        $this->ui->assertSession()->responseContains($this->lpaUid);
+        $this->ui->assertSession()->responseContains('donorName');
+        $this->ui->assertSession()->responseContains('caseSubtype');
+        $this->ui->assertSession()->responseContains('lpaActorToken');
+        $this->ui->assertSession()->responseContains('Ian Deputy Deputy');
+        $this->ui->assertSession()->responseContains('hw');
         $this->ui->assertSession()->responseContains($this->userLpaActorToken);
     }
 

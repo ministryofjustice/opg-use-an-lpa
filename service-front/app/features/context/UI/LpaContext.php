@@ -486,7 +486,11 @@ class LpaContext implements Context
                         [
                             'title' => 'Bad Request',
                             'details' => 'LPA already added',
-                            'data' => $this->lpaData,
+                            'data' => [
+                                'donorName'     => 'Some person',
+                                'caseSubtype'   => $this->lpa->caseSubtype,
+                                'lpaActorToken' => $this->userLpaActorToken
+                            ],
                         ]
                     )
                 )

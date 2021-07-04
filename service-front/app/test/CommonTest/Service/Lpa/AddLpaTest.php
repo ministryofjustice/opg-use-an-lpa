@@ -9,6 +9,7 @@ use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResponse;
 use Common\Service\Lpa\ParseLpaData;
+use Common\Service\Lpa\Response\Transformer\LpaAlreadyAddedResponseTransformer;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -34,12 +35,15 @@ class AddLpaTest extends TestCase
     private $parseLpaDataProphecy;
     /** @var \Prophecy\Prophecy\ObjectProphecy|LoggerInterface */
     private $loggerProphecy;
+    /** @var \Prophecy\Prophecy\ObjectProphecy|LpaAlreadyAddedResponseTransformer */
+    private $alreadyAddedTransformerProphecy;
 
     public function setUp(): void
     {
         $this->apiClientProphecy = $this->prophesize(ApiClient::class);
         $this->parseLpaDataProphecy = $this->prophesize(ParseLpaData::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->alreadyAddedTransformerProphecy = $this->prophesize(LpaAlreadyAddedResponseTransformer::class);
 
         $this->data = [
             'uid' => '700000000321',
@@ -52,7 +56,8 @@ class AddLpaTest extends TestCase
         $this->addLpa = new AddLpa(
             $this->apiClientProphecy->reveal(),
             $this->loggerProphecy->reveal(),
-            $this->parseLpaDataProphecy->reveal()
+            $this->parseLpaDataProphecy->reveal(),
+            $this->alreadyAddedTransformerProphecy->reveal()
         );
 
         $actor = new CaseActor();

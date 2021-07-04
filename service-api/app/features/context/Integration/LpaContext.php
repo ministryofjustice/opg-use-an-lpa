@@ -191,9 +191,12 @@ class LpaContext extends BaseIntegrationContext
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA already added', $ex->getMessage());
-            assertArrayHasKey('lpa', $ex->getAdditionalData());
-            assertArrayHasKey('actor', $ex->getAdditionalData());
-            assertArrayHasKey('user-lpa-actor-token', $ex->getAdditionalData());
+            assertArrayHasKey('donorName', $ex->getAdditionalData());
+            assertArrayHasKey('caseSubtype', $ex->getAdditionalData());
+            assertArrayHasKey('lpaActorToken', $ex->getAdditionalData());
+            assertEquals('Ian Deputy Deputy', $ex->getAdditionalData()['donorName']);
+            assertEquals('hw', $ex->getAdditionalData()['caseSubtype']);
+            assertEquals($this->userLpaActorToken, $ex->getAdditionalData()['lpaActorToken']);
             return;
         }
 

@@ -75,6 +75,10 @@ class AddLpaApiResponse
 
     private function validateDataType($data): bool
     {
+        if (is_array($data)) {
+            return true;
+        }
+
         $allowedDataTypes = [
             ArrayObject::class,
             LpaAlreadyAddedResponse::class,
