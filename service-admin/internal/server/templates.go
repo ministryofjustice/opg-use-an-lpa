@@ -67,12 +67,12 @@ func LoadTemplates(folder fs.FS) *Templates {
 
 		ts, err = ts.ParseFS(folder, "*.layout.gohtml")
 		if err != nil {
-			log.Fatal().AnErr("error", err).Msg("unable to glob layouts")
+			log.Info().AnErr("error", err).Msg("unable to glob layouts")
 		}
 
 		ts, err = ts.ParseFS(folder, "*.partial.gohtml")
 		if err != nil {
-			log.Fatal().AnErr("error", err).Msg("unable to glob partials")
+			log.Info().AnErr("error", err).Msg("unable to glob partials")
 		}
 
 		tmpls[name] = ts
