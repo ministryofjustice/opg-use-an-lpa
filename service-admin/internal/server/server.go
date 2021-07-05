@@ -61,10 +61,10 @@ func withErrorHandling(next http.Handler) http.Handler {
 		var eh ErrorHandler = func(w http.ResponseWriter, i int) {
 			w.WriteHeader(i)
 
-			t := "error"
+			t := "error.page.gohtml"
 			switch i {
 			case 404:
-				t = "notfound"
+				t = "notfound.page.gohtml"
 			}
 
 			if err := handlers.RenderTemplate(w, r.Context(), t, nil); err != nil {

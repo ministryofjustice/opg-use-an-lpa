@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"io/fs"
 	"net/http"
+	"path/filepath"
 	"time"
 
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
@@ -14,13 +15,13 @@ import (
 )
 
 type Templates struct {
-	tmpls *template.Template
+	tmpls map[string]*template.Template
 }
 
 var ErrTemplateNotFound = errors.New("template not found")
 
 func (t *Templates) Get(name string) (*template.Template, error) {
-	if tpl := t.tmpls.Lookup(name); tpl != nil {
+	if tpl, isMapContains := t.tmpls[name]; isMapContains {
 		return tpl, nil
 	} else {
 		return nil, fmt.Errorf("%w, \"%s\"", ErrTemplateNotFound, name)
@@ -49,9 +50,32 @@ func LoadTemplates(folder fs.FS) *Templates {
 		},
 	})
 
-	tmpls, err := t.ParseFS(folder, "*.gohtml")
+	files, err := fs.Glob(folder, "*.page.gohtml")
 	if err != nil {
-		log.Fatal().AnErr("error", err).Msg("unable to glob template folder")
+		log.Fatal().AnErr("error", err).Msg("unable to glob page templates")
+	}
+
+	tmpls := make(map[string]*template.Template)
+
+	for _, file := range files {
+		name := filepath.Base(file)
+
+		ts, err := template.Must(t.Clone()).ParseFS(folder, file)
+		if err != nil {
+			log.Fatal().AnErr("error", err).Msgf("unable to load template %s", file)
+		}
+
+		ts, err = ts.ParseFS(folder, "*.layout.gohtml")
+		if err != nil {
+			log.Fatal().AnErr("error", err).Msg("unable to glob layouts")
+		}
+
+		ts, err = ts.ParseFS(folder, "*.partial.gohtml")
+		if err != nil {
+			log.Fatal().AnErr("error", err).Msg("unable to glob partials")
+		}
+
+		tmpls[name] = ts
 	}
 
 	return &Templates{
