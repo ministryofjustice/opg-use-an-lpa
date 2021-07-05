@@ -6,6 +6,7 @@ namespace App\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\Repository\LpasInterface;
+use App\DataAccess\Repository\Response\LpaInterface as LpaResponseInterface;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
@@ -14,6 +15,7 @@ use Psr\Log\LoggerInterface;
 
 class OlderLpaService
 {
+    private LpaAlreadyAdded $lpaAlreadyAdded;
     private LpaService $lpaService;
     private LpasInterface $lpaRepository;
     private LoggerInterface $logger;
@@ -22,6 +24,7 @@ class OlderLpaService
     private ValidateOlderLpaRequirements $validateLpaRequirements;
 
     public function __construct(
+        LpaAlreadyAdded $lpaAlreadyAdded,
         LpaService $lpaService,
         LpasInterface $lpaRepository,
         LoggerInterface $logger,
@@ -29,6 +32,7 @@ class OlderLpaService
         GetAttorneyStatus $getAttorneyStatus,
         ValidateOlderLpaRequirements $validateLpaRequirements
     ) {
+        $this->lpaAlreadyAdded = $lpaAlreadyAdded;
         $this->lpaService = $lpaService;
         $this->lpaRepository = $lpaRepository;
         $this->logger = $logger;
@@ -185,38 +189,69 @@ class OlderLpaService
     }
 
     /**
-     * Gets LPA by Uid, checks registration date and identifies the actor
+     * Checks if the LPA has already been added to the users account
      *
-     * @param array $dataToMatch
-     *
-     * @return array
-     * @throws \Exception
+     * @param string $userId
+     * @param string $lpaId
      */
-    public function checkLPAMatchAndGetActorDetails(array $dataToMatch): array
+    public function checkIfLpaAlreadyAdded(string $userId, string $lpaId): void
     {
-        // Cleanse user provided data
-        $dataToMatch = $this->cleanseUserData($dataToMatch);
+        if (null !== $lpaAddedData = ($this->lpaAlreadyAdded)($userId, $lpaId)) {
+            $this->logger->notice(
+                'User {id} attempted to add an LPA {uId} which already exists in their account',
+                [
+                    'id' => $userId,
+                    'uId' => $lpaId,
+                ]
+            );
+            throw new BadRequestException('LPA already added', $lpaAddedData);
+        }
+    }
 
-        //Get LPA by reference number
-        $lpaMatchResponse = $this->lpaService->getByUid((string)$dataToMatch['reference_number']);
+    /**
+     * @param string $lpaId
+     *
+     * @return LpaResponseInterface
+     */
+    public function getLpaByUid(string $lpaId): LpaResponseInterface
+    {
+        $lpa = $this->lpaService->getByUid($lpaId);
 
-        if (is_null($lpaMatchResponse)) {
+        if (is_null($lpa)) {
             $this->logger->info(
                 'The LPA {uId} entered by user is not found in Sirius',
                 [
-                    'uId' => $dataToMatch['reference_number'],
+                    'uId' => $lpaId,
                 ]
             );
             throw new NotFoundException('LPA not found');
         }
+        return $lpa;
+    }
 
-        if (!($this->validateLpaRequirements)($lpaMatchResponse->getData())) {
+    /**
+     * Gets LPA by Uid, checks registration date and identifies the actor
+     *
+     * @param string $userId
+     * @param array  $dataToMatch
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function checkLPAMatchAndGetActorDetails(string $userId, array $dataToMatch): array
+    {
+        $this->checkIfLpaAlreadyAdded($userId, (string) $dataToMatch['reference_number']);
+
+        $dataToMatch = $this->cleanseUserData($dataToMatch);
+
+        $lpaMatch = $this->getLpaByUid((string) $dataToMatch['reference_number']);
+
+        if (!($this->validateLpaRequirements)($lpaMatch->getData())) {
             throw new BadRequestException('LPA not eligible due to registration date');
         }
 
         //Check and compare user provided data with lpa data and return actor details
-
-        $actorMatch = $this->compareAndLookupActiveActorInLpa($lpaMatchResponse->getData(), $dataToMatch);
+        $actorMatch = $this->compareAndLookupActiveActorInLpa($lpaMatch->getData(), $dataToMatch);
 
         if (is_null($actorMatch)) {
             $this->logger->info(
@@ -229,11 +264,11 @@ class OlderLpaService
         }
 
         $actorMatch['donor_name'] = [
-            $lpaMatchResponse->getData()['donor']['firstname'],
-            $lpaMatchResponse->getData()['donor']['middlenames'],
-            $lpaMatchResponse->getData()['donor']['surname'],
+            $lpaMatch->getData()['donor']['firstname'],
+            $lpaMatch->getData()['donor']['middlenames'],
+            $lpaMatch->getData()['donor']['surname'],
         ];
-        $actorMatch['lpa_type'] = $lpaMatchResponse->getData()['caseSubtype'];
+        $actorMatch['lpa_type'] = $lpaMatch->getData()['caseSubtype'];
 
         return $actorMatch;
     }

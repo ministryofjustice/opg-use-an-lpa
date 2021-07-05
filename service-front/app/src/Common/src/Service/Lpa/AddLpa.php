@@ -129,7 +129,10 @@ class AddLpa
         switch ($message) {
             case self::ADD_LPA_NOT_ELIGIBLE:
                 $code = EventCodes::ADD_LPA_NOT_ELIGIBLE;
-                $response = new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_NOT_ELIGIBLE, $additionalData);
+                $response = new AddLpaApiResponse(
+                    AddLpaApiResponse::ADD_LPA_NOT_ELIGIBLE,
+                    $additionalData
+                );
                 break;
 
             case self::ADD_LPA_ALREADY_ADDED:
