@@ -79,9 +79,9 @@ func SearchHandler(db dynamodbiface.DynamoDBAPI) http.HandlerFunc {
 			err = s.Validate()
 			if err != nil {
 				log.Debug().AnErr("form-error", err).Msg("")
+			} else {
+				s.Result = doSearch(db, s.Type, s.Query)
 			}
-
-			s.Result = doSearch(db, s.Type, s.Query)
 		}
 
 		if err := RenderTemplate(w, r.Context(), "search.page.gohtml", s); err != nil {
