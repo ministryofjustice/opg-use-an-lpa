@@ -6,11 +6,12 @@ namespace App\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\Repository\LpasInterface;
-use App\DataAccess\Repository\Response\LpaInterface as LpaResponseInterface;
+use App\DataAccess\Repository\Response\Lpa;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use DateTime;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 class OlderLpaService
@@ -47,7 +48,7 @@ class OlderLpaService
      * @param array $data
      *
      * @return array|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function cleanseUserData(array $data): ?array
     {
@@ -211,9 +212,9 @@ class OlderLpaService
     /**
      * @param string $lpaId
      *
-     * @return LpaResponseInterface
+     * @return Lpa
      */
-    public function getLpaByUid(string $lpaId): LpaResponseInterface
+    public function getLpaByUid(string $lpaId): Lpa
     {
         $lpa = $this->lpaService->getByUid($lpaId);
 
@@ -226,7 +227,43 @@ class OlderLpaService
             );
             throw new NotFoundException('LPA not found');
         }
+
         return $lpa;
+    }
+
+    /**
+     * Compares user provided data with lpa data to return matched actor details
+     *
+     * @param array $lpa
+     * @param array $dataToMatch
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function lookupActorInLpa(array $lpa, array $dataToMatch): array
+    {
+        $actorMatch = $this->compareAndLookupActiveActorInLpa($lpa, $dataToMatch);
+
+        if (is_null($actorMatch)) {
+            $this->logger->info(
+                'Actor details for LPA {uId} not found',
+                [
+                    'uId' => $dataToMatch['reference_number'],
+                ]
+            );
+            throw new BadRequestException('LPA details do not match');
+        }
+
+        $actorMatch['lpa_type'] = $lpa['caseSubtype'];
+        $actorMatch['donor_name'] = (implode(' ', array_filter(
+            [
+                $lpa['donor']['firstname'],
+                $lpa['donor']['middlenames'],
+                $lpa['donor']['surname'],
+            ]
+        )));
+
+        return $actorMatch;
     }
 
     /**
@@ -236,7 +273,7 @@ class OlderLpaService
      * @param array  $dataToMatch
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function checkLPAMatchAndGetActorDetails(string $userId, array $dataToMatch): array
     {
@@ -250,29 +287,7 @@ class OlderLpaService
             throw new BadRequestException('LPA not eligible due to registration date');
         }
 
-        //Check and compare user provided data with lpa data and return actor details
-        $actorMatch = $this->compareAndLookupActiveActorInLpa($lpaMatch->getData(), $dataToMatch);
-
-        if (is_null($actorMatch)) {
-            $this->logger->info(
-                'Actor details for LPA {uId} not found',
-                [
-                    'uId' => $dataToMatch['reference_number'],
-                ]
-            );
-            throw new BadRequestException('LPA details do not match');
-        }
-
-        $actorMatch['donor_name'] = (implode(' ', array_filter(
-            [
-                $lpaMatch->getData()['donor']['firstname'],
-                $lpaMatch->getData()['donor']['middlenames'],
-                $lpaMatch->getData()['donor']['surname'],
-            ]
-        )));
-        $actorMatch['lpa_type'] = $lpaMatch->getData()['caseSubtype'];
-
-        return $actorMatch;
+        return $this->lookupActorInLpa($lpaMatch->getData(), $dataToMatch);
     }
 
     /**
