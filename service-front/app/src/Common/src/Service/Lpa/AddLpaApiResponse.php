@@ -31,6 +31,7 @@ class AddLpaApiResponse
         if (!$this->validateResponseType($response)) {
             throw new \RuntimeException('Incorrect response type when creating ' . __CLASS__);
         }
+
         if (!$this->validateDataType($data)) {
             throw new \RuntimeException('Incorrect data type when creating ' . __CLASS__);
         }
@@ -40,7 +41,7 @@ class AddLpaApiResponse
     }
 
     /**
-     * @return array|ArrayObject|LpaAlreadyAddedResponse
+     * @return mixed
      */
     public function getData()
     {

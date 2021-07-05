@@ -7,6 +7,7 @@ namespace Common\Service\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
+use Common\Service\Lpa\Response\Transformer\LpaAlreadyAddedResponseTransformer;
 use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
@@ -23,14 +24,17 @@ use RuntimeException;
 class AddOlderLpa
 {
     // Exception messages returned from the API layer
-    private const OLDER_LPA_NOT_ELIGIBLE = 'LPA not eligible due to registration date';
-    private const OLDER_LPA_DOES_NOT_MATCH     = 'LPA details do not match';
-    private const OLDER_LPA_HAS_ACTIVATION_KEY = 'LPA has an activation key already';
+    private const OLDER_LPA_NOT_ELIGIBLE        = 'LPA not eligible due to registration date';
+    private const OLDER_LPA_DOES_NOT_MATCH      = 'LPA details do not match';
+    private const OLDER_LPA_HAS_ACTIVATION_KEY  = 'LPA has an activation key already';
+    private const OLDER_LPA_ALREADY_ADDED       = 'LPA already added';
 
     /** @var ApiClient */
     private ApiClient $apiClient;
     /** @var LoggerInterface */
     private LoggerInterface $logger;
+    /** @var LpaAlreadyAddedResponseTransformer */
+    private LpaAlreadyAddedResponseTransformer $lpaAlreadyAddedResponseTransformer;
 
     /**
      * AddOlderLpa constructor.
@@ -40,10 +44,14 @@ class AddOlderLpa
      *
      * @codeCoverageIgnore
      */
-    public function __construct(ApiClient $apiClient, LoggerInterface $logger)
-    {
+    public function __construct(
+        ApiClient $apiClient,
+        LoggerInterface $logger,
+        LpaAlreadyAddedResponseTransformer $lpaAlreadyAddedResponseTransformer
+    ) {
         $this->apiClient = $apiClient;
         $this->logger = $logger;
+        $this->lpaAlreadyAddedResponseTransformer = $lpaAlreadyAddedResponseTransformer;
     }
 
     public function __invoke(
@@ -71,16 +79,23 @@ class AddOlderLpa
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_BAD_REQUEST:
-                    return $this->badRequestReturned($data['reference_number'], $apiEx->getMessage(), $apiEx->getAdditionalData());
+                    return $this->badRequestReturned(
+                        $data['reference_number'],
+                        $apiEx->getMessage(),
+                        $apiEx->getAdditionalData()
+                    );
                 case StatusCodeInterface::STATUS_NOT_FOUND:
-                    return $this->notFoundReturned($data['reference_number'], $apiEx->getAdditionalData());
+                    return $this->notFoundReturned(
+                        $data['reference_number'],
+                        $apiEx->getAdditionalData()
+                    );
                 default:
                     // An API exception that we don't want to handle has been caught, pass it up the stack
                     throw $apiEx;
             }
         }
 
-        $eventCode =  ($forceActivationKey) ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY : EventCodes::OLDER_LPA_SUCCESS;
+        $eventCode = ($forceActivationKey) ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY : EventCodes::OLDER_LPA_SUCCESS;
 
         $this->logger->notice(
             'Successfully matched LPA {uId} and sending activation letter for account with Id {id} ',
@@ -108,6 +123,14 @@ class AddOlderLpa
     private function badRequestReturned(int $lpaUid, string $message, array $additionalData): OlderLpaApiResponse
     {
         switch ($message) {
+            case self::OLDER_LPA_ALREADY_ADDED:
+                $code = EventCodes::OLDER_LPA_ALREADY_ADDED;
+                $response = new OlderLpaApiResponse(
+                    OlderLpaApiResponse::LPA_ALREADY_ADDED,
+                    ($this->lpaAlreadyAddedResponseTransformer)($additionalData)
+                );
+                break;
+
             case self::OLDER_LPA_NOT_ELIGIBLE:
                 $code = EventCodes::OLDER_LPA_NOT_ELIGIBLE;
                 $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_ELIGIBLE, $additionalData);

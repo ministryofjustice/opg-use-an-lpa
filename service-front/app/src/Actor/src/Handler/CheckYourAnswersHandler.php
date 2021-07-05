@@ -19,7 +19,6 @@ use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\OlderLpaApiResponse;
-use IntlDateFormatter;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
 use Mezzio\Helper\UrlHelper;
@@ -139,6 +138,19 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
             );
 
             switch ($result->getResponse()) {
+                case OlderLpaApiResponse::LPA_ALREADY_ADDED:
+                    $lpaAddedData = $result->getData();
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::lpa-already-added',
+                            [
+                                'user'       => $this->user,
+                                'donorName'  => $lpaAddedData->getDonorName(),
+                                'lpaType'    => $lpaAddedData->getCaseSubtype(),
+                                'actorToken' => $lpaAddedData->getLpaActorToken()
+                            ]
+                        )
+                    );
                 case OlderLpaApiResponse::NOT_ELIGIBLE:
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-send-activation-key',
