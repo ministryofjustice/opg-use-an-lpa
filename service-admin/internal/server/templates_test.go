@@ -22,7 +22,12 @@ func testFS() (fs.FS, error) {
 		return nil, err
 	}
 
-	err = afero.WriteFile(fs, "test.page.gohtml", []byte("{{ template \"default\" . }}{{ define \"main\"}}Hello World{{ end }}"), 0644)
+	err = afero.WriteFile(fs, "test.page.gohtml", []byte("{{ template \"default\" . }}{{ define \"main\"}}Hello {{ template \"partial\" . }}{{ end }}"), 0644)
+	if err != nil {
+		return nil, err
+	}
+
+	err = afero.WriteFile(fs, "test.partial.gohtml", []byte("{{ define \"partial\" }}World{{ end }}"), 0644)
 	if err != nil {
 		return nil, err
 	}
