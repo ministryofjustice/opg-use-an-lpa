@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\Lpa;
 
 use ArrayObject;
+use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 
 class OlderLpaApiResponse
@@ -83,6 +84,7 @@ class OlderLpaApiResponse
         $allowedDataTypes = [
             ArrayObject::class,
             LpaAlreadyAddedResponse::class,
+            ActivationKeyExistsResponse::class
         ];
 
         if (in_array(get_class($data), $allowedDataTypes)) {

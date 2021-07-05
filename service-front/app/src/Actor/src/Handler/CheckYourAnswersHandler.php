@@ -167,10 +167,8 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             'actor::already-have-activation-key',
                             [
                                 'user' => $this->user,
-                                'donorName' => $result->getData()['donor_name'],
-                                // TODO to move the name creation to a Twig function as a part of the template.
-                                'donorName' => (implode(' ', array_filter($result->getData()['donor_name']))),
-                                'caseType' => $result->getData()['lpa_type'],
+                                'donorName' => $result->getData()->getDonorName(),
+                                'caseType' => $result->getData()->getCaseSubtype(),
                                 'form' => $form
                             ]
                         )

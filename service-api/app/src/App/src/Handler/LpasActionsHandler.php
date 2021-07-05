@@ -66,8 +66,8 @@ class LpasActionsHandler implements RequestHandlerInterface
                 throw new BadRequestException(
                     'LPA has an activation key already',
                     [
-                        'lpa_type'   => $lpaMatchResponse['lpa_type'],
-                        'donor_name' => $lpaMatchResponse['donor_name']
+                        'donorName'     => $lpaMatchResponse['donor_name'],
+                        'caseSubtype'   => $lpaMatchResponse['lpa_type']
                     ]
                 );
             }

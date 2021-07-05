@@ -8,6 +8,7 @@ use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\Response\Transformer\LpaAlreadyAddedResponseTransformer;
+use Common\Service\Lpa\Response\Transformer\ParseActivationKeyExistsResponse;
 use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
@@ -35,6 +36,8 @@ class AddOlderLpa
     private LoggerInterface $logger;
     /** @var LpaAlreadyAddedResponseTransformer */
     private LpaAlreadyAddedResponseTransformer $lpaAlreadyAddedResponseTransformer;
+    /** @var ParseActivationKeyExistsResponse */
+    private ParseActivationKeyExistsResponse $parseActivationKeyExistsResponse;
 
     /**
      * AddOlderLpa constructor.
@@ -47,11 +50,13 @@ class AddOlderLpa
     public function __construct(
         ApiClient $apiClient,
         LoggerInterface $logger,
-        LpaAlreadyAddedResponseTransformer $lpaAlreadyAddedResponseTransformer
+        LpaAlreadyAddedResponseTransformer $lpaAlreadyAddedResponseTransformer,
+        ParseActivationKeyExistsResponse $parseActivationKeyExistsResponse
     ) {
         $this->apiClient = $apiClient;
         $this->logger = $logger;
         $this->lpaAlreadyAddedResponseTransformer = $lpaAlreadyAddedResponseTransformer;
+        $this->parseActivationKeyExistsResponse = $parseActivationKeyExistsResponse;
     }
 
     public function __invoke(
@@ -143,7 +148,10 @@ class AddOlderLpa
 
             case self::OLDER_LPA_HAS_ACTIVATION_KEY:
                 $code = EventCodes::OLDER_LPA_HAS_ACTIVATION_KEY;
-                $response = new OlderLpaApiResponse(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $additionalData);
+                $response = new OlderLpaApiResponse(
+                    OlderLpaApiResponse::HAS_ACTIVATION_KEY,
+                    ($this->parseActivationKeyExistsResponse)($additionalData)
+                );
                 break;
 
             default:

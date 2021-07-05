@@ -263,11 +263,13 @@ class OlderLpaService
             throw new BadRequestException('LPA details do not match');
         }
 
-        $actorMatch['donor_name'] = [
-            $lpaMatch->getData()['donor']['firstname'],
-            $lpaMatch->getData()['donor']['middlenames'],
-            $lpaMatch->getData()['donor']['surname'],
-        ];
+        $actorMatch['donor_name'] = (implode(' ', array_filter(
+            [
+                $lpaMatch->getData()['donor']['firstname'],
+                $lpaMatch->getData()['donor']['middlenames'],
+                $lpaMatch->getData()['donor']['surname'],
+            ]
+        )));
         $actorMatch['lpa_type'] = $lpaMatch->getData()['caseSubtype'];
 
         return $actorMatch;
