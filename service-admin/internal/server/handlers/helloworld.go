@@ -8,10 +8,10 @@ import (
 
 func HelloHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Ctx(r.Context()).Info().Msg("viewed the hello world page")
+		log.Ctx(r.Context()).Debug().Msg("viewed the hello world page")
 
 		if err := RenderTemplate(w, r.Context(), "helloworld", nil); err != nil {
-			log.Panic().Err(err).Msg("")
+			log.Panic().Err(err).Msg(err.Error())
 		}
 	}
 }
