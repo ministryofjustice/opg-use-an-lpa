@@ -19,7 +19,7 @@
       </dt>
       <dd class="govuk-summary-list__value">
         {{ if .LastLogin }}
-          {{ readableDateTime .LastLogin }}
+          {{ .LastLogin | readableDateTime }}
         {{ else }}
           Never
         {{ end }}

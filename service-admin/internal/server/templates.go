@@ -40,14 +40,7 @@ func WithTemplates(next http.Handler, t *Templates) http.Handler {
 func LoadTemplates(folder fs.FS) *Templates {
 	t := template.New("")
 	t = t.Funcs(template.FuncMap{
-		"readableDateTime": func(date string) string {
-			t, err := time.Parse(time.RFC3339, date)
-			if err != nil {
-				return date
-			}
-
-			return t.Format("2 January 2006 at 3:04PM")
-		},
+		"readableDateTime": readableDateTime,
 	})
 
 	files, err := fs.Glob(folder, "*.page.gohtml")
@@ -81,4 +74,13 @@ func LoadTemplates(folder fs.FS) *Templates {
 	return &Templates{
 		tmpls: tmpls,
 	}
+}
+
+func readableDateTime(date string) string {
+	t, err := time.Parse(time.RFC3339, date)
+	if err != nil {
+		return date
+	}
+
+	return t.Format("2 January 2006 at 3:04PM")
 }
