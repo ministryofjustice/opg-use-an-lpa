@@ -9,11 +9,15 @@ import (
 	"time"
 
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog/pkgerrors"
 )
 
 func main() {
 	port := getEnv("PORT", "9005")
+
+	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 
 	srv := &http.Server{
 		Handler:      server.NewServer(),
@@ -26,7 +30,7 @@ func main() {
 		log.Info().Str("port", port).Msgf("server starting on address %s", srv.Addr)
 
 		if err := srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
-			log.Fatal().AnErr("error", err).Msg("server exited")
+			log.Fatal().Stack().Err(err).Msg("server exited")
 		}
 	}()
 
@@ -44,7 +48,7 @@ func main() {
 	defer cnl()
 
 	if err := srv.Shutdown(tc); err != nil {
-		log.Error().AnErr("error", err).Msg("failed to shutdown server successfully")
+		log.Error().Stack().Err(err).Msg("failed to shutdown server successfully")
 	}
 }
 
