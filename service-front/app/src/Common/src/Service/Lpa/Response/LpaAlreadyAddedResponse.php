@@ -7,13 +7,13 @@ namespace Common\Service\Lpa\Response;
 class LpaAlreadyAddedResponse
 {
     /** @var string */
-    protected $donorName = null;
+    protected $donorName;
 
     /** @var string */
-    protected $caseSubtype = null;
+    protected $caseSubtype;
 
     /** @var string */
-    protected $lpaActorToken = null;
+    protected $lpaActorToken;
 
     public function getDonorName(): ?string
     {

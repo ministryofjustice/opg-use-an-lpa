@@ -10,7 +10,7 @@ use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResponse;
 use Common\Service\Lpa\ParseLpaData;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
-use Common\Service\Lpa\Response\Transformer\LpaAlreadyAddedResponseTransformer;
+use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -36,15 +36,15 @@ class AddLpaTest extends TestCase
     private $parseLpaDataProphecy;
     /** @var \Prophecy\Prophecy\ObjectProphecy|LoggerInterface */
     private $loggerProphecy;
-    /** @var \Prophecy\Prophecy\ObjectProphecy|LpaAlreadyAddedResponseTransformer */
-    private $alreadyAddedTransformerProphecy;
+    /** @var \Prophecy\Prophecy\ObjectProphecy|ParseLpaAlreadyAddedResponse */
+    private $parseAlreadyAddedProphecy;
 
     public function setUp(): void
     {
         $this->apiClientProphecy = $this->prophesize(ApiClient::class);
         $this->parseLpaDataProphecy = $this->prophesize(ParseLpaData::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
-        $this->alreadyAddedTransformerProphecy = $this->prophesize(LpaAlreadyAddedResponseTransformer::class);
+        $this->parseAlreadyAddedProphecy = $this->prophesize(ParseLpaAlreadyAddedResponse::class);
 
         $this->data = [
             'uid' => '700000000321',
@@ -58,7 +58,7 @@ class AddLpaTest extends TestCase
             $this->apiClientProphecy->reveal(),
             $this->loggerProphecy->reveal(),
             $this->parseLpaDataProphecy->reveal(),
-            $this->alreadyAddedTransformerProphecy->reveal()
+            $this->parseAlreadyAddedProphecy->reveal()
         );
 
         $actor = new CaseActor();
@@ -154,7 +154,7 @@ class AddLpaTest extends TestCase
         $dto->setCaseSubtype($response['caseSubtype']);
         $dto->setLpaActorToken($response['lpaActorToken']);
 
-        $this->alreadyAddedTransformerProphecy
+        $this->parseAlreadyAddedProphecy
             ->__invoke($response)
             ->willReturn($dto);
 

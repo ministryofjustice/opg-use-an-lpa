@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Common\Service\Lpa\Response\Transformer;
+namespace Common\Service\Lpa\Response\Parse;
 
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 use Laminas\Stdlib\Exception\InvalidArgumentException;

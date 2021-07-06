@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Common\Service\Lpa;
 
-use Common\Service\Lpa\Response\Transformer\LpaAlreadyAddedResponseTransformer;
+use Common\Service\Lpa\Response\Parse\LpaAlreadyAddedResponseTransformer;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
+use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use Fig\Http\Message\StatusCodeInterface;
 use ArrayObject;
 use Psr\Log\LoggerInterface;
@@ -23,18 +24,18 @@ class AddLpa
     private LoggerInterface $logger;
     private ApiClient $apiClient;
     private ParseLpaData $parseLpaData;
-    private LpaAlreadyAddedResponseTransformer $lpaAlreadyAddedResponseTransformer;
+    private ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse;
 
     public function __construct(
         ApiClient $apiClient,
         LoggerInterface $logger,
         ParseLpaData $parseLpaData,
-        LpaAlreadyAddedResponseTransformer $lpaAlreadyAddedResponseTransformer
+        ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse
     ) {
         $this->apiClient = $apiClient;
         $this->logger = $logger;
         $this->parseLpaData = $parseLpaData;
-        $this->lpaAlreadyAddedResponseTransformer = $lpaAlreadyAddedResponseTransformer;
+        $this->parseLpaAlreadyAddedResponse = $parseLpaAlreadyAddedResponse;
     }
 
     public function validate(
@@ -139,7 +140,7 @@ class AddLpa
                 $code = EventCodes::ADD_LPA_ALREADY_ADDED;
                 $response = new AddLpaApiResponse(
                     AddLpaApiResponse::ADD_LPA_ALREADY_ADDED,
-                    ($this->lpaAlreadyAddedResponseTransformer)($additionalData)
+                    ($this->parseLpaAlreadyAddedResponse)($additionalData)
                 );
                 break;
 

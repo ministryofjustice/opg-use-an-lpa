@@ -7,8 +7,8 @@ namespace Common\Service\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
-use Common\Service\Lpa\Response\Transformer\LpaAlreadyAddedResponseTransformer;
-use Common\Service\Lpa\Response\Transformer\ParseActivationKeyExistsResponse;
+use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
+use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
@@ -34,8 +34,8 @@ class AddOlderLpa
     private ApiClient $apiClient;
     /** @var LoggerInterface */
     private LoggerInterface $logger;
-    /** @var LpaAlreadyAddedResponseTransformer */
-    private LpaAlreadyAddedResponseTransformer $lpaAlreadyAddedResponseTransformer;
+    /** @var ParseLpaAlreadyAddedResponse */
+    private ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse;
     /** @var ParseActivationKeyExistsResponse */
     private ParseActivationKeyExistsResponse $parseActivationKeyExistsResponse;
 
@@ -50,12 +50,12 @@ class AddOlderLpa
     public function __construct(
         ApiClient $apiClient,
         LoggerInterface $logger,
-        LpaAlreadyAddedResponseTransformer $lpaAlreadyAddedResponseTransformer,
+        ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse,
         ParseActivationKeyExistsResponse $parseActivationKeyExistsResponse
     ) {
         $this->apiClient = $apiClient;
         $this->logger = $logger;
-        $this->lpaAlreadyAddedResponseTransformer = $lpaAlreadyAddedResponseTransformer;
+        $this->parseLpaAlreadyAddedResponse = $parseLpaAlreadyAddedResponse;
         $this->parseActivationKeyExistsResponse = $parseActivationKeyExistsResponse;
     }
 
@@ -132,7 +132,7 @@ class AddOlderLpa
                 $code = EventCodes::OLDER_LPA_ALREADY_ADDED;
                 $response = new OlderLpaApiResponse(
                     OlderLpaApiResponse::LPA_ALREADY_ADDED,
-                    ($this->lpaAlreadyAddedResponseTransformer)($additionalData)
+                    ($this->parseLpaAlreadyAddedResponse)($additionalData)
                 );
                 break;
 

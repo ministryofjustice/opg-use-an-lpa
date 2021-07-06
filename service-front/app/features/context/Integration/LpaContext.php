@@ -14,6 +14,9 @@ use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Lpa\RemoveLpa;
+use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
+use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTime;
 use Exception;
@@ -26,7 +29,7 @@ use JSHayes\FakeRequests\MockHandler;
  *
  * Account creation, login, password reset etc.
  *
- * @property string lpa
+ * @property array lpa
  * @property string lpaJson
  * @property string lpaData
  * @property string passcode
@@ -1380,6 +1383,17 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
     {
+        $keyExistsData = [
+            'donorName' => (implode(' ', array_filter(
+                [
+                    $this->userFirstname,
+                    $this->userMiddlenames,
+                    $this->userSurname
+                ]
+            ))),
+            'caseSubtype' => 'hw'
+        ];
+
         // API call for requesting activation code
         $this->apiFixtures->patch('/v1/lpas/request-letter')
             ->respondWith(
@@ -1390,14 +1404,7 @@ class LpaContext extends BaseIntegrationContext
                         [
                             'title'     => 'Bad Request',
                             'details'   => 'LPA has an activation key already',
-                            'data'      => [
-                                'donor_name' => [
-                                    $this->userFirstname,
-                                    $this->userMiddlenames,
-                                    $this->userSurname
-                                ],
-                                'lpa_type' => ' '
-                            ],
+                            'data'      => $keyExistsData
                         ]
                     )
                 )
@@ -1405,38 +1412,128 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        $data = [
-            'identity'              =>  $this->userIdentity,
-            'reference_number'      =>  intval($this->referenceNo),
-            'first_names'           =>  $this->userFirstname,
-            'last_name'             =>  $this->userSurname,
-            'dob'                   =>  DateTime::createFromFormat('Y-m-d', $this->userDob),
-            'postcode'              =>  $this->userPostCode,
-            'force_activation_key'  => false
-        ];
-
         $result = $addOlderLpa(
-            $data['identity'],
-            intval($data['reference_number']),
-            $data['first_names'],
-            $data['last_name'],
-            $data['dob'],
-            $data['postcode'],
-            $data['force_activation_key']
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+            false
         );
+
+        $parseKeyExistsResponse = $this->container->get(ParseActivationKeyExistsResponse::class);
 
         $response = new OlderLpaApiResponse(
             OlderLpaApiResponse::HAS_ACTIVATION_KEY,
-            [
-                'donor_name' => [
-                    $this->userFirstname,
-                    $this->userMiddlenames,
-                    $this->userSurname
-                ],
-                'lpa_type' => ' ',
-            ]
+            ($parseKeyExistsResponse)($keyExistsData)
         );
 
         assertEquals($response, $result);
+    }
+
+    /**
+     * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
+     */
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
+    {
+        $alreadyAddedData = [
+            'donorName'     => (implode(' ', array_filter(
+                [
+                    $this->userFirstname,
+                    $this->userMiddlenames,
+                    $this->userSurname
+                ]
+            ))),
+            'caseSubtype'   => 'hw',
+            'lpaActorToken' => $this->actorLpaToken
+        ];
+
+        // API call for requesting activation code
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title'     => 'Bad Request',
+                            'details'   => 'LPA already added',
+                            'data'      => $alreadyAddedData
+                        ]
+                    )
+                )
+            );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        $result = $addOlderLpa(
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+            false
+        );
+
+        $parseAlreadyAddedResponse = $this->container->get(ParseLpaAlreadyAddedResponse::class);
+
+        $response = new OlderLpaApiResponse(
+            OlderLpaApiResponse::LPA_ALREADY_ADDED,
+            ($parseAlreadyAddedResponse)($alreadyAddedData)
+        );
+
+        assertEquals($response, $result);
+    }
+
+    /**
+     * @Then /^I should be told that I have already added this LPA$/
+     */
+    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I attempt to add the same LPA again$/
+     */
+    public function iAttemptToAddTheSameLPAAgain()
+    {
+        // API call for checking add LPA data
+        $this->apiFixtures->post('/v1/add-lpa/validate')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Bad Request',
+                            'details' => 'LPA already added',
+                            'data' => [
+                                'donorName'     => 'Some person',
+                                'caseSubtype'   => $this->lpa['caseSubtype'],
+                                'lpaActorToken' => $this->actorLpaToken
+                            ],
+                        ]
+                    )
+                )
+            );
+
+        $addLpa = $this->container->get(AddLpa::class);
+        $alreadyAddedDTO = new LpaAlreadyAddedResponse();
+        $alreadyAddedDTO->setDonorName('Some person');
+        $alreadyAddedDTO->setCaseSubtype($this->lpa['caseSubtype']);
+        $alreadyAddedDTO->setLpaActorToken($this->actorLpaToken);
+
+        $response = $addLpa->validate(
+            $this->userIdentity,
+            $this->passcode,
+            $this->referenceNo,
+            $this->userDob
+        );
+
+        assertEquals(AddLpaApiResponse::ADD_LPA_ALREADY_ADDED, $response->getResponse());
+        assertEquals($alreadyAddedDTO, $response->getData());
     }
 }

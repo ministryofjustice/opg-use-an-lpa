@@ -69,6 +69,39 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
+     */
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
+    {
+        $this->fillAndSubmitOlderLpaForm();
+
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Bad request',
+                            'details' => 'LPA already added',
+                            'data' => [
+                                'donorName'     => (implode(' ', array_filter(
+                                    [
+                                        $this->lpa->donor->firstname,
+                                        $this->lpa->donor->middlenames,
+                                        $this->lpa->donor->surname
+                                    ]
+                                ))),
+                                'caseSubtype'   => $this->lpa->caseSubtype,
+                                'lpaActorToken' => $this->userLpaActorToken
+                            ],
+                        ]
+                    )
+                )
+            );
+    }
+
+    /**
      * @When /^I request to remove an LPA from my account without the lpa actor token$/
      */
     public function iRequestToRemoveAnLPAFromMyAccountWithoutTheLpaActorToken()
@@ -1663,12 +1696,14 @@ class LpaContext implements Context
                                 'title' => 'Bad request',
                                 'details' => 'LPA has an activation key already',
                                 'data' => [
-                                    'donor_name' => [
-                                        ($this->lpaData['lpa'])->donor->firstname,
-                                        ($this->lpaData['lpa'])->donor->middlenames,
-                                        ($this->lpaData['lpa'])->donor->surname
-                                    ],
-                                    'lpa_type'   => $this->lpaData['lpa']->caseSubtype
+                                    'donorName'     => (implode(' ', array_filter(
+                                        [
+                                            $this->lpa->donor->firstname,
+                                            $this->lpa->donor->middlenames,
+                                            $this->lpa->donor->surname,
+                                        ]
+                                    ))),
+                                    'caseSubtype'   => $this->lpa->caseSubtype
                                 ],
                             ]
                         )
