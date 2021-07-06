@@ -588,7 +588,7 @@ orbs:
         resource_class: small
       terraform:
         docker:
-          - image: hashicorp/terraform:0.15.4
+          - image: hashicorp/terraform:1.0.1
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
@@ -1051,11 +1051,11 @@ orbs:
                 mkdir -p build/service-admin
                 cd service-admin/
                 go test -race -coverpkg ./... -coverprofile=../build/service-admin/coverage.out -covermode=atomic ./...
-          - persist_to_workspace:
-              root: build
-              paths:
-                - service-admin/
-              when: always
+          # - persist_to_workspace:
+          #     root: build
+          #     paths:
+          #       - service-admin/
+          #     when: always
 
       docker_build_admin:
         #
@@ -1464,7 +1464,7 @@ jobs:
 
   workspace_cleanup:
     docker:
-      - image: hashicorp/terraform:0.15.4
+      - image: hashicorp/terraform:1.0.1
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
