@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Common\Service\Lpa;
 
-use ArrayObject;
 use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 
@@ -77,18 +76,19 @@ class OlderLpaApiResponse
 
     private function validateDataType($data): bool
     {
+        $allowedDataTypes = [
+            ActivationKeyExistsResponse::class,
+            LpaAlreadyAddedResponse::class,
+        ];
+
         if (is_array($data)) {
             return true;
         }
 
-        $allowedDataTypes = [
-            ArrayObject::class,
-            LpaAlreadyAddedResponse::class,
-            ActivationKeyExistsResponse::class
-        ];
-
-        if (in_array(get_class($data), $allowedDataTypes)) {
-            return true;
+        if (is_object($data)) {
+            if (in_array(get_class($data), $allowedDataTypes)) {
+                return true;
+            }
         }
 
         return false;

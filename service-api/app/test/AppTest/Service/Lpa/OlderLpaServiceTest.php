@@ -89,6 +89,31 @@ class OlderLpaServiceTest extends TestCase
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid);
     }
 
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function checks_if_lpa_already_added_and_throws_exception_if_yes()
+    {
+        $expectedException = new BadRequestException(
+            'Lpa already added',
+            [
+                'donorName'     => 'Some Person',
+                'caseSubtype'   => 'hw',
+                'lpaActorToken' => 'qwerty-54321'
+            ]
+        );
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willThrow($expectedException);
+
+        $this->expectExceptionObject($expectedException);
+
+        $service = $this->getOlderLpaService();
+        $service->checkIfLpaAlreadyAdded($this->userId, $this->lpaUid);
+    }
+
     /** @test */
     public function request_access_code_letter_api_call_fails(): void
     {

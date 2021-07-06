@@ -199,7 +199,7 @@ class OlderLpaService
     {
         if (null !== $lpaAddedData = ($this->lpaAlreadyAdded)($userId, $lpaId)) {
             $this->logger->notice(
-                'User {id} attempted to add an LPA {uId} which already exists in their account',
+                'User {id} attempted to request a key for the LPA {uId} which already exists in their account',
                 [
                     'id' => $userId,
                     'uId' => $lpaId,
