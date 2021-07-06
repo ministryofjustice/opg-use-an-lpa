@@ -1975,6 +1975,11 @@ class LpaContext implements Context
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
@@ -2048,6 +2053,11 @@ class LpaContext implements Context
      */
     public function iProvideDetailsOfAnLPAThatDoesNotExist()
     {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
@@ -2081,6 +2091,11 @@ class LpaContext implements Context
      */
     public function iProvideDetailsThatDoNotMatchThePaperDocument($firstnames, $lastname, $postcode, $dob)
     {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
@@ -2123,6 +2138,11 @@ class LpaContext implements Context
     public function iProvideDetailsFromAnLPARegisteredBeforeSept2019()
     {
         $this->lpa->registrationDate = '2019-08-31';
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
 
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
@@ -2167,6 +2187,11 @@ class LpaContext implements Context
     {
         $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
 
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
@@ -2199,8 +2224,8 @@ class LpaContext implements Context
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA has an activation key already');
-        $this->ui->assertSession()->responseContains('donor_name');
-        $this->ui->assertSession()->responseContains('lpa_type');
+        $this->ui->assertSession()->responseContains('donorName');
+        $this->ui->assertSession()->responseContains('caseSubtype');
     }
 
     /**
@@ -2380,6 +2405,11 @@ class LpaContext implements Context
      */
     public function iRequestForANewActivationKeyAgain()
     {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(

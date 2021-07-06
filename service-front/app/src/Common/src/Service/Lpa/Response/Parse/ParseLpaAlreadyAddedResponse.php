@@ -7,7 +7,7 @@ namespace Common\Service\Lpa\Response\Transformer;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 use Laminas\Stdlib\Exception\InvalidArgumentException;
 
-class LpaAlreadyAddedResponseTransformer
+class ParseLpaAlreadyAddedResponse
 {
     public function __invoke(array $data): LpaAlreadyAddedResponse
     {

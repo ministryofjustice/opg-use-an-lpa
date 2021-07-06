@@ -254,8 +254,8 @@ class OlderLpaService
             throw new BadRequestException('LPA details do not match');
         }
 
-        $actorMatch['lpa_type'] = $lpa['caseSubtype'];
-        $actorMatch['donor_name'] = (implode(' ', array_filter(
+        $actorMatch['caseSubtype'] = $lpa['caseSubtype'];
+        $actorMatch['donorName'] = (implode(' ', array_filter(
             [
                 $lpa['donor']['firstname'],
                 $lpa['donor']['middlenames'],

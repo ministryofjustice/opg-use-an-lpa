@@ -1165,6 +1165,11 @@ class LpaContext extends BaseIntegrationContext
             'last_name' => $this->userSurname,
         ];
 
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/' . $this->lpaUid,
@@ -1173,7 +1178,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
+            $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA not eligible due to registration date', $ex->getMessage());
@@ -1198,6 +1203,11 @@ class LpaContext extends BaseIntegrationContext
             'last_name' => $this->userSurname,
         ];
 
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/' . $invalidLpaId,
@@ -1206,7 +1216,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
+            $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
         } catch (NotFoundException $ex) {
             assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
             assertEquals('LPA not found', $ex->getMessage());
@@ -1229,6 +1239,11 @@ class LpaContext extends BaseIntegrationContext
             'last_name' => $lastname,
         ];
 
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/' . $this->lpaUid,
@@ -1237,7 +1252,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
+            $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA details do not match', $ex->getMessage());
@@ -1260,6 +1275,11 @@ class LpaContext extends BaseIntegrationContext
             'last_name'         => $this->userSurname,
         ];
 
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         // LpaRepository::get
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
@@ -1271,7 +1291,7 @@ class LpaContext extends BaseIntegrationContext
         $codeExists = new stdClass();
         $codeExists->Created = null;
 
-        $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
+        $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
 
         assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
         assertEquals($lpaMatchResponse['actor-id'], $this->actorLpaId);
@@ -1307,6 +1327,11 @@ class LpaContext extends BaseIntegrationContext
             'force_activation_key'  => false
         ];
 
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/' . $this->lpaUid,
@@ -1318,7 +1343,7 @@ class LpaContext extends BaseIntegrationContext
         $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
         $codeExists->Created = $createdDate;
 
-        $result = $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
+        $result = $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
 
         $this->pactPostInteraction(
             $this->codesApiPactProvider,
@@ -1461,7 +1486,7 @@ class LpaContext extends BaseIntegrationContext
                 )
             );
 
-        $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
+        $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, $this->userId);
 
         if ($status == "Revoked") {
             assertEmpty($lpaData);
@@ -1890,6 +1915,11 @@ class LpaContext extends BaseIntegrationContext
             'force_activation_key'  => true
         ];
 
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/' . $this->lpaUid,
@@ -1897,7 +1927,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $result = $this->olderLpaService->checkLPAMatchAndGetActorDetails($data);
+        $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
     }
 
     /**
