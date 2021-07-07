@@ -41,7 +41,7 @@ class OlderLpaApiResponse
     }
 
     /**
-     * @return mixed
+     * @return array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse
      */
     public function getData()
     {
