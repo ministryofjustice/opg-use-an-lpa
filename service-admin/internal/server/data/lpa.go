@@ -24,7 +24,7 @@ var ErrUserLpaActorMapNotFound = errors.New("userlpaactormap not found")
 
 func GetLpasByUserID(db dynamodbiface.DynamoDBAPI, uid string) (lpas []*LPA, err error) {
 	result, err := db.Query(&dynamodb.QueryInput{
-		TableName: aws.String(UserLpaActorTableName),
+		TableName: aws.String(prefixedTableName(UserLpaActorTableName)),
 		IndexName: aws.String(UserLpaActorUserIndexName),
 		KeyConditions: map[string]*dynamodb.Condition{
 			"UserId": {

@@ -29,7 +29,7 @@ var ErrActorUserNotFound = errors.New("actoruser not found")
 
 func GetActorUserByEmail(db dynamodbiface.DynamoDBAPI, email string) (aa *ActorUser, err error) {
 	result, err := db.Query(&dynamodb.QueryInput{
-		TableName: aws.String(ActorTableName),
+		TableName: aws.String(prefixedTableName(ActorTableName)),
 		IndexName: aws.String(ActorTableEmailIndexName),
 		KeyConditions: map[string]*dynamodb.Condition{
 			"Email": {

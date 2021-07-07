@@ -10,7 +10,13 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+var tablePrefix string
+
 func NewDynamoConnection() dynamodbiface.DynamoDBAPI {
+	if tp := os.Getenv("DYNAMODB_TABLE_PREFIX"); tp != "" {
+		tablePrefix = tp + "-"
+	}
+
 	reg := os.Getenv("AWS_REGION")
 	if reg == "" {
 		reg = "eu-west-1"
@@ -30,4 +36,8 @@ func NewDynamoConnection() dynamodbiface.DynamoDBAPI {
 	svc := dynamodb.New(session)
 
 	return dynamodbiface.DynamoDBAPI(svc)
+}
+
+func prefixedTableName(name string) string {
+	return tablePrefix + name
 }
