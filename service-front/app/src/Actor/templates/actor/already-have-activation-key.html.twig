@@ -21,7 +21,7 @@
                                 {% trans %}Donor name{% endtrans %}
                             </dt>
                             <dd class="govuk-body govuk-summary-list__value">
-                                {{ donor_name }}
+                                {{ actor_name(donor) }}
                             </dd>
                         </div>
                         <div class="govuk-summary-list__row">
@@ -29,7 +29,7 @@
                                 {% trans %}LPA type{% endtrans %}
                             </dt>
                             <dd class="govuk-body govuk-summary-list__value">
-                                {% if lpa_type|lower == "pfa" %}
+                                {% if lpaType|lower == "pfa" %}
                                     {% trans %}Property and finance{% endtrans %}
                                 {% else %}
                                     {% trans %}Health and welfare{% endtrans %}

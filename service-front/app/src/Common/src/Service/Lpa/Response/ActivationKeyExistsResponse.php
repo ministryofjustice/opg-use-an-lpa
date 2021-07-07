@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Common\Service\Lpa\Response;
 
+use Common\Entity\CaseActor;
+
 class ActivationKeyExistsResponse
 {
-    /** @var string */
-    protected $donorName = null;
+    protected CaseActor $donor;
 
-    /** @var string */
-    protected $caseSubtype = null;
+    protected string $caseSubtype;
 
-    public function getDonorName(): ?string
+    public function getDonor(): ?CaseActor
     {
-        return $this->donorName;
+        return $this->donor;
     }
 
     public function getCaseSubtype(): ?string
@@ -22,9 +22,9 @@ class ActivationKeyExistsResponse
         return $this->caseSubtype;
     }
 
-    public function setDonorName(string $donorName): void
+    public function setDonor(CaseActor $donor): void
     {
-        $this->donorName = $donorName;
+        $this->donor = $donor;
     }
 
     public function setCaseSubtype(string $caseSubtype): void

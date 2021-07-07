@@ -159,7 +159,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         'actor::lpa-already-added',
                         [
                             'user'       => $this->user,
-                            'donorName'  => $lpaAddedData->getDonorName(),
+                            'donor'      => $lpaAddedData->getDonor(),
                             'lpaType'    => $lpaAddedData->getCaseSubtype(),
                             'actorToken' => $lpaAddedData->getLpaActorToken()
                         ]

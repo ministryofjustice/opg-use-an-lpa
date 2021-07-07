@@ -17,18 +17,15 @@ class AddLpa
 {
     private LoggerInterface $logger;
     private ActorCodeService $actorCodeService;
-    private LpaService $lpaService;
     private LpaAlreadyAdded $lpaAlreadyAdded;
 
     public function __construct(
         LoggerInterface $logger,
         ActorCodeService $actorCodeService,
-        LpaService $lpaService,
         LpaAlreadyAdded $lpaAlreadyAdded
     ) {
         $this->logger = $logger;
         $this->actorCodeService = $actorCodeService;
-        $this->lpaService = $lpaService;
         $this->lpaAlreadyAdded = $lpaAlreadyAdded;
     }
 

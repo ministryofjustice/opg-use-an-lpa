@@ -255,13 +255,12 @@ class OlderLpaService
         }
 
         $actorMatch['caseSubtype'] = $lpa['caseSubtype'];
-        $actorMatch['donorName'] = (implode(' ', array_filter(
-            [
-                $lpa['donor']['firstname'],
-                $lpa['donor']['middlenames'],
-                $lpa['donor']['surname'],
-            ]
-        )));
+        $actorMatch['donor'] = [
+            'uId'           => $lpa['donor']['uId'],
+            'firstname'     => $lpa['donor']['firstname'],
+            'middlenames'   => $lpa['donor']['middlenames'],
+            'surname'       => $lpa['donor']['surname'],
+        ];
 
         return $actorMatch;
     }

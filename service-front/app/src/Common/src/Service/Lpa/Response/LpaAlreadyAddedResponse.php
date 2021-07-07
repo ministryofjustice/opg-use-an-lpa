@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Common\Service\Lpa\Response;
 
+use Common\Entity\CaseActor;
+
 class LpaAlreadyAddedResponse
 {
-    /** @var string */
-    protected $donorName;
+    protected CaseActor $donor;
+    protected string $caseSubtype;
+    protected string $lpaActorToken;
 
-    /** @var string */
-    protected $caseSubtype;
-
-    /** @var string */
-    protected $lpaActorToken;
-
-    public function getDonorName(): ?string
+    public function getDonor(): ?CaseActor
     {
-        return $this->donorName;
+        return $this->donor;
     }
 
     public function getCaseSubtype(): ?string
@@ -30,9 +27,9 @@ class LpaAlreadyAddedResponse
         return $this->lpaActorToken;
     }
 
-    public function setDonorName(string $donorName): void
+    public function setDonor(CaseActor $donor): void
     {
-        $this->donorName = $donorName;
+        $this->donor = $donor;
     }
 
     public function setCaseSubtype(string $caseSubtype): void

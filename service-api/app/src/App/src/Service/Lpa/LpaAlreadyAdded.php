@@ -46,13 +46,12 @@ class LpaAlreadyAdded
                     ]
                 );
                 return [
-                    'donorName'     => (implode(' ', array_filter(
-                        [
-                            $lpaData['lpa']['donor']['firstname'],
-                            $lpaData['lpa']['donor']['middlenames'],
-                            $lpaData['lpa']['donor']['surname'],
-                        ]
-                    ))),
+                    'donor'         => [
+                        'uId'           => $lpaData['lpa']['donor']['uId'],
+                        'firstname'     => $lpaData['lpa']['donor']['firstname'],
+                        'middlenames'   => $lpaData['lpa']['donor']['middlenames'],
+                        'surname'       => $lpaData['lpa']['donor']['surname'],
+                    ],
                     'caseSubtype'   => $lpaData['lpa']['caseSubtype'],
                     'lpaActorToken' => $userLpaActorToken
                 ];

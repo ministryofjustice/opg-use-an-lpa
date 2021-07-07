@@ -145,8 +145,8 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             'actor::lpa-already-added',
                             [
                                 'user'          => $this->user,
-                                'donorName'     => $lpaAddedData->getDonorName(),
-                                'caseSubtype'   => $lpaAddedData->getCaseSubtype(),
+                                'donor'         => $lpaAddedData->getDonor(),
+                                'lpaType'       => $lpaAddedData->getCaseSubtype(),
                                 'actorToken'    => $lpaAddedData->getLpaActorToken()
                             ]
                         )
@@ -166,10 +166,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         $this->renderer->render(
                             'actor::already-have-activation-key',
                             [
-                                'user' => $this->user,
-                                'donorName' => $result->getData()->getDonorName(),
-                                'caseSubtype' => $result->getData()->getCaseSubtype(),
-                                'form' => $form
+                                'user'      => $this->user,
+                                'donor'     => $result->getData()->getDonor(),
+                                'lpaType'   => $result->getData()->getCaseSubtype(),
+                                'form'      => $form
                             ]
                         )
                     );
