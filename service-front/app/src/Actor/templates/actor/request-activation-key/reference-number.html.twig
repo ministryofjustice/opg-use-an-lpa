@@ -1,0 +1,44 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Ask for an activation key{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.add') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}LPA reference number{% endtrans %}</h1>
+
+                    {{ govuk_error_summary(form) }}
+
+                    {{ govuk_form_open(form) }}
+
+                        {{ govuk_form_element(form.get('__csrf')) }}
+
+                        {{ govuk_form_element(form.get('opg_reference_number'), {
+                            'hint': 'LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000'| trans,
+                            'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-!-font-weight-bold govuk-!-margin-bottom-4'},
+                            'inputmode': 'numeric',
+                            'pattern': '[0-9 -]*'
+                        }) }}
+
+                        <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+
+                    {{ govuk_form_close() }}
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}

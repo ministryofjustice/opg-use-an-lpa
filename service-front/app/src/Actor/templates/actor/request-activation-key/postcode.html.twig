@@ -1,0 +1,43 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Ask for an activation key{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.date-of-birth') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}Postcode{% endtrans %}</h1>
+
+                    {{ govuk_error_summary(form) }}
+
+                    {{ govuk_form_open(form) }}
+
+                        {{ govuk_form_element(form.get('__csrf')) }}
+
+                        {{ govuk_form_element(form.get('postcode'), {
+                            'hint': 'This must be your current postcode and match the one we have on our records. The activation key will be posted to this address. <a href="/lpa/change-details">Let us know if you have moved.</a>'| trans,
+                            'label_attr': {'class': 'govuk-!-font-weight-bold'},
+                            'attr' : {'class': 'govuk-input--width-10', 'label_class': 'govuk-!-font-weight-bold'}
+                        }) }}
+
+                        <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+
+                    {{ govuk_form_close() }}
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}

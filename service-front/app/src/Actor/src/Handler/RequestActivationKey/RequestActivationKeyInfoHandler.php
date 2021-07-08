@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler;
+namespace Actor\Handler\RequestActivationKey;
 
 use Common\Handler\{AbstractHandler, UserAware};
 use Common\Handler\Traits\User;
@@ -15,7 +15,7 @@ use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
  * Class RequestActivationKeyInfoHandler
- * @package Actor\Handler
+ * @package Actor\Handler\RequestActivationKey
  * @codeCoverageIgnore
  */
 class RequestActivationKeyInfoHandler extends AbstractHandler implements UserAware
@@ -42,7 +42,7 @@ class RequestActivationKeyInfoHandler extends AbstractHandler implements UserAwa
     {
         $user = $this->getUser($request);
 
-        return new HtmlResponse($this->renderer->render('actor::request-activation-key-info', [
+        return new HtmlResponse($this->renderer->render('actor::request-activation-key/info', [
             'user' => $user,
         ]));
     }
