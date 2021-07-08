@@ -2,7 +2,9 @@
 
 namespace CommonTest\Service\Lpa;
 
+use Common\Entity\CaseActor;
 use Common\Service\Lpa\AddLpaApiResponse;
+use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -37,8 +39,14 @@ class AddLpaApiResponseTest extends TestCase
      */
     private function createAlreadyAddedDTO()
     {
+        $donor = new CaseActor();
+        $donor->setUId('12345');
+        $donor->setFirstname('Example');
+        $donor->setMiddlenames('Donor');
+        $donor->setSurname('Person');
+
         $dto = new LpaAlreadyAddedResponse();
-        $dto->setDonorName('Donor Person');
+        $dto->setDonor($donor);
         $dto->setCaseSubtype('hw');
         $dto->setLpaActorToken('abc');
         return $dto;

@@ -217,14 +217,20 @@ class LpaContext implements Context
             ]
         );
 
+        $expectedResponse = [
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname,
+            ],
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'lpaActorToken' => $this->userLpaActorToken
+        ];
+
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-        $this->ui->assertSession()->responseContains('Lpa already added');
-        $this->ui->assertSession()->responseContains('donorName');
-        $this->ui->assertSession()->responseContains('caseSubtype');
-        $this->ui->assertSession()->responseContains('lpaActorToken');
-        $this->ui->assertSession()->responseContains('Ian Deputy Deputy');
-        $this->ui->assertSession()->responseContains('hw');
-        $this->ui->assertSession()->responseContains($this->userLpaActorToken);
+        $this->ui->assertSession()->responseContains('LPA already added');
+        assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
     /**
@@ -2222,10 +2228,19 @@ class LpaContext implements Context
             ]
         );
 
+        $expectedResponse = [
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname,
+            ],
+            'caseSubtype' => $this->lpa->caseSubtype,
+        ];
+
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA has an activation key already');
-        $this->ui->assertSession()->responseContains('donorName');
-        $this->ui->assertSession()->responseContains('caseSubtype');
+        assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
     /**
@@ -2454,5 +2469,71 @@ class LpaContext implements Context
     public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
+     */
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
+    {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorId,
+                                'UserId' => $this->userId,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/lpas/request-letter',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
+                'force_activation_key' => false
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $expectedResponse = [
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname,
+            ],
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'lpaActorToken' => $this->userLpaActorToken
+        ];
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->ui->assertSession()->responseContains('LPA already added');
+        assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 }

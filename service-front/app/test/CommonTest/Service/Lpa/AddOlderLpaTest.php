@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use Common\Entity\CaseActor;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Lpa\AddOlderLpa;
@@ -184,9 +185,14 @@ class AddOlderLpaTest extends TestCase
      */
     public function it_will_let_know_user_LPA_has_an_active_activation_key(): void
     {
-        $responseData = [
-            'caseSubtype'  => 'pfa',
-            'donorName'    => 'Donor Person'
+        $response = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => 'hw',
         ];
 
         $this->apiClientProphecy
@@ -205,16 +211,22 @@ class AddOlderLpaTest extends TestCase
                     'LPA has an activation key already',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
                     null,
-                    $responseData
+                    $response
                 )
             );
 
+        $donor = new CaseActor();
+        $donor->setUId($response['donor']['uId']);
+        $donor->setFirstname($response['donor']['firstname']);
+        $donor->setMiddlenames($response['donor']['middlenames']);
+        $donor->setSurname($response['donor']['surname']);
+
         $dto = new ActivationKeyExistsResponse();
-        $dto->setDonorName($responseData['donorName']);
-        $dto->setCaseSubtype($responseData['caseSubtype']);
+        $dto->setDonor($donor);
+        $dto->setCaseSubtype($response['caseSubtype']);
 
         $this->parseKeyExistsProphecy
-            ->__invoke($responseData)
+            ->__invoke($response)
             ->willReturn($dto);
 
         $result = ($this->sut)(
@@ -238,10 +250,15 @@ class AddOlderLpaTest extends TestCase
      */
     public function it_will_fail_if_they_have_already_added_the_LPA(): void
     {
-        $responseData = [
-            'caseSubtype'   => 'pfa',
-            'donorName'     => 'Donor Person',
-            'lpaActorToken' => 'wqxyz-54321'
+        $response = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => 'hw',
+            'lpaActorToken' => 'wxyz-4321'
         ];
 
         $this->apiClientProphecy
@@ -260,17 +277,23 @@ class AddOlderLpaTest extends TestCase
                     'LPA already added',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
                     null,
-                    $responseData
+                    $response
                 )
             );
 
+        $donor = new CaseActor();
+        $donor->setUId($response['donor']['uId']);
+        $donor->setFirstname($response['donor']['firstname']);
+        $donor->setMiddlenames($response['donor']['middlenames']);
+        $donor->setSurname($response['donor']['surname']);
+
         $dto = new LpaAlreadyAddedResponse();
-        $dto->setDonorName($responseData['donorName']);
-        $dto->setCaseSubtype($responseData['caseSubtype']);
-        $dto->setLpaActorToken($responseData['lpaActorToken']);
+        $dto->setDonor($donor);
+        $dto->setCaseSubtype($response['caseSubtype']);
+        $dto->setLpaActorToken($response['lpaActorToken']);
 
         $this->parseAlreadyAddedProphecy
-            ->__invoke($responseData)
+            ->__invoke($response)
             ->willReturn($dto);
 
         $result = ($this->sut)(

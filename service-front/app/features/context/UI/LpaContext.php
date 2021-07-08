@@ -85,14 +85,13 @@ class LpaContext implements Context
                             'title' => 'Bad request',
                             'details' => 'LPA already added',
                             'data' => [
-                                'donorName'     => (implode(' ', array_filter(
-                                    [
-                                        $this->lpa->donor->firstname,
-                                        $this->lpa->donor->middlenames,
-                                        $this->lpa->donor->surname
-                                    ]
-                                ))),
-                                'caseSubtype'   => $this->lpa->caseSubtype,
+                                'donor'         => [
+                                    'uId'           => $this->lpa->donor->uId,
+                                    'firstname'     => $this->lpa->donor->firstname,
+                                    'middlenames'   => $this->lpa->donor->middlenames,
+                                    'surname'       => $this->lpa->donor->surname,
+                                ],
+                                'caseSubtype' => $this->lpa->caseSubtype,
                                 'lpaActorToken' => $this->userLpaActorToken
                             ],
                         ]
@@ -520,8 +519,13 @@ class LpaContext implements Context
                             'title' => 'Bad Request',
                             'details' => 'LPA already added',
                             'data' => [
-                                'donorName'     => 'Some person',
-                                'caseSubtype'   => $this->lpa->caseSubtype,
+                                'donor'         => [
+                                    'uId'           => $this->lpa->donor->uId,
+                                    'firstname'     => $this->lpa->donor->firstname,
+                                    'middlenames'   => $this->lpa->donor->middlenames,
+                                    'surname'       => $this->lpa->donor->surname,
+                                ],
+                                'caseSubtype' => $this->lpa->caseSubtype,
                                 'lpaActorToken' => $this->userLpaActorToken
                             ],
                         ]
@@ -1696,14 +1700,14 @@ class LpaContext implements Context
                                 'title' => 'Bad request',
                                 'details' => 'LPA has an activation key already',
                                 'data' => [
-                                    'donorName'     => (implode(' ', array_filter(
-                                        [
-                                            $this->lpa->donor->firstname,
-                                            $this->lpa->donor->middlenames,
-                                            $this->lpa->donor->surname,
-                                        ]
-                                    ))),
-                                    'caseSubtype'   => $this->lpa->caseSubtype
+                                    'donor'         => [
+                                        'uId'           => $this->lpa->donor->uId,
+                                        'firstname'     => $this->lpa->donor->firstname,
+                                        'middlenames'   => $this->lpa->donor->middlenames,
+                                        'surname'       => $this->lpa->donor->surname,
+                                    ],
+                                    'caseSubtype' => $this->lpa->caseSubtype,
+                                    'lpaActorToken' => $this->userLpaActorToken
                                 ],
                             ]
                         )

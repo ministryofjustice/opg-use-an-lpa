@@ -179,6 +179,17 @@ class LpaContext extends BaseIntegrationContext
 
         $addLpaService = $this->container->get(AddLpa::class);
 
+        $expectedResponse = [
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname,
+            ],
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'lpaActorToken' => $this->userLpaActorToken
+        ];
+
         try {
             $addLpaService->validateAddLpaData(
                 [
@@ -191,12 +202,7 @@ class LpaContext extends BaseIntegrationContext
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA already added', $ex->getMessage());
-            assertArrayHasKey('donorName', $ex->getAdditionalData());
-            assertArrayHasKey('caseSubtype', $ex->getAdditionalData());
-            assertArrayHasKey('lpaActorToken', $ex->getAdditionalData());
-            assertEquals('Ian Deputy Deputy', $ex->getAdditionalData()['donorName']);
-            assertEquals('hw', $ex->getAdditionalData()['caseSubtype']);
-            assertEquals($this->userLpaActorToken, $ex->getAdditionalData()['lpaActorToken']);
+            assertEquals($expectedResponse, $ex->getAdditionalData());
             return;
         }
 
@@ -1936,5 +1942,70 @@ class LpaContext extends BaseIntegrationContext
     public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode()
     {
         // Not needed for this context
+    }
+
+
+    /**
+     * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
+     */
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
+    {
+        $data = [
+            'reference_number'      => $this->lpaUid,
+            'dob'                   => $this->userDob,
+            'postcode'              => $this->userPostCode,
+            'first_names'           => $this->userFirstname,
+            'last_name'             => $this->userSurname,
+            'force_activation_key'  => false
+        ];
+
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $expectedResponse = [
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname,
+            ],
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'lpaActorToken' => $this->userLpaActorToken
+        ];
+
+        try {
+            $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+        } catch (BadRequestException $ex) {
+            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            assertEquals('LPA already added', $ex->getMessage());
+            assertEquals($expectedResponse, $ex->getAdditionalData());
+            return;
+        }
+
+        throw new ExpectationFailedException('LPA already added exception should have been thrown');
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BehatTest\Context\Integration;
 
 use BehatTest\Context\ActorContextTrait;
+use Common\Entity\CaseActor;
 use Common\Exception\ApiException;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\AddLpa;
@@ -14,6 +15,7 @@ use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Lpa\RemoveLpa;
+use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
@@ -1383,17 +1385,6 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
     {
-        $keyExistsData = [
-            'donorName' => (implode(' ', array_filter(
-                [
-                    $this->userFirstname,
-                    $this->userMiddlenames,
-                    $this->userSurname
-                ]
-            ))),
-            'caseSubtype' => 'hw'
-        ];
-
         // API call for requesting activation code
         $this->apiFixtures->patch('/v1/lpas/request-letter')
             ->respondWith(
@@ -1404,7 +1395,15 @@ class LpaContext extends BaseIntegrationContext
                         [
                             'title'     => 'Bad Request',
                             'details'   => 'LPA has an activation key already',
-                            'data'      => $keyExistsData
+                            'data'      => [
+                                'donor'         => [
+                                    'uId'           => $this->lpa['donor']['uId'],
+                                    'firstname'     => $this->lpa['donor']['firstname'],
+                                    'middlenames'   => $this->lpa['donor']['middlenames'],
+                                    'surname'       => $this->lpa['donor']['surname'],
+                                ],
+                                'caseSubtype'   => $this->lpa['caseSubtype']
+                            ]
                         ]
                     )
                 )
@@ -1422,11 +1421,19 @@ class LpaContext extends BaseIntegrationContext
             false
         );
 
-        $parseKeyExistsResponse = $this->container->get(ParseActivationKeyExistsResponse::class);
+        $donor = new CaseActor();
+        $donor->setUId($this->lpa['donor']['uId']);
+        $donor->setFirstname($this->lpa['donor']['firstname']);
+        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
+        $donor->setSurname($this->lpa['donor']['surname']);
+
+        $keyExistsDTO = new ActivationKeyExistsResponse();
+        $keyExistsDTO->setDonor($donor);
+        $keyExistsDTO->setCaseSubtype($this->lpa['caseSubtype']);
 
         $response = new OlderLpaApiResponse(
             OlderLpaApiResponse::HAS_ACTIVATION_KEY,
-            ($parseKeyExistsResponse)($keyExistsData)
+            $keyExistsDTO
         );
 
         assertEquals($response, $result);
@@ -1437,18 +1444,6 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
     {
-        $alreadyAddedData = [
-            'donorName'     => (implode(' ', array_filter(
-                [
-                    $this->userFirstname,
-                    $this->userMiddlenames,
-                    $this->userSurname
-                ]
-            ))),
-            'caseSubtype'   => 'hw',
-            'lpaActorToken' => $this->actorLpaToken
-        ];
-
         // API call for requesting activation code
         $this->apiFixtures->patch('/v1/lpas/request-letter')
             ->respondWith(
@@ -1459,7 +1454,16 @@ class LpaContext extends BaseIntegrationContext
                         [
                             'title'     => 'Bad Request',
                             'details'   => 'LPA already added',
-                            'data'      => $alreadyAddedData
+                            'data'      => [
+                                'donor'         => [
+                                    'uId'           => $this->lpa['donor']['uId'],
+                                    'firstname'     => $this->lpa['donor']['firstname'],
+                                    'middlenames'   => $this->lpa['donor']['middlenames'],
+                                    'surname'       => $this->lpa['donor']['surname'],
+                                ],
+                                'caseSubtype'   => $this->lpa['caseSubtype'],
+                                'lpaActorToken' => $this->actorLpaToken
+                            ]
                         ]
                     )
                 )
@@ -1477,11 +1481,20 @@ class LpaContext extends BaseIntegrationContext
             false
         );
 
-        $parseAlreadyAddedResponse = $this->container->get(ParseLpaAlreadyAddedResponse::class);
+        $donor = new CaseActor();
+        $donor->setUId($this->lpa['donor']['uId']);
+        $donor->setFirstname($this->lpa['donor']['firstname']);
+        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
+        $donor->setSurname($this->lpa['donor']['surname']);
+
+        $alreadyAddedDTO = new LpaAlreadyAddedResponse();
+        $alreadyAddedDTO->setDonor($donor);
+        $alreadyAddedDTO->setCaseSubtype($this->lpa['caseSubtype']);
+        $alreadyAddedDTO->setLpaActorToken($this->actorLpaToken);
 
         $response = new OlderLpaApiResponse(
             OlderLpaApiResponse::LPA_ALREADY_ADDED,
-            ($parseAlreadyAddedResponse)($alreadyAddedData)
+            $alreadyAddedDTO
         );
 
         assertEquals($response, $result);
@@ -1511,7 +1524,12 @@ class LpaContext extends BaseIntegrationContext
                             'title' => 'Bad Request',
                             'details' => 'LPA already added',
                             'data' => [
-                                'donorName'     => 'Some person',
+                                'donor'         => [
+                                    'uId'           => $this->lpa['donor']['uId'],
+                                    'firstname'     => $this->lpa['donor']['firstname'],
+                                    'middlenames'   => $this->lpa['donor']['middlenames'],
+                                    'surname'       => $this->lpa['donor']['surname'],
+                                ],
                                 'caseSubtype'   => $this->lpa['caseSubtype'],
                                 'lpaActorToken' => $this->actorLpaToken
                             ],
@@ -1520,9 +1538,15 @@ class LpaContext extends BaseIntegrationContext
                 )
             );
 
+        $donor = new CaseActor();
+        $donor->setUId($this->lpa['donor']['uId']);
+        $donor->setFirstname($this->lpa['donor']['firstname']);
+        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
+        $donor->setSurname($this->lpa['donor']['surname']);
+
         $addLpa = $this->container->get(AddLpa::class);
         $alreadyAddedDTO = new LpaAlreadyAddedResponse();
-        $alreadyAddedDTO->setDonorName('Some person');
+        $alreadyAddedDTO->setDonor($donor);
         $alreadyAddedDTO->setCaseSubtype($this->lpa['caseSubtype']);
         $alreadyAddedDTO->setLpaActorToken($this->actorLpaToken);
 

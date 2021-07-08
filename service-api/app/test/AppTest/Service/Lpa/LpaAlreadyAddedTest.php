@@ -68,8 +68,10 @@ class LpaAlreadyAddedTest extends TestCase
                             'uId' => '700000000111',
                             'caseSubtype' => 'pfa',
                             'donor' => [
-                                'firstname' => 'Some',
-                                'surname'   => 'Person',
+                                'uId' => '700000000222',
+                                'firstname'     => 'Some',
+                                'middlenames'   => '',
+                                'surname'       => 'Person'
                             ],
                         ],
                     ],
@@ -79,8 +81,10 @@ class LpaAlreadyAddedTest extends TestCase
                             'uId' => $this->lpaUid,
                             'caseSubtype' => 'hw',
                             'donor' => [
-                                'firstname' => 'Another',
-                                'surname'   => 'Person',
+                                'uId' => '700000000444',
+                                'firstname'     => 'Another',
+                                'middlenames'   => '',
+                                'surname'       => 'Person',
                             ],
                         ],
                     ]
@@ -89,7 +93,12 @@ class LpaAlreadyAddedTest extends TestCase
 
         $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, $this->lpaUid);
         $this->assertEquals([
-            'donorName' => 'Another Person',
+            'donor'         => [
+                'uId'           => '700000000444',
+                'firstname'     => 'Another',
+                'middlenames'   => '',
+                'surname'       => 'Person',
+            ],
             'caseSubtype' => 'hw',
             'lpaActorToken' => $this->userLpaActorToken
         ], $lpaAddedData);

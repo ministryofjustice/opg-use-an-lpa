@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CommonTest\Service\Lpa;
 
 use ArrayObject;
+use Common\Entity\CaseActor;
 use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
@@ -40,8 +41,14 @@ class OlderLpaApiResponseTest extends TestCase
      */
     private function createAlreadyAddedDTO()
     {
+        $donor = new CaseActor();
+        $donor->setUId('12345');
+        $donor->setFirstname('Example');
+        $donor->setMiddlenames('Donor');
+        $donor->setSurname('Person');
+
         $dto = new LpaAlreadyAddedResponse();
-        $dto->setDonorName('Donor Person');
+        $dto->setDonor($donor);
         $dto->setCaseSubtype('hw');
         $dto->setLpaActorToken('abc');
         return $dto;
@@ -54,8 +61,14 @@ class OlderLpaApiResponseTest extends TestCase
      */
     private function createActivationKeyExistsDTO()
     {
+        $donor = new CaseActor();
+        $donor->setUId('12345');
+        $donor->setFirstname('Example');
+        $donor->setMiddlenames('Donor');
+        $donor->setSurname('Person');
+
         $dto = new ActivationKeyExistsResponse();
-        $dto->setDonorName('Donor Person');
+        $dto->setDonor($donor);
         $dto->setCaseSubtype('pfa');
         return $dto;
     }

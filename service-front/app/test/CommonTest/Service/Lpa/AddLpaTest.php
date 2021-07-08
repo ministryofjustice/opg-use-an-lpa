@@ -127,7 +127,12 @@ class AddLpaTest extends TestCase
     public function it_will_fail_to_add_an_lpa_which_has_already_been_added(): void
     {
         $response = [
-            'donorName' => 'Another Person',
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
             'caseSubtype' => 'hw',
             'lpaActorToken' => 'wxyz-4321'
         ];
@@ -149,8 +154,14 @@ class AddLpaTest extends TestCase
                 )
             );
 
+        $donor = new CaseActor();
+        $donor->setUId($response['donor']['uId']);
+        $donor->setFirstname($response['donor']['firstname']);
+        $donor->setMiddlenames($response['donor']['middlenames']);
+        $donor->setSurname($response['donor']['surname']);
+
         $dto = new LpaAlreadyAddedResponse();
-        $dto->setDonorName($response['donorName']);
+        $dto->setDonor($donor);
         $dto->setCaseSubtype($response['caseSubtype']);
         $dto->setLpaActorToken($response['lpaActorToken']);
 

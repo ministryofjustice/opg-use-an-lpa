@@ -93,9 +93,14 @@ class OlderLpaServiceTest extends TestCase
     public function checks_if_lpa_already_added_and_throws_exception_if_yes()
     {
         $responseData = [
-            'donorName'     => 'Some Person',
-            'caseSubtype'   => 'hw',
-            'lpaActorToken' => 'qwerty-54321'
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => 'hw',
+            'lpaActorToken' => 'qwerty-54321',
         ];
 
         $expectedException = new BadRequestException('LPA already added', $responseData);
@@ -443,8 +448,13 @@ class OlderLpaServiceTest extends TestCase
         $expectedException = new BadRequestException(
             'Lpa already added',
             [
-                'donorName'     => 'Some Person',
-                'caseSubtype'   => 'hw',
+                'donor'         => [
+                    'uId'           => '12345',
+                    'firstname'     => 'Example',
+                    'middlenames'   => 'Donor',
+                    'surname'       => 'Person',
+                ],
+                'caseSubtype' => 'hw',
                 'lpaActorToken' => 'qwerty-54321'
             ]
         );
@@ -620,7 +630,11 @@ class OlderLpaServiceTest extends TestCase
 
         $this->assertEquals($this->actorUid, $result['actor-id']);
         $this->assertEquals($this->lpaUid, $result['lpa-id']);
-        $this->assertEquals('Donor Person', $result['donorName']);
+        $this->assertArrayHasKey('donor', $result);
+        $this->assertEquals($lpa->getData()['donor']['uId'], $result['donor']['uId']);
+        $this->assertEquals($lpa->getData()['donor']['firstname'], $result['donor']['firstname']);
+        $this->assertEquals($lpa->getData()['donor']['middlenames'], $result['donor']['middlenames']);
+        $this->assertEquals($lpa->getData()['donor']['surname'], $result['donor']['surname']);
         $this->assertEquals($lpa->getData()['caseSubtype'], $result['caseSubtype']);
     }
 
@@ -659,7 +673,10 @@ class OlderLpaServiceTest extends TestCase
 
         $this->assertEquals($this->actorUid, $result['actor-id']);
         $this->assertEquals($this->lpaUid, $result['lpa-id']);
-        $this->assertEquals('Donor Person', $result['donorName']);
+        $this->assertEquals($lpa->getData()['donor']['uId'], $result['donor']['uId']);
+        $this->assertEquals($lpa->getData()['donor']['firstname'], $result['donor']['firstname']);
+        $this->assertEquals($lpa->getData()['donor']['middlenames'], $result['donor']['middlenames']);
+        $this->assertEquals($lpa->getData()['donor']['surname'], $result['donor']['surname']);
         $this->assertEquals($lpa->getData()['caseSubtype'], $result['caseSubtype']);
     }
 
@@ -707,7 +724,10 @@ class OlderLpaServiceTest extends TestCase
 
         $this->assertEquals($this->actorUid, $result['actor-id']);
         $this->assertEquals($this->lpaUid, $result['lpa-id']);
-        $this->assertEquals('Donor Person', $result['donorName']);
+        $this->assertEquals($lpa->getData()['donor']['uId'], $result['donor']['uId']);
+        $this->assertEquals($lpa->getData()['donor']['firstname'], $result['donor']['firstname']);
+        $this->assertEquals($lpa->getData()['donor']['middlenames'], $result['donor']['middlenames']);
+        $this->assertEquals($lpa->getData()['donor']['surname'], $result['donor']['surname']);
         $this->assertEquals($lpa->getData()['caseSubtype'], $result['caseSubtype']);
     }
 
@@ -759,11 +779,12 @@ class OlderLpaServiceTest extends TestCase
                 'status'            => 'Registered',
                 'caseSubtype'       => 'pfa',
                 'donor' => [
-                    'uId'       => '700000001111',
-                    'dob'       => '1975-10-05',
-                    'firstname' => 'Donor',
-                    'surname'   => 'Person',
-                    'addresses' => [
+                    'uId'           => '700000001111',
+                    'dob'           => '1975-10-05',
+                    'firstname'     => 'Donor',
+                    'middlenames'   => 'Example',
+                    'surname'       => 'Person',
+                    'addresses'     => [
                         [
                             'postcode' => 'PY1 3Kd'
                         ]
