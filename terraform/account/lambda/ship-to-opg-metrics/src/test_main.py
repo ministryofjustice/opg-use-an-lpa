@@ -38,9 +38,9 @@ class TestLambdaFunction(unittest.TestCase):
     def test_handler(self, m):
         from main import handler
 
-        m.register_uri('PUT', OPG_METRICS_URL + '/development/metrics',
+        m.register_uri('PUT', OPG_METRICS_URL + '/metrics',
                        json={'StatusCode': 200, 'Message': 'SUCCESS'})
-        print(requests.put(OPG_METRICS_URL + '/development/metrics').json())
+        print(requests.put(OPG_METRICS_URL + '/metrics').json())
 
         event = PAYLOAD
 

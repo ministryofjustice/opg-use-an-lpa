@@ -16,7 +16,7 @@ def call_api_gateway(json_data):
     url = os.getenv('OPG_METRICS_URL')
     api_key = os.getenv('API_KEY')
     method = 'PUT'
-    path = '/development/metrics'
+    path = '/metrics'
     headers = {
         'Content-Type': 'application/json',
         'Content-Length': str(len(str(json_data))),
