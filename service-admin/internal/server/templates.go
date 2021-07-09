@@ -77,10 +77,15 @@ func LoadTemplates(folder fs.FS) *Templates {
 }
 
 func readableDateTime(date string) string {
+	l, err := time.LoadLocation("Europe/London")
+	if err != nil {
+		return date
+	}
+
 	t, err := time.Parse(time.RFC3339, date)
 	if err != nil {
 		return date
 	}
 
-	return t.Format("2 January 2006 at 3:04PM")
+	return t.In(l).Format("2 January 2006 at 3:04PM")
 }
