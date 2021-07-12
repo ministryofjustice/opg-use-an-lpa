@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
 	"github.com/rs/zerolog/log"
@@ -37,10 +38,11 @@ func (w *errorInterceptResponseWriter) Write(p []byte) (int, error) {
 	return w.ResponseWriter.Write(p)
 }
 
-func NewServer() http.Handler {
+func NewServer(db dynamodbiface.DynamoDBAPI) http.Handler {
 	router := mux.NewRouter()
 
 	router.Handle("/helloworld", handlers.HelloHandler())
+	router.Handle("/", handlers.SearchHandler(db))
 	router.PathPrefix("/").Handler(handlers.StaticHandler(os.DirFS("web/static")))
 
 	wrap := WithJSONLogging(
@@ -59,10 +61,10 @@ func withErrorHandling(next http.Handler) http.Handler {
 		var eh ErrorHandler = func(w http.ResponseWriter, i int) {
 			w.WriteHeader(i)
 
-			t := "error"
+			t := "error.page.gohtml"
 			switch i {
 			case 404:
-				t = "notfound"
+				t = "notfound.page.gohtml"
 			}
 
 			if err := handlers.RenderTemplate(w, r.Context(), t, nil); err != nil {

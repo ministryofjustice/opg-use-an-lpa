@@ -10,7 +10,10 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/cmd/admin/main.go",
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "AWS_DYNAMODB_ENDPOINT": "http://localhost:4569"
+            }
         }
     ]
 }
