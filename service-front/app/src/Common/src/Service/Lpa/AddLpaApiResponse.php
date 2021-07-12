@@ -22,10 +22,16 @@ class AddLpaApiResponse
     /** @var string The LPA failed to be added */
     public const ADD_LPA_FAILURE = 'ADD_LPA_FAILURE';
 
-    /** @var mixed */
+    /** @var array|ArrayObject|LpaAlreadyAddedResponse */
     private $data;
     private string $response;
 
+    /**
+     * AddLpaApiResponse constructor.
+     *
+     * @param string $response
+     * @param array|ArrayObject|LpaAlreadyAddedResponse $data
+     */
     public function __construct(string $response, $data)
     {
         if (!$this->validateResponseType($response)) {
