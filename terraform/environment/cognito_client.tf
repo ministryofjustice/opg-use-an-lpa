@@ -14,6 +14,7 @@ locals {
 }
 
 resource "aws_cognito_user_pool_client" "use_a_lasting_power_of_attorney_admin" {
+  count                                = local.account.build_admin == true ? 1 : 0
   provider                             = aws.identity
   name                                 = "${local.environment}-admin-auth"
   user_pool_id                         = local.admin_cognito_user_pool_id

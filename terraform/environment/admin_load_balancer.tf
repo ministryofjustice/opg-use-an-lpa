@@ -60,8 +60,8 @@ resource "aws_lb_listener" "admin_loadbalancer" {
     authenticate_oidc {
       authentication_request_extra_params = {}
       authorization_endpoint              = "${local.admin_cognito_user_pool_domain_name}/oauth2/authorize"
-      client_id                           = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin.id
-      client_secret                       = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin.client_secret
+      client_id                           = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin[0].id
+      client_secret                       = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin[0].client_secret
       issuer                              = "https://cognito-idp.eu-west-1.amazonaws.com/${local.admin_cognito_user_pool_id}"
       on_unauthenticated_request          = "authenticate"
       scope                               = "openid"
