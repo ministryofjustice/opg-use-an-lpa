@@ -298,7 +298,7 @@ locals {
           value = tostring(local.account.allow_older_lpas)
         },
         {
-          name  = "ALLOW_MERRIS_LPAS",
+          name  = "ALLOW_MERIS_LPAS",
           value = tostring(local.account.allow_merris_lpas)
         }
       ]
