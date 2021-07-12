@@ -40,6 +40,6 @@ resource "aws_cognito_user_pool_client" "use_a_lasting_power_of_attorney_admin" 
   read_attributes       = []
   write_attributes      = []
 
-  callback_urls = ["https://${local.admin_cognito_user_pool_domain_name}/oauth2/idpresponse"]
-  logout_urls   = ["https://${local.admin_cognito_user_pool_domain_name}/logout"]
+  callback_urls = ["https://${aws_route53_record.admin_use_my_lpa[0].fqdn}/oauth2/idpresponse"]
+  logout_urls   = ["https://${aws_route53_record.admin_use_my_lpa[0].fqdn}/logout"]
 }
