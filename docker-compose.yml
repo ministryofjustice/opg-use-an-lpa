@@ -122,7 +122,7 @@ services:
       USE_OLDER_LPA_JOURNEY: "true"
       DELETE_LPA_FEATURE: "true"
       ALLOW_OLDER_LPAS: "true"
-      ALLOW_MERRIS_LPAS: "false"
+      ALLOW_MERIS_LPAS: "false"
 
       # Local only
       API_SERVICE_URL: http://api-web
