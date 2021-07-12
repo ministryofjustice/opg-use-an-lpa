@@ -78,12 +78,26 @@ class ReferenceNumber extends AbstractHandler implements UserAware, CsrfGuardAwa
 
             //  Set the data in the session and pass to the check your answers handler
             $this->session->set('opg_reference_number', $postData['opg_reference_number']);
-            return $this->redirectToRoute('lpa.your-name');
+            return $this->routeFromAnswersInSession();
         }
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/reference-number', [
             'user' => $this->user,
             'form' => $this->form->prepare()
         ]));
+    }
+
+    private function routeFromAnswersInSession(): \Laminas\Diactoros\Response\RedirectResponse
+    {
+        if ($this->hasFutureAnswersInSession()) {
+            return $this->redirectToRoute('lpa.check-answers');
+        } else {
+            return $this->redirectToRoute('lpa.your-name');
+        }
+    }
+
+    private function hasFutureAnswersInSession(): bool
+    {
+        return $this->session->get('postcode') != null;
     }
 }

@@ -79,12 +79,26 @@ class NameHandler extends AbstractHandler implements UserAware, CsrfGuardAware
             //  Set the data in the session and pass to the check your answers handler
             $this->session->set('first_names', $postData['first_names']);
             $this->session->set('last_name', $postData['last_name']);
-            return $this->redirectToRoute('lpa.date-of-birth');
+            return $this->routeFromAnswersInSession();
         }
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/your-name', [
             'user' => $this->user,
             'form' => $this->form->prepare()
         ]));
+    }
+
+    private function routeFromAnswersInSession(): \Laminas\Diactoros\Response\RedirectResponse
+    {
+        if ($this->hasFutureAnswersInSession()) {
+            return $this->redirectToRoute('lpa.check-answers');
+        } else {
+            return $this->redirectToRoute('lpa.date-of-birth');
+        }
+    }
+
+    private function hasFutureAnswersInSession(): bool
+    {
+        return $this->session->get('postcode') != null;
     }
 }

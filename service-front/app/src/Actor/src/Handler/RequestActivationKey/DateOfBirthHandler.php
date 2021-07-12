@@ -85,12 +85,26 @@ class DateOfBirthHandler extends AbstractHandler implements UserAware, CsrfGuard
                     'year' => $postData['dob']['year']
                 ]
             );
-            return $this->redirectToRoute('lpa.postcode');
+            return $this->routeFromAnswersInSession();
         }
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/date-of-birth', [
             'user' => $this->user,
             'form' => $this->form->prepare()
         ]));
+    }
+
+    private function routeFromAnswersInSession(): \Laminas\Diactoros\Response\RedirectResponse
+    {
+        if ($this->hasFutureAnswersInSession()) {
+            return $this->redirectToRoute('lpa.check-answers');
+        } else {
+            return $this->redirectToRoute('lpa.postcode');
+        }
+    }
+
+    private function hasFutureAnswersInSession(): bool
+    {
+        return $this->session->get('postcode') != null;
     }
 }
