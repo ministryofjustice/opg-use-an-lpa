@@ -197,9 +197,9 @@ locals {
 }
 
 locals {
-  admin_domain = local.account.build_admin == true ? "https://${aws_route53_record.admin_use_my_lpa[0].fqdn}/" : "Not deployed"
+  admin_domain = local.account.build_admin == true ? "https://${aws_route53_record.admin_use_my_lpa[0].fqdn}" : "Not deployed"
 }
 
-output "admin_app_deployed_version" {
+output "admin_domain" {
   value = local.admin_domain
 }
