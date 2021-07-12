@@ -32,12 +32,12 @@ resource "aws_cognito_user_pool_client" "use_a_lasting_power_of_attorney_admin" 
 
   token_validity_units {
     access_token  = "minutes"
-    id_token      = "minutes"
+    id_token      = "seconds"
     refresh_token = "days"
   }
 
   access_token_validity = local.account.session_expires_admin
-  id_token_validity     = 60
+  id_token_validity     = 3600
   read_attributes       = []
   write_attributes      = []
 
