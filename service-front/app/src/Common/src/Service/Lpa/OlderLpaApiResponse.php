@@ -22,10 +22,16 @@ class OlderLpaApiResponse
     /** @var string The LPA has already been added to the account */
     public const LPA_ALREADY_ADDED  = 'LPA_ALREADY_ADDED';
 
-    /** @var mixed */
+    /** @var array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse */
     private $data;
     private string $response;
 
+    /**
+     * OlderLpaApiResponse constructor.
+     *
+     * @param string $response
+     * @param array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse $data
+     */
     public function __construct(string $response, $data)
     {
         if (!$this->validateResponseType($response)) {
