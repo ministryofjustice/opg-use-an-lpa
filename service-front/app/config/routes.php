@@ -182,27 +182,27 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Actor\Handler\RequestActivationKey\RequestActivationKeyInfoHandler::class
         ], ['GET', 'POST'], 'lpa.add-by-paper-information');
 
-        $app->route('/lpa/add-by-paper', [
+        $app->route('/lpa/request-code/lpa-reference-number', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\RequestActivationKey\ReferenceNumber::class
         ], ['GET', 'POST'], 'lpa.add-by-paper');
 
-        $app->route('/lpa/your-name', [
+        $app->route('/lpa/request-code/your-name', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\RequestActivationKey\NameHandler::class
         ], ['GET', 'POST'], 'lpa.your-name');
 
-        $app->route('/lpa/date-of-birth', [
+        $app->route('/lpa/request-code/date-of-birth', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\RequestActivationKey\DateOfBirthHandler::class
         ], ['GET', 'POST'], 'lpa.date-of-birth');
 
-        $app->route('/lpa/postcode', [
+        $app->route('/lpa/request-code/postcode', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\RequestActivationKey\PostcodeHandler::class
         ], ['GET', 'POST'], 'lpa.postcode');
 
-        $app->route('/lpa/check-answers', [
+        $app->route('/lpa/request-code/check-answers', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\CheckYourAnswersHandler::class
         ], ['GET', 'POST'], 'lpa.check-answers');
