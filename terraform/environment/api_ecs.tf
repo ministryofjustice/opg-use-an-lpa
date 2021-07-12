@@ -299,7 +299,7 @@ locals {
         },
         {
           name  = "ALLOW_MERIS_LPAS",
-          value = tostring(local.account.allow_merris_lpas)
+          value = tostring(local.account.allow_meris_lpas)
         }
       ]
   })
