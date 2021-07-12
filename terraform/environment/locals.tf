@@ -61,6 +61,8 @@ variable "accounts" {
       use_legacy_codes_service   = bool
       use_older_lpa_journey      = bool
       delete_lpa_feature         = bool
+      allow_older_lpas           = bool
+      allow_merris_lpas          = bool
     })
   )
 }
