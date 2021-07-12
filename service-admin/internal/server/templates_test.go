@@ -17,17 +17,17 @@ import (
 func testFS() (fs.FS, error) {
 	fs := afero.NewMemMapFs()
 
-	err := fs.MkdirAll("layouts", 0755)
+	err := afero.WriteFile(fs, "default.layout.gohtml", []byte("{{ define \"default\" }}{{ block \"main\" . }}{{ end }}{{ end }}"), 0644)
 	if err != nil {
 		return nil, err
 	}
 
-	err = afero.WriteFile(fs, "layouts/default.gohtml", []byte("{{ define \"default\" }}{{ block \"main\" . }}{{ end }}{{ end }}"), 0644)
+	err = afero.WriteFile(fs, "test.page.gohtml", []byte("{{ template \"default\" . }}{{ define \"main\"}}Hello {{ template \"partial\" . }}{{ end }}"), 0644)
 	if err != nil {
 		return nil, err
 	}
 
-	err = afero.WriteFile(fs, "test.gohtml", []byte("{{ template \"default\" . }}{{ define \"main\"}}Hello World{{ end }}"), 0644)
+	err = afero.WriteFile(fs, "test.partial.gohtml", []byte("{{ define \"partial\" }}World{{ end }}"), 0644)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func TestLoadTemplates(t *testing.T) {
 
 	ts := LoadTemplates(fs)
 
-	_, err = ts.Get("test")
+	_, err = ts.Get("test.page.gohtml")
 	if err != nil {
 		t.Error("failed to load expected template")
 	}
@@ -71,7 +71,7 @@ func TestTemplates_Get(t *testing.T) {
 		{
 			name:     "gets a template that exists",
 			tmpls:    LoadTemplates(fs),
-			tmplName: "test",
+			tmplName: "test.page.gohtml",
 			wantErr:  false,
 		},
 		{

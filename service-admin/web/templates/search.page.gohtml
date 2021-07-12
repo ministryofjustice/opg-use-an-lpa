@@ -1,0 +1,55 @@
+{{ template "default" . }}
+
+{{ define "title" }}Search{{ end }}
+
+{{ define "main" }}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form method="post">
+        <div class="govuk-form-group {{ if .Errors.Query }}govuk-form-group--error{{ end }}">
+          <h1 class="govuk-label-wrapper">
+            <label class="govuk-heading-l govuk-!-margin-bottom-2" for="search">
+              Search for an email address or activation key
+            </label>
+          </h1>
+
+          <div id="search-hint" class="govuk-hint moj-search__hint">
+            You can search by email address or activation key
+          </div>
+
+          {{ if .Errors.Query }}
+          <span class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ .Errors.Query }}
+          </span>
+          {{ end }}
+
+          <input class="govuk-input {{ if .Errors.Query }}govuk-input--error{{ end }} moj-search__input govuk-!-width-one-half" id="query" name="query" type="search" value="{{ .Query }}" aria-describedby="search-hint" autocomplete="off">
+          <button class="govuk-button moj-search__button " data-module="govuk-button">
+            Search
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {{ if and .Query (not .Result) (not .Errors) }}
+  <div class="govuk-grid-row govuk-!-margin-top-6">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-body">There are no accounts with those details: &#8220;<strong>{{ .Query }}</strong>&#8221;</p>
+    </div>
+  </div>
+  {{ else if and .Query .Result (eq .Type 0) (not .Errors) }}
+  <div class="govuk-grid-row govuk-!-margin-top-6">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-hint">Showing results for "<strong>{{ .Query }}</strong>"</p>
+      {{ template "result_actor" .Result }}
+    </div>
+  </div>
+  {{ else if and .Query .Result (eq .Type 1) (not .Errors) }}
+  <div class="govuk-grid-row govuk-!-margin-top-6">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-hint">Showing results for "<strong>{{ .Query }}</strong>"</p>
+    </div>
+  </div>
+  {{ end }}
+{{ end }}

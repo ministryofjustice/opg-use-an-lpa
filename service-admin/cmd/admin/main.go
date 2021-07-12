@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
+	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/rs/zerolog/pkgerrors"
@@ -17,10 +18,12 @@ import (
 func main() {
 	port := getEnv("PORT", "9005")
 
+	dynamoDB := data.NewDynamoConnection()
+
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 
 	srv := &http.Server{
-		Handler:      server.NewServer(),
+		Handler:      server.NewServer(dynamoDB),
 		Addr:         ":" + port,
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
