@@ -292,7 +292,16 @@ locals {
         {
           name  = "LOGGING_LEVEL",
           value = tostring(local.account.logging_level)
-      }]
+        },
+        {
+          name  = "ALLOW_OLDER_LPAS",
+          value = tostring(local.account.allow_older_lpas)
+        },
+        {
+          name  = "ALLOW_MERRIS_LPAS",
+          value = tostring(local.account.allow_merris_lpas)
+        }
+      ]
   })
 }
 
