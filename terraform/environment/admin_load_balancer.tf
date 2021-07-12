@@ -66,7 +66,7 @@ resource "aws_lb_listener" "admin_loadbalancer" {
       on_unauthenticated_request          = "authenticate"
       scope                               = "openid"
       session_cookie_name                 = "AWSELBAuthSessionCookie"
-      session_timeout                     = 604800
+      session_timeout                     = 3600 # 1 hour in seconds
       token_endpoint                      = "${local.admin_cognito_user_pool_domain_name}/oauth2/token"
       user_info_endpoint                  = "${local.admin_cognito_user_pool_domain_name}/oauth2/userInfo"
     }
