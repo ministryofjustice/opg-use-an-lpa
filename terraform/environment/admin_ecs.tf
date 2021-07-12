@@ -189,6 +189,10 @@ locals {
         {
           name  = "DYNAMODB_TABLE_PREFIX",
           value = tostring(local.environment)
+        },
+        {
+          name  = "LOGOUT_URL",
+          value = "${local.admin_cognito_user_pool_domain_name}/logout"
         }
       ]
     }
