@@ -22,8 +22,8 @@ Feature: Ask for an activation key
       |                  | Enter the LPA reference number |
 
   @ui
-  Scenario Outline: The user cannot request an activation key without inputting their details
-    Given I am on the request an activation key page
+  Scenario Outline: The user cannot request an activation key without inputting their name
+    Given I am on the ask for your name page
     When I request an activation key without entering my <data>
     Then I am told that my input is invalid because <reason>
 
@@ -31,12 +31,10 @@ Feature: Ask for an activation key
       | data       | reason |
       | firstnames | Enter your first names   |
       | last name  | Enter your last name     |
-      | dob        | Enter your date of birth |
-      | postcode   | Enter your postcode      |
 
   @ui
   Scenario Outline: The user cannot request an activation key with an invalid dob
-    Given I am on the request an activation key page
+    Given I am on the ask for your date of birth page
     When I request an activation key with an invalid DOB format of "<day>" "<month>" "<year>"
     Then I am told that my input is invalid because <reason>
 

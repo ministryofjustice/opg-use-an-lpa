@@ -18,6 +18,7 @@ integration:
         - BehatTest\Context\Integration\AccountContext
         - BehatTest\Context\Integration\ViewerContext
         - BehatTest\Context\Integration\LpaContext
+        - BehatTest\Context\Integration\RequestActivationKeyContext
       filters:
         tags: "@integration"
 
@@ -30,6 +31,8 @@ acceptance:
         - BehatTest\Context\UI\AccountContext
         - BehatTest\Context\UI\CommonContext
         - BehatTest\Context\UI\LpaContext
+        - BehatTest\Context\UI\RequestActivationKeyContext
+
       filters:
         tags: "@actor&&@ui"
     viewer:
