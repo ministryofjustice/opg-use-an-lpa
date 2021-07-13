@@ -65,3 +65,11 @@ Feature: Add an older LPA
     When I request for a new activation key again
     Then a letter is requested containing a one time use code
     Then I am told a new activation key is posted to the provided postcode
+
+  @acceptance @integration
+  Scenario: The user is unable to request key for an LPA that they have already added
+    Given I am on the add an older LPA page
+    And I have added an LPA to my account
+    When I provide the details from a valid paper LPA which I have already added to my account
+    And I confirm that those details are correct
+    Then I should be told that I have already added this LPA

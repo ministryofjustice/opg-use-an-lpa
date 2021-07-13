@@ -45,7 +45,16 @@ class LpaAlreadyAdded
                         'uId' => $lpaUid
                     ]
                 );
-                return $lpasAdded[$userLpaActorToken];
+                return [
+                    'donor'         => [
+                        'uId'           => $lpaData['lpa']['donor']['uId'],
+                        'firstname'     => $lpaData['lpa']['donor']['firstname'],
+                        'middlenames'   => $lpaData['lpa']['donor']['middlenames'],
+                        'surname'       => $lpaData['lpa']['donor']['surname'],
+                    ],
+                    'caseSubtype'   => $lpaData['lpa']['caseSubtype'],
+                    'lpaActorToken' => $userLpaActorToken
+                ];
             }
         }
         return null;

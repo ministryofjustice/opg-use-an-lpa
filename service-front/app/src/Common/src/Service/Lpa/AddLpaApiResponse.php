@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\Lpa;
 
 use ArrayObject;
+use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 
 class AddLpaApiResponse
 {
@@ -21,22 +22,34 @@ class AddLpaApiResponse
     /** @var string The LPA failed to be added */
     public const ADD_LPA_FAILURE = 'ADD_LPA_FAILURE';
 
-    private ArrayObject $data;
+    /** @var array|ArrayObject|LpaAlreadyAddedResponse */
+    private $data;
     private string $response;
 
-    public function __construct(string $response, ArrayObject $data)
+    /**
+     * AddLpaApiResponse constructor.
+     *
+     * @param string $response
+     * @param array|ArrayObject|LpaAlreadyAddedResponse $data
+     */
+    public function __construct(string $response, $data)
     {
         if (!$this->validateResponseType($response)) {
             throw new \RuntimeException('Incorrect response type when creating ' . __CLASS__);
         }
+
+        if (!$this->validateDataType($data)) {
+            throw new \RuntimeException('Incorrect data type when creating ' . __CLASS__);
+        }
+
         $this->response = $response;
         $this->data = $data;
     }
 
     /**
-     * @return ArrayObject
+     * @return array|ArrayObject|LpaAlreadyAddedResponse
      */
-    public function getData(): ArrayObject
+    public function getData()
     {
         return $this->data;
     }
@@ -62,6 +75,26 @@ class AddLpaApiResponse
 
         if (in_array($response, $allowedResponses)) {
             return true;
+        }
+
+        return false;
+    }
+
+    private function validateDataType($data): bool
+    {
+        $allowedDataTypes = [
+            ArrayObject::class,
+            LpaAlreadyAddedResponse::class,
+        ];
+
+        if (is_array($data)) {
+            return true;
+        }
+
+        if (is_object($data)) {
+            if (in_array(get_class($data), $allowedDataTypes)) {
+                return true;
+            }
         }
 
         return false;

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Common\Service\Lpa;
 
+use Common\Service\Lpa\Response\Parse\LpaAlreadyAddedResponseTransformer;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
+use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use Fig\Http\Message\StatusCodeInterface;
 use ArrayObject;
 use Psr\Log\LoggerInterface;
@@ -22,15 +24,18 @@ class AddLpa
     private LoggerInterface $logger;
     private ApiClient $apiClient;
     private ParseLpaData $parseLpaData;
+    private ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse;
 
     public function __construct(
         ApiClient $apiClient,
         LoggerInterface $logger,
-        ParseLpaData $parseLpaData
+        ParseLpaData $parseLpaData,
+        ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse
     ) {
         $this->apiClient = $apiClient;
         $this->logger = $logger;
         $this->parseLpaData = $parseLpaData;
+        $this->parseLpaAlreadyAddedResponse = $parseLpaAlreadyAddedResponse;
     }
 
     public function validate(
@@ -55,12 +60,12 @@ class AddLpa
                     return $this->badRequestReturned(
                         $lpaUid,
                         $apiEx->getMessage(),
-                        ($this->parseLpaData)($apiEx->getAdditionalData())
+                        $apiEx->getAdditionalData()
                     );
                 case StatusCodeInterface::STATUS_NOT_FOUND:
                     return $this->notFoundReturned(
                         $lpaUid,
-                        ($this->parseLpaData)($apiEx->getAdditionalData())
+                        $apiEx->getAdditionalData()
                     );
                 default:
                     // An API exception that we don't want to handle has been caught, pass it up the stack
@@ -104,33 +109,39 @@ class AddLpa
                 ]
             );
 
-            return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_SUCCESS, new ArrayObject());
+            return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_SUCCESS, []);
         }
 
-        return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_FAILURE, new ArrayObject());
+        return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_FAILURE, []);
     }
 
     /**
      * Translates an exception message returned from the API into a const string that we can use, as well
      * as logging the result
      *
-     * @param string      $lpaUid
-     * @param string      $message
-     * @param ArrayObject $additionalData
+     * @param string $lpaUid
+     * @param string $message
+     * @param array  $additionalData
      *
      * @return AddLpaApiResponse
      */
-    private function badRequestReturned(string $lpaUid, string $message, ArrayObject $additionalData): AddLpaApiResponse
+    private function badRequestReturned(string $lpaUid, string $message, array $additionalData): AddLpaApiResponse
     {
         switch ($message) {
             case self::ADD_LPA_NOT_ELIGIBLE:
                 $code = EventCodes::ADD_LPA_NOT_ELIGIBLE;
-                $response = new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_NOT_ELIGIBLE, $additionalData);
+                $response = new AddLpaApiResponse(
+                    AddLpaApiResponse::ADD_LPA_NOT_ELIGIBLE,
+                    $additionalData
+                );
                 break;
 
             case self::ADD_LPA_ALREADY_ADDED:
                 $code = EventCodes::ADD_LPA_ALREADY_ADDED;
-                $response = new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_ALREADY_ADDED, $additionalData);
+                $response = new AddLpaApiResponse(
+                    AddLpaApiResponse::ADD_LPA_ALREADY_ADDED,
+                    ($this->parseLpaAlreadyAddedResponse)($additionalData)
+                );
                 break;
 
             default:
@@ -155,12 +166,12 @@ class AddLpa
     /**
      * Translates a 'Not Found' response from our API into an appropriate const value and also logs the result
      *
-     * @param string      $lpaUid
-     * @param ArrayObject $additionalData
+     * @param string $lpaUid
+     * @param array  $additionalData
      *
      * @return AddLpaApiResponse
      */
-    private function notFoundReturned(string $lpaUid, ArrayObject $additionalData): AddLpaApiResponse
+    private function notFoundReturned(string $lpaUid, array $additionalData): AddLpaApiResponse
     {
         $this->logger->notice(
             'Validation failed on the details provided to add the LPA {uId}',
