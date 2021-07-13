@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use Common\Entity\CaseActor;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\OlderLpaApiResponse;
+use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
+use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
+use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
@@ -18,6 +23,7 @@ use RuntimeException;
  * Class AddOlderLpaTest
  *
  * @property array olderLpa
+ * @property AddOlderLpa $sut
  *
  * @package CommonTest\Service\Lpa
  * @coversDefaultClass \Common\Service\Lpa\AddOlderLpa
@@ -28,11 +34,17 @@ class AddOlderLpaTest extends TestCase
     private $apiClientProphecy;
     /** @var \Prophecy\Prophecy\ObjectProphecy|LoggerInterface */
     private $loggerProphecy;
+    /** @var \Prophecy\Prophecy\ObjectProphecy|ParseActivationKeyExistsResponse */
+    private $parseKeyExistsProphecy;
+    /** @var \Prophecy\Prophecy\ObjectProphecy|ParseLpaAlreadyAddedResponse */
+    private $parseAlreadyAddedProphecy;
 
     public function setUp(): void
     {
         $this->apiClientProphecy = $this->prophesize(ApiClient::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->parseKeyExistsProphecy = $this->prophesize(ParseActivationKeyExistsResponse::class);
+        $this->parseAlreadyAddedProphecy = $this->prophesize(ParseLpaAlreadyAddedResponse::class);
 
         $this->olderLpa = [
             'reference_number'  => 700000000000,
@@ -43,6 +55,13 @@ class AddOlderLpaTest extends TestCase
         ];
 
         $this->apiClientProphecy->setUserTokenHeader('12-1-1-1-1234')->shouldBeCalled();
+
+        $this->sut = new AddOlderLpa(
+            $this->apiClientProphecy->reveal(),
+            $this->loggerProphecy->reveal(),
+            $this->parseAlreadyAddedProphecy->reveal(),
+            $this->parseKeyExistsProphecy->reveal()
+        );
     }
 
     /**
@@ -69,9 +88,7 @@ class AddOlderLpaTest extends TestCase
                 ]
             );
 
-        $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-
-        $result  = $sut(
+        $result = ($this->sut)(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -109,9 +126,7 @@ class AddOlderLpaTest extends TestCase
                 )
             );
 
-        $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-
-        $result  = $sut(
+        $result = ($this->sut)(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -150,8 +165,7 @@ class AddOlderLpaTest extends TestCase
                 )
             );
 
-        $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-        $result  = $sut(
+        $result = ($this->sut)(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -171,6 +185,16 @@ class AddOlderLpaTest extends TestCase
      */
     public function it_will_let_know_user_LPA_has_an_active_activation_key(): void
     {
+        $response = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => 'hw',
+        ];
+
         $this->apiClientProphecy
             ->httpPatch(
                 '/v1/lpas/request-letter',
@@ -187,16 +211,25 @@ class AddOlderLpaTest extends TestCase
                     'LPA has an activation key already',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
                     null,
-                    [
-                        'lpa_type'      => 'pfa',
-                        'donor_name'    => ['abc','lmn','xyz']
-                    ]
-
+                    $response
                 )
             );
 
-        $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-        $result  = $sut(
+        $donor = new CaseActor();
+        $donor->setUId($response['donor']['uId']);
+        $donor->setFirstname($response['donor']['firstname']);
+        $donor->setMiddlenames($response['donor']['middlenames']);
+        $donor->setSurname($response['donor']['surname']);
+
+        $dto = new ActivationKeyExistsResponse();
+        $dto->setDonor($donor);
+        $dto->setCaseSubtype($response['caseSubtype']);
+
+        $this->parseKeyExistsProphecy
+            ->__invoke($response)
+            ->willReturn($dto);
+
+        $result = ($this->sut)(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -207,6 +240,74 @@ class AddOlderLpaTest extends TestCase
         );
 
         $this->assertEquals(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $result->getResponse());
+        $this->assertEquals($dto, $result->getData());
+    }
+
+    /**
+     * @test
+     * @covers ::__invoke
+     * @covers ::badRequestReturned
+     */
+    public function it_will_fail_if_they_have_already_added_the_LPA(): void
+    {
+        $response = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => 'hw',
+            'lpaActorToken' => 'wxyz-4321'
+        ];
+
+        $this->apiClientProphecy
+            ->httpPatch(
+                '/v1/lpas/request-letter',
+                [
+                    'reference_number'      => (string) $this->olderLpa['reference_number'],
+                    'first_names'           => $this->olderLpa['first_names'],
+                    'last_name'             => $this->olderLpa['last_name'],
+                    'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode'              => $this->olderLpa['postcode'],
+                    'force_activation_key'  => false
+                ]
+            )->willThrow(
+                new ApiException(
+                    'LPA already added',
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    null,
+                    $response
+                )
+            );
+
+        $donor = new CaseActor();
+        $donor->setUId($response['donor']['uId']);
+        $donor->setFirstname($response['donor']['firstname']);
+        $donor->setMiddlenames($response['donor']['middlenames']);
+        $donor->setSurname($response['donor']['surname']);
+
+        $dto = new LpaAlreadyAddedResponse();
+        $dto->setDonor($donor);
+        $dto->setCaseSubtype($response['caseSubtype']);
+        $dto->setLpaActorToken($response['lpaActorToken']);
+
+        $this->parseAlreadyAddedProphecy
+            ->__invoke($response)
+            ->willReturn($dto);
+
+        $result = ($this->sut)(
+            '12-1-1-1-1234',
+            $this->olderLpa['reference_number'],
+            $this->olderLpa['first_names'],
+            $this->olderLpa['last_name'],
+            $this->olderLpa['dob'],
+            $this->olderLpa['postcode'],
+            false
+        );
+
+        $this->assertEquals(OlderLpaApiResponse::LPA_ALREADY_ADDED, $result->getResponse());
+        $this->assertEquals($dto, $result->getData());
     }
 
     /**
@@ -234,8 +335,7 @@ class AddOlderLpaTest extends TestCase
                 )
             );
 
-        $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-        $result  = $sut(
+        $result = ($this->sut)(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -272,12 +372,10 @@ class AddOlderLpaTest extends TestCase
                 )
             );
 
-        $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-
         $this->expectException(ApiException::class);
         $this->expectExceptionMessage('Service Error');
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
-        $result  = $sut(
+        ($this->sut)(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -313,10 +411,8 @@ class AddOlderLpaTest extends TestCase
                 )
             );
 
-        $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-
         $this->expectException(RuntimeException::class);
-        $result  = $sut(
+        ($this->sut)(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -347,8 +443,7 @@ class AddOlderLpaTest extends TestCase
                 ]
             )->willReturn([]);
 
-        $sut = new AddOlderLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-        $result  = $sut(
+        $result = ($this->sut)(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],

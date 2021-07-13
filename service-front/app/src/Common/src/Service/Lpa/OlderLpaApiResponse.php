@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Common\Service\Lpa;
 
+use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
+use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
+
 class OlderLpaApiResponse
 {
     /** @var string The LPA was successfully added */
@@ -16,23 +19,37 @@ class OlderLpaApiResponse
     public const DOES_NOT_MATCH     = 'NOT_MATCH';
     /** @var string There is already an activation key available/in-flight */
     public const HAS_ACTIVATION_KEY = 'HAS_ACTIVATION_KEY';
+    /** @var string The LPA has already been added to the account */
+    public const LPA_ALREADY_ADDED  = 'LPA_ALREADY_ADDED';
 
-    private array $data;
+    /** @var array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse */
+    private $data;
     private string $response;
 
-    public function __construct(string $response, array $data)
+    /**
+     * OlderLpaApiResponse constructor.
+     *
+     * @param string $response
+     * @param array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse $data
+     */
+    public function __construct(string $response, $data)
     {
         if (!$this->validateResponseType($response)) {
             throw new \RuntimeException('Incorrect response type when creating ' . __CLASS__);
         }
+
+        if (!$this->validateDataType($data)) {
+            throw new \RuntimeException('Incorrect data type when creating ' . __CLASS__);
+        }
+
         $this->response = $response;
         $this->data = $data;
     }
 
     /**
-     * @return array
+     * @return array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse
      */
-    public function getData(): array
+    public function getData()
     {
         return $this->data;
     }
@@ -53,10 +70,31 @@ class OlderLpaApiResponse
             self::DOES_NOT_MATCH,
             self::NOT_ELIGIBLE,
             self::HAS_ACTIVATION_KEY,
+            self::LPA_ALREADY_ADDED
         ];
 
         if (in_array($response, $allowedResponses)) {
             return true;
+        }
+
+        return false;
+    }
+
+    private function validateDataType($data): bool
+    {
+        $allowedDataTypes = [
+            ActivationKeyExistsResponse::class,
+            LpaAlreadyAddedResponse::class,
+        ];
+
+        if (is_array($data)) {
+            return true;
+        }
+
+        if (is_object($data)) {
+            if (in_array(get_class($data), $allowedDataTypes)) {
+                return true;
+            }
         }
 
         return false;

@@ -19,7 +19,6 @@ use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\OlderLpaApiResponse;
-use IntlDateFormatter;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
 use Mezzio\Helper\UrlHelper;
@@ -139,6 +138,19 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
             );
 
             switch ($result->getResponse()) {
+                case OlderLpaApiResponse::LPA_ALREADY_ADDED:
+                    $lpaAddedData = $result->getData();
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::lpa-already-added',
+                            [
+                                'user'          => $this->user,
+                                'donor'         => $lpaAddedData->getDonor(),
+                                'lpaType'       => $lpaAddedData->getCaseSubtype(),
+                                'actorToken'    => $lpaAddedData->getLpaActorToken()
+                            ]
+                        )
+                    );
                 case OlderLpaApiResponse::NOT_ELIGIBLE:
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-send-activation-key',
@@ -154,12 +166,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         $this->renderer->render(
                             'actor::already-have-activation-key',
                             [
-                                'user' => $this->user,
-                                'donorName' => $result->getData()['donor_name'],
-                                // TODO to move the name creation to a Twig function as a part of the template.
-                                'donorName' => (implode(' ', array_filter($result->getData()['donor_name']))),
-                                'caseType' => $result->getData()['lpa_type'],
-                                'form' => $form
+                                'user'      => $this->user,
+                                'donor'     => $result->getData()->getDonor(),
+                                'lpaType'   => $result->getData()->getCaseSubtype(),
+                                'form'      => $form
                             ]
                         )
                     );

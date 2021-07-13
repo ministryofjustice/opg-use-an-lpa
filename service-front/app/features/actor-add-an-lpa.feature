@@ -112,7 +112,7 @@ Feature: Add an LPA
       | 05  | 12    | 2020 | Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18 |
 
 
-  @ui
+  @ui @integration
   Scenario: The user is shown an error message when attempting to add the same LPA twice
     Given I have added an LPA to my account
     When I attempt to add the same LPA again

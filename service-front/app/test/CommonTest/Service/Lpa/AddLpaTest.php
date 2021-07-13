@@ -9,6 +9,8 @@ use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResponse;
 use Common\Service\Lpa\ParseLpaData;
+use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -34,12 +36,15 @@ class AddLpaTest extends TestCase
     private $parseLpaDataProphecy;
     /** @var \Prophecy\Prophecy\ObjectProphecy|LoggerInterface */
     private $loggerProphecy;
+    /** @var \Prophecy\Prophecy\ObjectProphecy|ParseLpaAlreadyAddedResponse */
+    private $parseAlreadyAddedProphecy;
 
     public function setUp(): void
     {
         $this->apiClientProphecy = $this->prophesize(ApiClient::class);
         $this->parseLpaDataProphecy = $this->prophesize(ParseLpaData::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->parseAlreadyAddedProphecy = $this->prophesize(ParseLpaAlreadyAddedResponse::class);
 
         $this->data = [
             'uid' => '700000000321',
@@ -52,7 +57,8 @@ class AddLpaTest extends TestCase
         $this->addLpa = new AddLpa(
             $this->apiClientProphecy->reveal(),
             $this->loggerProphecy->reveal(),
-            $this->parseLpaDataProphecy->reveal()
+            $this->parseLpaDataProphecy->reveal(),
+            $this->parseAlreadyAddedProphecy->reveal()
         );
 
         $actor = new CaseActor();
@@ -120,6 +126,17 @@ class AddLpaTest extends TestCase
     /** @test */
     public function it_will_fail_to_add_an_lpa_which_has_already_been_added(): void
     {
+        $response = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => 'hw',
+            'lpaActorToken' => 'wxyz-4321'
+        ];
+
         $this->apiClientProphecy
             ->httpPost(
                 '/v1/add-lpa/validate',
@@ -133,13 +150,24 @@ class AddLpaTest extends TestCase
                     'LPA already added',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
                     null,
-                    $this->lpaArrayData
+                    $response
                 )
             );
 
-        $this->parseLpaDataProphecy
-            ->__invoke($this->lpaArrayData)
-            ->willReturn($this->lpaParsedData);
+        $donor = new CaseActor();
+        $donor->setUId($response['donor']['uId']);
+        $donor->setFirstname($response['donor']['firstname']);
+        $donor->setMiddlenames($response['donor']['middlenames']);
+        $donor->setSurname($response['donor']['surname']);
+
+        $dto = new LpaAlreadyAddedResponse();
+        $dto->setDonor($donor);
+        $dto->setCaseSubtype($response['caseSubtype']);
+        $dto->setLpaActorToken($response['lpaActorToken']);
+
+        $this->parseAlreadyAddedProphecy
+            ->__invoke($response)
+            ->willReturn($dto);
 
         $result = $this->addLpa->validate(
             '12-1-1-1-1234',
@@ -149,7 +177,7 @@ class AddLpaTest extends TestCase
         );
 
         $this->assertEquals(AddLpaApiResponse::ADD_LPA_ALREADY_ADDED, $result->getResponse());
-        $this->assertEquals($this->lpaParsedData, $result->getData());
+        $this->assertEquals($dto, $result->getData());
     }
 
     /** @test */
@@ -184,7 +212,7 @@ class AddLpaTest extends TestCase
         );
 
         $this->assertEquals(AddLpaApiResponse::ADD_LPA_NOT_ELIGIBLE, $result->getResponse());
-        $this->assertEquals(new ArrayObject(), $result->getData());
+        $this->assertEquals([], $result->getData());
     }
 
     /** @test */
@@ -219,7 +247,7 @@ class AddLpaTest extends TestCase
         );
 
         $this->assertEquals(AddLpaApiResponse::ADD_LPA_NOT_FOUND, $result->getResponse());
-        $this->assertEquals(new ArrayObject(), $result->getData());
+        $this->assertEquals([], $result->getData());
     }
 
     /** @test */
