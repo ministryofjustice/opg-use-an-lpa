@@ -5,5 +5,7 @@ declare(strict_types=1);
 return [
     'feature_flags' => [
         'use_legacy_codes_service' => getenv('USE_LEGACY_CODES_SERVICE') ?: 'false',
+        'allow_older_lpas' => filter_var(getenv('ALLOW_OLDER_LPAS'), FILTER_VALIDATE_BOOLEAN) ?: false,
+        'allow_meris_lpas' => filter_var(getenv('ALLOW_MERIS_LPAS'), FILTER_VALIDATE_BOOLEAN) ?: false,
     ]
 ];

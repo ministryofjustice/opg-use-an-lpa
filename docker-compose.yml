@@ -118,8 +118,11 @@ services:
       GOOGLE_ANALYTICS_ID: "UA-170469426-1"
       KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
 
+      # Feature flags
       USE_OLDER_LPA_JOURNEY: "true"
       DELETE_LPA_FEATURE: "true"
+      ALLOW_OLDER_LPAS: "true"
+      ALLOW_MERIS_LPAS: "false"
 
       # Local only
       API_SERVICE_URL: http://api-web
@@ -190,6 +193,10 @@ services:
 
       SIRIUS_API_ENDPOINT: "http://api_gateway:4343"
       LPA_CODES_API_ENDPOINT: "http://codes-gateway:4343"
+
+      # Feature flags
+      ALLOW_OLDER_LPAS: "true"
+      ALLOW_MERIS_LPAS: "false"
 
       # Local only
       AWS_ACCESS_KEY_ID: "-"
