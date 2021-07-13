@@ -196,7 +196,7 @@ services:
 
       # Feature flags
       ALLOW_OLDER_LPAS: "true"
-      ALLOW_MERRIS_LPAS: "false"
+      ALLOW_MERIS_LPAS: "false"
 
       # Local only
       AWS_ACCESS_KEY_ID: "-"
