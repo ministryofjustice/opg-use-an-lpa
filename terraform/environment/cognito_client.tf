@@ -36,10 +36,11 @@ resource "aws_cognito_user_pool_client" "use_a_lasting_power_of_attorney_admin" 
     refresh_token = "days"
   }
 
-  access_token_validity = local.account.session_expires_admin
-  id_token_validity     = 3600
-  read_attributes       = []
-  write_attributes      = []
+  access_token_validity  = local.account.session_expires_admin
+  id_token_validity      = 3600
+  refresh_token_validity = 1
+  read_attributes        = []
+  write_attributes       = []
 
   callback_urls = ["https://${aws_route53_record.admin_use_my_lpa[0].fqdn}/oauth2/idpresponse"]
   logout_urls   = ["https://${aws_route53_record.admin_use_my_lpa[0].fqdn}/logout"]
