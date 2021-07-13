@@ -62,7 +62,7 @@ variable "accounts" {
       use_older_lpa_journey      = bool
       delete_lpa_feature         = bool
       allow_older_lpas           = bool
-      allow_merrs_lpas           = bool
+      allow_meris_lpas           = bool
     })
   )
 }
