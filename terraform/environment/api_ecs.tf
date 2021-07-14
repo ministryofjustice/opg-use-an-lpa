@@ -304,11 +304,3 @@ locals {
       ]
   })
 }
-
-output "api_web_deployed_version" {
-  value = "${data.aws_ecr_repository.use_an_lpa_api_web.repository_url}:${var.container_version}"
-}
-
-output "api_app_deployed_version" {
-  value = "${data.aws_ecr_repository.use_an_lpa_api_app.repository_url}:${var.container_version}"
-}

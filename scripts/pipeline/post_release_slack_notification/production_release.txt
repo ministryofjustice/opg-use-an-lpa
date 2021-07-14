@@ -3,6 +3,7 @@
 *Links*
     *Use frontend:* {{ use_url }}
     *View frontend:* {{ view_url }}
+    *Admin frontend:* {{ admin_url }}
     *CircleCI build url:* {{ circleci_build_url }}
 
 *Commit message:*

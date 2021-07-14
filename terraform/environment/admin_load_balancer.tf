@@ -56,6 +56,23 @@ resource "aws_lb_listener" "admin_loadbalancer" {
   certificate_arn = data.aws_acm_certificate.certificate_admin.arn
 
   default_action {
+    type = "authenticate-oidc"
+    authenticate_oidc {
+      authentication_request_extra_params = {}
+      authorization_endpoint              = "${local.admin_cognito_user_pool_domain_name}/oauth2/authorize"
+      client_id                           = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin[0].id
+      client_secret                       = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin[0].client_secret
+      issuer                              = "https://cognito-idp.eu-west-1.amazonaws.com/${local.admin_cognito_user_pool_id}"
+      on_unauthenticated_request          = "authenticate"
+      scope                               = "openid"
+      session_cookie_name                 = "AWSELBAuthSessionCookie"
+      session_timeout                     = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin[0].id_token_validity
+      token_endpoint                      = "${local.admin_cognito_user_pool_domain_name}/oauth2/token"
+      user_info_endpoint                  = "${local.admin_cognito_user_pool_domain_name}/oauth2/userInfo"
+    }
+  }
+
+  default_action {
     target_group_arn = aws_lb_target_group.admin[0].arn
     type             = "forward"
   }
@@ -74,6 +91,16 @@ resource "aws_security_group" "admin_loadbalancer" {
   description = "Allow inbound traffic"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
+}
+
+resource "aws_security_group_rule" "admin_loadbalancer_port_80_redirect_ingress" {
+  count             = local.account.build_admin == true ? 1 : 0
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = module.whitelist.moj_sites
+  security_group_id = aws_security_group.admin_loadbalancer[0].id
 }
 
 resource "aws_security_group_rule" "admin_loadbalancer_ingress" {
