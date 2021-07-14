@@ -8,6 +8,7 @@ use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Se
 use Actor\Form\RequestActivationKey\RequestReferenceNumber;
 use Common\Handler\Traits\User;
 use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Url\UrlValidityCheckService;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\SessionInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -30,15 +31,18 @@ class ReferenceNumber extends AbstractHandler implements UserAware, CsrfGuardAwa
     private RequestReferenceNumber $form;
     private ?SessionInterface $session;
     private ?UserInterface $user;
+    private UrlValidityCheckService $urlValidityCheckService;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper
+        UrlHelper $urlHelper,
+        UrlValidityCheckService $urlValidityCheckService
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
+        $this->urlValidityCheckService = $urlValidityCheckService;
     }
 
     /**
@@ -62,17 +66,20 @@ class ReferenceNumber extends AbstractHandler implements UserAware, CsrfGuardAwa
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         $this->form->setData($this->session->toArray());
+        $referer = $this->urlValidityCheckService->setValidReferer($request->getHeaders()['referer'][0]);
+        $this->session->set('referrer', $referer);
+
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/reference-number', [
             'user' => $this->user,
-            'form' => $this->form->prepare()
+            'form' => $this->form->prepare(),
+            'referer' => $referer
         ]));
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $this->form->setData($request->getParsedBody());
-
         if ($this->form->isValid()) {
             $postData = $this->form->getData();
 
@@ -80,10 +87,10 @@ class ReferenceNumber extends AbstractHandler implements UserAware, CsrfGuardAwa
             $this->session->set('opg_reference_number', $postData['opg_reference_number']);
             return $this->routeFromAnswersInSession();
         }
-
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/reference-number', [
             'user' => $this->user,
-            'form' => $this->form->prepare()
+            'form' => $this->form->prepare(),
+            'referer' => $this->session->get('referrer');
         ]));
     }
 
