@@ -7,7 +7,7 @@ namespace Actor\Handler\RequestActivationKey;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session as SessionTrait, UserAware};
 use Actor\Form\RequestActivationKey\RequestPostcode;
 use Common\Handler\Traits\User;
-use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Url\UrlValidityCheckService;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\SessionInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -30,6 +30,7 @@ class PostcodeHandler extends AbstractHandler implements UserAware, CsrfGuardAwa
     private RequestPostcode $form;
     private ?SessionInterface $session;
     private ?UserInterface $user;
+
 
     public function __construct(
         TemplateRendererInterface $renderer,

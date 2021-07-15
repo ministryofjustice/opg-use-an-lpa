@@ -7,7 +7,8 @@ namespace Actor\Handler\RequestActivationKey;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session as SessionTrait, UserAware};
 use Actor\Form\RequestActivationKey\RequestDateOfBirth;
 use Common\Handler\Traits\User;
-use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Url\UrlValidityCheckService;
+use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\SessionInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -94,7 +95,7 @@ class DateOfBirthHandler extends AbstractHandler implements UserAware, CsrfGuard
         ]));
     }
 
-    private function routeFromAnswersInSession(): \Laminas\Diactoros\Response\RedirectResponse
+    private function routeFromAnswersInSession(): RedirectResponse
     {
         if ($this->hasFutureAnswersInSession()) {
             return $this->redirectToRoute('lpa.check-answers');

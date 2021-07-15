@@ -7,8 +7,8 @@ namespace Actor\Handler\RequestActivationKey;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session as SessionTrait, UserAware};
 use Actor\Form\RequestActivationKey\RequestReferenceNumber;
 use Common\Handler\Traits\User;
-use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Url\UrlValidityCheckService;
+use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\SessionInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -31,18 +31,15 @@ class ReferenceNumber extends AbstractHandler implements UserAware, CsrfGuardAwa
     private RequestReferenceNumber $form;
     private ?SessionInterface $session;
     private ?UserInterface $user;
-    private UrlValidityCheckService $urlValidityCheckService;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper,
-        UrlValidityCheckService $urlValidityCheckService
+        UrlHelper $urlHelper
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
-        $this->urlValidityCheckService = $urlValidityCheckService;
     }
 
     /**
@@ -66,14 +63,11 @@ class ReferenceNumber extends AbstractHandler implements UserAware, CsrfGuardAwa
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         $this->form->setData($this->session->toArray());
-        $referer = $this->urlValidityCheckService->setValidReferer($request->getHeaders()['referer'][0]);
-        $this->session->set('referrer', $referer);
 
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/reference-number', [
             'user' => $this->user,
-            'form' => $this->form->prepare(),
-            'referer' => $referer
+            'form' => $this->form->prepare()
         ]));
     }
 
@@ -89,12 +83,11 @@ class ReferenceNumber extends AbstractHandler implements UserAware, CsrfGuardAwa
         }
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/reference-number', [
             'user' => $this->user,
-            'form' => $this->form->prepare(),
-            'referer' => $this->session->get('referrer');
+            'form' => $this->form->prepare()
         ]));
     }
 
-    private function routeFromAnswersInSession(): \Laminas\Diactoros\Response\RedirectResponse
+    private function routeFromAnswersInSession(): RedirectResponse
     {
         if ($this->hasFutureAnswersInSession()) {
             return $this->redirectToRoute('lpa.check-answers');
