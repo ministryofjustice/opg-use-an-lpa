@@ -13,7 +13,8 @@ resource "pagerduty_service_integration" "cloudwatch_integration" {
 }
 
 resource "aws_sns_topic" "cloudwatch_to_pagerduty" {
-  name = "CloudWatch-to-PagerDuty-${local.environment}"
+  name              = "CloudWatch-to-PagerDuty-${local.environment}"
+  kms_master_key_id = "alias/aws/sns"
 }
 
 resource "aws_sns_topic_subscription" "cloudwatch_sns_subscription" {

@@ -54,43 +54,59 @@ locals {
 
 resource "aws_security_group" "api_ecs_service" {
   name_prefix = "${local.environment}-api-ecs-service"
+  description = "API service security group"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //----------------------------------
 // 80 in from Viewer ECS service
 
 resource "aws_security_group_rule" "api_ecs_service_viewer_ingress" {
+  description              = "Allow Port 80 ingress from the View service"
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
   security_group_id        = aws_security_group.api_ecs_service.id
   source_security_group_id = aws_security_group.viewer_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //----------------------------------
 // 80 in from Actor ECS service
 
 resource "aws_security_group_rule" "api_ecs_service_actor_ingress" {
+  description              = "Allow Port 80 ingress from the Use service"
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
   security_group_id        = aws_security_group.api_ecs_service.id
   source_security_group_id = aws_security_group.actor_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //----------------------------------
 // Anything out
 resource "aws_security_group_rule" "api_ecs_service_egress" {
+  description       = "Allow any egress from API service"
   type              = "egress"
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for ECR access
   security_group_id = aws_security_group.api_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //--------------------------------------
@@ -106,6 +122,7 @@ resource "aws_ecs_task_definition" "api" {
   task_role_arn            = aws_iam_role.api_task_role.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   tags                     = local.default_tags
+
 }
 
 //----------------
