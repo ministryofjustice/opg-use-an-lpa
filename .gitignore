@@ -7,6 +7,8 @@ geckodriver.log
 **/cluster_config.json
 
 .python-version
+.pytest_cache
+.coverage
 scripts/analysis_scripts/*.csv
 
 query/s3_objects/**
