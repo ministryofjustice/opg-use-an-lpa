@@ -75,6 +75,9 @@ resource "aws_security_group" "admin_loadbalancer" {
   description = "Admin service application load balancer"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "admin_loadbalancer_ingress" {
