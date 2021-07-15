@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\CheckYourAnswers;
+use Actor\Form\CreateNewActivationKey;
 use Carbon\Carbon;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
@@ -18,8 +19,6 @@ use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\OlderLpaApiResponse;
-use DateTime;
-use IntlDateFormatter;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
 use Mezzio\Helper\UrlHelper;
@@ -27,6 +26,7 @@ use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
+use Common\Service\Lpa\LocalisedDate;
 
 /**
  * Class CheckYourAnswersHandler
@@ -47,6 +47,9 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     private array $data;
     private ?string $identity;
 
+    /** @var LocalisedDate */
+    private $localisedDate;
+
     /** @var EmailClient */
     private $emailClient;
 
@@ -56,13 +59,15 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         UrlHelper $urlHelper,
         AddOlderLpa $addOlderLpa,
         LoggerInterface $logger,
-        EmailClient $emailClient
+        EmailClient $emailClient,
+        LocalisedDate $localisedDate
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
         $this->addOlderLpa = $addOlderLpa;
         $this->emailClient = $emailClient;
+        $this->localisedDate = $localisedDate;
     }
 
     /**
@@ -122,7 +127,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $this->form->setData($request->getParsedBody());
-
         if ($this->form->isValid()) {
             $result = ($this->addOlderLpa)(
                 $this->identity,
@@ -130,23 +134,42 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 $this->data['first_names'],
                 $this->data['last_name'],
                 $this->data['dob'],
-                $this->data['postcode'],
+                $this->data['postcode']
             );
 
             switch ($result->getResponse()) {
+                case OlderLpaApiResponse::LPA_ALREADY_ADDED:
+                    $lpaAddedData = $result->getData();
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::lpa-already-added',
+                            [
+                                'user'          => $this->user,
+                                'donor'         => $lpaAddedData->getDonor(),
+                                'lpaType'       => $lpaAddedData->getCaseSubtype(),
+                                'actorToken'    => $lpaAddedData->getLpaActorToken()
+                            ]
+                        )
+                    );
                 case OlderLpaApiResponse::NOT_ELIGIBLE:
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-send-activation-key',
                         ['user'  => $this->user]
                     ));
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
+                    $form = new CreateNewActivationKey($this->getCsrfGuard($request));
+                    $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
+
+                    $form->setData($this->data);
+
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::already-have-activation-key',
                             [
-                                'user' => $this->user,
-                                'donorName' => $result->getData()['donor_name'],
-                                'caseType' => $result->getData()['lpa_type']
+                                'user'      => $this->user,
+                                'donor'     => $result->getData()->getDonor(),
+                                'lpaType'   => $result->getData()->getCaseSubtype(),
+                                'form'      => $form
                             ]
                         )
                     );
@@ -165,7 +188,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         $this->user->getDetails()['Email'],
                         (string)$this->data['reference_number'],
                         $this->data['postcode'],
-                        $this->localisedLetterExpectedDate($letterExpectedDate)
+                        ($this->localisedDate)($letterExpectedDate)
                     );
 
                     return new HtmlResponse(
@@ -179,28 +202,5 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     );
             }
         }
-    }
-
-    /**
-     * Uses duplicated code from the LpaExtension class to ensure that the date we send out in the
-     * letters if correctly localised.
-     *
-     * Violation of DRY so TODO: https://opgtransform.atlassian.net/browse/UML-1370
-     *
-     * @param \DateTimeInterface $date
-     *
-     * @return string
-     */
-    private function localisedLetterExpectedDate(\DateTimeInterface $date): string
-    {
-        $formatter = IntlDateFormatter::create(
-            \Locale::getDefault(),
-            IntlDateFormatter::LONG,
-            IntlDateFormatter::NONE,
-            'Europe/London',
-            IntlDateFormatter::GREGORIAN
-        );
-
-        return $formatter->format($date);
     }
 }

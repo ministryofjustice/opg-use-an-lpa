@@ -45,7 +45,7 @@ Feature: Add an older LPA
     Then I am told that I cannot request an activation key
 
   @integration @acceptance @pact
-  Scenario: The user cannot add an older LPA to their account if they have an activation key
+  Scenario: The user is informed if they have an activation key
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document that already has an activation key
     And I confirm that those details are correct
@@ -57,3 +57,19 @@ Feature: Add an older LPA
     When I provide the details from a valid paper LPA document
     And A malformed request is sent which is missing a data attribute
     Then I am told that something went wrong
+
+  @acceptance @integration
+  Scenario: The user is able to generate a new key even if an activation key already exists
+    Given I am on the add an older LPA page
+    And I lost the letter received having the activation key
+    When I request for a new activation key again
+    Then a letter is requested containing a one time use code
+    Then I am told a new activation key is posted to the provided postcode
+
+  @acceptance @integration
+  Scenario: The user is unable to request key for an LPA that they have already added
+    Given I am on the add an older LPA page
+    And I have added an LPA to my account
+    When I provide the details from a valid paper LPA which I have already added to my account
+    And I confirm that those details are correct
+    Then I should be told that I have already added this LPA

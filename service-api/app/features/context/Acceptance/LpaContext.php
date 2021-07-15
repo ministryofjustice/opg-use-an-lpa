@@ -217,11 +217,20 @@ class LpaContext implements Context
             ]
         );
 
+        $expectedResponse = [
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname,
+            ],
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'lpaActorToken' => $this->userLpaActorToken
+        ];
+
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-        $this->ui->assertSession()->responseContains('Lpa already added');
-        $this->ui->assertSession()->responseContains('actor');
-        $this->ui->assertSession()->responseContains($this->lpaUid);
-        $this->ui->assertSession()->responseContains($this->userLpaActorToken);
+        $this->ui->assertSession()->responseContains('LPA already added');
+        assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
     /**
@@ -1972,6 +1981,11 @@ class LpaContext implements Context
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
@@ -2013,7 +2027,8 @@ class LpaContext implements Context
                 'first_names'       => $this->userFirstnames,
                 'last_name'         => $this->userSurname,
                 'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode
+                'postcode'          => $this->userPostCode,
+                'force_activation_key' => false
             ],
             [
                 'user-token' => $this->userId,
@@ -2044,6 +2059,11 @@ class LpaContext implements Context
      */
     public function iProvideDetailsOfAnLPAThatDoesNotExist()
     {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
@@ -2077,6 +2097,11 @@ class LpaContext implements Context
      */
     public function iProvideDetailsThatDoNotMatchThePaperDocument($firstnames, $lastname, $postcode, $dob)
     {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
@@ -2119,6 +2144,11 @@ class LpaContext implements Context
     public function iProvideDetailsFromAnLPARegisteredBeforeSept2019()
     {
         $this->lpa->registrationDate = '2019-08-31';
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
 
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
@@ -2163,6 +2193,11 @@ class LpaContext implements Context
     {
         $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
 
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
@@ -2185,19 +2220,27 @@ class LpaContext implements Context
                 'first_names'       => $this->userFirstnames,
                 'last_name'         => $this->userSurname,
                 'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode
+                'postcode'          => $this->userPostCode,
+                'force_activation_key' => false
             ],
             [
                 'user-token' => $this->userId,
             ]
         );
 
+        $expectedResponse = [
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname,
+            ],
+            'caseSubtype' => $this->lpa->caseSubtype,
+        ];
+
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-        $this->ui->assertSession()->responseContains('LPA not eligible as an activation key already exists');
-        $this->ui->assertSession()->responseContains($createdDate);
-        $this->ui->assertSession()->responseContains('activation_key_created');
-        $this->ui->assertSession()->responseContains('donor_name');
-        $this->ui->assertSession()->responseContains('lpa_type');
+        $this->ui->assertSession()->responseContains('LPA has an activation key already');
+        assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
     /**
@@ -2354,5 +2397,143 @@ class LpaContext implements Context
     public function theStatusOfTheLpaGotRevoked()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @Given /^I already have a valid activation key for my LPA$/
+     */
+    public function iAlreadyHaveAValidActivationKeyForMyLPA()
+    {
+     // Not needed for this context
+    }
+
+    /**
+     * @Given /^I lost the letter received having the activation key$/
+     */
+    public function iLostTheLetterReceivedHavingTheActivationKey()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request for a new activation key again$/
+     */
+    public function iRequestForANewActivationKeyAgain()
+    {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // request a code to be generated and letter to be sent
+        $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    []
+                )
+            );
+
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/lpas/request-letter',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
+                'force_activation_key' => true,
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
+    }
+
+    /**
+     * @Then /^I am told a new activation key is posted to the provided postcode$/
+     */
+    public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
+     */
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
+    {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorId,
+                                'UserId' => $this->userId,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/lpas/request-letter',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
+                'force_activation_key' => false
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $expectedResponse = [
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname,
+            ],
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'lpaActorToken' => $this->userLpaActorToken
+        ];
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->ui->assertSession()->responseContains('LPA already added');
+        assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 }

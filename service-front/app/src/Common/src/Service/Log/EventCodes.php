@@ -40,6 +40,11 @@ class EventCodes
     public const SHARE_CODE_NOT_FOUND = 'SHARE_CODE_NOT_FOUND';
 
     /**
+     * Request for an activation key failed as the LPA has already been added
+     */
+    public const OLDER_LPA_ALREADY_ADDED = 'OLDER_LPA_ALREADY_ADDED';
+
+    /**
      * LPA not found
      */
     public const OLDER_LPA_NOT_FOUND = 'OLDER_LPA_NOT_FOUND';
@@ -104,4 +109,9 @@ class EventCodes
      * An LPA was removed from a users account
      */
     public const LPA_REMOVED = 'LPA_REMOVED';
+
+    /**
+     * An LPA force requesting another activation key again
+     */
+    public const OLDER_LPA_FORCE_ACTIVATION_KEY = 'OLDER_LPA_FORCE_ACTIVATION_KEY';
 }

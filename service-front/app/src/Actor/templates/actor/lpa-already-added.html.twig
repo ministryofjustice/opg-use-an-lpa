@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}You've already added this <abbr title="lasting power of attorney">LPA</abbr> to your account{% endtrans %} - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}You've already added this LPA to your account{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -27,7 +27,7 @@
                                 {% trans %}Donor name{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ actor_name(lpa.donor) }}
+                                {{ actor_name(donor) }}
                             </dd>
                         </div>
                         <div class="govuk-summary-list__row">
@@ -35,7 +35,7 @@
                                 {% trans %}Type of LPA{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {% if lpa.caseSubtype|lower == "pfa" %}
+                                {% if lpaType|lower == "pfa" %}
                                     {% trans %}Property and finance{% endtrans %}
                                 {% else %}
                                     {% trans %}Health and welfare{% endtrans %}

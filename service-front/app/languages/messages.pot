@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-06-21T15:08:25+00:00\n"
+"POT-Creation-Date: 2021-06-23T11:36:19+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -23,7 +23,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-already-added.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:72
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:73
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
@@ -36,7 +36,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:31
 #: src/Actor/templates/actor/lpa-already-added.html.twig:41
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:72
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:73
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:26
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
@@ -134,7 +134,7 @@ msgid "The following codes will no longer work."
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:88
-msgid "If an organisation asks to see this <abbr title=\"lasting power of attorney\">LPA</abbr> again, you can <a href=\"%create-code-link%\">make them a new code</a>."
+msgid "If an organisation asks to see this <abbr title=\"lasting power of attorney\">LPA</abbr> again, you can <a href=\"%create-code-link%\" class=\"govuk-link\">make them a new code</a>."
 msgstr ""
 
 #: src/Actor/templates/actor/request-email-change-success.html.twig:3
@@ -1607,7 +1607,7 @@ msgstr ""
 msgid "Any lasting power of attorney (LPA) you add to your account will appear on this page."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:48
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:49
 msgid "Add another LPA"
 msgstr ""
 
@@ -2126,7 +2126,7 @@ msgstr ""
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:46
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:47
 msgid "Add your first LPA"
 msgstr ""
 
@@ -3718,7 +3718,7 @@ msgstr ""
 msgid "%organisation% on %date%"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:60
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:61
 msgid "You have %count% LPA in your account"
 msgid_plural "You have %count% LPAs in your account"
 msgstr[0] ""
@@ -4011,4 +4011,9 @@ msgid ""
 "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br>\n"
 "        Textphone: 0115 934 2778 <br>\n"
 "        Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:41
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:43
+msgid "ask for an activation key if you have not been given one"
 msgstr ""

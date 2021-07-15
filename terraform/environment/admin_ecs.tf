@@ -197,6 +197,10 @@ locals {
         {
           name  = "PORT",
           value = tostring(80)
+        },
+        {
+          name  = "DYNAMODB_TABLE_PREFIX",
+          value = tostring(local.environment)
         }
       ]
     }

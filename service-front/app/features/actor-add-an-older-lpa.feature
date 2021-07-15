@@ -32,10 +32,32 @@ Feature: Add an older LPA
     Then I am told that I cannot request an activation key
 
   @ui @integration
-  Scenario: The user cannot add an older LPA to their account if they have an activation key
+  Scenario: The user is informed when trying to add an older LPA to their account and it has an activation key
     Given I am on the add an older LPA page
     And I already have a valid activation key for my LPA
     When I provide the details from a valid paper document
     And I confirm that those details are correct
     Then I am told that I have an activation key for this LPA and where to find it
 
+  @ui
+  Scenario: The user is given an option to generate a new key even if an activation key already exists
+    Given I am on the add an older LPA page
+    And I already have a valid activation key for my LPA
+    And I lost the letter received having the activation key
+    Then I should have an option to regenerate an activation key for the old LPA I want to add
+
+  @ui @integration
+  Scenario: The user is able to generate a new key even if an activation key already exists
+    Given I am on the add an older LPA page
+    And I already have a valid activation key for my LPA
+    And I lost the letter received having the activation key
+    When I request for a new activation key again
+    Then I am told a new activation key is posted to the provided postcode
+
+  @ui @integration
+  Scenario: The user is unable to request key for an LPA that they have already added
+    Given I am on the add an older LPA page
+    And I have added an LPA to my account
+    When I provide the details from a valid paper LPA which I have already added to my account
+    And I confirm that those details are correct
+    Then I should be told that I have already added this LPA

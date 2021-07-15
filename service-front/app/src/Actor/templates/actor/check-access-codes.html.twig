@@ -85,7 +85,7 @@
                             <h2 class="govuk-heading-m">{% trans %}Inactive codes{% endtrans %}</h2>
 
                             <p class="govuk-body">{% trans %}The following codes will no longer work.{% endtrans %}<br>
-                                {%trans with {'%create-code-link%': path('lpa.create-code', {}, {'lpa':  actorToken })} %}If an organisation asks to see this <abbr title="lasting power of attorney">LPA</abbr> again, you can <a href="%create-code-link%">make them a new code</a>.{% endtrans %}
+                                {%trans with {'%create-code-link%': path('lpa.create-code', {}, {'lpa':  actorToken })} %}If an organisation asks to see this <abbr title="lasting power of attorney">LPA</abbr> again, you can <a href="%create-code-link%" class="govuk-link">make them a new code</a>.{% endtrans %}
                             </p>
 
                             <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default-2" data-opentext="{% trans %}Open all{% notes %}Accordion label{% endtrans%}" data-closetext="{% trans %}Close all{% notes %}Accordion label{% endtrans %}" data-sectiontext="{% trans %}inactive code details{% notes %}Accordion label{% endtrans %}">

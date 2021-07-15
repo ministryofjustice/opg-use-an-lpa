@@ -257,6 +257,14 @@ locals {
         {
           name  = "DELETE_LPA_FEATURE",
           value = tostring(local.account.delete_lpa_feature)
+        },
+        {
+          name  = "ALLOW_OLDER_LPAS",
+          value = tostring(local.account.allow_older_lpas)
+        },
+        {
+          name  = "ALLOW_MERIS_LPAS",
+          value = tostring(local.account.allow_meris_lpas)
         }
       ]
   })

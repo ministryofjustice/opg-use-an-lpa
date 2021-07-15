@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BehatTest\Context\Integration;
 
 use BehatTest\Context\ActorContextTrait;
+use Common\Entity\CaseActor;
 use Common\Exception\ApiException;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\AddLpa;
@@ -14,6 +15,10 @@ use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Lpa\RemoveLpa;
+use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
+use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
+use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTime;
 use Exception;
@@ -26,7 +31,7 @@ use JSHayes\FakeRequests\MockHandler;
  *
  * Account creation, login, password reset etc.
  *
- * @property string lpa
+ * @property array lpa
  * @property string lpaJson
  * @property string lpaData
  * @property string passcode
@@ -142,6 +147,7 @@ class LpaContext extends BaseIntegrationContext
                 $this->userSurname,
                 DateTime::createFromFormat('Y-m-d', $this->userDob),
                 $this->userPostCode,
+                false
             );
         } catch (ApiException $e) {
             throw new Exception(
@@ -203,6 +209,7 @@ class LpaContext extends BaseIntegrationContext
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
             $this->userPostCode,
+            false
         );
 
         $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_FOUND, []);
@@ -239,9 +246,9 @@ class LpaContext extends BaseIntegrationContext
                     [],
                     json_encode(
                         [
-                            'title' => 'Bad Request',
-                            'details' => 'LPA not eligible due to registration date',
-                            'data' => [],
+                            'title'     => 'Bad Request',
+                            'details'   => 'LPA not eligible due to registration date',
+                            'data'      => [],
                         ]
                     )
                 )
@@ -256,69 +263,10 @@ class LpaContext extends BaseIntegrationContext
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
             $this->userPostCode,
+            false
         );
 
         $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_ELIGIBLE, []);
-
-        assertEquals($response, $result);
-    }
-
-    /**
-     * @Then /^I am told that I have an activation key for this LPA and where to find it$/
-     */
-    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
-    {
-        // API call for requesting activation code
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Bad Request',
-                            'details' => 'LPA not eligible as an activation key already exists',
-                            'data' => [
-                                'activation_key_created' => $this->codeCreatedDate,
-                                'donor_name' => preg_replace(
-                                    '/\s+/',
-                                    ' ',
-                                    $this->userFirstname . ' '
-                                    . $this->userMiddlenames . ' '
-                                    . $this->userSurname
-                                ),
-                                'lpa_type' => ' '
-                            ],
-                        ]
-                    )
-                )
-            );
-
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
-
-        $result = $addOlderLpa(
-            $this->userIdentity,
-            intval($this->referenceNo),
-            $this->userFirstname,
-            $this->userSurname,
-            DateTime::createFromFormat('Y-m-d', $this->userDob),
-            $this->userPostCode,
-        );
-
-        $response = new OlderLpaApiResponse(
-            OlderLpaApiResponse::HAS_ACTIVATION_KEY,
-            [
-                'activation_key_created' => $this->codeCreatedDate,
-                'donor_name' => preg_replace(
-                    '/\s+/',
-                    ' ',
-                    $this->userFirstname . ' '
-                    . $this->userMiddlenames . ' '
-                    . $this->userSurname
-                ),
-                'lpa_type' => ' ',
-            ]
-        );
 
         assertEquals($response, $result);
     }
@@ -356,25 +304,25 @@ class LpaContext extends BaseIntegrationContext
         $this->accessCode = "XYZ321ABC987";
 
         $code1 = [
-            'SiriusUid' => $this->referenceNo,
-            'Added' => '2020-01-01T23:59:59+00:00',
-            'Organisation' => $this->organisation,
-            'UserLpaActor' => $this->actorLpaToken,
-            'ViewerCode' => $this->accessCode,
-            'Expires' => $code1Expiry,
-            'Viewed' => false,
-            'ActorId' => $this->actorId,
+            'SiriusUid'     => $this->referenceNo,
+            'Added'         => '2020-01-01T23:59:59+00:00',
+            'Organisation'  => $this->organisation,
+            'UserLpaActor'  => $this->actorLpaToken,
+            'ViewerCode'    => $this->accessCode,
+            'Expires'       => $code1Expiry,
+            'Viewed'        => false,
+            'ActorId'       => $this->actorId,
         ];
 
         $code2 = [
-            'SiriusUid' => $this->referenceNo,
-            'Added' => '2020-01-01T23:59:59+00:00',
-            'Organisation' => $this->organisation,
-            'UserLpaActor' => $this->actorLpaToken,
-            'ViewerCode' => $this->accessCode,
-            'Expires' => $code2Expiry,
-            'Viewed' => false,
-            'ActorId' => $this->actorId,
+            'SiriusUid'     => $this->referenceNo,
+            'Added'         => '2020-01-01T23:59:59+00:00',
+            'Organisation'  => $this->organisation,
+            'UserLpaActor'  => $this->actorLpaToken,
+            'ViewerCode'    => $this->accessCode,
+            'Expires'       => $code2Expiry,
+            'Viewed'        => false,
+            'ActorId'       => $this->actorId,
         ];
 
         //API call for getting all the users added LPAs
@@ -488,8 +436,8 @@ class LpaContext extends BaseIntegrationContext
                     json_encode(
                         [
                             'user-lpa-actor-token' => $this->actorLpaToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
+                            'date'  => 'date',
+                            'lpa'   => $this->lpa,
                             'actor' => $this->lpaData['actor'],
                         ]
                     )
@@ -525,8 +473,8 @@ class LpaContext extends BaseIntegrationContext
                     json_encode(
                         [
                             'user-lpa-actor-token' => $this->actorLpaToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
+                            'date'  => 'date',
+                            'lpa'   => $this->lpa,
                             'actor' => $this->lpaData['actor'],
                         ]
                     )
@@ -586,8 +534,8 @@ class LpaContext extends BaseIntegrationContext
                     json_encode(
                         [
                             'user-lpa-actor-token' => $this->actorLpaToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
+                            'date'  => 'date',
+                            'lpa'   => $this->lpa,
                             'actor' => $this->lpaData['actor'],
                         ]
                     )
@@ -658,8 +606,8 @@ class LpaContext extends BaseIntegrationContext
                     json_encode(
                         [
                             'user-lpa-actor-token' => $this->actorLpaToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
+                            'date'  => 'date',
+                            'lpa'   => $this->lpa,
                             'actor' => $this->lpaData['actor'],
                         ]
                     )
@@ -715,8 +663,8 @@ class LpaContext extends BaseIntegrationContext
                     json_encode(
                         [
                             'user-lpa-actor-token' => $this->actorLpaToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
+                            'date'  => 'date',
+                            'lpa'   => $this->lpa,
                             'actor' => $this->lpaData['actor'],
                         ]
                     )
@@ -732,24 +680,24 @@ class LpaContext extends BaseIntegrationContext
                     json_encode(
                         [
                             0 => [
-                                'SiriusUid' => $this->lpa['uId'],
-                                'Added' => '2020-01-01T23:59:59+00:00',
-                                'Expires' => '2021-01-01T23:59:59+00:00',
-                                'UserLpaActor' => $this->actorLpaToken,
-                                'Organisation' => $this->organisation,
-                                'ViewerCode' => $this->accessCode,
-                                'Viewed' => false,
-                                'ActorId' => $this->actorId,
+                                'SiriusUid'     => $this->lpa['uId'],
+                                'Added'         => '2020-01-01T23:59:59+00:00',
+                                'Expires'       => '2021-01-01T23:59:59+00:00',
+                                'UserLpaActor'  => $this->actorLpaToken,
+                                'Organisation'  => $this->organisation,
+                                'ViewerCode'    => $this->accessCode,
+                                'Viewed'        => false,
+                                'ActorId'       => $this->actorId,
                             ],
                             1 => [
-                                'SiriusUid' => $this->lpa['uId'],
-                                'Added' => '2020-01-01T23:59:59+00:00',
-                                'Expires' => '2020-02-01T23:59:59+00:00',
-                                'UserLpaActor' => $this->actorLpaToken,
-                                'Organisation' => $this->organisation,
-                                'ViewerCode' => "ABC321ABCXYZ",
-                                'Viewed' => false,
-                                'ActorId' => $this->actorId,
+                                'SiriusUid'     => $this->lpa['uId'],
+                                'Added'         => '2020-01-01T23:59:59+00:00',
+                                'Expires'       => '2020-02-01T23:59:59+00:00',
+                                'UserLpaActor'  => $this->actorLpaToken,
+                                'Organisation'  => $this->organisation,
+                                'ViewerCode'    => "ABC321ABCXYZ",
+                                'Viewed'        => false,
+                                'ActorId'       => $this->actorId,
                             ],
                         ]
                     )
@@ -1047,10 +995,10 @@ class LpaContext extends BaseIntegrationContext
                     [],
                     json_encode(
                         [
-                            'user-lpa-actor-token' => $this->actorLpaToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
+                            'user-lpa-actor-token'  => $this->actorLpaToken,
+                            'date'                  => 'date',
+                            'lpa'                   => $this->lpa,
+                            'actor'                 => $this->lpaData['actor'],
                         ]
                     )
                 )
@@ -1106,10 +1054,10 @@ class LpaContext extends BaseIntegrationContext
                         [],
                         json_encode(
                             [
-                                'user-lpa-actor-token' => $this->actorLpaToken,
-                                'date' => 'date',
-                                'lpa' => [],
-                                'actor' => $this->lpaData['actor'],
+                                'user-lpa-actor-token'  => $this->actorLpaToken,
+                                'date'                  => 'date',
+                                'lpa'                   => [],
+                                'actor'                 => $this->lpaData['actor'],
                             ]
                         )
                     )
@@ -1123,10 +1071,10 @@ class LpaContext extends BaseIntegrationContext
                         [],
                         json_encode(
                             [
-                                'user-lpa-actor-token' => $this->actorLpaToken,
-                                'date' => 'date',
-                                'lpa' => $this->lpa,
-                                'actor' => $this->lpaData['actor'],
+                                'user-lpa-actor-token'  => $this->actorLpaToken,
+                                'date'                  => 'date',
+                                'lpa'                   => $this->lpa,
+                                'actor'                 => $this->lpaData['actor'],
                             ]
                         )
                     )
@@ -1171,10 +1119,10 @@ class LpaContext extends BaseIntegrationContext
                     [],
                     json_encode(
                         [
-                            'user-lpa-actor-token' => $this->actorLpaToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
+                            'user-lpa-actor-token'  => $this->actorLpaToken,
+                            'date'                  => 'date',
+                            'lpa'                   => $this->lpa,
+                            'actor'                 => $this->lpaData['actor'],
                         ]
                     )
                 )
@@ -1304,9 +1252,9 @@ class LpaContext extends BaseIntegrationContext
                     [],
                     json_encode(
                         [
-                            'title' => 'Not found',
-                            'details' => 'Code validation failed',
-                            'data' => [],
+                            'title'     => 'Not found',
+                            'details'   => 'Code validation failed',
+                            'data'      => [],
                         ]
                     )
                 )
@@ -1374,5 +1322,242 @@ class LpaContext extends BaseIntegrationContext
     public function iReceiveAnEmailConfirmingActivationKeyRequest()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @Given /^I lost the letter received having the activation key$/
+     */
+    public function iLostTheLetterReceivedHavingTheActivationKey()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I request for a new activation key again$/
+     */
+    public function iRequestForANewActivationKeyAgain()
+    {
+        // API call for getLpaById call happens inside of the check access codes handler
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    [],
+                    ''
+                )
+            );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        try {
+            $result = $addOlderLpa(
+                $this->userIdentity,
+                intval($this->referenceNo),
+                $this->userFirstname,
+                $this->userSurname,
+                DateTime::createFromFormat('Y-m-d', $this->userDob),
+                $this->userPostCode,
+                true
+            );
+        } catch (ApiException $e) {
+            throw new Exception(
+                'Failed to correctly approve older LPA addition request: ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+
+        $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
+
+        assertEquals($response, $result);
+    }
+
+    /**
+     * @Then /^I am told a new activation key is posted to the provided postcode$/
+     */
+    public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I am told that I have an activation key for this LPA and where to find it$/
+     */
+    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
+    {
+        // API call for requesting activation code
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title'     => 'Bad Request',
+                            'details'   => 'LPA has an activation key already',
+                            'data'      => [
+                                'donor'         => [
+                                    'uId'           => $this->lpa['donor']['uId'],
+                                    'firstname'     => $this->lpa['donor']['firstname'],
+                                    'middlenames'   => $this->lpa['donor']['middlenames'],
+                                    'surname'       => $this->lpa['donor']['surname'],
+                                ],
+                                'caseSubtype'   => $this->lpa['caseSubtype']
+                            ]
+                        ]
+                    )
+                )
+            );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        $result = $addOlderLpa(
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+            false
+        );
+
+        $donor = new CaseActor();
+        $donor->setUId($this->lpa['donor']['uId']);
+        $donor->setFirstname($this->lpa['donor']['firstname']);
+        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
+        $donor->setSurname($this->lpa['donor']['surname']);
+
+        $keyExistsDTO = new ActivationKeyExistsResponse();
+        $keyExistsDTO->setDonor($donor);
+        $keyExistsDTO->setCaseSubtype($this->lpa['caseSubtype']);
+
+        $response = new OlderLpaApiResponse(
+            OlderLpaApiResponse::HAS_ACTIVATION_KEY,
+            $keyExistsDTO
+        );
+
+        assertEquals($response, $result);
+    }
+
+    /**
+     * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
+     */
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
+    {
+        // API call for requesting activation code
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title'     => 'Bad Request',
+                            'details'   => 'LPA already added',
+                            'data'      => [
+                                'donor'         => [
+                                    'uId'           => $this->lpa['donor']['uId'],
+                                    'firstname'     => $this->lpa['donor']['firstname'],
+                                    'middlenames'   => $this->lpa['donor']['middlenames'],
+                                    'surname'       => $this->lpa['donor']['surname'],
+                                ],
+                                'caseSubtype'   => $this->lpa['caseSubtype'],
+                                'lpaActorToken' => $this->actorLpaToken
+                            ]
+                        ]
+                    )
+                )
+            );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        $result = $addOlderLpa(
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+            false
+        );
+
+        $donor = new CaseActor();
+        $donor->setUId($this->lpa['donor']['uId']);
+        $donor->setFirstname($this->lpa['donor']['firstname']);
+        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
+        $donor->setSurname($this->lpa['donor']['surname']);
+
+        $alreadyAddedDTO = new LpaAlreadyAddedResponse();
+        $alreadyAddedDTO->setDonor($donor);
+        $alreadyAddedDTO->setCaseSubtype($this->lpa['caseSubtype']);
+        $alreadyAddedDTO->setLpaActorToken($this->actorLpaToken);
+
+        $response = new OlderLpaApiResponse(
+            OlderLpaApiResponse::LPA_ALREADY_ADDED,
+            $alreadyAddedDTO
+        );
+
+        assertEquals($response, $result);
+    }
+
+    /**
+     * @Then /^I should be told that I have already added this LPA$/
+     */
+    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^I attempt to add the same LPA again$/
+     */
+    public function iAttemptToAddTheSameLPAAgain()
+    {
+        // API call for checking add LPA data
+        $this->apiFixtures->post('/v1/add-lpa/validate')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Bad Request',
+                            'details' => 'LPA already added',
+                            'data' => [
+                                'donor'         => [
+                                    'uId'           => $this->lpa['donor']['uId'],
+                                    'firstname'     => $this->lpa['donor']['firstname'],
+                                    'middlenames'   => $this->lpa['donor']['middlenames'],
+                                    'surname'       => $this->lpa['donor']['surname'],
+                                ],
+                                'caseSubtype'   => $this->lpa['caseSubtype'],
+                                'lpaActorToken' => $this->actorLpaToken
+                            ],
+                        ]
+                    )
+                )
+            );
+
+        $donor = new CaseActor();
+        $donor->setUId($this->lpa['donor']['uId']);
+        $donor->setFirstname($this->lpa['donor']['firstname']);
+        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
+        $donor->setSurname($this->lpa['donor']['surname']);
+
+        $addLpa = $this->container->get(AddLpa::class);
+        $alreadyAddedDTO = new LpaAlreadyAddedResponse();
+        $alreadyAddedDTO->setDonor($donor);
+        $alreadyAddedDTO->setCaseSubtype($this->lpa['caseSubtype']);
+        $alreadyAddedDTO->setLpaActorToken($this->actorLpaToken);
+
+        $response = $addLpa->validate(
+            $this->userIdentity,
+            $this->passcode,
+            $this->referenceNo,
+            $this->userDob
+        );
+
+        assertEquals(AddLpaApiResponse::ADD_LPA_ALREADY_ADDED, $response->getResponse());
+        assertEquals($alreadyAddedDTO, $response->getData());
     }
 }
