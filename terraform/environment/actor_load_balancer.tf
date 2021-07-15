@@ -182,7 +182,7 @@ resource "aws_lb_listener_rule" "actor_maintenance_welsh" {
 
 
 resource "aws_security_group" "actor_loadbalancer" {
-  name        = "${local.environment}-actor-loadbalancer"
+  name_prefix = "${local.environment}-actor-loadbalancer"
   description = "Allow inbound traffic"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
@@ -242,7 +242,7 @@ resource "aws_security_group_rule" "actor_loadbalancer_egress" {
 }
 
 resource "aws_security_group" "actor_loadbalancer_route53" {
-  name        = "${local.environment}-actor-loadbalancer-route53"
+  name_prefix = "${local.environment}-actor-loadbalancer-route53"
   description = "Allow Route53 healthchecks"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags

@@ -71,7 +71,7 @@ resource "aws_lb_listener_certificate" "admin_loadbalancer_live_service_certific
 
 resource "aws_security_group" "admin_loadbalancer" {
   count       = local.account.build_admin == true ? 1 : 0
-  name        = "${local.environment}-admin-loadbalancer"
+  name_prefix = "${local.environment}-admin-loadbalancer"
   description = "Admin service application load balancer"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags

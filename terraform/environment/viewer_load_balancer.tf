@@ -182,7 +182,7 @@ resource "aws_lb_listener_rule" "viewer_maintenance_welsh" {
 
 
 resource "aws_security_group" "viewer_loadbalancer" {
-  name        = "${local.environment}-viewer-loadbalancer"
+  name_prefix = "${local.environment}-viewer-loadbalancer"
   description = "View service application load balancer"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
@@ -248,7 +248,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_egress" {
 }
 
 resource "aws_security_group" "viewer_loadbalancer_route53" {
-  name        = "${local.environment}-viewer-loadbalancer-route53"
+  name_prefix = "${local.environment}-viewer-loadbalancer-route53"
   description = "View service Route53 healthchecks"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
