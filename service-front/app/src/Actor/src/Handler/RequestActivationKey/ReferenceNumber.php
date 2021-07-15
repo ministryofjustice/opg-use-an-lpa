@@ -62,8 +62,11 @@ class ReferenceNumber extends AbstractHandler implements UserAware, CsrfGuardAwa
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form->setData($this->session->toArray());
+        if ($request->getQueryParams()['clearSession']) {
+            $this->clearSession();
+        }
 
+        $this->form->setData($this->session->toArray());
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/reference-number', [
             'user' => $this->user,
@@ -99,5 +102,14 @@ class ReferenceNumber extends AbstractHandler implements UserAware, CsrfGuardAwa
     private function hasFutureAnswersInSession(): bool
     {
         return $this->session->get('postcode') != null;
+    }
+
+    private function clearSession()
+    {
+        $this->session->unset('postcode');
+        $this->session->unset('first_names');
+        $this->session->unset('last_name');
+        $this->session->unset('dob');
+        $this->session->unset('opg_reference_number');
     }
 }
