@@ -5,7 +5,7 @@ services:
     image: ship-to-opg-metrics
     build:
       context: ./ship-to-opg-metrics
-      dockerfile: Test.Dockerfile
+      dockerfile: test.Dockerfile
     ports:
       - 9000:8080
     volumes:
