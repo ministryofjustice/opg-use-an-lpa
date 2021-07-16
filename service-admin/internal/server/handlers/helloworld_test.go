@@ -18,8 +18,8 @@ func TestHelloHandler(t *testing.T) {
 		server.LoadTemplates(os.DirFS("../../../web/templates")),
 	)
 
-	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/", nil)
-	assert.HTTPBodyContains(t, handler.ServeHTTP, "GET", "/", nil, "Hello World")
+	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/helloworld", nil)
+	assert.HTTPBodyContains(t, handler.ServeHTTP, "GET", "/helloworld", nil, "Hello World")
 }
 
 func TestHelloHandler_WithBadTemplate(t *testing.T) {
@@ -27,9 +27,9 @@ func TestHelloHandler_WithBadTemplate(t *testing.T) {
 
 	memfs := afero.NewMemMapFs()
 
-	err := memfs.MkdirAll("layouts", 0755)
+	err := afero.WriteFile(memfs, "test.page.gohtml", []byte(""), 0644)
 	if err != nil {
-		t.Errorf("unable to create in memory template filesystem, %w", err)
+		t.Fatalf("%v", err)
 	}
 
 	fs := afero.NewIOFS(memfs)
@@ -40,5 +40,5 @@ func TestHelloHandler_WithBadTemplate(t *testing.T) {
 	)
 
 	// the handler panics but that is handled upstream so it claims success at this point
-	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/", nil)
+	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/helloworld", nil)
 }

@@ -33,6 +33,7 @@ class LpasActionsHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
+        $userId = $request->getAttribute('actor-id');
 
         if (
             !isset($requestData['reference_number']) ||
@@ -44,7 +45,7 @@ class LpasActionsHandler implements RequestHandlerInterface
             throw new BadRequestException('Required data missing to request an activation key');
         }
         // Check LPA with user provided reference number
-        $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($requestData);
+        $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($userId, $requestData);
 
         if (!isset($lpaMatchResponse['lpa-id'])) {
             throw new BadRequestException('The lpa-id is missing from the data match response');
@@ -65,8 +66,8 @@ class LpasActionsHandler implements RequestHandlerInterface
                 throw new BadRequestException(
                     'LPA has an activation key already',
                     [
-                        'lpa_type'   => $lpaMatchResponse['lpa_type'],
-                        'donor_name' => $lpaMatchResponse['donor_name']
+                        'donor'         => $lpaMatchResponse['donor'],
+                        'caseSubtype'   => $lpaMatchResponse['caseSubtype']
                     ]
                 );
             }

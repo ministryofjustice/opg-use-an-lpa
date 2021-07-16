@@ -8,7 +8,7 @@ import (
 	"io/fs"
 	"net/http"
 	"path/filepath"
-	"strings"
+	"time"
 
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
 	"github.com/rs/zerolog/log"
@@ -21,8 +21,8 @@ type Templates struct {
 var ErrTemplateNotFound = errors.New("template not found")
 
 func (t *Templates) Get(name string) (*template.Template, error) {
-	if tmpl, isMapContains := t.tmpls[name]; isMapContains {
-		return tmpl, nil
+	if tpl, isMapContains := t.tmpls[name]; isMapContains {
+		return tpl, nil
 	} else {
 		return nil, fmt.Errorf("%w, \"%s\"", ErrTemplateNotFound, name)
 	}
@@ -38,25 +38,54 @@ func WithTemplates(next http.Handler, t *Templates) http.Handler {
 }
 
 func LoadTemplates(folder fs.FS) *Templates {
-	layouts, err := template.New("").ParseFS(folder, "layouts/*.gohtml")
+	t := template.New("")
+	t = t.Funcs(template.FuncMap{
+		"readableDateTime": readableDateTime,
+	})
+
+	files, err := fs.Glob(folder, "*.page.gohtml")
 	if err != nil {
-		log.Fatal().AnErr("error", err).Msg("unable to glob layout folder")
+		log.Fatal().AnErr("error", err).Msg("unable to glob page templates")
 	}
 
-	files, err := fs.Glob(folder, "*.gohtml")
-	if err != nil {
-		log.Fatal().AnErr("error", err).Msg("unable to glob template folder")
-	}
-
-	t := &Templates{
-		tmpls: make(map[string]*template.Template),
-	}
+	tmpls := make(map[string]*template.Template)
 
 	for _, file := range files {
 		name := filepath.Base(file)
-		name = strings.TrimSuffix(name, filepath.Ext(name))
-		t.tmpls[name] = template.Must(template.Must(layouts.Clone()).ParseFS(folder, file))
+
+		ts, err := template.Must(t.Clone()).ParseFS(folder, file)
+		if err != nil {
+			log.Fatal().AnErr("error", err).Msgf("unable to load template %s", file)
+		}
+
+		ts, err = ts.ParseFS(folder, "*.layout.gohtml")
+		if err != nil {
+			log.Info().AnErr("error", err).Msg("unable to glob layouts")
+		}
+
+		ts, err = ts.ParseFS(folder, "*.partial.gohtml")
+		if err != nil {
+			log.Info().AnErr("error", err).Msg("unable to glob partials")
+		}
+
+		tmpls[name] = ts
 	}
 
-	return t
+	return &Templates{
+		tmpls: tmpls,
+	}
+}
+
+func readableDateTime(date string) string {
+	l, err := time.LoadLocation("Europe/London")
+	if err != nil {
+		return date
+	}
+
+	t, err := time.Parse(time.RFC3339, date)
+	if err != nil {
+		return date
+	}
+
+	return t.In(l).Format("2 January 2006 at 3:04PM")
 }

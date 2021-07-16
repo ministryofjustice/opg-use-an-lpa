@@ -112,12 +112,14 @@ class RequestActivationKeyContext implements Context
                                 'title' => 'Bad request',
                                 'details' => 'LPA has an activation key already',
                                 'data' => [
-                                    'donor_name' => [
-                                        ($this->lpaData['lpa'])->donor->firstname,
-                                        ($this->lpaData['lpa'])->donor->middlenames,
-                                        ($this->lpaData['lpa'])->donor->surname
+                                    'donor'         => [
+                                        'uId'           => $this->lpa->donor->uId,
+                                        'firstname'     => $this->lpa->donor->firstname,
+                                        'middlenames'   => $this->lpa->donor->middlenames,
+                                        'surname'       => $this->lpa->donor->surname,
                                     ],
-                                    'lpa_type'   => $this->lpaData['lpa']->caseSubtype
+                                    'caseSubtype' => $this->lpa->caseSubtype,
+                                    'lpaActorToken' => $this->userLpaActorToken
                                 ],
                             ]
                         )
@@ -135,6 +137,48 @@ class RequestActivationKeyContext implements Context
                     assertArrayHasKey('template_id', $params);
                     assertArrayHasKey('personalisation', $params);
                 }
+            );
+    }
+
+    /**
+     * @Given /^I am on the request an activation key page$/
+     * @Given /^I am on the add an older LPA page$/
+     */
+    public function iAmOnTheRequestAnActivationKeyPage()
+    {
+        $this->ui->visit('/lpa/request-code/lpa-reference-number');
+        $this->ui->assertPageAddress('lpa/request-code/lpa-reference-number');
+    }
+
+    /**
+     * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
+     */
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
+    {
+        $this->fillAndSubmitOlderLpaForm();
+
+        $this->apiFixtures->patch('/v1/lpas/request-letter')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Bad request',
+                            'details' => 'LPA already added',
+                            'data' => [
+                                'donor'         => [
+                                    'uId'           => $this->lpa->donor->uId,
+                                    'firstname'     => $this->lpa->donor->firstname,
+                                    'middlenames'   => $this->lpa->donor->middlenames,
+                                    'surname'       => $this->lpa->donor->surname,
+                                ],
+                                'caseSubtype' => $this->lpa->caseSubtype,
+                                'lpaActorToken' => $this->userLpaActorToken
+                            ],
+                        ]
+                    )
+                )
             );
     }
 
@@ -206,16 +250,6 @@ class RequestActivationKeyContext implements Context
                     )
                 )
             );
-    }
-
-    /**
-     * @Given /^I am on the request an activation key page$/
-     * @Given /^I am on the add an older LPA page$/
-     */
-    public function iAmOnTheRequestAnActivationKeyPage()
-    {
-        $this->ui->visit('/lpa/request-code/lpa-reference-number');
-        $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
     }
 
     /**

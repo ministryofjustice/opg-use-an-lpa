@@ -7,7 +7,6 @@ use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Lpa\AddLpa;
 use App\Service\Lpa\LpaAlreadyAdded;
-use App\Service\Lpa\LpaService;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
@@ -18,9 +17,6 @@ class AddLpaTest extends TestCase
 {
     /** @var ObjectProphecy|LoggerInterface */
     private $loggerProphecy;
-
-    /** @var ObjectProphecy|LpaService */
-    private $lpaServiceProphecy;
 
     /** @var ObjectProphecy|ActorCodeService */
     private $actorCodeServiceProphecy;
@@ -36,7 +32,6 @@ class AddLpaTest extends TestCase
     public function setUp()
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
-        $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
         $this->actorCodeServiceProphecy = $this->prophesize(ActorCodeService::class);
         $this->lpaAlreadyAddedProphecy = $this->prophesize(LpaAlreadyAdded::class);
 
@@ -51,7 +46,6 @@ class AddLpaTest extends TestCase
         return new AddLpa(
             $this->loggerProphecy->reveal(),
             $this->actorCodeServiceProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal(),
             $this->lpaAlreadyAddedProphecy->reveal()
         );
     }

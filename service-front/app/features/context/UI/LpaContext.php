@@ -25,6 +25,7 @@ use Psr\Http\Message\RequestInterface;
  * @property string $userFirstName
  * @property int    $userId
  * @property string $userSurname
+ * @property string $activationCode
  * @property string $codeCreatedDate
  */
 class LpaContext implements Context
@@ -277,7 +278,6 @@ class LpaContext implements Context
 
 
 
-
     /**
      * @Then /^I am shown a not found error$/
      */
@@ -389,7 +389,16 @@ class LpaContext implements Context
                         [
                             'title' => 'Bad Request',
                             'details' => 'LPA already added',
-                            'data' => $this->lpaData,
+                            'data' => [
+                                'donor'         => [
+                                    'uId'           => $this->lpa->donor->uId,
+                                    'firstname'     => $this->lpa->donor->firstname,
+                                    'middlenames'   => $this->lpa->donor->middlenames,
+                                    'surname'       => $this->lpa->donor->surname,
+                                ],
+                                'caseSubtype' => $this->lpa->caseSubtype,
+                                'lpaActorToken' => $this->userLpaActorToken
+                            ],
                         ]
                     )
                 )
@@ -2249,6 +2258,25 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->assertPageContainsText('Ian Deputy Deputy');
         $this->ui->assertPageContainsText('Health and welfare');
+    }
+
+    protected function fillAndSubmitOlderLpaForm()
+    {
+        $this->ui->fillField('opg_reference_number', $this->lpa->uId);
+        $this->ui->fillField(
+            'first_names',
+            $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames
+        );
+        $this->ui->fillField('last_name', $this->lpa->donor->surname);
+
+        $date = new DateTime($this->lpa->donor->dob);
+        $this->ui->fillField('dob[day]', $date->format('d'));
+        $this->ui->fillField('dob[month]', $date->format('m'));
+        $this->ui->fillField('dob[year]', $date->format('Y'));
+
+        $this->ui->fillField('postcode', ($this->lpa->donor->addresses[0])->postcode);
+
+        $this->ui->pressButton('Continue');
     }
 
     /**
