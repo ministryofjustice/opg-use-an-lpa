@@ -31,7 +31,7 @@ resource "aws_cloudwatch_log_subscription_filter" "events" {
 }
 resource "aws_lambda_permission" "allow_cloudwatch" {
   count         = local.account.ship_metrics_queue_enabled == true ? 1 : 0
-  statement_id  = "AllowExecutionFromCloudWatch"
+  statement_id  = "${local.environment}-AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
   function_name = data.aws_lambda_function.clsf_to_sqs[0].function_name
   #function_name = module.clsf_to_sqs[0].lambda_function.function_name
