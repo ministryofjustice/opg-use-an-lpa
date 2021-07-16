@@ -270,11 +270,3 @@ locals {
   })
 
 }
-
-output "front_web_deployed_version" {
-  value = "${data.aws_ecr_repository.use_an_lpa_front_web.repository_url}:${var.container_version}"
-}
-
-output "front_app_deployed_version" {
-  value = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}:${var.container_version}"
-}
