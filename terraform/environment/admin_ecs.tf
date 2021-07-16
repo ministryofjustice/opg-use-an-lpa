@@ -189,6 +189,10 @@ locals {
         {
           name  = "DYNAMODB_TABLE_PREFIX",
           value = tostring(local.environment)
+        },
+        {
+          name  = "LOGOUT_URL",
+          value = "${local.admin_cognito_user_pool_domain_name}/logout"
         }
       ]
     }
@@ -196,6 +200,10 @@ locals {
 
 }
 
-# output "admin_app_deployed_version" {
-#   value = "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}:${var.container_version}"
-# }
+locals {
+  admin_domain = local.account.build_admin == true ? "https://${aws_route53_record.admin_use_my_lpa[0].fqdn}" : "Not deployed"
+}
+
+output "admin_domain" {
+  value = local.admin_domain
+}

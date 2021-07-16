@@ -133,7 +133,3 @@ locals {
     }
   })
 }
-
-output "pdf_app_deployed_version" {
-  value = "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}:${var.container_version}"
-}

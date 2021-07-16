@@ -55,6 +55,7 @@ variable "accounts" {
       pagerduty_service_name     = string
       session_expires_use        = number
       session_expires_view       = number
+      session_expires_admin      = number
       session_expiry_warning     = number
       ship_metrics_queue_enabled = bool
       sirius_account_id          = string
