@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  shiptometrics:
+    image: clsf-to-sqs
+    build:
+      context: ./clsf-to-sqs
+      dockerfile: Test.Dockerfile
+    ports:
+      - 9000:8080
+    volumes:
+      - type: bind
+        source: ./clsf-to-sqs
+        target: /clsf-to-sqs
