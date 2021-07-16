@@ -80,7 +80,17 @@ class AddOlderLpa
         $this->apiClient->setUserTokenHeader($userToken);
 
         try {
-            $this->apiClient->httpPatch('/v1/lpas/request-letter', $data);
+            $lpaData = $this->apiClient->httpPatch('/v1/lpas/request-letter', $data);
+
+            var_dump("helooooooo");
+            var_dump($data);
+
+
+            var_dump("--------------------------------");
+            var_dump($lpaData);
+            die;
+
+
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_BAD_REQUEST:
@@ -110,8 +120,9 @@ class AddOlderLpa
                 'uId' => $data['reference_number']
             ]
         );
+        return new OlderLpaApiResponse(OlderLpaApiResponse::ADD_LPA_FOUND, $lpaData);
 
-        return new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
+       // return new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
     }
 
     /**

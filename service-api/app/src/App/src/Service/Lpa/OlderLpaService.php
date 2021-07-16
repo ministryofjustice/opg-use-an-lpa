@@ -10,6 +10,7 @@ use App\DataAccess\Repository\Response\Lpa;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use App\Service\Lpa\ResolveActor;
 use DateTime;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -23,6 +24,7 @@ class OlderLpaService
     private ActorCodes $actorCodes;
     private GetAttorneyStatus $getAttorneyStatus;
     private ValidateOlderLpaRequirements $validateLpaRequirements;
+    private ResolveActor $resolveActor;
 
     public function __construct(
         LpaAlreadyAdded $lpaAlreadyAdded,
@@ -31,7 +33,8 @@ class OlderLpaService
         LoggerInterface $logger,
         ActorCodes $actorCodes,
         GetAttorneyStatus $getAttorneyStatus,
-        ValidateOlderLpaRequirements $validateLpaRequirements
+        ValidateOlderLpaRequirements $validateLpaRequirements,
+        ResolveActor $resolveActor
     ) {
         $this->lpaAlreadyAdded = $lpaAlreadyAdded;
         $this->lpaService = $lpaService;
@@ -40,6 +43,7 @@ class OlderLpaService
         $this->actorCodes = $actorCodes;
         $this->getAttorneyStatus = $getAttorneyStatus;
         $this->validateLpaRequirements = $validateLpaRequirements;
+        $this->resolveActor = $resolveActor;
     }
 
     /**
@@ -155,9 +159,22 @@ class OlderLpaService
             return null;
         }
 
+        //Get actor role
+        $actor = ($this->resolveActor)($lpa, $actorId);
+
+        $this->logger->info(
+            '**************Actor  Details for LPA {uId} for actor id {actorId} has role {role} ************',
+            [
+                'uId' => $lpaId,
+                'actorId' => $actorId,
+                'role' => $actor['type']
+            ]
+        );
+
         return [
             'actor-id' => $actorId,
             'lpa-id' => $lpaId,
+            'role' => $actor['type'],
         ];
     }
 

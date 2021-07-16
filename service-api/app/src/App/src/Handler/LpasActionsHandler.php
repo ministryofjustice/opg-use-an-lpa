@@ -7,6 +7,7 @@ namespace App\Handler;
 use App\Exception\BadRequestException;
 use App\Service\Lpa\OlderLpaService;
 use Laminas\Diactoros\Response\EmptyResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 use DateTime;
@@ -74,8 +75,9 @@ class LpasActionsHandler implements RequestHandlerInterface
         }
 
         //If all criteria pass, request letter with activation key
-        $this->olderLpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
+       // $this->olderLpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
 
-        return new EmptyResponse();
+       // return new EmptyResponse();
+        return new JsonResponse($lpaMatchResponse, 200);
     }
 }

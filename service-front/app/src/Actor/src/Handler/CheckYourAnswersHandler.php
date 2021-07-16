@@ -152,10 +152,14 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         )
                     );
                 case OlderLpaApiResponse::NOT_ELIGIBLE:
-                    return new HtmlResponse($this->renderer->render(
-                        'actor::cannot-send-activation-key',
-                        ['user'  => $this->user]
-                    ));
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::cannot-send-activation-key',
+                            [
+                                'user'  => $this->user
+                            ]
+                        )
+                    );
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
@@ -181,15 +185,34 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         'actor::cannot-find-lpa',
                         ['user'  => $this->user]
                     ));
+
+                // 1658
+//                case OlderLpaApiResponse::ADD_LPA_FOUND:
+//                    $lpaData = $result->getData();
+//
+//                    return new HtmlResponse(
+//                        $this->renderer->render(
+//                            'actor::check-right-lpa',
+//                            [
+//                                'form' => $this->form,
+//                                'user' => $this->data['first_names'],
+//                                'userRole' => ($result->getData()['actor']['type'] === 'donor') ? 'Donor' : 'Attorney',
+//                                'donor'     => $result->getData()->getDonor(),
+//                                'lpaType'   => $result->getData()->getCaseSubtype(),
+//                            ]
+//                        )
+//                    );
+
+                //
                 case OlderLpaApiResponse::SUCCESS:
                     $letterExpectedDate = (new Carbon())->addWeeks(2);
 
-                    $this->emailClient->sendActivationKeyRequestConfirmationEmail(
-                        $this->user->getDetails()['Email'],
-                        (string)$this->data['reference_number'],
-                        $this->data['postcode'],
-                        ($this->localisedDate)($letterExpectedDate)
-                    );
+//                    $this->emailClient->sendActivationKeyRequestConfirmationEmail(
+//                        $this->user->getDetails()['Email'],
+//                        (string)$this->data['reference_number'],
+//                        $this->data['postcode'],
+//                        ($this->localisedDate)($letterExpectedDate)
+//                    );
 
                     return new HtmlResponse(
                         $this->renderer->render(
