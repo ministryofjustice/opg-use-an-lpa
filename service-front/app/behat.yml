@@ -18,7 +18,6 @@ integration:
         - BehatTest\Context\Integration\AccountContext
         - BehatTest\Context\Integration\ViewerContext
         - BehatTest\Context\Integration\LpaContext
-        - BehatTest\Context\Integration\RequestActivationKeyContext
       filters:
         tags: "@integration"
 
