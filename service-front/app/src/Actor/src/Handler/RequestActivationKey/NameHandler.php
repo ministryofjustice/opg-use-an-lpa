@@ -22,42 +22,14 @@ use Laminas\Diactoros\Response\HtmlResponse;
  * @package Actor\Handler\RequestActivationKey
  * @codeCoverageIgnore
  */
-class NameHandler extends AbstractHandler implements UserAware, CsrfGuardAware
+class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware
 {
-    use User;
-    use CsrfGuard;
-    use SessionTrait;
-
     private RequestNames $form;
-    private ?SessionInterface $session;
-    private ?UserInterface $user;
 
-    public function __construct(
-        TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper
-    ) {
-        parent::__construct($renderer, $urlHelper);
-
-        $this->setAuthenticator($authenticator);
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new RequestNames($this->getCsrfGuard($request));
-        $this->user = $this->getUser($request);
-        $this->session = $this->getSession($request, 'session');
-
-        switch ($request->getMethod()) {
-            case 'POST':
-                return $this->handlePost($request);
-            default:
-                return $this->handleGet($request);
-        }
+        return parent::handle($request);
     }
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
@@ -96,10 +68,5 @@ class NameHandler extends AbstractHandler implements UserAware, CsrfGuardAware
         } else {
             return $this->redirectToRoute('lpa.date-of-birth');
         }
-    }
-
-    private function hasFutureAnswersInSession(): bool
-    {
-        return $this->session->get('postcode') != null;
     }
 }

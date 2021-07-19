@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session as SessionTrait, UserAware};
+use Actor\Form\RequestActivationKey\RequestNames;
 use Actor\Form\RequestActivationKey\RequestReferenceNumber;
 use Common\Handler\Traits\User;
 use Common\Service\Url\UrlValidityCheckService;
@@ -22,42 +23,14 @@ use Laminas\Diactoros\Response\HtmlResponse;
  * @package Actor\Handler\RequestActivationKey
  * @codeCoverageIgnore
  */
-class ReferenceNumber extends AbstractHandler implements UserAware, CsrfGuardAware
+class ReferenceNumber extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware
 {
-    use User;
-    use CsrfGuard;
-    use SessionTrait;
-
     private RequestReferenceNumber $form;
-    private ?SessionInterface $session;
-    private ?UserInterface $user;
 
-    public function __construct(
-        TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper
-    ) {
-        parent::__construct($renderer, $urlHelper);
-
-        $this->setAuthenticator($authenticator);
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new RequestReferenceNumber($this->getCsrfGuard($request));
-        $this->user = $this->getUser($request);
-        $this->session = $this->getSession($request, 'session');
-
-        switch ($request->getMethod()) {
-            case 'POST':
-                return $this->handlePost($request);
-            default:
-                return $this->handleGet($request);
-        }
+        return parent::handle($request);
     }
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
@@ -97,11 +70,6 @@ class ReferenceNumber extends AbstractHandler implements UserAware, CsrfGuardAwa
         } else {
             return $this->redirectToRoute('lpa.your-name');
         }
-    }
-
-    private function hasFutureAnswersInSession(): bool
-    {
-        return $this->session->get('postcode') != null;
     }
 
     private function clearSession()
