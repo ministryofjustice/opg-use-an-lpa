@@ -162,15 +162,6 @@ class OlderLpaService
         //Get actor role
         $actor = ($this->resolveActor)($lpa, $actorId);
 
-        $this->logger->info(
-            '**************Actor  Details for LPA {uId} for actor id {actorId} has role {role} ************',
-            [
-                'uId' => $lpaId,
-                'actorId' => $actorId,
-                'role' => $actor['type']
-            ]
-        );
-
         return [
             'actor-id' => $actorId,
             'lpa-id' => $lpaId,

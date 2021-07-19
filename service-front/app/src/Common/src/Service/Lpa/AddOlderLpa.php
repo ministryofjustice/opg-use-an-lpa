@@ -66,30 +66,23 @@ class AddOlderLpa
         string $lastname,
         DateTimeInterface $dob,
         string $postcode,
-        bool $forceActivationKey = false
+        bool $forceActivationKey = false,
+        bool $requestActivationKeyLetter = false
     ): OlderLpaApiResponse {
         $data = [
-            'reference_number'      => $lpaUid,
-            'first_names'           => $firstnames,
-            'last_name'             => $lastname,
-            'dob'                   => $dob->format('Y-m-d'),
-            'postcode'              => $postcode,
-            'force_activation_key'  => $forceActivationKey
+            'reference_number'          => $lpaUid,
+            'first_names'               => $firstnames,
+            'last_name'                 => $lastname,
+            'dob'                       => $dob->format('Y-m-d'),
+            'postcode'                  => $postcode,
+            'force_activation_key'      => $forceActivationKey,
+            'request_activation_key'    => $requestActivationKeyLetter
         ];
 
         $this->apiClient->setUserTokenHeader($userToken);
 
         try {
             $lpaData = $this->apiClient->httpPatch('/v1/lpas/request-letter', $data);
-
-            var_dump("helooooooo");
-            var_dump($data);
-
-
-            var_dump("--------------------------------");
-            var_dump($lpaData);
-            die;
-
 
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
@@ -110,8 +103,11 @@ class AddOlderLpa
             }
         }
 
-        $eventCode = ($forceActivationKey) ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY : EventCodes::OLDER_LPA_SUCCESS;
+        if (!empty($lpaData)) {
+            return new OlderLpaApiResponse(OlderLpaApiResponse::ADD_LPA_FOUND, $lpaData);
+        }
 
+        $eventCode = ($forceActivationKey) ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY : EventCodes::OLDER_LPA_SUCCESS;
         $this->logger->notice(
             'Successfully matched LPA {uId} and sending activation letter for account with Id {id} ',
             [
@@ -120,9 +116,8 @@ class AddOlderLpa
                 'uId' => $data['reference_number']
             ]
         );
-        return new OlderLpaApiResponse(OlderLpaApiResponse::ADD_LPA_FOUND, $lpaData);
 
-       // return new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
+        return new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
     }
 
     /**
