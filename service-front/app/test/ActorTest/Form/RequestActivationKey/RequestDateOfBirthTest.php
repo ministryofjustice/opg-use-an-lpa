@@ -29,8 +29,8 @@ class RequestDateOfBirthTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'                => Csrf::class,
-            'dob'                   => Date::class
+            '__csrf' => Csrf::class,
+            'dob'    => Date::class
         ];
     }
 
