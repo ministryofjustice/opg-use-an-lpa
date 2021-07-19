@@ -10,11 +10,12 @@ resource "aws_lb_target_group" "viewer" {
 }
 
 resource "aws_lb" "viewer" {
-  name               = "${local.environment}-viewer"
-  internal           = false
-  load_balancer_type = "application"
-  subnets            = data.aws_subnet_ids.public.ids
-  tags               = local.default_tags
+  name                       = "${local.environment}-viewer"
+  internal                   = false #tfsec:ignore:AWS005 - public alb
+  load_balancer_type         = "application"
+  drop_invalid_header_fields = true
+  subnets                    = data.aws_subnet_ids.public.ids
+  tags                       = local.default_tags
 
   security_groups = [
     aws_security_group.viewer_loadbalancer.id,
@@ -181,62 +182,88 @@ resource "aws_lb_listener_rule" "viewer_maintenance_welsh" {
 
 
 resource "aws_security_group" "viewer_loadbalancer" {
-  name        = "${local.environment}-viewer-loadbalancer"
-  description = "Allow inbound traffic"
+  name_prefix = "${local.environment}-viewer-loadbalancer"
+  description = "View service application load balancer"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress_http" {
+  description       = "Port 80 ingress from the internet to the application load balancer"
   type              = "ingress"
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS006 - open ingress for load balancers
   security_group_id = aws_security_group.viewer_loadbalancer.id
+  lifecycle {
+    create_before_destroy = true
+  }
+
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress" {
+  description       = "Port 443 ingress from the allow list to the application load balancer"
   type              = "ingress"
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
   cidr_blocks       = module.whitelist.moj_sites
   security_group_id = aws_security_group.viewer_loadbalancer.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress_production" {
+  description       = "Port 443 ingress for production from the internet to the application load balancer"
   count             = local.environment == "production" ? 1 : 0
   type              = "ingress"
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS006 - open ingress for load balancers
   security_group_id = aws_security_group.viewer_loadbalancer.id
+  lifecycle {
+    create_before_destroy = true
+  }
+
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_egress" {
+  description       = "Allow any egress from View service load balancer"
   type              = "egress"
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for load balancers
   security_group_id = aws_security_group.viewer_loadbalancer.id
+  lifecycle {
+    create_before_destroy = true
+  }
+
 }
 
 resource "aws_security_group" "viewer_loadbalancer_route53" {
-  name        = "${local.environment}-viewer-loadbalancer-route53"
-  description = "Allow Route53 healthchecks"
+  name_prefix = "${local.environment}-viewer-loadbalancer-route53"
+  description = "View service Route53 healthchecks"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress_route53_healthchecks" {
+  description       = "Loadbalancer ingresss from Route53 healthchecks"
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "443"
   to_port           = "443"
   cidr_blocks       = data.aws_ip_ranges.route53_healthchecks.cidr_blocks
   security_group_id = aws_security_group.viewer_loadbalancer_route53.id
-  description       = "Loadbalancer ingresss from Route53 healthchecks"
+  lifecycle {
+    create_before_destroy = true
+  }
+
 }
