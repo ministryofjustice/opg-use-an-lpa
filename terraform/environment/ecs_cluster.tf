@@ -1,6 +1,10 @@
 resource "aws_ecs_cluster" "use-an-lpa" {
   name = "${local.environment}-use-an-lpa"
   tags = local.default_tags
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 }
 
 data "aws_iam_policy_document" "task_role_assume_policy" {
@@ -63,4 +67,3 @@ data "aws_iam_policy_document" "execution_role" {
     ]
   }
 }
-

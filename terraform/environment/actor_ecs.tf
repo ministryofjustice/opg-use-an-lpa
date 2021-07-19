@@ -31,37 +31,53 @@ resource "aws_ecs_service" "actor" {
 
 resource "aws_security_group" "actor_ecs_service" {
   name_prefix = "${local.environment}-actor-ecs-service"
+  description = "Use service security group"
   vpc_id      = data.aws_vpc.default.id
   tags        = local.default_tags
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 // 80 in from the ELB
 resource "aws_security_group_rule" "actor_ecs_service_ingress" {
+  description              = "Allow Port 80 ingress from the application load balancer"
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
   security_group_id        = aws_security_group.actor_ecs_service.id
   source_security_group_id = aws_security_group.actor_loadbalancer.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 // Anything out
 resource "aws_security_group_rule" "actor_ecs_service_egress" {
+  description       = "Allow any egress from Use service"
   type              = "egress"
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for ECR access
   security_group_id = aws_security_group.actor_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "actor_ecs_service_elasticache_ingress" {
+  description              = "Allow elasticache ingress for Use service"
   type                     = "ingress"
   from_port                = 0
   to_port                  = 6379
   protocol                 = "tcp"
   security_group_id        = data.aws_security_group.brute_force_cache_service.id
   source_security_group_id = aws_security_group.actor_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //--------------------------------------
@@ -253,12 +269,4 @@ locals {
       ]
   })
 
-}
-
-output "front_web_deployed_version" {
-  value = "${data.aws_ecr_repository.use_an_lpa_front_web.repository_url}:${var.container_version}"
-}
-
-output "front_app_deployed_version" {
-  value = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}:${var.container_version}"
 }
