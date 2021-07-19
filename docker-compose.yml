@@ -179,6 +179,8 @@ services:
     build:
       context: .
       dockerfile: service-api/docker/app/Dockerfile
+    depends_on:
+      - dynamodb-local
     volumes:
       - ./service-api/app:/app
     networks:
@@ -200,7 +202,7 @@ services:
 
       # Local only
       AWS_ACCESS_KEY_ID: "-"
-      AWS_ENDPOINT_DYNAMODB: http://localstack:4566
+      AWS_ENDPOINT_DYNAMODB: http://dynamodb-local:8000
       AWS_SECRET_ACCESS_KEY: "-"
       LPA_CODES_STATIC_AUTH_TOKEN: asdf1234567890
       PACT_BROKER_PUBLISH: "false"
@@ -229,7 +231,7 @@ services:
       context: .
       dockerfile: service-api/docker/seeding/Dockerfile
     depends_on:
-      - localstack
+      - dynamodb-local
     environment:
       AWS_ACCESS_KEY_ID: "-"
       AWS_SECRET_ACCESS_KEY: "-"
@@ -237,7 +239,7 @@ services:
       DYNAMODB_TABLE_VIEWER_CODES: "ViewerCodes"
       DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
-      AWS_ENDPOINT_DYNAMODB: localstack:4566
+      AWS_ENDPOINT_DYNAMODB: dynamodb-local:8000
       CODES_ENDPOINT: codes-gateway:4343
 
 networks:
