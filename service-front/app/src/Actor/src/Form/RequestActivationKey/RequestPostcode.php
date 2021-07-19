@@ -51,7 +51,6 @@ class RequestPostcode extends AbstractForm implements InputFilterProviderInterfa
                 'validators' => [
                     [
                         'name'                   => NotEmpty::class,
-                        'break_chain_on_failure' => true,
                         'options'                => [
                             'message'  => 'Enter your postcode',
                         ],

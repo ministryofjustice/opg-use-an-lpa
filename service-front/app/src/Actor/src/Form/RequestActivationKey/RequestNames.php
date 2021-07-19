@@ -55,7 +55,6 @@ class RequestNames extends AbstractForm implements InputFilterProviderInterface
                 'validators' => [
                     [
                         'name'                   => NotEmpty::class,
-                        'break_chain_on_failure' => true,
                         'options'                => [
                             'message'  => 'Enter your first names',
                         ],
@@ -69,7 +68,6 @@ class RequestNames extends AbstractForm implements InputFilterProviderInterface
                 'validators' => [
                     [
                         'name'                   => NotEmpty::class,
-                        'break_chain_on_failure' => true,
                         'options'                => [
                             'message'  => 'Enter your last name',
                         ],
