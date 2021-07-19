@@ -31,6 +31,9 @@ def handler(event, context):
 def buildJsonString(data, timestamp):
     resultData = {}
     resultData["Project"] = os.getenv('METRIC_PROJECT_NAME')
+    resultData["Category"] = os.getenv('METRIC_CATEGORY')
+    resultData["Subcategory"] = os.getenv('METRIC_SUBCATEGORY')
+    resultData["Environment"] = os.getenv('METRIC_ENVIRONMENT')
     resultData["MeasureName"] = data["context"]["event_code"]
     resultData["MeasureValue"] = "1.0"
     resultData["MeasureValueType"] = "DOUBLE"

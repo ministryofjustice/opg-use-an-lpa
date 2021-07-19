@@ -13,7 +13,7 @@ PAYLOAD = {
         {
             "messageId": "dd121f41-054a-4380-afc4-ef72544aae8c",
             "receiptHandle": "AQEBU+bLgA1NJ1btTyzQ6qGhwD/bclqPzJIqqDoarCcW+T8XP6vASi6OqlmnB0bNCiv0gUHkCsfGoHLB8RYKvuCjUCehES93edeYddbr8rEMU5/MmEVnOqoW9mISZuO2mgA+U6JhkA9b5gvBNVStlOKBS/MZTRulb4IuTe9CEhqp+G1Mfl6MFp9hrFOFH3saJBwnFH1/j9/OtdgLgJY1hMEWsruEffrCAEZsgu6Y+Iitm+lvFFiSRAlHlpOVl/hgpytR8UvJaPCRCGf1085HEzdZlEOqrjtIqtkziVFa+MOfXruE21VAc1Yqh1XEgT7G/8zHa8ttF4rQ8pZtfT2ZMr1B50NtufmoPzsMZt9xEP8SkznQ00ZlU+GxIzfbx8ft7L8ISP9WEHUEP7LX21H0KRpXBZ2Fl4qU7FnQppEoq8e6D6o=",
-            "body": "{'metrics': [{'metric': {'Project': 'useanlpadevelopment', 'MeasureName': 'DOWNLOAD_SUMMARY', 'MeasureValue': '1', 'Time': '1622720114831'}}]}",
+            "body": "{'metrics': [{'metric': {'Project': 'use-an-lpa', 'Category': 'kpi', 'Subcategory': 'service', 'Environment': 'development', 'MeasureName': 'DOWNLOAD_SUMMARY', 'MeasureValue': '1', 'Time': '1622720114831'}}]}",
             "attributes": {
                 "ApproximateReceiveCount": "1",
                 "SentTimestamp": "1622191541032",
@@ -50,9 +50,12 @@ class TestLambdaFunction(unittest.TestCase):
             {
               'metric': 
               {
+                'Project': 'use-an-lpa',
+                'Category': 'kpi',
+                'Subcategory': 'service',
+                'Environment': 'development',
                 'MeasureName': 'DOWNLOAD_SUMMARY',
                 'MeasureValue': '1',
-                'Project': 'useanlpadevelopment',
                 'Time': '1622720114831'
               }
             }
