@@ -111,6 +111,14 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I am redirected to the activation key page$/
+     */
+    public function iAmRedirectedToTheActivationKeyPage()
+    {
+        $this->ui->assertPageAddress('lpa/request-code/lpa-reference-number');
+    }
+
+    /**
      * @Then /^I am taken back to the date of birth page where I can see my answers and change them$/
      */
     public function iAmTakenBackToTheDateOfBirthPageWhereICanSeeMyAnswersAndChangeThem()
@@ -487,6 +495,30 @@ class RequestActivationKeyContext implements Context
 
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
         $this->ui->assertPageContainsText('Continue and ask for a new key');
+    }
+
+    /**
+     * @When /^I visit the Your Name page without filling out the form$/
+     */
+    public function iVisitTheYourNamePageWithoutFillingOutTheForm()
+    {
+        $this->ui->visit('lpa/request-code/your-name');
+    }
+
+    /**
+     * @When /^I visit the Date of Birth page without filling out the form$/
+     */
+    public function iVisitTheDateOfBirthPageWithoutFillingOutTheForm()
+    {
+        $this->ui->visit('lpa/request-code/date-of-birth');
+    }
+
+    /**
+     * @When /^I visit the Postcode page without filling out the form$/
+     */
+    public function iVisitThePostcodePageWithoutFillingOutTheForm()
+    {
+        $this->ui->visit('lpa/request-code/postcode');
     }
 
     protected function fillAndSubmitOlderLpaForm()

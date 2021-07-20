@@ -55,3 +55,22 @@ Feature: Ask for an activation key
     Given I am on the request an activation key page
     When I request an activation key with valid details
     Then I am asked to check my answers before requesting an activation key
+
+  @ui
+  Scenario: As a user I am unable to visit the your name page without filling in my other details before
+    Given I am on the request an activation key page
+    When I visit the Your Name page without filling out the form
+    Then I am redirected to the activation key page
+
+  @ui
+  Scenario: As a user I am unable to visit the date of birth page without filling in my other details before
+    Given I am on the request an activation key page
+    When I visit the Date of Birth page without filling out the form
+    Then I am redirected to the activation key page
+
+  @ui
+  Scenario: As a user I am unable to visit the postcode page without filling in my other details before
+    Given I am on the request an activation key page
+    When I visit the Postcode page without filling out the form
+    Then I am redirected to the activation key page
+
