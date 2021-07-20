@@ -18,9 +18,6 @@ use Laminas\Diactoros\Response\HtmlResponse;
  */
 class ContactUsPageHandler extends AbstractHandler
 {
-    /**
-     * @var UrlValidityCheckService
-     */
     private UrlValidityCheckService $urlValidityCheckService;
 
     public function __construct(
