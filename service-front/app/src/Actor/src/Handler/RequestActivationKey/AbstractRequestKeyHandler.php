@@ -12,6 +12,7 @@ use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+
 /**
  * Class RequestActivationKeyHandler
  * @package Actor\Handler
