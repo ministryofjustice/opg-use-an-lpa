@@ -2,19 +2,12 @@ version: '3.8'
 
 services:
 
-  localstack:
-    image: localstack/localstack:0.11.4
+  dynamodb-local:
+    command: "-jar DynamoDBLocal.jar -sharedDb"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
     ports:
-      - 4569:4566
-      - 8000:4566
-    environment:
-      - SERVICES=dynamodb
-      - DEFAULT_REGION=eu-west-1
-      - HOSTNAME=gateway-localstack
-    networks:
-      default:
-        aliases:
-          - gateway-localstack
+      - 8000:8000
 
   # -----
   # Code Generation API development environment
@@ -28,7 +21,7 @@ services:
     volumes:
       - ../opg-data-lpa-codes/lambda_functions/v1/:/var/www/lambda_functions/v1/
     depends_on:
-      - localstack
+      - dynamodb-local
     environment:
       LOCAL_URL: host.docker.internal #rather than host name as the port is hardcoded to 8000
       ENVIRONMENT: local
