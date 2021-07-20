@@ -26,7 +26,7 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        if ($request->getQueryParams()['clearSession']) {
+        if ($request->getQueryParams()['startAgain']) {
             $this->clearSession();
         }
 
