@@ -30,8 +30,8 @@ class RequestPostcodeTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'                => Csrf::class,
-            'postcode'              => Text::class
+            '__csrf'    => Csrf::class,
+            'postcode'  => Text::class
         ];
     }
 
