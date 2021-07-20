@@ -14,12 +14,14 @@ use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
+use App\Service\Lpa\ResolveActor;
 use App\Service\Lpa\ValidateOlderLpaRequirements;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
@@ -46,6 +48,9 @@ class OlderLpaServiceTest extends TestCase
     /** @var ObjectProphecy|ValidateOlderLpaRequirements */
     private $validateOlderLpaRequirements;
 
+    /** @var ObjectProphecy|ResolveActor */
+    private $resolveActorProphecy;
+
     public string $userId;
     public string $lpaUid;
     public string $actorUid;
@@ -59,6 +64,7 @@ class OlderLpaServiceTest extends TestCase
         $this->actorCodesProphecy = $this->prophesize(ActorCodes::class);
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
         $this->validateOlderLpaRequirements = $this->prophesize(ValidateOlderLpaRequirements::class);
+        $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
 
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
@@ -74,7 +80,8 @@ class OlderLpaServiceTest extends TestCase
             $this->loggerProphecy->reveal(),
             $this->actorCodesProphecy->reveal(),
             $this->getAttorneyStatusProphecy->reveal(),
-            $this->validateOlderLpaRequirements->reveal()
+            $this->validateOlderLpaRequirements->reveal(),
+            $this->resolveActorProphecy->reveal()
         );
     }
 
@@ -239,6 +246,11 @@ class OlderLpaServiceTest extends TestCase
      */
     public function returns_actor_and_lpa_details_if_match_found_in_lookup(?array $expectedResponse, array $userData)
     {
+        $mockActor = [
+            'details' => [],
+            'type' => 'Attorney',
+        ];
+
         $lpa = [
             'uId' => '700000012345',
             'donor' => [
@@ -337,6 +349,13 @@ class OlderLpaServiceTest extends TestCase
             ])
             ->willReturn(0); // active attorney
 
+
+
+        $this->resolveActorProphecy
+            ->__invoke(Argument::type('array'), Argument::type('string'))
+            ->willReturn($mockActor);
+
+
         $service = $this->getOlderLpaService();
 
         $userData = $service->cleanseUserData($userData);
@@ -351,7 +370,8 @@ class OlderLpaServiceTest extends TestCase
             [
                 [
                     'actor-id' => '700000001234', // successful match for attorney
-                    'lpa-id'   => '700000012345'
+                    'lpa-id'   => '700000012345',
+                    'role'     => 'Attorney'
                 ],
                 [
                     'dob'         => '1980-03-01',
@@ -363,7 +383,8 @@ class OlderLpaServiceTest extends TestCase
             [
                 [
                     'actor-id' => '700000001111', // successful match for donor
-                    'lpa-id'   => '700000012345'
+                    'lpa-id'   => '700000012345',
+                    'role'     => 'Attorney'
                 ],
                 [
                     'dob'         => '1975-10-05',
