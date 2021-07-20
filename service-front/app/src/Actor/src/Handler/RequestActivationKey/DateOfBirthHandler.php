@@ -4,17 +4,9 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session as SessionTrait, UserAware};
+use Common\Handler\{ CsrfGuardAware, UserAware};
 use Actor\Form\RequestActivationKey\RequestDateOfBirth;
-use Common\Handler\Traits\User;
-use Common\Service\Url\UrlValidityCheckService;
-use Laminas\Diactoros\Response\RedirectResponse;
-use Mezzio\Authentication\UserInterface;
-use Mezzio\Session\SessionInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
-use Mezzio\Authentication\AuthenticationInterface;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 
 /**
@@ -69,6 +61,11 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
             'back' => $this->getRouteNameFromAnswersInSession(true)
         ]));
     }
+    protected function isSessionMissingPrerequisite(): bool
+    {
+        return !$this->session->has('opg_reference_number')
+            || !$this->session->has('first_names');
+    }
 
     protected function lastPage(): string
     {
@@ -79,6 +76,4 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
     {
         return 'lpa.postcode';
     }
-
-
 }

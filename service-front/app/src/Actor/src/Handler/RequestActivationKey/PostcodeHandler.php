@@ -4,21 +4,14 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session as SessionTrait, UserAware};
-use Actor\Form\RequestActivationKey\RequestNames;
 use Actor\Form\RequestActivationKey\RequestPostcode;
-use Common\Handler\Traits\User;
-use Common\Service\Url\UrlValidityCheckService;
-use Mezzio\Authentication\UserInterface;
-use Mezzio\Session\SessionInterface;
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
-use Mezzio\Authentication\AuthenticationInterface;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
+use Common\Handler\{CsrfGuardAware, UserAware};
 use Laminas\Diactoros\Response\HtmlResponse;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
  * Class RequestActivationKeyHandler
+ *
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
@@ -36,11 +29,16 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
     {
         $this->form->setData($this->session->toArray());
 
-        return new HtmlResponse($this->renderer->render('actor::request-activation-key/postcode', [
-            'user' => $this->user,
-            'form' => $this->form->prepare(),
-            'back' => $this->getRouteNameFromAnswersInSession(true)
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/postcode',
+                [
+                    'user' => $this->user,
+                    'form' => $this->form->prepare(),
+                    'back' => $this->getRouteNameFromAnswersInSession(true),
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -56,11 +54,23 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
             return $this->redirectToRoute('lpa.check-answers');
         }
 
-        return new HtmlResponse($this->renderer->render('actor::request-activation-key/postcode', [
-            'user' => $this->user,
-            'form' => $this->form->prepare(),
-            'back' => $this->getRouteNameFromAnswersInSession(true)
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/postcode',
+                [
+                    'user' => $this->user,
+                    'form' => $this->form->prepare(),
+                    'back' => $this->getRouteNameFromAnswersInSession(true),
+                ]
+            )
+        );
+    }
+
+    protected function isSessionMissingPrerequisite(): bool
+    {
+        return !$this->session->has('opg_reference_number')
+            || !$this->session->has('first_names')
+            || !$this->session->has('dob');
     }
 
     protected function lastPage(): string

@@ -5,18 +5,13 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session as SessionTrait, UserAware};
-use Actor\Form\RequestActivationKey\RequestDateOfBirth;
 use Common\Handler\Traits\User;
-use Common\Service\Url\UrlValidityCheckService;
-use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\SessionInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Laminas\Diactoros\Response\HtmlResponse;
-
 /**
  * Class RequestActivationKeyHandler
  * @package Actor\Handler
@@ -64,6 +59,10 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements User
         $this->user = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
 
+        if ($this->isSessionMissingPrerequisite()) {
+            return $this->redirectToRoute('lpa.add-by-paper');
+        }
+
         switch ($request->getMethod()) {
             case 'POST':
                 return $this->handlePost($request);
@@ -78,8 +77,10 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements User
 
     protected function hasFutureAnswersInSession(): bool
     {
-        return $this->session->get('postcode') != null;
+        return $this->session->has('postcode');
     }
+
+    abstract protected function isSessionMissingPrerequisite(): bool;
 
     abstract protected function nextPage(): string;
 
