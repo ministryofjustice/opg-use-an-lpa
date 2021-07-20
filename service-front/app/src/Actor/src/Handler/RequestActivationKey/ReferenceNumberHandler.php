@@ -19,11 +19,11 @@ use Mezzio\Template\TemplateRendererInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 
 /**
- * Class ReferenceNumber
+ * Class ReferenceNumberHandler
  * @package Actor\Handler\RequestActivationKey
  * @codeCoverageIgnore
  */
-class ReferenceNumber extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware
+class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware
 {
     private RequestReferenceNumber $form;
 

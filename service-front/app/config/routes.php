@@ -184,7 +184,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
         $app->route('/lpa/request-code/lpa-reference-number', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\ReferenceNumber::class
+            Actor\Handler\RequestActivationKey\ReferenceNumberHandler::class
         ], ['GET', 'POST'], 'lpa.add-by-paper');
 
         $app->route('/lpa/request-code/your-name', [
