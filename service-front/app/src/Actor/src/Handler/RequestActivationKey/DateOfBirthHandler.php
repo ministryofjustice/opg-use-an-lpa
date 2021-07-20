@@ -38,7 +38,8 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/date-of-birth', [
             'user' => $this->user,
-            'form' => $this->form->prepare()
+            'form' => $this->form->prepare(),
+            'back' => $this->getRouteNameFromAnswersInSession(true)
         ]));
     }
 
@@ -58,21 +59,26 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
                     'year' => $postData['dob']['year']
                 ]
             );
-            return $this->routeFromAnswersInSession();
+            $nextPageName = $this->getRouteNameFromAnswersInSession();
+            return $this->redirectToRoute($nextPageName);
         }
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/date-of-birth', [
             'user' => $this->user,
-            'form' => $this->form->prepare()
+            'form' => $this->form->prepare(),
+            'back' => $this->getRouteNameFromAnswersInSession(true)
         ]));
     }
 
-    private function routeFromAnswersInSession(): RedirectResponse
+    protected function lastPage(): string
     {
-        if ($this->hasFutureAnswersInSession()) {
-            return $this->redirectToRoute('lpa.check-answers');
-        } else {
-            return $this->redirectToRoute('lpa.postcode');
-        }
+        return 'lpa.your-name';
     }
+
+    protected function nextPage(): string
+    {
+        return 'lpa.postcode';
+    }
+
+
 }

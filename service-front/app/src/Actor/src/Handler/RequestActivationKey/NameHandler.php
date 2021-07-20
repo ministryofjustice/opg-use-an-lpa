@@ -38,7 +38,8 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/your-name', [
             'user' => $this->user,
-            'form' => $this->form->prepare()
+            'form' => $this->form->prepare(),
+            'back' => $this->getRouteNameFromAnswersInSession(true)
         ]));
     }
 
@@ -52,21 +53,25 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
             //  Set the data in the session and pass to the check your answers handler
             $this->session->set('first_names', $postData['first_names']);
             $this->session->set('last_name', $postData['last_name']);
-            return $this->routeFromAnswersInSession();
+
+            $nextPageName = $this->getRouteNameFromAnswersInSession();
+            return $this->redirectToRoute($nextPageName);
         }
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/your-name', [
             'user' => $this->user,
-            'form' => $this->form->prepare()
+            'form' => $this->form->prepare(),
+            'back' => $this->getRouteNameFromAnswersInSession(true)
         ]));
     }
 
-    private function routeFromAnswersInSession(): RedirectResponse
+    protected function nextPage(): string
     {
-        if ($this->hasFutureAnswersInSession()) {
-            return $this->redirectToRoute('lpa.check-answers');
-        } else {
-            return $this->redirectToRoute('lpa.date-of-birth');
-        }
+        return 'lpa.date-of-birth';
+    }
+
+    protected function lastPage(): string
+    {
+        return 'lpa.add-by-paper';
     }
 }

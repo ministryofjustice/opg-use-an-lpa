@@ -42,6 +42,20 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements User
     }
 
     /**
+     * @param bool $back optional parameter specifying if the route named should be for the back button
+     *
+     * @return string the name of the route
+     */
+    protected function getRouteNameFromAnswersInSession(bool $back = false): string
+    {
+        if ($this->hasFutureAnswersInSession()) {
+            return 'lpa.check-answers';
+        } else {
+            return $back ? $this->lastPage() : $this->nextPage();
+        }
+    }
+
+    /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
@@ -66,4 +80,8 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements User
     {
         return $this->session->get('postcode') != null;
     }
+
+    abstract protected function nextPage(): string;
+
+    abstract protected function lastPage(): string;
 }

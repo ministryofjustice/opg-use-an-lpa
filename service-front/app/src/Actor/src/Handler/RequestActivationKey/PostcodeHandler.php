@@ -38,7 +38,8 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/postcode', [
             'user' => $this->user,
-            'form' => $this->form->prepare()
+            'form' => $this->form->prepare(),
+            'back' => $this->getRouteNameFromAnswersInSession(true)
         ]));
     }
 
@@ -57,7 +58,18 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/postcode', [
             'user' => $this->user,
-            'form' => $this->form->prepare()
+            'form' => $this->form->prepare(),
+            'back' => $this->getRouteNameFromAnswersInSession(true)
         ]));
+    }
+
+    protected function lastPage(): string
+    {
+        return 'lpa.date-of-birth';
+    }
+
+    protected function nextPage(): string
+    {
+        return 'lpa.check-answers';
     }
 }

@@ -43,7 +43,8 @@ class ReferenceNumber extends AbstractRequestKeyHandler implements UserAware, Cs
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/reference-number', [
             'user' => $this->user,
-            'form' => $this->form->prepare()
+            'form' => $this->form->prepare(),
+            'back' => $this-> getRouteNameFromAnswersInSession(true)
         ]));
     }
 
@@ -55,21 +56,25 @@ class ReferenceNumber extends AbstractRequestKeyHandler implements UserAware, Cs
 
             //  Set the data in the session and pass to the check your answers handler
             $this->session->set('opg_reference_number', $postData['opg_reference_number']);
-            return $this->routeFromAnswersInSession();
+
+            $nextPageName = $this->getRouteNameFromAnswersInSession();
+            return $this->redirectToRoute($nextPageName);
         }
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/reference-number', [
             'user' => $this->user,
-            'form' => $this->form->prepare()
+            'form' => $this->form->prepare(),
+            'back' => $this->getRouteNameFromAnswersInSession(true)
         ]));
     }
 
-    private function routeFromAnswersInSession(): RedirectResponse
+    protected function nextPage(): string
     {
-        if ($this->hasFutureAnswersInSession()) {
-            return $this->redirectToRoute('lpa.check-answers');
-        } else {
-            return $this->redirectToRoute('lpa.your-name');
-        }
+        return 'lpa.your-name';
+    }
+
+    protected function lastPage(): string
+    {
+        return 'lpa.add-by-paper-information';
     }
 
     private function clearSession()
