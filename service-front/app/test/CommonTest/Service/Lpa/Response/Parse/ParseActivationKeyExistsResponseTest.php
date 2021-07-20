@@ -38,27 +38,47 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         $this->lpaFactory = $this->prophesize(LpaFactory::class);
     }
 
+    /** @test */
     public function it_creates_a_dto_from_array_data()
     {
+        $this->lpaFactory
+            ->createCaseActorFromData($this->response['donor'])
+            ->willReturn($this->donor);
+
         $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
-        $donor = new CaseActor();
-        $donor->setUId($this->response['donor']['uId']);
-        $donor->setFirstname($this->response['donor']['firstname']);
-        $donor->setMiddlenames($this->response['donor']['middlenames']);
-        $donor->setSurname($this->response['donor']['surname']);
-
         $this->assertInstanceOf(ActivationKeyExistsResponse::class, $result);
-        $this->assertEquals($donor, $result->getDonor());
-        $this->assertEquals('pfa', $result->getCaseSubtype());
+        $this->assertEquals($this->donor, $result->getDonor());
+        $this->assertEquals('hw', $result->getCaseSubtype());
     }
 
-    /**
-     * @dataProvider keyExistsDataProvider
-     * @test
-     */
-    public function it_will_fail_if_data_attributes_are_not_set(array $data)
+    /** @test */
+    public function it_creates_a_dto_from_array_data_if_name_fields_are_null()
+    {
+        $this->response['donor']['firstname'] = null;
+        $this->response['donor']['middlenames'] = null;
+        $this->response['donor']['surname'] = null;
+
+        $donor = new CaseActor();
+        $donor->setUId('12345');
+
+        $this->lpaFactory
+            ->createCaseActorFromData($this->response['donor'])
+            ->willReturn($donor);
+
+        $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
+        $result = ($sut)($this->response);
+
+        $this->assertInstanceOf(ActivationKeyExistsResponse::class, $result);
+        $this->assertNull($result->getDonor()->getFirstname());
+        $this->assertNull($result->getDonor()->getMiddlenames());
+        $this->assertNull($result->getDonor()->getSurname());
+        $this->assertEquals('hw', $result->getCaseSubtype());
+    }
+
+    /** @test */
+    public function it_will_fail_if_donor_firstname_array_key_doesnt_exist()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -66,35 +86,83 @@ class ParseActivationKeyExistsResponseTest extends TestCase
             'does not contain the required fields'
         );
 
+        $data = [
+            'donor'         => [
+                'uId'           => '12345',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => null
+        ];
+
         $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
         ($sut)($data);
     }
 
-    public function keyExistsDataProvider()
+    /** @test */
+    public function it_will_fail_if_donor_middlenames_array_key_doesnt_exist()
     {
-        return [
-            [
-                [
-                    'donor'         => [
-                        'uId'           => '12345',
-                        'firstname'     => null,
-                        'middlenames'   => 'Donor',
-                        'surname'       => 'Person',
-                    ],
-                    'caseSubtype' => 'hw'
-                ]
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse::__invoke ' .
+            'does not contain the required fields'
+        );
+
+        $data = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Donor',
+                'surname'       => 'Person',
             ],
-            [
-                [
-                    'donor'         => [
-                        'uId'           => '12345',
-                        'firstname'     => 'Example',
-                        'middlenames'   => 'Donor',
-                        'surname'       => 'Person',
-                    ],
-                    'caseSubtype' => null
-                ]
-            ]
+            'caseSubtype' => null
         ];
+
+        $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
+        ($sut)($data);
+    }
+
+    /** @test */
+    public function it_will_fail_if_donor_surname_array_key_doesnt_exist()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse::__invoke ' .
+            'does not contain the required fields'
+        );
+
+        $data = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Donor',
+                'middlenames'   => 'Person',
+            ],
+            'caseSubtype' => null
+        ];
+
+        $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
+        ($sut)($data);
+    }
+
+    /** @test */
+    public function it_will_fail_if_lpa_type_is_not_set()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse::__invoke ' .
+            'does not contain the required fields'
+        );
+
+        $data = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => null
+        ];
+
+        $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
+        ($sut)($data);
     }
 }

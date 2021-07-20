@@ -26,9 +26,9 @@ class ParseLpaAlreadyAddedResponse
     {
         if (
             !isset($data['donor']['uId']) ||
-            !isset($data['donor']['firstname']) ||
-            !isset($data['donor']['middlenames']) ||
-            !isset($data['donor']['surname']) ||
+            !array_key_exists('firstname', $data['donor']) ||
+            !array_key_exists('middlenames', $data['donor']) ||
+            !array_key_exists('surname', $data['donor']) ||
             !isset($data['caseSubtype']) ||
             !isset($data['lpaActorToken'])
         ) {

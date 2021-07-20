@@ -64,7 +64,7 @@ logs:
 .PHONY: logs
 
 up_dependencies:
-	$(COMPOSE) up -d --remove-orphans localstack codes-gateway redis kms
+	$(COMPOSE) up -d --remove-orphans dynamodb-local codes-gateway redis kms
 	$(MAKE) up-bridge-ual create_secrets --directory=../opg-data-lpa/
 .PHONY: up_dependencies
 
