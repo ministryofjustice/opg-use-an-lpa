@@ -83,7 +83,6 @@ class AddOlderLpa
 
         try {
             $lpaData = $this->apiClient->httpPatch('/v1/lpas/request-letter', $data);
-
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_BAD_REQUEST:

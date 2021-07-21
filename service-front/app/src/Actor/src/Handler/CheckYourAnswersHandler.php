@@ -179,7 +179,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
                 case OlderLpaApiResponse::DOES_NOT_MATCH:
                 case OlderLpaApiResponse::NOT_FOUND:
-
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-find-lpa',
                         ['user'  => $this->user]
