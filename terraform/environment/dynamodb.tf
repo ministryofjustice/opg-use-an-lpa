@@ -2,9 +2,9 @@ resource "aws_dynamodb_table" "actor_codes_table" {
   name         = "${local.environment}-ActorCodes"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "ActorCode"
-  # server_side_encryption {
-  #   enabled = true
-  # }
+  server_side_encryption {
+    enabled = true
+  }
 
   attribute {
     name = "ActorCode"
@@ -26,9 +26,9 @@ resource "aws_dynamodb_table" "actor_users_table" {
   name         = "${local.environment}-ActorUsers"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Id"
-  # server_side_encryption {
-  #   enabled = true
-  # }
+  server_side_encryption {
+    enabled = true
+  }
 
   attribute {
     name = "Id"
@@ -101,9 +101,9 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
   name         = "${local.environment}-ViewerCodes"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "ViewerCode"
-  # server_side_encryption {
-  #   enabled = true
-  # }
+  server_side_encryption {
+    enabled = true
+  }
 
   attribute {
     name = "ViewerCode"
@@ -143,9 +143,9 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "ViewerCode"
   range_key    = "Viewed"
-  # server_side_encryption {
-  #   enabled = true
-  # }
+  server_side_encryption {
+    enabled = true
+  }
 
   attribute {
     name = "ViewerCode"
@@ -171,9 +171,9 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
   name         = "${local.environment}-UserLpaActorMap"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Id"
-  # server_side_encryption {
-  #   enabled = true
-  # }
+  server_side_encryption {
+    enabled = true
+  }
 
   attribute {
     name = "Id"
