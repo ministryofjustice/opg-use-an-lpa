@@ -24,7 +24,7 @@ class RequestNamesTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'request_activation_key';
+        return 'request_activation_key_names';
     }
 
     public function getFormElements(): array

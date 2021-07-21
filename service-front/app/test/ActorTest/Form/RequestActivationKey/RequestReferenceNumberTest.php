@@ -24,7 +24,7 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'request_activation_key';
+        return 'request_activation_key_reference_number';
     }
 
     public function getFormElements(): array

@@ -23,7 +23,7 @@ class RequestDateOfBirthTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'request_activation_key';
+        return 'request_activation_key_dob';
     }
 
     public function getFormElements(): array
