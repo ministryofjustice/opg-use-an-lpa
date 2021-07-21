@@ -14,7 +14,8 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document
     And I confirm that those details are correct
-    Then a letter is requested containing a one time use code
+    Then I am shown details of the found LPA
+    And I confirm that those details are correct
     And I receive an email confirming activation key request
 
   @ui @integration
@@ -61,3 +62,16 @@ Feature: Add an older LPA
     When I provide the details from a valid paper LPA which I have already added to my account
     And I confirm that those details are correct
     Then I should be told that I have already added this LPA
+
+  @ui
+  Scenario: The user is shown the details of the LPA trying to be added
+    Given I am on the add an older LPA page
+    When I provide the details from a valid paper document
+    And I confirm that those details are correct
+    Then I am shown details of the found LPA
+
+  @ui
+  Scenario: The user is taken back to start of activation request if the found LPA is incorrect
+    Given I am on the check LPA details page
+    When  I realise this is not the correct LPA
+    Then I am taken back to the start of requesting an activation key again

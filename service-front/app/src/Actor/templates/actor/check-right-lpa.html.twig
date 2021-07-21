@@ -45,6 +45,7 @@
                             </dd>
 
                         </div>
+                        {% if userRole|lower != "donor" %}
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
                                 {% trans %}The donor's name{% endtrans %}
@@ -53,6 +54,7 @@
                                 {{ donor.firstname ~ ' ' ~ donor.middlenames ~ ' ' ~  donor.surname }}
                             </dd>
                         </div>
+                        {% endif %}
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
                                 {% trans %}Type of LPA{% endtrans %}

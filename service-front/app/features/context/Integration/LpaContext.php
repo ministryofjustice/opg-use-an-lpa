@@ -123,17 +123,27 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^a letter is requested containing a one time use code$/
+     * @Then /^I am shown details of the found LPA$/
      */
-    public function aLetterIsRequestedContainingAOneTimeUseCode()
+    public function iAmShownDetailsOfTheFoundLPA()
     {
         // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->patch('/v1/lpas/request-letter')
             ->respondWith(
                 new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    StatusCodeInterface::STATUS_OK,
                     [],
-                    ''
+                    json_encode(
+                        [
+                            'donor' => [
+                                'uId' => $this->lpa['donor']['uId'],
+                                'firstname' => $this->lpa['donor']['firstname'],
+                                'middlenames' => $this->lpa['donor']['middlenames'],
+                                'surname' => $this->lpa['donor']['surname'],
+                            ],
+                            'caseSubtype' => $this->lpa['caseSubtype'],
+                        ]
+                    )
                 )
             );
 

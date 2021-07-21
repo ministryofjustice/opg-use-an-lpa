@@ -1978,6 +1978,7 @@ class LpaContext implements Context
 
     /**
      * @Then /^a letter is requested containing a one time use code$/
+     * @Then /a letter is requested containing activation key$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
@@ -2023,23 +2024,25 @@ class LpaContext implements Context
         $this->apiPatch(
             '/v1/lpas/request-letter',
             [
-                'reference_number'  => $this->lpaUid,
-                'first_names'       => $this->userFirstnames,
-                'last_name'         => $this->userSurname,
-                'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode,
-                'force_activation_key' => false
+                'reference_number'          => $this->lpaUid,
+                'first_names'               => $this->userFirstnames,
+                'last_name'                 => $this->userSurname,
+                'dob'                       => $this->userDob,
+                'postcode'                  => $this->userPostCode,
+                'force_activation_key'      => false,
+                'request_activation_key'    => false
             ],
             [
                 'user-token' => $this->userId,
             ]
         );
 
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
     }
 
     /**
      * @Given /^I confirm that those details are correct$/
+     * @Then /^I am shown details of the found LPA$/
      */
     public function iConfirmThatThoseDetailsAreCorrect()
     {
@@ -2216,12 +2219,13 @@ class LpaContext implements Context
         $this->apiPatch(
             '/v1/lpas/request-letter',
             [
-                'reference_number'  => $this->lpaUid,
-                'first_names'       => $this->userFirstnames,
-                'last_name'         => $this->userSurname,
-                'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode,
-                'force_activation_key' => false
+                'reference_number'          => $this->lpaUid,
+                'first_names'               => $this->userFirstnames,
+                'last_name'                 => $this->userSurname,
+                'dob'                       => $this->userDob,
+                'postcode'                  => $this->userPostCode,
+                'force_activation_key'      => false,
+                'request_activation_key'    => false
             ],
             [
                 'user-token' => $this->userId,
@@ -2448,19 +2452,19 @@ class LpaContext implements Context
         $this->apiPatch(
             '/v1/lpas/request-letter',
             [
-                'reference_number'  => $this->lpaUid,
-                'first_names'       => $this->userFirstnames,
-                'last_name'         => $this->userSurname,
-                'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode,
-                'force_activation_key' => true,
+                'reference_number'          => $this->lpaUid,
+                'first_names'               => $this->userFirstnames,
+                'last_name'                 => $this->userSurname,
+                'dob'                       => $this->userDob,
+                'postcode'                  => $this->userPostCode,
+                'force_activation_key'      => true
             ],
             [
                 'user-token' => $this->userId,
             ]
         );
 
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
     }
 
     /**
@@ -2509,12 +2513,13 @@ class LpaContext implements Context
         $this->apiPatch(
             '/v1/lpas/request-letter',
             [
-                'reference_number'  => $this->lpaUid,
-                'first_names'       => $this->userFirstnames,
-                'last_name'         => $this->userSurname,
-                'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode,
-                'force_activation_key' => false
+                'reference_number'          => $this->lpaUid,
+                'first_names'               => $this->userFirstnames,
+                'last_name'                 => $this->userSurname,
+                'dob'                       => $this->userDob,
+                'postcode'                  => $this->userPostCode,
+                'force_activation_key'      => false,
+                'request_activation_key'    => false
             ],
             [
                 'user-token' => $this->userId,

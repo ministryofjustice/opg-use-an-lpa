@@ -192,7 +192,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
                     $lpaData = $result->getData();
 
-
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::check-right-lpa',

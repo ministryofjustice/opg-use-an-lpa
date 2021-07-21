@@ -62,7 +62,7 @@ class LpaContext extends BaseIntegrationContext
     private OlderLpaService $olderLpaService;
 
     /**
-     * @Then /^a letter is requested containing a one time use code$/
+     * @Then /^a letter is requested containing activation key$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
@@ -1056,6 +1056,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Given /^I confirm that those details are correct$/
+     * @Then /^I am shown details of the found LPA$/
      */
     public function iConfirmThatThoseDetailsAreCorrect()
     {
@@ -1299,6 +1300,7 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
 
+
         assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
         assertEquals($lpaMatchResponse['actor-id'], $this->actorLpaId);
 
@@ -1330,7 +1332,8 @@ class LpaContext extends BaseIntegrationContext
             'postcode'              => $this->userPostCode,
             'first_names'           => $this->userFirstname,
             'last_name'             => $this->userSurname,
-            'force_activation_key'  => false
+            'force_activation_key'  => false,
+            'request_activation_key'=> false
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -1918,7 +1921,8 @@ class LpaContext extends BaseIntegrationContext
             'last_name'             => $this->userSurname,
             'dob'                   => $this->userDob,
             'postcode'              => $this->userPostCode,
-            'force_activation_key'  => true
+            'force_activation_key'  => true,
+            'request_activation_key'=> true
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -1956,7 +1960,8 @@ class LpaContext extends BaseIntegrationContext
             'postcode'              => $this->userPostCode,
             'first_names'           => $this->userFirstname,
             'last_name'             => $this->userSurname,
-            'force_activation_key'  => false
+            'force_activation_key'  => false,
+            'request_activation_key'=> false
         ];
 
         // UserLpaActorMap::getUsersLpas

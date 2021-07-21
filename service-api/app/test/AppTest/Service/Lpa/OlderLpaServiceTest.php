@@ -542,6 +542,7 @@ class OlderLpaServiceTest extends TestCase
             'last_name'             => 'Testing',
             'postcode'              => 'Ab1 2Cd',
             'force_activation_key'  => false,
+            'request_activation_key'=> false
         ];
 
         $service = $this->getOlderLpaService();
@@ -578,6 +579,7 @@ class OlderLpaServiceTest extends TestCase
             'last_name'             => 'Incorrect',
             'postcode'              => 'wR0 nG1',
             'force_activation_key'  => false,
+            'request_activation_key'=> false
         ];
 
         $service = $this->getOlderLpaService();
@@ -618,6 +620,7 @@ class OlderLpaServiceTest extends TestCase
             'last_name'             => 'Testing',
             'postcode'              => 'Ab1 2Cd',
             'force_activation_key'  => false,
+            'request_activation_key'=> false
         ];
 
         $service = $this->getOlderLpaService();
@@ -671,7 +674,8 @@ class OlderLpaServiceTest extends TestCase
             'first_names'           => 'Test Tester',
             'last_name'             => 'Testing',
             'postcode'              => 'Ab1 2Cd',
-            'force_activation_key'  => true
+            'force_activation_key'  => true,
+            'request_activation_key'=> true
         ];
 
         $service = $this->getOlderLpaService();
@@ -714,6 +718,7 @@ class OlderLpaServiceTest extends TestCase
             'last_name'             => 'Testing',
             'postcode'              => 'Ab1 2Cd',
             'force_activation_key'  => false,
+            'request_activation_key'=> false
         ];
 
         $service = $this->getOlderLpaService();

@@ -171,13 +171,12 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^a letter is requested containing a one time use code$/
+     * @Then /^I am shown details of the found LPA$/
      */
-    public function aLetterIsRequestedContainingAOneTimeUseCode()
+    public function iAmShownDetailsOfTheFoundLPA()
     {
         $this->ui->assertPageAddress('/lpa/check-answers');
-
-        $this->ui->assertElementContainsText('h1', 'We\'re posting you an activation key');
+        $this->ui->assertElementContainsText('h1', 'Check we\'ve found the right LPA');
     }
 
     /**
@@ -1683,9 +1682,19 @@ class LpaContext implements Context
             $this->apiFixtures->patch('/v1/lpas/request-letter')
                 ->respondWith(
                     new Response(
-                        StatusCodeInterface::STATUS_NO_CONTENT,
+                        StatusCodeInterface::STATUS_OK,
                         [],
-                        ''
+                        json_encode(
+                            [
+                                'donor' => [
+                                    'uId' => $this->lpa->donor->uId,
+                                    'firstname' => $this->lpa->donor->firstname,
+                                    'middlenames' => $this->lpa->donor->middlenames,
+                                    'surname' => $this->lpa->donor->surname,
+                                ],
+                                'caseSubtype' => $this->lpa->caseSubtype,
+                            ]
+                        )
                     )
                 );
         } else {
@@ -2684,5 +2693,33 @@ class LpaContext implements Context
     public function iAmToldANewActivationIsPostedToTheProvidedPostcode()
     {
         $this->ui->assertPageAddress('/lpa/confirm-activation-key-generation');
+    }
+
+    /**
+     * @Then /^I am on the check LPA details page$/
+     */
+    public function iAmOnTheCheckLPADetailsPage()
+    {
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iProvideTheDetailsFromAValidPaperDocument();
+        $this->iConfirmThatThoseDetailsAreCorrect();
+        $this->iAmShownDetailsOfTheFoundLPA();
+    }
+
+    /**
+     * @When /^I realise this is not the correct LPA$/
+     */
+    public function iRealiseThisIsNotTheCorrectLPA()
+    {
+        $this->ui->assertPageContainsText('This is not the correct LPA');
+        $this->ui->clickLink('This is not the correct LPA');
+    }
+
+    /**
+     * @When /^I am taken back to the start of requesting an activation key again$/
+     */
+    public function iAmTakenBackToTheStartOfRequestingAnActivationKeyAgain()
+    {
+        $this->ui->assertPageAddress('/lpa/add');
     }
 }
