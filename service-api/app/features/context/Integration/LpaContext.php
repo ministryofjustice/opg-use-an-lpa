@@ -1327,13 +1327,13 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
     {
         $data = [
-            'reference_number'      => $this->lpaUid,
-            'dob'                   => $this->userDob,
-            'postcode'              => $this->userPostCode,
-            'first_names'           => $this->userFirstname,
-            'last_name'             => $this->userSurname,
-            'force_activation_key'  => false,
-            'request_activation_key'=> false
+            'reference_number'          => $this->lpaUid,
+            'dob'                       => $this->userDob,
+            'postcode'                  => $this->userPostCode,
+            'first_names'               => $this->userFirstname,
+            'last_name'                 => $this->userSurname,
+            'force_activation_key'      => false,
+            'request_activation_key'    => false
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -1916,13 +1916,13 @@ class LpaContext extends BaseIntegrationContext
     public function iRequestForANewActivationKeyAgain()
     {
         $data = [
-            'reference_number'      => $this->lpaUid,
-            'first_names'           => $this->userFirstname,
-            'last_name'             => $this->userSurname,
-            'dob'                   => $this->userDob,
-            'postcode'              => $this->userPostCode,
-            'force_activation_key'  => true,
-            'request_activation_key'=> true
+            'reference_number'          => $this->lpaUid,
+            'first_names'               => $this->userFirstname,
+            'last_name'                 => $this->userSurname,
+            'dob'                       => $this->userDob,
+            'postcode'                  => $this->userPostCode,
+            'force_activation_key'      => true,
+            'request_activation_key'    => true
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -1955,13 +1955,13 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
     {
         $data = [
-            'reference_number'      => $this->lpaUid,
-            'dob'                   => $this->userDob,
-            'postcode'              => $this->userPostCode,
-            'first_names'           => $this->userFirstname,
-            'last_name'             => $this->userSurname,
-            'force_activation_key'  => false,
-            'request_activation_key'=> false
+            'reference_number'          => $this->lpaUid,
+            'dob'                       => $this->userDob,
+            'postcode'                  => $this->userPostCode,
+            'first_names'               => $this->userFirstname,
+            'last_name'                 => $this->userSurname,
+            'force_activation_key'      => false,
+            'request_activation_key'    => false
         ];
 
         // UserLpaActorMap::getUsersLpas
@@ -1971,11 +1971,11 @@ class LpaContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id' => $this->userLpaActorToken,
-                                'ActorId' => $this->actorLpaId,
-                                'UserId' => $this->userId,
+                                'SiriusUid'     => $this->lpaUid,
+                                'Added'         => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id'            => $this->userLpaActorToken,
+                                'ActorId'       => $this->actorLpaId,
+                                'UserId'        => $this->userId,
                             ]
                         ),
                     ],
@@ -1998,7 +1998,7 @@ class LpaContext extends BaseIntegrationContext
                 'middlenames'   => $this->lpa->donor->middlenames,
                 'surname'       => $this->lpa->donor->surname,
             ],
-            'caseSubtype' => $this->lpa->caseSubtype,
+            'caseSubtype'   => $this->lpa->caseSubtype,
             'lpaActorToken' => $this->userLpaActorToken
         ];
 
