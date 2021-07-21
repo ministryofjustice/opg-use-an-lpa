@@ -67,7 +67,7 @@ class AddOlderLpa
         DateTimeInterface $dob,
         string $postcode,
         bool $forceActivationKey = false,
-        bool $requestActivationKeyLetter = false
+        bool $requestNewActivationKey = false
     ): OlderLpaApiResponse {
         $data = [
             'reference_number'          => $lpaUid,
@@ -76,7 +76,7 @@ class AddOlderLpa
             'dob'                       => $dob->format('Y-m-d'),
             'postcode'                  => $postcode,
             'force_activation_key'      => $forceActivationKey,
-            'request_activation_key'    => $requestActivationKeyLetter
+            'request_activation_key'    => $requestNewActivationKey
         ];
 
         $this->apiClient->setUserTokenHeader($userToken);
@@ -105,7 +105,9 @@ class AddOlderLpa
             return new OlderLpaApiResponse(OlderLpaApiResponse::ADD_LPA_FOUND, $lpaData);
         }
 
-        $eventCode = ($forceActivationKey) ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY : EventCodes::OLDER_LPA_SUCCESS;
+        $eventCode = ($forceActivationKey and $requestNewActivationKey) ?
+            EventCodes::OLDER_LPA_SUCCESS :
+            EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY;
         $this->logger->notice(
             'Successfully matched LPA {uId} and sending activation letter for account with Id {id} ',
             [

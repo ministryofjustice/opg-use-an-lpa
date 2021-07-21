@@ -1367,6 +1367,7 @@ class LpaContext extends BaseIntegrationContext
                 $this->userSurname,
                 DateTime::createFromFormat('Y-m-d', $this->userDob),
                 $this->userPostCode,
+                true,
                 true
             );
         } catch (ApiException $e) {

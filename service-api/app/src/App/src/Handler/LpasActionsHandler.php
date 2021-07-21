@@ -75,7 +75,7 @@ class LpasActionsHandler implements RequestHandlerInterface
         }
 
         if ($requestData['request_activation_key']) {
-            //If forced for an activation key
+            //When a first time or forced request for an activation key
             $this->olderLpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
             return new EmptyResponse();
         }
