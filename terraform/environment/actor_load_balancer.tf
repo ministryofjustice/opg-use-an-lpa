@@ -209,9 +209,6 @@ resource "aws_security_group_rule" "actor_loadbalancer_ingress" {
   protocol          = "tcp"
   cidr_blocks       = module.whitelist.moj_sites
   security_group_id = aws_security_group.actor_loadbalancer.id
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress_production" {
