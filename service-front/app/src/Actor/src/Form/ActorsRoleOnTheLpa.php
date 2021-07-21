@@ -11,7 +11,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class ActorsRoleOnTheLpa extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'your_role_on_the_lpa';
+    public const FORM_NAME = 'actor_role_on_the_lpa';
 
     /**
      * AddLpaTriage constructor.
@@ -42,7 +42,7 @@ class ActorsRoleOnTheLpa extends AbstractForm implements InputFilterProviderInte
     public function getInputFilterSpecification(): array
     {
         return [
-            'role_on_lpa_radio' => [
+            'lpa_role_radio' => [
                 'required'   => true,
                 'validators' => [
                     [

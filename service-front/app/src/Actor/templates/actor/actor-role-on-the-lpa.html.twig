@@ -20,6 +20,8 @@
 
                     <h1 class="govuk-heading-xl">{% trans %}What is your role on the LPA?{% endtrans %}</h1>
 
+                    {{ govuk_error_summary(form) }}
+
                     {{ govuk_form_open(form) }}
 
                     {{ govuk_form_element(form.get('__csrf')) }}
