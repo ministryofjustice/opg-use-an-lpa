@@ -468,4 +468,49 @@ class AddOlderLpaTest extends TestCase
 
         $this->assertEquals(OlderLpaApiResponse::SUCCESS, $result->getResponse());
     }
+
+    /**
+     * @test
+     * @covers ::__invoke
+     * @covers ::badRequestReturned
+     */
+    public function it_will_show_lpa_found_when_details_match(): void
+    {
+        $response = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => 'hw',
+            'lpaActorToken' => 'wxyz-4321'
+        ];
+        $this->apiClientProphecy
+            ->httpPatch(
+                '/v1/lpas/request-letter',
+                [
+                    'reference_number'          => (string)$this->olderLpa['reference_number'],
+                    'first_names'               => $this->olderLpa['first_names'],
+                    'last_name'                 => $this->olderLpa['last_name'],
+                    'dob'                       => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode'                  => $this->olderLpa['postcode'],
+                    'force_activation_key'      => true,
+                    'request_activation_key'    => true
+                ]
+            )->willReturn($response);
+
+        $result = ($this->sut)(
+            '12-1-1-1-1234',
+            $this->olderLpa['reference_number'],
+            $this->olderLpa['first_names'],
+            $this->olderLpa['last_name'],
+            $this->olderLpa['dob'],
+            $this->olderLpa['postcode'],
+            true,
+            true
+        );
+
+        $this->assertEquals(OlderLpaApiResponse::ADD_LPA_FOUND, $result->getResponse());
+    }
 }
