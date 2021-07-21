@@ -348,14 +348,9 @@ class OlderLpaServiceTest extends TestCase
                 'systemStatus' => true,
             ])
             ->willReturn(0); // active attorney
-
-
-
         $this->resolveActorProphecy
             ->__invoke(Argument::type('array'), Argument::type('string'))
             ->willReturn($mockActor);
-
-
         $service = $this->getOlderLpaService();
 
         $userData = $service->cleanseUserData($userData);

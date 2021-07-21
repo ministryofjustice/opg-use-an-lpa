@@ -1300,7 +1300,6 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
 
-
         assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
         assertEquals($lpaMatchResponse['actor-id'], $this->actorLpaId);
 
