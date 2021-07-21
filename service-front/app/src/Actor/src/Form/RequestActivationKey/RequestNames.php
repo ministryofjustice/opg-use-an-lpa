@@ -20,7 +20,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
  */
 class RequestNames extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'request_activation_key';
+    public const FORM_NAME = 'request_activation_key_names';
 
     /**
      * RequestActivationKey constructor.
