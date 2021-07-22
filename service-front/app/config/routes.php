@@ -164,6 +164,18 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Actor\Handler\ChangeLpaDetailsHandler::class
     ], 'lpa.change-lpa-details');
 
+    // Access for All Journey
+    if (($container->get(Common\Service\Features\FeatureEnabled::class))('allow_older_lpas')) {
+        $app->route(
+            '/lpa/add/contact-details',
+            [
+                Mezzio\Authentication\AuthenticationMiddleware::class,
+                Actor\Handler\ContactDetailsHandler::class
+            ],
+            ['GET', 'POST'],
+            'lpa.add.contact-details'
+        );
+    }
     // Older LPA journey
     if (($container->get(Common\Service\Features\FeatureEnabled::class))('use_older_lpa_journey')) {
         // if flag true, send user to triage page as entry point

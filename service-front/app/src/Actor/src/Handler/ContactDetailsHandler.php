@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Acpr\I18n\TranslatorInterface;
-use Actor\Form\ChangeEmail;
 use Actor\Form\RequestContactDetails;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\CsrfGuard;

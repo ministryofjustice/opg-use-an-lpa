@@ -2,9 +2,9 @@
 
 namespace ActorTest\Form;
 
-use Actor\Form\RequestContactDetails;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
+use Actor\Form\RequestContactDetails;
 use Laminas\Form\Element\Checkbox;
 use Laminas\Form\Element\Text;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
