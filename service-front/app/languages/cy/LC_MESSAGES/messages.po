@@ -5499,12 +5499,12 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key.html.twig:56
 msgid ""
 "This must be your current postcode and match the one we have on our records. "
-"The activation key will be posted to this address. <a href=\"/lpa/change-"
-"details\" class=\"govuk-link\">Let us know if you have moved.</a>"
+"The activation key will be posted to this address. <a href=\"%link%\""
+" class=\"govuk-link\">Let us know if you have moved.</a>"
 msgstr ""
 "Rhaid i hwn fod yn god post cyfredol a chyfateb i’r un sydd gennym ar ein "
 "cofnodion. Bydd yr allwedd cadarnhau cyfrif yn cael ei phostio i’r cyfeiriad "
-"hwn. <a href=\"/lpa/change-details\" class=\"govuk-link\">Rhowch wybod i ni os ydych wedi symud.</a>"
+"hwn. <a href=\"%link%\" class=\"govuk-link\">Rhowch wybod i ni os ydych wedi symud.</a>"
 
 #: src/Common/templates/partials/govuk_form.html.twig:19
 msgid ""

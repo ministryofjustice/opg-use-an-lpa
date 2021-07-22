@@ -3830,7 +3830,7 @@ msgid "These details must match the information we have about you on our records
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key.html.twig:56
-msgid "This must be your current postcode and match the one we have on our records. The activation key will be posted to this address. <a href=\"/lpa/change-details\" class=\"govuk-link\"> Let us know if you have moved.</a>"
+msgid "This must be your current postcode and match the one we have on our records. The activation key will be posted to this address. <a href=\"%link%\" class=\"govuk-link\"> Let us know if you have moved.</a>"
 msgstr ""
 
 #: src/Common/templates/partials/govuk_form.html.twig:19
