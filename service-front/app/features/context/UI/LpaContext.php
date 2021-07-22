@@ -43,6 +43,14 @@ class LpaContext implements Context
     }
 
     /**
+     * @Then /^I am taken to the contact details page$/
+     */
+    public function iAmTakenToTheContactDetailsPage()
+    {
+        $this->ui->assertPageAddress('/lpa/add/contact-details');
+    }
+
+    /**
      * @Then /^I am taken to the remove an LPA confirmation page$/
      */
     public function iAmTakenToTheRemoveAnLPAConfirmationPage()
@@ -123,6 +131,17 @@ class LpaContext implements Context
     public function myActiveCodesAreCancelled()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @Given /^My role is the donor on the LPA$/
+     */
+    public function myRoleIsTheDonorOnTheLPA()
+    {
+        $this->ui->assertPageContainsText('What is your role on the LPA?');
+
+        $this->ui->fillField('actor_role_radio', 'Donor');
+        $this->ui->pressButton('Continue');
     }
 
     /**
@@ -233,9 +252,12 @@ class LpaContext implements Context
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
-        $this->ui->assertPageAddress('/lpa/check-answers');
-
-        $this->ui->assertElementContainsText('h1', 'We could not find an LPA with the details you entered');
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->assertPageContainsText('What is your role on the LPA?');
+        } else {
+            $this->ui->assertPageAddress('/lpa/check-answers');
+            $this->ui->assertElementContainsText('h1', 'We could not find an LPA with the details you entered');
+        }
     }
 
     /**

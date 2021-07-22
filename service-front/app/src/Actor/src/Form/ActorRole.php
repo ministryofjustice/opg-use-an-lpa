@@ -9,9 +9,9 @@ use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-class ActorsRoleOnTheLpa extends AbstractForm implements InputFilterProviderInterface
+class ActorRole extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'actor_role_on_the_lpa';
+    public const FORM_NAME = 'actor_role';
 
     /**
      * AddLpaTriage constructor.
@@ -23,7 +23,7 @@ class ActorsRoleOnTheLpa extends AbstractForm implements InputFilterProviderInte
 
         $this->add(
             [
-                'name'       => 'lpa_role_radio',
+                'name'       => 'actor_role_radio',
                 'type'       => 'Radio',
                 'options'    => [
                     'value_options' => [
@@ -42,7 +42,7 @@ class ActorsRoleOnTheLpa extends AbstractForm implements InputFilterProviderInte
     public function getInputFilterSpecification(): array
     {
         return [
-            'lpa_role_radio' => [
+            'actor_role_radio' => [
                 'required'   => true,
                 'validators' => [
                     [

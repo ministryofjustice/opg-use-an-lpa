@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
-use Actor\Form\ActorsRoleOnTheLpa;
+use Actor\Form\ActorRole;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
@@ -28,7 +28,7 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     use User;
     use CsrfGuard;
 
-    private ActorsRoleOnTheLpa $form;
+    private ActorRole $form;
     private ?UserInterface $user;
 
     public function __construct(
@@ -46,7 +46,7 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new ActorsRoleOnTheLpa($this->getCsrfGuard($request));
+        $this->form = new ActorRole($this->getCsrfGuard($request));
         $this->user = $this->getUser($request);
 
         if ($request->getMethod() == 'POST') {
@@ -54,7 +54,7 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         }
 
         return new HtmlResponse($this->renderer->render(
-            'actor::actor-role-on-the-lpa',
+            'actor::actor-role',
             [
                 'user'  => $this->user,
                 'form'  => $this->form
@@ -71,7 +71,7 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $selected = $this->form->getData()['lpa_role_radio'];
+            $selected = $this->form->getData()['actor_role_radio'];
 
             if ($selected === 'Donor') {
                 return $this->redirectToRoute('lpa.add.contact-details');
@@ -79,7 +79,7 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             // TODO: implement Actor route redirect here UML-1606
         }
 
-        return new HtmlResponse($this->renderer->render('actor::actor-role-on-the-lpa', [
+        return new HtmlResponse($this->renderer->render('actor::actor-role', [
             'user'  => $this->user,
             'form'  => $this->form
         ]));
