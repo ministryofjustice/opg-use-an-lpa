@@ -43,6 +43,14 @@ class LpaContext implements Context
     }
 
     /**
+     * @Then /^I am taken to the contact details page$/
+     */
+    public function iAmTakenToTheContactDetailsPage()
+    {
+        $this->ui->assertPageAddress('/lpa/add/contact-details');
+    }
+
+    /**
      * @Then /^I am taken to the remove an LPA confirmation page$/
      */
     public function iAmTakenToTheRemoveAnLPAConfirmationPage()
@@ -91,6 +99,17 @@ class LpaContext implements Context
     public function myActiveCodesAreCancelled()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @Given /^My role is the donor on the LPA$/
+     */
+    public function myRoleIsTheDonorOnTheLPA()
+    {
+        $this->ui->assertPageContainsText('What is your role on the LPA?');
+
+        $this->ui->fillField('actor_role_radio', 'Donor');
+        $this->ui->pressButton('Continue');
     }
 
     /**

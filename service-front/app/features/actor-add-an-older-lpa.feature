@@ -24,6 +24,14 @@ Feature: Add an older LPA
     And I confirm that those details are correct
     Then I am informed that an LPA could not be found with these details
 
+  @ui
+  Scenario: Donors are taken to the contact details page when data doesnt match
+    Given I am on the add an older LPA page
+    When I provide details that do not match a valid paper document
+    And I confirm that those details are correct
+    And My role is the donor on the LPA
+    Then I am taken to the contact details page
+
   @ui @integration
   Scenario: The user cannot add an older LPA to their account as their LPA is registered before Sept 2019
     Given I am on the add an older LPA page
