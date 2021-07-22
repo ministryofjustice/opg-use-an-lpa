@@ -1,0 +1,29 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Your contact details{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+        {{ include('@partials/account-bar.html.twig') }}
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.actor-role') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                            <h1 class="govuk-fieldset__heading">{% trans %}Your contact details{% endtrans %}</h1>
+                        </legend>
+                        <p class="govuk-body">We may need to contact you to ask for more information.</p>
+                    </fieldset>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
