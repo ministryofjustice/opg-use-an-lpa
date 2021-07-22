@@ -211,10 +211,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     }
 
     if (($container->get(Common\Service\Features\FeatureEnabled::class))('allow_older_lpas')) {
-        $app->route('/lpa/actor-role', [
+        $app->route('/lpa/add/actor-role', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\ActorRoleHandler::class
-        ], ['GET', 'POST'], 'lpa.actor-role');
+        ], ['GET', 'POST'], 'lpa.add.actor-role');
 
         $app->route('/lpa/add/contact-details', [
             Mezzio\Authentication\AuthenticationMiddleware::class,

@@ -182,7 +182,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 case OlderLpaApiResponse::DOES_NOT_MATCH:
                     if (($this->featureEnabled)('allow_older_lpas')) {
                         $form = new ActorRole($this->getCsrfGuard($request));
-                        $form->setAttribute('action', $this->urlHelper->generate('lpa.actor-role'));
+                        $form->setAttribute('action', $this->urlHelper->generate('lpa.add.actor-role'));
                         return new HtmlResponse($this->renderer->render(
                             'actor::actor-role',
                             [
