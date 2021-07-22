@@ -97,5 +97,4 @@ class ContactDetailsHandler extends AbstractHandler implements UserAware
             'referer' => $this->session->get('referer')
         ]));
     }
-
 }

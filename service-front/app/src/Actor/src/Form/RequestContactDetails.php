@@ -8,7 +8,6 @@ use Common\Form\AbstractForm;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-
 class RequestContactDetails extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = 'contact-details';
