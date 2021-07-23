@@ -5,12 +5,19 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
+use Laminas\Filter\Digits;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Mezzio\Csrf\CsrfGuardInterface;
 
 class RequestContactDetails extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = 'contact-details';
+
+    public const OPTION_NOT_SELECTED = 'OptionNotSelected';
+
+    protected array $messageTemplates = [
+        self::OPTION_NOT_SELECTED => 'Enter your phone number or check the box to say you cannot take calls',
+    ];
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
@@ -47,6 +54,9 @@ class RequestContactDetails extends AbstractForm implements InputFilterProviderI
         return [
             'telephone' => [
                 'required' => false,
+                'filters'  => [
+                    ['name' => Digits::class],
+                ],
             ],
             'no_phone' => [
                 'required' => false

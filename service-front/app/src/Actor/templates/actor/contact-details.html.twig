@@ -37,7 +37,7 @@
                         <p class="govuk-body govuk-!-margin-bottom-6">{% trans %}or{% endtrans %}</p>
 
                         {{ govuk_form_element(form.get('no_phone'), {
-                            'label': 'I do not have a phone'| trans,
+                            'label': 'I do not have a phone or cannot use a phone to take calls'| trans,
                         }) }}
 
                     <p class="govuk-body">{% trans %} We may also contact you by email on {% endtrans %} <b>{{ user.getDetail('email') }}</b> </p>

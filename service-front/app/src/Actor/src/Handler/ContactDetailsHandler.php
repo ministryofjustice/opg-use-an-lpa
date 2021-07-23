@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
-use Actor\Form\RequestActivationKey;
+use Actor\Form\ChangeEmail;
 use Actor\Form\RequestContactDetails;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\CsrfGuard;
@@ -20,7 +20,6 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Exception;
 
 /**
  * @codeCoverageIgnore
@@ -87,8 +86,12 @@ class ContactDetailsHandler extends AbstractHandler implements UserAware
             $this->session->set('telephone', $postData['telephone']);
             $this->session->set('no_phone', $postData['no_phone']);
 
-            //TODO: Redirect to end of journey
-            //return $this->redirectToRoute('Somewhere');
+            if ($postData['telephone'] != '' || $postData['no_phone'] == 'yes') {
+                //TODO: Redirect to end of journey
+                //return $this->redirectToRoute('Somewhere');
+            } else {
+                $this->form->addErrorMessage(RequestContactDetails::OPTION_NOT_SELECTED);
+            }
         }
 
         return new HtmlResponse($this->renderer->render('actor::contact-details', [
