@@ -126,11 +126,9 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
-        // do a validation of lpa to see if
-        //
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
-            $result = ($this->addOlderLpa)(
+            $result = $this->addOlderLpa->validate(
                 $this->identity,
                 $this->data['reference_number'],
                 $this->data['first_names'],
@@ -198,8 +196,8 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             'actor::check-right-lpa',
                             [
                                 'form'      => $form,
-                                'user'      => $this->data,
-                                'userRole'  => $lpaData['role'],
+                                'user'      => $lpaData['actor'],
+                                'userRole'  => $lpaData['actor']['role'],
                                 'donor'     => $lpaData['donor'],
                                 'lpaType'   => $lpaData['caseSubtype']
                             ]

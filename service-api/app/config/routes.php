@@ -37,9 +37,14 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     $app->get('/v1/lpas', App\Handler\LpasCollectionHandler::class, 'lpa.collection');
     $app->patch(
-        '/v1/lpas/request-letter',
-        App\Handler\LpasActionsHandler::class,
-        'lpa.request-letter'
+        '/v1/request-key/validate',
+        App\Handler\OlderLpaVerificationHandler::class,
+        'lpa.request-key-validate'
+    );
+    $app->patch(
+        '/v1/request-key/confirm',
+        App\Handler\OlderLpaConfirmationHandler::class,
+        'lpa.request-key-confirm'
     );
     $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.resource');
     $app->delete('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.remove');

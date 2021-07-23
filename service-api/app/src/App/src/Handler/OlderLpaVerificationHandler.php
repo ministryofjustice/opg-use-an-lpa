@@ -13,11 +13,11 @@ use Psr\Http\Server\RequestHandlerInterface;
 use DateTime;
 
 /**
- * Class LpasActionHandler
+ * Class OlderLpaVerificationHandler
  * @package App\Handler
  * @codeCoverageIgnore
  */
-class LpasActionsHandler implements RequestHandlerInterface
+class OlderLpaVerificationHandler implements RequestHandlerInterface
 {
     private OlderLpaService $olderLpaService;
 
@@ -72,12 +72,6 @@ class LpasActionsHandler implements RequestHandlerInterface
                     ]
                 );
             }
-        }
-
-        if ($requestData['request_activation_key']) {
-            //When a first time or forced request for an activation key
-            $this->olderLpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
-            return new EmptyResponse();
         }
 
         return new JsonResponse($lpaMatchResponse, 200);

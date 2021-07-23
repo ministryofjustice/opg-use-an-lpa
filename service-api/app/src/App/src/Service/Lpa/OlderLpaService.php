@@ -165,7 +165,7 @@ class OlderLpaService
         return [
             'actor-id' => $actorId,
             'lpa-id' => $lpaId,
-            'role' => $actor['type'],
+            'actor' => $actor,
         ];
     }
 
@@ -268,6 +268,15 @@ class OlderLpaService
             'firstname'     => $lpa['donor']['firstname'],
             'middlenames'   => $lpa['donor']['middlenames'],
             'surname'       => $lpa['donor']['surname'],
+        ];
+
+        //If the actor is the donor - need to revisit
+        $actorMatch['actor'] = [
+            'uId'           => $actorMatch['actor']['details']['uId'],
+            'firstname'     => $actorMatch['actor']['details']['firstname'],
+            'middlenames'   => $actorMatch['actor']['details']['middlenames'],
+            'surname'       => $actorMatch['actor']['details']['surname'],
+            'role'          => $actorMatch['actor']['type']
         ];
 
         return $actorMatch;

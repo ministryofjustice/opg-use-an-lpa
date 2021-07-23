@@ -59,15 +59,14 @@ class AddOlderLpa
         $this->parseActivationKeyExistsResponse = $parseActivationKeyExistsResponse;
     }
 
-    public function __invoke(
+    public function validate(
         string $userToken,
         int $lpaUid,
         string $firstnames,
         string $lastname,
         DateTimeInterface $dob,
         string $postcode,
-        bool $forceActivationKey = false,
-        bool $requestNewActivationKey = false
+        bool $forceActivationKey = false
     ): OlderLpaApiResponse {
         $data = [
             'reference_number'          => $lpaUid,
@@ -75,14 +74,13 @@ class AddOlderLpa
             'last_name'                 => $lastname,
             'dob'                       => $dob->format('Y-m-d'),
             'postcode'                  => $postcode,
-            'force_activation_key'      => $forceActivationKey,
-            'request_activation_key'    => $requestNewActivationKey
+            'force_activation_key'      => $forceActivationKey
         ];
 
         $this->apiClient->setUserTokenHeader($userToken);
 
         try {
-            $lpaData = $this->apiClient->httpPatch('/v1/lpas/request-letter', $data);
+            $lpaData = $this->apiClient->httpPatch('/v1/request-key/validate', $data);
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_BAD_REQUEST:
@@ -101,13 +99,10 @@ class AddOlderLpa
                     throw $apiEx;
             }
         }
-        if (!empty($lpaData)) {
-            return new OlderLpaApiResponse(OlderLpaApiResponse::OLDER_LPA_FOUND, $lpaData);
-        }
 
-        $eventCode = ($forceActivationKey and $requestNewActivationKey) ?
-            EventCodes::OLDER_LPA_SUCCESS :
-            EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY;
+        $eventCode = ($forceActivationKey) ?
+            EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY :
+            EventCodes::OLDER_LPA_SUCCESS;
         $this->logger->notice(
             'Successfully matched LPA {uId} and sending activation letter for account with Id {id} ',
             [
@@ -116,6 +111,18 @@ class AddOlderLpa
                 'uId' => $data['reference_number']
             ]
         );
+
+        return new OlderLpaApiResponse(OlderLpaApiResponse::OLDER_LPA_FOUND, $lpaData);
+    }
+
+    public function confirm(
+        string $userToken,
+        string $lpaUid,
+        string $actorId
+    ){
+        $this->apiClient->setUserTokenHeader($userToken);
+
+        $this->apiClient->httpPost('/v1/request-key/confirm');
 
         return new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
     }

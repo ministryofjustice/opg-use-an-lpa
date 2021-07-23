@@ -69,7 +69,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
         $form = new CreateNewActivationKey($this->getCsrfGuard($request));
         $user = $this->getUser($request);
         $forceActivationKey = true;
-        $requestNewActivationKey = true;
+        //$requestNewActivationKey = true;
 
         $form->setData($request->getParsedBody());
 
@@ -83,8 +83,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                 $data['last_name'],
                 new DateTime($data['dob']),
                 $data['postcode'],
-                $forceActivationKey,
-                $requestNewActivationKey
+                $forceActivationKey
             );
 
             $letterExpectedDate = (new Carbon())->addWeeks(2);
