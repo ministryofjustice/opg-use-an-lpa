@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session as SessionTrait, UserAware};
+use Common\Handler\{AbstractHandler,
+    CsrfGuardAware,
+    Traits\CsrfGuard,
+    Traits\Session as SessionTrait,
+    UserAware,
+    WorkflowStep};
 use Common\Handler\Traits\User;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\SessionInterface;
@@ -18,7 +23,7 @@ use Mezzio\Template\TemplateRendererInterface;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-abstract class AbstractRequestKeyHandler extends AbstractHandler implements UserAware, CsrfGuardAware
+abstract class AbstractRequestKeyHandler extends AbstractHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
     use User;
     use CsrfGuard;
@@ -60,7 +65,7 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements User
         $this->user = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
 
-        if ($this->isSessionMissingPrerequisite()) {
+        if ($this->isMissingPrerequisite()) {
             return $this->redirectToRoute('lpa.add-by-paper');
         }
 
@@ -80,10 +85,4 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements User
     {
         return $this->session->has('postcode');
     }
-
-    abstract protected function isSessionMissingPrerequisite(): bool;
-
-    abstract protected function nextPage(): string;
-
-    abstract protected function lastPage(): string;
 }

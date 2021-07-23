@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Common\Handler\{ CsrfGuardAware, UserAware};
+use Common\Handler\{CsrfGuardAware, UserAware, WorkflowStep};
 use Actor\Form\RequestActivationKey\RequestDateOfBirth;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -14,7 +14,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware
+class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
     private RequestDateOfBirth $form;
 
@@ -61,18 +61,18 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
             'back' => $this->getRouteNameFromAnswersInSession(true)
         ]));
     }
-    protected function isSessionMissingPrerequisite(): bool
+    public function isMissingPrerequisite(): bool
     {
         return !$this->session->has('opg_reference_number')
             || !$this->session->has('first_names');
     }
 
-    protected function lastPage(): string
+    public function lastPage(): string
     {
         return 'lpa.your-name';
     }
 
-    protected function nextPage(): string
+    public function nextPage(): string
     {
         return 'lpa.postcode';
     }

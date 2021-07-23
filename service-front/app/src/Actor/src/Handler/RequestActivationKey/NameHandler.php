@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Common\Handler\{ CsrfGuardAware, UserAware};
+use Common\Handler\{CsrfGuardAware, UserAware, WorkflowStep};
 use Actor\Form\RequestActivationKey\RequestNames;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -14,7 +14,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
  * @package Actor\Handler\RequestActivationKey
  * @codeCoverageIgnore
  */
-class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware
+class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
     private RequestNames $form;
 
@@ -57,17 +57,17 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
         ]));
     }
 
-    protected function isSessionMissingPrerequisite(): bool
+    public function isMissingPrerequisite(): bool
     {
         return !$this->session->has('opg_reference_number');
     }
 
-    protected function nextPage(): string
+    public function nextPage(): string
     {
         return 'lpa.date-of-birth';
     }
 
-    protected function lastPage(): string
+    public function lastPage(): string
     {
         return 'lpa.add-by-paper';
     }

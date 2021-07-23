@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Common\Handler\{CsrfGuardAware, UserAware};
+use Common\Handler\{CsrfGuardAware, UserAware, WorkflowStep};
 use Actor\Form\RequestActivationKey\RequestReferenceNumber;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -14,7 +14,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
  * @package Actor\Handler\RequestActivationKey
  * @codeCoverageIgnore
  */
-class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware
+class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
     private RequestReferenceNumber $form;
 
@@ -35,7 +35,7 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/reference-number', [
             'user' => $this->user,
             'form' => $this->form->prepare(),
-            'back' => $this-> getRouteNameFromAnswersInSession(true)
+            'back' => $this->getRouteNameFromAnswersInSession(true)
         ]));
     }
 
@@ -58,17 +58,17 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
         ]));
     }
 
-    protected function isSessionMissingPrerequisite(): bool
+    public function isMissingPrerequisite(): bool
     {
         return false;
     }
 
-    protected function nextPage(): string
+    public function nextPage(): string
     {
         return 'lpa.your-name';
     }
 
-    protected function lastPage(): string
+    public function lastPage(): string
     {
         return 'lpa.add-by-paper-information';
     }
