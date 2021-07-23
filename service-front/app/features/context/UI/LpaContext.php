@@ -2233,7 +2233,11 @@ class LpaContext implements Context
     public function theRevokedLPADetailsAreNotDisplayed()
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->assertPageNotContainsText($this->lpa->donor->firstname . '' . $this->lpa->donor->middlenames . ' ' . $this->lpa->donor->surname);
+        $this->ui->assertPageNotContainsText(
+            $this->lpa->donor->firstname . '' .
+            $this->lpa->donor->middlenames . ' ' .
+            $this->lpa->donor->surname
+        );
     }
 
     /**
