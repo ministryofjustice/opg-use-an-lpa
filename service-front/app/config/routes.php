@@ -215,11 +215,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\ActorRoleHandler::class
         ], ['GET', 'POST'], 'lpa.add.actor-role');
-
-        $app->route('/lpa/add/contact-details', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\ContactDetailsHandler::class
-        ], ['GET', 'POST'], 'lpa.add.contact-details');
     }
 };
 

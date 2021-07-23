@@ -74,7 +74,7 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             $selected = $this->form->getData()['actor_role_radio'];
 
             if ($selected === 'Donor') {
-                return $this->redirectToRoute('lpa.add.contact-details');
+                // TODO: implement Donor route redirect here UML-1555
             }
             // TODO: implement Actor route redirect here UML-1606
         }
